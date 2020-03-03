@@ -2,75 +2,377 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1DBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49997C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31EF220848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:31:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oDX6EKAh"
+	by mail.kernel.org (Postfix) with ESMTP id 0C592208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:32:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583267567;
+	bh=asWueVinJU+3Ywx2VZZSKud8958wpLEyBceMR5oJMZo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Mxs7+w76myWO1jTyWNtBOl6XVKDFAWbZmGGZ2reIjz0LRU+K7AFpHGxnyas+Cqwdl
+	 7swFEvrap9kZ6QgLG8KS4CyR5EBhfazQ14oNZ2jWKQHa6cSE02UkXLwjGqcF9Wfsdq
+	 G5j/qHW8HXb57pCnT7KrKKPu7f/hGD9iBsiUbPlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbgCCUbv (ORCPT
+        id S1731828AbgCCUcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:31:51 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:55104 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731151AbgCCUbu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 15:31:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=R4fltXhc1AgDmBEaAlZkK4e2FHblSj9UMQm1yxSRRZ8=; b=oDX6EKAhem5TcZV2zenuM4LtHG
-        XScSDk4EEL3AGGCVsLKd8k4tqdSfozl+lVD3TJIoIxnnpu5f3BNeoVVexh6O1pDWtg+3OWifQEDCH
-        f6xqbDBTeQjwYyxf3o98MtqgYXseL4E+GQ/y64cra6oCSWk/q4lTlTR2whaexaggIaB7NIaS11W0y
-        zXzOUDDQzOYEMobZC0rgDPTiRzr7L7wv6HRZwuAvhDS8RpRsQxxyV3msjdWv15Jb03Z/vo7KnwT9k
-        6tqX53+efg81c7inTFXgvgH0m9DDsCD5pJWIdauAU8zs7hhe7ib07n7YH2MP1PLSfld3bgFVKkBqQ
-        CB1TntAA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9ECk-0003D6-MC; Tue, 03 Mar 2020 20:31:50 +0000
-Date:   Tue, 3 Mar 2020 12:31:50 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Alexey Dobriyan <adobriyan@gmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Simplify /proc/$pid/maps implementation
-Message-ID: <20200303203150.GU29971@bombadil.infradead.org>
-References: <20200229165910.24605-1-willy@infradead.org>
- <20200303195650.GB17768@avx2>
+        Tue, 3 Mar 2020 15:32:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730837AbgCCUcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 15:32:45 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D229420848;
+        Tue,  3 Mar 2020 20:32:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583267564;
+        bh=asWueVinJU+3Ywx2VZZSKud8958wpLEyBceMR5oJMZo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YyC5iVFRnXWAzjX5sjfKDKRk4oHY9j6RfDJ60b8zjLnUA3SmKk+zIm76j/qJFi+/t
+         EzXUsDXwHE/dKYmFT3XQLjU5Zsr/6WpMATJ6khKlv9iE3BEOrYLPCEW82fiwUTVB4Y
+         DuL7Luanb+WHZ6VvU+1QpMLsxKQYhOpE43ivjiZ8=
+Date:   Tue, 3 Mar 2020 20:32:36 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     xxm <xxm@rock-chips.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, lars@metafoo.de,
+        linux-iio@vger.kernel.org,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        linux-kernel@vger.kernel.org, kever.yang@rock-chips.com,
+        linux-rockchip@lists.infradead.org, pmeerw@pmeerw.net,
+        knaack.h@gmx.de
+Subject: Re: [PATCH] iio: adc: rockchip_saradc: Add support iio
+ =?UTF-8?B?YnVmZmVyc+OAkOivt+azqOaEj++8jOmCruS7tueUsWxpbnV4LXJvY2tjaGlw?=
+ =?UTF-8?B?LWJvdW5jZXMreHhtPXJvY2stY2hpcHMuY29tQGxpc3RzLmluZnJhZGVhZC5v?=
+ =?UTF-8?B?cmfku6Plj5HjgJE=?=
+Message-ID: <20200303203236.2cbcfeee@archlinux>
+In-Reply-To: <67e46e36-ebac-ebe3-b4f4-9edb88fb0dcf@rock-chips.com>
+References: <20200301112353.887028-1-heiko@sntech.de>
+        <67e46e36-ebac-ebe3-b4f4-9edb88fb0dcf@rock-chips.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303195650.GB17768@avx2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:56:50PM +0300, Alexey Dobriyan wrote:
-> On Sat, Feb 29, 2020 at 08:59:05AM -0800, Matthew Wilcox wrote:
-> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> > 
-> > Back in 2005, we merged a patch from Akamai that sped up /proc/$pid/maps
-> > by using f_version to stash the user virtual address that we'd just
-> > displayed.  That wasn't necessary; we can just use the private *ppos for
-> > the same purpose.  There have also been some other odd choices made over
-> > the years that use the seq_file infrastructure in some non-idiomatic ways.
-> > 
-> > Tested by using 'dd' with various different 'bs=' parameters to check that
-> > calling ->start, ->stop and ->next at various offsets work as expected.
-> 
-> /proc part looks OK, I only ask to include this description into first
-> patch, so it doesn't get lost. Often 0/N patch is the most interesting
-> part of a series.
+On Mon, 2 Mar 2020 10:11:02 +0800
+xxm <xxm@rock-chips.com> wrote:
 
-I'm perfectly fine with this justification for the patch series being
-lost.  I think this is the least interesting part of what I wrote.  And
-will be the least interesting part for future researchers ... "Why did
-this code get converted to behave exactly the same way as all the other
-code" isn't really an interesting question.
+> Hi, Heiko
+>=20
+> =E5=9C=A8 2020/3/1 19:23, Heiko Stuebner =E5=86=99=E9=81=93:
+> > From: Simon Xue <xxm@rock-chips.com>
+> >=20
+> > Add the ability to also support access via (triggered) buffers
+> > next to the existing direct mode.
+> >=20
+> > Device in question is the Odroid Go Advance that connects a joystick
+> > to two of the saradc channels for X and Y axis and the new (and still
+> > pending) adc joystick driver of course wants to use triggered buffers
+> > from the iio subsystem.
+> >=20
+> > Signed-off-by: Simon Xue <xxm@rock-chips.com>
+> > [some simplifications and added commit description]
+> > Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> > ---
+> >   drivers/iio/adc/Kconfig           |   2 +
+> >   drivers/iio/adc/rockchip_saradc.c | 137 ++++++++++++++++++++++--------
+> >   2 files changed, 102 insertions(+), 37 deletions(-)
+> >=20
+> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > index 82e33082958c..55d2499ff757 100644
+> > --- a/drivers/iio/adc/Kconfig
+> > +++ b/drivers/iio/adc/Kconfig
+> > @@ -787,6 +787,8 @@ config ROCKCHIP_SARADC
+> >   	tristate "Rockchip SARADC driver"
+> >   	depends on ARCH_ROCKCHIP || (ARM && COMPILE_TEST)
+> >   	depends on RESET_CONTROLLER
+> > +	select IIO_BUFFER
+> > +	select IIO_TRIGGERED_BUFFER
+> >   	help
+> >   	  Say yes here to build support for the SARADC found in SoCs from
+> >   	  Rockchip.
+> > diff --git a/drivers/iio/adc/rockchip_saradc.c b/drivers/iio/adc/rockch=
+ip_saradc.c
+> > index 582ba047c4a6..402b2210a682 100644
+> > --- a/drivers/iio/adc/rockchip_saradc.c
+> > +++ b/drivers/iio/adc/rockchip_saradc.c
+> > @@ -15,7 +15,11 @@
+> >   #include <linux/delay.h>
+> >   #include <linux/reset.h>
+> >   #include <linux/regulator/consumer.h>
+> > +#include <linux/iio/buffer.h>
+> >   #include <linux/iio/iio.h>
+> > +#include <linux/iio/trigger.h>
+> > +#include <linux/iio/trigger_consumer.h>
+> > +#include <linux/iio/triggered_buffer.h>
+> >  =20
+> >   #define SARADC_DATA			0x00
+> >  =20
+> > @@ -34,7 +38,6 @@
+> >   #define SARADC_TIMEOUT			msecs_to_jiffies(100)
+> >  =20
+> >   struct rockchip_saradc_data {
+> > -	int				num_bits;
+> >   	const struct iio_chan_spec	*channels;
+> >   	int				num_channels;
+> >   	unsigned long			clk_rate;
+> > @@ -49,8 +52,37 @@ struct rockchip_saradc {
+> >   	struct reset_control	*reset;
+> >   	const struct rockchip_saradc_data *data;
+> >   	u16			last_val;
+> > +	const struct iio_chan_spec *last_chan;
+> >   };
+> >  =20
+> > +static void rockchip_saradc_power_down(struct rockchip_saradc *info)
+> > +{
+> > +	/* Clear irq & power down adc */
+> > +	writel_relaxed(0, info->regs + SARADC_CTRL);
+> > +}
+> > +
+> > +static int rockchip_saradc_conversion(struct rockchip_saradc *info,
+> > +				   struct iio_chan_spec const *chan)
+> > +{
+> > +	reinit_completion(&info->completion);
+> > +
+> > +	/* 8 clock periods as delay between power up and start cmd */
+> > +	writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
+> > +
+> > +	info->last_chan =3D chan;
+> > +
+> > +	/* Select the channel to be used and trigger conversion */
+> > +	writel(SARADC_CTRL_POWER_CTRL
+> > +			| (chan->channel & SARADC_CTRL_CHN_MASK)
+> > +			| SARADC_CTRL_IRQ_ENABLE,
+> > +		   info->regs + SARADC_CTRL);
+> > +
+> > +	if (!wait_for_completion_timeout(&info->completion, SARADC_TIMEOUT))
+> > +		return -ETIMEDOUT;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >   static int rockchip_saradc_read_raw(struct iio_dev *indio_dev,
+> >   				    struct iio_chan_spec const *chan,
+> >   				    int *val, int *val2, long mask)
+> > @@ -62,24 +94,12 @@ static int rockchip_saradc_read_raw(struct iio_dev =
+*indio_dev,
+> >   	case IIO_CHAN_INFO_RAW:
+> >   		mutex_lock(&indio_dev->mlock);
+> >  =20
+> > -		reinit_completion(&info->completion);
+> > -
+> > -		/* 8 clock periods as delay between power up and start cmd */
+> > -		writel_relaxed(8, info->regs + SARADC_DLY_PU_SOC);
+> > -
+> > -		/* Select the channel to be used and trigger conversion */
+> > -		writel(SARADC_CTRL_POWER_CTRL
+> > -				| (chan->channel & SARADC_CTRL_CHN_MASK)
+> > -				| SARADC_CTRL_IRQ_ENABLE,
+> > -		       info->regs + SARADC_CTRL);
+> > -
+> > -		if (!wait_for_completion_timeout(&info->completion,
+> > -						 SARADC_TIMEOUT)) {
+> > -			writel_relaxed(0, info->regs + SARADC_CTRL);
+> > +		ret =3D rockchip_saradc_conversion(info, chan);
+> > +		if (ret) {
+> > +			rockchip_saradc_power_down(info);
+> >   			mutex_unlock(&indio_dev->mlock);
+> > -			return -ETIMEDOUT;
+> > +			return ret;
+> >   		}
+> > -
+> >   		*val =3D info->last_val;
+> >   		mutex_unlock(&indio_dev->mlock);
+> >   		return IIO_VAL_INT;
+> > @@ -91,7 +111,7 @@ static int rockchip_saradc_read_raw(struct iio_dev *=
+indio_dev,
+> >   		}
+> >  =20
+> >   		*val =3D ret / 1000;
+> > -		*val2 =3D info->data->num_bits;
+> > +		*val2 =3D chan->scan_type.realbits;
+> >   		return IIO_VAL_FRACTIONAL_LOG2;
+> >   	default:
+> >   		return -EINVAL;
+> > @@ -104,10 +124,9 @@ static irqreturn_t rockchip_saradc_isr(int irq, vo=
+id *dev_id)
+> >  =20
+> >   	/* Read value */
+> >   	info->last_val =3D readl_relaxed(info->regs + SARADC_DATA);
+> > -	info->last_val &=3D GENMASK(info->data->num_bits - 1, 0);
+> > +	info->last_val &=3D GENMASK(info->last_chan->scan_type.realbits - 1, =
+0);
+> >  =20
+> > -	/* Clear irq & power down adc */
+> > -	writel_relaxed(0, info->regs + SARADC_CTRL);
+> > +	rockchip_saradc_power_down(info);
+> >  =20
+> >   	complete(&info->completion);
+> >  =20
+> > @@ -118,51 +137,55 @@ static const struct iio_info rockchip_saradc_iio_=
+info =3D {
+> >   	.read_raw =3D rockchip_saradc_read_raw,
+> >   };
+> >  =20
+> > -#define ADC_CHANNEL(_index, _id) {				\
+> > +#define ADC_CHANNEL(_index, _id, _res) {			\
+> >   	.type =3D IIO_VOLTAGE,					\
+> >   	.indexed =3D 1,						\
+> >   	.channel =3D _index,					\
+> >   	.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW),		\
+> >   	.info_mask_shared_by_type =3D BIT(IIO_CHAN_INFO_SCALE),	\
+> >   	.datasheet_name =3D _id,					\
+> > +	.scan_index =3D _index,					\
+> > +	.scan_type =3D {						\
+> > +		.sign =3D 'u',					\
+> > +		.realbits =3D _res,				\
+> > +		.storagebits =3D 16,				\
+> > +		.endianness =3D IIO_LE,				\
+> > +	},							\
+> >   }
+> >  =20
+> >   static const struct iio_chan_spec rockchip_saradc_iio_channels[] =3D {
+> > -	ADC_CHANNEL(0, "adc0"),
+> > -	ADC_CHANNEL(1, "adc1"),
+> > -	ADC_CHANNEL(2, "adc2"),
+> > +	ADC_CHANNEL(0, "adc0", 10),
+> > +	ADC_CHANNEL(1, "adc1", 10),
+> > +	ADC_CHANNEL(2, "adc2", 10),
+> >   };
+> >  =20
+> >   static const struct rockchip_saradc_data saradc_data =3D {
+> > -	.num_bits =3D 10,
+> >   	.channels =3D rockchip_saradc_iio_channels,
+> >   	.num_channels =3D ARRAY_SIZE(rockchip_saradc_iio_channels),
+> >   	.clk_rate =3D 1000000,
+> >   };
+> >  =20
+> >   static const struct iio_chan_spec rockchip_rk3066_tsadc_iio_channels[=
+] =3D {
+> > -	ADC_CHANNEL(0, "adc0"),
+> > -	ADC_CHANNEL(1, "adc1"),
+> > +	ADC_CHANNEL(0, "adc0", 12),
+> > +	ADC_CHANNEL(1, "adc1", 12),
+> >   };
+> >  =20
+> >   static const struct rockchip_saradc_data rk3066_tsadc_data =3D {
+> > -	.num_bits =3D 12,
+> >   	.channels =3D rockchip_rk3066_tsadc_iio_channels,
+> >   	.num_channels =3D ARRAY_SIZE(rockchip_rk3066_tsadc_iio_channels),
+> >   	.clk_rate =3D 50000,
+> >   };
+> >  =20
+> >   static const struct iio_chan_spec rockchip_rk3399_saradc_iio_channels=
+[] =3D {
+> > -	ADC_CHANNEL(0, "adc0"),
+> > -	ADC_CHANNEL(1, "adc1"),
+> > -	ADC_CHANNEL(2, "adc2"),
+> > -	ADC_CHANNEL(3, "adc3"),
+> > -	ADC_CHANNEL(4, "adc4"),
+> > -	ADC_CHANNEL(5, "adc5"),
+> > +	ADC_CHANNEL(0, "adc0", 10),
+> > +	ADC_CHANNEL(1, "adc1", 10),
+> > +	ADC_CHANNEL(2, "adc2", 10),
+> > +	ADC_CHANNEL(3, "adc3", 10),
+> > +	ADC_CHANNEL(4, "adc4", 10),
+> > +	ADC_CHANNEL(5, "adc5", 10),
+> >   };
+> >  =20
+> >   static const struct rockchip_saradc_data rk3399_saradc_data =3D {
+> > -	.num_bits =3D 10,
+> >   	.channels =3D rockchip_rk3399_saradc_iio_channels,
+> >   	.num_channels =3D ARRAY_SIZE(rockchip_rk3399_saradc_iio_channels),
+> >   	.clk_rate =3D 1000000,
+> > @@ -193,6 +216,39 @@ static void rockchip_saradc_reset_controller(struc=
+t reset_control *reset)
+> >   	reset_control_deassert(reset);
+> >   }
+> >  =20
+> > +static irqreturn_t rockchip_saradc_trigger_handler(int irq, void *p)
+> > +{
+> > +	struct iio_poll_func *pf =3D p;
+> > +	struct iio_dev *i_dev =3D pf->indio_dev;
+> > +	struct rockchip_saradc *info =3D iio_priv(i_dev);
+> > +	u16 data[20]; =20
+> How about this:
+> #define MAX_CHANNEL_NUM 16
+
+Unfortunately this is a bit more complex than it seems.=20
+The buffer needs to be big enough for all the channels
++ a 8 byte aligned space to put the timestamp in.
+
+You can construct that in a fashion suitable to use in a
+macro but it's a bit more fiddly than simply being the
+maximum number of channels.
+
+> u16 data[MAX_CHANNEL_NUM];
+> > +	int ret;
+> > +	int i, j =3D 0;
+> > +
+> > +	mutex_lock(&i_dev->mlock);
+> > +
+> > +	for_each_set_bit(i, i_dev->active_scan_mask, i_dev->masklength) {
+> > +		const struct iio_chan_spec *chan =3D &i_dev->channels[i];
+> > +
+> > +		ret =3D rockchip_saradc_conversion(info, chan);
+> > +		if (ret) {
+> > +			rockchip_saradc_power_down(info);
+> > +			goto out;
+> > +		}
+> > +
+> > +		data[j] =3D info->last_val;
+> > +		j++;
+> > +	}
+> > +
+> > +	iio_push_to_buffers_with_timestamp(i_dev, data, iio_get_time_ns(i_dev=
+));
+> > +out:
+> > +	mutex_unlock(&i_dev->mlock);
+> > +
+> > +	iio_trigger_notify_done(i_dev->trig);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> >   static int rockchip_saradc_probe(struct platform_device *pdev)
+> >   {
+> >   	struct rockchip_saradc *info =3D NULL;
+> > @@ -315,12 +371,19 @@ static int rockchip_saradc_probe(struct platform_=
+device *pdev)
+> >   	indio_dev->channels =3D info->data->channels;
+> >   	indio_dev->num_channels =3D info->data->num_channels;
+> >  =20
+> > -	ret =3D iio_device_register(indio_dev);
+> > +	ret =3D iio_triggered_buffer_setup(indio_dev, NULL,
+> > +					 rockchip_saradc_trigger_handler, NULL); =20
+> devm_iio_triggered_buffer_setup seems better
+> >   	if (ret)
+> >   		goto err_clk;
+> >  =20
+> > +	ret =3D iio_device_register(indio_dev);
+> > +	if (ret)
+> > +		goto err_buffer_cleanup;
+> > +
+> >   	return 0;
+> >  =20
+> > +err_buffer_cleanup:
+> > +	iio_triggered_buffer_cleanup(indio_dev);
+> >   err_clk:
+> >   	clk_disable_unprepare(info->clk);
+> >   err_pclk:
+> >  =20
+> xxm@rock-chips.com
+>=20
+>=20
 
