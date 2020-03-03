@@ -7,55 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E09BC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D61C1C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 199FC2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF6E2072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258571;
-	bh=csGExRBkwGzlCGWjK4cPPFMFAbs96bjnmP6x1pCqZ8c=;
+	s=default; t=1583258581;
+	bh=mxbDHS6ejt+bC1CxSzwV5KFxMk1n1iUNt5JgMeuMNik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=flp3ml8CJ4gHnoLZQWTz9fTniWv5nVusSqNMZA4cYL4GzstLBpQ2/9SVqIy3/+D6e
-	 SbS7aPUdN7Aw7+OXh0p7jaUra0zBGVLITqrogxDrzVQ7aXSsR7G9IgSE0skfLwq2sD
-	 O9U511zXAdT1EiiP6Ri6iYbCGAzn+OnTDQU7SS2I=
+	b=ivJPnMsqNZQN4jtjkzJ+bGhzaayIkFmfNeLAW+RhXm+JLE29C75P+3qHIhaiMtj5E
+	 4Cbsh4T8OCv23XN32FkHY5bvipMLR4HfnNUpWq1YPr3P6uUSX5SVPJEwTCKFs1ADIB
+	 TVbpp+EQxQ2jxVcGK1MdPZ4QTGQ0aga/+kVnhSwQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388239AbgCCSCd (ORCPT
+        id S2388135AbgCCSCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:02:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47186 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:02:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388227AbgCCSCb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:02:31 -0500
+        id S2388122AbgCCSCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:02:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA0E02072D;
-        Tue,  3 Mar 2020 18:02:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F5FD2072D;
+        Tue,  3 Mar 2020 18:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258550;
-        bh=csGExRBkwGzlCGWjK4cPPFMFAbs96bjnmP6x1pCqZ8c=;
+        s=default; t=1583258522;
+        bh=mxbDHS6ejt+bC1CxSzwV5KFxMk1n1iUNt5JgMeuMNik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XAbmRgh8kkXq6H7vq7rYhZ6ZFC1ETFYmbDI4r2u93oZSAOqUbEsPMSCDEb4IAwVT/
-         LZUIu0Wu98tN/lQXhsAHOZbTbCsyJm+gGS8HvQwFGTO62MP4EnBtDiloei7gDU1iF5
-         R/GNG1y8gEkzYYpgGrtHqU4bZ9UPD4f/3Aiteqjg=
+        b=njdq+3XLoqo2kM+bVKxMI+lWW8LS7bPkMwf8csx9i2QvFCD+DlRQoIfqE1MwD4TGm
+         s6eBVvF3MwC/McSqpq4Y4SoHPiucOTYoQkrUOvq6Ys8vK5ruXZNen06jUaUm3WLTKd
+         3WDuDEwEq4PFxsdjNDVgfBfUtjty/rq2q1K4y87A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Anton Blanchard <anton@samba.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Richter <tmricht@linux.vnet.ibm.com>,
-        yuzhoujian@didichuxing.com,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>
-Subject: [PATCH 4.19 74/87] perf stat: Use perf_evsel__is_clocki() for clock events
-Date:   Tue,  3 Mar 2020 18:44:05 +0100
-Message-Id: <20200303174356.909524760@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: [PATCH 4.19 82/87] thermal: brcmstb_thermal: Do not use DT coefficients
+Date:   Tue,  3 Mar 2020 18:44:13 +0100
+Message-Id: <20200303174357.652862314@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -68,41 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit eb08d006054e7e374592068919e32579988602d4 upstream.
+commit e1ff6fc22f19e2af8adbad618526b80067911d40 upstream.
 
-We already have function to check if a given event is either
-SW_CPU_CLOCK or SW_TASK_CLOCK. Utilize it.
+At the time the brcmstb_thermal driver and its binding were merged, the
+DT binding did not make the coefficients properties a mandatory one,
+therefore all users of the brcmstb_thermal driver out there have a non
+functional implementation with zero coefficients. Even if these
+properties were provided, the formula used for computation is incorrect.
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Anton Blanchard <anton@samba.org>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
-Cc: yuzhoujian@didichuxing.com
-Link: http://lkml.kernel.org/r/20181115095533.16930-1-ravi.bangoria@linux.ibm.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Tommi Rantala <tommi.t.rantala@nokia.com>
+The coefficients are entirely process specific (right now, only 28nm is
+supported) and not board or SoC specific, it is therefore appropriate to
+hard code them in the driver given the compatibility string we are
+probed with which has to be updated whenever a new process is
+introduced.
+
+We remove the existing coefficients definition since subsequent patches
+are going to add support for a new process and will introduce new
+coefficients as well.
+
+Fixes: 9e03cf1b2dd5 ("thermal: add brcmstb AVS TMON driver")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Link: https://lore.kernel.org/r/20200114190607.29339-2-f.fainelli@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/perf/util/stat-shadow.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/thermal/broadcom/brcmstb_thermal.c |   31 ++++++++---------------------
+ 1 file changed, 9 insertions(+), 22 deletions(-)
 
---- a/tools/perf/util/stat-shadow.c
-+++ b/tools/perf/util/stat-shadow.c
-@@ -212,8 +212,7 @@ void perf_stat__update_shadow_stats(stru
+--- a/drivers/thermal/broadcom/brcmstb_thermal.c
++++ b/drivers/thermal/broadcom/brcmstb_thermal.c
+@@ -58,7 +58,7 @@
+ #define AVS_TMON_TP_TEST_ENABLE		0x20
  
- 	count *= counter->scale;
+ /* Default coefficients */
+-#define AVS_TMON_TEMP_SLOPE		-487
++#define AVS_TMON_TEMP_SLOPE		487
+ #define AVS_TMON_TEMP_OFFSET		410040
  
--	if (perf_evsel__match(counter, SOFTWARE, SW_TASK_CLOCK) ||
--	    perf_evsel__match(counter, SOFTWARE, SW_CPU_CLOCK))
-+	if (perf_evsel__is_clock(counter))
- 		update_runtime_stat(st, STAT_NSECS, 0, cpu, count);
- 	else if (perf_evsel__match(counter, HARDWARE, HW_CPU_CYCLES))
- 		update_runtime_stat(st, STAT_CYCLES, ctx, cpu, count);
+ /* HW related temperature constants */
+@@ -117,23 +117,12 @@ struct brcmstb_thermal_priv {
+ 	struct thermal_zone_device *thermal;
+ };
+ 
+-static void avs_tmon_get_coeffs(struct thermal_zone_device *tz, int *slope,
+-				int *offset)
+-{
+-	*slope = thermal_zone_get_slope(tz);
+-	*offset = thermal_zone_get_offset(tz);
+-}
+-
+ /* Convert a HW code to a temperature reading (millidegree celsius) */
+ static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
+ 					u32 code)
+ {
+-	const int val = code & AVS_TMON_TEMP_MASK;
+-	int slope, offset;
+-
+-	avs_tmon_get_coeffs(tz, &slope, &offset);
+-
+-	return slope * val + offset;
++	return (AVS_TMON_TEMP_OFFSET -
++		(int)((code & AVS_TMON_TEMP_MAX) * AVS_TMON_TEMP_SLOPE));
+ }
+ 
+ /*
+@@ -145,20 +134,18 @@ static inline int avs_tmon_code_to_temp(
+ static inline u32 avs_tmon_temp_to_code(struct thermal_zone_device *tz,
+ 					int temp, bool low)
+ {
+-	int slope, offset;
+-
+ 	if (temp < AVS_TMON_TEMP_MIN)
+-		return AVS_TMON_TEMP_MAX; /* Maximum code value */
+-
+-	avs_tmon_get_coeffs(tz, &slope, &offset);
++		return AVS_TMON_TEMP_MAX;	/* Maximum code value */
+ 
+-	if (temp >= offset)
++	if (temp >= AVS_TMON_TEMP_OFFSET)
+ 		return 0;	/* Minimum code value */
+ 
+ 	if (low)
+-		return (u32)(DIV_ROUND_UP(offset - temp, abs(slope)));
++		return (u32)(DIV_ROUND_UP(AVS_TMON_TEMP_OFFSET - temp,
++					  AVS_TMON_TEMP_SLOPE));
+ 	else
+-		return (u32)((offset - temp) / abs(slope));
++		return (u32)((AVS_TMON_TEMP_OFFSET - temp) /
++			      AVS_TMON_TEMP_SLOPE);
+ }
+ 
+ static int brcmstb_get_temp(void *data, int *temp)
 
 
