@@ -2,135 +2,128 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8D1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F2C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9E221739
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="a75aZgZ0"
+	by mail.kernel.org (Postfix) with ESMTP id 0F81C215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727704AbgCCHtO (ORCPT
+        id S1727717AbgCCHtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:49:14 -0500
-Received: from mail-eopbgr80049.outbound.protection.outlook.com ([40.107.8.49]:51501
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727498AbgCCHtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 02:49:16 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:34818 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbgCCHtN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Mar 2020 02:49:13 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EaA6kqm5JxinSPSiCHaCnqJAnunHSpCYAvksx798iMm5mThs0vI8HleJyXEnuu6tvA7fNKWxetV+zcZEI4TqvXrsTGDMPjVcDBp35qDx6SdNEyMnIOmUhHk3CeobxnKzunNpXvG5zFuSr9d6QxREYec7m5frnWWIaDEHM9dkGgd6+5JaGumwL9w6gox051amHw1CYVVkciqrNTKHXsTJMOhdLkcLYxlDzBZ87g3y6zHCZviUYlpP1vuxXwP030Areh1gGzZyqQ8Vy8Z3RVxZcaABCVtiA2EzPFmzf0pMPncaLAGf1K2PEPRM6/W2Y9049+1Gu+D6eFSOkD1W6EzkDg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P0ilMC45hFArsUfA3cj3I7Yny8LoukivuI7X2yeQuUc=;
- b=VfGDC+pCSRcLGwZTozBl4lKQMVQ0T6o4GUfobPxeF5VxxucN2yXJ4OS2M7oV0cQKwYte4j9OebplokTxIS/UAu3MfO3lLMolzAHNJxhIuuC5MRE+5yz7nKZEZbMAqsNOpRsIyaE3ayLgNbjyS4MYYmGtp0Od3EZQlBFMFsLbStqUVoX7nM0oEYuqcDVd1I29bdBoYz0HV9bnPxjAaECmotyH5cYiLe0i3OxSxfPSPNEYJj8Gm8+qf3BDKssNCF6s7S2d94xN/R6ZGBzBWGjxf+mr4cq4bgIgAKiBs1IzYf+5BhIwROdb8dvYHeAww8RpYwgeTt1RlXueXCmnceZ00w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=P0ilMC45hFArsUfA3cj3I7Yny8LoukivuI7X2yeQuUc=;
- b=a75aZgZ0VGF/PvuxpoGxC3xPztivXf4ZVgjA1YGwgsRStt7yaxSm9nEg2vxVzkW8B1z7kgVcAbKFnBU7YtHzrBIg8pAikbxU18m0zEHyV0bSpBBwVqrmR4dSnbYOMxud67MbYqTOI4ITlLSk1nxrfbKeQJLahAOV4pqDoVaLigQ=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4114.eurprd04.prod.outlook.com (52.134.94.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.18; Tue, 3 Mar 2020 07:49:09 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
- 07:49:09 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com, o.rempel@pengutronix.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, leonard.crestez@nxp.com, aisheng.dong@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V5 1/4] dt-bindings: mailbox: imx-mu: add SCU MU support
-Date:   Tue,  3 Mar 2020 15:42:36 +0800
-Message-Id: <1583221359-9285-2-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583221359-9285-1-git-send-email-peng.fan@nxp.com>
-References: <1583221359-9285-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0250.apcprd06.prod.outlook.com
- (2603:1096:4:ac::34) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+Received: by mail-io1-f69.google.com with SMTP id w16so1741742iot.2
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 23:49:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ZGg9d9RlpkSp9tiCdOBj7hjE3h8DLuUCRNUsn/fFdXk=;
+        b=U7cdaeAMetpt/9C3/bDwioJOanM/Ca4qk1Yn68dK8VoN2mBgfHR/4YhH8BiXch1T34
+         eZqQ18r9JTI6CcLxCEiOO49BtlW7BRnvL7zuZhmgI53VPvQaSlZmsgKcRqvIdbi4t6x/
+         nl+9Hg96DVIaeqd+Xwb7jZ4SC6Q1ZKCViOA81Vn8dqlY3AggMMsBuP5+tY0061CP6RBT
+         V3p6/Om+e7U0sFzrG+2bBsYVWXzU6g7f+BOlq+UfOUaFUEFsbuW1ewWKUOkH6/ivR23q
+         z8hzbTkotUphy+kYlJ0TtcsM0/l/y2EKLzjamTVZrnzndSspns6vz5Bdg2r/S0oSMadL
+         5PlA==
+X-Gm-Message-State: ANhLgQ3MAqKVQIXdwNXfTAPRxTZqYNORjTS7C7k/giRNctheL4PlqdpX
+        c/bD6bhQsdcXhFqI49wITBi6/Z5koFi9h24zAvv2QE81LZ2W
+X-Google-Smtp-Source: ADFU+vtq+Z0tEgLDgWc5E+/2DcRrLjUJQjPO+lwYFDXxBFzQQa9nltg2I6T05x3FDEkDFpd29Ba1cz1kElMF5vTpjV48wKj1xo52
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0250.apcprd06.prod.outlook.com (2603:1096:4:ac::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2772.15 via Frontend Transport; Tue, 3 Mar 2020 07:49:05 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 3c41d93a-52d1-4246-1634-08d7bf475b80
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4114:|AM0PR04MB4114:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB4114FD0D0C77DB97011BA62288E40@AM0PR04MB4114.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
-X-Forefront-PRVS: 03319F6FEF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(199004)(189003)(8936002)(69590400007)(52116002)(9686003)(6486002)(5660300002)(6512007)(8676002)(66946007)(81166006)(66556008)(66476007)(81156014)(26005)(36756003)(6666004)(956004)(478600001)(86362001)(4326008)(2906002)(2616005)(316002)(16526019)(6506007)(186003)(15650500001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4114;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LLx4xmkKI1ZUO7sLDbzxBj4f4sEJuH4qnEnLbkJaGU/YIKWtxmboUAR/WMQlsuMnv94IsfYiGjTahTEFS9IVt8LSSgemxGV36X867fhaJaLuFVl+FCf46podqQJnjFoR3pIyPaC8jmXBX5uFDCt+IftEsqALXdOwidLgstPCYQA9SPVkaKn5I8VPFr0ZzMSRjf7h2AOaga8E4lnXSolUCqPGaH6CvqPUt0/t2P3cfE0kXYsGlBTbIyg2E0VGZAaNse/2AT7S4OJhsPdwGncatiG7gykKCti8mB5Z9dC8tArWXW+lIEEoWvTdwGEiwCgq1J6i2pYSaQX7bHwVG5KyAkwa1UvBNo9l9X4nW8SDIidclfMpoWdj1pxTexKqek+ar3WEa/g7NsAfCKxbq/Uv7H0CmIRCcgxRIc6ZVGV2nAd31YkWKO5DzFRd8yrigBkuhfun1i3mC1rEvhFpL/bgb4flAOWOe4axoopQc7h6Zw2jciuQGAGPxEPq3uQXlpPf
-X-MS-Exchange-AntiSpam-MessageData: bM2OCBepqOo9RDZ9FIV4ru4VEzksmYUzp1x8BoYtlwdLMd+gG/8D1mw46w8N4CY2x1llmIzraMEOiBrgOwgv65GHTgBaSl/QOq7C2cv92G4UHCkr9gEu2ATVNgs713ekbIkbXoTcnCukCRAEVuIgyw==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3c41d93a-52d1-4246-1634-08d7bf475b80
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 07:49:09.8606
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bSpfhZ1FuvGC3EOYRep+dGsPCz5U4BUqGZW89JAmZro/U61ClFqrKlAenEwdOJHRdW+tTeq+7jU7hZ+mEW3SEg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4114
+X-Received: by 2002:a6b:2c0c:: with SMTP id s12mr2801014ios.91.1583221752863;
+ Mon, 02 Mar 2020 23:49:12 -0800 (PST)
+Date:   Mon, 02 Mar 2020 23:49:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000002e20b9059fee8a94@google.com>
+Subject: WARNING in idr_destroy
+From:   syzbot <syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com>
+To:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
+        mripard@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+Hello,
 
-i.MX8/8X SCU MU is dedicated for communication between SCU
-and Cortex-A cores from hardware design, it could not be reused
-for other purpose. To use SCU MU more effectivly, add "fsl,imx8-scu-mu"
-compatile to support fast IPC.
+syzbot found the following crash on:
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
+HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10e978e3e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+dashboard link: https://syzkaller.appspot.com/bug?extid=05835159fe322770fe3d
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e978e3e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10b1a819e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
+
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
+R13: 00007fc6b3362d90 R14: 0000000000000004 R15: 000000000000002d
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 12260 at lib/radix-tree.c:682 radix_tree_free_nodes lib/radix-tree.c:682 [inline]
+WARNING: CPU: 0 PID: 12260 at lib/radix-tree.c:682 idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 12260 Comm: syz-executor386 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ panic+0x264/0x7a9 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1b6/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:radix_tree_free_nodes lib/radix-tree.c:682 [inline]
+RIP: 0010:idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
+Code: b5 63 f9 48 89 df 48 c7 c6 c0 0a 13 88 e8 6a ce 50 f9 4c 3b 65 b8 74 57 e8 cf b5 63 f9 4d 89 fc e9 67 ff ff ff e8 c2 b5 63 f9 <0f> 0b eb d5 89 f9 80 e1 07 38 c1 7c 84 e8 c0 de a0 f9 e9 7a ff ff
+RSP: 0018:ffffc90005107ba0 EFLAGS: 00010293
+RAX: ffffffff881363be RBX: ffff888087dba998 RCX: ffff888094062300
+RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff888087dba988
+RBP: ffffc90005107be8 R08: ffffffff88136330 R09: ffffed1012a78181
+R10: ffffed1012a78181 R11: 0000000000000000 R12: ffff888087dba980
+R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
+ drm_mode_create_lease_ioctl+0x1347/0x1860 drivers/gpu/drm/drm_lease.c:583
+ drm_ioctl_kernel+0x2cf/0x410 drivers/gpu/drm/drm_ioctl.c:786
+ drm_ioctl+0x52f/0x890 drivers/gpu/drm/drm_ioctl.c:886
+ vfs_ioctl fs/ioctl.c:47 [inline]
+ ksys_ioctl fs/ioctl.c:763 [inline]
+ __do_sys_ioctl fs/ioctl.c:772 [inline]
+ __se_sys_ioctl+0x113/0x190 fs/ioctl.c:770
+ __x64_sys_ioctl+0x7b/0x90 fs/ioctl.c:770
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x44a4b9
+Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b cc fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fc6b3362d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 000000000044a4b9
+RDX: 0000000020000040 RSI: ffffffffffffffc6 RDI: 0000000000000003
+RBP: 00000000006dbc20 R08: 0000000000000001 R09: 0000000000000039
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
+R13: 00007fc6b3362d90 R14: 0000000000000004 R15: 000000000000002d
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
+
 ---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-V5:
- None
-V4:
- None
-V3:
- New patch
-
- Documentation/devicetree/bindings/mailbox/fsl,mu.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-index 9c43357c5924..31486c9f6443 100644
---- a/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-+++ b/Documentation/devicetree/bindings/mailbox/fsl,mu.txt
-@@ -23,6 +23,8 @@ Required properties:
- 		be included together with SoC specific compatible.
- 		There is a version 1.0 MU on imx7ulp, use "fsl,imx7ulp-mu"
- 		compatible to support it.
-+		To communicate with i.MX8 SCU, "fsl,imx8-mu-scu" could be
-+		used for fast IPC
- - reg :		Should contain the registers location and length
- - interrupts :	Interrupt number. The interrupt specifier format depends
- 		on the interrupt controller parent.
--- 
-2.16.4
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
