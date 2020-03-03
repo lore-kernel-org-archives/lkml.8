@@ -2,86 +2,102 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 894A5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 694A6C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F87D20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nw5ituQz"
+	by mail.kernel.org (Postfix) with ESMTP id 44DF820728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbgCCSh1 (ORCPT
+        id S1731367AbgCCSkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:37:27 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41918 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCCSh0 (ORCPT
+        Tue, 3 Mar 2020 13:40:45 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:45149 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728787AbgCCSko (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:37:26 -0500
-Received: by mail-io1-f65.google.com with SMTP id m25so4718327ioo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 10:37:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=m9WYQEOpVWGproVMAv07ziOTdPLiRIDc+HJ/iWbkJV8=;
-        b=nw5ituQz/pxZjKMazbeyIO9kVrzTCthyRCgmJ6Ar5UhswHJ6/p5LDuVy/3Mdr+U7/K
-         dmSH9Z115uy9rWM1d2V+eTGy6i/WW5va2/nPuq/+WaOBMMZwnCwk9pegwRJy/s41GdVZ
-         gbrjXviV3QRqt7vNyaIoq+OS/YcD7SbY/Hk7uRnTRFlM5B/FpscRPgfstnrFF2kKdZuf
-         +vy2yrmyPWKKW0Ej6NwYTqac32h/GmxUhjiHOqy/kI+PILBIZQ4+ojXQeEYYJjn6gGf1
-         2pMo+bFxnv9YxHWLZOjfYCEdgZeLVJLFzWp2J0rXkNsVq6uEPlSNZ94AEs7+aOriMJLu
-         6Vuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=m9WYQEOpVWGproVMAv07ziOTdPLiRIDc+HJ/iWbkJV8=;
-        b=HMT5KtoOxHHmIyE1zoUA36L9xhLOKieHihf8UXUU9aL+4S1K9EhpoZqgUVuTYXafQE
-         c6QkxRfUoKC70R0+wxbC48889K0VI+uLbwckaWH70cLcylBguQNMt6rDevrC8hsPKAnX
-         01piPQtIXdcy4KeuThLihcZ3BOJDSmQDm84gs8TOOy8sf8fs3ttli74ih7ErKiBjPvNl
-         5yGPRsG2qz5hNI2nEzWtR2R7gUk8ulI8nrKQcmwuNWowfIyvzDYsK3lI0Pj8K/iRFHay
-         PZieF7ORivaV5La+iO5Gbfp0y+iiEpCnnDZwB3YgYfzVW+n9BeI3HbJN6FNt4qpCaTi8
-         ubag==
-X-Gm-Message-State: ANhLgQ2HJBB8mVlS3mTP6gHIcqywYOW3LifpBLYg65JZQwz1kVPrp89c
-        nZ2uWd1dZvl5kW9L2hMjmEO2dTnPh8sumLq+JK+4Mg==
-X-Google-Smtp-Source: ADFU+vsbEoLs/s4b8PtMM3X7o6dJ75+m8cmCT11wPJXYP+bN2I4AMLKekRt07jPvqjI6HHPiQWatQKoNCs0R+jPHFxI=
-X-Received: by 2002:a6b:e807:: with SMTP id f7mr5197526ioh.26.1583260645891;
- Tue, 03 Mar 2020 10:37:25 -0800 (PST)
+        Tue, 3 Mar 2020 13:40:44 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j9CTA-0003Uu-LP; Tue, 03 Mar 2020 19:40:40 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F00981C1A9F;
+        Tue,  3 Mar 2020 19:40:39 +0100 (CET)
+Date:   Tue, 03 Mar 2020 18:40:39 -0000
+From:   "tip-bot2 for Cyril Hrubis" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: timers/urgent] sys/sysinfo: Respect boottime inside time namespace
+Cc:     Cyril Hrubis <chrubis@suse.cz>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200303150638.7329-1-chrubis@suse.cz>
+References: <20200303150638.7329-1-chrubis@suse.cz>
 MIME-Version: 1.0
-References: <20200302235709.27467-1-sean.j.christopherson@intel.com> <20200302235709.27467-65-sean.j.christopherson@intel.com>
-In-Reply-To: <20200302235709.27467-65-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 3 Mar 2020 10:37:14 -0800
-Message-ID: <CALMp9eRuT=Zi_JoBmmRyMzid7RF3MpYMjXCrOMA9cvqOO06C9w@mail.gmail.com>
-Subject: Re: [PATCH v2 64/66] KVM: nSVM: Expose SVM features to L1 iff nested
- is enabled
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <158326083954.28353.16922158200341050554.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 3:57 PM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> Set SVM feature bits in KVM capabilities if and only if nested=true, KVM
-> shouldn't advertise features that realistically can't be used.  Use
-> kvm_cpu_cap_has(X86_FEATURE_SVM) to indirectly query "nested" in
-> svm_set_supported_cpuid() in anticipation of moving CPUID 0x8000000A
-> adjustments into common x86 code.
+The following commit has been merged into the timers/urgent branch of tip:
 
-Why not go ahead and report the SVM feature bits regardless of
-"nested," and lock SVM off in VM_CR when nested=false? That would be
-more like hardware behavior.
+Commit-ID:     ecc421e05bab97cf3ff4fe456ade47ef84dba8c2
+Gitweb:        https://git.kernel.org/tip/ecc421e05bab97cf3ff4fe456ade47ef84dba8c2
+Author:        Cyril Hrubis <chrubis@suse.cz>
+AuthorDate:    Tue, 03 Mar 2020 16:06:38 +01:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 03 Mar 2020 19:34:32 +01:00
+
+sys/sysinfo: Respect boottime inside time namespace
+
+The sysinfo() syscall includes uptime in seconds but has no correction for
+time namespaces which makes it inconsistent with the /proc/uptime inside of
+a time namespace.
+
+Add the missing time namespace adjustment call.
+
+Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Dmitry Safonov <dima@arista.com>
+Link: https://lkml.kernel.org/r/20200303150638.7329-1-chrubis@suse.cz
+
+---
+ kernel/sys.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/sys.c b/kernel/sys.c
+index f9bc5c3..d325f3a 100644
+--- a/kernel/sys.c
++++ b/kernel/sys.c
+@@ -47,6 +47,7 @@
+ #include <linux/syscalls.h>
+ #include <linux/kprobes.h>
+ #include <linux/user_namespace.h>
++#include <linux/time_namespace.h>
+ #include <linux/binfmts.h>
+ 
+ #include <linux/sched.h>
+@@ -2546,6 +2547,7 @@ static int do_sysinfo(struct sysinfo *info)
+ 	memset(info, 0, sizeof(struct sysinfo));
+ 
+ 	ktime_get_boottime_ts64(&tp);
++	timens_add_boottime(&tp);
+ 	info->uptime = tp.tv_sec + (tp.tv_nsec ? 1 : 0);
+ 
+ 	get_avenrun(info->loads, 0, SI_LOAD_SHIFT - FSHIFT);
