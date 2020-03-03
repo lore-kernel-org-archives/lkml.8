@@ -2,111 +2,127 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FD8C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E92EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B3D420866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:11:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="OtwE4L35"
+	by mail.kernel.org (Postfix) with ESMTP id DF54320838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbgCCOLE (ORCPT
+        id S1729157AbgCCOLO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:11:04 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:37648 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727604AbgCCOLD (ORCPT
+        Tue, 3 Mar 2020 09:11:14 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:44817 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCCOLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:11:03 -0500
-Received: by mail-io1-f68.google.com with SMTP id c17so3709879ioc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:11:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=mTx2plxg9Df6IflSHbJKT5bYL5iIl+THZm0QXJzfcTo=;
-        b=OtwE4L35EOBWYLiqou7S0JQAG1/jjvkjvAnIQCw4HxRHQWuqRBJNy7eTtdd1KFu4gY
-         ynNB7Dm+GKQK5xP0ltYldY9reVYrX99cEQjv5EP8Q77AlruXFxhAM01FlqxVUJHbNfpj
-         57B4N00jJ4X+t4XZ8dFG62Jfh9BDAa3By5KO0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=mTx2plxg9Df6IflSHbJKT5bYL5iIl+THZm0QXJzfcTo=;
-        b=sJEcupZ0E6VVhZ5Lih1rLjbMKXrKpMYdWV9PbbLDawOLX+2DPDWGNFqtO/5Pl5AMev
-         2mpNTIZHzifGQZp4r1NxabqBxyZi0IL0TSNJCnvGZqtOO29TJPC/99EXyHEfM41fYAJJ
-         7RIszq+KVpK9lOblhRFIZolaA9KGyI08+YwpxhCwQshpfFuIpg/uz2HOnA8w3ADd4LdZ
-         nzBLZcys0hpzDis0goWa5momuMYcQxZH87X+5jZOj2yiAjilnhk/yN2Xra3MjjQt73HP
-         W4f+Ik6Y7+Isv7xhmiFlh1jhJk88mXwoFV87hv4UEI00/pkVMm7EFSQSDKVEyHX2zfYm
-         IBGg==
-X-Gm-Message-State: ANhLgQ0Bw+xomLqmqm5g9dfGkkbGyLEy3QBjwNa+3wVhhUzmkDsnE30e
-        phbir/ttqzGjTfHMVLI/haYp9KhpenxhBbXeP4hEiQ==
-X-Google-Smtp-Source: ADFU+vtLRyHBggE8dM0IQenq5myGtycP6n4bf/pwe+192e1gRcnjD3MAj+3seh4Y8IVdPCMKjFwHFg+xWSJq2cSKwCY=
-X-Received: by 2002:a02:9f04:: with SMTP id z4mr1393539jal.35.1583244662034;
- Tue, 03 Mar 2020 06:11:02 -0800 (PST)
+        Tue, 3 Mar 2020 09:11:14 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1j98GK-0007Kd-2l; Tue, 03 Mar 2020 15:11:08 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:124:7ee3:e89c:2c00] (unknown [IPv6:2a03:f580:87bc:d400:124:7ee3:e89c:2c00])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id E74E14C57D7;
+        Tue,  3 Mar 2020 14:11:04 +0000 (UTC)
+Subject: Re: [PATCH v1] net: phy: tja11xx: add TJA1102 support
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Marek Vasut <marex@denx.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        David Jander <david@protonic.nl>,
+        Christian Herber <christian.herber@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+References: <AM0PR04MB70412893CFD2F553107148FC86E40@AM0PR04MB7041.eurprd04.prod.outlook.com>
+ <2228b5de-89e3-d61a-4af9-8d1a8a5eb311@pengutronix.de>
+ <20200303140912.GH31977@lunn.ch>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ mQINBFFVq30BEACtnSvtXHoeHJxG6nRULcvlkW6RuNwHKmrqoksispp43X8+nwqIFYgb8UaX
+ zu8T6kZP2wEIpM9RjEL3jdBjZNCsjSS6x1qzpc2+2ivjdiJsqeaagIgvy2JWy7vUa4/PyGfx
+ QyUeXOxdj59DvLwAx8I6hOgeHx2X/ntKAMUxwawYfPZpP3gwTNKc27dJWSomOLgp+gbmOmgc
+ 6U5KwhAxPTEb3CsT5RicsC+uQQFumdl5I6XS+pbeXZndXwnj5t84M+HEj7RN6bUfV2WZO/AB
+ Xt5+qFkC/AVUcj/dcHvZwQJlGeZxoi4veCoOT2MYqfR0ax1MmN+LVRvKm29oSyD4Ts/97cbs
+ XsZDRxnEG3z/7Winiv0ZanclA7v7CQwrzsbpCv+oj+zokGuKasofzKdpywkjAfSE1zTyF+8K
+ nxBAmzwEqeQ3iKqBc3AcCseqSPX53mPqmwvNVS2GqBpnOfY7Mxr1AEmxdEcRYbhG6Xdn+ACq
+ Dq0Db3A++3PhMSaOu125uIAIwMXRJIzCXYSqXo8NIeo9tobk0C/9w3fUfMTrBDtSviLHqlp8
+ eQEP8+TDSmRP/CwmFHv36jd+XGmBHzW5I7qw0OORRwNFYBeEuiOIgxAfjjbLGHh9SRwEqXAL
+ kw+WVTwh0MN1k7I9/CDVlGvc3yIKS0sA+wudYiselXzgLuP5cQARAQABtCZNYXJjIEtsZWlu
+ ZS1CdWRkZSA8bWtsQHBlbmd1dHJvbml4LmRlPokCVAQTAQoAPgIbAwIeAQIXgAULCQgHAwUV
+ CgkICwUWAgMBABYhBMFAC6CzmJ5vvH1bXCte4hHFiupUBQJcUsSbBQkM366zAAoJECte4hHF
+ iupUgkAP/2RdxKPZ3GMqag33jKwKAbn/fRqAFWqUH9TCsRH3h6+/uEPnZdzhkL4a9p/6OeJn
+ Z6NXqgsyRAOTZsSFcwlfxLNHVxBWm8pMwrBecdt4lzrjSt/3ws2GqxPsmza1Gs61lEdYvLST
+ Ix2vPbB4FAfE0kizKAjRZzlwOyuHOr2ilujDsKTpFtd8lV1nBNNn6HBIBR5ShvJnwyUdzuby
+ tOsSt7qJEvF1x3y49bHCy3uy+MmYuoEyG6zo9udUzhVsKe3hHYC2kfB16ZOBjFC3lH2U5An+
+ yQYIIPZrSWXUeKjeMaKGvbg6W9Oi4XEtrwpzUGhbewxCZZCIrzAH2hz0dUhacxB201Y/faY6
+ BdTS75SPs+zjTYo8yE9Y9eG7x/lB60nQjJiZVNvZ88QDfVuLl/heuIq+fyNajBbqbtBT5CWf
+ mOP4Dh4xjm3Vwlz8imWW/drEVJZJrPYqv0HdPbY8jVMpqoe5jDloyVn3prfLdXSbKPexlJaW
+ 5tnPd4lj8rqOFShRnLFCibpeHWIumqrIqIkiRA9kFW3XMgtU6JkIrQzhJb6Tc6mZg2wuYW0d
+ Wo2qvdziMgPkMFiWJpsxM9xPk9BBVwR+uojNq5LzdCsXQ2seG0dhaOTaaIDWVS8U/V8Nqjrl
+ 6bGG2quo5YzJuXKjtKjZ4R6k762pHJ3tnzI/jnlc1sXz
+Message-ID: <1fb184b1-4304-fa39-cd04-0608ef996f50@pengutronix.de>
+Date:   Tue, 3 Mar 2020 15:11:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <107666.1582907766@warthog.procyon.org.uk> <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home> <20200303130347.GA2302029@kroah.com>
- <20200303131434.GA2373427@kroah.com> <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
- <20200303134316.GA2509660@kroah.com>
-In-Reply-To: <20200303134316.GA2509660@kroah.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 3 Mar 2020 15:10:50 +0100
-Message-ID: <CAJfpegtFyZqSRzo3uuXp1S2_jJJ29DL=xAwKjpEGvyG7=AzabA@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Karel Zak <kzak@redhat.com>, David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200303140912.GH31977@lunn.ch>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 2:43 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
+On 3/3/20 3:09 PM, Andrew Lunn wrote:
+>>> Hi Oleksij, Heiner, Marc,
+>>>
+>>> You could also refer the solution implemented here as part of a TJA110x driver:
+>>> https://source.codeaurora.org/external/autoivnsw/tja110x_linux_phydev/about/
+>>
+>> OK, thank you!
+>>
+>> Suddenly, the solution in this driver is not mainlainable. It may match on
+>> ther PHYs with PHYID == 0.
+>>
+>> See this part of the code:
+>> #define NXP_PHY_ID_TJA1102P1      (0x00000000U)
+>> ...
+>> 	, {
+>> 	.phy_id = NXP_PHY_ID_TJA1102P1,
+>> 	.name = "TJA1102_p1",
+>> 	.phy_id_mask = NXP_PHY_ID_MASK,
+> 
+> Noooo
+> 
+> You cannot assume NXP is the only silicon vendor to manufacture broken
+> silicon with a PHY ID of 0.
 
-> > If buffer is too small to fit the whole file, return error.
->
-> Why?  What's wrong with just returning the bytes asked for?  If someone
-> only wants 5 bytes from the front of a file, it should be fine to give
-> that to them, right?
+ACK, we ruled that soultion out already :)
 
-I think we need to signal in some way to the caller that the result
-was truncated (see readlink(2), getxattr(2), getcwd(2)), otherwise the
-caller might be surprised.
+We'll look into your and Marek's suggestions.
 
->
-> > Verify that the number of bytes read matches the file size, otherwise
-> > return error (may need to loop?).
->
-> No, we can't "match file size" as sysfs files do not really have a sane
-> "size".  So I don't want to loop at all here, one-shot, that's all you
-> get :)
+Marc
 
-Hmm.  I understand the no-size thing.  But looping until EOF (i.e.
-until read return zero) might be a good idea regardless, because short
-reads are allowed.
-
-Thanks,
-Miklos
+-- 
+Pengutronix e.K.                 | Marc Kleine-Budde           |
+Embedded Linux                   | https://www.pengutronix.de  |
+Vertretung West/Dortmund         | Phone: +49-231-2826-924     |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-5555 |
