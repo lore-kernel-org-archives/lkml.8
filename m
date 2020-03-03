@@ -2,54 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3AAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92669C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346C62146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C0820CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258314;
-	bh=008dOLlFKIktXb24OrvAG80tGZUu59mSd3sOA31cZbA=;
+	s=default; t=1583258316;
+	bh=w9TY+lObuDVnEeEEHYOwlwmNRLvekgv4TfThDbtQvg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eqOsaIyAApDRWKL6+Uz4AsAjoH4UeEJgq1ma7LxkV6KKybtWhUWiKG7Lw+eBVHFSp
-	 FknEUTmaJRmtK1zV1+yUSkKb16FcgenWen1GCpUNfajIce6WSEaH1Iqz38YjHLw98z
-	 Kx/abCMoif+KZz+XAFdATGpsc14HArHlZTE3gmVs=
+	b=hlBCbhtxlH/dWd44ce9Bjn8W0PBiBaHPUaIL7dB/eKxf+lewJaUIvqD13TYGVdgRd
+	 usx6rIb3V4k/ZdqQK12IgCrsvhs8CjIKosgrMRqmxJCKEv9S3X0ciA551RgDzZTxvv
+	 mVtI+1+nHPPvzCyeooXW+1jGKAjAVZIMFu8ArFls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732995AbgCCR6c (ORCPT
+        id S2387421AbgCCR6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:58:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41324 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:58:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41384 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732859AbgCCR63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:58:29 -0500
+        id S2387410AbgCCR6c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D80A20728;
-        Tue,  3 Mar 2020 17:58:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10AB2206D5;
+        Tue,  3 Mar 2020 17:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258308;
-        bh=008dOLlFKIktXb24OrvAG80tGZUu59mSd3sOA31cZbA=;
+        s=default; t=1583258311;
+        bh=w9TY+lObuDVnEeEEHYOwlwmNRLvekgv4TfThDbtQvg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fKiL6KENobMFploB8KNNeJM7EbFKtPad30XeQrBiaJvVs4jRpDNUScNZqxLsPEvb9
-         egTIVO5Z7+zmziBnfLSQHENjAU3j0dmbxuvI46+Vvy8vf5sHrqgaHk5i18IFtEXsTY
-         xgr5aay1GyCJuoaehmNOkd2lsNUOoA1ncsAa5JKw=
+        b=zkzLe0syLkZoGb3DAfzdcXg92Ps4MkQSkVPjdOrpjK/XM7RKPj4zf3QWeGoYV7PY4
+         W9DOqvJJROGu7mP/1ZgsNnhXxOvpcQ/9viKSa+PRz5q2li7Bv2Zcl9jCpy1A/12mUn
+         /YdOWgY8OJhtaSGMPsAg1yCT1F0w4ifQw6QrNQH0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>,
-        Jon Cargille <jcargill@google.com>
-Subject: [PATCH 5.4 152/152] kvm: nVMX: VMWRITE checks unsupported field before read-only field
-Date:   Tue,  3 Mar 2020 18:44:10 +0100
-Message-Id: <20200303174320.103888736@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.4 132/152] perf hists browser: Restore ESC as "Zoom out" of DSO/thread/etc
+Date:   Tue,  3 Mar 2020 18:43:50 +0100
+Message-Id: <20200303174317.807421179@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -62,55 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-commit 693e02cc24090c379217138719d9d84e50036b24 upstream.
+commit 3f7774033e6820d25beee5cf7aefa11d4968b951 upstream.
 
-According to the SDM, VMWRITE checks to see if the secondary source
-operand corresponds to an unsupported VMCS field before it checks to
-see if the secondary source operand corresponds to a VM-exit
-information field and the processor does not support writing to
-VM-exit information fields.
+We need to set actions->ms.map since 599a2f38a989 ("perf hists browser:
+Check sort keys before hot key actions"), as in that patch we bail out
+if map is NULL.
 
-Fixes: 49f705c5324aa ("KVM: nVMX: Implement VMREAD and VMWRITE")
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Oliver Upton <oupton@google.com>
-Reviewed-by: Jon Cargille <jcargill@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 599a2f38a989 ("perf hists browser: Check sort keys before hot key actions")
+Link: https://lkml.kernel.org/n/tip-wp1ssoewy6zihwwexqpohv0j@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ tools/perf/ui/browsers/hists.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4741,6 +4741,12 @@ static int handle_vmwrite(struct kvm_vcp
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3054,6 +3054,7 @@ static int perf_evsel__hists_browse(stru
  
- 
- 	field = kvm_register_readl(vcpu, (((vmx_instruction_info) >> 28) & 0xf));
-+
-+	offset = vmcs_field_to_offset(field);
-+	if (offset < 0)
-+		return nested_vmx_failValid(vcpu,
-+			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
-+
- 	/*
- 	 * If the vCPU supports "VMWRITE to any supported field in the
- 	 * VMCS," then the "read-only" fields are actually read/write.
-@@ -4757,11 +4763,6 @@ static int handle_vmwrite(struct kvm_vcp
- 	if (!is_guest_mode(vcpu) && !is_shadow_field_rw(field))
- 		copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
- 
--	offset = vmcs_field_to_offset(field);
--	if (offset < 0)
--		return nested_vmx_failValid(vcpu,
--			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
--
- 	/*
- 	 * Some Intel CPUs intentionally drop the reserved bits of the AR byte
- 	 * fields on VMWRITE.  Emulate this behavior to ensure consistent KVM
+ 				continue;
+ 			}
++			actions->ms.map = map;
+ 			top = pstack__peek(browser->pstack);
+ 			if (top == &browser->hists->dso_filter) {
+ 				/*
 
 
