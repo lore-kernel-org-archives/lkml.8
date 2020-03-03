@@ -7,52 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5E6C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8684DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B05C214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE1820656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258556;
-	bh=0xlMtQIoyzAVvX8j4C4/77qTkqd8Dd9Gk4a4Bx7/u1U=;
+	s=default; t=1583258558;
+	bh=v1IbuT4NWyYic0LgpWGCsYhxjF2QjGfkvO9EqvZrVtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C7sOM3FQw9I3N+v9diJVLFL4SQZJIbpKObgMHsrup8N5pnCYOeMLz0atNM8pRT5e8
-	 3ZRs1EDy4MpsDsSSKkdjDQlW+d6JksuPb6lzM+ztlr8yBfLK6eAcqxLuDAPKxWo1L5
-	 frkNTzGMc3KX2tiZiylwYa7RE62qRVFxGzusMh/Y=
+	b=C0DE73cbAf1Ku6oJdstqQu5l1Rfb6K8RMCCMGEqi0pKN0/tL5UMnj1dOrwcfGlfaX
+	 bMR23YpLb0lh5H32LJCSpaEEaFwZ0M3HR8W7PCSDAK77fJiXWz0HL+iUpjx6RdtP7y
+	 +xwLoYzYHKtyfqGo+0BrbwIK+3cXp38Kx4vycfvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388249AbgCCSCf (ORCPT
+        id S2388259AbgCCSCh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:02:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47092 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:02:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388226AbgCCSC3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:02:29 -0500
+        id S2388244AbgCCSCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:02:34 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72E63206D5;
-        Tue,  3 Mar 2020 18:02:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2269B20866;
+        Tue,  3 Mar 2020 18:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258547;
-        bh=0xlMtQIoyzAVvX8j4C4/77qTkqd8Dd9Gk4a4Bx7/u1U=;
+        s=default; t=1583258552;
+        bh=v1IbuT4NWyYic0LgpWGCsYhxjF2QjGfkvO9EqvZrVtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aRwSnYhPBezdv2OpW4Tt0tUYbVTbUpHMtd1URhU+H5CHcH+c3qrXFEQnrIqkcOB9C
-         XcxsBruP9s/6InXIB6/55gxr88y/3kxS1L4OGrxdMTI/v0CSLdNGH+he2SdjCCehJI
-         fmtmemGo8o1H0OU8w2FD39p8xgFcFBAh8FQyHmAE=
+        b=TvSEryAWZzOjJBZsXgyjDOxQr+41BncYB5dXHmLn2Sg+E6klGOUzvNVKMKxc+38sR
+         zoHK4vA0PdJahSHyzt0jQjbNVlZX9XRguPXyZE++3wQ/tBa9p+yj1qytTY7JH0URBK
+         +Palot3G6jBhdOfxGBHOrSmuggJP5JKIIxgwVT7k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, sargun@sargun.me,
-        tj@kernel.org, xiexiuqi@huawei.com, xiezhipeng1@huawei.com,
-        Ingo Molnar <mingo@kernel.org>,
-        Vishnu Rangayyan <vishnu.rangayyan@apple.com>
-Subject: [PATCH 4.19 73/87] sched/fair: Fix O(nr_cgroups) in the load balancing path
-Date:   Tue,  3 Mar 2020 18:44:04 +0100
-Message-Id: <20200303174356.821996642@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@redhat.com>,
+        Anton Blanchard <anton@samba.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Richter <tmricht@linux.vnet.ibm.com>,
+        yuzhoujian@didichuxing.com,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Tommi Rantala <tommi.t.rantala@nokia.com>
+Subject: [PATCH 4.19 75/87] perf stat: Fix shadow stats for clock events
+Date:   Tue,  3 Mar 2020 18:44:06 +0100
+Message-Id: <20200303174356.997103456@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -65,127 +68,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 
-commit 039ae8bcf7a5f4476f4487e6bf816885fb3fb617 upstream.
+commit 57ddf09173c1e7d0511ead8924675c7198e56545 upstream.
 
-This re-applies the commit reverted here:
+Commit 0aa802a79469 ("perf stat: Get rid of extra clock display
+function") introduced scale and unit for clock events. Thus,
+perf_stat__update_shadow_stats() now saves scaled values of clock events
+in msecs, instead of original nsecs. But while calculating values of
+shadow stats we still consider clock event values in nsecs. This results
+in a wrong shadow stat values. Ex,
 
-  commit c40f7d74c741 ("sched/fair: Fix infinite loop in update_blocked_averages() by reverting a9e7f6544b9c")
+  # ./perf stat -e task-clock,cycles ls
+    <SNIP>
+              2.60 msec task-clock:u    #    0.877 CPUs utilized
+         2,430,564      cycles:u        # 1215282.000 GHz
 
-I.e. now that cfs_rq can be safely removed/added in the list, we can re-apply:
+Fix this by saving original nsec values for clock events in
+perf_stat__update_shadow_stats(). After patch:
 
- commit a9e7f6544b9c ("sched/fair: Fix O(nr_cgroups) in load balance path")
+  # ./perf stat -e task-clock,cycles ls
+    <SNIP>
+              3.14 msec task-clock:u    #    0.839 CPUs utilized
+         3,094,528      cycles:u        #    0.985 GHz
 
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: sargun@sargun.me
-Cc: tj@kernel.org
-Cc: xiexiuqi@huawei.com
-Cc: xiezhipeng1@huawei.com
-Link: https://lkml.kernel.org/r/1549469662-13614-3-git-send-email-vincent.guittot@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Vishnu Rangayyan <vishnu.rangayyan@apple.com>
+Suggested-by: Jiri Olsa <jolsa@redhat.com>
+Reported-by: Anton Blanchard <anton@samba.org>
+Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Thomas Richter <tmricht@linux.vnet.ibm.com>
+Cc: yuzhoujian@didichuxing.com
+Fixes: 0aa802a79469 ("perf stat: Get rid of extra clock display function")
+Link: http://lkml.kernel.org/r/20181116042843.24067-1-ravi.bangoria@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Tommi Rantala <tommi.t.rantala@nokia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/sched/fair.c |   43 ++++++++++++++++++++++++++++++++++---------
- 1 file changed, 34 insertions(+), 9 deletions(-)
+ tools/perf/util/stat-shadow.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -375,9 +375,10 @@ static inline void assert_list_leaf_cfs_
- 	SCHED_WARN_ON(rq->tmp_alone_branch != &rq->leaf_cfs_rq_list);
- }
- 
--/* Iterate through all cfs_rq's on a runqueue in bottom-up order */
--#define for_each_leaf_cfs_rq(rq, cfs_rq) \
--	list_for_each_entry_rcu(cfs_rq, &rq->leaf_cfs_rq_list, leaf_cfs_rq_list)
-+/* Iterate thr' all leaf cfs_rq's on a runqueue */
-+#define for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos)			\
-+	list_for_each_entry_safe(cfs_rq, pos, &rq->leaf_cfs_rq_list,	\
-+				 leaf_cfs_rq_list)
- 
- /* Do the two (enqueued) entities belong to the same group ? */
- static inline struct cfs_rq *
-@@ -474,8 +475,8 @@ static inline void assert_list_leaf_cfs_
+--- a/tools/perf/util/stat-shadow.c
++++ b/tools/perf/util/stat-shadow.c
+@@ -209,11 +209,12 @@ void perf_stat__update_shadow_stats(stru
+ 				    int cpu, struct runtime_stat *st)
  {
- }
+ 	int ctx = evsel_context(counter);
++	u64 count_ns = count;
  
--#define for_each_leaf_cfs_rq(rq, cfs_rq)	\
--		for (cfs_rq = &rq->cfs; cfs_rq; cfs_rq = NULL)
-+#define for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos)	\
-+		for (cfs_rq = &rq->cfs, pos = NULL; cfs_rq; cfs_rq = pos)
+ 	count *= counter->scale;
  
- static inline struct sched_entity *parent_entity(struct sched_entity *se)
- {
-@@ -7461,10 +7462,27 @@ static inline bool others_have_blocked(s
- 
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 
-+static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
-+{
-+	if (cfs_rq->load.weight)
-+		return false;
-+
-+	if (cfs_rq->avg.load_sum)
-+		return false;
-+
-+	if (cfs_rq->avg.util_sum)
-+		return false;
-+
-+	if (cfs_rq->avg.runnable_load_sum)
-+		return false;
-+
-+	return true;
-+}
-+
- static void update_blocked_averages(int cpu)
- {
- 	struct rq *rq = cpu_rq(cpu);
--	struct cfs_rq *cfs_rq;
-+	struct cfs_rq *cfs_rq, *pos;
- 	const struct sched_class *curr_class;
- 	struct rq_flags rf;
- 	bool done = true;
-@@ -7476,7 +7494,7 @@ static void update_blocked_averages(int
- 	 * Iterates the task_group tree in a bottom up fashion, see
- 	 * list_add_leaf_cfs_rq() for details.
- 	 */
--	for_each_leaf_cfs_rq(rq, cfs_rq) {
-+	for_each_leaf_cfs_rq_safe(rq, cfs_rq, pos) {
- 		struct sched_entity *se;
- 
- 		if (update_cfs_rq_load_avg(cfs_rq_clock_task(cfs_rq), cfs_rq))
-@@ -7487,6 +7505,13 @@ static void update_blocked_averages(int
- 		if (se && !skip_blocked_update(se))
- 			update_load_avg(cfs_rq_of(se), se, 0);
- 
-+		/*
-+		 * There can be a lot of idle CPU cgroups.  Don't let fully
-+		 * decayed cfs_rqs linger on the list.
-+		 */
-+		if (cfs_rq_is_decayed(cfs_rq))
-+			list_del_leaf_cfs_rq(cfs_rq);
-+
- 		/* Don't need periodic decay once load/util_avg are null */
- 		if (cfs_rq_has_blocked(cfs_rq))
- 			done = false;
-@@ -10272,10 +10297,10 @@ const struct sched_class fair_sched_clas
- #ifdef CONFIG_SCHED_DEBUG
- void print_cfs_stats(struct seq_file *m, int cpu)
- {
--	struct cfs_rq *cfs_rq;
-+	struct cfs_rq *cfs_rq, *pos;
- 
- 	rcu_read_lock();
--	for_each_leaf_cfs_rq(cpu_rq(cpu), cfs_rq)
-+	for_each_leaf_cfs_rq_safe(cpu_rq(cpu), cfs_rq, pos)
- 		print_cfs_rq(m, cpu, cfs_rq);
- 	rcu_read_unlock();
- }
+ 	if (perf_evsel__is_clock(counter))
+-		update_runtime_stat(st, STAT_NSECS, 0, cpu, count);
++		update_runtime_stat(st, STAT_NSECS, 0, cpu, count_ns);
+ 	else if (perf_evsel__match(counter, HARDWARE, HW_CPU_CYCLES))
+ 		update_runtime_stat(st, STAT_CYCLES, ctx, cpu, count);
+ 	else if (perf_stat_evsel__is(counter, CYCLES_IN_TX))
 
 
