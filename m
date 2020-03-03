@@ -7,159 +7,173 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2035C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36259C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:11:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875B72166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B82820828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:11:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KCka3Q2w"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvMOlYXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgCCQJ6 (ORCPT
+        id S1730152AbgCCQL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:09:58 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55662 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729537AbgCCQJ6 (ORCPT
+        Tue, 3 Mar 2020 11:11:27 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34625 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbgCCQL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:09:58 -0500
-Received: by mail-pj1-f65.google.com with SMTP id a18so1533567pjs.5;
-        Tue, 03 Mar 2020 08:09:57 -0800 (PST)
+        Tue, 3 Mar 2020 11:11:27 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z15so5110852wrl.1;
+        Tue, 03 Mar 2020 08:11:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PW2q1O1LawBhjKs2T037lJZGZjX7nCN1iWTrJRayolM=;
-        b=KCka3Q2wKj2xVhjSXAi8XIkgJ9mhNXB/kTDBT1C1NuPxqIl8xXd6pVByb9ojoZejpw
-         8TespAE8VKuf17GKiCRf6WiTmkKqznh4jQbzVppjBC3HK01CGZj/FjZHdhM9sRT7IPKz
-         52ALAGynVBSMhGEuE2ueaEumNrG6kvlIlTwrkOAhhr6IpG3iG9iA2vmVnrGZbs7z8LcR
-         99WgjY3WQyyqVBwQmWUxjBY+MFbULrzfoy1MpNME4AnJ/5qvU1+LzPfYgY/e/+0HKm+K
-         KK7Tx4FruMouiQ9+DhneMzPHoZTM0iuvYfFemkH4JPOPsPYGiM0l1DLAX3J2wzfsnRg8
-         XfmA==
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=+SzpTWQT3Ru6kg4f8Uj442Z+FLl17Fjj2BOSrwBP2tA=;
+        b=JvMOlYXWMq0Xw1p+AMSLlLQea6qJWe/imSAwECDX0rMvjouX6tXhiTzi6l9PrEOKZH
+         mdkAi2TI7TwqRHeOSAeN4q9w+Mfvk/US67aBFw14KS0w9HiygV3cRD7xJ9z5VRS3PXBr
+         1jaA30b2hzUR0OE/6lXyX2IVnqwBLNuda+OJC4XozRGsax9OtpUhBPfs8c9xgxYWsIqA
+         VuTKw5sjUPmNkpaU06pgtELNoVNP1YKm/LPYmN5gz9+5lVtFmcvVqJxFf5crA986u4HC
+         RRz7ZOhDNXYl+enXW+x20gh545dfWhHil10Ywy6BIlDvrtAIwOqafQWOWpl3U18e7JhH
+         mXOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PW2q1O1LawBhjKs2T037lJZGZjX7nCN1iWTrJRayolM=;
-        b=pYeovKXJ+HPlH/3vs7SxYliN1WDqVaP1a+VntqVn7kOymwTkJDfdoS6qbNZyo3leJS
-         NJ1+bKGK0nMhE4k4HcCNARd1p4wJVni3EjuyQhMYuYbsPdkv839EMyxPvOeP9/dW83Qy
-         tfaRTEYlge1lHFfOKyEB+9AtPfDnO7vn6JAxB1d4jL6wkteloGn8Ek/tY+3lA4b7kV6s
-         BBH2EPspH5j+6SQFTLK32hshtsS9+27Q357c94fkKRSJ2E/tensKmcoLSCiC9qUWxeC+
-         VWiGB2Fgl86qGjO05kyi1Fu4pWM0zmDxY4S8fC1b2FdBhuQskDRg+0Yn0NAfuDmoGmNx
-         klrw==
-X-Gm-Message-State: ANhLgQ2rSyhZCm2Vdxhl69qZzaTOJdGCDWHuWn/Q660WnbH1qZHSQbiq
-        TzRG9UOLYUr8LWVN12fZzQ==
-X-Google-Smtp-Source: ADFU+vvU5CjB5y9u06eyei85NMjbw5qrIk3jyjI8+yUjUqJ73mj64gxiHt9qRLQ+G4XUWNomDb87UQ==
-X-Received: by 2002:a17:90a:aa83:: with SMTP id l3mr4747518pjq.5.1583251797089;
-        Tue, 03 Mar 2020 08:09:57 -0800 (PST)
-Received: from madhuparna-HP-Notebook ([112.79.49.138])
-        by smtp.gmail.com with ESMTPSA id x65sm12449591pfd.34.2020.03.03.08.09.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Mar 2020 08:09:56 -0800 (PST)
-From:   Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-X-Google-Original-From: Madhuparna Bhowmik <change_this_user_name@gmail.com>
-Date:   Tue, 3 Mar 2020 21:39:06 +0530
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Amol Grover <frextrite@gmail.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH 1/2] drivers: base: power: main: Use built-in RCU list
- checking
-Message-ID: <20200303160810.GA5486@madhuparna-HP-Notebook>
-References: <20200228174630.8989-1-madhuparnabhowmik10@gmail.com>
- <CAJZ5v0jhw+cVm=ViiOtZgKr+a1L_PbeVPNXpsPbgghUvMPODSA@mail.gmail.com>
- <C2E57D31-A459-4F5F-8ECF-484FBB26C065@joelfernandes.org>
- <CAJZ5v0jTSKd_23fJhM+XUmFX_yTjcD+c_s1Jvi3HA1EmXPkzZw@mail.gmail.com>
- <CAEXW_YRL0kum5yVm+9V8i_PK2FcHfPeUOxJKZ+T8P3zqhATxJg@mail.gmail.com>
- <CAD=jOEZ3vdNC4qTMxptaXLjs7i8TCTYjeiv9vXhcapLSkrr9RQ@mail.gmail.com>
- <CAJZ5v0hee4FxeVub_ZkAYn9z8q1_ZLA_AcmTtS-w39VzSe0UxA@mail.gmail.com>
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+SzpTWQT3Ru6kg4f8Uj442Z+FLl17Fjj2BOSrwBP2tA=;
+        b=HFOvzmfMPAd44Y/EP9xF5KFdE4WA+USwNtRHyiKzDfODsEds1EdgXDUvXol3Oye5Wu
+         CqZnBHwlyLkWmrgemRW8E+JfBpT9hNpaKITHRqOb376DXcoPIDaEv3yQl7mPSziXhlrt
+         cf6jFTQARLQyGIESqNYNqVetT0Q5piJZkFi4jmuKCh7MfXrbvVhO6+mMKTrNzJvu5xXV
+         ZhdkXn1Vcr3rFdyP+d0fhNsHclrrG0rDS8rdtRi4b6ZuXP7Jy64PshDHhkkDMMuKjJUj
+         PsNCSEpcP4OnFeRphIlkK1Gyx256uEyiiRKmXJzVQrB3dxudqsMJfejxROg7Qn2bhRUx
+         5ORQ==
+X-Gm-Message-State: ANhLgQ2mYYUxOsQNK5No6A8/+TjgZUCvB0t99Pqd93b+IwPVdk9bseZn
+        uM+kUBZ5ZNnr9UGJYYA1ijDwBLcb
+X-Google-Smtp-Source: ADFU+vsxfAPm/x+IV3Wuxbup+iavPIjBhYZz58QDdng5ipw9V1mPOt2TMllv6EsxNgKf3ODQBhebjg==
+X-Received: by 2002:a5d:5743:: with SMTP id q3mr6227104wrw.135.1583251884664;
+        Tue, 03 Mar 2020 08:11:24 -0800 (PST)
+Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id s5sm32669295wru.39.2020.03.03.08.11.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 08:11:23 -0800 (PST)
+Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: Add initial support for
+ Pinebook Pro
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     Tobias Schramm <t.schramm@manjaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andy Yan <andy.yan@rock-chips.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nick Xie <nick@khadas.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>
+References: <20200229144817.355678-1-t.schramm@manjaro.org>
+ <20200229144817.355678-3-t.schramm@manjaro.org>
+ <bcc2c8d4-a2cd-58c1-89af-e42439f8f344@gmail.com>
+Message-ID: <850e60b0-c260-c184-839f-93b064388e32@gmail.com>
+Date:   Tue, 3 Mar 2020 17:11:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hee4FxeVub_ZkAYn9z8q1_ZLA_AcmTtS-w39VzSe0UxA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <bcc2c8d4-a2cd-58c1-89af-e42439f8f344@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 06:02:21PM +0100, Rafael J. Wysocki wrote:
-> On Mon, Mar 2, 2020 at 1:34 PM Madhuparna Bhowmik
-> <madhuparnabhowmik10@gmail.com> wrote:
-> >
-> >
-> >
-> > On Mon, 2 Mar, 2020, 3:48 AM Joel Fernandes, <joel@joelfernandes.org> wrote:
-> >>
-> >> On Sun, Mar 1, 2020 at 4:23 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >> >
-> >> > On Sun, Mar 1, 2020 at 9:53 PM <joel@joelfernandes.org> wrote:
-> >> > >
-> >> > >
-> >> > >
-> >> > > On March 1, 2020 3:12:53 PM EST, "Rafael J. Wysocki" <rafael@kernel.org> wrote:
-> >> > > >On Fri, Feb 28, 2020 at 6:47 PM <madhuparnabhowmik10@gmail.com> wrote:
-> >> > > >>
-> >> > > >> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> >> > > >>
-> >> > > >> This patch passes the cond argument to list_for_each_entry_rcu()
-> >> > > >> to fix the following false-positive lockdep warnings:
-> >> > > >>
-> >> > > >> [  330.302784] =============================
-> >> > > >> [  330.302789] WARNING: suspicious RCU usage
-> >> > > >> [  330.302796] 5.6.0-rc1+ #5 Not tainted
-> >> > > >> [  330.302801] -----------------------------
-> >> > > >> [  330.302808] drivers/base/power/main.c:326 RCU-list traversed in
-> >> > > >non-reader section!!
-> >> > > >>
-> >> > > >> [  330.303303] =============================
-> >> > > >> [  330.303307] WARNING: suspicious RCU usage
-> >> > > >> [  330.303311] 5.6.0-rc1+ #5 Not tainted
-> >> > > >> [  330.303315] -----------------------------
-> >> > > >> [  330.303319] drivers/base/power/main.c:1698 RCU-list traversed in
-> >> > > >non-reader section!!
-> >> > > >>
-> >> > > >> [  331.934969] =============================
-> >> > > >> [  331.934971] WARNING: suspicious RCU usage
-> >> > > >> [  331.934973] 5.6.0-rc1+ #5 Not tainted
-> >> > > >> [  331.934975] -----------------------------
-> >> > > >> [  331.934977] drivers/base/power/main.c:1238 RCU-list traversed in
-> >> > > >non-reader section!!
-> >> > > >>
-> >> > > >> [  332.467772] WARNING: suspicious RCU usage
-> >> > > >> [  332.467775] 5.6.0-rc1+ #5 Not tainted
-> >> > > >> [  332.467775] -----------------------------
-> >> > > >> [  332.467778] drivers/base/power/main.c:269 RCU-list traversed in
-> >> > > >non-reader section!!
-> >> > > >
-> >> > > >I don't see these warnings in the kernels run locally here.
-> >> > > >
-> >> > > >What do you do to get them?
-> >> > > >
-> >> > > >Joel, any comments here?
-> >> > >
-> >> > > You have to enable lockdep in your config. Does your setup have that?
-> >> >
-> >> > CONFIG_LOCK_DEBUGGING_SUPPORT=y
-> >> > CONFIG_PROVE_LOCKING=y
-> >> > CONFIG_DEBUG_SPINLOCK=y
-> >> > CONFIG_DEBUG_LOCK_ALLOC=y
-> >> > CONFIG_LOCKDEP=y
-> >>
-> >>
-> > I had CONFIG_PROVE_RCU_LIST = y and I think these warnings were triggered when I had closed my laptop (like just close without shutting down).
-> 
-> OK, so let's define a macro for that in this file to avoid code duplication.
-> 
-> And analogously in the second patch.
->
-Sure, I will do it and send the patch soon.
+Hi,
 
-> Thanks!
+Add more reg = <..>
+
+On 3/3/20 4:37 PM, Johan Jonker wrote:
+> Hi Tobias,
+> 
+> Some minor style issues.
+> This dts file contains a partition node.
+> Question for the maintainers (Heiko?):
+> Should that partition be included or not?
+
+[..]
+
+>> +&i2c4 {
+>> +	i2c-scl-falling-time-ns = <20>;
+>> +	i2c-scl-rising-time-ns = <600>;
+>> +	status = "okay";
+>> +
+>> +	fusb0: fusb30x@22 {
+>> +		compatible = "fcs,fusb302";
+>> +		reg = <0x22>;
+>> +		fcs,int_n = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&fusb0_int_gpio>;
+> 
+>> +		status = "okay";
+> 
+> Remove or else status below.
+> New nodes are already okay I think.
+> If insure check compiled flat dts output to see if it is still there.
+> 
+>> +		vbus-supply = <&vbus_typec>;
+>> +
+>> +		connector {
+>> +			compatible = "usb-c-connector";
+>> +			label = "USB-C";
+>> +			op-sink-microwatt = <1000000>;
+>> +			power-role = "dual";
+>> +			sink-pdos =
+>> +				<PDO_FIXED(5000, 2500, PDO_FIXED_USB_COMM)>;
+>> +			source-pdos =
+>> +				<PDO_FIXED(5000, 1400, PDO_FIXED_USB_COMM)>;
+>> +			try-power-role = "sink";
+>> +
+>> +			ports {
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +
+>> +				port@0 {
+
+reg = <0>;
+
+>> +					usbc_hs: endpoint {
+>> +						remote-endpoint =
+>> +							<&u2phy0_typec_hs>;
+>> +					};
+>> +				};
+>> +
+>> +				port@1 {
+
+reg = <1>;
+
+>> +					usbc_ss: endpoint {
+>> +						remote-endpoint =
+>> +							<&tcphy0_typec_ss>;
+>> +					};
+>> +				};
+>> +
+>> +				port@2 {
+
+reg = <2>;
+
+>> +					usbc_dp: endpoint {
+>> +						remote-endpoint =
+>> +							<&tcphy0_typec_dp>;
+>> +					};
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>> +};
+
