@@ -2,126 +2,98 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C8BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE00C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092F020838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 442BF20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583254747;
+	bh=8H4Wakgj410FWowFma4sZ8OJz0IncW+GkyXmfanmzcs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gldGUeoJEYAiWqEcYj8UIO5HYehHPfA+RrBwGsdODzEEai+6LIMgxi2yQX3STw8K/
+	 y/UxbDO3wSme8XEJE92ZuPE1Vw4FYEXtOIa8rg69el3jjuhBYgJxL6l7gAkCOoOys0
+	 5OBeLnSZhL9Q/KLENPQn5yiys8OxXhDPkzAOZb3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730477AbgCCQ6v (ORCPT
+        id S1730491AbgCCQ7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:58:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:49756 "EHLO foss.arm.com"
+        Tue, 3 Mar 2020 11:59:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56450 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727077AbgCCQ6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:58:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E68952F;
-        Tue,  3 Mar 2020 08:58:49 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9C2583F534;
-        Tue,  3 Mar 2020 08:58:47 -0800 (PST)
-Date:   Tue, 3 Mar 2020 16:58:45 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-Cc:     will@kernel.org, mark.rutland@arm.com, maz@kernel.org,
-        suzuki.poulose@arm.com, sudeep.holla@arm.com, lukasz.luba@arm.com,
-        valentin.schneider@arm.com, dietmar.eggemann@arm.com,
-        rjw@rjwysocki.net, pkondeti@codeaurora.org, peterz@infradead.org,
-        mingo@redhat.com, vincent.guittot@linaro.org,
-        viresh.kumar@linaro.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 1/7] arm64: add support for the AMU extension v1
-Message-ID: <20200303165845.GF823373@arrakis.emea.arm.com>
-References: <20200226132947.29738-1-ionela.voinescu@arm.com>
- <20200226132947.29738-2-ionela.voinescu@arm.com>
- <20200228103234.GA3904776@arrakis.emea.arm.com>
- <20200302142326.GA15709@arm.com>
+        id S1727077AbgCCQ7G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:59:06 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7E5F20836;
+        Tue,  3 Mar 2020 16:59:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583254745;
+        bh=8H4Wakgj410FWowFma4sZ8OJz0IncW+GkyXmfanmzcs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WLx1pz6X82LxTVq7p5k1+0WQDu3UvgzzpWFYsCmLOgvqglB1Dvseap0+302bD3p4o
+         i9a8dehqjhhNV1J2tsfJdy6TyvUIQTNzHHfrVesWYUpaf+T1Ac9CuMNfYRJY5UlXMQ
+         IpKrUrAXnlwTNkMNESxu1GaWnaaf5whO38uzaMfI=
+Date:   Tue, 3 Mar 2020 17:59:03 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200303165903.GA779378@kroah.com>
+References: <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+ <20200303130347.GA2302029@kroah.com>
+ <20200303131434.GA2373427@kroah.com>
+ <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+ <20200303134316.GA2509660@kroah.com>
+ <1657843.1583245198@warthog.procyon.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302142326.GA15709@arm.com>
+In-Reply-To: <1657843.1583245198@warthog.procyon.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 02:23:26PM +0000, Ionela Voinescu wrote:
-> On Friday 28 Feb 2020 at 10:32:34 (+0000), Catalin Marinas wrote:
-> > On Wed, Feb 26, 2020 at 01:29:41PM +0000, Ionela Voinescu wrote:
-> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > index dbc22d684627..49f0c436928f 100644
-> > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > @@ -318,6 +318,15 @@
-> > >  			Format: <a>,<b>
-> > >  			See also Documentation/input/joydev/joystick.rst
-> > >  
-> > > +	amu=		[ARM64]
-> > > +			Enables or disables detection, enablement and access to
-> > > +			counter registers of the Activity Monitors Unit (AMU).
-> > > +			Format: amu=[0/1/on/off/y/n]
-> > > +			amu=[0/off/n] ensures access to AMU's counter registers
-> > > +				      is not attempted.
-> > > +			amu=[1/on/y] (default) enables detection and access to
-> > > +				     AMU's counter registers.
-> > 
-> > Is the only reason for this parameter to be able to disable the feature
-> > if the firmware doesn't support it? According to the Kconfig entry, you
-> > may see weird behaviour, firmware lock-up. Is the user supposed to try
-> > again with amu=0?
-> > 
-> > I'm not particularly fond of adding kernel parameters to work around
-> > broken firmware. We have other architecture features (e.g. PtrAuth) that
-> > need enabling at EL3 but we don't have such parameters. If it's likely
-> > that we hit this issue in practice, I'd rather have the firmware
-> > describing the presence of AMU via some DT entry. But I'd rather not
-> > bother at all, just get the vendors to update their firmware.
+On Tue, Mar 03, 2020 at 02:19:58PM +0000, David Howells wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 > 
-> The firmware is supposed to do three actions for the kernel to be able
-> to use the counters: enable access to EL2/EL1, enable the counters and
-> save/restore the counters before/after core-off.
-[...]
-> Therefore, the amu kernel parameter is not only there if the firmware
-> does not support AMU, but it's also there if the firmware support is
-> broken/improper. The kernel parameter was added at Suzuki's
-> recommendation to be able to bypass its use in single kernels that are
-> meant to run on multiple platforms.
-
-Single kernel images are supposed to run on multiple platforms while
-using the same command line arguments.
-
-There are many other ways firmware can screw up but I'm not keen on
-working on such assumption and preemptively adding options to ignore CPU
-features.
-
-> I also believe this is nice to have even for platforms that properly
-> support AMU, but they might not want the use of the feature in the
-> kernel.
-
-Are there any downsides to this feature? If you want it for testing
-purposes, i.e. different scheduler behaviour, fine by me but I'd change
-the text in the Kconfig to not even imply that firmware is allowed to be
-broken as we have a workaround in the kernel.
-
-> > If we drop this parameter, patch 1 would need to change. Otherwise the
-> > patches look fine.
+> > +	fd = do_sys_open(dfd, filename, flags, 0000);
+> > +	if (fd <= 0)
+> > +		return fd;
+> > +
+> > +	retval = ksys_read(fd, buffer, bufsize);
+> > +
+> > +	__close_fd(current->files, fd);
 > 
-> This being said, I agree this was added as a 'just in case' and not as
-> support for a likely scenario, therefore, I don't fully disagree to drop
-> it for now.
+> If you can use dentry_open() and vfs_read(), you might be able to avoid
+> dealing with file descriptors entirely.  That might make it worth a syscall.
 
-If you need it for testing different scheduler behaviours, maybe
-big.LITTLE where AMU is only supported on some CPUs, than keep it. If
-it's only on the assumption that the firmware may be broken, please
-remove it.
+Will poke at that...
 
-Thanks.
+> You're going to be asked for writefile() you know ;-)
 
--- 
-Catalin
+Yup, that just got asked on this thread already :)
+
+greg k-h
