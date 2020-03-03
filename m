@@ -2,330 +2,259 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 040AEC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE94C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C157320870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:28:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DC6820728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:29:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bnSswgv1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbgCCW23 (ORCPT
+        id S1727869AbgCCW3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:28:29 -0500
-Received: from mga07.intel.com ([134.134.136.100]:42643 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727335AbgCCW23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:28:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 14:28:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="232416410"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Mar 2020 14:28:27 -0800
-Date:   Tue, 3 Mar 2020 14:28:27 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v9 7/7] KVM: X86: Add user-space access interface for CET
- MSRs
-Message-ID: <20200303222827.GC1439@linux.intel.com>
-References: <20191227021133.11993-1-weijiang.yang@intel.com>
- <20191227021133.11993-8-weijiang.yang@intel.com>
+        Tue, 3 Mar 2020 17:29:38 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:34884 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727322AbgCCW3h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 17:29:37 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 7so2220913pgr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:29:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=qsYG18HX6uZbiPK20EisyP81AacMb1c2Icyzz8nclsQ=;
+        b=bnSswgv1wQFHCnn2gUBYrBM6J8xRuL8TpkX3sFiMTk4PrTI/zDDPpicC5ZXcMnJDM/
+         0Ry1HAMWFWQNXmkHdB7fFqsXsckAp87MBVtGcXD9f2e75GCgZbuNApH7lJCb93O1VBcf
+         eZAhsO/26YflgSqRe7KMkFSPiHe2E3+sgW/9wFTytSoZ0cHMP5HrBowLc+Bkg1oToYoY
+         1Tdm3PmBgZAtoBgYkPh4swcaX6JDf5+v6Kl//LM1ArypSYa2P3tIDUqFUj+ggonrV3um
+         F0r0YZAnpFQDAGqXCrS40dDQWYBigUnN074NBmPnOI2lZ1v5BZKascdgNBolGiNcr/Cp
+         q/ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=qsYG18HX6uZbiPK20EisyP81AacMb1c2Icyzz8nclsQ=;
+        b=AHKD5B3/p9k0irXNOFosXjqnCp1lueTQ17wpUE0KVSpBuyJ1UE2xYIk0UxRyGUmbz6
+         c1Wj47mfcvLlCMup+iANS7sRvvv+43Z1Nw+InVm33D5nxg13Sa6NYoSa2CKKDL9RNoG9
+         dFWGc94S42yTXCgFJVApOcZPdwbBFqsX4XQwKnBMVObPqiPfnJewAeSgqVcF2BXghTJg
+         q8N2zhPZxkRQF3KJeMNcFHaJzw32/iMQNdvJCTAKc/CnL7rY43woUa265JDsYDnVUN83
+         e5/Yccg+XQTqEoAZVZQoOguQtsO/Jff+BbE6jFJ0qZntbA178iVK1fmwWZZdWR1qFNNJ
+         YPNg==
+X-Gm-Message-State: ANhLgQ0mTOFhb2OGia1lUZd2cjxxEsz42wA3EyUq4UAXDEhDgwxK1M5O
+        MDrUCEBV0726z7zG9MhQ+1JZiA==
+X-Google-Smtp-Source: ADFU+vtzyIShP+G54of6bxET8G8ijzqUGU1m5d1X3O4aCk+cSDULuBvvUSQPIM3mSn/0xoX3ha8aAA==
+X-Received: by 2002:aa7:9a5e:: with SMTP id x30mr497971pfj.33.1583274575478;
+        Tue, 03 Mar 2020 14:29:35 -0800 (PST)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id d24sm26951030pfq.75.2020.03.03.14.29.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:29:34 -0800 (PST)
+Date:   Tue, 3 Mar 2020 14:29:34 -0800 (PST)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Christoph Hellwig <hch@lst.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
+        baekhw@google.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+Subject: Re: [rfc 4/6] dma-remap: dynamically expanding atomic pools
+In-Reply-To: <alpine.DEB.2.21.2003011537440.213582@chino.kir.corp.google.com>
+Message-ID: <alpine.DEB.2.21.2003031424400.41997@chino.kir.corp.google.com>
+References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com> <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com> <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com>
+ <alpine.DEB.2.21.2003011537440.213582@chino.kir.corp.google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191227021133.11993-8-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Subject should be something like "Enable CET virtualization", or maybe
-move CPUID changes to a separate final patch?
+On Sun, 1 Mar 2020, David Rientjes wrote:
 
-On Fri, Dec 27, 2019 at 10:11:33AM +0800, Yang Weijiang wrote:
-> There're two different places storing Guest CET states, states
-> managed with XSAVES/XRSTORS, as restored/saved
-> in previous patch, can be read/write directly from/to the MSRs.
-> For those stored in VMCS fields, they're access via vmcs_read/
-> vmcs_write.
+> When an atomic pool becomes fully depleted because it is now relied upon
+> for all non-blocking allocations through the DMA API, allow background
+> expansion of each pool by a kworker.
 > 
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
+> When an atomic pool has less than the default size of memory left, kick
+> off a kworker to dynamically expand the pool in the background.  The pool
+> is doubled in size.
+> 
+> This allows the default size to be kept quite low when one or more of the
+> atomic pools is not used.
+> 
+> Also switch over some node ids to the more appropriate NUMA_NO_NODE.
+> 
+> Signed-off-by: David Rientjes <rientjes@google.com>
 > ---
->  arch/x86/include/asm/kvm_host.h |   3 +-
->  arch/x86/kvm/cpuid.c            |   5 +-
->  arch/x86/kvm/vmx/vmx.c          | 138 ++++++++++++++++++++++++++++++++
->  arch/x86/kvm/x86.c              |  11 +++
->  4 files changed, 154 insertions(+), 3 deletions(-)
+>  kernel/dma/remap.c | 79 ++++++++++++++++++++++++++++++++++------------
+>  1 file changed, 58 insertions(+), 21 deletions(-)
 > 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 64bf379381e4..34140462084f 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -90,7 +90,8 @@
->  			  | X86_CR4_PGE | X86_CR4_PCE | X86_CR4_OSFXSR | X86_CR4_PCIDE \
->  			  | X86_CR4_OSXSAVE | X86_CR4_SMEP | X86_CR4_FSGSBASE \
->  			  | X86_CR4_OSXMMEXCPT | X86_CR4_LA57 | X86_CR4_VMXE \
-> -			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP))
-> +			  | X86_CR4_SMAP | X86_CR4_PKE | X86_CR4_UMIP \
-> +			  | X86_CR4_CET))
+> diff --git a/kernel/dma/remap.c b/kernel/dma/remap.c
+> --- a/kernel/dma/remap.c
+> +++ b/kernel/dma/remap.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/genalloc.h>
+>  #include <linux/slab.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/workqueue.h>
 >  
->  #define CR8_RESERVED_BITS (~(unsigned long)X86_CR8_TPR)
+>  struct page **dma_common_find_pages(void *cpu_addr)
+>  {
+> @@ -104,7 +105,10 @@ static struct gen_pool *atomic_pool_dma32 __ro_after_init;
+>  static struct gen_pool *atomic_pool_normal __ro_after_init;
 >  
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index 126a31b99823..4414bd110f3c 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -385,13 +385,14 @@ static inline void do_cpuid_7_mask(struct kvm_cpuid_entry2 *entry, int index)
->  		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
->  		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
->  		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
-> -		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
-> +		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | F(SHSTK) |
-> +		0 /*WAITPKG*/;
+>  #define DEFAULT_DMA_COHERENT_POOL_SIZE  SZ_256K
+> -static size_t atomic_pool_size __initdata = DEFAULT_DMA_COHERENT_POOL_SIZE;
+> +static size_t atomic_pool_size = DEFAULT_DMA_COHERENT_POOL_SIZE;
+> +
+> +/* Dynamic background expansion when the atomic pool is near capacity */
+> +struct work_struct atomic_pool_work;
 >  
->  	/* cpuid 7.0.edx*/
->  	const u32 kvm_cpuid_7_0_edx_x86_features =
->  		F(AVX512_4VNNIW) | F(AVX512_4FMAPS) | F(SPEC_CTRL) |
->  		F(SPEC_CTRL_SSBD) | F(ARCH_CAPABILITIES) | F(INTEL_STIBP) |
-> -		F(MD_CLEAR);
-> +		F(MD_CLEAR) | F(IBT);
+>  static int __init early_coherent_pool(char *p)
+>  {
+> @@ -113,14 +117,14 @@ static int __init early_coherent_pool(char *p)
+>  }
+>  early_param("coherent_pool", early_coherent_pool);
 >  
->  	/* cpuid 7.1.eax */
->  	const u32 kvm_cpuid_7_1_eax_x86_features =
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 0a75b65d03f0..52ac67604026 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1763,6 +1763,96 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
+> -static int __init __dma_atomic_pool_init(struct gen_pool **pool,
+> -					 size_t pool_size, gfp_t gfp)
+> +static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
+> +			      gfp_t gfp)
+>  {
+> -	const unsigned int order = get_order(pool_size);
+>  	const unsigned long nr_pages = pool_size >> PAGE_SHIFT;
+> +	const unsigned int order = get_order(pool_size);
+>  	struct page *page;
+>  	void *addr;
+> -	int ret;
+> +	int ret = -ENOMEM;
+>  
+>  	if (dev_get_cma_area(NULL))
+>  		page = dma_alloc_from_contiguous(NULL, nr_pages, order, false);
+
+There's an issue here if the pool grows too large which would result in
+order > MAX_ORDER-1.  We can fix that by limiting order to MAX_ORDER-1 and 
+doing nr_pages = 1 << order.
+
+I should also add support for trying smaller page allocations if our 
+preferred expansion size results in an allocation failure.
+
+Other than that, I'll remove the RFC tag and send a refreshed series by 
+the end of the week unless there are other comments or suggestions to 
+factor in.
+
+Thanks!
+
+> @@ -131,38 +135,67 @@ static int __init __dma_atomic_pool_init(struct gen_pool **pool,
+>  
+>  	arch_dma_prep_coherent(page, pool_size);
+>  
+> -	*pool = gen_pool_create(PAGE_SHIFT, -1);
+> -	if (!*pool)
+> -		goto free_page;
+> -
+>  	addr = dma_common_contiguous_remap(page, pool_size,
+>  					   pgprot_dmacoherent(PAGE_KERNEL),
+>  					   __builtin_return_address(0));
+>  	if (!addr)
+> -		goto destroy_genpool;
+> +		goto free_page;
+>  
+> -	ret = gen_pool_add_virt(*pool, (unsigned long)addr, page_to_phys(page),
+> -				pool_size, -1);
+> +	ret = gen_pool_add_virt(pool, (unsigned long)addr, page_to_phys(page),
+> +				pool_size, NUMA_NO_NODE);
+>  	if (ret)
+>  		goto remove_mapping;
+> -	gen_pool_set_algo(*pool, gen_pool_first_fit_order_align, NULL);
+>  
+> -	pr_info("DMA: preallocated %zu KiB %pGg pool for atomic allocations\n",
+> -		pool_size >> 10, &gfp);
 >  	return 0;
+>  
+>  remove_mapping:
+>  	dma_common_free_remap(addr, pool_size);
+> -destroy_genpool:
+> -	gen_pool_destroy(*pool);
+> -	*pool = NULL;
+>  free_page:
+>  	if (!dma_release_from_contiguous(NULL, page, nr_pages))
+>  		__free_pages(page, order);
+>  out:
+> -	pr_err("DMA: failed to allocate %zu KiB %pGg pool for atomic allocation\n",
+> -		atomic_pool_size >> 10, &gfp);
+> -	return -ENOMEM;
+> +	return ret;
+> +}
+> +
+> +static void atomic_pool_resize(struct gen_pool *pool, gfp_t gfp)
+> +{
+> +	if (pool && gen_pool_avail(pool) < atomic_pool_size)
+> +		atomic_pool_expand(pool, gen_pool_size(pool), gfp);
+> +}
+> +
+> +static void atomic_pool_work_fn(struct work_struct *work)
+> +{
+> +	if (IS_ENABLED(CONFIG_ZONE_DMA))
+> +		atomic_pool_resize(atomic_pool, GFP_DMA);
+> +	if (IS_ENABLED(CONFIG_ZONE_DMA32))
+> +		atomic_pool_resize(atomic_pool_dma32, GFP_DMA32);
+> +	atomic_pool_resize(atomic_pool_normal, GFP_KERNEL);
+> +}
+> +
+> +static int __init __dma_atomic_pool_init(struct gen_pool **pool,
+> +					 size_t pool_size, gfp_t gfp)
+> +{
+> +	int ret;
+> +
+> +	*pool = gen_pool_create(PAGE_SHIFT, NUMA_NO_NODE);
+> +	if (!*pool)
+> +		return -ENOMEM;
+> +
+> +	gen_pool_set_algo(*pool, gen_pool_first_fit_order_align, NULL);
+> +
+> +	ret = atomic_pool_expand(*pool, pool_size, gfp);
+> +	if (ret) {
+> +		gen_pool_destroy(*pool);
+> +		*pool = NULL;
+> +		pr_err("DMA: failed to allocate %zu KiB %pGg pool for atomic allocation\n",
+> +		       atomic_pool_size >> 10, &gfp);
+> +		return ret;
+> +	}
+> +
+> +
+> +	pr_info("DMA: preallocated %zu KiB %pGg pool for atomic allocations\n",
+> +		pool_size >> 10, &gfp);
+> +	return 0;
 >  }
 >  
-> +#define CET_MSR_RSVD_BITS_1    0x3
-> +#define CET_MSR_RSVD_BITS_2   (0xF << 6)
-
-Would it make sense to use GENMASK?
-
-> +static bool cet_ssp_write_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> +{
-> +	u64 data = msr->data;
-> +	u32 high_word = data >> 32;
-> +
-> +	if (is_64_bit_mode(vcpu)) {
-> +		if (data & CET_MSR_RSVD_BITS_1)
-
-This looks odd.  I assume it should look more like cet_ctl_write_allowed()?
-E.g.
-
-	if (data & CET_MSR_RSVD_BITS_1)
-		return false;
-
-	if (!is_64_bit_mode(vcpu) && high_word)
-		return false;
-
-> +			return false;
-> +	} else if (high_word) {
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static bool cet_ctl_write_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> +{
-> +	u64 data = msr->data;
-> +	u32 high_word = data >> 32;
-> +
-> +	if (data & CET_MSR_RSVD_BITS_2)
-> +		return false;
-> +
-> +	if (!is_64_bit_mode(vcpu) && high_word)
-> +		return false;
-> +
-> +	return true;
-> +}
-> +
-> +static bool cet_ssp_access_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> +{
-> +	u64 kvm_xss;
-> +	u32 index = msr->index;
-> +
-> +	if (is_guest_mode(vcpu))
-
-Hmm, this seems wrong, e.g. shouldn't WRMSR be allowed if L1 passes the MSR
-to L2, which is the only way to reach this, if I'm not mistaken.
-
-> +		return false;
-> +
-> +	if (!boot_cpu_has(X86_FEATURE_SHSTK))
-> +		return false;
-> +
-> +	if (!msr->host_initiated &&
-> +	    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK))
-> +		return false;
-> +
-> +	if (index == MSR_IA32_INT_SSP_TAB)
-> +		return true;
-> +
-> +	kvm_xss = kvm_supported_xss();
-> +
-> +	if (index == MSR_IA32_PL3_SSP) {
-> +		if (!(kvm_xss & XFEATURE_MASK_CET_USER))
-> +			return false;
-> +	} else if (!(kvm_xss & XFEATURE_MASK_CET_KERNEL)) {
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
-> +
-> +static bool cet_ctl_access_allowed(struct kvm_vcpu *vcpu, struct msr_data *msr)
-> +{
-> +	u64 kvm_xss;
-> +	u32 index = msr->index;
-> +
-> +	if (is_guest_mode(vcpu))
-> +		return false;
-> +
-> +	kvm_xss = kvm_supported_xss();
-> +
-> +	if (!boot_cpu_has(X86_FEATURE_SHSTK) &&
-> +	    !boot_cpu_has(X86_FEATURE_IBT))
-> +		return false;
-> +
-> +	if (!msr->host_initiated &&
-> +	    !guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) &&
-> +	    !guest_cpuid_has(vcpu, X86_FEATURE_IBT))
-> +		return false;
-> +
-> +	if (index == MSR_IA32_U_CET) {
-> +		if (!(kvm_xss & XFEATURE_MASK_CET_USER))
-> +			return false;
-> +	} else if (!(kvm_xss & XFEATURE_MASK_CET_KERNEL)) {
-> +		return false;
-> +	}
-> +
-> +	return true;
-> +}
->  /*
->   * Reads an msr value (of 'msr_index') into 'pdata'.
->   * Returns 0 on success, non-0 otherwise.
-> @@ -1886,6 +1976,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		else
->  			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
->  		break;
-> +	case MSR_IA32_S_CET:
-> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
-> +			return 1;
-> +		msr_info->data = vmcs_readl(GUEST_S_CET);
-> +		break;
-> +	case MSR_IA32_INT_SSP_TAB:
-> +		if (!cet_ssp_access_allowed(vcpu, msr_info))
-> +			return 1;
-> +		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
-> +		break;
-> +	case MSR_IA32_U_CET:
-> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
-> +			return 1;
-> +		rdmsrl(MSR_IA32_U_CET, msr_info->data);
-> +		break;
-> +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> +		if (!cet_ssp_access_allowed(vcpu, msr_info))
-> +			return 1;
-> +		rdmsrl(msr_info->index, msr_info->data);
-
-Ugh, thought of another problem.  If a SoftIRQ runs after an IRQ it can
-load the kernel FPU state.  So for all the XSAVES MSRs we'll need a helper
-similar to vmx_write_guest_kernel_gs_base(), except XSAVES has to be even
-more restrictive and disable IRQs entirely.  E.g.
-
-static void vmx_get_xsave_msr(struct msr_data *msr_info)
-{
-	local_irq_disable();
-	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-		switch_fpu_return();
-	rdmsrl(msr_info->index, msr_info->data);
-	local_irq_enable();
-}
-
-> +		break;
->  	case MSR_TSC_AUX:
->  		if (!msr_info->host_initiated &&
->  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> @@ -2147,6 +2257,34 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		else
->  			vmx->pt_desc.guest.addr_a[index / 2] = data;
->  		break;
-> +	case MSR_IA32_S_CET:
-> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
-> +			return 1;
-> +		if (!cet_ctl_write_allowed(vcpu, msr_info))
-> +			return 1;
-> +		vmcs_writel(GUEST_S_CET, data);
-> +		break;
-> +	case MSR_IA32_INT_SSP_TAB:
-> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
-> +			return 1;
-> +		if (!is_64_bit_mode(vcpu))
-> +			return 1;
-> +		vmcs_writel(GUEST_INTR_SSP_TABLE, data);
-> +		break;
-> +	case MSR_IA32_U_CET:
-> +		if (!cet_ctl_access_allowed(vcpu, msr_info))
-> +			return 1;
-> +		if (!cet_ctl_write_allowed(vcpu, msr_info))
-> +			return 1;
-> +		wrmsrl(MSR_IA32_U_CET, data);
-> +		break;
-> +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> +		if (!cet_ssp_access_allowed(vcpu, msr_info))
-> +			return 1;
-> +		if (!cet_ssp_write_allowed(vcpu, msr_info))
-> +			return 1;
-> +		wrmsrl(msr_info->index, data);
-> +		break;
->  	case MSR_TSC_AUX:
->  		if (!msr_info->host_initiated &&
->  		    !guest_cpuid_has(vcpu, X86_FEATURE_RDTSCP))
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 6dbe77365b22..7de6faa6aa51 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1186,6 +1186,10 @@ static const u32 msrs_to_save_all[] = {
->  	MSR_ARCH_PERFMON_EVENTSEL0 + 12, MSR_ARCH_PERFMON_EVENTSEL0 + 13,
->  	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
->  	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
-> +
-> +	MSR_IA32_XSS, MSR_IA32_U_CET, MSR_IA32_S_CET,
-> +	MSR_IA32_PL0_SSP, MSR_IA32_PL1_SSP, MSR_IA32_PL2_SSP,
-> +	MSR_IA32_PL3_SSP, MSR_IA32_INT_SSP_TAB,
->  };
+>  static int __init dma_atomic_pool_init(void)
+> @@ -170,6 +203,8 @@ static int __init dma_atomic_pool_init(void)
+>  	int ret = 0;
+>  	int err;
 >  
->  static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_all)];
-> @@ -1468,6 +1472,13 @@ static int __kvm_set_msr(struct kvm_vcpu *vcpu, u32 index, u64 data,
->  		 * invokes 64-bit SYSENTER.
->  		 */
->  		data = get_canonical(data, vcpu_virt_addr_bits(vcpu));
-> +		break;
-> +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
-> +	case MSR_IA32_U_CET:
-> +	case MSR_IA32_S_CET:
-> +	case MSR_IA32_INT_SSP_TAB:
-> +		if (is_noncanonical_address(data, vcpu))
-> +			return 1;
+> +	INIT_WORK(&atomic_pool_work, atomic_pool_work_fn);
+> +
+>  	ret = __dma_atomic_pool_init(&atomic_pool_normal, atomic_pool_size,
+>  				     GFP_KERNEL);
+>  	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
+> @@ -231,6 +266,8 @@ void *dma_alloc_from_pool(struct device *dev, size_t size,
+>  		ptr = (void *)val;
+>  		memset(ptr, 0, size);
 >  	}
+> +	if (gen_pool_avail(pool) < atomic_pool_size)
+> +		schedule_work(&atomic_pool_work);
 >  
->  	msr.data = data;
-> -- 
-> 2.17.2
+>  	return ptr;
+>  }
 > 
