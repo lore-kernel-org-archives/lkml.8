@@ -2,108 +2,117 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BE7C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99861C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 140F02072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 708E02072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cUtFbLLA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbgCCTWn (ORCPT
+        id S1730786AbgCCTXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:22:43 -0500
-Received: from mga12.intel.com ([192.55.52.136]:14655 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729833AbgCCTWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:22:43 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 11:22:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="274348369"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 03 Mar 2020 11:22:42 -0800
-Date:   Tue, 3 Mar 2020 11:22:42 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     "Luck, Tony" <tony.luck@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mark D Rustad <mrustad@gmail.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Yu, Fenghua" <fenghua.yu@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH] x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
-Message-ID: <20200303192242.GU1439@linux.intel.com>
-References: <20200206164614.GA20622@agluck-desk2.amr.corp.intel.com>
- <6735A646-3817-4030-B9B9-11492BB1B8F0@amacapital.net>
+        Tue, 3 Mar 2020 14:23:21 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:42832 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729458AbgCCTXU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:23:20 -0500
+Received: by mail-il1-f194.google.com with SMTP id x2so3794286ila.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:23:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KiZbLVn4oUdQq37v8gihe8HTdDkjhp2c0YGGCKWw9Xs=;
+        b=cUtFbLLAYh6gx9tm2hX9XXTHNvQbYYtQzHRgoECvT1iNpNhnaqHdzCG/CIyEeLM4gL
+         Z1ePPKxytHV6jrshCuDSCg/F/Y3EhjB789IMGMhvLY5BjMF12XYa9P1fenpGS3wnUpiq
+         2ub+HBTb161Oel2xhswKj/mAZyHisH25WZK9vbaxjY6LTd9Hw0LO3CFy6e1A4xK6Rp8h
+         B5RYOBiOga3ZtJu6UFkd/mh/wq7qjfsVdp483vXbAO26p9+WfSM398uJZlbzilANoMKh
+         Fc8hK9CXNYQpui0/BpLv6RVXEYpV8KRigcO4x7aUkA1YZ0R/2aAWKkiiGy9dpnCH8Mco
+         ACqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KiZbLVn4oUdQq37v8gihe8HTdDkjhp2c0YGGCKWw9Xs=;
+        b=e8cMvucM9A2KfCq1kzF46y9m2ithTBhXZHAea10yKBn1lkp3ZlVola8QFFYnhGbcSb
+         RhKCf4x5UJf7NJFUE/5Rd1OPm51v24l1Yttc3VQLPsfiIPgnTnjEOczFb2vmubb72zCR
+         hP2LTHxhX7d4/kQswpG8m9HsSRyP4Doi9olDbyR/S6TcQ2EVvEU/pDRCPKUByPWOS+Yf
+         JnoArjo3y3+IwMVSe3Gt81lc5mZMCkO/QBOAIUFncL1KMrZauxwkOGUb+JZTA95t2CwK
+         mnKYU4kRlaL6OsjvspX3zuV0a3aR3oYRL+uedg6FrqpFWmn/12dnlRM8LqL0SoUtEVdD
+         jgLg==
+X-Gm-Message-State: ANhLgQ2EGmX8fxbn/YH4LLzddW/5c+6vIO+bkTSRg3NMNzdBU7DSpDc/
+        WgOtUM64AYP+91eedf6H1GYLKPFxx/Y=
+X-Google-Smtp-Source: ADFU+vsGYrEKxsUpTqs5b+dGZi3gm2OTFxMN1tCOScyWlCXapZO1C3KKgpKNsVOR0wDn9xAFuJJT4A==
+X-Received: by 2002:a92:9507:: with SMTP id y7mr1729545ilh.243.1583263398611;
+        Tue, 03 Mar 2020 11:23:18 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id f72sm8161736ilg.84.2020.03.03.11.23.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 11:23:18 -0800 (PST)
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+To:     Jeff Layton <jlayton@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+ <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com>
+ <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+ <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
+ <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
+ <20200303142407.GA47158@kroah.com>
+ <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
+ <acb1753c78a019fb0d54ba29077cef144047f70f.camel@kernel.org>
+ <7a05adc8-1ca9-c900-7b24-305f1b3a9b86@kernel.dk>
+ <dbb06c63c17c23fcacdd99e8b2266804ee39ffe5.camel@kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <dc84aa00-e570-8833-cf9f-d1001c52dd7a@kernel.dk>
+Date:   Tue, 3 Mar 2020 12:23:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <dbb06c63c17c23fcacdd99e8b2266804ee39ffe5.camel@kernel.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6735A646-3817-4030-B9B9-11492BB1B8F0@amacapital.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 11:37:04AM -0800, Andy Lutomirski wrote:
-> 
-> > On Feb 6, 2020, at 8:46 AM, Luck, Tony <tony.luck@intel.com> wrote:
-> > 
-> > ﻿On Wed, Feb 05, 2020 at 05:18:23PM -0800, Andy Lutomirski wrote:
-> >>> On Wed, Feb 5, 2020 at 4:49 PM Luck, Tony <tony.luck@intel.com> wrote:
-> >>> 
-> >>> In a context switch from a task that is detecting split locks
-> >>> to one that is not (or vice versa) we need to update the TEST_CTRL
-> >>> MSR. Currently this is done with the common sequence:
-> >>>        read the MSR
-> >>>        flip the bit
-> >>>        write the MSR
-> >>> in order to avoid changing the value of any reserved bits in the MSR.
-> >>> 
-> >>> Cache the value of the TEST_CTRL MSR when we read it during initialization
-> >>> so we can avoid an expensive RDMSR instruction during context switch.
-> >> 
-> >> If something else that is per-cpu-ish gets added to the MSR in the
-> >> future, I will personally make fun of you for not making this percpu.
-> > 
-> > Xiaoyao Li has posted a version using a percpu cache value:
-> > 
-> > https://lore.kernel.org/r/20200206070412.17400-4-xiaoyao.li@intel.com
-> > 
-> > So take that if it makes you happier.  My patch only used the
-> > cached value to store the state of the reserved bits in the MSR
-> > and assumed those are the same for all cores.
-> > 
-> > Xiaoyao Li's version updates with what was most recently written
-> > on each thread (but doesn't, and can't, make use of that because we
-> > know that the other thread on the core may have changed the actual
-> > value in the MSR).
-> > 
-> > If more bits are implemented that need to be set at run time, we
-> > are likely up the proverbial creek. I'll see if I can find out if
-> > there are plans for that.
-> > 
-> 
-> I suppose that this whole thing is a giant mess, especially since at least
-> one bit there is per-physical-core. Sigh.
-> 
-> So I don’t have a strong preference.
+On 3/3/20 12:02 PM, Jeff Layton wrote:
+> Basically, all you'd need to do is keep a pointer to struct file in the
+> internal state for the chain. Then, allow userland to specify some magic
+> fd value for subsequent chained operations that says to use that instead
+> of consulting the fdtable. Maybe use -4096 (-MAX_ERRNO - 1)?
 
-I'd prefer to go with this patch, i.e. not percpu, to remove the temptation
-of incorrectly optimizing away toggling SPLIT_LOCK_DETECT.
+BTW, I think we need two magics here. One that says "result from
+previous is fd for next", and one that says "fd from previous is fd for
+next". The former allows inheritance from open -> read, the latter from
+read -> write.
+
+-- 
+Jens Axboe
+
