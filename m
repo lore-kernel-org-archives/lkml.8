@@ -2,54 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC84DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FCCC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B597621741
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55E60206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258048;
-	bh=3gWKxybEj+MPghi+m6w934dffMdy1LR+18drW+smWv0=;
+	s=default; t=1583258054;
+	bh=mYVq59/icy0FJB4PO/fo2pWze3ZggxVI6qyA2COpnic=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2kLsb+jeSLrDFSIRECNfQT2JC+qVq+/WGAJgUOQZFDTk2ziOTnTy2xfiAjm8sZwY
-	 b+OKS9IXKQsWfsZ7f/6XQ4kmSD0Dh/iBcK2kKkq8i12kzxeN/onOu+TsPnaqvtGUbS
-	 E2o/CdX0NA0IB76/SZVxNuzFiNS/TQknpjJGZLBg=
+	b=hqAWSKX3B9ZFI4nYLjfhnH/h8HF0PNmpilt0S11Q21iB+X69v858Oacah5x1tRBGA
+	 tx0M9pPAJIh0oPuJmm8t72LAgS1GbL1QddJnfuKttpG9yf/pt2CHxi78DQbEJcmxiH
+	 XRSa7iE5WQ/PTWPI/SHnrpruHd/7F8loP4ditgSE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732480AbgCCRyH (ORCPT
+        id S1732506AbgCCRyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34982 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732136AbgCCRyE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:04 -0500
+        id S1732492AbgCCRyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 998A2206D5;
-        Tue,  3 Mar 2020 17:54:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AAB0206D5;
+        Tue,  3 Mar 2020 17:54:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258044;
-        bh=3gWKxybEj+MPghi+m6w934dffMdy1LR+18drW+smWv0=;
+        s=default; t=1583258051;
+        bh=mYVq59/icy0FJB4PO/fo2pWze3ZggxVI6qyA2COpnic=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QnWZIMGnlBFwSlTIKu+d2IuG/E2a4YSKTnEipOVUPGvaKMSuSDQ8A/JBcMxlf1R0q
-         Xqq/ifWX2idoNwHoErHNC6ySejdvzpGvLv5y7P4GoAyhuXIxUBxuILO/FYww2fIh3d
-         EN8M2s8egr9xVc94BlMI+g2gIT6Jn7HxpPPh4eMA=
+        b=CddN4VYR1WWun4netlMcM0Lx6Sc4sx+IBie29oOF7bXE1TKCkaxqTJcaqxH7RLtZQ
+         IWSaeE+f7HPTRHBoNuxSc+p/Ir25sLUlVjDfBsRaCKHHVUcqnA3d5B0VKVzCsN6SFv
+         1yEl3bcufWLVTPZaiPZ96axd8OjOnw9gMxRWUtLU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 048/152] i40e: Fix the conditional for i40e_vc_validate_vqs_bitmaps
-Date:   Tue,  3 Mar 2020 18:42:26 +0100
-Message-Id: <20200303174307.890726780@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 015/152] bnxt_en: Improve device shutdown method.
+Date:   Tue,  3 Mar 2020 18:41:53 +0100
+Message-Id: <20200303174304.229062032@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -62,49 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brett Creeley <brett.creeley@intel.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit f27f37a04a69890ac85d9155f03ee2d23b678d8f ]
+[ Upstream commit 5567ae4a8d569d996d0d88d0eceb76205e4c7ce5 ]
 
-Commit d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap
-validation") introduced a necessary change for verifying how queue
-bitmaps from the iavf driver get validated. Unfortunately, the
-conditional was reversed. Fix this.
+Especially when bnxt_shutdown() is called during kexec, we need to
+disable MSIX and disable Bus Master to completely quiesce the device.
+Make these 2 calls unconditionally in the shutdown method.
 
-Fixes: d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap validation")
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: c20dc142dd7b ("bnxt_en: Disable bus master during PCI shutdown and driver unload.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 4 ++--
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index 3515ace0f0201..38042d610f82c 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -2363,7 +2363,7 @@ static int i40e_vc_enable_queues_msg(struct i40e_vf *vf, u8 *msg)
- 		goto error_param;
- 	}
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -11908,10 +11908,10 @@ static void bnxt_shutdown(struct pci_dev
+ 		dev_close(dev);
  
--	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
-+	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
- 		aq_ret = I40E_ERR_PARAM;
- 		goto error_param;
- 	}
-@@ -2425,7 +2425,7 @@ static int i40e_vc_disable_queues_msg(struct i40e_vf *vf, u8 *msg)
- 		goto error_param;
- 	}
+ 	bnxt_ulp_shutdown(bp);
++	bnxt_clear_int_mode(bp);
++	pci_disable_device(pdev);
  
--	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
-+	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
- 		aq_ret = I40E_ERR_PARAM;
- 		goto error_param;
+ 	if (system_state == SYSTEM_POWER_OFF) {
+-		bnxt_clear_int_mode(bp);
+-		pci_disable_device(pdev);
+ 		pci_wake_from_d3(pdev, bp->wol);
+ 		pci_set_power_state(pdev, PCI_D3hot);
  	}
--- 
-2.20.1
-
 
 
