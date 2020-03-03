@@ -2,77 +2,97 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5ABC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDAAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA1520848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B8B2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583241279;
+	bh=U28fY8JhI6bCyYW5i7FnUHu0QsanuxLwZ73WPobV7tM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JrNJNmLb1BQsQBmAlF96QSJ5h1dsrtlsBiCLPkT0hci1ukvj/PBI0Rv/KhDaKdmTe
+	 Tb2hQr4MiqFLa0mMcr7kEd0Bgp53P+uoGSOfNSbbRNXs3o/sCUvS7A5p5DqFIuLP8o
+	 K50kzM5cSIT0lrJHI+PYc9pNBsAeUJjvl3N39tVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgCCNOb (ORCPT
+        id S1729037AbgCCNOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:14:31 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10718 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727872AbgCCNOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:14:31 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id EF1357A0F349068C8526;
-        Tue,  3 Mar 2020 21:14:25 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Mar 2020
- 21:14:16 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>, <peng.ma@nxp.com>,
-        <yuehaibing@huawei.com>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] dmaengine: fsl-dpaa2-qdma: remove set but not used variable 'dpaa2_qdma'
-Date:   Tue, 3 Mar 2020 21:13:47 +0800
-Message-ID: <20200303131347.28392-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 3 Mar 2020 08:14:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53058 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727872AbgCCNOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:14:37 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DDB320842;
+        Tue,  3 Mar 2020 13:14:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583241277;
+        bh=U28fY8JhI6bCyYW5i7FnUHu0QsanuxLwZ73WPobV7tM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eBgTn54vhuoXwc2Fijp0ZPXdIVlth72dEuoUBHuO98Tt1c3mOCJGuZPVxIGH3k7cj
+         YDSguUeZHBnVrtox9b6f92pg+Di0lq1GYn5SeHgcKg3xbRTESFxU/YdG3ErowUr5e9
+         QkKhS9QtYFvlPZfoFLXn/9szhCR4vjX4/wPYPRm4=
+Date:   Tue, 3 Mar 2020 14:14:34 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Karel Zak <kzak@redhat.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200303131434.GA2373427@kroah.com>
+References: <1582644535.3361.8.camel@HansenPartnership.com>
+ <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
+ <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+ <20200303130347.GA2302029@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303130347.GA2302029@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c: In function dpaa2_qdma_shutdown:
-drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c:795:28: warning: variable dpaa2_qdma set but not used [-Wunused-but-set-variable]
+On Tue, Mar 03, 2020 at 02:03:47PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Mar 03, 2020 at 12:38:14PM +0100, Karel Zak wrote:
+> > On Tue, Mar 03, 2020 at 10:26:21AM +0100, Miklos Szeredi wrote:
+> > > No, I don't think this is going to be a performance issue at all, but
+> > > if anything we could introduce a syscall
+> > > 
+> > >   ssize_t readfile(int dfd, const char *path, char *buf, size_t
+> > > bufsize, int flags);
+> > 
+> > off-topic, but I'll buy you many many beers if you implement it ;-),
+> > because open + read + close is pretty common for /sys and /proc in
+> > many userspace tools; for example ps, top, lsblk, lsmem, lsns, udevd
+> > etc. is all about it.
+> 
+> Unlimited beers for a 21-line kernel patch?  Sign me up!
+> 
+> Totally untested, barely compiled patch below.
 
-commit 3e0ca3c38dc2 ("dmaengine: fsl-dpaa2-qdma: Adding shutdown hook")
-involved this, remove it.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-index fabbbb9..4ec909e 100644
---- a/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-+++ b/drivers/dma/fsl-dpaa2-qdma/dpaa2-qdma.c
-@@ -792,13 +792,11 @@ static int dpaa2_qdma_remove(struct fsl_mc_device *ls_dev)
- 
- static void dpaa2_qdma_shutdown(struct fsl_mc_device *ls_dev)
- {
--	struct dpaa2_qdma_engine *dpaa2_qdma;
- 	struct dpaa2_qdma_priv *priv;
- 	struct device *dev;
- 
- 	dev = &ls_dev->dev;
- 	priv = dev_get_drvdata(dev);
--	dpaa2_qdma = priv->dpaa2_qdma;
- 
- 	dpdmai_disable(priv->mc_io, 0, ls_dev->mc_handle);
- 	dpaa2_dpdmai_dpio_unbind(priv);
--- 
-2.7.4
-
-
+Ok, that didn't even build, let me try this for real now...
