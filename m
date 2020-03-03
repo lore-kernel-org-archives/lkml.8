@@ -2,102 +2,141 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD386C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:27:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DE2C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B12217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:27:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADC2624673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgCCC1H (ORCPT
+        id S1727228AbgCCC1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:27:07 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11135 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726970AbgCCC1H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:27:07 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1CA85A9F2E78C2E8C79E;
-        Tue,  3 Mar 2020 10:27:02 +0800 (CST)
-Received: from [127.0.0.1] (10.173.221.207) by DGGEMS407-HUB.china.huawei.com
- (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Mar 2020
- 10:26:56 +0800
-Subject: Re: [PATCH -next] drivers/base/power: fix build error without SYSFS
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <christian.brauner@ubuntu.com>, <linux-kernel@vger.kernel.org>,
-        <linux-pm@vger.kernel.org>, <chenzhou10@huawei.com>,
-        <rjw@rjwysocki.net>, <pavel@ucw.cz>
-References: <20200302092918.40163-1-yaohongbo@huawei.com>
- <20200302092308.GA1997164@kroah.com>
-From:   Hongbo Yao <yaohongbo@huawei.com>
-Message-ID: <1b1e850f-18e1-4410-672c-4e010bae46e6@huawei.com>
-Date:   Tue, 3 Mar 2020 10:26:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 2 Mar 2020 21:27:53 -0500
+Received: from mga11.intel.com ([192.55.52.93]:12164 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726970AbgCCC1x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:27:53 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:27:52 -0800
+X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
+   d="scan'208";a="233433400"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.67]) ([10.255.30.67])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 02 Mar 2020 18:27:50 -0800
+Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when function
+ is out-of-range
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-2-sean.j.christopherson@intel.com>
+ <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
+ <20200302204940.GG6244@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <16e902a8-7883-0b67-d4ee-73e8fe22f955@intel.com>
+Date:   Tue, 3 Mar 2020 10:27:47 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200302092308.GA1997164@kroah.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200302204940.GG6244@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.221.207]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2020/3/2 17:23, Greg KH wrote:
-> On Mon, Mar 02, 2020 at 05:29:18PM +0800, Hongbo Yao wrote:
->> If CONFIG_SYSFS=n, the following error is seen while building 
->> drivers/base/power/sysfs.c:
+On 3/3/2020 4:49 AM, Sean Christopherson wrote:
+> On Mon, Mar 02, 2020 at 09:26:54PM +0100, Jan Kiszka wrote:
+>> On 02.03.20 20:57, Sean Christopherson wrote:
+>>> Rework kvm_cpuid() to query entry->function when adjusting the output
+>>> values so that the original function (in the aptly named "function") is
+>>> preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
+>>> trace the max function for a range instead of the requested function if
+>>> the requested function is out-of-range and an entry for the max function
+>>> exists.
+>>>
+>>> Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
+>>> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+>>> Cc: Jim Mattson <jmattson@google.com>
+>>> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> ---
+>>>   arch/x86/kvm/cpuid.c | 15 +++++++--------
+>>>   1 file changed, 7 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>> index b1c469446b07..6be012937eba 100644
+>>> --- a/arch/x86/kvm/cpuid.c
+>>> +++ b/arch/x86/kvm/cpuid.c
+>>> @@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+>>>   	return max && function <= max->eax;
+>>>   }
+>>> +/* Returns true if the requested leaf/function exists in guest CPUID. */
+>>>   bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>>>   	       u32 *ecx, u32 *edx, bool check_limit)
+>>>   {
+>>> -	u32 function = *eax, index = *ecx;
+>>> +	const u32 function = *eax, index = *ecx;
+>>>   	struct kvm_cpuid_entry2 *entry;
+>>> -	struct kvm_cpuid_entry2 *max;
+>>>   	bool found;
+>>>   	entry = kvm_find_cpuid_entry(vcpu, function, index);
+>>> @@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>>>   	 */
+>>>   	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
+>>>   	    !cpuid_function_in_range(vcpu, function)) {
+>>> -		max = kvm_find_cpuid_entry(vcpu, 0, 0);
+>>> -		if (max) {
+>>> -			function = max->eax;
+>>> -			entry = kvm_find_cpuid_entry(vcpu, function, index);
+>>> -		}
+>>> +		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
+>>> +		if (entry)
+>>> +			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
+>>>   	}
+>>>   	if (entry) {
+>>>   		*eax = entry->eax;
+>>>   		*ebx = entry->ebx;
+>>>   		*ecx = entry->ecx;
+>>>   		*edx = entry->edx;
+>>> -		if (function == 7 && index == 0) {
+>>> +
+>>> +		if (entry->function == 7 && index == 0) {
+>>>   			u64 data;
+>>>   		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+>>>   			    (data & TSX_CTRL_CPUID_CLEAR))
+>>>
 >>
->> drivers/base/power/sysfs.c: In function dpm_sysfs_change_owner:
->> drivers/base/power/sysfs.c:708:44: error: passing argument 2 of
->> sysfs_group_change_owner from incompatible pointer type
->> [-Werror=incompatible-pointer-types]
->>   rc = sysfs_group_change_owner(&dev->kobj, &pm_attr_group, kuid, kgid);
->>                                             ^
->> In file included from ./include/linux/kobject.h:20:0,
->>                  from ./include/linux/device.h:17,
->>                  from drivers/base/power/sysfs.c:3:
->> ./include/linux/sysfs.h:564:19: note: expected const struct
->> attribute_group ** but argument is of type const struct attribute_group *
->>
->> dpm_sysfs_change_owner() should only used when CONFIG_SYSFS is
->> defined.
->>
->> Reported-by: Hulk Robot <hulkci@huawei.com>
->> Fixes: 3b52fc5d7876 ("drivers/base/power: add dpm_sysfs_change_owner()")
->> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
->> ---
->>  drivers/base/power/power.h | 10 +++++++++-
->>  drivers/base/power/sysfs.c |  2 ++
+>> What about the !entry case below this? It was impacted by the function
+>> capping so far, not it's no longer.
 > 
-> You shouldn't have to add #ifdefs to a .c file here, it should all be
-> able to be fixed in the .h file by putting proper "empty" functions.
-
-  I think it's a little difficult to fix this without changing the .c file,
-  unless changing the Kconfig.
-
-  This function was implemeted when CONFIG_PM=y, and if CONFIG_PM=n, this
-  function would be "empty".
-
-  However, I found this function should depends on CONFIG_SYSFS, if
-  CONFIG_SYSFS=n, this function should also be empty, so only changing the
-  dependency of the header file will cause redefinition.
-
-  thanks,
-  Hongbo.
-
-> thanks,
+> Hmm, the only way the output would be different is in a really contrived
+> scenario where userspace doesn't provide an entry for the max basic leaf.
 > 
-> greg k-h
+> The !entry path can only be reached with "orig_function != function" if
+> orig_function is out of range and there is no entry for the max basic leaf.
+
+> The adjustments for 0xb/0x1f require the max basic leaf to be 0xb or 0x1f,
+> and to take effect with !entry would require there to be a CPUID.max.1 but
+> not a CPUID.max.0.  That'd be a violation of Intel's SDM, i.e. it's bogus
+> userspace input and IMO can be ignored.
 > 
-> .
-> 
+
+Sorry I cannot catch you. Why it's a violation of Intel's SDM?
+
+Supposing the max basic is 0x1f, and it queries cpuid(0x20, 0x5),
+it should return cpuid(0x1f, 0x5).
+
+But based on this patch, it returns all zeros.
 
