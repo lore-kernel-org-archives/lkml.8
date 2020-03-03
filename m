@@ -7,64 +7,65 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E243C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36DC1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4646620863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04C7E20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:37:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="iNrm0CI9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="nxLcwmlS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbgCCOhi (ORCPT
+        id S1729631AbgCCOhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:37:38 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39764 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728560AbgCCOhh (ORCPT
+        Tue, 3 Mar 2020 09:37:43 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34310 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728741AbgCCOhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:37:37 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so4634444wrn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:37:35 -0800 (PST)
+        Tue, 3 Mar 2020 09:37:42 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z15so4672724wrl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:37:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=K5hjg1G3VFJLeuZ62RXxBnJp53DPSao1yCpZ+ZBtBN8=;
-        b=iNrm0CI9XnahfkY1GKdbv7m82hqORspH2rHCweh+wIBudNC2ZqFrcVAnaaXt7uDpCy
-         eOWYuWZdiQ8nxSKtcUSXqN5o/NCkO70fo22VX8gYL63tV53T+rWuSE9e6mLiaevS0Ff4
-         6M2FGsxXj3GoRVu27Q/2kIYiT4RKTrcngLYpiHQvNDqhyEWatZMzY35QMk8rOBe7Wc4Z
-         an2h2ylpm7D3382SDTEw7p7Ia3K2fERXdyabba14Lsi+KMozLek0GLJ2GArlVQm9HUYI
-         BeI+g3eiumyugaCfnPNyWzZ/uvi0ouNBGZPILG3gzL59aIjyao9pf6rXzpkOGg4NGTMo
-         YqYA==
+        bh=I21Kq4omIiuvyI+q1sEWfUXp3zFBaxsCmxFd55nT6Nc=;
+        b=nxLcwmlSwzbT9LjOoX3uevnYPtP2GITTh8LVaVdm6+RT3dnCxKjfFh8kyPnMpwiOxM
+         5uss3JhQqj46EyDXlUg0TVsrPdBxi2quB02VHNy/TymVj5XdZLnMmz+LZ1pBgGeH4FPu
+         LcJyK1iz5U5bqtSMJ85zECaQL51uk1TCsfnL8e17vQX4HZlf+jnWI2w2GxlAvk2TNJmU
+         jUncowMn3vqHnJ+DPD2FOV4GhP496L2uej+ESflr3VXxXQ2OXC4psjVsfwQrlwTyozmd
+         QN6hIUzvYX1L9oaYO69VDdkuw5Nvvgjafghzqluhjkk6RDsdJeWuqKI5PlB01BfXUIw4
+         pM2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=K5hjg1G3VFJLeuZ62RXxBnJp53DPSao1yCpZ+ZBtBN8=;
-        b=dv4J0zcrqu5yEhMyAK48Tsa5Zno+A034/QbDW7bNn8GNIW5xSuVBZuqd1JIdbJe/mj
-         u3JtJUOdgf9JPekH8e8WctGjAAATC5H36jIHJE06Ya5td4wB7pjuk7ivqIlkZSCg5zeG
-         G0HES7Y7UevM4gqZOkrOc3xcpm1UqgDrqecQwcyRgI7r41/kaD+JlTyvmpO8aYI+D0eO
-         UwpzPsjxEF6BXVfvCvitkArv3clbs1CNz71NNK9MRw51NAODTXOnMm7+Z2H52ANCcFF4
-         KQ/f735kCb4i4yn3BFK+IVXINUc+QpERINN4owTqJa4yW4+uKMUXIi6T7jZaZbvFsVKp
-         TvVg==
-X-Gm-Message-State: ANhLgQ37154R3ptnq6LrplMVFU2/ViKMsp5WNooOur9RKAsL+QR6pbXu
-        jXxN08k6srAnPoqyLwyUSnwXhg==
-X-Google-Smtp-Source: ADFU+vubH5FvBdZxArVu9XQq+51wNWYXHqzexBNcTn8d0oRpiHzqnZXe/qfgWED/LdX7eNM+kJIlAQ==
-X-Received: by 2002:a5d:67c7:: with SMTP id n7mr5635176wrw.319.1583246254899;
-        Tue, 03 Mar 2020 06:37:34 -0800 (PST)
+        bh=I21Kq4omIiuvyI+q1sEWfUXp3zFBaxsCmxFd55nT6Nc=;
+        b=I/MYwxak3YzUa9qzx1vXnQVh+7vwuduKYD0g9JKWoXtxO94uo4WrnTI6Rx8bKqRnk9
+         a0ZjHbLA7JbXJfqJ/sd7iAs5u4bfPnWnYbaOoZd0wJK7x2E6O6maVPw946IdWG2g/IQ/
+         jya45fh0qgj5oNmVBg0E6fneLhmhKLerAEb54esz8X2dunmutcm23GQwa+gkSfuh4d4I
+         EeNvTywk5BC1x7uA5UIlOzHwxkWbo44OrsCvngLTXt4cbJjPWLhsaSBa6/fuHnZ4RUMd
+         CkZ+xq6yzp7ZT1vSbEq8QsDEoXse5miPZDQvNrZiiucUoRFuViWpGZH5JY93oWtl/rBo
+         RSYQ==
+X-Gm-Message-State: ANhLgQ0we8difT4eP7wcov2fw9cfsv1UKnnZtqc+tOpPqu8HLt+QFgwQ
+        lxhhUku0Id5pBmen4GI4y5/dvw==
+X-Google-Smtp-Source: ADFU+vuzU3GnUXN5a1eci6HLf/AkGr33SXxzdBrH1IuW/OcmGXvPDrI1vY6qHt9b8dYQSQ1N/uq20Q==
+X-Received: by 2002:adf:c445:: with SMTP id a5mr5752925wrg.14.1583246258140;
+        Tue, 03 Mar 2020 06:37:38 -0800 (PST)
 Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id l4sm4652779wmf.38.2020.03.03.06.37.34
+        by smtp.gmail.com with ESMTPSA id l4sm4652779wmf.38.2020.03.03.06.37.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:37:34 -0800 (PST)
+        Tue, 03 Mar 2020 06:37:37 -0800 (PST)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     mchehab@kernel.org, hans.verkuil@cisco.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+Cc:     Maxime Jourdan <mjourdan@baylibre.com>,
         linux-media@vger.kernel.org, linux-amlogic@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
         Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH v6 1/5] media: meson: vdec: align stride on 32 bytes
-Date:   Tue,  3 Mar 2020 15:37:28 +0100
-Message-Id: <20200303143732.762-2-narmstrong@baylibre.com>
+Subject: [PATCH v6 4/5] media: meson: vdec: add VP9 input support
+Date:   Tue,  3 Mar 2020 15:37:31 +0100
+Message-Id: <20200303143732.762-5-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20200303143732.762-1-narmstrong@baylibre.com>
 References: <20200303143732.762-1-narmstrong@baylibre.com>
@@ -75,75 +76,217 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HEVC/VP9 aligns the plane stride on 32, so align the planes stride
-for all codecs to 32 to satisfy HEVC/VP9 decoding using the "HEVC" HW.
+From: Maxime Jourdan <mjourdan@baylibre.com>
 
-This fixes VP9 decoding of streams with following (not limited) widths:
-- 264
- -288
-- 350
-- 352
-- 472
-- 480
-- 528
-- 600
-- 720
-- 800
-- 848
-- 1440
+Amlogic VP9 decoder requires an additional 16-byte payload before every
+frame header.
 
+The source buffer is updated in-place, then given to the Parser FIFO DMA.
+
+The FIFO DMA copies the blocks into the 16MiB parser ring buffer, then parses
+and copies the slice into the decoder "workspace".
+
+Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Tested-by: Kevin Hilman <khilman@baylibre.com>
 ---
- drivers/staging/media/meson/vdec/vdec.c         | 10 +++++-----
- drivers/staging/media/meson/vdec/vdec_helpers.c |  4 ++--
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/staging/media/meson/vdec/esparser.c | 150 +++++++++++++++++++-
+ 1 file changed, 146 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/staging/media/meson/vdec/vdec.c b/drivers/staging/media/meson/vdec/vdec.c
-index 92f0258868b1..bfca4c82aa56 100644
---- a/drivers/staging/media/meson/vdec/vdec.c
-+++ b/drivers/staging/media/meson/vdec/vdec.c
-@@ -528,20 +528,20 @@ vdec_try_fmt_common(struct amvdec_session *sess, u32 size,
- 		memset(pfmt[1].reserved, 0, sizeof(pfmt[1].reserved));
- 		if (pixmp->pixelformat == V4L2_PIX_FMT_NV12M) {
- 			pfmt[0].sizeimage = output_size;
--			pfmt[0].bytesperline = ALIGN(pixmp->width, 64);
-+			pfmt[0].bytesperline = ALIGN(pixmp->width, 32);
+diff --git a/drivers/staging/media/meson/vdec/esparser.c b/drivers/staging/media/meson/vdec/esparser.c
+index adc5c1e81a4c..4a9aad3fafeb 100644
+--- a/drivers/staging/media/meson/vdec/esparser.c
++++ b/drivers/staging/media/meson/vdec/esparser.c
+@@ -52,6 +52,7 @@
+ #define PARSER_VIDEO_HOLE	0x90
  
- 			pfmt[1].sizeimage = output_size / 2;
--			pfmt[1].bytesperline = ALIGN(pixmp->width, 64);
-+			pfmt[1].bytesperline = ALIGN(pixmp->width, 32);
- 			pixmp->num_planes = 2;
- 		} else if (pixmp->pixelformat == V4L2_PIX_FMT_YUV420M) {
- 			pfmt[0].sizeimage = output_size;
--			pfmt[0].bytesperline = ALIGN(pixmp->width, 64);
-+			pfmt[0].bytesperline = ALIGN(pixmp->width, 32);
+ #define SEARCH_PATTERN_LEN	512
++#define VP9_HEADER_SIZE		16
  
- 			pfmt[1].sizeimage = output_size / 4;
--			pfmt[1].bytesperline = ALIGN(pixmp->width, 64) / 2;
-+			pfmt[1].bytesperline = ALIGN(pixmp->width, 32) / 2;
+ static DECLARE_WAIT_QUEUE_HEAD(wq);
+ static int search_done;
+@@ -74,14 +75,121 @@ static irqreturn_t esparser_isr(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
  
- 			pfmt[2].sizeimage = output_size / 2;
--			pfmt[2].bytesperline = ALIGN(pixmp->width, 64) / 2;
-+			pfmt[2].bytesperline = ALIGN(pixmp->width, 32) / 2;
- 			pixmp->num_planes = 3;
- 		}
- 	}
-diff --git a/drivers/staging/media/meson/vdec/vdec_helpers.c b/drivers/staging/media/meson/vdec/vdec_helpers.c
-index a4970ec1bf2e..3f7929c54dc6 100644
---- a/drivers/staging/media/meson/vdec/vdec_helpers.c
-+++ b/drivers/staging/media/meson/vdec/vdec_helpers.c
-@@ -154,8 +154,8 @@ int amvdec_set_canvases(struct amvdec_session *sess,
++/**
++ * VP9 frame headers need to be appended by a 16-byte long
++ * Amlogic custom header
++ */
++static int vp9_update_header(struct amvdec_core *core, struct vb2_buffer *buf)
++{
++	u8 *dp;
++	u8 marker;
++	int dsize;
++	int num_frames, cur_frame;
++	int cur_mag, mag, mag_ptr;
++	int frame_size[8], tot_frame_size[8];
++	int total_datasize = 0;
++	int new_frame_size;
++	unsigned char *old_header = NULL;
++
++	dp = (uint8_t *)vb2_plane_vaddr(buf, 0);
++	dsize = vb2_get_plane_payload(buf, 0);
++
++	if (dsize == vb2_plane_size(buf, 0)) {
++		dev_warn(core->dev, "%s: unable to update header\n", __func__);
++		return 0;
++	}
++
++	marker = dp[dsize - 1];
++	if ((marker & 0xe0) == 0xc0) {
++		num_frames = (marker & 0x7) + 1;
++		mag = ((marker >> 3) & 0x3) + 1;
++		mag_ptr = dsize - mag * num_frames - 2;
++		if (dp[mag_ptr] != marker)
++			return 0;
++
++		mag_ptr++;
++		for (cur_frame = 0; cur_frame < num_frames; cur_frame++) {
++			frame_size[cur_frame] = 0;
++			for (cur_mag = 0; cur_mag < mag; cur_mag++) {
++				frame_size[cur_frame] |=
++					(dp[mag_ptr] << (cur_mag * 8));
++				mag_ptr++;
++			}
++			if (cur_frame == 0)
++				tot_frame_size[cur_frame] =
++					frame_size[cur_frame];
++			else
++				tot_frame_size[cur_frame] =
++					tot_frame_size[cur_frame - 1] +
++					frame_size[cur_frame];
++			total_datasize += frame_size[cur_frame];
++		}
++	} else {
++		num_frames = 1;
++		frame_size[0] = dsize;
++		tot_frame_size[0] = dsize;
++		total_datasize = dsize;
++	}
++
++	new_frame_size = total_datasize + num_frames * VP9_HEADER_SIZE;
++
++	if (new_frame_size >= vb2_plane_size(buf, 0)) {
++		dev_warn(core->dev, "%s: unable to update header\n", __func__);
++		return 0;
++	}
++
++	for (cur_frame = num_frames - 1; cur_frame >= 0; cur_frame--) {
++		int framesize = frame_size[cur_frame];
++		int framesize_header = framesize + 4;
++		int oldframeoff = tot_frame_size[cur_frame] - framesize;
++		int outheaderoff =  oldframeoff + cur_frame * VP9_HEADER_SIZE;
++		u8 *fdata = dp + outheaderoff;
++		u8 *old_framedata = dp + oldframeoff;
++
++		memmove(fdata + VP9_HEADER_SIZE, old_framedata, framesize);
++
++		fdata[0] = (framesize_header >> 24) & 0xff;
++		fdata[1] = (framesize_header >> 16) & 0xff;
++		fdata[2] = (framesize_header >> 8) & 0xff;
++		fdata[3] = (framesize_header >> 0) & 0xff;
++		fdata[4] = ((framesize_header >> 24) & 0xff) ^ 0xff;
++		fdata[5] = ((framesize_header >> 16) & 0xff) ^ 0xff;
++		fdata[6] = ((framesize_header >> 8) & 0xff) ^ 0xff;
++		fdata[7] = ((framesize_header >> 0) & 0xff) ^ 0xff;
++		fdata[8] = 0;
++		fdata[9] = 0;
++		fdata[10] = 0;
++		fdata[11] = 1;
++		fdata[12] = 'A';
++		fdata[13] = 'M';
++		fdata[14] = 'L';
++		fdata[15] = 'V';
++
++		if (!old_header) {
++			/* nothing */
++		} else if (old_header > fdata + 16 + framesize) {
++			dev_dbg(core->dev, "%s: data has gaps, setting to 0\n",
++				__func__);
++			memset(fdata + 16 + framesize, 0,
++			       (old_header - fdata + 16 + framesize));
++		} else if (old_header < fdata + 16 + framesize) {
++			dev_err(core->dev, "%s: data overwritten\n", __func__);
++		}
++		old_header = fdata;
++	}
++
++	return new_frame_size;
++}
++
+ /* Pad the packet to at least 4KiB bytes otherwise the VDEC unit won't trigger
+  * ISRs.
+  * Also append a start code 000001ff at the end to trigger
+  * the ESPARSER interrupt.
+  */
+-static u32 esparser_pad_start_code(struct amvdec_core *core, struct vb2_buffer *vb)
++static u32 esparser_pad_start_code(struct amvdec_core *core,
++				   struct vb2_buffer *vb,
++				   u32 payload_size)
  {
- 	struct v4l2_m2m_buffer *buf;
- 	u32 pixfmt = sess->pixfmt_cap;
--	u32 width = ALIGN(sess->width, 64);
--	u32 height = ALIGN(sess->height, 64);
-+	u32 width = ALIGN(sess->width, 32);
-+	u32 height = ALIGN(sess->height, 32);
- 	u32 reg_cur = reg_base[0];
- 	u32 reg_num_cur = 0;
- 	u32 reg_base_cur = 0;
+-	u32 payload_size = vb2_get_plane_payload(vb, 0);
+ 	u32 pad_size = 0;
+ 	u8 *vaddr = vb2_plane_vaddr(vb, 0);
+ 
+@@ -186,13 +294,35 @@ esparser_queue(struct amvdec_session *sess, struct vb2_v4l2_buffer *vbuf)
+ 	int ret;
+ 	struct vb2_buffer *vb = &vbuf->vb2_buf;
+ 	struct amvdec_core *core = sess->core;
++	struct amvdec_codec_ops *codec_ops = sess->fmt_out->codec_ops;
+ 	u32 payload_size = vb2_get_plane_payload(vb, 0);
+ 	dma_addr_t phy = vb2_dma_contig_plane_dma_addr(vb, 0);
++	u32 num_dst_bufs = 0;
+ 	u32 offset;
+ 	u32 pad_size;
+ 
+-	if (esparser_vififo_get_free_space(sess) < payload_size)
++	/*
++	 * When max ref frame is held by VP9, this should be -= 3 to prevent a
++	 * shortage of CAPTURE buffers on the decoder side.
++	 * For the future, a good enhancement of the way this is handled could
++	 * be to notify new capture buffers to the decoding modules, so that
++	 * they could pause when there is no capture buffer available and
++	 * resume on this notification.
++	 */
++	if (sess->fmt_out->pixfmt == V4L2_PIX_FMT_VP9) {
++		if (codec_ops->num_pending_bufs)
++			num_dst_bufs = codec_ops->num_pending_bufs(sess);
++
++		num_dst_bufs += v4l2_m2m_num_dst_bufs_ready(sess->m2m_ctx);
++		if (sess->fmt_out->pixfmt == V4L2_PIX_FMT_VP9)
++			num_dst_bufs -= 3;
++
++		if (esparser_vififo_get_free_space(sess) < payload_size ||
++		    atomic_read(&sess->esparser_queued_bufs) >= num_dst_bufs)
++			return -EAGAIN;
++	} else if (esparser_vififo_get_free_space(sess) < payload_size) {
+ 		return -EAGAIN;
++	}
+ 
+ 	v4l2_m2m_src_buf_remove_by_buf(sess->m2m_ctx, vbuf);
+ 
+@@ -206,7 +336,19 @@ esparser_queue(struct amvdec_session *sess, struct vb2_v4l2_buffer *vbuf)
+ 	vbuf->field = V4L2_FIELD_NONE;
+ 	vbuf->sequence = sess->sequence_out++;
+ 
+-	pad_size = esparser_pad_start_code(core, vb);
++	if (sess->fmt_out->pixfmt == V4L2_PIX_FMT_VP9) {
++		payload_size = vp9_update_header(core, vb);
++
++		/* If unable to alter buffer to add headers */
++		if (payload_size == 0) {
++			amvdec_remove_ts(sess, vb->timestamp);
++			v4l2_m2m_buf_done(vbuf, VB2_BUF_STATE_ERROR);
++
++			return 0;
++		}
++	}
++
++	pad_size = esparser_pad_start_code(core, vb, payload_size);
+ 	ret = esparser_write_data(core, phy, payload_size + pad_size);
+ 
+ 	if (ret <= 0) {
 -- 
 2.22.0
 
