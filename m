@@ -2,32 +2,32 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0936C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 635C8C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:02:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE512465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4033824680
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgCCCCm (ORCPT
+        id S1727417AbgCCCCs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:02:42 -0500
-Received: from mga05.intel.com ([192.55.52.43]:54060 "EHLO mga05.intel.com"
+        Mon, 2 Mar 2020 21:02:48 -0500
+Received: from mga05.intel.com ([192.55.52.43]:54063 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgCCCCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:02:42 -0500
+        id S1727234AbgCCCCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:02:44 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:02:41 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:02:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="440384923"
+   d="scan'208";a="440384963"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 18:02:40 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 18:02:42 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,10 +36,12 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 0/7]  KVM: x86/mmu: nVMX: 5-level paging cleanup and enabling
-Date:   Mon,  2 Mar 2020 18:02:33 -0800
-Message-Id: <20200303020240.28494-1-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 5/7] KVM: nVMX: Rename EPTP validity helper and associated variables
+Date:   Mon,  2 Mar 2020 18:02:38 -0800
+Message-Id: <20200303020240.28494-6-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200303020240.28494-1-sean.j.christopherson@intel.com>
+References: <20200303020240.28494-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,42 +49,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clean up MMU code related to 5 level paging, expose 5-level EPT to L1, and
-additional clean up on top (mostly renames of functions/variables that
-caused me no end of confusion when trying to figure out what was broken
-at various times).
+Rename valid_ept_address() to nested_vmx_check_eptp() to follow the nVMX
+nomenclature and to reflect that the function now checks a lot more than
+just the address contained in the EPTP.  Rename address to new_eptp in
+associated code.
 
-v3:
-  - Dropped fixes for existing 5-level bugs (merged for 5.6).
-  - Use get_guest_pgd() instead of get_guest_cr3_or_eptp(). [Paolo]
-  - Add patches to fix MMU role calculation to play nice with 5-level
-    paging without requiring additional CR4.LA_57 bit.
+No functional change intended.
 
-v2:
-  - Increase the nested EPT array sizes to accomodate 5-level paging in
-    the patch that adds support for 5-level nested EPT, not in the bug
-    fix for 5-level shadow paging.
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+---
+ arch/x86/kvm/vmx/nested.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-Sean Christopherson (7):
-  KVM: x86/mmu: Don't drop level/direct from MMU role calculation
-  KVM: x86/mmu: Drop kvm_mmu_extended_role.cr4_la57 hack
-  KVM: nVMX: Allow L1 to use 5-level page walks for nested EPT
-  KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
-  KVM: nVMX: Rename EPTP validity helper and associated variables
-  KVM: x86/mmu: Rename kvm_mmu->get_cr3() to ->get_guest_pgd()
-  KVM: nVMX: Drop unnecessary check on ept caps for execute-only
-
- arch/x86/include/asm/kvm_host.h |  3 +-
- arch/x86/include/asm/vmx.h      | 12 +++++++
- arch/x86/kvm/mmu/mmu.c          | 59 +++++++++++++++++----------------
- arch/x86/kvm/mmu/paging_tmpl.h  |  4 +--
- arch/x86/kvm/svm.c              |  2 +-
- arch/x86/kvm/vmx/nested.c       | 52 ++++++++++++++++++-----------
- arch/x86/kvm/vmx/nested.h       |  4 +--
- arch/x86/kvm/vmx/vmx.c          |  3 +-
- arch/x86/kvm/x86.c              |  2 +-
- 9 files changed, 82 insertions(+), 59 deletions(-)
-
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index f8717c1e4e51..e545a40b93c8 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -2563,13 +2563,13 @@ static int nested_vmx_check_nmi_controls(struct vmcs12 *vmcs12)
+ 	return 0;
+ }
+ 
+-static bool valid_ept_address(struct kvm_vcpu *vcpu, u64 address)
++static bool nested_vmx_check_eptp(struct kvm_vcpu *vcpu, u64 new_eptp)
+ {
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	int maxphyaddr = cpuid_maxphyaddr(vcpu);
+ 
+ 	/* Check for memory type validity */
+-	switch (address & VMX_EPTP_MT_MASK) {
++	switch (new_eptp & VMX_EPTP_MT_MASK) {
+ 	case VMX_EPTP_MT_UC:
+ 		if (CC(!(vmx->nested.msrs.ept_caps & VMX_EPTP_UC_BIT)))
+ 			return false;
+@@ -2583,7 +2583,7 @@ static bool valid_ept_address(struct kvm_vcpu *vcpu, u64 address)
+ 	}
+ 
+ 	/* Page-walk levels validity. */
+-	switch (address & VMX_EPTP_PWL_MASK) {
++	switch (new_eptp & VMX_EPTP_PWL_MASK) {
+ 	case VMX_EPTP_PWL_5:
+ 		if (CC(!(vmx->nested.msrs.ept_caps & VMX_EPT_PAGE_WALK_5_BIT)))
+ 			return false;
+@@ -2597,11 +2597,11 @@ static bool valid_ept_address(struct kvm_vcpu *vcpu, u64 address)
+ 	}
+ 
+ 	/* Reserved bits should not be set */
+-	if (CC(address >> maxphyaddr || ((address >> 7) & 0x1f)))
++	if (CC(new_eptp >> maxphyaddr || ((new_eptp >> 7) & 0x1f)))
+ 		return false;
+ 
+ 	/* AD, if set, should be supported */
+-	if (address & VMX_EPTP_AD_ENABLE_BIT) {
++	if (new_eptp & VMX_EPTP_AD_ENABLE_BIT) {
+ 		if (CC(!(vmx->nested.msrs.ept_caps & VMX_EPT_AD_BIT)))
+ 			return false;
+ 	}
+@@ -2650,7 +2650,7 @@ static int nested_check_vm_execution_controls(struct kvm_vcpu *vcpu,
+ 		return -EINVAL;
+ 
+ 	if (nested_cpu_has_ept(vmcs12) &&
+-	    CC(!valid_ept_address(vcpu, vmcs12->ept_pointer)))
++	    CC(!nested_vmx_check_eptp(vcpu, vmcs12->ept_pointer)))
+ 		return -EINVAL;
+ 
+ 	if (nested_cpu_has_vmfunc(vmcs12)) {
+@@ -5244,7 +5244,7 @@ static int nested_vmx_eptp_switching(struct kvm_vcpu *vcpu,
+ 				     struct vmcs12 *vmcs12)
+ {
+ 	u32 index = kvm_rcx_read(vcpu);
+-	u64 address;
++	u64 new_eptp;
+ 	bool accessed_dirty;
+ 	struct kvm_mmu *mmu = vcpu->arch.walk_mmu;
+ 
+@@ -5257,23 +5257,23 @@ static int nested_vmx_eptp_switching(struct kvm_vcpu *vcpu,
+ 
+ 
+ 	if (kvm_vcpu_read_guest_page(vcpu, vmcs12->eptp_list_address >> PAGE_SHIFT,
+-				     &address, index * 8, 8))
++				     &new_eptp, index * 8, 8))
+ 		return 1;
+ 
+-	accessed_dirty = !!(address & VMX_EPTP_AD_ENABLE_BIT);
++	accessed_dirty = !!(new_eptp & VMX_EPTP_AD_ENABLE_BIT);
+ 
+ 	/*
+ 	 * If the (L2) guest does a vmfunc to the currently
+ 	 * active ept pointer, we don't have to do anything else
+ 	 */
+-	if (vmcs12->ept_pointer != address) {
+-		if (!valid_ept_address(vcpu, address))
++	if (vmcs12->ept_pointer != new_eptp) {
++		if (!nested_vmx_check_eptp(vcpu, new_eptp))
+ 			return 1;
+ 
+ 		kvm_mmu_unload(vcpu);
+ 		mmu->ept_ad = accessed_dirty;
+ 		mmu->mmu_role.base.ad_disabled = !accessed_dirty;
+-		vmcs12->ept_pointer = address;
++		vmcs12->ept_pointer = new_eptp;
+ 		/*
+ 		 * TODO: Check what's the correct approach in case
+ 		 * mmu reload fails. Currently, we just let the next
 -- 
 2.24.1
 
