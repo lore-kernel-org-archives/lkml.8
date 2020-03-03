@@ -2,112 +2,111 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CFE1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1316C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:30:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 342C724673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:29:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="a0C+82I5"
+	by mail.kernel.org (Postfix) with ESMTP id 9B3B824673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:30:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgCCB3S (ORCPT
+        id S1727125AbgCCBad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 20:29:18 -0500
-Received: from ozlabs.org ([203.11.71.1]:54153 "EHLO ozlabs.org"
+        Mon, 2 Mar 2020 20:30:33 -0500
+Received: from mga18.intel.com ([134.134.136.126]:22374 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbgCCB3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 20:29:18 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WfYl1pJrz9sRf;
-        Tue,  3 Mar 2020 12:29:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583198955;
-        bh=9JgwDHLebH7yM40ELOfocC40qLVAwpcXJe/0yOA1g88=;
-        h=Date:From:To:Cc:Subject:From;
-        b=a0C+82I54n/QClXx9rJSYbqBaN2rESCM8Xf98eHGox4eNhyd3FYuy0udTiL2JCqIt
-         I+ynQ99jXZNcld6w3lGDOfhH0XvL53uDA639VunJX/8+4Q4A+3z3nmZ6kSXRLFohgk
-         VnPiGdLOj66ZoaS95IsFiZPwb1nXPv6H+SoKhHiLmVXRAbFOqYrY5NTgSqjBZcZ6pb
-         /Kj5nf6FoR1vbDSCqpIyGNw8rwsZhC7rZIOpqnw0vNNJSENdLZ0XQVgD9k4Jyq/r41
-         IGrm9hbzo/BaWx3P+xkEGu5yqeBrpo/RS74kkKx2R6ySk9OJssV3J1kjOoZEKZ1Jgn
-         2uotJ7RMbj79w==
-Date:   Tue, 3 Mar 2020 12:29:09 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Akshu Agrawal <akshu.agrawal@amd.com>
-Subject: linux-next: build warning after merge of the sound-asoc tree
-Message-ID: <20200303122909.0d760f83@canb.auug.org.au>
+        id S1726755AbgCCBad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 20:30:33 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 17:30:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
+   d="scan'208";a="258195400"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga002.jf.intel.com with ESMTP; 02 Mar 2020 17:30:28 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        "Johannes Weiner" <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>,
+        "Alexander Duyck" <alexander.duyck@gmail.com>
+Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
+References: <20200228033819.3857058-1-ying.huang@intel.com>
+        <20200228034248.GE29971@bombadil.infradead.org>
+        <87a7538977.fsf@yhuang-dev.intel.com>
+        <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
+        <871rqf850z.fsf@yhuang-dev.intel.com>
+        <20200228095048.GK3771@dhcp22.suse.cz>
+        <87d09u7sm2.fsf@yhuang-dev.intel.com>
+        <20200302142549.GO4380@dhcp22.suse.cz>
+Date:   Tue, 03 Mar 2020 09:30:28 +0800
+In-Reply-To: <20200302142549.GO4380@dhcp22.suse.cz> (Michal Hocko's message of
+        "Mon, 2 Mar 2020 15:25:49 +0100")
+Message-ID: <874kv66x8r.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/k8LROJLLNdbDSbqbVb3+ij6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/k8LROJLLNdbDSbqbVb3+ij6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Michal Hocko <mhocko@kernel.org> writes:
 
-Hi all,
+> On Mon 02-03-20 22:12:53, Huang, Ying wrote:
+>> Michal Hocko <mhocko@kernel.org> writes:
+> [...]
+>> > And MADV_FREE pages are a kind of cache as well. If the target node is
+>> > short on memory then those will be reclaimed as a cache so a
+>> > pro-active freeing sounds counter productive as you do not have any
+>> > idea whether that cache is going to be used in future. In other words
+>> > you are not going to free a clean page cache if you want to use that
+>> > memory as a migration target right? So you should make a clear case
+>> > about why MADV_FREE cache is less important than the clean page cache
+>> > and ideally have a good justification backed by real workloads.
+>> 
+>> Clean page cache still have valid contents, while clean MADV_FREE pages
+>> has no valid contents.  So penalty of discarding the clean page cache is
+>> reading from disk, while the penalty of discarding clean MADV_FREE pages
+>> is just page allocation and zeroing.
+>
+> And "just page allocation and zeroing" overhead is the primary
+> motivation to keep the page in memory. It is a decision of the workload
+> to use MADV_FREE because chances are that this will speed things up. All
+> that with a contract that the memory goes away under memory pressure so
+> with a good workload/memory sizing you do not really lose that
+> optimization. Now you want to make decision on behalf of the consumer of
+> the MADV_FREE memory.
 
-After merging the sound-asoc tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+I understand that MADV_FREE helps in some situations.  And if the
+application want to keep the "contract" after migration, they should
+have a way to do that.
 
-In file included from include/linux/device.h:15,
-                 from include/sound/core.h:10,
-                 from sound/soc/amd/acp3x-rt5682-max9836.c:7:
-sound/soc/amd/acp3x-rt5682-max9836.c: In function 'acp3x_probe':
-sound/soc/amd/acp3x-rt5682-max9836.c:341:23: warning: format '%d' expects a=
-rgument of type 'int', but argument 3 has type 'long int' [-Wformat=3D]
-  341 |   dev_err(&pdev->dev, "DMIC gpio failed err=3D%d\n",
-      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-include/linux/dev_printk.h:19:22: note: in definition of macro 'dev_fmt'
-   19 | #define dev_fmt(fmt) fmt
-      |                      ^~~
-sound/soc/amd/acp3x-rt5682-max9836.c:341:3: note: in expansion of macro 'de=
-v_err'
-  341 |   dev_err(&pdev->dev, "DMIC gpio failed err=3D%d\n",
-      |   ^~~~~~~
-sound/soc/amd/acp3x-rt5682-max9836.c:341:46: note: format string is defined=
- here
-  341 |   dev_err(&pdev->dev, "DMIC gpio failed err=3D%d\n",
-      |                                             ~^
-      |                                              |
-      |                                              int
-      |                                             %ld
+>> I understand that MADV_FREE is another kind of cache and has its value.
+>> But in the original implementation, during migration, we have already
+>> freed the original "cache", then reallocate the cache elsewhere and
+>> copy.  This appears more like all pages are populated in mmap() always.
+>> I know there's value to populate all pages in mmap(), but does that need
+>> to be done always by default?
+>
+> It is not. You have to explicitly request MAP_POPULATE to initialize
+> mmap.
 
-Introduced by commit
+Yes.  mmap() can control whether to populate the underlying physical
+pages.  But for migrating MADV_FREE pages, there's no control, all pages
+will be populated again always by default.  Maybe we should avoid to do
+that in some situations too.
 
-  72c3b2b09fcd ("ASoc: amd: Add DMIC switch capability to machine driver")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/k8LROJLLNdbDSbqbVb3+ij6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5dsuUACgkQAVBC80lX
-0GyXTwf/Viokg1Oor3erp/lUXDSs9qHoliYCz0MYQFs/YxrQ55wseIqA15yPKOJU
-Ks7A2hptHkfyljjP8fNsZY841javuNi8/k+gxqmiN4E1YhzAvzSUw51ptSk1b+qO
-aZY6Hf/yd3oDpS2WKh2jOqrRcFR3e9c2EGoioElMeP0yn2oxr3ZuYLOEgH3diHNc
-GGWxE9ytM0MqZeMyrppNzR9wyBylLr3X2MOYqo5M7JAAQApud8kDfD9BNmk5zgfQ
-J8B40jPk826UZ8Rvx3AI/GoYdRBpAehlvL7Km51y4/1GQNRrk68y4zlg+SeDOZ2l
-eifKqPPYPIGUSxUX/nO0eai0STg+Gg==
-=OzbO
------END PGP SIGNATURE-----
-
---Sig_/k8LROJLLNdbDSbqbVb3+ij6--
+Best Regards,
+Huang, Ying
