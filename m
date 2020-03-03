@@ -7,86 +7,90 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F25AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25CEFC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 559CD2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE3962072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583275150;
-	bh=g0VhpinrBmn7HKATUnTwD6rm/I13DlmTYZx1QTDqtEg=;
+	s=default; t=1583275219;
+	bh=Zat+QL2EK9KhHS8AhAv49+8JsoJc6Ef+wcQ9Q6byCWI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JkqiPR6r1w24tV7jecjL7o7rLxqsewnH4RhpkmXJLi28Ck0V9i2nVxcDjXTo75MLa
-	 +bbJclzv3UzNCnlxCILdFfI5J3EO47Xw2WFd1k+YXl2iGVbYGkHOEaRCk4PeWBco37
-	 l7jvFzfJLBxQ8lEeQVzxzQ8exMq1fmHQGm1ZbpZo=
+	b=wU6a43GV9xcM3r/T5WSSG6WPXnOUiIDhEyKtbHgxA1UcAZddVY7yMvQv4Mglx57ni
+	 DZWxozAFfHyhbMisxyZwby8aswSfJQmd5jXs9+qvQc9nywd7gNFt3mL/IMlKtt4kE2
+	 6+FZ1TVasYHm6akGruYCyAfcBspJuxuC/UsYtAzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728031AbgCCWjJ (ORCPT
+        id S1727916AbgCCWkS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:39:09 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:41114 "EHLO
+        Tue, 3 Mar 2020 17:40:18 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:40629 "EHLO
         mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbgCCWjJ (ORCPT
+        with ESMTP id S1726747AbgCCWkR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:39:09 -0500
-Received: by mail-oi1-f194.google.com with SMTP id i1so50026oie.8;
-        Tue, 03 Mar 2020 14:39:08 -0800 (PST)
+        Tue, 3 Mar 2020 17:40:17 -0500
+Received: by mail-oi1-f194.google.com with SMTP id j80so57773oih.7;
+        Tue, 03 Mar 2020 14:40:16 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=a6/0B8KLI+wIuIFwR3hPyELWveCaOwNjzdatSPUN1sc=;
-        b=hUYlL9psYJ1UKkn6Ol3wf5SS8AonlIJdDyXXsxh4sKXUTwKLNccyhFHzoZDU1FZukg
-         1GyXZDHdqHfcMqXg+H9Adazf5jB7j2pKloFRmf4S+635WgSEUAKtYd8aw7MCz7tMhxud
-         pLdvm2Ak9xOjuYVfUaObtfmODTM870RQku6bizKQZu6bTz6wsYatoRUTyhrsSRFLjUsZ
-         bTogNX7Y0X8lwqteI9mHY5R0IKJqPLk3m6qdCy+rOQ8NLyniAooUEZLUMfAFwCfznjAf
-         qA3XTuhvWN0N7MXGq2Zao4OlMY/afGkZCBxLPLj5PqF7HEZBKNdH5Lay3yGnpSwmWJ/U
-         K36Q==
-X-Gm-Message-State: ANhLgQ0LKLmXAqmPjFxQ32AccY8ULl/pSKgGA3AAnMGwLD7/8JL3UuKM
-        F2fp5FcJPH5vgR/geIWbkQ==
-X-Google-Smtp-Source: ADFU+vs51yl6SSgJqKRKqM4Xl3vwqt/V4nBzrTXPJP2xNpu7td6+1mMvUOkm25pJRe//I5M0J+vZGw==
-X-Received: by 2002:a05:6808:610:: with SMTP id y16mr558376oih.89.1583275148253;
-        Tue, 03 Mar 2020 14:39:08 -0800 (PST)
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BqQd81PxAorJe3DrcyYS0OjbqqCAv2eTRW7X1U9wEb0=;
+        b=lrSRooupdwoviV9rGvjj/NYDE8E3Uu8TMAyzyrcixaEyw1WcgkCnZImy5XH2067lZd
+         FdjayrkCVPdPVjTcg93Udy92fB9IgS08RxhB+6ts0ZN3JGo+AcV7WWeKfB7MjImRUpzV
+         QihiE6lkr0q0Iwd0EC/Vu/ZPWBHsdXzzF1Vde/bqLRyvOwv2AMZf4QEpG1bf/k+s1eJv
+         l7Bruxsx/kw+t1OI9j/2IQqTB3fqpkdDTDTOWlfhHxP7Dfpm6JZ9D1Rfk5mvkuJpos3J
+         IXAhXk8E/as68YlmX5eOG4iyCxI1LNWlQ2Aa6DoRHx3aGkz1IbMJBZ2N2JQkSVWbfAUH
+         5mag==
+X-Gm-Message-State: ANhLgQ0ijXKRMSGVC1IYldNUllCePQBRyRoK+s11k+NSjkmqkVnhzTrR
+        hB7HJtCNZTOWi8+H3nE3+g==
+X-Google-Smtp-Source: ADFU+vvr+K/q3LLOjA4PSsa3d6cNVzDbNdbXQcAvWmfJnwY3zuI0TCoJfLaefQAtE4lFsIxCgCk4bA==
+X-Received: by 2002:aca:2104:: with SMTP id 4mr554313oiz.127.1583275215922;
+        Tue, 03 Mar 2020 14:40:15 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k16sm1883065otp.52.2020.03.03.14.39.07
+        by smtp.gmail.com with ESMTPSA id g7sm8388947otk.17.2020.03.03.14.40.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 14:39:07 -0800 (PST)
-Received: (nullmailer pid 21088 invoked by uid 1000);
-        Tue, 03 Mar 2020 22:39:06 -0000
-Date:   Tue, 3 Mar 2020 16:39:06 -0600
+        Tue, 03 Mar 2020 14:40:15 -0800 (PST)
+Received: (nullmailer pid 22805 invoked by uid 1000);
+        Tue, 03 Mar 2020 22:40:14 -0000
+Date:   Tue, 3 Mar 2020 16:40:14 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
-Cc:     devicetree@vger.kernel.org,
-        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: mfd: Fix typo in file name of
- twl-familly.txt
-Message-ID: <20200303223906.GA21037@bogus>
-References: <20200227170702.4582-1-j.neuschaefer@gmx.net>
+To:     Suman Anna <s-anna@ti.com>
+Cc:     Tony Lindgren <tony@atomide.com>, Roger Quadros <rogerq@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Suman Anna <s-anna@ti.com>
+Subject: Re: [PATCH v2 1/5] dt-bindings: bus: ti-sysc: Add support for PRUSS
+ SYSC type
+Message-ID: <20200303224014.GA22749@bogus>
+References: <20200227222837.7329-1-s-anna@ti.com>
+ <20200227222837.7329-2-s-anna@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200227170702.4582-1-j.neuschaefer@gmx.net>
+In-Reply-To: <20200227222837.7329-2-s-anna@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 18:07:01 +0100, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= wrote:
+On Thu, 27 Feb 2020 16:28:33 -0600, Suman Anna wrote:
+> From: Roger Quadros <rogerq@ti.com>
 > 
-> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
+> The PRUSS module has a SYSCFG which is unique. The SYSCFG
+> has two additional unique fields called STANDBY_INIT and
+> SUB_MWAIT in addition to regular IDLE_MODE and STANDBY_MODE
+> fields. Add the bindings for this new sysc type.
+> 
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 > ---
->  Documentation/devicetree/bindings/input/twl4030-pwrbutton.txt   | 2 +-
->  .../devicetree/bindings/mfd/{twl-familly.txt => twl-family.txt} | 0
->  2 files changed, 1 insertion(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/mfd/{twl-familly.txt => twl-family.txt} (100%)
+> v2: No changes
+> 
+>  Documentation/devicetree/bindings/bus/ti-sysc.txt | 1 +
+>  include/dt-bindings/bus/ti-sysc.h                 | 4 ++++
+>  2 files changed, 5 insertions(+)
 > 
 
-Applied, thanks.
-
-Rob
+Acked-by: Rob Herring <robh@kernel.org>
