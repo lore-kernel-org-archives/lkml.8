@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E3B3C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E7DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41E4B2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:24:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B568C21739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:24:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EAYDCY7S"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q2ev026E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727572AbgCCGX6 (ORCPT
+        id S1727534AbgCCGXz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:23:58 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:39216 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbgCCGX4 (ORCPT
+        Tue, 3 Mar 2020 01:23:55 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43734 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbgCCGXx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:23:56 -0500
-Received: by mail-pj1-f68.google.com with SMTP id o5so863676pjs.4;
-        Mon, 02 Mar 2020 22:23:54 -0800 (PST)
+        Tue, 3 Mar 2020 01:23:53 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u12so1026644pgb.10;
+        Mon, 02 Mar 2020 22:23:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=TI3Z8YY503FP0KWJnGcP8fCbF2AkQr8pkKXqhxZsBmc=;
-        b=EAYDCY7S4bhB2WRC9nvVwFPyK5XgymtItdht/AXBXjWl4G4vRkAEs0a89EbW9UXGJK
-         4AMHFHAVVrfXI6FGDnx3vHen7TN5/Bm2Nb0g3b3G83Dm5Yba+V9doMYTV2kSoU0LcqSV
-         xcX2Os7LGLf/Um4io/wG7mTQVJVlazLWmGGyJIw5Yyk/N5LrLZ7QB1B4VGhb4lViumw3
-         UZa0wiEtq3EuGyFUBCQ6rsGYCpdkivrV2VtUz+Uxkh47VVeKg7EwReRulojx6iBgrnb3
-         pSrVqaGSdo5F0T7KirZrS113pbsX+uxXRBVqy0ZVgnqvKvY5B9RDlEJjcdfYJ2x7axJ0
-         /2rQ==
+        bh=lFzezbgly821hZw00oikD/AE/FsI5IqUTxbG0Oja4KA=;
+        b=Q2ev026EawsJ85PvppOvYO+mZKcxl1rYkm0COMir47W+yf7TRR2dtZsMLOvP+UMScU
+         xS9L6F+BPNybR2G9IXZhRxvCLx3Q574FJN6F37LpcOsMrf9n1q9vldzDujO8n6b4oj0x
+         eswTQm6axlN5xjSAnBK+K0uuF7wf2XAjklFRJlb4IXtE8fkn+rDLs74YWTMLy8nGaE/Y
+         h8o5F7SqarVuydI1WYyukWahoxsqfzmu+OctGVGQp0da16nmB9uDLGHLaSvP7g1nyQ6+
+         CGxPlb5753cz7g4GeFsMn2DvpkSkV+dq8AUYcz/wTU5ZvLN0vZly96dBtkTfswyyZYN4
+         2XTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=TI3Z8YY503FP0KWJnGcP8fCbF2AkQr8pkKXqhxZsBmc=;
-        b=IugeofG7XvzOj4U5OR81SQHwruPS7XRAj9e7YaT2qhZKMy4aAs0ArbohewL9n7EbIe
-         RjJ122SQCGoZu4fOCYloq9ScWPkTErXgzJRXsrGDJVq+AzVCOXEVPN20Qc6tRmcAto/w
-         9JTQxjKYMt896g2QhSEQCODI3Tv6adLH/N/Rvv0JM5QnWeuLZWxoNSHdOlYMY/PXIxN6
-         TcEu0o5OgIHgfDjG3N4W/dGNf01TIVmEinA1WZdokanN6QqPE+YkQPlHvK3xheteYITc
-         NLhxgY/a6Z5F1mgaQPFuMRQUdPLk2QnIdXPUzIHUvGcpaCPKo5vyDGMuwa3kjiPIemMU
-         JQlQ==
-X-Gm-Message-State: ANhLgQ1NizDGAeA1CgwHfD7Zuzxe4j+EdE1/0jPQLoojdfeYV+l6QloT
-        fC5+SU071TcO8Eodr39n7XQ=
-X-Google-Smtp-Source: ADFU+vt9tRuqC9HtMQlJWQEOzdX43o3XQH7276qTwTP1ViurSta8NASB80y6m5uKUP303TtRaWHTww==
-X-Received: by 2002:a17:90a:f009:: with SMTP id bt9mr2411146pjb.150.1583216634072;
-        Mon, 02 Mar 2020 22:23:54 -0800 (PST)
+        bh=lFzezbgly821hZw00oikD/AE/FsI5IqUTxbG0Oja4KA=;
+        b=B/CzGt63khCPKT+khCHadcrRadn6Ut4vtYCBgMJ/gDU9dgf+16Tme4MMdnbE8xgyd6
+         bx3AO2PDFU4CyD8lEXaxo0wl8dHYxIw12BSZdejH7DrHCYWScP0mtrH/YTc7k9wj6gyS
+         ebvp0XLOtrinRjz42CVNcPfWGNk+dSgf6rIvfZ4njdtHfToZb5HIzjrJhKuQcjs9B6yF
+         VSlCPQz70B0ZKWN+uVkKE5x38kRcjI5T9gkqigoWz0u7mYJobItuh47awRvJUAWA4PsA
+         Oyh6nU8wjNii6XGEf80bmFCFG+fm907cRX8xvDYx5xJUEym3s6lNYrU9YtOhBeoe2bC2
+         VM3A==
+X-Gm-Message-State: ANhLgQ2Z8UroYYX7hq+RhBv3hDjsiCFtn4zxUx7QgaXsjvJAjjN3iJnZ
+        Cit1mTW9PdODBHSkWa9PJDA=
+X-Google-Smtp-Source: ADFU+vv2fSMb6IsU3yZJKIeBgC4S/mzJAkC13JfKcx/EFBGA3G4AC7izihv2YSh16vWsaLOKFpyJKg==
+X-Received: by 2002:a62:1682:: with SMTP id 124mr2672356pfw.107.1583216630225;
+        Mon, 02 Mar 2020 22:23:50 -0800 (PST)
 Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-24-4-25-55.hsd1.ca.comcast.net. [24.4.25.55])
-        by smtp.gmail.com with ESMTPSA id k5sm7453526pfp.66.2020.03.02.22.23.52
+        by smtp.gmail.com with ESMTPSA id k5sm7453526pfp.66.2020.03.02.22.23.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 22:23:53 -0800 (PST)
+        Mon, 02 Mar 2020 22:23:49 -0800 (PST)
 From:   rentao.bupt@gmail.com
 To:     Felipe Balbi <balbi@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -72,9 +72,9 @@ To:     Felipe Balbi <balbi@kernel.org>,
         linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
         taoren@fb.com
 Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH v7 6/7] ARM: dts: aspeed-g4: add vhub port and endpoint properties
-Date:   Mon,  2 Mar 2020 22:23:35 -0800
-Message-Id: <20200303062336.7361-7-rentao.bupt@gmail.com>
+Subject: [PATCH v7 3/7] usb: gadget: aspeed: add ast2600 vhub support
+Date:   Mon,  2 Mar 2020 22:23:32 -0800
+Message-Id: <20200303062336.7361-4-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200303062336.7361-1-rentao.bupt@gmail.com>
 References: <20200303062336.7361-1-rentao.bupt@gmail.com>
@@ -85,32 +85,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-Add "aspeed,vhub-downstream-ports" and "aspeed,vhub-generic-endpoints"
-properties to describe supported number of vhub ports and endpoints.
+Add AST2600 support in aspeed-vhub driver. There are 3 major differences
+between AST2500 and AST2600 vhub:
+  - AST2600 supports 7 downstream ports while AST2500 supports 5.
+  - AST2600 supports 21 generic endpoints while AST2500 supports 15.
+  - EP0 data buffer's 8-byte DMA alignment restriction is removed from
+    AST2600.
 
 Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Reviewed-by: Joel Stanley <joel@jms.id.au>
 ---
- No change in v2/v3/v4/v5/v6/v7.
-   - It's given v7 to align with the version of the patch series.
+ No Change in v3/v4/v5/v6/v7.
+ Changes in v2:
+   - removed "ast_vhub_config" related logic.
 
- arch/arm/boot/dts/aspeed-g4.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/usb/gadget/udc/aspeed-vhub/Kconfig | 4 ++--
+ drivers/usb/gadget/udc/aspeed-vhub/core.c  | 3 +++
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/aspeed-g4.dtsi b/arch/arm/boot/dts/aspeed-g4.dtsi
-index 807a0fc20670..8e04303e8514 100644
---- a/arch/arm/boot/dts/aspeed-g4.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g4.dtsi
-@@ -164,6 +164,8 @@
- 			reg = <0x1e6a0000 0x300>;
- 			interrupts = <5>;
- 			clocks = <&syscon ASPEED_CLK_GATE_USBPORT1CLK>;
-+			aspeed,vhub-downstream-ports = <5>;
-+			aspeed,vhub-generic-endpoints = <15>;
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&pinctrl_usb2d_default>;
- 			status = "disabled";
+diff --git a/drivers/usb/gadget/udc/aspeed-vhub/Kconfig b/drivers/usb/gadget/udc/aspeed-vhub/Kconfig
+index 83ba8a2eb6af..605500b19cf3 100644
+--- a/drivers/usb/gadget/udc/aspeed-vhub/Kconfig
++++ b/drivers/usb/gadget/udc/aspeed-vhub/Kconfig
+@@ -4,5 +4,5 @@ config USB_ASPEED_VHUB
+ 	depends on ARCH_ASPEED || COMPILE_TEST
+ 	depends on USB_LIBCOMPOSITE
+ 	help
+-	  USB peripheral controller for the Aspeed AST2500 family
+-	  SoCs supporting the "vHub" functionality and USB2.0
++	  USB peripheral controller for the Aspeed AST2400, AST2500 and
++	  AST2600 family SoCs supporting the "vHub" functionality and USB2.0
+diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+index f8ab8e012f34..f8d35dd60c34 100644
+--- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
++++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
+@@ -423,6 +423,9 @@ static const struct of_device_id ast_vhub_dt_ids[] = {
+ 	{
+ 		.compatible = "aspeed,ast2500-usb-vhub",
+ 	},
++	{
++		.compatible = "aspeed,ast2600-usb-vhub",
++	},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, ast_vhub_dt_ids);
 -- 
 2.17.1
 
