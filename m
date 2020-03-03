@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 781E7C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E68C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E04E20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32A3020656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259049;
-	bh=kEQ25yhyfyUPB0XRr6iuZu6xRNtePwkWL9EyB/s6u8k=;
+	s=default; t=1583259054;
+	bh=E3YVgtsw6Ht4SRsv2+bJ31Iqon7r6QazEhUVanUXS3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lRvST1bdOoK7YF7+50kJfj+vxpSgSNgYlPuw76bxKCdPm5GFyYaDE36lTwTF2/y12
-	 IeXhMSVIj6Qc57Gfwwo5xMIY3o8VJoi5U8Xt/zALISX9aTyJKdkPGvSLlG1Q2NDJCn
-	 zsN8bcA0Nos0rUZPKcC4JBfCL5mkA8kD2zA/lM8Q=
+	b=jVfXg82UYUHl6JrcJk9Dn0dGIzobvFT7BYGXYMrB+0hCtmFw5qyGlpMoyeprrqhBY
+	 Q65yb7/oqo+UuDmfz256MjYTm9VGQRmPY4Ncj80Yi5OlhgRUl/NVMzdVmTxZ+Awxpa
+	 mznd9/TdSCsjdBR76SwOjDClr0PPYLHkOw4wCP0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388321AbgCCSKr (ORCPT
+        id S1731307AbgCCRuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:10:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58344 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:50:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731521AbgCCRuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:50:37 -0500
+        id S1731118AbgCCRuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:50:18 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB751208C3;
-        Tue,  3 Mar 2020 17:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1490420CC7;
+        Tue,  3 Mar 2020 17:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257836;
-        bh=kEQ25yhyfyUPB0XRr6iuZu6xRNtePwkWL9EyB/s6u8k=;
+        s=default; t=1583257817;
+        bh=E3YVgtsw6Ht4SRsv2+bJ31Iqon7r6QazEhUVanUXS3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PgWYZA/S6UxjbdS97LPW5PiLAR55oH6CIUnrrInUV29jaTD6y90tjF5jq47wnAZ2v
-         iuMHUp3L0KCOnPpivUKPtComjOO8z2RUGV3sNh4cRzX0HsagFrNu70LVbaftC2daVQ
-         QCqZSRnERJegvMzofsLI9HongoH4El0WsO8kV4Ck=
+        b=PleMDdzS/8ySrfKkqnOecbIg7+StsyVUTCdCH+ITCprnSZffyT05+XoNOqVpbgWuw
+         nW1g3IxL+jvn6Fri7+dRhJZ1ceg34ioyuCL2hA7oAOweZDWGZ4oBM36XLd49k6ajRb
+         BmQAd3yHj/kvpdqP+wNh9Dy52P/dkClrxHL/AvMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Janne Karhunen <janne.karhunen@gmail.com>,
-        Konsta Karsisto <konsta.karsisto@gmail.com>
-Subject: [PATCH 5.5 148/176] ima: ima/lsm policy rule loading logic bug fixes
-Date:   Tue,  3 Mar 2020 18:43:32 +0100
-Message-Id: <20200303174321.829218572@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 5.5 133/176] selftests: Install settings files to fix TIMEOUT failures
+Date:   Tue,  3 Mar 2020 18:43:17 +0100
+Message-Id: <20200303174320.136453781@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,140 +59,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janne Karhunen <janne.karhunen@gmail.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 483ec26eed42bf050931d9a5c5f9f0b5f2ad5f3b upstream.
+commit b9167c8078c3527de6da241c8a1a75a9224ed90a upstream.
 
-Keep the ima policy rules around from the beginning even if they appear
-invalid at the time of loading, as they may become active after an lsm
-policy load.  However, loading a custom IMA policy with unknown LSM
-labels is only safe after we have transitioned from the "built-in"
-policy rules to a custom IMA policy.
+Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
+timeout per test") added a 45 second timeout for tests, and also added
+a way for tests to customise the timeout via a settings file.
 
-Patch also fixes the rule re-use during the lsm policy reload and makes
-some prints a bit more human readable.
+For example the ftrace tests take multiple minutes to run, so they
+were given longer in commit b43e78f65b1d ("tracing/selftests: Turn off
+timeout setting").
 
-Changelog:
-v4:
-- Do not allow the initial policy load refer to non-existing lsm rules.
-v3:
-- Fix too wide policy rule matching for non-initialized LSMs
-v2:
-- Fix log prints
+This works when the tests are run from the source tree. However if the
+tests are installed with "make -C tools/testing/selftests install",
+the settings files are not copied into the install directory. When the
+tests are then run from the install directory the longer timeouts are
+not applied and the tests timeout incorrectly.
 
-Fixes: b16942455193 ("ima: use the lsm policy update notifier")
-Cc: Casey Schaufler <casey@schaufler-ca.com>
-Reported-by: Mimi Zohar <zohar@linux.ibm.com>
-Signed-off-by: Janne Karhunen <janne.karhunen@gmail.com>
-Signed-off-by: Konsta Karsisto <konsta.karsisto@gmail.com>
-Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+So add the settings files to TEST_FILES of the appropriate Makefiles
+to cause the settings files to be installed using the existing install
+logic.
+
+Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second timeout per test")
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- security/integrity/ima/ima_policy.c |   44 +++++++++++++++++++++---------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
+ tools/testing/selftests/ftrace/Makefile    |    2 +-
+ tools/testing/selftests/livepatch/Makefile |    2 ++
+ tools/testing/selftests/rseq/Makefile      |    2 ++
+ tools/testing/selftests/rtc/Makefile       |    2 ++
+ 4 files changed, 7 insertions(+), 1 deletion(-)
 
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -263,7 +263,7 @@ static void ima_lsm_free_rule(struct ima
- static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- {
- 	struct ima_rule_entry *nentry;
--	int i, result;
-+	int i;
+--- a/tools/testing/selftests/ftrace/Makefile
++++ b/tools/testing/selftests/ftrace/Makefile
+@@ -2,7 +2,7 @@
+ all:
  
- 	nentry = kmalloc(sizeof(*nentry), GFP_KERNEL);
- 	if (!nentry)
-@@ -277,7 +277,7 @@ static struct ima_rule_entry *ima_lsm_co
- 	memset(nentry->lsm, 0, sizeof_field(struct ima_rule_entry, lsm));
+ TEST_PROGS := ftracetest
+-TEST_FILES := test.d
++TEST_FILES := test.d settings
+ EXTRA_CLEAN := $(OUTPUT)/logs/*
  
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
--		if (!entry->lsm[i].rule)
-+		if (!entry->lsm[i].args_p)
- 			continue;
+ include ../lib.mk
+--- a/tools/testing/selftests/livepatch/Makefile
++++ b/tools/testing/selftests/livepatch/Makefile
+@@ -8,4 +8,6 @@ TEST_PROGS := \
+ 	test-state.sh \
+ 	test-ftrace.sh
  
- 		nentry->lsm[i].type = entry->lsm[i].type;
-@@ -286,13 +286,13 @@ static struct ima_rule_entry *ima_lsm_co
- 		if (!nentry->lsm[i].args_p)
- 			goto out_err;
- 
--		result = security_filter_rule_init(nentry->lsm[i].type,
--						   Audit_equal,
--						   nentry->lsm[i].args_p,
--						   &nentry->lsm[i].rule);
--		if (result == -EINVAL)
--			pr_warn("ima: rule for LSM \'%d\' is undefined\n",
--				entry->lsm[i].type);
-+		security_filter_rule_init(nentry->lsm[i].type,
-+					  Audit_equal,
-+					  nentry->lsm[i].args_p,
-+					  &nentry->lsm[i].rule);
-+		if (!nentry->lsm[i].rule)
-+			pr_warn("rule for LSM \'%s\' is undefined\n",
-+				(char *)entry->lsm[i].args_p);
- 	}
- 	return nentry;
- 
-@@ -329,7 +329,7 @@ static void ima_lsm_update_rules(void)
- 	list_for_each_entry_safe(entry, e, &ima_policy_rules, list) {
- 		needs_update = 0;
- 		for (i = 0; i < MAX_LSM_RULES; i++) {
--			if (entry->lsm[i].rule) {
-+			if (entry->lsm[i].args_p) {
- 				needs_update = 1;
- 				break;
- 			}
-@@ -339,8 +339,7 @@ static void ima_lsm_update_rules(void)
- 
- 		result = ima_lsm_update_rule(entry);
- 		if (result) {
--			pr_err("ima: lsm rule update error %d\n",
--				result);
-+			pr_err("lsm rule update error %d\n", result);
- 			return;
- 		}
- 	}
-@@ -357,7 +356,7 @@ int ima_lsm_policy_change(struct notifie
- }
- 
- /**
-- * ima_match_rules - determine whether an inode matches the measure rule.
-+ * ima_match_rules - determine whether an inode matches the policy rule.
-  * @rule: a pointer to a rule
-  * @inode: a pointer to an inode
-  * @cred: a pointer to a credentials structure for user validation
-@@ -415,9 +414,12 @@ static bool ima_match_rules(struct ima_r
- 		int rc = 0;
- 		u32 osid;
- 
--		if (!rule->lsm[i].rule)
--			continue;
--
-+		if (!rule->lsm[i].rule) {
-+			if (!rule->lsm[i].args_p)
-+				continue;
-+			else
-+				return false;
-+		}
- 		switch (i) {
- 		case LSM_OBJ_USER:
- 		case LSM_OBJ_ROLE:
-@@ -823,8 +825,14 @@ static int ima_lsm_rule_init(struct ima_
- 					   entry->lsm[lsm_rule].args_p,
- 					   &entry->lsm[lsm_rule].rule);
- 	if (!entry->lsm[lsm_rule].rule) {
--		kfree(entry->lsm[lsm_rule].args_p);
--		return -EINVAL;
-+		pr_warn("rule for LSM \'%s\' is undefined\n",
-+			(char *)entry->lsm[lsm_rule].args_p);
++TEST_FILES := settings
 +
-+		if (ima_rules == &ima_default_rules) {
-+			kfree(entry->lsm[lsm_rule].args_p);
-+			result = -EINVAL;
-+		} else
-+			result = 0;
- 	}
+ include ../lib.mk
+--- a/tools/testing/selftests/rseq/Makefile
++++ b/tools/testing/selftests/rseq/Makefile
+@@ -19,6 +19,8 @@ TEST_GEN_PROGS_EXTENDED = librseq.so
  
- 	return result;
+ TEST_PROGS = run_param_test.sh
+ 
++TEST_FILES := settings
++
+ include ../lib.mk
+ 
+ $(OUTPUT)/librseq.so: rseq.c rseq.h rseq-*.h
+--- a/tools/testing/selftests/rtc/Makefile
++++ b/tools/testing/selftests/rtc/Makefile
+@@ -6,4 +6,6 @@ TEST_GEN_PROGS = rtctest
+ 
+ TEST_GEN_PROGS_EXTENDED = setdate
+ 
++TEST_FILES := settings
++
+ include ../lib.mk
 
 
