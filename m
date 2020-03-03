@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5672C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F08C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAAEA2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 261212166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204163;
-	bh=V92sDOYXrgTN/LPG8HmD8wiIfnP0EWsCtC0vXOEMDLk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EGsjDvGdCj/GTd4QtjldfSwp6qyuuyQOsEgKgWZTkyJbOB9fqKAeaovxMW+ccadZg
-	 poEL0hAy7VwOy3VYV5P0UwR/7gveS95Wq7R4nGEAJBuOpJSwRg+qtCbXujn64JhBBp
-	 fMEE+8klQZYjR3mi5mKZpXbUb8Co6rgSBji9I5jA=
+	s=default; t=1583204165;
+	bh=ssKvFUgnI1L6vedipqOf+KiYAXpk4XNBlD8QG1x3TBg=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vB+6OlxaxtBkkA4EsfjjQUgQErdKU6Vv8tVZImDmBbPCpPPUtQLTod9+2HmD8mF2y
+	 RSO99NH5RXXm67mxtaUZ4fz75KD9r4fPDY3+6jFUvzLxLzKRmvwQuICFfbP6HbxS0d
+	 XYXsE+rArOfkTeURfOR4taKJ2WNGDU7PMWLIJVBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728603AbgCCCsy (ORCPT
+        id S1728970AbgCCC4D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44486 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:56:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44818 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbgCCCsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:40 -0500
+        id S1728594AbgCCCsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:54 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 239AC24699;
-        Tue,  3 Mar 2020 02:48:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9E8D24680;
+        Tue,  3 Mar 2020 02:48:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203718;
-        bh=V92sDOYXrgTN/LPG8HmD8wiIfnP0EWsCtC0vXOEMDLk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VpN/FdTT61kKRFolRA0mdEYbMpQPvxPlVuDlg8FSjdUdWtWRU9ytQgKsTNmOB6jKr
-         FxoK7d6cK85Hp9S8hDSF/VCTuxgKWn/c/Zr9NFbpkdXi6SA7Av19kPlC/2KMJfOFhh
-         rvbQLPytOoxTNtVTvPPY7A9O33cYilB0c16HlOCQ=
+        s=default; t=1583203733;
+        bh=ssKvFUgnI1L6vedipqOf+KiYAXpk4XNBlD8QG1x3TBg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=OZfSeyrUqh8nAz5gSywhf8iRItSkPMcuOTmr/8nRhqgxh9+hg6TsYjzxplCrurT2f
+         aacSXVwGxZ1N5kLlbzOD8EpttTpBKApl6Dq+n31CXzTIGM8Y90uktf8Up7p3+MOhgH
+         34XYGxydM/h2S+eVbqrB/B+f5RryTyWPf8m+xY6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandra Winter <wintera@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 48/58] s390/qeth: vnicc Fix EOPNOTSUPP precedence
-Date:   Mon,  2 Mar 2020 21:47:30 -0500
-Message-Id: <20200303024740.9511-48-sashal@kernel.org>
+Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
+Subject: [PATCH AUTOSEL 4.19 01/32] ALSA: hda: do not override bus codec_mask in link_get()
+Date:   Mon,  2 Mar 2020 21:48:20 -0500
+Message-Id: <20200303024851.10054-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
-References: <20200303024740.9511-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,108 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandra Winter <wintera@linux.ibm.com>
+From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
 
-[ Upstream commit 6f3846f0955308b6d1b219419da42b8de2c08845 ]
+[ Upstream commit 43bcb1c0507858cdc95e425017dcc33f8105df39 ]
 
-When getting or setting VNICC parameters, the error code EOPNOTSUPP
-should have precedence over EBUSY.
+snd_hdac_ext_bus_link_get() does not work correctly in case
+there are multiple codecs on the bus. It unconditionally
+resets the bus->codec_mask value. As per documentation in
+hdaudio.h and existing use in client code, this field should
+be used to store bit flag of detected codecs on the bus.
 
-EBUSY is used because vnicc feature and bridgeport feature are mutually
-exclusive, which is a temporary condition.
-Whereas EOPNOTSUPP indicates that the HW does not support all or parts of
-the vnicc feature.
-This issue causes the vnicc sysfs params to show 'blocked by bridgeport'
-for HW that does not support VNICC at all.
+By overwriting value of the codec_mask, information on all
+detected codecs is lost. No current user of hdac is impacted,
+but use of bus->codec_mask is planned in future patches
+for SOF.
 
-Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20200206200223.7715-1-kai.vehmanen@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+ sound/hda/ext/hdac_ext_controller.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 59e220749ad1f..92bace3b28fd2 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -1846,15 +1846,14 @@ int qeth_l2_vnicc_set_state(struct qeth_card *card, u32 vnicc, bool state)
+diff --git a/sound/hda/ext/hdac_ext_controller.c b/sound/hda/ext/hdac_ext_controller.c
+index 60cb00fd0c693..84b44cdae28a1 100644
+--- a/sound/hda/ext/hdac_ext_controller.c
++++ b/sound/hda/ext/hdac_ext_controller.c
+@@ -262,6 +262,7 @@ EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_link_power_down_all);
+ int snd_hdac_ext_bus_link_get(struct hdac_bus *bus,
+ 				struct hdac_ext_link *link)
+ {
++	unsigned long codec_mask;
+ 	int ret = 0;
  
- 	QETH_CARD_TEXT(card, 2, "vniccsch");
+ 	mutex_lock(&bus->lock);
+@@ -283,9 +284,11 @@ int snd_hdac_ext_bus_link_get(struct hdac_bus *bus,
+ 		 *  HDA spec section 4.3 - Codec Discovery
+ 		 */
+ 		udelay(521);
+-		bus->codec_mask = snd_hdac_chip_readw(bus, STATESTS);
+-		dev_dbg(bus->dev, "codec_mask = 0x%lx\n", bus->codec_mask);
+-		snd_hdac_chip_writew(bus, STATESTS, bus->codec_mask);
++		codec_mask = snd_hdac_chip_readw(bus, STATESTS);
++		dev_dbg(bus->dev, "codec_mask = 0x%lx\n", codec_mask);
++		snd_hdac_chip_writew(bus, STATESTS, codec_mask);
++		if (!bus->codec_mask)
++			bus->codec_mask = codec_mask;
+ 	}
  
--	/* do not change anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic and enable/disable are supported */
- 	if (!(card->options.vnicc.sup_chars & vnicc) ||
- 	    !(card->options.vnicc.set_char_sup & vnicc))
- 		return -EOPNOTSUPP;
- 
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* set enable/disable command and store wanted characteristic */
- 	if (state) {
- 		cmd = IPA_VNICC_ENABLE;
-@@ -1900,14 +1899,13 @@ int qeth_l2_vnicc_get_state(struct qeth_card *card, u32 vnicc, bool *state)
- 
- 	QETH_CARD_TEXT(card, 2, "vniccgch");
- 
--	/* do not get anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic is supported */
- 	if (!(card->options.vnicc.sup_chars & vnicc))
- 		return -EOPNOTSUPP;
- 
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* if card is ready, query current VNICC state */
- 	if (qeth_card_hw_is_reachable(card))
- 		rc = qeth_l2_vnicc_query_chars(card);
-@@ -1925,15 +1923,14 @@ int qeth_l2_vnicc_set_timeout(struct qeth_card *card, u32 timeout)
- 
- 	QETH_CARD_TEXT(card, 2, "vniccsto");
- 
--	/* do not change anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic and set_timeout are supported */
- 	if (!(card->options.vnicc.sup_chars & QETH_VNICC_LEARNING) ||
- 	    !(card->options.vnicc.getset_timeout_sup & QETH_VNICC_LEARNING))
- 		return -EOPNOTSUPP;
- 
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* do we need to do anything? */
- 	if (card->options.vnicc.learning_timeout == timeout)
- 		return rc;
-@@ -1962,14 +1959,14 @@ int qeth_l2_vnicc_get_timeout(struct qeth_card *card, u32 *timeout)
- 
- 	QETH_CARD_TEXT(card, 2, "vniccgto");
- 
--	/* do not get anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic and get_timeout are supported */
- 	if (!(card->options.vnicc.sup_chars & QETH_VNICC_LEARNING) ||
- 	    !(card->options.vnicc.getset_timeout_sup & QETH_VNICC_LEARNING))
- 		return -EOPNOTSUPP;
-+
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* if card is ready, get timeout. Otherwise, just return stored value */
- 	*timeout = card->options.vnicc.learning_timeout;
- 	if (qeth_card_hw_is_reachable(card))
+ 	mutex_unlock(&bus->lock);
 -- 
 2.20.1
 
