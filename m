@@ -2,172 +2,87 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2FBC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BDFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 230BC2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:38:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eea/ossA"
+	by mail.kernel.org (Postfix) with ESMTP id 1E2412072A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:38:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583275101;
+	bh=i+FJPpnpUyQ07Wv4G7WRCDmh82JZ3q2tQCrFPGAxDCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rCRpZWZL20R5OxPhQ/JD9j18nzCV8fXClhB1waW3wb5e2qAPH+6WD8rbijA6JIhWp
+	 DggCjj6y1F15yhCYu+ENMhZf7F4ufeA0IPn9OQfrR/ZJoSFhiYo5mYixeany6FtlRP
+	 CwWeVa8lt8OBaC6SVYSYoSyeO9jlwkTivHzHJkcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbgCCWiL (ORCPT
+        id S1728010AbgCCWiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:38:11 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:34846 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbgCCWiL (ORCPT
+        Tue, 3 Mar 2020 17:38:20 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:40572 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727274AbgCCWiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:38:11 -0500
-Received: by mail-qk1-f195.google.com with SMTP id 145so5197812qkl.2;
-        Tue, 03 Mar 2020 14:38:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=88lKfSfxqeKfW9gPmeZNxU/n5BEhm6ow0JX/FjM1ow0=;
-        b=Eea/ossAaGke+BXBqhzBcqWt7LcYZFg+xJy+lW2C2M2TgoHjybgnVxdmtMzivSYm6f
-         rDA8MYlpP2JV7LM+hN4Wqv78PCUnLlLHYkciQHGyLh02hFZ/OVNhKPB39a+/LFsPpPEF
-         EwEJIKoNuEQdPeRP9V0BhSYq2ZeNFTbXaAPLIgoSw8pwj7SP5bGy29QbA3Ec1ZrThLQ1
-         ylzofUVzUdYcGB3u62u5OOr4owR8TLDxaM1EiJyiaebVQaKCeWek0Rj9vfM3FB62abLS
-         fe2Y+flireZmGdceY3SBZr2li29R3VktpJN8RRQH2o14wpSFXHDvlwJmhAhj36rznadq
-         WQ4Q==
+        Tue, 3 Mar 2020 17:38:20 -0500
+Received: by mail-ot1-f66.google.com with SMTP id x19so64274otp.7;
+        Tue, 03 Mar 2020 14:38:19 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=88lKfSfxqeKfW9gPmeZNxU/n5BEhm6ow0JX/FjM1ow0=;
-        b=NNDHx+UgdGocl7pIO8Y3PYp+L+OW3ttgvEFM3sDuTpGvRhHUIpbbCbXyLWssCeyIGx
-         mbVNZIxr5+eWXy3Ep164grHupch8D4NS5ImY5Y4c5QOC5b8Rw1Ww9oXjafcqSyb9bvYm
-         SlAVbQMMxneSyDoFYalwvR1dS8CyR1TTTp6FRBjkJeUpoNbCbHPkVs1hf2F0rbNG/VAF
-         xMwnbNnOLRv0C0/rfNjo/W6iXjdm2XCvCJH6SUxsAvmYr2S17eca8X1KEZZGDVTpTAvm
-         s+/J+NQfqSWVPykE7FJrBPCQz5Jom3OQ6ELznMK8kLLYZd4aUuILXXT94wP9JXGZoWsl
-         BpuQ==
-X-Gm-Message-State: ANhLgQ2HS2H4NyARHip0O+klRVzrj4k2Xy2ARj+0JoRFAR3aeVDeVI/X
-        cGBF/wmKrnE9AoHKu3TVevpJMR5DWkDumskDDtQ=
-X-Google-Smtp-Source: ADFU+vvegmGWnsIiWRqtrOWlAq083f+jCj/g1rN8KnGNlDatrhclHcbcOE/PPvDweniboXXOP0dPiikYM09L0uigyDw=
-X-Received: by 2002:a05:620a:99d:: with SMTP id x29mr270802qkx.39.1583275090204;
- Tue, 03 Mar 2020 14:38:10 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=0FIpv/OUvR76v9iwOAqhXw3ngtUGboEQ7jvFqcQcaq8=;
+        b=VprBxdrt/eP80Gq4qIfkcuQSbtaZPqtMHrNbgf3/EBmaHk9hlDk+FiovQ87CTYraBI
+         cmvkvbaBcx5ShMOHMmmNRW1cMwO3uxbpM4fGzdQ43ZavDns1PdL5+OgfSdCxMW2lwPTc
+         R1CoZqA4Vair4bTtb7uQUHbx/rw+ldgz8UI1X3nS/quf/WwibSB/2LBVN73VicUcgMWr
+         uv7n7EwOgQaleqX4keFhQ0gm8SEqHJ0zr+h9V8xejwoxAz2SGnAgB/HCEGf8M6v7NMOU
+         +GImJzGmtmrN3UFz9HnVFhqm5rIerzFFC1g1fhNFPCbEFyUlmUbsR2RmzF2KPyqf0Cmz
+         HKFQ==
+X-Gm-Message-State: ANhLgQ3mEPBUn53pTUGh6jv/6K77XuIV/BWe9PhoB1Chy3k0V/qamwl4
+        ab3s2CTCAXgmeUO/gogCZQ==
+X-Google-Smtp-Source: ADFU+vtGIq1fDTWdDHUduPlKc10mCXIOM6omTTG7lUpIbghFUq+2FcoNa8d5APUpEdUIRJhGDkQFSg==
+X-Received: by 2002:a05:6830:10da:: with SMTP id z26mr95262oto.27.1583275098314;
+        Tue, 03 Mar 2020 14:38:18 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id t203sm8212900oig.39.2020.03.03.14.38.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:38:17 -0800 (PST)
+Received: (nullmailer pid 19747 invoked by uid 1000);
+        Tue, 03 Mar 2020 22:38:17 -0000
+Date:   Tue, 3 Mar 2020 16:38:17 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>
+Cc:     devicetree@vger.kernel.org,
+        Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        Lee Jones <lee.jones@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: tps65910: Improve grammar
+Message-ID: <20200303223816.GA19633@bogus>
+References: <20200227160522.17582-1-j.neuschaefer@gmx.net>
 MIME-Version: 1.0
-References: <20200303140950.6355-1-kpsingh@chromium.org> <20200303140950.6355-4-kpsingh@chromium.org>
-In-Reply-To: <20200303140950.6355-4-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 3 Mar 2020 14:37:58 -0800
-Message-ID: <CAEf4BzZVV12WoHDnQSfOKpndr3qVLEAz8itMcdqnQq8Q4njc0w@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/7] bpf: Introduce BPF_MODIFY_RETURN
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200227160522.17582-1-j.neuschaefer@gmx.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 6:12 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> When multiple programs are attached, each program receives the return
-> value from the previous program on the stack and the last program
-> provides the return value to the attached function.
->
-> The fmod_ret bpf programs are run after the fentry programs and before
-> the fexit programs. The original function is only called if all the
-> fmod_ret programs return 0 to avoid any unintended side-effects. The
-> success value, i.e. 0 is not currently configurable but can be made so
-> where user-space can specify it at load time.
->
-> For example:
->
-> int func_to_be_attached(int a, int b)
-> {  <--- do_fentry
->
-> do_fmod_ret:
->    <update ret by calling fmod_ret>
->    if (ret != 0)
->         goto do_fexit;
->
-> original_function:
->
->     <side_effects_happen_here>
->
-> }  <--- do_fexit
->
-> The fmod_ret program attached to this function can be defined as:
->
-> SEC("fmod_ret/func_to_be_attached")
-> BPF_PROG(func_name, int a, int b, int ret)
-
-same as on cover letter, return type is missing
-
-> {
->         // This will skip the original function logic.
->         return 1;
-> }
->
-> The first fmod_ret program is passed 0 in its return argument.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
+On Thu, 27 Feb 2020 17:05:21 +0100, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= wrote:
+> 
+> Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 > ---
->  arch/x86/net/bpf_jit_comp.c    | 96 ++++++++++++++++++++++++++++++++--
->  include/linux/bpf.h            |  1 +
->  include/uapi/linux/bpf.h       |  1 +
->  kernel/bpf/btf.c               |  3 +-
->  kernel/bpf/syscall.c           |  1 +
->  kernel/bpf/trampoline.c        |  5 +-
->  kernel/bpf/verifier.c          |  1 +
->  tools/include/uapi/linux/bpf.h |  1 +
->  8 files changed, 103 insertions(+), 6 deletions(-)
->
+>  Documentation/devicetree/bindings/mfd/tps65910.txt | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
 
-[...]
+Applied, thanks.
 
->
-> +       if (fmod_ret->nr_progs) {
-> +               branches = kcalloc(fmod_ret->nr_progs, sizeof(u8 *),
-> +                                  GFP_KERNEL);
-> +               if (!branches)
-> +                       return -ENOMEM;
-> +               if (invoke_bpf_mod_ret(m, &prog, fmod_ret, stack_size,
-> +                                      branches))
-
-branches leaks here
-
-> +                       return -EINVAL;
-> +       }
-> +
->         if (flags & BPF_TRAMP_F_CALL_ORIG) {
-> -               if (fentry->nr_progs)
-> +               if (fentry->nr_progs || fmod_ret->nr_progs)
->                         restore_regs(m, &prog, nr_args, stack_size);
->
->                 /* call original function */
-> @@ -1573,6 +1649,14 @@ int arch_prepare_bpf_trampoline(void *image, void *image_end,
-
-there is early return one line above here, you need to free branches
-in that case to not leak memory
-
-So I guess it's better to do goto cleanup approach at this point?
-
->                 emit_stx(&prog, BPF_DW, BPF_REG_FP, BPF_REG_0, -8);
->         }
->
-> +       if (fmod_ret->nr_progs) {
-> +               align16_branch_target(&prog);
-> +               for (i = 0; i < fmod_ret->nr_progs; i++)
-> +                       emit_cond_near_jump(&branches[i], prog, branches[i],
-> +                                           X86_JNE);
-> +               kfree(branches);
-> +       }
-> +
-
-[...]
+Rob
