@@ -2,130 +2,89 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68283C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC59C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E07920842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B1A20728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583255304;
-	bh=/mCxlrQbqOdMvvD+gq71AzS1eRHAIzVY4Y7Dz+xsR6g=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=OhaCwQnnSdPK5gKKvzILDd/NcSDdLrSTKzPA7oYi0ZG9I7+Z1RSt9D+WneBRIVcFA
-	 phhfOCKDKWKBooFXSo5+79LHUrQToNH+L2yhJySwiqETR6Cmc0SooPl9YmKX/es57h
-	 wZmfI0w9yOfUPVvLedcnDrNrKSddKSIRIxVAW+tg=
+	s=default; t=1583255453;
+	bh=EdRpff7Ggw9f6J9+gqrw6YLTi24c2hIe6q1lIu9QeXk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JKm+2fpZ8PlBVpqPIQ+7/kUztQLB6H180qJSfPLMzTyWabQLX9yc+yVCf1n6PZ1cr
+	 rwcL69vDjJ1MWXksBD8exFdIbfyLErutMzTkgFvWfgYk965B1w4RzZHE8e5rrpCpCN
+	 EJ+NGulJwMnBwLfT4CQoOuPm7XCV2w9x4AfKbBcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgCCRIX (ORCPT
+        id S1729818AbgCCRKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:08:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:49994 "EHLO foss.arm.com"
+        Tue, 3 Mar 2020 12:10:52 -0500
+Received: from foss.arm.com ([217.140.110.172]:50014 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729041AbgCCRIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:08:22 -0500
+        id S1727198AbgCCRKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:10:52 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 646CC2F;
-        Tue,  3 Mar 2020 09:08:22 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 925202F;
+        Tue,  3 Mar 2020 09:10:51 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC64F3F534;
-        Tue,  3 Mar 2020 09:08:21 -0800 (PST)
-Date:   Tue, 03 Mar 2020 17:08:20 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 128593F534;
+        Tue,  3 Mar 2020 09:10:50 -0800 (PST)
+Date:   Tue, 3 Mar 2020 17:10:49 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Cc:     Igor Opanyuk <igor.opanyuk@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-spi@vger.kernel.org,
-        "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Mark Brown <broonie@kernel.org>,
-        Oleksandr Suvorov <cryosay@gmail.com>,
-        Philippe Schenker <philippe.schenker@toradex.com>
-Subject: Applied "spi: fsl-lpspi: remove unneeded array" to the spi tree
-In-Reply-To:  <20200220141143.3902922-2-oleksandr.suvorov@toradex.com>
-Message-Id:  <applied-20200220141143.3902922-2-oleksandr.suvorov@toradex.com>
-X-Patchwork-Hint: ignore
+To:     Anson Huang <Anson.Huang@nxp.com>
+Cc:     lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Linux-imx@nxp.com
+Subject: Re: [PATCH] regulator: anatop: Drop min dropout for bypass mode
+Message-ID: <20200303171049.GI3866@sirena.org.uk>
+References: <1583245476-8009-1-git-send-email-Anson.Huang@nxp.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="HkMjoL2LAeBLhbFV"
+Content-Disposition: inline
+In-Reply-To: <1583245476-8009-1-git-send-email-Anson.Huang@nxp.com>
+X-Cookie: Drilling for oil is boring.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   spi: fsl-lpspi: remove unneeded array
+--HkMjoL2LAeBLhbFV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-has been applied to the spi tree at
+On Tue, Mar 03, 2020 at 10:24:36PM +0800, Anson Huang wrote:
+> Some of anatop regulators support bypass mode, and in bypass mode,
+> minimum dropout is NOT required, the input voltage will be equal to
+> the output voltage. The minimum dropout value is ONLY necessary for
+> LDO enabled mode, so drop the minimum dropout for bypass mode to
+> avoid unexpected high voltage output from PMIC supplies.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+The goal makes sense but I don't think it makes sense to do this in the
+driver - changing this without the core knowing is likely to lead to
+confusion at some point and also I think this behaviour is likely to be
+the same for every regulator that has a bypass mode (at least if it
+isn't I'm kind of confused about how it's bypassing, usually the minimum
+drop is a function of maintaining regulation).  Could you look into
+doing something like this in the core instead please?
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+--HkMjoL2LAeBLhbFV
+Content-Type: application/pgp-signature; name="signature.asc"
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+-----BEGIN PGP SIGNATURE-----
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5ej5gACgkQJNaLcl1U
+h9C23gf/bha+BF8TIeD6hPRVh2Doz2kjJKrak1meqLCpkFllt0K4GL9QHSddTmgb
+vrjGFu5CFPdnY9nTE7cAI53PqzGkkl8jOICNxPmXFRmHnddTVkRVpYohC2DV2CIJ
+Z0sSsrEfR7Y0lsddsLs/4zF8g5kZOhmp+3RyqJPdtu5dZsIaLRxcaoj0BDpYPFtK
+QC8N1Ef3S5XZdnWioputBbLaEa/4Rq9WTjo6wCb87zRkFs1mIRpEXtXbnLfrPJ3V
+nKjUmEZpsmxNyBJw6HIlHM8OibaLlzpzwA+6r5geDOiiXtODom3rcW0BmCOn4iQa
+8Fkq/y5fKW3tq2xOWn49Uz006me3Mg==
+=gqK6
+-----END PGP SIGNATURE-----
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From 2fa98705a9289c758b6154a22174aa8d4041a285 Mon Sep 17 00:00:00 2001
-From: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Date: Thu, 20 Feb 2020 14:11:48 +0000
-Subject: [PATCH] spi: fsl-lpspi: remove unneeded array
-
-- replace the array with the shift operation
-- remove the extra comparing operation.
-
-Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Link: https://lore.kernel.org/r/20200220141143.3902922-2-oleksandr.suvorov@toradex.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-fsl-lpspi.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
-index d0b8cc741a24..298329b781d2 100644
---- a/drivers/spi/spi-fsl-lpspi.c
-+++ b/drivers/spi/spi-fsl-lpspi.c
-@@ -86,8 +86,6 @@
- #define TCR_RXMSK	BIT(19)
- #define TCR_TXMSK	BIT(18)
- 
--static int clkdivs[] = {1, 2, 4, 8, 16, 32, 64, 128};
--
- struct lpspi_config {
- 	u8 bpw;
- 	u8 chip_select;
-@@ -331,15 +329,14 @@ static int fsl_lpspi_set_bitrate(struct fsl_lpspi_data *fsl_lpspi)
- 	}
- 
- 	for (prescale = 0; prescale < 8; prescale++) {
--		scldiv = perclk_rate /
--			 (clkdivs[prescale] * config.speed_hz) - 2;
-+		scldiv = perclk_rate / config.speed_hz / (1 << prescale) - 2;
- 		if (scldiv < 256) {
- 			fsl_lpspi->config.prescale = prescale;
- 			break;
- 		}
- 	}
- 
--	if (prescale == 8 && scldiv >= 256)
-+	if (scldiv >= 256)
- 		return -EINVAL;
- 
- 	writel(scldiv | (scldiv << 8) | ((scldiv >> 1) << 16),
--- 
-2.20.1
-
+--HkMjoL2LAeBLhbFV--
