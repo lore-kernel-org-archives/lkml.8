@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F81C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4ADDC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FB8220728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 913FA206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258205;
-	bh=mCggJkKA8cUpf3SzAiuVzOPs82bmMMhiDIGPL/xGvEo=;
+	s=default; t=1583258208;
+	bh=I4Gf8slb2n8tPWEyQEcec+l/JX2CkkOdb3AmE9CO1OM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwCA23N4PageX4cAzbETYD8MasEd/8A6ifiTGNkbEGHtI0e6wn9wDL2V72Qp9J/8u
-	 sJbFH0EGbOCtlYOuiD9UluGjIcFi1YNFrhRL3xxrRDK+LqQd3TgR5TTgfswjxSlUDJ
-	 HLRS556dgEk5wy5f0NTnuoUjiOygo2Cip+yO7/fw=
+	b=nn620FPv8HmQlddqnMf1u0fy6R+jKV57LNMZ5RP6U8Byf3+uy5dtX8L0liQjnkLIo
+	 D8a2aO7/wm3eG4XGmyb7jKYdWw7r+KPfLf3Dtmf2uFzZWpqbpnZeln8fgu1PFSNlU8
+	 H6tOyuCO7s1H38rBeO+cMv8XlJIVZo3JcpSQ5Rrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732961AbgCCR4o (ORCPT
+        id S1732970AbgCCR4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:56:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39050 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:56:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732949AbgCCR4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:56:42 -0500
+        id S1732962AbgCCR4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:56:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8AC4206D5;
-        Tue,  3 Mar 2020 17:56:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BC6120656;
+        Tue,  3 Mar 2020 17:56:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258202;
-        bh=mCggJkKA8cUpf3SzAiuVzOPs82bmMMhiDIGPL/xGvEo=;
+        s=default; t=1583258204;
+        bh=I4Gf8slb2n8tPWEyQEcec+l/JX2CkkOdb3AmE9CO1OM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MTu6LJFrYYPwig9NkMjzE4lGsiYtsIfiobc4xNmLSiDjUelELBW+6VY/4uZMPbYGv
-         fFa1cdp9omypGo9BQdS9s1MJqZmm09974Znw8I9LU4IrITsE76AUTfiHhVwUuv6l2a
-         3bUqYMqiCppqL2g5SbgQizRQolr2iiJmU7kd7DmI=
+        b=j9hIqTf89BdocGNkxqrDg8UvM9ixTkG2HeBFdRbDrytmAajHUo0GDYtb0lIosro2s
+         VMsE/CyLqhn6pfMzRIVOL+c+ggviSpnGoWEMfnn/9apLXGM7eEG8aviTtn/GNnkYI2
+         /AfjurMcdpw/z2TMTSyvTAE5skI4kxqIJEb6qZWw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Saeed Bshara <saeedb@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 110/152] net/smc: no peer ID in CLC decline for SMCD
-Date:   Tue,  3 Mar 2020 18:43:28 +0100
-Message-Id: <20200303174315.233505136@linuxfoundation.org>
+Subject: [PATCH 5.4 111/152] net: ena: make ena rxfh support ETH_RSS_HASH_NO_CHANGE
+Date:   Tue,  3 Mar 2020 18:43:29 +0100
+Message-Id: <20200303174315.366817258@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,35 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-commit 369537c97024dca99303a8d4d6ab38b4f54d3909 upstream.
+commit 470793a78ce344bd53d31e0c2d537f71ba957547 upstream.
 
-Just SMCR requires a CLC Peer ID, but not SMCD. The field should be
-zero for SMCD.
+As the name suggests ETH_RSS_HASH_NO_CHANGE is received upon changing
+the key or indirection table using ethtool while keeping the same hash
+function.
 
-Fixes: c758dfddc1b5 ("net/smc: add SMC-D support in CLC messages")
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Also add a function for retrieving the current hash function from
+the ena-com layer.
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Saeed Bshara <saeedb@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/smc/smc_clc.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c     |    5 +++++
+ drivers/net/ethernet/amazon/ena/ena_com.h     |    8 ++++++++
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c |    3 +++
+ 3 files changed, 16 insertions(+)
 
---- a/net/smc/smc_clc.c
-+++ b/net/smc/smc_clc.c
-@@ -372,7 +372,9 @@ int smc_clc_send_decline(struct smc_sock
- 	dclc.hdr.length = htons(sizeof(struct smc_clc_msg_decline));
- 	dclc.hdr.version = SMC_CLC_V1;
- 	dclc.hdr.flag = (peer_diag_info == SMC_CLC_DECL_SYNCERR) ? 1 : 0;
--	memcpy(dclc.id_for_peer, local_systemid, sizeof(local_systemid));
-+	if (smc->conn.lgr && !smc->conn.lgr->is_smcd)
-+		memcpy(dclc.id_for_peer, local_systemid,
-+		       sizeof(local_systemid));
- 	dclc.peer_diagnosis = htonl(peer_diag_info);
- 	memcpy(dclc.trl.eyecatcher, SMC_EYECATCHER, sizeof(SMC_EYECATCHER));
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -1059,6 +1059,11 @@ static void ena_com_hash_key_fill_defaul
+ 	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
+ }
  
++int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev)
++{
++	return ena_dev->rss.hash_func;
++}
++
+ static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
+ {
+ 	struct ena_rss *rss = &ena_dev->rss;
+--- a/drivers/net/ethernet/amazon/ena/ena_com.h
++++ b/drivers/net/ethernet/amazon/ena/ena_com.h
+@@ -656,6 +656,14 @@ int ena_com_rss_init(struct ena_com_dev
+  */
+ void ena_com_rss_destroy(struct ena_com_dev *ena_dev);
+ 
++/* ena_com_get_current_hash_function - Get RSS hash function
++ * @ena_dev: ENA communication layer struct
++ *
++ * Return the current hash function.
++ * @return: 0 or one of the ena_admin_hash_functions values.
++ */
++int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev);
++
+ /* ena_com_fill_hash_function - Fill RSS hash function
+  * @ena_dev: ENA communication layer struct
+  * @func: The hash function (Toeplitz or crc)
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -736,6 +736,9 @@ static int ena_set_rxfh(struct net_devic
+ 	}
+ 
+ 	switch (hfunc) {
++	case ETH_RSS_HASH_NO_CHANGE:
++		func = ena_com_get_current_hash_function(ena_dev);
++		break;
+ 	case ETH_RSS_HASH_TOP:
+ 		func = ENA_ADMIN_TOEPLITZ;
+ 		break;
 
 
