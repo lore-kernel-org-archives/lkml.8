@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BDEEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1040DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F00A02146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1EDD20728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258290;
-	bh=Y4W9atvGmn4hDWb8DGFHdTnSI/IULFfUCaj1/x46eFo=;
+	s=default; t=1583258293;
+	bh=x8n96SRLqp4fokeJXdqU687T8MK3HtqEw58DRydIEiw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bw7K3KcjuFt0+OHAKv2Nz3j28eWErQkZ7OMATX9VsmDeyCVl6kiL+Zvj7i2xaDvfl
-	 5ojhKX2XXFM8kn1qSe30qkkdDLJ9dXFVGkQQaAf0LFGMDV7du76I74felGqDdmcl4W
-	 fQDcE/2I3ntVuJO7qwI8aw4DcLtc5cj9G+1jcshk=
+	b=PdD6M3v+94kHRak/lR89If86ZQF1sHJ/a6txCa0krPHJGhQtzTVANmJSncNOD8mW1
+	 9ezxYlVE3lAdHrv366cQV07EMEi4fcpGbm03fh+1AL/uHVbcDBQwmC/i7YNlQWzxtC
+	 25ltsvbWjsECQdo2dB+TFifNz9xyLkjMexxFfZtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733212AbgCCR6H (ORCPT
+        id S1733278AbgCCR6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:58:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40672 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:58:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733192AbgCCR56 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:57:58 -0500
+        id S1733202AbgCCR6E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:04 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 007F12072D;
-        Tue,  3 Mar 2020 17:57:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E0982072D;
+        Tue,  3 Mar 2020 17:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258278;
-        bh=Y4W9atvGmn4hDWb8DGFHdTnSI/IULFfUCaj1/x46eFo=;
+        s=default; t=1583258283;
+        bh=x8n96SRLqp4fokeJXdqU687T8MK3HtqEw58DRydIEiw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KkPGy1D1VZBJo8reMeehr07UuQV/KZ1DHu9UpJiuJbr974l2+BPLzj9FLKWJ0q0Vu
-         qFXdVkmiSiNjgS1i0IvL//FYWiOqzr2rSayb+W6tsb/81h8mNvE51J81rVyvMhCnFV
-         PEUf5lERc5PuQ9CP8x/BdB6HYFzv6FYSMA+8ogcQ=
+        b=P1n7OChDvilBT+PbKfLxzWAowA959mmLkIYebrGQZe/U0QkgypvEkfDOyXMYiWHD1
+         +QKgNzpv+DZkWatMYRcikyCKuB1cbAgdvBhK0PtiDx3j6h5FqP8zWkM4IuprdNndHU
+         jLsHCEgMkvO7v4lrhh4AE8SYGQyt7lPZJpfLl9YY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 141/152] netfilter: nft_tunnel: no need to call htons() when dumping ports
-Date:   Tue,  3 Mar 2020 18:43:59 +0100
-Message-Id: <20200303174318.820162454@linuxfoundation.org>
+        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.4 143/152] bus: tegra-aconnect: Remove PM_CLK dependency
+Date:   Tue,  3 Mar 2020 18:44:01 +0100
+Message-Id: <20200303174319.044754943@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,35 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Sameer Pujar <spujar@nvidia.com>
 
-commit cf3e204a1ca5442190018a317d9ec181b4639bd6 upstream.
+commit 2f56acf818a08a9187ac8ec6e3d994fc13dc368d upstream.
 
-info->key.tp_src and tp_dst are __be16, when using nla_put_be16()
-to dump them, htons() is not needed, so remove it in this patch.
+The ACONNECT bus driver does not use pm-clk interface anymore and hence
+the dependency can be removed from its Kconfig option.
 
-Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 0d7dab926130 ("bus: tegra-aconnect: use devm_clk_*() helpers")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_tunnel.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/bus/Kconfig |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/net/netfilter/nft_tunnel.c
-+++ b/net/netfilter/nft_tunnel.c
-@@ -505,8 +505,8 @@ static int nft_tunnel_opts_dump(struct s
- static int nft_tunnel_ports_dump(struct sk_buff *skb,
- 				 struct ip_tunnel_info *info)
- {
--	if (nla_put_be16(skb, NFTA_TUNNEL_KEY_SPORT, htons(info->key.tp_src)) < 0 ||
--	    nla_put_be16(skb, NFTA_TUNNEL_KEY_DPORT, htons(info->key.tp_dst)) < 0)
-+	if (nla_put_be16(skb, NFTA_TUNNEL_KEY_SPORT, info->key.tp_src) < 0 ||
-+	    nla_put_be16(skb, NFTA_TUNNEL_KEY_DPORT, info->key.tp_dst) < 0)
- 		return -1;
- 
- 	return 0;
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -138,7 +138,6 @@ config TEGRA_ACONNECT
+ 	tristate "Tegra ACONNECT Bus Driver"
+ 	depends on ARCH_TEGRA_210_SOC
+ 	depends on OF && PM
+-	select PM_CLK
+ 	help
+ 	  Driver for the Tegra ACONNECT bus which is used to interface with
+ 	  the devices inside the Audio Processing Engine (APE) for Tegra210.
 
 
