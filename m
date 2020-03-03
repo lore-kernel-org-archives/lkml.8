@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 870C4C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0DBC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DAB3217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64FE1217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204029;
-	bh=UkPhDA+l+1mOszkHMydsWpIQS6JRfI56n/Wm5/1EY48=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NKmYp0KBwN+NfYeVWzbaajXszub7KcjNi0Pe/ymxpBX8uAc/Bs8Qlck4sMiEx22yw
-	 9tKqijRlodEUdJZRVcVdBx98TGie95fSIoJ5Qqy1aigOi/dEAGfRxClk0xdLDfhM/9
-	 3/h4lyjecmG3esceQPC40doQfJTKpKRnhdCLc7y8=
+	s=default; t=1583204037;
+	bh=+PYbT6PSjcBXlV0X5hQe9ZrLqKbBChZnSnxyDuUYcQY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VykpW7N26WemwhSa8lFlhIXrsPJKjGbLl8XqKLiMjmTIWh+2Ncpp2b/9gzf5N/C20
+	 H50kSQ7/lQZrF3+vPZ8exXUqs6pz5SO46Q30twtRwRY3zcABUaU0MVCqxwijlPRitj
+	 Uu8do745Kir5/mp0QVxV7yvbu1RcSPBXgEJDd5mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbgCCCxr (ORCPT
+        id S1728847AbgCCCx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:53:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45864 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:53:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728907AbgCCCtf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:35 -0500
+        id S1728883AbgCCCt3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C424024699;
-        Tue,  3 Mar 2020 02:49:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2FC624699;
+        Tue,  3 Mar 2020 02:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203775;
-        bh=UkPhDA+l+1mOszkHMydsWpIQS6JRfI56n/Wm5/1EY48=;
-        h=From:To:Cc:Subject:Date:From;
-        b=HST6ElRwHbxfr2GztdTiID/oVbuv7doiGP1C6y5ez+5T4Pry3Cn88FM1bN8LXUOqN
-         41VxqDeABkrvh6K/nvsOjsEMgq9/OKLEU6R2S68KORrXsdkKiDCLcVPV9EeW+3VhFH
-         eLigIeQne0jAAKVCf0ZzzxM2iLYOPAdaCwXspjB4=
+        s=default; t=1583203768;
+        bh=+PYbT6PSjcBXlV0X5hQe9ZrLqKbBChZnSnxyDuUYcQY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yYPwqvjh6TltDOWbJs8C04YcTMGXYKn8XUfqb/eXCmXp25u0Rns3aqhqpxVJ7ez9z
+         ACcb8Y5BKqq4O8zRqbcjWp5nfC7HMeN90okcjqdJ/R+TczxJV26oDid2Ovb56jTLhB
+         wE7ID3x7ES3ROj1SZ7durpgef/T6DaYvqPGEbjdc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Chen <peter.chen@nxp.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 01/22] usb: charger: assign specific number for enum value
-Date:   Mon,  2 Mar 2020 21:49:12 -0500
-Message-Id: <20200303024933.10371-1-sashal@kernel.org>
+Cc:     Michal Swiatkowski <michal.swiatkowski@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 29/32] ice: Don't tell the OS that link is going down
+Date:   Mon,  2 Mar 2020 21:48:48 -0500
+Message-Id: <20200303024851.10054-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200303024851.10054-1-sashal@kernel.org>
+References: <20200303024851.10054-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,53 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Michal Swiatkowski <michal.swiatkowski@intel.com>
 
-[ Upstream commit ca4b43c14cd88d28cfc6467d2fa075aad6818f1d ]
+[ Upstream commit 8a55c08d3bbc9ffc9639f69f742e59ebd99f913b ]
 
-To work properly on every architectures and compilers, the enum value
-needs to be specific numbers.
+Remove code that tell the OS that link is going down when user
+change flow control via ethtool. When link is up it isn't certain
+that link goes down after 0x0605 aq command. If link doesn't go
+down, OS thinks that link is down, but physical link is up. To
+reset this state user have to take interface down and up.
 
-Suggested-by: Greg KH <gregkh@linuxfoundation.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/1580537624-10179-1-git-send-email-peter.chen@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+If link goes down after 0x0605 command, FW send information
+about that and after that driver tells the OS that the link goes
+down. So this code in ethtool is unnecessary.
+
+Signed-off-by: Michal Swiatkowski <michal.swiatkowski@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/usb/charger.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_ethtool.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/include/uapi/linux/usb/charger.h b/include/uapi/linux/usb/charger.h
-index 5f72af35b3ed7..ad22079125bff 100644
---- a/include/uapi/linux/usb/charger.h
-+++ b/include/uapi/linux/usb/charger.h
-@@ -14,18 +14,18 @@
-  * ACA (Accessory Charger Adapters)
-  */
- enum usb_charger_type {
--	UNKNOWN_TYPE,
--	SDP_TYPE,
--	DCP_TYPE,
--	CDP_TYPE,
--	ACA_TYPE,
-+	UNKNOWN_TYPE = 0,
-+	SDP_TYPE = 1,
-+	DCP_TYPE = 2,
-+	CDP_TYPE = 3,
-+	ACA_TYPE = 4,
- };
+diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+index 4c5c87b158f55..627abef829c9a 100644
+--- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
++++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+@@ -772,13 +772,6 @@ ice_set_pauseparam(struct net_device *netdev, struct ethtool_pauseparam *pause)
+ 	else
+ 		return -EINVAL;
  
- /* USB charger state */
- enum usb_charger_state {
--	USB_CHARGER_DEFAULT,
--	USB_CHARGER_PRESENT,
--	USB_CHARGER_ABSENT,
-+	USB_CHARGER_DEFAULT = 0,
-+	USB_CHARGER_PRESENT = 1,
-+	USB_CHARGER_ABSENT = 2,
- };
+-	/* Tell the OS link is going down, the link will go back up when fw
+-	 * says it is ready asynchronously
+-	 */
+-	ice_print_link_msg(vsi, false);
+-	netif_carrier_off(netdev);
+-	netif_tx_stop_all_queues(netdev);
+-
+ 	/* Set the FC mode and only restart AN if link is up */
+ 	status = ice_set_fc(pi, &aq_failures, link_up);
  
- #endif /* _UAPI__LINUX_USB_CHARGER_H */
 -- 
 2.20.1
 
