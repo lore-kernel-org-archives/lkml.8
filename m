@@ -2,137 +2,143 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95CCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:38:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C822AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C008C20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F0D220857
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:38:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G7C+luge"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n44gaBx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728507AbgCCNih (ORCPT
+        id S1728973AbgCCNio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:38:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60267 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728109AbgCCNig (ORCPT
+        Tue, 3 Mar 2020 08:38:44 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:34154 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbgCCNio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:38:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583242715;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZIdK4y2508Xb+/mC7DM2rNqSWal4zqTlltB83tI+9ok=;
-        b=G7C+lugeeOWU7/MM5faQwP6S+NzfH4PI05JHXUif1oYUwI8skwayJZQOZpY96YaCE1neLN
-        qzHM0np3uAgkVT6hESCTVDqQD09cA8+8f37Vw81ox/az9KIL9WvVS3mT1JyjvuxNQI1rkx
-        tDStJOMBpXhGPBd0BbvYYstQ0+oVghs=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-231-7LaCyNrIPNub_LVv5lj0WA-1; Tue, 03 Mar 2020 08:38:31 -0500
-X-MC-Unique: 7LaCyNrIPNub_LVv5lj0WA-1
-Received: by mail-wr1-f71.google.com with SMTP id n12so1222075wrp.19
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:38:31 -0800 (PST)
+        Tue, 3 Mar 2020 08:38:44 -0500
+Received: by mail-io1-f68.google.com with SMTP id z190so3600754iof.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:38:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=JYvtLVzi18cIH6u0PRaiZ+x+kMrKvMGPICXTKLEmlk4=;
+        b=n44gaBx7J09bO0aLDcRtttMXYmMiYYEMy7D8QsoilKQYF/NcqQlhD8Z+kjxuhKBSSu
+         Wl3s5P5ZgXFmSe/6IFfmOEyzCksX0OeaIyOw8gM1eVBr5IS4rFViV4YnJD5f8zguw8d4
+         BY7hLvhyYGG3HpyoSeDYAvNfsAwV/ZWwfDuEpAntd5kBmv0/RY88cAGJrvYbKfoGpRuo
+         OwlgJXgDBOF11BpDmdn3NG0wPH1ocEKxE2n0bY9ewqnA1OR38lSTQSzFTmZezw5I3V+w
+         LFh9aNc+jMuj0lUpJU24gIEul247Ug9i1VZ84vlDzZ9/kHodRXbJE9BCdjiEP2XSBKig
+         4bLw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ZIdK4y2508Xb+/mC7DM2rNqSWal4zqTlltB83tI+9ok=;
-        b=H6IVQGYeWhhQVvJMRmZvRwPv+w0xrY0CrbAKBbySydGISzf8bySHvKX8HGOV0JXM75
-         305n0qaqGIMQ2SpCYmvd4kZuxrXqYX3rABMlF/FvafZCcgx+3KxKoa0MfEXitabRqQgH
-         sNwZlZY2poZQ4v8B3eOVdbs8FxdCfe2RS9aMTc5PUj4RxvpGdxd7+MU1ZzJMw0e6hqT3
-         98NPlWiVc/tdoeDX9g5Bqn51jHCvfb15r7dfyzMMLWFM0EoMzdF2VdVUy+8jvJK5CvdI
-         ubm8typWsJxI5AIW+BtKaM+w4IYT/5lPvo+ZqkHvu6vQNWqbLkEYOUCkY7ofOiUPAcXB
-         X99A==
-X-Gm-Message-State: ANhLgQ3GCzBC81tLc+jsv2SKHqLUpxZC0eJ13ZZXW98e+QEi7YTv8JCn
-        azgBCyEZka15dcyZyhL3yibP7OO3mN1Pot6vOCq4KiG17wLoEDv/Zcl7ZHIxwlntrf0VXq0bRSs
-        MRYtv9dFU56MlR7g5aNIbuSZp
-X-Received: by 2002:adf:e506:: with SMTP id j6mr5414694wrm.309.1583242710882;
-        Tue, 03 Mar 2020 05:38:30 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vtH8R9P8o+Uo7AGDF83jLl43yugXJTyawCm8EZlL50uB6ig6MkWHi92L0GcizSfOo6phbXeew==
-X-Received: by 2002:adf:e506:: with SMTP id j6mr5414680wrm.309.1583242710689;
-        Tue, 03 Mar 2020 05:38:30 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c8sm24438550wru.7.2020.03.03.05.38.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 05:38:30 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Oliver Upton <oupton@google.com>
-Subject: Re: [GIT PULL] KVM changes for Linux 5.6-rc4
-In-Reply-To: <9bb75cdc-961e-0d83-0546-342298517496@redhat.com>
-References: <1582570669-45822-1-git-send-email-pbonzini@redhat.com> <87zhcyfvmk.fsf@vitty.brq.redhat.com> <8fbeb3c2-9627-bf41-d798-bafba22073e3@redhat.com> <87tv35fv5t.fsf@vitty.brq.redhat.com> <9bb75cdc-961e-0d83-0546-342298517496@redhat.com>
-Date:   Tue, 03 Mar 2020 14:38:29 +0100
-Message-ID: <87o8tdftii.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JYvtLVzi18cIH6u0PRaiZ+x+kMrKvMGPICXTKLEmlk4=;
+        b=KAvRYGRC2g1ZfpL7urHmEC1EfgeYwwc3k+e0cv3tsgK5ZbbRAkQpC6PxJNxl6dTc7H
+         05Md4O+c2L2KCrZFN+p82oYDH5Yyg1wrbyrncR2o82WYPeSaD/Z66qTWgdZuciVmwy+b
+         q0GqHAHzxoxGbM2Y74zySBLFANFTmFz/xzH1UMhcveIwKn6qnHuAlinvpyyblJgyRNfF
+         zILbqDpgv6cBSi4l+Abh7MN5mah+hFTkbmBsTiizUIQbKl8bdmIIs0DtEHyXUxy/CRjr
+         4PHam3BCo4SuPMBN282T91MY0UgXuAWIGNsy4G7chduNpeel8XYqji9y+Bdac0Si7euh
+         YwmA==
+X-Gm-Message-State: ANhLgQ2RzPT2xx9ozcTx9HD+5t4MiDMSTdu0cjO/XrLZafkLO/3gLk6C
+        ULXQgxZtD5fh7K3rV5pFzTwv+xiiu194pSr1Vg==
+X-Google-Smtp-Source: ADFU+vt4acEi2rH4gaRHNqkKwa1P0yr+sPIbgUyPKs0Ei5EeGEkmnjhXuMHANnRWBsK11F38ccB5yPzOz9SmGb/O5Vs=
+X-Received: by 2002:a02:3093:: with SMTP id q141mr3343332jaq.121.1583242723230;
+ Tue, 03 Mar 2020 05:38:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1582889550-9101-1-git-send-email-kernelfans@gmail.com>
+ <1582889550-9101-3-git-send-email-kernelfans@gmail.com> <1433456b-733c-02dc-d4fd-50e5b2be50bc@nvidia.com>
+In-Reply-To: <1433456b-733c-02dc-d4fd-50e5b2be50bc@nvidia.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Tue, 3 Mar 2020 21:38:31 +0800
+Message-ID: <CAFgQCTvob1+cTeVA7Gn=6dGRb-YPxChefJQoAKp8k=YE8Q6vaQ@mail.gmail.com>
+Subject: Re: [PATCHv5 2/3] mm/gup: fix omission of check on FOLL_LONGTERM in
+ gup fast path
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Linux-MM <linux-mm@kvack.org>, Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Shuah Khan <shuah@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
-
-> On 03/03/20 14:02, Vitaly Kuznetsov wrote:
->> Right you are,
->> 
->> a big hammer like
->> 
->> diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
->> index 2a8f2bd..52c9bce 100644
->> --- a/arch/x86/include/asm/kvm_emulate.h
->> +++ b/arch/x86/include/asm/kvm_emulate.h
->> @@ -324,14 +324,6 @@ struct x86_emulate_ctxt {
->>          */
->>  
->>         /* current opcode length in bytes */
->> -       u8 opcode_len;
->> -       u8 b;
->> -       u8 intercept;
->> -       u8 op_bytes;
->> -       u8 ad_bytes;
->> -       struct operand src;
->> -       struct operand src2;
->> -       struct operand dst;
->>         union {
->>                 int (*execute)(struct x86_emulate_ctxt *ctxt);
->>                 fastop_t fop;
->> @@ -343,6 +335,14 @@ struct x86_emulate_ctxt {
->>          * or elsewhere
->>          */
->>         bool rip_relative;
->> +       u8 opcode_len;
->> +       u8 b;
->> +       u8 intercept;
->> +       u8 op_bytes;
->> +       u8 ad_bytes;
->> +       struct operand src;
->> +       struct operand src2;
->> +       struct operand dst;
->>         u8 rex_prefix;
->>         u8 lock_prefix;
->>         u8 rep_prefix;
->> 
->> seems to make the issue go away. (For those wondering why fielf
->> shuffling makes a difference: init_decode_cache() clears
->> [rip_relative, modrm) range) How did this even work before...
->> (I'm still looking at the code, stay tuned...)
+On Tue, Mar 3, 2020 at 7:51 AM John Hubbard <jhubbard@nvidia.com> wrote:
 >
-> On AMD, probably because all these instructions were normally trapped by L1.
+> On 2/28/20 3:32 AM, Pingfan Liu wrote:
+> > FOLL_LONGTERM suggests a pin which is going to be given to hardware and
+> > can't move. It would truncate CMA permanently and should be excluded.
+> >
+> > FOLL_LONGTERM has already been checked in the slow path, but not checked in
+> > the fast path, which means a possible leak of CMA page to longterm pinned
+> > requirement through this crack.
+> >
+> > Place a check in try_get_compound_head() in the fast path.
+> >
+> > Some note about the check:
+> > Huge page's subpages have the same migrate type due to either
+> > allocation from a free_list[] or alloc_contig_range() with param
+> > MIGRATE_MOVABLE. So it is enough to check on a single subpage
+> > by is_migrate_cma_page(subpage)
+> >
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Mike Rapoport <rppt@linux.ibm.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Cc: Christoph Hellwig <hch@infradead.org>
+> > Cc: Shuah Khan <shuah@kernel.org>
+> > To: linux-mm@kvack.org
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  mm/gup.c | 26 +++++++++++++++++++-------
+> >  1 file changed, 19 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index cd8075e..f0d6804 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -33,9 +33,21 @@ struct follow_page_context {
+> >   * Return the compound head page with ref appropriately incremented,
+> >   * or NULL if that failed.
+> >   */
+> > -static inline struct page *try_get_compound_head(struct page *page, int refs)
+> > +static inline struct page *try_get_compound_head(struct page *page, int refs,
+> > +     unsigned int flags)
 >
-> Of these, however, most need not be zeroed again. op_bytes, ad_bytes,
-> opcode_len and b are initialized by x86_decode_insn, and dst/src/src2
-> also by decode_operand.  So only intercept is affected, adding
-> "ctxt->intercept = x86_intercept_none" should be enough.
+>
+> ohhh...please please look at the latest gup.c in mmotm, and this one in particular:
+>
+>     commit 0ea2781c3de4 mm/gup: track FOLL_PIN pages
+>
+> ...where you'll see that there is a concept of "try_get*" vs. "try_grab*"). This is going
+> to be a huge mess if we do it as above, from a code structure point of view.
+>
+> The "grab" functions take gup flags, the "get" functions do not.
+>
+> Anyway, as I said in reply to the cover letter, I'm really uncomfortable with this
+> being applied to linux.git. So maybe if we see a fix to mmotm, it will be clearer how
+> to port that back to linux.git (assuming that you need 5.6 fixed--do you though?)
+Sure, I will read your series and figure out the way to rebase my
+patches on mmotm at first.
 
-This matches my findings, thank you! Patch[es] are coming.
-
--- 
-Vitaly
-
+Thanks,
+Pingfan
