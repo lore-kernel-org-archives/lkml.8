@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5979C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48903C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C8DF217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CBCD217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:00:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204416;
-	bh=jYY9onVjt5nIJMEtgE+UH1baq7Rw12q18+wK0cv1hhc=;
+	s=default; t=1583204426;
+	bh=cu5JtxGOUou9gdgLY53pKTUzlQRU1Q28DCgM6qZ6/1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nWPplOX8qe0cvN260COhLO2TtRmnMBhR+mbPA+ZbSft3mUm4rDeCYnB0RrpgTpKLP
-	 7pSUaK+wK2uut6GVnTg75Xpd9ZGVEaFi1WV3u6D9LmrnZLIDAUFVFIhKRQSm1mPkKC
-	 xaO8QmSUV5jzQp58BxmZyMiA0Vo5x3VCHwNegbrk=
+	b=TU3tjHXQviN1PpzvZoZkh9H+YG13fTArGFm3hXfFZ12bKRO+vabO5zktWqAlKRnDl
+	 4VGxMuJcgNvHLb/nBS9uxkRXWpWP12upGpeKP++zN4IjGhhHKGNAJP09+FT/qyvoSf
+	 GZqzcQjuaV/IOErhJMT5R4zJRvyE6vGa+o3aetsc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbgCCDAK (ORCPT
+        id S1728381AbgCCDAY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:00:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42408 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 22:00:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728016AbgCCCrZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:25 -0500
+        id S1727990AbgCCCrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:22 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 873CF2468D;
-        Tue,  3 Mar 2020 02:47:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22A6424684;
+        Tue,  3 Mar 2020 02:47:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203645;
-        bh=jYY9onVjt5nIJMEtgE+UH1baq7Rw12q18+wK0cv1hhc=;
+        s=default; t=1583203641;
+        bh=cu5JtxGOUou9gdgLY53pKTUzlQRU1Q28DCgM6qZ6/1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XDWV8kwAS1Tfsxs2Zuc8CzmZXvGJHqiTij5oZvpv2KvtnQmA7bsoUncbZ2HmkG7C7
-         2YDR8qLWLstsqkxz0Lh4lpqkFiH+3cVj9thm2Z6oiSvynhRP6YIaZLO6LTbj5AdTqZ
-         pcNAvfDGZ61U7u+pIXMInoCJSTV4BqtQlBV8VrgY=
+        b=PpBAxRsJA1L1O7E4JNN8mkSOI8OM+0htBNPJWdLccmtlDfAZ7eDR1CfAGJ4eGfsnJ
+         +XvAtLr9FdlJwndaJdjbuNPtLW0tO5RToyF0ETlKsADUEKJ5TBsRjXpUr2CYvd8jbs
+         PP1yXfD4L7ox3NMZhOqawiqMkdYWXARx08VlZU6o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shannon Nelson <snelson@pensando.io>,
+Cc:     Alexandra Winter <wintera@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 56/66] ionic: fix fw_status read
-Date:   Mon,  2 Mar 2020 21:46:05 -0500
-Message-Id: <20200303024615.8889-56-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 53/66] s390/qeth: vnicc Fix EOPNOTSUPP precedence
+Date:   Mon,  2 Mar 2020 21:46:02 -0500
+Message-Id: <20200303024615.8889-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -59,64 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Alexandra Winter <wintera@linux.ibm.com>
 
-[ Upstream commit 68b759a75d6257759d1e37ff13f2d0659baf1112 ]
+[ Upstream commit 6f3846f0955308b6d1b219419da42b8de2c08845 ]
 
-The fw_status field is only 8 bits, so fix the read.  Also,
-we only want to look at the one status bit, to allow for future
-use of the other bits, and watch for a bad PCI read.
+When getting or setting VNICC parameters, the error code EOPNOTSUPP
+should have precedence over EBUSY.
 
-Fixes: 97ca486592c0 ("ionic: add heartbeat check")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
+EBUSY is used because vnicc feature and bridgeport feature are mutually
+exclusive, which is a temporary condition.
+Whereas EOPNOTSUPP indicates that the HW does not support all or parts of
+the vnicc feature.
+This issue causes the vnicc sysfs params to show 'blocked by bridgeport'
+for HW that does not support VNICC at all.
+
+Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_dev.c | 11 +++++++----
- drivers/net/ethernet/pensando/ionic/ionic_if.h  |  1 +
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ drivers/s390/net/qeth_l2_main.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_dev.c b/drivers/net/ethernet/pensando/ionic/ionic_dev.c
-index 5f9d2ec70446f..61c06fbe10dbb 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_dev.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_dev.c
-@@ -103,7 +103,7 @@ int ionic_heartbeat_check(struct ionic *ionic)
- {
- 	struct ionic_dev *idev = &ionic->idev;
- 	unsigned long hb_time;
--	u32 fw_status;
-+	u8 fw_status;
- 	u32 hb;
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index 47d37e75dda68..e26ad80ddfa39 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -1815,15 +1815,14 @@ int qeth_l2_vnicc_set_state(struct qeth_card *card, u32 vnicc, bool state)
  
- 	/* wait a little more than one second before testing again */
-@@ -111,9 +111,12 @@ int ionic_heartbeat_check(struct ionic *ionic)
- 	if (time_before(hb_time, (idev->last_hb_time + ionic->watchdog_period)))
- 		return 0;
+ 	QETH_CARD_TEXT(card, 2, "vniccsch");
  
--	/* firmware is useful only if fw_status is non-zero */
--	fw_status = ioread32(&idev->dev_info_regs->fw_status);
--	if (!fw_status)
-+	/* firmware is useful only if the running bit is set and
-+	 * fw_status != 0xff (bad PCI read)
-+	 */
-+	fw_status = ioread8(&idev->dev_info_regs->fw_status);
-+	if (fw_status == 0xff ||
-+	    !(fw_status & IONIC_FW_STS_F_RUNNING))
- 		return -ENXIO;
+-	/* do not change anything if BridgePort is enabled */
+-	if (qeth_bridgeport_is_in_use(card))
+-		return -EBUSY;
+-
+ 	/* check if characteristic and enable/disable are supported */
+ 	if (!(card->options.vnicc.sup_chars & vnicc) ||
+ 	    !(card->options.vnicc.set_char_sup & vnicc))
+ 		return -EOPNOTSUPP;
  
- 	/* early FW has no heartbeat, else FW will return non-zero */
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_if.h b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-index ed23a05f2642f..d5e8b4e2a96e0 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-@@ -2348,6 +2348,7 @@ union ionic_dev_info_regs {
- 		u8     version;
- 		u8     asic_type;
- 		u8     asic_rev;
-+#define IONIC_FW_STS_F_RUNNING	0x1
- 		u8     fw_status;
- 		u32    fw_heartbeat;
- 		char   fw_version[IONIC_DEVINFO_FWVERS_BUFLEN];
++	if (qeth_bridgeport_is_in_use(card))
++		return -EBUSY;
++
+ 	/* set enable/disable command and store wanted characteristic */
+ 	if (state) {
+ 		cmd = IPA_VNICC_ENABLE;
+@@ -1869,14 +1868,13 @@ int qeth_l2_vnicc_get_state(struct qeth_card *card, u32 vnicc, bool *state)
+ 
+ 	QETH_CARD_TEXT(card, 2, "vniccgch");
+ 
+-	/* do not get anything if BridgePort is enabled */
+-	if (qeth_bridgeport_is_in_use(card))
+-		return -EBUSY;
+-
+ 	/* check if characteristic is supported */
+ 	if (!(card->options.vnicc.sup_chars & vnicc))
+ 		return -EOPNOTSUPP;
+ 
++	if (qeth_bridgeport_is_in_use(card))
++		return -EBUSY;
++
+ 	/* if card is ready, query current VNICC state */
+ 	if (qeth_card_hw_is_reachable(card))
+ 		rc = qeth_l2_vnicc_query_chars(card);
+@@ -1894,15 +1892,14 @@ int qeth_l2_vnicc_set_timeout(struct qeth_card *card, u32 timeout)
+ 
+ 	QETH_CARD_TEXT(card, 2, "vniccsto");
+ 
+-	/* do not change anything if BridgePort is enabled */
+-	if (qeth_bridgeport_is_in_use(card))
+-		return -EBUSY;
+-
+ 	/* check if characteristic and set_timeout are supported */
+ 	if (!(card->options.vnicc.sup_chars & QETH_VNICC_LEARNING) ||
+ 	    !(card->options.vnicc.getset_timeout_sup & QETH_VNICC_LEARNING))
+ 		return -EOPNOTSUPP;
+ 
++	if (qeth_bridgeport_is_in_use(card))
++		return -EBUSY;
++
+ 	/* do we need to do anything? */
+ 	if (card->options.vnicc.learning_timeout == timeout)
+ 		return rc;
+@@ -1931,14 +1928,14 @@ int qeth_l2_vnicc_get_timeout(struct qeth_card *card, u32 *timeout)
+ 
+ 	QETH_CARD_TEXT(card, 2, "vniccgto");
+ 
+-	/* do not get anything if BridgePort is enabled */
+-	if (qeth_bridgeport_is_in_use(card))
+-		return -EBUSY;
+-
+ 	/* check if characteristic and get_timeout are supported */
+ 	if (!(card->options.vnicc.sup_chars & QETH_VNICC_LEARNING) ||
+ 	    !(card->options.vnicc.getset_timeout_sup & QETH_VNICC_LEARNING))
+ 		return -EOPNOTSUPP;
++
++	if (qeth_bridgeport_is_in_use(card))
++		return -EBUSY;
++
+ 	/* if card is ready, get timeout. Otherwise, just return stored value */
+ 	*timeout = card->options.vnicc.learning_timeout;
+ 	if (qeth_card_hw_is_reachable(card))
 -- 
 2.20.1
 
