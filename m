@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC63C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A346C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 163BD24680
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E0A924684
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203631;
-	bh=iOTOzWvnEBWJ2lYE1qrTSa8s9PYi2HDkCLTTQGhOrkc=;
+	s=default; t=1583203635;
+	bh=sKWT9C6S3r2RGpbAtBeNneIuanNERDEEBk/3vOnT6T8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p0c0mM6JlRegcz0ov7C5pzy8203+z9Glo/NM7eQkstxze450v4bEjGaqMnTiTdbkX
-	 k6iTe9Jw3KMCsE1Ewu8R1bHkXgXo4UeBceMBH5E2ouweKJrbMaL0GAN2008XbmsD9C
-	 i1CdKN2B7AV2UgEQ19h1AAEbnBOnxK2/L85kNy/w=
+	b=A89tNtZs61cHYGGJRtq+kvPEOzFi6qPcurjaxM3DKXZ72MKHU2KL1ctAhpKoG7e0t
+	 e0tCXORYgZX4JFCLL9pCLZllJWO7V2oCB5Al40vWAJ1OLhYDIr1FCoVxGx1rlqTPkG
+	 9ipODVMFjL7TY3tEbNjjt2gpiNcVZVMsaYEebpEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgCCCrJ (ORCPT
+        id S1727949AbgCCCrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:47:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:47:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727866AbgCCCrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:05 -0500
+        id S1727902AbgCCCrK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42399246BB;
-        Tue,  3 Mar 2020 02:47:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA4A0246BB;
+        Tue,  3 Mar 2020 02:47:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203624;
-        bh=iOTOzWvnEBWJ2lYE1qrTSa8s9PYi2HDkCLTTQGhOrkc=;
+        s=default; t=1583203629;
+        bh=sKWT9C6S3r2RGpbAtBeNneIuanNERDEEBk/3vOnT6T8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cp9y9VJ7MGtW5ayrnILm78boSCCa6BVwzU92mj1AhBISI7+RrnnN50aN/vsmiA9qk
-         in7mXhWb2hoT7jKFgah4wqM5sCHhubPa9p7jr1Hpktmz43108NKMf+uKa9EFVaRSil
-         Afy2sXirlsR6jhKqTY894jXxgb99mZiwPr1qRubk=
+        b=bW6yUl8cpqEVM3XNqth2M1uUzKahpFiJnO+23YsFNggOzGM6DhhndkhBS/Gx4KFPq
+         FFYyKMUGoSYzGzlwSkkCgQ12jDJWZIdPbMpPKobzkg6f5arydwRfTXSnOioAg2J9Ye
+         ewee2oHnM1LwVt7JGWCSn1bYpSF4bpqdhOcda5BQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 39/66] s390: make 'install' not depend on vmlinux
-Date:   Mon,  2 Mar 2020 21:45:48 -0500
-Message-Id: <20200303024615.8889-39-sashal@kernel.org>
+Cc:     Hamdan Igbaria <hamdani@mellanox.com>,
+        Alex Vesker <valex@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 43/66] net/mlx5: DR, Fix matching on vport gvmi
+Date:   Mon,  2 Mar 2020 21:45:52 -0500
+Message-Id: <20200303024615.8889-43-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -59,51 +61,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Hamdan Igbaria <hamdani@mellanox.com>
 
-[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
+[ Upstream commit 52d214976d4f64504c1bbb52d47b46a5a3d5ee42 ]
 
-For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
-install" not depend on vmlinux"), the install targets should never
-trigger the rebuild of the kernel.
+Set vport gvmi in the tag, only when source gvmi is set in the bit mask.
 
-The variable, CONFIGURE, is not set by anyone. Remove it as well.
-
-Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 26d688e3 ("net/mlx5: DR, Add Steering entry (STE) utilities")
+Signed-off-by: Hamdan Igbaria <hamdani@mellanox.com>
+Reviewed-by: Alex Vesker <valex@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/Makefile      | 2 +-
- arch/s390/boot/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index e0e3a465bbfd6..8dfa2cf1f05c7 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -146,7 +146,7 @@ all: bzImage
- #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
- KBUILD_IMAGE	:= $(boot)/bzImage
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c
+index c6c7d1defbd78..aade62a9ee5ce 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c
+@@ -2307,7 +2307,9 @@ static int dr_ste_build_src_gvmi_qpn_tag(struct mlx5dr_match_param *value,
+ 	struct mlx5dr_cmd_vport_cap *vport_cap;
+ 	struct mlx5dr_domain *dmn = sb->dmn;
+ 	struct mlx5dr_cmd_caps *caps;
++	u8 *bit_mask = sb->bit_mask;
+ 	u8 *tag = hw_ste->tag;
++	bool source_gvmi_set;
  
--install: vmlinux
-+install:
- 	$(Q)$(MAKE) $(build)=$(boot) $@
+ 	DR_STE_SET_TAG(src_gvmi_qp, tag, source_qp, misc, source_sqn);
  
- bzImage: vmlinux
-diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-index e2c47d3a1c891..0ff9261c915e3 100644
---- a/arch/s390/boot/Makefile
-+++ b/arch/s390/boot/Makefile
-@@ -70,7 +70,7 @@ $(obj)/compressed/vmlinux: $(obj)/startup.a FORCE
- $(obj)/startup.a: $(OBJECTS) FORCE
- 	$(call if_changed,ar)
+@@ -2328,7 +2330,8 @@ static int dr_ste_build_src_gvmi_qpn_tag(struct mlx5dr_match_param *value,
+ 	if (!vport_cap)
+ 		return -EINVAL;
  
--install: $(CONFIGURE) $(obj)/bzImage
-+install:
- 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
- 	      System.map "$(INSTALL_PATH)"
+-	if (vport_cap->vport_gvmi)
++	source_gvmi_set = MLX5_GET(ste_src_gvmi_qp, bit_mask, source_gvmi);
++	if (vport_cap->vport_gvmi && source_gvmi_set)
+ 		MLX5_SET(ste_src_gvmi_qp, tag, source_gvmi, vport_cap->vport_gvmi);
  
+ 	misc->source_eswitch_owner_vhca_id = 0;
 -- 
 2.20.1
 
