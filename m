@@ -2,52 +2,54 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C51C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 462FFC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C78E2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D9B8208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258906;
-	bh=RvQhxzX6sNPG//i4+vk6Vu4eK5JycpXVfhLLiIG7OWM=;
+	s=default; t=1583258910;
+	bh=oTYgoWQTfmOG7ZN0sUeME2E5uZ6h8jH+epj1i8hWPwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iuGvMcm0c2kPPpUolM7sn+TwsT7OyTToprxGy9s3gVkqASlQNrHHBzA0Z8HwVcJgN
-	 zbPPX/OXd/lEea0IQIaYjAlqbXAt0AvKm26+hBm40B+Sv1pceYVvktzLL6qefR9cmB
-	 HrWoBVAro1IGYQKLez+li6xaqLWbcD2mH/+R62LM=
+	b=Hmgip4uky6WXshi9OsJV30pnwjUomEwHHzJq/Vy0oV7+566aODjf19NK953hI3YVV
+	 OiLaDdY3CVdaEEIvskiGfRnM42Dd6npPecOfUaprUccKgStGCkKrqbz8vpyNnCyCTN
+	 f7P7fXWzjh7jj1Bin7/sPkHfhOc6XqnTHot5ixAg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387943AbgCCSIZ (ORCPT
+        id S2388157AbgCCSI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:08:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:08:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729318AbgCCRxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:39 -0500
+        id S1730695AbgCCRxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD860206D5;
-        Tue,  3 Mar 2020 17:53:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 708D620870;
+        Tue,  3 Mar 2020 17:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258018;
-        bh=RvQhxzX6sNPG//i4+vk6Vu4eK5JycpXVfhLLiIG7OWM=;
+        s=default; t=1583258012;
+        bh=oTYgoWQTfmOG7ZN0sUeME2E5uZ6h8jH+epj1i8hWPwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V93xFb259SAflWIsGKUC0X7Mamk+uxuD74LhwVAfDb+zMP4rrNyTFzEtCLQzys2b+
-         oqBl4WEe3fKjY/7spBbzppwi06UT9L3yaw4UzlaSPEst8TM407eQ6UxdCwxaxKc3AI
-         By1biQoJQ9ISx+D+lmspuiFrSODsvJ30jLCJ/ymI=
+        b=QmjIPtAB2r1NKB0teRbDECG6THTjsVSfgbt64tGMQdCrZu+lvv8P0OrdcnJRIZtQP
+         eETzVQFwk6CurGaijq+X9BxV2M0wiuOqhqBaT1nS2fYzCFozfnncwcrVXPVFKzpCjF
+         aiNuBpkCSB2Rz0BRem+hWYUaDIoE+bzIjrhDFlmw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
-        Paolo Abeni <pabeni@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 012/152] Revert "net: dev: introduce support for sch BYPASS for lockless qdisc"
-Date:   Tue,  3 Mar 2020 18:41:50 +0100
-Message-Id: <20200303174303.899277587@linuxfoundation.org>
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 037/152] perf/x86/cstate: Add Tremont support
+Date:   Tue,  3 Mar 2020 18:42:15 +0100
+Message-Id: <20200303174306.647549639@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,59 +62,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit 379349e9bc3b42b8b2f8f7a03f64a97623fff323 ]
+[ Upstream commit ecf71fbccb9ac5cb964eb7de59bb9da3755b7885 ]
 
-This reverts commit ba27b4cdaaa66561aaedb2101876e563738d36fe
+Tremont is Intel's successor to Goldmont Plus. From the perspective of
+Intel cstate residency counters, there is nothing changed compared with
+Goldmont Plus and Goldmont.
 
-Ahmed reported ouf-of-order issues bisected to commit ba27b4cdaaa6
-("net: dev: introduce support for sch BYPASS for lockless qdisc").
-I can't find any working solution other than a plain revert.
+Share glm_cstates with Goldmont Plus and Goldmont.
+Update the comments for Tremont.
 
-This will introduce some minor performance regressions for
-pfifo_fast qdisc. I plan to address them in net-next with more
-indirect call wrapper boilerplate for qdiscs.
-
-Reported-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-Fixes: ba27b4cdaaa6 ("net: dev: introduce support for sch BYPASS for lockless qdisc")
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Link: https://lkml.kernel.org/r/1580236279-35492-2-git-send-email-kan.liang@linux.intel.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/dev.c |   22 ++--------------------
- 1 file changed, 2 insertions(+), 20 deletions(-)
+ arch/x86/events/intel/cstate.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
 
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -3386,26 +3386,8 @@ static inline int __dev_xmit_skb(struct
- 	qdisc_calculate_pkt_len(skb, q);
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index e1daf4151e116..4814c964692cb 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -40,17 +40,18 @@
+  * Model specific counters:
+  *	MSR_CORE_C1_RES: CORE C1 Residency Counter
+  *			 perf code: 0x00
+- *			 Available model: SLM,AMT,GLM,CNL
++ *			 Available model: SLM,AMT,GLM,CNL,TNT
+  *			 Scope: Core (each processor core has a MSR)
+  *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
+  *			       perf code: 0x01
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,GLM,
+- *						CNL,KBL,CML
++ *						CNL,KBL,CML,TNT
+  *			       Scope: Core
+  *	MSR_CORE_C6_RESIDENCY: CORE C6 Residency Counter
+  *			       perf code: 0x02
+  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
+- *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL
++ *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL,
++ *						TNT
+  *			       Scope: Core
+  *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
+  *			       perf code: 0x03
+@@ -60,17 +61,18 @@
+  *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
+  *			       perf code: 0x00
+  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
+- *						KBL,CML,ICL,TGL
++ *						KBL,CML,ICL,TGL,TNT
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
+  *			       perf code: 0x01
+  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,KNL,
+- *						GLM,CNL,KBL,CML,ICL,TGL
++ *						GLM,CNL,KBL,CML,ICL,TGL,TNT
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C6_RESIDENCY:  Package C6 Residency Counter.
+  *			       perf code: 0x02
+- *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW
+- *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL
++ *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
++ *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL,
++ *						TNT
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
+  *			       perf code: 0x03
+@@ -87,7 +89,8 @@
+  *			       Scope: Package (physical package)
+  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
+  *			       perf code: 0x06
+- *			       Available model: HSW ULT,KBL,GLM,CNL,CML,ICL,TGL
++ *			       Available model: HSW ULT,KBL,GLM,CNL,CML,ICL,TGL,
++ *						TNT
+  *			       Scope: Package (physical package)
+  *
+  */
+@@ -640,8 +643,9 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
  
- 	if (q->flags & TCQ_F_NOLOCK) {
--		if ((q->flags & TCQ_F_CAN_BYPASS) && READ_ONCE(q->empty) &&
--		    qdisc_run_begin(q)) {
--			if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
--					      &q->state))) {
--				__qdisc_drop(skb, &to_free);
--				rc = NET_XMIT_DROP;
--				goto end_run;
--			}
--			qdisc_bstats_cpu_update(q, skb);
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT,   glm_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_D, glm_cstates),
 -
--			rc = NET_XMIT_SUCCESS;
--			if (sch_direct_xmit(skb, q, dev, txq, NULL, true))
--				__qdisc_run(q);
--
--end_run:
--			qdisc_run_end(q);
--		} else {
--			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
--			qdisc_run(q);
--		}
-+		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
-+		qdisc_run(q);
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_TREMONT_D, glm_cstates),
++	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_TREMONT, glm_cstates),
  
- 		if (unlikely(to_free))
- 			kfree_skb_list(to_free);
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_L, icl_cstates),
+ 	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE,   icl_cstates),
+-- 
+2.20.1
+
 
 
