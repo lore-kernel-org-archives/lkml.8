@@ -2,113 +2,107 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17962C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8F1C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C38D820870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41C6120870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:41:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tzTQnOec"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LHmrPVvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731915AbgCCUjx (ORCPT
+        id S1731945AbgCCUlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:39:53 -0500
-Received: from ozlabs.org ([203.11.71.1]:50479 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729681AbgCCUjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 15:39:52 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48X85K1Jp1z9sPK;
-        Wed,  4 Mar 2020 07:39:48 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583267990;
-        bh=TjvrRgnHhdcBJu19Jlnojiu/tbhukvpbVzMp/IdP1xs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tzTQnOec8I2gag1nBSCVDE+IhhXm5T65Po66j0RJdzhFtNPYuHnFNebjYLv44pPdW
-         i6t90M3kHJHvoI3+cB4hCAUiModR0T0RRqOedSc5R8mz5+NH1AObHaCUun4I/PvUbK
-         FyaoyRFlZ0y1Oc06RkAC2oeQPJ5ny+k+pxEd3QPqHdE0Km8nM8Htsrx/Pj2VN2lkc+
-         WqO5rAqFcka42fv0YuG9x4WoIhgc5S1Jeko77q50D4JKwhYIYPIbUKtp9WSqpFGPtj
-         1306WbxskM80Fu/x69jfAFwv8aLiiDbeB3X2PXEKuX5wlA7I9YdJ6mPqB6snshwLjR
-         U7LmMGEQwduJw==
-Date:   Wed, 4 Mar 2020 07:39:38 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        KVM <kvm@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Haiwei Li <lihaiwei.kernel@gmail.com>
-Subject: linux-next: Fixes tags need some work in the kvm-fixes tree
-Message-ID: <20200304073938.73ac724d@canb.auug.org.au>
+        Tue, 3 Mar 2020 15:41:49 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46034 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729681AbgCCUlt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 15:41:49 -0500
+Received: by mail-wr1-f67.google.com with SMTP id v2so6100210wrp.12;
+        Tue, 03 Mar 2020 12:41:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=woDLnQT31XgiRNk9DQZv8gRSvGaIo3mJ0GaQ1nM51GM=;
+        b=LHmrPVvlbsRGCO5FAVzOsvmkCEv2jIPik6Jl6Ftr7arZdioMmpaPOAThUL1l/I6Qlm
+         3rj35adGbgtXFwUwf7pbRww3k3AGqSDywui69IF7xWP1UPDc7BkDj/x7qFFeQQO2XMaT
+         OmsJEhOXGj/onAHf2S2mSCfI9l/k9OkIeaelF98O+FfuHhXktI9X5VBkMaOW5MnUaMnZ
+         6qzNk+BbOZV77tOftXvnZ5tZKP24mg04Hh1V6Pan7Spu8rSYDK18lYxF6wqbiFkcs91z
+         4UvCbEY94m1D3BI2XUfYe9YihoJfWIkzQHMpkNrJTFVUPU+A7toKSOLo4Zime/TkeSrc
+         Maiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=woDLnQT31XgiRNk9DQZv8gRSvGaIo3mJ0GaQ1nM51GM=;
+        b=NFqryLiMKMwSbV2gylnL3SBYMSad5kyejJR7NgvJ3h6cGYqYVgyflpu0OI5pSYowYX
+         rdx1+0rq6olqff43SMkPQ/s+qlMCnXBdGfqU+4UxFXiBa81skHUz/VHBkq2zdHy3T8UX
+         vz9H6I4ph/GtNwpcCRWSXXxV8IADMQaha26nVTUJ5bTsr5qZj/XhVXb8QGd2M9WgPHBF
+         TDb7YUT6QjLgbB9Z7Zf2lmRKfMuEwL4FocnzX23YCmeklz6rgGf8x1dbGFcLcsryd79I
+         70sZkta+V4X11lMykGHreB5c/oaf95zUvXAVnfddrrh8I97G891Fv5Co4dBZK2SmH0Z5
+         bOZw==
+X-Gm-Message-State: ANhLgQ3gAgyOa9czZmgP6VvOy0+NxSjytXORnCik2RhnC8Q9eHob1wlB
+        SwfMcSZeigoIt32i+aGiCQ==
+X-Google-Smtp-Source: ADFU+vsGj6aZ/TvtMwnt6J6I/4YSUsaorDIgFG1wjuPKvkja3v7ctdlD9lfPY1nBMmBmrqWDZEJZfw==
+X-Received: by 2002:a05:6000:189:: with SMTP id p9mr7039296wrx.391.1583268106733;
+        Tue, 03 Mar 2020 12:41:46 -0800 (PST)
+Received: from avx2 ([46.53.249.49])
+        by smtp.gmail.com with ESMTPSA id w16sm1387813wrp.8.2020.03.03.12.41.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 12:41:46 -0800 (PST)
+Date:   Tue, 3 Mar 2020 23:41:44 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     rjw@rjwysocki.net, lenb@kernel.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        luto@kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org,
+        linux-acpi@vger.kernel.org
+Subject: [PATCH] x86/acpi: make "asmlinkage" part first thing in the function
+ definition
+Message-ID: <20200303204144.GA9913@avx2>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/s78gslOY7Cj_i6a9gEuspHl";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/s78gslOY7Cj_i6a9gEuspHl
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+g++ insists that function declaration must start with extern "C"
+(which asmlinkage expands to).
 
-Hi all,
+gcc doesn't care.
 
-In commit
+Signed-off-by: _Z6Alexeyv <adobriyan@gmail.com>
+---
 
-  aaca21007ba1 ("KVM: SVM: Fix the svm vmexit code for WRMSR")
+ arch/x86/kernel/acpi/sleep.c |    2 +-
+ arch/x86/kernel/acpi/sleep.h |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Fixes tag
-
-  Fixes: 1e9e2622a149 ("KVM: VMX: FIXED+PHYSICAL mode single target IPI fas=
-tpath", 2019-11-21)
-
-has these problem(s):
-
-  - Subject does not match target commit subject
-    Just use
-	git log -1 --format=3D'Fixes: %h ("%s")'
-
-In commit
-
-  9a11997e757b ("KVM: X86: Fix dereference null cpufreq policy")
-
-Fixes tag
-
-  Fixes: aaec7c03de (KVM: x86: avoid useless copy of cpufreq policy)
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/s78gslOY7Cj_i6a9gEuspHl
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5ewIsACgkQAVBC80lX
-0Gxkpgf+IB9yxNHj3j/9pX/g2IdnBgBxNCbf1J9AZclS/iIt4wPidyRJ0eEWrIc/
-NSAzTl8gypsGq7wexKm/GuzCHLJi836qHeHh72oPAwl9Dv7l0YILvWG5VgdalnFh
-BDgQ2F5/1yKZKxlBnjWNn21ZWHjPEUfceqvdWGYLjXH2mGc3HhudOyEW0/cwej4t
-Biz8z6V/rRVRxGM3FguyLdY2y/fikGQJD/t/bKKthr8h2wYOSq7AJervOqPTNhnb
-1I/k7bBphyq5bym4sZUEDn2AO7rygJrhADgr5e1u4ib7pvZsDOJLweDshdzX0YyL
-tg0vgXMGM2tJy+5Akd4tIuFAA1CdVw==
-=f/mY
------END PGP SIGNATURE-----
-
---Sig_/s78gslOY7Cj_i6a9gEuspHl--
+--- a/arch/x86/kernel/acpi/sleep.c
++++ b/arch/x86/kernel/acpi/sleep.c
+@@ -43,7 +43,7 @@ unsigned long acpi_get_wakeup_address(void)
+  *
+  * Wrapper around acpi_enter_sleep_state() to be called by assmebly.
+  */
+-acpi_status asmlinkage __visible x86_acpi_enter_sleep_state(u8 state)
++asmlinkage acpi_status __visible x86_acpi_enter_sleep_state(u8 state)
+ {
+ 	return acpi_enter_sleep_state(state);
+ }
+--- a/arch/x86/kernel/acpi/sleep.h
++++ b/arch/x86/kernel/acpi/sleep.h
+@@ -19,4 +19,4 @@ extern void do_suspend_lowlevel(void);
+ 
+ extern int x86_acpi_suspend_lowlevel(void);
+ 
+-acpi_status asmlinkage x86_acpi_enter_sleep_state(u8 state);
++asmlinkage acpi_status x86_acpi_enter_sleep_state(u8 state);
