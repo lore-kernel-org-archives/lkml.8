@@ -2,106 +2,107 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06700C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B3EC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC44220842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:34:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="eEQq5fiM"
+	by mail.kernel.org (Postfix) with ESMTP id B6DF020857
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:35:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729459AbgCCNey (ORCPT
+        id S1729496AbgCCNf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:34:54 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44058 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727167AbgCCNey (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:34:54 -0500
-Received: by mail-il1-f194.google.com with SMTP id x7so2716980ilq.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:34:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d8UZDr3lZGFyJivNM6em5ybzB9qz5QGiZZazZdznXqk=;
-        b=eEQq5fiMKdVd42vqfExJKz3i8PtBQaz26xc++cNx+VS/zkeI5e09ipMisnSMiHdrf5
-         u+xmYZFz/xI0z/5+EySdWurVl96IIsUyghbPc5Vppji0ZZ9iQNhE7e1tgdNfKcxWAAes
-         y80ESNGhn+KNkkn+eLigS588MUERmZAN3AgMs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d8UZDr3lZGFyJivNM6em5ybzB9qz5QGiZZazZdznXqk=;
-        b=IoYUrXED3NxodQ8fkOzSOfydRl8+Ir3mA00ZD+YVayHROS7ZXVPJXIzcOTdsCbtqFT
-         Q5N9ctvffp9s1Rr100AAfCOT2Cfp+LvHyLMVituctp2N2ph51Pg7Et16Flib2qd5Ysd/
-         o9dsT2wwORG/Gb5yg15nfRW1xJSWVTphJb0aDj19a+zhBeqsVhRFAI34xDQXlrPjO78l
-         vPFxj6F5H+jImsDh/s/dHNi8CvtFvtAe2XeLDJhgYx2a5hiLYGzJS1l4sHzwK9T2MSoX
-         5t0Hc7JxpC3NtfTnAiXIqE4bvLPcaU7bcV2f5zZBj+OLYyzSw8kvV4iDHxf3c2lBgEV0
-         zdRw==
-X-Gm-Message-State: ANhLgQ3IlPRuY+rsLM0ji8s7xietbqlaRfIn13aKlEtg8WnJxvdTGvKk
-        W2ZKAdEOusJvsEP8HjFtx1EZxhfCnZcH7q6jjzpSTQ==
-X-Google-Smtp-Source: ADFU+vse5bB7gLvCvFy8XryGmsALFqGE4Oyf3LKEtJstP+x5Mc4KlKOxwSw8ylASXSSbsPp5ZHBKAyS4fw1aRsVzAO8=
-X-Received: by 2002:a92:8847:: with SMTP id h68mr4667878ild.212.1583242493712;
- Tue, 03 Mar 2020 05:34:53 -0800 (PST)
+        Tue, 3 Mar 2020 08:35:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727167AbgCCNf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:35:27 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 149D920838;
+        Tue,  3 Mar 2020 13:35:26 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 08:35:23 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Bob Liu <bob.liu@oracle.com>
+Cc:     Cengiz Can <cengiz@kernel.wtf>, Jens Axboe <axboe@kernel.dk>,
+        Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] blktrace: fix dereference after null check
+Message-ID: <20200303083523.78233c24@gandalf.local.home>
+In-Reply-To: <ec24c6d8-617f-1460-0420-bc2ac3f346c6@oracle.com>
+References: <20200303073358.57799-1-cengiz@kernel.wtf>
+        <ec24c6d8-617f-1460-0420-bc2ac3f346c6@oracle.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home> <20200303130347.GA2302029@kroah.com>
- <20200303131434.GA2373427@kroah.com>
-In-Reply-To: <20200303131434.GA2373427@kroah.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 3 Mar 2020 14:34:42 +0100
-Message-ID: <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Karel Zak <kzak@redhat.com>, David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Tue, 3 Mar 2020 21:29:08 +0800
+Bob Liu <bob.liu@oracle.com> wrote:
 
-> > Unlimited beers for a 21-line kernel patch?  Sign me up!
-> >
-> > Totally untested, barely compiled patch below.
->
-> Ok, that didn't even build, let me try this for real now...
+> On 3/3/20 3:33 PM, Cengiz Can wrote:
+> > There was a recent change in blktrace.c that added a RCU protection to
+> > `q->blk_trace` in order to fix a use-after-free issue during access.
+> > 
+> > However the change missed an edge case that can lead to dereferencing of
+> > `bt` pointer even when it's NULL:
+> > 
+> > ```
+> >         bt->act_mask = value; // bt can still be NULL here
+> > ```
+> > 
+> > Added a reassignment into the NULL check block to fix the issue.
+> > 
+> > Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
+> > 
+> > Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+> > ---
+> >  Huge thanks goes to Steven Rostedt for his assistance.
+> > 
+> >  kernel/trace/blktrace.c | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> > index 4560878f0bac..29ea88f10b87 100644
+> > --- a/kernel/trace/blktrace.c
+> > +++ b/kernel/trace/blktrace.c
+> > @@ -1896,8 +1896,10 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
+> >  	}
+> > 
+> >  	ret = 0;
+> > -	if (bt == NULL)
+> > +	if (bt == NULL) {
+> >  		ret = blk_trace_setup_queue(q, bdev);
+> > +		bt = q->blk_trace;  
+> 
+> The return value 'ret' should be judged, it's wrong to set 'bt' if blk_trace_setup_queue()
+> return failure.
 
-Some comments on the interface:
+Why? If ret is an error, q is still valid, and bt would just be garbage. bt
+is ignored below if ret is anything but zero. Why add an unnecessary if
+condition here?
 
-O_LARGEFILE can be unconditional, since offsets are not exposed to the caller.
+That said, the bt assignment still needs rcu annotation:
 
-Use the openat2 style arguments; limit the accepted flags to sane ones
-(e.g. don't let this syscall create a file).
+		bt = rcu_dereference_protected(q->blk_trace,
+				lockdep_is_held(&q->blk_trace_mutex));
 
-If buffer is too small to fit the whole file, return error.
+-- Steve
 
-Verify that the number of bytes read matches the file size, otherwise
-return error (may need to loop?).
 
-Thanks,
-Miklos
+> 
+> > +	}
+> > 
+> >  	if (ret == 0) {
+> >  		if (attr == &dev_attr_act_mask)
+> > --
+> > 2.25.1
+> >   
+
