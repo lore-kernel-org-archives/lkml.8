@@ -2,91 +2,99 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URG_BIZ
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F69AC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E716C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332BC2465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BA572465E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204323;
-	bh=hdEXpynWFPxkGxPFxK8zhwyo9jTjHRf72xZ9g/yKc/A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ronjJL2jXRb9IvzwVitBR5K6qovoxMr1fXUwJSTxo4FFJr5K9fUdYJiTgyIcs8s7/
-	 J9ezbKYoEiMij+KTvT29unCYxiuo2+q5AXUPy3o7iQidbcdTJSKZluIzdaCdtJ2PY+
-	 nWHAc7MMseqJFrgxmMk8dq5lNfYi07V29vxmLFDA=
+	s=default; t=1583204328;
+	bh=f9xV/eWY/rwskCqYR2yqEJNGHdDtaNPeUxuxL49T+Ac=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=XmBx58/OUJ7S6WDVT4MgWwJvAed0fZsgCXLnav9zppOKFoyjMGXpIbJS3hsmKZLhB
+	 hgMyz0E177TC805wGvUvEvxsvLyKMvGF+P4aALPlKIF1lVE4S/E8+4u4KNlaOAiBIQ
+	 hBOijt7/rElV+W8HhvFFn0Oll6WFop+u8/0Zobos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728251AbgCCCsC (ORCPT
+        id S1728885AbgCCC6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43082 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:58:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727513AbgCCCrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:52 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728516AbgCCC6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:58:44 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88000246D8;
-        Tue,  3 Mar 2020 02:47:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF1062166E;
+        Tue,  3 Mar 2020 02:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203672;
-        bh=hdEXpynWFPxkGxPFxK8zhwyo9jTjHRf72xZ9g/yKc/A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hl5r6XBMiDfDS3/rG8lpNcwMJFn5Dr14s+CWJ4H0pwEQbohJUsSWO4QqyHz0zXjjx
-         DwY545S0Cr0QaI1eP+RbbVbkSS19BS53sNlakhLSPxdYXzrQhX0p0Nqy5QpQnD3tHa
-         qTA3+d7aPN6NJhYIhmE1sE8lvlycI3jW2wR4inMU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 10/58] habanalabs: patched cb equals user cb in device memset
-Date:   Mon,  2 Mar 2020 21:46:52 -0500
-Message-Id: <20200303024740.9511-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
-References: <20200303024740.9511-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=default; t=1583204323;
+        bh=f9xV/eWY/rwskCqYR2yqEJNGHdDtaNPeUxuxL49T+Ac=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dNoPxFpKJBE86vFwZdoo3a4tx3MuutdydtjpGxdR/ztdb8DTREfm5hDI/2zN53xnC
+         tIA36GrORZFqkWxzPf3YyZIEv/rr64M3R3vBZgJypfKzRULNAC7RertavLryoHe6Mu
+         MeAnejynMcszJqiRmhIluUqXpKN28I++7cwyW1Jg=
+Date:   Tue, 3 Mar 2020 11:58:39 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH v3] Documentation: bootconfig: Update boot configuration
+ documentation
+Message-Id: <20200303115839.4a18738d5d0d5899c6e1cf32@kernel.org>
+In-Reply-To: <20200302151939.1a83a5ed@gandalf.local.home>
+References: <158313621831.3082.9886161529613724376.stgit@devnote2>
+        <158313622831.3082.8237132211731864948.stgit@devnote2>
+        <20200302125033.4a62e88e@lwn.net>
+        <20200302150802.348b814e@gandalf.local.home>
+        <20200302131351.1b51a58e@lwn.net>
+        <20200302151939.1a83a5ed@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oded Gabbay <oded.gabbay@gmail.com>
+On Mon, 2 Mar 2020 15:19:39 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-[ Upstream commit cf01514c5c6efa2d521d35e68dff2e0674d08e91 ]
+> On Mon, 2 Mar 2020 13:13:51 -0700
+> Jonathan Corbet <corbet@lwn.net> wrote:
+> 
+> > On Mon, 2 Mar 2020 15:08:02 -0500
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > > > So I tried to apply this but failed - it's built on other changes to
+> > > > bootconfig.rst that went into linux-next via Steve's tree.  So Steve,
+> > > > would you like to take this one too?    
+> > > 
+> > > All my changes in linux-next have already hit Linus's tree. I haven't
+> > > started pushing my next merge window changes yet. Are you up to date with
+> > > Linus?  
+> > 
+> > I try not to do too many backmerges with mainline, so no.  I can pull
+> > forward if I have to, I guess.
+> >
+> 
+> I can add it to my tree, but I may not send it to Linus unless I have
+> another urgent request to send to him. So it may not make it till the next
+> merge window.
 
-During device memory memset, the driver allocates and use a CB (command
-buffer). To reuse existing code, it keeps a pointer to the CB in two
-variables, user_cb and patched_cb. Therefore, there is no need to "put"
-both the user_cb and patched_cb, as it will cause an underflow of the
-refcnt of the CB.
+OK, then I'll wait for the next window. Anyway, I found a mistake and
+it needs to be updated (again).
 
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/misc/habanalabs/goya/goya.c | 2 --
- 1 file changed, 2 deletions(-)
+Thank you!
 
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 1e97f6d77e3da..13b39fd97429a 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -4666,8 +4666,6 @@ static int goya_memset_device_memory(struct hl_device *hdev, u64 addr, u64 size,
- 
- 	rc = goya_send_job_on_qman0(hdev, job);
- 
--	hl_cb_put(job->patched_cb);
--
- 	hl_debugfs_remove_job(hdev, job);
- 	kfree(job);
- 	cb->cs_cnt--;
+
 -- 
-2.20.1
-
+Masami Hiramatsu <mhiramat@kernel.org>
