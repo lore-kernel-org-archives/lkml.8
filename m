@@ -6,79 +6,102 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B445DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8640C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:57:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9346F206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8430F206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:57:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729110AbgCCLzK (ORCPT
+        id S1729122AbgCCL5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 06:55:10 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:42039 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729071AbgCCLzJ (ORCPT
+        Tue, 3 Mar 2020 06:57:03 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:39494 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgCCL5D (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 06:55:09 -0500
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1j968f-0000I7-0k; Tue, 03 Mar 2020 12:55:05 +0100
-Message-ID: <4c61fde86c5e0dced249221dbc0a8d4207d5bffa.camel@pengutronix.de>
-Subject: Re: [PATCH 0/5] drm/etnaviv: Ignore MC bit when checking for
- runtime suspend
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
-        Russell King <linux+etnaviv@armlinux.org.uk>,
-        Christian Gmeiner <christian.gmeiner@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Date:   Tue, 03 Mar 2020 12:55:04 +0100
-In-Reply-To: <cover.1583176306.git.agx@sigxcpu.org>
-References: <cover.1583176306.git.agx@sigxcpu.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 3 Mar 2020 06:57:03 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j96AO-0000th-AQ; Tue, 03 Mar 2020 11:56:52 +0000
+Date:   Tue, 3 Mar 2020 12:56:51 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200303115651.j5q7bsvzu5mstgw4@wittgenstein>
+References: <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303100045.zqntjjjv6npvs5zl@wittgenstein>
+ <CAJfpegu_O=wQsewDWdM39dhkrEoMPG4ZBkTQOsWTgFnYmvrLeA@mail.gmail.com>
+ <20200303102541.diud7za3vvjvqco4@wittgenstein>
+ <CAJfpegu7CTmE8XfL-Oqp3KkjJNU5FM+VJxohFfK9dO+xnJAdYA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAJfpegu7CTmE8XfL-Oqp3KkjJNU5FM+VJxohFfK9dO+xnJAdYA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mo, 2020-03-02 at 20:13 +0100, Guido Günther wrote:
-> At least GC7000 fails to enter runtime suspend for long periods of time since
-> the MC becomes busy again even when the FE is idle. The rest of the series
-> makes detecting similar issues easier to debug in the future by checking
-> all known bits in debugfs and also warning in the EBUSY case.
-
-Thanks, series applied to etnaviv/next.
-
-> Tested on GC7000 with a reduced runtime delay of 50ms. Patches are
-> against next-20200226.
-
-I've already wondered if 200ms is too long, 50ms sounds more
-reasonable. Do you have any numbers on the power draw on the i.MX8M
-with idle GPU, vs. being fully power gated? 
-
-Regards,
-Lucas
-
-> Thanks to Lucas Stach for pointing me in the right direction.
+On Tue, Mar 03, 2020 at 12:33:48PM +0100, Miklos Szeredi wrote:
+> On Tue, Mar 3, 2020 at 11:25 AM Christian Brauner
+> <christian.brauner@ubuntu.com> wrote:
+> >
+> > On Tue, Mar 03, 2020 at 11:13:50AM +0100, Miklos Szeredi wrote:
+> > > On Tue, Mar 3, 2020 at 11:00 AM Christian Brauner
+> > > <christian.brauner@ubuntu.com> wrote:
 > 
-> Guido Günther (5):
->   drm/etnaviv: Fix typo in comment
->   drm/etnaviv: Update idle bits
->   drm/etnaviv: Consider all kwnown idle bits in debugfs
->   drm/etnaviv: Ignore MC when checking runtime suspend idleness
->   drm/etnaviv: Warn when GPU doesn't idle fast enough
+> > > > More magic links to beam you around sounds like a bad idea. We had a
+> > > > bunch of CVEs around them in containers and they were one of the major
+> > > > reasons behind us pushing for openat2(). That's why it has a
+> > > > RESOLVE_NO_MAGICLINKS flag.
+> > >
+> > > No, that link wouldn't beam you around at all, it would end up in an
+> > > internally mounted instance of a mountfs, a safe place where no
+> >
+> > Even if it is a magic link to a safe place it's a magic link. They
+> > aren't a great solution to this problem. fsinfo() is cleaner and
+> > simpler as it creates a context for a supervised mount which gives the a
+> > managing application fine-grained control and makes it easily
+> > extendable.
 > 
->  drivers/gpu/drm/etnaviv/etnaviv_gpu.c  | 26 ++++++++++++++++++++++----
->  drivers/gpu/drm/etnaviv/state_hi.xml.h |  7 +++++++
->  2 files changed, 29 insertions(+), 4 deletions(-)
-> 
+> Yeah, it's a nice and clean interface in the ioctl(2) sense. Sure,
+> fsinfo() is way better than ioctl(), but it at the core it's still the
+> same syscall multiplexer, do everything hack.
 
+In contrast to a generic ioctl() it's a domain-specific separate
+syscall. You can't suddenly set kvm options through fsinfo() I would
+hope. I find it at least debatable that a new filesystem is preferable.
+And - feel free to simply dismiss the concerns I expressed - so far
+there has not been a lot of excitement about this idea.
+
+> 
+> > Also, we're apparently at the point where it seems were suggesting
+> > another (pseudo)filesystem to get information about filesystems.
+> 
+> Implementation detail.  Why would you care?
+
+I wouldn't call this an implementation detail. That's quite a big
+design choice; it's a separate fileystem. In addition, implementation
+details need to be maintained.
+
+Christian
