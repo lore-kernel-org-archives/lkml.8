@@ -2,155 +2,109 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F83C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A68CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:50:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C0D208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:48:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583264932;
-	bh=BY9+Zp5BXszJew6adZ55ehy4GPcyXxYtYJnWnwXUF9A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c2/iOa2czJGQqoRtY9nvyzX4uFSJEaoR1Ic9b18HP/PZXPXboBoOWDp8802uKdyKy
-	 N50nDwGh9RUrZPW+LsWnhuoHbLsxjbksLmdNBxduthtu3lg48b/y/YX0wwG0t6GDFU
-	 L8tR2zL9V1mz+2D8sm1RUWAwhKcgdaKpknuF/ofw=
+	by mail.kernel.org (Postfix) with ESMTP id F3B13214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:50:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LDf86eTy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731455AbgCCTsv (ORCPT
+        id S1730829AbgCCTuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:48:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729609AbgCCTsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:48:50 -0500
-Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 545B821556;
-        Tue,  3 Mar 2020 19:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583264929;
-        bh=BY9+Zp5BXszJew6adZ55ehy4GPcyXxYtYJnWnwXUF9A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L3mKERxxxndZbknY8/BMULxGy0GMnc+NGBfr3Q2cqiL3NvuyLpQiYKW/Te+qM8Vgd
-         AUJRtxrU6YtbDSLSbjsLJlOFVVO7PvKG37vf1kNQ03iY5WaZwZuG+J+UbFGMgR4j5P
-         P9gsXr5rf6YeuSlpGbrXF5HdeD24uzjW/cSoKG90=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kim Phillips <kim.phillips@amd.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH 5/5] perf symbols: Don't try to find a vmlinux file when looking for kernel modules
-Date:   Tue,  3 Mar 2020 16:48:27 -0300
-Message-Id: <20200303194827.6461-6-acme@kernel.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200303194827.6461-1-acme@kernel.org>
-References: <20200303194827.6461-1-acme@kernel.org>
+        Tue, 3 Mar 2020 14:50:14 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36925 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727604AbgCCTuN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:50:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583265012;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=vf4h5E8IkOQ4lygsPliUgjFr5XtylcraEA/u77n/sos=;
+        b=LDf86eTyZN5wa4esE33NT9Ibayu2gYGGQW1hw1SY9qsavOG7sVdN/xwbuLredk9NoJB18d
+        8oqGQ4IPDAKjuXAbFJnWahbI1Wm96HgLLMIz2mRTUC1oKaRkBBxFqDArdyt1PH8kSA4Fcf
+        AMPSWmfM/+QrxcAbsGqidLRw1d9k4I0=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-258-ZxgUchyKM1WCIoLQf5S6hw-1; Tue, 03 Mar 2020 14:50:07 -0500
+X-MC-Unique: ZxgUchyKM1WCIoLQf5S6hw-1
+Received: by mail-qt1-f197.google.com with SMTP id j35so3001021qte.19
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:50:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=vf4h5E8IkOQ4lygsPliUgjFr5XtylcraEA/u77n/sos=;
+        b=qbLFDpSA2QD52q7niKAV14a3UhDPzGBY4YqwdxILpwf4RjsQjO1IQWmXYe3PB8rn1V
+         zzOduqW/lwRQrqB5vlMq5H/Ryef+OI8rAiTel/RqPbCo2e27ZM6tTfnthzeojNhdGSxo
+         eSqX+CEv25c7BXPvg5hhkfKBASGoDF/NpefnSKwro8XCVGP31u/TWwybYU0BGwas8a81
+         7S5UE8kvYpsBfEKjx5GHU50E1UOoVyLAsUrBOGFUTLS6+Jcr0EnejJIEFQmxvaoI7bNz
+         lm2OlPxPa5sQHoQNcBpfUTUBCf8IygHdmbAezniS2e+RgqIZpzTlIT23FlCjGGo+avTd
+         WM7w==
+X-Gm-Message-State: ANhLgQ22T0bVoqSE2bQ8xu16JEG4aOgyFFqQjTya2ifWX52GuP8Ws2/P
+        gcWLH6utOb8Tf3gGRTwJd4NE+LfBSdgd5zE4bCWd9JmKR16Eeaa+bKZJY/cmyxOcdp++RFV8QXa
+        F7AwgLCNIfhTFLnjTnRx+RnH7
+X-Received: by 2002:ac8:357b:: with SMTP id z56mr6087792qtb.226.1583265007029;
+        Tue, 03 Mar 2020 11:50:07 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vuoqlsF5Q/fYco3ByAB69bUva9hDSW7kKRqW116dyUw2Moz1OhiY2NeJtVZGwucZU1EvvG+kQ==
+X-Received: by 2002:ac8:357b:: with SMTP id z56mr6087777qtb.226.1583265006801;
+        Tue, 03 Mar 2020 11:50:06 -0800 (PST)
+Received: from desoxy ([2600:380:8e4d:1b16:f190:533c:5a8b:4a57])
+        by smtp.gmail.com with ESMTPSA id f13sm8159246qkm.42.2020.03.03.11.50.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 11:50:06 -0800 (PST)
+Message-ID: <8560ac83111aed7b4cf74b96ae578682a764f5c8.camel@redhat.com>
+Subject: Re: [v2,2/3] drm/i915: Force DPCD backlight mode on X1 Extreme 2nd
+ Gen 4K AMOLED panel
+From:   Adam Jackson <ajax@redhat.com>
+To:     Lyude Paul <lyude@redhat.com>, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@intel.com>,
+        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>
+Date:   Tue, 03 Mar 2020 14:50:02 -0500
+In-Reply-To: <20200211183358.157448-3-lyude@redhat.com>
+References: <20200211183358.157448-3-lyude@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.0 (3.34.0-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+On Tue, 2020-02-11 at 13:33 -0500, Lyude Paul wrote:
 
-The dso->kernel value is now set to everything that is in
-machine->kmaps, but that was being used to decide if vmlinux lookup is
-needed, which ended up making that lookup be made for kernel modules,
-that now have dso->kernel set, leading to these kinds of warnings when
-running on a machine with compressed kernel modules, like fedora:31:
+> -	if (!intel_dp_aux_display_control_capable(intel_connector))
+> +	/*
+> +	 * There are a lot of machines that don't advertise the backlight
+> +	 * control interface to use properly in their VBIOS, :\
+> +	 */
+> +	if (dev_priv->vbt.backlight.type !=
+> +	    INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE &&
+> +	    !drm_dp_has_quirk(&intel_dp->desc, intel_dp->edid_quirks,
+> +			      DP_QUIRK_FORCE_DPCD_BACKLIGHT)) {
+> +		DRM_DEV_INFO(dev->dev,
+> +			     "Panel advertises DPCD backlight support, but "
+> +			     "VBT disagrees. If your backlight controls "
+> +			     "don't work try booting with "
+> +			     "i915.enable_dpcd_backlight=1. If your machine "
+> +			     "needs this, please file a _new_ bug report on "
+> +			     "bugs.freedesktop.org against DRI -> "
+> +			     "DRM/Intel\n");
 
-  [root@five ~]# perf record -F 10000 -a sleep 2
-  [ perf record: Woken up 1 times to write data ]
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  lzma: fopen failed on vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux: 'No such file or directory'
-  lzma: fopen failed on /boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /usr/lib/debug/boot/vmlinux-5.5.5-200.fc31.x86_64: 'No such file or directory'
-  lzma: fopen failed on /lib/modules/5.5.5-200.fc31.x86_64/build/vmlinux: 'No such file or directory'
-  [ perf record: Captured and wrote 1.024 MB perf.data (1366 samples) ]
-  [root@five ~]#
+Bugzilla's been put out of our misery, probably this should point to
+gitlab instead.
 
-This happens when collecting the buildid, when we find samples for
-kernel modules, fix it by checking if the looked up DSO is a kernel
-module by other means.
-
-Fixes: 02213cec64bb ("perf maps: Mark module DSOs with kernel type")
-Tested-by: Jiri Olsa <jolsa@redhat.com>
-Acked-by: Jiri Olsa <jolsa@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Kim Phillips <kim.phillips@amd.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Link: http://lore.kernel.org/lkml/20200302191007.GD10335@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/symbol.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 1077013d8ce2..26bc6a0096ce 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -1622,7 +1622,12 @@ int dso__load(struct dso *dso, struct map *map)
- 		goto out;
- 	}
- 
--	if (dso->kernel) {
-+	kmod = dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE ||
-+		dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP ||
-+		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE ||
-+		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE_COMP;
-+
-+	if (dso->kernel && !kmod) {
- 		if (dso->kernel == DSO_TYPE_KERNEL)
- 			ret = dso__load_kernel_sym(dso, map);
- 		else if (dso->kernel == DSO_TYPE_GUEST_KERNEL)
-@@ -1650,12 +1655,6 @@ int dso__load(struct dso *dso, struct map *map)
- 	if (!name)
- 		goto out;
- 
--	kmod = dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE ||
--		dso->symtab_type == DSO_BINARY_TYPE__SYSTEM_PATH_KMODULE_COMP ||
--		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE ||
--		dso->symtab_type == DSO_BINARY_TYPE__GUEST_KMODULE_COMP;
--
--
- 	/*
- 	 * Read the build id if possible. This is required for
- 	 * DSO_BINARY_TYPE__BUILDID_DEBUGINFO to work
--- 
-2.21.1
+- ajax
 
