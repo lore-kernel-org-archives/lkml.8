@@ -2,156 +2,123 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE34C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 830F6C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6849620836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:21:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5765A20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:22:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v7cg1KPn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbgCCRV3 (ORCPT
+        id S1730115AbgCCRWM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:21:29 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:50095 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729786AbgCCRV2 (ORCPT
+        Tue, 3 Mar 2020 12:22:12 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35948 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729570AbgCCRWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:21:28 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j9BDx-0006cR-KJ; Tue, 03 Mar 2020 17:20:53 +0000
-Date:   Tue, 3 Mar 2020 18:20:52 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCHv5] exec: Fix a deadlock in ptrace
-Message-ID: <20200303172052.fvqk4r7vbtxwo3ig@wittgenstein>
-References: <875zfmloir.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nmjulm.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003021531.C77EF10@keescook>
- <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
- <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <20200303170109.y6q2acgydyzuh3mp@wittgenstein>
+        Tue, 3 Mar 2020 12:22:12 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023HMBTi113154;
+        Tue, 3 Mar 2020 11:22:11 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583256131;
+        bh=SBRUU+j3XyFM6R2K8Qs7x9a1C38P7C+RT5tCbBFb0hI=;
+        h=From:To:CC:Subject:Date;
+        b=v7cg1KPn7IPdLZAVsY8/27/RR2l/nN/JHJRMrmyrf+EvYnjV8LHzuUAqDypAq5NQ+
+         U5M37Me3JuTQ+RqasRWnfiGIJJei/PY1n0I2SrZIT19bIbPQ0afRfGFO3Apd6e4KN/
+         oLSJ87u3nPajtUs3837qNK5DNjfYtJDlXqpYWiGs=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023HMBKj077381
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Mar 2020 11:22:11 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 11:22:10 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 11:22:10 -0600
+Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023HMAq0014433;
+        Tue, 3 Mar 2020 11:22:10 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>
+CC:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
+        <stable@vger.kernel.org>
+Subject: [Patch] media: ti-vpe: cal: fix a kernel oops when unloading module
+Date:   Tue, 3 Mar 2020 11:26:29 -0600
+Message-ID: <20200303172629.21339-1-bparrot@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200303170109.y6q2acgydyzuh3mp@wittgenstein>
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:01:11PM +0100, Christian Brauner wrote:
-> On Tue, Mar 03, 2020 at 04:48:01PM +0000, Bernd Edlinger wrote:
-> > On 3/3/20 4:18 PM, Eric W. Biederman wrote:
-> > > Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
-> > > 
-> > >> This fixes a deadlock in the tracer when tracing a multi-threaded
-> > >> application that calls execve while more than one thread are running.
-> > >>
-> > >> I observed that when running strace on the gcc test suite, it always
-> > >> blocks after a while, when expect calls execve, because other threads
-> > >> have to be terminated.  They send ptrace events, but the strace is no
-> > >> longer able to respond, since it is blocked in vm_access.
-> > >>
-> > >> The deadlock is always happening when strace needs to access the
-> > >> tracees process mmap, while another thread in the tracee starts to
-> > >> execve a child process, but that cannot continue until the
-> > >> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
-> > > 
-> > > A couple of things.
-> > > 
-> > > Why do we think it is safe to change the behavior exposed to userspace?
-> > > Not the deadlock but all of the times the current code would not
-> > > deadlock?
-> > > 
-> > > Especially given that this is a small window it might be hard for people
-> > > to track down and report so we need a strong argument that this won't
-> > > break existing userspace before we just change things.
-> > > 
-> > 
-> > Hmm, I tend to agree.
-> > 
-> > > Usually surveying all of the users of a system call that we can find
-> > > and checking to see if they might be affected by the change in behavior
-> > > is difficult enough that we usually opt for not being lazy and
-> > > preserving the behavior.
-> > > 
-> > > This patch is up to two changes in behavior now, that could potentially
-> > > affect a whole array of programs.  Adding linux-api so that this change
-> > > in behavior can be documented if/when this change goes through.
-> > > 
-> > 
-> > One is PTRACE_ACCESS possibly returning EAGAIN, yes.
-> > 
-> > We could try to restrict that behavior change to when any
-> > thread is ptraced when execve starts, can't be too complicated.
-> > 
-> > 
-> > But the other is only SYS_seccomp returning EAGAIN, when a different
-> > thread of the current process is calling execve at the same time.
-> > 
-> > I would consider it completely impossible to have any user-visual effect,
-> > since de_thread is just terminating all threads, including the thread
-> > where the -EAGAIN was returned, so we will never know what happened.
-> 
-> I think if we risk a user-space facing change we should try the simple
-> thing first before making the fix more convoluted? But it's a tough
-> call...
+After the switch to use v4l2_async_notifier_add_subdev() and
+v4l2_async_notifier_cleanup(), unloading the ti_cal module would casue a
+kernel oops.
 
-Actually, to get a _rough_ estimate of the possible impact I would
-recommend you run the criu test suite (and possible the strace
-test-suite) on a kernel with and without your fix. That's what I tend to
-do when I touch code I fear will have impact on APIs that very deeply
-touch core kernel. Criu's test-suite makes heavy use of ptrace and
-usually runs into a bunch of interesting (exec) races too, and does have
-tests for handling zombies processes etc. pp.
+This was root cause to the fact that v4l2_async_notifier_cleanup() tries
+to kfree the asd pointer passed into v4l2_async_notifier_add_subdev().
 
-Should be relatively simple: create a vm and then criu build-dependencies,
-git clone criu; cd criu; make; cd test; ./zdtm.py run -a --keep-going
-If your system doesn't support Selinux properly, you need to disable it
-when running the tests and you also need to make sure that you're using
-python3 or change the shebang in zdtm.py to python3.
+In our case the asd reference was from a statically allocated struct.
+So in effect v4l2_async_notifier_cleanup() was trying to free a pointer
+that was not kalloc.
 
-Just a recommendation.
+So here we switch to using a kzalloc struct instead of a static one.
 
-Christian
+Fixes: d079f94c9046 ("media: platform: Switch to v4l2_async_notifier_add_subdev")
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Benoit Parrot <bparrot@ti.com>
+---
+ drivers/media/platform/ti-vpe/cal.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index 6d4cbb8782ed..18fe2cb9dd17 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -372,8 +372,6 @@ struct cal_ctx {
+ 	struct v4l2_subdev	*sensor;
+ 	struct v4l2_fwnode_endpoint	endpoint;
+ 
+-	struct v4l2_async_subdev asd;
+-
+ 	struct v4l2_fh		fh;
+ 	struct cal_dev		*dev;
+ 	struct cc_data		*cc;
+@@ -2032,7 +2030,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+ 
+ 	parent = pdev->dev.of_node;
+ 
+-	asd = &ctx->asd;
+ 	endpoint = &ctx->endpoint;
+ 
+ 	ep_node = NULL;
+@@ -2040,6 +2037,10 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+ 	sensor_node = NULL;
+ 	ret = -EINVAL;
+ 
++	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
++	if (!asd)
++		goto cleanup_exit;
++
+ 	ctx_dbg(3, ctx, "Scanning Port node for csi2 port: %d\n", inst);
+ 	for (index = 0; index < CAL_NUM_CSI2_PORTS; index++) {
+ 		port = of_get_next_port(parent, port);
+-- 
+2.17.1
+
