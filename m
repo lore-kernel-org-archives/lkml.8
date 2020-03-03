@@ -7,106 +7,92 @@ X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC83C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B3BC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4B6D24673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:26:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF4824673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583198816;
-	bh=ii+jwXGVM7v313kI+AtKYp5NxP8mrg/O06xdYxblncQ=;
+	s=default; t=1583198863;
+	bh=fR+rYotifoinubBfF6KUuqLlBF+2cTwguErpKIra3TY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FxMpiC/FJENuChnZ09igAzEg4MjRLkP6JlH3RM/N4+ABhVZSSrtx4ukACnwujQuaW
-	 YKwSd2K3wpmZKHPiueDjmDk7mTK6sQzff9aRnLASr4b8S6l9mk8lTtLa9U3d1Sx8KY
-	 SnEP1MJApWF0ZR17nIUUY4Swhx1seonDhxtyyB3M=
+	b=1G/+ySpcmurvJdeFoymB78zU/oL81N6WmhtzVZYfHSQyh7zjZdb3HoPWdDiUPOejS
+	 jzA7atVgAylDKiAguyZow7+sA5rWEZO9VxxTnpdXNbhj3w15PMmyIQiZMFw+44m/ub
+	 y5BBJGfvpGwfK8BFVDgviDA3R5C2A/H0pFnqT+QA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgCCB0z (ORCPT
+        id S1727026AbgCCB1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 20:26:55 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33430 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726755AbgCCB0z (ORCPT
+        Mon, 2 Mar 2020 20:27:42 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43760 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbgCCB1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 20:26:55 -0500
-Received: by mail-oi1-f195.google.com with SMTP id q81so1377456oig.0;
-        Mon, 02 Mar 2020 17:26:54 -0800 (PST)
+        Mon, 2 Mar 2020 20:27:42 -0500
+Received: by mail-oi1-f196.google.com with SMTP id p125so1307398oif.10;
+        Mon, 02 Mar 2020 17:27:41 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Fbtgd3DlSZ/wztX+Kw5nqolTIEnJpCacR3P87ZuGfyg=;
-        b=X0QBIu0kES/76xzyPd3q/6HdObvAC+HxEmPTIMrgz1aZ10Ld3v6IBp2ZKP1InYM2Fs
-         fGyfndi5yK378c42K0wc5vrUc1/8KB+/gsbmqfRnZhCCzzl7EhDof2ETXjvlCLpcqRv8
-         OKdoWlupHmdCiqS5cz2SOtPMAKq9836UwJjSkpArVk6xVVaZ/CpO3jt/qXQq12lmUzGg
-         LGhxLBzEpvCcmWFh+ieTiJrm9JSYj/Qdubu6f80xRpveZ2amTyOBJZqVFbHvtYXsXL74
-         3BHfd5EABOUHmGwJx3CgW/2TDv6KO/WqNArdwTbJ3SP3unpPwibjtXikzT5FbHv4S7wB
-         IktA==
-X-Gm-Message-State: ANhLgQ0mED/sjQwb+YSpGb0JGHgbqV9Ymg7g4hS3rRw6BHZ0RJALaJkB
-        0tkABLViv7tTNF6zea3ekg==
-X-Google-Smtp-Source: ADFU+vuNkwrrfnZhdZ2enL3gQj+aywUwN+ZZuoDrOS8O06nbMrfm+4nP52YXx4GjqG9RH6dn9mHrhg==
-X-Received: by 2002:a54:4f14:: with SMTP id e20mr866385oiy.84.1583198814367;
-        Mon, 02 Mar 2020 17:26:54 -0800 (PST)
+        bh=dm1t6njmdF0LcQ/JwaxNIGbhSwo1xAC4p4QTQOmO8R8=;
+        b=CawXHVjfucDcm8PYnJUG/zvfmRygGW4rLRzlMdkP8R1kGSqpoMoNGQ4mkSVJikLGkl
+         yZISzWrEgfN7++yRcjeNLLuV8BIe7eKSjdtBhXLWr0N/625sFuMM5Zpq1B0r0F381Z+q
+         IykjheosVhjawX5de5FBfMzBvxjS46ftid2C+fIw2Q5Y2Vt/O/OHldYsCE5aH3sUcDcp
+         9xj7oc9Lr6vDpRM3f8+QRfkdw3VmGDXmCRF1jf8FkjSjlzheu20/KPyZwYvk3YD6YI3D
+         F6DfUN9G7NA9qmr2G5nxrQqvKlvigLDL2+K8QpKm70uk9w5v1hIZZ/lVntV1b6vYk4Jw
+         snww==
+X-Gm-Message-State: ANhLgQ3biRK11PsE3S+BQQMwujax5Nf0RaSXguVWMPFWOwcSDYPtke/H
+        chUckhlC8AR54Z3sihAlwg==
+X-Google-Smtp-Source: ADFU+vsOLrRbJEqg2mCQ42mkiK8649lsfjK2gGOYitmyBCzRYRCQ7IPikdu5vvzjOfnVmGDit5rOJg==
+X-Received: by 2002:a05:6808:b13:: with SMTP id s19mr849527oij.119.1583198861487;
+        Mon, 02 Mar 2020 17:27:41 -0800 (PST)
 Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id l12sm7227110oth.9.2020.03.02.17.26.53
+        by smtp.gmail.com with ESMTPSA id 16sm6352863otc.33.2020.03.02.17.27.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 17:26:53 -0800 (PST)
-Received: (nullmailer pid 5540 invoked by uid 1000);
-        Tue, 03 Mar 2020 01:26:52 -0000
-Date:   Mon, 2 Mar 2020 19:26:52 -0600
+        Mon, 02 Mar 2020 17:27:40 -0800 (PST)
+Received: (nullmailer pid 6739 invoked by uid 1000);
+        Tue, 03 Mar 2020 01:27:39 -0000
+Date:   Mon, 2 Mar 2020 19:27:39 -0600
 From:   Rob Herring <robh@kernel.org>
-To:     Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
-Cc:     devicetree@vger.kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, bleung@chromium.org,
-        enric.balletbo@collabora.com, groeck@chromium.org,
-        dafna.hirschfeld@collabora.com, linux-kernel@vger.kernel.org,
-        helen.koike@collabora.com, ezequiel@collabora.com,
-        kernel@collabora.com, dafna3@gmail.com,
-        sebastian.reichel@collabora.com
-Subject: Re: [PATCH v5 1/2] dt-bindings: i2c: cros-ec-tunnel: convert
- i2c-cros-ec-tunnel.txt to yaml
-Message-ID: <20200303012652.GA5481@bogus>
-References: <20200227145528.8940-1-dafna.hirschfeld@collabora.com>
+To:     Sibi Sankar <sibis@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org,
+        robh+dt@kernel.org, agross@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tsoni@codeaurora.org, vnkgutta@codeaurora.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v5 2/3] dt-bindings: soc: qcom: apr: Add protection
+ domain bindings
+Message-ID: <20200303012739.GA6699@bogus>
+References: <20200302184723.16420-1-sibis@codeaurora.org>
+ <20200302184723.16420-3-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227145528.8940-1-dafna.hirschfeld@collabora.com>
+In-Reply-To: <20200302184723.16420-3-sibis@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 27 Feb 2020 15:55:27 +0100, Dafna Hirschfeld wrote:
-> Convert the binding file i2c-cros-ec-tunnel.txt to yaml format.
+On Tue,  3 Mar 2020 00:17:22 +0530, Sibi Sankar wrote:
+> Qualcomm SoCs (starting with MSM8998) allow for multiple protection
+> domains (PDs) to run on the same Q6 sub-system. This allows for
+> services like AVS AUDIO to have their own separate address space and
+> crash/recover without disrupting the other PDs running on the same Q6
+> ADSP. Add "qcom,protection-domain" bindings to capture the dependencies
+> between the APR service and the PD on which the apr service runs.
 > 
-> This was tested and verified on ARM and ARM64 with:
-> 
-> make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/google,cros-ec-i2c-tunnel.yaml
-> make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/i2c/google,cros-ec-i2c-tunnel.yaml
-> 
-> Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
-> Changes since v1:
-> - changing the subject to start with "dt-bindings: i2c: cros-ec-tunnel:"
-> - changing the license to (GPL-2.0-only OR BSD-2-Clause)
-> - removing "Guenter Roeck <groeck@chromium.org>" from the maintainers list
-> - adding ref: /schemas/i2c/i2c-controller.yaml
 > 
-> Changes since v2:
-> - adding another patch that fixes a warning found by this patch
+> V5:
+>  * Picked up Bjorn's R-b
 > 
-> Changes since v3:
-> - In the example, change sbs-battery@b to battery@b
-> 
-> Changes since v4:
-> - change the name of the yaml file to google,cros-ec-i2c-tunnel.yaml
-> - make the example more complete by adding spi0 as parent and other properties.
-> 
->  .../i2c/google,cros-ec-i2c-tunnel.yaml        | 69 +++++++++++++++++++
->  .../bindings/i2c/i2c-cros-ec-tunnel.txt       | 39 -----------
->  2 files changed, 69 insertions(+), 39 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/i2c/google,cros-ec-i2c-tunnel.yaml
->  delete mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+>  .../devicetree/bindings/soc/qcom/qcom,apr.txt | 50 +++++++++++++++++++
+>  1 file changed, 50 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
