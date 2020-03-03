@@ -2,120 +2,143 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81008C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D10FC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 546C3246E4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203816;
-	bh=AKiDxTBGwqzIwKAfhtt+V4AulIjqGDPCCSzA6zfwocA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=twkwI+wXoiLMTLpFlHodjzSW2OCX9HTXB2wceSb1UQwdB94dFD5pGvVImcPh12hpd
-	 uT1e4WvhIqBGjjrmtOFiT3ySqQB4O2RRpBcdNHgruCb3ZFV85m2IUnNroIdk0n/O0Q
-	 SB6OZxouQUmOnqhl6AyS18s/lnMRmMm8tuMX3ZbI=
+	by mail.kernel.org (Postfix) with ESMTP id 1F174246E9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbgCCCuP (ORCPT
+        id S1729130AbgCCCuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:50:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46770 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:50:19 -0500
+Received: from mga17.intel.com ([192.55.52.151]:48417 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgCCCuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:10 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A3CB246E6;
-        Tue,  3 Mar 2020 02:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203810;
-        bh=AKiDxTBGwqzIwKAfhtt+V4AulIjqGDPCCSzA6zfwocA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zfQI0oGGWyF4pshb4rsmgzjcf40NJHKTBOrr+98VuJyu2Wrq65cW4RIYjqDIZF4vz
-         ozD5TzOja7pqF/wBBnWjrSy09O/dH+nzn1IDrtfjxuOR2KmsuMf7TF3vuixqmNyEQI
-         ZVIv6N6zXLQwXW7lGPPZpDpCx5Hg/PTowCC7qnjw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Todd Kjos <tkjos@google.com>,
-        Alistair Delva <adelva@google.com>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        freedreno@lists.freedesktop.org,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.9 05/13] drm: msm: Fix return type of dsi_mgr_connector_mode_valid for kCFI
-Date:   Mon,  2 Mar 2020 21:49:54 -0500
-Message-Id: <20200303025002.10600-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303025002.10600-1-sashal@kernel.org>
-References: <20200303025002.10600-1-sashal@kernel.org>
+        id S1729082AbgCCCuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:09 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:50:08 -0800
+X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
+   d="scan'208";a="233439160"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.67]) ([10.255.30.67])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 02 Mar 2020 18:50:05 -0800
+Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when function
+ is out-of-range
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-2-sean.j.christopherson@intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <6b41fc5c-f7f4-b20d-cfb5-95bf13cc7534@intel.com>
+Date:   Tue, 3 Mar 2020 10:50:03 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200302195736.24777-2-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Stultz <john.stultz@linaro.org>
+On 3/3/2020 3:57 AM, Sean Christopherson wrote:
+> Rework kvm_cpuid() to query entry->function when adjusting the output
+> values so that the original function (in the aptly named "function") is
+> preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
+> trace the max function for a range instead of the requested function if
+> the requested function is out-of-range and an entry for the max function
+> exists.
+> 
+> Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
+> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+> Cc: Jim Mattson <jmattson@google.com>
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>   arch/x86/kvm/cpuid.c | 15 +++++++--------
+>   1 file changed, 7 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index b1c469446b07..6be012937eba 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+>   	return max && function <= max->eax;
+>   }
+>   
+> +/* Returns true if the requested leaf/function exists in guest CPUID. */
+>   bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>   	       u32 *ecx, u32 *edx, bool check_limit)
+>   {
+> -	u32 function = *eax, index = *ecx;
+> +	const u32 function = *eax, index = *ecx;
+>   	struct kvm_cpuid_entry2 *entry;
+> -	struct kvm_cpuid_entry2 *max;
+>   	bool found;
+>   
+>   	entry = kvm_find_cpuid_entry(vcpu, function, index);
+> @@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>   	 */
+>   	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
+>   	    !cpuid_function_in_range(vcpu, function)) {
+> -		max = kvm_find_cpuid_entry(vcpu, 0, 0);
+> -		if (max) {
+> -			function = max->eax;
+> -			entry = kvm_find_cpuid_entry(vcpu, function, index);
+> -		}
+> +		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
+> +		if (entry)
+> +			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
 
-[ Upstream commit 7fd2dfc3694922eb7ace4801b7208cf9f62ebc7d ]
+There is a problem.
 
-I was hitting kCFI crashes when building with clang, and after
-some digging finally narrowed it down to the
-dsi_mgr_connector_mode_valid() function being implemented as
-returning an int, instead of an enum drm_mode_status.
+when queried leaf is out of range on Intel CPU, it returns the maximum 
+basic leaf, and any dependence on input ECX (i.e., subleaf) value in the 
+basic leaf is honored. As disclaimed in SDM of CPUID instruction.
 
-This patch fixes it, and appeases the opaque word of the kCFI
-gods (seriously, clang inlining everything makes the kCFI
-backtraces only really rough estimates of where things went
-wrong).
+The ECX should be honored if and only the leaf has a significant index.
+If the leaf doesn't has a significant index, it just ignores the EDX 
+input in bare metal.
 
-Thanks as always to Sami for his help narrowing this down.
+So it should be something like:
 
-Cc: Rob Clark <robdclark@gmail.com>
-Cc: Sean Paul <sean@poorly.run>
-Cc: Sami Tolvanen <samitolvanen@google.com>
-Cc: Todd Kjos <tkjos@google.com>
-Cc: Alistair Delva <adelva@google.com>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Cc: Sumit Semwal <sumit.semwal@linaro.org>
-Cc: freedreno@lists.freedesktop.org
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Tested-by: Amit Pundir <amit.pundir@linaro.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
+	!cpuid_function_in_range(vcpu, function)) {
+	entry = kvm_find_cpuid_entry(vcpu, 0, 0);
+	if (entry) {
+		entry = kvm_find_cpuid_entry(vcpu, entry->eax, 0);
+		if (entry &&
+		    entry->flags & KVM_CPUID_FLAG_SIGNIFCANT_INDEX ) {
+			entry = kvm_find_cpuid_entry(vcpu, entry->eax,
+						     index);
+		}
+	}
+}
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index c8d1f19c9a6d9..10d49d43c17eb 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -306,7 +306,7 @@ static int dsi_mgr_connector_get_modes(struct drm_connector *connector)
- 	return num;
- }
- 
--static int dsi_mgr_connector_mode_valid(struct drm_connector *connector,
-+static enum drm_mode_status dsi_mgr_connector_mode_valid(struct drm_connector *connector,
- 				struct drm_display_mode *mode)
- {
- 	int id = dsi_mgr_connector_get_id(connector);
--- 
-2.20.1
+>   	}
+>   	if (entry) {
+>   		*eax = entry->eax;
+>   		*ebx = entry->ebx;
+>   		*ecx = entry->ecx;
+>   		*edx = entry->edx;
+> -		if (function == 7 && index == 0) {
+> +
+> +		if (entry->function == 7 && index == 0) {
+>   			u64 data;
+>   		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+>   			    (data & TSX_CTRL_CPUID_CLEAR))
+> 
 
