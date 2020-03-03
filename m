@@ -2,132 +2,121 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83594C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DB2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE5520CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583219393;
-	bh=25tK8WOoFxs0713ihIp2v/ZITVby64PNqh7BHCke+Yc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=vBYZeFylsE8/TBk/BX7MPbSihhfkVqGBDelX+Prf8jr4RcBr+1sqCq18S1oXsDwR0
-	 b2AOEG8fV7G6NgURrAM6nezqdcl8W8EwOza6566BXpYAbtAVlwk2a5nZ58BkijE6JM
-	 0Z7oABFBOrwOIMefCovS4UsGKeVyJ5OUJlpODG1M=
+	by mail.kernel.org (Postfix) with ESMTP id 7BDA720CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:09:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J55yNkh6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbgCCHJw (ORCPT
+        id S1727593AbgCCHJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:09:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgCCHJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:09:52 -0500
-Received: from onda.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 3 Mar 2020 02:09:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:24434 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725879AbgCCHJz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 02:09:55 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583219394; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=g1igezX6bhKy+1gVBsKMmqM1Yvay0uel4aitex+BcCs=; b=J55yNkh6E/KtRxGghg4ql7IL6O6heuv9BBtaGacVMN68K89Zi7EFOLIg/3C3+KE8nyRSGQFx
+ IPXt8dnGn84WqLV9e//1J6HPhb2GXKW3HFqvbVpVlmhWbgpYJ1D8qNFa45gzesq29MR2xjsa
+ 4w4QvbOwPCXo0+K+Meugwb8i6kQ=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5e02bd.7fee8e273538-smtp-out-n01;
+ Tue, 03 Mar 2020 07:09:49 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D806BC43383; Tue,  3 Mar 2020 07:09:47 +0000 (UTC)
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6196A20CC7;
-        Tue,  3 Mar 2020 07:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583219391;
-        bh=25tK8WOoFxs0713ihIp2v/ZITVby64PNqh7BHCke+Yc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ZbJbnpZz2MfKVFBPbmxrq+1xY9Pdkkw/QUQp9bomOyWUw/rJb6q+yiJPtpjPlhC+c
-         HdpxKkmIGdmb8A75J6BmmPcZ6cm/Z5Ag2Z823D5MBBix+R6E6ip8SHUlCvshtm7aRK
-         bUSTNRkHrZ6tvkDBrlLApaZ0wenZ3dUqkkRyUXlw=
-Date:   Tue, 3 Mar 2020 08:09:47 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 00/12] Convert some DT documentation files to ReST
-Message-ID: <20200303080947.5f381004@onda.lan>
-In-Reply-To: <20200302123554.08ac0c34@lwn.net>
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
-        <20200302123554.08ac0c34@lwn.net>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB6BBC433A2;
+        Tue,  3 Mar 2020 07:09:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB6BBC433A2
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: sc7180: Enable soc sleep stats
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        devicetree@vger.kernel.org
+References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
+ <1582274986-17490-4-git-send-email-mkshah@codeaurora.org>
+ <20200228063444.GA857139@builder>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <aef0ea05-7941-0a9a-ab0f-875e5ebcb899@codeaurora.org>
+Date:   Tue, 3 Mar 2020 12:39:41 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200228063444.GA857139@builder>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 2 Mar 2020 12:35:54 -0700
-Jonathan Corbet <corbet@lwn.net> escreveu:
 
-> On Mon,  2 Mar 2020 08:59:25 +0100
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
->=20
-> > While most of the devicetree stuff has its own format (with is now being
-> > converted to YAML format), some documents there are actually
-> > describing the DT concepts and how to contribute to it.
-> >=20
-> > IMHO, those documents would fit perfectly as part of the documentation
-> > body, as part of the firmare documents set.
-> >=20
-> > This patch series manually converts some DT documents that, on my
-> > opinion, would belong to it. =20
->=20
-> Did you consider putting this stuff into the firmware-guide while you were
-> at it?  It's not a perfect fit, I guess, but it doesn't seem too awkward
-> either.
+On 2/28/2020 12:04 PM, Bjorn Andersson wrote:
+> On Fri 21 Feb 00:49 PST 2020, Maulik Shah wrote:
+>
+>> SoC sleep stats provides various low power mode stats.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index 8011c5f..eee6d92 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -745,6 +745,11 @@
+>>   			};
+>>   		};
+>>   
+>> +		rpmh_sleep_stats: soc-sleep-stats@c3f0000 {
+> I don't see any reason to reference this node, so you should be able to
+> omit the label(?)
+Done. Will update in next revision.
 
-I placed it just below the firmware-guide at the main index file.
+Thanks,
+Maulik
+>
+>> +			compatible = "qcom,rpmh-sleep-stats";
+>> +			reg = <0 0xc3f0000 0 0x400>;
+> Please pad the address to 8 digits and sort the nodes by address.
+>
+> Regards,
+> Bjorn
+Done. Will update in next revision.
 
-I have split thoughts about moving the files to there, though. From
-one side, it may fit better from the PoV of organizing the documentation.
+Thanks,
+Maulik
+>
+>> +		};
+>> +
+>>   		tcsr_mutex_regs: syscon@1f40000 {
+>>   			compatible = "syscon";
+>>   			reg = <0 0x01f40000 0 0x40000>;
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
 
-=46rom other side, newcomers working with DT may expect looking at the
-text files inside Documentation/devicetree/.
-
-Maybe I could add an extra patch at the end of this series with the
-move, adding a "RFC" on his title. This way, we can better discuss it,
-and either merge the last one or not depending on the comments.
-
->=20
-> It also seems like it would be good to CC the devicetree folks, or at
-> least the devicetree mailing list?
-
-Yeah, that would make sense. I'm using get-maintainers script to
-prepare the c/c list, as it is simply too much work to find the
-right maintainers by hand, for every single patch.
-
-I just noticed today that there's just *one entry* at MAINTAINERS
-file for Documentation/devicetree, and that points to you:
-
-	DOCUMENTATION
-	M:	Jonathan Corbet <corbet@lwn.net>
-	L:      linux-doc@vger.kernel.org
-	S:	Maintained
-	F:      Documentation/
-	F:	scripts/documentation-file-ref-check
-	F:	scripts/kernel-doc
-	F:	scripts/sphinx-pre-install
-	X:      Documentation/ABI/
-	X:	Documentation/firmware-guide/acpi/
-	X:	Documentation/devicetree/
-
-So, perhaps we should add something like this to MAINTAINERS:
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fe3ab10354c2..64deb23dbb13 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12394,6 +12394,11 @@ L:	linux-rdma@vger.kernel.org
- S:	Supported
- F:	drivers/infiniband/ulp/opa_vnic
-=20
-+OPEN FIRMWARE
-+L:	devicetree@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree
-+
- OPEN FIRMWARE AND DEVICE TREE OVERLAYS
- M:	Pantelis Antoniou <pantelis.antoniou@konsulko.com>
- M:	Frank Rowand <frowand.list@gmail.com>
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
