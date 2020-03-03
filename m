@@ -2,123 +2,80 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D51C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE02C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3C720848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BAC20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:37:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="r5lxmvS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729660AbgCCNhc (ORCPT
+        id S1729694AbgCCNhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:37:32 -0500
-Received: from mga02.intel.com ([134.134.136.20]:12239 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbgCCNhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:37:39 -0500
+Received: from mail4.protonmail.ch ([185.70.40.27]:11780 "EHLO
+        mail4.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729552AbgCCNhA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Mar 2020 08:37:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 05:36:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="351830564"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 03 Mar 2020 05:36:55 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1001)
-        id 9B10523F; Tue,  3 Mar 2020 15:36:49 +0200 (EET)
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Zha Qipeng <qipeng.zha@intel.com>,
-        "David E . Box" <david.e.box@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v8 05/19] platform/x86: intel_mid_powerbtn: Convert to use new SCU IPC API
-Date:   Tue,  3 Mar 2020 16:36:35 +0300
-Message-Id: <20200303133649.39819-6-mika.westerberg@linux.intel.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
-References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
+Date:   Tue, 03 Mar 2020 13:36:51 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1583242617;
+        bh=BDD6c0qZ3ADSHbjsHFkUzs++yi2EQJXwPCJ/kduplTk=;
+        h=Date:To:From:Reply-To:Subject:Feedback-ID:From;
+        b=r5lxmvS3YKRLOCCbi+F2AVDKJbgbVgaTtiUK7I94gONbAX8hItSU2j3hU3/fmp8fp
+         /ga5ih/SH+jijkxPraz2umLQcY7I6lO0/NM4fKoeSySH7AATgscN4qdpDIy91H1FbH
+         sFlFcpOyIytH14A30DLMFWSNxARo+2p8C/P7hX8Q=
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Reply-To: =?UTF-8?Q?Ywe_C=C3=A6rlyn?= <ywecrn@protonmail.com>
+Subject: Re: was: Fair Pay - Dewa
+Message-ID: <jB2itcriZLq3qPSq-Y0wcDZtCquO0XQa_6uupi2ON6Xo25G57BPW9i_ZJoyIuP_KsFokx65irNCCYz5-XWjyT-VcN8Y_cF-CrlgzFiyCa7E=@protonmail.com>
+Feedback-ID: jE8CP55NmWCGfbi9g5qzrOGkxuwuSXpchSI6fmYzjd5UEveHXeJrmiWc0_sgJdqIHM8YAKf9EEyPwffaRmhZ0A==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This converts the power button driver to use the new SCU IPC API where
-the SCU IPC instance is passed to the functions.
+Even better - India is still a place with widespread idolatry. A good econo=
+nmy is established with monotheism ofcourse.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/platform/x86/intel_mid_powerbtn.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+One Dewa Without Company.
 
-diff --git a/drivers/platform/x86/intel_mid_powerbtn.c b/drivers/platform/x86/intel_mid_powerbtn.c
-index 6f436836fe50..1fdcdef1d89f 100644
---- a/drivers/platform/x86/intel_mid_powerbtn.c
-+++ b/drivers/platform/x86/intel_mid_powerbtn.c
-@@ -46,6 +46,7 @@ struct mid_pb_ddata {
- 	unsigned short mirqlvl1_addr;
- 	unsigned short pbstat_addr;
- 	u8 pbstat_mask;
-+	struct intel_scu_ipc_dev *scu;
- 	int (*setup)(struct mid_pb_ddata *ddata);
- };
- 
-@@ -55,7 +56,8 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
- 	int ret;
- 	u8 pbstat;
- 
--	ret = intel_scu_ipc_ioread8(ddata->pbstat_addr, &pbstat);
-+	ret = intel_scu_ipc_dev_ioread8(ddata->scu, ddata->pbstat_addr,
-+					&pbstat);
- 	if (ret)
- 		return ret;
- 
-@@ -67,14 +69,15 @@ static int mid_pbstat(struct mid_pb_ddata *ddata, int *value)
- 
- static int mid_irq_ack(struct mid_pb_ddata *ddata)
- {
--	return intel_scu_ipc_update_register(ddata->mirqlvl1_addr, 0, MSIC_PWRBTNM);
-+	return intel_scu_ipc_dev_update(ddata->scu, ddata->mirqlvl1_addr, 0,
-+					MSIC_PWRBTNM);
- }
- 
- static int mrfld_setup(struct mid_pb_ddata *ddata)
- {
- 	/* Unmask the PBIRQ and MPBIRQ on Tangier */
--	intel_scu_ipc_update_register(BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
--	intel_scu_ipc_update_register(BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
-+	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQ, 0, MSIC_PWRBTNM);
-+	intel_scu_ipc_dev_update(ddata->scu, BCOVE_PBIRQMASK, 0, MSIC_PWRBTNM);
- 
- 	return 0;
- }
-@@ -161,6 +164,10 @@ static int mid_pb_probe(struct platform_device *pdev)
- 			return error;
- 	}
- 
-+	ddata->scu = devm_intel_scu_ipc_dev_get(&pdev->dev);
-+	if (!ddata->scu)
-+		return -EPROBE_DEFER;
-+
- 	error = devm_request_threaded_irq(&pdev->dev, irq, NULL, mid_pb_isr,
- 					  IRQF_ONESHOT, DRIVER_NAME, ddata);
- 	if (error) {
--- 
-2.25.1
+Hinduism and religion can be traced back to Adam. "Manu" in hinduism. Man. =
+His original religion is kept in The Quran.
+
+Peace,
+Ywe C=C3=A6rlyn
+Initiative Taker,
+I/T Net! - The Fair Pay Hardware Software Interface System. ("OS")
+
+
+Sent with ProtonMail Secure Email.
+
+=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90 Original Me=
+ssage =E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90=E2=80=90
+On Sunday, March 1, 2020 8:24 AM, Ywe C=C3=A6rlyn <ywecrn@protonmail.com> w=
+rote:
+
+> It is now named I/T Net! since this is going to be a tightening up of the=
+ net overall.
+>
+> Also something that occured to me, the common term "Quda" in some muslim =
+places, is actually completely with this. - So have nothing to fear from th=
+at.
+>
+> The Quda needs no company.
+>
+> Peace,
+> Ywe C=C3=A6rlyn.
+
 
