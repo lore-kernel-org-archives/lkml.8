@@ -2,94 +2,203 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300CFC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:20:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80180C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:21:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024B320838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:20:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 452D92073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:21:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a0+yFjRB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BxqgyUSc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgCCOUH (ORCPT
+        id S1728693AbgCCOVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:20:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42924 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727311AbgCCOUH (ORCPT
+        Tue, 3 Mar 2020 09:21:12 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52470 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728113AbgCCOVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:20:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583245206;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=gP09PkMcAbB+aqERIzsOakmbWC4dSi+WdMqM2DGrLiw=;
-        b=a0+yFjRBD0QTe5dbXgK8CcqR5OwXG4+TExXVz2Qs4HQd6wkVfduN6rseU84/GzJJNRqXXl
-        4fHjK0MJFitsiYAWCNHXNrejWH/9+qcF5BCSeR2pYiQgUjJ6D31JqDAodDop/aVV9mAvYi
-        SAYWJsFqXjNe6s7/6ku1yuMbEdtTWds=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-487-12-YiS5SOA6KUj7hkxmUvw-1; Tue, 03 Mar 2020 09:20:04 -0500
-X-MC-Unique: 12-YiS5SOA6KUj7hkxmUvw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 85E8E802698;
-        Tue,  3 Mar 2020 14:20:02 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AD24D101D493;
-        Tue,  3 Mar 2020 14:19:59 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200303141030.GA2811@kroah.com>
-References: <20200303141030.GA2811@kroah.com> <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com> <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net> <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com> <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com> <20200303113814.rsqhljkch6tgorpu@ws.net.home> <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com> <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com> <20200303134316.GA2509660@kroah.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     dhowells@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Karel Zak <kzak@redhat.com>, Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+        Tue, 3 Mar 2020 09:21:11 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so3405875wmc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:21:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NFqfyuaIMXDmhEYwybWDmV6br7ErXXNIWP0DfrtJhAg=;
+        b=BxqgyUScA42ya5W/hS98tP3urB/eFkPXNoQrM9ONG1yTtYDYC4daSym5eFym6xUM8X
+         sTJL5hq76g1DuAKaig8PJypHLYoLwVF9Rqdy21AjtTpGuJA+AlYkCdWfthQ976h8wD/+
+         ZZgE3MTT+Ixz1RJ/h8cYHl54wBqjpsCQ2TSFNGErYN+9e9lQNswyvFfoDrumFmZi265X
+         id3XKeV9L/pECKKLEmhIIISAn7dU1v5TQr94KQg1FTzFrCo93/2wCC8lxGBAg4FSeoOv
+         RWwzzPS68juV98HgpKl7at4mU+Nz95TcMJsdmwgtqjgFEdUBaddhB4YAHZaH31XQvpkl
+         zJ8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NFqfyuaIMXDmhEYwybWDmV6br7ErXXNIWP0DfrtJhAg=;
+        b=alfIl6mijskRoWGJBuJb89L+GLKFClkPZ8uKMzk4PkhBqYgAEkojXp8GcpBWWvMsxC
+         jNdy6nxB40NitHP3OgJrYtbzQWnEZykXl7CwawyTsL8KDlEFi3eDpUPHBLyA4GkiSI0Q
+         5AuR3HhuN3saksUW77LS2mlhi3mlum92F6ifVzLk79P9daV3W63mfiq9om0hXyGyGLDs
+         83k91eqsF9xtvtAIw01BzTQq0fS2YxmZE3xmrZKiwXjziuMonvB0IWxa4t5suGOXxswa
+         j1eWaXlkCygGjWq0hmLcTMII2oSe1jNH78pCOkdK0Bol8dRnlpS9y0zWzr9kBJtuZepT
+         kN7A==
+X-Gm-Message-State: ANhLgQ0C5UqVGeraD1GjJJV33/CtKrjYkfCQVdLQ+VzAuFb+yN5jXRs+
+        Sa7D5eosDGRpu1uCQrjXIq8=
+X-Google-Smtp-Source: ADFU+vuA55YiBqZW8hozKVnA303Z8I+G6uCt/91NLr0beE3WRI/tNItyCX8dfci1a2+B6uQ5231B5w==
+X-Received: by 2002:a1c:a70a:: with SMTP id q10mr4525360wme.88.1583245267106;
+        Tue, 03 Mar 2020 06:21:07 -0800 (PST)
+Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id h20sm11805212wrc.47.2020.03.03.06.21.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 06:21:06 -0800 (PST)
+Date:   Tue, 3 Mar 2020 15:21:04 +0100
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     maz@kernel.org, wens@csie.org, mripard@kernel.org,
+        mark.rutland@arm.com, lorenzo.pieralisi@arm.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux@armlinux.org.uk
+Subject: Re: sunxi: a83t: does not boot anymore in BigEndian
+Message-ID: <20200303142104.GA8327@Red>
+References: <20200303074326.GA9935@Red>
+ <65498b8e-a6c3-9edb-873f-6c011582a2eb@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1657842.1583245198.1@warthog.procyon.org.uk>
-Date:   Tue, 03 Mar 2020 14:19:58 +0000
-Message-ID: <1657843.1583245198@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <65498b8e-a6c3-9edb-873f-6c011582a2eb@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+On Tue, Mar 03, 2020 at 01:47:02PM +0000, Robin Murphy wrote:
+> On 03/03/2020 7:43 am, Corentin Labbe wrote:
+> > Hello
+> > 
+> > My sun8i-a83t-bananapi-m3 does not boot anymore in BE.
+> > Others sunxi platform I have seems not affected (a10, a20, a64, h3, h5, h6)
+> > 
+> > I have bisected this problem:
+> > git bisect start
+> > # bad: [98d54f81e36ba3bf92172791eba5ca5bd813989b] Linux 5.6-rc4
+> > git bisect bad 98d54f81e36ba3bf92172791eba5ca5bd813989b
+> > # bad: [d5226fa6dbae0569ee43ecfc08bdcd6770fc4755] Linux 5.5
+> > git bisect bad d5226fa6dbae0569ee43ecfc08bdcd6770fc4755
+> > # good: [219d54332a09e8d8741c1e1982f5eae56099de85] Linux 5.4
+> > git bisect good 219d54332a09e8d8741c1e1982f5eae56099de85
+> > # bad: [8c39f71ee2019e77ee14f88b1321b2348db51820] Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+> > git bisect bad 8c39f71ee2019e77ee14f88b1321b2348db51820
+> > # bad: [3b397c7ccafe0624018cb09fc96729f8f6165573] Merge tag 'regmap-v5.5' of git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regmap
+> > git bisect bad 3b397c7ccafe0624018cb09fc96729f8f6165573
+> > # good: [924ea58dadea23cc28b60d02b9c0896b7b168a6f] Merge tag 'mt76-for-kvalo-2019-11-20' of https://github.com/nbd168/wireless
+> > git bisect good 924ea58dadea23cc28b60d02b9c0896b7b168a6f
+> > # good: [3f3c8be973af10875cfa1e7b85a535b6ba76b44f] Merge tag 'for-linus-5.5a-rc1-tag' of git://git.kernel.org/pub/scm/linux/kernel/git/xen/tip
+> > git bisect good 3f3c8be973af10875cfa1e7b85a535b6ba76b44f
+> > # bad: [642356cb5f4a8c82b5ca5ebac288c327d10df236] Merge git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
+> > git bisect bad 642356cb5f4a8c82b5ca5ebac288c327d10df236
+> > # good: [57d8154f15e89f53dfb412f4ed32ebe3c3d755a0] crypto: atmel-aes - Change data type for "lastc" buffer
+> > git bisect good 57d8154f15e89f53dfb412f4ed32ebe3c3d755a0
+> > # bad: [752272f16dd18f2cac58a583a8673c8e2fb93abb] Merge tag 'for-linus' of git://git.kernel.org/pub/scm/virt/kvm/kvm
+> > git bisect bad 752272f16dd18f2cac58a583a8673c8e2fb93abb
+> > # good: [9477f4449b0b011ce1d058c09ec450bfcdaab784] KVM: VMX: Add helper to check reserved bits in IA32_PERF_GLOBAL_CTRL
+> > git bisect good 9477f4449b0b011ce1d058c09ec450bfcdaab784
+> > # bad: [cd7056ae34af0e9424da97bbc7d2b38246ba8a2c] Merge remote-tracking branch 'kvmarm/misc-5.5' into kvmarm/next
+> > git bisect bad cd7056ae34af0e9424da97bbc7d2b38246ba8a2c
+> > # bad: [c7892db5dd6afe921ead502aff7440a1e450d947] KVM: arm64: Select TASK_DELAY_ACCT+TASKSTATS rather than SCHEDSTATS
+> > git bisect bad c7892db5dd6afe921ead502aff7440a1e450d947
+> > # bad: [8564d6372a7d8a6d440441b8ed8020f97f744450] KVM: arm64: Support stolen time reporting via shared structure
+> > git bisect bad 8564d6372a7d8a6d440441b8ed8020f97f744450
+> > # bad: [55009c6ed2d24fc0f5521ab2482f145d269389ea] KVM: arm/arm64: Factor out hypercall handling from PSCI code
+> > git bisect bad 55009c6ed2d24fc0f5521ab2482f145d269389ea
+> > # bad: [6a7458485b390f48e481fcd4a0b20e6c5c843d2e] KVM: arm64: Document PV-time interface
+> > git bisect bad 6a7458485b390f48e481fcd4a0b20e6c5c843d2e
+> > # bad: [dcac930e9901d765234bc15004db4f7d4416db71] Merge remote-tracking branch 'arm64/for-next/smccc-conduit-cleanup' into kvm-arm64/stolen-time
+> > git bisect bad dcac930e9901d765234bc15004db4f7d4416db71
+> > # first bad commit: [dcac930e9901d765234bc15004db4f7d4416db71] Merge remote-tracking branch 'arm64/for-next/smccc-conduit-cleanup' into kvm-arm64/stolen-time
+> > 
+> > But bisect lead to a merge request.
+> 
+> FWIW once you've bisected to a merge commit, you can always then try 
+> bisecting down the merged branch itself (i.e. between 5.4-rc3 and 
+> e6ea46511b1a in this case) to narrow things down further.
+> 
+> Given that that branch is supposed to be a functionally-inert cleanup, 
+> and (judging by the DTS) this platform apparently isn't using PSCI 
+> anyway, it does seem a bit odd. Can you get any earlycon/earlyprintk 
+> output to suggest what the actual cause of the boot failure is?
+> 
 
-> +	fd = do_sys_open(dfd, filename, flags, 0000);
-> +	if (fd <= 0)
-> +		return fd;
-> +
-> +	retval = ksys_read(fd, buffer, bufsize);
-> +
-> +	__close_fd(current->files, fd);
+Hello
 
-If you can use dentry_open() and vfs_read(), you might be able to avoid
-dealing with file descriptors entirely.  That might make it worth a syscall.
+With earlycon I got:
 
-You're going to be asked for writefile() you know ;-)
+bootz 0x42000000 0x43300000 0x43000000
+## Loading init Ramdisk from Legacy Image at 43300000 ...
+   Image Name:   
+   Image Type:   ARM Linux RAMDisk Image (uncompressed)
+   Data Size:    32397255 Bytes = 30.9 MiB
+   Load Address: 00000000
+   Entry Point:  00000000
+   Verifying Checksum ... OK
+## Flattened Device Tree blob at 43000000
+   Booting using the fdt blob at 0x43000000
+   Using Device Tree in place at 43000000, end 43008f07
+Starting kernel ...
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 5.6.0-rc4 (compile@Red) (gcc version 8.3.0 (Gentoo 8.3.0-r1 p1.1)) #21 SMP Tue Mar 3 15:07:20 CET 2020
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=12c5387d
+[    0.000000] CPU: div instructions available: patching division code
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] OF: fdt: Machine model: Banana Pi BPI-M3
+[    0.000000] earlycon: uart0 at MMIO32 0x01c28000 (options '')
+[    0.000000] printk: bootconsole [uart0] enabled
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] cma: Reserved 16 MiB at 0xbf000000
+[    0.000000] percpu: Embedded 15 pages/cpu s31320 r8192 d21928 u61440
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 522752
+[    0.000000] Kernel command line: console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x01c28000 ip=dhcp
+[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] Memory: 2019352K/2097152K available (7168K kernel code, 485K rwdata, 2832K rodata, 1024K init, 248K bss, 61416K reserved, 16384K cma-reserved, 1294336K highmem)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: 	RCU event tracing is enabled.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+[    0.000000] random: get_random_bytes called from start_kernel+0x2a4/0x440 with crng_init=0
+[    0.000000] arch_timer: cp15 timer(s) running at 24.00MHz (virt).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+[    0.000008] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 4398046511097ns
+[    0.008636] Switching to timer-based delay loop, resolution 41ns
+[    0.015439] clocksource: timer: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79635851949 ns
+[    0.025876] Console: colour dummy device 80x30
+[    0.030743] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=240000)
+[    0.041927] pid_max: default: 32768 minimum: 301
+[    0.047093] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+[    0.055003] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+[    0.064553] CPU: Testing write buffer coherency: ok
+[    0.070534] /cpus/cpu@0 missing clock-frequency property
+[    0.076282] /cpus/cpu@1 missing clock-frequency property
+[    0.082071] /cpus/cpu@2 missing clock-frequency property
+[    0.087816] /cpus/cpu@3 missing clock-frequency property
+[    0.093560] /cpus/cpu@100 missing clock-frequency property
+[    0.099498] /cpus/cpu@101 missing clock-frequency property
+[    0.105441] /cpus/cpu@102 missing clock-frequency property
+[    0.111363] /cpus/cpu@103 missing clock-frequency property
+[    0.117292] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.124164] Setting up static identity map for 0x40100000 - 0x40100060
+[    0.131496] ARM CCI driver probed
+[    0.135832] sunxi multi cluster SMP support installed
+[    0.141784] rcu: Hierarchical SRCU implementation.
+[    0.147537] smp: Bringing up secondary CPUs ...
 
-David
+I will try to redo the bisect
 
