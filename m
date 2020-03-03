@@ -2,108 +2,167 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC61C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC10DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D5320836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="1BVMSz5o"
+	by mail.kernel.org (Postfix) with ESMTP id 8030220836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583258724;
+	bh=7PAGkUMkITWRXeaFnSAbt/bBop6k7nk6nZjKkTwPpXU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IPSzAzG0OjapbBqgNFF81QgS52vIegFAi1zV9EK++IZ/LkriyN2fFJ8tZx6zKfJu6
+	 A90CpDm3iv1u3J5SenJvQr+rm4RKs1It8drqWWB1tyKGSKweRcW1tOmgEVFhw9ooOG
+	 RrNKvkdrXloAImA0WRWFoDBI9lemyUOGxfYiKEXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388197AbgCCSFQ (ORCPT
+        id S2388209AbgCCSFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:05:16 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:46956 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387409AbgCCR6b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:58:31 -0500
-Received: by mail-il1-f195.google.com with SMTP id e8so3518245ilc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:58:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=G5nat7TjfwsYKukhiu6yJ6peKaEgkq8tBpj9OwyiAts=;
-        b=1BVMSz5op5aH4SjFm/0AsfcMaTUcTjYDE6RYQdIeeh6bJpDEvM4lczmgOBYIgehYU6
-         3wROaS6Xl/bSaiSQf1ruWmaWuuF7FyuSv7ZRENnxDrZxheVkOjHnLQ/GNJEQR6lM2VMp
-         koVVCUE6aU9BJMHhq9kh3VRjDq/M2GUjetqQFWni8tEoSBPcIpKb/zSSIGmjFAU8NrFZ
-         k9n15D7kPTkUMdfLUV+6X4ZmzIunA0Bdsim+Bap2Su7dPEHZWa8OxFn7XfKDdc1KYiFZ
-         W681UKO6qansKW5nNWQcDpAYHf2w6E0cACcLMNMmocdS+Fkal/VR09QiiT4H4Y3s67uc
-         vMJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=G5nat7TjfwsYKukhiu6yJ6peKaEgkq8tBpj9OwyiAts=;
-        b=bbdRqlV2XtttjWG9s/pXgJhWT2irF70MCoWv+KcZ7ov+lfvIX4i93yqsH+Gl0P8/nG
-         /3q8qiB649Wdefy7EOqolWIe5KsLoWVHLTqGvgzVoBw5hcV70kZW91BQMFnzU23tWVww
-         QgtMZoCPu0lqOJzFUhtJbP+Gms3/HT/GFIFGcdkfvsmtqsVJ32VFFCy++jKQQjVl8IDS
-         rrBZDbVznSkZxQvmALGVuCSUnY1yBonMaLivvOHZk+Xb2C1zlbTxNngd8cd1cyq2qywa
-         Qcn4jRmuWMoUFxIyKgwIKQMxmb2b8M6MysKC5WtNsVl61bi+UZKGUhmxnkSY8GPAjsES
-         YKpA==
-X-Gm-Message-State: ANhLgQ3sZIyXmG2OysGETqQzfQfuin0x+YDsk8xDs/IEtonUX+ukujR5
-        LAactQtc0yl6hc9dHKVGwtDDTA==
-X-Google-Smtp-Source: ADFU+vtV+apP8mi6vB9ANWxLbJfeoFiJDA7yX1gYyG13Gfv6reOP037TkZVssoM3D1a1NrpJRw0hBA==
-X-Received: by 2002:a92:de03:: with SMTP id x3mr5968538ilm.146.1583258310639;
-        Tue, 03 Mar 2020 09:58:30 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id k16sm8140521ili.35.2020.03.03.09.58.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 09:58:30 -0800 (PST)
-Subject: Re: [PATCH 5.5 072/176] bcache: ignore pending signals when creating
- gc and allocator thread
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-References: <20200303174304.593872177@linuxfoundation.org>
- <20200303174312.994115258@linuxfoundation.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <24e19cd9-8eea-a41a-27f7-84ffcd872977@kernel.dk>
-Date:   Tue, 3 Mar 2020 10:58:29 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 3 Mar 2020 13:05:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733293AbgCCR6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:24 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F01020656;
+        Tue,  3 Mar 2020 17:58:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583258303;
+        bh=7PAGkUMkITWRXeaFnSAbt/bBop6k7nk6nZjKkTwPpXU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=g71v8PlIewW3DwKiKm8NnEK7dXibFt7JrfXAkiRBGJawp6A3lBwZ7aYluzAu4IoWV
+         1LbgVI/fTtNz8LhPHbQ7GzgmUABP0aWTjoGDXzmVyL/KxEScjGS8NQ0wAKBSm4i44T
+         BBLswigHr/+e2qH3cwjryFAxF8BQw0FUI5Z1daa8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Rientjes <rientjes@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 150/152] mm, thp: fix defrag setting if newline is not used
+Date:   Tue,  3 Mar 2020 18:44:08 +0100
+Message-Id: <20200303174319.854517709@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
+References: <20200303174302.523080016@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200303174312.994115258@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 10:42 AM, Greg Kroah-Hartman wrote:
-> From: Coly Li <colyli@suse.de>
-> 
-> [ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
-> 
-> When run a cache set, all the bcache btree node of this cache set will
-> be checked by bch_btree_check(). If the bcache btree is very large,
-> iterating all the btree nodes will occupy too much system memory and
-> the bcache registering process might be selected and killed by system
-> OOM killer. kthread_run() will fail if current process has pending
-> signal, therefore the kthread creating in run_cache_set() for gc and
-> allocator kernel threads are very probably failed for a very large
-> bcache btree.
-> 
-> Indeed such OOM is safe and the registering process will exit after
-> the registration done. Therefore this patch flushes pending signals
-> during the cache set start up, specificly in bch_cache_allocator_start()
-> and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
-> large cahced data set.
+From: David Rientjes <rientjes@google.com>
 
-Ditto this one, of course.
+commit f42f25526502d851d0e3ca1e46297da8aafce8a7 upstream.
 
-Did someone send this in for stable? It's not marked stable in the
-original commit.
+If thp defrag setting "defer" is used and a newline is *not* used when
+writing to the sysfs file, this is interpreted as the "defer+madvise"
+option.
 
--- 
-Jens Axboe
+This is because we do prefix matching and if five characters are written
+without a newline, the current code ends up comparing to the first five
+bytes of the "defer+madvise" option and using that instead.
+
+Use the more appropriate sysfs_streq() that handles the trailing newline
+for us.  Since this doubles as a nice cleanup, do it in enabled_store()
+as well.
+
+The current implementation relies on prefix matching: the number of
+bytes compared is either the number of bytes written or the length of
+the option being compared.  With a newline, "defer\n" does not match
+"defer+"madvise"; without a newline, however, "defer" is considered to
+match "defer+madvise" (prefix matching is only comparing the first five
+bytes).  End result is that writing "defer" is broken unless it has an
+additional trailing character.
+
+This means that writing "madv" in the past would match and set
+"madvise".  With strict checking, that no longer is the case but it is
+unlikely anybody is currently doing this.
+
+Link: http://lkml.kernel.org/r/alpine.DEB.2.21.2001171411020.56385@chino.kir.corp.google.com
+Fixes: 21440d7eb904 ("mm, thp: add new defer+madvise defrag option")
+Signed-off-by: David Rientjes <rientjes@google.com>
+Suggested-by: Andrew Morton <akpm@linux-foundation.org>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ mm/huge_memory.c |   24 ++++++++----------------
+ 1 file changed, 8 insertions(+), 16 deletions(-)
+
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -177,16 +177,13 @@ static ssize_t enabled_store(struct kobj
+ {
+ 	ssize_t ret = count;
+ 
+-	if (!memcmp("always", buf,
+-		    min(sizeof("always")-1, count))) {
++	if (sysfs_streq(buf, "always")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("madvise", buf,
+-			   min(sizeof("madvise")-1, count))) {
++	} else if (sysfs_streq(buf, "madvise")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("never", buf,
+-			   min(sizeof("never")-1, count))) {
++	} else if (sysfs_streq(buf, "never")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 	} else
+@@ -250,32 +247,27 @@ static ssize_t defrag_store(struct kobje
+ 			    struct kobj_attribute *attr,
+ 			    const char *buf, size_t count)
+ {
+-	if (!memcmp("always", buf,
+-		    min(sizeof("always")-1, count))) {
++	if (sysfs_streq(buf, "always")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("defer+madvise", buf,
+-		    min(sizeof("defer+madvise")-1, count))) {
++	} else if (sysfs_streq(buf, "defer+madvise")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("defer", buf,
+-		    min(sizeof("defer")-1, count))) {
++	} else if (sysfs_streq(buf, "defer")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("madvise", buf,
+-			   min(sizeof("madvise")-1, count))) {
++	} else if (sysfs_streq(buf, "madvise")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
+-	} else if (!memcmp("never", buf,
+-			   min(sizeof("never")-1, count))) {
++	} else if (sysfs_streq(buf, "never")) {
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
+ 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+
 
