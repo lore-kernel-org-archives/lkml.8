@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EE5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2769CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5122166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A1624673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204221;
-	bh=VwhYKLy1NhWaPZdxdXJS0pwQhJAtWfm9/KXs9tu/rec=;
+	s=default; t=1583204225;
+	bh=EcXmh/sViq3cjX+kT2vA7ywCjsgkFY/MvcXJvo0fHBQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pgMXsBEujDG/Qa+rmc1i+TtJoVMGMdDbbH0i8sLCSGCDwrPUw6k6MW1f+Dv/gJNLy
-	 NuM+i+JITexcoTdcJp7KWgZFH5daJ0YnYpj42fx8CuEhGsnSdhSRiB4r/TqpcXY5dL
-	 qXmsdNHIS9ikmWtjfiwA0cr5vA/gdwz+dSht5Hx0=
+	b=y8JjxTfm1lkWOR3+259ga7IA4PIGdYOy+1pKSCDM7lxBZ5ttz2gCjKhWoLlYrzD9l
+	 fJog9zmk8aEfc5EL1rKpfdNr4YImdooNPwwgIpLwNbtN1OdrSTCiz3RMGs4PLh62Cc
+	 mB4hRmfQIce7N/SJIAITJhmxTc8cDIWjsQ8tO3bo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgCCCs3 (ORCPT
+        id S1728480AbgCCC5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:57:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44326 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbgCCCsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:19 -0500
+        id S1728441AbgCCCs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:29 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E163824680;
-        Tue,  3 Mar 2020 02:48:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E91C24697;
+        Tue,  3 Mar 2020 02:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203698;
-        bh=VwhYKLy1NhWaPZdxdXJS0pwQhJAtWfm9/KXs9tu/rec=;
+        s=default; t=1583203709;
+        bh=EcXmh/sViq3cjX+kT2vA7ywCjsgkFY/MvcXJvo0fHBQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wyci/qHSKzipQnQZGEfbmeMyRN3UWYrB9dtTNc2CjeZAozWmMD3luEWHaDGn/XpWx
-         Rdj3MZKAHcwazUQDrBUMEIwtLMgHIs5V/01hypiZ3Dh6BHCNkY4l4ewBJ9ZA2KmpzB
-         gCVcf0UrubynrfoWwQbrLJrqg38QQd8J5rUGVrqU=
+        b=cDMmJwWEceWeru+Zs8KI0eQvBx7BVTCIrT5UCNNB/H/aPXMtIpETfzKcibAG1cK4U
+         podRZ7iknZvtWWzswK+WNBmqgsgdMlpLheK8+tc30vIFgetCmvLDCudIqETxbpXYes
+         x/FQ125lE5i/hBDLIRtgK05b4vJpTBb76y6BeYw4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Mathieu Malaterre <malat@debian.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 31/58] net: ethernet: dm9000: Handle -EPROBE_DEFER in dm9000_parse_dt()
-Date:   Mon,  2 Mar 2020 21:47:13 -0500
-Message-Id: <20200303024740.9511-31-sashal@kernel.org>
+Cc:     Shyjumon N <shyjumon.n@intel.com>,
+        Jon Derrick <jonathan.derrick@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 40/58] nvme/pci: Add sleep quirk for Samsung and Toshiba drives
+Date:   Mon,  2 Mar 2020 21:47:22 -0500
+Message-Id: <20200303024740.9511-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -62,36 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Shyjumon N <shyjumon.n@intel.com>
 
-[ Upstream commit 9a6a0dea16177ccaecc116f560232e63bec115f1 ]
+[ Upstream commit 1fae37accfc5872af3905d4ba71dc6ab15829be7 ]
 
-The call to of_get_mac_address() can return -EPROBE_DEFER, for instance
-when the MAC address is read from a NVMEM driver that did not probe yet.
+The Samsung SSD SM981/PM981 and Toshiba SSD KBG40ZNT256G on the Lenovo
+C640 platform experience runtime resume issues when the SSDs are kept in
+sleep/suspend mode for long time.
 
-Cc: H. Nikolaus Schaller <hns@goldelico.com>
-Cc: Mathieu Malaterre <malat@debian.org>
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This patch applies the 'Simple Suspend' quirk to these configurations.
+With this patch, the issue had not been observed in a 1+ day test.
+
+Reviewed-by: Jon Derrick <jonathan.derrick@intel.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Shyjumon N <shyjumon.n@intel.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/davicom/dm9000.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvme/host/pci.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/net/ethernet/davicom/dm9000.c b/drivers/net/ethernet/davicom/dm9000.c
-index cce90b5925d93..70060c51854fd 100644
---- a/drivers/net/ethernet/davicom/dm9000.c
-+++ b/drivers/net/ethernet/davicom/dm9000.c
-@@ -1405,6 +1405,8 @@ static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
- 	mac_addr = of_get_mac_address(np);
- 	if (!IS_ERR(mac_addr))
- 		ether_addr_copy(pdata->dev_addr, mac_addr);
-+	else if (PTR_ERR(mac_addr) == -EPROBE_DEFER)
-+		return ERR_CAST(mac_addr);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index f34a56d588d31..944f89fc15946 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -2740,6 +2740,18 @@ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
+ 		    (dmi_match(DMI_BOARD_NAME, "PRIME B350M-A") ||
+ 		     dmi_match(DMI_BOARD_NAME, "PRIME Z370-A")))
+ 			return NVME_QUIRK_NO_APST;
++	} else if ((pdev->vendor == 0x144d && (pdev->device == 0xa801 ||
++		    pdev->device == 0xa808 || pdev->device == 0xa809)) ||
++		   (pdev->vendor == 0x1e0f && pdev->device == 0x0001)) {
++		/*
++		 * Forcing to use host managed nvme power settings for
++		 * lowest idle power with quick resume latency on
++		 * Samsung and Toshiba SSDs based on suspend behavior
++		 * on Coffee Lake board for LENOVO C640
++		 */
++		if ((dmi_match(DMI_BOARD_VENDOR, "LENOVO")) &&
++		     dmi_match(DMI_BOARD_NAME, "LNVNB161216"))
++			return NVME_QUIRK_SIMPLE_SUSPEND;
+ 	}
  
- 	return pdata;
- }
+ 	return 0;
 -- 
 2.20.1
 
