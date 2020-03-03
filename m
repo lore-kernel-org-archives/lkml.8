@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A02EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7228C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0447B2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C7E2072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258439;
-	bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
+	s=default; t=1583258443;
+	bh=U79f2KH8oegSSdb7QtGP/IXx/JFv49iQpTTomm8CTB0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eD4M3Rs6Kv49tWmHy1q08WeD4O3MFbQbcklC8XN1KSLtW3I90E/8pHrFs6O03y76o
-	 s10GFy2BK7GKi8NVV1reTBxDxnJU9COALq4TLBCQvEuG8aRjtpG6OZMK3DE9mniyLk
-	 eZlkRISB4MLN9npVJCmYUK8wRKSo7+xFDV1uPXlU=
+	b=sTRfMDJWv4myjgX54N//zA4NgFtMukQdWGylz+nLxw/5GjRetj9zJP41Ha/QhxFH+
+	 ZzxT/DZc/2aGT5JXl1wea89fGzpsFW5bLXUek81GCdDjI1MRwqAKi8GIwm8MK4jqRn
+	 XdOLPrFwU9/C3d00ZuypSpzZSD34XoKJdditXuWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387809AbgCCSAh (ORCPT
+        id S2387828AbgCCSAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:00:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44382 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:00:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387795AbgCCSAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:00:35 -0500
+        id S2387814AbgCCSAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:00:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3310020656;
-        Tue,  3 Mar 2020 18:00:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 990A52072D;
+        Tue,  3 Mar 2020 18:00:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258433;
-        bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
+        s=default; t=1583258439;
+        bh=U79f2KH8oegSSdb7QtGP/IXx/JFv49iQpTTomm8CTB0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WbQrGivbtaBzrfG7n4TFEUlS0tpg3jZiBZLdTLl34Edgc3sObqnwwSlCNKB26Y+EK
-         7yp+yQk0Ed5Fie5dzYzbiUGkSJZJ+UJbkI2/L8IyMn8Jd/FXJ1nWSVYIfSsRzPUtz6
-         hIhcSVLd9xrZKm4469Ve9C0UqwOgFLTWcZ5DH9Vw=
+        b=trOVaWZO/s7coA3AqI2FC3V0tzWGOvCezyVCxW+7zVasGxjnmcndjLXwWnszpfZnw
+         ENdMNeol67gUnH45s0jujxrxE72W5aGPou8tz1vv8AKWArjiEtyoO4gSCGRdxK9buF
+         ctIACk9n6v8zM64xuQLoLC6icXM9OKypr+eBJqvw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Michael Ellerman <mpe@ellerman.id.au>, stable@kernel.org
-Subject: [PATCH 4.19 47/87] macintosh: therm_windtunnel: fix regression when instantiating devices
-Date:   Tue,  3 Mar 2020 18:43:38 +0100
-Message-Id: <20200303174354.576969823@linuxfoundation.org>
+        stable@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
+        Orson Zhai <orson.unisoc@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 4.19 49/87] Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"
+Date:   Tue,  3 Mar 2020 18:43:40 +0100
+Message-Id: <20200303174354.746201966@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -60,136 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa@the-dreams.de>
+From: Orson Zhai <orson.unisoc@gmail.com>
 
-commit 38b17afb0ebb9ecd41418d3c08bcf9198af4349d upstream.
+commit 66d0e797bf095d407479c89952d42b1d96ef0a7f upstream.
 
-Removing attach_adapter from this driver caused a regression for at
-least some machines. Those machines had the sensors described in their
-DT, too, so they didn't need manual creation of the sensor devices. The
-old code worked, though, because manual creation came first. Creation of
-DT devices then failed later and caused error logs, but the sensors
-worked nonetheless because of the manually created devices.
+This reverts commit 4585fbcb5331fc910b7e553ad3efd0dd7b320d14.
 
-When removing attach_adaper, manual creation now comes later and loses
-the race. The sensor devices were already registered via DT, yet with
-another binding, so the driver could not be bound to it.
+The name changing as devfreq(X) breaks some user space applications,
+such as Android HAL from Unisoc and Hikey [1].
+The device name will be changed unexpectly after every boot depending
+on module init sequence. It will make trouble to setup some system
+configuration like selinux for Android.
 
-This fix refactors the code to remove the race and only manually creates
-devices if there are no DT nodes present. Also, the DT binding is updated
-to match both, the DT and manually created devices. Because we don't
-know which device creation will be used at runtime, the code to start
-the kthread is moved to do_probe() which will be called by both methods.
+So we'd like to revert it back to old naming rule before any better
+way being found.
 
-Fixes: 3e7bed52719d ("macintosh: therm_windtunnel: drop using attach_adapter")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=201723
-Reported-by: Erhard Furtner <erhard_f@mailbox.org>
-Tested-by: Erhard Furtner <erhard_f@mailbox.org>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org # v4.19+
+[1] https://lkml.org/lkml/2018/5/8/1042
+
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/macintosh/therm_windtunnel.c |   52 ++++++++++++++++++++---------------
- 1 file changed, 31 insertions(+), 21 deletions(-)
+ drivers/devfreq/devfreq.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/drivers/macintosh/therm_windtunnel.c
-+++ b/drivers/macintosh/therm_windtunnel.c
-@@ -300,9 +300,11 @@ static int control_loop(void *dummy)
- /*	i2c probing and setup						*/
- /************************************************************************/
- 
--static int
--do_attach( struct i2c_adapter *adapter )
-+static void do_attach(struct i2c_adapter *adapter)
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -600,7 +600,6 @@ struct devfreq *devfreq_add_device(struc
  {
-+	struct i2c_board_info info = { };
-+	struct device_node *np;
-+
- 	/* scan 0x48-0x4f (DS1775) and 0x2c-2x2f (ADM1030) */
- 	static const unsigned short scan_ds1775[] = {
- 		0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
-@@ -313,25 +315,24 @@ do_attach( struct i2c_adapter *adapter )
- 		I2C_CLIENT_END
- 	};
+ 	struct devfreq *devfreq;
+ 	struct devfreq_governor *governor;
+-	static atomic_t devfreq_no = ATOMIC_INIT(-1);
+ 	int err = 0;
  
--	if( strncmp(adapter->name, "uni-n", 5) )
--		return 0;
--
--	if( !x.running ) {
--		struct i2c_board_info info;
-+	if (x.running || strncmp(adapter->name, "uni-n", 5))
-+		return;
- 
--		memset(&info, 0, sizeof(struct i2c_board_info));
--		strlcpy(info.type, "therm_ds1775", I2C_NAME_SIZE);
-+	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,ds1775");
-+	if (np) {
-+		of_node_put(np);
-+	} else {
-+		strlcpy(info.type, "MAC,ds1775", I2C_NAME_SIZE);
- 		i2c_new_probed_device(adapter, &info, scan_ds1775, NULL);
-+	}
- 
--		strlcpy(info.type, "therm_adm1030", I2C_NAME_SIZE);
-+	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,adm1030");
-+	if (np) {
-+		of_node_put(np);
-+	} else {
-+		strlcpy(info.type, "MAC,adm1030", I2C_NAME_SIZE);
- 		i2c_new_probed_device(adapter, &info, scan_adm1030, NULL);
--
--		if( x.thermostat && x.fan ) {
--			x.running = 1;
--			x.poll_task = kthread_run(control_loop, NULL, "g4fand");
--		}
+ 	if (!dev || !profile || !governor_name) {
+@@ -661,8 +660,7 @@ struct devfreq *devfreq_add_device(struc
  	}
--	return 0;
- }
+ 	devfreq->max_freq = devfreq->scaling_max_freq;
  
- static int
-@@ -404,8 +405,8 @@ out:
- enum chip { ds1775, adm1030 };
- 
- static const struct i2c_device_id therm_windtunnel_id[] = {
--	{ "therm_ds1775", ds1775 },
--	{ "therm_adm1030", adm1030 },
-+	{ "MAC,ds1775", ds1775 },
-+	{ "MAC,adm1030", adm1030 },
- 	{ }
- };
- MODULE_DEVICE_TABLE(i2c, therm_windtunnel_id);
-@@ -414,6 +415,7 @@ static int
- do_probe(struct i2c_client *cl, const struct i2c_device_id *id)
- {
- 	struct i2c_adapter *adapter = cl->adapter;
-+	int ret = 0;
- 
- 	if( !i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA
- 				     | I2C_FUNC_SMBUS_WRITE_BYTE) )
-@@ -421,11 +423,19 @@ do_probe(struct i2c_client *cl, const st
- 
- 	switch (id->driver_data) {
- 	case adm1030:
--		return attach_fan( cl );
-+		ret = attach_fan(cl);
-+		break;
- 	case ds1775:
--		return attach_thermostat(cl);
-+		ret = attach_thermostat(cl);
-+		break;
- 	}
--	return 0;
-+
-+	if (!x.running && x.thermostat && x.fan) {
-+		x.running = 1;
-+		x.poll_task = kthread_run(control_loop, NULL, "g4fand");
-+	}
-+
-+	return ret;
- }
- 
- static struct i2c_driver g4fan_driver = {
+-	dev_set_name(&devfreq->dev, "devfreq%d",
+-				atomic_inc_return(&devfreq_no));
++	dev_set_name(&devfreq->dev, "%s", dev_name(dev));
+ 	err = device_register(&devfreq->dev);
+ 	if (err) {
+ 		mutex_unlock(&devfreq->lock);
 
 
