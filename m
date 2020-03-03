@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86983C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15357C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BEDA214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC782146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257690;
-	bh=t0ILfPI1THySAeKMScXdX+yW20YuVW1b/Uuz9HQq564=;
+	s=default; t=1583257693;
+	bh=t+S2XrhfT3pYPEY8Yhnl8TEwlDJoicoGndjBbpEjWXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UAM8cXHR2xr8Xjlp8fe3MsyNJRymGfPxRsYzIDHvWAecLZ+vCSXGAd4cL5wd45G6c
-	 i2PTEAIbf4E8Z7LpB6GpcEF7ADH1nvr8ho5gHILwmZ6DfucK+fTqn831ZhpI46KxhH
-	 wIII/cp1cr5r03/IqFr7zNZkyBwEd76Dyu219TDo=
+	b=iLy8ZDJ2tUzK9W8tRR+TkpBWOHELr63nHwoH+78Mh2JAJj0sMT9EX26TU2o46K8yh
+	 sPK89RU02muALQWMZ4oNYUOhUm9xNoeDF4LqLFG8lCk5lfAkOIZZ9xckpnbGSH0OTy
+	 sYy3gCJZBOuKBxmeJugqabUZBKde7MCcatocJqfY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbgCCRsI (ORCPT
+        id S1731503AbgCCRsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:48:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55174 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730375AbgCCRsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:07 -0500
+        id S1731486AbgCCRsI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:08 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 233872146E;
-        Tue,  3 Mar 2020 17:48:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94064208C3;
+        Tue,  3 Mar 2020 17:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257685;
-        bh=t0ILfPI1THySAeKMScXdX+yW20YuVW1b/Uuz9HQq564=;
+        s=default; t=1583257688;
+        bh=t+S2XrhfT3pYPEY8Yhnl8TEwlDJoicoGndjBbpEjWXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TahGh3qUtHJaIRm0It0vHgNQkb5fQz0Qptm3bxXg14wJt9wHH9yQOeqT0m+Cupwpp
-         WB+f4Hd8I05748FDnNsnVMI2VnkHLjjoAlkecTa+pVjOGaQPF2hNMZgy4wnJ92H5ac
-         la8tR59AEGeMRRr8sD3kUhH6wvQt9MWT+nN2JB+A=
+        b=FZ5ZIZoIMcYjeGdS6dKi0OvghRIzcp1IcX9pFMVgapWAigboOfbx92230ZzFw8qOY
+         w5sR+9M3kPhetQDHV6qNT24SZdogqapWYIIwdn9t4o0xfd9RcmRBL5SeqVxbto5UOB
+         eZmDQl+dA+Xyy2byLqaaNtw3tCtotp0HUMhXY4oE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Zden=C4=9Bk=20Rampas?= <zdenda.rampas@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 5.5 090/176] HID: ite: Only bind to keyboard USB interface on Acer SW5-012 keyboard dock
-Date:   Tue,  3 Mar 2020 18:42:34 +0100
-Message-Id: <20200303174315.209175263@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Korsnes <jkorsnes@cisco.com>,
+        Armando Visconti <armando.visconti@st.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: [PATCH 5.5 091/176] HID: core: fix off-by-one memset in hid_report_raw_event()
+Date:   Tue,  3 Mar 2020 18:42:35 +0100
+Message-Id: <20200303174315.347608869@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,61 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Johan Korsnes <jkorsnes@cisco.com>
 
-commit beae56192a2570578ae45050e73c5ff9254f63e6 upstream.
+commit 5ebdffd25098898aff1249ae2f7dbfddd76d8f8f upstream.
 
-Commit 8f18eca9ebc5 ("HID: ite: Add USB id match for Acer SW5-012 keyboard
-dock") added the USB id for the Acer SW5-012's keyboard dock to the
-hid-ite driver to fix the rfkill driver not working.
+In case a report is greater than HID_MAX_BUFFER_SIZE, it is truncated,
+but the report-number byte is not correctly handled. This results in a
+off-by-one in the following memset, causing a kernel Oops and ensuing
+system crash.
 
-Most keyboard docks with an ITE 8595 keyboard/touchpad controller have the
-"Wireless Radio Control" bits which need the special hid-ite driver on the
-second USB interface (the mouse interface) and their touchpad only supports
-mouse emulation, so using generic hid-input handling for anything but
-the "Wireless Radio Control" bits is fine. On these devices we simply bind
-to all USB interfaces.
+Note: With commit 8ec321e96e05 ("HID: Fix slab-out-of-bounds read in
+hid_field_extract") I no longer hit the kernel Oops as we instead fail
+"controlled" at probe if there is a report too long in the HID
+report-descriptor. hid_report_raw_event() is an exported symbol, so
+presumabely we cannot always rely on this being the case.
 
-But unlike other ITE8595 using keyboard docks, the Acer Aspire Switch 10
-(SW5-012)'s touchpad not only does mouse emulation it also supports
-HID-multitouch and all the keys including the "Wireless Radio Control"
-bits have been moved to the first USB interface (the keyboard intf).
-
-So we need hid-ite to handle the first (keyboard) USB interface and have
-it NOT bind to the second (mouse) USB interface so that that can be
-handled by hid-multitouch.c and we get proper multi-touch support.
-
-This commit changes the hid_device_id for the SW5-012 keyboard dock to
-only match on hid devices from the HID_GROUP_GENERIC group, this way
-hid-ite will not bind the the mouse/multi-touch interface which has
-HID_GROUP_MULTITOUCH_WIN_8 as group.
-This fixes the regression to mouse-emulation mode introduced by adding
-the keyboard dock USB id.
-
-Cc: stable@vger.kernel.org
-Fixes: 8f18eca9ebc5 ("HID: ite: Add USB id match for Acer SW5-012 keyboard dock")
-Reported-by: Zdeněk Rampas <zdenda.rampas@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Fixes: 966922f26c7f ("HID: fix a crash in hid_report_raw_event()
+                     function.")
+Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
+Cc: Armando Visconti <armando.visconti@st.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-ite.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/hid/hid-core.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/hid-ite.c
-+++ b/drivers/hid/hid-ite.c
-@@ -41,8 +41,9 @@ static const struct hid_device_id ite_de
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
- 	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
--	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
--			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
-+	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
-+		     USB_VENDOR_ID_SYNAPTICS,
-+		     USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(hid, ite_devices);
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -1741,7 +1741,9 @@ int hid_report_raw_event(struct hid_devi
+ 
+ 	rsize = ((report->size - 1) >> 3) + 1;
+ 
+-	if (rsize > HID_MAX_BUFFER_SIZE)
++	if (report_enum->numbered && rsize >= HID_MAX_BUFFER_SIZE)
++		rsize = HID_MAX_BUFFER_SIZE - 1;
++	else if (rsize > HID_MAX_BUFFER_SIZE)
+ 		rsize = HID_MAX_BUFFER_SIZE;
+ 
+ 	if (csize < rsize) {
 
 
