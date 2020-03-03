@@ -4,81 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18C90C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:13:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C2CC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D94EA21556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:12:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A236120863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:13:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uomHMbW9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Du9Qu22z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbgCCRMy (ORCPT
+        id S1730633AbgCCRMA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:12:54 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42791 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730664AbgCCRMG (ORCPT
+        Tue, 3 Mar 2020 12:12:00 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35932 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730037AbgCCRL6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:12:06 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z11so5314733wro.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:12:05 -0800 (PST)
+        Tue, 3 Mar 2020 12:11:58 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j16so5368998wrt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:11:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tOKDkyUmAMjWXMziJpbUMfDorD9PY/k8abOKzPT2TKY=;
-        b=uomHMbW9ekhiV44ysS9cyvZ9tL7y1E7JYc1HMpdfBMEbT9d5Ow3RKbO/B8VpiBo/ok
-         48kCLGVn+SmsTKdBNKKQxImm+QjMO4TsQsSwFmy+G9wTNd616cPPYznUNBWfAZWdcG98
-         UDiYvF7+Zr6yHblKJX0HN8NFZrPNNG+pfiJ7X5M+T2PUBMAKQWGQkoHPYWFZURCg9z3y
-         9/GWeSiAiAJJM+JT8N8d7OrrZZYT5KZkrpqg9BeuN6e7QX6FATpVOeI9bdnrsIT4tRq3
-         CckH1Ef/gk/QRw/ooSmH1yXzfkXe+/roCqZDcRAn/68HO1z8g873SF5KuYnxsPM8tcUP
-         13qQ==
+        bh=x14DHuiChMvzSWsadrwnTIhfZ4wDDTTqWq8bf9unaaI=;
+        b=Du9Qu22ztUZjSTVSiL24pPM+euHVU9XNSZ1i3LWBzI0AUSm/Ao+kgcYmbbdt5pvhsP
+         6QC93teKVb/8161KXakzCUEOaIX2xn1MQivBG2gac2uWTIrf+taYOXXZ8FbSeLhFrMSH
+         kMhpq4LM6M7QAG94hMiPypRM4D6JhfBSqJuP4BkKtGbuS18lYjuGbkB8lfsutFxN2oXm
+         XR6AyM3z3migAlB1dadLIRI4pUI0qYk605ohUdyjVf+ZAHVmMnNksAXC1p+7ULdaPMQn
+         wEh8nekBmI2nUIYS3KdAsKxyU+eT5VZuw5ZrYi7t0LUZMNcFKwtuewH2kmOpPdKlsUGF
+         Fhnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tOKDkyUmAMjWXMziJpbUMfDorD9PY/k8abOKzPT2TKY=;
-        b=YsAp9C8j1Sg58aivS2m2YwoFQbf0vCC1yBcetTSVdPtmFJrUvrwcFTgbFwzjrj9GnH
-         zyV/AmzTegEqVQEw+DaBrREChupxo5gVW2Q8g+Q67y60zicAG/GFNNB0BT7lVnuZNGau
-         5E9fOBbVxhZpqXpDXkJYKE9jmmi5ShvVqBnL0qwSJVtEzO2TiJOp4lACiMSHYjBItXAR
-         E6uFxxkmmdcUeNe33aOAuiS86Bhv5ygk5VDPaTmIrP5lNEnA9bOGo07dDxeoFRrJn+Jh
-         Zr3NRyjYPJMgvFcffu25G9pso8PbpFQvINNjRz46brm1OtP2ZcuStInkve3irDIAn/Dr
-         fDSA==
-X-Gm-Message-State: ANhLgQ10n3phD6XJqWKMQyRqZm5hQMAU58M1xWzaWk81yNog5M47Zmrn
-        Sg0CABrDQ1tD3O83i/SVqgm3KQ==
-X-Google-Smtp-Source: ADFU+vsxxytqy/j85IVjnrdfu0A9gIGsCA9PPaP2vsFxVyxsBQHwkxnO09aDb/KALLKDPd3+l8vjww==
-X-Received: by 2002:adf:f504:: with SMTP id q4mr6131687wro.28.1583255524715;
-        Tue, 03 Mar 2020 09:12:04 -0800 (PST)
+        bh=x14DHuiChMvzSWsadrwnTIhfZ4wDDTTqWq8bf9unaaI=;
+        b=YSO9ZDHXEqV3PJ3wuhVzvvhoAazxfQtxpqYEOqsMk9lIlptFCUZINzUYQet/I4oMVn
+         OgXIY5eC5/tXDCkfGUkEjHE6gVycEd9xIVCkUowVyWrYPSmIfh6tbww48zWjISNUW1DZ
+         aTN2eZTNnH26LYOEbv/sA6asBNj0YA7vqCfvQp6hYzdjsJ/eh/DnvnNP49ttbbJG9OnO
+         LELYzM3MvpPbmMMrdR2Q/qNNA2P4DCPwQRdwbl1s2SweEo3M78Zg39W+eW6DpCoXjyrF
+         vp4GCLP0Q1aqxJSiRM+k0E9yV0K/kJes/TJ4+Q7MDcGhP6aW+JLHrMozpv+he3be4aRm
+         61Cw==
+X-Gm-Message-State: ANhLgQ2zXC2wbfCB3QCp0s49CUh2gTgoLz8CHeTNExq2aAStP3oWWQhj
+        29weIaeZOAcfF1OVusTFY93S4A==
+X-Google-Smtp-Source: ADFU+vvAPi7jejs+NNjZQAyc2iu811clxwle31yQJY1UjLIPta/ye65qm3YuHtGd6NdgYrCY6eJuEQ==
+X-Received: by 2002:adf:9cca:: with SMTP id h10mr6767695wre.390.1583255516296;
+        Tue, 03 Mar 2020 09:11:56 -0800 (PST)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id z13sm5425319wrw.88.2020.03.03.09.12.03
+        by smtp.gmail.com with ESMTPSA id z13sm5425319wrw.88.2020.03.03.09.11.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 09:12:04 -0800 (PST)
+        Tue, 03 Mar 2020 09:11:55 -0800 (PST)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
         bjorn.andersson@linaro.org, robh@kernel.org
 Cc:     linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        ShuFan Lee <shufan_lee@richtek.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Yu Chen <chenyu56@huawei.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Jun Li <lijun.kernel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        devicetree@vger.kernel.org
-Subject: [PATCH v7 10/18] usb: dwc3: Add support for usb-conn-gpio connectors
-Date:   Tue,  3 Mar 2020 17:11:51 +0000
-Message-Id: <20200303171159.246992-11-bryan.odonoghue@linaro.org>
+        devicetree@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH v7 04/18] dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
+Date:   Tue,  3 Mar 2020 17:11:45 +0000
+Message-Id: <20200303171159.246992-5-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
 References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
@@ -89,94 +80,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the ability to probe and enumerate a connector based on
-usb-conn-gpio.
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 
-You would use usb-conn-gpio when a regulator in your system provides VBUS
-directly to the connector instead of supplying via the USB PHY.
+Binding description for Qualcomm's Synopsys 1.0.0 SuperSpeed PHY. This PHY
+appears in a number of SoCs on various flavors of 20nm and 28nm nodes.
 
-The parent device must have the "usb-role-switch" property, so that when
-the usb-conn-gpio driver calls usb_role_switch_set_role() the notification
-in dwc3 will run and the block registers will be updated to match the state
-detected at the connector.
+This commit adds information related to the 28nm node only.
 
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+definitions.
+
+[bod: converted to yaml format]
+
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-CC: ShuFan Lee <shufan_lee@richtek.com>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Yu Chen <chenyu56@huawei.com>
-Cc: Felipe Balbi <balbi@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Jun Li <lijun.kernel@gmail.com>
-Cc: Valentin Schneider <valentin.schneider@arm.com>
-Cc: Jack Pham <jackp@codeaurora.org>
-Cc: linux-usb@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
 Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- drivers/usb/dwc3/drd.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+ .../devicetree/bindings/phy/qcom,usb-ss.yaml  | 83 +++++++++++++++++++
+ 1 file changed, 83 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
 
-diff --git a/drivers/usb/dwc3/drd.c b/drivers/usb/dwc3/drd.c
-index 331c6e997f0c..2ec1ae30bcc5 100644
---- a/drivers/usb/dwc3/drd.c
-+++ b/drivers/usb/dwc3/drd.c
-@@ -11,6 +11,7 @@
- #include <linux/of_graph.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/of_platform.h>
- 
- #include "debug.h"
- #include "core.h"
-@@ -538,9 +539,30 @@ static int dwc3_setup_role_switch(struct dwc3 *dwc)
- 	dwc3_set_mode(dwc, DWC3_GCTL_PRTCAP_DEVICE);
- 	return 0;
- }
+diff --git a/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml b/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+new file mode 100644
+index 000000000000..bd1388d62ce0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
+@@ -0,0 +1,83 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/phy/qcom,usb-ss.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
 +
-+static int dwc3_register_gpio_usb_connector(struct dwc3 *dwc)
-+{
-+	struct device		*dev = dwc->dev;
-+	struct device_node	*np = dev->of_node, *conn_np;
-+	int			ret = 0;
++title: Qualcomm Synopsys 1.0.0 SuperSpeed USB PHY
 +
-+	conn_np = of_get_child_by_name(np, "connector");
-+	if (!conn_np) {
-+		dev_dbg(dev, "no connector child node specified\n");
-+		goto done;
-+	}
++maintainers:
++  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 +
-+	if (of_device_is_compatible(conn_np, "gpio-usb-b-connector"))
-+		ret = of_platform_populate(np, NULL, NULL, dev);
-+done:
-+	of_node_put(conn_np);
-+	return ret;
-+}
++description: |
++  Qualcomm Synopsys 1.0.0 SuperSpeed USB PHY
 +
- #else
- #define ROLE_SWITCH 0
- #define dwc3_setup_role_switch(x) 0
-+#define dwc3_register_gpio_usb_connector(x) 0
- #endif
- 
- int dwc3_drd_init(struct dwc3 *dwc)
-@@ -556,6 +578,9 @@ int dwc3_drd_init(struct dwc3 *dwc)
- 		ret = dwc3_setup_role_switch(dwc);
- 		if (ret < 0)
- 			return ret;
-+		ret = dwc3_register_gpio_usb_connector(dwc);
-+		if (ret < 0)
-+			return ret;
- 	} else if (dwc->edev) {
- 		dwc->edev_nb.notifier_call = dwc3_drd_notifier;
- 		ret = extcon_register_notifier(dwc->edev, EXTCON_USB_HOST,
++properties:
++  compatible:
++    enum:
++      - qcom,usb-ss-28nm-phy
++
++  reg:
++    maxItems: 1
++
++  "#phy-cells":
++    const: 0
++
++  clocks:
++    items:
++      - description: rpmcc clock
++      - description: PHY AHB clock
++      - description: SuperSpeed pipe clock
++
++  clock-names:
++    items:
++      - const: ref
++      - const: ahb
++      - const: pipe
++
++  vdd-supply:
++    description: phandle to the regulator VDD supply node.
++
++  vdda1p8-supply:
++    description: phandle to the regulator 1.8V supply node.
++
++  resets:
++    items:
++      - description: COM reset
++      - description: PHY reset line
++
++  reset-names:
++    items:
++      - const: com
++      - const: phy
++
++required:
++  - compatible
++  - reg
++  - "#phy-cells"
++  - clocks
++  - clock-names
++  - vdd-supply
++  - vdda1p8-supply
++
++additionalProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/clock/qcom,gcc-qcs404.h>
++    #include <dt-bindings/clock/qcom,rpmcc.h>
++    usb3_phy: usb3-phy@78000 {
++        compatible = "qcom,usb-ss-28nm-phy";
++        reg = <0x78000 0x400>;
++        #phy-cells = <0>;
++        clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
++                 <&gcc GCC_USB_HS_PHY_CFG_AHB_CLK>,
++                 <&gcc GCC_USB3_PHY_PIPE_CLK>;
++        clock-names = "ref", "ahb", "pipe";
++        resets = <&gcc GCC_USB3_PHY_BCR>,
++                 <&gcc GCC_USB3PHY_PHY_BCR>;
++        reset-names = "com", "phy";
++        vdd-supply = <&vreg_l3_1p05>;
++        vdda1p8-supply = <&vreg_l5_1p8>;
++    };
++...
 -- 
 2.25.1
 
