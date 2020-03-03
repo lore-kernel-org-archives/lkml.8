@@ -2,354 +2,141 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC413C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67A38C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 895B420848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:54:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2014620848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:57:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="Qn/dIOkd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729303AbgCCNyg (ORCPT
+        id S1729189AbgCCN54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:54:36 -0500
-Received: from mga18.intel.com ([134.134.136.126]:4960 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgCCNyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:54:35 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 05:54:35 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="386790935"
-Received: from nntpdsd52-183.inn.intel.com ([10.125.52.183])
-  by orsmga004.jf.intel.com with ESMTP; 03 Mar 2020 05:54:31 -0800
-From:   roman.sudarikov@linux.intel.com
-To:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org, eranian@google.com,
-        bgregg@netflix.com, ak@linux.intel.com, kan.liang@linux.intel.com
-Cc:     alexander.antonov@intel.com, roman.sudarikov@linux.intel.com
-Subject: [PATCH v7 3/3] =?UTF-8?q?perf=20x86:=20Exposing=20an=20Uncore=20u?= =?UTF-8?q?nit=20to=20PMON=20for=20Intel=20Xeon=C2=AE=20server=20platform?=
-Date:   Tue,  3 Mar 2020 16:54:18 +0300
-Message-Id: <20200303135418.9621-4-roman.sudarikov@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20200303135418.9621-1-roman.sudarikov@linux.intel.com>
-References: <20200303135418.9621-1-roman.sudarikov@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Tue, 3 Mar 2020 08:57:56 -0500
+Received: from mail-mw2nam10on2080.outbound.protection.outlook.com ([40.107.94.80]:6067
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727121AbgCCN54 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:57:56 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MMjSFjtr8usF4aVVsXnWw0PjcNQC406OheZCZUryAzvgR0Zi/XNI44auGC3hEkTqp8wiSdYxYGbUtDS/ND3mwPJ5UX4CJu1JD9FI7q6rFaEUMNuos0ltGuPXRS+ffFyiyKLJun9kJwvYTCiQYuqGLt7REMv0iPzyo0U3qNMH9ffTTZupsPKPS+ACf4q8HMxiUrSNd7MIV0Lml2eDC0vhXKFjWOX3Vy320SsmRfupdUK2ieqPUn2wtLA4sFE09b/v+UaYeLbL1KqM6NeSiA+DSnQaZcLsj31Yiu6Cae8ZiHYnLyq7mu2LQRLyNw4uEtb+m6/w6hGevwujj1b8cNNiKw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WJWKSBT/aIMsiaHAo7Xx1K4koZvC1HU6IjSKPPkAzPc=;
+ b=YRIhMhCRXBt4rZQlQNjI1p7F/n7VKo1L5Jfuhe4q/0QrYtGNuiQxPiqmWVfVFQplbgsrgw7MCAgDOoqb8awYtUG2pIT+/311aDVFOp1vtKDkfS1/0nO/4+SJtWikAjVLYC65qbOqLqlhIJ2CXMAz/ojXTIO6zf7snHrpcReKTWkIC2tdwPyWaDaPd/uRegzYjAnSNUz701iWG7svtxF8uB8chqrsGxoD0JgCRRsS+h5Q2S5r8AC142dr9W5G1atPtYQT3SbrDVSGm1RPUmUVzGy3yh3EaelT0J939Cv5uHhKymrnofYdmYnM7LIusIsWM+6mnweiZAW416hSKKAeow==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WJWKSBT/aIMsiaHAo7Xx1K4koZvC1HU6IjSKPPkAzPc=;
+ b=Qn/dIOkdChYTk6CQsRiayZFxY4H1DwbtoLvNCW+ciBrOcMkM1lY/s+Q2pZ7TJHDezH6/MqcO/Kd3TQ206Nd1C3jWX9w1e9gxV+he5ovz6s932+KzvB92VrX5RgtOWywAdtDihJS3dSjT1WQ+XFKmTl3x8H0ZJ2eqsl0aRm9oQ8Q=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=John.Allen@amd.com; 
+Received: from SN1PR12MB2448.namprd12.prod.outlook.com (2603:10b6:802:28::23)
+ by SN1PR12MB2349.namprd12.prod.outlook.com (2603:10b6:802:2a::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Tue, 3 Mar
+ 2020 13:57:53 +0000
+Received: from SN1PR12MB2448.namprd12.prod.outlook.com
+ ([fe80::4064:dc7:d9b9:1f64]) by SN1PR12MB2448.namprd12.prod.outlook.com
+ ([fe80::4064:dc7:d9b9:1f64%7]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
+ 13:57:53 +0000
+From:   John Allen <john.allen@amd.com>
+To:     linux-crypto@vger.kernel.org
+Cc:     thomas.lendacky@amd.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, brijesh.singh@amd.com, bp@suse.de,
+        linux-kernel@vger.kernel.org, John Allen <john.allen@amd.com>
+Subject: [PATCH 1/2] crypto/ccp: Cleanup misc_dev on sev_exit()
+Date:   Tue,  3 Mar 2020 07:57:23 -0600
+Message-Id: <20200303135724.14060-2-john.allen@amd.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200303135724.14060-1-john.allen@amd.com>
+References: <20200303135724.14060-1-john.allen@amd.com>
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: DM5PR07CA0060.namprd07.prod.outlook.com
+ (2603:10b6:4:ad::25) To SN1PR12MB2448.namprd12.prod.outlook.com
+ (2603:10b6:802:28::23)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mojo.amd.com (165.204.77.1) by DM5PR07CA0060.namprd07.prod.outlook.com (2603:10b6:4:ad::25) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18 via Frontend Transport; Tue, 3 Mar 2020 13:57:52 +0000
+X-Mailer: git-send-email 2.24.1
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 8c4501bd-b91b-441c-d26e-08d7bf7ade3a
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2349:|SN1PR12MB2349:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB234983338C8D48C957D754169AE40@SN1PR12MB2349.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 03319F6FEF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(189003)(199004)(316002)(478600001)(2616005)(956004)(8936002)(81166006)(81156014)(6916009)(8676002)(86362001)(44832011)(36756003)(26005)(186003)(16526019)(6486002)(6666004)(1076003)(66946007)(66476007)(4326008)(5660300002)(2906002)(52116002)(7696005)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR12MB2349;H:SN1PR12MB2448.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KGdzdEGEtuQlPs+2+3mgryrakLi/xNL285XmpE2EQRLT1NkjJv3Il0331yGlJi72+xiz4f3COy3ar64q9/kFGcNOc04FB4Tu4hYbrDYUI2FjeqfA3gSUp6+rITq1gkeStlm5ifp+LKcInvHJqIxW1kxMkaBMzXOWjoGKKT1u+I9TMGjUF5zDbecRbqQzukIafzS+SU4HFwwIihMrm46oqzqeFd0+MmYRoINnprGdtv9Pwb0EtCgXiuCLbeeJH89w7gm1IDjZirhAr7vmQy1WxkzzfmG0s7jZFgyhzEiGPJkdT56XVvOvOjPeuB1pc23Pkfr6OESja7pUv2ojlLg+cZJvz05gZSFVAt/LgEU2iQIvAgFjFC2W5CGAOK2eimU5EVF9J/JvvJbPKYyihtUanmhgD19Gwu8J79NwS0Z5NCnx2LVtT9clVFfm7CtBYNjh
+X-MS-Exchange-AntiSpam-MessageData: bnf2N+2dWdY9fBPDqT1ogUmwceCEGw4WEnWGpsqcPxmIicKPzTDpLGwjer9OvomBMD6IPfEc7lG9L1gKl17+IT1HxOhO5bgixroBNwnfj3KlMXB+SVACiTu2bkTi+rOPbk+dY2ktUAralCANinr+iw==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8c4501bd-b91b-441c-d26e-08d7bf7ade3a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 13:57:53.5174
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Qqi3NomNjbJMU7wPxAZB1oEQCZGdTubCLDQzRmOlUMqVm5Oq9RkS2t+ir7WRvIIR+ZsJCGXyDoL4tzH9SFPlxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2349
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+Explicitly free and clear misc_dev in sev_exit(). Since devm_kzalloc()
+associates misc_dev with the first device that gets probed, change from
+devm_kzalloc() to kzalloc() and explicitly free memory in sev_exit() as
+the first device probed is not guaranteed to be the last device released.
+To ensure that the variable gets properly set to NULL, remove the local
+definition of misc_dev.
 
-Current version supports a server line starting Intel® Xeon® Processor
-Scalable Family and introduces mapping for IIO Uncore units only.
-Other units can be added on demand.
-
-IIO stack to PMON mapping is exposed through:
-    /sys/devices/uncore_iio_<pmu_idx>/dieX
-    where dieX is file which holds "Segment:Root Bus" for PCIe root port,
-    which can be monitored by that IIO PMON block.
-
-Details are explained in Documentation/ABI/testing/sysfs-devices-mapping
-
-Co-developed-by: Alexander Antonov <alexander.antonov@intel.com>
-Signed-off-by: Alexander Antonov <alexander.antonov@intel.com>
-Signed-off-by: Roman Sudarikov <roman.sudarikov@linux.intel.com>
+Fixes: 200664d5237f ("crypto: ccp: Add Secure Encrypted Virtualization (SEV) command support")
+Signed-off-by: John Allen <john.allen@amd.com>
 ---
- .../ABI/testing/sysfs-devices-mapping         |  33 +++
- arch/x86/events/intel/uncore.h                |   9 +
- arch/x86/events/intel/uncore_snbep.c          | 193 ++++++++++++++++++
- 3 files changed, 235 insertions(+)
- create mode 100644 Documentation/ABI/testing/sysfs-devices-mapping
+ drivers/crypto/ccp/sev-dev.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/ABI/testing/sysfs-devices-mapping b/Documentation/ABI/testing/sysfs-devices-mapping
-new file mode 100644
-index 000000000000..16f4e900be7b
---- /dev/null
-+++ b/Documentation/ABI/testing/sysfs-devices-mapping
-@@ -0,0 +1,33 @@
-+What:           /sys/devices/uncore_iio_x/dieX
-+Date:           February 2020
-+Contact:        Roman Sudarikov <roman.sudarikov@linux.intel.com>
-+Description:
-+                Each IIO stack (PCIe root port) has its own IIO PMON block, so
-+                each dieX file (where X is die number) holds "Segment:Root Bus"
-+                for PCIe root port, which can be monitored by that IIO PMON
-+                block.
-+                For example, on 4-die Xeon platform with up to 6 IIO stacks per
-+                die and, therefore, 6 IIO PMON blocks per die, the mapping of
-+                IIO PMON block 0 exposes as the following:
-+
-+                $ ls /sys/devices/uncore_iio_0/die*
-+                -r--r--r-- /sys/devices/uncore_iio_0/die0
-+                -r--r--r-- /sys/devices/uncore_iio_0/die1
-+                -r--r--r-- /sys/devices/uncore_iio_0/die2
-+                -r--r--r-- /sys/devices/uncore_iio_0/die3
-+
-+                $ tail /sys/devices/uncore_iio_0/die*
-+                ==> /sys/devices/uncore_iio_0/die0 <==
-+                0000:00
-+                ==> /sys/devices/uncore_iio_0/die1 <==
-+                0000:40
-+                ==> /sys/devices/uncore_iio_0/die2 <==
-+                0000:80
-+                ==> /sys/devices/uncore_iio_0/die3 <==
-+                0000:c0
-+
-+                Which means:
-+                IIO PMU 0 on die 0 belongs to PCI RP on bus 0x00, domain 0x0000
-+                IIO PMU 0 on die 1 belongs to PCI RP on bus 0x40, domain 0x0000
-+                IIO PMU 0 on die 2 belongs to PCI RP on bus 0x80, domain 0x0000
-+                IIO PMU 0 on die 3 belongs to PCI RP on bus 0xc0, domain 0x0000
-\ No newline at end of file
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index c1da2b8218cd..eb93b8676f34 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -174,6 +174,15 @@ int uncore_pcibus_to_physid(struct pci_bus *bus);
- ssize_t uncore_event_show(struct kobject *kobj,
- 			  struct kobj_attribute *attr, char *buf);
+diff --git a/drivers/crypto/ccp/sev-dev.c b/drivers/crypto/ccp/sev-dev.c
+index e467860f797d..aa591dae067c 100644
+--- a/drivers/crypto/ccp/sev-dev.c
++++ b/drivers/crypto/ccp/sev-dev.c
+@@ -896,9 +896,9 @@ EXPORT_SYMBOL_GPL(sev_guest_df_flush);
  
-+static inline struct intel_uncore_pmu *dev_to_uncore_pmu(struct device *dev)
-+{
-+	return container_of(dev_get_drvdata(dev), struct intel_uncore_pmu, pmu);
-+}
-+
-+#define to_device_attribute(n)	container_of(n, struct device_attribute, attr)
-+#define to_dev_ext_attribute(n)	container_of(n, struct dev_ext_attribute, attr)
-+#define attr_to_ext_attr(n)	to_dev_ext_attribute(to_device_attribute(n))
-+
- extern int __uncore_max_dies;
- #define uncore_max_dies()	(__uncore_max_dies)
+ static void sev_exit(struct kref *ref)
+ {
+-	struct sev_misc_dev *misc_dev = container_of(ref, struct sev_misc_dev, refcount);
+-
+ 	misc_deregister(&misc_dev->misc);
++	kfree(misc_dev);
++	misc_dev = NULL;
+ }
  
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index ad20220af303..5e15425c5133 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -273,6 +273,30 @@
- #define SKX_CPUNODEID			0xc0
- #define SKX_GIDNIDMAP			0xd4
+ static int sev_misc_init(struct sev_device *sev)
+@@ -916,7 +916,7 @@ static int sev_misc_init(struct sev_device *sev)
+ 	if (!misc_dev) {
+ 		struct miscdevice *misc;
  
-+/*
-+ * The CPU_BUS_NUMBER MSR returns the values of the respective CPUBUSNO CSR
-+ * that BIOS programmed. MSR has package scope.
-+ * |  Bit  |  Default  |  Description
-+ * | [63]  |    00h    | VALID - When set, indicates the CPU bus
-+ *                       numbers have been initialized. (RO)
-+ * |[62:48]|    ---    | Reserved
-+ * |[47:40]|    00h    | BUS_NUM_5 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(5). (RO)
-+ * |[39:32]|    00h    | BUS_NUM_4 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(4). (RO)
-+ * |[31:24]|    00h    | BUS_NUM_3 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(3). (RO)
-+ * |[23:16]|    00h    | BUS_NUM_2 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(2). (RO)
-+ * |[15:8] |    00h    | BUS_NUM_1 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(1). (RO)
-+ * | [7:0] |    00h    | BUS_NUM_0 — Return the bus number BIOS assigned
-+ *                       CPUBUSNO(0). (RO)
-+ */
-+#define SKX_MSR_CPU_BUS_NUMBER		0x300
-+#define SKX_MSR_CPU_BUS_VALID_BIT	(1ULL << 63)
-+#define BUS_NUM_STRIDE			8
-+
- /* SKX CHA */
- #define SKX_CHA_MSR_PMON_BOX_FILTER_TID		(0x1ffULL << 0)
- #define SKX_CHA_MSR_PMON_BOX_FILTER_LINK	(0xfULL << 9)
-@@ -3575,6 +3599,172 @@ static struct intel_uncore_ops skx_uncore_iio_ops = {
- 	.read_counter		= uncore_msr_read_counter,
- };
+-		misc_dev = devm_kzalloc(dev, sizeof(*misc_dev), GFP_KERNEL);
++		misc_dev = kzalloc(sizeof(*misc_dev), GFP_KERNEL);
+ 		if (!misc_dev)
+ 			return -ENOMEM;
  
-+static inline u8 skx_iio_stack(struct intel_uncore_pmu *pmu, int die)
-+{
-+	return pmu->type->topology[die] >> (pmu->pmu_idx * BUS_NUM_STRIDE);
-+}
-+
-+static umode_t
-+skx_iio_mapping_visible(struct kobject *kobj, struct attribute *attr, int die)
-+{
-+	struct intel_uncore_pmu *pmu = dev_to_uncore_pmu(kobj_to_dev(kobj));
-+
-+	// Root bus 0x00 is valid only for die 0 AND pmu_idx = 0.
-+	return (!skx_iio_stack(pmu, die) && pmu->pmu_idx) ? 0 : attr->mode;
-+}
-+
-+static ssize_t skx_iio_mapping_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
-+{
-+	struct pci_bus *bus = pci_find_next_bus(NULL);
-+	struct intel_uncore_pmu *uncore_pmu = dev_to_uncore_pmu(dev);
-+	struct dev_ext_attribute *ea = to_dev_ext_attribute(attr);
-+	long die = (long)ea->var;
-+
-+	/*
-+	 * Current implementation is for single segment configuration hence it's
-+	 * safe to take the segment value from the first available root bus.
-+	 */
-+	return sprintf(buf, "%04x:%02x\n", pci_domain_nr(bus),
-+					   skx_iio_stack(uncore_pmu, die));
-+}
-+
-+static int skx_msr_cpu_bus_read(int cpu, u64 *topology)
-+{
-+	u64 msr_value;
-+
-+	if (rdmsrl_on_cpu(cpu, SKX_MSR_CPU_BUS_NUMBER, &msr_value) ||
-+			!(msr_value & SKX_MSR_CPU_BUS_VALID_BIT))
-+		return -ENXIO;
-+
-+	*topology = msr_value;
-+
-+	return 0;
-+}
-+
-+static int die_to_cpu(int die)
-+{
-+	int res = 0, cpu, current_die;
-+	/*
-+	 * Using cpus_read_lock() to ensure cpu is not going down between
-+	 * looking at cpu_online_mask.
-+	 */
-+	cpus_read_lock();
-+	for_each_online_cpu(cpu) {
-+		current_die = topology_logical_die_id(cpu);
-+		if (current_die == die) {
-+			res = cpu;
-+			break;
-+		}
-+	}
-+	cpus_read_unlock();
-+	return res;
-+}
-+
-+static int skx_iio_get_topology(struct intel_uncore_type *type)
-+{
-+	int i, ret;
-+	struct pci_bus *bus = NULL;
-+
-+	/*
-+	 * Verified single-segment environments only; disabled for multiple
-+	 * segment topologies for now except VMD domains.
-+	 * VMD domains start at 0x10000 to not clash with ACPI _SEG domains.
-+	 */
-+	while ((bus = pci_find_next_bus(bus))
-+		&& (!pci_domain_nr(bus) || pci_domain_nr(bus) > 0xffff))
-+		;
-+	if (bus)
-+		return -EPERM;
-+
-+	type->topology = kcalloc(uncore_max_dies(), sizeof(u64), GFP_KERNEL);
-+	if (!type->topology)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < uncore_max_dies(); i++) {
-+		ret = skx_msr_cpu_bus_read(die_to_cpu(i), &type->topology[i]);
-+		if (ret) {
-+			kfree(type->topology);
-+			type->topology = NULL;
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static struct attribute_group skx_iio_mapping_group = {
-+	.is_visible	= skx_iio_mapping_visible,
-+};
-+
-+const static struct attribute_group *skx_iio_attr_update[] = {
-+	&skx_iio_mapping_group,
-+	NULL,
-+};
-+
-+static int skx_iio_set_mapping(struct intel_uncore_type *type)
-+{
-+	char buf[64];
-+	int ret;
-+	long die = -1;
-+	struct attribute **attrs = NULL;
-+	struct dev_ext_attribute *eas = NULL;
-+
-+	ret = skx_iio_get_topology(type);
-+	if (ret)
-+		return ret;
-+
-+	// One more for NULL.
-+	attrs = kzalloc((uncore_max_dies() + 1) * sizeof(*attrs), GFP_KERNEL);
-+	if (!attrs) {
-+		kfree(type->topology);
-+		return -ENOMEM;
-+	}
-+
-+	eas = kzalloc(sizeof(*eas) * uncore_max_dies(), GFP_KERNEL);
-+	if (!eas)
-+		goto err;
-+
-+	for (die = 0; die < uncore_max_dies(); die++) {
-+		sprintf(buf, "die%ld", die);
-+		sysfs_attr_init(&eas[die].attr.attr);
-+		eas[die].attr.attr.name = kstrdup(buf, GFP_KERNEL);
-+		if (!eas[die].attr.attr.name)
-+			goto err;
-+		eas[die].attr.attr.mode = 0444;
-+		eas[die].attr.show = skx_iio_mapping_show;
-+		eas[die].attr.store = NULL;
-+		eas[die].var = (void *)die;
-+		attrs[die] = &eas[die].attr.attr;
-+	}
-+	skx_iio_mapping_group.attrs = attrs;
-+
-+	return 0;
-+err:
-+	for (; die >= 0; die--)
-+		kfree(eas[die].attr.attr.name);
-+	kfree(eas);
-+	kfree(attrs);
-+	kfree(type->topology);
-+	type->attr_update = NULL;
-+	return -ENOMEM;
-+}
-+
-+static void skx_iio_cleanup_mapping(struct intel_uncore_type *type)
-+{
-+	struct attribute **attr = skx_iio_mapping_group.attrs;
-+
-+	if (!attr)
-+		return;
-+
-+	for (; *attr; attr++)
-+		kfree((*attr)->name);
-+	kfree(attr_to_ext_attr(*skx_iio_mapping_group.attrs));
-+	kfree(skx_iio_mapping_group.attrs);
-+	skx_iio_mapping_group.attrs = NULL;
-+	kfree(type->topology);
-+}
-+
- static struct intel_uncore_type skx_uncore_iio = {
- 	.name			= "iio",
- 	.num_counters		= 4,
-@@ -3589,6 +3779,9 @@ static struct intel_uncore_type skx_uncore_iio = {
- 	.constraints		= skx_uncore_iio_constraints,
- 	.ops			= &skx_uncore_iio_ops,
- 	.format_group		= &skx_uncore_iio_format_group,
-+	.attr_update		= skx_iio_attr_update,
-+	.set_mapping		= skx_iio_set_mapping,
-+	.cleanup_mapping	= skx_iio_cleanup_mapping,
- };
- 
- enum perf_uncore_iio_freerunning_type_id {
 -- 
-2.19.1
+2.18.2
 
