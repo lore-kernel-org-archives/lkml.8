@@ -2,98 +2,121 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F25DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF09DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34EA62072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:31:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HVv0BoVS"
+	by mail.kernel.org (Postfix) with ESMTP id 9948120717
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgCCEbY (ORCPT
+        id S1727234AbgCCEb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:31:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43114 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726859AbgCCEbX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:31:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583209883;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=G7PTv7USExYEn8kuZRYNfAsmaeP7hh+IuVMoTsdTys0=;
-        b=HVv0BoVSirTjsKnuQequpaiMqjxLkSz65Fn2sLod+QPL2gngbuSQTK8t9BcV5CvQ6+IPuc
-        AN4NU0Mf5Fi3XTQN/sabcmr1guYcrzN65Zi8NbBPelMlWYwwwiJL2hQjy1HYI4PH4pMCyr
-        8ohf63MUO/1DM5LEkt+XNKsjdTq3cI8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-177-ATO5EeQENWy1aM7HvrAlrw-1; Mon, 02 Mar 2020 23:31:19 -0500
-X-MC-Unique: ATO5EeQENWy1aM7HvrAlrw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 98B7D8017DF;
-        Tue,  3 Mar 2020 04:31:17 +0000 (UTC)
-Received: from t490s (ovpn-116-88.phx2.redhat.com [10.3.116.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 301501001B2C;
-        Tue,  3 Mar 2020 04:31:16 +0000 (UTC)
-Date:   Mon, 2 Mar 2020 23:31:13 -0500
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Salter <msalter@redhat.com>,
-        Jon Masters <jcm@jonmasters.org>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        Michal Hocko <mhocko@kernel.org>, QI Fuli <qi.fuli@fujitsu.com>
-Subject: Re: [PATCH 2/3] arm64: select CPUMASK_OFFSTACK if NUMA
-Message-ID: <20200303043113.GB94763@t490s>
-References: <20200223192520.20808-1-aarcange@redhat.com>
- <20200223192520.20808-3-aarcange@redhat.com>
+        Mon, 2 Mar 2020 23:31:56 -0500
+Received: from mga06.intel.com ([134.134.136.31]:55138 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726859AbgCCEb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 23:31:56 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 20:31:55 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
+   d="scan'208";a="243458952"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 20:31:54 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j8zDl-0006TO-DM; Tue, 03 Mar 2020 12:31:53 +0800
+Date:   Tue, 3 Mar 2020 12:31:23 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 2/2] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
+Message-ID: <202003031201.WdZ9GaGO%lkp@intel.com>
+References: <20200302175135.269397-3-dima@arista.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200223192520.20808-3-aarcange@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200302175135.269397-3-dima@arista.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 02:25:19PM -0500, Andrea Arcangeli wrote:
-> It's unclear why normally CPUMASK_OFFSTACK can only be manually
-> configured "if DEBUG_PER_CPU_MAPS" which is not an option meant to be
-> enabled on enterprise arm64 kernels.
-> 
-> The default enterprise kernels NR_CPUS is 4096 which is fairly large.
-> So it'll save some RAM and it'll increase reliability to select
-> CPUMASK_OFFSET at least when NUMA is selected and a large NR_CPUS is
-> to be expected.
-> 
-> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-> ---
->  arch/arm64/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 0b30e884e088..882887e65394 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -955,6 +955,7 @@ config NUMA
->  	bool "Numa Memory Allocation and Scheduler Support"
->  	select ACPI_NUMA if ACPI
->  	select OF_NUMA
-> +	select CPUMASK_OFFSTACK
->  	help
->  	  Enable NUMA (Non Uniform Memory Access) support.
-> 
+Hi Dmitry,
 
-Acked-by: Rafael Aquini <aquini@redhat.com>
+Thank you for the patch! Perhaps something to improve:
 
+[auto build test WARNING on tty/tty-testing]
+[also build test WARNING on usb/usb-testing linus/master v5.6-rc4 next-20200302]
+[cannot apply to linux/master]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Dmitry-Safonov/serial-sysrq-Add-MAGIC_SYSRQ_SERIAL_SEQUENCE/20200303-041809
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+New smatch warnings:
+drivers/tty/serial/serial_core.c:3123 uart_try_toggle_sysrq() warn: unsigned '++port->sysrq_seq' is never less than zero.
+
+Old smatch warnings:
+drivers/tty/serial/serial_core.c:298 uart_shutdown() error: we previously assumed 'uport' could be null (see line 294)
+drivers/tty/serial/serial_core.c:2741 iomem_base_show() warn: argument 4 to %lX specifier is cast from pointer
+
+vim +3123 drivers/tty/serial/serial_core.c
+
+  3099	
+  3100	/**
+  3101	 *	uart_try_toggle_sysrq - Enables SysRq from serial line
+  3102	 *	@port: uart_port structure where char(s) after BREAK met
+  3103	 *	@ch: new character in the sequence after received BREAK
+  3104	 *
+  3105	 *	Enables magic SysRq when the required sequence is met on port
+  3106	 *	(see CONFIG_MAGIC_SYSRQ_SERIAL_SEQUENCE).
+  3107	 *
+  3108	 *	Returns false if @ch is out of enabling sequence and should be
+  3109	 *	handled some other way, true if @ch was consumed.
+  3110	 */
+  3111	static bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
+  3112	{
+  3113		if (ARRAY_SIZE(sysrq_toggle_seq) <= 1)
+  3114			return false;
+  3115	
+  3116		BUILD_BUG_ON(ARRAY_SIZE(sysrq_toggle_seq) >= U8_MAX);
+  3117		if (sysrq_toggle_seq[port->sysrq_seq] != ch) {
+  3118			port->sysrq_seq = 0;
+  3119			return false;
+  3120		}
+  3121	
+  3122		/* Without the last \0 */
+> 3123		if (++port->sysrq_seq < (ARRAY_SIZE(sysrq_toggle_seq) - 1)) {
+  3124			port->sysrq = jiffies + SYSRQ_TIMEOUT;
+  3125			return true;
+  3126		}
+  3127	
+  3128		schedule_work(&sysrq_enable_work);
+  3129	
+  3130		port->sysrq = 0;
+  3131		return true;
+  3132	}
+  3133	#else
+  3134	static inline bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
+  3135	{
+  3136		return false;
+  3137	}
+  3138	#endif
+  3139	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
