@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E25A1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E068BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE46020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9FCB208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257740;
-	bh=06zphrd16BCYMlWwmetBuNSFfj4P02ROA5ONAvY8z00=;
+	s=default; t=1583257743;
+	bh=rMQn7kjsa7T0S3IBhZrsTg2HDBVaXevtNP7v9XkF4Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jt3j85fENut8KiLILptj3bUACuRytdsNK9/2QSNd6zu41ShyWBuAXD9X+6+dt8hK7
-	 4pCzFmZ4AiaEmj3zfxCRICY7fyDOb3L01Rpe9yAPNtLmqGG4P6G3oDfjma5x50HDuw
-	 pjZZANQGnjf7PDH8KlD6G4znScZ2H/0cnigziyj8=
+	b=Q2N0uXibQsJRNBRBiLGJjl3ezSitF7Lsnv7PB5WVspEsta1TXkobenXV2wAKIi8P/
+	 PD1eqBKalOegTp7A4WxKVCWBnYQf9xKIrkNv61i90HxkWOTFtyUCN8m1DWB+zMS9MN
+	 XaTPvSYjI/jdwRvT2rZHPS5gOJpn84PM40CJn5Fk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731706AbgCCRs7 (ORCPT
+        id S1730503AbgCCRtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:48:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56138 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:49:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731696AbgCCRs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:56 -0500
+        id S1731702AbgCCRs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84D2F20870;
-        Tue,  3 Mar 2020 17:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F106F20870;
+        Tue,  3 Mar 2020 17:48:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257735;
-        bh=06zphrd16BCYMlWwmetBuNSFfj4P02ROA5ONAvY8z00=;
+        s=default; t=1583257737;
+        bh=rMQn7kjsa7T0S3IBhZrsTg2HDBVaXevtNP7v9XkF4Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QqrFOUzvOgh/3WHHni6OsQpnuu5+5to1yRqxJQL4XSXxhPX9Kx1N9+kCIbVPDi5px
-         UI13658hCrKzH5PAH60KqSNCDsA9vhCeKZbHci8lAOnnSlWxFiTroeodLMKWEcDHUp
-         SvtJYIHhVfLTEtHTMc/7tOUQJA3yhRzoF4zq0LYo=
+        b=l08/7ShVYV1H1oGMAuCJdOEHAou/6kB0A3IU+bhwrKxxHvQOpP/uIXwxQxbba70ZM
+         22OogBjUKIDB5DoU2M6xHfCLNaXCm2VUJNJ6wajMigX/IKYqw04eEfD9g6LNVAiSCC
+         TitTdc3V69YxdA51c8oEXB3y94RY6u8vPW+THoGQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.5 101/176] io_uring: fix 32-bit compatability with sendmsg/recvmsg
-Date:   Tue,  3 Mar 2020 18:42:45 +0100
-Message-Id: <20200303174316.529389059@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Paul Burton <paulburton@kernel.org>, ralf@linux-mips.org,
+        linux-mips@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH 5.5 110/176] MIPS: VPE: Fix a double free and a memory leak in release_vpe()
+Date:   Tue,  3 Mar 2020 18:42:54 +0100
+Message-Id: <20200303174317.555620066@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -58,51 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit d876836204897b6d7d911f942084f69a1e9d5c4d upstream.
+commit bef8e2dfceed6daeb6ca3e8d33f9c9d43b926580 upstream.
 
-We must set MSG_CMSG_COMPAT if we're in compatability mode, otherwise
-the iovec import for these commands will not do the right thing and fail
-the command with -EINVAL.
+Pointer on the memory allocated by 'alloc_progmem()' is stored in
+'v->load_addr'. So this is this memory that should be freed by
+'release_progmem()'.
 
-Found by running the test suite compiled as 32-bit.
+'release_progmem()' is only a call to 'kfree()'.
 
-Cc: stable@vger.kernel.org
-Fixes: aa1fa28fc73e ("io_uring: add support for recvmsg()")
-Fixes: 0fa03c624d8f ("io_uring: add support for sendmsg()")
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+With the current code, there is both a double free and a memory leak.
+Fix it by passing the correct pointer to 'release_progmem()'.
+
+Fixes: e01402b115ccc ("More AP / SP bits for the 34K, the Malta bits and things. Still wants")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: ralf@linux-mips.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/io_uring.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/mips/kernel/vpe.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2166,6 +2166,11 @@ static int io_sendmsg_prep(struct io_kio
- 	sr->msg_flags = READ_ONCE(sqe->msg_flags);
- 	sr->msg = u64_to_user_ptr(READ_ONCE(sqe->addr));
- 
-+#ifdef CONFIG_COMPAT
-+	if (req->ctx->compat)
-+		sr->msg_flags |= MSG_CMSG_COMPAT;
-+#endif
-+
- 	if (!io)
- 		return 0;
- 
-@@ -2258,6 +2263,11 @@ static int io_recvmsg_prep(struct io_kio
- 	sr->msg_flags = READ_ONCE(sqe->msg_flags);
- 	sr->msg = u64_to_user_ptr(READ_ONCE(sqe->addr));
- 
-+#ifdef CONFIG_COMPAT
-+	if (req->ctx->compat)
-+		sr->msg_flags |= MSG_CMSG_COMPAT;
-+#endif
-+
- 	if (!io)
- 		return 0;
+--- a/arch/mips/kernel/vpe.c
++++ b/arch/mips/kernel/vpe.c
+@@ -134,7 +134,7 @@ void release_vpe(struct vpe *v)
+ {
+ 	list_del(&v->list);
+ 	if (v->load_addr)
+-		release_progmem(v);
++		release_progmem(v->load_addr);
+ 	kfree(v);
+ }
  
 
 
