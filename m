@@ -6,109 +6,131 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB078C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:00:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61897C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC8520866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:00:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437CD20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbgCCKAR convert rfc822-to-8bit (ORCPT
+        id S1728331AbgCCKA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:00:17 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:40674 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726694AbgCCKAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:00:17 -0500
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 25233E88490DF10B5032;
-        Tue,  3 Mar 2020 18:00:13 +0800 (CST)
-Received: from DGGEMM421-HUB.china.huawei.com (10.1.198.38) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 3 Mar 2020 18:00:12 +0800
-Received: from DGGEMM528-MBX.china.huawei.com ([169.254.8.90]) by
- dggemm421-hub.china.huawei.com ([10.1.198.38]) with mapi id 14.03.0439.000;
- Tue, 3 Mar 2020 18:00:06 +0800
-From:   "Zhoujian (jay)" <jianjay.zhou@huawei.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-CC:     "peterx@redhat.com" <peterx@redhat.com>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "wangxin (U)" <wangxinxin.wang@huawei.com>,
-        "Huangweidong (C)" <weidong.huang@huawei.com>,
-        "Liujinsong (Paul)" <liu.jinsong@huawei.com>
-Subject: RE: [PATCH] kvm: selftests: Support dirty log initial-all-set test
-Thread-Topic: [PATCH] kvm: selftests: Support dirty log initial-all-set test
-Thread-Index: AQHV8TLCY4Xj3pfMjkOXUb/5I4t9Iqg2Ch2AgACW2iA=
-Date:   Tue, 3 Mar 2020 10:00:05 +0000
-Message-ID: <B2D15215269B544CADD246097EACE7474BB4E091@DGGEMM528-MBX.china.huawei.com>
-References: <20200303080710.1672-1-jianjay.zhou@huawei.com>
- <f0c2dcb8-4415-eec9-d181-fb29d206c55c@redhat.com>
-In-Reply-To: <f0c2dcb8-4415-eec9-d181-fb29d206c55c@redhat.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.228.206]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 3 Mar 2020 05:00:59 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:36546 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728005AbgCCKA6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:00:58 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j94M2-0002Iv-H5; Tue, 03 Mar 2020 10:00:46 +0000
+Date:   Tue, 3 Mar 2020 11:00:45 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200303100045.zqntjjjv6npvs5zl@wittgenstein>
+References: <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
+ <1582644535.3361.8.camel@HansenPartnership.com>
+ <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
+ <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> -----Original Message-----
-> From: Paolo Bonzini [mailto:pbonzini@redhat.com]
-> Sent: Tuesday, March 3, 2020 4:54 PM
-> To: Zhoujian (jay) <jianjay.zhou@huawei.com>; kvm@vger.kernel.org
-> Cc: peterx@redhat.com; shuah@kernel.org; linux-kselftest@vger.kernel.org;
-> linux-kernel@vger.kernel.org; wangxin (U) <wangxinxin.wang@huawei.com>;
-> Huangweidong (C) <weidong.huang@huawei.com>; Liujinsong (Paul)
-> <liu.jinsong@huawei.com>
-> Subject: Re: [PATCH] kvm: selftests: Support dirty log initial-all-set test
-> 
-> On 03/03/20 09:07, Jay Zhou wrote:
-> >  #ifdef USE_CLEAR_DIRTY_LOG
-> > -	if (!kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2)) {
-> > -		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not available, skipping
-> tests\n");
-> > +	dirty_log_manual_caps =
-> > +		kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2);
-> > +	if (!dirty_log_manual_caps) {
-> > +		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not available, "
-> > +				"skipping tests\n");
-> > +		exit(KSFT_SKIP);
-> > +	}
-> > +	if (dirty_log_manual_caps != KVM_DIRTY_LOG_MANUAL_CAPS &&
-> > +		dirty_log_manual_caps !=
-> KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE) {
-> > +		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not valid caps "
-> > +				"%"PRIu64", skipping tests\n",
-> > +				dirty_log_manual_caps);
-> >  		exit(KSFT_SKIP);
-> >  	}
-> >  #endif
+On Tue, Mar 03, 2020 at 10:26:21AM +0100, Miklos Szeredi wrote:
+> On Tue, Mar 3, 2020 at 10:13 AM David Howells <dhowells@redhat.com> wrote:
 > >
+> > Miklos Szeredi <miklos@szeredi.hu> wrote:
+> >
+> > > I'm doing a patch.   Let's see how it fares in the face of all these
+> > > preconceptions.
+> >
+> > Don't forget the efficiency criterion.  One reason for going with fsinfo(2) is
+> > that scanning /proc/mounts when there are a lot of mounts in the system is
+> > slow (not to mention the global lock that is held during the read).
+> >
+> > Now, going with sysfs files on top of procfs links might avoid the global
+> > lock, and you can avoid rereading the options string if you export a change
+> > notification, but you're going to end up injecting a whole lot of pathwalk
+> > latency into the system.
 > 
-> Thanks, instead of this final "if" it should be enough to do
+> Completely irrelevant.  Cached lookup is so much optimized, that you
+> won't be able to see any of it.
 > 
-> 	dirty_log_manual_caps &= (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE
-> |
-> 				  KVM_DIRTY_LOG_INITIALLY_SET);
+> No, I don't think this is going to be a performance issue at all, but
+> if anything we could introduce a syscall
 > 
+>   ssize_t readfile(int dfd, const char *path, char *buf, size_t
+> bufsize, int flags);
 > 
-> Otherwise looks good, I'll test it and eventually apply both patches.
+> that is basically the equivalent of open + read + close, or even a
+> vectored variant that reads multiple files.  But that's off topic
+> again, since I don't think there's going to be any performance issue
+> even with plain I/O syscalls.
+> 
+> >
+> > On top of that, it isn't going to help with the case that I'm working towards
+> > implementing where a container manager can monitor for mounts taking place
+> > inside the container and supervise them.  What I'm proposing is that during
+> > the action phase (eg. FSCONFIG_CMD_CREATE), fsconfig() would hand an fd
+> > referring to the context under construction to the manager, which would then
+> > be able to call fsinfo() to query it and fsconfig() to adjust it, reject it or
+> > permit it.  Something like:
+> >
+> >         fd = receive_context_to_supervise();
+> >         struct fsinfo_params params = {
+> >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
+> >                 .request        = FSINFO_ATTR_SB_OPTIONS,
+> >         };
+> >         fsinfo(fd, NULL, &params, sizeof(params), buffer, sizeof(buffer));
+> >         supervise_parameters(buffer);
+> >         fsconfig(fd, FSCONFIG_SET_FLAG, "hard", NULL, 0);
+> >         fsconfig(fd, FSCONFIG_SET_STRING, "vers", "4.2", 0);
+> >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_CREATE, NULL, NULL, 0);
+> >         struct fsinfo_params params = {
+> >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
+> >                 .request        = FSINFO_ATTR_SB_NOTIFICATIONS,
+> >         };
+> >         struct fsinfo_sb_notifications sbnotify;
+> >         fsinfo(fd, NULL, &params, sizeof(params), &sbnotify, sizeof(sbnotify));
+> >         watch_super(fd, "", AT_EMPTY_PATH, watch_fd, 0x03);
+> >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_PERMIT, NULL, NULL, 0);
+> >         close(fd);
+> >
+> > However, the supervised mount may be happening in a completely different set
+> > of namespaces, in which case the supervisor presumably wouldn't be able to see
+> > the links in procfs and the relevant portions of sysfs.
+> 
+> It would be a "jump" link to the otherwise invisible directory.
 
-Do I need to resubmit this patch with this modification?
+More magic links to beam you around sounds like a bad idea. We had a
+bunch of CVEs around them in containers and they were one of the major
+reasons behind us pushing for openat2(). That's why it has a
+RESOLVE_NO_MAGICLINKS flag.
 
-Regards,
-Jay Zhou
-
-> 
-> Paolo
-
+Christian
