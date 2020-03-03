@@ -2,97 +2,108 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6432FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:35:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F060C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C53B20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:35:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32E2A2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:36:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GHga60VN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="mPQLb0f5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728905AbgCCMfz (ORCPT
+        id S1728506AbgCCMg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:35:55 -0500
-Received: from mail-wm1-f41.google.com ([209.85.128.41]:40849 "EHLO
-        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728415AbgCCMfz (ORCPT
+        Tue, 3 Mar 2020 07:36:57 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([85.215.255.81]:20281 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbgCCMg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:35:55 -0500
-Received: by mail-wm1-f41.google.com with SMTP id e26so2653940wme.5;
-        Tue, 03 Mar 2020 04:35:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=rz2M9V+ocKeCKBO1DTovHWBHdLHnzUuWHLb/2ndomPg=;
-        b=GHga60VNe5FeroqHZ/v9n4E2vp3rgvzrlblLNbqORO7SNQfyDjLW5AON9gM6Uwb6xQ
-         NuH/FL2Z7dX+BUNOj+YEiLciP9jJgIftKg/HXqpl1XainX2ArMEwtLj+EimmO0+IEUiv
-         hhqudlhUeULciWh1yPbxzzyAhuFz4if+ORNrQIbSUOo503U5vshuNOiOf2byKeefwgoH
-         oNp3wtIuF18eqbb4I51cXPZoPk6KmLKzwYAu0DuDR9lw4L9zQHm2L1CsgUGinhEIaXJ2
-         WCl3PuFlmwE8n0h5hym+lNEOR9OhS6f7rEVjMGcXFDAzGqmq2xBKNYXWbLJfhVWyYTP0
-         vpIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=rz2M9V+ocKeCKBO1DTovHWBHdLHnzUuWHLb/2ndomPg=;
-        b=VZ4mlvVbGmrXyBUPW26a4RijXHEb3mGS0EvxbopNnbZdDLcReWhtlyeh2WE1crm669
-         Xc1sjOKuBCPLsCPifR6cjctmzP/PD4++yD/yqbj0QdrRqKJDx+u7tyC0pCs77JhVH3+7
-         q/0NQNSLZuBB2VB8g7ojlTTgul2ucaXtIxInW2TsH0Dx/cGDkQ4BqynqtbYlYndOYeNJ
-         7iAQLrbwp1A2lzlexkPbp6CPu9qmMTD4ygZRGB1sQ8vsUZEL0XlyN5Rwumw6VF2/ujMP
-         3J/Hn0pW6iDrN1wby7C0p+TPunkDV0/7t8W435HG4ilY9A/Zc3ZgnBzTeooO9smSovA/
-         Lnbw==
-X-Gm-Message-State: ANhLgQ2lGA9Olt1KoGWzsdGffIs8yNYKsW/qwcVxbypUEqw8GdkdqnlP
-        87zjiHMOm3XH5jfb/Nt1iWGmF37d
-X-Google-Smtp-Source: ADFU+vufeWSmB8RAOO4F2s3ATVOHiD1EGO8AhsT03Q02Af0id3T2mAwbnruorwSjWm0o//ef43PtVg==
-X-Received: by 2002:a7b:c204:: with SMTP id x4mr4179246wmi.20.1583238952930;
-        Tue, 03 Mar 2020 04:35:52 -0800 (PST)
-Received: from [10.34.28.108] (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id k126sm3401852wme.4.2020.03.03.04.35.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 04:35:52 -0800 (PST)
-Subject: Re: [RFC] crypto: xts - limit accepted key length
-To:     "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>,
-        Andrei Botila <andrei.botila@oss.nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <b8c0cbbf0cb94e389bae5ae3da77596d@DM6PR20MB2762.namprd20.prod.outlook.com>
- <CY4PR0401MB3652818432E5A28BC5089E15C3E70@CY4PR0401MB3652.namprd04.prod.outlook.com>
-From:   Milan Broz <gmazyland@gmail.com>
-Message-ID: <72e1866a-9202-8d5b-f67b-8d9a63d888a7@gmail.com>
-Date:   Tue, 3 Mar 2020 13:35:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <CY4PR0401MB3652818432E5A28BC5089E15C3E70@CY4PR0401MB3652.namprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 3 Mar 2020 07:36:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583239014;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=VMrHKMbD83NkBboxDHGdQ72KMc222y8alTEvMYhCHlU=;
+        b=mPQLb0f5ASKIwloweC0L6YW6lSVEbG946OwHgHpPu6I0Nv1ocdhrzkVjFSO036nsvd
+        866CG2wJ9HI+ydwaRXGXASYPn0OuIniDAFHI7If2GgHiG6EuGE+TdCkP9hgoLeH2SAbv
+        Mt+s9KsQGl7qgYVhcWoKatnK4eyi8GK/o49a91dHKa6C3pdFGmfMjaVxj2tfthVdYOum
+        GelULxTtnKWyqQKC2DtpkMM9TK/OkhRAHyXMkVMmD8oy3Z7Oq6S+50Tmuk5x/iB+xyEL
+        ZCJz7FpTYaM6Ak1nTf5DLW8mCSZTf+nt8ooCx7w4ujvJDrzp7Ost1kDioM8Xg2l5SwFT
+        0EuA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDGvxw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw23CaqIDD
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 3 Mar 2020 13:36:52 +0100 (CET)
+Subject: Re: [PATCH v5 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Content-Type: text/plain; charset=us-ascii
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200303123214.GA15333@alpha.franken.de>
+Date:   Tue, 3 Mar 2020 13:36:51 +0100
+Cc:     Paul Boddie <paul@boddie.org.uk>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>, stable <stable@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <D0A35BF6-D044-4AB9-BC4D-15E5924E1171@goldelico.com>
+References: <cover.1583005548.git.hns@goldelico.com> <02f18080fa0e0c214b40431749ca1ce514c53d37.1583005548.git.hns@goldelico.com> <20200303101818.GA12103@alpha.franken.de> <85F9D066-EAF6-4840-8F54-24E6D8A534DC@goldelico.com> <20200303123214.GA15333@alpha.franken.de>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/03/2020 09:33, Van Leeuwen, Pascal wrote:
-> Hmm ... in principle IEEE-1619 also defines XTS *only* for AES. So by that  same
-> reasoning, you should also not allow any usage of XTS beyond AES. Yet it is
-> actually being actively used(?) with other ciphers in the Linux kernel.
-Just FYI - yes, it is actively used with other ciphers.
 
-There is a lot of LUKS devices that use Serpent or Twofish with XTS mode.
+> Am 03.03.2020 um 13:32 schrieb Thomas Bogendoerfer =
+<tsbogend@alpha.franken.de>:
+>=20
+> On Tue, Mar 03, 2020 at 01:10:22PM +0100, H. Nikolaus Schaller wrote:
+>>> And please seperate fixes from improvments, thank you.
+>>=20
+>> What do you mean by "separate"? Two separate patches?
+>> This patch only contains fixes (which I would consider
+>> all of them to be improvements).
+>=20
+> There are two patches with Fixes tag, which IMHO should go
+> into 5.6 via mips-fixes branch. All others are going
+> via mips-next into 5.7. So it helps me, if they come in different
+> patch series (or as single patches).
 
-The same for TrueCrypt/VeraCrypt, here sometimes it is used also in cipher chain
-(both native binaries or cryptsetup code use dm-crypt with crypto API here).
+Ah, ok. I didn't know that there are two branches and originally
+I didn't see them as fixes - they became by review suggestions.
 
-XTS mode is designed for storage encryption only - and at least for disk encryption
-I have never seen request for 192bit keys...
+> I see other DT changes in your other patch series. Are the changes
+> there independent from each other or do they require correct order
+> when appling them ?
 
-Milan
+I think they are independent. Only the fixes should go to stable as =
+well.
+The others can wait.
+
+>=20
+> Thomas.
+
+BR and thanks,
+Nikolaus
+
