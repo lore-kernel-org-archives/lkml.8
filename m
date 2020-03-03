@@ -2,148 +2,192 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B6C8C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4A4C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 673662073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="oZKw7eqz";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ZUmG+NQw"
+	by mail.kernel.org (Postfix) with ESMTP id 80C6D2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583258991;
+	bh=texoo3q8x2jij7O8X63DZtxgNyt1H6icxYPG9lvfRNo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Uh84TVEjk7D4QFwx8RLPWobQLDMyxjaIhx/yWvn7T6iYRE78yln5mEg0/e6EHbrNZ
+	 gqtsCU8UOwZYf8JhTAPgivb0LpE2khM+uuzGEA2r4o/whNPLt64P5erx9tLOylg6tz
+	 0CfCAsRspf1xe0RMkAZGuLpGIz0kWFynVIAozoUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733152AbgCCSJp (ORCPT
+        id S1732050AbgCCRvu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:09:45 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:49146 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731328AbgCCRvz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:55 -0500
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id 023Hp8Bl007909;
-        Tue, 3 Mar 2020 09:51:13 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=rsD1LdJcb4XeJg2CPYn1NUbbWfj4DFC/7mHXA9v+pbw=;
- b=oZKw7eqzE02H/wabnnEOSoeVbMV4fWs0xZQ9qLymdlfHd6ZPlGKmVSe0ZPX717GVMDBt
- KxjqgGAmdId9JPEKd+gQbsP4tnrzCOY6dOSVeTaDMMAYb6xOoDqYw+h2kjm/4S4g9E6y
- bnFzahlofRJB7GMkfYiG5jC41Trhcnt0gPw= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2yfmb6y83d-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 03 Mar 2020 09:51:13 -0800
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.102) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 3 Mar 2020 09:51:01 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m4ssrtudTioHC2rcLso6oAmx3wdvp8XBZzrZ3/17BTvBTt894l8R6GzeDjq+enRup56di0ohZkphO+hvMgdNCc7nG/K6hZsy7k/jTcIwCybEdXKZH89+EXfnBgZK0zc4uD1J43W6qcRzhU7ekMI2doaIN0T9jqdM6ZWTXzaPzRhJ2HtB71ow9HS3U3o2WNuUIJMOYpnc1frOZvUIhamOlOk2E1upfA5+KwtwMsb35vykQetHSWyCtnkvsScMID2tAO+6V7nsQcVtiOKHAoAN5oZ1jqA3oJiyTvy15rSMhPQiX8DtOZ71yZJ3NuE+qnM/8G02CT4tQJ3bYxQZKfbJCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rsD1LdJcb4XeJg2CPYn1NUbbWfj4DFC/7mHXA9v+pbw=;
- b=oKV1YfgRF/46xzMENfLd3T1KSS7WfZFi0Ssf8AkAfgpzFhJGIbLL75x9FgP7q3RV+qFjizXN7gjfTz4aC4/5hJs5pg0oh6J8SYYD4J/+1WtALqU92KCACUn98qg8nZ9Ge/SqqaEuPG69blDfjtoEiASvkGOBInvuBIrZJpbZ0ye/1Xc2Mfe6pHEOf852WNdm3Z7MwS87Fv5cdQrN/YK2L+zNhk9JPtm7pbKkbp4cKfLGnsOgOmZ3GVoyqKVfJIIo4bicWp63XK8zJLUwPaSIpNtiW01Ea+fn1MWbDe6KO7Gwglk3DjgyjIJSHcD86rwiqkoCBtrAVf8UV2bhakamuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rsD1LdJcb4XeJg2CPYn1NUbbWfj4DFC/7mHXA9v+pbw=;
- b=ZUmG+NQwbAccbTlN91hpkDx/SKEttLhXprFDuQuk9YorasQrvnO7Sl0Yz4DrBPZ20mxB9CACTWVv3eaMGW0AXyjQbqO2aN8CA4H2ajIpB6BwuvUxWEF1Jsfie4aMBEsK1JrNAzbreF1z8khdCBX/a1R19GrTRTZ+7Q+1QH7vC3s=
-Received: from BYAPR15MB2278.namprd15.prod.outlook.com (2603:10b6:a02:8e::17)
- by BYAPR15MB2454.namprd15.prod.outlook.com (2603:10b6:a02:89::33) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Tue, 3 Mar
- 2020 17:51:00 +0000
-Received: from BYAPR15MB2278.namprd15.prod.outlook.com
- ([fe80::4d5a:6517:802b:5f47]) by BYAPR15MB2278.namprd15.prod.outlook.com
- ([fe80::4d5a:6517:802b:5f47%4]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
- 17:51:00 +0000
-Date:   Tue, 3 Mar 2020 09:50:51 -0800
-From:   Martin KaFai Lau <kafai@fb.com>
-To:     Lorenz Bauer <lmb@cloudflare.com>
-CC:     <john.fastabend@gmail.com>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        <kernel-team@cloudflare.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH bpf-next v2 3/9] bpf: sockmap: move generic sockmap hooks
- from BPF TCP
-Message-ID: <20200303175051.zcxmo3c257pfpj7f@kafai-mbp>
-References: <20200228115344.17742-1-lmb@cloudflare.com>
- <20200228115344.17742-4-lmb@cloudflare.com>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228115344.17742-4-lmb@cloudflare.com>
-User-Agent: NeoMutt/20180716
-X-ClientProxiedBy: MWHPR21CA0033.namprd21.prod.outlook.com
- (2603:10b6:300:129::19) To BYAPR15MB2278.namprd15.prod.outlook.com
- (2603:10b6:a02:8e::17)
+        Tue, 3 Mar 2020 12:51:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60012 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730481AbgCCRvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:47 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8842C20728;
+        Tue,  3 Mar 2020 17:51:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583257907;
+        bh=texoo3q8x2jij7O8X63DZtxgNyt1H6icxYPG9lvfRNo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rU4i0StA/Nj/6Fd+b8fepqP6sDbPsi9cD2lLQIuHwQ8IkPMqJXsa/w76UmpRfQZim
+         lMB2P85irjh//wbr5RIG/G2kOV00bYyuHIdvsVVTtjvVQAACN7GoEb8/xm45LjdFgx
+         Gz+AxPy7jaF8IynvRNma6NrBgSqgyQ87c4BaG4E0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Peter Shier <pshier@google.com>,
+        Oliver Upton <oupton@google.com>,
+        Jon Cargille <jcargill@google.com>
+Subject: [PATCH 5.5 175/176] kvm: nVMX: VMWRITE checks VMCS-link pointer before VMCS field
+Date:   Tue,  3 Mar 2020 18:43:59 +0100
+Message-Id: <20200303174324.057218896@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
+References: <20200303174304.593872177@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from kafai-mbp (2620:10d:c090:500::7:521b) by MWHPR21CA0033.namprd21.prod.outlook.com (2603:10b6:300:129::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.2 via Frontend Transport; Tue, 3 Mar 2020 17:50:58 +0000
-X-Originating-IP: [2620:10d:c090:500::7:521b]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7ba4bb87-883b-4550-bc80-08d7bf9b6ec9
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2454:
-X-Microsoft-Antispam-PRVS: <BYAPR15MB2454AC50E20335088945E9DFD5E40@BYAPR15MB2454.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 03319F6FEF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(346002)(366004)(39860400002)(376002)(396003)(136003)(199004)(189003)(4326008)(5660300002)(1076003)(8676002)(81156014)(4744005)(81166006)(7416002)(2906002)(478600001)(186003)(66946007)(66476007)(66556008)(6916009)(16526019)(9686003)(6496006)(55016002)(52116002)(316002)(33716001)(86362001)(8936002)(54906003)(6666004)(41533002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2454;H:BYAPR15MB2278.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: kiX9OfwZfrDhQteOm5OO+r/+eHbCZ7UY7eq3w5zK5tLFTPYuXOW+aOmIP0kQABtUGtpMFP1cT3OwdhXBYDAUnx5mrtKncjm1qaXgbMkPF9kJ2k9pM9Z8L3Mnd8JR+y1fDTkJSJsadB87emLHFvfVmF2m6ABJUY/1bt6WKikTOQm6+AVra47oQfQgNgwHLVJGIYPwgxyts+cAvaPJvH5qcGMAWN7U9i3VBuUffNnisd/2LJyo1r52gRbK1slvYuZdJowi0GHog2OMcsgN8EbxjH+Qr7LabyFIKqlZSxCFF1pAeei/c9lt9/Itc8+rx6ul69dHtdADYEG1lpvheIkSr8ik4+lmYnBvFEtDySwI8faCTqRCltFN3YZetH2Ev3deIEPkzrpPUpLtUJ9kAyRUO2NefUN5goOlSB4OKyM+Eaj46oEdj4MjRBk8zlJWcvkAf2CGpZZusCH4AGnAwEfcm1dFJKKCFL1aC7Sa9yD2FG0dmofB5RTWSSr0kUegQ/Ux
-X-MS-Exchange-AntiSpam-MessageData: TuiYMCZFYeNrDfsbOreHNk7FusIZ9n4Fz7I/85F7PYHi9gHrQVqHPClx5ekIzeDunIcrhdSCejiVlb+WgX3ywB+15pzJqeax+b5d2qgQ8iYf3zBNcp+FF9uf23mSNCDmS0fq/M77a19cn/mAON9RurGnqyP42YwlMpjrjQEPxVk2iM8DxXoaWDFPyU1OxvvP
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7ba4bb87-883b-4550-bc80-08d7bf9b6ec9
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 17:50:59.8723
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: bT2kLkJpFFf6/jGbEHmbitOiuyUFAoXRA1YWqc0ZAMeaXOESHGzX8KIssPKRKdwA
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2454
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-03_06:2020-03-03,2020-03-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0
- impostorscore=0 mlxscore=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 phishscore=0 clxscore=1011 mlxlogscore=853 suspectscore=0
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030120
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 11:53:38AM +0000, Lorenz Bauer wrote:
-> The close, unhash and clone handlers from TCP sockmap are actually generic,
-> and can be reused by UDP sockmap. Move the helpers into the sockmap code
-Is clone reused in UDP? 
+From: Jim Mattson <jmattson@google.com>
 
-> base and expose them. This requires tcp_bpf_(re)init and tcp_bpf_clone to
-> be conditional on BPF_STREAM_PARSER.
-> 
+commit dd2d6042b7f4a5440705b4ffc6c4c2dba81a43b7 upstream.
 
-[ ... ]
+According to the SDM, a VMWRITE in VMX non-root operation with an
+invalid VMCS-link pointer results in VMfailInvalid before the validity
+of the VMCS field in the secondary source operand is checked.
 
-> @@ -707,3 +659,4 @@ void tcp_bpf_clone(const struct sock *sk, struct sock *newsk)
->  	if (prot == &tcp_bpf_prots[family][TCP_BPF_BASE])
->  		newsk->sk_prot = sk->sk_prot_creator;
->  }
-> +#endif /* CONFIG_BPF_STREAM_PARSER */
-> 
+For consistency, modify both handle_vmwrite and handle_vmread, even
+though there was no problem with the latter.
+
+Fixes: 6d894f498f5d1 ("KVM: nVMX: vmread/vmwrite: Use shadow vmcs12 if running L2")
+Signed-off-by: Jim Mattson <jmattson@google.com>
+Cc: Liran Alon <liran.alon@oracle.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Reviewed-by: Peter Shier <pshier@google.com>
+Reviewed-by: Oliver Upton <oupton@google.com>
+Reviewed-by: Jon Cargille <jcargill@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/kvm/vmx/nested.c |   59 +++++++++++++++++++---------------------------
+ 1 file changed, 25 insertions(+), 34 deletions(-)
+
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4808,32 +4808,28 @@ static int handle_vmread(struct kvm_vcpu
+ {
+ 	unsigned long field;
+ 	u64 field_value;
++	struct vcpu_vmx *vmx = to_vmx(vcpu);
+ 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
+ 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
+ 	int len;
+ 	gva_t gva = 0;
+-	struct vmcs12 *vmcs12;
++	struct vmcs12 *vmcs12 = is_guest_mode(vcpu) ? get_shadow_vmcs12(vcpu)
++						    : get_vmcs12(vcpu);
+ 	struct x86_exception e;
+ 	short offset;
+ 
+ 	if (!nested_vmx_check_permission(vcpu))
+ 		return 1;
+ 
+-	if (to_vmx(vcpu)->nested.current_vmptr == -1ull)
++	/*
++	 * In VMX non-root operation, when the VMCS-link pointer is -1ull,
++	 * any VMREAD sets the ALU flags for VMfailInvalid.
++	 */
++	if (vmx->nested.current_vmptr == -1ull ||
++	    (is_guest_mode(vcpu) &&
++	     get_vmcs12(vcpu)->vmcs_link_pointer == -1ull))
+ 		return nested_vmx_failInvalid(vcpu);
+ 
+-	if (!is_guest_mode(vcpu))
+-		vmcs12 = get_vmcs12(vcpu);
+-	else {
+-		/*
+-		 * When vmcs->vmcs_link_pointer is -1ull, any VMREAD
+-		 * to shadowed-field sets the ALU flags for VMfailInvalid.
+-		 */
+-		if (get_vmcs12(vcpu)->vmcs_link_pointer == -1ull)
+-			return nested_vmx_failInvalid(vcpu);
+-		vmcs12 = get_shadow_vmcs12(vcpu);
+-	}
+-
+ 	/* Decode instruction info and find the field to read */
+ 	field = kvm_register_readl(vcpu, (((vmx_instruction_info) >> 28) & 0xf));
+ 
+@@ -4912,13 +4908,20 @@ static int handle_vmwrite(struct kvm_vcp
+ 	 */
+ 	u64 field_value = 0;
+ 	struct x86_exception e;
+-	struct vmcs12 *vmcs12;
++	struct vmcs12 *vmcs12 = is_guest_mode(vcpu) ? get_shadow_vmcs12(vcpu)
++						    : get_vmcs12(vcpu);
+ 	short offset;
+ 
+ 	if (!nested_vmx_check_permission(vcpu))
+ 		return 1;
+ 
+-	if (vmx->nested.current_vmptr == -1ull)
++	/*
++	 * In VMX non-root operation, when the VMCS-link pointer is -1ull,
++	 * any VMWRITE sets the ALU flags for VMfailInvalid.
++	 */
++	if (vmx->nested.current_vmptr == -1ull ||
++	    (is_guest_mode(vcpu) &&
++	     get_vmcs12(vcpu)->vmcs_link_pointer == -1ull))
+ 		return nested_vmx_failInvalid(vcpu);
+ 
+ 	if (vmx_instruction_info & (1u << 10))
+@@ -4946,24 +4949,12 @@ static int handle_vmwrite(struct kvm_vcp
+ 		return nested_vmx_failValid(vcpu,
+ 			VMXERR_VMWRITE_READ_ONLY_VMCS_COMPONENT);
+ 
+-	if (!is_guest_mode(vcpu)) {
+-		vmcs12 = get_vmcs12(vcpu);
+-
+-		/*
+-		 * Ensure vmcs12 is up-to-date before any VMWRITE that dirties
+-		 * vmcs12, else we may crush a field or consume a stale value.
+-		 */
+-		if (!is_shadow_field_rw(field))
+-			copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
+-	} else {
+-		/*
+-		 * When vmcs->vmcs_link_pointer is -1ull, any VMWRITE
+-		 * to shadowed-field sets the ALU flags for VMfailInvalid.
+-		 */
+-		if (get_vmcs12(vcpu)->vmcs_link_pointer == -1ull)
+-			return nested_vmx_failInvalid(vcpu);
+-		vmcs12 = get_shadow_vmcs12(vcpu);
+-	}
++	/*
++	 * Ensure vmcs12 is up-to-date before any VMWRITE that dirties
++	 * vmcs12, else we may crush a field or consume a stale value.
++	 */
++	if (!is_guest_mode(vcpu) && !is_shadow_field_rw(field))
++		copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
+ 
+ 	offset = vmcs_field_to_offset(field);
+ 	if (offset < 0)
+
+
