@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED517C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E13C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88B724673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F04E2468D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203653;
-	bh=1Y0TjNSWX3z/xqRoK7YVkvMrzuGCXWFlefxsN8emi/A=;
+	s=default; t=1583203656;
+	bh=nRO455Vq+s6RfjtfOB2yl+aWuz2EYmxn6affqv+/Knc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fHl8i2yLWNku3EbpMm+9ED4TE8hA2Pd7OVADZh2cnTiLgF31aZGx0oRsAG6VgDnxc
-	 icIfPRTtoMgzS8AG4hKHRqzUSt1ljYmk1LmeKY4PypQRV/1ss8YCxS2J3RY28ZASn7
-	 7JrBBNBMV/38kiXtRJVU5vnYShVWgBB0T2M0ldUE=
+	b=Oh5+gcw8k1yBpori4rOu21IT5mTI7nyo2sQUDCCISqzdO1BEyW60M6bzBMwdNZwaK
+	 N7R4iS9+stu3BIEcBJU46IRKiUftJhtc1rR2mAHG3qIWkFgLY/HksQcbCfoFAOWMAU
+	 sajmHMmosMhJJ3yHyw38OA8NDPp3NWcbnSaF7iK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbgCCCrc (ORCPT
+        id S1728094AbgCCCrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:47:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42498 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:47:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728054AbgCCCra (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:30 -0500
+        id S1728072AbgCCCrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 697A4246DE;
-        Tue,  3 Mar 2020 02:47:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFB022468D;
+        Tue,  3 Mar 2020 02:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203649;
-        bh=1Y0TjNSWX3z/xqRoK7YVkvMrzuGCXWFlefxsN8emi/A=;
+        s=default; t=1583203651;
+        bh=nRO455Vq+s6RfjtfOB2yl+aWuz2EYmxn6affqv+/Knc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zk7UjH26EWaUSdwjtMfXSjpR6a/6x2dbZr2hUm93SRo5Bd6oVviJmz4alqG9/J7AU
-         aUYSYJ7uN0Xvpm+ShpyRRmXgA0jHbwxNbsmc/UI5CcqoEhJeE/hDx08XQBdQ41Fd99
-         kc7glf5jZSRX5bh1doK3l+D5wPucln04ScGx7p7k=
+        b=qsrHc/lvdd8GKUo6PI20vJyUGlDfPZhPIpcq4TAylaRo+iIm/xnEFE9qXJQiZJaA6
+         qBur56tJ+6/p7j0v1pg50QUcQAi4TJG4NFxZ9UaIex0X6TtIbdj09i1JarBmst1pFa
+         +GWLcS7DGGGVsALAbT5yXQKqLL42S5cvbaWeI72Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 59/66] bnxt_en: Issue PCIe FLR in kdump kernel to cleanup pending DMAs.
-Date:   Mon,  2 Mar 2020 21:46:08 -0500
-Message-Id: <20200303024615.8889-59-sashal@kernel.org>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 61/66] csky: Set regs->usp to kernel sp, when the exception is from kernel
+Date:   Mon,  2 Mar 2020 21:46:10 -0500
+Message-Id: <20200303024615.8889-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -60,42 +58,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit 8743db4a9acfd51f805ac0c87bcaae92c42d1061 ]
+[ Upstream commit f8e17c17b81070f38062dce79ca7f4541851dadd ]
 
-If crashed kernel does not shutdown the NIC properly, PCIe FLR
-is required in the kdump kernel in order to initialize all the
-functions properly.
+In the past, we didn't care about kernel sp when saving pt_reg. But in some
+cases, we still need pt_reg->usp to represent the kernel stack before enter
+exception.
 
-Fixes: d629522e1d66 ("bnxt_en: Reduce memory usage when running in kdump kernel.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+For cmpxhg in atomic.S, we need save and restore usp for above.
+
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/csky/abiv1/inc/abi/entry.h | 19 ++++++++++++++-----
+ arch/csky/abiv2/inc/abi/entry.h | 11 +++++++++++
+ arch/csky/kernel/atomic.S       |  8 ++++++--
+ 3 files changed, 31 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 1a90118370ea1..cc86038b1d96b 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -11775,6 +11775,14 @@ static int bnxt_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (version_printed++ == 0)
- 		pr_info("%s", version);
+diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
+index 7ab78bd0f3b13..f35a9f3315ee6 100644
+--- a/arch/csky/abiv1/inc/abi/entry.h
++++ b/arch/csky/abiv1/inc/abi/entry.h
+@@ -16,14 +16,16 @@
+ #define LSAVE_A4	40
+ #define LSAVE_A5	44
  
-+	/* Clear any pending DMA transactions from crash kernel
-+	 * while loading driver in capture kernel.
-+	 */
-+	if (is_kdump_kernel()) {
-+		pci_clear_master(pdev);
-+		pcie_flr(pdev);
-+	}
++#define usp ss1
 +
- 	max_irqs = bnxt_get_max_irq(pdev);
- 	dev = alloc_etherdev_mq(sizeof(*bp), max_irqs);
- 	if (!dev)
+ .macro USPTOKSP
+-	mtcr	sp, ss1
++	mtcr	sp, usp
+ 	mfcr	sp, ss0
+ .endm
+ 
+ .macro KSPTOUSP
+ 	mtcr	sp, ss0
+-	mfcr	sp, ss1
++	mfcr	sp, usp
+ .endm
+ 
+ .macro	SAVE_ALL epc_inc
+@@ -45,7 +47,13 @@
+ 	add	lr, r13
+ 	stw     lr, (sp, 8)
+ 
++	mov	lr, sp
++	addi	lr, 32
++	addi	lr, 32
++	addi	lr, 16
++	bt	2f
+ 	mfcr	lr, ss1
++2:
+ 	stw     lr, (sp, 16)
+ 
+ 	stw     a0, (sp, 20)
+@@ -79,9 +87,10 @@
+ 	ldw     a0, (sp, 12)
+ 	mtcr    a0, epsr
+ 	btsti   a0, 31
++	bt      1f
+ 	ldw     a0, (sp, 16)
+ 	mtcr	a0, ss1
+-
++1:
+ 	ldw     a0, (sp, 24)
+ 	ldw     a1, (sp, 28)
+ 	ldw     a2, (sp, 32)
+@@ -102,9 +111,9 @@
+ 	addi	sp, 32
+ 	addi	sp, 8
+ 
+-	bt      1f
++	bt      2f
+ 	KSPTOUSP
+-1:
++2:
+ 	rte
+ .endm
+ 
+diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
+index 9897a16b45e5d..94a7a58765dff 100644
+--- a/arch/csky/abiv2/inc/abi/entry.h
++++ b/arch/csky/abiv2/inc/abi/entry.h
+@@ -31,7 +31,13 @@
+ 
+ 	mfcr	lr, epsr
+ 	stw	lr, (sp, 12)
++	btsti   lr, 31
++	bf      1f
++	addi    lr, sp, 152
++	br	2f
++1:
+ 	mfcr	lr, usp
++2:
+ 	stw	lr, (sp, 16)
+ 
+ 	stw     a0, (sp, 20)
+@@ -64,8 +70,10 @@
+ 	mtcr	a0, epc
+ 	ldw	a0, (sp, 12)
+ 	mtcr	a0, epsr
++	btsti   a0, 31
+ 	ldw	a0, (sp, 16)
+ 	mtcr	a0, usp
++	mtcr	a0, ss0
+ 
+ #ifdef CONFIG_CPU_HAS_HILO
+ 	ldw	a0, (sp, 140)
+@@ -86,6 +94,9 @@
+ 	addi    sp, 40
+ 	ldm     r16-r30, (sp)
+ 	addi    sp, 72
++	bf	1f
++	mfcr	sp, ss0
++1:
+ 	rte
+ .endm
+ 
+diff --git a/arch/csky/kernel/atomic.S b/arch/csky/kernel/atomic.S
+index 5b84f11485aeb..3821ef9b75672 100644
+--- a/arch/csky/kernel/atomic.S
++++ b/arch/csky/kernel/atomic.S
+@@ -17,10 +17,12 @@ ENTRY(csky_cmpxchg)
+ 	mfcr	a3, epc
+ 	addi	a3, TRAP0_SIZE
+ 
+-	subi    sp, 8
++	subi    sp, 16
+ 	stw     a3, (sp, 0)
+ 	mfcr    a3, epsr
+ 	stw     a3, (sp, 4)
++	mfcr	a3, usp
++	stw     a3, (sp, 8)
+ 
+ 	psrset	ee
+ #ifdef CONFIG_CPU_HAS_LDSTEX
+@@ -47,7 +49,9 @@ ENTRY(csky_cmpxchg)
+ 	mtcr	a3, epc
+ 	ldw     a3, (sp, 4)
+ 	mtcr	a3, epsr
+-	addi	sp, 8
++	ldw     a3, (sp, 8)
++	mtcr	a3, usp
++	addi	sp, 16
+ 	KSPTOUSP
+ 	rte
+ END(csky_cmpxchg)
 -- 
 2.20.1
 
