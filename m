@@ -2,261 +2,100 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C36C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F3ECC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5816D22522
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:02:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I+swJmrz"
+	by mail.kernel.org (Postfix) with ESMTP id 143AC215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:04:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgCCICk (ORCPT
+        id S1727695AbgCCIEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:02:40 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7943 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgCCICj (ORCPT
+        Tue, 3 Mar 2020 03:04:16 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:48760 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbgCCIEP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:02:39 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e5e0ef50000>; Tue, 03 Mar 2020 00:01:57 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 03 Mar 2020 00:02:37 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 03 Mar 2020 00:02:37 -0800
-Received: from [10.2.160.177] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
- 2020 08:02:37 +0000
-Subject: Re: [PATCH v2 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>,
-        <jack@suse.cz>, <kirill@shutemov.name>
-CC:     <borntraeger@de.ibm.com>, <david@redhat.com>,
-        <aarcange@redhat.com>, <linux-mm@kvack.org>,
-        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
-        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        Will Deacon <will@kernel.org>
-References: <20200303002506.173957-1-imbrenda@linux.ibm.com>
- <20200303002506.173957-3-imbrenda@linux.ibm.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <99903e77-7720-678e-35c5-6eb9e35e7fcb@nvidia.com>
-Date:   Mon, 2 Mar 2020 23:59:32 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 03:04:15 -0500
+X-AuditID: c0a8fbf4-473ff70000004419-ca-5e5e0f7e1834
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 57.74.17433.E7F0E5E5; Tue,  3 Mar 2020 09:04:14 +0100 (CET)
+Received: from WILL-MAIL001.REu.RohmEu.com ([fe80::2915:304f:d22c:c6ba]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0487.000; Tue, 3 Mar 2020 09:04:09 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "rafael@kernel.org" <rafael@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "sre@kernel.org" <sre@kernel.org>,
+        "Laine, Markus" <Markus.Laine@fi.rohmeurope.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "Mutanen, Mikko" <Mikko.Mutanen@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH v3 5/8] regulator: use linear_ranges helper
+Thread-Topic: [RFC PATCH v3 5/8] regulator: use linear_ranges helper
+Thread-Index: AQHV58CCun7qdt/zDkaUtOc73neHtagqMwKAgAE06ACAAJmVgIAKguIA
+Date:   Tue, 3 Mar 2020 08:04:08 +0000
+Message-ID: <13a6781b02f847669d4923b1cbd069d112105070.camel@fi.rohmeurope.com>
+References: <cover.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+         <ba2eb2d7363b386136a546a769a6e2d077558094.1582182989.git.matti.vaittinen@fi.rohmeurope.com>
+         <20200224115751.GE6215@sirena.org.uk>
+         <d5e63ea6935991d855e2ae12915b3b4614e8f3aa.camel@fi.rohmeurope.com>
+         <20200225153309.GE4633@sirena.org.uk>
+In-Reply-To: <20200225153309.GE4633@sirena.org.uk>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [62.78.225.252]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <994A4A7EC2E7C440AB179A6703ECBB61@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20200303002506.173957-3-imbrenda@linux.ibm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583222517; bh=1iSbjST0XUCdE0peAn1uo5SihBMXldFyp2pYk6xzoPw=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=I+swJmrz555GiMwUtMsejt//bN6PjQVEusk2hVU5+0QN6bb0Wk1vudXwxLP/Ml7fi
-         v5mVXZ0iDl36dU94E95yZA6CFrjauEgYjZttCFtAZa5vHBgFm4NvYR3QOnzI7vsnw7
-         nnXockUGygUl6fqTmLWbghOWgQSHuYn0dR1rwhO/J6uIVeS5UlKjhbygj28KhIMTTA
-         fN9rLOepuaFAkyxhK+OmLufBPdALeLuSgB6rfYEO9DmxH0XPFEnVrYNTPegFCMi/vM
-         bvzcQytHqKkmlAlGAISTcptf5WoNzNlL2HLzcJnwB4SdXyfhcUetyoQdmLQaO7+VXM
-         86kTOh2b+eAjQ==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprOJsWRmVeSWpSXmKPExsVyYMXvTbp1/HFxBlsn81lMffiEzWL+kXOs
+        Fs2L17NZfLvSwWRxedccNovPvUcYLZZev8hkMWfpCRaLuV+mMlu07j3CbnF6d4kDt8eaeWsY
+        PXbOusvusWlVJ5vH/rlr2D0+b5ILYI3itklKLCkLzkzP07dL4M74/W0zS8Ey7orjZ++yNTA2
+        cHcxcnJICJhIzLh8k6WLkYtDSOAqo8SGK63sEM5xRonZx78BORwcbAI2El032UEaRAR0Jab+
+        WswGUsMs8I5F4k7bQlaQGmEBZ4kdJ+whalwkXu1tYoWw3STWfp/PBmKzCKhI7Hz2DMzmFfCT
+        OLr8DBPErt1MElO/TQdbwClgJHH21xomEJtRQFais+EdmM0sIC6x6dl3VoirBSSW7DnPDGGL
+        Srx8/A8qriix/fs6FpB7mAU0Jdbv0ododZA4cPkFG4StKDGl+yE7xA2CEidnPmGZwCg2C8mG
+        WQjds5B0z0LSPQtJ9wJG1lWMErmJmTnpiSWphnpFqaV6RfkZuUAqOT93EyMkor/sYPx/yPMQ
+        IxMH4yFGSQ4mJVHeD/6xcUJ8SfkplRmJxRnxRaU5qcWHGCU4mJVEeH05o+OEeFMSK6tSi/Jh
+        UtIcLErivOoPJ8YKCYDsyk5NLUgtgsnKcHAoSfBy8MXFCQkWpaanVqRl5pQgpJk4OEGGc0mJ
+        FKfmpaQWJZaWZMSD0kd8MTCBgKR4gPaa8QC18xYXJOYCRSFaTzFqc0x4OXcRM8eRuUsXMQux
+        5OXnpUqJ817mBioVACnNKM2DW/SKUZyDUUmYdyIvUJYHmNrh5rwCWsEEtKLnOchrxSWJCCmp
+        BkaTHWuvbvj//6lS9PfNr7rynrKU67vJRoZcSY8TiIw2LuOVasl4M1Px6n37L28dGg/WV4Sn
+        dTO8dZE12tBX/qsiqlW75bXuy9ofpx+1fTh4eucDxeQ5Myy3byjO//ijaWr2gjN2h0viSvY2
+        RzwUTrizbPqMXWvNjuxl59j1RjvnX7PtTYOVS+SVWIozEg21mIuKEwGLqjrGqgMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 4:25 PM, Claudio Imbrenda wrote:
-> With the introduction of protected KVM guests on s390 there is now a
-> concept of inaccessible pages. These pages need to be made accessible
-> before the host can access them.
-> 
-> While cpu accesses will trigger a fault that can be resolved, I/O
-> accesses will just fail.  We need to add a callback into architecture
-> code for places that will do I/O, namely when writeback is started or
-> when a page reference is taken.
-> 
-> This is not only to enable paging, file backing etc, it is also
-> necessary to protect the host against a malicious user space.  For
-> example a bad QEMU could simply start direct I/O on such protected
-> memory.  We do not want userspace to be able to trigger I/O errors and
-> thus the logic is "whenever somebody accesses that page (gup) or does
-> I/O, make sure that this page can be accessed".  When the guest tries
-> to access that page we will wait in the page fault handler for
-> writeback to have finished and for the page_ref to be the expected
-> value.
-> 
-> On s390x the function is not supposed to fail, so it is ok to use a
-> WARN_ON on failure. If we ever need some more finegrained handling
-> we can tackle this when we know the details.
-> 
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> Acked-by: Will Deacon <will@kernel.org>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->   include/linux/gfp.h |  6 ++++++
->   mm/gup.c            | 27 ++++++++++++++++++++++++---
->   mm/page-writeback.c |  5 +++++
->   3 files changed, 35 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> index e5b817cb86e7..be2754841369 100644
-> --- a/include/linux/gfp.h
-> +++ b/include/linux/gfp.h
-> @@ -485,6 +485,12 @@ static inline void arch_free_page(struct page *page, int order) { }
->   #ifndef HAVE_ARCH_ALLOC_PAGE
->   static inline void arch_alloc_page(struct page *page, int order) { }
->   #endif
-> +#ifndef HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
-> +static inline int arch_make_page_accessible(struct page *page)
-> +{
-> +	return 0;
-> +}
-> +#endif
->   
->   struct page *
->   __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 81a95fbe9901..15c47e0e86f8 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -413,6 +413,7 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->   	struct page *page;
->   	spinlock_t *ptl;
->   	pte_t *ptep, pte;
-> +	int ret;
->   
->   	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
->   	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
-> @@ -471,8 +472,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->   		if (is_zero_pfn(pte_pfn(pte))) {
->   			page = pte_page(pte);
->   		} else {
-> -			int ret;
-> -
->   			ret = follow_pfn_pte(vma, address, ptep, flags);
->   			page = ERR_PTR(ret);
->   			goto out;
-> @@ -480,7 +479,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->   	}
->   
->   	if (flags & FOLL_SPLIT && PageTransCompound(page)) {
-> -		int ret;
->   		get_page(page);
->   		pte_unmap_unlock(ptep, ptl);
->   		lock_page(page);
-> @@ -497,6 +495,19 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->   		page = ERR_PTR(-ENOMEM);
->   		goto out;
->   	}
-> +	/*
-> +	 * We need to make the page accessible if we are actually going to
-> +	 * poke at its content (pin), otherwise we can leave it inaccessible.
-> +	 * If we cannot make the page accessible, fail.
-> +	 */
-> +	if (flags & FOLL_PIN) {
-> +		ret = arch_make_page_accessible(page);
-> +		if (ret) {
-> +			unpin_user_page(page);
-> +			page = ERR_PTR(ret);
-> +			goto out;
-> +		}
-> +	}
-
-
-That looks good.
-
-
->   	if (flags & FOLL_TOUCH) {
->   		if ((flags & FOLL_WRITE) &&
->   		    !pte_dirty(pte) && !PageDirty(page))
-> @@ -2162,6 +2173,16 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
->   
->   		VM_BUG_ON_PAGE(compound_head(page) != head, page);
->   
-> +		/*
-> +		 * We need to make the page accessible if we are actually
-> +		 * going to poke at its content (pin), otherwise we can
-> +		 * leave it inaccessible. If the page cannot be made
-> +		 * accessible, fail.
-> +		 */
-
-
-This part looks good, so these two points are just nits:
-
-That's a little bit of repeating what the code does, in the comments. How about:
-
-		/*
-		 * We need to make the page accessible if and only if we are
-		 * going to access its content (the FOLL_PIN case). Please see
-		 * Documentation/core-api/pin_user_pages.rst for details.
-		 */
-
-
-> +		if ((flags & FOLL_PIN) && arch_make_page_accessible(page)) {
-> +			unpin_user_page(page);
-> +			goto pte_unmap;
-> +		}
-
-
-Your style earlier in the patch was easier on the reader, why not stay consistent
-with that (and with this file, which tends also to do this), so:
-
-		if (flags & FOLL_PIN) {
-			ret = arch_make_page_accessible(page);
-			if (ret) {
-				unpin_user_page(page);
-				goto pte_unmap;
-			}
-		}
-
-
-
-
->   		SetPageReferenced(page);
->   		pages[*nr] = page;
->   		(*nr)++;
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index ab5a3cee8ad3..8384be5a2758 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -2807,6 +2807,11 @@ int __test_set_page_writeback(struct page *page, bool keep_write)
->   		inc_zone_page_state(page, NR_ZONE_WRITE_PENDING);
->   	}
->   	unlock_page_memcg(page);
-> +	/*
-> +	 * If writeback has been triggered on a page that cannot be made
-> +	 * accessible, it is too late.
-> +	 */
-> +	WARN_ON(arch_make_page_accessible(page));
-
-
-I'm not deep enough into this area to know if a) this is correct, and b) if there are any
-other places that need arch_make_page_accessible() calls. So I'll rely on other
-reviewers to help check on that.
-
-
->   	return ret;
->   
->   }
-> 
-
-Anyway, I don't see any problems, and as I said, those documentation and style points are
-just nitpicks, not bugs.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+SGVsbG8gTWFyaywNCg0KT24gVHVlLCAyMDIwLTAyLTI1IGF0IDE1OjMzICswMDAwLCBNYXJrIEJy
+b3duIHdyb3RlOg0KPiBPbiBUdWUsIEZlYiAyNSwgMjAyMCBhdCAwNjoyMzozMUFNICswMDAwLCBW
+YWl0dGluZW4sIE1hdHRpIHdyb3RlOg0KPiANCj4gPiBPbmx5IGNoYW5nZSByZXF1aXJlZCBvbiBp
+bmRpdmlkdWFsIHJlZ3VsYXRvciBkcml2ZXJzIHNob3VsZCBiZQ0KPiA+IHJlbmFtaW5nDQo+ID4g
+dGhlIHN0cnVjdCByZWd1bGF0b3JfbGluZWFyX3JhbmdlIHRvIGxpbmVhcl9yYW5nZS4gUmVzdCBv
+ZiB0aGUNCj4gPiBjaGFuZ2VzDQo+ID4gc2hvdWxkIGJlIGludGVybmFsIHRvIHJlZ3VsYXRvciBm
+cmFtZXdvcmssIHJpZ2h0Pw0KPiANCj4gUmlnaHQsIGl0J3MgdGhhdCB0eXBlIHJlcGxhY2VtZW50
+IHRoYXQgc2hvdWxkIGJlIGRvbmUgYXRvbWljYWxseS4NCg0KWWVzLiBBbmQgdGhlIHR5cGUgcmVw
+bGFjZW1lbnQgaXMgZG9uZSBvbmx5IGluIHRoaXMgcGF0Y2ggd2hlcmUgdGhlDQpzdHJ1Y3QgaXMg
+cmVtb3ZlZCBmcm9tIHJlZ3VsYXRvciBkcml2ZXIuaCBoZWFkZXIgLSBhbmQgdGhlIGxpbmVhcl9y
+YW5nZQ0KaGVhZGVyIHByb3ZpZGluZyB0aGlzIG5ldyBzdHJ1Y3QgaXMgaW5jbHVkZWQuIFByZXZp
+b3VzIHBhdGNoIGRpZCBub3QNCmNoYW5nZSB0aGUgdHlwZSAtIGp1c3QgcmVuYW1lZCB0aGUgc3Ry
+dWN0Lg0KDQpBbnl3YXlzLCBJIGRpZCBjb21waWxlIHRlc3QgdGhlIHBhdGNoIHY0IGZvciB0aGVz
+ZSBjb21taXRzIGFuZCB0aGVyZQ0Kd2VyZSBubyBwcm9ibGVtcyBpbiByZWd1bGF0b3IgZHJpdmVy
+cy4gVGhlIEJENzA1MjggY2hhcmdlciBkcml2ZXIgaGFkDQphbiBpc3N1ZSBhcyB0aGUgbGluZWFy
+X3JhbmdlIHN0cnVjdCB3YXMgZHVibGljYXRlZCB0aGVyZSAtIGJ1dCB0aGlzDQpzaG91bGQgYmUg
+Zml4ZWQgYnkgdGhlIHY0IHdoZXJlIEkgYWRkZWQgb25lIGV4dHJhIHBhdGNoIGRvaW5nIHJlbmFt
+aW5nDQpmb3IgdGhpcyBCRDcwNTI4IGNoYXJnZXIgaW50ZXJuYWwgc3RydWN0dXJlLg0KDQpCZXN0
+IFJlZ2FyZHMNCglNYXR0aSBWYWl0dGluZW4NCg==
