@@ -2,154 +2,91 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6281C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D70C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A35492073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:42:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="AkZ255c1"
+	by mail.kernel.org (Postfix) with ESMTP id 3F90E2086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:43:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583239422;
+	bh=044UYjZT4SSbVtehGTLNQnkP9+qCXgs6Amiefo4tRXI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CbD/Ey3q1MUSEdw40cVsTnGWHZry75woWRYLmI7lFzln8/6rEy6vLWafL15u0IAYE
+	 eJpfT2JBBUAZLCjU4FNOBSgTglPSPh3wjZgmRjBoN9Ga2RCRhPINaXTzUwJERyn4gr
+	 5lkTl8Fr9/yaGF0AdNXN17MrsjIZs0iTf7E1F/24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728372AbgCCMmh (ORCPT
+        id S1728436AbgCCMnl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:42:37 -0500
-Received: from mail-eopbgr80073.outbound.protection.outlook.com ([40.107.8.73]:26338
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727826AbgCCMmh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:42:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fohMI+70btdxp0CjnxWj0kHmrp31SvuSSBTqs1oejVLK53tGGzIc3RmVStQBOEJyJ+GplpcA6hqmnJ/1XEMfcSMBgXW+Sihk/ExbjequXD9w/05tX1RHqMXUfJJA1hma9dcYr/pFNLaW6FivTRBAuKQ78dYeP9+gTv7kCvyZxrD5ic92rvO1n6J+Os3BsVXS+RRZVUcm6fSpejAzWvKH33P3I6lSwytqKfBubklV/G8MK07gkfZcRgYIoHKy8dIWKLQfsV87TRRpvw4ayGlj2acmhLj3OP4tTYhy/KM2h07HxIIgSqn0+zVFhvatlaPHupROBIjiEYljOD4LIwIlYw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TZQ/KXYyEtu5JOGr9NpXqqDzEzNAAM2mdXtXBXwTl1o=;
- b=XkQlAjMC42qTkTPBrUjYU0kTrZS9tXJEo1sP3gxNkACuEGZYHNnJLx6w2aZqeWlSqHpLlv3D9JcA+UewwRulV5749+MLe2OIzktGBM35oY9Hmzg7ZmubuKdyo/8bhLDr0z/i1ZtqBF+ij11jB+ku2onNjPTnTiMjcmMoBIam1wWE8NsklsxqNBUmzAAr4Eu8aVEDTP4WmST+gjT9WIIKno4PHoZSMZ7L8YSf8R082Lom69CHs7y/zAr5xCm000XdXSlXud/VaAEEdyl3YwpGVsV+ugByHbA9HvtVOge8IvfroeMfz6Ra8nzW5FbytFmKC1202FLlUZbTsMhs/bQO9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TZQ/KXYyEtu5JOGr9NpXqqDzEzNAAM2mdXtXBXwTl1o=;
- b=AkZ255c1iI6qTJYCYDClWZHAai7U3Fa755Z1xUl+E6tnk/ruSESRC9Qr05YTlYXrAfsjnre0G/LTkUMMPcyluNTl9JUC2UEEHQ+sgQEEqmZEi0AzAT3bIj1xf/pOc79P9l3yFzisxTUoTkRUV0+B1pZiajmRzFtngmGgiuxXIs0=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4304.eurprd05.prod.outlook.com (52.134.31.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.18; Tue, 3 Mar 2020 12:42:33 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
- 12:42:33 +0000
-Date:   Tue, 3 Mar 2020 08:42:29 -0400
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-Cc:     dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        nouveau@lists.freedesktop.org, Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ben Skeggs <bskeggs@redhat.com>
-Subject: Re: [PATCH v2] nouveau/hmm: map pages after migration
-Message-ID: <20200303124229.GH26318@mellanox.com>
-References: <20200303010023.2983-1-rcampbell@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200303010023.2983-1-rcampbell@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-ClientProxiedBy: MN2PR11CA0010.namprd11.prod.outlook.com
- (2603:10b6:208:23b::15) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
+        Tue, 3 Mar 2020 07:43:41 -0500
+Received: from foss.arm.com ([217.140.110.172]:46538 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727922AbgCCMnl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 07:43:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82C99FEC;
+        Tue,  3 Mar 2020 04:43:40 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 050CE3F534;
+        Tue,  3 Mar 2020 04:43:39 -0800 (PST)
+Date:   Tue, 3 Mar 2020 12:43:38 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        MTD Maling List <linux-mtd@lists.infradead.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device
+ buswidth
+Message-ID: <20200303124338.GD3866@sirena.org.uk>
+References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
+ <1582903131-160033-2-git-send-email-john.garry@huawei.com>
+ <CAMuHMdW7Xu6EzfmVFx1+i1byy3KOS5A+h2GuMb8nkZ+-jD1=BA@mail.gmail.com>
+ <f6f21e75-7cee-89da-bb87-95327a4ec2cc@huawei.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR11CA0010.namprd11.prod.outlook.com (2603:10b6:208:23b::15) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Tue, 3 Mar 2020 12:42:32 +0000
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j96sX-00052m-Fn; Tue, 03 Mar 2020 08:42:29 -0400
-X-Originating-IP: [142.68.57.212]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 932f4548-d333-4524-d9c2-08d7bf7057fc
-X-MS-TrafficTypeDiagnostic: VI1PR05MB4304:
-X-Microsoft-Antispam-PRVS: <VI1PR05MB4304D9D99272469C88E0B9D2CFE40@VI1PR05MB4304.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:10000;
-X-Forefront-PRVS: 03319F6FEF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(189003)(199004)(2906002)(26005)(7416002)(498600001)(9746002)(9786002)(6916009)(36756003)(8676002)(81166006)(2616005)(81156014)(8936002)(52116002)(54906003)(66476007)(66556008)(33656002)(66946007)(5660300002)(186003)(4326008)(1076003)(86362001)(66574012)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4304;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sqUfKc9/lGC/B3dtqv2ERaiDJD/SIYB/tAv0oF3CVMnVEE+Kyq99++m/M5Gs2szBIvQr7vMVnDJFXhVPoM3ENwnHjdWn5I7vHvmmX5c126BpBS3aV4AmQWUcqKMCjj71Y4LeBoa4Sfw9MdBWw9UNznWdrVYeEk3DjqtvG+iVG/WfObc/lOgpn+Bd0k3yWoCHYXixQxhITTMSrQwX/l0s/FcFuiYN8Ufr35Jni08KgjYWwju1B6mzs8W25q7Wpe2oNmIlC0B41DG3Y0vSdxrhP06qVqVW0nuGRiVBkWANX07SshusIw4jBYqG1tPu0ng7H7cGGKVlZXiwFYMNw6Vcz78Kv+2eQ6TslgjoR3DiZNkZKWyzKlG0xfNbrJIqgRrTufd3ZS40FJFxmSXhBobJJ/6sNMkJJpAegLV7uQ9DNNZx0phgfBsaJAGotu+CJrIDoORhuv2tD2JH+xSgAF1Jo4eJueR75YccmycaM5/F5oJ1W0Ap+nDqVfVg1f1azdt8
-X-MS-Exchange-AntiSpam-MessageData: BhMVWap8pTjYC7/WBNhXHjIZ7qtbW7ov+QPCU+iY0TbMWIf83UO8NQtWvndTX1w5rqKmrbVbHW14N6pTdLA+JaVWTcOFwSYPStd+1ogHkIXovkpTfT7oeynKtoieOrYB0RYN+lJMZnRS1XdRFhWZTg==
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 932f4548-d333-4524-d9c2-08d7bf7057fc
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 12:42:33.1434
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cAL3WKQnCqcEhA6Hd332a2QVZzi5Aq6WkA9z4wJVHtuOJKxrduvyeCy/MPssTwko8UZaZMyRnwQRkRGCjfc6xg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4304
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IDYEmSnFhs3mNXr+"
+Content-Disposition: inline
+In-Reply-To: <f6f21e75-7cee-89da-bb87-95327a4ec2cc@huawei.com>
+X-Cookie: Drilling for oil is boring.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 05:00:23PM -0800, Ralph Campbell wrote:
-> When memory is migrated to the GPU, it is likely to be accessed by GPU
-> code soon afterwards. Instead of waiting for a GPU fault, map the
-> migrated memory into the GPU page tables with the same access permissions
-> as the source CPU page table entries. This preserves copy on write
-> semantics.
-> 
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jason Gunthorpe <jgg@mellanox.com>
-> Cc: "Jérôme Glisse" <jglisse@redhat.com>
-> Cc: Ben Skeggs <bskeggs@redhat.com>
-> ---
-> 
-> Originally this patch was targeted for Jason's rdma tree since other HMM
-> related changes were queued there. Now that those have been merged, this
-> patch just contains changes to nouveau so it could go through any tree.
-> I guess Ben Skeggs' tree would be appropriate.
 
-Yep
+--IDYEmSnFhs3mNXr+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +static inline struct nouveau_pfnmap_args *
-> +nouveau_pfns_to_args(void *pfns)
+On Tue, Mar 03, 2020 at 09:42:45AM +0000, John Garry wrote:
 
-don't use static inline inside C files
+> However, maybe another callback could be introduced, .early_setup().
 
-> +{
-> +	struct nvif_vmm_pfnmap_v0 *p =
-> +		container_of(pfns, struct nvif_vmm_pfnmap_v0, phys);
-> +
-> +	return container_of(p, struct nouveau_pfnmap_args, p);
+One thing I like about the explicit core code is that it makes it much
+easier to see which drivers are doing the worrying thing, with just
+overwriting things in a callback everything is very freeform and you
+have to audit things individually.
 
-And this should just be 
+--IDYEmSnFhs3mNXr+
+Content-Type: application/pgp-signature; name="signature.asc"
 
-   return container_of(pfns, struct nouveau_pfnmap_args, p.phys);
+-----BEGIN PGP SIGNATURE-----
 
-> +static struct nouveau_svmm *
-> +nouveau_find_svmm(struct nouveau_svm *svm, struct mm_struct *mm)
-> +{
-> +	struct nouveau_ivmm *ivmm;
-> +
-> +	list_for_each_entry(ivmm, &svm->inst, head) {
-> +		if (ivmm->svmm->notifier.mm == mm)
-> +			return ivmm->svmm;
-> +	}
-> +	return NULL;
-> +}
+iQEyBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5eUPkACgkQJNaLcl1U
+h9BYcAf4kl/gydZycwZtTddrolWZTe5aGp9hdBn91H5K4i0f3Sp/wzjZi9Z7NMLZ
+hFT1kd7fwU9kHr5QBDt66s8mnC/A8WU/yLekP7hKQkumLFBXT+EzpW4ZsD0OFB8R
+KvAr5BCFqvJMdRPYCqsqi1nvZwNA4jYhWXp5sGlT3T/4GH0ulhQDZghULkx+8e06
+Kd23pOwyQmDQgwVTqQ/YuB36cPzriYsoxu3vijQZLIVGO4K/PPqiaoq5Af1EiGlr
+mcwa0IaW3IMQbjLk5KPuITz8YUMrPryVc+unOuertCfFYoHcYmgIO/Aq6yOpnbRl
+UajtjXoFfB5jRdSGvoDFHjZcfYfJ
+=FOcd
+-----END PGP SIGNATURE-----
 
-Is this re-implementing mmu_notifier_get() ?
-
-Jason
+--IDYEmSnFhs3mNXr+--
