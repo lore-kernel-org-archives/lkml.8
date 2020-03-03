@@ -2,41 +2,43 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F07FC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6C2C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED942214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2656320870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="EMPB6VLy"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="FCX6N1U6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730425AbgCCRnW (ORCPT
+        id S1730559AbgCCRnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:43:22 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:41849 "EHLO
+        Tue, 3 Mar 2020 12:43:23 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:52621 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729463AbgCCRnW (ORCPT
+        with ESMTP id S1729597AbgCCRnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Mar 2020 12:43:22 -0500
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id D7C1C231D9;
-        Tue,  3 Mar 2020 18:43:18 +0100 (CET)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 07A902327F;
+        Tue,  3 Mar 2020 18:43:20 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583257399;
+        t=1583257400;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=/SS0Mpitdw47OknrMdnyVNGnPtzEQcsJ+qOlq2fN2jQ=;
-        b=EMPB6VLynHXmYFxKp/ONkM14baAzs5ZaCvqFD/iFs09cuXslOkpOh9Iw3zyk+Pt/xYIfXK
-        0fkrfGlazORExVvOcTQEwlC+8NmN3+DP/MFu53+G/CkM9/Zj+jA8EgeHYcN2D1fCR5681+
-        /6RGigOxmRBKGX4DyhS21DvMk2DCCc4=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=s6EOAobt5saGFt58QDGrFmkjtzz3qIh/p10CWvZHnSU=;
+        b=FCX6N1U6d7uPfzP7Q6kWpXhw428mP88+dxCD0VYxh+CnjIwMKR1HBskjC+bxADMn1TTUN3
+        XviKeL1ET08nf50gvQOo00tWTEkxdY1CA0TzYIZYiFLVtxg+lLe1atkbjIg+YSTH+/YpTB
+        sVuHnjbL6iIgLXYImtu0vozQU9xHvZo=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
@@ -47,15 +49,17 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
         Vabhav Sharma <vabhav.sharma@nxp.com>,
         Yuan Yao <yao.yuan@nxp.com>, Michael Walle <michael@walle.cc>
-Subject: [PATCH v3 0/9] tty: serial: fsl_lpuart various fixes and LS1028A support
-Date:   Tue,  3 Mar 2020 18:42:57 +0100
-Message-Id: <20200303174306.6015-1-michael@walle.cc>
+Subject: [PATCH v3 1/9] Revert "tty: serial: fsl_lpuart: drop EARLYCON_DECLARE"
+Date:   Tue,  3 Mar 2020 18:42:58 +0100
+Message-Id: <20200303174306.6015-2-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200303174306.6015-1-michael@walle.cc>
+References: <20200303174306.6015-1-michael@walle.cc>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
 X-Rspamd-Server: web
-X-Rspamd-Queue-Id: D7C1C231D9
+X-Rspamd-Queue-Id: 07A902327F
 X-Spamd-Result: default: False [6.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -64,7 +68,7 @@ X-Spamd-Result: default: False [6.40 / 15.00];
          TAGGED_RCPT(0.00)[dt];
          MIME_GOOD(-0.10)[text/plain];
          BROKEN_CONTENT_TYPE(1.50)[];
-         NEURAL_SPAM(0.00)[0.504];
+         NEURAL_SPAM(0.00)[0.494];
          DKIM_SIGNED(0.00)[];
          RCPT_COUNT_TWELVE(0.00)[14];
          MID_CONTAINS_FROM(1.00)[];
@@ -79,47 +83,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are various fixes for problems I found during development of the
-LS1028A support for the LPUART.
+This reverts commit a659652f6169240a5818cb244b280c5a362ef5a4.
 
-Also, I'm not sure if this series should be split between the "tty:
-serial: fsl_lpuart" patches and the devicetree patches. So unless
-someone tell me otherwise I keep them together to avoid mention any
-dependencies.
+This broke the earlycon on LS1021A processors because the order of the
+earlycon_setup() functions were changed. Before the commit the normal
+lpuart32_early_console_setup() was called. After the commit the
+lpuart32_imx_early_console_setup() is called instead.
 
-Changes since v2:
-Changed DMA channel request handling. Spotted by Rob Herring. Thanks.
+Fixes: a659652f6169 ("tty: serial: fsl_lpuart: drop EARLYCON_DECLARE")
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/tty/serial/fsl_lpuart.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Modified patches:
-  tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
-
-Changes since v1:
-DMA support fixes.
-
-New patches:
-  tty: serial: fsl_lpuart: fix DMA mapping
-  arm64: dts: ls1028a: add "fsl,vf610-edma" compatible
-
-Modified patches:
-  arm64: dts: ls1028a: add missing LPUART nodes
-   - add dma phandles
-
-Michael Walle (9):
-  Revert "tty: serial: fsl_lpuart: drop EARLYCON_DECLARE"
-  tty: serial: fsl_lpuart: free IDs allocated by IDA
-  tty: serial: fsl_lpuart: handle EPROBE_DEFER for DMA
-  tty: serial: fsl_lpuart: fix DMA mapping
-  dt-bindings: serial: lpuart: add ls1028a compatibility
-  tty: serial: fsl_lpuart: add LS1028A support
-  tty: serial: fsl_lpuart: add LS1028A earlycon support
-  arm64: dts: ls1028a: add "fsl,vf610-edma" compatible
-  arm64: dts: ls1028a: add missing LPUART nodes
-
- .../devicetree/bindings/serial/fsl-lpuart.txt |  10 +-
- .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi |  75 +++++-
- drivers/tty/serial/fsl_lpuart.c               | 251 ++++++++++++------
- 3 files changed, 255 insertions(+), 81 deletions(-)
-
+diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
+index 91e2805e6441..27fdc131c352 100644
+--- a/drivers/tty/serial/fsl_lpuart.c
++++ b/drivers/tty/serial/fsl_lpuart.c
+@@ -2390,6 +2390,8 @@ static int __init lpuart32_imx_early_console_setup(struct earlycon_device *devic
+ OF_EARLYCON_DECLARE(lpuart, "fsl,vf610-lpuart", lpuart_early_console_setup);
+ OF_EARLYCON_DECLARE(lpuart32, "fsl,ls1021a-lpuart", lpuart32_early_console_setup);
+ OF_EARLYCON_DECLARE(lpuart32, "fsl,imx7ulp-lpuart", lpuart32_imx_early_console_setup);
++EARLYCON_DECLARE(lpuart, lpuart_early_console_setup);
++EARLYCON_DECLARE(lpuart32, lpuart32_early_console_setup);
+ 
+ #define LPUART_CONSOLE	(&lpuart_console)
+ #define LPUART32_CONSOLE	(&lpuart32_console)
 -- 
 2.20.1
 
