@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C872C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0797C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5EE2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 842BC2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204208;
-	bh=ZV8dvxl6uwGEoAc1BLIA9d9BiR8PgAVgeU9wYp/7O1o=;
+	s=default; t=1583204212;
+	bh=xqt4H5Ll6dhRS4CH7JG/NGQN2sDa4HiwBAcvJr7uI2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lV9pNz0U9mO2eniTJAGu/0R4mPf08Dz8xZhkqWxS/U5lwoNIsy7yEncAfVJjNnVwQ
-	 kImWShK7vuFUOxR6nl+JsHBMJTEDVrvkWq1PhkUxTFDl5gaAw8fOlxQGA7vJvi2gFD
-	 o8D2c/+U+3pyw4FdhCo7xmyU5ag8Uu2j8upfHVZk=
+	b=uh4806EK0XRaezhOIviuetFPoQwqOJPUDlLtt9qWsWjMB1VpF8SJW6ODDQ2SxWcK4
+	 BtNhdo1fg9G723zYS3+5wwcNzJ7SlA9u6TuY60V+POu9HGB4ACxd7c0S/QYLA28PZ8
+	 iuiDySl1JfKMBm1rSfzwB3CdWvFEpuKy6x5oQvD4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729042AbgCCC4r (ORCPT
+        id S1728458AbgCCCsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:56:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44456 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbgCCCsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:35 -0500
+        id S1728397AbgCCCsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D82E246D6;
-        Tue,  3 Mar 2020 02:48:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC24F246D6;
+        Tue,  3 Mar 2020 02:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203715;
-        bh=ZV8dvxl6uwGEoAc1BLIA9d9BiR8PgAVgeU9wYp/7O1o=;
+        s=default; t=1583203703;
+        bh=xqt4H5Ll6dhRS4CH7JG/NGQN2sDa4HiwBAcvJr7uI2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N55szuSo127wabnrXvH+MlG2WfymfNOicZVxz4khqHR4t2ozN8285xIlU8Yz9bT+x
-         QUftFzViS+LzfZ6p+dMtEhgsXTrbmltbUEzD9VJskrZut+b+Pkks/uYyOQVsVW/AOb
-         ujOxsGQIvYJ6XFLyt5ry015TLq3JDtlBhPxQyXjo=
+        b=YAPLcXOw99TrMRdv4OtfIGcew+r3tO+GVt3VbhUyf5zAZisrmUdnah7Mrl2wPAr0G
+         Jz7ttAqTyD0C2ysezYAxEHBlfFb+L7HOfYB+6s2PnTqBES+Z2Cw9P0WP0rgB/q0Ceh
+         TAv6NhM6SwayIdHnmt9abP8PkasX0Yx3yU4vuNSA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Osipenko <digetx@gmail.com>,
+Cc:     Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 45/58] nfc: pn544: Fix occasional HW initialization failure
-Date:   Mon,  2 Mar 2020 21:47:27 -0500
-Message-Id: <20200303024740.9511-45-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 35/58] net: mscc: fix in frame extraction
+Date:   Mon,  2 Mar 2020 21:47:17 -0500
+Message-Id: <20200303024740.9511-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -59,46 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Osipenko <digetx@gmail.com>
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
 
-[ Upstream commit c3331d2fe3fd4d5e321f2467d01f72de7edfb5d0 ]
+[ Upstream commit a81541041ceb55bcec9a8bb8ad3482263f0a205a ]
 
-The PN544 driver checks the "enable" polarity during of driver's probe and
-it's doing that by turning ON and OFF NFC with different polarities until
-enabling succeeds. It takes some time for the hardware to power-down, and
-thus, to deassert the IRQ that is raised by turning ON the hardware.
-Since the delay after last power-down of the polarity-checking process is
-missed in the code, the interrupt may trigger immediately after installing
-the IRQ handler (right after the checking is done), which results in IRQ
-handler trying to touch the disabled HW and ends with marking NFC as
-'DEAD' during of the driver's probe:
+Each extracted frame on Ocelot has an IFH. The frame and IFH are extracted
+by reading chuncks of 4 bytes from a register.
 
-  pn544_hci_i2c 1-002a: NFC: nfc_en polarity : active high
-  pn544_hci_i2c 1-002a: NFC: invalid len byte
-  shdlc: llc_shdlc_recv_frame: NULL Frame -> link is dead
+In case the IFH and frames were read corretly it would try to read the next
+frame. In case there are no more frames in the queue, it checks if there
+were any previous errors and in that case clear the queue. But this check
+will always succeed also when there are no errors. Because when extracting
+the IFH the error is checked against 4(number of bytes read) and then the
+error is set only if the extraction of the frame failed. So in a happy case
+where there are no errors the err variable is still 4. So it could be
+a case where after the check that there are no more frames in the queue, a
+frame will arrive in the queue but because the error is not reseted, it
+would try to flush the queue. So the frame will be lost.
 
-This patch fixes the occasional NFC initialization failure on Nexus 7
-device.
+The fix consist in resetting the error after reading the IFH.
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nfc/pn544/i2c.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/mscc/ocelot_board.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/nfc/pn544/i2c.c b/drivers/nfc/pn544/i2c.c
-index 720c89d6066ef..4ac8cb262559c 100644
---- a/drivers/nfc/pn544/i2c.c
-+++ b/drivers/nfc/pn544/i2c.c
-@@ -225,6 +225,7 @@ static void pn544_hci_i2c_platform_init(struct pn544_i2c_phy *phy)
+diff --git a/drivers/net/ethernet/mscc/ocelot_board.c b/drivers/net/ethernet/mscc/ocelot_board.c
+index aac115136720f..3371562325013 100644
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -112,6 +112,14 @@ static irqreturn_t ocelot_xtr_irq_handler(int irq, void *arg)
+ 		if (err != 4)
+ 			break;
  
- out:
- 	gpiod_set_value_cansleep(phy->gpiod_en, !phy->en_polarity);
-+	usleep_range(10000, 15000);
- }
++		/* At this point the IFH was read correctly, so it is safe to
++		 * presume that there is no error. The err needs to be reset
++		 * otherwise a frame could come in CPU queue between the while
++		 * condition and the check for error later on. And in that case
++		 * the new frame is just removed and not processed.
++		 */
++		err = 0;
++
+ 		ocelot_parse_ifh(ifh, &info);
  
- static void pn544_hci_i2c_enable_mode(struct pn544_i2c_phy *phy, int run_mode)
+ 		dev = ocelot->ports[info.port]->dev;
 -- 
 2.20.1
 
