@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A36C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 108D0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE832465D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD10720CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257646;
-	bh=B121PA6hXOFvZznG/7fDaBlo/sGgh6O5jluLJi1gRzE=;
+	s=default; t=1583257656;
+	bh=b0T7XcKyF7fdfoO4CCzBX1iv4p+VefjFERsskt64TYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iN2FCGp7v1zYK6lWw4pUmRyu0HH9NnwCZC67M8jz6UHzbPYhTZvpI3EU3vQwzMVBo
-	 /orGnGrwExD4XaaESkfzQ7thAkIkQwGnnQePpmKgtoYrPeDds9YbrSwKH2/T/k5B4x
-	 Przr6bg7HYj281kzECd7RRHFBq+Fdfm2RmN990H4=
+	b=aa0u5XsXJkr3rrRGZUo9FKoDF4LwtdP306M8V0k9cPw/pKFA3I9s3jaZT3OJ9Oj1h
+	 qlXE2oD/tbQdKbmTiy2q6xigiX0qZV0e+xA9b/ZzB8h1K2C1P7JAK9EwHfdGPTA7Yu
+	 boIRB7Azt/nlR+T7sTcLV5V2TATxaa/VibSoSWIM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731331AbgCCRrV (ORCPT
+        id S1731389AbgCCRrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54174 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:47:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54470 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730061AbgCCRrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:47:19 -0500
+        id S1731366AbgCCRrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:47:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A3E920870;
-        Tue,  3 Mar 2020 17:47:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3083208C3;
+        Tue,  3 Mar 2020 17:47:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257638;
-        bh=B121PA6hXOFvZznG/7fDaBlo/sGgh6O5jluLJi1gRzE=;
+        s=default; t=1583257651;
+        bh=b0T7XcKyF7fdfoO4CCzBX1iv4p+VefjFERsskt64TYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C3cHITWjaAfKY34/gIcUkBTiwtrqXcJ9Itq3UGaFpW7LWmCJuMbGFARiKiMb0trgM
-         QGXP5SwyRwKsuF5yLD064fByZAYJJ6ZB9Xmzd/t11D+lQNhtILdSGrtcenHfaIVhYQ
-         SP7KzKpH5En+lr7MxrjnSoaZQfafyTWU3fnUbB4U=
+        b=sAtXCf+ae5BTUK1uTy+TpYQfTgaTNZ0IdjoxCvADbzenxVDoPWEbtlcby0KpF42Gt
+         1Fn9SdLUUYkJCJqNr6iZaZXBEvi3TAGM3GvCBL/as8J3p/10rYbQMjvJZbweFjdTvu
+         gsOJg4/adv0T7bbsj73kXykRrSvpOLZb15T0D0+Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Glauber Costa <glauber@scylladb.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 070/176] io-wq: dont call kXalloc_node() with non-online node
-Date:   Tue,  3 Mar 2020 18:42:14 +0100
-Message-Id: <20200303174312.758678795@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 044/176] ARM: dts: sti: fixup sound frame-inversion for stihxxx-b2120.dtsi
+Date:   Tue,  3 Mar 2020 18:41:48 +0100
+Message-Id: <20200303174309.625791372@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,134 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-[ Upstream commit 7563439adfae153b20331f1567c8b5d0e5cbd8a7 ]
+[ Upstream commit f24667779b5348279e5e4328312a141a730a1fc7 ]
 
-Glauber reports a crash on init on a box he has:
+frame-inversion is "flag" not "uint32".
+This patch fixup it.
 
- RIP: 0010:__alloc_pages_nodemask+0x132/0x340
- Code: 18 01 75 04 41 80 ce 80 89 e8 48 8b 54 24 08 8b 74 24 1c c1 e8 0c 48 8b 3c 24 83 e0 01 88 44 24 20 48 85 d2 0f 85 74 01 00 00 <3b> 77 08 0f 82 6b 01 00 00 48 89 7c 24 10 89 ea 48 8b 07 b9 00 02
- RSP: 0018:ffffb8be4d0b7c28 EFLAGS: 00010246
- RAX: 0000000000000000 RBX: 0000000000000000 RCX: 000000000000e8e8
- RDX: 0000000000000000 RSI: 0000000000000002 RDI: 0000000000002080
- RBP: 0000000000012cc0 R08: 0000000000000000 R09: 0000000000000002
- R10: 0000000000000dc0 R11: ffff995c60400100 R12: 0000000000000000
- R13: 0000000000012cc0 R14: 0000000000000001 R15: ffff995c60db00f0
- FS:  00007f4d115ca900(0000) GS:ffff995c60d80000(0000) knlGS:0000000000000000
- CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
- CR2: 0000000000002088 CR3: 00000017cca66002 CR4: 00000000007606e0
- DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
- DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
- PKRU: 55555554
- Call Trace:
-  alloc_slab_page+0x46/0x320
-  new_slab+0x9d/0x4e0
-  ___slab_alloc+0x507/0x6a0
-  ? io_wq_create+0xb4/0x2a0
-  __slab_alloc+0x1c/0x30
-  kmem_cache_alloc_node_trace+0xa6/0x260
-  io_wq_create+0xb4/0x2a0
-  io_uring_setup+0x97f/0xaa0
-  ? io_remove_personalities+0x30/0x30
-  ? io_poll_trigger_evfd+0x30/0x30
-  do_syscall_64+0x5b/0x1c0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
- RIP: 0033:0x7f4d116cb1ed
-
-which is due to the 'wqe' and 'worker' allocation being node affine.
-But it isn't valid to call the node affine allocation if the node isn't
-online.
-
-Setup structures for even offline nodes, as usual, but skip them in
-terms of thread setup to not waste resources. If the node isn't online,
-just alloc memory with NUMA_NO_NODE.
-
-Reported-by: Glauber Costa <glauber@scylladb.com>
-Tested-by: Glauber Costa <glauber@scylladb.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/io-wq.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/stihxxx-b2120.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index 0dc4bb6de6566..25ffb6685baea 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -666,11 +666,16 @@ static int io_wq_manager(void *data)
- 	/* create fixed workers */
- 	refcount_set(&wq->refs, workers_to_create);
- 	for_each_node(node) {
-+		if (!node_online(node))
-+			continue;
- 		if (!create_io_worker(wq, wq->wqes[node], IO_WQ_ACCT_BOUND))
- 			goto err;
- 		workers_to_create--;
- 	}
- 
-+	while (workers_to_create--)
-+		refcount_dec(&wq->refs);
-+
- 	complete(&wq->done);
- 
- 	while (!kthread_should_stop()) {
-@@ -678,6 +683,9 @@ static int io_wq_manager(void *data)
- 			struct io_wqe *wqe = wq->wqes[node];
- 			bool fork_worker[2] = { false, false };
- 
-+			if (!node_online(node))
-+				continue;
-+
- 			spin_lock_irq(&wqe->lock);
- 			if (io_wqe_need_worker(wqe, IO_WQ_ACCT_BOUND))
- 				fork_worker[IO_WQ_ACCT_BOUND] = true;
-@@ -793,7 +801,9 @@ static bool io_wq_for_each_worker(struct io_wqe *wqe,
- 
- 	list_for_each_entry_rcu(worker, &wqe->all_list, all_list) {
- 		if (io_worker_get(worker)) {
--			ret = func(worker, data);
-+			/* no task if node is/was offline */
-+			if (worker->task)
-+				ret = func(worker, data);
- 			io_worker_release(worker);
- 			if (ret)
- 				break;
-@@ -1006,6 +1016,8 @@ void io_wq_flush(struct io_wq *wq)
- 	for_each_node(node) {
- 		struct io_wqe *wqe = wq->wqes[node];
- 
-+		if (!node_online(node))
-+			continue;
- 		init_completion(&data.done);
- 		INIT_IO_WORK(&data.work, io_wq_flush_func);
- 		data.work.flags |= IO_WQ_WORK_INTERNAL;
-@@ -1038,12 +1050,15 @@ struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
- 
- 	for_each_node(node) {
- 		struct io_wqe *wqe;
-+		int alloc_node = node;
- 
--		wqe = kzalloc_node(sizeof(struct io_wqe), GFP_KERNEL, node);
-+		if (!node_online(alloc_node))
-+			alloc_node = NUMA_NO_NODE;
-+		wqe = kzalloc_node(sizeof(struct io_wqe), GFP_KERNEL, alloc_node);
- 		if (!wqe)
- 			goto err;
- 		wq->wqes[node] = wqe;
--		wqe->node = node;
-+		wqe->node = alloc_node;
- 		wqe->acct[IO_WQ_ACCT_BOUND].max_workers = bounded;
- 		atomic_set(&wqe->acct[IO_WQ_ACCT_BOUND].nr_running, 0);
- 		if (wq->user) {
-@@ -1051,7 +1066,6 @@ struct io_wq *io_wq_create(unsigned bounded, struct io_wq_data *data)
- 					task_rlimit(current, RLIMIT_NPROC);
- 		}
- 		atomic_set(&wqe->acct[IO_WQ_ACCT_UNBOUND].nr_running, 0);
--		wqe->node = node;
- 		wqe->wq = wq;
- 		spin_lock_init(&wqe->lock);
- 		INIT_WQ_LIST(&wqe->work_list);
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 60e11045ad762..d051f080e52ec 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -46,7 +46,7 @@
+ 			/* DAC */
+ 			format = "i2s";
+ 			mclk-fs = <256>;
+-			frame-inversion = <1>;
++			frame-inversion;
+ 			cpu {
+ 				sound-dai = <&sti_uni_player2>;
+ 			};
 -- 
 2.20.1
 
