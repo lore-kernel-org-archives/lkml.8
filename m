@@ -2,89 +2,124 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61205C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C660C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C2C721556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583227120;
-	bh=Qo3nRK4HWumf4jtOtTGc8uhpaSbpnraV+o/q7veIVAk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fyALrrSbI9BUR+wxXwVGVlHe2Qx71RClOvph9dymfJV3gkmaPjqzL4p1IM4wmxuZk
-	 +WrVTeiJ2EkskH6RSOVOQXSjAylkwUVmfEKnjAIrMzXpaLm8q/jamaj4iwDHVLsYTh
-	 qqylICVHiJiQWfsClXn1s1Twr66klq2c8ur5zS0A=
+	by mail.kernel.org (Postfix) with ESMTP id 1839A21556
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vAo/Y/cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgCCJSj (ORCPT
+        id S1728116AbgCCJTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:18:39 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41074 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727972AbgCCJSi (ORCPT
+        Tue, 3 Mar 2020 04:19:09 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:41518 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgCCJTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:18:38 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v4so3345753wrs.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:18:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=pXW4XibhqAWbXclYMHPjPrIsQTzUNXr/pk+A3VeMp8Q=;
-        b=eLx1Veu4TkTqn3FZK+z7f5yUsK+KpqWmcfmONDrJj8SeU2/np9HBU7p1rnHKCBxZi1
-         7URsTPDw96yburlPWCAGn9c0AUlJ1QwoVeE/0udwwgpL9eAuWhHFhGiCX/NwTCL9blGO
-         /cv7r/xwQlnBZZ5J6H8zmAWb2Afl8+dm/9v/GxCyHTbeDKTsVARvxOjDa2eEfY3fBHIK
-         ffXFMpy/LBmEFjv4w8wV50yjxPCRYOqlEb8q+dYJvGh4QEagHszqQfrGJY1AotaK8Anb
-         cYf3xWJTkfy1JGhr6976RMAhtcjBYEufej5/fp+u4YzGim71k8WbyaM+8KbE1fV4kxPe
-         M84g==
-X-Gm-Message-State: ANhLgQ26Nc1KyZ2464CnxrPStaHWNlCXx40urU/GESS1OEwCBpW4MkoB
-        pnAtZOCkRDw17e6WtX4/uh8=
-X-Google-Smtp-Source: ADFU+vuBgMiydd/l2UUSufgoAbaYi+wHaw+zSqFwkxZNbX4n0pu0OFPRgcX7TTqLwk7xAerOFo/hKQ==
-X-Received: by 2002:adf:d086:: with SMTP id y6mr4333948wrh.387.1583227117589;
-        Tue, 03 Mar 2020 01:18:37 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id z5sm2847585wml.48.2020.03.03.01.18.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 01:18:36 -0800 (PST)
-Date:   Tue, 3 Mar 2020 10:18:36 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Thomas =?iso-8859-1?Q?Hellstr=F6m_=28VMware=29?= 
-        <thomas_os@shipmail.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Ralph Campbell <rcampbell@nvidia.com>, pv-drivers@vmware.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-graphics-maintainer@vmware.com,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v4 0/9] Huge page-table entries for TTM
-Message-ID: <20200303091836.GC4380@dhcp22.suse.cz>
-References: <20200220122719.4302-1-thomas_os@shipmail.org>
- <cc469a2a-e31c-4645-503a-f225fb101899@shipmail.org>
+        Tue, 3 Mar 2020 04:19:08 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0239Irjt116537;
+        Tue, 3 Mar 2020 03:18:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583227133;
+        bh=QIoU5X0rCsPLgh6f6hX/m3Rq6EJWCP9dyqJ6Kiv4p2E=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=vAo/Y/csINLFU/q9QAPYTZ2JEwIeZJ4Y8IizD4GSMIueqqQDl4N0j5diJFBSGWrXK
+         fOev58YKdHMS+vgGx81vAH77X+fLrdnIW+0tBpV8PdLeVf4Uc1yOgIvHrD9ROoVnRb
+         PFA4ZnXCbJ6pFCABixP8qLsnZ5QlZd35ioPRr5B4=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0239IrMv043566
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Mar 2020 03:18:53 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 03:18:52 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 03:18:52 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0239Ilcc029377;
+        Tue, 3 Mar 2020 03:18:49 -0600
+Subject: Re: [PATCH 1/3] drm/omap: Prepare DSS for probing without legacy
+ platform data
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+References: <20200224191230.30972-1-tony@atomide.com>
+ <20200224191230.30972-2-tony@atomide.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <d5ce999e-3b26-334e-fc62-adee4753a3ed@ti.com>
+Date:   Tue, 3 Mar 2020 11:18:47 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cc469a2a-e31c-4645-503a-f225fb101899@shipmail.org>
+In-Reply-To: <20200224191230.30972-2-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 28-02-20 14:08:04, Thomas Hellström (VMware) wrote:
-> Andrew, Michal
+On 24/02/2020 21:12, Tony Lindgren wrote:
+> In order to probe display subsystem (DSS) components with ti-sysc
+> interconnect target module without legacy platform data and using
+> devicetree, we need to update dss probing a bit.
 > 
-> I'm wondering what's the best way here to get the patches touching mm
-> reviewed and accepted?
+> In the device tree, we will be defining the data also for the interconnect
+> target modules as DSS really is a private interconnect. There is some
+> information about that in 4460 TRM in "Figure 10-3. DSS Integration" for
+> example where it mentions "32-bit interconnect (SLX)".
+> 
+> The changes we need to make are:
+> 
+> 1. Parse also device tree subnodes for the compatible property fixup
+> 
+> 2. Update the component code to consider device tree subnodes
+> 
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: Jyri Sarha <jsarha@ti.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+> 
+> This is needed for dropping DSS platform data that I'll be posting
+> seprately. If this looks OK, can you guys please test and ack?
+> 
+> ---
+>   drivers/gpu/drm/omapdrm/dss/dss.c             | 25 ++++++++++++++++---
+>   .../gpu/drm/omapdrm/dss/omapdss-boot-init.c   | 25 +++++++++++++------
+>   2 files changed, 39 insertions(+), 11 deletions(-)
 
-I am sorry, but I am busy with other stuff and unlikely to find time to
-review this series.
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+
+This doesn't conflict with drm-next (with Laurent's recent patches), so it should be fine for you to 
+have this in your branch.
+
+And not a biggie, but I wonder if the changes to these two files should be in separate patches, due 
+to omapdss-boot-init going away. Well, probably doesn't matter.
+
+  Tomi
+
 -- 
-Michal Hocko
-SUSE Labs
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
