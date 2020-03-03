@@ -2,211 +2,149 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D217C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F86DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513462146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:49:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C012146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:51:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iHnPg7Bc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eGOGyoxs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727228AbgCCEs7 (ORCPT
+        id S1727289AbgCCEvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:48:59 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:39786 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbgCCEs7 (ORCPT
+        Mon, 2 Mar 2020 23:51:05 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:32955 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726859AbgCCEvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:48:59 -0500
-Received: by mail-pg1-f195.google.com with SMTP id s2so924953pgv.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 20:48:58 -0800 (PST)
+        Mon, 2 Mar 2020 23:51:04 -0500
+Received: by mail-qv1-f65.google.com with SMTP id p3so1131723qvq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 20:51:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Sics0B7EoHCtat3/CO1pwyp/swYRXD7UJx80Cjp454c=;
-        b=iHnPg7BcPecEdHYB95AV1YGmFaTE8e6ruVjUoK73IQbKQmU1NJROEx6/7ho6yrgcVX
-         plBRasUX+u9rqCk4siHPbGty2/YnfeBVzIAx+ckfm8TTZvumSLIIwdkS9803ZCkUgIZz
-         OPdz/MnVjYzXW3pMqrOU9QbDB7LjmXePfmKgs=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BVGVQnxZtKvu5WnCQWuc4A5xHojwRze8c7W911gPsz4=;
+        b=eGOGyoxsK0Q234ZJr5UzB+z8DCoiAIt4CNNzce4tRt9F94JL9PHDpk6HQhNdwF54mH
+         oodd1OliC4kv8x/QYhmTvkaUut5M8bSdBfdr5x1XB8/4JPVGOrkwgcNOOxhWmp9NTRBC
+         9YSRFYJTF0RMPnow1M+vDetnbswzE5DVWeAiQ9gMB+WX6fl9LxW9/C+FMtAKBpTraD7M
+         qOQj2AcrkKsSQ/mfoYI1omlYNJ3scDbzmwJpjx4k2BRiEc3fe/QtJpWPcJqNVDRFXRst
+         mV3hTTfTnse0NVCoTD23+85bGyIXo8tcb9WBTzpNU24HRBKHOtkDsWAvdvbmmJ6K2puB
+         FBRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Sics0B7EoHCtat3/CO1pwyp/swYRXD7UJx80Cjp454c=;
-        b=goxXhmNjtPfzptb1ozdt7YaLH2SBzxW1cuN+3dqsdDOL2EmwKWmxKpjzKudj/XRq6R
-         VhywuN86ysBNxC4x7rwCgtMwd1q/6KcqCWGfP6jWpgnLhrv2MRjd9TZPqWRNXE+iYEFo
-         KlvKLv0B5LrK5MNupYnQVU1njOP17YKDI5xhVFP7mN6fN1zP1ysBXMvUjpnNH3a90rkP
-         2jKirE/XN5KDc9G423osNw2YW70eI7ktzMRd1qANLulUXgfCgUilEGbUXWSUGq+8RzAW
-         ZnuB7vwcYmxl+UtuKUKihjAQpvVzqRNBj0kVUFnvtWEfZjkcaqTusmXyrLM80p/8ovNJ
-         jXOA==
-X-Gm-Message-State: ANhLgQ3hwQejJa2vHDerTXDkwzXkOaZcDVZea7SkyXMW4Gj4rN6DIcxw
-        /eDB40f8dhmLdeaU6ERCChLzeA==
-X-Google-Smtp-Source: ADFU+vt2+qrCj2iXmaEVSCgXbvrK/ZVYtlXXb3TycWpDX8A69+F5QF37dyu0h7y6sOHRsE/xRKnU4A==
-X-Received: by 2002:a62:342:: with SMTP id 63mr2377981pfd.19.1583210938225;
-        Mon, 02 Mar 2020 20:48:58 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id q3sm13264664pgj.92.2020.03.02.20.48.57
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=BVGVQnxZtKvu5WnCQWuc4A5xHojwRze8c7W911gPsz4=;
+        b=AmoU3XjRuD8tIZjsYSujVVjfwmvXzKnPCDgyi9dt1iIsuQ4T8g61TANeB6b9uccmrt
+         XikbP/jTHnkwSixwvRLNGRw6+v7P3tXZPN5kZ0GmNQxM6I3EJHlP+uW3dcUt4uv56hZ8
+         G8OBDNBGO31Lmrv4Sge/XAvCd2sGnlGiwOvAplf1IQPu8il89x3OcPYXxdEHE2dbYLGJ
+         EgkxazB8o9fjxRaChrHkM8jsTUazK1SOYy7vqQWWlSqc4COXCgYaxU8V6i5E/Wd84Eju
+         5hUw3x0qrg6jupOdiF1qsocL3hgOvJ5Z3pB8KeLJpWh8p9YLNK99yWGov9kFdwCsiyvJ
+         SPTA==
+X-Gm-Message-State: ANhLgQ3lolqRsKk+IkH0DjCAhzgz8C6+He3Lkx//dLECyPWL9BShVX9l
+        8imClFXbXAu1Ut4oAJfNalU=
+X-Google-Smtp-Source: ADFU+vv0/u6cM/i1pkRIiCJ7tMOSpGeYcYsL9BsxkiOsCSwmakKlq+XFF01jwpLjeqRjl2khWyxp0Q==
+X-Received: by 2002:ad4:4861:: with SMTP id u1mr2498626qvy.233.1583211062210;
+        Mon, 02 Mar 2020 20:51:02 -0800 (PST)
+Received: from localhost.localdomain ([128.6.37.0])
+        by smtp.googlemail.com with ESMTPSA id z26sm4790469qki.36.2020.03.02.20.51.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 20:48:57 -0800 (PST)
-Date:   Mon, 2 Mar 2020 20:48:56 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>, bpf@vger.kernel.org
-Subject: Re: [PATCH] kbuild: Remove debug info from kallsyms linking
-Message-ID: <202003022046.4185359A@keescook>
-References: <202002242114.CBED7F1@keescook>
+        Mon, 02 Mar 2020 20:51:01 -0800 (PST)
+From:   Mingbo Zhang <whensungoes@gmail.com>
+To:     x86@kernel.org
+Cc:     Mingbo Zhang <whensungoes@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] x86: perf: insn: Tweak opcode map for Intel CET instructions
+Date:   Mon,  2 Mar 2020 23:50:30 -0500
+Message-Id: <20200303045033.6137-1-whensungoes@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202002242114.CBED7F1@keescook>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 09:16:17PM -0800, Kees Cook wrote:
-> When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
-> time collecting and writing the dwarf sections to the temporary output
-> files. kallsyms does not need this information, and leaving it off
-> halves their linking time. This is especially noticeable without
-> CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
-> need those details.
-> 
-> Refactor the BTF and kallsyms generation stages slightly for more
-> regularized temporary names. Skip debug during kallsyms links.
-> 
-> For a full debug info build with BTF, my link time goes from 1m06s to
-> 0m54s, saving about 12 seconds, or 18%.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Intel CET instructions are not described in the Intel SDM. When trying to
+get the instruction length, the following instructions get wrong (missing
+ModR/M byte).
 
-Ping. Masahiro what do you think of this? It saves me a fair bit of time
-on the link stage... I bet the BPF folks would be interested too. :)
+RDSSPD r32
+RSDDPQ r64
+ENDBR32
+ENDBR64
+WRSSD r/m32, r32
+WRSSQ r/m64, r64
 
--Kees
+RDSSPD/Q and ENDBR32/64 use the same opcode (f3 0f 1e) slot, which is
+described in SDM as Reserved-NOP with no encoding characters, and got an
+empty slot in the opcode map. WRSSD/Q (0f 38 f6) also got an empty slot.
 
-> ---
->  scripts/link-vmlinux.sh | 28 +++++++++++++++++++---------
->  1 file changed, 19 insertions(+), 9 deletions(-)
-> 
-> diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-> index dd484e92752e..ac569e197bfa 100755
-> --- a/scripts/link-vmlinux.sh
-> +++ b/scripts/link-vmlinux.sh
-> @@ -63,12 +63,18 @@ vmlinux_link()
->  	local lds="${objtree}/${KBUILD_LDS}"
->  	local output=${1}
->  	local objects
-> +	local strip_debug
->  
->  	info LD ${output}
->  
->  	# skip output file argument
->  	shift
->  
-> +	# The kallsyms linking does not need debug symbols included.
-> +	if [ "$output" != "${output#.tmp_vmlinux.kallsyms}" ] ; then
-> +		strip_debug=-Wl,--strip-debug
-> +	fi
-> +
->  	if [ "${SRCARCH}" != "um" ]; then
->  		objects="--whole-archive			\
->  			${KBUILD_VMLINUX_OBJS}			\
-> @@ -79,6 +85,7 @@ vmlinux_link()
->  			${@}"
->  
->  		${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}	\
-> +			${strip_debug#-Wl,}			\
->  			-o ${output}				\
->  			-T ${lds} ${objects}
->  	else
-> @@ -91,6 +98,7 @@ vmlinux_link()
->  			${@}"
->  
->  		${CC} ${CFLAGS_vmlinux}				\
-> +			${strip_debug}				\
->  			-o ${output}				\
->  			-Wl,-T,${lds}				\
->  			${objects}				\
-> @@ -106,6 +114,8 @@ gen_btf()
->  {
->  	local pahole_ver
->  	local bin_arch
-> +	local bin_format
-> +	local bin_file
->  
->  	if ! [ -x "$(command -v ${PAHOLE})" ]; then
->  		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
-> @@ -118,8 +128,9 @@ gen_btf()
->  		return 1
->  	fi
->  
-> -	info "BTF" ${2}
->  	vmlinux_link ${1}
-> +
-> +	info "BTF" ${2}
->  	LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
->  
->  	# dump .BTF section into raw binary file to link with final vmlinux
-> @@ -127,11 +138,12 @@ gen_btf()
->  		cut -d, -f1 | cut -d' ' -f2)
->  	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
->  		awk '{print $4}')
-> +	bin_file=.btf.vmlinux.bin
->  	${OBJCOPY} --change-section-address .BTF=0 \
->  		--set-section-flags .BTF=alloc -O binary \
-> -		--only-section=.BTF ${1} .btf.vmlinux.bin
-> +		--only-section=.BTF ${1} $bin_file
->  	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
-> -		--rename-section .data=.BTF .btf.vmlinux.bin ${2}
-> +		--rename-section .data=.BTF $bin_file ${2}
->  }
->  
->  # Create ${2} .o file with all symbols from the ${1} object file
-> @@ -166,8 +178,8 @@ kallsyms()
->  kallsyms_step()
->  {
->  	kallsymso_prev=${kallsymso}
-> -	kallsymso=.tmp_kallsyms${1}.o
-> -	kallsyms_vmlinux=.tmp_vmlinux${1}
-> +	kallsyms_vmlinux=.tmp_vmlinux.kallsyms${1}
-> +	kallsymso=${kallsyms_vmlinux}.o
->  
->  	vmlinux_link ${kallsyms_vmlinux} "${kallsymso_prev}" ${btf_vmlinux_bin_o}
->  	kallsyms ${kallsyms_vmlinux} ${kallsymso}
-> @@ -190,7 +202,6 @@ cleanup()
->  {
->  	rm -f .btf.*
->  	rm -f .tmp_System.map
-> -	rm -f .tmp_kallsyms*
->  	rm -f .tmp_vmlinux*
->  	rm -f System.map
->  	rm -f vmlinux
-> @@ -257,9 +268,8 @@ tr '\0' '\n' < modules.builtin.modinfo | sed -n 's/^[[:alnum:]:_]*\.file=//p' |
->  
->  btf_vmlinux_bin_o=""
->  if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
-> -	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
-> -		btf_vmlinux_bin_o=.btf.vmlinux.bin.o
-> -	else
-> +	btf_vmlinux_bin_o=.btf.vmlinux.bin.o
-> +	if ! gen_btf .tmp_vmlinux.btf $btf_vmlinux_bin_o ; then
->  		echo >&2 "Failed to generate BTF for vmlinux"
->  		echo >&2 "Try to disable CONFIG_DEBUG_INFO_BTF"
->  		exit 1
-> -- 
-> 2.20.1
-> 
-> 
-> -- 
-> Kees Cook
+Signed-off-by: Mingbo Zhang <whensungoes@gmail.com>
+---
+ arch/x86/lib/x86-opcode-map.txt       | 4 ++--
+ tools/arch/x86/lib/x86-opcode-map.txt | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/arch/x86/lib/x86-opcode-map.txt b/arch/x86/lib/x86-opcode-map.txt
+index 53adc1762ec0..0e3434c882d4 100644
+--- a/arch/x86/lib/x86-opcode-map.txt
++++ b/arch/x86/lib/x86-opcode-map.txt
+@@ -366,7 +366,7 @@ AVXcode: 1
+ 1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
+ 1c: Grp20 (1A),(1C)
+ 1d:
+-1e:
++1e: NOP Gy,Gy
+ 1f: NOP Ev
+ # 0x0f 0x20-0x2f
+ 20: MOV Rd,Cd
+@@ -804,7 +804,7 @@ f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
+ f2: ANDN Gy,By,Ey (v)
+ f3: Grp17 (1A)
+ f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
+-f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
++f6: NOP Ey,Gy | ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
+ f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
+ f8: MOVDIR64B Gv,Mdqq (66) | ENQCMD Gv,Mdqq (F2) | ENQCMDS Gv,Mdqq (F3)
+ f9: MOVDIRI My,Gy
+diff --git a/tools/arch/x86/lib/x86-opcode-map.txt b/tools/arch/x86/lib/x86-opcode-map.txt
+index 53adc1762ec0..0e3434c882d4 100644
+--- a/tools/arch/x86/lib/x86-opcode-map.txt
++++ b/tools/arch/x86/lib/x86-opcode-map.txt
+@@ -366,7 +366,7 @@ AVXcode: 1
+ 1b: BNDCN Gv,Ev (F2) | BNDMOV Ev,Gv (66) | BNDMK Gv,Ev (F3) | BNDSTX Ev,Gv
+ 1c: Grp20 (1A),(1C)
+ 1d:
+-1e:
++1e: NOP Gy,Gy
+ 1f: NOP Ev
+ # 0x0f 0x20-0x2f
+ 20: MOV Rd,Cd
+@@ -804,7 +804,7 @@ f1: MOVBE My,Gy | MOVBE Mw,Gw (66) | CRC32 Gd,Ey (F2) | CRC32 Gd,Ew (66&F2)
+ f2: ANDN Gy,By,Ey (v)
+ f3: Grp17 (1A)
+ f5: BZHI Gy,Ey,By (v) | PEXT Gy,By,Ey (F3),(v) | PDEP Gy,By,Ey (F2),(v)
+-f6: ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
++f6: NOP Ey,Gy | ADCX Gy,Ey (66) | ADOX Gy,Ey (F3) | MULX By,Gy,rDX,Ey (F2),(v)
+ f7: BEXTR Gy,Ey,By (v) | SHLX Gy,Ey,By (66),(v) | SARX Gy,Ey,By (F3),(v) | SHRX Gy,Ey,By (F2),(v)
+ f8: MOVDIR64B Gv,Mdqq (66) | ENQCMD Gv,Mdqq (F2) | ENQCMDS Gv,Mdqq (F3)
+ f9: MOVDIRI My,Gy
 -- 
-Kees Cook
+2.25.1
+
