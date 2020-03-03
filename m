@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71246C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C79C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED512166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C2602166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203992;
-	bh=f+smNxhL2OfdgV7oDdGzlTppEvpqzeaeqjamekC+ckE=;
+	s=default; t=1583203996;
+	bh=TZNA2TVM3aGgVsvEbNQ6ouxAgPJTw+ElW2D2JSSBOgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CdzTfN1fvJ+8+uDuWxKJvSpg+UMHgMuRkjdujlZvO4saRs7c6r4N8NJsaDypJHXoA
-	 0N3jxyjNJXCPwhdTktoRDtKk2J8GV+dvzdtaKoaoYVeOLIySWB7cI75AcEkeZN5mr+
-	 +pxxb6qFnuGzZtOTWsRxJGyXWB+Y3m/AIespOPXU=
+	b=XmzbQdxkdTswuCuuGDXzo3nDoy00l3zWcc39rrIaPnNZxdrOLrOqB+OgGSZcAcHKr
+	 05jSp08uZBHcMShBcfW+XpSSVulVjLJgnLVFquC5SLGHyko7KNH+RU/BeekzfapdDt
+	 ddfezxihww0zFfWwU/Ptsf2w7W3vp5w0BREV7LC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728965AbgCCCts (ORCPT
+        id S1727186AbgCCCxO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:49:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45990 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:53:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728929AbgCCCtm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:42 -0500
+        id S1728956AbgCCCtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABA1F2468D;
-        Tue,  3 Mar 2020 02:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16BCB246ED;
+        Tue,  3 Mar 2020 02:49:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203781;
-        bh=f+smNxhL2OfdgV7oDdGzlTppEvpqzeaeqjamekC+ckE=;
+        s=default; t=1583203785;
+        bh=TZNA2TVM3aGgVsvEbNQ6ouxAgPJTw+ElW2D2JSSBOgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=icIt4muG1fGkYyzzx22l9ZSWlfJKr7TldSX1wy/tZBM6UE1mu+oaQif45kMpx8U4k
-         XL70twANYWbyYH7/ZuBeTI5IFgio+lNMAEJySuTcbVuIJJw2NneJYjt0ptOCppKxWl
-         VDxmakOBSS6y1GY1LRZ6FFtahVHrEPIc4VvAeipY=
+        b=2tHMSvm/ReGtYi0ok8wzDfP1TM69fCP9+myocd//LCxBTYCJ+tkl3bTCpIywkqLXS
+         KO47wGkEd4+kqppjE22XK49tKki2B15YggBAl/LkpchvavGWPOPpIdn9vwMmcID+8K
+         xet1q0NQBPcr0So12wqFHdtCDGm7fRev/IOxdBjE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sergey Organov <sorganov@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 06/22] usb: gadget: serial: fix Tx stall after buffer overflow
-Date:   Mon,  2 Mar 2020 21:49:17 -0500
-Message-Id: <20200303024933.10371-6-sashal@kernel.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 09/22] drm/msm/dsi: save pll state before dsi host is powered off
+Date:   Mon,  2 Mar 2020 21:49:20 -0500
+Message-Id: <20200303024933.10371-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024933.10371-1-sashal@kernel.org>
 References: <20200303024933.10371-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,45 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Organov <sorganov@gmail.com>
+From: Harigovindan P <harigovi@codeaurora.org>
 
-[ Upstream commit e4bfded56cf39b8d02733c1e6ef546b97961e18a ]
+[ Upstream commit a1028dcfd0dd97884072288d0c8ed7f30399b528 ]
 
-Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
-it while either USB cable is not connected, or nobody listens on the
-other side of the cable. If driver circular buffer overflows before
-connection is established, no data will be written to the USB layer
-until/unless /dev/ttyGS0 is closed and re-opened again by the
-application (the latter besides having no means of being notified about
-the event of establishing of the connection.)
+Save pll state before dsi host is powered off. Without this change
+some register values gets resetted.
 
-Fix: on open and/or connect, kick Tx to flush circular buffer data to
-USB layer.
-
-Signed-off-by: Sergey Organov <sorganov@gmail.com>
-Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/u_serial.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
-index 520ace49f91d9..942d2977797d7 100644
---- a/drivers/usb/gadget/function/u_serial.c
-+++ b/drivers/usb/gadget/function/u_serial.c
-@@ -715,8 +715,10 @@ static int gs_start_io(struct gs_port *port)
- 	port->n_read = 0;
- 	started = gs_start_rx(port);
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 7d46399a39b4d..9fbfa9f94e6ce 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -543,6 +543,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
+ 	struct mipi_dsi_host *host = msm_dsi->host;
+ 	struct drm_panel *panel = msm_dsi->panel;
++	struct msm_dsi_pll *src_pll;
+ 	bool is_dual_dsi = IS_DUAL_DSI();
+ 	int ret;
  
--	/* unblock any pending writes into our circular buffer */
- 	if (started) {
-+		gs_start_tx(port);
-+		/* Unblock any pending writes into our circular buffer, in case
-+		 * we didn't in gs_start_tx() */
- 		tty_wakeup(port->port.tty);
- 	} else {
- 		gs_free_requests(ep, head, &port->read_allocated);
+@@ -583,6 +584,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 								id, ret);
+ 	}
+ 
++	/* Save PLL status if it is a clock source */
++	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
++	msm_dsi_pll_save_state(src_pll);
++
+ 	ret = msm_dsi_host_power_off(host);
+ 	if (ret)
+ 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+index 7c9bf91bc22b6..c0a7fa56d9a74 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+@@ -613,10 +613,6 @@ void msm_dsi_phy_disable(struct msm_dsi_phy *phy)
+ 	if (!phy || !phy->cfg->ops.disable)
+ 		return;
+ 
+-	/* Save PLL status if it is a clock source */
+-	if (phy->usecase != MSM_DSI_PHY_SLAVE)
+-		msm_dsi_pll_save_state(phy->pll);
+-
+ 	phy->cfg->ops.disable(phy);
+ 
+ 	dsi_phy_regulator_disable(phy);
 -- 
 2.20.1
 
