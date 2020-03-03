@@ -2,261 +2,170 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981C3C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E287C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6465B2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583262532;
-	bh=mKE3HtE/aTkp0UlhtxahKZBgoDUFqA0POdykfcgqlGY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=eqVtmlz0pOlv48WhVJhKiGJvrDkdyToVkZcHimbLIshZHLvwbQt2xrhhK/GoiLXpu
-	 A81yi3ZSIFrqRZKMKE5+BF6xTowJjR/NhLpCYqNBwa681BEBWufCoHQzvzuFPQWzbY
-	 ZHQKM4BzyXqAPAxOmqnwAqwRsTJVQkr3JNKC/KLA=
+	by mail.kernel.org (Postfix) with ESMTP id 2735B208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:10:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=jlekstrand-net.20150623.gappssmtp.com header.i=@jlekstrand-net.20150623.gappssmtp.com header.b="O3uRmfbH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbgCCTIv (ORCPT
+        id S1730624AbgCCTKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:08:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46494 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgCCTIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:08:50 -0500
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E15B20CC7
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 19:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583262529;
-        bh=mKE3HtE/aTkp0UlhtxahKZBgoDUFqA0POdykfcgqlGY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=cuPF82uYsyrRXu+Jp1Zf1mzesnqA7iSLVrZ/IxZAnf0DH1YwYVwaX0x71Pv6+DTd1
-         0phCb1txHFJa4uWhoeezmLk8AGg/0LWBaLgh5XicGpPnkUP8rRfQjJJXCzSsrfse+l
-         kpJuxlcZbqpGZKyk1I8BnbytPyjPiwjev8IgKaZ4=
-Received: by mail-wm1-f42.google.com with SMTP id u9so4043155wml.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:08:49 -0800 (PST)
-X-Gm-Message-State: ANhLgQ07DJKiIfhtqMIobg2tP9ExH4dPMzMVTeJF82giWoG0v9Y4W9EA
-        Ngb3KMiQNwMy2X4jxgCyE+wNoAQ/kWyTaOBiXjXq2g==
-X-Google-Smtp-Source: ADFU+vu5OPgIYhOba6bSYHkKXk/xTSx4zBMO8fWnm/mwPAvL8SdOkwFOP2xVqup7Qh/wMYCkH7of+moi3EtFkyXzRY4=
-X-Received: by 2002:a7b:cb93:: with SMTP id m19mr7779wmi.133.1583262527713;
- Tue, 03 Mar 2020 11:08:47 -0800 (PST)
+        Tue, 3 Mar 2020 14:10:33 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34396 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728467AbgCCTKd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:10:33 -0500
+Received: by mail-ed1-f67.google.com with SMTP id dm3so5853358edb.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:10:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jlekstrand-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jv7Ih1NyrqeNZpG1dR8gyRFpz0epRhdNQwzv72VuIfM=;
+        b=O3uRmfbHh64VdAmQ/qm/TdRLtr3VzWsMlk35GCQ0l1JuNPFgo5hbwSh/l/b/kJ6zIp
+         p2ekHiW/aBjc+H3XbL9cCmchVqOF4PcbUr8Uj7XwIEM2jM7I61+HidBb2dndcg3ycAzt
+         RbnojAZvLK7rxv3G7Q+5s9dNqt7AkMefzVZqzibZzjsw/ARxzZYcS0wya2W5FVtJFnkk
+         Ncojxn4je1V6yqKoYsuPmEpl+tJBm4VFaaxcy+zTxZzmXbkQk5qd2lMu9E9J8E1tzDg1
+         GEFBgYYSdvqAN+keSv5aTnTIC947P46GTp407QMVAxFgTn1zqXyEc98AeBmhfjcNZT3b
+         XN+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jv7Ih1NyrqeNZpG1dR8gyRFpz0epRhdNQwzv72VuIfM=;
+        b=Mvt2jYe/zj1DclgtWQs2l+WavmkMq63kBYCKGtwoPpyjqzRCxpkNgzXj+KWIQ4rAgm
+         oftd/TkVRF2S31QP0jg9Ff73t7G7N6pnOyj/Vtf4juVLMKd/Akb+2pyNI0jmmRXltBC4
+         6a1KkYRMv+j0tXA3pSgyA2KemOVEKC9yGhhKcj7xrKdK8Ferbc/+49wl0xWaMAK5bs7b
+         zKklB9l/pfxyrH8/dvTY5SPbg0YbK4NfqCU6CIauy0Avmiso0/kKW+Usy3Fo+e3F6nj6
+         YHdu9DK1DFxix4/LgJz8tBTAulfR0UfKW+f5yY8G9jKzcjFLJshlNlClPUJOVnQnU43i
+         ca8A==
+X-Gm-Message-State: ANhLgQ0E0KMAOOYQxMPYm/xShvDrPZy5/7fPMruLyfc+4FNA2qtlyO69
+        F1oseFMoaf9ON8riuCpBxF2CarooPxTspqjAJ/e/KQ==
+X-Google-Smtp-Source: ADFU+vsmTm+PWU2FuG/IFYesXpVvcuHpos6kjEbqVQD1KKJIdmpF681WL/kjVdopso7dwT46jc/Gw12waDjkW4uto7E=
+X-Received: by 2002:a50:f38e:: with SMTP id g14mr5691650edm.168.1583262630144;
+ Tue, 03 Mar 2020 11:10:30 -0800 (PST)
 MIME-Version: 1.0
-References: <20200301230537.2247550-1-nivedita@alum.mit.edu> <20200301230537.2247550-3-nivedita@alum.mit.edu>
-In-Reply-To: <20200301230537.2247550-3-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 3 Mar 2020 20:08:36 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu-f=mZwxAyLOzkrtSFPpxsKweRU2rKBUwTK0_r7s6gZPQ@mail.gmail.com>
-Message-ID: <CAKv+Gu-f=mZwxAyLOzkrtSFPpxsKweRU2rKBUwTK0_r7s6gZPQ@mail.gmail.com>
-Subject: Re: [PATCH 2/5] efi/x86: Decompress at start of PE image load address
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200225235856.975366-1-jason@jlekstrand.net> <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
+ <20200226100523.GQ2363188@phenom.ffwll.local> <CAOFGe94O66HL212aXqhi9tdYqw---Xm-fwNSV4pxHyPmpSGpbg@mail.gmail.com>
+ <CAP+8YyEUz29fXDW5kO_0ZG6c849=TuFWCK8ynT3LuM+Tn+rMzw@mail.gmail.com> <810a26e7-4294-a615-b7ee-18148ac70641@amd.com>
+In-Reply-To: <810a26e7-4294-a615-b7ee-18148ac70641@amd.com>
+From:   Jason Ekstrand <jason@jlekstrand.net>
+Date:   Tue, 3 Mar 2020 13:10:18 -0600
+Message-ID: <CAOFGe96namyeQXTvdrduM+=wkJuoWWx34CxcsJHS3fcCaKDadw@mail.gmail.com>
+Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync files
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
+        Dave Airlie <airlied@redhat.com>,
+        Jesse Hall <jessehall@google.com>,
+        James Jones <jajones@nvidia.com>,
+        Daniel Stone <daniels@collabora.com>,
+        =?UTF-8?Q?Kristian_H=C3=B8gsberg?= <hoegsberg@google.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Chenbo Feng <fengc@google.com>,
+        Greg Hackmann <ghackmann@google.com>,
+        linux-media@vger.kernel.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 00:05, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Thu, Feb 27, 2020 at 2:28 AM Christian K=C3=B6nig
+<christian.koenig@amd.com> wrote:
 >
-> When booted via PE loader, define image_offset to hold the offset of
-> startup_32 from the start of the PE image, and use it as the start of
-> the decompression buffer.
+> Am 26.02.20 um 17:46 schrieb Bas Nieuwenhuizen:
+> > On Wed, Feb 26, 2020 at 4:29 PM Jason Ekstrand <jason@jlekstrand.net> w=
+rote:
+> >> On Wed, Feb 26, 2020 at 4:05 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >>> On Wed, Feb 26, 2020 at 10:16:05AM +0100, Christian K=C3=B6nig wrote:
+> >>> [SNIP]
+> >>>> Just imagine that you access some DMA-buf with a shader and that ope=
+ration
+> >>>> is presented as a fence on the DMA-bufs reservation object. And now =
+you can
+> >>>> go ahead and replace that fence and free up the memory.
+> >>>>
+> >>>> Tricking the Linux kernel into allocating page tables in that freed =
+memory
+> >>>> is trivial and that's basically it you can overwrite page tables wit=
+h your
+> >>>> shader and gain access to all of system memory :)
+> >>>>
+> >>>> What we could do is to always make sure that the added fences will c=
+omplete
+> >>>> later than the already existing ones, but that is also rather tricky=
+ to get
+> >>>> right. I wouldn't do that if we don't have a rather big use case for=
+ this.
+> >> Right.  I thought about that but I'm still learning how dma_resv
+> >> works.  It'd be easy enough to make a fence array that contains both
+> >> the old fence and the new fence and replace the old fence with that.
+> >> What I don't know is the proper way to replace the exclusive fence
+> >> safely.  Some sort of atomic_cpxchg loop, perhaps?  I presume there's
+> >> some way of doing it properly because DRM drivers are doing it all the
+> >> time.
 >
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->  arch/x86/boot/compressed/head_32.S      | 17 +++++++++++
->  arch/x86/boot/compressed/head_64.S      | 38 +++++++++++++++++++++++--
->  drivers/firmware/efi/libstub/x86-stub.c | 12 ++++++--
->  3 files changed, 61 insertions(+), 6 deletions(-)
+> First of all you need to grab the lock of the dma_resv object or you
+> can't replace the exclusive nor the shared ones.
 >
-> diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-> index 894182500606..98b224f5a025 100644
-> --- a/arch/x86/boot/compressed/head_32.S
-> +++ b/arch/x86/boot/compressed/head_32.S
-> @@ -100,6 +100,19 @@ SYM_FUNC_START(startup_32)
->
->  #ifdef CONFIG_RELOCATABLE
->         movl    %edx, %ebx
-> +
-> +#ifdef CONFIG_EFI_STUB
-> +/*
-> + * If we were loaded via the EFI LoadImage service, startup_32 will be at an
-> + * offset to the start of the space allocated for the image. efi_pe_entry will
-> + * setup image_offset to tell us where the image actually starts, so that we
-> + * can use the full available buffer.
-> + *     image_offset = startup_32 - image_base
-> + * Otherwise image_offset will be zero and have no effect on the calculations.
-> + */
-> +       subl    image_offset(%edx), %ebx
-> +#endif
-> +
->         movl    BP_kernel_alignment(%esi), %eax
->         decl    %eax
->         addl    %eax, %ebx
-> @@ -226,6 +239,10 @@ SYM_DATA_START_LOCAL(gdt)
->         .quad   0x00cf92000000ffff      /* __KERNEL_DS */
->  SYM_DATA_END_LABEL(gdt, SYM_L_LOCAL, gdt_end)
->
-> +#ifdef CONFIG_EFI_STUB
-> +SYM_DATA(image_offset, .long 0)
-> +#endif
-> +
->  /*
->   * Stack and heap for uncompression
->   */
-> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-> index 5d8338a693ce..1a4ea8738df0 100644
-> --- a/arch/x86/boot/compressed/head_64.S
-> +++ b/arch/x86/boot/compressed/head_64.S
-> @@ -99,6 +99,19 @@ SYM_FUNC_START(startup_32)
->
->  #ifdef CONFIG_RELOCATABLE
->         movl    %ebp, %ebx
-> +
-> +#ifdef CONFIG_EFI_STUB
-> +/*
-> + * If we were loaded via the EFI LoadImage service, startup_32 will be at an
-> + * offset to the start of the space allocated for the image. efi_pe_entry will
-> + * setup image_offset to tell us where the image actually starts, so that we
-> + * can use the full available buffer.
-> + *     image_offset = startup_32 - image_base
-> + * Otherwise image_offset will be zero and have no effect on the calculations.
-> + */
-> +       subl    image_offset(%ebp), %ebx
-> +#endif
-> +
->         movl    BP_kernel_alignment(%esi), %eax
->         decl    %eax
->         addl    %eax, %ebx
-> @@ -111,9 +124,8 @@ SYM_FUNC_START(startup_32)
->  1:
->
->         /* Target address to relocate to for decompression */
-> -       movl    BP_init_size(%esi), %eax
-> -       subl    $_end, %eax
-> -       addl    %eax, %ebx
-> +       addl    BP_init_size(%esi), %ebx
-> +       subl    $_end, %ebx
->
->  /*
->   * Prepare for entering 64 bit mode
-> @@ -299,6 +311,20 @@ SYM_CODE_START(startup_64)
->         /* Start with the delta to where the kernel will run at. */
->  #ifdef CONFIG_RELOCATABLE
->         leaq    startup_32(%rip) /* - $startup_32 */, %rbp
-> +
-> +#ifdef CONFIG_EFI_STUB
-> +/*
-> + * If we were loaded via the EFI LoadImage service, startup_32 will be at an
-> + * offset to the start of the space allocated for the image. efi_pe_entry will
-> + * setup image_offset to tell us where the image actually starts, so that we
-> + * can use the full available buffer.
-> + *     image_offset = startup_32 - image_base
-> + * Otherwise image_offset will be zero and have no effect on the calculations.
-> + */
-> +       movl    image_offset(%rip), %eax
-> +       subq    %rax, %rbp
-> +#endif
-> +
->         movl    BP_kernel_alignment(%rsi), %eax
->         decl    %eax
->         addq    %rax, %rbp
-> @@ -647,6 +673,10 @@ SYM_DATA_START_LOCAL(gdt)
->         .quad   0x0000000000000000      /* TS continued */
->  SYM_DATA_END_LABEL(gdt, SYM_L_LOCAL, gdt_end)
->
-> +#ifdef CONFIG_EFI_STUB
-> +SYM_DATA(image_offset, .long 0)
-> +#endif
-> +
->  #ifdef CONFIG_EFI_MIXED
->  SYM_DATA_LOCAL(efi32_boot_args, .long 0, 0, 0)
->  SYM_DATA(efi_is64, .byte 1)
-> @@ -712,6 +742,8 @@ SYM_FUNC_START(efi32_pe_entry)
->         movl    -4(%ebp), %esi                  // loaded_image
->         movl    LI32_image_base(%esi), %esi     // loaded_image->image_base
->         movl    %ebx, %ebp                      // startup_32 for efi32_pe_stub_entry
-> +       subl    %esi, %ebx
-> +       movl    %ebx, image_offset(%ebp)        // save image_offset
+> This way you don't need to do a atomic_cmpxchg or anything else and
+> still guarantee correct ordering.
 
-So I guess we are assigning image_offset here because we need it to be
-set before we get to efi_pe_entry() ?
+Fixed in v3.
 
-I think that deserves a comment.
+> > I think for an exclusive fence you may need to create a fence array
+> > that includes the existing exclusive and shared fences in the dma_resv
+> > combined with the added fence.
+>
+> Yes, that at least gives us the correct synchronization.
 
->         jmp     efi32_pe_stub_entry
->
->  2:     popl    %edi                            // restore callee-save registers
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index 7f3e97c2aad3..0c4a6352cfd3 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -19,6 +19,7 @@
->
->  static efi_system_table_t *sys_table;
->  extern const bool efi_is64;
-> +extern u32 image_offset;
->
->  __pure efi_system_table_t *efi_system_table(void)
->  {
-> @@ -364,6 +365,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
->         struct boot_params *boot_params;
->         struct setup_header *hdr;
->         efi_loaded_image_t *image;
-> +       void *image_base;
->         efi_guid_t proto = LOADED_IMAGE_PROTOCOL_GUID;
->         int options_size = 0;
->         efi_status_t status;
-> @@ -384,7 +386,10 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
->                 efi_exit(handle, status);
->         }
->
-> -       hdr = &((struct boot_params *)efi_table_attr(image, image_base))->hdr;
-> +       image_base = efi_table_attr(image, image_base);
-> +       image_offset = (void *)startup_32 - image_base;
-> +
-> +       hdr = &((struct boot_params *)image_base)->hdr;
->         above4g = hdr->xloadflags & XLF_CAN_BE_LOADED_ABOVE_4G;
->
->         status = efi_allocate_pages(0x4000, (unsigned long *)&boot_params,
-> @@ -399,7 +404,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
->         hdr = &boot_params->hdr;
->
->         /* Copy the second sector to boot_params */
-> -       memcpy(&hdr->jump, efi_table_attr(image, image_base) + 512, 512);
-> +       memcpy(&hdr->jump, image_base + 512, 512);
->
->         /*
->          * Fill out some of the header fields ourselves because the
-> @@ -726,7 +731,7 @@ unsigned long efi_main(efi_handle_t handle,
->          * If the kernel isn't already loaded at the preferred load
->          * address, relocate it.
->          */
-> -       if (bzimage_addr != hdr->pref_address) {
-> +       if (bzimage_addr - image_offset != hdr->pref_address) {
->                 status = efi_relocate_kernel(&bzimage_addr,
->                                              hdr->init_size, hdr->init_size,
->                                              hdr->pref_address,
-> @@ -736,6 +741,7 @@ unsigned long efi_main(efi_handle_t handle,
->                         efi_printk("efi_relocate_kernel() failed!\n");
->                         goto fail;
->                 }
-> +               image_offset = 0;
+Fixed in v2
 
-Again, this could do with a comment why this should be 0x0 for the
-relocated image. It may all seem super obvious now, but our future
-selves are probably not as smart as we are today :-)
+> > However, I'm not sure what the best way is to do garbage collection on
+> > that so that we don't get an impossibly list of fence arrays.
+>
+> Exactly yes. That's also the reason why the dma_fence_chain container I
+> came up with for the sync timeline stuff has such a rather sophisticated
+> garbage collection.
+>
+> When some of the included fences signal you need to free up the
+> array/chain and make sure that the memory for the container can be reused=
+.
 
->         }
+Currently (as of v2), I'm using dma_fence_array and being careful to
+not bother constructing one if there's only one fence in play.  Is
+this insufficient?  If so, maybe we should consider improving
+dma_fence_array.
+
+> >   (Note
+> > the dma_resv has a lock that needs to be taken before adding an
+> > exclusive fence, might be useful). Some code that does a thing like
+> > this is __dma_resv_make_exclusive in
+> > drivers/gpu/drm/amd/amdgpu/amdgpu_dma_buf.c
 >
->         /*
-> --
-> 2.24.1
->
+> Wanted to move that into dma_resv.c for quite a while since there are
+> quite a few other cases where we need this.
+
+I've roughly done that.  The primary difference is that my version
+takes an optional additional fence to add to the array.  This makes it
+a bit more complicated but I think I got it mostly right.
+
+I've also written userspace code which exercises this and it seems to
+work.  Hopefully, that will give a better idea of what I'm trying to
+accomplish.
+
+https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/4037
+
+--Jason
