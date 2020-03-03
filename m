@@ -1,155 +1,134 @@
 Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EB10C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 877E320848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:15:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I3g3W9bn"
+	by mail.kernel.org (Postfix) with ESMTP id 430A020848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:18:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583270306;
+	bh=9nZtCyRm9ddWtpuTWo561LEWtyColZSm3B3JWQB0Fso=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bDKQTX5jbNsGfB1ZRVod5HDSNhFg1EwQS/e2RZm1dSUSKCmlCxPSy7c9ZZVrCiBrH
+	 jE++dT8HRAYY8o7U22/+L2tZD/bJXmaVRKKpxe2Gg0C1TKTz9LOtj/uJgwTv/EkLCQ
+	 Geft89GD7HIfTLjUM8MWBYs1Je69rc6qkkVzpnJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732420AbgCCVPY (ORCPT
+        id S1732515AbgCCVSY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:15:24 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2192 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732075AbgCCVPX (ORCPT
+        Tue, 3 Mar 2020 16:18:24 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41030 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732075AbgCCVSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:15:23 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e5ec8c20000>; Tue, 03 Mar 2020 13:14:42 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 03 Mar 2020 13:15:23 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 03 Mar 2020 13:15:23 -0800
-Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
- 2020 21:15:21 +0000
-Subject: Re: [PATCH v2] nouveau/hmm: map pages after migration
-To:     Jason Gunthorpe <jgg@mellanox.com>
-CC:     <dri-devel@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <nouveau@lists.freedesktop.org>,
-        Jerome Glisse <jglisse@redhat.com>,
-        "John Hubbard" <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ben Skeggs <bskeggs@redhat.com>
-References: <20200303010023.2983-1-rcampbell@nvidia.com>
- <20200303124229.GH26318@mellanox.com>
-X-Nvconfidentiality: public
-From:   Ralph Campbell <rcampbell@nvidia.com>
-Message-ID: <1f27ac9e-7ddf-6e4f-25ea-063ef6c78761@nvidia.com>
-Date:   Tue, 3 Mar 2020 13:15:21 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 3 Mar 2020 16:18:24 -0500
+Received: by mail-pf1-f193.google.com with SMTP id j9so2118407pfa.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:18:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3Al6Dba4vILzb1qGfePPll7WwcKDQ0se1L1GE0jp6m8=;
+        b=BA/d+Rs5vr4vZfcSXEN8gZw1/tyxpNLiyJnUgSQPAWrFPEnY5zoXLi8iwGcp8uPM7u
+         byhoung4nkNM7ARSc4msBvvFfFsGgWDk6nMvvdIPvBXa5Tsbu1C1kllPumuG/t6sbiik
+         ZUxvzUVW3fn7SGs6BmTxQYQE8KawqTY32dPx7JvbmKn7viuzwsBI2cyHeknKK6+flvki
+         YGfueIWiFCjYK/aVodY/FLqMypenlebQk242WUQvee2Ei0pc+gWRuq37V174eFjqh+Oe
+         PBJUXFhGKBOCSMWToWAHJJqweMRSKKypOtfdRqVJ0mObww4RLIuf039/8OTPqD0qTCi3
+         Iv4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3Al6Dba4vILzb1qGfePPll7WwcKDQ0se1L1GE0jp6m8=;
+        b=Ef+//Omw8oovR0R51T2UZBlg5Yj/oW2AAL6kFFbljJHZPk+cxxJ3/3tyWOFKQk4blS
+         Pq63hbAM2beyZIBmfAG/M+KgjZqWl8tRej7ywgDIu7invEZ9GLAjNj5/cAefufKz2s1Y
+         h93EJ9D8orxy8EzUxK45gdrwUyBClS/w+XwHjTP+ZEB5gFUeihPZmDFrNdtVGYzUnrJK
+         3d/UthN0aZsfHOcUt7xtyvnjTpi3wxmb2JdEDCtIpaDn6uvbamaINu3LR3DxF9VSKkvi
+         oLS7x4O9qBMBZ4+fyJDbiJgJVGL59uUTr3ThsBshqvpZk8cKSi3tAaQWg93SOx3cn69N
+         VEgQ==
+X-Gm-Message-State: ANhLgQ2i53AH8uJqR4YyXC43l/ebuNw9sQD3v8SMZ/c+fnw5b/hR/mI8
+        9FrG/n4MjV4GzNv3+hbKZ+GFAhu+
+X-Google-Smtp-Source: ADFU+vutWbwjVREvrg7CwC+hKBwCnK7xhctkxH3euoL5afj5wLtv2BcaDSZsz5PXxKy/44oEMlWueg==
+X-Received: by 2002:a05:6a00:cb:: with SMTP id e11mr5969571pfj.88.1583270303364;
+        Tue, 03 Mar 2020 13:18:23 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id d77sm12688895pfd.109.2020.03.03.13.18.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 13:18:21 -0800 (PST)
+Date:   Tue, 3 Mar 2020 13:18:19 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, Jan Kara <jack@suse.cz>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH v2] mm: fix long time stall from mm_populate
+Message-ID: <20200303211819.GB219683@google.com>
+References: <20200303002638.206421-1-minchan@kernel.org>
+ <20200303012203.GR29971@bombadil.infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20200303124229.GH26318@mellanox.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583270082; bh=22wphWyEQ9kA/NT134DIsydKvoJeEto8s37Q83fcwtM=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=I3g3W9bniGHs2rCu0yfLWPfwG56cNXGXLhCicraDzGKkb8e8gDWo+Z8OzaNStF2hu
-         y3pYgrOQBhye2JydvTdoCV80OZvDgk5j81+ak7Zq2hHmG07zCQUH2Df5BLAaJajL0C
-         Xjb7yXcjyaBSRn+6ANiN9Cocmi4gH/WT0MKD7iDsS9f5EEQMqToUxA3wTmt8msDvmf
-         7qHk5rrgkRKLNqpsboRa/an6DDqsJ7qWGmLT8mf5YdHQB93cIuMlydQHqkNU3rvTY6
-         rhVXu0wQdLr/wATCoZe0XCmCGMZN2smS+n55V57w4wiyJiOnxXbX34fiMJ6MTiG68I
-         ocqAAhJ0YEmjQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303012203.GR29971@bombadil.infradead.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Mar 02, 2020 at 05:22:03PM -0800, Matthew Wilcox wrote:
+> On Mon, Mar 02, 2020 at 04:26:38PM -0800, Minchan Kim wrote:
+> > @@ -1196,6 +1196,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+> >  	struct vm_area_struct *vma = NULL;
+> >  	int locked = 0;
+> >  	long ret = 0;
+> > +	bool tried = false;
+> 
+> How about ...
+> 
+> 	int *lockedp = &locked;
+> 
+> >  
+> >  	end = start + len;
+> >  
+> > @@ -1226,14 +1227,18 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+> >  		 * double checks the vma flags, so that it won't mlock pages
+> >  		 * if the vma was already munlocked.
+> >  		 */
+> > -		ret = populate_vma_page_range(vma, nstart, nend, &locked);
+> > +		ret = populate_vma_page_range(vma, nstart, nend,
+> > +						tried ? NULL : &locked);
+> 
+> 		ret = populate_vma_page_range(vma, nstart, nend, lockedp);
+> 
+> >  		if (ret < 0) {
+> >  			if (ignore_errors) {
+> >  				ret = 0;
+> >  				continue;	/* continue at next VMA */
+> >  			}
+> >  			break;
+> > -		}
+> > +		} else if (ret == 0)
+> > +			tried = true;
+> > +		else
+> > +			tried = false;
+> 
+> 		} else if (ret == 0)
+> 			lockedp = NULL;
+> 
+> Maybe there's a better name than lockedp.
 
-On 3/3/20 4:42 AM, Jason Gunthorpe wrote:
-> On Mon, Mar 02, 2020 at 05:00:23PM -0800, Ralph Campbell wrote:
->> When memory is migrated to the GPU, it is likely to be accessed by GPU
->> code soon afterwards. Instead of waiting for a GPU fault, map the
->> migrated memory into the GPU page tables with the same access permission=
-s
->> as the source CPU page table entries. This preserves copy on write
->> semantics.
->>
->> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
->> Cc: Christoph Hellwig <hch@lst.de>
->> Cc: Jason Gunthorpe <jgg@mellanox.com>
->> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
->> Cc: Ben Skeggs <bskeggs@redhat.com>
->> ---
->>
->> Originally this patch was targeted for Jason's rdma tree since other HMM
->> related changes were queued there. Now that those have been merged, this
->> patch just contains changes to nouveau so it could go through any tree.
->> I guess Ben Skeggs' tree would be appropriate.
->=20
-> Yep
->=20
->> +static inline struct nouveau_pfnmap_args *
->> +nouveau_pfns_to_args(void *pfns)
->=20
-> don't use static inline inside C files
+Thanks for the review, Matthew.
 
-OK.
+It changes the behavior from mine in that it never set lockedp as "non-NULL"
+since it had retried so that we lose fault retrying optimization for
+successive addresses
 
->> +{
->> +	struct nvif_vmm_pfnmap_v0 *p =3D
->> +		container_of(pfns, struct nvif_vmm_pfnmap_v0, phys);
->> +
->> +	return container_of(p, struct nouveau_pfnmap_args, p);
->=20
-> And this should just be
->=20
->     return container_of(pfns, struct nouveau_pfnmap_args, p.phys);
-
-Much simpler, thanks.
-
->> +static struct nouveau_svmm *
->> +nouveau_find_svmm(struct nouveau_svm *svm, struct mm_struct *mm)
->> +{
->> +	struct nouveau_ivmm *ivmm;
->> +
->> +	list_for_each_entry(ivmm, &svm->inst, head) {
->> +		if (ivmm->svmm->notifier.mm =3D=3D mm)
->> +			return ivmm->svmm;
->> +	}
->> +	return NULL;
->> +}
->=20
-> Is this re-implementing mmu_notifier_get() ?
->=20
-> Jason
-
-Not quite. This is being called from an ioctl() call on the GPU device
-file which calls nouveau_svmm_bind() which locks mmap_sem for reading,
-walks the vmas for the address range given in the ioctl() data, and migrate=
-s
-the pages to the GPU memory.
-mmu_notifier_get() would try to lock mmap_sem for writing so that would dea=
-dlock.
-But it is similar in that the GPU specific process context (nouveau_svmm) n=
-eeds
-to be found for the given ioctl caller.
-If find_get_mmu_notifier() was exported, I think that could work.
-Now that I look at this again, there is an easier way to find the svmm and =
-I see
-some other bugs that need fixing. I'll post a v3 as soon as I get those wri=
-tten
-and tested.
-
-Thanks for the review.
+I understand the code is not pretty there so that hard to follow it but
+I am not sure the your suggestion makes it better.
