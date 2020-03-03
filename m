@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEA7C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556A8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4A7320656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A91206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258560;
-	bh=FPVa7EgyFbqzPMP9b5UqFWfiQfjcJ/p/YEDAggvfVJs=;
+	s=default; t=1583258563;
+	bh=UOJy3pLs5Fs1mlGGncBPdJXTbv+3LRVXAKJbhH46Fm0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SMRRlRIrW5NXhH8MjQdKSYcc+1kQ6sXHraTcmZyUWah8bWvNUTrvLhSQc8JnT7D7/
-	 FvUl9rl1ex+5RZZmeyMr7SlNkhCk6rjocDUrZnLN9re/MThpm9h8sEtqTISSXYSYGV
-	 oLGVnnM2cI5hNohN4wplyQIRTyiFuBazbuKt8pwQ=
+	b=rmJTXx3TmN0aFQaJBGP5K4sfcKZWveW67rOl15Nj767pDzkrW6EK4kuLzc7tB4mJQ
+	 PGpQ68O31IRvoSQ44xeI5AHP0eNWZhhr1PA4hpidJ+m7yj7sBDj398x/TzaK0tZwN3
+	 aPTa5Cpokaz6qJICf4MMjBt0LrfXXdTp9hK46B+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388268AbgCCSCk (ORCPT
+        id S2388277AbgCCSCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:02:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47300 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:02:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388248AbgCCSCf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:02:35 -0500
+        id S2388261AbgCCSCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:02:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91F3F20656;
-        Tue,  3 Mar 2020 18:02:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09A0D20836;
+        Tue,  3 Mar 2020 18:02:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258555;
-        bh=FPVa7EgyFbqzPMP9b5UqFWfiQfjcJ/p/YEDAggvfVJs=;
+        s=default; t=1583258557;
+        bh=UOJy3pLs5Fs1mlGGncBPdJXTbv+3LRVXAKJbhH46Fm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eEFQMb8FZtDDFIS/j82+CpRd02FBqggUFpC55hg68RndCt8q8jZgiAKvyCI1TdgxK
-         KKDUMoWB27J2rbkWQWnThJK8ZzSxLMrL91Mj8Pi/DBSmJP8FEai3b66xxkdIvmEqcA
-         xPO88heqa8stEqV54a9FX54sIzv+6G2vcEi+SIX8=
+        b=sKN+Pq5mxPNK65EI0L0OLGOiPo9qYlR4909ffLUGv3cQ1BbORAnghyqrbH11Ty1jm
+         iyh8hwdUfCFmbdN6AEMZIy2JBFm9lXt0I3hM207IiYa5IlGL7UdzG0ZXtIhCPjkPom
+         +SRfeIpOfyGzKMbqpdUypzZkbsXXa8xwQ8NWZS2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 76/87] drivers: net: xgene: Fix the order of the arguments of alloc_etherdev_mqs()
-Date:   Tue,  3 Mar 2020 18:44:07 +0100
-Message-Id: <20200303174357.083595653@linuxfoundation.org>
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Aleksa Sarai <cyphar@cyphar.com>
+Subject: [PATCH 4.19 67/87] namei: only return -ECHILD from follow_dotdot_rcu()
+Date:   Tue,  3 Mar 2020 18:43:58 +0100
+Message-Id: <20200303174356.329220763@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -60,37 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Aleksa Sarai <cyphar@cyphar.com>
 
-commit 5a44c71ccda60a50073c5d7fe3f694cdfa3ab0c2 upstream.
+commit 2b98149c2377bff12be5dd3ce02ae0506e2dd613 upstream.
 
-'alloc_etherdev_mqs()' expects first 'tx', then 'rx'. The semantic here
-looks reversed.
+It's over-zealous to return hard errors under RCU-walk here, given that
+a REF-walk will be triggered for all other cases handling ".." under
+RCU.
 
-Reorder the arguments passed to 'alloc_etherdev_mqs()' in order to keep
-the correct semantic.
+The original purpose of this check was to ensure that if a rename occurs
+such that a directory is moved outside of the bind-mount which the
+resolution started in, it would be detected and blocked to avoid being
+able to mess with paths outside of the bind-mount. However, triggering a
+new REF-walk is just as effective a solution.
 
-In fact, this is a no-op because both XGENE_NUM_[RT]X_RING are 8.
-
-Fixes: 107dec2749fe ("drivers: net: xgene: Add support for multiple queues")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: 397d425dc26d ("vfs: Test for and handle paths that are unreachable from their mnt_root")
+Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/apm/xgene/xgene_enet_main.c |    2 +-
+ fs/namei.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-+++ b/drivers/net/ethernet/apm/xgene/xgene_enet_main.c
-@@ -2034,7 +2034,7 @@ static int xgene_enet_probe(struct platf
- 	int ret;
- 
- 	ndev = alloc_etherdev_mqs(sizeof(struct xgene_enet_pdata),
--				  XGENE_NUM_RX_RING, XGENE_NUM_TX_RING);
-+				  XGENE_NUM_TX_RING, XGENE_NUM_RX_RING);
- 	if (!ndev)
- 		return -ENOMEM;
- 
+--- a/fs/namei.c
++++ b/fs/namei.c
+@@ -1368,7 +1368,7 @@ static int follow_dotdot_rcu(struct name
+ 			nd->path.dentry = parent;
+ 			nd->seq = seq;
+ 			if (unlikely(!path_connected(&nd->path)))
+-				return -ENOENT;
++				return -ECHILD;
+ 			break;
+ 		} else {
+ 			struct mount *mnt = real_mount(nd->path.mnt);
 
 
