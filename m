@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13DA0C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407BCC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA77D20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FEA720CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257711;
-	bh=/fUNwf/vztwTSEohLnloV9eTLI537OBCYIVodXwIu6Y=;
+	s=default; t=1583257714;
+	bh=88cw4804wTQIXco+dXCuqHOHI28kQNCEPZwYM5vjOXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UxJOzgfwdufFpZj4njACvhDzhTF02dvygXLCiZjADIvo3V9WP4P+TrjPqOnV2mPyA
-	 BRciIJ8uEc5M08RdjazykVvq3K43Sw2YHvlndVinAuy7DQgf9e+TPy3ZvObRMTfuo/
-	 y1hnPZxJEU4WdsXit2+HSGFWaLHGwP+iX4Hz7LHY=
+	b=B23QHUZPgZmYWD95kt96/jyu83gF+t1CHe5aKXEJq8RbXAzSdFy0q5WQ8AlxmmheF
+	 X2fKWVbrf+KJhjDMLknFPpDjwRSI5lakPUhaP7WmDOVDkrZMYXU+JlAkJjne15c/Hm
+	 4L/bkSRvhSVpVpALuNoCRky1gocauVk2wFG3tRUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728330AbgCCRsa (ORCPT
+        id S1731523AbgCCRsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:48:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55558 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731657AbgCCRs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:27 -0500
+        id S1731664AbgCCRs2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:28 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38767208C3;
-        Tue,  3 Mar 2020 17:48:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BB492146E;
+        Tue,  3 Mar 2020 17:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257705;
-        bh=/fUNwf/vztwTSEohLnloV9eTLI537OBCYIVodXwIu6Y=;
+        s=default; t=1583257708;
+        bh=88cw4804wTQIXco+dXCuqHOHI28kQNCEPZwYM5vjOXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SMPuKDTNZTR9o+IXEIcVcUXx06DdoKL4iKr3Tz4ld2fhGqCQKJLM5Xaqy+Z7WkKSR
-         zJo7sfA8Wxkapkz5v5COv/TQ7hxurlNX7OpCjng7DvmBjazTfMyy6JIzzbyrZ1dRee
-         YMz5fNeXDjmHX44kNymiJ7vXlFbTmJQfSzhVtbhg=
+        b=xNQfxR/UTBPnwH33WJZu/6pWW6P/wrHWzUyeCYHOOhnIcrTDOpGR1MzjqW1B6vP+c
+         KysExPKGGSy6OM34gFgkpJHXx56+kQqf4bnKFG6aCjJ0QNG15R0XvaS2AdtAE2eqNB
+         67Uw3j3/hpLUIZJLQfErJV2UypHI+6CFeNsPNqos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.5 097/176] tracing: Disable trace_printk() on post poned tests
-Date:   Tue,  3 Mar 2020 18:42:41 +0100
-Message-Id: <20200303174316.051529563@linuxfoundation.org>
+        stable@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
+        Orson Zhai <orson.unisoc@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 5.5 098/176] Revert "PM / devfreq: Modify the device name as devfreq(X) for sysfs"
+Date:   Tue,  3 Mar 2020 18:42:42 +0100
+Message-Id: <20200303174316.164280289@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,51 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Orson Zhai <orson.unisoc@gmail.com>
 
-commit 78041c0c9e935d9ce4086feeff6c569ed88ddfd4 upstream.
+commit 66d0e797bf095d407479c89952d42b1d96ef0a7f upstream.
 
-The tracing seftests checks various aspects of the tracing infrastructure,
-and one is filtering. If trace_printk() is active during a self test, it can
-cause the filtering to fail, which will disable that part of the trace.
+This reverts commit 4585fbcb5331fc910b7e553ad3efd0dd7b320d14.
 
-To keep the selftests from failing because of trace_printk() calls,
-trace_printk() checks the variable tracing_selftest_running, and if set, it
-does not write to the tracing buffer.
+The name changing as devfreq(X) breaks some user space applications,
+such as Android HAL from Unisoc and Hikey [1].
+The device name will be changed unexpectly after every boot depending
+on module init sequence. It will make trouble to setup some system
+configuration like selinux for Android.
 
-As some tracers were registered earlier in boot, the selftest they triggered
-would fail because not all the infrastructure was set up for the full
-selftest. Thus, some of the tests were post poned to when their
-infrastructure was ready (namely file system code). The postpone code did
-not set the tracing_seftest_running variable, and could fail if a
-trace_printk() was added and executed during their run.
+So we'd like to revert it back to old naming rule before any better
+way being found.
 
+[1] https://lkml.org/lkml/2018/5/8/1042
+
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: stable@vger.kernel.org
-Fixes: 9afecfbb95198 ("tracing: Postpone tracer start-up tests till the system is more robust")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Orson Zhai <orson.unisoc@gmail.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/devfreq/devfreq.c |    4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1827,6 +1827,7 @@ static __init int init_trace_selftests(v
+--- a/drivers/devfreq/devfreq.c
++++ b/drivers/devfreq/devfreq.c
+@@ -738,7 +738,6 @@ struct devfreq *devfreq_add_device(struc
+ {
+ 	struct devfreq *devfreq;
+ 	struct devfreq_governor *governor;
+-	static atomic_t devfreq_no = ATOMIC_INIT(-1);
+ 	int err = 0;
  
- 	pr_info("Running postponed tracer tests:\n");
+ 	if (!dev || !profile || !governor_name) {
+@@ -800,8 +799,7 @@ struct devfreq *devfreq_add_device(struc
+ 	devfreq->suspend_freq = dev_pm_opp_get_suspend_opp_freq(dev);
+ 	atomic_set(&devfreq->suspend_count, 0);
  
-+	tracing_selftest_running = true;
- 	list_for_each_entry_safe(p, n, &postponed_selftests, list) {
- 		/* This loop can take minutes when sanitizers are enabled, so
- 		 * lets make sure we allow RCU processing.
-@@ -1849,6 +1850,7 @@ static __init int init_trace_selftests(v
- 		list_del(&p->list);
- 		kfree(p);
- 	}
-+	tracing_selftest_running = false;
- 
-  out:
- 	mutex_unlock(&trace_types_lock);
+-	dev_set_name(&devfreq->dev, "devfreq%d",
+-				atomic_inc_return(&devfreq_no));
++	dev_set_name(&devfreq->dev, "%s", dev_name(dev));
+ 	err = device_register(&devfreq->dev);
+ 	if (err) {
+ 		mutex_unlock(&devfreq->lock);
 
 
