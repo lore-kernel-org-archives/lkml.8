@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B2AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B52C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:03:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5E9217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885AF20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:03:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgCCLDX (ORCPT
+        id S1728603AbgCCLDd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 06:03:23 -0500
-Received: from outbound-smtp10.blacknight.com ([46.22.139.15]:52045 "EHLO
-        outbound-smtp10.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728452AbgCCLDW (ORCPT
+        Tue, 3 Mar 2020 06:03:33 -0500
+Received: from outbound-smtp55.blacknight.com ([46.22.136.239]:45553 "EHLO
+        outbound-smtp55.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728068AbgCCLDd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 06:03:22 -0500
+        Tue, 3 Mar 2020 06:03:33 -0500
 Received: from mail.blacknight.com (pemlinmail04.blacknight.ie [81.17.254.17])
-        by outbound-smtp10.blacknight.com (Postfix) with ESMTPS id 2382A1C3453
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 11:03:21 +0000 (GMT)
-Received: (qmail 14225 invoked from network); 3 Mar 2020 11:03:20 -0000
+        by outbound-smtp55.blacknight.com (Postfix) with ESMTPS id 7AD72FA7F9
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 11:03:31 +0000 (GMT)
+Received: (qmail 15378 invoked from network); 3 Mar 2020 11:03:31 -0000
 Received: from unknown (HELO stampy.112glenside.lan) (mgorman@techsingularity.net@[84.203.18.57])
-  by 81.17.254.9 with ESMTPA; 3 Mar 2020 11:03:20 -0000
+  by 81.17.254.9 with ESMTPA; 3 Mar 2020 11:03:31 -0000
 From:   Mel Gorman <mgorman@techsingularity.net>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Peter Zijlstra <peterz@infradead.org>,
@@ -42,9 +42,9 @@ Cc:     Peter Zijlstra <peterz@infradead.org>,
         Paul McKenney <paulmck@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Mel Gorman <mgorman@techsingularity.net>
-Subject: [PATCH 1/3] sched/fair: Fix statistics for find_idlest_group()
-Date:   Tue,  3 Mar 2020 11:02:56 +0000
-Message-Id: <20200303110258.1092-2-mgorman@techsingularity.net>
+Subject: [PATCH 2/3] sched/fair: Fix kernel build warning in test_idle_cores() for !SMT NUMA
+Date:   Tue,  3 Mar 2020 11:02:57 +0000
+Message-Id: <20200303110258.1092-3-mgorman@techsingularity.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200303110258.1092-1-mgorman@techsingularity.net>
 References: <20200303110258.1092-1-mgorman@techsingularity.net>
@@ -53,40 +53,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Valentin Schneider <valentin.schneider@arm.com>
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Valentin Schneider <valentin.schneider@arm.com>
 
-sgs->group_weight is not set while gathering statistics in
-update_sg_wakeup_stats(). This means that a group can be classified as
-fully busy with 0 running tasks if utilization is high enough.
+Building against the tip/sched/core as ff7db0bf24db ("sched/numa: Prefer
+using an idle CPU as a migration target instead of comparing tasks") with
+the arm64 defconfig (which doesn't have CONFIG_SCHED_SMT set) leads to:
 
-This path is mainly used for fork and exec.
+  kernel/sched/fair.c:1525:20: warning: 'test_idle_cores' declared 'static' but never defined [-Wunused-function]
+   static inline bool test_idle_cores(int cpu, bool def);
+		      ^~~~~~~~~~~~~~~
 
-Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Acked-by: Mel Gorman <mgorman@techsingularity.net>
+Rather than define it in its own CONFIG_SCHED_SMT #define island, bunch it
+up with test_idle_cores().
+
+Fixes: ff7db0bf24db ("sched/numa: Prefer using an idle CPU as a migration target instead of comparing tasks")
+[mgorman@techsingularity.net: Edit changelog, minor style change]
+Reported-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Reported-by: Lukasz Luba <lukasz.luba@arm.com>
+Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-Link: https://lore.kernel.org/r/20200218144534.4564-1-vincent.guittot@linaro.org
+Reviewed-by: Lukasz Luba <lukasz.luba@arm.com>
 ---
- kernel/sched/fair.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/sched/fair.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index fcc968669aea..4b5d5e5e701e 100644
+index 4b5d5e5e701e..33622bbfcea7 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -8561,6 +8561,8 @@ static inline void update_sg_wakeup_stats(struct sched_domain *sd,
+@@ -1520,9 +1520,6 @@ static inline bool is_core_idle(int cpu)
+ 	return true;
+ }
  
- 	sgs->group_capacity = group->sgc->capacity;
+-/* Forward declarations of select_idle_sibling helpers */
+-static inline bool test_idle_cores(int cpu, bool def);
+-
+ struct task_numa_env {
+ 	struct task_struct *p;
  
-+	sgs->group_weight = group->group_weight;
-+
- 	sgs->group_type = group_classify(sd->imbalance_pct, group, sgs);
+@@ -1558,9 +1555,11 @@ numa_type numa_classify(unsigned int imbalance_pct,
+ 	return node_fully_busy;
+ }
  
- 	/*
++#ifdef CONFIG_SCHED_SMT
++/* Forward declarations of select_idle_sibling helpers */
++static inline bool test_idle_cores(int cpu, bool def);
+ static inline int numa_idle_core(int idle_core, int cpu)
+ {
+-#ifdef CONFIG_SCHED_SMT
+ 	if (!static_branch_likely(&sched_smt_present) ||
+ 	    idle_core >= 0 || !test_idle_cores(cpu, false))
+ 		return idle_core;
+@@ -1571,10 +1570,15 @@ static inline int numa_idle_core(int idle_core, int cpu)
+ 	 */
+ 	if (is_core_idle(cpu))
+ 		idle_core = cpu;
+-#endif
+ 
+ 	return idle_core;
+ }
++#else
++static inline int numa_idle_core(int idle_core, int cpu)
++{
++	return idle_core;
++}
++#endif
+ 
+ /*
+  * Gather all necessary information to make NUMA balancing placement
 -- 
 2.16.4
 
