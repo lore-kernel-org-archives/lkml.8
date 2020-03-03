@@ -2,86 +2,146 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F93C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:09:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F975C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFE8A20838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:09:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 664FC20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hk6M5h8n"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="laBzjI5h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729546AbgCCOJY (ORCPT
+        id S1729560AbgCCOKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:09:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38260 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729533AbgCCOJY (ORCPT
+        Tue, 3 Mar 2020 09:10:03 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35815 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728533AbgCCOKC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:09:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583244563;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=f1oQbBmvrBGg0OPWPnhd5xlRIiyvJNmigaWzMX+f8Oo=;
-        b=Hk6M5h8no4DBgLFBrEq9Z1+PdfBBGrQzf0x4pc1IDWMOYvwgSZGit7toOz95vkfsA6IKTu
-        nx9t1dW09QxHg4w7WEQGuyWoOx9mzN8yjkXH0uSq3x0Gr+yl3Jjm5fZNGOXHW2J0fjfsva
-        HwCsxKaA9arK+8AHiGjv9CyFAe8fSfw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-451-V0i0Dt2SOYSUsHpCEce_5g-1; Tue, 03 Mar 2020 09:09:19 -0500
-X-MC-Unique: V0i0Dt2SOYSUsHpCEce_5g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 995FA18B9FC1;
-        Tue,  3 Mar 2020 14:09:17 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A16BA60BE1;
-        Tue,  3 Mar 2020 14:09:14 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20200303130347.GA2302029@kroah.com>
-References: <20200303130347.GA2302029@kroah.com> <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com> <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk> <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com> <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net> <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com> <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com> <20200303113814.rsqhljkch6tgorpu@ws.net.home>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     dhowells@redhat.com, Karel Zak <kzak@redhat.com>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+        Tue, 3 Mar 2020 09:10:02 -0500
+Received: by mail-wr1-f67.google.com with SMTP id r7so4541842wro.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:10:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JL2Fpw/lCnaQ/XUN6zAHALWLaBMkxZHS+mEJ+EF0ZVY=;
+        b=laBzjI5h6krI1uPEgUkHv/ZKSQ+Z8ids/RVkJijNF9hmmkdASTBoYnB/7xl7Hgb1Mg
+         BubzGGprkGLSjK6uC17l7JKFmAuNKQAe7mebom121Rb1ZX7t8afUG1d1oG5ksP4iW46a
+         WR8Rvo74RTKxnPZPwBPH3sMykyYqZfLGRC0mc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JL2Fpw/lCnaQ/XUN6zAHALWLaBMkxZHS+mEJ+EF0ZVY=;
+        b=RWFUkVLdxo65JgdJbVbaY21iGmNe7B3uuz/81FzSwxVefq/mYANFRlBh6gXvDDy1Cb
+         Ig8zN6SsY6XYVwrDER8RDjzvtHgXezfFABbmC8J/QQoDVDN6zuV1+liNCxG/3K6ZudXu
+         Y/fkfJerCckJVSfW82LOvUeD2E3rfwjV5Y1xDIWSGHH+nNNtUFv2425G/XuL+w/QrHNF
+         BnOGoPEIhQ48DXqTUbrjZwHbqYhpl8mCIG8P5pS33lluU+cRkD+WJAVUHSjQaYvT5A0S
+         nCMnfGhu7D3UDQ0vlOddk0dglHociE/U+oj2daYqChD/DkFLpT+4kX/hGgWlgryfgmsS
+         Oa2g==
+X-Gm-Message-State: ANhLgQ1Pn8ZSCxnHyT9Xe1Zliyl8BbbhfJ6oE0Bt5kWJqKeGKQbwyBBH
+        ZY9Nc5MbsS9FXIp+jXumAfbxtdf6lj4=
+X-Google-Smtp-Source: ADFU+vuL6Zt9apvq5/5BIeAmC8CeHZPk64Alb7HZEf7e0A/TFMw48bXS8bAGo5m+C3cCwKs6DCLf0Q==
+X-Received: by 2002:a05:6000:10c8:: with SMTP id b8mr5438416wrx.287.1583244600891;
+        Tue, 03 Mar 2020 06:10:00 -0800 (PST)
+Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:308:2811:c80d:9375:bf8a])
+        by smtp.gmail.com with ESMTPSA id h20sm11746823wrc.47.2020.03.03.06.10.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 06:10:00 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: [PATCH bpf-next 0/7] Introduce BPF_MODIFY_RET tracing progs.
+Date:   Tue,  3 Mar 2020 15:09:43 +0100
+Message-Id: <20200303140950.6355-1-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1656812.1583244553.1@warthog.procyon.org.uk>
-Date:   Tue, 03 Mar 2020 14:09:13 +0000
-Message-ID: <1656813.1583244553@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+From: KP Singh <kpsingh@google.com>
 
-> Actually, I like this idea (the syscall,
+This was brought up in the KRSI v4 discussion and found to be useful
+both for security and tracing programs.
 
-It might mesh well with atomic_open in some way.
+  https://lore.kernel.org/bpf/20200225193108.GB22391@chromium.org/
 
-David
+The modify_return programs are allowed for security hooks (with an
+extra CAP_MAC_ADMIN check) and functions whitelisted for error
+injection (ALLOW_ERROR_INJECTION).
+
+The "security_" check is expected to be cleaned up with the KRSI patch
+series.
+
+Here is an example of how a fmod_ret program behaves:
+
+int func_to_be_attached(int a, int b)
+{  <--- do_fentry
+
+do_fmod_ret:
+   <update ret by calling fmod_ret>
+   if (ret != 0)
+        goto do_fexit;
+
+original_function:
+
+    <side_effects_happen_here>
+
+}  <--- do_fexit
+
+ALLOW_ERROR_INJECTION(func_to_be_attached, ERRNO)
+
+The fmod_ret program attached to this function can be defined as:
+
+SEC("fmod_ret/func_to_be_attached")
+BPF_PROG(func_name, int a, int b, int ret)
+{
+        // This will skip the original function logic.
+        return -1;
+}
+
+KP Singh (7):
+  bpf: Refactor trampoline update code
+  bpf: JIT helpers for fmod_ret progs
+  bpf: Introduce BPF_MODIFY_RETURN
+  bpf: Attachment verification for BPF_MODIFY_RETURN
+  tools/libbpf: Add support for BPF_MODIFY_RETURN
+  bpf: Add test ops for BPF_PROG_TYPE_TRACING
+  bpf: Add selftests for BPF_MODIFY_RETURN
+
+ arch/x86/net/bpf_jit_comp.c                   | 261 +++++++++++++-----
+ include/linux/bpf.h                           |  24 +-
+ include/uapi/linux/bpf.h                      |   1 +
+ kernel/bpf/bpf_struct_ops.c                   |  13 +-
+ kernel/bpf/btf.c                              |  27 +-
+ kernel/bpf/syscall.c                          |   1 +
+ kernel/bpf/trampoline.c                       |  66 +++--
+ kernel/bpf/verifier.c                         |  32 +++
+ kernel/trace/bpf_trace.c                      |   1 +
+ net/bpf/test_run.c                            |  57 +++-
+ tools/include/uapi/linux/bpf.h                |   1 +
+ tools/lib/bpf/libbpf.c                        |   4 +
+ .../selftests/bpf/prog_tests/fentry_fexit.c   |  12 +-
+ .../selftests/bpf/prog_tests/fentry_test.c    |  14 +-
+ .../selftests/bpf/prog_tests/fexit_test.c     |  69 ++---
+ .../selftests/bpf/prog_tests/modify_return.c  |  65 +++++
+ .../selftests/bpf/progs/modify_return.c       |  49 ++++
+ 17 files changed, 509 insertions(+), 188 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/modify_return.c
+ create mode 100644 tools/testing/selftests/bpf/progs/modify_return.c
+
+-- 
+2.20.1
 
