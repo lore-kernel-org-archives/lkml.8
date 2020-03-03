@@ -2,135 +2,78 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61897C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 711D9C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 437CD20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4101D21741
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:01:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="B9eh0jiq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbgCCKA7 (ORCPT
+        id S1728117AbgCCKB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:00:59 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:36546 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728005AbgCCKA6 (ORCPT
+        Tue, 3 Mar 2020 05:01:28 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:48296 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727826AbgCCKB1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:00:58 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j94M2-0002Iv-H5; Tue, 03 Mar 2020 10:00:46 +0000
-Date:   Tue, 3 Mar 2020 11:00:45 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200303100045.zqntjjjv6npvs5zl@wittgenstein>
-References: <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
- <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
- <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
- <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+        Tue, 3 Mar 2020 05:01:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=XlqXkLDSB+ETcyYLJsUXHHcoH+7NKDdu7FvL7NDQ/xg=; b=B9eh0jiq5+KlMWJmFSUzWYR613
+        zxWNSWP+9sF4jQ+6I+IX3HYkE993QlvEhrHcH+sOgdPy4eTaG4YZYbQorOgrPoUJXJ+6zY+JKEnZO
+        CVKnMu7ztGLagDpOjVy5/s7R3sRIv/z4L86IriUjgZFGxzHL6xLpa5X2i/u6McdU9zezmiW6mzHMe
+        gXSSeIrME6Vu28bU42h59J2CeQOq548gmNXwfNAgs3B7u2qn+XJsB8S3ARTwOnZEXs0Paq/rPSnVl
+        tRs85JnCZciWd3zNQQhuUHyUAfb+SsQ8y6EuBEcmqp18BGOBubZiH7vs28HNdFr+GA0fkRctHBvtb
+        eghnNAnw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j94MS-0001OM-CK; Tue, 03 Mar 2020 10:01:12 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 01F453012C3;
+        Tue,  3 Mar 2020 10:59:12 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id ED3D42119B2EB; Tue,  3 Mar 2020 11:01:10 +0100 (CET)
+Date:   Tue, 3 Mar 2020 11:01:10 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, luto@amacapital.net, axboe@kernel.dk,
+        torvalds@linux-foundation.org, jannh@google.com, will@kernel.org
+Subject: Re: [PATCH v2] mm: Fix use_mm() vs TLB invalidate
+Message-ID: <20200303100110.GB2596@hirez.programming.kicks-ass.net>
+References: <20200226132133.GM14946@hirez.programming.kicks-ass.net>
+ <202002261336.7A72F3C@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+In-Reply-To: <202002261336.7A72F3C@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:26:21AM +0100, Miklos Szeredi wrote:
-> On Tue, Mar 3, 2020 at 10:13 AM David Howells <dhowells@redhat.com> wrote:
-> >
-> > Miklos Szeredi <miklos@szeredi.hu> wrote:
-> >
-> > > I'm doing a patch.   Let's see how it fares in the face of all these
-> > > preconceptions.
-> >
-> > Don't forget the efficiency criterion.  One reason for going with fsinfo(2) is
-> > that scanning /proc/mounts when there are a lot of mounts in the system is
-> > slow (not to mention the global lock that is held during the read).
-> >
-> > Now, going with sysfs files on top of procfs links might avoid the global
-> > lock, and you can avoid rereading the options string if you export a change
-> > notification, but you're going to end up injecting a whole lot of pathwalk
-> > latency into the system.
+On Wed, Feb 26, 2020 at 01:36:53PM -0800, Kees Cook wrote:
+> On Wed, Feb 26, 2020 at 02:21:33PM +0100, Peter Zijlstra wrote:
+> > v2 now with WARN_ON_ONCE
+> > [...]
+> > +	WARN_ON(!(tsk->flags & PF_KTHREAD));
+> > +	WARN_ON(tsk->mm != NULL);
+> > [...]
+> > +	WARN_ON(!(tsk->flags & PF_KTHREAD));
 > 
-> Completely irrelevant.  Cached lookup is so much optimized, that you
-> won't be able to see any of it.
-> 
-> No, I don't think this is going to be a performance issue at all, but
-> if anything we could introduce a syscall
-> 
->   ssize_t readfile(int dfd, const char *path, char *buf, size_t
-> bufsize, int flags);
-> 
-> that is basically the equivalent of open + read + close, or even a
-> vectored variant that reads multiple files.  But that's off topic
-> again, since I don't think there's going to be any performance issue
-> even with plain I/O syscalls.
-> 
-> >
-> > On top of that, it isn't going to help with the case that I'm working towards
-> > implementing where a container manager can monitor for mounts taking place
-> > inside the container and supervise them.  What I'm proposing is that during
-> > the action phase (eg. FSCONFIG_CMD_CREATE), fsconfig() would hand an fd
-> > referring to the context under construction to the manager, which would then
-> > be able to call fsinfo() to query it and fsconfig() to adjust it, reject it or
-> > permit it.  Something like:
-> >
-> >         fd = receive_context_to_supervise();
-> >         struct fsinfo_params params = {
-> >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
-> >                 .request        = FSINFO_ATTR_SB_OPTIONS,
-> >         };
-> >         fsinfo(fd, NULL, &params, sizeof(params), buffer, sizeof(buffer));
-> >         supervise_parameters(buffer);
-> >         fsconfig(fd, FSCONFIG_SET_FLAG, "hard", NULL, 0);
-> >         fsconfig(fd, FSCONFIG_SET_STRING, "vers", "4.2", 0);
-> >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_CREATE, NULL, NULL, 0);
-> >         struct fsinfo_params params = {
-> >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
-> >                 .request        = FSINFO_ATTR_SB_NOTIFICATIONS,
-> >         };
-> >         struct fsinfo_sb_notifications sbnotify;
-> >         fsinfo(fd, NULL, &params, sizeof(params), &sbnotify, sizeof(sbnotify));
-> >         watch_super(fd, "", AT_EMPTY_PATH, watch_fd, 0x03);
-> >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_PERMIT, NULL, NULL, 0);
-> >         close(fd);
-> >
-> > However, the supervised mount may be happening in a completely different set
-> > of namespaces, in which case the supervisor presumably wouldn't be able to see
-> > the links in procfs and the relevant portions of sysfs.
-> 
-> It would be a "jump" link to the otherwise invisible directory.
+> Version mismatch?
 
-More magic links to beam you around sounds like a bad idea. We had a
-bunch of CVEs around them in containers and they were one of the major
-reasons behind us pushing for openat2(). That's why it has a
-RESOLVE_NO_MAGICLINKS flag.
+Dammit; no, that's just me being an idiot for doing too many things at
+once :/
 
-Christian
+I suppose I'll go send v3..
