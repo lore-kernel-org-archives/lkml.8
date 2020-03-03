@@ -2,105 +2,290 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B75C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBC6C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B35620728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:23:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51C9A20728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:24:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Toq8GFkz"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="K2kLOtZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727862AbgCCWXr (ORCPT
+        id S1727892AbgCCWYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:23:47 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:48846 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbgCCWXr (ORCPT
+        Tue, 3 Mar 2020 17:24:39 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38360 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727636AbgCCWYi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:23:47 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023MI9eM056809;
-        Tue, 3 Mar 2020 22:23:40 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=3sx1vwQWdvQ5Z2ZWTgaCbJGjCVKxUP31T5G8RYrSA9g=;
- b=Toq8GFkzL372Owc/4KN1qQbRsT9j4MDSzCv9DVNQ1BDhKCkrhlXEoeQNWcL8jYUXfSZ8
- PNS2A5dl3BLgMybeoowg+PeSbKIBT3oxiBCsNxOZXnKES3Eq3ULEGx+xSVJPXMlQWrEB
- W+/TKgtCKe+AeWCq7HzxIh9ePVU+LuotI8j2xtibJr9iU8JES4mGjYcq1RNtb1pYpe8r
- Nn82JmhooPdWYK7sWCs07dbUFIdeL8zdqm3F8pJfUTLtg4f/cm+cL41FZcimv2xCNDaa
- qtBVzmCP2LCT8fGaJIaFIQ57+mzY9QfyCEc4BXTH4KLxOlTR8MGCV3qmbAINGIAut5/0 ZQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2yffwqtb56-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 22:23:40 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023MMU2l141297;
-        Tue, 3 Mar 2020 22:23:39 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2yg1p5kbdf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 22:23:39 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 023MNbrI031000;
-        Tue, 3 Mar 2020 22:23:38 GMT
-Received: from localhost.localdomain (/10.211.9.80)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 14:23:37 -0800
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-To:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     julien@xen.org, boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, joe.jin@oracle.com
-Subject: [PATCH v3 2/2] xenbus: req->err should be updated before req->state
-Date:   Tue,  3 Mar 2020 14:14:23 -0800
-Message-Id: <20200303221423.21962-2-dongli.zhang@oracle.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200303221423.21962-1-dongli.zhang@oracle.com>
-References: <20200303221423.21962-1-dongli.zhang@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=980 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030144
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030143
+        Tue, 3 Mar 2020 17:24:38 -0500
+Received: by mail-wr1-f68.google.com with SMTP id t11so6474343wrw.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:24:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=40e6DTgB56dV3R1i2G6eE8mEU0qiesh3B85VcDut/6w=;
+        b=K2kLOtZWxXcIALYynzYEtgquSgGMsiizyUYYZ6xj7d2/PdrJFdzOTaIt8I77jUmUiN
+         Vd/LiHU3MyrpnGkqEbw6r7wuHRSC//daMbpfBeD5lF/rpbrHpFWDgfxx0ylp1YIyHITj
+         ihLOqF5FQ4nHDLTGDpLjwdvy0NcT4+uQQsBuk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=40e6DTgB56dV3R1i2G6eE8mEU0qiesh3B85VcDut/6w=;
+        b=o6ieVo/FNJfJzWEI/hMamCuArXLX7AWwUlKfiUcQtCuk1XboNIhSltzzgu4v0dk8Hk
+         3vKK22GGzhHCvn6gdmuQdtfd325lzGbnZUPgdb7WZ2dDOcliNRfFtNlU4wl7Fo2vF6WL
+         GBvDqSEdYy0TINNd6QQHXJkinHe/jqgU8zv5BsgvWMBvrVo4AXF0KwtsMu/sqTHH3kaF
+         ++0udV7WLvg1C5IfaKVeqymE3TWc0pyveLqwQRynxDcknnKNjJwPtsGgNGtV7gQ7nS0z
+         y/ywbdu5M/i6JS1M+VLkyXBZfnxo7htAZYvu/muJvj0+OIYpbISUm6iD0pqV1Ds1gV6e
+         i8Sw==
+X-Gm-Message-State: ANhLgQ0YmDXYkoce/bCHc/Rz9VMUexl2Rdjf1oJmY5IwHqi4lzeUI1DI
+        8xtQ3kwJdKYCU4/OMC36KS03ew==
+X-Google-Smtp-Source: ADFU+vt2ZN0HOeF5zQmhWJCP/7siB5Sn6+j4aXz6yTM1e4COWJpXgO3qTtK/v6YpOsw3o8fymTshTQ==
+X-Received: by 2002:adf:ebca:: with SMTP id v10mr163109wrn.307.1583274275715;
+        Tue, 03 Mar 2020 14:24:35 -0800 (PST)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id i204sm731361wma.44.2020.03.03.14.24.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:24:35 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 3 Mar 2020 23:24:33 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: Re: [PATCH bpf-next 1/7] bpf: Refactor trampoline update code
+Message-ID: <20200303222433.GA3272@chromium.org>
+References: <20200303140950.6355-1-kpsingh@chromium.org>
+ <20200303140950.6355-2-kpsingh@chromium.org>
+ <CAEf4BzZj1+G7D2eZ9Enp_FtmmNPEkX7f6BDj2q=iZ1D8ZxxTMQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZj1+G7D2eZ9Enp_FtmmNPEkX7f6BDj2q=iZ1D8ZxxTMQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds the barrier to guarantee that req->err is always updated
-before req->state.
+On 03-Mär 14:12, Andrii Nakryiko wrote:
+> On Tue, Mar 3, 2020 at 6:13 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > As we need to introduce a third type of attachment for trampolines, the
+> > flattened signature of arch_prepare_bpf_trampoline gets even more
+> > complicated.
+> >
+> > Refactor the prog and count argument to arch_prepare_bpf_trampoline to
+> > use bpf_tramp_progs to simplify the addition and accounting for new
+> > attachment types.
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+> >  arch/x86/net/bpf_jit_comp.c | 31 +++++++++---------
+> >  include/linux/bpf.h         | 13 ++++++--
+> >  kernel/bpf/bpf_struct_ops.c | 13 +++++++-
+> >  kernel/bpf/trampoline.c     | 63 +++++++++++++++++++++----------------
+> >  4 files changed, 75 insertions(+), 45 deletions(-)
+> >
+> > diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+> > index 9ba08e9abc09..15c7d28bc05c 100644
+> > --- a/arch/x86/net/bpf_jit_comp.c
+> > +++ b/arch/x86/net/bpf_jit_comp.c
+> > @@ -1362,12 +1362,12 @@ static void restore_regs(const struct btf_func_model *m, u8 **prog, int nr_args,
+> >  }
+> >
+> >  static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
+> > -                     struct bpf_prog **progs, int prog_cnt, int stack_size)
+> > +                     struct bpf_tramp_progs *tp, int stack_size)
+> 
+> nit: it's `tp` here, but `tprogs` in arch_prepare_bpf_trampoline. It's
+> minor, but would be nice to stick to consistent naming.
 
-Otherwise, read_reply() would not return ERR_PTR(req->err) but
-req->body, when process_writes()->xb_write() is failed.
+I did this to ~distinguish~ that rather than being an array of
+tprogs it's a pointer to one of its members e.g.
+&tprogs[BPF_TRAMP_FEXIT]).
 
-Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
----
- drivers/xen/xenbus/xenbus_comms.c | 2 ++
- 1 file changed, 2 insertions(+)
+I change it if you feel this is not a valuable disntinction.
 
-diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
-index 852ed161fc2a..eb5151fc8efa 100644
---- a/drivers/xen/xenbus/xenbus_comms.c
-+++ b/drivers/xen/xenbus/xenbus_comms.c
-@@ -397,6 +397,8 @@ static int process_writes(void)
- 	if (state.req->state == xb_req_state_aborted)
- 		kfree(state.req);
- 	else {
-+		/* write err, then update state */
-+		virt_wmb();
- 		state.req->state = xb_req_state_got_reply;
- 		wake_up(&state.req->wq);
- 	}
--- 
-2.17.1
+> 
+> >  {
+> >         u8 *prog = *pprog;
+> >         int cnt = 0, i;
+> >
+> > -       for (i = 0; i < prog_cnt; i++) {
+> > +       for (i = 0; i < tp->nr_progs; i++) {
+> >                 if (emit_call(&prog, __bpf_prog_enter, prog))
+> >                         return -EINVAL;
+> >                 /* remember prog start time returned by __bpf_prog_enter */
+> > @@ -1376,17 +1376,17 @@ static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
+> >                 /* arg1: lea rdi, [rbp - stack_size] */
+> >                 EMIT4(0x48, 0x8D, 0x7D, -stack_size);
+> >                 /* arg2: progs[i]->insnsi for interpreter */
+> > -               if (!progs[i]->jited)
+> > +               if (!tp->progs[i]->jited)
+> >                         emit_mov_imm64(&prog, BPF_REG_2,
+> > -                                      (long) progs[i]->insnsi >> 32,
+> > -                                      (u32) (long) progs[i]->insnsi);
+> > +                                      (long) tp->progs[i]->insnsi >> 32,
+> > +                                      (u32) (long) tp->progs[i]->insnsi);
+> >                 /* call JITed bpf program or interpreter */
+> > -               if (emit_call(&prog, progs[i]->bpf_func, prog))
+> > +               if (emit_call(&prog, tp->progs[i]->bpf_func, prog))
+> >                         return -EINVAL;
+> >
+> >                 /* arg1: mov rdi, progs[i] */
+> > -               emit_mov_imm64(&prog, BPF_REG_1, (long) progs[i] >> 32,
+> > -                              (u32) (long) progs[i]);
+> > +               emit_mov_imm64(&prog, BPF_REG_1, (long) tp->progs[i] >> 32,
+> > +                              (u32) (long) tp->progs[i]);
+> >                 /* arg2: mov rsi, rbx <- start time in nsec */
+> >                 emit_mov_reg(&prog, true, BPF_REG_2, BPF_REG_6);
+> >                 if (emit_call(&prog, __bpf_prog_exit, prog))
+> > @@ -1458,12 +1458,13 @@ static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
+> >   */
+> >  int arch_prepare_bpf_trampoline(void *image, void *image_end,
+> >                                 const struct btf_func_model *m, u32 flags,
+> > -                               struct bpf_prog **fentry_progs, int fentry_cnt,
+> > -                               struct bpf_prog **fexit_progs, int fexit_cnt,
+> > +                               struct bpf_tramp_progs *tprogs,
+> >                                 void *orig_call)
+> >  {
+> >         int cnt = 0, nr_args = m->nr_args;
+> >         int stack_size = nr_args * 8;
+> > +       struct bpf_tramp_progs *fentry = &tprogs[BPF_TRAMP_FENTRY];
+> > +       struct bpf_tramp_progs *fexit = &tprogs[BPF_TRAMP_FEXIT];
+> >         u8 *prog;
+> >
+> >         /* x86-64 supports up to 6 arguments. 7+ can be added in the future */
+> 
+> [...]
+> 
+> > diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
+> > index c498f0fffb40..a011a77b21fa 100644
+> > --- a/kernel/bpf/bpf_struct_ops.c
+> > +++ b/kernel/bpf/bpf_struct_ops.c
+> > @@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+> >         struct bpf_struct_ops_value *uvalue, *kvalue;
+> >         const struct btf_member *member;
+> >         const struct btf_type *t = st_ops->type;
+> > +       struct bpf_tramp_progs *tprogs = NULL;
+> >         void *udata, *kdata;
+> >         int prog_fd, err = 0;
+> >         void *image;
+> > @@ -425,10 +426,19 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+> >                         goto reset_unlock;
+> >                 }
+> >
+> > +               tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(struct bpf_tramp_progs),
+> 
+> nit: sizeof(*tprogs) ?
 
+Sure. I can fix it.
+
+> 
+> > +                                GFP_KERNEL);
+> > +               if (!tprogs) {
+> > +                       err = -ENOMEM;
+> > +                       goto reset_unlock;
+> > +               }
+> > +
+> > +               *tprogs[BPF_TRAMP_FENTRY].progs = prog;
+> 
+> I'm very confused what's going on here, why * at the beginning here,
+> but no * below?.. It seems unnecessary.
+
+The progs member of bpf_tramp_progs is
+
+  struct bpf_tramp_progs {
+	struct bpf_prog *progs[BPF_MAX_TRAMP_PROGS];
+	int nr_progs;
+  };
+
+Equivalent to the **progs we had before in the signature of
+arch_prepare_bpf_trampoline.
+
+    *tprogs[BPF_TRAMP_FENTRY].progs = prog;
+
+is setting the program in the **progs. The one below is setting the
+count. Am I missing something :)
+
+> 
+> > +               tprogs[BPF_TRAMP_FENTRY].nr_progs = 1;
+> >                 err = arch_prepare_bpf_trampoline(image,
+> >                                                   st_map->image + PAGE_SIZE,
+> >                                                   &st_ops->func_models[i], 0,
+> > -                                                 &prog, 1, NULL, 0, NULL);
+> > +                                                 tprogs, NULL);
+> >                 if (err < 0)
+> >                         goto reset_unlock;
+> >
+> > @@ -469,6 +479,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+> >         memset(uvalue, 0, map->value_size);
+> >         memset(kvalue, 0, map->value_size);
+> >  unlock:
+> > +       kfree(tprogs);
+> >         mutex_unlock(&st_map->lock);
+> >         return err;
+> >  }
+> > diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> > index 704fa787fec0..9daeb094f054 100644
+> > --- a/kernel/bpf/trampoline.c
+> > +++ b/kernel/bpf/trampoline.c
+> > @@ -190,40 +190,50 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
+> >         return ret;
+> >  }
+> >
+> > -/* Each call __bpf_prog_enter + call bpf_func + call __bpf_prog_exit is ~50
+> > - * bytes on x86.  Pick a number to fit into BPF_IMAGE_SIZE / 2
+> > - */
+> > -#define BPF_MAX_TRAMP_PROGS 40
+> > +static struct bpf_tramp_progs *
+> > +bpf_trampoline_update_progs(struct bpf_trampoline *tr, int *total)
+> > +{
+> > +       struct bpf_tramp_progs *tprogs;
+> > +       struct bpf_prog **progs;
+> > +       struct bpf_prog_aux *aux;
+> > +       int kind;
+> > +
+> > +       *total = 0;
+> > +       tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(struct bpf_tramp_progs),
+> 
+> same nit as above, sizeof(*tprogs) is shorter and less error-prone
+
+Sure, can fix it.
+
+- KP
+
+> 
+> > +                        GFP_KERNEL);
+> > +       if (!tprogs)
+> > +               return ERR_PTR(-ENOMEM);
+> > +
+> > +       for (kind = 0; kind < BPF_TRAMP_MAX; kind++) {
+> > +               tprogs[kind].nr_progs = tr->progs_cnt[kind];
+> > +               *total += tr->progs_cnt[kind];
+> > +               progs = tprogs[kind].progs;
+> > +
+> > +               hlist_for_each_entry(aux, &tr->progs_hlist[kind], tramp_hlist)
+> > +                       *progs++ = aux->prog;
+> > +       }
+> > +       return tprogs;
+> > +}
+> >
+> 
+> [...]
