@@ -2,139 +2,135 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B959C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FA2C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7734B215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2866214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:57:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="EjwZW+SH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbgCCH5d (ORCPT
+        id S1727756AbgCCH54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:57:33 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36639 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgCCH5c (ORCPT
+        Tue, 3 Mar 2020 02:57:56 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40165 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgCCH54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:57:32 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j16so3090818wrt.3;
-        Mon, 02 Mar 2020 23:57:31 -0800 (PST)
+        Tue, 3 Mar 2020 02:57:56 -0500
+Received: by mail-io1-f65.google.com with SMTP id m22so2521338ioj.7
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 23:57:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=1jgWIQ5qhHPD/OB0fU45dANprOVpISqKroX9vsY1CRU=;
+        b=EjwZW+SH7EytjtajDXzNRus07lEWu2Mmz+276Cm00/dkoK8mPqSqpz72bN7oJ/1rTt
+         igTkBSmgVGzsvMiKS5hAXTh7tCKfzEfJKcsdxRbx0CSbpwNks+QNzyli2PY0pQzKC18J
+         Kokec4Qq9CPSuu5Jq7a2YEo5spm5ifQEEnB40YjVO2h3TfQWuYQ/CCB5jPsqcChgFH9Q
+         3C5DYQVvkLjw4dIDyHbO5NKA0Gmqj01H86u0wBgTenloo6ZKCpXzywIozg072/+ZZtDJ
+         LiDSgFnfktSASPcs0ZoDbQeaNphYswaOmN4wO0ZSIlTt4yxL8ooRx2MVN+n1mqCXtO7S
+         itcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=GIpTxxRTdtqR1dz04Vc7cfNzKbDxGM90ZB3jr6ZSAEY=;
-        b=W0Si6s8cP1mhaiKzmeEqo3DB/iAmGgP+VsIWaAbLHhg03p9TqIEaZFJOtw1hiHD2yt
-         IYGwwen2uI5ZhI1BgDqi50KEZk7VJPPvfGbaFirzYtq2LjNE6eZP4/wwi8rd8DQFcBkL
-         q2OGRqUd6SOBiqsE96FCIgqv4BykYHSpo5DOuBUdnm6ABx/krW3RlXfBJG9nY+Lrsy9u
-         8dY/sFjFloGi5leamhZMd2QNIK67G82FWL0qMm+Sn87M9LKJ+skW+NbXoBH3GSFhvvl8
-         6NUtBd5HOY8bw+3zvUQ7Pox8Y6Sw2APRWTCaRySj5F58x1RPqNs37dmK99x2AiacnjZv
-         zKNA==
-X-Gm-Message-State: ANhLgQ28EZ5zfjRe45NQ4Yg33mQJiUoiDiS3X6MV1g7edM5FGiFNe0Hd
-        U5i1blmqOba79zQCF0uKJszpdMYPDPA=
-X-Google-Smtp-Source: ADFU+vvHkSh56FMbU3/BkuhFPwSMZKfBKZVRcWRi0hdXpLnzJ4aJ4p6k99RgisKOlQwn0LUUXJ6xxA==
-X-Received: by 2002:a5d:63c7:: with SMTP id c7mr4283436wrw.115.1583222250356;
-        Mon, 02 Mar 2020 23:57:30 -0800 (PST)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id u25sm2442095wml.17.2020.03.02.23.57.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 02 Mar 2020 23:57:29 -0800 (PST)
-Subject: Re: [PATCH 2/2] tty:serial:mvebu-uart:fix a wrong return
-To:     tangbin <tangbin@cmss.chinamobile.com>, gregkh@linuxfoundation.org
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200303071309.17172-1-tangbin@cmss.chinamobile.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <22c8d64b-5360-6495-8f83-75b52e86ca08@suse.cz>
-Date:   Tue, 3 Mar 2020 08:57:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=1jgWIQ5qhHPD/OB0fU45dANprOVpISqKroX9vsY1CRU=;
+        b=S0yLUWTxGsEdBUXc189uKmBUQaaje1lJtaJgFLuYAVuwUE/Hf22ihSQYXQV59AG7Ak
+         Gy0PsuDOWgkHaqw2QKBZfw3nfG0q8t0XVK4L0kIYEfEm8paAjiChnQLmkiZG0VyLe5Mb
+         oSkSsnrumfO52fEpCGun4Qvo3o0cHabWeiFcfSI/qVjMi/GMY7Jmwk3E9EB4OPSSu+K9
+         3GMsfuKZygDZLgRF9ZL/0h5bGterVIuggwIY4lZs/rSdXWbv9HhMOvF5x4kzS9o39DVY
+         dHPWiKuImmuNx4L2ZcKZ3vcfUA98k0W9qZY7ceeKnqVwgUdzaQW101wI50CtjbCNXSKl
+         KbiA==
+X-Gm-Message-State: ANhLgQ1uXPDy28i5mnUK8i5/zcSGsEGFGezwGEuBjVWX0bOxhtTjE5lo
+        asknCO3A8Xxg3ya8at1GjT+XWCFGcbX3j9HBJfWtAuKU
+X-Google-Smtp-Source: ADFU+vvoKoITM9L9lN5OjwuNnB6xxSEKbotb40pNpHliF7dxzlREj4wVsiU8LUIO4QoB9MpXOOqCqy0BqktL/JUyTeg=
+X-Received: by 2002:a5d:8952:: with SMTP id b18mr3019929iot.40.1583222274495;
+ Mon, 02 Mar 2020 23:57:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200303071309.17172-1-tangbin@cmss.chinamobile.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200211131240.15853-1-brgl@bgdev.pl>
+In-Reply-To: <20200211131240.15853-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Tue, 3 Mar 2020 08:57:43 +0100
+Message-ID: <CAMRc=Mc=gTrpQsMdOTBJaYT6JLg=o17Mm78ijAGUJYE2pXcCQQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/6] irq/irq_sim: try to improve the API
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03. 03. 20, 8:13, tangbin wrote:
-> in this place,the right return should be
-> return PTR_ERR(),not return -PTR_ERR()
+wt., 11 lut 2020 o 14:12 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(a=
+):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> This is my second take at improving the interrupt simulator interface.
+> I marked it as v2 but it actually takes a completely different approach.
+>
+> The interrupt simulator API exposes a lot of custom data structures and
+> functions and doesn't reuse the interfaces already exposed by the irq
+> subsystem. This series tries to address it.
+>
+> First, we make irq_domain_reset_irq_data() available to non-V2 domain API
+> users - that'll be used in the subsequent patch. Next we overhaul the
+> public interfaces - we hide all specific data structures and instead
+> rely on the irq_domain struct and virtual interrupt numberspace.
+>
+> Next four patches simplify the interface even more, but since the change
+> may be a bit more controversial due to modification of the irq_domain
+> I decided to split them out of the second patch.
+>
+> In patch 3/6 we're adding a new callback to irq_domain_ops that is called
+> right before all the other code in irq_domain_remove(). Next we use it to
+> remove the simulator-specific cleanup function from irq_sim.h - users now
+> can simply use the regular irq_domain_remove().
+>
+> Last two patches show that the new callback isn't limited to the interrup=
+t
+> simulator and can be used to shrink code in real driver too. We introduce
+> a new helper for a common use case of disposing of all mappings before
+> removing the irq_domain and use it in the keystone irqchip driver.
+>
+> The end effect is that we limit the interrupt simulator API to two
+> functions (plus one device managed variant) and zero new structures.
+>
+> v1: https://lkml.org/lkml/2019/8/12/558
+>
+> v1 -> v2:
+> - instead of just making the new data structures opaque for users, remove
+>   them entirely in favor of irq_domain
+> - call irq_set_handler() & irq_domain_reset_irq_data() when unmapping
+>   the simulated interrupt
+> - fix a memory leak in error path
+> - make it possible to use irq_find_matching_fwnode() with the simulator
+>   domain
+> - correctly use irq_create_mapping() and irq_find_mapping(): only use the
+>   former at init-time and the latter at interrupt-time
+>
 
-One because missing. Like ", because PTR_ERR already returns a negative
-error and the probe function is expected to return a negative value in
-case of error."
+Hi,
 
-Acked-by: Jiri Slaby <jslaby@suse.cz>
+it's been three weeks, so gentle ping on that.
 
-> Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
-> ---
->  drivers/tty/serial/mvebu-uart.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/tty/serial/mvebu-uart.c b/drivers/tty/serial/mvebu-uart.c
-> index c12a12556..4e9a59071 100644
-> --- a/drivers/tty/serial/mvebu-uart.c
-> +++ b/drivers/tty/serial/mvebu-uart.c
-> @@ -851,7 +851,7 @@ static int mvebu_uart_probe(struct platform_device *pdev)
->  
->  	port->membase = devm_ioremap_resource(&pdev->dev, reg);
->  	if (IS_ERR(port->membase))
-> -		return -PTR_ERR(port->membase);
-> +		return PTR_ERR(port->membase);
->  
->  	mvuart = devm_kzalloc(&pdev->dev, sizeof(struct mvebu_uart),
->  			      GFP_KERNEL);
-> 
+Or should I resend the entire series with a more elaborate commit
+message for patch 1/6?
 
-
--- 
-js
-suse labs
+Bartosz
