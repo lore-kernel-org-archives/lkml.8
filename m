@@ -2,181 +2,117 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07CFC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDABC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:00:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBBF20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FDB420866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:00:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oRT8HZ4B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbgCCDpe (ORCPT
+        id S1726979AbgCCD7n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:45:34 -0500
-Received: from mga11.intel.com ([192.55.52.93]:16934 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726843AbgCCDpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 22:45:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 19:45:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="351725731"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Mar 2020 19:45:32 -0800
-Date:   Mon, 2 Mar 2020 19:45:32 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when
- function is out-of-range
-Message-ID: <20200303034532.GC27842@linux.intel.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-2-sean.j.christopherson@intel.com>
- <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
- <20200302204940.GG6244@linux.intel.com>
- <16e902a8-7883-0b67-d4ee-73e8fe22f955@intel.com>
+        Mon, 2 Mar 2020 22:59:43 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33656 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbgCCD7n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 22:59:43 -0500
+Received: by mail-qt1-f194.google.com with SMTP id d22so490518qtn.0;
+        Mon, 02 Mar 2020 19:59:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fvgiEL+QVxL1O0iuln0ifrtO9JeYp774TkUNa+6Pqoo=;
+        b=oRT8HZ4B32/7utrig5nxukRcBp2kXL+RB7l6+X9X21Z/lE1ng0lir/2XnCN4MCNCL/
+         JCs+4EUTPXdEdohoncGhgZqyiZqG5StxthdVvUsRlip4ttwbFnATHlA+0ivVzJ98ojAQ
+         etVMYVwNN7kp/A+P/eYeqexBN4sWYR0yfSxguyzTQG1EhWJdw4iRlCK7sIud2Lthti89
+         Zuo/HkGECwJlpBAV4fXexo/XYscKNWFwieSqQ49/DIMqu7XmrjH3AMeI6QVVDMguhKKz
+         71NuaFosTdSaKOq6pav7EEC9eGWRitBjA0RGj7UMjPCGezvoauU4Wy4VAvwjAe5K/rs2
+         NUAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fvgiEL+QVxL1O0iuln0ifrtO9JeYp774TkUNa+6Pqoo=;
+        b=NjywlriaJTPixsPqLAZkLg32cuVK4C938HZcq2Yx0z4vRwEeZ+ROUnpUsKH8CnqsA+
+         /6/BjtBoqsvjaMckHGdwCcsMJBHBvWu4zP4tX6WxAbqHMCCbWzoR4xYhWjqRUbKOGsDu
+         yAZbp7OZkM1G3i3YhOSuQA2n5iXhggvnlfYFzimatgyR0uyKLpPF6VmVnL+RfQpVGO5m
+         3JgGRXGRniEV0M2ZkgwZHEFqmY6SwLXVixZYD84k3gO08bVEfds3Hb6USoSfnuN87h1t
+         t9Hf9tj1nAJnFKORcpulNQbVj+0SoVqoIPYRIH5ok5x/ooAXrNfwCg9SjO2HJvy03i9h
+         04og==
+X-Gm-Message-State: ANhLgQ39703IjgjgfjcoSmixIfUiiixul9WfT/GyZXYqpZIuv793GF9P
+        eBUuNbB2zOoP94Z5Of47g6MsTx3NGHNqRM8/Wa0=
+X-Google-Smtp-Source: ADFU+vv2FItiQhj89T5uuRfiab6WkfDHcosumKkrglL71peu+YE/jk0AhS8fXeo7PG4qPrc7PTpI+QkNhWhZ/+gdSNI=
+X-Received: by 2002:ac8:518a:: with SMTP id c10mr2808979qtn.360.1583207982044;
+ Mon, 02 Mar 2020 19:59:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <16e902a8-7883-0b67-d4ee-73e8fe22f955@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <cover.1583039752.git.shengjiu.wang@nxp.com> <872c2e1082de6348318e14ccd31884d62355c282.1583039752.git.shengjiu.wang@nxp.com>
+ <20200303014133.GA24596@bogus>
+In-Reply-To: <20200303014133.GA24596@bogus>
+From:   Shengjiu Wang <shengjiu.wang@gmail.com>
+Date:   Tue, 3 Mar 2020 11:59:30 +0800
+Message-ID: <CAA+D8ANgECaz=tRtRwNP=jMXBD0XciAE0HUYROH8uuo03iDejg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/8] ASoC: dt-bindings: fsl_asrc: Change asrc-width to asrc-format
+To:     Rob Herring <robh@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
+        shawnguo@kernel.org, s.hauer@pengutronix.de,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>, linux-imx@nxp.com,
+        kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:27:47AM +0800, Xiaoyao Li wrote:
-> On 3/3/2020 4:49 AM, Sean Christopherson wrote:
-> >On Mon, Mar 02, 2020 at 09:26:54PM +0100, Jan Kiszka wrote:
-> >>On 02.03.20 20:57, Sean Christopherson wrote:
-> >>>Rework kvm_cpuid() to query entry->function when adjusting the output
-> >>>values so that the original function (in the aptly named "function") is
-> >>>preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
-> >>>trace the max function for a range instead of the requested function if
-> >>>the requested function is out-of-range and an entry for the max function
-> >>>exists.
-> >>>
-> >>>Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
-> >>>Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-> >>>Cc: Jim Mattson <jmattson@google.com>
-> >>>Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> >>>Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> >>>---
-> >>>  arch/x86/kvm/cpuid.c | 15 +++++++--------
-> >>>  1 file changed, 7 insertions(+), 8 deletions(-)
-> >>>
-> >>>diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> >>>index b1c469446b07..6be012937eba 100644
-> >>>--- a/arch/x86/kvm/cpuid.c
-> >>>+++ b/arch/x86/kvm/cpuid.c
-> >>>@@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
-> >>>  	return max && function <= max->eax;
-> >>>  }
-> >>>+/* Returns true if the requested leaf/function exists in guest CPUID. */
-> >>>  bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
-> >>>  	       u32 *ecx, u32 *edx, bool check_limit)
-> >>>  {
-> >>>-	u32 function = *eax, index = *ecx;
-> >>>+	const u32 function = *eax, index = *ecx;
-> >>>  	struct kvm_cpuid_entry2 *entry;
-> >>>-	struct kvm_cpuid_entry2 *max;
-> >>>  	bool found;
-> >>>  	entry = kvm_find_cpuid_entry(vcpu, function, index);
-> >>>@@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
-> >>>  	 */
-> >>>  	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
-> >>>  	    !cpuid_function_in_range(vcpu, function)) {
-> >>>-		max = kvm_find_cpuid_entry(vcpu, 0, 0);
-> >>>-		if (max) {
-> >>>-			function = max->eax;
-> >>>-			entry = kvm_find_cpuid_entry(vcpu, function, index);
-> >>>-		}
-> >>>+		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
-> >>>+		if (entry)
-> >>>+			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
-> >>>  	}
-> >>>  	if (entry) {
-> >>>  		*eax = entry->eax;
-> >>>  		*ebx = entry->ebx;
-> >>>  		*ecx = entry->ecx;
-> >>>  		*edx = entry->edx;
-> >>>-		if (function == 7 && index == 0) {
-> >>>+
-> >>>+		if (entry->function == 7 && index == 0) {
-> >>>  			u64 data;
-> >>>  		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
-> >>>  			    (data & TSX_CTRL_CPUID_CLEAR))
-> >>>
-> >>
-> >>What about the !entry case below this? It was impacted by the function
-> >>capping so far, not it's no longer.
+Hi
+
+On Tue, Mar 3, 2020 at 9:43 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Sun, Mar 01, 2020 at 01:24:12PM +0800, Shengjiu Wang wrote:
+> > asrc_format is more inteligent, which is align with the alsa
+> > definition snd_pcm_format_t, we don't need to convert it to
+> > format in driver, and it can distinguish S24_LE & S24_3LE.
 > >
-> >Hmm, the only way the output would be different is in a really contrived
-> >scenario where userspace doesn't provide an entry for the max basic leaf.
+> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/sound/fsl,asrc.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
 > >
-> >The !entry path can only be reached with "orig_function != function" if
-> >orig_function is out of range and there is no entry for the max basic leaf.
-> 
-> >The adjustments for 0xb/0x1f require the max basic leaf to be 0xb or 0x1f,
-> >and to take effect with !entry would require there to be a CPUID.max.1 but
-> >not a CPUID.max.0.  That'd be a violation of Intel's SDM, i.e. it's bogus
-> >userspace input and IMO can be ignored.
+> > diff --git a/Documentation/devicetree/bindings/sound/fsl,asrc.txt b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > index cb9a25165503..0cbb86c026d5 100644
+> > --- a/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > +++ b/Documentation/devicetree/bindings/sound/fsl,asrc.txt
+> > @@ -38,7 +38,9 @@ Required properties:
 > >
-> 
-> Sorry I cannot catch you. Why it's a violation of Intel's SDM?
+> >     - fsl,asrc-rate   : Defines a mutual sample rate used by DPCM Back Ends.
+> >
+> > -   - fsl,asrc-width  : Defines a mutual sample width used by DPCM Back Ends.
+> > +   - fsl,asrc-format : Defines a mutual sample format used by DPCM Back
+> > +                       Ends. The value is one of SNDRV_PCM_FORMAT_XX in
+> > +                       "include/uapi/sound/asound.h"
+>
+> You can't just change properties. They are an ABI.
 
-The case being discussed above would look like:
+I have updated all the things related with this ABI in this patch series.
+What else should I do?
 
-KVM CPUID Entries:
-   Function   Index Output
-   0x00000000 0x00: eax=0x0000000b ebx=0x756e6547 ecx=0x6c65746e edx=0x49656e69
-   0x00000001 0x00: eax=0x000906ea ebx=0x03000800 ecx=0xfffa3223 edx=0x0f8bfbff
-   0x00000002 0x00: eax=0x00000001 ebx=0x00000000 ecx=0x0000004d edx=0x002c307d
-   0x00000003 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
-   0x00000004 0x00: eax=0x00000121 ebx=0x01c0003f ecx=0x0000003f edx=0x00000001
-   0x00000004 0x01: eax=0x00000122 ebx=0x01c0003f ecx=0x0000003f edx=0x00000001
-   0x00000004 0x02: eax=0x00000143 ebx=0x03c0003f ecx=0x00000fff edx=0x00000001
-   0x00000004 0x03: eax=0x00000163 ebx=0x03c0003f ecx=0x00003fff edx=0x00000006
-   0x00000005 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000003 edx=0x00000000
-   0x00000006 0x00: eax=0x00000004 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
-   0x00000007 0x00: eax=0x00000000 ebx=0x009c4fbb ecx=0x00000004 edx=0x84000000
-   0x00000008 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
-   0x00000009 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
-   0x0000000a 0x00: eax=0x07300402 ebx=0x00000000 ecx=0x00000000 edx=0x00000603
---> MISSING CPUID.0xB.0
-   0x0000000b 0x01: eax=0x00000000 ebx=0x00000001 ecx=0x00000201 edx=0x00000003
-
-CPUID.0xB.0 does not exist, so output.ECX=0, which indicates an invalid
-level-type.
-
-The SDM states (for CPUID.0xB):
-
-   If an input value n in ECX returns the invalid level-type of 0 in ECX[15:8],
-   other input values with ECX > n also return 0 in ECX[15:8]
-
-That means returning a valid level-type in CPUID.0xB.1 as above violates
-the SDM's definition of how leaf 0xB works.  I'm arguing we can ignore the
-adjustments that would be done on output.E{C,D} for an out of range leaf
-because the model is bogus.
-
-> Supposing the max basic is 0x1f, and it queries cpuid(0x20, 0x5),
-> it should return cpuid(0x1f, 0x5).
-> 
-> But based on this patch, it returns all zeros.
-
-Have you tested the patch, or is your comment based on the above discussion
-and/or code inspection?  Honest question, because I've thoroughly tested
-the above scenario and it works as you describe, but now I'm worried I
-completely botched my testing.
+Best regards
+Wang Shengjiu
