@@ -2,82 +2,88 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E4DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:32:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BE8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7643E20863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA39620863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:33:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583238805;
+	bh=2rCSLxe62hKFmu9Wq3m9gb95gGynLEiWwhZ3yjr9GzE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tp0JRCPYoyVrf83nRq+qIsalOaXGPD5NTQwh3KTq3WsdpWoQpqjACfuLyNGRZXS8d
+	 FB+hmihHPe1pdXPnXjRWJwPVm8qHPxy/uhrFFKwfX7rhDvwfRSV1Fkw6hkWLXfeJy8
+	 ecvPtkA0eN803r+GFfVfZqEdr5pjLwx7bmfLPrkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729292AbgCCMcf (ORCPT
+        id S1729294AbgCCMdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:32:35 -0500
-Received: from elvis.franken.de ([193.175.24.41]:49595 "EHLO elvis.franken.de"
+        Tue, 3 Mar 2020 07:33:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:46406 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgCCMcf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:32:35 -0500
-Received: from uucp (helo=alpha)
-        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
-        id 1j96iu-0003ir-00; Tue, 03 Mar 2020 13:32:32 +0100
-Received: by alpha.franken.de (Postfix, from userid 1000)
-        id 43958C0EC5; Tue,  3 Mar 2020 13:32:14 +0100 (CET)
-Date:   Tue, 3 Mar 2020 13:32:14 +0100
-From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Boddie <paul@boddie.org.uk>,
-        Paul Cercueil <paul@crapouillou.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v5 2/5] MIPS: DTS: CI20: fix PMU definitions for ACT8600
-Message-ID: <20200303123214.GA15333@alpha.franken.de>
-References: <cover.1583005548.git.hns@goldelico.com>
- <02f18080fa0e0c214b40431749ca1ce514c53d37.1583005548.git.hns@goldelico.com>
- <20200303101818.GA12103@alpha.franken.de>
- <85F9D066-EAF6-4840-8F54-24E6D8A534DC@goldelico.com>
+        id S1727121AbgCCMdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 07:33:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C8B93FEC;
+        Tue,  3 Mar 2020 04:33:23 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4A66D3F534;
+        Tue,  3 Mar 2020 04:33:23 -0800 (PST)
+Date:   Tue, 3 Mar 2020 12:33:21 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Akshu Agrawal <akshu.agrawal@amd.com>,
+        alsa-devel@alsa-project.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] ASoc: amd: use correct format specifier for a long
+ int
+Message-ID: <20200303123321.GC3866@sirena.org.uk>
+References: <20200303103903.9259-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="JgQwtEuHJzHdouWu"
 Content-Disposition: inline
-In-Reply-To: <85F9D066-EAF6-4840-8F54-24E6D8A534DC@goldelico.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20200303103903.9259-1-colin.king@canonical.com>
+X-Cookie: Drilling for oil is boring.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 01:10:22PM +0100, H. Nikolaus Schaller wrote:
-> > And please seperate fixes from improvments, thank you.
-> 
-> What do you mean by "separate"? Two separate patches?
-> This patch only contains fixes (which I would consider
-> all of them to be improvements).
 
-There are two patches with Fixes tag, which IMHO should go
-into 5.6 via mips-fixes branch. All others are going
-via mips-next into 5.7. So it helps me, if they come in different
-patch series (or as single patches).
+--JgQwtEuHJzHdouWu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I see other DT changes in your other patch series. Are the changes
-there independent from each other or do they require correct order
-when appling them ?
+On Tue, Mar 03, 2020 at 10:39:03AM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>=20
+> Currently the format specifier %d is being used for a long int. Fix
+> the by using %ld instead.
 
-Thomas.
+Someone already sent a fix for this.
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+--JgQwtEuHJzHdouWu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5eTpEACgkQJNaLcl1U
+h9AKuQf/U01aci745PIHD/iQ86xIE2c0Ph5wIDFYgVS45kaTlPwBGX6iX72t/5tT
+/BesrakIoU6wHxO5wNQst+QuxCauSfQTqwuqtA4k4P/sizM7M5NPcoxeM/uECmGf
+Z91qqtfZq492X6yWceLwhCt9SA+5xzJ1bKdeETaOGaiJ594qhD/4+22WjhuibSF5
+FHcllXvFPVKZCVGB0QOAVtUpBK0NQfRBsjshPlNLwMsop+dXJSfI3YhrhiIq5+sS
+41UM1RDsJu3jGE6Lld3dBl5BgUdxR5yxudSuCqPtliEYnKyINev6qqWrrGoiwZ4B
+SbuwgxiOqB11TS0lW97afaTVtdAETQ==
+=tEk3
+-----END PGP SIGNATURE-----
+
+--JgQwtEuHJzHdouWu--
