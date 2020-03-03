@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71911C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AFA5C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471BB2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4911921D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:01:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204467;
-	bh=QLQy8wlt2AqZ0CRoJLgZFN+jBg/hHItbk3IGsNcoL+0=;
+	s=default; t=1583204475;
+	bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LNHtdYDJ3VPU+FFjX07gM6ZewU0RaIb8oixgZZQAroyTmNHhMhVKm6LX7EsVloOAC
-	 8HdSJY0iCY7cti0c0Y4S9ydH8czWSOTzOD/wP3rrf//Kh1lXmaZetKS/p6CVe678eY
-	 9qyXZk70ZRMsK63KJYOtIGLpv1fwc2aFbo6lpqxI=
+	b=mo9LpI8jLs2sjLiab/7quqofaQelUsbnV5fnjccsXVOO0rpmC/up5Tk7b6hNvTmTJ
+	 IPW3kbAyMS5W9s9zdN2Bg9r07w9uLRT0ZSIDr03K9CPevz6Ey2uTRGFhkm6C0oZdD6
+	 PBoMblzB/bH5wORITJun9ef+E3wON0x+alqNf7Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbgCCDBF (ORCPT
+        id S1728079AbgCCDBN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:01:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41996 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 22:01:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727893AbgCCCrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:09 -0500
+        id S1727860AbgCCCrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2438246D5;
-        Tue,  3 Mar 2020 02:47:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06D5B246A1;
+        Tue,  3 Mar 2020 02:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203628;
-        bh=QLQy8wlt2AqZ0CRoJLgZFN+jBg/hHItbk3IGsNcoL+0=;
+        s=default; t=1583203623;
+        bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EtXOlabxhRy7b6U5FSmZC5zuPp8AN5LIF12FP5w6UQQuHsTmKJN4cnussTBzaDr9g
-         QP+ojNocdFTFU2Zh4c7hjku8P7UM8GqNFIKM8mnkIzGHjXv8ReUdcbJqkwscXp1MGC
-         aQcCGzN0OwC3yN3/YcoFCYVoFWtZmQ/Tqxf0dXco=
+        b=Ia49MGVPmT6wXju8M0oMcgaxDsmiEBrNC9YkTKDQy/YFaM3CKv1WztWG7YosibU4n
+         WS+BVT50noDMBqRPpwUISYtaMYLt3pjcXxC1kvY1wYui/e00cLv4qlJtLVQGkjDTra
+         27OdY7hJVeiPqIfZjbCRqfqFO3ZtsNoO4drtLUoI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 42/66] qede: Fix race between rdma destroy workqueue and link change event
-Date:   Mon,  2 Mar 2020 21:45:51 -0500
-Message-Id: <20200303024615.8889-42-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 38/66] s390/cio: cio_ignore_proc_seq_next should increase position index
+Date:   Mon,  2 Mar 2020 21:45:47 -0500
+Message-Id: <20200303024615.8889-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -60,111 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit af6565adb02d3129d3fae4d9d5da945abaf4417a ]
+[ Upstream commit 8b101a5e14f2161869636ff9cb4907b7749dc0c2 ]
 
-If an event is added while the rdma workqueue is being destroyed
-it could lead to several races, list corruption, null pointer
-dereference during queue_work or init_queue.
-This fixes the race between the two flows which can occur during
-shutdown.
+if seq_file .next fuction does not change position index,
+read after some lseek can generate unexpected output.
 
-A kref object and a completion object are added to the rdma_dev
-structure, these are initialized before the workqueue is created.
-The refcnt is used to indicate work is being added to the
-workqueue and ensures the cleanup flow won't start while we're in
-the middle of adding the event.
-Once the work is added, the refcnt is decreased and the cleanup flow
-is safe to run.
-
-Fixes: cee9fbd8e2e ("qede: Add qedr framework")
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
+Link: https://lore.kernel.org/r/d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h      |  2 ++
- drivers/net/ethernet/qlogic/qede/qede_rdma.c | 29 +++++++++++++++++++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
+ drivers/s390/cio/blacklist.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index e8a1b27db84de..234c6f30effb7 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -163,6 +163,8 @@ struct qede_rdma_dev {
- 	struct list_head entry;
- 	struct list_head rdma_event_list;
- 	struct workqueue_struct *rdma_wq;
-+	struct kref refcnt;
-+	struct completion event_comp;
- 	bool exp_recovery;
- };
- 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-index ffabc2d2f0824..2d873ae8a234d 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-@@ -59,6 +59,9 @@ static void _qede_rdma_dev_add(struct qede_dev *edev)
- static int qede_rdma_create_wq(struct qede_dev *edev)
+diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
+index 2a3f874a21d54..9cebff8e8d740 100644
+--- a/drivers/s390/cio/blacklist.c
++++ b/drivers/s390/cio/blacklist.c
+@@ -303,8 +303,10 @@ static void *
+ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
  {
- 	INIT_LIST_HEAD(&edev->rdma_info.rdma_event_list);
-+	kref_init(&edev->rdma_info.refcnt);
-+	init_completion(&edev->rdma_info.event_comp);
-+
- 	edev->rdma_info.rdma_wq = create_singlethread_workqueue("rdma_wq");
- 	if (!edev->rdma_info.rdma_wq) {
- 		DP_NOTICE(edev, "qedr: Could not create workqueue\n");
-@@ -83,8 +86,23 @@ static void qede_rdma_cleanup_event(struct qede_dev *edev)
- 	}
+ 	struct ccwdev_iter *iter;
++	loff_t p = *offset;
+ 
+-	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
++	(*offset)++;
++	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
+ 		return NULL;
+ 	iter = it;
+ 	if (iter->devno == __MAX_SUBCHANNEL) {
+@@ -314,7 +316,6 @@ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+ 			return NULL;
+ 	} else
+ 		iter->devno++;
+-	(*offset)++;
+ 	return iter;
  }
  
-+static void qede_rdma_complete_event(struct kref *ref)
-+{
-+	struct qede_rdma_dev *rdma_dev =
-+		container_of(ref, struct qede_rdma_dev, refcnt);
-+
-+	/* no more events will be added after this */
-+	complete(&rdma_dev->event_comp);
-+}
-+
- static void qede_rdma_destroy_wq(struct qede_dev *edev)
- {
-+	/* Avoid race with add_event flow, make sure it finishes before
-+	 * we start accessing the list and cleaning up the work
-+	 */
-+	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
-+	wait_for_completion(&edev->rdma_info.event_comp);
-+
- 	qede_rdma_cleanup_event(edev);
- 	destroy_workqueue(edev->rdma_info.rdma_wq);
- }
-@@ -310,15 +328,24 @@ static void qede_rdma_add_event(struct qede_dev *edev,
- 	if (!edev->rdma_info.qedr_dev)
- 		return;
- 
-+	/* We don't want the cleanup flow to start while we're allocating and
-+	 * scheduling the work
-+	 */
-+	if (!kref_get_unless_zero(&edev->rdma_info.refcnt))
-+		return; /* already being destroyed */
-+
- 	event_node = qede_rdma_get_free_event_node(edev);
- 	if (!event_node)
--		return;
-+		goto out;
- 
- 	event_node->event = event;
- 	event_node->ptr = edev;
- 
- 	INIT_WORK(&event_node->work, qede_rdma_handle_event);
- 	queue_work(edev->rdma_info.rdma_wq, &event_node->work);
-+
-+out:
-+	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
- }
- 
- void qede_rdma_dev_event_open(struct qede_dev *edev)
 -- 
 2.20.1
 
