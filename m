@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE294C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CF45C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1731208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FB52073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258890;
-	bh=QaUmGOs6VeR87aE8yHZMtpxIbTBHgOfdmQpPxvkOCs0=;
+	s=default; t=1583258895;
+	bh=PhncEhRCTKBC5B1M7UkmrcPOnOXpB7zh+aV1dws/UrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SuqQBxs43bONP2UXHcoQWYnmNALxa6zO4WuB7KOb9cMs2mFPpK6cC5FTVJYK09HHS
-	 keV0HZVu/m6pJP+7ubwHdjcLjf/U3yVkGx8w4TJMC05c/ZiqZBHu5zxGLZ6IJeEKDX
-	 yZsbuibJRn7hWhDOU9hu6pyB6FYs9gOMBDbT3Xfk=
+	b=RDK3npfD7BE6zKIA6k2woL1Dy7b1vFM+cFIHtOjKNjIaHCibBvcJm0Ggtz6APBgOU
+	 FM0oGF5rEBuBDht+vs4N0PJBJgfKG/IZJrPFJbHLKWpIlatnygrp4vzMQzYAQ4WvrZ
+	 So5hBHHb7LpR6lsuyYKr9SDWmSpFoHLoIhK7WwC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387999AbgCCSIH (ORCPT
+        id S2388276AbgCCSIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:08:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34826 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:08:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732458AbgCCRyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:02 -0500
+        id S1732440AbgCCRx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B020206D5;
-        Tue,  3 Mar 2020 17:54:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 19B45206D5;
+        Tue,  3 Mar 2020 17:53:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258041;
-        bh=QaUmGOs6VeR87aE8yHZMtpxIbTBHgOfdmQpPxvkOCs0=;
+        s=default; t=1583258036;
+        bh=PhncEhRCTKBC5B1M7UkmrcPOnOXpB7zh+aV1dws/UrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1gUg39SuoDncn5VPOloYOeMRKpwDt9kFadBPww0j9UIvBCBdQS3j8cttRA0PVmHta
-         bUEM8bXmC4Lw11F43KLUhrhJpQsU/kLL70HjSoLAR87yDm+EUZaQbLiDah4DjHjYq9
-         oK5AKNmSYZhYjCdgAlY/XU7HyCvmHlWqdxUDB9+k=
+        b=ekvGdYREdQBsRwKtbtWzlITQz+rGWnf3i6RMEH1n6qr/VWKAzapXyzt8zMrXVwauy
+         8PXVeuWL2GCq6UlMIUJ6/+1O+AIU7B+/k79OGo3PgNru4MUbLkrGIdvr2SeBF8/j0y
+         T+EjG3cjKmZl2K/Xz5V9gU7KX+wLLHQIleaa8Y+o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Olof Johansson <olof@lixom.net>,
+        stable@vger.kernel.org, Isabel Zhang <isabel.zhang@amd.com>,
+        Eric Yang <eric.yang2@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 047/152] soc/tegra: fuse: Fix build with Tegra194 configuration
-Date:   Tue,  3 Mar 2020 18:42:25 +0100
-Message-Id: <20200303174307.765802208@linuxfoundation.org>
+Subject: [PATCH 5.4 045/152] drm/amd/display: Add initialitions for PLL2 clock source
+Date:   Tue,  3 Mar 2020 18:42:23 +0100
+Message-Id: <20200303174307.528235584@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,38 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+From: Isabel Zhang <isabel.zhang@amd.com>
 
-[ Upstream commit 6f4ecbe284df5f22e386a640d9a4b32cede62030 ]
+[ Upstream commit c134c3cabae46a56ab2e1f5e5fa49405e1758838 ]
 
-If only Tegra194 support is enabled, the tegra30_fuse_read() and
-tegra30_fuse_init() function are not declared and cause a build failure.
-Add Tegra194 to the preprocessor guard to make sure these functions are
-available for Tegra194-only builds as well.
+[Why]
+Starting from 14nm, the PLL is built into the PHY and the PLL is mapped
+to PHY on 1 to 1 basis. In the code, the DP port is mapped to a PLL that was not
+initialized. This causes DP to HDMI dongle to not light up the display.
 
-Link: https://lore.kernel.org/r/20200203143114.3967295-1-thierry.reding@gmail.com
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
-Signed-off-by: Olof Johansson <olof@lixom.net>
+[How]
+Initializations added for PLL2 when creating resources.
+
+Signed-off-by: Isabel Zhang <isabel.zhang@amd.com>
+Reviewed-by: Eric Yang <eric.yang2@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/soc/tegra/fuse/fuse-tegra30.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/soc/tegra/fuse/fuse-tegra30.c b/drivers/soc/tegra/fuse/fuse-tegra30.c
-index be9424a871734..9c3ef0a02fd4e 100644
---- a/drivers/soc/tegra/fuse/fuse-tegra30.c
-+++ b/drivers/soc/tegra/fuse/fuse-tegra30.c
-@@ -35,7 +35,8 @@
-     defined(CONFIG_ARCH_TEGRA_124_SOC) || \
-     defined(CONFIG_ARCH_TEGRA_132_SOC) || \
-     defined(CONFIG_ARCH_TEGRA_210_SOC) || \
--    defined(CONFIG_ARCH_TEGRA_186_SOC)
-+    defined(CONFIG_ARCH_TEGRA_186_SOC) || \
-+    defined(CONFIG_ARCH_TEGRA_194_SOC)
- static u32 tegra30_fuse_read_early(struct tegra_fuse *fuse, unsigned int offset)
- {
- 	if (WARN_ON(!fuse->base))
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+index b0e5e64df2127..161bf7caf3ae0 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn21/dcn21_resource.c
+@@ -57,6 +57,7 @@
+ #include "dcn20/dcn20_dccg.h"
+ #include "dcn21_hubbub.h"
+ #include "dcn10/dcn10_resource.h"
++#include "dce110/dce110_resource.h"
+ 
+ #include "dcn20/dcn20_dwb.h"
+ #include "dcn20/dcn20_mmhubbub.h"
+@@ -824,6 +825,7 @@ static const struct dc_debug_options debug_defaults_diags = {
+ enum dcn20_clk_src_array_id {
+ 	DCN20_CLK_SRC_PLL0,
+ 	DCN20_CLK_SRC_PLL1,
++	DCN20_CLK_SRC_PLL2,
+ 	DCN20_CLK_SRC_TOTAL_DCN21
+ };
+ 
+@@ -1492,6 +1494,10 @@ static bool construct(
+ 			dcn21_clock_source_create(ctx, ctx->dc_bios,
+ 				CLOCK_SOURCE_COMBO_PHY_PLL1,
+ 				&clk_src_regs[1], false);
++	pool->base.clock_sources[DCN20_CLK_SRC_PLL2] =
++			dcn21_clock_source_create(ctx, ctx->dc_bios,
++				CLOCK_SOURCE_COMBO_PHY_PLL2,
++				&clk_src_regs[2], false);
+ 
+ 	pool->base.clk_src_count = DCN20_CLK_SRC_TOTAL_DCN21;
+ 
 -- 
 2.20.1
 
