@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FCBC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10150C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E888924680
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA0AC24686
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203596;
-	bh=EmVp/FvO12B6npsKyvEA08xNMu5dfLgtPtThwfKw6fg=;
+	s=default; t=1583203601;
+	bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U4yBaUz1DyDIOtt9izXiAyYlDZ4oXUSPhRNvm6zZQA3c47lWznAWafF2rhOt0kz+z
-	 +WB33hHFpFOKfKCypKG1KOwo/Wh5l3TkGpfe3VvJfTU9BvjgEYV+PsO3h/Tmk7402d
-	 rybbkHX6XMBbOPHDd8lGCl3CHJs6OK8l+ePyBrVc=
+	b=ZkvVQx1pdxfbEUkJPYzqwthxuQrX4f0sLe6kDSIOQ8qT6PfD4KkN9NkEGVdLDva/k
+	 mtaH6VWto6rgOhDGs/MExwDJ9zXNwwPGYMK4m1Rx3EA2zbrcGgNLnLqq+1v19wKUpB
+	 vxF12bpd4kz595e/xIXv939Q7ZzY0gkvtTtHCg8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgCCCqe (ORCPT
+        id S1727593AbgCCCql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:46:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40810 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:46:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727473AbgCCCq2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:46:28 -0500
+        id S1727536AbgCCCqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:36 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DB672468E;
-        Tue,  3 Mar 2020 02:46:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96B3D24684;
+        Tue,  3 Mar 2020 02:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203587;
-        bh=EmVp/FvO12B6npsKyvEA08xNMu5dfLgtPtThwfKw6fg=;
+        s=default; t=1583203595;
+        bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DEEitbjR7afgHqnc/zV9Pyw+9KcL8aze3fDHiRScUK/crkukrFLkjB/HS+DSpmBd1
-         TuwRt/GL9nUNI5+r20gtcS8pXhjIcd8TDRmnx1X4ayGAohb6qCd0F3ilZHrHz86i1x
-         /EMpdoReH2dEvYCNft48sNdjNfEHvR2SGxoVa8W8=
+        b=XDO3RL8g+zs8FuuUTjBEa/gwUz5h0Szl38OmAL77m6MGgA3r87aK7EL/O2roeQrkG
+         jOBChEuSQKZpUcelX9YL963/8rXvReBsyvxGE8V9w9W3PiWbTXecVIs6IdkRKTBKOd
+         msWZmh1brcw8WPz2CrB8OPN6eEmq9RVqp+Xlnvlo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Omer Shpigelman <oshpigelman@habana.ai>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 10/66] habanalabs: do not halt CoreSight during hard reset
-Date:   Mon,  2 Mar 2020 21:45:19 -0500
-Message-Id: <20200303024615.8889-10-sashal@kernel.org>
+Cc:     Tomas Henzl <thenzl@redhat.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 16/66] scsi: megaraid_sas: silence a warning
+Date:   Mon,  2 Mar 2020 21:45:25 -0500
+Message-Id: <20200303024615.8889-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -59,39 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Omer Shpigelman <oshpigelman@habana.ai>
+From: Tomas Henzl <thenzl@redhat.com>
 
-[ Upstream commit a37e47192dfa98f79a0cd5ab991c224b5980c982 ]
+[ Upstream commit 0e99b2c625da181aebf1a3d13493e3f7a5057a9c ]
 
-During hard reset we must not write to the device.
-Hence avoid halting CoreSight during user context close if it is done
-during hard reset.
-In addition, we must not re-enable clock gating afterwards as it was
-deliberately disabled in the beginning of the hard reset flow.
+Add a flag to DMA memory allocation to silence a warning.
 
-Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+This driver allocates DMA memory for IO frames. This allocation may exceed
+MAX_ORDER pages for few megaraid_sas controllers (controllers with very
+high queue depth). Consequently, the driver has logic to keep reducing the
+controller queue depth until the DMA memory allocation succeeds.
+
+On impacted megaraid_sas controllers there would be multiple DMA allocation
+failures until driver settled on an allocation that fit. These failed DMA
+allocation requests caused stack traces in system logs. These were not
+harmful and this patch silences those warnings/stack traces.
+
+[mkp: clarified commit desc]
+
+Link: https://lore.kernel.org/r/20200204152413.7107-1-thenzl@redhat.com
+Signed-off-by: Tomas Henzl <thenzl@redhat.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/device.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/scsi/megaraid/megaraid_sas_fusion.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/device.c b/drivers/misc/habanalabs/device.c
-index 166883b647252..b680b0caa69be 100644
---- a/drivers/misc/habanalabs/device.c
-+++ b/drivers/misc/habanalabs/device.c
-@@ -598,7 +598,9 @@ int hl_device_set_debug_mode(struct hl_device *hdev, bool enable)
- 			goto out;
- 		}
+diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+index 46bc062d873ef..d868388018053 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -594,7 +594,8 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
  
--		hdev->asic_funcs->halt_coresight(hdev);
-+		if (!hdev->hard_reset_pending)
-+			hdev->asic_funcs->halt_coresight(hdev);
-+
- 		hdev->in_debug = 0;
+ 	fusion->io_request_frames =
+ 			dma_pool_alloc(fusion->io_request_frames_pool,
+-				GFP_KERNEL, &fusion->io_request_frames_phys);
++				GFP_KERNEL | __GFP_NOWARN,
++				&fusion->io_request_frames_phys);
+ 	if (!fusion->io_request_frames) {
+ 		if (instance->max_fw_cmds >= (MEGASAS_REDUCE_QD_COUNT * 2)) {
+ 			instance->max_fw_cmds -= MEGASAS_REDUCE_QD_COUNT;
+@@ -632,7 +633,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
  
- 		goto out;
+ 		fusion->io_request_frames =
+ 			dma_pool_alloc(fusion->io_request_frames_pool,
+-				       GFP_KERNEL,
++				       GFP_KERNEL | __GFP_NOWARN,
+ 				       &fusion->io_request_frames_phys);
+ 
+ 		if (!fusion->io_request_frames) {
 -- 
 2.20.1
 
