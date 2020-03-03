@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F181BC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B720AC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30472146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9469C214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257531;
-	bh=16G+r9AkZmKoMHThPkU6o83ScBvSpFl2idhcFxZGbFM=;
+	s=default; t=1583257533;
+	bh=9BjhoBnBzQnLnI+/nXzFt2VjJRGgBy1DwuBn5xEVsPw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HH9ElctfQ3ERYTxVyoAJpRQQK9py9fj9N8/V+N4tAnlHaIe3O7IVYihxG/k7qViAH
-	 K4/nAARlzfJZPWOdJoHHZhgeaHG0p7ZXUEDijazp8uEf25Y57BrqwFBr1hK00Wow1h
-	 30uCsUWDkO9+86c885gtSsb0VnSGPQ6Oe+NE6oEI=
+	b=0eJ5hpqi8zeiGajrh6+ZhIAoOdRY7mwLa7y1taTYwdk1ScBdpkJlpNRm6E8CC7qyZ
+	 hAJn9sUTp8KtvQ+h2f2ak1ygKAiTTbykw9+y5eiFWCx3K0uOnavEcbXzAOzEzFd3In
+	 9kY9iwwaOPAxGGLx4S2fakIg2nTHrU3tn7e5WHs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730913AbgCCRpX (ORCPT
+        id S1730942AbgCCRpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:45:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51224 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51442 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730900AbgCCRpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:17 -0500
+        id S1730926AbgCCRp0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:45:26 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6A71208C3;
-        Tue,  3 Mar 2020 17:45:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18A8F20870;
+        Tue,  3 Mar 2020 17:45:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257516;
-        bh=16G+r9AkZmKoMHThPkU6o83ScBvSpFl2idhcFxZGbFM=;
+        s=default; t=1583257525;
+        bh=9BjhoBnBzQnLnI+/nXzFt2VjJRGgBy1DwuBn5xEVsPw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bw6YpojbjgZC/+55D1mYp0ZONoOpNA0gk/eWJn6AuooM5P78X1fjOymTT0+haqA5R
-         6uDMGrMeF70FHXLUYq1tlxT5jiYqUkBTPCAMg3ptt5b9Id6v3DZVpFB0eF8w1hTCle
-         dnQfWCCK6MrxotA2D5FBSElG+rN2Js5FJTRU9YmQ=
+        b=mx/LoOEA9rqIivsDRrmGpP7Bzow3/32GGVIK10lSOkdCSpLkUYtwC5xTn/IvEDEIH
+         TQKWG16bqHDuhQnAhZ3vDWrCdwLQQgKMMgAH8zqJmUVWRZ0FZVuDZQK6Ku5MWaDgcD
+         wdimX6Y8rZh4XDuq0OFOiJVLuQcYLtsbGyxbm7cA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Corey Minyard <cminyard@mvista.com>,
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Scott Wood <swood@redhat.com>, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 025/176] ipmi:ssif: Handle a possible NULL pointer reference
-Date:   Tue,  3 Mar 2020 18:41:29 +0100
-Message-Id: <20200303174307.442287259@linuxfoundation.org>
+Subject: [PATCH 5.5 028/176] timers/nohz: Update NOHZ load in remote tick
+Date:   Tue,  3 Mar 2020 18:41:32 +0100
+Message-Id: <20200303174307.766112667@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,42 +61,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corey Minyard <cminyard@mvista.com>
+From: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-[ Upstream commit 6b8526d3abc02c08a2f888e8c20b7ac9e5776dfe ]
+[ Upstream commit ebc0f83c78a2d26384401ecf2d2fa48063c0ee27 ]
 
-In error cases a NULL can be passed to memcpy.  The length will always
-be zero, so it doesn't really matter, but go ahead and check for NULL,
-anyway, to be more precise and avoid static analysis errors.
+The way loadavg is tracked during nohz only pays attention to the load
+upon entering nohz.  This can be particularly noticeable if full nohz is
+entered while non-idle, and then the cpu goes idle and stays that way for
+a long time.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Corey Minyard <cminyard@mvista.com>
+Use the remote tick to ensure that full nohz cpus report their deltas
+within a reasonable time.
+
+[ swood: Added changelog and removed recheck of stopped tick. ]
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Scott Wood <swood@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lkml.kernel.org/r/1578736419-14628-3-git-send-email-swood@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/char/ipmi/ipmi_ssif.c | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ include/linux/sched/nohz.h |  2 ++
+ kernel/sched/core.c        |  4 +++-
+ kernel/sched/loadavg.c     | 33 +++++++++++++++++++++++----------
+ 3 files changed, 28 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_ssif.c b/drivers/char/ipmi/ipmi_ssif.c
-index 22c6a2e612360..8ac390c2b5147 100644
---- a/drivers/char/ipmi/ipmi_ssif.c
-+++ b/drivers/char/ipmi/ipmi_ssif.c
-@@ -775,10 +775,14 @@ static void msg_done_handler(struct ssif_info *ssif_info, int result,
- 	flags = ipmi_ssif_lock_cond(ssif_info, &oflags);
- 	msg = ssif_info->curr_msg;
- 	if (msg) {
-+		if (data) {
-+			if (len > IPMI_MAX_MSG_LENGTH)
-+				len = IPMI_MAX_MSG_LENGTH;
-+			memcpy(msg->rsp, data, len);
-+		} else {
-+			len = 0;
-+		}
- 		msg->rsp_size = len;
--		if (msg->rsp_size > IPMI_MAX_MSG_LENGTH)
--			msg->rsp_size = IPMI_MAX_MSG_LENGTH;
--		memcpy(msg->rsp, data, msg->rsp_size);
- 		ssif_info->curr_msg = NULL;
+diff --git a/include/linux/sched/nohz.h b/include/linux/sched/nohz.h
+index 1abe91ff6e4a2..6d67e9a5af6bb 100644
+--- a/include/linux/sched/nohz.h
++++ b/include/linux/sched/nohz.h
+@@ -15,9 +15,11 @@ static inline void nohz_balance_enter_idle(int cpu) { }
+ 
+ #ifdef CONFIG_NO_HZ_COMMON
+ void calc_load_nohz_start(void);
++void calc_load_nohz_remote(struct rq *rq);
+ void calc_load_nohz_stop(void);
+ #else
+ static inline void calc_load_nohz_start(void) { }
++static inline void calc_load_nohz_remote(struct rq *rq) { }
+ static inline void calc_load_nohz_stop(void) { }
+ #endif /* CONFIG_NO_HZ_COMMON */
+ 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 3cb879f4eb9c6..65ed821335dd5 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3677,6 +3677,7 @@ static void sched_tick_remote(struct work_struct *work)
+ 	if (cpu_is_offline(cpu))
+ 		goto out_unlock;
+ 
++	curr = rq->curr;
+ 	update_rq_clock(rq);
+ 
+ 	if (!is_idle_task(curr)) {
+@@ -3689,10 +3690,11 @@ static void sched_tick_remote(struct work_struct *work)
  	}
+ 	curr->sched_class->task_tick(rq, curr, 0);
+ 
++	calc_load_nohz_remote(rq);
+ out_unlock:
+ 	rq_unlock_irq(rq, &rf);
+-
+ out_requeue:
++
+ 	/*
+ 	 * Run the remote tick once per second (1Hz). This arbitrary
+ 	 * frequency is large enough to avoid overload but short enough
+diff --git a/kernel/sched/loadavg.c b/kernel/sched/loadavg.c
+index 28a516575c181..de22da666ac73 100644
+--- a/kernel/sched/loadavg.c
++++ b/kernel/sched/loadavg.c
+@@ -231,16 +231,11 @@ static inline int calc_load_read_idx(void)
+ 	return calc_load_idx & 1;
+ }
+ 
+-void calc_load_nohz_start(void)
++static void calc_load_nohz_fold(struct rq *rq)
+ {
+-	struct rq *this_rq = this_rq();
+ 	long delta;
+ 
+-	/*
+-	 * We're going into NO_HZ mode, if there's any pending delta, fold it
+-	 * into the pending NO_HZ delta.
+-	 */
+-	delta = calc_load_fold_active(this_rq, 0);
++	delta = calc_load_fold_active(rq, 0);
+ 	if (delta) {
+ 		int idx = calc_load_write_idx();
+ 
+@@ -248,6 +243,24 @@ void calc_load_nohz_start(void)
+ 	}
+ }
+ 
++void calc_load_nohz_start(void)
++{
++	/*
++	 * We're going into NO_HZ mode, if there's any pending delta, fold it
++	 * into the pending NO_HZ delta.
++	 */
++	calc_load_nohz_fold(this_rq());
++}
++
++/*
++ * Keep track of the load for NOHZ_FULL, must be called between
++ * calc_load_nohz_{start,stop}().
++ */
++void calc_load_nohz_remote(struct rq *rq)
++{
++	calc_load_nohz_fold(rq);
++}
++
+ void calc_load_nohz_stop(void)
+ {
+ 	struct rq *this_rq = this_rq();
+@@ -268,7 +281,7 @@ void calc_load_nohz_stop(void)
+ 		this_rq->calc_load_update += LOAD_FREQ;
+ }
+ 
+-static long calc_load_nohz_fold(void)
++static long calc_load_nohz_read(void)
+ {
+ 	int idx = calc_load_read_idx();
+ 	long delta = 0;
+@@ -323,7 +336,7 @@ static void calc_global_nohz(void)
+ }
+ #else /* !CONFIG_NO_HZ_COMMON */
+ 
+-static inline long calc_load_nohz_fold(void) { return 0; }
++static inline long calc_load_nohz_read(void) { return 0; }
+ static inline void calc_global_nohz(void) { }
+ 
+ #endif /* CONFIG_NO_HZ_COMMON */
+@@ -346,7 +359,7 @@ void calc_global_load(unsigned long ticks)
+ 	/*
+ 	 * Fold the 'old' NO_HZ-delta to include all NO_HZ CPUs.
+ 	 */
+-	delta = calc_load_nohz_fold();
++	delta = calc_load_nohz_read();
+ 	if (delta)
+ 		atomic_long_add(delta, &calc_load_tasks);
  
 -- 
 2.20.1
