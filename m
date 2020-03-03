@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D97C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F81C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7DC220656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FB8220728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258202;
-	bh=cb8y8QAIKJEZ/s6kUey14C4RaZL75F8O2HRemztVjCA=;
+	s=default; t=1583258205;
+	bh=mCggJkKA8cUpf3SzAiuVzOPs82bmMMhiDIGPL/xGvEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P2AHpk3NwPOTBhxFQh9C6qBPxWzJfWJ/VPhi2V+nkz3q7xSU3qq+lCmAmcVgOoHI9
-	 4LtrCPqy4QL3GzHYc2AXOyiGo0CcVl3CXO60t6uoIId0EMoXIke4y22pk8Udop0oxq
-	 35udt0+wa/ds19HZlQBpO8+H1UtfOAeaSTRObNx4=
+	b=MwCA23N4PageX4cAzbETYD8MasEd/8A6ifiTGNkbEGHtI0e6wn9wDL2V72Qp9J/8u
+	 sJbFH0EGbOCtlYOuiD9UluGjIcFi1YNFrhRL3xxrRDK+LqQd3TgR5TTgfswjxSlUDJ
+	 HLRS556dgEk5wy5f0NTnuoUjiOygo2Cip+yO7/fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732943AbgCCR4k (ORCPT
+        id S1732961AbgCCR4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:56:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38780 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:56:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732616AbgCCR4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:56:32 -0500
+        id S1732949AbgCCR4m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:56:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF12C20656;
-        Tue,  3 Mar 2020 17:56:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8AC4206D5;
+        Tue,  3 Mar 2020 17:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258192;
-        bh=cb8y8QAIKJEZ/s6kUey14C4RaZL75F8O2HRemztVjCA=;
+        s=default; t=1583258202;
+        bh=mCggJkKA8cUpf3SzAiuVzOPs82bmMMhiDIGPL/xGvEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fytTEX8kT1OFHiAzrtulqM37QxMdqdTLzub/bwzh9fZtzscJU1NNvAAVEiAiv0cac
-         SPXrdAD+3NnziBcbUVG8Isrqeeho4+BmMuNFiEDsJ5JVzRsNTtcOwcVy/uHToLSiOu
-         IiIPRk7uPZjk4wfNSndhRtJg/PQSx/2foIPR/AXU=
+        b=MTu6LJFrYYPwig9NkMjzE4lGsiYtsIfiobc4xNmLSiDjUelELBW+6VY/4uZMPbYGv
+         fFa1cdp9omypGo9BQdS9s1MJqZmm09974Znw8I9LU4IrITsE76AUTfiHhVwUuv6l2a
+         3bUqYMqiCppqL2g5SbgQizRQolr2iiJmU7kd7DmI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe Vu-Brugier <cvubrugier@fastmail.fm>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Pavel Belous <pbelous@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
+        stable@vger.kernel.org, Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 107/152] net: atlantic: fix use after free kasan warn
-Date:   Tue,  3 Mar 2020 18:43:25 +0100
-Message-Id: <20200303174314.806720778@linuxfoundation.org>
+Subject: [PATCH 5.4 110/152] net/smc: no peer ID in CLC decline for SMCD
+Date:   Tue,  3 Mar 2020 18:43:28 +0100
+Message-Id: <20200303174315.233505136@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -63,62 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Belous <pbelous@marvell.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-commit a4980919ad6a7be548d499bc5338015e1a9191c6 upstream.
+commit 369537c97024dca99303a8d4d6ab38b4f54d3909 upstream.
 
-skb->len is used to calculate statistics after xmit invocation.
+Just SMCR requires a CLC Peer ID, but not SMCD. The field should be
+zero for SMCD.
 
-Under a stress load it may happen that skb will be xmited,
-rx interrupt will come and skb will be freed, all before xmit function
-is even returned.
-
-Eventually, skb->len will access unallocated area.
-
-Moving stats calculation into tx_clean routine.
-
-Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
-Reported-by: Christophe Vu-Brugier <cvubrugier@fastmail.fm>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Pavel Belous <pbelous@marvell.com>
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Fixes: c758dfddc1b5 ("net/smc: add SMC-D support in CLC messages")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c  |    4 ----
- drivers/net/ethernet/aquantia/atlantic/aq_ring.c |    7 +++++--
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ net/smc/smc_clc.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -598,10 +598,6 @@ int aq_nic_xmit(struct aq_nic_s *self, s
- 	if (likely(frags)) {
- 		err = self->aq_hw_ops->hw_ring_tx_xmit(self->aq_hw,
- 						       ring, frags);
--		if (err >= 0) {
--			++ring->stats.tx.packets;
--			ring->stats.tx.bytes += skb->len;
--		}
- 	} else {
- 		err = NETDEV_TX_BUSY;
- 	}
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-@@ -243,9 +243,12 @@ bool aq_ring_tx_clean(struct aq_ring_s *
- 			}
- 		}
+--- a/net/smc/smc_clc.c
++++ b/net/smc/smc_clc.c
+@@ -372,7 +372,9 @@ int smc_clc_send_decline(struct smc_sock
+ 	dclc.hdr.length = htons(sizeof(struct smc_clc_msg_decline));
+ 	dclc.hdr.version = SMC_CLC_V1;
+ 	dclc.hdr.flag = (peer_diag_info == SMC_CLC_DECL_SYNCERR) ? 1 : 0;
+-	memcpy(dclc.id_for_peer, local_systemid, sizeof(local_systemid));
++	if (smc->conn.lgr && !smc->conn.lgr->is_smcd)
++		memcpy(dclc.id_for_peer, local_systemid,
++		       sizeof(local_systemid));
+ 	dclc.peer_diagnosis = htonl(peer_diag_info);
+ 	memcpy(dclc.trl.eyecatcher, SMC_EYECATCHER, sizeof(SMC_EYECATCHER));
  
--		if (unlikely(buff->is_eop))
--			dev_kfree_skb_any(buff->skb);
-+		if (unlikely(buff->is_eop)) {
-+			++self->stats.rx.packets;
-+			self->stats.tx.bytes += buff->skb->len;
- 
-+			dev_kfree_skb_any(buff->skb);
-+		}
- 		buff->pa = 0U;
- 		buff->eop_index = 0xffffU;
- 		self->sw_head = aq_ring_next_dx(self, self->sw_head);
 
 
