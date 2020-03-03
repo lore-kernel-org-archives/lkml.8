@@ -7,278 +7,86 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4A1C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F73C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE192208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14539214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583267098;
-	bh=L0GueqxteLGlGoUJ9dBrzniaBgvcDGJ2vJhbzDbsAeM=;
+	s=default; t=1583267279;
+	bh=6UaeTxB0EcXT+LhMv79ITkiIEzlAiO/oYwI25OmNdCE=;
 	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=HGb3mVda3FqoMSb78JMUVmPn/GOJntjB1LZ0GSvoN1JuDhOfxFa3Rm9zCZdCYdV56
-	 oJEuJU6IfsDbYBALvnbCdCneHM1WYm6FiFngNlhBS+HzlGFUzDyiOrlMyTkOm94pT7
-	 FvdbiR33aFzaLy0NPAPkW1AhqTmHiQZxw5GMvOSs=
+	b=F1rUD+e99hUeTjpPf2zMwKNkgWESf2hiMG4nrXnjyva0cYOTT4J8yVF3VGnA9UBds
+	 w01BBfPjWWLjbQXxrvekdYh36RKu5MGTbVt+xYfe+SCE+Sp0NOflcINNRwhxPx2Et2
+	 SMr+Oq1h1WtJENklm55oKM10dvlF9uIFAqr6sieg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731680AbgCCUY4 (ORCPT
+        id S1731687AbgCCU16 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:24:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37582 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 15:27:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730081AbgCCUY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 15:24:56 -0500
+        id S1729967AbgCCU15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 15:27:57 -0500
 Received: from localhost.localdomain (unknown [194.230.155.125])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC54620848;
-        Tue,  3 Mar 2020 20:24:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08CCA20CC7;
+        Tue,  3 Mar 2020 20:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583267095;
-        bh=L0GueqxteLGlGoUJ9dBrzniaBgvcDGJ2vJhbzDbsAeM=;
+        s=default; t=1583267277;
+        bh=6UaeTxB0EcXT+LhMv79ITkiIEzlAiO/oYwI25OmNdCE=;
         h=From:To:Cc:Subject:Date:From;
-        b=DNy83wdchtQCXa+LIQRCsT/RaIKN1z6kglAxRpPscymNKzoYBTE8Mr9M30T1vDjVO
-         gAj+cephD/ztb06fhxYTN2kUiNZs8ZqBZtzHKPG9BI/3edKB7RW8f3YzwPlDGgEV+Z
-         V4nvEoo+drNZdoTkmYrV5ooMPKGU74fMfG+4i6Nw=
+        b=tSChNZ7KPOV1+drPeErg8JAgd6eywCCoUpxqqWg119Q62uXljcSQ6MiSyp3T6z7cm
+         ND9/x7IrXyJAWX81ZiDU57E2PGWeZp+fIoVRnuGOLmY3QEvGp70NaMeKavWSSvhvlJ
+         +auTOmwbFErabMmd1vCSGP++nR3nck4Jjc6iGrhU=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+To:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v2] pwm: Enable compile testing for some of drivers
-Date:   Tue,  3 Mar 2020 21:24:47 +0100
-Message-Id: <20200303202447.4245-1-krzk@kernel.org>
+Cc:     Suman Anna <s-anna@ti.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RESEND PATCH 1/4] iommu/omap: Fix pointer cast -Wpointer-to-int-cast warnings on 64 bit
+Date:   Tue,  3 Mar 2020 21:27:48 +0100
+Message-Id: <20200303202751.5153-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some of the PWM drivers can be compile tested to increase build
-coverage.
+pointers should be casted to unsigned long to avoid
+-Wpointer-to-int-cast warnings when compiling on 64-bit platform (e.g.
+with COMPILE_TEST):
 
-The Meson PWM driver requires COMMON_CLK dependency.
+    drivers/iommu/omap-iommu.c: In function ‘omap2_iommu_enable’:
+    drivers/iommu/omap-iommu.c:170:25: warning:
+        cast from pointer to integer of different size [-Wpointer-to-int-cast]
+      if (!obj->iopgd || !IS_ALIGNED((u32)obj->iopgd,  SZ_16K))
+                             ^
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com> # For Broadcoam
-Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com> # For Meson
-Acked-by: Claudiu Beznea <claudiu.beznea@microchip.com> # For Atmel
 
 ---
 
-Changes since v1:
-1. Split "depends on OF" to separate entry in PWM_ATMEL and PWM_MXS.
+Not tested on hardware.
 ---
- drivers/pwm/Kconfig | 47 ++++++++++++++++++++++++---------------------
- 1 file changed, 25 insertions(+), 22 deletions(-)
+ drivers/iommu/omap-iommu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 30190beeb6e9..70153bf11201 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -44,7 +44,8 @@ config PWM_AB8500
+diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
+index be551cc34be4..50e8acf88ec4 100644
+--- a/drivers/iommu/omap-iommu.c
++++ b/drivers/iommu/omap-iommu.c
+@@ -167,7 +167,7 @@ static int omap2_iommu_enable(struct omap_iommu *obj)
+ {
+ 	u32 l, pa;
  
- config PWM_ATMEL
- 	tristate "Atmel PWM support"
--	depends on ARCH_AT91 && OF
-+	depends on OF
-+	depends on ARCH_AT91 || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for Atmel SoC.
+-	if (!obj->iopgd || !IS_ALIGNED((u32)obj->iopgd,  SZ_16K))
++	if (!obj->iopgd || !IS_ALIGNED((unsigned long)obj->iopgd,  SZ_16K))
+ 		return -EINVAL;
  
-@@ -100,7 +101,7 @@ config PWM_BCM_KONA
- 
- config PWM_BCM2835
- 	tristate "BCM2835 PWM support"
--	depends on ARCH_BCM2835 || ARCH_BRCMSTB
-+	depends on ARCH_BCM2835 || ARCH_BRCMSTB || COMPILE_TEST
- 	help
- 	  PWM framework driver for BCM2835 controller (Raspberry Pi)
- 
-@@ -109,7 +110,7 @@ config PWM_BCM2835
- 
- config PWM_BERLIN
- 	tristate "Marvell Berlin PWM support"
--	depends on ARCH_BERLIN
-+	depends on ARCH_BERLIN || COMPILE_TEST
- 	help
- 	  PWM framework driver for Marvell Berlin SoCs.
- 
-@@ -118,7 +119,7 @@ config PWM_BERLIN
- 
- config PWM_BRCMSTB
- 	tristate "Broadcom STB PWM support"
--	depends on ARCH_BRCMSTB || BMIPS_GENERIC
-+	depends on ARCH_BRCMSTB || BMIPS_GENERIC || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for the Broadcom Set-top-Box
- 	  SoCs (BCM7xxx).
-@@ -152,7 +153,7 @@ config PWM_CROS_EC
- 
- config PWM_EP93XX
- 	tristate "Cirrus Logic EP93xx PWM support"
--	depends on ARCH_EP93XX
-+	depends on ARCH_EP93XX || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for Cirrus Logic EP93xx.
- 
-@@ -195,7 +196,7 @@ config PWM_IMG
- 
- config PWM_IMX1
- 	tristate "i.MX1 PWM support"
--	depends on ARCH_MXC
-+	depends on ARCH_MXC || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for i.MX1 and i.MX21
- 
-@@ -204,7 +205,7 @@ config PWM_IMX1
- 
- config PWM_IMX27
- 	tristate "i.MX27 PWM support"
--	depends on ARCH_MXC
-+	depends on ARCH_MXC || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for i.MX27 and later i.MX SoCs.
- 
-@@ -244,7 +245,7 @@ config PWM_LP3943
- 
- config PWM_LPC18XX_SCT
- 	tristate "LPC18xx/43xx PWM/SCT support"
--	depends on ARCH_LPC18XX
-+	depends on ARCH_LPC18XX || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for NXP LPC18xx PWM/SCT which
- 	  supports 16 channels.
-@@ -256,7 +257,7 @@ config PWM_LPC18XX_SCT
- 
- config PWM_LPC32XX
- 	tristate "LPC32XX PWM support"
--	depends on ARCH_LPC32XX
-+	depends on ARCH_LPC32XX || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for LPC32XX. The LPC32XX SOC has two
- 	  PWM controllers.
-@@ -289,7 +290,8 @@ config PWM_LPSS_PLATFORM
- 
- config PWM_MESON
- 	tristate "Amlogic Meson PWM driver"
--	depends on ARCH_MESON
-+	depends on ARCH_MESON || COMPILE_TEST
-+	depends on COMMON_CLK
- 	help
- 	  The platform driver for Amlogic Meson PWM controller.
- 
-@@ -318,7 +320,8 @@ config PWM_MEDIATEK
- 
- config PWM_MXS
- 	tristate "Freescale MXS PWM support"
--	depends on ARCH_MXS && OF
-+	depends on OF
-+	depends on ARCH_MXS || COMPILE_TEST
- 	select STMP_DEVICE
- 	help
- 	  Generic PWM framework driver for Freescale MXS.
-@@ -357,7 +360,7 @@ config PWM_PUV3
- 
- config PWM_PXA
- 	tristate "PXA PWM support"
--	depends on ARCH_PXA
-+	depends on ARCH_PXA || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for PXA.
- 
-@@ -388,14 +391,14 @@ config PWM_RENESAS_TPU
- 
- config PWM_ROCKCHIP
- 	tristate "Rockchip PWM support"
--	depends on ARCH_ROCKCHIP
-+	depends on ARCH_ROCKCHIP || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for the PWM controller found on
- 	  Rockchip SoCs.
- 
- config PWM_SAMSUNG
- 	tristate "Samsung PWM support"
--	depends on PLAT_SAMSUNG || ARCH_EXYNOS
-+	depends on PLAT_SAMSUNG || ARCH_EXYNOS || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for Samsung.
- 
-@@ -415,7 +418,7 @@ config PWM_SIFIVE
- 
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
--	depends on PLAT_SPEAR
-+	depends on PLAT_SPEAR || COMPILE_TEST
- 	depends on OF
- 	help
- 	  Generic PWM framework driver for the PWM controller on ST
-@@ -437,7 +440,7 @@ config PWM_SPRD
- 
- config PWM_STI
- 	tristate "STiH4xx PWM support"
--	depends on ARCH_STI
-+	depends on ARCH_STI || COMPILE_TEST
- 	depends on OF
- 	help
- 	  Generic PWM framework driver for STiH4xx SoCs.
-@@ -447,7 +450,7 @@ config PWM_STI
- 
- config PWM_STM32
- 	tristate "STMicroelectronics STM32 PWM"
--	depends on MFD_STM32_TIMERS
-+	depends on MFD_STM32_TIMERS || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for STM32 SoCs.
- 
-@@ -483,7 +486,7 @@ config PWM_SUN4I
- 
- config PWM_TEGRA
- 	tristate "NVIDIA Tegra PWM support"
--	depends on ARCH_TEGRA
-+	depends on ARCH_TEGRA || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for the PWFM controller found on NVIDIA
- 	  Tegra SoCs.
-@@ -493,7 +496,7 @@ config PWM_TEGRA
- 
- config PWM_TIECAP
- 	tristate "ECAP PWM support"
--	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3
-+	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
- 	help
- 	  PWM driver support for the ECAP APWM controller found on TI SOCs
- 
-@@ -502,7 +505,7 @@ config PWM_TIECAP
- 
- config PWM_TIEHRPWM
- 	tristate "EHRPWM PWM support"
--	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3
-+	depends on ARCH_OMAP2PLUS || ARCH_DAVINCI_DA8XX || ARCH_K3 || COMPILE_TEST
- 	help
- 	  PWM driver support for the EHRPWM controller found on TI SOCs
- 
-@@ -529,7 +532,7 @@ config PWM_TWL_LED
- 
- config PWM_VT8500
- 	tristate "vt8500 PWM support"
--	depends on ARCH_VT8500
-+	depends on ARCH_VT8500 || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for vt8500.
- 
-@@ -538,7 +541,7 @@ config PWM_VT8500
- 
- config PWM_ZX
- 	tristate "ZTE ZX PWM support"
--	depends on ARCH_ZX
-+	depends on ARCH_ZX || COMPILE_TEST
- 	help
- 	  Generic PWM framework driver for ZTE ZX family SoCs.
- 
+ 	pa = virt_to_phys(obj->iopgd);
 -- 
 2.17.1
 
