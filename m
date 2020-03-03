@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41189C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8793EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 236E12465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 683792465E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:03:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgCCCDB (ORCPT
+        id S1727237AbgCCCCn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:03:01 -0500
-Received: from mga05.intel.com ([192.55.52.43]:54064 "EHLO mga05.intel.com"
+        Mon, 2 Mar 2020 21:02:43 -0500
+Received: from mga05.intel.com ([192.55.52.43]:54060 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727306AbgCCCCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:02:44 -0500
+        id S1727030AbgCCCCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:02:42 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:02:44 -0800
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:02:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="440384975"
+   d="scan'208";a="440384933"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 18:02:43 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 18:02:41 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
 To:     Paolo Bonzini <pbonzini@redhat.com>
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
@@ -36,9 +36,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v3 7/7] KVM: nVMX: Drop unnecessary check on ept caps for execute-only
-Date:   Mon,  2 Mar 2020 18:02:40 -0800
-Message-Id: <20200303020240.28494-8-sean.j.christopherson@intel.com>
+Subject: [PATCH v3 1/7] KVM: x86/mmu: Don't drop level/direct from MMU role calculation
+Date:   Mon,  2 Mar 2020 18:02:34 -0800
+Message-Id: <20200303020240.28494-2-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200303020240.28494-1-sean.j.christopherson@intel.com>
 References: <20200303020240.28494-1-sean.j.christopherson@intel.com>
@@ -49,37 +49,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop the call to cpu_has_vmx_ept_execute_only() when calculating which
-EPT capabilities will be exposed to L1 for nested EPT.  The resulting
-configuration is immediately sanitized by the passed in @ept_caps, and
-except for the call from vmx_check_processor_compat(), @ept_caps is the
-capabilities that are queried by cpu_has_vmx_ept_execute_only().  For
-vmx_check_processor_compat(), KVM *wants* to ignore vmx_capability.ept
-so that a divergence in EPT capabilities between CPUs is detected.
+Use the calculated role as-is when propagating it to kvm_mmu.mmu_role,
+i.e. stop masking off meaningful fields.  The concept of masking off
+fields came from kvm_mmu_pte_write(), which (correctly) ignores certain
+fields when comparing kvm_mmu_page.role against kvm_mmu.mmu_role, e.g.
+the current mmu's access and level have no relation to a shadow page's
+access and level.
+
+Masking off the level causes problems for 5-level paging, e.g. CR4.LA57
+has its own redundant flag in the extended role, and nested EPT would
+need a similar hack to support 5-level paging for L2.
+
+Opportunistically rework the mask for kvm_mmu_pte_write() to define the
+fields that should be ignored as opposed to the fields that should be
+checked, i.e. make it opt-out instead of opt-in so that new fields are
+automatically picked up.  While doing so, stop ignoring "direct".  The
+field is effectively ignored anyways because kvm_mmu_pte_write() is only
+reached with an indirect mmu and the loop only walks indirect shadow
+pages, but double checking "direct" literally costs nothing.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/x86/kvm/mmu/mmu.c | 35 ++++++++++++++++++-----------------
+ 1 file changed, 18 insertions(+), 17 deletions(-)
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index c6163f1b2517..5b87e8d3aec6 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -6143,10 +6143,9 @@ void nested_vmx_setup_ctls_msrs(struct nested_vmx_msrs *msrs, u32 ept_caps)
- 			VMX_EPT_PAGE_WALK_4_BIT |
- 			VMX_EPT_PAGE_WALK_5_BIT |
- 			VMX_EPTP_WB_BIT |
--			VMX_EPT_INVEPT_BIT;
--		if (cpu_has_vmx_ept_execute_only())
--			msrs->ept_caps |=
--				VMX_EPT_EXECUTE_ONLY_BIT;
-+			VMX_EPT_INVEPT_BIT |
-+			VMX_EPT_EXECUTE_ONLY_BIT;
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index c4e0b97f82ac..80b21b7cf092 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -215,17 +215,6 @@ struct kvm_shadow_walk_iterator {
+ 	unsigned index;
+ };
+ 
+-static const union kvm_mmu_page_role mmu_base_role_mask = {
+-	.cr0_wp = 1,
+-	.gpte_is_8_bytes = 1,
+-	.nxe = 1,
+-	.smep_andnot_wp = 1,
+-	.smap_andnot_wp = 1,
+-	.smm = 1,
+-	.guest_mode = 1,
+-	.ad_disabled = 1,
+-};
+-
+ #define for_each_shadow_entry_using_root(_vcpu, _root, _addr, _walker)     \
+ 	for (shadow_walk_init_using_root(&(_walker), (_vcpu),              \
+ 					 (_root), (_addr));                \
+@@ -4919,7 +4908,6 @@ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
+ 	union kvm_mmu_role new_role =
+ 		kvm_calc_tdp_mmu_root_page_role(vcpu, false);
+ 
+-	new_role.base.word &= mmu_base_role_mask.word;
+ 	if (new_role.as_u64 == context->mmu_role.as_u64)
+ 		return;
+ 
+@@ -4991,7 +4979,6 @@ void kvm_init_shadow_mmu(struct kvm_vcpu *vcpu)
+ 	union kvm_mmu_role new_role =
+ 		kvm_calc_shadow_mmu_root_page_role(vcpu, false);
+ 
+-	new_role.base.word &= mmu_base_role_mask.word;
+ 	if (new_role.as_u64 == context->mmu_role.as_u64)
+ 		return;
+ 
+@@ -5048,7 +5035,6 @@ void kvm_init_shadow_ept_mmu(struct kvm_vcpu *vcpu, bool execonly,
+ 
+ 	__kvm_mmu_new_cr3(vcpu, new_eptp, new_role.base, false);
+ 
+-	new_role.base.word &= mmu_base_role_mask.word;
+ 	if (new_role.as_u64 == context->mmu_role.as_u64)
+ 		return;
+ 
+@@ -5089,7 +5075,6 @@ static void init_kvm_nested_mmu(struct kvm_vcpu *vcpu)
+ 	union kvm_mmu_role new_role = kvm_calc_mmu_role_common(vcpu, false);
+ 	struct kvm_mmu *g_context = &vcpu->arch.nested_mmu;
+ 
+-	new_role.base.word &= mmu_base_role_mask.word;
+ 	if (new_role.as_u64 == g_context->mmu_role.as_u64)
+ 		return;
+ 
+@@ -5328,6 +5313,22 @@ static u64 *get_written_sptes(struct kvm_mmu_page *sp, gpa_t gpa, int *nspte)
+ 	return spte;
+ }
+ 
++/*
++ * Ignore various flags when determining if a SPTE can be immediately
++ * overwritten for the current MMU.
++ *  - level: explicitly checked in mmu_pte_write_new_pte(), and will never
++ *    match the current MMU role, as MMU's level tracks the root level.
++ *  - access: updated based on the new guest PTE
++ *  - quadrant: handled by get_written_sptes()
++ *  - invalid: always false (loop only walks valid shadow pages)
++ */
++static const union kvm_mmu_page_role role_ign = {
++	.level = 0xf,
++	.access = 0x7,
++	.quadrant = 0x3,
++	.invalid = 0x1,
++};
 +
- 		msrs->ept_caps &= ept_caps;
- 		msrs->ept_caps |= VMX_EPT_EXTENT_GLOBAL_BIT |
- 			VMX_EPT_EXTENT_CONTEXT_BIT | VMX_EPT_2MB_PAGE_BIT |
+ static void kvm_mmu_pte_write(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 			      const u8 *new, int bytes,
+ 			      struct kvm_page_track_notifier_node *node)
+@@ -5383,8 +5384,8 @@ static void kvm_mmu_pte_write(struct kvm_vcpu *vcpu, gpa_t gpa,
+ 			entry = *spte;
+ 			mmu_page_zap_pte(vcpu->kvm, sp, spte);
+ 			if (gentry &&
+-			      !((sp->role.word ^ base_role)
+-			      & mmu_base_role_mask.word) && rmap_can_add(vcpu))
++			    !((sp->role.word ^ base_role) & ~role_ign.word) &&
++			    rmap_can_add(vcpu))
+ 				mmu_pte_write_new_pte(vcpu, sp, spte, &gentry);
+ 			if (need_remote_flush(entry, *spte))
+ 				remote_flush = true;
 -- 
 2.24.1
 
