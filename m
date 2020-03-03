@@ -2,129 +2,172 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C44C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AB9C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BB1C2072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:47:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583261263;
-	bh=lSa7np7Lnx2hwojjbDQUicjfMs6ZAecuviJeb+Mjxno=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tUb9YnPpDDYd/x+eZNkExIjCnghQgghfNxHmpLMechQWWGeXgQe8uhpTFu3d3UCgz
-	 HpsbaDXSOsibX5wpg614D1LWBRpaWcwsGkfS5qaixt5aPd0DXqvMR+lyzu5Zm7JDrh
-	 QvxxbNzoPkbAm0byXJp0tb1Q+l6Tp1GhnM550UsU=
+	by mail.kernel.org (Postfix) with ESMTP id C482E20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbgCCSrm (ORCPT
+        id S1730207AbgCCSz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:47:42 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39430 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgCCSrl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:47:41 -0500
-Received: by mail-ot1-f65.google.com with SMTP id x97so4082438ota.6;
-        Tue, 03 Mar 2020 10:47:39 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=V16aal7zag3kMsr09Mn6Pwm+yaS63ymnYzw5shFWl8o=;
-        b=hPPd8kp79gKGNtyGE61o3kO8/xGa4wfSN3K9mSGqWCAuX5YjJl9JxKZfNSNkQyukGY
-         xmoawkOIa7R97kUou2yF+hYqHRU++xU90KvpDYN/dxDT+MbOX/vsd0VJOvwSQYjUkwI2
-         tx8y0lc1kRM/D/GIBr8ee/0I6XcnnlldgpUEZisVaPo3cFDeTB2/bdVowCP56XtZUlHT
-         y7jHymiZFOK1/DDA0ocsUTQoEgzm9gcadgyVZ59bx363QHN6luHtiKoPffFuzk+ZMruA
-         iJWySNHhe/SkbvfwAQZJKNGOWDK0hX5FiIbjtZ5b7VmNnqY1lL2W/QuB/UNqZlww+fGr
-         87CQ==
-X-Gm-Message-State: ANhLgQ1tXVTvr/fMzxrTM9KbRV4BLFvw+oKAuhSO688q+kSWOl83ID3Y
-        s8LH3NfOTG2F9l1auIoeyQ==
-X-Google-Smtp-Source: ADFU+vtZ2kBjLYMbCupGtxnCYEydzNp//c2n2ytmjC5DrFRFmsm+XNsR1sLMnsSr9bp4FbQOOdzObw==
-X-Received: by 2002:a9d:5e82:: with SMTP id f2mr4317186otl.240.1583261259115;
-        Tue, 03 Mar 2020 10:47:39 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s2sm766013otp.35.2020.03.03.10.47.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 10:47:38 -0800 (PST)
-Received: (nullmailer pid 20625 invoked by uid 1000);
-        Tue, 03 Mar 2020 18:47:37 -0000
-Date:   Tue, 3 Mar 2020 12:47:37 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Yuan Yao <yao.yuan@nxp.com>
-Subject: Re: [PATCH v3 3/9] tty: serial: fsl_lpuart: handle EPROBE_DEFER for
- DMA
-Message-ID: <20200303184737.GD26191@bogus>
-References: <20200303174306.6015-1-michael@walle.cc>
- <20200303174306.6015-4-michael@walle.cc>
+        Tue, 3 Mar 2020 13:55:27 -0500
+Received: from mga07.intel.com ([134.134.136.100]:29401 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgCCSz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:55:26 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 10:55:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="438840209"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 03 Mar 2020 10:55:24 -0800
+Date:   Tue, 3 Mar 2020 10:55:24 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/8] x86/split_lock: Ensure
+ X86_FEATURE_SPLIT_LOCK_DETECT means the existence of feature
+Message-ID: <20200303185524.GQ1439@linux.intel.com>
+References: <20200206070412.17400-1-xiaoyao.li@intel.com>
+ <20200206070412.17400-3-xiaoyao.li@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303174306.6015-4-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200206070412.17400-3-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:43:00PM +0100, Michael Walle wrote:
-> The DMA channel might not be available at probe time. This is esp. the
-> case if the DMA controller has an IOMMU mapping.
+On Thu, Feb 06, 2020 at 03:04:06PM +0800, Xiaoyao Li wrote:
+> When flag X86_FEATURE_SPLIT_LOCK_DETECT is set, it should ensure the
+> existence of MSR_TEST_CTRL and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit.
 
-The subject should be updated as this doesn't involve deferred probe any 
-more. 
+The changelog confused me a bit.  "When flag X86_FEATURE_SPLIT_LOCK_DETECT
+is set" makes it sound like the logic is being applied after the feature
+bit is set.  Maybe something like:
 
-> There is also another caveat. If there is no DMA controller at all,
-> dma_request_chan() will also return -EPROBE_DEFER. Thus we cannot test
-> for -EPROBE_DEFER in probe(). Otherwise the lpuart driver will fail to
-> probe if, for example, the DMA driver is not enabled in the kernel
-> configuration.
-> 
-> To workaround this, we request the DMA channel in _startup(). Other
-> serial drivers do it the same way.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+```
+Verify MSR_TEST_CTRL.SPLIT_LOCK_DETECT can be toggled via WRMSR prior to
+setting the SPLIT_LOCK_DETECT feature bit so that runtime consumers,
+e.g. KVM, don't need to worry about WRMSR failure.
+```
+
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
 > ---
->  drivers/tty/serial/fsl_lpuart.c | 84 +++++++++++++++++++++------------
->  1 file changed, 53 insertions(+), 31 deletions(-)
+>  arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++----------------
+>  1 file changed, 23 insertions(+), 18 deletions(-)
 > 
-> diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-> index c31b8f3db6bf..0b8c477b32a3 100644
-> --- a/drivers/tty/serial/fsl_lpuart.c
-> +++ b/drivers/tty/serial/fsl_lpuart.c
-> @@ -1493,36 +1493,63 @@ static void rx_dma_timer_init(struct lpuart_port *sport)
->  static void lpuart_tx_dma_startup(struct lpuart_port *sport)
->  {
->  	u32 uartbaud;
-> +	int ret;
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index 2b3874a96bd4..49535ed81c22 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -702,7 +702,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+>  	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
+>  		tsx_disable();
 >  
-> -	if (sport->dma_tx_chan && !lpuart_dma_tx_request(&sport->port)) {
-> -		init_waitqueue_head(&sport->dma_wait);
-> -		sport->lpuart_dma_tx_use = true;
-> -		if (lpuart_is_32(sport)) {
-> -			uartbaud = lpuart32_read(&sport->port, UARTBAUD);
-> -			lpuart32_write(&sport->port,
-> -				       uartbaud | UARTBAUD_TDMAE, UARTBAUD);
-> -		} else {
-> -			writeb(readb(sport->port.membase + UARTCR5) |
-> -				UARTCR5_TDMAS, sport->port.membase + UARTCR5);
-> -		}
-> +	sport->dma_tx_chan = dma_request_slave_channel(sport->port.dev, "tx");
-> +	if (!sport->dma_tx_chan) {
-> +		dev_info_once(sport->port.dev,
-> +			      "DMA tx channel request failed, operating without tx DMA\n");
+> -	split_lock_init();
+> +	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
+> +		split_lock_init();
+>  }
+>  
+>  #ifdef CONFIG_X86_32
+> @@ -986,9 +987,26 @@ static inline bool match_option(const char *arg, int arglen, const char *opt)
+>  
+>  static void __init split_lock_setup(void)
+>  {
+> +	u64 test_ctrl_val;
+>  	char arg[20];
+>  	int i, ret;
+> +	/*
+> +	 * Use the "safe" versions of rdmsr/wrmsr here to ensure MSR_TEST_CTRL
+> +	 * and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit do exist. Because there may
+> +	 * be glitches in virtualization that leave a guest with an incorrect
+> +	 * view of real h/w capabilities.
+> +	 */
+> +	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+> +		return;
+> +
+> +	if (wrmsrl_safe(MSR_TEST_CTRL,
+> +			test_ctrl_val | MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
+> +		return;
+> +
+> +	if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val))
+> +		return;a
 
-Might be useful to print the errno too.
+Probing the MSR should be skipped if SLD is disabled in sld_options, i.e.
+move this code (and setup_force_cpu_cap() etc...) down below the
+match_option() logic.  The above would temporarily enable SLD even if the
+admin has explicitly disabled it, e.g. makes the kernel param useless for
+turning off the feature due to bugs.
 
-Rob
+And with that, IMO failing any of RDMSR/WRSMR here warrants a pr_err().
+The CPU says it supports split lock and the admin hasn't explicitly turned
+it off, so failure to enable should be logged.
+
+> +
+>  	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
+>  	sld_state = sld_warn;
+>  
+> @@ -1022,24 +1040,19 @@ static void __init split_lock_setup(void)
+>   * Locking is not required at the moment because only bit 29 of this
+>   * MSR is implemented and locking would not prevent that the operation
+>   * of one thread is immediately undone by the sibling thread.
+> - * Use the "safe" versions of rdmsr/wrmsr here because although code
+> - * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
+> - * exist, there may be glitches in virtualization that leave a guest
+> - * with an incorrect view of real h/w capabilities.
+>   */
+> -static bool __sld_msr_set(bool on)
+> +static void __sld_msr_set(bool on)
+>  {
+>  	u64 test_ctrl_val;
+>  
+> -	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+> -		return false;
+> +	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>  
+>  	if (on)
+>  		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>  	else
+>  		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>  
+> -	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
+> +	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>  }
+>  
+>  static void split_lock_init(void)
+> @@ -1047,15 +1060,7 @@ static void split_lock_init(void)
+>  	if (sld_state == sld_off)
+>  		return;
+>  
+> -	if (__sld_msr_set(true))
+> -		return;
+> -
+> -	/*
+> -	 * If this is anything other than the boot-cpu, you've done
+> -	 * funny things and you get to keep whatever pieces.
+> -	 */
+> -	pr_warn("MSR fail -- disabled\n");
+> -	sld_state = sld_off;
+> +	__sld_msr_set(true);
+>  }
+>  
+>  bool handle_user_split_lock(unsigned long ip)
+> -- 
+> 2.23.0
+> 
