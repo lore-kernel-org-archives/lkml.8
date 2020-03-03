@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5A55C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6E5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F77A206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA29720866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258542;
-	bh=RdW95msYqZwPu5bl1s1ms5/qXiC27To1/xFmApXKYT8=;
+	s=default; t=1583258545;
+	bh=qjzHJ7RyXbk68kqkDHkrRTeM8Wey8C0wgzXF/aGFSeE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SL3WUZv+h34P1DPjYOXFGGOOlVkm2U1GGbzmP9OrYbjtlLFHyhgiO9H1Yf+QqSgBJ
-	 S5Org8LQpfc9o9NBG/7I29C8vLervAyehi0rw178BTfZNOVv4at85tRwyxrJ1sypAe
-	 eQRcX/kftZTgawzLilmMku0JhaDvFg8VkefdAm0w=
+	b=WEK9VNAVf+2gsSBUloDN3XjBbHjHdseSoLT5bqXLhlOgPrb1Nu8PP0r3RVDnmtfSJ
+	 j7ISzQjAMuWwMNKrHU6esYd/yFYVJV5K9JG4h9bZ1fwbAEMB3CxCV6q5qMnEAyUpLk
+	 TBfsX+4M/1wXTGNyUfpXZeK3VxBePda4FaWLqz4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388191AbgCCSCV (ORCPT
+        id S2388205AbgCCSCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:02:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46856 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:02:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388177AbgCCSCT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:02:19 -0500
+        id S2388192AbgCCSCW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:02:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFD68206D5;
-        Tue,  3 Mar 2020 18:02:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4075220866;
+        Tue,  3 Mar 2020 18:02:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258538;
-        bh=RdW95msYqZwPu5bl1s1ms5/qXiC27To1/xFmApXKYT8=;
+        s=default; t=1583258540;
+        bh=qjzHJ7RyXbk68kqkDHkrRTeM8Wey8C0wgzXF/aGFSeE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KSYaawrfW/oYzFMBmBVBTslpXOEplln6Wcz0wlGKJYZHKia2oJFuuYGFCSmtdX8mf
-         s1eKPCEYwVMf8lvOZB+YoznLFMAMFs840Cr47CppT3rv7ndWyaIlBk7w3mrp0UGOfA
-         BeRZQj++LYNqK1Zu3S/gJ0KKpV3Z8wEeWes5AWE4=
+        b=wVTXD9ux069sZP4A4SaxVvcGIrF4+OXGoYzOn7lruVEe3WgDj3Lylxk9FOb7U2bkh
+         OGMs+Tjq/lpHkoCOQcU0V34EsbRZj7qFTyqCcM826Sn2glnWj8BCaCW6tIl5a4NKyj
+         KnkS0LC7M3AwCYB/OR2ejh/3qGWOZiTydG8XIc3U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Rientjes <rientjes@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 87/87] mm, thp: fix defrag setting if newline is not used
-Date:   Tue,  3 Mar 2020 18:44:18 +0100
-Message-Id: <20200303174358.147786617@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 70/87] KVM: SVM: Override default MMIO mask if memory encryption is enabled
+Date:   Tue,  3 Mar 2020 18:44:01 +0100
+Message-Id: <20200303174356.572899901@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -62,107 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Rientjes <rientjes@google.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-commit f42f25526502d851d0e3ca1e46297da8aafce8a7 upstream.
+commit 52918ed5fcf05d97d257f4131e19479da18f5d16 upstream.
 
-If thp defrag setting "defer" is used and a newline is *not* used when
-writing to the sysfs file, this is interpreted as the "defer+madvise"
-option.
+The KVM MMIO support uses bit 51 as the reserved bit to cause nested page
+faults when a guest performs MMIO. The AMD memory encryption support uses
+a CPUID function to define the encryption bit position. Given this, it is
+possible that these bits can conflict.
 
-This is because we do prefix matching and if five characters are written
-without a newline, the current code ends up comparing to the first five
-bytes of the "defer+madvise" option and using that instead.
+Use svm_hardware_setup() to override the MMIO mask if memory encryption
+support is enabled. Various checks are performed to ensure that the mask
+is properly defined and rsvd_bits() is used to generate the new mask (as
+was done prior to the change that necessitated this patch).
 
-Use the more appropriate sysfs_streq() that handles the trailing newline
-for us.  Since this doubles as a nice cleanup, do it in enabled_store()
-as well.
-
-The current implementation relies on prefix matching: the number of
-bytes compared is either the number of bytes written or the length of
-the option being compared.  With a newline, "defer\n" does not match
-"defer+"madvise"; without a newline, however, "defer" is considered to
-match "defer+madvise" (prefix matching is only comparing the first five
-bytes).  End result is that writing "defer" is broken unless it has an
-additional trailing character.
-
-This means that writing "madv" in the past would match and set
-"madvise".  With strict checking, that no longer is the case but it is
-unlikely anybody is currently doing this.
-
-Link: http://lkml.kernel.org/r/alpine.DEB.2.21.2001171411020.56385@chino.kir.corp.google.com
-Fixes: 21440d7eb904 ("mm, thp: add new defer+madvise defrag option")
-Signed-off-by: David Rientjes <rientjes@google.com>
-Suggested-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/huge_memory.c |   24 ++++++++----------------
- 1 file changed, 8 insertions(+), 16 deletions(-)
+ arch/x86/kvm/svm.c |   43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -173,16 +173,13 @@ static ssize_t enabled_store(struct kobj
- {
- 	ssize_t ret = count;
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1298,6 +1298,47 @@ static void shrink_ple_window(struct kvm
+ 				    control->pause_filter_count, old);
+ }
  
--	if (!memcmp("always", buf,
--		    min(sizeof("always")-1, count))) {
-+	if (sysfs_streq(buf, "always")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("madvise", buf,
--			   min(sizeof("madvise")-1, count))) {
-+	} else if (sysfs_streq(buf, "madvise")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("never", buf,
--			   min(sizeof("never")-1, count))) {
-+	} else if (sysfs_streq(buf, "never")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 	} else
-@@ -246,32 +243,27 @@ static ssize_t defrag_store(struct kobje
- 			    struct kobj_attribute *attr,
- 			    const char *buf, size_t count)
++/*
++ * The default MMIO mask is a single bit (excluding the present bit),
++ * which could conflict with the memory encryption bit. Check for
++ * memory encryption support and override the default MMIO mask if
++ * memory encryption is enabled.
++ */
++static __init void svm_adjust_mmio_mask(void)
++{
++	unsigned int enc_bit, mask_bit;
++	u64 msr, mask;
++
++	/* If there is no memory encryption support, use existing mask */
++	if (cpuid_eax(0x80000000) < 0x8000001f)
++		return;
++
++	/* If memory encryption is not enabled, use existing mask */
++	rdmsrl(MSR_K8_SYSCFG, msr);
++	if (!(msr & MSR_K8_SYSCFG_MEM_ENCRYPT))
++		return;
++
++	enc_bit = cpuid_ebx(0x8000001f) & 0x3f;
++	mask_bit = boot_cpu_data.x86_phys_bits;
++
++	/* Increment the mask bit if it is the same as the encryption bit */
++	if (enc_bit == mask_bit)
++		mask_bit++;
++
++	/*
++	 * If the mask bit location is below 52, then some bits above the
++	 * physical addressing limit will always be reserved, so use the
++	 * rsvd_bits() function to generate the mask. This mask, along with
++	 * the present bit, will be used to generate a page fault with
++	 * PFER.RSV = 1.
++	 *
++	 * If the mask bit location is 52 (or above), then clear the mask.
++	 */
++	mask = (mask_bit < 52) ? rsvd_bits(mask_bit, 51) | PT_PRESENT_MASK : 0;
++
++	kvm_mmu_set_mmio_spte_mask(mask, PT_WRITABLE_MASK | PT_USER_MASK);
++}
++
+ static __init int svm_hardware_setup(void)
  {
--	if (!memcmp("always", buf,
--		    min(sizeof("always")-1, count))) {
-+	if (sysfs_streq(buf, "always")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("defer+madvise", buf,
--		    min(sizeof("defer+madvise")-1, count))) {
-+	} else if (sysfs_streq(buf, "defer+madvise")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("defer", buf,
--		    min(sizeof("defer")-1, count))) {
-+	} else if (sysfs_streq(buf, "defer")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("madvise", buf,
--			   min(sizeof("madvise")-1, count))) {
-+	} else if (sysfs_streq(buf, "madvise")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
- 		set_bit(TRANSPARENT_HUGEPAGE_DEFRAG_REQ_MADV_FLAG, &transparent_hugepage_flags);
--	} else if (!memcmp("never", buf,
--			   min(sizeof("never")-1, count))) {
-+	} else if (sysfs_streq(buf, "never")) {
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_DIRECT_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_FLAG, &transparent_hugepage_flags);
- 		clear_bit(TRANSPARENT_HUGEPAGE_DEFRAG_KSWAPD_OR_MADV_FLAG, &transparent_hugepage_flags);
+ 	int cpu;
+@@ -1352,6 +1393,8 @@ static __init int svm_hardware_setup(voi
+ 		}
+ 	}
+ 
++	svm_adjust_mmio_mask();
++
+ 	for_each_possible_cpu(cpu) {
+ 		r = svm_cpu_init(cpu);
+ 		if (r)
 
 
