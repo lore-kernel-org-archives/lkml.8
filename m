@@ -2,142 +2,195 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ACE8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5F3C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078222073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="cqiqwgAv"
+	by mail.kernel.org (Postfix) with ESMTP id 4B7EA20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:04:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583255086;
+	bh=bk85Xz7NknJrsTjKyhov1Bic6DhuQc8uI72oheQ6XTo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=gufF2+ns14KOExQvscZK5F2ED4cxLu7helnjh3RMUOHO/4EZgcjqZNzoaBgyPo8fh
+	 G2QlBNSlAKDqXERPVJ/Lw3AKNYKHtXSeKGanCVeLttYTca867MD4OJM8uHh4gFiqJc
+	 1GhKObqKS57nGwB26cFOtL+fixkzLOr9ETrD6Ucs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730531AbgCCREa (ORCPT
+        id S1730544AbgCCREp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:04:30 -0500
-Received: from mail-bn8nam11on2066.outbound.protection.outlook.com ([40.107.236.66]:20302
-        "EHLO NAM11-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729000AbgCCREa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:04:30 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=AeKDJ62K/Tbp2FEYNXjwiwlkCfQ/6G7CwZFvj1ngBdq9B0Q2vJppI+cY034QuMNlCltHrhk2+oYLAQ2XbY0CYqWCPo8TNKTkDdLoGoSz6ulXUbDgMOiOiHK8XDrMmpqpIOjNdyHprD2s77sVeyUg3Q4jYdpnfOvIu4aiJhsa5qdtNCdnS/GNNG1aEj6zcQTO18sE7BdPkjR9eqhu8gJ8IXu40l/JQiLGMSE5l0um+gr45loYy211AckMEkkH8lVZcR3spRuKk/OZS/XWy/3MGccZ0GjwwyefKUr4RapjSxFgsDmG5tJRrnqtD7Wj/3rBWtvewuv8749Lix8GeQms2g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QPtfK5t+6xALbK8zwNW9i/3AI19PXF/GvftPPfakOIM=;
- b=oTbTxgyNyXmfU8pdy0i1a+zM1LVpdLi1CDKP1zvaGv0J4I9ObOVj/gu8kRm/MvN6OBDViqgRl/nIkPaDo6POqzeKgEtF1rc1wkIZ59eWJsi9AS4U+gGhsS+XLC/sT02FKTM9OdY3RBwaEQvbMfNzo0O+FIYQ4o9Co1dB1QJMwD/GyxEB4a6e5RuJTzMWdutwwq+XaZQIByvLiz8kTYxGr9q9rx5tHIiJ2ANT4s7gcFR9Kp9eHm+Z6pkdkIBQDvNpSObaJwmIv/vVLhOBcxRpHavV/Ct2bHgiPOHaLF7R82R9hUvOKDoNpv8g++84L5p3lTG8N4mmPGgEGGfeEfasFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QPtfK5t+6xALbK8zwNW9i/3AI19PXF/GvftPPfakOIM=;
- b=cqiqwgAvVLbLSHvD4+iqFiNFH0R5Yf0KWJbBuA8Xinm8BS0SXZ6j9nP+dl1eUCDeFuj9XireuhwLg2vcVi5vvWldHnjF3hcG7mU8C1l/sE84PumgSqcRcPH3bJck75PZU8+djrlmjY3z9sEUFpRrjDtnqFZJS4nifijvWy1kb8A=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com (2603:10b6:805:75::33)
- by SN6PR12MB2671.namprd12.prod.outlook.com (2603:10b6:805:75::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Tue, 3 Mar
- 2020 17:04:26 +0000
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
- 17:04:26 +0000
-Subject: Re: [PATCH v3 3/3] perf vendor events amd: update Zen1 events to V2
-To:     Vijay Thakkar <vijaythakkar@me.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        =?UTF-8?Q?Martin_Li=c5=a1ka?= <mliska@suse.cz>,
-        Jon Grimm <jon.grimm@amd.com>, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org
-References: <20200228175639.39171-1-vijaythakkar@me.com>
- <20200228175639.39171-4-vijaythakkar@me.com>
-From:   Kim Phillips <kim.phillips@amd.com>
-Message-ID: <77552e9e-7fca-7186-24cc-6a8a87d4b7b6@amd.com>
-Date:   Tue, 3 Mar 2020 11:04:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-In-Reply-To: <20200228175639.39171-4-vijaythakkar@me.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DM5PR22CA0012.namprd22.prod.outlook.com
- (2603:10b6:3:101::22) To SN6PR12MB2845.namprd12.prod.outlook.com
- (2603:10b6:805:75::33)
+        Tue, 3 Mar 2020 12:04:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729000AbgCCREo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:04:44 -0500
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4203D20836;
+        Tue,  3 Mar 2020 17:04:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583255083;
+        bh=bk85Xz7NknJrsTjKyhov1Bic6DhuQc8uI72oheQ6XTo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=qNCb/zCik+KlUt63trn4jH/HOKpvdCE0AYNJTPur9ziG9LAGwYOv73I5VIFmF/7JB
+         ZPj90kUy1w8igSGgUR6q7Rm7LT8wQzr+IOxG6YOa4of9kqMYaQDpcYl6ccbs12k2uT
+         GCmC54BnsdxA3oveFfm/0R/btd6caA/zk3wSzX7E=
+Date:   Tue, 3 Mar 2020 11:04:42 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sathyanarayanan.kuppuswamy@linux.intel.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+Subject: Re: [PATCH v16 3/9] PCI/ERR: Remove service dependency in
+ pcie_do_recovery()
+Message-ID: <20200303170442.GA89997@google.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.236.136.247] (165.204.77.1) by DM5PR22CA0012.namprd22.prod.outlook.com (2603:10b6:3:101::22) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Tue, 3 Mar 2020 17:04:24 +0000
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 4785c8fc-37ee-4c95-f512-08d7bf94ed7f
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2671:|SN6PR12MB2671:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB267187C79D372610E589528887E40@SN6PR12MB2671.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 03319F6FEF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(396003)(39860400002)(346002)(376002)(189003)(199004)(8936002)(7416002)(66476007)(81166006)(31696002)(5660300002)(81156014)(4326008)(6486002)(86362001)(8676002)(66946007)(66556008)(53546011)(52116002)(36756003)(110136005)(31686004)(16576012)(16526019)(54906003)(316002)(26005)(2906002)(2616005)(956004)(478600001)(186003)(44832011);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2671;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: e5JhFpE0IYvrCu5keJ6NvKH/bZCM+bX/S9ya551RIPfJbSoYxECboCsjyVY+0Xd1BYa/DiR1Mv+eQmAb8N7ibuqBPIzFLNaKzwPzuQPwWeonsHeJS95ituq1amEZaCcRAqBWTAn9Mm74pJKuU8/5zPQ6/oNxRNNCG5ffaudKvsnmodRcPPKy/xPFIhGH4BpSgockeKh/NXRBWlEfGPutB56Q02BcGLkvnhimIDKb4qWSg6RAVKA+wBHihSYWESzBUej3nuDmhjdWJJEJ0oZkqDz8NfPZVCT/PQxYshDjrLS5q5C5CMWxSFfLPSjLRTyK7qlbAt7A8bBP22sHEvpPAwOTD0u+Du6zo1nZq3aQFFoHZvVRcYa1hNEAItZAD9n9z921B8Cbibo0Dut3MaKQgGtXat26K1xVl6Xr8EPnNLi9SLCzz8/WZ7lbeA1fmbCk
-X-MS-Exchange-AntiSpam-MessageData: xbfVOTlU383yu+JfbBhPKLB0i6Jon3uczQHY3BAuAtXgTFTo2vXfirX8FFmIwbze3nBAYyeDEQmc/HfR7ZjeLJXAGmjXoAZm/VWnJEllKPCAFhvHgW8svlDubCMY9v758wPVckZcR7NC/ahXngYztg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4785c8fc-37ee-4c95-f512-08d7bf94ed7f
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 17:04:25.8757
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: C0HAFfzkJ3iRF3QS2wY++XUhnmWMBmrhPTUO9SInWILnGsU19skK75SaOXyU481XZCdGFuvtC7UzzBm/QDj5Eg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2671
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <152c530a3ca8780ae85c2325f97f5f35f5d3602f.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vijay,
+On Thu, Feb 27, 2020 at 04:59:45PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> 
+> Currently we pass PCIe service type parameter to pcie_do_recovery()
+> function which was in-turn used by reset_link() function to identify
+> the underlying pci_port_service_driver and then initiate the driver
+> specific reset_link call. Instead of using this roundabout way, we
+> can just pass the driver specific reset_link callback function when
+> calling pcie_do_recovery() function.
 
-On 2/28/20 11:56 AM, Vijay Thakkar wrote:
-> +++ b/tools/perf/pmu-events/arch/x86/amdzen1/floating-point.json
-> @@ -3,16 +3,72 @@
->      "EventName": "fpu_pipe_assignment.dual",
->      "EventCode": "0x00",
->      "BriefDescription": "Total number multi-pipe uOps.",
+I love this!  And I think pcie_port_find_service() is now unused.  I
+can add a patch to remove it.
 
-Please concatenate .."assigned to all pipes", like you did in the publicDescription:
-
-> -    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to Pipe 3.",
-> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number multi-pipe uOps assigned to all pipes.",
->      "UMask": "0xf0"
->    },
-<snip>
->    {
->      "EventName": "fpu_pipe_assignment.total",
->      "EventCode": "0x00",
->      "BriefDescription": "Total number uOps.",
-
-Same here.
-
-> -    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to Pipe 3.",
-> +    "PublicDescription": "The number of operations (uOps) and dual-pipe uOps dispatched to each of the 4 FPU execution pipelines. This event reflects how busy the FPU pipelines are and may be used for workload characterization. This includes all operations performed by x87, MMX, and SSE instructions, including moves. Each increment represents a one- cycle dispatch event. This event is a speculative event. Since this event includes non-numeric operations it is not suitable for measuring MFLOPS. Total number uOps assigned to all pipes.",
->      "UMask": "0xf"
->    },
-
-The rest looks good to me, and so does patch 1/3 still.
-
-Thanks,
-
-Kim
-
+> This change will also enable non PCIe service driver to call
+> pcie_do_recovery() function. This is required for adding Error
+> Disconnect Recover (EDR) support.
+> 
+> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+> ---
+>  drivers/pci/pci.h      |  2 +-
+>  drivers/pci/pcie/aer.c | 11 +++++------
+>  drivers/pci/pcie/dpc.c |  2 +-
+>  drivers/pci/pcie/err.c | 16 ++++++++--------
+>  4 files changed, 15 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
+> index a4c360515a69..2962200bfe35 100644
+> --- a/drivers/pci/pci.h
+> +++ b/drivers/pci/pci.h
+> @@ -548,7 +548,7 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
+>  
+>  /* PCI error reporting and recovery */
+>  void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> -		      u32 service);
+> +		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev));
+>  
+>  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
+>  #ifdef CONFIG_PCIEASPM
+> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+> index 4a818b07a1af..1235eca0a2e6 100644
+> --- a/drivers/pci/pcie/aer.c
+> +++ b/drivers/pci/pcie/aer.c
+> @@ -102,6 +102,7 @@ struct aer_stats {
+>  #define ERR_UNCOR_ID(d)			(d >> 16)
+>  
+>  static int pcie_aer_disable;
+> +static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
+>  
+>  void pci_no_aer(void)
+>  {
+> @@ -1053,11 +1054,9 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
+>  					info->status);
+>  		pci_aer_clear_device_status(dev);
+>  	} else if (info->severity == AER_NONFATAL)
+> -		pcie_do_recovery(dev, pci_channel_io_normal,
+> -				 PCIE_PORT_SERVICE_AER);
+> +		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
+>  	else if (info->severity == AER_FATAL)
+> -		pcie_do_recovery(dev, pci_channel_io_frozen,
+> -				 PCIE_PORT_SERVICE_AER);
+> +		pcie_do_recovery(dev, pci_channel_io_frozen, aer_root_reset);
+>  	pci_dev_put(dev);
+>  }
+>  
+> @@ -1094,10 +1093,10 @@ static void aer_recover_work_func(struct work_struct *work)
+>  		cper_print_aer(pdev, entry.severity, entry.regs);
+>  		if (entry.severity == AER_NONFATAL)
+>  			pcie_do_recovery(pdev, pci_channel_io_normal,
+> -					 PCIE_PORT_SERVICE_AER);
+> +					 aer_root_reset);
+>  		else if (entry.severity == AER_FATAL)
+>  			pcie_do_recovery(pdev, pci_channel_io_frozen,
+> -					 PCIE_PORT_SERVICE_AER);
+> +					 aer_root_reset);
+>  		pci_dev_put(pdev);
+>  	}
+>  }
+> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+> index 6b116d7fdb89..114358d62ddf 100644
+> --- a/drivers/pci/pcie/dpc.c
+> +++ b/drivers/pci/pcie/dpc.c
+> @@ -227,7 +227,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
+>  	}
+>  
+>  	/* We configure DPC so it only triggers on ERR_FATAL */
+> -	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
+> +	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
+>  
+>  	return IRQ_HANDLED;
+>  }
+> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> index eefefe03857a..05f87bc9d011 100644
+> --- a/drivers/pci/pcie/err.c
+> +++ b/drivers/pci/pcie/err.c
+> @@ -162,14 +162,13 @@ static pci_ers_result_t default_reset_link(struct pci_dev *dev)
+>  	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
+>  }
+>  
+> -static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+> +static pci_ers_result_t reset_link(struct pci_dev *dev,
+> +			pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
+>  {
+>  	pci_ers_result_t status;
+> -	struct pcie_port_service_driver *driver = NULL;
+>  
+> -	driver = pcie_port_find_service(dev, service);
+> -	if (driver && driver->reset_link) {
+> -		status = driver->reset_link(dev);
+> +	if (reset_cb) {
+> +		status = reset_cb(dev);
+>  	} else if (pcie_downstream_port(dev)) {
+>  		status = default_reset_link(dev);
+>  	} else {
+> @@ -187,8 +186,9 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
+>  	return status;
+>  }
+>  
+> -void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+> -		      u32 service)
+> +void pcie_do_recovery(struct pci_dev *dev,
+> +		      enum pci_channel_state state,
+> +		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
+>  {
+>  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
+>  	struct pci_bus *bus;
+> @@ -209,7 +209,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
+>  		pci_walk_bus(bus, report_normal_detected, &status);
+>  
+>  	if (state == pci_channel_io_frozen) {
+> -		status = reset_link(dev, service);
+> +		status = reset_link(dev, reset_cb);
+>  		if (status != PCI_ERS_RESULT_RECOVERED)
+>  			goto failed;
+>  	}
+> -- 
+> 2.21.0
+> 
