@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E13C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB99C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F04E2468D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 060FB2469C
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203656;
-	bh=nRO455Vq+s6RfjtfOB2yl+aWuz2EYmxn6affqv+/Knc=;
+	s=default; t=1583203663;
+	bh=zC3Y1C8HwIOEPRo15lvjJ/967zThZkg6I7D9cZHzu88=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Oh5+gcw8k1yBpori4rOu21IT5mTI7nyo2sQUDCCISqzdO1BEyW60M6bzBMwdNZwaK
-	 N7R4iS9+stu3BIEcBJU46IRKiUftJhtc1rR2mAHG3qIWkFgLY/HksQcbCfoFAOWMAU
-	 sajmHMmosMhJJ3yHyw38OA8NDPp3NWcbnSaF7iK0=
+	b=gJ5JbM6f/bbDqjKdtjvpitWcpEo6/jtE4YwV4mZqSJpvPb4iHcsc0VuQ1XD7vA+te
+	 JTDI0GQLklV87XCyAsm854AGnUyLibQNpKBt3z7PvALtCz5O1kFGtqz9OY43lWFuWw
+	 xUFZo9/SOWADS2JUMx7AY9vIDzK0AdMrFUE5vqNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgCCCrf (ORCPT
+        id S1727273AbgCCCrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:47:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42566 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:47:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728072AbgCCCrc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:32 -0500
+        id S1728085AbgCCCrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFB022468D;
-        Tue,  3 Mar 2020 02:47:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3E9E24677;
+        Tue,  3 Mar 2020 02:47:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203651;
-        bh=nRO455Vq+s6RfjtfOB2yl+aWuz2EYmxn6affqv+/Knc=;
+        s=default; t=1583203653;
+        bh=zC3Y1C8HwIOEPRo15lvjJ/967zThZkg6I7D9cZHzu88=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qsrHc/lvdd8GKUo6PI20vJyUGlDfPZhPIpcq4TAylaRo+iIm/xnEFE9qXJQiZJaA6
-         qBur56tJ+6/p7j0v1pg50QUcQAi4TJG4NFxZ9UaIex0X6TtIbdj09i1JarBmst1pFa
-         +GWLcS7DGGGVsALAbT5yXQKqLL42S5cvbaWeI72Q=
+        b=vmIng55i4nSiV0BRh3USz4+20dN6gteW5hZ0Ns2ddmTjaanCiZgDVUpMLRaP6qAFW
+         I7JcrqsKMj/z7yy+Rf7ltPg0+KvJ1bQAPMv++dgLO5OkLEMw36if+MsSFcDAIhTdh5
+         n5qiOZpj5ZyvsnWevIGDqs2nBoLqFX/s/XFRQnIw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Guo Ren <guoren@linux.alibaba.com>,
         Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 61/66] csky: Set regs->usp to kernel sp, when the exception is from kernel
-Date:   Mon,  2 Mar 2020 21:46:10 -0500
-Message-Id: <20200303024615.8889-61-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 63/66] csky: Fixup ftrace modify panic
+Date:   Mon,  2 Mar 2020 21:46:12 -0500
+Message-Id: <20200303024615.8889-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -60,151 +60,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit f8e17c17b81070f38062dce79ca7f4541851dadd ]
+[ Upstream commit 359ae00d12589c31cf103894d0f32588d523ca83 ]
 
-In the past, we didn't care about kernel sp when saving pt_reg. But in some
-cases, we still need pt_reg->usp to represent the kernel stack before enter
-exception.
-
-For cmpxhg in atomic.S, we need save and restore usp for above.
+During ftrace init, linux will replace all function prologues
+(call_mcout) with nops, but it need flush_dcache and
+invalidate_icache to make it work. So flush_cache functions
+couldn't be nested called by ftrace framework.
 
 Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/abiv1/inc/abi/entry.h | 19 ++++++++++++++-----
- arch/csky/abiv2/inc/abi/entry.h | 11 +++++++++++
- arch/csky/kernel/atomic.S       |  8 ++++++--
- 3 files changed, 31 insertions(+), 7 deletions(-)
+ arch/csky/mm/Makefile | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/csky/abiv1/inc/abi/entry.h b/arch/csky/abiv1/inc/abi/entry.h
-index 7ab78bd0f3b13..f35a9f3315ee6 100644
---- a/arch/csky/abiv1/inc/abi/entry.h
-+++ b/arch/csky/abiv1/inc/abi/entry.h
-@@ -16,14 +16,16 @@
- #define LSAVE_A4	40
- #define LSAVE_A5	44
+diff --git a/arch/csky/mm/Makefile b/arch/csky/mm/Makefile
+index c94ef64810986..efb7ebab342b3 100644
+--- a/arch/csky/mm/Makefile
++++ b/arch/csky/mm/Makefile
+@@ -1,8 +1,10 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ ifeq ($(CONFIG_CPU_HAS_CACHEV2),y)
+ obj-y +=			cachev2.o
++CFLAGS_REMOVE_cachev2.o = $(CC_FLAGS_FTRACE)
+ else
+ obj-y +=			cachev1.o
++CFLAGS_REMOVE_cachev1.o = $(CC_FLAGS_FTRACE)
+ endif
  
-+#define usp ss1
-+
- .macro USPTOKSP
--	mtcr	sp, ss1
-+	mtcr	sp, usp
- 	mfcr	sp, ss0
- .endm
- 
- .macro KSPTOUSP
- 	mtcr	sp, ss0
--	mfcr	sp, ss1
-+	mfcr	sp, usp
- .endm
- 
- .macro	SAVE_ALL epc_inc
-@@ -45,7 +47,13 @@
- 	add	lr, r13
- 	stw     lr, (sp, 8)
- 
-+	mov	lr, sp
-+	addi	lr, 32
-+	addi	lr, 32
-+	addi	lr, 16
-+	bt	2f
- 	mfcr	lr, ss1
-+2:
- 	stw     lr, (sp, 16)
- 
- 	stw     a0, (sp, 20)
-@@ -79,9 +87,10 @@
- 	ldw     a0, (sp, 12)
- 	mtcr    a0, epsr
- 	btsti   a0, 31
-+	bt      1f
- 	ldw     a0, (sp, 16)
- 	mtcr	a0, ss1
--
-+1:
- 	ldw     a0, (sp, 24)
- 	ldw     a1, (sp, 28)
- 	ldw     a2, (sp, 32)
-@@ -102,9 +111,9 @@
- 	addi	sp, 32
- 	addi	sp, 8
- 
--	bt      1f
-+	bt      2f
- 	KSPTOUSP
--1:
-+2:
- 	rte
- .endm
- 
-diff --git a/arch/csky/abiv2/inc/abi/entry.h b/arch/csky/abiv2/inc/abi/entry.h
-index 9897a16b45e5d..94a7a58765dff 100644
---- a/arch/csky/abiv2/inc/abi/entry.h
-+++ b/arch/csky/abiv2/inc/abi/entry.h
-@@ -31,7 +31,13 @@
- 
- 	mfcr	lr, epsr
- 	stw	lr, (sp, 12)
-+	btsti   lr, 31
-+	bf      1f
-+	addi    lr, sp, 152
-+	br	2f
-+1:
- 	mfcr	lr, usp
-+2:
- 	stw	lr, (sp, 16)
- 
- 	stw     a0, (sp, 20)
-@@ -64,8 +70,10 @@
- 	mtcr	a0, epc
- 	ldw	a0, (sp, 12)
- 	mtcr	a0, epsr
-+	btsti   a0, 31
- 	ldw	a0, (sp, 16)
- 	mtcr	a0, usp
-+	mtcr	a0, ss0
- 
- #ifdef CONFIG_CPU_HAS_HILO
- 	ldw	a0, (sp, 140)
-@@ -86,6 +94,9 @@
- 	addi    sp, 40
- 	ldm     r16-r30, (sp)
- 	addi    sp, 72
-+	bf	1f
-+	mfcr	sp, ss0
-+1:
- 	rte
- .endm
- 
-diff --git a/arch/csky/kernel/atomic.S b/arch/csky/kernel/atomic.S
-index 5b84f11485aeb..3821ef9b75672 100644
---- a/arch/csky/kernel/atomic.S
-+++ b/arch/csky/kernel/atomic.S
-@@ -17,10 +17,12 @@ ENTRY(csky_cmpxchg)
- 	mfcr	a3, epc
- 	addi	a3, TRAP0_SIZE
- 
--	subi    sp, 8
-+	subi    sp, 16
- 	stw     a3, (sp, 0)
- 	mfcr    a3, epsr
- 	stw     a3, (sp, 4)
-+	mfcr	a3, usp
-+	stw     a3, (sp, 8)
- 
- 	psrset	ee
- #ifdef CONFIG_CPU_HAS_LDSTEX
-@@ -47,7 +49,9 @@ ENTRY(csky_cmpxchg)
- 	mtcr	a3, epc
- 	ldw     a3, (sp, 4)
- 	mtcr	a3, epsr
--	addi	sp, 8
-+	ldw     a3, (sp, 8)
-+	mtcr	a3, usp
-+	addi	sp, 16
- 	KSPTOUSP
- 	rte
- END(csky_cmpxchg)
+ obj-y +=			dma-mapping.o
 -- 
 2.20.1
 
