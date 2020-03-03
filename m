@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34EAAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB72C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D47E2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CCD72146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258095;
-	bh=fcYWeqZ+NvVYPuQOwjSEMDHOVle4+rOHXv1FIZXYU70=;
+	s=default; t=1583258099;
+	bh=U+TwmQghRFL4tyWR71j959Q9l1ND+J3WcgVln4U0tJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IxURE7wQKkmXL5zjg+U8qAsezklzY6aXum3NShjNmzdEBWPAym1zQ7wPBQgKapOnZ
-	 yhcRMvVaH+hAqIJDkItTAF0rGA2Hpr+GmKcGuu6lJs4SSHAH/8Ngdv7g4YCDPzrSa0
-	 n1pNYHEbIRwvnqnnuIWvE6S2tY8pi5GW7cm/4LPs=
+	b=PmyF8nI55pDWOo4rjCo1HsJpM5E2QmEVIu66JRbAnrFQWcf4REB6QdQi0nIf75364
+	 OE/09B9EJmjS2PqUxqfCuarylrmgIw2Ajm4/J3N03s9CjLMcN7wqXG31jeGtkSDFXX
+	 EhfTAk/KxPedGO+JZ57FrbhY81DJXfZ25mUW+26Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbgCCRyt (ORCPT
+        id S1732611AbgCCRy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36042 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36182 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729117AbgCCRyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:46 -0500
+        id S1732587AbgCCRyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C59C82146E;
-        Tue,  3 Mar 2020 17:54:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 301472146E;
+        Tue,  3 Mar 2020 17:54:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258085;
-        bh=fcYWeqZ+NvVYPuQOwjSEMDHOVle4+rOHXv1FIZXYU70=;
+        s=default; t=1583258092;
+        bh=U+TwmQghRFL4tyWR71j959Q9l1ND+J3WcgVln4U0tJI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FFWDVibzdsn87oMx0K7Gj4yB8MDtwQ8Ck6J0l0nDMkcrVgXSl12VnkkeAM41fEqLz
-         U055J+nnVgfuEQdK/z0xI8eR3GrN38F1tWw1siH7qFdMZa0ahYSrDeIfRcSUwzcf5Y
-         +wafjFHoRSRnnGH+Infm7kZuLgA5140DKSYSMIXo=
+        b=OB/da2m2r+vkQQuYHYjVtsyj3vlc/HDL6fWvsfBOkNqd51Xmqhfjj4tjHaOuVLTj2
+         TvvjitCKnZHQEpGfZ1Q8wczCv7RQgGr1ifc6UKT3a6XJ8K0vklYF8RRHUM7XFcZ1ds
+         Pd2lHj1RrZbf9yQoHV4MpTpPh69tK+P6xKOvCbO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Guangbin Huang <huangguangbin2@huawei.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>,
+        stable@vger.kernel.org, Ezequiel Lara Gomez <ezegomez@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 066/152] net: hns3: fix a copying IPv6 address error in hclge_fd_get_flow_tuples()
-Date:   Tue,  3 Mar 2020 18:42:44 +0100
-Message-Id: <20200303174309.965336387@linuxfoundation.org>
+Subject: [PATCH 5.4 051/152] net: ena: add missing ethtool TX timestamping indication
+Date:   Tue,  3 Mar 2020 18:42:29 +0100
+Message-Id: <20200303174308.219400407@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,61 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guangbin Huang <huangguangbin2@huawei.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 47327c9315b2f3ae4ab659457977a26669631f20 ]
+[ Upstream commit cf6d17fde93bdda23c9b02dd5906a12bf8c55209 ]
 
-The IPv6 address defined in struct in6_addr is specified as
-big endian, but there is no specified endian in struct
-hclge_fd_rule_tuples, so it  will cause a problem if directly
-use memcpy() to copy ipv6 address between these two structures
-since this field in struct hclge_fd_rule_tuples is little endian.
+Current implementation of the driver calls skb_tx_timestamp()to add a
+software tx timestamp to the skb, however the software-transmit capability
+is not reported in ethtool -T.
 
-This patch fixes this problem by using be32_to_cpu() to convert
-endian of IPv6 address of struct in6_addr before copying.
+This commit updates the ethtool structure to report the software-transmit
+capability in ethtool -T using the standard ethtool_op_get_ts_info().
+This function reports all software timestamping capabilities (tx and rx),
+as well as setting phc_index = -1. phc_index is the index of the PTP
+hardware clock device that will be used for hardware timestamps. Since we
+don't have such a device in ENA, using the default -1 value is the correct
+setting.
 
-Fixes: d93ed94fbeaf ("net: hns3: add aRFS support for PF")
-Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Ezequiel Lara Gomez <ezegomez@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 0c3c63aed2c06..c01cf8ef69df9 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -6003,6 +6003,9 @@ static int hclge_get_all_rules(struct hnae3_handle *handle,
- static void hclge_fd_get_flow_tuples(const struct flow_keys *fkeys,
- 				     struct hclge_fd_rule_tuples *tuples)
- {
-+#define flow_ip6_src fkeys->addrs.v6addrs.src.in6_u.u6_addr32
-+#define flow_ip6_dst fkeys->addrs.v6addrs.dst.in6_u.u6_addr32
-+
- 	tuples->ether_proto = be16_to_cpu(fkeys->basic.n_proto);
- 	tuples->ip_proto = fkeys->basic.ip_proto;
- 	tuples->dst_port = be16_to_cpu(fkeys->ports.dst);
-@@ -6011,12 +6014,12 @@ static void hclge_fd_get_flow_tuples(const struct flow_keys *fkeys,
- 		tuples->src_ip[3] = be32_to_cpu(fkeys->addrs.v4addrs.src);
- 		tuples->dst_ip[3] = be32_to_cpu(fkeys->addrs.v4addrs.dst);
- 	} else {
--		memcpy(tuples->src_ip,
--		       fkeys->addrs.v6addrs.src.in6_u.u6_addr32,
--		       sizeof(tuples->src_ip));
--		memcpy(tuples->dst_ip,
--		       fkeys->addrs.v6addrs.dst.in6_u.u6_addr32,
--		       sizeof(tuples->dst_ip));
-+		int i;
-+
-+		for (i = 0; i < IPV6_SIZE; i++) {
-+			tuples->src_ip[i] = be32_to_cpu(flow_ip6_src[i]);
-+			tuples->dst_ip[i] = be32_to_cpu(flow_ip6_dst[i]);
-+		}
- 	}
- }
+diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+index 8c1c73b0ced74..4472e41bd7825 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -805,6 +805,7 @@ static const struct ethtool_ops ena_ethtool_ops = {
+ 	.get_channels		= ena_get_channels,
+ 	.get_tunable		= ena_get_tunable,
+ 	.set_tunable		= ena_set_tunable,
++	.get_ts_info            = ethtool_op_get_ts_info,
+ };
  
+ void ena_set_ethtool_ops(struct net_device *netdev)
 -- 
 2.20.1
 
