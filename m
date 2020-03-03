@@ -2,99 +2,100 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URG_BIZ
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E716C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FB0C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BA572465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C33DB24673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204328;
-	bh=f9xV/eWY/rwskCqYR2yqEJNGHdDtaNPeUxuxL49T+Ac=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XmBx58/OUJ7S6WDVT4MgWwJvAed0fZsgCXLnav9zppOKFoyjMGXpIbJS3hsmKZLhB
-	 hgMyz0E177TC805wGvUvEvxsvLyKMvGF+P4aALPlKIF1lVE4S/E8+4u4KNlaOAiBIQ
-	 hBOijt7/rElV+W8HhvFFn0Oll6WFop+u8/0Zobos=
+	s=default; t=1583204330;
+	bh=5KKM57E/6i1ezCg+qBrkEvzBJzmv+cHuBS7GbTFfXtc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=02mBQTFWWijifi+Tu4etYQ41+8CvD3/WqlcfriwxPoFb86a7alSmdJJu1XVrsjocj
+	 3IXXosfwjrGA7u9K/L/DmZ4Ti4I9HclDkHzzxvHXniHPIPkzu3wZPocofUgi7JQ+1N
+	 V3MDEdFtbf8R6ZAcGtdRBcHI/hId891nzkC8gQSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgCCC6q (ORCPT
+        id S1728563AbgCCC6p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:58:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57332 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:58:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728516AbgCCC6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:58:44 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728243AbgCCCsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:02 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF1062166E;
-        Tue,  3 Mar 2020 02:58:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 746A0246D8;
+        Tue,  3 Mar 2020 02:48:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583204323;
-        bh=f9xV/eWY/rwskCqYR2yqEJNGHdDtaNPeUxuxL49T+Ac=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dNoPxFpKJBE86vFwZdoo3a4tx3MuutdydtjpGxdR/ztdb8DTREfm5hDI/2zN53xnC
-         tIA36GrORZFqkWxzPf3YyZIEv/rr64M3R3vBZgJypfKzRULNAC7RertavLryoHe6Mu
-         MeAnejynMcszJqiRmhIluUqXpKN28I++7cwyW1Jg=
-Date:   Tue, 3 Mar 2020 11:58:39 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [PATCH v3] Documentation: bootconfig: Update boot configuration
- documentation
-Message-Id: <20200303115839.4a18738d5d0d5899c6e1cf32@kernel.org>
-In-Reply-To: <20200302151939.1a83a5ed@gandalf.local.home>
-References: <158313621831.3082.9886161529613724376.stgit@devnote2>
-        <158313622831.3082.8237132211731864948.stgit@devnote2>
-        <20200302125033.4a62e88e@lwn.net>
-        <20200302150802.348b814e@gandalf.local.home>
-        <20200302131351.1b51a58e@lwn.net>
-        <20200302151939.1a83a5ed@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1583203681;
+        bh=5KKM57E/6i1ezCg+qBrkEvzBJzmv+cHuBS7GbTFfXtc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gSSdIjxicxgu3+YBUZrwA0x18+eTwK94d7mZ7Ny/yNCgbDv86JLM/yKbn2PFWwK9S
+         ViMxGds+VjKULWQU6hbt19DngbQ1vMJjfugUrjiu6fherp2AUlG0OpsXGf3YKUjCXL
+         0zVpbSWCIkJ27P+0kT4TBcy/Y/nO1UHHVgBQdKoY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 17/58] drm/msm/dsi/pll: call vco set rate explicitly
+Date:   Mon,  2 Mar 2020 21:46:59 -0500
+Message-Id: <20200303024740.9511-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
+References: <20200303024740.9511-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 15:19:39 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Harigovindan P <harigovi@codeaurora.org>
 
-> On Mon, 2 Mar 2020 13:13:51 -0700
-> Jonathan Corbet <corbet@lwn.net> wrote:
-> 
-> > On Mon, 2 Mar 2020 15:08:02 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > > So I tried to apply this but failed - it's built on other changes to
-> > > > bootconfig.rst that went into linux-next via Steve's tree.  So Steve,
-> > > > would you like to take this one too?    
-> > > 
-> > > All my changes in linux-next have already hit Linus's tree. I haven't
-> > > started pushing my next merge window changes yet. Are you up to date with
-> > > Linus?  
-> > 
-> > I try not to do too many backmerges with mainline, so no.  I can pull
-> > forward if I have to, I guess.
-> >
-> 
-> I can add it to my tree, but I may not send it to Linus unless I have
-> another urgent request to send to him. So it may not make it till the next
-> merge window.
+[ Upstream commit c6659785dfb3f8d75f1fe637e4222ff8178f5280 ]
 
-OK, then I'll wait for the next window. Anyway, I found a mistake and
-it needs to be updated (again).
+For a given byte clock, if VCO recalc value is exactly same as
+vco set rate value, vco_set_rate does not get called assuming
+VCO is already set to required value. But Due to GDSC toggle,
+VCO values are erased in the HW. To make sure VCO is programmed
+correctly, we forcefully call set_rate from vco_prepare.
 
-Thank you!
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-
+diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+index 8f6100db90ed4..aa9385d5bfff9 100644
+--- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
++++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
+@@ -411,6 +411,12 @@ static int dsi_pll_10nm_vco_prepare(struct clk_hw *hw)
+ 	if (pll_10nm->slave)
+ 		dsi_pll_enable_pll_bias(pll_10nm->slave);
+ 
++	rc = dsi_pll_10nm_vco_set_rate(hw,pll_10nm->vco_current_rate, 0);
++	if (rc) {
++		pr_err("vco_set_rate failed, rc=%d\n", rc);
++		return rc;
++	}
++
+ 	/* Start PLL */
+ 	pll_write(pll_10nm->phy_cmn_mmio + REG_DSI_10nm_PHY_CMN_PLL_CNTRL,
+ 		  0x01);
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.20.1
+
