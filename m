@@ -6,33 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B257C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:08:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E547C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59FFD20857
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:08:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1FA20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgCCMIe (ORCPT
+        id S1729139AbgCCMJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:08:34 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44776 "EHLO mx2.suse.de"
+        Tue, 3 Mar 2020 07:09:32 -0500
+Received: from foss.arm.com ([217.140.110.172]:46210 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbgCCMIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:08:34 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D37C7AEE7;
-        Tue,  3 Mar 2020 12:08:31 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     phil@raspberrypi.org, florian.fainelli@broadcom.com,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] DTS: bcm2711: Move emmc2 into its own bus
-Date:   Tue,  3 Mar 2020 13:08:20 +0100
-Message-Id: <20200303120820.4377-1-nsaenzjulienne@suse.de>
+        id S1727857AbgCCMJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 07:09:32 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8E84FEC;
+        Tue,  3 Mar 2020 04:09:31 -0800 (PST)
+Received: from e110176-lin.kfn.arm.com (unknown [10.50.4.151])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 539263F534;
+        Tue,  3 Mar 2020 04:09:30 -0800 (PST)
+From:   Gilad Ben-Yossef <gilad@benyossef.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Ofir Drang <ofir.drang@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] crypto: testmgr - sync both RFC4106 IV copies
+Date:   Tue,  3 Mar 2020 14:09:25 +0200
+Message-Id: <20200303120925.12067-1-gilad@benyossef.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -41,68 +43,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on bcm2711's revision its emmc2 controller might have
-different DMA constraints. Raspberry Pi 4's firmware will take care of
-updating those, but only if a certain alias is found in the device tree.
-So, move emmc2 into its own bus, so as not to pollute other devices with
-dma-ranges changes and create the emmc2bus alias.
+RFC4106 AEAD ciphers the AAD is the concatenation of associated
+authentication data || IV || plaintext or ciphertext but the
+random AEAD message generation in testmgr extended tests did
+not obey this requirements producing messages with undefined
+behaviours. Fix it by syncing the copies if needed.
 
-Based in Phil ELwell's downstream implementation.
+Since this only relevant for developer only extended tests any
+additional cycles/run time costs are negligible.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+This fixes extended AEAD test failures with the ccree driver
+caused by illegal input.
+
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Eric Biggers <ebiggers@kernel.org>
 ---
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  1 +
- arch/arm/boot/dts/bcm2711.dtsi        | 19 ++++++++++++++-----
- 2 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index 1d4b589fe233..e26ea9006378 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -20,6 +20,7 @@ memory@0 {
- 	};
+ crypto/testmgr.c | 35 ++++++++++++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 9 deletions(-)
+
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index 88f33c0efb23..379bd1c7dd5b 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -91,10 +91,16 @@ struct aead_test_suite {
+ 	unsigned int einval_allowed : 1;
  
- 	aliases {
-+		emmc2bus = &emmc2bus;
- 		ethernet0 = &genet;
- 		pcie0 = &pcie0;
- 	};
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-index d1e684d0acfd..61ea8b44c51e 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -241,17 +241,26 @@ pwm1: pwm@7e20c800 {
- 			status = "disabled";
- 		};
+ 	/*
+-	 * Set if the algorithm intentionally ignores the last 8 bytes of the
+-	 * AAD buffer during decryption.
++	 * Set if the algorithm includes a copy of the IV (last 8 bytes)
++	 * in the AAD buffer but does not include it in calculating the ICV
+ 	 */
+-	unsigned int esp_aad : 1;
++	unsigned int skip_aad_iv : 1;
++
++	/*
++	 * Set if the algorithm includes a copy of the IV (last 8 bytes)
++	 * in the AAD buffer and does include it when calculating the ICV
++	 */
++	unsigned int auth_aad_iv : 1;
+ };
  
-+		hvs@7e400000 {
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
-+
-+	emmc2bus: emmc2bus {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+
-+		ranges = <0x0 0x7e000000  0x0 0xfe000000  0x01800000>;
-+		dma-ranges = <0x0 0xc0000000  0x0 0x00000000  0x40000000>;
-+
- 		emmc2: emmc2@7e340000 {
- 			compatible = "brcm,bcm2711-emmc2";
--			reg = <0x7e340000 0x100>;
-+			reg = <0x0 0x7e340000 0x100>;
- 			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clocks BCM2711_CLOCK_EMMC2>;
- 			status = "disabled";
- 		};
--
--		hvs@7e400000 {
--			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
--		};
- 	};
+ struct cipher_test_suite {
+@@ -2167,14 +2173,20 @@ struct aead_extra_tests_ctx {
+  * here means the full ciphertext including the authentication tag.  The
+  * authentication tag (and hence also the ciphertext) is assumed to be nonempty.
+  */
+-static void mutate_aead_message(struct aead_testvec *vec, bool esp_aad)
++static void mutate_aead_message(struct aead_testvec *vec,
++				const struct aead_test_suite *suite)
+ {
+-	const unsigned int aad_tail_size = esp_aad ? 8 : 0;
++	const unsigned int aad_ivsize = 8;
++	const unsigned int aad_tail_size = suite->skip_aad_iv ? aad_ivsize : 0;
+ 	const unsigned int authsize = vec->clen - vec->plen;
  
- 	arm-pmu {
+ 	if (prandom_u32() % 2 == 0 && vec->alen > aad_tail_size) {
+ 		 /* Mutate the AAD */
+ 		flip_random_bit((u8 *)vec->assoc, vec->alen - aad_tail_size);
++		if (suite->auth_aad_iv)
++			memcpy((u8 *)vec->iv,
++			       (vec->assoc + vec->alen - aad_ivsize),
++			       aad_ivsize);
+ 		if (prandom_u32() % 2 == 0)
+ 			return;
+ 	}
+@@ -2208,6 +2220,10 @@ static void generate_aead_message(struct aead_request *req,
+ 	/* Generate the AAD. */
+ 	generate_random_bytes((u8 *)vec->assoc, vec->alen);
+ 
++	if (suite->auth_aad_iv && (vec->alen > ivsize))
++		memcpy(((u8 *)vec->assoc + vec->alen - ivsize), vec->iv,
++		       ivsize);
++
+ 	if (inauthentic && prandom_u32() % 2 == 0) {
+ 		/* Generate a random ciphertext. */
+ 		generate_random_bytes((u8 *)vec->ctext, vec->clen);
+@@ -2242,7 +2258,7 @@ static void generate_aead_message(struct aead_request *req,
+ 		 * Mutate the authentic (ciphertext, AAD) pair to get an
+ 		 * inauthentic one.
+ 		 */
+-		mutate_aead_message(vec, suite->esp_aad);
++		mutate_aead_message(vec, suite);
+ 	}
+ 	vec->novrfy = 1;
+ 	if (suite->einval_allowed)
+@@ -5202,7 +5218,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 			.aead = {
+ 				____VECS(aes_gcm_rfc4106_tv_template),
+ 				.einval_allowed = 1,
+-				.esp_aad = 1,
++				.skip_aad_iv = 1,
+ 			}
+ 		}
+ 	}, {
+@@ -5214,7 +5230,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 			.aead = {
+ 				____VECS(aes_ccm_rfc4309_tv_template),
+ 				.einval_allowed = 1,
+-				.esp_aad = 1,
++				.skip_aad_iv = 1,
+ 			}
+ 		}
+ 	}, {
+@@ -5225,6 +5241,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 			.aead = {
+ 				____VECS(aes_gcm_rfc4543_tv_template),
+ 				.einval_allowed = 1,
++				.auth_aad_iv = 1,
+ 			}
+ 		}
+ 	}, {
+@@ -5240,7 +5257,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 			.aead = {
+ 				____VECS(rfc7539esp_tv_template),
+ 				.einval_allowed = 1,
+-				.esp_aad = 1,
++				.skip_aad_iv = 1,
+ 			}
+ 		}
+ 	}, {
 -- 
 2.25.1
 
