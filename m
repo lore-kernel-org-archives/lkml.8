@@ -2,113 +2,154 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 277F3C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33E5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EED5220848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 877E320848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:15:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sEjAkOMS"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I3g3W9bn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732482AbgCCVNC (ORCPT
+        id S1732420AbgCCVPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:13:02 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40038 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732397AbgCCVNC (ORCPT
+        Tue, 3 Mar 2020 16:15:24 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:2192 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732075AbgCCVPX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:13:02 -0500
-Received: by mail-pg1-f195.google.com with SMTP id t24so2119794pgj.7;
-        Tue, 03 Mar 2020 13:13:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cjXy/AHGlnAlmHeoOkLzE1LxnTMabJl9XqoDCRnfzNE=;
-        b=sEjAkOMSLNvtn3nZJRpx/eE6ORIfEgvsFBh+5/piT1xic0gKe7EwFsQ6Pl9ugiU0Ha
-         e4siP8DGeYfqtlAmIaCHjCe7rU00pMcdPlBUqC7aY2dUW3nXYSB20yvLSxKkqBPULEtm
-         VfOem5NK/9HCV5QuxeZu3q29yJhpqHWkArurUDVw+aAnxJ0YTahhqUpGUM7AHaIIwT2z
-         KYc4Ggb+hvXd/au56BzgAxSBsKmdpOi86a46z51yvNi2Q8/Zrke+N3R2ZwqUVIJtSe+f
-         sl2/ZmeJulF4gyidW5fUwg06977aj9IkKrc4Uyc+DRbiiPaIOgZa6g4WpTXLrihmmCk6
-         TdzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cjXy/AHGlnAlmHeoOkLzE1LxnTMabJl9XqoDCRnfzNE=;
-        b=XLmfX11eM6GVXXBRr0uvFCztB1pXO4UiqP0nHqck9tvkjBNeVVyfQiKJ8PfPeeHBu8
-         JI8l45AbenlLsBwFQO1UDyNdP2L3nyexfdpy5IsohvnjA7Cyi/DU8o4I5eANPM4UwCFP
-         ZAUjy7qjBdRdZZFSnr2CxvcYGofirB82NzV3mYPGLK9/UatSXAseJltVEqwtuvys+FvV
-         XMFIRdnavCoYp/mR8EsVSQvZ6+wE2G9WgIk9T6eG89NF3G6g1mCqlLEePnXC+SFkMhrC
-         ESah59bC1FgVp918yuCpvcvlFpNab8xFKg2DN459JVNkh406eq+slVGhW+Jhlq1nRzxb
-         HCNA==
-X-Gm-Message-State: ANhLgQ2Sx/RcRBRSfFJ++CxLAI7S8AygNlNczHeQYYAxyr4Iq8w2bDYe
-        oB0pZcY+wnJjgxAazpkmC9Q=
-X-Google-Smtp-Source: ADFU+vvDPgFZc1xbBVSUOTlj/dSzxsSyW1Yi/QOyvs65jdchwSF2E/h4FOLGKh+lSE+ibyqQqnn5aA==
-X-Received: by 2002:aa7:9e5e:: with SMTP id z30mr6091148pfq.132.1583269981097;
-        Tue, 03 Mar 2020 13:13:01 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t15sm25080543pgr.60.2020.03.03.13.13.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Mar 2020 13:13:00 -0800 (PST)
-Date:   Tue, 3 Mar 2020 13:12:59 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv2 2/4] watchdog: reset last_hw_keepalive time at start
-Message-ID: <20200303211259.GA28733@roeck-us.net>
-References: <20200302200426.6492-1-t-kristo@ti.com>
- <20200302200426.6492-3-t-kristo@ti.com>
+        Tue, 3 Mar 2020 16:15:23 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5ec8c20000>; Tue, 03 Mar 2020 13:14:42 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 03 Mar 2020 13:15:23 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 03 Mar 2020 13:15:23 -0800
+Received: from rcampbell-dev.nvidia.com (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
+ 2020 21:15:21 +0000
+Subject: Re: [PATCH v2] nouveau/hmm: map pages after migration
+To:     Jason Gunthorpe <jgg@mellanox.com>
+CC:     <dri-devel@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <nouveau@lists.freedesktop.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        "John Hubbard" <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ben Skeggs <bskeggs@redhat.com>
+References: <20200303010023.2983-1-rcampbell@nvidia.com>
+ <20200303124229.GH26318@mellanox.com>
+X-Nvconfidentiality: public
+From:   Ralph Campbell <rcampbell@nvidia.com>
+Message-ID: <1f27ac9e-7ddf-6e4f-25ea-063ef6c78761@nvidia.com>
+Date:   Tue, 3 Mar 2020 13:15:21 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302200426.6492-3-t-kristo@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200303124229.GH26318@mellanox.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583270082; bh=22wphWyEQ9kA/NT134DIsydKvoJeEto8s37Q83fcwtM=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=I3g3W9bniGHs2rCu0yfLWPfwG56cNXGXLhCicraDzGKkb8e8gDWo+Z8OzaNStF2hu
+         y3pYgrOQBhye2JydvTdoCV80OZvDgk5j81+ak7Zq2hHmG07zCQUH2Df5BLAaJajL0C
+         Xjb7yXcjyaBSRn+6ANiN9Cocmi4gH/WT0MKD7iDsS9f5EEQMqToUxA3wTmt8msDvmf
+         7qHk5rrgkRKLNqpsboRa/an6DDqsJ7qWGmLT8mf5YdHQB93cIuMlydQHqkNU3rvTY6
+         rhVXu0wQdLr/wATCoZe0XCmCGMZN2smS+n55V57w4wiyJiOnxXbX34fiMJ6MTiG68I
+         ocqAAhJ0YEmjQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 10:04:24PM +0200, Tero Kristo wrote:
-> Currently the watchdog core does not initialize the last_hw_keepalive
-> time during watchdog startup. This will cause the watchdog to be pinged
-> immediately if enough time has passed from the system boot-up time, and
-> some types of watchdogs like K3 RTI does not like this.
-> 
-> To avoid the issue, setup the last_hw_keepalive time during watchdog
-> startup.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+On 3/3/20 4:42 AM, Jason Gunthorpe wrote:
+> On Mon, Mar 02, 2020 at 05:00:23PM -0800, Ralph Campbell wrote:
+>> When memory is migrated to the GPU, it is likely to be accessed by GPU
+>> code soon afterwards. Instead of waiting for a GPU fault, map the
+>> migrated memory into the GPU page tables with the same access permission=
+s
+>> as the source CPU page table entries. This preserves copy on write
+>> semantics.
+>>
+>> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+>> Cc: Christoph Hellwig <hch@lst.de>
+>> Cc: Jason Gunthorpe <jgg@mellanox.com>
+>> Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+>> Cc: Ben Skeggs <bskeggs@redhat.com>
+>> ---
+>>
+>> Originally this patch was targeted for Jason's rdma tree since other HMM
+>> related changes were queued there. Now that those have been merged, this
+>> patch just contains changes to nouveau so it could go through any tree.
+>> I guess Ben Skeggs' tree would be appropriate.
+>=20
+> Yep
+>=20
+>> +static inline struct nouveau_pfnmap_args *
+>> +nouveau_pfns_to_args(void *pfns)
+>=20
+> don't use static inline inside C files
 
-> ---
-> v2:
->   * apply functionality always instead of being behind a flag
-> 
->  drivers/watchdog/watchdog_dev.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-> index 8b5c742f24e8..7e4cd34a8c20 100644
-> --- a/drivers/watchdog/watchdog_dev.c
-> +++ b/drivers/watchdog/watchdog_dev.c
-> @@ -282,6 +282,7 @@ static int watchdog_start(struct watchdog_device *wdd)
->  	if (err == 0) {
->  		set_bit(WDOG_ACTIVE, &wdd->status);
->  		wd_data->last_keepalive = started_at;
-> +		wd_data->last_hw_keepalive = started_at;
->  		watchdog_update_worker(wdd);
->  	}
->  
-> -- 
-> 2.17.1
-> 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+OK.
+
+>> +{
+>> +	struct nvif_vmm_pfnmap_v0 *p =3D
+>> +		container_of(pfns, struct nvif_vmm_pfnmap_v0, phys);
+>> +
+>> +	return container_of(p, struct nouveau_pfnmap_args, p);
+>=20
+> And this should just be
+>=20
+>     return container_of(pfns, struct nouveau_pfnmap_args, p.phys);
+
+Much simpler, thanks.
+
+>> +static struct nouveau_svmm *
+>> +nouveau_find_svmm(struct nouveau_svm *svm, struct mm_struct *mm)
+>> +{
+>> +	struct nouveau_ivmm *ivmm;
+>> +
+>> +	list_for_each_entry(ivmm, &svm->inst, head) {
+>> +		if (ivmm->svmm->notifier.mm =3D=3D mm)
+>> +			return ivmm->svmm;
+>> +	}
+>> +	return NULL;
+>> +}
+>=20
+> Is this re-implementing mmu_notifier_get() ?
+>=20
+> Jason
+
+Not quite. This is being called from an ioctl() call on the GPU device
+file which calls nouveau_svmm_bind() which locks mmap_sem for reading,
+walks the vmas for the address range given in the ioctl() data, and migrate=
+s
+the pages to the GPU memory.
+mmu_notifier_get() would try to lock mmap_sem for writing so that would dea=
+dlock.
+But it is similar in that the GPU specific process context (nouveau_svmm) n=
+eeds
+to be found for the given ioctl caller.
+If find_get_mmu_notifier() was exported, I think that could work.
+Now that I look at this again, there is an easier way to find the svmm and =
+I see
+some other bugs that need fixing. I'll post a v3 as soon as I get those wri=
+tten
+and tested.
+
+Thanks for the review.
