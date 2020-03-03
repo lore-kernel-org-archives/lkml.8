@@ -2,133 +2,83 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CFDC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:16:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFC7C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4630215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:16:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="D44FedmN"
+	by mail.kernel.org (Postfix) with ESMTP id 47B28215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:19:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgCCGQG (ORCPT
+        id S1726083AbgCCGTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:16:06 -0500
-Received: from mail-eopbgr80052.outbound.protection.outlook.com ([40.107.8.52]:57762
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727426AbgCCGQG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:16:06 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hwd8hbTs6+x1c0JHE2bAAcweuQd2A1jsM6O0Q+WeGspavKf7vBOxIOSqKqjT4Rodo51BBrQo41R8toWWNKzLt+Wy/YR/cOfOG0eiqiQg7VZzgLtcdQAisTbXM5Z2DuOYcM4KbNuCQnK4sYxIpkdYd+27YUER/F3WDCtG5V8QGkn7UZNADllUsVmGc1H8qsCKLi5pJ9Q0Ivs2gXzvbEuxgsyB0P7+UrXk5QsKEAXom34z5Ij4hdru2vTEp6p34iVW0Pz+HHQtI9tR3uDUOSgxXRdQJlEdvOCdYJpMzm1vz6zZTyuUhjnKGdOqWOLaWLYzUSHd5Pg7Jzk3R6gbotoTaw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AQJH8eVrJTmgv9yhZbRpk0PKjGnyD0myRVUaM1wn4og=;
- b=BM5QnQ+S18Bhjq0ZVQZfDUBEDHkaOZc8ecIEllmxIVBQ0f3wzWQpsORtg9bPeIQPVxXwa8AYsvun1M7LWTHovFoqNrZbkec/VvMU3GduY15bP2Q4uWTiFuhhsRiZ3U4zBBmnIz9MYQ80m1gcJ9gXz481SMBdatMu6hXjXXBugETpDlxIKHb1WfMhb9aJP8datGUpg0WXoe+6D0Fqe4SGEKjuANsKTiFC9RU3YytBiDZ/2oY6/hnEnV4LVERXIM9W70hkY5FoXVhL+0oYcZbmMUgZIhaFdNKRGp3d0HjOQPPC6sKokWbDyNgdPQMVu4hageV1s9HanSsVBxNR8lOm6Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AQJH8eVrJTmgv9yhZbRpk0PKjGnyD0myRVUaM1wn4og=;
- b=D44FedmNw0KjmFpM0DTADyfGhV2lNnZQIJaKtX7EF7E7yunxotliUa34sOyp66jntOtnpdId8LoLZUbvLBNcGrudSjBwMHPE00mQCCXUQ5sRoCiZKapX+FnMO+KbGHs4VH1sr2cYwql7AR48684wK8ARu0xh0Qf3MsYP84HrkXI=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6881.eurprd04.prod.outlook.com (52.132.215.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15; Tue, 3 Mar 2020 06:16:03 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
- 06:16:03 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-CC:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Subject: RE: [PATCH 0/3] Convert i.MX6Q cpufreq to use nvmem API
-Thread-Topic: [PATCH 0/3] Convert i.MX6Q cpufreq to use nvmem API
-Thread-Index: AQHV8QJkDs1b7gEXw0mPCPayRF0Q4Kg2W/SAgAABb8A=
-Date:   Tue, 3 Mar 2020 06:16:03 +0000
-Message-ID: <AM0PR04MB4481FDAD041F6476FFFC0F6788E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1583201690-16068-1-git-send-email-peng.fan@nxp.com>
- <20200303054547.4wpnzmgnuo7jd2qa@vireshk-i7>
-In-Reply-To: <20200303054547.4wpnzmgnuo7jd2qa@vireshk-i7>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1aa7a1c6-2be4-4963-9232-08d7bf3a59fd
-x-ms-traffictypediagnostic: AM0PR04MB6881:|AM0PR04MB6881:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB68810DBBF10F0CBD7848960B88E40@AM0PR04MB6881.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 03319F6FEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(376002)(136003)(39860400002)(189003)(199004)(7416002)(54906003)(86362001)(4326008)(316002)(33656002)(53546011)(8676002)(6506007)(71200400001)(81156014)(7696005)(81166006)(8936002)(6916009)(66476007)(5660300002)(52536014)(66946007)(64756008)(9686003)(66446008)(66556008)(55016002)(44832011)(2906002)(4744005)(76116006)(478600001)(186003)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6881;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: kq9u7fWzbqJEWzfXOWhF1/ABQhfy3l4vnwsBdZ+UfYSR8n5RscehzaisJBg7BcwK8a4SwD1SpUL1t/iboBmg8YdoQynFMHoxTge6KaG5eBQ8bybs4CHh0xuY0GcJTviJtLIMh1UMFN3nSorrw2y7tkhKTwVbq5yC1wTz3ae84ZpoI5I2MjAtf1goK96ln2TLL3K1rfgRWtd/yc7LwNG+XVQXdAEkqFlqzUc9BxRrSsQ9IG55o6YRj6paCkmwXrZ4QU1vi5xyTM9NzMgkg7j9YREr7QSEfqc0xF0J8nWxOVsP0w01suBopVxaT+KaonhtJYt029In3F0+FZNYDERM82KWcwP8JBPGs9ushncMSqqdqULqycbxD4+UwxK9B2ZPL5PDu0LQXbkgEmWgkrEyL2OxL87mdo6pg+AV1gdM4fW7x4GJiKNn1fxT55ThRQ7D
-x-ms-exchange-antispam-messagedata: NJmObuxTmiL5veKVUIGku0zG+hJ9r+hk5h3j1pdHR2u8h9OlnYHtSyFcPbM+2PQW2TTVrDWwq2iIOz/D6pYyOOPLDw9UXLcZurUrg1FPd7jZOSjGEn+uSt8iobjE4ADtjos2lknTIvygtLiRUimUdw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Mar 2020 01:19:23 -0500
+Received: from mga06.intel.com ([134.134.136.31]:61509 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725554AbgCCGTW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 01:19:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 22:19:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
+   d="scan'208";a="286888659"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by FMSMGA003.fm.intel.com with ESMTP; 02 Mar 2020 22:19:19 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Hugh Dickins <hughd@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Subject: Re: [PATCH] mm, migrate: Check return value of try_to_unmap()
+References: <20200303033645.280694-1-ying.huang@intel.com>
+        <alpine.LSU.2.11.2003022150540.1344@eggly.anvils>
+Date:   Tue, 03 Mar 2020 14:19:18 +0800
+In-Reply-To: <alpine.LSU.2.11.2003022150540.1344@eggly.anvils> (Hugh Dickins's
+        message of "Mon, 2 Mar 2020 22:11:45 -0800")
+Message-ID: <87blpe55ax.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1aa7a1c6-2be4-4963-9232-08d7bf3a59fd
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2020 06:16:03.3943
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rSLbgHuPHeijrHC80RaA146NQmNPPz3gJ6Wq0nW/aFswp3fCu0ALUBHJLRldxAHWbjvt/u8CvfHGzy3OPLdRKw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6881
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
+Hi, Hugh,
 
-> Subject: Re: [PATCH 0/3] Convert i.MX6Q cpufreq to use nvmem API
->=20
-> On 03-03-20, 10:14, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > Use nvmem API is better compared with direclty accessing OCOTP register=
-s.
-> > nvmem could handle OCOTP clk, defer probe.
-> >
-> > Patch 1/3 is dts changes to add nvmem related properties Patch 2/3 is
-> > a bug fix Patch 3/3 is convert to nvmem API
->=20
-> Should I apply patch 2 and 3 ? And you can take 1/3 via ARM Soc tree as t=
-his
-> shouldn't break anything.
+Hugh Dickins <hughd@google.com> writes:
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index 3900044cfaa6..981f8374a6ef 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1116,8 +1116,11 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
+>>  		/* Establish migration ptes */
+>>  		VM_BUG_ON_PAGE(PageAnon(page) && !PageKsm(page) && !anon_vma,
+>>  				page);
+>> -		try_to_unmap(page,
+>> -			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
+>> +		if (!try_to_unmap(page,
+>> +			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS)) {
+>> +			rc = -EIO;
+>> +			goto out_unlock_both;
+>
+> No: even if try_to_unmap() says that it did not entirely succeed,
+> it may have unmapped some ptes, inserting migration entries in their
+> place. Those need to be replaced by proper ptes before the page is
+> unlocked, which page_was_mapped 1 and remove_migration_ptes() do;
+> but this goto skips those.
 
-Please take patch 2 and 3. Without patch 1, it just use legacy method,
-not break things.
+Yes.  You are right.  I misunderstand the original code.  Please ignore
+this patch.
 
-Thanks,
-Peng.
-
->=20
-> --
-> viresh
+Best Regards,
+Huang, Ying
