@@ -2,464 +2,264 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C1D6C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04429C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE379214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0614214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:03:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="T7dYQecS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yrWL1D6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgCCGCO (ORCPT
+        id S1727447AbgCCGDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:02:14 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37947 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725879AbgCCGCN (ORCPT
+        Tue, 3 Mar 2020 01:03:03 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:32940 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgCCGDD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:02:13 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583215332; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Hgyhpnz/1VwtwjGevXGytjKbVK11C0D2DnvfZ4/Fr8w=;
- b=T7dYQecSlRab+20rkywB65bJsSCXEG2OchOMOg5sqZXIr0D4f9SMskjDjUhg0MnnYCJz+eaV
- y6+9XxxsfJIkceaPt99cAqLp6lrr43pG/xJ0S4/AfTVb/y5TfjOfFlpV4r3W8z/j/0QciCeN
- mciJCGDQxSMveNPB0A/CKCd/ELQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5df2cb.7fb7887458b8-smtp-out-n03;
- Tue, 03 Mar 2020 06:01:47 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DA0B4C447A0; Tue,  3 Mar 2020 06:01:45 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: ppvk)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 59078C43383;
-        Tue,  3 Mar 2020 06:01:44 +0000 (UTC)
+        Tue, 3 Mar 2020 01:03:03 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02362mgN072926;
+        Tue, 3 Mar 2020 00:02:48 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583215368;
+        bh=yKiNYD+8y7Qu09nDhYahOcRlXG7fP8YIj6NAyiAOHMs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=yrWL1D6CGPLlugRxoFy69xtkmbRU5aQ7B4C8E0x9FfP4c+l1WW88uIfg/OO4XY2X0
+         seOjJI5XvEMLNuzxoj/dU98pYt7qk6dDLLaNFtO/epn8MhvsGCevok21XLn+0nyRs5
+         5rBJYlgzZqizAqEb8botmCANaxPqIA8Os/oqJejQ=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02362mHm111089
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Mar 2020 00:02:48 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 00:02:47 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 00:02:47 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 02362hrt076700;
+        Tue, 3 Mar 2020 00:02:44 -0600
+Subject: Re: [PATCH 3/3] bus: ti-sysc: Implement display subsystem reset quirk
+To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
+CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, Jyri Sarha <jsarha@ti.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        <dri-devel@lists.freedesktop.org>
+References: <20200224191230.30972-1-tony@atomide.com>
+ <20200224191230.30972-4-tony@atomide.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <7d4af3b5-5dd7-76b3-4d3f-4698bfde288c@ti.com>
+Date:   Tue, 3 Mar 2020 08:02:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20200224191230.30972-4-tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 03 Mar 2020 11:31:44 +0530
-From:   ppvk@codeaurora.org
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     bjorn.andersson@linaro.org, adrian.hunter@intel.com,
-        robh+dt@kernel.org, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        vbadigan@codeaurora.org, sboyd@kernel.org,
-        georgi.djakov@linaro.org, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, agross@kernel.org,
-        linux-mmc-owner@vger.kernel.org,
-        Subhash Jadavani <subhashj@codeaurora.org>
-Subject: Re: [RFC v4 1/2] mmc: sdhci-msm: Add interconnect bus bandwidth
- scaling support
-In-Reply-To: <20200218222151.GD15781@google.com>
-References: <1582030833-12964-1-git-send-email-ppvk@codeaurora.org>
- <1582030833-12964-2-git-send-email-ppvk@codeaurora.org>
- <20200218222151.GD15781@google.com>
-Message-ID: <f4b8b9d65a2fd98ac218f07449afa3f9@codeaurora.org>
-X-Sender: ppvk@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Matthias for review and suggestions.
+On 24/02/2020 21:12, Tony Lindgren wrote:
+> The display subsystem (DSS) needs the child outputs disabled for reset.
+> In order to prepare to probe DSS without legacy platform data, let's
+> implement sysc_pre_reset_quirk_dss() similar to what we have for the
+> platform data with omap_dss_reset().
+> 
+> Note that we cannot directly use the old omap_dss_reset() without
+> platform data callbacks and updating omap_dss_reset() to understand
+> struct device. And we will be dropping omap_dss_reset() anyways when
+> all the SoCs are probing with device tree, so let's not mess with the
+> legacy code at all.
+> 
+> Cc: Jyri Sarha <jsarha@ti.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>   drivers/bus/ti-sysc.c                 | 131 +++++++++++++++++++++++++-
+>   include/linux/platform_data/ti-sysc.h |   1 +
+>   2 files changed, 129 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+> --- a/drivers/bus/ti-sysc.c
+> +++ b/drivers/bus/ti-sysc.c
+> @@ -1303,11 +1303,11 @@ static const struct sysc_revision_quirk sysc_revision_quirks[] = {
+>   	SYSC_QUIRK("dcan", 0x48480000, 0x20, -ENODEV, -ENODEV, 0xa3170504, 0xffffffff,
+>   		   SYSC_QUIRK_CLKDM_NOAUTO),
+>   	SYSC_QUIRK("dss", 0x4832a000, 0, 0x10, 0x14, 0x00000020, 0xffffffff,
+> -		   SYSC_QUIRK_OPT_CLKS_IN_RESET),
+> +		   SYSC_QUIRK_OPT_CLKS_IN_RESET | SYSC_MODULE_QUIRK_DSS_RESET),
+>   	SYSC_QUIRK("dss", 0x58000000, 0, -ENODEV, 0x14, 0x00000040, 0xffffffff,
+> -		   SYSC_QUIRK_OPT_CLKS_IN_RESET),
+> +		   SYSC_QUIRK_OPT_CLKS_IN_RESET | SYSC_MODULE_QUIRK_DSS_RESET),
+>   	SYSC_QUIRK("dss", 0x58000000, 0, -ENODEV, 0x14, 0x00000061, 0xffffffff,
+> -		   SYSC_QUIRK_OPT_CLKS_IN_RESET),
+> +		   SYSC_QUIRK_OPT_CLKS_IN_RESET | SYSC_MODULE_QUIRK_DSS_RESET),
+>   	SYSC_QUIRK("dwc3", 0x48880000, 0, 0x10, -ENODEV, 0x500a0200, 0xffffffff,
+>   		   SYSC_QUIRK_CLKDM_NOAUTO),
+>   	SYSC_QUIRK("dwc3", 0x488c0000, 0, 0x10, -ENODEV, 0x500a0200, 0xffffffff,
+> @@ -1468,6 +1468,128 @@ static void sysc_init_revision_quirks(struct sysc *ddata)
+>   	}
+>   }
+>   
+> +/*
+> + * DSS needs dispc outputs disabled to reset modules. Returns mask of
+> + * enabled DSS interrupts. Eventually we may be able to do this on
+> + * dispc init rather than top-level DSS init.
+> + */
+> +static u32 sysc_quirk_dispc(struct sysc *ddata, int dispc_offset,
+> +			    bool disable)
+> +{
+> +	bool lcd_en, digit_en, lcd2_en = false, lcd3_en = false;
+> +	const int lcd_en_mask = BIT(0), digit_en_mask = BIT(1);
+> +	int manager_count;
+> +	bool framedonetv_irq;
+> +	u32 val, irq_mask = 0;
+> +
+> +	switch (sysc_soc->soc) {
+> +	case SOC_2420 ... SOC_3630:
+> +		manager_count = 2;
+> +		framedonetv_irq = false;
+> +		break;
+> +	case SOC_4430 ... SOC_4470:
+> +		manager_count = 3;
+> +		break;
+> +	case SOC_5430:
+> +	case SOC_DRA7:
+> +		manager_count = 4;
+> +		break;
+> +	case SOC_AM4:
+> +		manager_count = 1;
+> +		break;
+> +	case SOC_UNKNOWN:
+> +	default:
+> +		return 0;
+> +	};
+> +
+> +	/* Remap the whole module range to be able to reset dispc outputs */
+> +	devm_iounmap(ddata->dev, ddata->module_va);
+> +	ddata->module_va = devm_ioremap(ddata->dev,
+> +					ddata->module_pa,
+> +					ddata->module_size);
 
-On 2020-02-19 03:51, Matthias Kaehlcke wrote:
-> Hi Pradeep,
-> 
-> On Tue, Feb 18, 2020 at 06:30:32PM +0530, Pradeep P V K wrote:
->> Add interconnect bandwidths for SDHC driver using OPP framework that
->> is required by SDHC driver based on the clock frequency and bus width
->> of the card. Otherwise, the system clocks may run at minimum clock
->> speed and thus affecting the performance.
->> 
->> This change is based on
->> [RFC] mmc: host: sdhci-msm: Use the interconnect API
->> (https://lkml.org/lkml/2018/10/11/499) and
->> 
->> [PATCH v6] Introduce Bandwidth OPPs for interconnects
->> (https://lkml.org/lkml/2019/12/6/740)
->> 
->> Co-developed-by: Sahitya Tummala <stummala@codeaurora.org>
->> Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
->> Co-developed-by: Subhash Jadavani <subhashj@codeaurora.org>
->> Signed-off-by: Subhash Jadavani <subhashj@codeaurora.org>
->> Co-developed-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->> Co-developed-by: Pradeep P V K <ppvk@codeaurora.org>
->> Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
->> ---
->> 
->> changes from RFC v3 -> v4:
->> 
->> - Addressed review comments from Bjorn and Matthias
-> 
-> This is not helpful, please describe in future versions what those
-> changes are.
-> 
-sure will do this from next patch series.
->> 
->>  drivers/mmc/host/sdhci-msm.c | 204 
->> ++++++++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 200 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/mmc/host/sdhci-msm.c 
->> b/drivers/mmc/host/sdhci-msm.c
->> index 71f29ba..5af1c58 100644
->> --- a/drivers/mmc/host/sdhci-msm.c
->> +++ b/drivers/mmc/host/sdhci-msm.c
->> @@ -11,8 +11,10 @@
->>  #include <linux/mmc/mmc.h>
->>  #include <linux/pm_runtime.h>
->>  #include <linux/slab.h>
->> +#include <linux/interconnect.h>
->>  #include <linux/iopoll.h>
->>  #include <linux/regulator/consumer.h>
->> +#include <linux/pm_opp.h>
->> 
->>  #include "sdhci-pltfm.h"
->> 
->> @@ -229,6 +231,12 @@ struct sdhci_msm_variant_info {
->>  	const struct sdhci_msm_offset *offset;
->>  };
->> 
->> +struct sdhci_msm_bus_vote_data {
->> +	struct icc_path *sdhc_to_ddr;
->> +	struct icc_path *cpu_to_sdhc;
->> +	u32 curr_freq;
->> +};
->> +
->>  struct sdhci_msm_host {
->>  	struct platform_device *pdev;
->>  	void __iomem *core_mem;	/* MSM SDCC mapped address */
->> @@ -255,8 +263,11 @@ struct sdhci_msm_host {
->>  	bool use_cdr;
->>  	u32 transfer_mode;
->>  	bool updated_ddr_cfg;
->> +	struct sdhci_msm_bus_vote_data *bus_vote_data;
->>  };
->> 
->> +static void sdhci_msm_bus_voting(struct sdhci_host *host, bool 
->> enable);
->> +
->>  static const struct sdhci_msm_offset *sdhci_priv_msm_offset(struct 
->> sdhci_host *host)
->>  {
->>  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> @@ -1564,6 +1575,7 @@ static void sdhci_msm_set_clock(struct 
->> sdhci_host *host, unsigned int clock)
->> 
->>  	msm_set_clock_rate_for_bus_mode(host, clock);
->>  out:
->> +	sdhci_msm_bus_voting(host, !!clock);
->>  	__sdhci_msm_set_clock(host, clock);
->>  }
->> 
->> @@ -1685,6 +1697,174 @@ static void 
->> sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->>  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
->>  }
->> 
->> +/*
->> + * Returns required bandwidth in Bytes per Sec
->> + */
->> +static unsigned long sdhci_get_bw_required(struct sdhci_host *host,
->> +					struct mmc_ios *ios)
->> +{
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +
->> +	switch (ios->bus_width) {
->> +	case MMC_BUS_WIDTH_1:
->> +		return msm_host->clk_rate/8;
-> 
-> nit: it would be more readable with spaces around '/'.
-> 
-ok. i will address this in my next patchset.
+Why is this needed? The range is not mapped when sysc_pre_reset_quirk_dss() is called? This will 
+unmap and remap twice, as this function is called twice. And then left mapped.
 
->> +	case MMC_BUS_WIDTH_4:
->> +		return msm_host->clk_rate/2;
->> +	case MMC_BUS_WIDTH_8:
->> +		break;
->> +	}
->> +	return msm_host->clk_rate;
->> +}
->> +
->> +/*
->> + * Helper function to parse the exact OPP node
->> + * Returns OPP pointer on success else NULL on error
->> + */
->> +static struct dev_pm_opp
->> +		*sdhci_msm_find_opp_for_freq(struct sdhci_msm_host *msm_host,
->> +							unsigned long bw)
->> +{
->> +	struct dev_pm_opp *opp;
->> +	struct sdhci_host *host = mmc_priv(msm_host->mmc);
->> +	unsigned int freq = bw;
->> +	struct device *dev = &msm_host->pdev->dev;
->> +
->> +
->> +	if (!freq)
->> +		opp = dev_pm_opp_find_peak_bw_floor(dev, &freq);
->> +	else
->> +		opp = dev_pm_opp_find_peak_bw_exact(dev, freq, true);
->> +
->> +	/* Max bandwidth vote */
->> +	if (PTR_ERR(opp) == -ERANGE && freq > sdhci_msm_get_max_clock(host))
->> +		opp = dev_pm_opp_find_peak_bw_ceil(dev, &bw);
->> +
->> +	if (IS_ERR(opp)) {
->> +		dev_err(dev, "Failed to find OPP for freq:%u err:%ld\n",
->> +				freq, PTR_ERR(opp));
->> +		return NULL;
->> +	}
->> +	return opp;
->> +}
->> +
->> +/*
->> + * This function sets the interconnect bus bandwidth
->> + * vote based on bw (bandwidth) argument.
->> + */
->> +#define BUS_INTERCONNECT_PATHS 2 /* 1. sdhc -> ddr 2. cpu -> sdhc */
->> +static void sdhci_msm_bus_set_vote(struct sdhci_host *host,
->> +						unsigned int bw)
->> +{
->> +	int i, ddr_rc, cpu_rc;
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +	struct sdhci_msm_bus_vote_data *vote_data = msm_host->bus_vote_data;
->> +	struct device *dev = &msm_host->pdev->dev;
->> +	struct dev_pm_opp *opp;
->> +	unsigned long freq = bw;
->> +	unsigned long peak_bw[BUS_INTERCONNECT_PATHS] = {0};
->> +	unsigned long avg_bw[BUS_INTERCONNECT_PATHS] = {0};
->> +
->> +	if (bw == vote_data->curr_freq)
->> +		return;
->> +
->> +	for (i = 0; i < BUS_INTERCONNECT_PATHS; i++) {
->> +		opp = sdhci_msm_find_opp_for_freq(msm_host, freq);
->> +		if (opp) {
->> +			avg_bw[i] = dev_pm_opp_get_bw(opp, &peak_bw[i]);
->> +			freq += 1; /* Next bandwidth vote */
->> +			dev_pm_opp_put(opp);
->> +		}
->> +	}
->> +	pr_debug("%s: freq:%d sdhc_to_ddr avg_bw:%lu peak_bw:%lu cpu_to_sdhc 
->> avg_bw:%lu peak_bw:%lu\n",
->> +			mmc_hostname(host->mmc), bw, avg_bw[0], peak_bw[0],
->> +				avg_bw[1], peak_bw[1]);
->> +	ddr_rc = icc_set_bw(vote_data->sdhc_to_ddr, 0, peak_bw[0]);
->> +	cpu_rc = icc_set_bw(vote_data->cpu_to_sdhc, 0, peak_bw[1]);
->> +	if (ddr_rc || cpu_rc) {
->> +		dev_err(dev, "icc_set() failed ddr_rc:%d cpu_rc:%d\n",
->> +							ddr_rc, cpu_rc);
->> +		return;
->> +	}
-> 
-> Do you necessarily want to set the bandwidth of the CPU to SDHC path, 
-> if
-> setting the bandwidth for the SDHC to DDR path failed? If not I'd 
-> suggest
-> to get rid of this double error handling with 'ddr_rc' and 'cpu_rc' and
-> handle each error individually.
-> 
-It is not required to set bw for CPU to SDHC path, if setting to SDHC to 
-DDR path
-failed. i will handle this individually in my next patch series.
+> +	if (!ddata->module_va)
+> +		return -EIO;
+> +
+> +	/* DISP_CONTROL */
+> +	val = sysc_read(ddata, dispc_offset + 0x40);
 
->> +	vote_data->curr_freq = bw;
->> +}
->> +
->> +/*
->> + * Helper function to register for OPP and interconnect
->> + * frameworks.
->> + */
->> +static struct sdhci_msm_bus_vote_data
->> +		*sdhci_msm_bus_register(struct sdhci_msm_host *host,
->> +				struct platform_device *pdev)
->> +{
->> +	struct sdhci_msm_bus_vote_data *vote_data;
->> +	struct device *dev = &pdev->dev;
->> +	int ret;
->> +
->> +	vote_data = devm_kzalloc(dev, sizeof(*vote_data), GFP_KERNEL);
->> +	if (!vote_data)
->> +		return NULL;
-> 
-> Even though the interconnects are optional I think we want to propagate 
-> an
-> out of memory error, i.e. you probably want to return -ENOMEM here.
-> 
-> Also the allocated 'vote_data' will not be used if the ICC 
-> configuration
-> does not exist or is invalid. I think Bjorn suggested to do the 
-> allocation
-> after getting the ICC paths and error handling, when you know the 
-> struct
-> is actually used.
-> 
-ok i will do this in my next patch set.
->> +
->> +	vote_data->sdhc_to_ddr = of_icc_get(&pdev->dev, "sdhc-ddr");
->> +	vote_data->cpu_to_sdhc = of_icc_get(&pdev->dev, "cpu-sdhc");
->> +	if (!vote_data->sdhc_to_ddr || !vote_data->cpu_to_sdhc) {
->> +		dev_info(&pdev->dev, "ICC DT property is missing. skip vote !!\n");
->> +		return NULL;
-> 
-> This combined handling masks possible misconfigurations/errors, where 
-> one
-> ICC path is specified (correctly or not), and the other not. Also the 
-> log
-> message would be confusing in this case, since the ICC property exists.
-> 
-> Preferably NULL would only be returned if neither of the ICC paths is
-> specified. The message could be something like "no interconnect 
-> configuration".
-> This is still not entirely correct, since there could be a 
-> configuration, just
-> not with the expected interconnect names.
-> 
-i will take care this in my next patch series.
+Defines for dss/dispc register offsets could have been copied from the platform display.c and used 
+in this file.
 
->> +	} else if (IS_ERR(vote_data->sdhc_to_ddr) ||
->> +			IS_ERR(vote_data->cpu_to_sdhc)) {
->> +		dev_err(&pdev->dev, "(%ld): failed getting %s path\n",
->> +				PTR_ERR(vote_data->sdhc_to_ddr), "sdhc-ddr");
-> 
-> What is the point of using '%s' here?
-> 
-Not required specifically. i will take care this too in my next patch 
-set.
+> +	lcd_en = val & lcd_en_mask;
+> +	digit_en = val & digit_en_mask;
+> +	if (lcd_en)
+> +		irq_mask |= BIT(0);			/* FRAMEDONE */
+> +	if (digit_en) {
+> +		if (framedonetv_irq)
+> +			irq_mask |= BIT(24);		/* FRAMEDONETV */
+> +		else
+> +			irq_mask |= BIT(2) | BIT(3);	/* EVSYNC bits */
+> +	}
+> +	if (disable & (lcd_en | digit_en))
+> +		sysc_write(ddata, dispc_offset + 0x40,
+> +			   val & ~(lcd_en_mask | digit_en_mask));
+> +
+> +	if (manager_count <= 2)
+> +		return irq_mask;
+> +
+> +	/* DISPC_CONTROL2 */
+> +	val = sysc_read(ddata, dispc_offset + 0x238);
+> +	lcd2_en = val & lcd_en_mask;
+> +	if (lcd2_en)
+> +		irq_mask |= BIT(22);			/* FRAMEDONE2 */
+> +	if (disable && lcd2_en)
+> +		sysc_write(ddata, dispc_offset + 0x238,
+> +			   val & ~lcd_en_mask);
+> +
+> +	if (manager_count <= 3)
+> +		return irq_mask;
+> +
+> +	/* DISPC_CONTROL3 */
+> +	val = sysc_read(ddata, dispc_offset + 0x848);
+> +	lcd3_en = val & lcd_en_mask;
+> +	if (lcd3_en)
+> +		irq_mask |= BIT(30);			/* FRAMEDONE3 */
+> +	if (disable && lcd3_en)
+> +		sysc_write(ddata, dispc_offset + 0x848,
+> +			   val & ~lcd_en_mask);
+> +
+> +	return irq_mask;
+> +}
+> +
+> +/* DSS needs child outputs disabled and SDI registers cleared for reset */
+> +static void sysc_pre_reset_quirk_dss(struct sysc *ddata)
+> +{
+> +	const int dispc_offset = 0x1000;
+> +	int error;
+> +	u32 irq_mask, val;
+> +
+> +	/* Get enabled outputs */
+> +	irq_mask = sysc_quirk_dispc(ddata, dispc_offset, false);
+> +	if (!irq_mask)
+> +		return;
+> +
+> +	/* Clear IRQSTATUS */
+> +	sysc_write(ddata, 0x1000 + 0x18, irq_mask);
 
->> +		dev_err(&pdev->dev, "(%ld): failed getting %s path\n",
->> +				PTR_ERR(vote_data->sdhc_to_ddr), "cpu-sdhc");
-> 
-> ditto
-> 
-ok.
->> +
->> +		return IS_ERR(vote_data->sdhc_to_ddr) ?
->> +			ERR_CAST(vote_data->sdhc_to_ddr) :
->> +			ERR_CAST(vote_data->cpu_to_sdhc);
->> +	}
-> 
-> The above could print an error message for an ICC path that doesn't
-> have a problem. Also we don't want to yell in case of deferred probing.
-> 
-> Something like this could be a possible alternative:
-> 
->      	struct icc_path *icc_paths[BUS_INTERCONNECT_PATHS];
-> 	const char *path_names[] = {
-> 		"sdhc-ddr",
-> 		"cpu-sdhc"
-> 	};
-> 
-> 	// use loop?
-> 	icc_paths[0] = of_icc_get(&pdev->dev, "sdhc-ddr");
-> 	icc_paths[1] = of_icc_get(&pdev->dev, "cpu-sdhc");
-> 
-> 	if (!icc_paths[0] && !icc_paths[1]) {
-> 		dev_info(...);
-> 		return NULL;
-> 	}
-> 
-> 	for (i = 0; i <  BUS_INTERCONNECT_PATHS; i++) {
-> 	       	int err = 0;
-> 
-> 		if (!icc_paths[i]) {
-> 			dev_err(pdev->dev. "interconnect path '%s' is not configured\n",
-> path_names[i]);
-> 			err = -EINVAL;
-> 			goto handle_err;
-> 		}
-> 
-> 		if (IS_ERR(icc_paths[i]) {
-> 			err = PTR_ERR(icc_paths[i]);
-> 
-> 			if (err != -EPROBE_DEFER)
-> 				dev_err(pdev->dev. "interconnect path '%s' is invalid: %d\n",
-> path_names[i], err);
-> 		}
-> 
-> handle_err:
-> 		if (err) {
-> 			int other = (i == 0)? 1 : 0;
-> 
-> 			if (!IS_ERR_OR_NULL(icc_paths[other]))
-> 				icc_put(icc_paths[other]);
-> 
-> 			return err;
-> 		}
-> 	}
-> 
-Thanks for the alternate code. i will address this in my next patch set.
+dispc_offset instead of 0x1000.
 
->> +	ret = dev_pm_opp_of_add_table(dev);
->> +	if (ret) {
->> +		if (ret == -ENODEV || ret == -ENODATA)
->> +			dev_err(dev, "OPP dt properties missing:%d\n", ret);
->> +		else
->> +			dev_err(dev, "OPP registration failed:%d\n", ret);
->> +		return ERR_PTR(ret);
->> +	}
-> 
-> Now that we know that there are no errors we can allocate 'vote_data' 
-> and
-> initialize it.
-> 
-ok.
+> +
+> +	/* Disable outputs */
+> +	val = sysc_quirk_dispc(ddata, dispc_offset, true);
+> +
+> +	/* Poll IRQSTATUS */
+> +	error = readl_poll_timeout(ddata->module_va + dispc_offset + 0x18,
+> +				   val, val != irq_mask, 100, 50);
+> +	if (error)
+> +		dev_warn(ddata->dev, "%s: timed out %08x !+ %08x\n",
+> +			 __func__, val, irq_mask);
+> +
+> +	if (sysc_soc->soc == SOC_3430) {
+> +		/* Clear DSS_SDI_CONTROL */
+> +		sysc_write(ddata, dispc_offset + 0x44, 0);
+> +
+> +		/* Clear DSS_PLL_CONTROL */
+> +		sysc_write(ddata, dispc_offset + 0x48, 0);
 
->> +	return vote_data;
->> +}
->> +
->> +static void sdhci_msm_bus_unregister(struct device *dev,
->> +				struct sdhci_msm_host *host)
->> +{
->> +	struct sdhci_msm_bus_vote_data *vote_data = host->bus_vote_data;
->> +
->> +	if (!vote_data ||
->> +		IS_ERR(vote_data->sdhc_to_ddr) ||
->> +		IS_ERR(vote_data->cpu_to_sdhc))
-> 
-> The check for errors in the ICC paths is not necessary. When an error 
-> is
-> encountered sdhci_msm_bus_register() returns an error, not a struct.
-> 
-ok. i will address this in my next patch set.
+These are not dispc registers, but dss registers.
 
->> +		return;
->> +
->> +	icc_put(vote_data->sdhc_to_ddr);
->> +	icc_put(vote_data->cpu_to_sdhc);
->> +}
->> +
->> +static void sdhci_msm_bus_voting(struct sdhci_host *host, bool 
->> enable)
->> +{
->> +	struct mmc_ios *ios = &host->mmc->ios;
->> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
->> +	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
->> +	unsigned int bw;
->> +
->> +	if (!msm_host->bus_vote_data ||
->> +		IS_ERR(msm_host->bus_vote_data))
-> 
-> no need to check for errors, _probe() is aborted in case of errors.
-> 
-ok.
+> +	}
+> +
+> +	/* Clear DSS_CONTROL to switch DSS clock sources to PRCM if not */
+> +	sysc_write(ddata, dispc_offset + 0x40, 0);
 
-> Thanks
-> 
-> Matthias
+Same here.
+
+  Tomi
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
