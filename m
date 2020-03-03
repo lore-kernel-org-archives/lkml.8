@@ -2,78 +2,150 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A36EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B9BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D65B2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8862D2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:53:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730470AbgCCQwF (ORCPT
+        id S1730430AbgCCQxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:52:05 -0500
-Received: from mga12.intel.com ([192.55.52.136]:1727 "EHLO mga12.intel.com"
+        Tue, 3 Mar 2020 11:53:01 -0500
+Received: from relay.sw.ru ([185.231.240.75]:46376 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729156AbgCCQwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:52:04 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 08:52:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="228984318"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 03 Mar 2020 08:52:04 -0800
-Date:   Tue, 3 Mar 2020 08:52:04 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/13] KVM: x86: Dynamically allocate per-vCPU
- emulation context
-Message-ID: <20200303165203.GM1439@linux.intel.com>
-References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
- <20200218232953.5724-9-sean.j.christopherson@intel.com>
- <87wo89i7e3.fsf@vitty.brq.redhat.com>
+        id S1729755AbgCCQxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:53:01 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j9Amn-0006yJ-94; Tue, 03 Mar 2020 19:52:49 +0300
+Subject: Re: [PATCH v2 1/1] mm: fix interrupt disabled long time inside
+ deferred_init_memmap()
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>
+References: <20200303161551.132263-1-shile.zhang@linux.alibaba.com>
+ <20200303161551.132263-2-shile.zhang@linux.alibaba.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <fc22967d-0803-2e6f-26af-148a24f8f958@virtuozzo.com>
+Date:   Tue, 3 Mar 2020 19:52:47 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wo89i7e3.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200303161551.132263-2-shile.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 06:29:56PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> > @@ -9409,6 +9451,9 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
-> >  
-> >  	kvm_x86_ops->vcpu_free(vcpu);
-> >  
-> > +	if (vcpu->arch.emulate_ctxt)
-> > +		kmem_cache_free(x86_emulator_cache, vcpu->arch.emulate_ctxt);
+On 03.03.2020 19:15, Shile Zhang wrote:
+> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdatinit' kthread will
+> initialise the deferred pages with local interrupts disabled. It is
+> introduced by commit 3a2d7fa8a3d5 ("mm: disable interrupts while
+> initializing deferred pages").
 > 
-> Checking for NULL here seems superfluous as we create the context in
-> kvm_arch_vcpu_create() unconditionally. I'd suggest we move the check to 
-> "[PATCH v2 12/13] KVM: x86: Add variable to control existence of
-> emulator" where 'enable_emulator' global is added.
+> The local interrupt will be disabled long time inside
+> deferred_init_memmap(), depends on memory size.
+> On machine with NCPUS <= 2, the 'pgdatinit' kthread could be pined on
+> boot CPU, then the tick timer will stuck long time, which caused the
+> system wall time inaccuracy.
+> 
+> For example, the dmesg shown that:
+> 
+>   [    0.197975] node 0 initialised, 32170688 pages in 1ms
+> 
+> Obviously, 1ms is unreasonable.
+> Now, fix it by restore in the pending interrupts inside the while loop.
+> The reasonable demsg shown likes:
+> 
+> [    1.069306] node 0 initialised, 32203456 pages in 894ms
 
-Ya, checking here is premature.
+The way I understand the original problem, that Pavel fixed:
 
-> > +
-> >  	free_cpumask_var(vcpu->arch.wbinvd_dirty_mask);
-> >  	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
-> >  	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
+we need disable irqs in deferred_init_memmap() since this function may be called
+in parallel with deferred_grow_zone() called from interrupt handler. So, Pavel
+added lock to fix the race.
+
+In case of we temporary unlock the lock, interrupt still be possible,
+so my previous proposition returns the problem back.
+
+Now thought again, I think we have to just add:
+
+	pgdat_resize_unlock();
+	pgdat_resize_lock();
+
+instead of releasing interrupts, since in case of we just release them with lock held,
+a call of interrupt->deferred_grow_zone() bring us to a deadlock.
+
+So, unlock the lock is must.
+
+> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+> ---
+>  mm/page_alloc.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> -- 
-> Vitaly
-> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..d3f337f2e089 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1809,8 +1809,12 @@ static int __init deferred_init_memmap(void *data)
+>  	 * that we can avoid introducing any issues with the buddy
+>  	 * allocator.
+>  	 */
+> -	while (spfn < epfn)
+> +	while (spfn < epfn) {
+>  		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +		/* let in any pending interrupts */
+> +		local_irq_restore(flags);
+> +		local_irq_save(flags);
+> +	}
+>  zone_empty:
+>  	pgdat_resize_unlock(pgdat, &flags);
+
+I think we need here something like below (untested):
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 79e950d76ffc..323afa9a4db5 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1828,7 +1828,7 @@ static int __init deferred_init_memmap(void *data)
+ {
+ 	pg_data_t *pgdat = data;
+ 	const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
+-	unsigned long spfn = 0, epfn = 0, nr_pages = 0;
++	unsigned long spfn = 0, epfn = 0, nr_pages = 0, prev_nr_pages = 0;
+ 	unsigned long first_init_pfn, flags;
+ 	unsigned long start = jiffies;
+ 	struct zone *zone;
+@@ -1869,8 +1869,18 @@ static int __init deferred_init_memmap(void *data)
+ 	 * that we can avoid introducing any issues with the buddy
+ 	 * allocator.
+ 	 */
+-	while (spfn < epfn)
++	while (spfn < epfn) {
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
++		/*
++		 * Release interrupts every 1Gb to give a possibility
++		 * a timer to advance jiffies.
++		 */
++		if (nr_pages - prev_nr_pages > (1UL << (30 - PAGE_SHIFT))) {
++			prev_nr_pages = nr_pages;
++			pgdat_resize_unlock(pgdat, &flags);
++			pgdat_resize_lock(pgdat, &flags);
++		}
++	}
+ zone_empty:
+ 	pgdat_resize_unlock(pgdat, &flags);
+ 
+
+(I believe the comment may be improved more).
