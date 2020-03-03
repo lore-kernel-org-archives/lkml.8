@@ -2,67 +2,164 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05176C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76FAFC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6E8B21556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2A520828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:58:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583247533;
+	bh=XcnPtotkEVIDFWaz2KdV+CGIVicto2TAK1oKQnmw+7M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kynUxeAr9rs8dvYQcVsOvpKx5dWCjf1kHssbpkfEh5Y02+FXW2OuMpuaW8Yv4I54I
+	 +fUen747jLpRebgS8yNkDg0JKi3dJHp8YFF0i3X57aXpqC41YgvaD36LovA0VYItfW
+	 kluBALV97E4tVxcPTwJdgBmTjnidsUFKxue4BIOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgCCO5r (ORCPT
+        id S1729147AbgCCO6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:57:47 -0500
-Received: from mga07.intel.com ([134.134.136.100]:12485 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727440AbgCCO5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:57:47 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 06:57:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="412763005"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 03 Mar 2020 06:57:46 -0800
-Date:   Tue, 3 Mar 2020 06:57:46 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 08/13] KVM: x86: Dynamically allocate per-vCPU
- emulation context
-Message-ID: <20200303145746.GA1439@linux.intel.com>
-References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
- <20200218232953.5724-9-sean.j.christopherson@intel.com>
- <87wo89i7e3.fsf@vitty.brq.redhat.com>
- <83bd7c0c-ac3c-8ab5-091f-598324156d27@redhat.com>
+        Tue, 3 Mar 2020 09:58:52 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39373 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726766AbgCCO6w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:58:52 -0500
+Received: by mail-oi1-f194.google.com with SMTP id r16so3285923oie.6;
+        Tue, 03 Mar 2020 06:58:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HxYfnK8zgVmnkmuPybEMmldIypjikhPJCdUr+htsJJY=;
+        b=AQcti3dNavBx+hC2vh/8gLnHHCiCzNfR6k2msjeRmTrPqt1gwoaW0mZdTScmbgpa6a
+         2tyqH1byCVJxl2dNWZA2+bpiLs4ZRHs473alfOZ1jpW4z1URnGb91qgKDj+KsTjR4MAx
+         xePCw7xCShGyIfPwIcUXaMbASu4jeLmxPF3J6G58MMJcUuNm9a/hMfwQ7tdo5YK19voc
+         kM9HeF3ty5Qy1i1D5//2nnn3kCqSrXypWv8c7ax2+Vi6j6JjHrG9EUVir+6Jfjot3WJd
+         fke2q60PwfdjtdVr/841NQ7LwUicp3rLWRQ/x0m7gb/4ufUHrrfkxzJ6MWSJHbvqSP4l
+         uDWg==
+X-Gm-Message-State: ANhLgQ0XB6xPkMZo43s6sPsnIWuFXYwGCtLaWdFeLwSy5jqtMc83L/dU
+        DfKmp5KL46qb+614NgD/2g==
+X-Google-Smtp-Source: ADFU+vsNrW8VLQ1ZuwqDkt7czhKZ/Buqrf2aEO084qIkKlMwfgtTqE0s+XvEn0/xjyizTznoEYeHeg==
+X-Received: by 2002:a54:4791:: with SMTP id o17mr2613096oic.70.1583247530753;
+        Tue, 03 Mar 2020 06:58:50 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c12sm7744056oic.27.2020.03.03.06.58.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 06:58:49 -0800 (PST)
+Received: (nullmailer pid 31539 invoked by uid 1000);
+        Tue, 03 Mar 2020 14:58:48 -0000
+Date:   Tue, 3 Mar 2020 08:58:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        linux-gpio@vger.kernel.org, kernel@pyra-handheld.com,
+        letux-kernel@openphoenux.org
+Subject: Re: [RFC 0/8] MIPS: CI20: add HDMI out support
+Message-ID: <20200303145848.GA13796@bogus>
+References: <cover.1582744379.git.hns@goldelico.com>
+ <20200227122325.GA7587@ravnborg.org>
+ <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <83bd7c0c-ac3c-8ab5-091f-598324156d27@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 11:26:21AM +0100, Paolo Bonzini wrote:
-> On 26/02/20 18:29, Vitaly Kuznetsov wrote:
-> >>  struct x86_emulate_ctxt {
-> >> +	void *vcpu;
-> > Why 'void *'? I changed this to 'struct kvm_vcpu *' and it seems to
-> > compile just fine...
-> > 
+On Thu, Feb 27, 2020 at 01:56:56PM +0100, H. Nikolaus Schaller wrote:
+> Hi Sam,
 > 
-> I guess because it's really just an opaque pointer; using void* ensures
-> that the emulator doesn't break the emulator ops abstraction.
+> > Am 27.02.2020 um 13:23 schrieb Sam Ravnborg <sam@ravnborg.org>:
+> > 
+> > Hi Nikolaus.
+> > 
+> > On Wed, Feb 26, 2020 at 08:12:52PM +0100, H. Nikolaus Schaller wrote:
+> >> This patch series adds HDMI output to the jz4780/CI20 board.
+> >> 
+> >> It is based on taking the old 3.18 vendor kernel and trying
+> >> to achieve the same with modern DTS setup and new/modified
+> >> drivers.
+> >> 
+> >> Unfortunately, in this first RFC, only EDID and creation of
+> >> /dev/fb0 are working. Also, HDMI hot plugging is detected.
+> >> 
+> >> But there is no HDMI output signal. So some tiny piece seems
+> >> to be missing to enable/configure the Synposys HDMI controller.
+> >> 
+> >> We need help from the community to fix this.
+> >> 
+> >> Note: device tree bindings are from 2015 and still seem to
+> >> fit - except they are not in yaml format.
+> >> 
+> >> Original authors of most patches are
+> >> * Paul Boddie <paul@boddie.org.uk>
+> >> * Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
+> >> 
+> >> 
+> >> H. Nikolaus Schaller (2):
+> >>  drm: ingenic-drm: add MODULE_DEVICE_TABLE
+> >>  MIPS: CI20: defconfig: configure for DRM_DW_HDMI_JZ4780
+> >> 
+> >> Paul Boddie (4):
+> >>  drm: ingenic: add jz4780 Synopsys HDMI driver.
+> >>  pinctrl: ingenic: add hdmi-ddc pin control group
+> >>  MIPS: DTS: jz4780: account for Synopsys HDMI driver and LCD controller
+> >>  MIPS: DTS: CI20: add HDMI setup
+> >> 
+> >> Zubair Lutfullah Kakakhel (2):
+> >>  dt-bindings: video: Add jz4780-lcd binding
+> >>  dt-bindings: video: Add jz4780-hdmi binding
+> >> 
+> >> .../bindings/display/ingenic-jz4780-hdmi.txt  |  41 ++++++
+> >> .../bindings/display/ingenic-jz4780-lcd.txt   |  39 ++++++
+> > New bindings in DT Schema format please...
+> > We want to have then in a formal launguage so we can use these
+> > to verify the DT files.
+> 
+> Yes, I know. And I fully support the goal.
+> 
+> But I personally do not have the time to learn the (IMHO brain-twisting)
+> way the Schema format is working. Especially, I am not interested
+> in becoming volunteer translator for .txt based schemas developed
+> by someone else.
+> 
+> So I hope that someone from the community can and is willing to do
+> that.
+> 
+> Or that there will appear good tools soon. E.g. some GUI
+> based editor tool would be very helpful so that you don't have
+> to fight with the yaml indentation rules. Like there are XML
+> and DTD editors. And even HTML is rarely written manually any more.
+> 
+> IMHO such tools should have been developed and in place *before*
+> the rule to provide DT schemata is enforced.
 
-Ya, it prevents the emulator from directly deferencing the vcpu.
+You mean tools like what is discussed here:
+
+https://www.redhat.com/sysadmin/yaml-tips
+
+There's also yaml-format in the dtschema repo which will reformat a file 
+to the desired formatting. It is just a wrapper around ruamel yaml 
+library.
+
+Rob
