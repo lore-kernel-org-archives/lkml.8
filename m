@@ -2,127 +2,196 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E0CC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DADC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C0C720866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:01:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="tF5yG/AW"
+	by mail.kernel.org (Postfix) with ESMTP id C798C20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:02:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583262139;
+	bh=qpII4wdYHJwhFAnCde4eYkRsLi/qDHubQHybtAXjWsM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=oPLcQqUmk3lUw+88koQSDw+PXPY1aILE+JDa+YiHIN72rACGBFPlUscazosvj5lc7
+	 q20p22796jJJcUE7E90MKrusjtFEFz+a59V5JcL5HPA31o3TNzOrCGILrOhFAgxXf9
+	 KHEb9Rjc3FMvyb4XjAfPfI0KS0Zo5CYYyWNnMvEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730125AbgCCTBG (ORCPT
+        id S1730056AbgCCTCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:01:06 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:37123 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728089AbgCCTBF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:01:05 -0500
-Received: by mail-qk1-f196.google.com with SMTP id m9so4537627qke.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:01:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=37vsySpB7Mqr4UTwM/asZE/CIaecAwjFUAkmqD+hVbo=;
-        b=tF5yG/AWd+MBMKM3vl2N5PrQwoQ369N9ecF8QhfmfTho88uMe3HwPetZtfRLo0VXX0
-         GGE7gUX6ISVew0WD/Dz3HAHu5kGePLzK5IBo5j54NW8rgsHjEu/4jCX5CpUeRfV4ZvVV
-         lJiR6/29mC9sbD4/1XS3nHQdSf7CH1A3vgeNNbiS693B1Kp9Lcyy+5urzNj124TpsS6D
-         fznxmqkI0Qg+DfAlNbGlWbqBn/oVUOsYjGqR6M3BWIgezg+IGELz3+M//gCmE3afJLsW
-         A+0086QT4t5fGHe1iItCfnWAOgMYT06CS+0kGqDYCP/ezN/k1jIvAUPzy3RnKsg1ENF9
-         zbsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=37vsySpB7Mqr4UTwM/asZE/CIaecAwjFUAkmqD+hVbo=;
-        b=R2NlToM5JCwZdElrPi7FNceoNix9NNYLcNH4o/CA31sCX9qDiI2rFGhECUbb60GccJ
-         IfULQcXOpGmMC4JaF/sdqmTQ86wuSWkfxQvL0jutlTodwEXAy54Nypzijo12k1PtPDr3
-         cM5FZUChkXwgqxbXxhj/rqY9JevtAsIk3jcj6vpIwWAbONdCUsNoyUBXvb4QeXlCavK+
-         DErxI1VAc4soj92s/E8R2w3PYggQJ6WIDSUxpVpihAOhAHVCS/iUfZexfZnAwnjOMIDg
-         M4eGcdCWJ/W17OdaJC3GRfIFzvEQIV+BrIITl377AsqrDGfiBwO7tqk75iHd5wqMmCPM
-         RC2Q==
-X-Gm-Message-State: ANhLgQ2HOdjeCmSvhzTP2NpQv1+WeXBz2xz5eSoHevQQfVoPbVE1DijM
-        HdnG+w5OwInsytI5qZogHoRxpw==
-X-Google-Smtp-Source: ADFU+vtODMnJ+4ShJe3Bohbk8f0YR/Zh520g1xmeyo/GdYXZtLKRnrfgx9VgFdCYtn0++2UgUn/2MA==
-X-Received: by 2002:a37:6211:: with SMTP id w17mr4945011qkb.324.1583262064910;
-        Tue, 03 Mar 2020 11:01:04 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id w83sm11981895qkb.83.2020.03.03.11.01.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Mar 2020 11:01:04 -0800 (PST)
-Message-ID: <1583262063.7365.147.camel@lca.pw>
-Subject: Re: [PATCH -next] signal: annotate data races in sys_rt_sigaction
-From:   Qian Cai <cai@lca.pw>
-To:     Marco Elver <elver@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>, catalin.marinas@arm.com,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Tue, 03 Mar 2020 14:01:03 -0500
-In-Reply-To: <CANpmjNOtweO7o7wxM6yX3_XKETWcLVqmKsQq5ZkXybfAY4_H5g@mail.gmail.com>
-References: <1583256049-15497-1-git-send-email-cai@lca.pw>
-         <CANpmjNPJc_45+h_yJWwmw=YUuWduD6pPX2vdfPVekPvnnHd+_Q@mail.gmail.com>
-         <CANpmjNOtweO7o7wxM6yX3_XKETWcLVqmKsQq5ZkXybfAY4_H5g@mail.gmail.com>
+        Tue, 3 Mar 2020 14:02:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41412 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728089AbgCCTCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:02:18 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0CEEB20866;
+        Tue,  3 Mar 2020 19:02:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583262136;
+        bh=qpII4wdYHJwhFAnCde4eYkRsLi/qDHubQHybtAXjWsM=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=gGpKtYj4Zyd/XRowpu2VnXeYovcLUpEgl7/Vpd0xHAtiNH6nTNlnCcwxOO3l/6hgY
+         uAfYATLBg/pMAbBATqT45hwqBoWRVA51ZW2wG6YNCvEJG5yg51nNJKet243+LknQmZ
+         Xz/fAJW7FOAgTl0uXByEPlcVtiTUnWepBiZBG8VQ=
+Message-ID: <dbb06c63c17c23fcacdd99e8b2266804ee39ffe5.camel@kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
+ [ver #17]
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Date:   Tue, 03 Mar 2020 14:02:13 -0500
+In-Reply-To: <7a05adc8-1ca9-c900-7b24-305f1b3a9b86@kernel.dk>
+References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+         <1509948.1583226773@warthog.procyon.org.uk>
+         <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+         <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+         <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com>
+         <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+         <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
+         <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
+         <20200303142407.GA47158@kroah.com>
+         <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
+         <acb1753c78a019fb0d54ba29077cef144047f70f.camel@kernel.org>
+         <7a05adc8-1ca9-c900-7b24-305f1b3a9b86@kernel.dk>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-03 at 19:26 +0100, Marco Elver wrote:
-> On Tue, 3 Mar 2020 at 18:53, Marco Elver <elver@google.com> wrote:
-> > 
-> > On Tue, 3 Mar 2020 at 18:21, Qian Cai <cai@lca.pw> wrote:
+On Tue, 2020-03-03 at 09:55 -0700, Jens Axboe wrote:
+> On 3/3/20 9:51 AM, Jeff Layton wrote:
+> > On Tue, 2020-03-03 at 08:44 -0700, Jens Axboe wrote:
+> > > On 3/3/20 7:24 AM, Greg Kroah-Hartman wrote:
+> > > > On Tue, Mar 03, 2020 at 03:13:26PM +0100, Jann Horn wrote:
+> > > > > On Tue, Mar 3, 2020 at 3:10 PM Greg Kroah-Hartman
+> > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > > On Tue, Mar 03, 2020 at 02:43:16PM +0100, Greg Kroah-Hartman wrote:
+> > > > > > > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
+> > > > > > > > On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
+> > > > > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > > > > 
+> > > > > > > > > > Unlimited beers for a 21-line kernel patch?  Sign me up!
+> > > > > > > > > > 
+> > > > > > > > > > Totally untested, barely compiled patch below.
+> > > > > > > > > 
+> > > > > > > > > Ok, that didn't even build, let me try this for real now...
+> > > > > > > > 
+> > > > > > > > Some comments on the interface:
+> > > > > > > 
+> > > > > > > Ok, hey, let's do this proper :)
+> > > > > > 
+> > > > > > Alright, how about this patch.
+> > > > > > 
+> > > > > > Actually tested with some simple sysfs files.
+> > > > > > 
+> > > > > > If people don't strongly object, I'll add "real" tests to it, hook it up
+> > > > > > to all arches, write a manpage, and all the fun fluff a new syscall
+> > > > > > deserves and submit it "for real".
+> > > > > 
+> > > > > Just FYI, io_uring is moving towards the same kind of thing... IIRC
+> > > > > you can already use it to batch a bunch of open() calls, then batch a
+> > > > > bunch of read() calls on all the new fds and close them at the same
+> > > > > time. And I think they're planning to add support for doing
+> > > > > open()+read()+close() all in one go, too, except that it's a bit
+> > > > > complicated because passing forward the file descriptor in a generic
+> > > > > way is a bit complicated.
+> > > > 
+> > > > It is complicated, I wouldn't recommend using io_ring for reading a
+> > > > bunch of procfs or sysfs files, that feels like a ton of overkill with
+> > > > too much setup/teardown to make it worth while.
+> > > > 
+> > > > But maybe not, will have to watch and see how it goes.
 > > > 
-> > > Kmemleak could scan task stacks while plain writes happens to those
-> > > stack variables which could results in data races. For example, in
-> > > sys_rt_sigaction and do_sigaction(), it could have plain writes in
-> > > a 32-byte size. Since the kmemleak does not care about the actual values
-> > > of a non-pointer and all do_sigaction() call sites only copy to stack
-> > > variables, annotate them as intentional data races using the
-> > > data_race() macro. The data races were reported by KCSAN,
+> > > It really isn't, and I too thinks it makes more sense than having a
+> > > system call just for the explicit purpose of open/read/close. As Jann
+> > > said, you can't currently do a linked sequence of open/read/close,
+> > > because the fd passing between them isn't done. But that will come in
+> > > the future. If the use case is "a bunch of files", then you could
+> > > trivially do "open bunch", "read bunch", "close bunch" in three separate
+> > > steps.
 > > > 
-> > >  BUG: KCSAN: data-race in _copy_from_user / scan_block
+> > > Curious what the use case is for this that warrants a special system
+> > > call?
 > > > 
-> > >  read to 0xffffb3074e61fe58 of 8 bytes by task 356 on cpu 19:
-> > >   scan_block+0x6e/0x1a0
-> > >   scan_block at mm/kmemleak.c:1251
-> > >   kmemleak_scan+0xbea/0xd20
-> > >   kmemleak_scan at mm/kmemleak.c:1482
-> > >   kmemleak_scan_thread+0xcc/0xfa
-> > >   kthread+0x1cd/0x1f0
-> > >   ret_from_fork+0x3a/0x50
 > > 
-> > I think we should move the annotations to kmemleak instead of signal.c.
+> > Agreed. I'd really rather see something more general-purpose than the
+> > proposed readfile(). At least with NFS and SMB, you can compound
+> > together fairly arbitrary sorts of operations, and it'd be nice to be
+> > able to pattern calls into the kernel for those sorts of uses.
 > > 
-> > Because putting a "data_race()" on the accesses in signal.c just
-> > because of Kmemleak feels wrong because then we might miss other more
-> > serious issues. Kmemleak isn't normally enabled in a non-debug kernel.
+> > So, NFSv4 has the concept of a current_stateid that is maintained by the
+> > server. So basically you can do all this (e.g.) in a single compound:
 > > 
-> > I wonder if it'd be a better idea to just disable KCSAN on scan_block
-> > with __no_kcsan? If Kmemleak only does reads, then __no_kcsan will do
-> > the right thing here, because the reads are hidden completely from
-> > KCSAN. With "data_race()" you would still have to mark both accesses
-> > in signal.c and kmemleak (this is by design, so that we document all
-> > intentionally data-racy accesses).
+> > open <some filehandle get a stateid>
+> > write <using that stateid>
+> > close <same stateid>
 > > 
-> > An alternative would be to just exempt kmemleak from KCSAN with
-> > "KCSAN_SANITIZE_kmemleak.o := n". Given Kmemleak is a debugging tool
-> > and it's expected to race with all kinds of accesses, maybe that's the
-> > best option.
+> > It'd be nice to be able to do something similar with io_uring. Make it
+> > so that when you do an open, you set the "current fd" inside the
+> > kernel's context, and then be able to issue io_uring requests that
+> > specify a magic "fd" value that use it.
+> > 
+> > That would be a really useful pattern.
 > 
-> I saw there are already some data_race() annotations in Kmemleak.
-> Given there are probably more things waiting to be found in Kmemleak,
-> KCSAN_SANITIZE_kmemleak.o := n might just be the best option. I think
-> this is fair, because we really do not want to annotate anything
-> outside Kmemleak just because Kmemleak scans everything. The existing
-> annotations should probably be reverted in that case.
+> For io_uring, you can link requests that you submit into a chain. Each
+> link in the chain is done in sequence. Which means that you could do:
+> 
+> <open some file><read from that file><close that file>
+> 
+> in a single sequence. The only thing that is missing right now is a way
+> to have the return of that open propagated to the 'fd' of the read and
+> close, and it's actually one of the topics to discuss at LSFMM next
+> month.
+> 
+> One approach would be to use BPF to handle this passing, another
+> suggestion has been to have the read/close specify some magic 'fd' value
+> that just means "inherit fd from result of previous". The latter sounds
+> very close to the stateid you mention above, and the upside here is that
+> it wouldn't explode the necessary toolchain to need to include BPF.
+> 
+> In other words, this is really close to being reality and practically
+> feasible.
+> 
 
-Good idea. I'll post a new patch for that.
+Excellent.
+
+Yes, the latter is exactly what I had in mind for this. I suspect that
+that would cover a large fraction of the potential use-cases for this.
+
+Basically, all you'd need to do is keep a pointer to struct file in the
+internal state for the chain. Then, allow userland to specify some magic
+fd value for subsequent chained operations that says to use that instead
+of consulting the fdtable. Maybe use -4096 (-MAX_ERRNO - 1)?
+
+That would cover the smb or nfs server sort of use cases, I think. For
+the sysfs cases, I guess you'd need to dispatch several chains, but that
+doesn't sound _too_ onerous.
+
+In fact, with that you should even be able to emulate the proposed
+readlink syscall in a userland library.
+-- 
+Jeff Layton <jlayton@kernel.org>
+
