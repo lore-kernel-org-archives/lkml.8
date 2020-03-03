@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AB99C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B94C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 060FB2469C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 169D024677
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203663;
-	bh=zC3Y1C8HwIOEPRo15lvjJ/967zThZkg6I7D9cZHzu88=;
+	s=default; t=1583203666;
+	bh=vOSBD3sjHzK6riGbNN96CcuhfOs6Oto3eXhPhUlUcHs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJ5JbM6f/bbDqjKdtjvpitWcpEo6/jtE4YwV4mZqSJpvPb4iHcsc0VuQ1XD7vA+te
-	 JTDI0GQLklV87XCyAsm854AGnUyLibQNpKBt3z7PvALtCz5O1kFGtqz9OY43lWFuWw
-	 xUFZo9/SOWADS2JUMx7AY9vIDzK0AdMrFUE5vqNg=
+	b=YCSfalEzJj3rJ6ytJFQyrXHvNl3cYJOaZCLEPc0m1iPoe9WOBKuBsuWCKsYMqJo1U
+	 Ao+x5HgSJiA3b11ECaxcSpowJbOjmUuk4MAu1oVjIw2OfHQL+kg8B8JeOs0Js1Yt1H
+	 JhfX2OLDGsOP3rVhFDu3jXGEUOTVTpVTp+sBK6NA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbgCCCrl (ORCPT
+        id S1728150AbgCCCro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:47:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42634 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:47:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728085AbgCCCrd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:33 -0500
+        id S1728103AbgCCCrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3E9E24677;
-        Tue,  3 Mar 2020 02:47:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE77F24697;
+        Tue,  3 Mar 2020 02:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203653;
-        bh=zC3Y1C8HwIOEPRo15lvjJ/967zThZkg6I7D9cZHzu88=;
+        s=default; t=1583203656;
+        bh=vOSBD3sjHzK6riGbNN96CcuhfOs6Oto3eXhPhUlUcHs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vmIng55i4nSiV0BRh3USz4+20dN6gteW5hZ0Ns2ddmTjaanCiZgDVUpMLRaP6qAFW
-         I7JcrqsKMj/z7yy+Rf7ltPg0+KvJ1bQAPMv++dgLO5OkLEMw36if+MsSFcDAIhTdh5
-         n5qiOZpj5ZyvsnWevIGDqs2nBoLqFX/s/XFRQnIw=
+        b=IjtH5PL8mPZnm4EgwH1GU5HIuHafOHqhNE7KOhTS3bP7NIrydHRqGhuJ6XWIh40kk
+         70FZjxABSfGS1+eLOr3hh3kw9IMuOfl5S2KOI6chguwBeFL+pyWUmjBcTjh2+EHUWg
+         lQzBzoJDXZRozqFz6Shs7k9HPEGZ4B5e0KG5I+B4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guo Ren <guoren@linux.alibaba.com>,
-        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 63/66] csky: Fixup ftrace modify panic
-Date:   Mon,  2 Mar 2020 21:46:12 -0500
-Message-Id: <20200303024615.8889-63-sashal@kernel.org>
+Cc:     Hangbin Liu <liuhangbin@gmail.com>,
+        Petr Machata <petrm@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 66/66] selftests: forwarding: vxlan_bridge_1d: use more proper tos value
+Date:   Mon,  2 Mar 2020 21:46:15 -0500
+Message-Id: <20200303024615.8889-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -58,36 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guo Ren <guoren@linux.alibaba.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit 359ae00d12589c31cf103894d0f32588d523ca83 ]
+[ Upstream commit 9b64208f74fbd0e920475ecfe9326f8443fdc3a5 ]
 
-During ftrace init, linux will replace all function prologues
-(call_mcout) with nops, but it need flush_dcache and
-invalidate_icache to make it work. So flush_cache functions
-couldn't be nested called by ftrace framework.
+0x11 and 0x12 set the ECN bits based on RFC2474, it would be better to avoid
+that. 0x14 and 0x18 would be better and works as well.
 
-Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Reported-by: Petr Machata <petrm@mellanox.com>
+Fixes: 4e867c9a50ff ("selftests: forwarding: vxlan_bridge_1d: fix tos value")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/csky/mm/Makefile | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/csky/mm/Makefile b/arch/csky/mm/Makefile
-index c94ef64810986..efb7ebab342b3 100644
---- a/arch/csky/mm/Makefile
-+++ b/arch/csky/mm/Makefile
-@@ -1,8 +1,10 @@
- # SPDX-License-Identifier: GPL-2.0-only
- ifeq ($(CONFIG_CPU_HAS_CACHEV2),y)
- obj-y +=			cachev2.o
-+CFLAGS_REMOVE_cachev2.o = $(CC_FLAGS_FTRACE)
- else
- obj-y +=			cachev1.o
-+CFLAGS_REMOVE_cachev1.o = $(CC_FLAGS_FTRACE)
- endif
+diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
+index 353613fc19475..ce6bea9675c07 100755
+--- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
++++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
+@@ -516,9 +516,9 @@ test_tos()
+ 	RET=0
  
- obj-y +=			dma-mapping.o
+ 	tc filter add dev v1 egress pref 77 prot ip \
+-		flower ip_tos 0x11 action pass
+-	vxlan_ping_test $h1 192.0.2.3 "-Q 0x11" v1 egress 77 10
+-	vxlan_ping_test $h1 192.0.2.3 "-Q 0x12" v1 egress 77 0
++		flower ip_tos 0x14 action pass
++	vxlan_ping_test $h1 192.0.2.3 "-Q 0x14" v1 egress 77 10
++	vxlan_ping_test $h1 192.0.2.3 "-Q 0x18" v1 egress 77 0
+ 	tc filter del dev v1 egress pref 77 prot ip
+ 
+ 	log_test "VXLAN: envelope TOS inheritance"
 -- 
 2.20.1
 
