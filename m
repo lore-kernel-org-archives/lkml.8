@@ -2,53 +2,51 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40EAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC95FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC43E20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C884321556
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257733;
-	bh=suz0D/D2dzRGQclTwBiN+1zSd0FQxwwst2MdgJCDEqg=;
+	s=default; t=1583257737;
+	bh=TkxtcHX/hfDE6kKJ2CzjP9PIAziqcd/Z3aylXr8hs0w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0XN48kj5cmioFltNKQHX7Jd7P1cec//Ngvy0mGI2YZPapIZxrhhmwy7fWEGOn4j3Z
-	 GbB2u4ZjyJY+Q1KN+6I9+WSPfwdkzz2iMS8E3emRNw1ojpMA/Bd9OLnJK3QHT8Pmwu
-	 y6w69qTNiUOVnhpLAZk1wYASvrL0DFPe2tKgwuL0=
+	b=ieEz2UXbcJF9VppfsjaG/PzxfjtueeTprR853jpJ0zwkrP9rGo8IyBP7ctwnGgvv2
+	 JGs6JEvYx9a5FyOlgBpf9qQAmo6ii9ijO5eZFbX3gNNsi95LqxL+aET3B8DAhiPDAx
+	 WGqlzd8edzKNGUKJg0HGbViWqnHxMVnbYFKgsfxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731693AbgCCRsw (ORCPT
+        id S1730013AbgCCRs4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:48:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56050 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731677AbgCCRsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:50 -0500
+        id S1730739AbgCCRsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D210D20CC7;
-        Tue,  3 Mar 2020 17:48:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D75320870;
+        Tue,  3 Mar 2020 17:48:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257729;
-        bh=suz0D/D2dzRGQclTwBiN+1zSd0FQxwwst2MdgJCDEqg=;
+        s=default; t=1583257731;
+        bh=TkxtcHX/hfDE6kKJ2CzjP9PIAziqcd/Z3aylXr8hs0w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m6vgX3H7cDr39XItKhflLeof5Bw8ueWont1WZcHwIScv3MoXJ8G3fPhE0QV91QWng
-         KywaqOot+qpjYXu34t1eeBbAM9S60kRqZgW9V6zlU/tWpvAFHqc0QSTdo297ZvMDuL
-         MvXzCy5+oMilAPWlQrSRd6nNdZE8pKNNViTOkHlc=
+        b=pAERLSMB8IWK4004wCDzjTYS5/M5Unut06eyyXEhRyuAC9MKdZIwO3inJ1zOeFugO
+         xB+Uo8rqmXnzdqv48zrz7tSOYnXohWhc2IL8R0rGOP9xYpe8RR4coEezA4XkE74DyR
+         IM09MmCOotPfk8DXEay/RA/XDBtWTQd+EBQngMLw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>,
-        Damien Le Moal <damien.lemoal@wdc.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.5 081/176] scsi: sd_sbc: Fix sd_zbc_report_zones()
-Date:   Tue,  3 Mar 2020 18:42:25 +0100
-Message-Id: <20200303174314.030529780@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 072/176] bcache: ignore pending signals when creating gc and allocator thread
+Date:   Tue,  3 Mar 2020 18:42:16 +0100
+Message-Id: <20200303174312.994115258@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,76 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Damien Le Moal <damien.lemoal@wdc.com>
+From: Coly Li <colyli@suse.de>
 
-commit 51fdaa0490241e8cd41b40cbf43a336d1a014460 upstream.
+[ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
 
-The block layer generic blk_revalidate_disk_zones() checks the validity of
-zone descriptors reported by a disk using the blk_revalidate_zone_cb()
-callback function executed for each zone descriptor. If a ZBC disk reports
-invalid zone descriptors, blk_revalidate_disk_zones() returns an error and
-sd_zbc_read_zones() changes the disk capacity to 0, which in turn results
-in the gendisk structure capacity to be set to 0. This all works well for
-the first revalidate pass on a disk and the block layer detects the
-capactiy change.
+When run a cache set, all the bcache btree node of this cache set will
+be checked by bch_btree_check(). If the bcache btree is very large,
+iterating all the btree nodes will occupy too much system memory and
+the bcache registering process might be selected and killed by system
+OOM killer. kthread_run() will fail if current process has pending
+signal, therefore the kthread creating in run_cache_set() for gc and
+allocator kernel threads are very probably failed for a very large
+bcache btree.
 
-On the second revalidate pass, blk_revalidate_disk_zones() is called again
-and sd_zbc_report_zones() executed to check the zones a second time.
-However, for this second pass, the gendisk capacity is now 0, which results
-in sd_zbc_report_zones() to do nothing and to report success and no
-zones. blk_revalidate_disk_zones() in turn returns success and sets the
-disk queue chunk_sectors limit with zero as no zones were checked, causing
-a oops to trigger on the BUG_ON(!is_power_of_2(chunk_sectors)) in
-blk_queue_chunk_sectors().
+Indeed such OOM is safe and the registering process will exit after
+the registration done. Therefore this patch flushes pending signals
+during the cache set start up, specificly in bch_cache_allocator_start()
+and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
+large cahced data set.
 
-Fix this by using the sdkp capacity field rather than the gendisk capacity
-for the report zones loop in sd_zbc_report_zones(). Also add a check to
-return immediately an error if the sdkp capacity is 0.  With this fix,
-invalid/buggy ZBC disk scan does not trigger a oops and are exposed with a
-0 capacity. This change also preserve the chance for the disk to be
-correctly revalidated on the second revalidate pass as the scsi disk
-structure capacity field is always set to the disk reported value when
-sd_zbc_report_zones() is called.
-
-Link: https://lore.kernel.org/r/20200219063800.880834-1-damien.lemoal@wdc.com
-Fixes: d41003513e61 ("block: rework zone reporting")
-Cc: Cc: <stable@vger.kernel.org> # v5.5
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/sd_zbc.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/md/bcache/alloc.c | 18 ++++++++++++++++--
+ drivers/md/bcache/btree.c | 13 +++++++++++++
+ 2 files changed, 29 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/sd_zbc.c
-+++ b/drivers/scsi/sd_zbc.c
-@@ -161,6 +161,7 @@ int sd_zbc_report_zones(struct gendisk *
- 			unsigned int nr_zones, report_zones_cb cb, void *data)
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index a1df0d95151c6..8bc1faf71ff2f 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -67,6 +67,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/kthread.h>
+ #include <linux/random.h>
++#include <linux/sched/signal.h>
+ #include <trace/events/bcache.h>
+ 
+ #define MAX_OPEN_BUCKETS 128
+@@ -733,8 +734,21 @@ int bch_open_buckets_alloc(struct cache_set *c)
+ 
+ int bch_cache_allocator_start(struct cache *ca)
  {
- 	struct scsi_disk *sdkp = scsi_disk(disk);
-+	sector_t capacity = logical_to_sectors(sdkp->device, sdkp->capacity);
- 	unsigned int nr, i;
- 	unsigned char *buf;
- 	size_t offset, buflen = 0;
-@@ -171,11 +172,15 @@ int sd_zbc_report_zones(struct gendisk *
- 		/* Not a zoned device */
- 		return -EOPNOTSUPP;
- 
-+	if (!capacity)
-+		/* Device gone or invalid */
-+		return -ENODEV;
+-	struct task_struct *k = kthread_run(bch_allocator_thread,
+-					    ca, "bcache_allocator");
++	struct task_struct *k;
 +
- 	buf = sd_zbc_alloc_report_buffer(sdkp, nr_zones, &buflen);
- 	if (!buf)
- 		return -ENOMEM;
++	/*
++	 * In case previous btree check operation occupies too many
++	 * system memory for bcache btree node cache, and the
++	 * registering process is selected by OOM killer. Here just
++	 * ignore the SIGKILL sent by OOM killer if there is, to
++	 * avoid kthread_run() being failed by pending signals. The
++	 * bcache registering process will exit after the registration
++	 * done.
++	 */
++	if (signal_pending(current))
++		flush_signals(current);
++
++	k = kthread_run(bch_allocator_thread, ca, "bcache_allocator");
+ 	if (IS_ERR(k))
+ 		return PTR_ERR(k);
  
--	while (zone_idx < nr_zones && sector < get_capacity(disk)) {
-+	while (zone_idx < nr_zones && sector < capacity) {
- 		ret = sd_zbc_do_report_zones(sdkp, buf, buflen,
- 				sectors_to_logical(sdkp->device, sector), true);
- 		if (ret)
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index 14d6c33b0957e..78f0711a25849 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -34,6 +34,7 @@
+ #include <linux/random.h>
+ #include <linux/rcupdate.h>
+ #include <linux/sched/clock.h>
++#include <linux/sched/signal.h>
+ #include <linux/rculist.h>
+ #include <linux/delay.h>
+ #include <trace/events/bcache.h>
+@@ -1917,6 +1918,18 @@ static int bch_gc_thread(void *arg)
+ 
+ int bch_gc_thread_start(struct cache_set *c)
+ {
++	/*
++	 * In case previous btree check operation occupies too many
++	 * system memory for bcache btree node cache, and the
++	 * registering process is selected by OOM killer. Here just
++	 * ignore the SIGKILL sent by OOM killer if there is, to
++	 * avoid kthread_run() being failed by pending signals. The
++	 * bcache registering process will exit after the registration
++	 * done.
++	 */
++	if (signal_pending(current))
++		flush_signals(current);
++
+ 	c->gc_thread = kthread_run(bch_gc_thread, c, "bcache_gc");
+ 	return PTR_ERR_OR_ZERO(c->gc_thread);
+ }
+-- 
+2.20.1
+
 
 
