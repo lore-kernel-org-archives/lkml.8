@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66205C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A49C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFF6208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F70C208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258870;
-	bh=9kFRiKQMxCYsH+san8ZR4DvZjUuoV5evHH59jKA2ls4=;
+	s=default; t=1583258876;
+	bh=RBkE2p+p1wkYJ94iTvM47rJcXwsX+MC8/AcJdXC+qCU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VJb4Vf3PHxE2lwGUHBS7MXVOQ+H0GE3d+wQRBBAWMzEMzObTvhMLsP5FX4wfYJFnX
-	 XroMTBu0g3dXi1/w0RsbZvoMNimoZjEmTPM/XM5tUxqFcLE8RhCY+PBUXYrBCu7eU/
-	 YZy6kh8qUKeiIfC3CF5plZHs+ppwKNJRQlF8m1Mc=
+	b=edyXB19LeBq6Nm3dWmHDNQLQa5XrDP4ZomoozyRz5Tv2jtd4Z56BSqJHSkKcb2xg2
+	 q/LhoWRxhLHxJnNlcF4M1/q/Fx5sWgIdRdsIaYDl4wTmHTij8X3D9MkDxdLrKzAQ4u
+	 aurqYIp+YrXuQBbr7Q7KTnKy45SScWq2eNujzMW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387737AbgCCSHt (ORCPT
+        id S1732490AbgCCRyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:07:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35496 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732319AbgCCRyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:22 -0500
+        id S1732478AbgCCRyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA42F206D5;
-        Tue,  3 Mar 2020 17:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C2A62146E;
+        Tue,  3 Mar 2020 17:54:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258062;
-        bh=9kFRiKQMxCYsH+san8ZR4DvZjUuoV5evHH59jKA2ls4=;
+        s=default; t=1583258046;
+        bh=RBkE2p+p1wkYJ94iTvM47rJcXwsX+MC8/AcJdXC+qCU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bXDqe7PNWOg08kjxZ8MiwSi8yIidDw2wJKXXUUfnoaswmjPS1yolt/W7Nm62q3xuj
-         S/jfE4tj8qbiQ3bC0Nq0nuADNBA4310OZkSCVRaohygfr4LHgHgHne7hV2nmtP9IC4
-         Qu5MZGnUz6Pd9ySzyzme3x4DX0s6BwKO/Ui7LTGg=
+        b=rvfc2I6yxx6pAKIXUzAanC4HzDGz+Wqm8cAJlwlzFB5M0/nQ7KN/WX8haHPzHZoue
+         omTmJg0zBCsL4jJzNqyMBL7tNWapsBvLfiRsy8UexfKPqVmjCiyQmpmYX6J6KS4SMc
+         0m8TNsrBkmqH8/kN6GNcZ0fqD9gdAlP34pYGzmjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Rohit Maheshwari <rohitm@chelsio.com>,
-        Jakub Kicinski <kuba@kernel.org>,
+        stable@vger.kernel.org, Pavel Roskin <plroskin@gmail.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Eric Dumazet <edumazet@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 009/152] net/tls: Fix to avoid gettig invalid tls record
-Date:   Tue,  3 Mar 2020 18:41:47 +0100
-Message-Id: <20200303174303.574514775@linuxfoundation.org>
+Subject: [PATCH 5.4 013/152] udp: rehash on disconnect
+Date:   Tue,  3 Mar 2020 18:41:51 +0100
+Message-Id: <20200303174304.011342222@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,69 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rohit Maheshwari <rohitm@chelsio.com>
+From: Willem de Bruijn <willemb@google.com>
 
-[ Upstream commit 06f5201c6392f998a49ca9c9173e2930c8eb51d8 ]
+[ Upstream commit 303d0403b8c25e994e4a6e45389e173cf8706fb5 ]
 
-Current code doesn't check if tcp sequence number is starting from (/after)
-1st record's start sequnce number. It only checks if seq number is before
-1st record's end sequnce number. This problem will always be a possibility
-in re-transmit case. If a record which belongs to a requested seq number is
-already deleted, tls_get_record will start looking into list and as per the
-check it will look if seq number is before the end seq of 1st record, which
-will always be true and will return 1st record always, it should in fact
-return NULL.
-As part of the fix, start looking each record only if the sequence number
-lies in the list else return NULL.
-There is one more check added, driver look for the start marker record to
-handle tcp packets which are before the tls offload start sequence number,
-hence return 1st record if the record is tls start marker and seq number is
-before the 1st record's starting sequence number.
+As of the below commit, udp sockets bound to a specific address can
+coexist with one bound to the any addr for the same port.
 
-Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
-Signed-off-by: Rohit Maheshwari <rohitm@chelsio.com>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+The commit also phased out the use of socket hashing based only on
+port (hslot), in favor of always hashing on {addr, port} (hslot2).
+
+The change broke the following behavior with disconnect (AF_UNSPEC):
+
+    server binds to 0.0.0.0:1337
+    server connects to 127.0.0.1:80
+    server disconnects
+    client connects to 127.0.0.1:1337
+    client sends "hello"
+    server reads "hello"	// times out, packet did not find sk
+
+On connect the server acquires a specific source addr suitable for
+routing to its destination. On disconnect it reverts to the any addr.
+
+The connect call triggers a rehash to a different hslot2. On
+disconnect, add the same to return to the original hslot2.
+
+Skip this step if the socket is going to be unhashed completely.
+
+Fixes: 4cdeeee9252a ("net: udp: prefer listeners bound to an address")
+Reported-by: Pavel Roskin <plroskin@gmail.com>
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Reviewed-by: Eric Dumazet <edumazet@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tls/tls_device.c |   20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ net/ipv4/udp.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/net/tls/tls_device.c
-+++ b/net/tls/tls_device.c
-@@ -581,7 +581,7 @@ struct tls_record_info *tls_get_record(s
- 				       u32 seq, u64 *p_record_sn)
- {
- 	u64 record_sn = context->hint_record_sn;
--	struct tls_record_info *info;
-+	struct tls_record_info *info, *last;
+--- a/net/ipv4/udp.c
++++ b/net/ipv4/udp.c
+@@ -1856,8 +1856,12 @@ int __udp_disconnect(struct sock *sk, in
+ 	inet->inet_dport = 0;
+ 	sock_rps_reset_rxhash(sk);
+ 	sk->sk_bound_dev_if = 0;
+-	if (!(sk->sk_userlocks & SOCK_BINDADDR_LOCK))
++	if (!(sk->sk_userlocks & SOCK_BINDADDR_LOCK)) {
+ 		inet_reset_saddr(sk);
++		if (sk->sk_prot->rehash &&
++		    (sk->sk_userlocks & SOCK_BINDPORT_LOCK))
++			sk->sk_prot->rehash(sk);
++	}
  
- 	info = context->retransmit_hint;
- 	if (!info ||
-@@ -593,6 +593,24 @@ struct tls_record_info *tls_get_record(s
- 						struct tls_record_info, list);
- 		if (!info)
- 			return NULL;
-+		/* send the start_marker record if seq number is before the
-+		 * tls offload start marker sequence number. This record is
-+		 * required to handle TCP packets which are before TLS offload
-+		 * started.
-+		 *  And if it's not start marker, look if this seq number
-+		 * belongs to the list.
-+		 */
-+		if (likely(!tls_record_is_start_marker(info))) {
-+			/* we have the first record, get the last record to see
-+			 * if this seq number belongs to the list.
-+			 */
-+			last = list_last_entry(&context->records_list,
-+					       struct tls_record_info, list);
-+
-+			if (!between(seq, tls_record_start_seq(info),
-+				     last->end_seq))
-+				return NULL;
-+		}
- 		record_sn = context->unacked_record_sn;
- 	}
- 
+ 	if (!(sk->sk_userlocks & SOCK_BINDPORT_LOCK)) {
+ 		sk->sk_prot->unhash(sk);
 
 
