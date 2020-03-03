@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6281C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A27C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 943A4217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B351217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204050;
-	bh=66QW2+ESPuzoUmehFdhSS+d4CRWx0EfkVdbM2bdSjKI=;
+	s=default; t=1583204054;
+	bh=w4Vph8L0Job0JGTl/V9A4ULdLn1PgStBJDbEJ0KONhI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t9yTWm7PF4mPRFqXVzWNzK7L3H6GPt+lBN+99SNbcowaWKaZ8zSOeHCEs/WJIt9fv
-	 9BMHyxs6t4W5Lb1A+rzGhYYrWpnFKMzoqmfN2YubhuJyfyhbeNh4rqGOfDM78g7kdh
-	 ylNobfhEiRW6C3J+hIXjW8X8gbDkrXjkQagLt/D0=
+	b=ErzW3Po/xDBn24QDy9KuHDbohVtUwzwOth6hebBpdR4GAtqDjNRM3IjYo6iREnuhd
+	 LnkVous4dh0NSIjo7AMVZTWSeb7/GWdV6qUawXodtIjCL64HilkQXkmNWDJgAa7lfD
+	 UPk5rXpPuDKpQWU/1P638CMtflm0GssbKrRYTKfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbgCCCtZ (ORCPT
+        id S1728907AbgCCCyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:49:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45584 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:54:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728777AbgCCCtW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:22 -0500
+        id S1728846AbgCCCtY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:24 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E152E24699;
-        Tue,  3 Mar 2020 02:49:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21F4D246DD;
+        Tue,  3 Mar 2020 02:49:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203761;
-        bh=66QW2+ESPuzoUmehFdhSS+d4CRWx0EfkVdbM2bdSjKI=;
+        s=default; t=1583203763;
+        bh=w4Vph8L0Job0JGTl/V9A4ULdLn1PgStBJDbEJ0KONhI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kBp9pawZPEBoSV/2SRxyWvCAL+tUwSU2w4molBhcuXBCRgGFlNjXOtXS6MoCORjPh
-         8LzzQFROv+ueOFV/lVCJgh2kl/Rf6HM9BBj2qm+2tVIxYJRmkuwAh1n1dlV+7ZNwfS
-         RC+K8228KXQ92QML5XX1/kLqXaOOk3NSuO07ZpxA=
+        b=gJrt6plEaxc8v5eK6wAIDbuC0vl20xoG3DQlNDmg5CJO7bloP7sLuZK8U7/DWpG2R
+         qoVXnU52zRc+g35sDddmX78cym0jwchf/4ttGJ98jdfJN1lwbkFRPD5uaba2FdBZU5
+         EcGNCaxIYl83GHshH3vNCmkwStRrSkCGyA85hVGM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 23/32] s390: make 'install' not depend on vmlinux
-Date:   Mon,  2 Mar 2020 21:48:42 -0500
-Message-Id: <20200303024851.10054-23-sashal@kernel.org>
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Borislav Petkov <bp@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 25/32] x86/boot/compressed: Don't declare __force_order in kaslr_64.c
+Date:   Mon,  2 Mar 2020 21:48:44 -0500
+Message-Id: <20200303024851.10054-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024851.10054-1-sashal@kernel.org>
 References: <20200303024851.10054-1-sashal@kernel.org>
@@ -59,51 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: "H.J. Lu" <hjl.tools@gmail.com>
 
-[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
+[ Upstream commit df6d4f9db79c1a5d6f48b59db35ccd1e9ff9adfc ]
 
-For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
-install" not depend on vmlinux"), the install targets should never
-trigger the rebuild of the kernel.
+GCC 10 changed the default to -fno-common, which leads to
 
-The variable, CONFIGURE, is not set by anyone. Remove it as well.
+    LD      arch/x86/boot/compressed/vmlinux
+  ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition of `__force_order'; \
+    arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
+  make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compressed/vmlinux] Error 1
 
-Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Since __force_order is already provided in pgtable_64.c, there is no
+need to declare __force_order in kaslr_64.c.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200124181811.4780-1-hjl.tools@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/Makefile      | 2 +-
- arch/s390/boot/Makefile | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/kaslr_64.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index 4bccde36cb161..9a3a698c8fca5 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -140,7 +140,7 @@ all: bzImage
- #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
- KBUILD_IMAGE	:= $(boot)/bzImage
+diff --git a/arch/x86/boot/compressed/kaslr_64.c b/arch/x86/boot/compressed/kaslr_64.c
+index 748456c365f46..9557c5a15b91e 100644
+--- a/arch/x86/boot/compressed/kaslr_64.c
++++ b/arch/x86/boot/compressed/kaslr_64.c
+@@ -29,9 +29,6 @@
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+ #include "../../mm/ident_map.c"
  
--install: vmlinux
-+install:
- 	$(Q)$(MAKE) $(build)=$(boot) $@
- 
- bzImage: vmlinux
-diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-index f6a9b0c203553..45c72d1f9e7d2 100644
---- a/arch/s390/boot/Makefile
-+++ b/arch/s390/boot/Makefile
-@@ -46,7 +46,7 @@ quiet_cmd_ar = AR      $@
- $(obj)/startup.a: $(OBJECTS) FORCE
- 	$(call if_changed,ar)
- 
--install: $(CONFIGURE) $(obj)/bzImage
-+install:
- 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
- 	      System.map "$(INSTALL_PATH)"
- 
+-/* Used by pgtable.h asm code to force instruction serialization. */
+-unsigned long __force_order;
+-
+ /* Used to track our page table allocation area. */
+ struct alloc_pgt_data {
+ 	unsigned char *pgt_buf;
 -- 
 2.20.1
 
