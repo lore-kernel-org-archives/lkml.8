@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AD70C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F274C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B87E20CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC9082072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258266;
-	bh=LqAP0KvMGc8JzE6uGuZp/y4BiDKlH9TptkED8OV5tJI=;
+	s=default; t=1583258269;
+	bh=M0CjjTmG0IKFpBkEYG84Jv79xfXbJMIzIS/SxLzWllE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gk2XvzJbuMHzGhXoyypjhh3Hv6GvswzcfzKaytEAIZsWKW6BE2Z3JBtVI+4tITMAJ
-	 ZwuHHJcYt1OabKeh2gG8Xesy0OOmlvx+yL5FbtPJG4I6yDmEmuT3zvJY1pMrH4Hu78
-	 6M2DRFmLc/QIv/atoPNoDIiPzX3XTfoR41LmIs3s=
+	b=xt/prA2WHozCj4iv/pVzoigJp9cMPhphipnM44DWA73knuOL2FbYN00aK8uaBj+Jw
+	 0n5j2KG0HZHFsr+NE+3sG8cL9ch6U99VA0eRTzFv30VVEfEbefw15xRQhOv4/Eq3E7
+	 owpe1RxmARQGZJn0GAvcQN3YB3K5XLrvN5tADMYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733141AbgCCR5o (ORCPT
+        id S1733151AbgCCR5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:57:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40296 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:57:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733129AbgCCR5l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:57:41 -0500
+        id S1733138AbgCCR5o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:57:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7977D20728;
-        Tue,  3 Mar 2020 17:57:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A41C20870;
+        Tue,  3 Mar 2020 17:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258260;
-        bh=LqAP0KvMGc8JzE6uGuZp/y4BiDKlH9TptkED8OV5tJI=;
+        s=default; t=1583258263;
+        bh=M0CjjTmG0IKFpBkEYG84Jv79xfXbJMIzIS/SxLzWllE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R60MHtzR8cg07w4ruAxEVR/+/4XdbSUgP9cz0PMmPhcPGziyW7Sxf2gKrjUPymgpG
-         ltnKstsUYkBfHpfbTKrKmAHaIFkY7kpoTnKsStnwCBm7mEDTeUqRxhsOBqIUOHV1TG
-         YhlTitfJotn259qlWQf6ijM5HiFcrLJ7QK2UJbnk=
+        b=nku8bu2zGOawxGAfwjvkgVeqnlTRvyn3+Q7DkNSFt0i/p3Giiu8at6VnlUmWDz6ZT
+         Ed2n8/cq7Mp26ksMJbxGwk21GqcrBXLbWnVe5J0pxaDtUNHRONokgSv4G3SVKtiKr1
+         OTQZAMuyoi+2QZvv+Z4rbCpS/xpR/8MdpYqv/Wis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Laight <David.Laight@ACULAB.COM>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
+        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
         Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 5.4 095/152] i2c: altera: Fix potential integer overflow
-Date:   Tue,  3 Mar 2020 18:43:13 +0100
-Message-Id: <20200303174313.371203832@linuxfoundation.org>
+Subject: [PATCH 5.4 096/152] i2c: jz4780: silence log flood on txabrt
+Date:   Tue,  3 Mar 2020 18:43:14 +0100
+Message-Id: <20200303174313.487589723@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,38 +59,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Wolfram Sang <wsa@the-dreams.de>
 
-commit 54498e8070e19e74498a72c7331348143e7e1f8c upstream.
+commit 9e661cedcc0a072d91a32cb88e0515ea26e35711 upstream.
 
-Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
-instead of 64-bit.
+The printout for txabrt is way too talkative and is highly annoying with
+scanning programs like 'i2cdetect'. Reduce it to the minimum, the rest
+can be gained by I2C core debugging and datasheet information. Also,
+make it a debug printout, it won't help the regular user.
 
-Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
-and there is no need for div_u64().
-
-Addresses-Coverity: 1458369 ("Unintentional integer overflow")
-Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
-Suggested-by: David Laight <David.Laight@ACULAB.COM>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
+Fixes: ba92222ed63a ("i2c: jz4780: Add i2c bus controller driver for Ingenic JZ4780")
+Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
+Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
 Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-altera.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-jz4780.c |   36 ++----------------------------------
+ 1 file changed, 2 insertions(+), 34 deletions(-)
 
---- a/drivers/i2c/busses/i2c-altera.c
-+++ b/drivers/i2c/busses/i2c-altera.c
-@@ -171,7 +171,7 @@ static void altr_i2c_init(struct altr_i2
- 	/* SCL Low Time */
- 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
- 	/* SDA Hold Time, 300ns */
--	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
-+	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
+--- a/drivers/i2c/busses/i2c-jz4780.c
++++ b/drivers/i2c/busses/i2c-jz4780.c
+@@ -73,25 +73,6 @@
+ #define JZ4780_I2C_STA_TFNF		BIT(1)
+ #define JZ4780_I2C_STA_ACT		BIT(0)
  
- 	/* Mask all master interrupt bits */
- 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
+-static const char * const jz4780_i2c_abrt_src[] = {
+-	"ABRT_7B_ADDR_NOACK",
+-	"ABRT_10ADDR1_NOACK",
+-	"ABRT_10ADDR2_NOACK",
+-	"ABRT_XDATA_NOACK",
+-	"ABRT_GCALL_NOACK",
+-	"ABRT_GCALL_READ",
+-	"ABRT_HS_ACKD",
+-	"SBYTE_ACKDET",
+-	"ABRT_HS_NORSTRT",
+-	"SBYTE_NORSTRT",
+-	"ABRT_10B_RD_NORSTRT",
+-	"ABRT_MASTER_DIS",
+-	"ARB_LOST",
+-	"SLVFLUSH_TXFIFO",
+-	"SLV_ARBLOST",
+-	"SLVRD_INTX",
+-};
+-
+ #define JZ4780_I2C_INTST_IGC		BIT(11)
+ #define JZ4780_I2C_INTST_ISTT		BIT(10)
+ #define JZ4780_I2C_INTST_ISTP		BIT(9)
+@@ -529,21 +510,8 @@ done:
+ 
+ static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
+ {
+-	int i;
+-
+-	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
+-	dev_err(&i2c->adap.dev, "device addr=%x\n",
+-		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
+-	dev_err(&i2c->adap.dev, "send cmd count:%d  %d\n",
+-		i2c->cmd, i2c->cmd_buf[i2c->cmd]);
+-	dev_err(&i2c->adap.dev, "receive data count:%d  %d\n",
+-		i2c->cmd, i2c->data_buf[i2c->cmd]);
+-
+-	for (i = 0; i < 16; i++) {
+-		if (src & BIT(i))
+-			dev_dbg(&i2c->adap.dev, "I2C TXABRT[%d]=%s\n",
+-				i, jz4780_i2c_abrt_src[i]);
+-	}
++	dev_dbg(&i2c->adap.dev, "txabrt: 0x%08x, cmd: %d, send: %d, recv: %d\n",
++		src, i2c->cmd, i2c->cmd_buf[i2c->cmd], i2c->data_buf[i2c->cmd]);
+ }
+ 
+ static inline int jz4780_i2c_xfer_read(struct jz4780_i2c *i2c,
 
 
