@@ -2,159 +2,165 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462FFC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6986BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9B8208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258910;
-	bh=oTYgoWQTfmOG7ZN0sUeME2E5uZ6h8jH+epj1i8hWPwQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hmgip4uky6WXshi9OsJV30pnwjUomEwHHzJq/Vy0oV7+566aODjf19NK953hI3YVV
-	 OiLaDdY3CVdaEEIvskiGfRnM42Dd6npPecOfUaprUccKgStGCkKrqbz8vpyNnCyCTN
-	 f7P7fXWzjh7jj1Bin7/sPkHfhOc6XqnTHot5ixAg=
+	by mail.kernel.org (Postfix) with ESMTP id 3BB9F2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EkdAW6/g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388157AbgCCSI2 (ORCPT
+        id S2388200AbgCCSId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:08:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34138 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730695AbgCCRxd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:33 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 708D620870;
-        Tue,  3 Mar 2020 17:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258012;
-        bh=oTYgoWQTfmOG7ZN0sUeME2E5uZ6h8jH+epj1i8hWPwQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QmjIPtAB2r1NKB0teRbDECG6THTjsVSfgbt64tGMQdCrZu+lvv8P0OrdcnJRIZtQP
-         eETzVQFwk6CurGaijq+X9BxV2M0wiuOqhqBaT1nS2fYzCFozfnncwcrVXPVFKzpCjF
-         aiNuBpkCSB2Rz0BRem+hWYUaDIoE+bzIjrhDFlmw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 037/152] perf/x86/cstate: Add Tremont support
-Date:   Tue,  3 Mar 2020 18:42:15 +0100
-Message-Id: <20200303174306.647549639@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
-References: <20200303174302.523080016@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 3 Mar 2020 13:08:33 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45554 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730394AbgCCRxc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:32 -0500
+Received: by mail-oi1-f194.google.com with SMTP id v19so3890045oic.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:53:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1QskSzXkk1uR/gTFKte9PcDDhEgJX8WglHuzZL1T1G4=;
+        b=EkdAW6/gbfcyTLcI6cTuLSxNcHGev64LQOUj5OAjNQw2Xj0vLIPKWYamrckOeGPLtq
+         MhahHQt+YRF0QGMJZcGPkOWZV/8U8AknEZxlXU2VZ+FrViArmUtKhGfIaEUbH7F/gF4T
+         04hPqBSpVHKtoGKcQNVvvSuZKE0Vy3OUl+JOHQR+tULqSkdsfOHK69X+FeNXTap9cvFf
+         C/YFZiDDbNYtWupxyhH4d0URwyaCyd8kqZvCe5TE6eQtT1l4uTTY9eodjkNdGJDN0ujX
+         +t9dGG48tMSUkTYHDv2NOPSrqgFzqNTMcYapNtcIFzhp5ASA9hiX7gzvkquAyM5Bko1n
+         AiOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1QskSzXkk1uR/gTFKte9PcDDhEgJX8WglHuzZL1T1G4=;
+        b=JcpaGQzNZmnUUPRlps+OUZUQKD1OBC7HItzS7cQ4ayD53zVz1mD42rlItGZsHEaHrW
+         bEY4zhYeJhViPCsqQw8K3gLz9bxLn7ypD3QE2UsekVCC++gLXG/BTysMvHDVogTiNoHd
+         AiGc+apYT19BZhzydzrpk8E8WxJKcClrClCEc6grbjq6cQPus//IJuC3OwCDszQjRb17
+         qNi5EP0AuS0Kgmc8vf8ens2+tmgwDHVV1ygloxliVcbFiOS4J4fdmJQr+vH+VAwAzBzW
+         PL3qfY2P4aY+Eu1uxBlvbFs35MXZz2SIPlcAZcOWWtuwWEIKEf7XFiHisY8Rp8tF93+K
+         oMtQ==
+X-Gm-Message-State: ANhLgQ1lSQlDoCYOZkYRZRqPYfckyze/LAI01AGPT3VdRXlqkBIkX/Cf
+        rSjrX6qZfADG6Ef0kY3eF7cMfE0eDxniiZP3QWtwr4ZcOUY=
+X-Google-Smtp-Source: ADFU+vvAz3SFLobt0buMef4VTMqh/gw3M2ubbyrfIoKOqQ/M5Ky/Ct5gh8DK1xfIa99e1pRyzln7JMroMoIwcBdJCwY=
+X-Received: by 2002:aca:4cd8:: with SMTP id z207mr3096082oia.155.1583258011709;
+ Tue, 03 Mar 2020 09:53:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1583256049-15497-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1583256049-15497-1-git-send-email-cai@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Tue, 3 Mar 2020 18:53:20 +0100
+Message-ID: <CANpmjNPJc_45+h_yJWwmw=YUuWduD6pPX2vdfPVekPvnnHd+_Q@mail.gmail.com>
+Subject: Re: [PATCH -next] signal: annotate data races in sys_rt_sigaction
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>, catalin.marinas@arm.com,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+On Tue, 3 Mar 2020 at 18:21, Qian Cai <cai@lca.pw> wrote:
+>
+> Kmemleak could scan task stacks while plain writes happens to those
+> stack variables which could results in data races. For example, in
+> sys_rt_sigaction and do_sigaction(), it could have plain writes in
+> a 32-byte size. Since the kmemleak does not care about the actual values
+> of a non-pointer and all do_sigaction() call sites only copy to stack
+> variables, annotate them as intentional data races using the
+> data_race() macro. The data races were reported by KCSAN,
+>
+>  BUG: KCSAN: data-race in _copy_from_user / scan_block
+>
+>  read to 0xffffb3074e61fe58 of 8 bytes by task 356 on cpu 19:
+>   scan_block+0x6e/0x1a0
+>   scan_block at mm/kmemleak.c:1251
+>   kmemleak_scan+0xbea/0xd20
+>   kmemleak_scan at mm/kmemleak.c:1482
+>   kmemleak_scan_thread+0xcc/0xfa
+>   kthread+0x1cd/0x1f0
+>   ret_from_fork+0x3a/0x50
 
-[ Upstream commit ecf71fbccb9ac5cb964eb7de59bb9da3755b7885 ]
+I think we should move the annotations to kmemleak instead of signal.c.
 
-Tremont is Intel's successor to Goldmont Plus. From the perspective of
-Intel cstate residency counters, there is nothing changed compared with
-Goldmont Plus and Goldmont.
+Because putting a "data_race()" on the accesses in signal.c just
+because of Kmemleak feels wrong because then we might miss other more
+serious issues. Kmemleak isn't normally enabled in a non-debug kernel.
 
-Share glm_cstates with Goldmont Plus and Goldmont.
-Update the comments for Tremont.
+I wonder if it'd be a better idea to just disable KCSAN on scan_block
+with __no_kcsan? If Kmemleak only does reads, then __no_kcsan will do
+the right thing here, because the reads are hidden completely from
+KCSAN. With "data_race()" you would still have to mark both accesses
+in signal.c and kmemleak (this is by design, so that we document all
+intentionally data-racy accesses).
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Link: https://lkml.kernel.org/r/1580236279-35492-2-git-send-email-kan.liang@linux.intel.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/events/intel/cstate.c | 22 +++++++++++++---------
- 1 file changed, 13 insertions(+), 9 deletions(-)
+An alternative would be to just exempt kmemleak from KCSAN with
+"KCSAN_SANITIZE_kmemleak.o := n". Given Kmemleak is a debugging tool
+and it's expected to race with all kinds of accesses, maybe that's the
+best option.
 
-diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
-index e1daf4151e116..4814c964692cb 100644
---- a/arch/x86/events/intel/cstate.c
-+++ b/arch/x86/events/intel/cstate.c
-@@ -40,17 +40,18 @@
-  * Model specific counters:
-  *	MSR_CORE_C1_RES: CORE C1 Residency Counter
-  *			 perf code: 0x00
-- *			 Available model: SLM,AMT,GLM,CNL
-+ *			 Available model: SLM,AMT,GLM,CNL,TNT
-  *			 Scope: Core (each processor core has a MSR)
-  *	MSR_CORE_C3_RESIDENCY: CORE C3 Residency Counter
-  *			       perf code: 0x01
-  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,GLM,
-- *						CNL,KBL,CML
-+ *						CNL,KBL,CML,TNT
-  *			       Scope: Core
-  *	MSR_CORE_C6_RESIDENCY: CORE C6 Residency Counter
-  *			       perf code: 0x02
-  *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-- *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL
-+ *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL,
-+ *						TNT
-  *			       Scope: Core
-  *	MSR_CORE_C7_RESIDENCY: CORE C7 Residency Counter
-  *			       perf code: 0x03
-@@ -60,17 +61,18 @@
-  *	MSR_PKG_C2_RESIDENCY:  Package C2 Residency Counter.
-  *			       perf code: 0x00
-  *			       Available model: SNB,IVB,HSW,BDW,SKL,KNL,GLM,CNL,
-- *						KBL,CML,ICL,TGL
-+ *						KBL,CML,ICL,TGL,TNT
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C3_RESIDENCY:  Package C3 Residency Counter.
-  *			       perf code: 0x01
-  *			       Available model: NHM,WSM,SNB,IVB,HSW,BDW,SKL,KNL,
-- *						GLM,CNL,KBL,CML,ICL,TGL
-+ *						GLM,CNL,KBL,CML,ICL,TGL,TNT
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C6_RESIDENCY:  Package C6 Residency Counter.
-  *			       perf code: 0x02
-- *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW
-- *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL
-+ *			       Available model: SLM,AMT,NHM,WSM,SNB,IVB,HSW,BDW,
-+ *						SKL,KNL,GLM,CNL,KBL,CML,ICL,TGL,
-+ *						TNT
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C7_RESIDENCY:  Package C7 Residency Counter.
-  *			       perf code: 0x03
-@@ -87,7 +89,8 @@
-  *			       Scope: Package (physical package)
-  *	MSR_PKG_C10_RESIDENCY: Package C10 Residency Counter.
-  *			       perf code: 0x06
-- *			       Available model: HSW ULT,KBL,GLM,CNL,CML,ICL,TGL
-+ *			       Available model: HSW ULT,KBL,GLM,CNL,CML,ICL,TGL,
-+ *						TNT
-  *			       Scope: Package (physical package)
-  *
-  */
-@@ -640,8 +643,9 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
- 
- 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT,   glm_cstates),
- 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_D, glm_cstates),
--
- 	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_GOLDMONT_PLUS, glm_cstates),
-+	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_TREMONT_D, glm_cstates),
-+	X86_CSTATES_MODEL(INTEL_FAM6_ATOM_TREMONT, glm_cstates),
- 
- 	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE_L, icl_cstates),
- 	X86_CSTATES_MODEL(INTEL_FAM6_ICELAKE,   icl_cstates),
--- 
-2.20.1
+Thanks,
+-- Marco
 
-
-
+>  write to 0xffffb3074e61fe58 of 32 bytes by task 30208 on cpu 2:
+>   _copy_from_user+0xb2/0xe0
+>   copy_user_generic at arch/x86/include/asm/uaccess_64.h:37
+>   (inlined by) raw_copy_from_user at arch/x86/include/asm/uaccess_64.h:71
+>   (inlined by) _copy_from_user at lib/usercopy.c:15
+>   __x64_sys_rt_sigaction+0x83/0x140
+>   __do_sys_rt_sigaction at kernel/signal.c:4245
+>   (inlined by) __se_sys_rt_sigaction at kernel/signal.c:4233
+>   (inlined by) __x64_sys_rt_sigaction at kernel/signal.c:4233
+>   do_syscall_64+0x91/0xb05
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  kernel/signal.c | 9 ++++++---
+>  1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/kernel/signal.c b/kernel/signal.c
+> index 5b2396350dd1..bf39078c8be1 100644
+> --- a/kernel/signal.c
+> +++ b/kernel/signal.c
+> @@ -3964,14 +3964,15 @@ int do_sigaction(int sig, struct k_sigaction *act, struct k_sigaction *oact)
+>
+>         spin_lock_irq(&p->sighand->siglock);
+>         if (oact)
+> -               *oact = *k;
+> +               /* Kmemleak could scan the task stack. */
+> +               data_race(*oact = *k);
+>
+>         sigaction_compat_abi(act, oact);
+>
+>         if (act) {
+>                 sigdelsetmask(&act->sa.sa_mask,
+>                               sigmask(SIGKILL) | sigmask(SIGSTOP));
+> -               *k = *act;
+> +               data_race(*k = *act);
+>                 /*
+>                  * POSIX 3.3.1.3:
+>                  *  "Setting a signal action to SIG_IGN for a signal that is
+> @@ -4242,7 +4243,9 @@ int __compat_save_altstack(compat_stack_t __user *uss, unsigned long sp)
+>         if (sigsetsize != sizeof(sigset_t))
+>                 return -EINVAL;
+>
+> -       if (act && copy_from_user(&new_sa.sa, act, sizeof(new_sa.sa)))
+> +       if (act &&
+> +           /* Kmemleak could scan the task stack. */
+> +           data_race(copy_from_user(&new_sa.sa, act, sizeof(new_sa.sa))))
+>                 return -EFAULT;
+>
+>         ret = do_sigaction(sig, act ? &new_sa : NULL, oact ? &old_sa : NULL);
+> --
+> 1.8.3.1
+>
