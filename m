@@ -2,159 +2,257 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9ADC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D1CAC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8B6020838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00F7120838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CV1elQMg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="YxSUTn6U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbgCCN3s (ORCPT
+        id S1729446AbgCCNdb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:29:48 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39028 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbgCCN3r (ORCPT
+        Tue, 3 Mar 2020 08:33:31 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:55358 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgCCNdb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:29:47 -0500
-Received: by mail-wr1-f66.google.com with SMTP id y17so4340556wrn.6;
-        Tue, 03 Mar 2020 05:29:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hicGAyZ5CpHfmsbw4Kl9cPGuNpt8g32PuytU/UcEDL8=;
-        b=CV1elQMgZLhBpuFfL5DjPopxXqFjooMD4nNFS/3zO/mg/Y0/qPPlbnp33SZup+b6Xn
-         R0cE9JzQP4R+zgJnfJFQeNA7dybshykF3a2Ldu9qefqWJuiMHnZSFlgqQpSJtEsRyXab
-         qAGDJu1tgLL/6+jZDbiLPhijElTtaRK5jMYuE82RT5dC2hH+bHvuAP9EdL3BBOjQkmxT
-         IqqyonwLWKq58HGm6CL1MVGtHWy1+FBRHWDoYPPWKlVhP9gL8EQOMMNbZGEZrl7vM5RD
-         qncE4ethqNSxzsEB357sbW5pZKYYUinUGRcUtKfY65TpSbFeZUURs1wPKt6vMXtGRShc
-         wPsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hicGAyZ5CpHfmsbw4Kl9cPGuNpt8g32PuytU/UcEDL8=;
-        b=B0I+pBRyERpcphZ6LbOgvprf5w8MAWJiv1sPM5AC3awdlw3KTkGkLX7OxpVPIZiURU
-         AM5BuM5zrZmZmjY/PV3Bro0qceBDBGZv56B3QcNkJUCqrMN2f1b3XF3CpEzpvHY39rG8
-         Br79LahWoMWlOyZkAY4Vt48Z81NAtv8aDYVaF0x7cSOH8HZhhAVJDPl/vXIYWa29u9TS
-         7Pmuttt7RDCNvuxH4wkPMRm7NegER+YE52oNKVOYHT2+td5zRKB0Ea2zsQzkx+yTk+iz
-         RHSzw1EnQ2PZfIL4/Vn+Ykb/0JNlm7YF28RzF1Bptgf0ySOgKT46v03wTBe0ZciGa9t5
-         CQJA==
-X-Gm-Message-State: ANhLgQ2MoEKt5w3eVarxLKyNNjjBqnPkjB4XuhYXLzz09j63mg5c3rS4
-        HOAXh4Mpa1DTLKP9Shpbl7u332QjfKYDxPkoZvE=
-X-Google-Smtp-Source: ADFU+vuFtNgxjbewAK+JcEL9uWLOVuASSCsfonI72+FgdQg4t/bXLC/G4KfOc+tj4z3cmF6C36Db39T7GycrQg3xlxQ=
-X-Received: by 2002:adf:9dcc:: with SMTP id q12mr5802969wre.164.1583242185866;
- Tue, 03 Mar 2020 05:29:45 -0800 (PST)
+        Tue, 3 Mar 2020 08:33:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1583242407; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iSlH7pb0xYuVMpMdsTbWcoW1/wUTkHc5Y3ywcj+WIo0=;
+        b=YxSUTn6Uy9SLYxoG/bKkmRsfWb3gn+20GKjrAVEF03z5uMLH3NwxmbiGPiFfXL5Tqgt1+s
+        tzUV6PkDFxRGOxCxgBPNGqcnJo8eOb+/yB5sALQRDBiEH0BJqyglu1amQpe5u4MeG4iI8t
+        lDyII3YeOv30S+QpltAw1UAjFzJFECo=
+Date:   Tue, 03 Mar 2020 10:33:04 -0300
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/2] MIPS: Ingenic: Add missing nodes for X1000 and
+ CU1000-Neo.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= "(Zhou Yanjie)" 
+        <zhouyanjie@wanyeetech.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        paul.burton@mips.com, paulburton@kernel.org, jhogan@kernel.org,
+        mark.rutland@arm.com, syq@debian.org, ralf@linux-mips.org,
+        rick.tyliu@ingenic.com, jason@lakedaemon.net,
+        keescook@chromium.org, geert+renesas@glider.be, krzk@kernel.org,
+        prasannatsmkumar@gmail.com, sernia.zhou@foxmail.com,
+        zhenwenjin@gmail.com, ebiederm@xmission.com
+Message-Id: <1583242384.3.0@crapouillou.net>
+In-Reply-To: <1579021428-43535-3-git-send-email-zhouyanjie@wanyeetech.com>
+References: <1579021428-43535-1-git-send-email-zhouyanjie@wanyeetech.com>
+        <1579021428-43535-3-git-send-email-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-References: <20200302205700.29746-1-daniel.baluta@oss.nxp.com>
- <20200302205700.29746-2-daniel.baluta@oss.nxp.com> <CAFQqKeU8YF+aZVTafj3ZiPvNUsx3nK-8cdr8eJUm=_9_2TkRQg@mail.gmail.com>
-In-Reply-To: <CAFQqKeU8YF+aZVTafj3ZiPvNUsx3nK-8cdr8eJUm=_9_2TkRQg@mail.gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 3 Mar 2020 15:29:34 +0200
-Message-ID: <CAEnQRZBNMRNYOKwqweuZCeOYgMGh9DprRvz2ci3EOQPxqN3fhg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/2] PM / domains: Introduce multi PM domains helpers
-To:     "Sridharan, Ranjani" <ranjani.sridharan@intel.com>
-Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>, rjw@rjwysocki.net,
-        "Brown, Len" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linux-pm@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>, khilman@kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Paul Olaru <paul.olaru@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Ranjani,
+Hi Zhou,
 
-On Mon, Mar 2, 2020 at 11:24 PM Sridharan, Ranjani
-<ranjani.sridharan@intel.com> wrote:
 
->> + */
->> +struct dev_multi_pm_domain_data *dev_multi_pm_attach(struct device *dev)
->> +{
->> +       struct dev_multi_pm_domain_data *mpd, *retp;
->> +       int num_domains;
->> +       int i;
->> +
->> +       num_domains = of_count_phandle_with_args(dev->of_node, "power-domains",
->> +                                                "#power-domain-cells");
->> +       if (num_domains < 2)
->
-> Hi Daniel,
->
-> Just out of curiosity, should it be an error when num_domains is 1? Is it an error because the expectation is that the caller would use dev_pm_domain_attach() in that case?
+Le mer., janv. 15, 2020 at 01:03, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=
+=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Add I2C0/I2C1/I2C2 nodes for X1000 and add I2C0, ADS7830,
+> MSC1, AP6212A, wlan_pwrseq nodes for CU1000-Neo.
+>=20
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> ---
+>  arch/mips/boot/dts/ingenic/cu1000-neo.dts | 71=20
+> +++++++++++++++++++++++++++++++
+>  arch/mips/boot/dts/ingenic/x1000.dtsi     | 45 ++++++++++++++++++++
 
-NULL here doesn't really mean an error. It means that we don't need to
-handle Power domains because as you said the caller
-already used dev_pm_domain_attach.
+Just as a rule of thumb it's preferred to split devicetree changes into=20
+two commits, one that touches the SoC's DTSI, and the second for the=20
+board.
 
-Similar with this:
+Cheers,
+-Paul
 
-$ drivers/base/power/domain.c +2504
+>  2 files changed, 116 insertions(+)
+>=20
+> diff --git a/arch/mips/boot/dts/ingenic/cu1000-neo.dts=20
+> b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+> index b0733da..03abd94 100644
+> --- a/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+> +++ b/arch/mips/boot/dts/ingenic/cu1000-neo.dts
+> @@ -4,6 +4,7 @@
+>  #include "x1000.dtsi"
+>  #include <dt-bindings/gpio/gpio.h>
+>  #include <dt-bindings/clock/ingenic,tcu.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+>=20
+>  / {
+>  	compatible =3D "yna,cu1000-neo", "ingenic,x1000";
+> @@ -21,6 +22,22 @@
+>  		device_type =3D "memory";
+>  		reg =3D <0x0 0x04000000>;
+>  	};
+> +
+> +	wlan_pwrseq: msc1-pwrseq {
+> +		compatible =3D "mmc-pwrseq-simple";
+> +
+> +		clocks =3D <&lpoclk>;
+> +		clock-names =3D "ext_clock";
+> +
+> +		reset-gpios =3D <&gpc 17 GPIO_ACTIVE_LOW>;
+> +		post-power-on-delay-ms =3D <200>;
+> +
+> +		lpoclk: ap6212a {
+> +			compatible =3D "fixed-clock";
+> +			#clock-cells =3D <0>;
+> +			clock-frequency =3D <32768>;
+> +		};
+> +	};
+>  };
+>=20
+>  &exclk {
+> @@ -36,6 +53,20 @@
+>  	ingenic,pwm-channels-mask =3D <0xfa>;
+>  };
+>=20
+> +&i2c0 {
+> +	status =3D "okay";
+> +
+> +	clock-frequency =3D <400000>;
+> +
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pins_i2c0>;
+> +
+> +	ads7830@48 {
+> +		compatible =3D "ti,ads7830";
+> +		reg =3D <0x48>;
+> +	};
+> +};
+> +
+>  &uart2 {
+>  	pinctrl-names =3D "default";
+>  	pinctrl-0 =3D <&pins_uart2>;
+> @@ -78,7 +109,41 @@
+>  	status =3D "okay";
+>  };
+>=20
+> +&msc1 {
+> +	bus-width =3D <4>;
+> +	max-frequency =3D <50000000>;
+> +
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&pins_msc1>;
+> +
+> +	#address-cells =3D <1>;
+> +	#size-cells =3D <0>;
+> +
+> +	non-removable;
+> +
+> +	mmc-pwrseq =3D <&wlan_pwrseq>;
+> +
+> +	status =3D "okay";
+> +
+> +	ap6212a: wifi@1 {
+> +		compatible =3D "brcm,bcm4329-fmac";
+> +		reg =3D <1>;
+> +
+> +		interrupt-parent =3D <&gpc>;
+> +		interrupts =3D <16 IRQ_TYPE_EDGE_FALLING>;
+> +		interrupt-names =3D "host-wake";
+> +
+> +		brcm,drive-strength =3D <10>;
+> +	};
+> +};
+> +
+>  &pinctrl {
+> +	pins_i2c0: i2c0 {
+> +		function =3D "i2c0";
+> +		groups =3D "i2c0-data";
+> +		bias-disable;
+> +	};
+> +
+>  	pins_uart2: uart2 {
+>  		function =3D "uart2";
+>  		groups =3D "uart2-data-d";
+> @@ -96,4 +161,10 @@
+>  		groups =3D "mmc0-1bit", "mmc0-4bit", "mmc0-8bit";
+>  		bias-disable;
+>  	};
+> +
+> +	pins_msc1: msc1 {
+> +		function =3D "mmc1";
+> +		groups =3D "mmc1-1bit", "mmc1-4bit";
+> +		bias-disable;
+> +	};
+>  };
+> diff --git a/arch/mips/boot/dts/ingenic/x1000.dtsi=20
+> b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> index ea54263..376df1b 100644
+> --- a/arch/mips/boot/dts/ingenic/x1000.dtsi
+> +++ b/arch/mips/boot/dts/ingenic/x1000.dtsi
+> @@ -169,6 +169,51 @@
+>  		};
+>  	};
+>=20
+> +	i2c0: i2c-controller@10050000 {
+> +		compatible =3D "ingenic,x1000-i2c";
+> +		reg =3D <0x10050000 0x1000>;
+> +
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <60>;
+> +
+> +		clocks =3D <&cgu X1000_CLK_I2C0>;
+> +
+> +		status =3D "disabled";
+> +	};
+> +
+> +	i2c1: i2c-controller@10051000 {
+> +		compatible =3D "ingenic,x1000-i2c";
+> +		reg =3D <0x10051000 0x1000>;
+> +
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <59>;
+> +
+> +		clocks =3D <&cgu X1000_CLK_I2C1>;
+> +
+> +		status =3D "disabled";
+> +	};
+> +
+> +	i2c2: i2c-controller@10052000 {
+> +		compatible =3D "ingenic,x1000-i2c";
+> +		reg =3D <0x10052000 0x1000>;
+> +
+> +		#address-cells =3D <1>;
+> +		#size-cells =3D <0>;
+> +
+> +		interrupt-parent =3D <&intc>;
+> +		interrupts =3D <58>;
+> +
+> +		clocks =3D <&cgu X1000_CLK_I2C2>;
+> +
+> +		status =3D "disabled";
+> +	};
+> +
+>  	uart0: serial@10030000 {
+>  		compatible =3D "ingenic,x1000-uart";
+>  		reg =3D <0x10030000 0x100>;
+> --
+> 2.7.4
+>=20
 
-int genpd_dev_pm_attach(struct device *dev)
+=
 
-         / * Devices with multiple PM domains must be attached separately, as we
-           * can only attach one PM domain per device.
-          */
-        if (of_count_phandle_with_args(dev->of_node, "power-domains",
-                                    "#power-domain-cells") != 1)
-               return 0;
-
-Will update the description for when this function returns a NULL.
-
->
->> +               return NULL;
->> +
->> +       mpd = devm_kzalloc(dev, GFP_KERNEL, sizeof(*mpd));
->> +       if (!mpd)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       mpd->dev = dev;
->> +       mpd->num_domains = num_domains;
->> +
->> +       mpd->virt_devs = devm_kmalloc_array(dev, mpd->num_domains,
->> +                                           sizeof(*mpd->virt_devs),
->> +                                           GFP_KERNEL);
->> +       if (!mpd->virt_devs)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       mpd->links = devm_kmalloc_array(dev, mpd->num_domains,
->> +                                       sizeof(*mpd->links), GFP_KERNEL);
->> +       if (!mpd->links)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       for (i = 0; i < mpd->num_domains; i++) {
->> +               mpd->virt_devs[i] = dev_pm_domain_attach_by_id(dev, i);
->> +               if (IS_ERR(mpd->virt_devs[i])) {
->> +                       retp = (struct dev_multi_pm_domain_data *)
->> +                               mpd->virt_devs[i];
->
-> Should retp be PTR_ERR(mpd->virt_devs[i]) here?
-
-PTR_ERR returns a long but our function needs to return struct
-dev_multi_pm_domain_data *.
-
-> Thanks,
-> Ranjani
