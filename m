@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7435EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4A49C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FF412146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5CB2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258058;
-	bh=OozF0n4biiFo40h+gvtJt74tu01cqRvrmfum7rt5Q3A=;
+	s=default; t=1583258060;
+	bh=I9Rn0pAQ2m55hRognCsQ3yUHhtuIvNGNb5qS/PBEijQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j6RfRXusYSZOj6mY7wOSSqv23KVskyIT32BL1ARE1mlIYTD+jdj/M2mYgkps/9m11
-	 p339emEqfJWOgYGb4W4xefhgwAIPmsgw+OMmT7vSzFAfp6F65YeZTzMh4YJvW1zZdP
-	 WISTPO+03hmx+KizXrs62uG882dKSlNrkvjFwsGI=
+	b=xGbJCOC9aAt6U8P8BrxKOgJYC9hkCekebfra7ini93FGy9TMBeq+2eV7SarsnKYBb
+	 RMDdN1rV+ZK6biAvumidQUsit3xYuc8ZWKUjv61RE3b9hiwejbAlx8xPpvWII2qQIp
+	 1aLNMYhRSnWkLI3HA1YOKDxeP2rGi5vFTkrXQqa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732339AbgCCRyQ (ORCPT
+        id S1732497AbgCCRyM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35330 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35214 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732331AbgCCRyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:15 -0500
+        id S1731424AbgCCRyJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C0532146E;
-        Tue,  3 Mar 2020 17:54:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F65B206D5;
+        Tue,  3 Mar 2020 17:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258054;
-        bh=OozF0n4biiFo40h+gvtJt74tu01cqRvrmfum7rt5Q3A=;
+        s=default; t=1583258049;
+        bh=I9Rn0pAQ2m55hRognCsQ3yUHhtuIvNGNb5qS/PBEijQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1toMsWJUG0o9ZntDbKB7b3mTzyca0e2262QSobW+ypIpBH5w7jVHcvj5Bl1dZbfw+
-         2UmPXaEX8hi0VzMR1/QeHNBPWpFrCRVLZdEbyAbwkkc1nh6QDNJJxDhVtigFWeopTp
-         6fUakvi3N+ify0DiFxvVp5mkw7Fx1isc3EhnnGXg=
+        b=hDLl79bpSAIYp26nxx4QdQQfI9Apx5V7pzSh8IbV2TFBLll8pNSg/Wbtrz9liKaxD
+         fPe1GNAo5CK7WjA1SArmWPrhd+fjV1u6ETtO+2/O5qyhBW7L0tmO4qRXW4wxNj9SI0
+         lJqjYujUmqF2d4iLjk0Tc7tSHv35oNu3YogMnaqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 016/152] bnxt_en: Issue PCIe FLR in kdump kernel to cleanup pending DMAs.
-Date:   Tue,  3 Mar 2020 18:41:54 +0100
-Message-Id: <20200303174304.335852104@linuxfoundation.org>
+Subject: [PATCH 5.4 014/152] sctp: move the format error check out of __sctp_sf_do_9_1_abort
+Date:   Tue,  3 Mar 2020 18:41:52 +0100
+Message-Id: <20200303174304.124601765@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,39 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Xin Long <lucien.xin@gmail.com>
 
-[ Upstream commit 8743db4a9acfd51f805ac0c87bcaae92c42d1061 ]
+[ Upstream commit 245709ec8be89af46ea7ef0444c9c80913999d99 ]
 
-If crashed kernel does not shutdown the NIC properly, PCIe FLR
-is required in the kdump kernel in order to initialize all the
-functions properly.
+When T2 timer is to be stopped, the asoc should also be deleted,
+otherwise, there will be no chance to call sctp_association_free
+and the asoc could last in memory forever.
 
-Fixes: d629522e1d66 ("bnxt_en: Reduce memory usage when running in kdump kernel.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+However, in sctp_sf_shutdown_sent_abort(), after adding the cmd
+SCTP_CMD_TIMER_STOP for T2 timer, it may return error due to the
+format error from __sctp_sf_do_9_1_abort() and miss adding
+SCTP_CMD_ASSOC_FAILED where the asoc will be deleted.
+
+This patch is to fix it by moving the format error check out of
+__sctp_sf_do_9_1_abort(), and do it before adding the cmd
+SCTP_CMD_TIMER_STOP for T2 timer.
+
+Thanks Hangbin for reporting this issue by the fuzz testing.
+
+v1->v2:
+  - improve the comment in the code as Marcelo's suggestion.
+
+Fixes: 96ca468b86b0 ("sctp: check invalid value of length parameter in error cause")
+Reported-by: Hangbin Liu <liuhangbin@gmail.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/sctp/sm_statefuns.c |   29 ++++++++++++++++++++---------
+ 1 file changed, 20 insertions(+), 9 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -11712,6 +11712,14 @@ static int bnxt_init_one(struct pci_dev
- 	if (version_printed++ == 0)
- 		pr_info("%s", version);
+--- a/net/sctp/sm_statefuns.c
++++ b/net/sctp/sm_statefuns.c
+@@ -170,6 +170,16 @@ static inline bool sctp_chunk_length_val
+ 	return true;
+ }
  
-+	/* Clear any pending DMA transactions from crash kernel
-+	 * while loading driver in capture kernel.
-+	 */
-+	if (is_kdump_kernel()) {
-+		pci_clear_master(pdev);
-+		pcie_flr(pdev);
-+	}
++/* Check for format error in an ABORT chunk */
++static inline bool sctp_err_chunk_valid(struct sctp_chunk *chunk)
++{
++	struct sctp_errhdr *err;
 +
- 	max_irqs = bnxt_get_max_irq(pdev);
- 	dev = alloc_etherdev_mq(sizeof(*bp), max_irqs);
- 	if (!dev)
++	sctp_walk_errors(err, chunk->chunk_hdr);
++
++	return (void *)err == (void *)chunk->chunk_end;
++}
++
+ /**********************************************************
+  * These are the state functions for handling chunk events.
+  **********************************************************/
+@@ -2255,6 +2265,9 @@ enum sctp_disposition sctp_sf_shutdown_p
+ 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
+ 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
+ 
++	if (!sctp_err_chunk_valid(chunk))
++		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
++
+ 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
+ }
+ 
+@@ -2298,6 +2311,9 @@ enum sctp_disposition sctp_sf_shutdown_s
+ 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
+ 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
+ 
++	if (!sctp_err_chunk_valid(chunk))
++		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
++
+ 	/* Stop the T2-shutdown timer. */
+ 	sctp_add_cmd_sf(commands, SCTP_CMD_TIMER_STOP,
+ 			SCTP_TO(SCTP_EVENT_TIMEOUT_T2_SHUTDOWN));
+@@ -2565,6 +2581,9 @@ enum sctp_disposition sctp_sf_do_9_1_abo
+ 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
+ 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
+ 
++	if (!sctp_err_chunk_valid(chunk))
++		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
++
+ 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
+ }
+ 
+@@ -2582,16 +2601,8 @@ static enum sctp_disposition __sctp_sf_d
+ 
+ 	/* See if we have an error cause code in the chunk.  */
+ 	len = ntohs(chunk->chunk_hdr->length);
+-	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr)) {
+-		struct sctp_errhdr *err;
+-
+-		sctp_walk_errors(err, chunk->chunk_hdr);
+-		if ((void *)err != (void *)chunk->chunk_end)
+-			return sctp_sf_pdiscard(net, ep, asoc, type, arg,
+-						commands);
+-
++	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr))
+ 		error = ((struct sctp_errhdr *)chunk->skb->data)->cause;
+-	}
+ 
+ 	sctp_add_cmd_sf(commands, SCTP_CMD_SET_SK_ERR, SCTP_ERROR(ECONNRESET));
+ 	/* ASSOC_FAILED will DELETE_TCB. */
 
 
