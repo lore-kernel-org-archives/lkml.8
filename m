@@ -2,152 +2,436 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC709C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E14BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF05F20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:32:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j9nk4PVP"
+	by mail.kernel.org (Postfix) with ESMTP id CDD4F20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:35:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732701AbgCCVcM (ORCPT
+        id S1732720AbgCCVfo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:32:12 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:39388 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732667AbgCCVcM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:32:12 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023LS1go036975;
-        Tue, 3 Mar 2020 21:32:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=AnKlCnsZKbhYJBc8etzmr5N2OwYTT8txAPj6KkeXERo=;
- b=j9nk4PVPkIxtzadAwWsgGAlZZsgIQ2sAqZ5uHhR0VG1IQwEC1X4uKIA9uQ+4O6fEcTIs
- sKVg2X39iXVBjuZwfcgcLNOe+zYmZlf+IOAIo67cqSLxq8LymK0C7ydoHfKojkV5NMB2
- EK6b2TAVx0x7OWodpUqGvuOOSQUJg7rDMW9AK4/lPxpFeePhNOGzHkyRL8JrQTlKtXH6
- OE4FX6l591SgfU741aeBHwwXkO0Itjl8EqTP/bOezR74EMlMKGwIrSW5jt3ug/pEGyyp
- 9YevRnnIjb17MByx1Eyea6QrXSkHWlsEMetg9bGv2+3kZOfgdX5+ObvwE9KyT4oyik05 RQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2yffcuj7c9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 21:32:02 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023LQaoT008213;
-        Tue, 3 Mar 2020 21:30:02 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2yg1emtngg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 21:30:01 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 023LU0BL019460;
-        Tue, 3 Mar 2020 21:30:00 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 13:30:00 -0800
-Date:   Tue, 3 Mar 2020 16:30:17 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Corentin Labbe <clabbe.montjoie@gmail.com>,
-        mark.rutland@arm.com, jiangshanlai@gmail.com,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        tj@kernel.org, Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: WARNING: at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
-Message-ID: <20200303213017.tanczhqd3nhpeeak@ca-dmjordan1.us.oracle.com>
-References: <20200217204803.GA13479@Red>
- <20200218163504.y5ofvaejleuf5tbh@ca-dmjordan1.us.oracle.com>
- <20200220090350.GA19858@Red>
- <20200221174223.r3y6tugavp3k5jdl@ca-dmjordan1.us.oracle.com>
- <20200228123311.GE3275@willie-the-truck>
- <20200228153331.uimy62rat2tdxxod@ca-dmjordan1.us.oracle.com>
- <20200301175351.GA11684@Red>
- <20200302172510.fspofleipqjcdxak@ca-dmjordan1.us.oracle.com>
- <e7c92da2-42c0-a97d-7427-6fdc769b41b9@arm.com>
+        Tue, 3 Mar 2020 16:35:44 -0500
+Received: from mga06.intel.com ([134.134.136.31]:55439 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732572AbgCCVfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 16:35:44 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 13:35:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="232402038"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Mar 2020 13:35:42 -0800
+Date:   Tue, 3 Mar 2020 13:35:42 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     John Andersen <john.s.andersen@intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        pbonzini@redhat.com, hpa@zytor.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, liran.alon@oracle.com,
+        luto@kernel.org, joro@8bytes.org, rick.p.edgecombe@intel.com,
+        kristen@linux.intel.com, arjan@linux.intel.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [RFC v2 2/4] KVM: X86: Add CR pin MSRs
+Message-ID: <20200303213541.GY1439@linux.intel.com>
+References: <20200218215902.5655-1-john.s.andersen@intel.com>
+ <20200218215902.5655-3-john.s.andersen@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e7c92da2-42c0-a97d-7427-6fdc769b41b9@arm.com>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=2 spamscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 suspectscore=2 spamscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030136
+In-Reply-To: <20200218215902.5655-3-john.s.andersen@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 06:00:10PM +0000, Robin Murphy wrote:
-> On 02/03/2020 5:25 pm, Daniel Jordan wrote:
-> Something smelled familiar about this discussion, and sure enough that merge
-> contains c4741b230597 ("crypto: run initcalls for generic implementations
-> earlier"), which has raised its head before[1].
+The subject should be something like
 
-Yep, that looks suspicious.
+  KVM: x86: Introduce paravirt feature CR0/CR4 pinning
 
-The bisect didn't point to that specific commit, even though my version of git
-tries commits in the merge.  I'm probably missing something.
+This patch obviously does a lot more than add a few MSRs :-)
 
-> > Does this fix it?  I can't verify but figure it's worth trying the simplest
-> > explanation first, which is that the work isn't initialized by the time it's
-> > queued.
+On Tue, Feb 18, 2020 at 01:59:00PM -0800, John Andersen wrote:
+
+...
+
+> +MSR_KVM_CR0_PIN_ALLOWED: 0x4b564d06
+> +MSR_KVM_CR4_PIN_ALLOWED: 0x4b564d07
+> +	Read only registers informing the guest which bits may be pinned for
+> +	each control register respectively via the CR pinned MSRs.
+> +
+> +	data: Bits which may be pinned.
+> +
+> +	Attempting to pin bits other than these will result in a failure when
+> +	writing to the respective CR pinned MSR.
+> +
+> +	Bits which are allowed to be pinned are WP for CR0 and SMEP, SMAP, and
+> +	UMIP for CR4.
+> +
+> +MSR_KVM_CR0_PINNED: 0x4b564d08
+> +MSR_KVM_CR4_PINNED: 0x4b564d09
+> +	Used to configure pinned bits in control registers
+> +
+> +	data: Bits to be pinned.
+> +
+> +	Fails if data contains bits which are not allowed to be pinned. Bits
+> +	which are allowed to be pinned can be found by reading the CR pin
+> +	allowed MSRs.
+> +
+> +	The MSRs are read/write for host userspace, and write-only for the
+> +	guest.
+> +
+> +	Once set to a non-zero value, the guest cannot clear any of the bits
+> +	that have been pinned to 1. The guest can set more bits to 1, so long
+> +	as those bits appear in the allowed MSR.
+
+Why not allow pinning a bit to 0?  That would make the logic in set_cr0/4
+more intuitive.  This approach also means that WRMSR interception needs to
+inject a #GP if the guest attempts to pin a bit and the bit isn't currently
+set in the MSR, which this patch doesn't do.
+
+The downside to allowing pinning to '0' is that KVM will need to track the
+pinned value, e.g. for RSM and VM-Exit, but that's a fairly small cost and
+might be valuable in the long run, e.g. if TSX retroactively gained CR
+enable bit...
+
+> +
+> +	Host userspace may clear or change pinned bits at any point. Host
+> +	userspace must clear pinned bits on reboot.
+> +
+> +	The MSR enables bit pinning for control registers. Pinning is active
+> +	when the guest is not in SMM. If the guest attempts to write values to
+> +	cr* where bits differ from pinned bits, the write will fail and the
+> +	guest will be sent a general protection fault.
+
+...
+
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fb5d64ebc35d..2ee0e9886a6e 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -733,6 +733,9 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
+>  }
+>  EXPORT_SYMBOL_GPL(pdptrs_changed);
+>  
+> +#define KVM_CR0_PIN_ALLOWED	(X86_CR0_WP)
+> +#define KVM_CR4_PIN_ALLOWED	(X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP)
+> +
+>  int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+>  {
+>  	unsigned long old_cr0 = kvm_read_cr0(vcpu);
+> @@ -753,6 +756,11 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
+>  	if ((cr0 & X86_CR0_PG) && !(cr0 & X86_CR0_PE))
+>  		return 1;
+>  
+> +	if (!is_smm(vcpu)
+
+Hmm, so there's some work to be done for nested virtualization.  I'm
+guessing the story will be the same as SMM, i.e. L2 is allowed to "unpin"
+bits, and pinned bits are rechecked on VM-Exit to L1.
+
+Assuming you want to go that route, this needs to also check for
+!is_guest_mode(), i.e. allow L2 to change bits that are pinned by L1.  It
+likely works for standard nesting because nested VM-Enter bypasses
+kvm_set_cr0(), e.g. prepare_vmcs02() calls vmx_set_cr0() to avoid fault
+logic, but it'll break if L1 doesn't intercept pinned bits.  
+
+Speaking of the bypass, you'll need to incorporate pinning into the
+VM-Enter consistency checks, otherwise L1 could bypass pinning by loading
+CR0/CR4 via VM-Exit, e.g. load_vmcs12_host_state() bypasses pinning checks.
+
+> +		&& vcpu->arch.cr0_pinned
+
+Operators go on the previous line, newline only when needed, and align
+indentation when continuing a statement, e.g. (whitespace damaged)
+
+        if (!is_smm(vcpu) && vcpu->arch.cr0_pinned &&
+            ((cr0 ^ vcpu->arch.cr0_pinned) & KVM_CR0_PIN_ALLOWED))
+                return 1;
+
+> +             && ((cr0 ^ vcpu->arch.cr0_pinned) & KVM_CR0_PIN_ALLOWED))
+
+If this ends up only allowing "pin-to-one" semantics, then the fields
+should be named vcpu->arch.cr0_pinned_1 or so.  It took a lot of staring
+to figure out what this code was doing.  The logic can also be optimized,
+e.g.:
+
+        if (!is_smm(vcpu) && !is_guest_mode(vcpu) &&
+            (~cr0 & vcpu->arch.cr0_pinned_1))
+                return 1;
+
+If the feature is defined to pin bits to their current value, as opposed to
+pinning bits to '1', then this code becomes:
+
+        if (!is_smm(vcpu) && !is_guest_mode(vcpu) &&
+            ((cr0 ^ old_cr0) & vcpu->arch.cr0_pinned.mask))
+		return 1;
+
+or if you wanted to be more paranoid
+
+        if (!is_smm(vcpu) && !is_guest_mode(vcpu) &&
+            ((cr0 ^ vcpu->arch.cr0_pinned.val) & vcpu->arch.cr0_pinned.mask))
+		return 1;
+
+or
+
+        if (!is_smm(vcpu) && !is_guest_mode(vcpu) &&
+            ((cr0 & vcpu->arch.cr0_pinned.mask) != vcpu->arch.cr0_pinned.val))
+		return 1;
+
+> +		&& ((cr0 ^ vcpu->arch.cr0_pinned) & KVM_CR0_PIN_ALLOWED))
+> +		return 1;
+> +
+>  	if (!is_paging(vcpu) && (cr0 & X86_CR0_PG)) {
+>  #ifdef CONFIG_X86_64
+>  		if ((vcpu->arch.efer & EFER_LME)) {
+> @@ -932,6 +940,11 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+>  	if (kvm_valid_cr4(vcpu, cr4))
+>  		return 1;
+>  
+> +	if (!is_smm(vcpu)
+> +		&& vcpu->arch.cr4_pinned
+> +		&& ((cr4 ^ vcpu->arch.cr4_pinned) & KVM_CR4_PIN_ALLOWED))
+> +		return 1;
+> +
+>  	if (is_long_mode(vcpu)) {
+>  		if (!(cr4 & X86_CR4_PAE))
+>  			return 1;
+> @@ -1255,6 +1268,10 @@ static const u32 emulated_msrs_all[] = {
+>  
+>  	MSR_K7_HWCR,
+>  	MSR_KVM_POLL_CONTROL,
+> +	MSR_KVM_CR0_PIN_ALLOWED,
+> +	MSR_KVM_CR4_PIN_ALLOWED,
+> +	MSR_KVM_CR0_PINNED,
+> +	MSR_KVM_CR4_PINNED,
+>  };
+>  
+>  static u32 emulated_msrs[ARRAY_SIZE(emulated_msrs_all)];
+> @@ -2878,6 +2895,28 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  		vcpu->arch.msr_kvm_poll_control = data;
+>  		break;
+>  
+> +	case MSR_KVM_CR0_PIN_ALLOWED:
+> +	case MSR_KVM_CR4_PIN_ALLOWED:
+> +		if (report_ignored_msrs)
+> +			vcpu_debug_ratelimited(vcpu, "unhandled wrmsr: 0x%x data 0x%llx\n",
+> +				    msr, data);
+
+report_ignored_msrs is only for MSRs that KVM doesn't know how to handle.
+The *_PIN_ALLOWED MSRs should simply do "return 1", even for host initiated
+writes.  I.e. inject #GP on attempted WRMSR in the guest, return -EINVAL if
+the userspace VMM tries to redefine what's allowed.
+
+> +		break;
+> +	case MSR_KVM_CR0_PINNED:
+> +		if (data & ~KVM_CR0_PIN_ALLOWED)
+> +			return 1;
+> +		if (msr_info->host_initiated)
+> +			vcpu->arch.cr0_pinned = data;
+> +		else
+> +			vcpu->arch.cr0_pinned |= data;
+
+Hmm, I understand what you're doing, but having fundamentally different
+behavior for host vs. guest is probably a bad idea.  I don't think it's
+too onerous to require a RMW operation from the guest, e.g.
+
+		if (data & ~KVM_CR0_PIN_ALLOWED)
+			return 1;
+
+		if (!msr_info->host_initiated &&
+		    (~data & vcpu->arch.cr0_pinned.mask))
+			return 1;
+
+		vcpu->arch.cr0_pinned.mask = data;
+		vcpu->arch.cr0_pinned.val = kvm_read_cr0(vcpu) & data;
+		break;
+
+> +		break;
+> +	case MSR_KVM_CR4_PINNED:
+> +		if (data & ~KVM_CR4_PIN_ALLOWED)
+> +			return 1;
+> +		if (msr_info->host_initiated)
+> +			vcpu->arch.cr4_pinned = data;
+> +		else
+> +			vcpu->arch.cr4_pinned |= data;
+> +		break;
+>  	case MSR_IA32_MCG_CTL:
+>  	case MSR_IA32_MCG_STATUS:
+>  	case MSR_IA32_MC0_CTL ... MSR_IA32_MCx_CTL(KVM_MAX_MCE_BANKS) - 1:
+> @@ -3124,6 +3163,18 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+>  	case MSR_KVM_POLL_CONTROL:
+>  		msr_info->data = vcpu->arch.msr_kvm_poll_control;
+>  		break;
+> +	case MSR_KVM_CR0_PIN_ALLOWED:
+> +		msr_info->data = KVM_CR0_PIN_ALLOWED;
+> +		break;
+> +	case MSR_KVM_CR4_PIN_ALLOWED:
+> +		msr_info->data = KVM_CR4_PIN_ALLOWED;
+> +		break;
+> +	case MSR_KVM_CR0_PINNED:
+> +		msr_info->data = vcpu->arch.cr0_pinned;
+> +		break;
+> +	case MSR_KVM_CR4_PINNED:
+> +		msr_info->data = vcpu->arch.cr4_pinned;
+> +		break;
+>  	case MSR_IA32_P5_MC_ADDR:
+>  	case MSR_IA32_P5_MC_TYPE:
+>  	case MSR_IA32_MCG_CAP:
+> @@ -6316,10 +6367,84 @@ static void emulator_set_hflags(struct x86_emulate_ctxt *ctxt, unsigned emul_fla
+>  	emul_to_vcpu(ctxt)->arch.hflags = emul_flags;
+>  }
+>  
+> +static inline u64 restore_pinned(u64 val, u64 subset, u64 pinned)
+> +{
+> +	u64 pinned_high = pinned & subset;
+> +	u64 pinned_low = ~pinned & subset;
+> +
+> +	val |= pinned_high;
+> +	val &= ~pinned_low;
+> +
+> +	return val;
+> +}
+> +
+> +static void kvm_pre_leave_smm_32_restore_crX_pinned(struct kvm_vcpu *vcpu,
+> +						    const char *smstate,
+> +						    u16 offset,
+> +						    unsigned long allowed,
+> +						    unsigned long cr_pinned)
+> +{
+> +	u32 cr;
+> +
+> +	cr = GET_SMSTATE(u32, smstate, offset);
+> +	cr = (u32)restore_pinned(cr, allowed, cr_pinned);
+> +	put_smstate(u32, smstate, offset, cr);
+> +}
+> +
+> +static void kvm_pre_leave_smm_32_restore_cr_pinned(struct kvm_vcpu *vcpu,
+> +						   const char *smstate)
+> +{
+> +	if (vcpu->arch.cr0_pinned)
+> +		kvm_pre_leave_smm_32_restore_crX_pinned(vcpu, smstate, 0x7ffc,
+> +							KVM_CR0_PIN_ALLOWED,
+> +							vcpu->arch.cr0_pinned);
+> +
+> +	if (vcpu->arch.cr4_pinned)
+> +		kvm_pre_leave_smm_32_restore_crX_pinned(vcpu, smstate, 0x7f14,
+> +							KVM_CR4_PIN_ALLOWED,
+> +							vcpu->arch.cr4_pinned);
+> +}
+> +
+> +static void kvm_pre_leave_smm_64_restore_crX_pinned(struct kvm_vcpu *vcpu,
+> +						    const char *smstate,
+> +						    u16 offset,
+> +						    unsigned long allowed,
+> +						    unsigned long cr_pinned)
+> +{
+> +	u32 cr;
+> +
+> +	cr = GET_SMSTATE(u64, smstate, offset);
+> +	cr = restore_pinned(cr, allowed, cr_pinned);
+> +	put_smstate(u64, smstate, offset, cr);
+> +}
+> +
+> +static void kvm_pre_leave_smm_64_restore_cr_pinned(struct kvm_vcpu *vcpu,
+> +						   const char *smstate)
+> +{
+> +	if (vcpu->arch.cr0_pinned)
+> +		kvm_pre_leave_smm_64_restore_crX_pinned(vcpu, smstate, 0x7f58,
+> +							KVM_CR0_PIN_ALLOWED,
+> +							vcpu->arch.cr0_pinned);
+> +
+> +	if (vcpu->arch.cr4_pinned)
+> +		kvm_pre_leave_smm_64_restore_crX_pinned(vcpu, smstate, 0x7f48,
+> +							KVM_CR4_PIN_ALLOWED,
+> +							vcpu->arch.cr4_pinned);
+
+Oof, that's a fair bit of ugly just to prevent SMM from poking into SMRAM
+to attack the kernel.
+
+If we do want to enforce pinning on RSM, I think it'd be better to inject
+shutdown (well, return X86EMUL_UNHANDLEABLE) if the SMM handler changed the
+value of a pinned CR bit.  The SDM blurb on RSM states:
+
+  If the processor detects invalid state information during state
+  restoration, it enters the shutdown state.
+
+IMO it's fair to say that attempting to unpin CR bits qualifies as invalid
+state.
+
+The logic is also a lot cleaner, e.g. (plus updating prototypes)
+
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index dd19fb3539e0..b1252de853c1 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -2674,7 +2674,8 @@ static int em_rsm(struct x86_emulate_ctxt *ctxt)
+                return X86EMUL_UNHANDLEABLE;
+        }
+
+-       ctxt->ops->post_leave_smm(ctxt);
++       if (ctxt->ops->post_leave_smm(ctxt))
++               return X86EMUL_UNHANDLEABLE;
+
+        return X86EMUL_CONTINUE;
+ }
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index aa2a085f115c..7c33c22b18fe 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -6263,8 +6263,14 @@ static int emulator_pre_leave_smm(struct x86_emulate_ctxt *ctxt,
+        return kvm_x86_ops->pre_leave_smm(emul_to_vcpu(ctxt), smstate);
+ }
+
+-static void emulator_post_leave_smm(struct x86_emulate_ctxt *ctxt)
++static int emulator_post_leave_smm(struct x86_emulate_ctxt *ctxt)
+ {
++       struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
++       unsigned long cr0 = kvm_read_cr0(vcpu);
++
++       if ((cr0 ^ vcpu->arch.cr0_pinned.val) & vcpu->arch.cr0_pinned.mask)
++               return 1;
++
+        kvm_smm_changed(emul_to_vcpu(ctxt));
+ }
+
+
+> +}
+> +
+>  static int emulator_pre_leave_smm(struct x86_emulate_ctxt *ctxt,
+>  				  const char *smstate)
+>  {
+> -	return kvm_x86_ops->pre_leave_smm(emul_to_vcpu(ctxt), smstate);
+> +	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
+> +
+> +#ifdef CONFIG_X86_64
+> +	if (guest_cpuid_has(vcpu, X86_FEATURE_LM))
+> +		kvm_pre_leave_smm_64_restore_cr_pinned(vcpu, smstate);
+> +	else
+> +#endif
+> +		kvm_pre_leave_smm_32_restore_cr_pinned(vcpu, smstate);
+> +
+> +	return kvm_x86_ops->pre_leave_smm(vcpu, smstate);
+>  }
+>  
+>  static void emulator_post_leave_smm(struct x86_emulate_ctxt *ctxt)
+> @@ -9490,6 +9615,9 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+>  
+>  	vcpu->arch.ia32_xss = 0;
+>  
+> +	vcpu->arch.cr0_pinned = 0;
+> +	vcpu->arch.cr4_pinned = 0;
+> +
+>  	kvm_x86_ops->vcpu_reset(vcpu, init_event);
+>  }
+>  
+> -- 
+> 2.21.0
 > 
-> The relative initcall levels would appear to explain the symptom - I guess
-> the question is whether this represents a bug in a particular test/algorithm
-> (as with the unaligned accesses) or a fundamental problem in the
-> infrastructure now being able to poke the module loader too early.
-
-I'm not familiar with the crypto code.  Could it be that the commit moved some
-request_module() calls before modules_wq_init()?
-
-And, is it "too early" or just "earlier"?  When is it too early for modprobe?
-
-Barring other ideas, Corentin, would you be willing to boot with
-
-    trace_event=initcall:*,module:* trace_options=stacktrace
-
-and
-
-diff --git a/kernel/module.c b/kernel/module.c
-index 33569a01d6e1..393be6979a27 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -3604,8 +3604,11 @@ static noinline int do_init_module(struct module *mod)
- 	 * be cleaned up needs to sync with the queued work - ie
- 	 * rcu_barrier()
- 	 */
--	if (llist_add(&freeinit->node, &init_free_list))
-+	if (llist_add(&freeinit->node, &init_free_list)) {
-+		pr_warn("%s: schedule_work for mod=%s\n", __func__, mod->name);
-+		dump_stack();
- 		schedule_work(&init_free_wq);
-+	}
- 
- 	mutex_unlock(&module_mutex);
- 	wake_up_all(&module_wq);
-
-but not my earlier fix and share the dmesg and ftrace output to see if the
-theory holds?
-
-Also, could you attach your config?  Curious now what your crypto options look
-like after fiddling with some of them today while trying and failing to see
-this on x86.
-
-thanks,
-Daniel
