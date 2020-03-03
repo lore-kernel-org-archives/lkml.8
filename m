@@ -2,108 +2,155 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6D0C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 373D3C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:03:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFCA215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F18720CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:03:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oGAEoToA"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hiGouDg2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbgCCQBJ (ORCPT
+        id S1729907AbgCCQDR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:01:09 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:56898 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730197AbgCCQBD (ORCPT
+        Tue, 3 Mar 2020 11:03:17 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:41597 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729484AbgCCQDQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:01:03 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023G110K087011;
-        Tue, 3 Mar 2020 10:01:01 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583251261;
-        bh=kMGzEG3llNgQuXMud+pl3UcHifoB2y/ZMOSZK0Quy3A=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=oGAEoToAiFkyZqc9hJqPrWskitemoDFntb6OHwV4d93i6/+EiiyNNFMMsHH6GmTYs
-         KmI+Wunoslp9I4+cxYcPReqI0wu/2feH/q197LNsthIPIeC63TaI/lQ3/Unt2kbFpr
-         DbVAUti+oLQbJsbGC9Rj3U7gycRuNdkjszCHsS18=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023G119P112162
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Mar 2020 10:01:01 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 10:01:00 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 10:01:01 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 023G10jb030402;
-        Tue, 3 Mar 2020 10:01:00 -0600
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-To:     Murali Karicheri <m-karicheri2@ti.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        "David S . Miller" <davem@davemloft.net>
-CC:     Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        netdev <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [for-next PATCH v2 5/5] arm64: dts: ti: k3-j721e-mcu: add scm node and phy-gmii-sel nodes
-Date:   Tue, 3 Mar 2020 18:00:29 +0200
-Message-ID: <20200303160029.345-6-grygorii.strashko@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200303160029.345-1-grygorii.strashko@ti.com>
-References: <20200303160029.345-1-grygorii.strashko@ti.com>
+        Tue, 3 Mar 2020 11:03:16 -0500
+Received: by mail-il1-f194.google.com with SMTP id q13so3204472ile.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:03:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=WJ8CT33vCQgmzyyKSord2fPnPar8kkaEbMHV5McznGQ=;
+        b=hiGouDg2FaInS+pLRzCFc0dFLEY3+qYi/nKghmXhNLPnCwCQi4EVttrrZlWfJbbU2F
+         wairFJDAsRO1GLD2GOqKjysbBffUBkPJBpF6WXD/dMcUrylikBIAyLhShy2IIz+8LpXk
+         T89ec3wN5qJWVfhT4+rX03RevMJ2die3Um06r6oa+epzjEXE+a3PdR28tuSC7/VnMP2Z
+         72AZ2KCefh3jQNHT/TiU4mEzBlRu+YMSzescXfOQY0u8EvXNf91S6kKmnClvNs0WPpI8
+         /l2jT9pOMKTqgcKWup6ZRFMwLhx6q7GxC+qRcOWNGcB/HugafPymk3Ry6MIOjcSNVsJE
+         3/1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WJ8CT33vCQgmzyyKSord2fPnPar8kkaEbMHV5McznGQ=;
+        b=CjNNDPXuEGrXuBDZDifAvHl1o6bzdDykVd6FOaJKrPyNLFxkXc9YjrbyjCuuSSfzsU
+         mXJWT/lxZTlwWEjzUzy8mL6FmqECt03LRd6/R4my9MnKXjZOhmiBCJbZMdl+z0NM8ABD
+         LDS/H4CojPKGpV/k2ko4hfuMs1UQvrjB2y87t5tbiNLgWxnHvfXBDLrRMAXAJRmR7QvQ
+         wFryot1Ldvlpkw4L2KxEWcYVI5q3vRxtnOWI5ckuFI454vC/tl90SH4rTfmIfQnWnHTr
+         WP2P9b7rB7161o9I7EOxmuJgwS0nKGQwhsyS58wPRFTHINgMXOk45GXavu9AdJh+/lm+
+         AC0Q==
+X-Gm-Message-State: ANhLgQ23hoki+JXLyOH/KhdiNjjwWLphG0YnxtgvyruN8UI5wJOLR013
+        F0Ei7PpyJll/Mr30qt3WCnN93WNeQcQ=
+X-Google-Smtp-Source: ADFU+vsI/dTdh2QHXsAzucz/h3HCFffui/bep2tqN1oMvr4GMjM8imoAagVCMjvooJK/S8JJtpaUkg==
+X-Received: by 2002:a92:c041:: with SMTP id o1mr5740753ilf.139.1583251395477;
+        Tue, 03 Mar 2020 08:03:15 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id s2sm5434633iod.12.2020.03.03.08.03.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 08:03:14 -0800 (PST)
+Subject: Re: [PATCH v2 4/4] io_uring: get next req on subm ref drop
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583181841.git.asml.silence@gmail.com>
+ <444aef98f849d947d7f10e88f30244fa0bc82360.1583181841.git.asml.silence@gmail.com>
+ <3ab75953-ee39-2c4e-99e2-f8c18ceb6a8d@kernel.dk>
+ <52b282f5-50f3-2ee6-a055-6ef0c2c39e93@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <904bfed4-19cc-7c05-8410-05016f9ab578@kernel.dk>
+Date:   Tue, 3 Mar 2020 09:03:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <52b282f5-50f3-2ee6-a055-6ef0c2c39e93@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for MCU System Control module DT node and DT node for the TI
-J721E SoC phy-gmii-sel PHY required for Ethernet ports mode selection.
+On 3/2/20 11:54 PM, Pavel Begunkov wrote:
+> On 03/03/2020 07:26, Jens Axboe wrote:
+>> On 3/2/20 1:45 PM, Pavel Begunkov wrote:
+>>> Get next request when dropping the submission reference. However, if
+>>> there is an asynchronous counterpart (i.e. read/write, timeout, etc),
+>>> that would be dangerous to do, so ignore them using new
+>>> REQ_F_DONT_STEAL_NEXT flag.
+>>
+>> Hmm, not so sure I like this one. It's not quite clear to me where we
+>> need REQ_F_DONT_STEAL_NEXT. If we have an async component, then we set
+>> REQ_F_DONT_STEAL_NEXT. So this is generally the case where our
+>> io_put_req() for submit is not the last drop. And for the other case,
+>> the put is generally in the caller anyway. So I don't really see what
+>> this extra flag buys us?
+> 
+> Because io_put_work() holds a reference, no async handler can achive req->refs
+> == 0, so it won't return next upon dropping the submission ref (i.e. by
+> put_find_nxt()). And I want to have next before io_put_work(), to, instead of as
+> currently:
+> 
+> run_work(work);
+> assign_cur_work(NULL); // spinlock + unlock worker->lock
+> new_work = put_work(work);
+> assign_cur_work(new_work); // the second time
+> 
+> do:
+> 
+> new_work = run_work(work);
+> assign_cur_work(new_work); // need new_work here
+> put_work(work);
+> 
+> 
+> The other way:
+> 
+> io_wq_submit_work() // for all async handlers
+> {
+> 	...
+> 	// Drop submission reference.
+> 	// One extra ref will be put in io_put_work() right
+> 	// after return, and it'll be done in the same thread
+> 	if (atomic_dec_and_get(req) == 1)
+> 		steal_next(req);
+> }
+> 
+> Maybe cleaner, but looks fragile as well. Would you prefer it?
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
----
- arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+I think I prefer that, since it doesn't need random setting of a
+no-steal flag throughout. And it should be pretty solid, since we know
+that we hold one and that can only be our reference. Just needs a nice
+comment explaining that fact as well.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-index 16c874bfd49a..6f961d5f077a 100644
---- a/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
-@@ -34,6 +34,20 @@
- 		};
- 	};
- 
-+	mcu_conf: syscon@40f00000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0x0 0x40f00000 0x0 0x20000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges = <0x0 0x0 0x40f00000 0x20000>;
-+
-+		phy_gmii_sel: phy@4040 {
-+			compatible = "ti,am654-phy-gmii-sel";
-+			reg = <0x4040 0x4>;
-+			#phy-cells = <1>;
-+		};
-+	};
-+
- 	wkup_pmx0: pinmux@4301c000 {
- 		compatible = "pinctrl-single";
- 		/* Proxy 0 addressing */
+>>> @@ -3943,7 +3947,10 @@ static int io_poll_add(struct io_kiocb *req)
+>>>  	if (mask) {
+>>>  		io_cqring_ev_posted(ctx);
+>>>  		io_put_req(req);
+>>> +	} else {
+>>> +		req->flags |= REQ_F_DONT_STEAL_NEXT;
+>>>  	}
+>>> +
+>>>  	return ipt.error;
+>>>  }
+>>
+>> Is this racy? I guess it doesn't matter since we're still holding the
+>> completion reference.
+> 
+> It's done by the same thread, that uses it. There could be a race if
+> the async counterpart is going to change req->flags, but we tolerate
+> false negative (i.e.  put_req() will handle it).
+
+It's relying on the fact that it's the task itself that'll run the task
+work, which can't be done by this time. Just caught my eye as something
+to look out for.
+
 -- 
-2.17.1
+Jens Axboe
 
