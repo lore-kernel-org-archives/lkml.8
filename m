@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 210B5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537E6C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBD6215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2492B20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258014;
-	bh=4BypovxFTpsOw6CslQIrS8l2iIcg0DbMZ7zyR66ltGs=;
+	s=default; t=1583258016;
+	bh=b7jTCnKwpg6483OPdvoS6UKKcbgT6fOfGV8ctSFzzqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C5bZSrAHz5IXmzjdT/zNe90hWzPz8K3o+PtGBf7HcwRx7bH41i5aD0oYKAg3Ntp9g
-	 iDhFKfcwB71/IYU6CYZdSEwnfNJyN3ZobsDJLB3KdcMymJYjVe72sB5Fqd6tzcwfMt
-	 fv8iHiZ5NKPwBHZTblA7kuheJIw3o+RI+IlZ0gG0=
+	b=yV50eUSKQDLSz+V+Fhrk72TDXUYujvfYg6An4Er6LXDL0ouCZsMqAh60ayenksGrQ
+	 9j0kwomwl4L4VguEoXBAH/4qAOPJseCmcAJBcbsyJoLQ5W0Xr0EbBJ1IgZNXdwG/3A
+	 9IDrGhfNzR3wOHZMidDONGvnnXSTfa5hHNf2LOHU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730679AbgCCRxd (ORCPT
+        id S1731584AbgCCRxf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:53:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34010 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:53:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732380AbgCCRx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:29 -0500
+        id S1731615AbgCCRxa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:30 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8993520CC7;
-        Tue,  3 Mar 2020 17:53:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F28D02072D;
+        Tue,  3 Mar 2020 17:53:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258008;
-        bh=4BypovxFTpsOw6CslQIrS8l2iIcg0DbMZ7zyR66ltGs=;
+        s=default; t=1583258010;
+        bh=b7jTCnKwpg6483OPdvoS6UKKcbgT6fOfGV8ctSFzzqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ciE86riX4i4pwAOVQUE2BG2MiCBuugrdU3YB81o4ZnbWUFrczqFUCDUxjapuoE8Uu
-         cBKDaVpqPetp5H63dgnPz226ZvYzgMWXzJcbSMnQTUQP4FMzrc+GJ9/kfStUQQGf23
-         wyo/QDyaoCgM5652NDNtmMa4Nb3VkpkGdSc9/RY0=
+        b=ZtWimVtQjHNXZrYPD9wqyi9JZnDaoTaYhrZ/lPyE29nju4V+60xsFX03tYyX03KJc
+         cpHKD9lrRnz01oxv57xeBnObPst/UZcAp9Ati+JyuPOJTLWeZDNY+0tsEgbE4CM2cu
+         EpxULGKKFo11aTMPGw8abQIQW/OZCmSR/oh3R/t0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
         "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 035/152] arm/ftrace: Fix BE text poking
-Date:   Tue,  3 Mar 2020 18:42:13 +0100
-Message-Id: <20200303174306.435377352@linuxfoundation.org>
+        Ingo Molnar <mingo@kernel.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 036/152] perf/x86/intel: Add Elkhart Lake support
+Date:   Tue,  3 Mar 2020 18:42:14 +0100
+Message-Id: <20200303174306.534289155@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,44 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
+[ Upstream commit eda23b387f6c4bb2971ac7e874a09913f533b22c ]
 
-The __patch_text() function already applies __opcode_to_mem_*(), so
-when __opcode_to_mem_*() is not the identity (BE*), it is applied
-twice, wrecking the instruction.
+Elkhart Lake also uses Tremont CPU. From the perspective of Intel PMU,
+there is nothing changed compared with Jacobsville.
+Share the perf code with Jacobsville.
 
-Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
-Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Dmitry Osipenko <digetx@gmail.com>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Link: https://lkml.kernel.org/r/1580236279-35492-1-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/ftrace.c | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
+ arch/x86/events/intel/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
-index bda949fd84e8b..93caf757f1d5d 100644
---- a/arch/arm/kernel/ftrace.c
-+++ b/arch/arm/kernel/ftrace.c
-@@ -81,13 +81,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
- {
- 	unsigned long replaced;
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index fcef678c34230..c531e3f3269ed 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4746,6 +4746,7 @@ __init int intel_pmu_init(void)
+ 		break;
  
--	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
-+	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
- 		old = __opcode_to_mem_thumb32(old);
--		new = __opcode_to_mem_thumb32(new);
--	} else {
-+	else
- 		old = __opcode_to_mem_arm(old);
--		new = __opcode_to_mem_arm(new);
--	}
- 
- 	if (validate) {
- 		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
+ 	case INTEL_FAM6_ATOM_TREMONT_D:
++	case INTEL_FAM6_ATOM_TREMONT:
+ 		x86_pmu.late_ack = true;
+ 		memcpy(hw_cache_event_ids, glp_hw_cache_event_ids,
+ 		       sizeof(hw_cache_event_ids));
 -- 
 2.20.1
 
