@@ -2,166 +2,75 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E579C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1DBC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:31:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9564206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:30:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31EF220848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:31:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="oMnlxAfa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oDX6EKAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbgCCUas (ORCPT
+        id S1731815AbgCCUbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:30:48 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46544 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731151AbgCCUas (ORCPT
+        Tue, 3 Mar 2020 15:31:51 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:55104 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731151AbgCCUbu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 15:30:48 -0500
-Received: by mail-qk1-f194.google.com with SMTP id u124so4765965qkh.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 12:30:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=123P9xQGjDkfvy5FsfzCO+UHa3rPS90oX4YiNtrqhWw=;
-        b=oMnlxAfaYeplW2vLS+DWelhhqH2WlAWDjWhlmOpKI/Duis+KxRNZz0/D21oxnIgULq
-         zgeFL7J09p5zRhZuEiKU0A44Iu5zo8t+DAT7bnK0R6jWCKxZu9EiFF2RPSzmDmGj4VrH
-         tf7m31BweTtKuVIIt2STCEMTZ0cceLF+cd7HOfySR6MP55Rp/mbHm7fZqGKtobukvEcU
-         ljoVaZjkKpl/W7a8I7QTI0PglgMnhhQyWFvFFnxXtVcWM7zeIZhJC8+X3vYRqswNkfOY
-         cu3Mfw6hiICbp67BUYQ7hRzo6QPjj/cdCqCUkIxbss5FMfZP/R8F0zE6KUY4z567HMKm
-         HPcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=123P9xQGjDkfvy5FsfzCO+UHa3rPS90oX4YiNtrqhWw=;
-        b=FgBWMIpIEHBfKfbEZrht9OxQ7fANTGWrT/B1sJDf/Y3fX/5YbNgO3Z7DHqgg8EE7KA
-         Cs7x5qIcCyngSwKHGBqSTvMWcFX+xyy0PFlBjvSZeBvYal6M7mUaS0obo9IwffQ/A1/3
-         DAnQt6vU0suxREdtjLTXRe6xnGENOLZRsY4UcacoWkpgLmQRRpU4LhtK9qeUNcinzTLf
-         kKjE2BacRoTq8QwQzml7nC4EGFHuRdZF4TRP8uvlVol3MapGOZ+WXutK0JzApBd6JuOE
-         kuMQ6Aiay5u3swMgfImFjZZsWikhI9uaL3/eWQaRGt/TeGSbvd1yprbSGxjk+qEVHbhK
-         uMdw==
-X-Gm-Message-State: ANhLgQ3LiH6P7F6gS5rRVaI0ggnOpiArQSNCK6zLgg9v8vWEhgPmZ+3Y
-        jOngHtkAqZxffctsUkSntnOjVg==
-X-Google-Smtp-Source: ADFU+vvHp3YJ4Y5ualAljJKts6XGmz1AJG7ZhH+LdzPqAcNANHKw/6O07c7kM42eTFtS7Agx619UJA==
-X-Received: by 2002:a37:67d3:: with SMTP id b202mr5746959qkc.496.1583267445778;
-        Tue, 03 Mar 2020 12:30:45 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id t29sm13453204qtt.20.2020.03.03.12.30.45
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Mar 2020 12:30:45 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j9EBg-0001xh-AJ; Tue, 03 Mar 2020 16:30:44 -0400
-Date:   Tue, 3 Mar 2020 16:30:44 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     syzbot <syzbot+46fe08363dbba223dec5@syzkaller.appspotmail.com>,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, rafael@kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        RDMA mailing list <linux-rdma@vger.kernel.org>
-Subject: Re: general protection fault in kobject_get
-Message-ID: <20200303203044.GD31668@ziepe.ca>
-References: <000000000000c4b371059fd83a92@google.com>
- <20200303072558.GF121803@unreal>
+        Tue, 3 Mar 2020 15:31:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=R4fltXhc1AgDmBEaAlZkK4e2FHblSj9UMQm1yxSRRZ8=; b=oDX6EKAhem5TcZV2zenuM4LtHG
+        XScSDk4EEL3AGGCVsLKd8k4tqdSfozl+lVD3TJIoIxnnpu5f3BNeoVVexh6O1pDWtg+3OWifQEDCH
+        f6xqbDBTeQjwYyxf3o98MtqgYXseL4E+GQ/y64cra6oCSWk/q4lTlTR2whaexaggIaB7NIaS11W0y
+        zXzOUDDQzOYEMobZC0rgDPTiRzr7L7wv6HRZwuAvhDS8RpRsQxxyV3msjdWv15Jb03Z/vo7KnwT9k
+        6tqX53+efg81c7inTFXgvgH0m9DDsCD5pJWIdauAU8zs7hhe7ib07n7YH2MP1PLSfld3bgFVKkBqQ
+        CB1TntAA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9ECk-0003D6-MC; Tue, 03 Mar 2020 20:31:50 +0000
+Date:   Tue, 3 Mar 2020 12:31:50 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Simplify /proc/$pid/maps implementation
+Message-ID: <20200303203150.GU29971@bombadil.infradead.org>
+References: <20200229165910.24605-1-willy@infradead.org>
+ <20200303195650.GB17768@avx2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303072558.GF121803@unreal>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200303195650.GB17768@avx2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 09:25:58AM +0200, Leon Romanovsky wrote:
-> +RDMA
+On Tue, Mar 03, 2020 at 10:56:50PM +0300, Alexey Dobriyan wrote:
+> On Sat, Feb 29, 2020 at 08:59:05AM -0800, Matthew Wilcox wrote:
+> > From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> > 
+> > Back in 2005, we merged a patch from Akamai that sped up /proc/$pid/maps
+> > by using f_version to stash the user virtual address that we'd just
+> > displayed.  That wasn't necessary; we can just use the private *ppos for
+> > the same purpose.  There have also been some other odd choices made over
+> > the years that use the seq_file infrastructure in some non-idiomatic ways.
+> > 
+> > Tested by using 'dd' with various different 'bs=' parameters to check that
+> > calling ->start, ->stop and ->next at various offsets work as expected.
 > 
-> On Sun, Mar 01, 2020 at 09:12:11PM -0800, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    3b3e808c Merge tag 'mac80211-next-for-net-next-2020-02-24'..
-> > git tree:       net-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=15e20a2de00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=6ec9623400ee72
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=46fe08363dbba223dec5
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+46fe08363dbba223dec5@syzkaller.appspotmail.com
+> /proc part looks OK, I only ask to include this description into first
+> patch, so it doesn't get lost. Often 0/N patch is the most interesting
+> part of a series.
 
-Hum, most probably something like this.. Will send a proper
-patch. If it is this I am very surprised that it didn't get a
-reproducer, as the fault should be pretty easy to hit, no race required..
+I'm perfectly fine with this justification for the patch series being
+lost.  I think this is the least interesting part of what I wrote.  And
+will be the least interesting part for future researchers ... "Why did
+this code get converted to behave exactly the same way as all the other
+code" isn't really an interesting question.
 
-diff --git a/drivers/infiniband/core/user_mad.c b/drivers/infiniband/core/user_mad.c
-index d1407fa378e832..e43ec710092a94 100644
---- a/drivers/infiniband/core/user_mad.c
-+++ b/drivers/infiniband/core/user_mad.c
-@@ -1129,17 +1129,30 @@ static const struct file_operations umad_sm_fops = {
- 	.llseek	 = no_llseek,
- };
- 
-+static struct ib_umad_port *get_port(struct ib_device *ibdev,
-+				     struct ib_umad_device *umad_dev,
-+				     unsigned int port)
-+{
-+	if (!umad_dev)
-+		return ERR_PTR(-EOPNOTSUPP);
-+	if (!rdma_is_port_valid(ibdev, port))
-+		return ERR_PTR(-EINVAL);
-+	if (!rdma_cap_ib_mad(ibdev, port))
-+		return ERR_PTR(-EOPNOTSUPP);
-+
-+	return &umad_dev->ports[port - rdma_start_port(ibdev)];
-+}
-+
- static int ib_umad_get_nl_info(struct ib_device *ibdev, void *client_data,
- 			       struct ib_client_nl_info *res)
- {
--	struct ib_umad_device *umad_dev = client_data;
-+	struct ib_umad_port *port = get_port(ibdev, client_data, res->port);
- 
--	if (!rdma_is_port_valid(ibdev, res->port))
--		return -EINVAL;
-+	if (IS_ERR(port))
-+		return PTR_ERR(port);
- 
- 	res->abi = IB_USER_MAD_ABI_VERSION;
--	res->cdev = &umad_dev->ports[res->port - rdma_start_port(ibdev)].dev;
--
-+	res->cdev = &port->dev;
- 	return 0;
- }
- 
-@@ -1154,15 +1167,13 @@ MODULE_ALIAS_RDMA_CLIENT("umad");
- static int ib_issm_get_nl_info(struct ib_device *ibdev, void *client_data,
- 			       struct ib_client_nl_info *res)
- {
--	struct ib_umad_device *umad_dev =
--		ib_get_client_data(ibdev, &umad_client);
-+	struct ib_umad_port *port = get_port(ibdev, client_data, res->port);
- 
--	if (!rdma_is_port_valid(ibdev, res->port))
--		return -EINVAL;
-+	if (IS_ERR(port))
-+		return PTR_ERR(port);
- 
- 	res->abi = IB_USER_MAD_ABI_VERSION;
--	res->cdev = &umad_dev->ports[res->port - rdma_start_port(ibdev)].sm_dev;
--
-+	res->cdev = &port->sm_dev;
- 	return 0;
- }
- 
