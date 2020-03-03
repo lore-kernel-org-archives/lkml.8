@@ -2,139 +2,117 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4306C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA03FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B6220848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F30820870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fOl9x86g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uuswdbwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732405AbgCCVJ3 (ORCPT
+        id S1732421AbgCCVK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:09:29 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45499 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732274AbgCCVJ3 (ORCPT
+        Tue, 3 Mar 2020 16:10:57 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:43038 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730925AbgCCVK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:09:29 -0500
-Received: by mail-pl1-f194.google.com with SMTP id b22so1881931pls.12
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:09:28 -0800 (PST)
+        Tue, 3 Mar 2020 16:10:56 -0500
+Received: by mail-yw1-f67.google.com with SMTP id p69so77327ywh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:10:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fwR7Sl83KeOsQT2W/DAwpFl0ZV6iw1v764tWAtDVZSg=;
-        b=fOl9x86ga//EGU5D5JLMkKF+bt8LyTcxJBIWZ2dGr89Mpzz9sg46dz3Z9WXg5spuRf
-         +5KkAM260XOqr4hFezfI0dAMkVHm2QrNAdvp27/d0QuCbfShXZU0mrxDKnCkuSp5mQ49
-         k9DQfKig4a/pE10r0ArWlycQSAwDX+FIKAyW8=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jhw2/hBTqqb08+XbLqFc1lQG7+XacrKgacG+f+lhHlw=;
+        b=UuswdbwtGUq/KOpTGPSUcHmuRFxUeMPpUUcP4c3+mgsuAAZ1wqfnSivQRMp7zhqP2i
+         yvBWIw6bqMhNA/DPbB71aQ0wCjAsjDNSGE4vvK+62X9DlD438J/f+Nj2df/aPLkpKMfF
+         5ocn7OG+YEKPkfrWpPgr+GcwXyvyAQ/mWC5rmoLddKOt9BLvUI7SMHMb7Fw9CVC1Brwp
+         7oBlwlgyME+tIP2gNltFHprtxkzqmd46EM7RAj60QXtKXqz8qLiEzu7thzKr+f14dQCa
+         wqB5jjXoBB8PCTZRigPCyuFoqbQRvn1jgnb6lYeX9vn9ADIMgGrH9qfcDDR7AZ4WBOg6
+         zscQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fwR7Sl83KeOsQT2W/DAwpFl0ZV6iw1v764tWAtDVZSg=;
-        b=n+e28k8kQFR80oXSTxYCGUuGvztw5PqjQfJw0+wDpBRGwIOuL+cAudFNkDopjW8kmL
-         pg69hS1JmuXUgLnFOAZEiBuXfa9eJtnAH/Ziixrf1GG/vLAvQ9KvYaYHCzjufOOgmjas
-         vzxmnkX8i7vJBK84E8YRdQir0qcvfb6Q3AURosBe9o0Mwtq4BEvUvMNFidv6JhyExWrl
-         zuJB4ZuzVLLkqCvjM60eBogeekH7utz1uVX1KWiXlvN3x/WbOuQOSzta2VuhgzmU4Mz8
-         haKq8npb0g7z8kjiKaTWmpsRkUAIpMool3t/T6CulPs2z0qMfzewKRUSta1Hl4Ob9Ytl
-         n0wA==
-X-Gm-Message-State: ANhLgQ0q4+Nq/s5oARDzwVsqGK7f24MGtVwlx/CqDJxvD9TJOtm5zvnu
-        TSJHu4L8Vry0sNIDhfr7Jfdxtg==
-X-Google-Smtp-Source: ADFU+vt03b0iuZ1w20LE5zwsZxme9o61Zd37p0buS3FKRP9h1g71JeHZkeIPeVEiUTWSKQkmQDa2bw==
-X-Received: by 2002:a17:902:9a42:: with SMTP id x2mr6295193plv.194.1583269768021;
-        Tue, 03 Mar 2020 13:09:28 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e9sm132865pjt.16.2020.03.03.13.09.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 13:09:27 -0800 (PST)
-Date:   Tue, 3 Mar 2020 13:09:26 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH v2] lib/refcount: Document interaction with PID_MAX_LIMIT
-Message-ID: <202003031309.FBE806C@keescook>
-References: <20200303105427.260620-1-jannh@google.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jhw2/hBTqqb08+XbLqFc1lQG7+XacrKgacG+f+lhHlw=;
+        b=hfPX5AZNfS+0EgdxriTPFvbnQ3F0kvaVAFafjh80cUSn2cLWNWHT05C3/EQxINaZG4
+         C4+gFbBhnr5cKmtm6etBmgrMhzGb/JRXMpgNpmjAueX5ZXp4wnQvYqQbA1aY7PT3Xx4I
+         9obaVEcPHEw13ZB3zx/z+IFVNaZ9p1xnM8K+F/FFSyP4tisAE2fwhNA3EcDWtP2oOC/y
+         kVTEMaiAFB+Ztbe4WQB+4cDkxvjIjduG3jWS47FNdrQ3hLjlomry5tSzr9RGKTMb5Rfm
+         eQIe3ObEBrZmfLcHVDp2BKrDwmka7e/e7IHFC/vMPQEG9mM+8y7u5Nq9ZyklFiU5Y3PY
+         6nNQ==
+X-Gm-Message-State: ANhLgQ1h36YkrIU1yWl8CyeGJTToiTUj2mmhbF0ovoJCzb1OGFeTZj75
+        c+D/8jm3U/tD3mg8elYeD435zuB/
+X-Google-Smtp-Source: ADFU+vsEbnSlM7oGL9DtebhjrJZii5EyJwKjrMBBftWbqqCUZqe3Ee6Wz+KeYqMy+vvlUWUZRKdcUQ==
+X-Received: by 2002:a81:b627:: with SMTP id u39mr6618523ywh.180.1583269853034;
+        Tue, 03 Mar 2020 13:10:53 -0800 (PST)
+Received: from mail-yw1-f53.google.com (mail-yw1-f53.google.com. [209.85.161.53])
+        by smtp.gmail.com with ESMTPSA id d6sm4834539ywc.8.2020.03.03.13.10.51
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 13:10:52 -0800 (PST)
+Received: by mail-yw1-f53.google.com with SMTP id 10so112412ywv.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:10:51 -0800 (PST)
+X-Received: by 2002:a0d:d68d:: with SMTP id y135mr2472118ywd.117.1583269851243;
+ Tue, 03 Mar 2020 13:10:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303105427.260620-1-jannh@google.com>
+References: <20200228105435.75298-1-lrizzo@google.com> <20200228110043.2771fddb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CA+FuTSfd80pZroxtqZDsTeEz4FaronC=pdgjeaBBfYqqi5HiyQ@mail.gmail.com>
+ <3c27d9c0-eb17-b20f-2d10-01f3bdf8c0d6@iogearbox.net> <20200303125020.2baef01b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200303125020.2baef01b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 3 Mar 2020 16:10:14 -0500
+X-Gmail-Original-Message-ID: <CA+FuTSeL_psqzpB6hxSh6f1HnO_SrpED=71Y3HcyDweG2Y3sdg@mail.gmail.com>
+Message-ID: <CA+FuTSeL_psqzpB6hxSh6f1HnO_SrpED=71Y3HcyDweG2Y3sdg@mail.gmail.com>
+Subject: Re: [PATCH v4] netdev attribute to control xdpgeneric skb linearization
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Luigi Rizzo <lrizzo@google.com>,
+        Network Development <netdev@vger.kernel.org>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        David Miller <davem@davemloft.net>, hawk@kernel.org,
+        "Jubran, Samih" <sameehj@amazon.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 11:54:27AM +0100, Jann Horn wrote:
-> Document the circumstances under which refcount_t's saturation mechanism
-> works deterministically.
-> 
-> Signed-off-by: Jann Horn <jannh@google.com>
+On Tue, Mar 3, 2020 at 3:50 PM Jakub Kicinski <kuba@kernel.org> wrote:
+>
+> On Tue, 3 Mar 2020 20:46:55 +0100 Daniel Borkmann wrote:
+> > Thus, when the data/data_end test fails in generic XDP, the user can
+> > call e.g. bpf_xdp_pull_data(xdp, 64) to make sure we pull in as much as
+> > is needed w/o full linearization and once done the data/data_end can be
+> > repeated to proceed. Native XDP will leave xdp->rxq->skb as NULL, but
+> > later we could perhaps reuse the same bpf_xdp_pull_data() helper for
+> > native with skb-less backing. Thoughts?
 
-Acked-by: Kees Cook <keescook@chromium.org>
+Something akin to pskb_may_pull sounds like a great solution to me.
 
-Thanks!
+Another approach would be a new xdp_action XDP_NEED_LINEARIZED that
+causes the program to be restarted after linearization. But that is both
+more expensive and less elegant.
 
--Kees
+Instead of a sysctl or device option, is this an optimization that
+could be taken based on the program? Specifically, would XDP_FLAGS be
+a path to pass a SUPPORT_SG flag along with the program? I'm not
+entirely familiar with the XDP setup code, so this may be a totally
+off. But from a quick read it seems like generic_xdp_install could
+transfer such a flag to struct net_device.
 
-> 
-> Notes:
->     v2:
->      - write down the math (Kees)
-> 
->  include/linux/refcount.h | 23 ++++++++++++++++++-----
->  1 file changed, 18 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/refcount.h b/include/linux/refcount.h
-> index 0ac50cf62d062..0e3ee25eb156a 100644
-> --- a/include/linux/refcount.h
-> +++ b/include/linux/refcount.h
-> @@ -38,11 +38,24 @@
->   * atomic operations, then the count will continue to edge closer to 0. If it
->   * reaches a value of 1 before /any/ of the threads reset it to the saturated
->   * value, then a concurrent refcount_dec_and_test() may erroneously free the
-> - * underlying object. Given the precise timing details involved with the
-> - * round-robin scheduling of each thread manipulating the refcount and the need
-> - * to hit the race multiple times in succession, there doesn't appear to be a
-> - * practical avenue of attack even if using refcount_add() operations with
-> - * larger increments.
-> + * underlying object.
-> + * Linux limits the maximum number of tasks to PID_MAX_LIMIT, which is currently
-> + * 0x400000 (and can't easily be raised in the future beyond FUTEX_TID_MASK).
-> + * With the current PID limit, if no batched refcounting operations are used and
-> + * the attacker can't repeatedly trigger kernel oopses in the middle of refcount
-> + * operations, this makes it impossible for a saturated refcount to leave the
-> + * saturation range, even if it is possible for multiple uses of the same
-> + * refcount to nest in the context of a single task:
-> + *
-> + *     (UINT_MAX+1-REFCOUNT_SATURATED) / PID_MAX_LIMIT =
-> + *     0x40000000 / 0x400000 = 0x100 = 256
-> + *
-> + * If hundreds of references are added/removed with a single refcounting
-> + * operation, it may potentially be possible to leave the saturation range; but
-> + * given the precise timing details involved with the round-robin scheduling of
-> + * each thread manipulating the refcount and the need to hit the race multiple
-> + * times in succession, there doesn't appear to be a practical avenue of attack
-> + * even if using refcount_add() operations with larger increments.
->   *
->   * Memory ordering
->   * ===============
-> 
-> base-commit: 98d54f81e36ba3bf92172791eba5ca5bd813989b
-> -- 
-> 2.25.0.265.gbab2e86ba0-goog
-> 
+> I'm curious why we consider a xdpgeneric-only addition. Is attaching
+> a cls_bpf program noticeably slower than xdpgeneric?
 
--- 
-Kees Cook
+This just should not be xdp*generic* only, but allow us to use any XDP
+with large MTU sizes and without having to disable GRO. I'd still like a
+way to be able to drop or modify packets before GRO, or to signal that
+a type of packet should skip GRO.
