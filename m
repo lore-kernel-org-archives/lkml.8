@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7533C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1D4C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF1972146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550DF214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258101;
-	bh=1CKLZHDjWSPRbxdC/lD+Y2DZ+zwKh+7ZDnwzhGxcMXI=;
+	s=default; t=1583258104;
+	bh=0floEeYV5OcdfQt5e4jA+XcdcYbsg8OUsbnx7OWpz4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lueVlZI6Rujq9IhGnPIrAaLtd/AIS+5Di/0p4QYsYXXn53ftt950KRzTZ+P3xCMB4
-	 cLJDAoZZNLvOVdNco9nVGpf1EnYhN70sEmXZe/7wquhzOmW1OEfI/GLqE4UqBpJYbY
-	 aqpJP5fzsjpboUYhWPKtMKpxR2VMyiq2eBChtVCc=
+	b=W6k3gTUCGtZROF44HF19dcL36Dw4jH2jXX2UmjefhDjCiOoJDZOTcUFuCKamPAFg2
+	 8hku2PUGjwpqDTM1SFKVHEwNysPURlrfHRBw/P9JoVMf2PbJj071spKfOLOYwkH/4u
+	 ScjRiWLcIjLTUsB0VMpHNghf8hheVXCxYJ8OP8PQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732623AbgCCRzA (ORCPT
+        id S1732632AbgCCRzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:55:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:55:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730958AbgCCRyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:52 -0500
+        id S1732603AbgCCRy4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:56 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE14A215A4;
-        Tue,  3 Mar 2020 17:54:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96228214D8;
+        Tue,  3 Mar 2020 17:54:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258090;
-        bh=1CKLZHDjWSPRbxdC/lD+Y2DZ+zwKh+7ZDnwzhGxcMXI=;
+        s=default; t=1583258095;
+        bh=0floEeYV5OcdfQt5e4jA+XcdcYbsg8OUsbnx7OWpz4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dbqT2luXvNSSb+IRdK9mGS+7yw9ADo87guQSGPCd+gST8d8SInuleeHKIksBZCcsq
-         xaRLGkwXGh1xxQEPMck74gaUcETFGQq2yNvhOzFjFB8SVLEQSFQb8WKEmsrVoJ6tq5
-         rtJiLZ+M5nuqSd28/xFrSZx7vsoWgHckFowyZp8A=
+        b=SD1ub3E/5j3wxK5wABZZLI5K4+JAxEutsDQezTweAA7zAW2D75wEUAp4NzhpMzLui
+         oNZLb+vUsO8YTXObNpkeKOLv/cSuzMKSEH0LIsn4zJIyoX8nSVj3VObly5H9PCajRT
+         co+TRAC/uPV7vnv0r2n46HPvqgs2NxEsXdN0MGNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nigel Kirkland <nigel.kirkland@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
         Christoph Hellwig <hch@lst.de>,
         Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 068/152] nvme: prevent warning triggered by nvme_stop_keep_alive
-Date:   Tue,  3 Mar 2020 18:42:46 +0100
-Message-Id: <20200303174310.191649995@linuxfoundation.org>
+Subject: [PATCH 5.4 069/152] nvme/pci: move cqe check after device shutdown
+Date:   Tue,  3 Mar 2020 18:42:47 +0100
+Message-Id: <20200303174310.299974528@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -64,117 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nigel Kirkland <nigel.kirkland@broadcom.com>
+From: Keith Busch <kbusch@kernel.org>
 
-[ Upstream commit 97b2512ad000a409b4073dd1a71e4157d76675cb ]
+[ Upstream commit fa46c6fb5d61b1f17b06d7c6ef75478b576304c7 ]
 
-Delayed keep alive work is queued on system workqueue and may be cancelled
-via nvme_stop_keep_alive from nvme_reset_wq, nvme_fc_wq or nvme_wq.
+Many users have reported nvme triggered irq_startup() warnings during
+shutdown. The driver uses the nvme queue's irq to synchronize scanning
+for completions, and enabling an interrupt affined to only offline CPUs
+triggers the alarming warning.
 
-Check_flush_dependency detects mismatched attributes between the work-queue
-context used to cancel the keep alive work and system-wq. Specifically
-system-wq does not have the WQ_MEM_RECLAIM flag, whereas the contexts used
-to cancel keep alive work have WQ_MEM_RECLAIM flag.
+Move the final CQE check to after disabling the device and all
+registered interrupts have been torn down so that we do not have any
+IRQ to synchronize.
 
-Example warning:
-
-  workqueue: WQ_MEM_RECLAIM nvme-reset-wq:nvme_fc_reset_ctrl_work [nvme_fc]
-	is flushing !WQ_MEM_RECLAIM events:nvme_keep_alive_work [nvme_core]
-
-To avoid the flags mismatch, delayed keep alive work is queued on nvme_wq.
-
-However this creates a secondary concern where work and a request to cancel
-that work may be in the same work queue - namely err_work in the rdma and
-tcp transports, which will want to flush/cancel the keep alive work which
-will now be on nvme_wq.
-
-After reviewing the transports, it looks like err_work can be moved to
-nvme_reset_wq. In fact that aligns them better with transition into
-RESETTING and performing related reset work in nvme_reset_wq.
-
-Change nvme-rdma and nvme-tcp to perform err_work in nvme_reset_wq.
-
-Signed-off-by: Nigel Kirkland <nigel.kirkland@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206509
 Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 10 +++++-----
- drivers/nvme/host/rdma.c |  2 +-
- drivers/nvme/host/tcp.c  |  2 +-
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/nvme/host/pci.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index e703827d27e9c..7dacfd102a992 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -66,8 +66,8 @@ MODULE_PARM_DESC(streams, "turn on support for Streams write directives");
-  * nvme_reset_wq - hosts nvme reset works
-  * nvme_delete_wq - hosts nvme delete works
-  *
-- * nvme_wq will host works such are scan, aen handling, fw activation,
-- * keep-alive error recovery, periodic reconnects etc. nvme_reset_wq
-+ * nvme_wq will host works such as scan, aen handling, fw activation,
-+ * keep-alive, periodic reconnects etc. nvme_reset_wq
-  * runs reset works which also flush works hosted on nvme_wq for
-  * serialization purposes. nvme_delete_wq host controller deletion
-  * works which flush reset works for serialization.
-@@ -972,7 +972,7 @@ static void nvme_keep_alive_end_io(struct request *rq, blk_status_t status)
- 		startka = true;
- 	spin_unlock_irqrestore(&ctrl->lock, flags);
- 	if (startka)
--		schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
-+		queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index f34a56d588d31..ff2003c16be34 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -1407,6 +1407,23 @@ static void nvme_disable_admin_queue(struct nvme_dev *dev, bool shutdown)
+ 	nvme_poll_irqdisable(nvmeq, -1);
  }
  
- static int nvme_keep_alive(struct nvme_ctrl *ctrl)
-@@ -1002,7 +1002,7 @@ static void nvme_keep_alive_work(struct work_struct *work)
- 		dev_dbg(ctrl->device,
- 			"reschedule traffic based keep-alive timer\n");
- 		ctrl->comp_seen = false;
--		schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
-+		queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ);
- 		return;
- 	}
++/*
++ * Called only on a device that has been disabled and after all other threads
++ * that can check this device's completion queues have synced. This is the
++ * last chance for the driver to see a natural completion before
++ * nvme_cancel_request() terminates all incomplete requests.
++ */
++static void nvme_reap_pending_cqes(struct nvme_dev *dev)
++{
++	u16 start, end;
++	int i;
++
++	for (i = dev->ctrl.queue_count - 1; i > 0; i--) {
++		nvme_process_cq(&dev->queues[i], &start, &end, -1);
++		nvme_complete_cqes(&dev->queues[i], start, end);
++	}
++}
++
+ static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
+ 				int entry_size)
+ {
+@@ -2241,11 +2258,6 @@ static bool __nvme_disable_io_queues(struct nvme_dev *dev, u8 opcode)
+ 		if (timeout == 0)
+ 			return false;
  
-@@ -1019,7 +1019,7 @@ static void nvme_start_keep_alive(struct nvme_ctrl *ctrl)
- 	if (unlikely(ctrl->kato == 0))
- 		return;
+-		/* handle any remaining CQEs */
+-		if (opcode == nvme_admin_delete_cq &&
+-		    !test_bit(NVMEQ_DELETE_ERROR, &nvmeq->flags))
+-			nvme_poll_irqdisable(nvmeq, -1);
+-
+ 		sent--;
+ 		if (nr_queues)
+ 			goto retry;
+@@ -2434,6 +2446,7 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
+ 	nvme_suspend_io_queues(dev);
+ 	nvme_suspend_queue(&dev->queues[0]);
+ 	nvme_pci_disable(dev);
++	nvme_reap_pending_cqes(dev);
  
--	schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
-+	queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ);
- }
- 
- void nvme_stop_keep_alive(struct nvme_ctrl *ctrl)
-diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
-index cb4c3000a57e8..4ff51da3b13fa 100644
---- a/drivers/nvme/host/rdma.c
-+++ b/drivers/nvme/host/rdma.c
-@@ -1088,7 +1088,7 @@ static void nvme_rdma_error_recovery(struct nvme_rdma_ctrl *ctrl)
- 	if (!nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_RESETTING))
- 		return;
- 
--	queue_work(nvme_wq, &ctrl->err_work);
-+	queue_work(nvme_reset_wq, &ctrl->err_work);
- }
- 
- static void nvme_rdma_wr_error(struct ib_cq *cq, struct ib_wc *wc,
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index a870144542159..244984420b41b 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -422,7 +422,7 @@ static void nvme_tcp_error_recovery(struct nvme_ctrl *ctrl)
- 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_RESETTING))
- 		return;
- 
--	queue_work(nvme_wq, &to_tcp_ctrl(ctrl)->err_work);
-+	queue_work(nvme_reset_wq, &to_tcp_ctrl(ctrl)->err_work);
- }
- 
- static int nvme_tcp_process_nvme_cqe(struct nvme_tcp_queue *queue,
+ 	blk_mq_tagset_busy_iter(&dev->tagset, nvme_cancel_request, &dev->ctrl);
+ 	blk_mq_tagset_busy_iter(&dev->admin_tagset, nvme_cancel_request, &dev->ctrl);
 -- 
 2.20.1
 
