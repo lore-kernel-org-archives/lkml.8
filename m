@@ -2,155 +2,136 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA9DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFA8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 003C420717
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D77A20717
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kOqCIMSR"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sWbH2eXG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbgCCNpT (ORCPT
+        id S1728661AbgCCNp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:45:19 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:54936 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727459AbgCCNpT (ORCPT
+        Tue, 3 Mar 2020 08:45:26 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33842 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727191AbgCCNpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:45:19 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023DgsjP103555;
-        Tue, 3 Mar 2020 13:44:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=vwBN/g7wSj2rxEfOmHREhq/V9cF9S95isMpxJfnzWDI=;
- b=kOqCIMSRkOpz4XSkCCbWSJMyd5BxXZQibLDHCHyHiVWImArzTc+FwBGmQ5YF8z3ixX7a
- B6rdv1ZyrDk9W2jEJJCePkVPZNcMXtAuDsEymEcSsHfY26cQeYXBSHnGHpGCmcIwq+E2
- kaVo/R9o392E/PZmYFahSwA4keDIRwgDqhXpx292xp3tNi+IAMlAguQJkbD1PxMKGgBD
- 56Ly9By0DtjndLdwbRBRkiItS81leDBYhLo+uojZh+C55hMOHku3c102fwE7Cr3OLRrK
- ufTVaQygOGgim+Kaa4UdOcZmQJP4YPzsQlGoFIcMMnma7RYI1kyAE5XrraV7829vroBx SA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2yghn332pe-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 13:44:46 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023Dh7c2026059;
-        Tue, 3 Mar 2020 13:44:45 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2yg1gxfu0w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 13:44:45 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 023Dij8D031981;
-        Tue, 3 Mar 2020 13:44:45 GMT
-Received: from [192.168.1.14] (/114.88.246.185)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 05:44:44 -0800
-Subject: Re: [PATCH] blktrace: fix dereference after null check
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Cengiz Can <cengiz@kernel.wtf>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200303073358.57799-1-cengiz@kernel.wtf>
- <ec24c6d8-617f-1460-0420-bc2ac3f346c6@oracle.com>
- <20200303083523.78233c24@gandalf.local.home>
-From:   Bob Liu <bob.liu@oracle.com>
-Message-ID: <61e6efc2-6521-5dc3-b9cf-353f52e10e2c@oracle.com>
-Date:   Tue, 3 Mar 2020 21:44:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 3 Mar 2020 08:45:25 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 11so3425018qkd.1;
+        Tue, 03 Mar 2020 05:45:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=k3SVGsAkRULOndp1bH4Vy4WDCwesGWr3P2z5Nm2yK10=;
+        b=sWbH2eXGNk7O1rQtiTzgMXTDZu43PmepDSxq/uNPdI7SoPgKCrQc597H3jFSvq2zv1
+         he75Y3Zb2UfC0zVYPysm6n3V+dKaiHAnEWWMEgHkZTWindFlUzUwSNrgbYg8JwUUAuET
+         K9VADaX7yvdP7LE2K8UTyxstGXHGw3Z7ZXBtsPfecPJGtAXaxrFtqlXDjnJJu84WC74g
+         xVAZhKs+WisQ6K5jO6DzK1ETO9PjxW2uwIGBQk8cCYnKD0MZxpdfSG41qOjKPDD84cBd
+         KkOo2PAR3ze0M7wNRVkVghDcTdire3inJI9/dDoxrSTL9HcS4rQo7xAjsJumQYgjF/Ka
+         aRzw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=k3SVGsAkRULOndp1bH4Vy4WDCwesGWr3P2z5Nm2yK10=;
+        b=Bwkbv+MiRKDx2Wf92mwku23vPB6QvpIZozG8w9Utl9JyJyEQjzWxzNC+2Viuot10yr
+         G5i0Es0qd4mn52YVJLKc4GeNVLKuBKhsYV6HM8RMHDlmqVUYa73Uod7L3ytBxbtfIPic
+         sMXaeZtMKRGNrXxSk+dB7ar/Bk+ZqHko4MgNIdAfjCWPc9HD4xcxjK+fVWbuhMfl5tWu
+         EwJbgsEffxir4g2HDyYgMvcYeP97VeSfYAv5ZKtkfX5At50VwhZpjPqlg9KvpQ76g1MK
+         3eisOgb+3ZQ3cdiUybbVY5abjzdTuMhBH4Z9+pnzO42kvTQCeSeJ9+c3oy9pd3z3gmGO
+         QSQQ==
+X-Gm-Message-State: ANhLgQ1qkLdBHYpl9v2/a3H/3UBgzowPC7g3qcG1TFj88tSjiTvkToMF
+        wl1zh6rlVmdDamwWKwLrc1iQuVrHnOU=
+X-Google-Smtp-Source: ADFU+vtMcmjz2IkoUm+AEKIOmhmLZ+Zq/cFMxCPvZfbkApv9+ewkMMxJ3r0lr/5bDhlCrRFK+R2JMg==
+X-Received: by 2002:ae9:ef4c:: with SMTP id d73mr3833332qkg.201.1583243123678;
+        Tue, 03 Mar 2020 05:45:23 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id o127sm12169290qke.92.2020.03.03.05.45.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 05:45:23 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Tue, 3 Mar 2020 08:45:21 -0500
+To:     Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] efi/x86: Decompress at start of PE image load address
+Message-ID: <20200303134521.GA3628638@rani.riverdale.lan>
+References: <20200301230537.2247550-1-nivedita@alum.mit.edu>
+ <20200301230537.2247550-3-nivedita@alum.mit.edu>
+ <dce7e026-ccb2-36f0-c892-83558dcc055f@nextfour.com>
 MIME-Version: 1.0
-In-Reply-To: <20200303083523.78233c24@gandalf.local.home>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=2 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030105
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 clxscore=1015 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030105
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <dce7e026-ccb2-36f0-c892-83558dcc055f@nextfour.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 9:35 PM, Steven Rostedt wrote:
-> On Tue, 3 Mar 2020 21:29:08 +0800
-> Bob Liu <bob.liu@oracle.com> wrote:
-> 
->> On 3/3/20 3:33 PM, Cengiz Can wrote:
->>> There was a recent change in blktrace.c that added a RCU protection to
->>> `q->blk_trace` in order to fix a use-after-free issue during access.
->>>
->>> However the change missed an edge case that can lead to dereferencing of
->>> `bt` pointer even when it's NULL:
->>>
->>> ```
->>>         bt->act_mask = value; // bt can still be NULL here
->>> ```
->>>
->>> Added a reassignment into the NULL check block to fix the issue.
->>>
->>> Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
->>>
->>> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
->>> ---
->>>  Huge thanks goes to Steven Rostedt for his assistance.
->>>
->>>  kernel/trace/blktrace.c | 4 +++-
->>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
->>> index 4560878f0bac..29ea88f10b87 100644
->>> --- a/kernel/trace/blktrace.c
->>> +++ b/kernel/trace/blktrace.c
->>> @@ -1896,8 +1896,10 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
->>>  	}
->>>
->>>  	ret = 0;
->>> -	if (bt == NULL)
->>> +	if (bt == NULL) {
->>>  		ret = blk_trace_setup_queue(q, bdev);
->>> +		bt = q->blk_trace;  
->>
->> The return value 'ret' should be judged, it's wrong to set 'bt' if blk_trace_setup_queue()
->> return failure.
-> 
-> Why? If ret is an error, q is still valid, and bt would just be garbage. bt
-> is ignored below if ret is anything but zero. Why add an unnecessary if
-> condition here?
->
-
-Oh..yes. You are right, sorry for missed the if (ret == 0) below.
-
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-
-> That said, the bt assignment still needs rcu annotation:
-> > 		bt = rcu_dereference_protected(q->blk_trace,
-> 				lockdep_is_held(&q->blk_trace_mutex));
-> 
-> -- Steve
+On Tue, Mar 03, 2020 at 06:28:20AM +0000, Mika Penttilä wrote:
 > 
 > 
->>
->>> +	}
->>>
->>>  	if (ret == 0) {
->>>  		if (attr == &dev_attr_act_mask)
->>> --
->>> 2.25.1
->>>   
+> On 2.3.2020 1.05, Arvind Sankar wrote:
+> > When booted via PE loader, define image_offset to hold the offset of
+> > startup_32 from the start of the PE image, and use it as the start of
+> > the decompression buffer.
+> >
+> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> > ---
+> >  arch/x86/boot/compressed/head_32.S      | 17 +++++++++++
+> >  arch/x86/boot/compressed/head_64.S      | 38 +++++++++++++++++++++++--
+> >  drivers/firmware/efi/libstub/x86-stub.c | 12 ++++++--
+> >  3 files changed, 61 insertions(+), 6 deletions(-)
+> 
+> ...
+> > --- a/drivers/firmware/efi/libstub/x86-stub.c
+> > +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> > @@ -19,6 +19,7 @@
+> >  
+> >  static efi_system_table_t *sys_table;
+> >  extern const bool efi_is64;
+> > +extern u32 image_offset;
+> >  
+> >  __pure efi_system_table_t *efi_system_table(void)
+> >  {
+> > @@ -364,6 +365,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+> >  	struct boot_params *boot_params;
+> >  	struct setup_header *hdr;
+> >  	efi_loaded_image_t *image;
+> > +	void *image_base;
+> >  	efi_guid_t proto = LOADED_IMAGE_PROTOCOL_GUID;
+> >  	int options_size = 0;
+> >  	efi_status_t status;
+> > @@ -384,7 +386,10 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+> >  		efi_exit(handle, status);
+> >  	}
+> >  
+> > -	hdr = &((struct boot_params *)efi_table_attr(image, image_base))->hdr;
+> > +	image_base = efi_table_attr(image, image_base);
+> > +	image_offset = (void *)startup_32 - image_base;
+> 
+> startup_32 == 0, so maybe something like
+> 
+> leaq	startup_32(%rip) - image_base
+> 
+> should be used ?
 > 
 
+That's what it already uses. All the files in this directory are
+compiled to be position-independent, so it uses rip-relative addressing
+on 64-bit and GOT-relative addressing on 32-bit.
