@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12446C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E11F6C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC80421D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B690424677
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204195;
-	bh=UrxAyspyyacTQv+bvn17scVrUXsw8Wvec21zX9DJ9Dg=;
+	s=default; t=1583204197;
+	bh=wLAC+afq5HQkAOoxAqMTwr9NAHi/aLACIDJFseyYRps=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gp8+uB5YcY1+NJ5qpV17Xs1mS9QxIgkVM0dunA2ZzW+BPBKngGriCl4EKWHnssd/2
-	 OU6I+UDf3S3CpLIz2wUEI/l6vEA8NZREVQIx9fxwcIFyn5H5pixSP9/m0bbPyLe2h5
-	 Ai8nr5eHQ+nJu9fm14SnpGiAazB8W1EL5EIaAQhQ=
+	b=zqwBb39nhNCCy85U8aOntdnKmmz8wW7CiJu/BtWjVYTkQg9gD+W7VFsxsizGYnQAu
+	 FEaWP5prctf1URf2enqb8Atb0saEfz9LRQY1vIDsXCH0ZXNQGHSQStaiPVognYT2ck
+	 zH/9fkIQro8F2qPoyo/ni3Yhha65io71SACwsoko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbgCCCsl (ORCPT
+        id S1728477AbgCCCsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44260 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbgCCCs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728409AbgCCCs1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 2 Mar 2020 21:48:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 470252468D;
-        Tue,  3 Mar 2020 02:48:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23E4024680;
+        Tue,  3 Mar 2020 02:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203707;
-        bh=UrxAyspyyacTQv+bvn17scVrUXsw8Wvec21zX9DJ9Dg=;
+        s=default; t=1583203705;
+        bh=wLAC+afq5HQkAOoxAqMTwr9NAHi/aLACIDJFseyYRps=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mZlJF5pZdf747R3120iKoL8J7zY1KQsuLUAOAH4u6nqQtxc5ULuK2DuJDSmzUk2AR
-         MC9sVsGuXlOtRNimxrX8gWWUqL7e5C2Mt7oiHXjBmtjx5bo4bglbo+Agv8kqP44f0v
-         XRdPjWUh5K8mPXV6zzkpJqSgg9nQJt4Jgfv8tnbo=
+        b=wkoxXMnrNvCpMeir6QrKWjE9s6HfddbPoLyVx4POsPqmSFMR+hvgp/+NoBsLl3Sl+
+         kMyv52khUpZU2er9ABr//TShvs/Qr+6IC8iktT+wLboz3DvjXmEYEjizMbLnFs56Q3
+         V7IWOwpE+uIJj8HeTJnRpZy3QYX2jRUNfWoCBPnQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hamdan Igbaria <hamdani@mellanox.com>,
-        Alex Vesker <valex@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 38/58] net/mlx5: DR, Fix matching on vport gvmi
-Date:   Mon,  2 Mar 2020 21:47:20 -0500
-Message-Id: <20200303024740.9511-38-sashal@kernel.org>
+Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <ariel.elior@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 37/58] qede: Fix race between rdma destroy workqueue and link change event
+Date:   Mon,  2 Mar 2020 21:47:19 -0500
+Message-Id: <20200303024740.9511-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -61,45 +60,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hamdan Igbaria <hamdani@mellanox.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit 52d214976d4f64504c1bbb52d47b46a5a3d5ee42 ]
+[ Upstream commit af6565adb02d3129d3fae4d9d5da945abaf4417a ]
 
-Set vport gvmi in the tag, only when source gvmi is set in the bit mask.
+If an event is added while the rdma workqueue is being destroyed
+it could lead to several races, list corruption, null pointer
+dereference during queue_work or init_queue.
+This fixes the race between the two flows which can occur during
+shutdown.
 
-Fixes: 26d688e3 ("net/mlx5: DR, Add Steering entry (STE) utilities")
-Signed-off-by: Hamdan Igbaria <hamdani@mellanox.com>
-Reviewed-by: Alex Vesker <valex@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+A kref object and a completion object are added to the rdma_dev
+structure, these are initialized before the workqueue is created.
+The refcnt is used to indicate work is being added to the
+workqueue and ensures the cleanup flow won't start while we're in
+the middle of adding the event.
+Once the work is added, the refcnt is decreased and the cleanup flow
+is safe to run.
+
+Fixes: cee9fbd8e2e ("qede: Add qedr framework")
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qede/qede.h      |  2 ++
+ drivers/net/ethernet/qlogic/qede/qede_rdma.c | 29 +++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c
-index 2739ed2a29111..841abe75652c9 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/steering/dr_ste.c
-@@ -2257,7 +2257,9 @@ static int dr_ste_build_src_gvmi_qpn_tag(struct mlx5dr_match_param *value,
- 	struct mlx5dr_cmd_vport_cap *vport_cap;
- 	struct mlx5dr_domain *dmn = sb->dmn;
- 	struct mlx5dr_cmd_caps *caps;
-+	u8 *bit_mask = sb->bit_mask;
- 	u8 *tag = hw_ste->tag;
-+	bool source_gvmi_set;
+diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
+index c303a92d5b06d..1f27f9866b801 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede.h
++++ b/drivers/net/ethernet/qlogic/qede/qede.h
+@@ -163,6 +163,8 @@ struct qede_rdma_dev {
+ 	struct list_head entry;
+ 	struct list_head rdma_event_list;
+ 	struct workqueue_struct *rdma_wq;
++	struct kref refcnt;
++	struct completion event_comp;
+ 	bool exp_recovery;
+ };
  
- 	DR_STE_SET_TAG(src_gvmi_qp, tag, source_qp, misc, source_sqn);
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+index ffabc2d2f0824..2d873ae8a234d 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+@@ -59,6 +59,9 @@ static void _qede_rdma_dev_add(struct qede_dev *edev)
+ static int qede_rdma_create_wq(struct qede_dev *edev)
+ {
+ 	INIT_LIST_HEAD(&edev->rdma_info.rdma_event_list);
++	kref_init(&edev->rdma_info.refcnt);
++	init_completion(&edev->rdma_info.event_comp);
++
+ 	edev->rdma_info.rdma_wq = create_singlethread_workqueue("rdma_wq");
+ 	if (!edev->rdma_info.rdma_wq) {
+ 		DP_NOTICE(edev, "qedr: Could not create workqueue\n");
+@@ -83,8 +86,23 @@ static void qede_rdma_cleanup_event(struct qede_dev *edev)
+ 	}
+ }
  
-@@ -2278,7 +2280,8 @@ static int dr_ste_build_src_gvmi_qpn_tag(struct mlx5dr_match_param *value,
- 	if (!vport_cap)
- 		return -EINVAL;
++static void qede_rdma_complete_event(struct kref *ref)
++{
++	struct qede_rdma_dev *rdma_dev =
++		container_of(ref, struct qede_rdma_dev, refcnt);
++
++	/* no more events will be added after this */
++	complete(&rdma_dev->event_comp);
++}
++
+ static void qede_rdma_destroy_wq(struct qede_dev *edev)
+ {
++	/* Avoid race with add_event flow, make sure it finishes before
++	 * we start accessing the list and cleaning up the work
++	 */
++	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
++	wait_for_completion(&edev->rdma_info.event_comp);
++
+ 	qede_rdma_cleanup_event(edev);
+ 	destroy_workqueue(edev->rdma_info.rdma_wq);
+ }
+@@ -310,15 +328,24 @@ static void qede_rdma_add_event(struct qede_dev *edev,
+ 	if (!edev->rdma_info.qedr_dev)
+ 		return;
  
--	if (vport_cap->vport_gvmi)
-+	source_gvmi_set = MLX5_GET(ste_src_gvmi_qp, bit_mask, source_gvmi);
-+	if (vport_cap->vport_gvmi && source_gvmi_set)
- 		MLX5_SET(ste_src_gvmi_qp, tag, source_gvmi, vport_cap->vport_gvmi);
++	/* We don't want the cleanup flow to start while we're allocating and
++	 * scheduling the work
++	 */
++	if (!kref_get_unless_zero(&edev->rdma_info.refcnt))
++		return; /* already being destroyed */
++
+ 	event_node = qede_rdma_get_free_event_node(edev);
+ 	if (!event_node)
+-		return;
++		goto out;
  
- 	misc->source_eswitch_owner_vhca_id = 0;
+ 	event_node->event = event;
+ 	event_node->ptr = edev;
+ 
+ 	INIT_WORK(&event_node->work, qede_rdma_handle_event);
+ 	queue_work(edev->rdma_info.rdma_wq, &event_node->work);
++
++out:
++	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
+ }
+ 
+ void qede_rdma_dev_event_open(struct qede_dev *edev)
 -- 
 2.20.1
 
