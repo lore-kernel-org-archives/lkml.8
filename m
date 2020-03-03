@@ -2,76 +2,87 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBB8C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1C3C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FBE520838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C91E20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729097AbgCCOV1 (ORCPT
+        id S1729058AbgCCOYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:21:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728113AbgCCOV0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:21:26 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 830602073D;
-        Tue,  3 Mar 2020 14:21:24 +0000 (UTC)
-Date:   Tue, 3 Mar 2020 09:21:23 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [OT] Pseudo module name in kallsyms (Re: [PATCH V3 03/13]
- kprobes: Add symbols for kprobe insn pages)
-Message-ID: <20200303092123.7d398adf@gandalf.local.home>
-In-Reply-To: <50754470-7675-c0b0-0931-9a6024e8eb90@intel.com>
-References: <20200228135125.567-1-adrian.hunter@intel.com>
-        <20200228135125.567-4-adrian.hunter@intel.com>
-        <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
-        <20200228172004.GI5451@krava>
-        <20200229134947.839096dbc8321cfdca980edb@kernel.org>
-        <20200229184913.4e13e516@oasis.local.home>
-        <20200302144307.GD204976@krava>
-        <20200303194700.5810cbaf49bc6eacdffa7fa4@kernel.org>
-        <50754470-7675-c0b0-0931-9a6024e8eb90@intel.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 3 Mar 2020 09:24:07 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44239 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728158AbgCCOYG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:24:06 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j98Se-0002TP-2j; Tue, 03 Mar 2020 14:23:52 +0000
+Date:   Tue, 3 Mar 2020 15:23:51 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Karel Zak <kzak@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200303142351.vtc2ldqltev5jo4h@wittgenstein>
+References: <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+ <20200303130347.GA2302029@kroah.com>
+ <20200303131434.GA2373427@kroah.com>
+ <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 12:55:24 +0200
-Adrian Hunter <adrian.hunter@intel.com> wrote:
-
-> If special characters are a problem, modules also do not start with '-' or
-> '_', so would "_kprobes" and "_ftrace" be acceptable to everyone?
+On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
+> On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > 
+> > > Unlimited beers for a 21-line kernel patch?  Sign me up!
+> > >
+> > > Totally untested, barely compiled patch below.
+> >
+> > Ok, that didn't even build, let me try this for real now...
+> 
+> Some comments on the interface:
+> 
+> O_LARGEFILE can be unconditional, since offsets are not exposed to the caller.
+> 
+> Use the openat2 style arguments; limit the accepted flags to sane ones
+> (e.g. don't let this syscall create a file).
 
-Or just be blunt about what it is, and append: "__builtin__" to it:
+If we think this is worth it, might even good to either have it support
+struct open_how or have it accept two flag arguments. We sure want
+openat2()s RESOLVE_* flags in there.
 
- [__builtin__kprobes]
- [__builtin__ftrace]
- [__builtin__bpf]
-
--- Steve
-
+Christian
