@@ -2,117 +2,86 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65B0C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B899DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:55:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84AEF2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:54:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADh48kCN"
+	by mail.kernel.org (Postfix) with ESMTP id 970572146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:55:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbgCCIyS (ORCPT
+        id S1727889AbgCCIz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:54:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37918 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727820AbgCCIyS (ORCPT
+        Tue, 3 Mar 2020 03:55:26 -0500
+Received: from paleale.coelho.fi ([176.9.41.70]:60330 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726661AbgCCIz0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:54:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583225656;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OjsWUXqjUWqBSkSGCD4PbdKz2btlJQttY4xDooxfz/U=;
-        b=ADh48kCNYCMHEDMMIE7F2ggKcYH6TV9UqPz9VPM/pbLe1ikNBRhKVVhqlyIo/sOTGKBbev
-        hyS2IAI8pmIpKd/UxqCuA4Tb5YfM2us/WDmgaoL0MP37oYLCBeto878fzxXyY7voYv7A9p
-        ohgTOT7Ojf8DsE9yD+uLsgay3dMYFtg=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-108-bEohyM4jN2WWgXZN-cfm9w-1; Tue, 03 Mar 2020 03:54:15 -0500
-X-MC-Unique: bEohyM4jN2WWgXZN-cfm9w-1
-Received: by mail-wr1-f70.google.com with SMTP id p5so906622wrj.17
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:54:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OjsWUXqjUWqBSkSGCD4PbdKz2btlJQttY4xDooxfz/U=;
-        b=CKrep2Y/cdbh2xukmj/Q0/mEjw67hUO4IjJgi7Sa2qPV4MUkDxYGmLLW01pzayNw0Z
-         0Gpv34PQio7fHRxvyvoD/OBQ6+xQDRa9vGtZtsD3bwUv+jkhl4j4kYkrqv5WEEEPHNZG
-         Umcvf5AtQHCR6zRtsNHF0IVWbY8xbzCcMhJD2aWzz+7ecdhteqi1REnhtpgVhZCmdXSR
-         1AwBsNnBMvlCvro8bPsaH3p+rYZkdsTpC5VAW0ZL86Zi21CMd50yQK5rAU2JL1i3VPa+
-         VAJzrnbwSQz3J9y23/BcIj6Y+T+Ad2JDl849rs2TLInAOr6MfzU7aLeWNNjVXNwO3knn
-         /Q9w==
-X-Gm-Message-State: ANhLgQ0Z8jXujgExkgUuGbnWjOtJLWsfhXOV90XmCQQP8cKQw4kse2oW
-        bM5M9OcVtBTLfigjV+ybiOuTRGFyo3VsW3YM2tM7GV7dH0uq8IqrpPQPVejkL7VmkWkCY9PPZYx
-        UpD/1ktLW1/iEAaBWksZSIjH+
-X-Received: by 2002:adf:ce12:: with SMTP id p18mr4208152wrn.88.1583225653992;
-        Tue, 03 Mar 2020 00:54:13 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vtxioLATY0Il+f/lYtoQmrW/DITC8fuFwFe+1VWyWHfMfdr9VUldKUP1b6K08oPMsyN/DiChQ==
-X-Received: by 2002:adf:ce12:: with SMTP id p18mr4208133wrn.88.1583225653782;
-        Tue, 03 Mar 2020 00:54:13 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:4c52:2f3b:d346:82de? ([2001:b07:6468:f312:4c52:2f3b:d346:82de])
-        by smtp.gmail.com with ESMTPSA id t124sm3204441wmg.13.2020.03.03.00.54.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 00:54:13 -0800 (PST)
-Subject: Re: [PATCH] kvm: selftests: Support dirty log initial-all-set test
-To:     Jay Zhou <jianjay.zhou@huawei.com>, kvm@vger.kernel.org
-Cc:     peterx@redhat.com, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wangxinxin.wang@huawei.com, weidong.huang@huawei.com,
-        liu.jinsong@huawei.com
-References: <20200303080710.1672-1-jianjay.zhou@huawei.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f0c2dcb8-4415-eec9-d181-fb29d206c55c@redhat.com>
-Date:   Tue, 3 Mar 2020 09:54:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 3 Mar 2020 03:55:26 -0500
+X-Greylist: delayed 1463 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Mar 2020 03:55:25 EST
+Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=redipa)
+        by farmhouse.coelho.fi with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+        (Exim 4.92.2)
+        (envelope-from <luca@coelho.fi>)
+        id 1j92wh-0003yi-5b; Tue, 03 Mar 2020 10:30:37 +0200
+Message-ID: <c2de2c8548d47945d4d3708c6b1c6a992d9e8cc3.camel@coelho.fi>
+From:   Luca Coelho <luca@coelho.fi>
+To:     Kalle Valo <kvalo@codeaurora.org>, Leho Kraav <leho@kraav.com>
+Cc:     "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <871rqauhbp.fsf@tynnyri.adurom.net>
+References: <20191224051639.6904-1-jan.steffens@gmail.com>
+         <20200221121135.GA9056@papaya> <871rqauhbp.fsf@tynnyri.adurom.net>
+Content-Type: text/plain; charset="UTF-8"
 MIME-Version: 1.0
-In-Reply-To: <20200303080710.1672-1-jianjay.zhou@huawei.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+Date:   Tue, 03 Mar 2020 10:17:07 +0200
+User-Agent: Evolution 3.34.1-4 
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] iwlwifi: pcie: restore support for Killer Qu C0 NICs
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/20 09:07, Jay Zhou wrote:
->  #ifdef USE_CLEAR_DIRTY_LOG
-> -	if (!kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2)) {
-> -		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not available, skipping tests\n");
-> +	dirty_log_manual_caps =
-> +		kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2);
-> +	if (!dirty_log_manual_caps) {
-> +		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not available, "
-> +				"skipping tests\n");
-> +		exit(KSFT_SKIP);
-> +	}
-> +	if (dirty_log_manual_caps != KVM_DIRTY_LOG_MANUAL_CAPS &&
-> +		dirty_log_manual_caps != KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE) {
-> +		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not valid caps "
-> +				"%"PRIu64", skipping tests\n",
-> +				dirty_log_manual_caps);
->  		exit(KSFT_SKIP);
->  	}
->  #endif
+On Tue, 2020-03-03 at 07:40 +0200, Kalle Valo wrote:
+> Leho Kraav <leho@kraav.com> writes:
 > 
+> > On Tue, Dec 24, 2019 at 06:16:39AM +0100, Jan Alexander Steffens (heftig) wrote:
+> > > Commit 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from
+> > > trans_pcie_alloc to probe") refactored the cfg mangling. Unfortunately,
+> > > in this process the lines which picked the right cfg for Killer Qu C0
+> > > NICs after C0 detection were lost. These lines were added by commit
+> > > b9500577d361 ("iwlwifi: pcie: handle switching killer Qu B0 NICs to
+> > > C0").
+> > > 
+> > > I suspect this is more of the "merge damage" which commit 7cded5658329
+> > > ("iwlwifi: pcie: fix merge damage on making QnJ exclusive") talks about.
+> > > 
+> > > Restore the missing lines so the driver loads the right firmware for
+> > > these NICs.
+> > 
+> > This seems real, as upgrading 5.5.0 -> 5.5.5 just broke my iwlwifi on XPS 7390.
+> > How come?
+> 
+> Luca, should I apply this to wireless-drivers?
+> 
+> https://patchwork.kernel.org/patch/11309095/
 
-Thanks, instead of this final "if" it should be enough to do
+Yes, please take it to wireless-drivers.  I've reassigned it to you.
 
-	dirty_log_manual_caps &= (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE |
-				  KVM_DIRTY_LOG_INITIALLY_SET);
+But please note that this will conflict with another patch that is
+already in v5.6-rc* that introduced this code again in a different way:
 
+https://patchwork.kernel.org/patch/11318849/
 
-Otherwise looks good, I'll test it and eventually apply both patches.
-
-Paolo
+--
+Cheers,
+Luca.
 
