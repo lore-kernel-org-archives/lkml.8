@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1D4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783E4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4651B246D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:51:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45535246D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203917;
-	bh=OHeUxoWl7PYvP4RNxPRj0SEgouS4L+rb+7tOc67OhaM=;
+	s=default; t=1583203925;
+	bh=zBcaWmOWFsefY4orvoW3vKI4XM4VDFpW+rPtM3jGBuE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LmcGcW8TpR8OTCARp3PqqhmDjzPmD4V3r7xyBfyOwc39a872w9ireLnqXkaqPDLsv
-	 0NuzvRlmv2WhEY+FFrYo/Qc8FAKXRzXnhNcp+WNhe6687Fav4Qyb4vdrG1NbMBDAfB
-	 KzvJmfsWFxu3fLJipeGr9jsY8RzpCLVinRSI3t4o=
+	b=Yy+fxvb7a9mEKdkqF6X6fswF6qgwreKMK5hUtseWRvOQo246JCRPQ7q6lljTHiIms
+	 qEvPof6xmANkhWqj/6E6T2RrQyCR6+tyf1MR7f3pj85tqUnlTZLkYXDHABdgkxXtqV
+	 PErSR1g3qlJ2Mz6YWs0Th+BSeXqnyLckJYEk+rw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgCCCvz (ORCPT
+        id S1728447AbgCCCwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:51:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46892 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:52:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727995AbgCCCuO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:14 -0500
+        id S1727909AbgCCCuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55E57246D5;
-        Tue,  3 Mar 2020 02:50:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ED742468D;
+        Tue,  3 Mar 2020 02:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203814;
-        bh=OHeUxoWl7PYvP4RNxPRj0SEgouS4L+rb+7tOc67OhaM=;
+        s=default; t=1583203811;
+        bh=zBcaWmOWFsefY4orvoW3vKI4XM4VDFpW+rPtM3jGBuE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=THS6bVXBiYiMLL4pefOLTRObQdtbDKnBMhzqQ+f71gHrT/PmZTNgfUWz6GvSUtclD
-         sBymJ49bgcL2JHm9Aw63CsQj9crvpZgVEwUdzrQogbsIOUPtClobebHPZKdyh+XXof
-         vH5D36tAEVGdhbkfBNa/zkP+7OR9Bz5KeG6hn2IA=
+        b=XZfhWXtVHtU5f98yCCYAjOHmQEkoCb1fmWVilzIh5VeeALbdFXuAD6gkEDHtIfOd/
+         4nn+btDuVy5HSftD7zJfp75M1H0Cc8aFJh+71e1Sl1OVVvtIOotP95LIXsY8cDkUoE
+         LuDOVs6yB75+kL1CCAXtznDwxdi6QbByTKdv0OXY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marex@denx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 08/13] net: ks8851-ml: Remove 8-bit bus accessors
-Date:   Mon,  2 Mar 2020 21:49:57 -0500
-Message-Id: <20200303025002.10600-8-sashal@kernel.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 06/13] drm/msm/dsi: save pll state before dsi host is powered off
+Date:   Mon,  2 Mar 2020 21:49:55 -0500
+Message-Id: <20200303025002.10600-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303025002.10600-1-sashal@kernel.org>
 References: <20200303025002.10600-1-sashal@kernel.org>
@@ -61,136 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Harigovindan P <harigovi@codeaurora.org>
 
-[ Upstream commit 69233bba6543a37755158ca3382765387b8078df ]
+[ Upstream commit a1028dcfd0dd97884072288d0c8ed7f30399b528 ]
 
-This driver is mixing 8-bit and 16-bit bus accessors for reasons unknown,
-however the speculation is that this was some sort of attempt to support
-the 8-bit bus mode.
+Save pll state before dsi host is powered off. Without this change
+some register values gets resetted.
 
-As per the KS8851-16MLL documentation, all two registers accessed via the
-8-bit accessors are internally 16-bit registers, so reading them using
-16-bit accessors is fine. The KS_CCR read can be converted to 16-bit read
-outright, as it is already a concatenation of two 8-bit reads of that
-register. The KS_RXQCR accesses are 8-bit only, however writing the top
-8 bits of the register is OK as well, since the driver caches the entire
-16-bit register value anyway.
-
-Finally, the driver is not used by any hardware in the kernel right now.
-The only hardware available to me is one with 16-bit bus, so I have no
-way to test the 8-bit bus mode, however it is unlikely this ever really
-worked anyway. If the 8-bit bus mode is ever required, it can be easily
-added by adjusting the 16-bit accessors to do 2 consecutive accesses,
-which is how this should have been done from the beginning.
-
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 45 +++---------------------
- 1 file changed, 5 insertions(+), 40 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 8dc1f0277117d..721f851674531 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -474,24 +474,6 @@ static int msg_enable;
-  * chip is busy transferring packet data (RX/TX FIFO accesses).
-  */
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 10d49d43c17eb..d46b9e75a8473 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -438,6 +438,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
+ 	struct mipi_dsi_host *host = msm_dsi->host;
+ 	struct drm_panel *panel = msm_dsi->panel;
++	struct msm_dsi_pll *src_pll;
+ 	bool is_dual_dsi = IS_DUAL_DSI();
+ 	int ret;
  
--/**
-- * ks_rdreg8 - read 8 bit register from device
-- * @ks	  : The chip information
-- * @offset: The register address
-- *
-- * Read a 8bit register from the chip, returning the result
-- */
--static u8 ks_rdreg8(struct ks_net *ks, int offset)
--{
--	u16 data;
--	u8 shift_bit = offset & 0x03;
--	u8 shift_data = (offset & 1) << 3;
--	ks->cmd_reg_cache = (u16) offset | (u16)(BE0 << shift_bit);
--	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
--	data  = ioread16(ks->hw_addr);
--	return (u8)(data >> shift_data);
--}
--
- /**
-  * ks_rdreg16 - read 16 bit register from device
-  * @ks	  : The chip information
-@@ -507,22 +489,6 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
- 	return ioread16(ks->hw_addr);
- }
+@@ -471,6 +472,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 								id, ret);
+ 	}
  
--/**
-- * ks_wrreg8 - write 8bit register value to chip
-- * @ks: The chip information
-- * @offset: The register address
-- * @value: The value to write
-- *
-- */
--static void ks_wrreg8(struct ks_net *ks, int offset, u8 value)
--{
--	u8  shift_bit = (offset & 0x03);
--	u16 value_write = (u16)(value << ((offset & 1) << 3));
--	ks->cmd_reg_cache = (u16)offset | (BE0 << shift_bit);
--	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
--	iowrite16(value_write, ks->hw_addr);
--}
--
- /**
-  * ks_wrreg16 - write 16bit register value to chip
-  * @ks: The chip information
-@@ -642,8 +608,7 @@ static void ks_read_config(struct ks_net *ks)
- 	u16 reg_data = 0;
- 
- 	/* Regardless of bus width, 8 bit read should always work.*/
--	reg_data = ks_rdreg8(ks, KS_CCR) & 0x00FF;
--	reg_data |= ks_rdreg8(ks, KS_CCR+1) << 8;
-+	reg_data = ks_rdreg16(ks, KS_CCR);
- 
- 	/* addr/data bus are multiplexed */
- 	ks->sharedbus = (reg_data & CCR_SHARED) == CCR_SHARED;
-@@ -747,7 +712,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
- 
- 	/* 1. set sudo DMA mode */
- 	ks_wrreg16(ks, KS_RXFDPR, RXFDPR_RXFPAI);
--	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
- 
- 	/* 2. read prepend data */
- 	/**
-@@ -764,7 +729,7 @@ static inline void ks_read_qmu(struct ks_net *ks, u16 *buf, u32 len)
- 	ks_inblk(ks, buf, ALIGN(len, 4));
- 
- 	/* 4. reset sudo DMA Mode */
--	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
- }
- 
- /**
-@@ -997,13 +962,13 @@ static void ks_write_qmu(struct ks_net *ks, u8 *pdata, u16 len)
- 	ks->txh.txw[1] = cpu_to_le16(len);
- 
- 	/* 1. set sudo-DMA mode */
--	ks_wrreg8(ks, KS_RXQCR, (ks->rc_rxqcr | RXQCR_SDA) & 0xff);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr | RXQCR_SDA);
- 	/* 2. write status/lenth info */
- 	ks_outblk(ks, ks->txh.txw, 4);
- 	/* 3. write pkt data */
- 	ks_outblk(ks, (u16 *)pdata, ALIGN(len, 4));
- 	/* 4. reset sudo-DMA mode */
--	ks_wrreg8(ks, KS_RXQCR, ks->rc_rxqcr);
-+	ks_wrreg16(ks, KS_RXQCR, ks->rc_rxqcr);
- 	/* 5. Enqueue Tx(move the pkt from TX buffer into TXQ) */
- 	ks_wrreg16(ks, KS_TXQCR, TXQCR_METFE);
- 	/* 6. wait until TXQCR_METFE is auto-cleared */
++	/* Save PLL status if it is a clock source */
++	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
++	msm_dsi_pll_save_state(src_pll);
++
+ 	ret = msm_dsi_host_power_off(host);
+ 	if (ret)
+ 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
 -- 
 2.20.1
 
