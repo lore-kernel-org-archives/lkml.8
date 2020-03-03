@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBC7C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCE4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EF8220CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DA372146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258037;
-	bh=g9RnykzEodxfWrp1WVCnoI0ktr7vw50NZU8MMja7NyI=;
+	s=default; t=1583258038;
+	bh=Y2gDl/DBouWsnZ7k9yTDr+JWTxGOv496eoFBcZNk5EU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdvdOvczd92osQNb4mFX5KPoYKnsak7rXZ2ZqdHcEx/EUpECAdeZHMWyDLBI9JkSC
-	 rV7UipQFIpo0KdEXcgKAnXuQCZoHDehqOGj8NQzbORYml937UPZyZOLlDmrmuHjxDp
-	 4OGgHuQMfuV94Fc9ThcKRF8MX5QE01Gkd0REXrNU=
+	b=yoTSwg5+hEvONFtH8Lhw6FQaFAOr7pnsNxwLhXRm603bL7NT5UR4zWULn5VKiw/jA
+	 thfMFxw6ocAozBsq68qAkF6Vcin0LxlDud313S9zOv4siOrOib2J/+WGz87XJwo8Cj
+	 nc602uLgwISmbHk3HT++7T91DT9E/9v1+10qdmk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732436AbgCCRx4 (ORCPT
+        id S1732446AbgCCRx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:53:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34462 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:53:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732088AbgCCRxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:46 -0500
+        id S1731636AbgCCRxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE2FF20CC7;
-        Tue,  3 Mar 2020 17:53:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B42A220CC7;
+        Tue,  3 Mar 2020 17:53:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258026;
-        bh=g9RnykzEodxfWrp1WVCnoI0ktr7vw50NZU8MMja7NyI=;
+        s=default; t=1583258031;
+        bh=Y2gDl/DBouWsnZ7k9yTDr+JWTxGOv496eoFBcZNk5EU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1gfX0jCb6sH13naQ/yKCwXn8KkOpN544mPARLA38PzPaqzv4yZfP1hcHa8Rbncd2k
-         K2CRBU220RibBuuqBn+VQ/FmQ1/n+ahTi/XwTHGl2LWToyQLTSyMBXFn5kp9E64346
-         mGaOoSgbcUeQyuJi/duJy8ujD4aWoWnCs7nVajp0=
+        b=YOuXJ2SqfDPN7X8m6gC3BqfaVuJWSJXRdH9NURM6QJqbr0TW+tybNt46qZTpbK41n
+         mxUKGx80FjcBLacJA4I41boJyuQTDpkS/uSYqu4cZl2cLEwhTE4CxF9P+zeRwwPlUA
+         nIMNIRVpvQVXh6TsXCQxraLeNZjYEEp3QQP73B8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sung Lee <sung.lee@amd.com>,
-        Tony Cheng <Tony.Cheng@amd.com>,
+        stable@vger.kernel.org, Aric Cyr <aric.cyr@amd.com>,
+        Harry Wentland <harry.wentland@amd.com>,
         Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 041/152] drm/amd/display: Do not set optimized_require to false after plane disable
-Date:   Tue,  3 Mar 2020 18:42:19 +0100
-Message-Id: <20200303174307.070810752@linuxfoundation.org>
+Subject: [PATCH 5.4 043/152] drm/amd/display: Check engine is not NULL before acquiring
+Date:   Tue,  3 Mar 2020 18:42:21 +0100
+Message-Id: <20200303174307.275923002@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -62,39 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sung Lee <sung.lee@amd.com>
+From: Aric Cyr <aric.cyr@amd.com>
 
-[ Upstream commit df36f6cf23ada812930afa8ee76681d4ad307c61 ]
+[ Upstream commit 2b63d0ec0daf79ba503fa8bfa25e07dc3da274f3 ]
 
-[WHY]
-The optimized_require flag is needed to set watermarks and clocks lower
-in certain conditions. This flag is set to true and then set to false
-while programming front end in dcn20.
+[Why]
+Engine can be NULL in some cases, so we must not acquire it.
 
-[HOW]
-Do not set the flag to false while disabling plane.
+[How]
+Check for NULL engine before acquiring.
 
-Signed-off-by: Sung Lee <sung.lee@amd.com>
-Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Signed-off-by: Aric Cyr <aric.cyr@amd.com>
+Reviewed-by: Harry Wentland <harry.wentland@amd.com>
 Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-index 937a8ba811603..e933f6a369f92 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn20/dcn20_hwseq.c
-@@ -493,7 +493,6 @@ static void dcn20_plane_atomic_disable(struct dc *dc, struct pipe_ctx *pipe_ctx)
- 	dpp->funcs->dpp_dppclk_control(dpp, false, false);
+diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+index c3f9f4185ce8d..cf877238fff9d 100644
+--- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
++++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
+@@ -386,7 +386,7 @@ static bool acquire(
+ {
+ 	enum gpio_result result;
  
- 	hubp->power_gated = true;
--	dc->optimized_required = false; /* We're powering off, no need to optimize */
+-	if (!is_engine_available(engine))
++	if ((engine == NULL) || !is_engine_available(engine))
+ 		return false;
  
- 	dc->hwss.plane_atomic_power_down(dc,
- 			pipe_ctx->plane_res.dpp,
+ 	result = dal_ddc_open(ddc, GPIO_MODE_HARDWARE,
 -- 
 2.20.1
 
