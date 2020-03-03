@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADF8C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B79BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD722208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60824208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258642;
-	bh=385P4NgndTaCvuQzX1IJ4OHtNQLxnwiU995960d8V9U=;
+	s=default; t=1583258650;
+	bh=WzlYHJe57erTHa7c4Ow9Tj26lAx2Kg/MFEhS3xdvflY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eQc/AEhOfyNOB/gp80vYMvWbps8o3ErCpFAVYVMp/kt+Fxli8ief2qNz8ArIU5bSX
-	 X8/CmGEBivihlLKciujYuhZWNqTE0r1xL9x9vorwmUlVtcyfv408jARo6S+dt3FDVS
-	 Viyt8iuT0oLsZa12MjBmiWqwcKK9OTeOYEC+04CU=
+	b=rbTsLLh9a6v3clHEzlpJmYQD6RwWO2n+aCDjQYXgyw3ROgNsJVZpx7M15ANkZ/2EH
+	 V0ngv7a4rJVfo3Sv+cFC26Ds7kvrdI2i8g2RxLhbLbksFzu/Jv1kMQEoARdOsoLjBC
+	 XLwjqrecXBZvcJQvCvlaRi8m6RuCZMVmpTTH47vk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387819AbgCCSAl (ORCPT
+        id S2387527AbgCCSEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:00:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44438 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:04:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387806AbgCCSAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:00:36 -0500
+        id S1733268AbgCCSAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:00:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 892AD206D5;
-        Tue,  3 Mar 2020 18:00:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC6EF206D5;
+        Tue,  3 Mar 2020 18:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258435;
-        bh=385P4NgndTaCvuQzX1IJ4OHtNQLxnwiU995960d8V9U=;
+        s=default; t=1583258422;
+        bh=WzlYHJe57erTHa7c4Ow9Tj26lAx2Kg/MFEhS3xdvflY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lIPG9btH7ppgG/wdgXmWdI1/CSXWWtFgKZwVVtsuOY5PN8Re75c0qRloXNzD8qVRY
-         sYVSvCO/d/z2LkWI1briUqIhLoZCJsKkpTXSC3GK1kd+RZagM+PD4wgAi2goKPsCQ2
-         OzHf1X+Ht+YYBdnVWc5i+Da4k27N/2D2pvhmj/6s=
+        b=N0IucV67cE9KY8o+V48biGeh+OOP1eQ+cgmTNSRksVss3U++AdEQvAFPGnLBlbRwn
+         LJSOq4RoWAm9QqtO0td10Ytu12Hs02GkOlTDfoAgQjVa7+LKrM/J4gzCbSQALRaDpq
+         8n4EKiPqBP3Rfp49f5vAJgk+IH2i9rf2qRx22D1M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 4.19 48/87] tracing: Disable trace_printk() on post poned tests
-Date:   Tue,  3 Mar 2020 18:43:39 +0100
-Message-Id: <20200303174354.661433779@linuxfoundation.org>
+        =?UTF-8?q?Zden=C4=9Bk=20Rampas?= <zdenda.rampas@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 4.19 44/87] HID: ite: Only bind to keyboard USB interface on Acer SW5-012 keyboard dock
+Date:   Tue,  3 Mar 2020 18:43:35 +0100
+Message-Id: <20200303174354.315990476@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -59,51 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 78041c0c9e935d9ce4086feeff6c569ed88ddfd4 upstream.
+commit beae56192a2570578ae45050e73c5ff9254f63e6 upstream.
 
-The tracing seftests checks various aspects of the tracing infrastructure,
-and one is filtering. If trace_printk() is active during a self test, it can
-cause the filtering to fail, which will disable that part of the trace.
+Commit 8f18eca9ebc5 ("HID: ite: Add USB id match for Acer SW5-012 keyboard
+dock") added the USB id for the Acer SW5-012's keyboard dock to the
+hid-ite driver to fix the rfkill driver not working.
 
-To keep the selftests from failing because of trace_printk() calls,
-trace_printk() checks the variable tracing_selftest_running, and if set, it
-does not write to the tracing buffer.
+Most keyboard docks with an ITE 8595 keyboard/touchpad controller have the
+"Wireless Radio Control" bits which need the special hid-ite driver on the
+second USB interface (the mouse interface) and their touchpad only supports
+mouse emulation, so using generic hid-input handling for anything but
+the "Wireless Radio Control" bits is fine. On these devices we simply bind
+to all USB interfaces.
 
-As some tracers were registered earlier in boot, the selftest they triggered
-would fail because not all the infrastructure was set up for the full
-selftest. Thus, some of the tests were post poned to when their
-infrastructure was ready (namely file system code). The postpone code did
-not set the tracing_seftest_running variable, and could fail if a
-trace_printk() was added and executed during their run.
+But unlike other ITE8595 using keyboard docks, the Acer Aspire Switch 10
+(SW5-012)'s touchpad not only does mouse emulation it also supports
+HID-multitouch and all the keys including the "Wireless Radio Control"
+bits have been moved to the first USB interface (the keyboard intf).
+
+So we need hid-ite to handle the first (keyboard) USB interface and have
+it NOT bind to the second (mouse) USB interface so that that can be
+handled by hid-multitouch.c and we get proper multi-touch support.
+
+This commit changes the hid_device_id for the SW5-012 keyboard dock to
+only match on hid devices from the HID_GROUP_GENERIC group, this way
+hid-ite will not bind the the mouse/multi-touch interface which has
+HID_GROUP_MULTITOUCH_WIN_8 as group.
+This fixes the regression to mouse-emulation mode introduced by adding
+the keyboard dock USB id.
 
 Cc: stable@vger.kernel.org
-Fixes: 9afecfbb95198 ("tracing: Postpone tracer start-up tests till the system is more robust")
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 8f18eca9ebc5 ("HID: ite: Add USB id match for Acer SW5-012 keyboard dock")
+Reported-by: Zdeněk Rampas <zdenda.rampas@gmail.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/hid/hid-ite.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1549,6 +1549,7 @@ static __init int init_trace_selftests(v
- 
- 	pr_info("Running postponed tracer tests:\n");
- 
-+	tracing_selftest_running = true;
- 	list_for_each_entry_safe(p, n, &postponed_selftests, list) {
- 		ret = run_tracer_selftest(p->type);
- 		/* If the test fails, then warn and remove from available_tracers */
-@@ -1567,6 +1568,7 @@ static __init int init_trace_selftests(v
- 		list_del(&p->list);
- 		kfree(p);
- 	}
-+	tracing_selftest_running = false;
- 
-  out:
- 	mutex_unlock(&trace_types_lock);
+--- a/drivers/hid/hid-ite.c
++++ b/drivers/hid/hid-ite.c
+@@ -44,8 +44,9 @@ static const struct hid_device_id ite_de
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
+ 	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
+-	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
+-			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
++	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
++		     USB_VENDOR_ID_SYNAPTICS,
++		     USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(hid, ite_devices);
 
 
