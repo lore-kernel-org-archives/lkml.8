@@ -3,102 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBECC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0C2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C8B920873
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C9F206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:28:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVYR9gRX"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OyNBrK10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727273AbgCCFDb (ORCPT
+        id S1726092AbgCCF2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 00:03:31 -0500
-Received: from mail-pj1-f42.google.com ([209.85.216.42]:38185 "EHLO
-        mail-pj1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgCCFDb (ORCPT
+        Tue, 3 Mar 2020 00:28:11 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:49579 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725807AbgCCF2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 00:03:31 -0500
-Received: by mail-pj1-f42.google.com with SMTP id a16so783081pju.3;
-        Mon, 02 Mar 2020 21:03:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=N/iUS9xlwhnRwn8ycV3kyYeyWXGgYeSILX+l2MBUv2c=;
-        b=pVYR9gRXdunMZ2xCOqSGRxL/S4cyc6o/in4nF/Kqz47Oe1Yv4+C22w0qIDZXbMDgMr
-         QmFda8Vv0CRHHgeYaDJWwLw2EmOBncDN0JV69c/iErEUpRhLfU6sf5QbJCKAFozqnb2x
-         N7WRrlQExOYxIlPmNDdCMVKfLP8lh9x5sSxDFLDStVNjLPOM9ZkSo7AIpcwSnyhrEiuV
-         0hQ7NTBkCLbt9FA6AaUGVjpx+jbLkn7/sGe/Kus9lHXajgBHSCBSGhRl/xIAPncgxj5d
-         sCufOxY7WmTEO7Spb9MwKPa6K2alHw2uOEaL+7jtoHd5WOoRaZNah3+m4WAdQHfeEFuE
-         CgGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=N/iUS9xlwhnRwn8ycV3kyYeyWXGgYeSILX+l2MBUv2c=;
-        b=SxSSXMUQyGq/f45vPexsOxPrzi9PU/LG5P2J7q3X5WxSd7MOflHrkdhvOXhyqR1Umf
-         grYRDoXlBzeZMMnDq8p+o7ooTPyrEbgHe3UVvOAkC56TwVFA9PeCfE9cn6P+Fk50vVSO
-         JxD+JUDvLfbs0Jd5adqpjyg5Wt/gpsCc1ShN8UcLVMuYYdvlNl8SXu24rf1Ohi91phl2
-         yChhwjvNtIQDCyv0Parke7ntwVGQITioErd0WjAD4rvfEuxzquwWCflUu89tqaVV0QMF
-         H70fBdIEy5ua3DS8Siy0ceGDhe8pCliYUSiR5o8oS3FHtY2qAZz3vAFUKkvLgSxsBm11
-         /cdQ==
-X-Gm-Message-State: ANhLgQ2M3i6SS0gnj4gg/Nb4NwTJyHoEgWecvpO70JEow4W0exRO9eWJ
-        7flhsKi0TDHMVwFn3TUxYEw=
-X-Google-Smtp-Source: ADFU+vsStuckLpVn2CMO8otbm7LSh6nbqTchYUDl9xj5VPs6RCRr+PtrOezcRY96gHAGgqMRWvC5hw==
-X-Received: by 2002:a17:90a:678e:: with SMTP id o14mr2235635pjj.24.1583211809750;
-        Mon, 02 Mar 2020 21:03:29 -0800 (PST)
-Received: from localhost.localdomain ([2405:205:c8aa:e481:f8d3:6de2:77f9:5602])
-        by smtp.gmail.com with ESMTPSA id b2sm780446pjc.40.2020.03.02.21.03.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 21:03:29 -0800 (PST)
-From:   Pragat Pandya <pragat.pandya@gmail.com>
-To:     corbet@lwn.net
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, Pragat Pandya <pragat.pandya@gmail.com>
-Subject: [PATCH v3 2/2] Documentation: Add io_ordering.rst to driver-api manual
-Date:   Tue,  3 Mar 2020 10:33:01 +0530
-Message-Id: <20200303050301.5412-3-pragat.pandya@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200303050301.5412-1-pragat.pandya@gmail.com>
-References: <20200302114300.34875f69@lwn.net>
- <20200303050301.5412-1-pragat.pandya@gmail.com>
+        Tue, 3 Mar 2020 00:28:11 -0500
+X-UUID: f70c6fa231a94c35b137fb8ec908cc21-20200303
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=38YX+l28Zy41XgygYxcUNL1rC8VyK8Gyz4X920RtfiQ=;
+        b=OyNBrK108YKO5DbtLCJYsFg5hG7og3qC5aLmxHchL4J8/Gu1a66JQ3pO0YSeLkk2wj6sA6iz2nlEUtWio1DMAFiKKKyueDJPyEBMZnsWC8QWEsRzqZZSS7Pwa2ssqVSIA5LnmFwSRpLHe31LMJY1aG+GT3ibkrQDdhmvC8dcFBY=;
+X-UUID: f70c6fa231a94c35b137fb8ec908cc21-20200303
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <jitao.shi@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 788522752; Tue, 03 Mar 2020 13:28:00 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 3 Mar
+ 2020 13:23:27 +0800
+Received: from mszsdclx1018.gcn.mediatek.inc (10.16.6.18) by
+ MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
+ 15.0.1395.4 via Frontend Transport; Tue, 3 Mar 2020 13:28:20 +0800
+From:   Jitao Shi <jitao.shi@mediatek.com>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+CC:     <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>, <yingjoe.chen@mediatek.com>,
+        <eddie.huang@mediatek.com>, <cawa.cheng@mediatek.com>,
+        <bibby.hsieh@mediatek.com>, <ck.hu@mediatek.com>,
+        <stonea168@163.com>, <huijuan.xie@mediatek.com>,
+        Jitao Shi <jitao.shi@mediatek.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v12 3/6] dt-bindings: display: mediatek: dpi sample data in dual edge support
+Date:   Tue, 3 Mar 2020 13:27:19 +0800
+Message-ID: <20200303052722.94795-4-jitao.shi@mediatek.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20200303052722.94795-1-jitao.shi@mediatek.com>
+References: <20200303052722.94795-1-jitao.shi@mediatek.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-TM-SNTS-SMTP: 8738D68F04DD779C3FF5C35B5432C8B06436CA13C2030E58F4827DA4FC02124B2000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add io_ordering.rst under Documentation/driver-api and reference it from
-the Sphinx TOC Tree present in Documentation/driver-api/index.rst
-
-Signed-off-by: Pragat Pandya <pragat.pandya@gmail.com>
----
- Documentation/driver-api/index.rst                            | 1 +
- Documentation/{io_ordering.txt => driver-api/io_ordering.rst} | 0
- 2 files changed, 1 insertion(+)
- rename Documentation/{io_ordering.txt => driver-api/io_ordering.rst} (100%)
-
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index e9da95004632..9335412e3832 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -80,6 +80,7 @@ available subsections can be seen below.
-    isa
-    isapnp
-    io-mapping
-+   io_ordering
-    generic-counter
-    lightnvm-pblk
-    memory-devices/index
-diff --git a/Documentation/io_ordering.txt b/Documentation/driver-api/io_ordering.rst
-similarity index 100%
-rename from Documentation/io_ordering.txt
-rename to Documentation/driver-api/io_ordering.rst
--- 
-2.17.1
+QWRkIHByb3BlcnR5ICJwY2xrLXNhbXBsZSIgdG8gY29uZmlnIHRoZSBkcGkgc2FtcGxlIG9uIGZh
+bGxpbmcgKDApLA0KcmlzaW5nICgxKSwgYm90aCBmYWxsaW5nIGFuZCByaXNpbmcgKDIpLg0KDQpB
+Y2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NClNpZ25lZC1vZmYtYnk6IEpp
+dGFvIFNoaSA8aml0YW8uc2hpQG1lZGlhdGVrLmNvbT4NCi0tLQ0KIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dCAgICAgfCA0ICsrKy0NCiAx
+IGZpbGUgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1n
+aXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9t
+ZWRpYXRlayxkcGkudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
+YXkvbWVkaWF0ZWsvbWVkaWF0ZWssZHBpLnR4dA0KaW5kZXggNzdjYTMyYTMyMzk5Li40ZWVlYWQx
+ZDM5ZGIgMTAwNjQ0DQotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
+cGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0DQorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tZWRpYXRlay9tZWRpYXRlayxkcGkudHh0DQpAQCAtMTks
+NyArMTksOCBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KIA0KIE9wdGlvbmFsIHByb3BlcnRpZXM6
+DQogLSBwaW5jdHJsLW5hbWVzOiBDb250YWluICJncGlvbW9kZSIgYW5kICJkcGltb2RlIi4NCi0g
+IHBpbmN0cmwtbmFtZXMgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5j
+dHJscGluY3RybC1iaW5kaW5ncy50eHQNCisgIHBpbmN0cmwtbmFtZXMgc2VlIERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waW5jdHJsL3BpbmN0cmwtYmluZGluZ3MudHh0DQorLSBw
+Y2xrLXNhbXBsZTogcmVmZXIgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlh
+L3ZpZGVvLWludGVyZmFjZXMudHh0Lg0KIA0KIEV4YW1wbGU6DQogDQpAQCAtMzcsNiArMzgsNyBA
+QCBkcGkwOiBkcGlAMTQwMWQwMDAgew0KIA0KIAlwb3J0IHsNCiAJCWRwaTBfb3V0OiBlbmRwb2lu
+dCB7DQorCQkJcGNsay1zYW1wbGUgPSA8MD47DQogCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZoZG1p
+MF9pbj47DQogCQl9Ow0KIAl9Ow0KLS0gDQoyLjIxLjANCg==
 
