@@ -2,161 +2,139 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6389EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:08:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4306C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:09:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3855F20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:08:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B6220848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:09:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lBTb4pfw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fOl9x86g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732400AbgCCVI3 (ORCPT
+        id S1732405AbgCCVJ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:08:29 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43438 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732305AbgCCVI2 (ORCPT
+        Tue, 3 Mar 2020 16:09:29 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45499 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732274AbgCCVJ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:08:28 -0500
-Received: by mail-pf1-f195.google.com with SMTP id s1so2097991pfh.10;
-        Tue, 03 Mar 2020 13:08:26 -0800 (PST)
+        Tue, 3 Mar 2020 16:09:29 -0500
+Received: by mail-pl1-f194.google.com with SMTP id b22so1881931pls.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:09:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tRnA9gsq61Jh7dxXvs0qNF+P6/PxC+dpo1WJdbrhTdo=;
-        b=lBTb4pfwS6M6tvdUtTKWO0pk/OE9IsCfEZSx9aXlLwD8oKDjxnafFMfCRwyJrBPuzc
-         YAAqsmERKuiJixQKCBp4pxpkHympc07N3kGP+MgW0BQ/ghX/7Svq9ZutY/IwoYZa3e4e
-         L3g5o5oLmpZqmCBRLkSyp+GFGtTIO2kKyMTZA+sfONya0SjPQENUh9f2XvyDkLbpeAMV
-         kW0k6SYgwMMv4hhXKNlj1SHB9jXalx2NsO1xl2wzHcIckPKwaMIVVOUpvAL8Jd6hmStN
-         zr71JcqYl/P4M7vikVzQ5mbHFhxnX6IXrv1nIkK3EKc6KSHfb2S2Ln91D4sJtIf1POkn
-         fTUQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=fwR7Sl83KeOsQT2W/DAwpFl0ZV6iw1v764tWAtDVZSg=;
+        b=fOl9x86ga//EGU5D5JLMkKF+bt8LyTcxJBIWZ2dGr89Mpzz9sg46dz3Z9WXg5spuRf
+         +5KkAM260XOqr4hFezfI0dAMkVHm2QrNAdvp27/d0QuCbfShXZU0mrxDKnCkuSp5mQ49
+         k9DQfKig4a/pE10r0ArWlycQSAwDX+FIKAyW8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tRnA9gsq61Jh7dxXvs0qNF+P6/PxC+dpo1WJdbrhTdo=;
-        b=JJt7hH551PMjryxAgPe0UVCBvp2p05UfMi6ChrkpJSiz7XdIANNiFKJ4TdgpPMbkGJ
-         gTD0zLD45t7ykcUtk1pL9yAFut1WH0Aw+TQiRjKKkMYLX/LC0p8U9Lo6yJq75w31qBvx
-         jPTFlC9ou6JOK/4Il8RyL0CTkkltvqDf7BgckSnsqncqBHt7wgdpvrJn59o9MacLtC0Q
-         UtwbNH2MGp6Rr2vhuXYZJbJbGNBR59jKJQtrFeSe8XknrWJomQjLYlBL6XaljMxT59vs
-         0VqolOEi293Jp91zRyeZeAVpwkkmbi7hrl8naPwnjiBebU6enFKPbO3up2jpILmdnJlA
-         m5fQ==
-X-Gm-Message-State: ANhLgQ19k/0/8anqwBIyQvFn6rXO8SEEIWcv3d+UACAZ/OAZHUPiu4Ks
-        iwULtPFR1oLcRNjdHaXcjUI=
-X-Google-Smtp-Source: ADFU+vs9qw5IJKjsfY9djOC7mpzpIVMRZ3OFGciTJwpjdbqAQKIxUT5j4Tu6zOrWOAI47BsnxM5YXg==
-X-Received: by 2002:a62:e111:: with SMTP id q17mr5873943pfh.242.1583269705838;
-        Tue, 03 Mar 2020 13:08:25 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id jx10sm122931pjb.33.2020.03.03.13.08.25
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Mar 2020 13:08:25 -0800 (PST)
-Date:   Tue, 3 Mar 2020 13:08:24 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        logan.shaw@alliedtelesis.co.nz, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/5] hwmon: (adt7475) Add support for inverting pwm
- output
-Message-ID: <20200303210824.GE14692@roeck-us.net>
-References: <20200227084642.7057-1-chris.packham@alliedtelesis.co.nz>
- <20200227084642.7057-6-chris.packham@alliedtelesis.co.nz>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=fwR7Sl83KeOsQT2W/DAwpFl0ZV6iw1v764tWAtDVZSg=;
+        b=n+e28k8kQFR80oXSTxYCGUuGvztw5PqjQfJw0+wDpBRGwIOuL+cAudFNkDopjW8kmL
+         pg69hS1JmuXUgLnFOAZEiBuXfa9eJtnAH/Ziixrf1GG/vLAvQ9KvYaYHCzjufOOgmjas
+         vzxmnkX8i7vJBK84E8YRdQir0qcvfb6Q3AURosBe9o0Mwtq4BEvUvMNFidv6JhyExWrl
+         zuJB4ZuzVLLkqCvjM60eBogeekH7utz1uVX1KWiXlvN3x/WbOuQOSzta2VuhgzmU4Mz8
+         haKq8npb0g7z8kjiKaTWmpsRkUAIpMool3t/T6CulPs2z0qMfzewKRUSta1Hl4Ob9Ytl
+         n0wA==
+X-Gm-Message-State: ANhLgQ0q4+Nq/s5oARDzwVsqGK7f24MGtVwlx/CqDJxvD9TJOtm5zvnu
+        TSJHu4L8Vry0sNIDhfr7Jfdxtg==
+X-Google-Smtp-Source: ADFU+vt03b0iuZ1w20LE5zwsZxme9o61Zd37p0buS3FKRP9h1g71JeHZkeIPeVEiUTWSKQkmQDa2bw==
+X-Received: by 2002:a17:902:9a42:: with SMTP id x2mr6295193plv.194.1583269768021;
+        Tue, 03 Mar 2020 13:09:28 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id e9sm132865pjt.16.2020.03.03.13.09.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 13:09:27 -0800 (PST)
+Date:   Tue, 3 Mar 2020 13:09:26 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH v2] lib/refcount: Document interaction with PID_MAX_LIMIT
+Message-ID: <202003031309.FBE806C@keescook>
+References: <20200303105427.260620-1-jannh@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227084642.7057-6-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200303105427.260620-1-jannh@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 09:46:42PM +1300, Chris Packham wrote:
-> Add a "adi,pwm-active-state" device-tree property to allow hardware
-> designs to use inverted logic on the PWM output.
+On Tue, Mar 03, 2020 at 11:54:27AM +0100, Jann Horn wrote:
+> Document the circumstances under which refcount_t's saturation mechanism
+> works deterministically.
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Signed-off-by: Jann Horn <jannh@google.com>
 
-Applied, with change described below. Please let me know if ignoring
-the error is not what you wanted.
+Acked-by: Kees Cook <keescook@chromium.org>
 
-Thanks,
-Guenter
+Thanks!
 
-> ---
+-Kees
+
 > 
 > Notes:
->     Changes in v5:
->     - change to adi,pwm-active-state
->     - uint32 array
->     
->     Changes in v4:
->     - use vendor prefix for new property
->     
->     Changes in v3:
->     - New
+>     v2:
+>      - write down the math (Kees)
 > 
->  drivers/hwmon/adt7475.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+>  include/linux/refcount.h | 23 ++++++++++++++++++-----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
-> index 3649b18359dc..142a4fec688b 100644
-> --- a/drivers/hwmon/adt7475.c
-> +++ b/drivers/hwmon/adt7475.c
-> @@ -1509,6 +1509,36 @@ static int load_attenuators(const struct i2c_client *client, int chip,
->  	return 0;
->  }
->  
-> +static int adt7475_set_pwm_polarity(struct i2c_client *client)
-> +{
-> +	u32 states[ADT7475_PWM_COUNT];
-> +	int ret, i;
-> +	u8 val;
-> +
-> +	ret = of_property_read_u32_array(client->dev.of_node,
-> +					 "adi,pwm-active-state", states,
-> +					 ARRAY_SIZE(states));
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (i = 0; i < ADT7475_PWM_COUNT; i++) {
-> +		ret = adt7475_read(PWM_CONFIG_REG(i));
-> +		if (ret < 0)
-> +			return ret;
-> +		val = ret;
-> +		if (states[i])
-> +			val &= ~BIT(4);
-> +		else
-> +			val |= BIT(4);
-> +
-> +		ret = i2c_smbus_write_byte_data(client, PWM_CONFIG_REG(i), val);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int adt7475_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> @@ -1617,6 +1647,10 @@ static int adt7475_probe(struct i2c_client *client,
->  	for (i = 0; i < ADT7475_PWM_COUNT; i++)
->  		adt7475_read_pwm(client, i);
->  
-> +	ret = adt7475_set_pwm_polarity(client);
-> +	if (ret && ret != -EINVAL)
-> +		dev_err(&client->dev, "Error configuring pwm polarity\n");
+> diff --git a/include/linux/refcount.h b/include/linux/refcount.h
+> index 0ac50cf62d062..0e3ee25eb156a 100644
+> --- a/include/linux/refcount.h
+> +++ b/include/linux/refcount.h
+> @@ -38,11 +38,24 @@
+>   * atomic operations, then the count will continue to edge closer to 0. If it
+>   * reaches a value of 1 before /any/ of the threads reset it to the saturated
+>   * value, then a concurrent refcount_dec_and_test() may erroneously free the
+> - * underlying object. Given the precise timing details involved with the
+> - * round-robin scheduling of each thread manipulating the refcount and the need
+> - * to hit the race multiple times in succession, there doesn't appear to be a
+> - * practical avenue of attack even if using refcount_add() operations with
+> - * larger increments.
+> + * underlying object.
+> + * Linux limits the maximum number of tasks to PID_MAX_LIMIT, which is currently
+> + * 0x400000 (and can't easily be raised in the future beyond FUTEX_TID_MASK).
+> + * With the current PID limit, if no batched refcounting operations are used and
+> + * the attacker can't repeatedly trigger kernel oopses in the middle of refcount
+> + * operations, this makes it impossible for a saturated refcount to leave the
+> + * saturation range, even if it is possible for multiple uses of the same
+> + * refcount to nest in the context of a single task:
+> + *
+> + *     (UINT_MAX+1-REFCOUNT_SATURATED) / PID_MAX_LIMIT =
+> + *     0x40000000 / 0x400000 = 0x100 = 256
+> + *
+> + * If hundreds of references are added/removed with a single refcounting
+> + * operation, it may potentially be possible to leave the saturation range; but
+> + * given the precise timing details involved with the round-robin scheduling of
+> + * each thread manipulating the refcount and the need to hit the race multiple
+> + * times in succession, there doesn't appear to be a practical avenue of attack
+> + * even if using refcount_add() operations with larger increments.
+>   *
+>   * Memory ordering
+>   * ===============
+> 
+> base-commit: 98d54f81e36ba3bf92172791eba5ca5bd813989b
+> -- 
+> 2.25.0.265.gbab2e86ba0-goog
+> 
 
-		dev_err -> dev_warn
-
-> +
->  	/* Start monitoring */
->  	switch (chip) {
->  	case adt7475:
+-- 
+Kees Cook
