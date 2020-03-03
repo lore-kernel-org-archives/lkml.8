@@ -2,121 +2,171 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF09DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97EEC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9948120717
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:31:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A7A20717
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:32:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZO61Sxyi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgCCEb4 (ORCPT
+        id S1727433AbgCCEcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:31:56 -0500
-Received: from mga06.intel.com ([134.134.136.31]:55138 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbgCCEb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:31:56 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 20:31:55 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
-   d="scan'208";a="243458952"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 02 Mar 2020 20:31:54 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j8zDl-0006TO-DM; Tue, 03 Mar 2020 12:31:53 +0800
-Date:   Tue, 3 Mar 2020 12:31:23 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 2/2] serial/sysrq: Add MAGIC_SYSRQ_SERIAL_SEQUENCE
-Message-ID: <202003031201.WdZ9GaGO%lkp@intel.com>
-References: <20200302175135.269397-3-dima@arista.com>
+        Mon, 2 Mar 2020 23:32:54 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:35050 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgCCEcy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 23:32:54 -0500
+Received: by mail-pj1-f67.google.com with SMTP id s8so760060pjq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 20:32:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=PAeuIw+hEri4xfaGtdCge6RjFwR9k/M6VeehKKOz2Zg=;
+        b=ZO61SxyiPLNPpW1EXlXI4x/HWOeu8rffpoS2+/Bt7b2ua54SalZEEkqudi6diZIkXh
+         cHuWJrfIFBFUMQECEu4k0LXTwfeayiwHTSI1Fd//oRS+ft8IegW8BxZ6m+yG/+KLbXEF
+         rCmTGOMC5dQjrfF/eviJrA/wJr34l+fzh5k2I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=PAeuIw+hEri4xfaGtdCge6RjFwR9k/M6VeehKKOz2Zg=;
+        b=uFFwGYO9LIAZ5vhL5Xz3Wk6XHK0KttTMVmgMGM81BWKdCL4k1deQ4Fku4Hv7ZuwKEW
+         XFByKqbtIK9/mOECbuwZWPZYvWhRoUElh6Dunh9cch+seaU3AC0FhtGL87NPom3bVuvW
+         Wlx39KIUFQ+tzd59WQNBadJg79EiD6Ise0HjCurELSARw6Ca9n2vWuT30gHuW2gMIpqZ
+         vCPMAyYuBDrLTb6aCV3obzHxDPhqhv309VVhtf66iFkHxeTOfi1zTxTQC48dipwTwUHA
+         MxyFuwFpl3IorVT3eaXHXDxu5i/9LveWIKOenGmDp/el0HxV7joo34F4GDXI4CGnl+mE
+         uCfw==
+X-Gm-Message-State: ANhLgQ1GEJDG15YQaUgRgpmKnleB4bF9qb6ELMHq5n54sNdkYzv9MUjd
+        NAy2Ajxru8dJcpz9ummgNF07+A==
+X-Google-Smtp-Source: ADFU+vuu87r1SlcNGnctFE2kHHSUxB6qWqCEisCd/TiEgwd8JkcqMCC9rIaYFVZCii+GL+ZBtK9QSw==
+X-Received: by 2002:a17:90a:be04:: with SMTP id a4mr2011764pjs.73.1583209973125;
+        Mon, 02 Mar 2020 20:32:53 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id f127sm23298618pfa.112.2020.03.02.20.32.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 20:32:52 -0800 (PST)
+Date:   Mon, 2 Mar 2020 20:32:51 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Sedat Dilek <sedat.dilek@gmail.com>
+Cc:     Borislav Petkov <bp@suse.de>, "H.J. Lu" <hjl.tools@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Masahiro Yamada <masahiroy@kernel.org>, x86@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kbuild@vger.kernel.org,
+        Clang-Built-Linux ML <clang-built-linux@googlegroups.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/9] Enable orphan section warning
+Message-ID: <202003022029.B549AA3@keescook>
+References: <20200228002244.15240-1-keescook@chromium.org>
+ <CA+icZUVRnjOWKZynAGDniXD_H9KRccONmeKHs25DPPU1c8ZcGg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302175135.269397-3-dima@arista.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CA+icZUVRnjOWKZynAGDniXD_H9KRccONmeKHs25DPPU1c8ZcGg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+On Fri, Feb 28, 2020 at 07:51:21AM +0100, Sedat Dilek wrote:
+> On Fri, Feb 28, 2020 at 1:22 AM Kees Cook <keescook@chromium.org> wrote:
+> > This series depends on tip/x86/boot (where recent .eh_frame fixes[3]
+> > landed), and has a minor conflict[4] with the ARM tree (related to
+> > the earlier mentioned bug). As it uses refactorings in the asm-generic
+> > linker script, and makes changes to kbuild, I think the cleanest place
+> > for this series to land would also be through -tip. Once again (like
+> > my READ_IMPLIES_EXEC series), I'm looking to get maintainer Acks so
+> > this can go all together with the least disruption. Splitting it up by
+> > architecture seems needlessly difficult.
+> 
+> Hi Kees,
+> 
+> is this an updated version of what you have in your
+> kees/linux.git#linker/orphans/x86-arm Git branch?
 
-Thank you for the patch! Perhaps something to improve:
+Hi; yes indeed.
 
-[auto build test WARNING on tty/tty-testing]
-[also build test WARNING on usb/usb-testing linus/master v5.6-rc4 next-20200302]
-[cannot apply to linux/master]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> Especially, I saw a difference in [2] and "[PATCH 4/9] x86/boot: Warn
+> on orphan section placement"
+> 
+> [ arch/x86/boot/compressed/Makefile ]
+> 
+> +KBUILD_LDFLAGS += --no-ld-generated-unwind-info
+> 
+> Can you comment on why this KBUILD_LDFLAGS was added/needed?
 
-url:    https://github.com/0day-ci/linux/commits/Dmitry-Safonov/serial-sysrq-Add-MAGIC_SYSRQ_SERIAL_SEQUENCE/20200303-041809
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/tty.git tty-testing
+It looks like the linker decided to add .eh_frame sections even when all
+the .o files lacked it. Adding this flag solved it (which I prefer over
+adding it to DISCARD).
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+> I like when people offer their work in a Git branch.
+> Do you plan to do that?
 
-New smatch warnings:
-drivers/tty/serial/serial_core.c:3123 uart_try_toggle_sysrq() warn: unsigned '++port->sysrq_seq' is never less than zero.
+Since it was based on a -tip sub-branch I didn't push a
+copy, but since you asked here it is:
+https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=orphans/tip/x86/boot
 
-Old smatch warnings:
-drivers/tty/serial/serial_core.c:298 uart_shutdown() error: we previously assumed 'uport' could be null (see line 294)
-drivers/tty/serial/serial_core.c:2741 iomem_base_show() warn: argument 4 to %lX specifier is cast from pointer
+And this email can serve as a "ping" to the arch maintainers too...
+does this all look okay to you? I think it'd be a nice improvement. :)
 
-vim +3123 drivers/tty/serial/serial_core.c
+Thanks!
 
-  3099	
-  3100	/**
-  3101	 *	uart_try_toggle_sysrq - Enables SysRq from serial line
-  3102	 *	@port: uart_port structure where char(s) after BREAK met
-  3103	 *	@ch: new character in the sequence after received BREAK
-  3104	 *
-  3105	 *	Enables magic SysRq when the required sequence is met on port
-  3106	 *	(see CONFIG_MAGIC_SYSRQ_SERIAL_SEQUENCE).
-  3107	 *
-  3108	 *	Returns false if @ch is out of enabling sequence and should be
-  3109	 *	handled some other way, true if @ch was consumed.
-  3110	 */
-  3111	static bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
-  3112	{
-  3113		if (ARRAY_SIZE(sysrq_toggle_seq) <= 1)
-  3114			return false;
-  3115	
-  3116		BUILD_BUG_ON(ARRAY_SIZE(sysrq_toggle_seq) >= U8_MAX);
-  3117		if (sysrq_toggle_seq[port->sysrq_seq] != ch) {
-  3118			port->sysrq_seq = 0;
-  3119			return false;
-  3120		}
-  3121	
-  3122		/* Without the last \0 */
-> 3123		if (++port->sysrq_seq < (ARRAY_SIZE(sysrq_toggle_seq) - 1)) {
-  3124			port->sysrq = jiffies + SYSRQ_TIMEOUT;
-  3125			return true;
-  3126		}
-  3127	
-  3128		schedule_work(&sysrq_enable_work);
-  3129	
-  3130		port->sysrq = 0;
-  3131		return true;
-  3132	}
-  3133	#else
-  3134	static inline bool uart_try_toggle_sysrq(struct uart_port *port, unsigned int ch)
-  3135	{
-  3136		return false;
-  3137	}
-  3138	#endif
-  3139	
+-Kees
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> Thanks.
+> 
+> Regards,
+> - Sedat -
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/log/?h=linker/orphans/x86-arm
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git/commit/?h=linker/orphans/x86-arm&id=e43aa77956c40b9b6db0b37b3780423aa2e661ad
+> 
+> 
+> 
+> > H.J. Lu (1):
+> >   Add RUNTIME_DISCARD_EXIT to generic DISCARDS
+> >
+> > Kees Cook (8):
+> >   scripts/link-vmlinux.sh: Delay orphan handling warnings until final
+> >     link
+> >   vmlinux.lds.h: Add .gnu.version* to DISCARDS
+> >   x86/build: Warn on orphan section placement
+> >   x86/boot: Warn on orphan section placement
+> >   arm64/build: Use common DISCARDS in linker script
+> >   arm64/build: Warn on orphan section placement
+> >   arm/build: Warn on orphan section placement
+> >   arm/boot: Warn on orphan section placement
+> >
+> >  arch/arm/Makefile                             |  4 ++++
+> >  arch/arm/boot/compressed/Makefile             |  2 ++
+> >  arch/arm/boot/compressed/vmlinux.lds.S        | 17 ++++++--------
+> >  .../arm/{kernel => include/asm}/vmlinux.lds.h | 22 ++++++++++++++-----
+> >  arch/arm/kernel/vmlinux-xip.lds.S             |  5 ++---
+> >  arch/arm/kernel/vmlinux.lds.S                 |  5 ++---
+> >  arch/arm64/Makefile                           |  4 ++++
+> >  arch/arm64/kernel/vmlinux.lds.S               | 13 +++++------
+> >  arch/x86/Makefile                             |  4 ++++
+> >  arch/x86/boot/compressed/Makefile             |  3 ++-
+> >  arch/x86/boot/compressed/vmlinux.lds.S        | 13 +++++++++++
+> >  arch/x86/kernel/vmlinux.lds.S                 |  7 ++++++
+> >  include/asm-generic/vmlinux.lds.h             | 11 ++++++++--
+> >  scripts/link-vmlinux.sh                       |  6 +++++
+> >  14 files changed, 85 insertions(+), 31 deletions(-)
+> >  rename arch/arm/{kernel => include/asm}/vmlinux.lds.h (92%)
+
+-- 
+Kees Cook
