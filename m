@@ -6,71 +6,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3703C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB9EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C21D920842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1C89215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:57:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgCCI43 (ORCPT
+        id S1727933AbgCCI5S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:56:29 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11136 "EHLO huawei.com"
+        Tue, 3 Mar 2020 03:57:18 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40528 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727872AbgCCI43 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:56:29 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8FD36214148A0B4E2E5F;
-        Tue,  3 Mar 2020 16:56:26 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Mar 2020
- 16:56:16 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <benh@kernel.crashing.org>, <paulus@samba.org>,
-        <mpe@ellerman.id.au>, <christophe.leroy@c-s.fr>
-CC:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] powerpc/pmac/smp: drop unnecessary volatile qualifier
-Date:   Tue, 3 Mar 2020 16:56:04 +0800
-Message-ID: <20200303085604.24952-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20191225114943.17216-1-yuehaibing@huawei.com>
-References: <20191225114943.17216-1-yuehaibing@huawei.com>
+        id S1725818AbgCCI5S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 03:57:18 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id BDEFBDE0C075254D2FC2;
+        Tue,  3 Mar 2020 16:57:15 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 3 Mar 2020 16:57:09 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 1/2] f2fs: compress: fix to call missing destroy_compress_ctx()
+Date:   Tue, 3 Mar 2020 16:57:06 +0800
+Message-ID: <20200303085707.45104-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
+X-Originating-IP: [10.120.216.130]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-core99_l2_cache/core99_l3_cache no need to mark as volatile,
-just remove it.
+Otherwise, it will cause memory leak.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
 ---
-v2: remove 'volatile' qualifier
----
- arch/powerpc/platforms/powermac/smp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/f2fs/compress.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
-index f95fbde..69ad567 100644
---- a/arch/powerpc/platforms/powermac/smp.c
-+++ b/arch/powerpc/platforms/powermac/smp.c
-@@ -661,8 +661,8 @@ static void smp_core99_gpio_tb_freeze(int freeze)
- #endif /* !CONFIG_PPC64 */
+diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+index bd3ea01db448..b373102ed4af 100644
+--- a/fs/f2fs/compress.c
++++ b/fs/f2fs/compress.c
+@@ -398,6 +398,8 @@ static int f2fs_compress_pages(struct compress_ctx *cc)
+ 		cc->cpages[i] = NULL;
+ 	}
  
- /* L2 and L3 cache settings to pass from CPU0 to CPU1 on G4 cpus */
--volatile static long int core99_l2_cache;
--volatile static long int core99_l3_cache;
-+static long core99_l2_cache;
-+static long core99_l3_cache;
++	cops->destroy_compress_ctx(cc);
++
+ 	cc->nr_cpages = nr_cpages;
  
- static void core99_init_caches(int cpu)
- {
+ 	trace_f2fs_compress_pages_end(cc->inode, cc->cluster_idx,
 -- 
-2.7.4
-
+2.18.0.rc1
 
