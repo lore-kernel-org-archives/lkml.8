@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A695AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66205C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E04A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFF6208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258867;
-	bh=HsMMMtuFBrmgN09XbK09/hXyX9IUjGtNnAz1PQKwXM8=;
+	s=default; t=1583258870;
+	bh=9kFRiKQMxCYsH+san8ZR4DvZjUuoV5evHH59jKA2ls4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qj4e7MKRz7cHCijhIMNWaa+CgyqfpJ2KAyUqnbWY5bIfKzQMKyB2tkZ0pEosBVL3R
-	 PmYxngHB9pcTU+4pn/Rlxio0hwtz3M9ir/QqNd585L2jYzLMbowYEnwO79n/geKQyN
-	 1pTeuwOdAlp/dQIxzjZlAdIt4QbW5dh75sp+OuAA=
+	b=VJb4Vf3PHxE2lwGUHBS7MXVOQ+H0GE3d+wQRBBAWMzEMzObTvhMLsP5FX4wfYJFnX
+	 XroMTBu0g3dXi1/w0RsbZvoMNimoZjEmTPM/XM5tUxqFcLE8RhCY+PBUXYrBCu7eU/
+	 YZy6kh8qUKeiIfC3CF5plZHs+ppwKNJRQlF8m1Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732331AbgCCRyW (ORCPT
+        id S2387737AbgCCSHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35440 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731544AbgCCRyU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:20 -0500
+        id S1732319AbgCCRyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:22 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65DB120870;
-        Tue,  3 Mar 2020 17:54:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA42F206D5;
+        Tue,  3 Mar 2020 17:54:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258059;
-        bh=HsMMMtuFBrmgN09XbK09/hXyX9IUjGtNnAz1PQKwXM8=;
+        s=default; t=1583258062;
+        bh=9kFRiKQMxCYsH+san8ZR4DvZjUuoV5evHH59jKA2ls4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bkwkjwMKlZ5H3lCVemTFz1p/pi8nDMCzr1jfEnhLAfkmSPjSUx3snoApKp7upgbXm
-         uPFbeEilLgyMYRY/+ArOjUtBRnmElKmHqh9VjfPUNCRI5yfUBpEW8Havlah5StTa1e
-         OgVa26aaRqHgb+gizo3+vCM94jEtU5IZ0VTQoMxA=
+        b=bXDqe7PNWOg08kjxZ8MiwSi8yIidDw2wJKXXUUfnoaswmjPS1yolt/W7Nm62q3xuj
+         S/jfE4tj8qbiQ3bC0Nq0nuADNBA4310OZkSCVRaohygfr4LHgHgHne7hV2nmtP9IC4
+         Qu5MZGnUz6Pd9ySzyzme3x4DX0s6BwKO/Ui7LTGg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org, Rohit Maheshwari <rohitm@chelsio.com>,
+        Jakub Kicinski <kuba@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 018/152] net: export netdev_next_lower_dev_rcu()
-Date:   Tue,  3 Mar 2020 18:41:56 +0100
-Message-Id: <20200303174304.547601697@linuxfoundation.org>
+Subject: [PATCH 5.4 009/152] net/tls: Fix to avoid gettig invalid tls record
+Date:   Tue,  3 Mar 2020 18:41:47 +0100
+Message-Id: <20200303174303.574514775@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -59,82 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Rohit Maheshwari <rohitm@chelsio.com>
 
-[ Upstream commit 7151affeef8d527f50b4b68a871fd28bd660023f ]
+[ Upstream commit 06f5201c6392f998a49ca9c9173e2930c8eb51d8 ]
 
-netdev_next_lower_dev_rcu() will be used to implement a function,
-which is to walk all lower interfaces.
-There are already functions that they walk their lower interface.
-(netdev_walk_all_lower_dev_rcu, netdev_walk_all_lower_dev()).
-But, there would be cases that couldn't be covered by given
-netdev_walk_all_lower_dev_{rcu}() function.
-So, some modules would want to implement own function,
-which is to walk all lower interfaces.
+Current code doesn't check if tcp sequence number is starting from (/after)
+1st record's start sequnce number. It only checks if seq number is before
+1st record's end sequnce number. This problem will always be a possibility
+in re-transmit case. If a record which belongs to a requested seq number is
+already deleted, tls_get_record will start looking into list and as per the
+check it will look if seq number is before the end seq of 1st record, which
+will always be true and will return 1st record always, it should in fact
+return NULL.
+As part of the fix, start looking each record only if the sequence number
+lies in the list else return NULL.
+There is one more check added, driver look for the start marker record to
+handle tcp packets which are before the tls offload start sequence number,
+hence return 1st record if the record is tls start marker and seq number is
+before the 1st record's starting sequence number.
 
-In the next patch, netdev_next_lower_dev_rcu() will be used.
-In addition, this patch removes two unused prototypes in netdevice.h.
-
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Fixes: e8f69799810c ("net/tls: Add generic NIC offload infrastructure")
+Signed-off-by: Rohit Maheshwari <rohitm@chelsio.com>
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/netdevice.h |    7 +++----
- net/core/dev.c            |    6 +++---
- 2 files changed, 6 insertions(+), 7 deletions(-)
+ net/tls/tls_device.c |   20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -72,6 +72,8 @@ void netdev_set_default_ethtool_ops(stru
- #define NET_RX_SUCCESS		0	/* keep 'em coming, baby */
- #define NET_RX_DROP		1	/* packet dropped */
+--- a/net/tls/tls_device.c
++++ b/net/tls/tls_device.c
+@@ -581,7 +581,7 @@ struct tls_record_info *tls_get_record(s
+ 				       u32 seq, u64 *p_record_sn)
+ {
+ 	u64 record_sn = context->hint_record_sn;
+-	struct tls_record_info *info;
++	struct tls_record_info *info, *last;
  
-+#define MAX_NEST_DEV 8
+ 	info = context->retransmit_hint;
+ 	if (!info ||
+@@ -593,6 +593,24 @@ struct tls_record_info *tls_get_record(s
+ 						struct tls_record_info, list);
+ 		if (!info)
+ 			return NULL;
++		/* send the start_marker record if seq number is before the
++		 * tls offload start marker sequence number. This record is
++		 * required to handle TCP packets which are before TLS offload
++		 * started.
++		 *  And if it's not start marker, look if this seq number
++		 * belongs to the list.
++		 */
++		if (likely(!tls_record_is_start_marker(info))) {
++			/* we have the first record, get the last record to see
++			 * if this seq number belongs to the list.
++			 */
++			last = list_last_entry(&context->records_list,
++					       struct tls_record_info, list);
 +
- /*
-  * Transmit return codes: transmit return codes originate from three different
-  * namespaces:
-@@ -4294,11 +4296,8 @@ void *netdev_lower_get_next(struct net_d
- 	     ldev; \
- 	     ldev = netdev_lower_get_next(dev, &(iter)))
++			if (!between(seq, tls_record_start_seq(info),
++				     last->end_seq))
++				return NULL;
++		}
+ 		record_sn = context->unacked_record_sn;
+ 	}
  
--struct net_device *netdev_all_lower_get_next(struct net_device *dev,
-+struct net_device *netdev_next_lower_dev_rcu(struct net_device *dev,
- 					     struct list_head **iter);
--struct net_device *netdev_all_lower_get_next_rcu(struct net_device *dev,
--						 struct list_head **iter);
--
- int netdev_walk_all_lower_dev(struct net_device *dev,
- 			      int (*fn)(struct net_device *lower_dev,
- 					void *data),
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -146,7 +146,6 @@
- #include "net-sysfs.h"
- 
- #define MAX_GRO_SKBS 8
--#define MAX_NEST_DEV 8
- 
- /* This should be increased if a protocol with a bigger head is added. */
- #define GRO_MAX_HEAD (MAX_HEADER + 128)
-@@ -6914,8 +6913,8 @@ static int __netdev_walk_all_lower_dev(s
- 	return 0;
- }
- 
--static struct net_device *netdev_next_lower_dev_rcu(struct net_device *dev,
--						    struct list_head **iter)
-+struct net_device *netdev_next_lower_dev_rcu(struct net_device *dev,
-+					     struct list_head **iter)
- {
- 	struct netdev_adjacent *lower;
- 
-@@ -6927,6 +6926,7 @@ static struct net_device *netdev_next_lo
- 
- 	return lower->dev;
- }
-+EXPORT_SYMBOL(netdev_next_lower_dev_rcu);
- 
- static u8 __netdev_upper_depth(struct net_device *dev)
- {
 
 
