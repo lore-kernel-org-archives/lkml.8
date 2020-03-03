@@ -2,117 +2,92 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99861C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26358C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708E02072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFB7B208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:23:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="cUtFbLLA"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uDa5LM3T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730786AbgCCTXV (ORCPT
+        id S1730808AbgCCTXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:23:21 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:42832 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729458AbgCCTXU (ORCPT
+        Tue, 3 Mar 2020 14:23:30 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39228 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCCTXa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:23:20 -0500
-Received: by mail-il1-f194.google.com with SMTP id x2so3794286ila.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:23:19 -0800 (PST)
+        Tue, 3 Mar 2020 14:23:30 -0500
+Received: by mail-io1-f67.google.com with SMTP id h3so4917904ioj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:23:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KiZbLVn4oUdQq37v8gihe8HTdDkjhp2c0YGGCKWw9Xs=;
-        b=cUtFbLLAYh6gx9tm2hX9XXTHNvQbYYtQzHRgoECvT1iNpNhnaqHdzCG/CIyEeLM4gL
-         Z1ePPKxytHV6jrshCuDSCg/F/Y3EhjB789IMGMhvLY5BjMF12XYa9P1fenpGS3wnUpiq
-         2ub+HBTb161Oel2xhswKj/mAZyHisH25WZK9vbaxjY6LTd9Hw0LO3CFy6e1A4xK6Rp8h
-         B5RYOBiOga3ZtJu6UFkd/mh/wq7qjfsVdp483vXbAO26p9+WfSM398uJZlbzilANoMKh
-         Fc8hK9CXNYQpui0/BpLv6RVXEYpV8KRigcO4x7aUkA1YZ0R/2aAWKkiiGy9dpnCH8Mco
-         ACqA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LLgQsCek9Kb1m4nAwNnmEBwVioWI00Iv+0FWhumo+dE=;
+        b=uDa5LM3TNki7/Wt/1Evy+4ZqW3++lqzqUvHiCP0G35KGppB8eFCf5pVdqMAX3Iy1+m
+         XH/iBV3BYIVye8uH4kelWQbCvb4vejH65iHoK1IEwU39B71e9YsDwp4Cfb0H22FbqGvw
+         v3KJE1BjTz2Fml0kzHMObjV5yhGCli6713TjXpfY3bCzWpBdli55vD/fGrILXjvnRWIa
+         yxh1RyXO/HYzlrE38oQnfs+nlGviCMMCpgMXMs+sHSOomRk73GKZltkpUNmozcnXUAJI
+         8zyM20HCik3wUHLKu0mlbShT8+hvAZmZCuXxmioAStIXxRro4rDAcLLVD6+znTbeb6zA
+         mZ7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KiZbLVn4oUdQq37v8gihe8HTdDkjhp2c0YGGCKWw9Xs=;
-        b=e8cMvucM9A2KfCq1kzF46y9m2ithTBhXZHAea10yKBn1lkp3ZlVola8QFFYnhGbcSb
-         RhKCf4x5UJf7NJFUE/5Rd1OPm51v24l1Yttc3VQLPsfiIPgnTnjEOczFb2vmubb72zCR
-         hP2LTHxhX7d4/kQswpG8m9HsSRyP4Doi9olDbyR/S6TcQ2EVvEU/pDRCPKUByPWOS+Yf
-         JnoArjo3y3+IwMVSe3Gt81lc5mZMCkO/QBOAIUFncL1KMrZauxwkOGUb+JZTA95t2CwK
-         mnKYU4kRlaL6OsjvspX3zuV0a3aR3oYRL+uedg6FrqpFWmn/12dnlRM8LqL0SoUtEVdD
-         jgLg==
-X-Gm-Message-State: ANhLgQ2EGmX8fxbn/YH4LLzddW/5c+6vIO+bkTSRg3NMNzdBU7DSpDc/
-        WgOtUM64AYP+91eedf6H1GYLKPFxx/Y=
-X-Google-Smtp-Source: ADFU+vsGYrEKxsUpTqs5b+dGZi3gm2OTFxMN1tCOScyWlCXapZO1C3KKgpKNsVOR0wDn9xAFuJJT4A==
-X-Received: by 2002:a92:9507:: with SMTP id y7mr1729545ilh.243.1583263398611;
-        Tue, 03 Mar 2020 11:23:18 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id f72sm8161736ilg.84.2020.03.03.11.23.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 11:23:18 -0800 (PST)
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-To:     Jeff Layton <jlayton@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jann Horn <jannh@google.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home>
- <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com>
- <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
- <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
- <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
- <20200303142407.GA47158@kroah.com>
- <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
- <acb1753c78a019fb0d54ba29077cef144047f70f.camel@kernel.org>
- <7a05adc8-1ca9-c900-7b24-305f1b3a9b86@kernel.dk>
- <dbb06c63c17c23fcacdd99e8b2266804ee39ffe5.camel@kernel.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <dc84aa00-e570-8833-cf9f-d1001c52dd7a@kernel.dk>
-Date:   Tue, 3 Mar 2020 12:23:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LLgQsCek9Kb1m4nAwNnmEBwVioWI00Iv+0FWhumo+dE=;
+        b=kG8T4ATnDaWwxShdE+zktdeBSF/DoO+2HyvYhdnHeB/mOLHlY+pAOY71qNXvdPw6OO
+         wHm7EdieYKR06QjJkpQz+bjSqpabFHzcy+UyTh2TU+vpxLOzepzpFO98LJZkjo5T48Nh
+         EcysZpqny8G1IG/5b4H1AfyYH/v8032qmatGzZQY9oU0XSHkzE6tI0tMVV12e8PCuqxW
+         VfESp/S4inWNIrIb/XD8o6oh8ga7j1dmeAX+8QmhaMNA3arOLFInFYqXv70u8PIGNffy
+         ipgijg+PEjiKO11dqzgsTJqyyOM1zUxxQGxMTzvGYEDoUksUhkxr/HqdEAcIHKSsIXA+
+         v+qw==
+X-Gm-Message-State: ANhLgQ0RjDdzSfsU52TSWsDOD2Crxy5RVRze38gmQKZd7r80mszGP60T
+        94tPnh368/UQCtHiW1QBykcbdR8GkvDgYwE9E3Ftjw==
+X-Google-Smtp-Source: ADFU+vvmFLfIa2HV/KNG6a6ZxH2awdyggqi1JUEECvxNbW+fPZiqZ/xZDxS36aAy14JiPgakxzIp85/ViOWnCFG7404=
+X-Received: by 2002:a6b:c986:: with SMTP id z128mr5313314iof.296.1583263409592;
+ Tue, 03 Mar 2020 11:23:29 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <dbb06c63c17c23fcacdd99e8b2266804ee39ffe5.camel@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200302235709.27467-1-sean.j.christopherson@intel.com> <20200302235709.27467-49-sean.j.christopherson@intel.com>
+In-Reply-To: <20200302235709.27467-49-sean.j.christopherson@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 3 Mar 2020 11:23:18 -0800
+Message-ID: <CALMp9eRoY6XkwaVd3NmB7xyVTgruRjRyo9ynixCf-szp7hBS+A@mail.gmail.com>
+Subject: Re: [PATCH v2 48/66] KVM: x86: Remove stateful CPUID handling
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 12:02 PM, Jeff Layton wrote:
-> Basically, all you'd need to do is keep a pointer to struct file in the
-> internal state for the chain. Then, allow userland to specify some magic
-> fd value for subsequent chained operations that says to use that instead
-> of consulting the fdtable. Maybe use -4096 (-MAX_ERRNO - 1)?
+On Mon, Mar 2, 2020 at 3:57 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
 
-BTW, I think we need two magics here. One that says "result from
-previous is fd for next", and one that says "fd from previous is fd for
-next". The former allows inheritance from open -> read, the latter from
-read -> write.
+> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> index b5dce17c070f..49527dbcc90c 100644
+> --- a/arch/x86/kvm/cpuid.c
+> +++ b/arch/x86/kvm/cpuid.c
+> @@ -495,25 +495,16 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
+>                  * time, with the least-significant byte in EAX enumerating the
+>                  * number of times software should do CPUID(2, 0).
+>                  *
+> -                * Modern CPUs (quite likely every CPU KVM has *ever* run on)
+> -                * are less idiotic.  Intel's SDM states that EAX & 0xff "will
+> -                * always return 01H. Software should ignore this value and not
+> +                * Modern CPUs, i.e. every CPU KVM has *ever* run on are less
 
--- 
-Jens Axboe
+Nit: missing comma after "run on."
 
+Reviewed-by: Jim Mattson <jmattson@google.com>
