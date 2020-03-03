@@ -2,90 +2,79 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36259C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA154C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B82820828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D392073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:12:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JvMOlYXW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y0oFKzzS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbgCCQL1 (ORCPT
+        id S1730175AbgCCQMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:11:27 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:34625 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729384AbgCCQL1 (ORCPT
+        Tue, 3 Mar 2020 11:12:06 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:33705 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbgCCQMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:11:27 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z15so5110852wrl.1;
-        Tue, 03 Mar 2020 08:11:25 -0800 (PST)
+        Tue, 3 Mar 2020 11:12:06 -0500
+Received: by mail-yw1-f67.google.com with SMTP id j186so3879092ywe.0;
+        Tue, 03 Mar 2020 08:12:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+SzpTWQT3Ru6kg4f8Uj442Z+FLl17Fjj2BOSrwBP2tA=;
-        b=JvMOlYXWMq0Xw1p+AMSLlLQea6qJWe/imSAwECDX0rMvjouX6tXhiTzi6l9PrEOKZH
-         mdkAi2TI7TwqRHeOSAeN4q9w+Mfvk/US67aBFw14KS0w9HiygV3cRD7xJ9z5VRS3PXBr
-         1jaA30b2hzUR0OE/6lXyX2IVnqwBLNuda+OJC4XozRGsax9OtpUhBPfs8c9xgxYWsIqA
-         VuTKw5sjUPmNkpaU06pgtELNoVNP1YKm/LPYmN5gz9+5lVtFmcvVqJxFf5crA986u4HC
-         RRz7ZOhDNXYl+enXW+x20gh545dfWhHil10Ywy6BIlDvrtAIwOqafQWOWpl3U18e7JhH
-         mXOg==
+        bh=9eh6lszkeCBFBrzn1n/zGlKp8TJzbq4QmrWCYSghREo=;
+        b=Y0oFKzzSc1nc8EEpUc959fsNttLh4PDgkd4P07j3pazdOzGf5/UPGVKv4OPzL33gZ/
+         4j5Kc9ngKfMH7K/Ty+0La0bsZimQxy0Y8NBQF8HdtgM2NVonUSpeY3oKt7xj9q0fMaWC
+         JCAvfKDQJaZHIZSTGkhJaTN+vGQ+7P+oI8wzqvXCacyM0IPgK3KJiRhSbCdiR5125Eue
+         6gbxXpw/6wz2wE61lq5LkO/sLKwBwB7kKK5eYToXEgxfJ+SzsQnYueLZKqslsypZnTx6
+         7Geu8tPbLI/SvXDatHNMziqgrVm9IhMWV8d9BThzuVw/y+YRDBn7sGGVSZN88cspMLT6
+         q+RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=+SzpTWQT3Ru6kg4f8Uj442Z+FLl17Fjj2BOSrwBP2tA=;
-        b=HFOvzmfMPAd44Y/EP9xF5KFdE4WA+USwNtRHyiKzDfODsEds1EdgXDUvXol3Oye5Wu
-         CqZnBHwlyLkWmrgemRW8E+JfBpT9hNpaKITHRqOb376DXcoPIDaEv3yQl7mPSziXhlrt
-         cf6jFTQARLQyGIESqNYNqVetT0Q5piJZkFi4jmuKCh7MfXrbvVhO6+mMKTrNzJvu5xXV
-         ZhdkXn1Vcr3rFdyP+d0fhNsHclrrG0rDS8rdtRi4b6ZuXP7Jy64PshDHhkkDMMuKjJUj
-         PsNCSEpcP4OnFeRphIlkK1Gyx256uEyiiRKmXJzVQrB3dxudqsMJfejxROg7Qn2bhRUx
-         5ORQ==
-X-Gm-Message-State: ANhLgQ2mYYUxOsQNK5No6A8/+TjgZUCvB0t99Pqd93b+IwPVdk9bseZn
-        uM+kUBZ5ZNnr9UGJYYA1ijDwBLcb
-X-Google-Smtp-Source: ADFU+vsxfAPm/x+IV3Wuxbup+iavPIjBhYZz58QDdng5ipw9V1mPOt2TMllv6EsxNgKf3ODQBhebjg==
-X-Received: by 2002:a5d:5743:: with SMTP id q3mr6227104wrw.135.1583251884664;
-        Tue, 03 Mar 2020 08:11:24 -0800 (PST)
-Received: from [192.168.2.1] (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id s5sm32669295wru.39.2020.03.03.08.11.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 08:11:23 -0800 (PST)
-Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: Add initial support for
- Pinebook Pro
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     Tobias Schramm <t.schramm@manjaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andy Yan <andy.yan@rock-chips.com>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Alexis Ballier <aballier@gentoo.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nick Xie <nick@khadas.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-References: <20200229144817.355678-1-t.schramm@manjaro.org>
- <20200229144817.355678-3-t.schramm@manjaro.org>
- <bcc2c8d4-a2cd-58c1-89af-e42439f8f344@gmail.com>
-Message-ID: <850e60b0-c260-c184-839f-93b064388e32@gmail.com>
-Date:   Tue, 3 Mar 2020 17:11:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        bh=9eh6lszkeCBFBrzn1n/zGlKp8TJzbq4QmrWCYSghREo=;
+        b=eBPKwed2W25cIK4x4pk1QFYQkAUd3/6BG/rk/IYWHs6DTCPUIFfeh71r7Xu6BfYCy2
+         r4OnuApfG8t62OLMzEF2tMybvOs0xlwV+INFIHqa8A95Do9xyYTvYARwUL8W5etmvJxJ
+         Bs/PrlrlrRRhFk5XZEeE6DFPPuog4tK1jfNjhpTtaFtgv7Axh26dvoh+kiyXXX69Lo3S
+         uQhdzUqJTpg6OD1Frgp1U4khQzWyHF1dt9ETf3zCslUYxdRB1kMz/DhdRS0DZhcGqK8Q
+         NGDqZyUjnmBI6GSzJirw2An5Jrwb56K3pB81N4n+7Wh750/go26bm/du9QPCzChz7wA5
+         IUZg==
+X-Gm-Message-State: ANhLgQ3v1mYg/4q6W+72pBAs5w+BH6MMdnzz9xgtkHm2Gn/Uq8cIfOpZ
+        vM8APqhCdrfB+k1EHlb7e48=
+X-Google-Smtp-Source: ADFU+vsrItRuClqVuhTf2p+WIfR263od0YmdikXPzIh6Ux5um/AZOGZw1D297aIg/nuvC94YjKpMZQ==
+X-Received: by 2002:a81:67c2:: with SMTP id b185mr5409082ywc.250.1583251925142;
+        Tue, 03 Mar 2020 08:12:05 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id v133sm9374025ywb.86.2020.03.03.08.12.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2020 08:12:04 -0800 (PST)
+Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
+To:     Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>
+References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
+ <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com>
+ <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <ca5e269e-9b30-4206-45a4-9a2d9f0f4fef@gmail.com>
+Date:   Tue, 3 Mar 2020 10:12:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <bcc2c8d4-a2cd-58c1-89af-e42439f8f344@gmail.com>
+In-Reply-To: <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -94,86 +83,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Add more reg = <..>
-
-On 3/3/20 4:37 PM, Johan Jonker wrote:
-> Hi Tobias,
+On 3/2/20 10:56 PM, Rayagonda Kokatanur wrote:
+> On Fri, Feb 28, 2020 at 7:20 PM Rob Herring <robh+dt@kernel.org> wrote:
+>>
+>> On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
+>> <rayagonda.kokatanur@broadcom.com> wrote:
+>>>
+>>> Generally i2c addr should not be greater than 10-bit. The highest 2 bits
+>>> are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
+>>> these flags if check slave addr valid.
+>>>
+>>> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+>>> ---
+>>>  scripts/dtc/Makefile | 2 +-
+>>>  scripts/dtc/checks.c | 5 +++++
+>>>  2 files changed, 6 insertions(+), 1 deletion(-)
+>>
+>> dtc changes must be submitted against upstream dtc.
 > 
-> Some minor style issues.
-> This dts file contains a partition node.
-> Question for the maintainers (Heiko?):
-> Should that partition be included or not?
+> Please let me know link to clone the upstream dtc branch.
 
-[..]
+Info about the dtc upstream project:
 
->> +&i2c4 {
->> +	i2c-scl-falling-time-ns = <20>;
->> +	i2c-scl-rising-time-ns = <600>;
->> +	status = "okay";
->> +
->> +	fusb0: fusb30x@22 {
->> +		compatible = "fcs,fusb302";
->> +		reg = <0x22>;
->> +		fcs,int_n = <&gpio1 RK_PA2 GPIO_ACTIVE_HIGH>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&fusb0_int_gpio>;
+   https://elinux.org/Device_Tree_Reference#dtc_.28upstream_project.29
+
+And the mail list to submit the patch to:
+
+   https://elinux.org/Device_Tree_Reference#Device-tree_Compiler_and_Tools_Mailing_List
+
+-Frank
+
+>>
+>>
+>>> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+>>> index 3acbb410904c..c5e8d6a9e73c 100644
+>>> --- a/scripts/dtc/Makefile
+>>> +++ b/scripts/dtc/Makefile
+>>> @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
+>>>  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
+>>>
+>>>  # Source files need to get at the userspace version of libfdt_env.h to compile
+>>> -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
+>>> +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
+>>>
+>>>  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
+>>>  ifneq ($(CHECK_DTBS),)
+>>> diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+>>> index 756f0fa9203f..17c9ed4137b5 100644
+>>> --- a/scripts/dtc/checks.c
+>>> +++ b/scripts/dtc/checks.c
+>>> @@ -3,6 +3,7 @@
+>>>   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
+>>>   */
+>>>
+>>> +#include <linux/bits.h>
+>>
+>> Not a UAPI header not that that would be much better as dtc also builds on Mac.
+>>
+>>>  #include "dtc.h"
+>>>  #include "srcpos.h"
+>>>
+>>> @@ -17,6 +18,9 @@
+>>>  #define TRACE(c, fmt, ...)     do { } while (0)
+>>>  #endif
+>>>
+>>> +#define I2C_TEN_BIT_ADDRESS    BIT(31)
+>>> +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
+>>> +
+>>>  enum checkstatus {
+>>>         UNCHECKED = 0,
+>>>         PREREQ,
+>>> @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+>>>
+>>>         for (len = prop->val.len; len > 0; len -= 4) {
+>>>                 reg = fdt32_to_cpu(*(cells++));
+>>> +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
+>>
+>> I'd just mask the top byte so we don't have to update on the next flag we add.
+> Do you mean something like this, shown below ?
+> reg &= 0xFFFF_FC000;
 > 
->> +		status = "okay";
+>>
+>> Rob
 > 
-> Remove or else status below.
-> New nodes are already okay I think.
-> If insure check compiled flat dts output to see if it is still there.
-> 
->> +		vbus-supply = <&vbus_typec>;
->> +
->> +		connector {
->> +			compatible = "usb-c-connector";
->> +			label = "USB-C";
->> +			op-sink-microwatt = <1000000>;
->> +			power-role = "dual";
->> +			sink-pdos =
->> +				<PDO_FIXED(5000, 2500, PDO_FIXED_USB_COMM)>;
->> +			source-pdos =
->> +				<PDO_FIXED(5000, 1400, PDO_FIXED_USB_COMM)>;
->> +			try-power-role = "sink";
->> +
->> +			ports {
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +
->> +				port@0 {
-
-reg = <0>;
-
->> +					usbc_hs: endpoint {
->> +						remote-endpoint =
->> +							<&u2phy0_typec_hs>;
->> +					};
->> +				};
->> +
->> +				port@1 {
-
-reg = <1>;
-
->> +					usbc_ss: endpoint {
->> +						remote-endpoint =
->> +							<&tcphy0_typec_ss>;
->> +					};
->> +				};
->> +
->> +				port@2 {
-
-reg = <2>;
-
->> +					usbc_dp: endpoint {
->> +						remote-endpoint =
->> +							<&tcphy0_typec_dp>;
->> +					};
->> +				};
->> +			};
->> +		};
->> +	};
->> +};
 
