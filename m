@@ -2,159 +2,206 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3255EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A38C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A2A3206E2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:40:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583246452;
-	bh=voICwXfMkCOmnvzzQLkAXsaE1rkTpvZ6JQkQpIcrKqA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FO8aTREnmgGEYIWXGCRv/Xeyz5kfUYhMOT7/Z5Of7i4gWcTNShP+J2Y5JroccOaIx
-	 ANoXG3PNp9WGlmE/fKH0LfySUCBIzDRXznEN35tvgN7zGQhw3OPHJSz8yTonc8b+zl
-	 nlXc5poCTTyT+HHeiQ56c3WhHokzp/40zthFzYHU=
+	by mail.kernel.org (Postfix) with ESMTP id 41372206E2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:40:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CrqZYCge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbgCCOku (ORCPT
+        id S1729678AbgCCOkz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:40:50 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34194 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728933AbgCCOku (ORCPT
+        Tue, 3 Mar 2020 09:40:55 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39743 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729318AbgCCOky (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:40:50 -0500
-Received: by mail-oi1-f194.google.com with SMTP id g6so3264737oiy.1;
-        Tue, 03 Mar 2020 06:40:49 -0800 (PST)
+        Tue, 3 Mar 2020 09:40:54 -0500
+Received: by mail-ot1-f66.google.com with SMTP id x97so3190161ota.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:40:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/mBWi97cRQrHShTl1wrJlc6BFZ2cxgJKMQ2xHrdnm0o=;
+        b=CrqZYCge8xKex30AAOHdpb0X5fD036JnHc2WvUXS0REQgZ4bU3rWlAlHCJ7350y6/q
+         Vlc0QA4cUYJ6GGYyIHxmwoQuxu9rZ3SV7ScZsy460bxcGCTSmhH0znlPJ8ioY1vCqu3f
+         pKvh7iLZb4C7L6aGAl/AmTDdazhseXNLBtvB3zKNBDckQmes2vUe9LmZBay+1fSBICiJ
+         dZ+P5ZDkHh9H7JYdpds2XJ4Wgqbk4fXxUHh5UGbZQ2qy8Oy7jfxZAgQEnrcLsk/vt+IL
+         XqvrpfzAP/USd+K1viA+k9OwkXLq2EwdIKML34OB8ZWksYGLjRuXZvCSjdYu1mOIwtjq
+         4JDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pBPgC25ubKS5wPAN+uT8vJ9mnR6iCFqlpOC1P57sXK4=;
-        b=b/mv7Xnf/rxY3UZFUp4Oqt0ljveaMBQnfClAIulPVvDDJEEVLbm1f3k69cEdsxjIae
-         OAvdfUMoR0Mf68yaMoaVmrgCAtX5D3RAu87nNyWvsCCxXc3sOasEpqNdRhN1GTVLdwrc
-         otppVsuN5amwqbajLnHPTDzw7TN0cmX41mx/zSz+F8eYNOEtMKobAm0KOSBOqBsEl4nI
-         PJMQg8YePLSfFIi+2N2GBbPA+wGb15NaqotRolqcCfSnusKNU44w2aX1pLeSS2iCr5DP
-         eO4ohmbduuAe2PdYByETzT8gIWq0dMSLmqSw1wieCJ6t3Q449rBJlp5yf/5qKygzhdpd
-         RWPQ==
-X-Gm-Message-State: ANhLgQ1HhBLyeYWFlBd1SEoSyr+JYh6+utUaZYkAkbm4wpgHZP54BvUs
-        NyAiImWhNIOb5RDk1pztWw==
-X-Google-Smtp-Source: ADFU+vv05XHH/grNWOM44+Loiz7eSQ7oRdXeA6SR+r3YHZMxgPfK8MbbrKBZbP66Sthy2ocwKowBzg==
-X-Received: by 2002:a54:4006:: with SMTP id x6mr2678057oie.145.1583246449504;
-        Tue, 03 Mar 2020 06:40:49 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id a26sm6034251oid.17.2020.03.03.06.40.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:40:48 -0800 (PST)
-Received: (nullmailer pid 5880 invoked by uid 1000);
-        Tue, 03 Mar 2020 14:40:47 -0000
-Date:   Tue, 3 Mar 2020 08:40:47 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Paul Boddie <paul@boddie.org.uk>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-gpio@vger.kernel.org, letux-kernel@openphoenux.org,
-        kernel@pyra-handheld.com,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-Subject: Re: [RFC 2/8] dt-bindings: video: Add jz4780-hdmi binding
-Message-ID: <20200303144047.GA24762@bogus>
-References: <cover.1582744379.git.hns@goldelico.com>
- <2d7202155bae3fa9c7097275d4c9a1ccab569aea.1582744379.git.hns@goldelico.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/mBWi97cRQrHShTl1wrJlc6BFZ2cxgJKMQ2xHrdnm0o=;
+        b=VvQI8PtFmjkZkCMk6c8EBUZIMv+pb9m5NFUA/+DyYgz6lAWHdiblSqsvHWbfyaqPyH
+         x7deo/AmDtdhzaCbZ/vvj1Y49nH6qJyR4i2A8FP6jCs/EgSJTLTwuLFyW0Xy01k9bb9d
+         6ytHQWGVj9xtSBH/7gPi2RRJBSsbGobNg7KUSVnMShObCIvKDw96Kc1ltidsgE9GrEJK
+         izu5AlEg7kPxZTPOCJ5ePpoKi/mdSr35DNFbPF10x3WvsxDXrfJ1Bfc7kBdpWCBNLiwa
+         oS2jbl6rqbqnghMLQrpBuCaFCAksTuCsbGdzI3uZu1Jkg7Ikoao2yaR96EKUNYXpMJv/
+         HsZw==
+X-Gm-Message-State: ANhLgQ2G5qCyES5khTGFaG0lJ9ZPwH5o3RIheVE4dMTjJj4i6aBtVfK8
+        75zBD9f7FxzFcNIqmcirZPkRP84z3RP3S98BEdMsnA==
+X-Google-Smtp-Source: ADFU+vu2yfaWH2buwSbocuTlemn870P5bOwMPwqx/zPpaBU68d+JJKh9qyzCZC8XdU+TPpl8/WgjPAFlQtdumGuIKqM=
+X-Received: by 2002:a05:6830:1d6e:: with SMTP id l14mr3567202oti.32.1583246452097;
+ Tue, 03 Mar 2020 06:40:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2d7202155bae3fa9c7097275d4c9a1ccab569aea.1582744379.git.hns@goldelico.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home> <20200303130347.GA2302029@kroah.com>
+ <20200303131434.GA2373427@kroah.com> <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+ <20200303134316.GA2509660@kroah.com> <CAJfpegtFyZqSRzo3uuXp1S2_jJJ29DL=xAwKjpEGvyG7=AzabA@mail.gmail.com>
+ <20200303142958.GB47158@kroah.com>
+In-Reply-To: <20200303142958.GB47158@kroah.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 3 Mar 2020 15:40:24 +0100
+Message-ID: <CAG48ez1sdUJzp85oqBw8vCpc3E4Sb26M9pj2zHhnKpb-1+f4vg@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 26, 2020 at 08:12:54PM +0100, H. Nikolaus Schaller wrote:
-> From: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> 
-> Add DT bindings for the hdmi driver for the Ingenic JZ4780 SoC.
-> 
-> Signed-off-by: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
-> ---
->  .../bindings/display/ingenic-jz4780-hdmi.txt  | 41 +++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.txt b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.txt
-> new file mode 100644
-> index 000000000000..f02e59fbdd5a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/ingenic-jz4780-hdmi.txt
-> @@ -0,0 +1,41 @@
-> +Device-Tree bindings for Ingenic JZ4780 HDMI Transmitter
-> +
-> +The HDMI Transmitter in the Ingenic JZ4780 is a Synopsys DesignWare HDMI 1.4
-> +TX controller IP with accompanying PHY IP.
-> +
-> +Required properties:
-> + - #address-cells : should be <1>
-> + - #size-cells : should be <0>
+On Tue, Mar 3, 2020 at 3:30 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+> On Tue, Mar 03, 2020 at 03:10:50PM +0100, Miklos Szeredi wrote:
+> > On Tue, Mar 3, 2020 at 2:43 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
+> >
+> > > > If buffer is too small to fit the whole file, return error.
+> > >
+> > > Why?  What's wrong with just returning the bytes asked for?  If someone
+> > > only wants 5 bytes from the front of a file, it should be fine to give
+> > > that to them, right?
+> >
+> > I think we need to signal in some way to the caller that the result
+> > was truncated (see readlink(2), getxattr(2), getcwd(2)), otherwise the
+> > caller might be surprised.
+>
+> But that's not the way a "normal" read works.  Short reads are fine, if
+> the file isn't big enough.  That's how char device nodes work all the
+> time as well, and this kind of is like that, or some kind of "stream" to
+> read from.
+>
+> If you think the file is bigger, then you, as the caller, can just pass
+> in a bigger buffer if you want to (i.e. you can stat the thing and
+> determine the size beforehand.)
+>
+> Think of the "normal" use case here, a sysfs read with a PAGE_SIZE
+> buffer.  That way userspace "knows" it will always read all of the data
+> it can from the file, we don't have to do any seeking or determining
+> real file size, or anything else like that.
+>
+> We return the number of bytes read as well, so we "know" if we did a
+> short read, and also, you could imply, if the number of bytes read are
+> the exact same as the number of bytes of the buffer, maybe the file is
+> either that exact size, or bigger.
+>
+> This should be "simple", let's not make it complex if we can help it :)
+>
+> > > > Verify that the number of bytes read matches the file size, otherwise
+> > > > return error (may need to loop?).
+> > >
+> > > No, we can't "match file size" as sysfs files do not really have a sane
+> > > "size".  So I don't want to loop at all here, one-shot, that's all you
+> > > get :)
+> >
+> > Hmm.  I understand the no-size thing.  But looping until EOF (i.e.
+> > until read return zero) might be a good idea regardless, because short
+> > reads are allowed.
+>
+> If you want to loop, then do a userspace open/read-loop/close cycle.
+> That's not what this syscall should be for.
+>
+> Should we call it: readfile-only-one-try-i-hope-my-buffer-is-big-enough()?  :)
 
-These aren't in the example.
+So how is this supposed to work in e.g. the following case?
 
-> + - compatible : should be "ingenic,jz4780-hdmi"
-> + - reg-io-width: must be <4>
+========================================
+$ cat map_lots_and_read_maps.c
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-If it can only be 4, then you can just assume that from the compatible.
+int main(void) {
+  for (int i=0; i<1000; i++) {
+    mmap(NULL, 0x1000, (i&1)?PROT_READ:PROT_NONE,
+MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+  }
+  int maps = open("/proc/self/maps", O_RDONLY);
+  static char buf[0x100000];
+  int res;
+  do {
+    res = read(maps, buf, sizeof(buf));
+  } while (res > 0);
+}
+$ gcc -o map_lots_and_read_maps map_lots_and_read_maps.c
+$ strace -e trace='!mmap' ./map_lots_and_read_maps
+execve("./map_lots_and_read_maps", ["./map_lots_and_read_maps"],
+0x7ffebd297ac0 /* 51 vars */) = 0
+brk(NULL)                               = 0x563a1184f000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=208479, ...}) = 0
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\320l\2\0\0\0\0\0"...,
+832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1820104, ...}) = 0
+mprotect(0x7fb5c2d1a000, 1642496, PROT_NONE) = 0
+close(3)                                = 0
+arch_prctl(ARCH_SET_FS, 0x7fb5c2eb6500) = 0
+mprotect(0x7fb5c2eab000, 12288, PROT_READ) = 0
+mprotect(0x563a103e4000, 4096, PROT_READ) = 0
+mprotect(0x7fb5c2f12000, 4096, PROT_READ) = 0
+munmap(0x7fb5c2eb7000, 208479)          = 0
+openat(AT_FDCWD, "/proc/self/maps", O_RDONLY) = 3
+read(3, "563a103e1000-563a103e2000 r--p 0"..., 1048576) = 4075
+read(3, "7fb5c2985000-7fb5c2986000 ---p 0"..., 1048576) = 4067
+read(3, "7fb5c29d8000-7fb5c29d9000 r--p 0"..., 1048576) = 4067
+read(3, "7fb5c2a2b000-7fb5c2a2c000 ---p 0"..., 1048576) = 4067
+read(3, "7fb5c2a7e000-7fb5c2a7f000 r--p 0"..., 1048576) = 4067
+read(3, "7fb5c2ad1000-7fb5c2ad2000 ---p 0"..., 1048576) = 4067
+read(3, "7fb5c2b24000-7fb5c2b25000 r--p 0"..., 1048576) = 4067
+read(3, "7fb5c2b77000-7fb5c2b78000 ---p 0"..., 1048576) = 4067
+read(3, "7fb5c2bca000-7fb5c2bcb000 r--p 0"..., 1048576) = 4067
+read(3, "7fb5c2c1d000-7fb5c2c1e000 ---p 0"..., 1048576) = 4067
+read(3, "7fb5c2c70000-7fb5c2c71000 r--p 0"..., 1048576) = 4067
+read(3, "7fb5c2cc3000-7fb5c2cc4000 ---p 0"..., 1048576) = 4078
+read(3, "7fb5c2eca000-7fb5c2ecb000 r--p 0"..., 1048576) = 2388
+read(3, "", 1048576)                    = 0
+exit_group(0)                           = ?
++++ exited with 0 +++
+$
+========================================
 
-> + - clocks: phandle to isrf and iahb clocks
-> + - clock-names : must be "isrf" and "iahb"
-> + - ports: Port nodes with endpoint definitions as defined in
-> +   Documentation/devicetree/bindings/media/video-interfaces.txt,
-> +
-> +Optional properties:
-> + - ddc-i2c-bus: phandle of an I2C controller used for DDC EDID probing
-
-This goes in a connector node. It's not part of the HDMI block.
-
-That also means you need an out port to the connector.
-
-> +
-> +example:
-> +
-> +hdmi: hdmi@10180000 {
-> +	compatible = "ingenic,jz4780-hdmi";
-> +	reg = <0x10180000 0x8000>;
-> +	reg-io-width = <4>;
-> +	ddc-i2c-bus = <&i2c4>;
-> +	interrupt-parent = <&intc>;
-> +	interrupts = <3>;
-> +	clocks = <&cgu JZ4780_CLK_HDMI>, <&cgu JZ4780_CLK_AHB0>;
-> +	clock-names = "isfr", "iahb";
-> +
-> +	ports {
-> +		hdmi_in: port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			hdmi_in_lcd: endpoint@0 {
-> +				reg = <0>;
-> +				remote-endpoint = <&jz4780_out_hdmi>;
-> +			};
-> +		};
-> +	};
-> +};
-> -- 
-> 2.23.0
-> 
+The kernel is randomly returning short reads *with different lengths*
+that are vaguely around PAGE_SIZE, no matter how big the buffer
+supplied by userspace is. And while repeated read() calls will return
+consistent state thanks to the seqfile magic, repeated readfile()
+calls will probably return garbage with half-complete lines.
