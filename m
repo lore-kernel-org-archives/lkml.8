@@ -3,51 +3,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1C94C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C37C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2D8B24681
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C6832465E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203691;
-	bh=1nbaMWuIFAoLjoGhCKBHXRKpAcZ/Cxe1xzwNFvknask=;
+	s=default; t=1583203693;
+	bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V8o5P0AqGCPvQIyZAPe2kRb01QHiF3QSonxHyWu0WL9exFovSnEW8UEjkLr5qr7vN
-	 eSHbh3P5scV9TUud3fZ32iTGuBxp1EsD1BqMbM8YVuYfggYRBXglGKMrcGMPAKAlLU
-	 nVVW7uA0H1vHE/Q4xbd2/vnwKeZC8no4l0gdUYoM=
+	b=Xl6csLDL0JP8A9DrPP66rsKV3Up4rhLBBHIL6PnIEmZXuRfdDvwMeu4p0IjzvL4fI
+	 /h9XHS16SGLFg0xUtv/GOwRKIL8wjxLo3hEjexBNrZFpYBOgioIYIuUi/YZ7jDNhCA
+	 x9b8XRU445FF3fU6efv4Vau79RCpHMYEjTTpJnpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728321AbgCCCsK (ORCPT
+        id S1728340AbgCCCsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43386 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728237AbgCCCsA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:00 -0500
+        id S1728255AbgCCCsD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 432FF24673;
-        Tue,  3 Mar 2020 02:47:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C146D2468D;
+        Tue,  3 Mar 2020 02:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203680;
-        bh=1nbaMWuIFAoLjoGhCKBHXRKpAcZ/Cxe1xzwNFvknask=;
+        s=default; t=1583203682;
+        bh=3VYHnFW9xuaaqOe/hIphKKB4MipCxChBwxd5IRK5Rbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sYtOn8rr0XeBkam4CjYVj5OQ7U5opmHuNElLh+u95FAcgjAzfDbRPTNIxmu8oxTs1
-         FI5laM7NqVVbXjQROslKEYN0FTEMbgoRjwzdG5w2MFAsZQpsQiE0L1yO3kp+NpKfEn
-         RvbaAn/P9Qeo2IYV0UzWJx9JimRDWLE4+sMakXXg=
+        b=0jaEWr7x0A0HnI5wK/71yHiRqp21fLXwPU1vpwj7OFADBv58g0dUdTo4BNT0bwYFK
+         E/IyVrA6mYpusf1n2EHnPvO9+3VVLdrUMHL5cJyVaFCrzSpUe2b0GwI/CSwbs0CuTE
+         Cwyws3WVrjAsQ4PGtxoUVs+2kGxaMg4zX3pexcO8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 16/58] drm/msm/dsi: save pll state before dsi host is powered off
-Date:   Mon,  2 Mar 2020 21:46:58 -0500
-Message-Id: <20200303024740.9511-16-sashal@kernel.org>
+Cc:     Hangbin Liu <liuhangbin@gmail.com>,
+        Petr Machata <pmachata@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 18/58] selftests: forwarding: use proto icmp for {gretap, ip6gretap}_mac testing
+Date:   Mon,  2 Mar 2020 21:47:00 -0500
+Message-Id: <20200303024740.9511-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -60,59 +61,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harigovindan P <harigovi@codeaurora.org>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit a1028dcfd0dd97884072288d0c8ed7f30399b528 ]
+[ Upstream commit e8023b030ce1748930e2dc76353a262fe47d4745 ]
 
-Save pll state before dsi host is powered off. Without this change
-some register values gets resetted.
+For tc ip_proto filter, when we extract the flow via __skb_flow_dissect()
+without flag FLOW_DISSECTOR_F_STOP_AT_ENCAP, we will continue extract to
+the inner proto.
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+So for GRE + ICMP messages, we should not track GRE proto, but inner ICMP
+proto.
+
+For test mirror_gre.sh, it may make user confused if we capture ICMP
+message on $h3(since the flow is GRE message). So I move the capture
+dev to h3-gt{4,6}, and only capture ICMP message.
+
+Before the fix:
+]# ./mirror_gre.sh
+TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
+TEST: egress mirror to gretap (skip_hw)                             [ OK ]
+TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
+TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
+TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [FAIL]
+ Expected to capture 10 packets, got 0.
+TEST: egress mirror to gretap: envelope MAC (skip_hw)               [FAIL]
+ Expected to capture 10 packets, got 0.
+TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [FAIL]
+ Expected to capture 10 packets, got 0.
+TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [FAIL]
+ Expected to capture 10 packets, got 0.
+TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
+WARN: Could not test offloaded functionality
+
+After fix:
+]# ./mirror_gre.sh
+TEST: ingress mirror to gretap (skip_hw)                            [ OK ]
+TEST: egress mirror to gretap (skip_hw)                             [ OK ]
+TEST: ingress mirror to ip6gretap (skip_hw)                         [ OK ]
+TEST: egress mirror to ip6gretap (skip_hw)                          [ OK ]
+TEST: ingress mirror to gretap: envelope MAC (skip_hw)              [ OK ]
+TEST: egress mirror to gretap: envelope MAC (skip_hw)               [ OK ]
+TEST: ingress mirror to ip6gretap: envelope MAC (skip_hw)           [ OK ]
+TEST: egress mirror to ip6gretap: envelope MAC (skip_hw)            [ OK ]
+TEST: two simultaneously configured mirrors (skip_hw)               [ OK ]
+WARN: Could not test offloaded functionality
+
+Fixes: ba8d39871a10 ("selftests: forwarding: Add test for mirror to gretap")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: Petr Machata <pmachata@gmail.com>
+Tested-by: Petr Machata <pmachata@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
- drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 4 ----
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ .../selftests/net/forwarding/mirror_gre.sh    | 25 ++++++++++---------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-index 355a60b4a536f..73127948f54d9 100644
---- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
-+++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
-@@ -479,6 +479,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
- 	struct mipi_dsi_host *host = msm_dsi->host;
- 	struct drm_panel *panel = msm_dsi->panel;
-+	struct msm_dsi_pll *src_pll;
- 	bool is_dual_dsi = IS_DUAL_DSI();
- 	int ret;
+diff --git a/tools/testing/selftests/net/forwarding/mirror_gre.sh b/tools/testing/selftests/net/forwarding/mirror_gre.sh
+index e6fd7a18c655f..0266443601bc0 100755
+--- a/tools/testing/selftests/net/forwarding/mirror_gre.sh
++++ b/tools/testing/selftests/net/forwarding/mirror_gre.sh
+@@ -63,22 +63,23 @@ test_span_gre_mac()
+ {
+ 	local tundev=$1; shift
+ 	local direction=$1; shift
+-	local prot=$1; shift
+ 	local what=$1; shift
  
-@@ -519,6 +520,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
- 								id, ret);
- 	}
+-	local swp3mac=$(mac_get $swp3)
+-	local h3mac=$(mac_get $h3)
++	case "$direction" in
++	ingress) local src_mac=$(mac_get $h1); local dst_mac=$(mac_get $h2)
++		;;
++	egress) local src_mac=$(mac_get $h2); local dst_mac=$(mac_get $h1)
++		;;
++	esac
  
-+	/* Save PLL status if it is a clock source */
-+	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
-+	msm_dsi_pll_save_state(src_pll);
-+
- 	ret = msm_dsi_host_power_off(host);
- 	if (ret)
- 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-index 3522863a4984f..21519229fe73a 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
-@@ -724,10 +724,6 @@ void msm_dsi_phy_disable(struct msm_dsi_phy *phy)
- 	if (!phy || !phy->cfg->ops.disable)
- 		return;
+ 	RET=0
  
--	/* Save PLL status if it is a clock source */
--	if (phy->usecase != MSM_DSI_PHY_SLAVE)
--		msm_dsi_pll_save_state(phy->pll);
--
- 	phy->cfg->ops.disable(phy);
+ 	mirror_install $swp1 $direction $tundev "matchall $tcflags"
+-	tc filter add dev $h3 ingress pref 77 prot $prot \
+-		flower ip_proto 0x2f src_mac $swp3mac dst_mac $h3mac \
+-		action pass
++	icmp_capture_install h3-${tundev} "src_mac $src_mac dst_mac $dst_mac"
  
- 	dsi_phy_regulator_disable(phy);
+-	mirror_test v$h1 192.0.2.1 192.0.2.2 $h3 77 10
++	mirror_test v$h1 192.0.2.1 192.0.2.2 h3-${tundev} 100 10
+ 
+-	tc filter del dev $h3 ingress pref 77
++	icmp_capture_uninstall h3-${tundev}
+ 	mirror_uninstall $swp1 $direction
+ 
+ 	log_test "$direction $what: envelope MAC ($tcflags)"
+@@ -120,14 +121,14 @@ test_ip6gretap()
+ 
+ test_gretap_mac()
+ {
+-	test_span_gre_mac gt4 ingress ip "mirror to gretap"
+-	test_span_gre_mac gt4 egress ip "mirror to gretap"
++	test_span_gre_mac gt4 ingress "mirror to gretap"
++	test_span_gre_mac gt4 egress "mirror to gretap"
+ }
+ 
+ test_ip6gretap_mac()
+ {
+-	test_span_gre_mac gt6 ingress ipv6 "mirror to ip6gretap"
+-	test_span_gre_mac gt6 egress ipv6 "mirror to ip6gretap"
++	test_span_gre_mac gt6 ingress "mirror to ip6gretap"
++	test_span_gre_mac gt6 egress "mirror to ip6gretap"
+ }
+ 
+ test_all()
 -- 
 2.20.1
 
