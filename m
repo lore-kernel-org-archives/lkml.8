@@ -2,116 +2,87 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A255C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:13:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC1FC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8C320CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:13:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HSdwRA5B"
+	by mail.kernel.org (Postfix) with ESMTP id 2D226214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:14:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbgCCUNw (ORCPT
+        id S1731289AbgCCUO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 15:13:52 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:42018 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730352AbgCCUNv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 15:13:51 -0500
-Received: by mail-yw1-f65.google.com with SMTP id n127so4612264ywd.9;
-        Tue, 03 Mar 2020 12:13:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pCzvYSdF8vmgaLCTyZpeoxltcbWBACzfXPrjZZqp6qg=;
-        b=HSdwRA5Bre9VwcSxMFaoCPSA0sPrtL1sp1XGm7Ny1rzf9Vq9rU/Dn+qUCnDuf2pCMt
-         wftX96Y7fd7IIoOntNw7zGMgK57yrEarZLclj6RrcBI5A0f9rHFnPUIasBiiWEMYzwWR
-         JzVPPXHJXW5mPHkhi7HCDIvfjhk1qrXsCnqtuEXCiXTVAdieSA7EprD6b3UQY4sTFoDg
-         hD6k51IOCmpoxhG6mDgWl5cE3pHbMAxH2ujpxrNvitgm/jb94F+2/6HdxvTcwA5MhZDC
-         gwdmUDZmV/s9K21zvY1zt3RLsn6fNQfyWyvFXBreOdQ+zy3RGoBzoLWMMX1OgWArQt+h
-         W7Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pCzvYSdF8vmgaLCTyZpeoxltcbWBACzfXPrjZZqp6qg=;
-        b=BIXr5vqsSfmh3vtNyoFZ235atj0qBySD/IJYLt3g+Q1gh+7HT36AHlZNFYA9JKOat9
-         1WL7Jzq2AUNZpBIma0prakUfaCScSfdXC2VTXbkXYNPW3ODuXNGDW3zLE7kDL/dOaS2F
-         VMUzS6i8R6ZmaCSV6tsoElwkL2s8j4ZL9R8qYPt/oRjANDcyOIVwaw3Fq/IZI0Va2nIZ
-         2uOxdG7FER1HBaYefikoRkhi6OdwA/rs2HMqDUU99AK48YkxdZkB1vX01/OXsGbWT05D
-         Pc2eaJ9J+/D+Gatj7mTZJaqufQwkuU1dfXF9bYLXTkAPPyp+rJc7Ja7urrMwwT0XgqMi
-         s58w==
-X-Gm-Message-State: ANhLgQ3arakZgpQPTOFbw6MjZdWnj0qmMhT4QQMSLD2wS08lQCBymKOB
-        LjsTb9pUO0P5cAJnrOX5QR1rPly176gT9fBm8xBXGW4v
-X-Google-Smtp-Source: ADFU+vse4AsegA7GlUrSvWXsI5JQFIAMJz76HINEijP2ceCWNl2LChFRI5gUzeg5y40xNet9+LnNSpv1FKu/Ff1YFSg=
-X-Received: by 2002:a81:6c55:: with SMTP id h82mr6562001ywc.381.1583266430034;
- Tue, 03 Mar 2020 12:13:50 -0800 (PST)
+        Tue, 3 Mar 2020 15:14:27 -0500
+Received: from mga17.intel.com ([192.55.52.151]:60348 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730352AbgCCUO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 15:14:26 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 12:14:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="440727556"
+Received: from fkuchars-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.4.236])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Mar 2020 12:14:20 -0800
+Date:   Tue, 3 Mar 2020 22:14:18 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
+Subject: Re: [PATCH v27 04/22] x86/sgx: Add SGX microarchitectural data
+ structures
+Message-ID: <20200303201418.GH5775@linux.intel.com>
+References: <20200223172559.6912-1-jarkko.sakkinen@linux.intel.com>
+ <20200223172559.6912-5-jarkko.sakkinen@linux.intel.com>
+ <20200303003932.GA27842@linux.intel.com>
 MIME-Version: 1.0
-References: <1583250197-10786-1-git-send-email-hqjagain@gmail.com>
-In-Reply-To: <1583250197-10786-1-git-send-email-hqjagain@gmail.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Tue, 3 Mar 2020 14:13:39 -0600
-Message-ID: <CAH2r5mv2VrSBT_MvUNjd=h354v=29htRQdLSEZi+pDtdggNfoQ@mail.gmail.com>
-Subject: Re: [PATCH] fs/cifs/cifsacl: fix sid_to_id
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200303003932.GA27842@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Doesn't rc = 0 have to be set earlier (preferably in the declaration
-on line 345)?
+On Mon, Mar 02, 2020 at 04:39:32PM -0800, Sean Christopherson wrote:
+> On Sun, Feb 23, 2020 at 07:25:41PM +0200, Jarkko Sakkinen wrote:
+> > Define the SGX microarchitectural data structures used by various SGX
+> > opcodes. This is not an exhaustive representation of all SGX data
+> > structures but only those needed by the kernel.
+> > 
+> > The data structures are described in:
+> > 
+> >   Intel SDM: 37.6 INTEL® SGX DATA STRUCTURES OVERVIEW
+> > 
+> > Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+> > ---
+> 
+> ...
+> 
+> > +#define SGX_SSA_GPRS_SIZE		182
+> 
+> SSA GPRs size is 184.  Per table 37.9 in the SDM:
+> 
+>   Field    OFFSET (Bytes)    Size (Bytes)
+> 
+>   GSBASE   176               8
+> 
+> Reported by a third party, I'm just the messenger and not that good at math :-).
 
-since line 392 does
-            goto got_valid_id;
-which appears to leave rc unitialized with your change
+Thanks!
 
-On Tue, Mar 3, 2020 at 9:56 AM Qiujun Huang <hqjagain@gmail.com> wrote:
->
-> fix it to return the errcode.
->
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> ---
->  fs/cifs/cifsacl.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
-> index 716574a..a8d2aa8 100644
-> --- a/fs/cifs/cifsacl.c
-> +++ b/fs/cifs/cifsacl.c
-> @@ -400,6 +400,7 @@
->         if (!sidstr)
->                 return -ENOMEM;
->
-> +       rc = 0;
->         saved_cred = override_creds(root_cred);
->         sidkey = request_key(&cifs_idmap_key_type, sidstr, "");
->         if (IS_ERR(sidkey)) {
-> @@ -454,7 +455,7 @@
->                 fattr->cf_uid = fuid;
->         else
->                 fattr->cf_gid = fgid;
-> -       return 0;
-> +       return rc;
->  }
->
->  int
-> --
-> 1.8.3.1
->
+I've fixed this in my tree.
 
-
--- 
-Thanks,
-
-Steve
+/Jarkko
