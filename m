@@ -2,138 +2,160 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41BB8C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A87C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:48:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1431820848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:47:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Eukd0FXA"
+	by mail.kernel.org (Postfix) with ESMTP id D305620848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:48:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbgCCJrC (ORCPT
+        id S1727945AbgCCJsB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:47:02 -0500
-Received: from mout.web.de ([212.227.15.14]:44765 "EHLO mout.web.de"
+        Tue, 3 Mar 2020 04:48:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:52092 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgCCJrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:47:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1583228777;
-        bh=11R2jOqIYJXhaV4wSIF7OZ+gfm8nLgTYGCTOFRg7x3E=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=Eukd0FXAh9pCubLsP+U0+/kieK+XaLa2kKGHFEZWu+ZeXkoPCpGesnzC02bu+J2PH
-         CsHoA61zz7+q+Z9dENub6ZEHn23O8iV9RokqLCWOitjmg2wnMq5huyS1s0pechjFCM
-         1Y6kJobHfgIm3Qlj1K1Bp+2W45RiDErgaMnojM2Q=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.62.7]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MPowc-1j48BX0Hv0-00504t; Tue, 03
- Mar 2020 10:46:17 +0100
-Subject: Re: [v3] Documentation: bootconfig: Update boot configuration
- documentation
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
+        id S1727818AbgCCJsB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:48:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D5375AD33;
+        Tue,  3 Mar 2020 09:47:58 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 10:47:58 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-References: <158313621831.3082.9886161529613724376.stgit@devnote2>
- <158313622831.3082.8237132211731864948.stgit@devnote2>
- <8c032093-c652-5e33-36ad-732f73beabab@infradead.org>
- <12200e6e-2ef0-a0e4-9d92-35d7150342d2@web.de>
- <d79b5810-7445-9c91-cd0f-99c45195ba3b@infradead.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <465b904e-8861-66b5-387f-ba36eaae76e8@web.de>
-Date:   Tue, 3 Mar 2020 10:46:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: misc nits Re: [PATCH 1/2] printk: add lockless buffer
+Message-ID: <20200303094758.ubylqjqns7zbg6gb@pathway.suse.cz>
+References: <20200128161948.8524-1-john.ogness@linutronix.de>
+ <20200128161948.8524-2-john.ogness@linutronix.de>
+ <20200221120557.lxpeoy6xuuqxzu5w@pathway.suse.cz>
+ <87r1ybujm5.fsf@linutronix.de>
+ <20200302123249.6khdqpneu7t6l35s@pathway.suse.cz>
+ <87a74yrhwy.fsf@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <d79b5810-7445-9c91-cd0f-99c45195ba3b@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:Al/INPzcG61+YRU7HyLd/wf3u5GoZIHh8MODdkS8yCwqGfpnur/
- usw0aGMxtDB84NxAyTx7VG3CfiQHjRc1PYryHj1dkujgrCm0iYDeIN6EMfWH1EYYyMevcWR
- klKvA174CE/bNGqy+3N3FIiUBh2p9+YR7LlJgepBuQpEyRwfQ5SE1hLW7lD45M3NUCUvlO3
- CYkmavNDgyCeJRfNiYzkQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rGIbdiPT7as=:dbKApni4DjLkQieIQukod+
- BfVWyYjTIg/ttUPNmtcxd4VCLRFjlNG+HpsoF6tT9GzgUrkqgyVP+czSDDBIFxJlKCYC6nTIX
- HHFuSk1+TMEyC8KNYy+o2TpakaiApLvjoKg9kM0YkANUlHAGGbLihZ2GHTYbC3e4Plb4DRydq
- FgacDdQIIb3Qll7/6wRmrRUCjxLrY13prdTXIWsXkunwDna9BhzQoIeq3Cu5SOsy+61tQm30g
- fX0Ob1ZBubiBVpK/LA9YGfgbmm7P4ws2qBoYL4mDbr7PQqDdT9+J+RtWajPK6UaABR5lnElch
- JvT/XDFG2daF7bspLGWMcyz0l8WyaTrH9jGcaC1wnkTUp+M9evA9sAM3EK0MpbxlfhhOVIeoM
- /ciTU/aG/wA5/unDCR7mckGUFhozKhH0fiS313efG2ZyT0ZS87YRP83QC950QE9w9YIyRmE0k
- sDMzsx5R1bVwIIzxNJZ9+3mE2UU0Jeeyf1+WWQ6hPtYgVf5XUezw2EpK7jQiNMwe4fWyZ4jEv
- Pa7W15STaYkUpt02XpozKcShGM2kHgYdPcuG/J65ykl8RchBXzpjfzjCCnakB3CzrD6+9V7zg
- us5ytw8A1oS3yP1QvV6OqK9bi+j9EU0ByVFhOJjanDVvygkYQGnI7u6vP3m0t1/g+iUYJFf6r
- 02xgbdCSxac3U+C457eRLKHoAKSd7sVL9+22EeQMS+4Y7tmLcurQ+LJAKMPF0R6aNm8ujBxJj
- tOThb1FyjsEfoXwvRP9b+lGD/xmssVPGKeiqNwyXdHkMGajmpiVUnMS8DcPITzcw4J5ph5K/e
- 3X4kX4ZiQwBGq+1TB//NYp8YKokXqO60VkicCk6hUitm8C5AlsmaHIMkXm1DWmTrs5dDQSzIO
- Y+Zcobgh7zypKOt6u0SkDCtI2bKlssTPJbptdeUxBN7MTX3xGujaU1RODcgtsU/hFh6NBPzZk
- 7DhMQQ8MY06mrD510/y6Xwc+6XUArBxvgOfkAf+fwudTXKWd/XNAyT+udLNyDhf/a2OcvjF35
- djKFOfKJQlAT147iyXU29Gcys5k0njifqMBhoiIfJsGF3rcFDtzTotlSTm2zkN8zu+Ses6TlR
- FgsWciAhq07WbkQbRcmETYUrdNeSGWw/mjubEQYYEgLKag16TO9tUmObqI+pdkOTQW0xRArph
- qMvwnDV3JXcelTIpb4kvabqi7dyx4F86uYQbuFKCy0MDL1N6tRjlwPG4b02kSW+hKodm4fo4M
- gtHA107Ke4VDQ/DWi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87a74yrhwy.fsf@linutronix.de>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> There are a few other things that I would change,
+On Mon 2020-03-02 14:43:41, John Ogness wrote:
+> On 2020-03-02, Petr Mladek <pmladek@suse.com> wrote:
+> >>>> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> >>>> new file mode 100644
+> >>>> index 000000000000..796257f226ee
+> >>>> --- /dev/null
+> >>>> +++ b/kernel/printk/printk_ringbuffer.c
+> >>>> +/*
+> >>>> + * Read the record @id and verify that it is committed and has the sequence
+> >>>> + * number @seq. On success, 0 is returned.
+> >>>> + *
+> >>>> + * Error return values:
+> >>>> + * -EINVAL: A committed record @seq does not exist.
+> >>>> + * -ENOENT: The record @seq exists, but its data is not available. This is a
+> >>>> + *          valid record, so readers should continue with the next seq.
+> >>>> + */
+> >>>> +static int desc_read_committed(struct prb_desc_ring *desc_ring,
+> >>>> +			       unsigned long id, u64 seq,
+> >>>> +			       struct prb_desc *desc)
+> >>>> +{
+> >
+> > OK, what about having desc_read_by_seq() instead?
+> 
+> Well, it isn't actually "reading by seq". @seq is there for additional
+> verification. Yes, prb_read() is deriving @id from @seq. But it only
+> does this once and uses that value for both calls.
 
-Would you like to mention these details?
+I do not want to nitpick about words. If I get it properly,
+the "id" is not important here. Any "id" is fine as long as
+"seq" matches. Reading "id" once is just an optimization.
+
+I do not resist on the change. It was just an idea how to
+avoid confusion. I was confused more than once. But I might
+be the only one. The more strightforward code looked more
+important to me than the optimization.
 
 
-> but I don't think that they are showstoppers.
+> > Also there is a bug in current desc_read_commited().
+> > desc->info.seq might contain a garbage when d_state is desc_miss
+> > or desc_reserved.
+> 
+> It is not a bug. In both of those cases, -EINVAL is the correct return
+> value.
 
-This view can be fine.
+No, it is a bug. If info is not read and contains garbage then the
+following check may pass by chance:
 
-Regards,
-Markus
+	if (desc->info.seq != seq)
+		return -EINVAL;
+
+Then the function would return 0 even when desc_read() returned
+desc_miss or desc_reserved.
+
+
+> > I would change it to:
+> >
+> > static enum desc_state
+> > desc_read_by_seq(struct prb_desc_ring *desc_ring,
+> > 		 u64 seq, struct prb_desc *desc)
+> > {
+> > 	struct prb_desc *rdesc = to_desc(desc_ring, seq);
+> > 	atomic_long_t *state_var = &rdesc->state_var;
+> > 	id = DESC_ID(atomic_long_read(state_var));
+> 
+> I think it is error-prone to re-read @state_var here. It is lockless
+> shared data. desc_read_committed() is called twice in prb_read() and it
+> is expected that both calls are using the same @id.
+
+It is not error prone. If "id" changes then "seq" will not match.
+
+> > 	enum desc_state d_state;
+> >
+> > 	d_state = desc_read(desc_ring, id, desc);
+> > 	if (d_state == desc_miss ||
+> > 	    d_state == desc_reserved ||
+> > 	    desc->info.seq != seq)
+> > 		return -EINVAL;
+> >
+> > 	if (d_state == desc_reusable)
+> > 		return -ENOENT;
+> 
+> I can use this refactoring.
+
+Yes please, "else" is not needed.
+
+> >
+> > 	if (d_state != desc_committed)
+> > 		return -EINVAL;
+> 
+> I suppose you meant to remove this check and leave in the @blk_lpos
+> check instead.
+
+Good catch, this check is superfluous.
+
+> If we're trying to minimize lines of code, the @blk_lpos
+> check could be combined with the "== desc_reusable" check as well.
+
+Minimizing the lines of code was not my primary goal. I was just
+confused by the function name. Also the fact that "seq" was the
+important thing was well hidden.
+
+Best Regards,
+Petr
+
+PS: I dived into the barriers and got lost. I hope that I will
+be able to send something sensible in the end ;-)
