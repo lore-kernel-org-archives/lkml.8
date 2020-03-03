@@ -2,127 +2,117 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F91C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:55:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C29AC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE57920863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:55:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583250925;
-	bh=UGdXaHoMkI2mtHF9nsoYia1Fwcd76iZNyx5ZnrXedcs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=OAvw055ls0v8gJVHUh0yiR9zj5Kaa4HBxm4SYDBU5KuKd9+TcSOMn1piFfj/1jcFO
-	 fmxKgsJlDHWfCUIf0dBUH39rao2oJ9cuCMAtevLWeClVOToSrXdJ85NYnnaKUoYu9Q
-	 xB2xvBmBEgKoDSF4xTDXtKOztpm7Ifxr+b+C6xBE=
+	by mail.kernel.org (Postfix) with ESMTP id 6C9F0208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:55:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729969AbgCCPzY (ORCPT
+        id S1730209AbgCCPzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:55:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33712 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 10:55:45 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:33664 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729577AbgCCPzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:55:24 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5559120866;
-        Tue,  3 Mar 2020 15:55:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583250924;
-        bh=UGdXaHoMkI2mtHF9nsoYia1Fwcd76iZNyx5ZnrXedcs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=YRoJVFSMzPTj9B2dJX4KD2NQin2bjap4pJVp8rJ8uAh6LBsdaBe/1PynQjLhWWiLh
-         obdqnCWGgryQKoLQlxaXFBROkTja7CF4CCKuZnIDQV5b+Nn+i/HrhjdiIakEeZ/SWJ
-         8TIuiuYMzO4bbn6F4huLsKk+4MC3QFyfkslK4ztU=
-Message-ID: <e06d74ad7dc02fb3df9ab4ae26203a85ea2ed67e.camel@kernel.org>
-Subject: Re: [PATCH] fcntl: Distribute switch variables for initialization
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Kees Cook <keescook@chromium.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Alexander Potapenko <glider@google.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 03 Mar 2020 10:55:22 -0500
-In-Reply-To: <202003022040.40A32072@keescook>
-References: <20200220062243.68809-1-keescook@chromium.org>
-         <202003022040.40A32072@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1729577AbgCCPzp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:55:45 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 2395E200FB7;
+        Tue,  3 Mar 2020 16:55:42 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 15F69200F8C;
+        Tue,  3 Mar 2020 16:55:42 +0100 (CET)
+Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 6DEB020414;
+        Tue,  3 Mar 2020 16:55:41 +0100 (CET)
+From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>
+Subject: [PATCH net 0/4] QorIQ DPAA FMan erratum A050385 workaround
+Date:   Tue,  3 Mar 2020 17:55:35 +0200
+Message-Id: <1583250939-24645-1-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: git-send-email 2.1.0
+Content-Type: text/plain; charset="us-ascii"
+Reply-to: madalin.bucur@oss.nxp.com
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-03-02 at 20:41 -0800, Kees Cook wrote:
-> On Wed, Feb 19, 2020 at 10:22:43PM -0800, Kees Cook wrote:
-> > Variables declared in a switch statement before any case statements
-> > cannot be automatically initialized with compiler instrumentation (as
-> > they are not part of any execution flow). With GCC's proposed automatic
-> > stack variable initialization feature, this triggers a warning (and they
-> > don't get initialized). Clang's automatic stack variable initialization
-> > (via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-> > doesn't initialize such variables[1]. Note that these warnings (or silent
-> > skipping) happen before the dead-store elimination optimization phase,
-> > so even when the automatic initializations are later elided in favor of
-> > direct initializations, the warnings remain.
-> > 
-> > To avoid these problems, move such variables into the "case" where
-> > they're used or lift them up into the main function body.
-> > 
-> > fs/fcntl.c: In function ‘send_sigio_to_task’:
-> > fs/fcntl.c:738:20: warning: statement will never be executed [-Wswitch-unreachable]
-> >   738 |   kernel_siginfo_t si;
-> >       |                    ^~
-> > 
-> > [1] https://bugs.llvm.org/show_bug.cgi?id=44916
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> 
-> Ping. Can someone pick this up, please?
-> 
-> Thanks!
-> 
-> -Kees
-> 
-> > ---
-> >  fs/fcntl.c |    6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/fcntl.c b/fs/fcntl.c
-> > index 9bc167562ee8..2e4c0fa2074b 100644
-> > --- a/fs/fcntl.c
-> > +++ b/fs/fcntl.c
-> > @@ -735,8 +735,9 @@ static void send_sigio_to_task(struct task_struct *p,
-> >  		return;
-> >  
-> >  	switch (signum) {
-> > -		kernel_siginfo_t si;
-> > -		default:
-> > +		default: {
-> > +			kernel_siginfo_t si;
-> > +
-> >  			/* Queue a rt signal with the appropriate fd as its
-> >  			   value.  We use SI_SIGIO as the source, not 
-> >  			   SI_KERNEL, since kernel signals always get 
-> > @@ -769,6 +770,7 @@ static void send_sigio_to_task(struct task_struct *p,
-> >  			si.si_fd    = fd;
-> >  			if (!do_send_sig_info(signum, &si, p, type))
-> >  				break;
-> > +		}
-> >  		/* fall-through - fall back on the old plain SIGIO signal */
-> >  		case 0:
-> >  			do_send_sig_info(SIGIO, SEND_SIG_PRIV, p, type);
-> > 
+The patch set implements the workaround for FMan erratum A050385:
 
-Sure, looks straightforward enough. I'll pick it up for v5.7.
+FMAN DMA read or writes under heavy traffic load may cause FMAN
+internal resource leak; thus stopping further packet processing.
 
-Thanks,
+The FMAN internal queue can overflow when FMAN splits single
+read or write transactions into multiple smaller transactions
+such that more than 17 AXI transactions are in flight from FMAN
+to interconnect. When the FMAN internal queue overflows, it can
+stall further packet processing. The issue can occur with any one
+of the following three conditions:
+
+  1. FMAN AXI transaction crosses 4K address boundary (Errata
+	 A010022)
+  2. FMAN DMA address for an AXI transaction is not 16 byte
+	 aligned, i.e. the last 4 bits of an address are non-zero
+  3. Scatter Gather (SG) frames have more than one SG buffer in
+	 the SG list and any one of the buffers, except the last
+	 buffer in the SG list has data size that is not a multiple
+	 of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
+
+With any one of the above three conditions present, there is
+likelihood of stalled FMAN packet processing, especially under
+stress with multiple ports injecting line-rate traffic.
+
+To avoid situations that stall FMAN packet processing, all of the
+above three conditions must be avoided; therefore, configure the
+system with the following rules:
+
+  1. Frame buffers must not span a 4KB address boundary, unless
+	 the frame start address is 256 byte aligned
+  2. All FMAN DMA start addresses (for example, BMAN buffer
+	 address, FD[address] + FD[offset]) are 16B aligned
+  3. SG table and buffer addresses are 16B aligned and the size
+	 of SG buffers are multiple of 16 bytes, except for the last
+	 SG buffer that can be of any size.
+
+Additional workaround notes:
+- Address alignment of 64 bytes is recommended for maximally
+efficient system bus transactions (although 16 byte alignment is
+sufficient to avoid the stall condition)
+- To support frame sizes that are larger than 4K bytes, there are
+two options:
+  1. Large single buffer frames that span a 4KB page boundary can
+	 be converted into SG frames to avoid transaction splits at
+	 the 4KB boundary,
+  2. Align the large single buffer to 256B address boundaries,
+	 ensure that the frame address plus offset is 256B aligned.
+- If software generated SG frames have buffers that are unaligned
+and with random non-multiple of 16 byte lengths, before
+transmitting such frames via FMAN, frames will need to be copied
+into a new single buffer or multiple buffer SG frame that is
+compliant with the three rules listed above.
+
+Madalin Bucur (4):
+  dt-bindings: net: FMan erratum A050385
+  arm64: dts: ls1043a: FMan erratum A050385
+  fsl/fman: detect FMan erratum A050385
+  dpaa_eth: FMan erratum A050385 workaround
+
+ Documentation/devicetree/bindings/net/fsl-fman.txt |   7 ++
+ arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi |   2 +
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c     | 111 ++++++++++++++++++++-
+ drivers/net/ethernet/freescale/fman/fman.c         |  18 ++++
+ drivers/net/ethernet/freescale/fman/fman.h         |  10 ++
+ 5 files changed, 145 insertions(+), 3 deletions(-)
+
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.1.0
 
