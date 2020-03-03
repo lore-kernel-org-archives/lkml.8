@@ -2,76 +2,100 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E777DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96F1C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C63BB20828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:42:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC82920866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:43:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u63NjWYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730102AbgCCPmv (ORCPT
+        id S1730109AbgCCPnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:42:51 -0500
-Received: from mga01.intel.com ([192.55.52.88]:36306 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728899AbgCCPmv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:42:51 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 07:42:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="287020798"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Mar 2020 07:42:50 -0800
-Date:   Tue, 3 Mar 2020 07:42:50 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        Jim Mattson <jmattson@google.com>, Bandan Das <bsd@redhat.com>,
-        Oliver Upton <oupton@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] KVM: x86: clear stale x86_emulate_ctxt->intercept
- value
-Message-ID: <20200303154250.GE1439@linux.intel.com>
-References: <20200303143316.834912-1-vkuznets@redhat.com>
- <20200303143316.834912-2-vkuznets@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303143316.834912-2-vkuznets@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 3 Mar 2020 10:43:23 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:44928 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgCCPnX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:43:23 -0500
+Received: by mail-pg1-f194.google.com with SMTP id a14so1692031pgb.11;
+        Tue, 03 Mar 2020 07:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=yVsYqPYn8VlY/Xr0vLshTuy/KHxsb6yKrL/whDXq2nQ=;
+        b=u63NjWYtBbIKnMGnZA3qD99y4hm4ZM8DTS/EiXtc/ljVUruQ6mlWYwg55/jqXlGhMn
+         ECDBhgWH7Wou0JHw6NPNSocMxuA4QPqWJsgGQhhD5IkxY4ETICeRgOl1CacgswX5vsTU
+         10pzH2cDLtN3ROnRS9DHqUGR8yubxIkbaMC0x4dklbWBGxbyf+k4hFox+D9B+ex6d0qw
+         C4I+Dshd6QFpOU63RwpD8ZFCN5Xq/v3glPJ7gPyc3G5NFtzaqwJH3MXanOtJ6EDAEzQF
+         2uGCMUqmqG1ViBixVSPucooxJvmI7XFuQQV2BFdt7SFX5RgGQqqohVi+RmU4Pv/DcAR/
+         dbcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=yVsYqPYn8VlY/Xr0vLshTuy/KHxsb6yKrL/whDXq2nQ=;
+        b=HIsXFqUQtaWyCX3eVpifkguju1D7rebFr53Cyh6zAv0gZe+RIQG5RcX8BlhtTydxhY
+         +pHQJ30IODAp8LeMr+oJ36lPBMLmu1FvqTBG3nXBvjp9cmttPgrn4FFMQWdrUWWoz5Fa
+         LPWtSk7l6uRPDZqawaKnVLdXjBMoTc+C7ggQg9msKtRSobmxFzgvMl/W8yqP97bdrzZE
+         BP2hDDVHS16ylaICPW0MJnvmq5x0WbXNNtVyjMHEh1+9kzisD9TwYmGo7VLa8rIIkQBv
+         cAoquImN+XYW+TzcC7Y8BD0marmBXDaH6MsUXE6WKrESEr3EVvLKRcUdjneVa9diLgzZ
+         fFdA==
+X-Gm-Message-State: ANhLgQ1h2b1Ggz9SfSq9jqAeL23NuZbwsONs/2e4It4sxrCA93PTfefQ
+        3AwwOx29AFfj7o3bOjjyiZkPhTER
+X-Google-Smtp-Source: ADFU+vuJPRqrMCk9b+dLAyaEyEFqSgz/Cqgg6gIaP3mcIKUZJf49QtdQtiws0cnndIqyrZYwLQsE8Q==
+X-Received: by 2002:a63:7a1a:: with SMTP id v26mr4604508pgc.152.1583250202039;
+        Tue, 03 Mar 2020 07:43:22 -0800 (PST)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id 64sm25131037pfd.48.2020.03.03.07.43.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2020 07:43:21 -0800 (PST)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     sfrench@samba.org
+Cc:     linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] fs/cifs/cifsacl: fix sid_to_id
+Date:   Tue,  3 Mar 2020 23:43:17 +0800
+Message-Id: <1583250197-10786-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 03:33:15PM +0100, Vitaly Kuznetsov wrote:
-> Commit c44b4c6ab80e ("KVM: emulate: clean up initializations in
-> init_decode_cache") reduced the number of fields cleared by
-> init_decode_cache() claiming that they are being cleared elsewhere,
-> 'intercept', however, seems to be left uncleared in some cases.
-> 
-> The issue I'm observing manifests itself as following:
-> after commit 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest
-> mode") Hyper-V guests on KVM stopped booting with:
-> 
->  kvm_nested_vmexit:    rip fffff802987d6169 reason EPT_VIOLATION info1 181
->     info2 0 int_info 0 int_info_err 0
->  kvm_page_fault:       address febd0000 error_code 181
->  kvm_emulate_insn:     0:fffff802987d6169: f3 a5
->  kvm_emulate_insn:     0:fffff802987d6169: f3 a5 FAIL
->  kvm_inj_exception:    #UD (0x0)
-> 
-> Fixes: c44b4c6ab80e ("KVM: emulate: clean up initializations in init_decode_cache")
-> Fixes: 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest mode")
-> Cc: stable@vger.kernel.org
-> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
+fix it to return the errcode.
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ fs/cifs/cifsacl.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+index 716574a..a8d2aa8 100644
+--- a/fs/cifs/cifsacl.c
++++ b/fs/cifs/cifsacl.c
+@@ -400,6 +400,7 @@
+ 	if (!sidstr)
+ 		return -ENOMEM;
+ 
++	rc = 0;
+ 	saved_cred = override_creds(root_cred);
+ 	sidkey = request_key(&cifs_idmap_key_type, sidstr, "");
+ 	if (IS_ERR(sidkey)) {
+@@ -454,7 +455,7 @@
+ 		fattr->cf_uid = fuid;
+ 	else
+ 		fattr->cf_gid = fgid;
+-	return 0;
++	return rc;
+ }
+ 
+ int
+-- 
+1.8.3.1
+
