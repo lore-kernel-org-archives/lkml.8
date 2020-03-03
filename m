@@ -2,107 +2,179 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B3EC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AC9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6DF020857
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0440720848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583242610;
+	bh=IuMkBnbn8qI7W2W1dpa5J66X6PrVzs4Mk76Hqet1E54=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=gDjhXV0Ebzp9CUKknfVCmtTkuskhLGFswrqoq6bZ4yKlwsv5azOW8bIHwKSMI+oZq
+	 CFwF+uz0i58DEKarkngHRfCeu0qHDVqV6iCrz6lshNLFj9VjkWuS3lgaCmq0OidwrZ
+	 7/Yg4yuf0VQy+RFz0TsOHS1sKrmzh84pkoKL+zrw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbgCCNf1 (ORCPT
+        id S1729505AbgCCNgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:35:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33676 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727167AbgCCNf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:35:27 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 149D920838;
-        Tue,  3 Mar 2020 13:35:26 +0000 (UTC)
-Date:   Tue, 3 Mar 2020 08:35:23 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Bob Liu <bob.liu@oracle.com>
-Cc:     Cengiz Can <cengiz@kernel.wtf>, Jens Axboe <axboe@kernel.dk>,
-        Ingo Molnar <mingo@redhat.com>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blktrace: fix dereference after null check
-Message-ID: <20200303083523.78233c24@gandalf.local.home>
-In-Reply-To: <ec24c6d8-617f-1460-0420-bc2ac3f346c6@oracle.com>
-References: <20200303073358.57799-1-cengiz@kernel.wtf>
-        <ec24c6d8-617f-1460-0420-bc2ac3f346c6@oracle.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 3 Mar 2020 08:36:48 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:25963 "EHLO
+        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728359AbgCCNgs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:36:48 -0500
+Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
+        by conuserg-12.nifty.com with ESMTP id 023Da7N6031722;
+        Tue, 3 Mar 2020 22:36:07 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 023Da7N6031722
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583242567;
+        bh=8FGBy+riSt4rwct2pwA55KsvMYYZXWMXoGZn5qEOkjE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=grxSx57ZX+gurmyI7mvzc52XjJyAxcPdujUCO7skfH02HvR2S5TGpOJuRPrRLYS9K
+         4peS2kE6aZME2d9MvI5tlttoNLf5iOkQ+GbR2t7xFCOkoMAuvpH/zBvgNJuBElToHC
+         R3lkjaCHDtrQ9UzercMLGEC/hJiV9C6uCNNTga5Z6UaSYlWn4Ze1+kYx+0QRtkQLd/
+         2iGBEZfwYR3D6mqtEbWH5WimGV8ucr1pegmBBQQNxLABqy6C5xLhmPu+qHAsEAY4Es
+         d/Jqmk2/hIjoLCwzIy7KalG53TnxyboDykbdOpRxmJJ2eom53kHuFnh26vDgp7CSR0
+         RbiYxn3e3ot8A==
+X-Nifty-SrcIP: [126.93.102.113]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-spdx@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>
+Subject: [PATCH 1/2] .gitignore: remove too obvious comments
+Date:   Tue,  3 Mar 2020 22:35:58 +0900
+Message-Id: <20200303133600.9263-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 21:29:08 +0800
-Bob Liu <bob.liu@oracle.com> wrote:
+Some .gitignore files have comments like "Generated files",
+"Ignore generated files" at the header part, but they are
+too obvious.
 
-> On 3/3/20 3:33 PM, Cengiz Can wrote:
-> > There was a recent change in blktrace.c that added a RCU protection to
-> > `q->blk_trace` in order to fix a use-after-free issue during access.
-> > 
-> > However the change missed an edge case that can lead to dereferencing of
-> > `bt` pointer even when it's NULL:
-> > 
-> > ```
-> >         bt->act_mask = value; // bt can still be NULL here
-> > ```
-> > 
-> > Added a reassignment into the NULL check block to fix the issue.
-> > 
-> > Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
-> > 
-> > Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-> > ---
-> >  Huge thanks goes to Steven Rostedt for his assistance.
-> > 
-> >  kernel/trace/blktrace.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> > index 4560878f0bac..29ea88f10b87 100644
-> > --- a/kernel/trace/blktrace.c
-> > +++ b/kernel/trace/blktrace.c
-> > @@ -1896,8 +1896,10 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
-> >  	}
-> > 
-> >  	ret = 0;
-> > -	if (bt == NULL)
-> > +	if (bt == NULL) {
-> >  		ret = blk_trace_setup_queue(q, bdev);
-> > +		bt = q->blk_trace;  
-> 
-> The return value 'ret' should be judged, it's wrong to set 'bt' if blk_trace_setup_queue()
-> return failure.
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
 
-Why? If ret is an error, q is still valid, and bt would just be garbage. bt
-is ignored below if ret is anything but zero. Why add an unnecessary if
-condition here?
+ certs/.gitignore               | 3 ---
+ drivers/atm/.gitignore         | 1 -
+ drivers/video/logo/.gitignore  | 3 ---
+ kernel/.gitignore              | 3 ---
+ lib/.gitignore                 | 3 ---
+ scripts/.gitignore             | 3 ---
+ scripts/kconfig/.gitignore     | 3 ---
+ scripts/selinux/mdp/.gitignore | 1 -
+ security/apparmor/.gitignore   | 3 ---
+ sound/oss/.gitignore           | 1 -
+ 10 files changed, 24 deletions(-)
 
-That said, the bt assignment still needs rcu annotation:
-
-		bt = rcu_dereference_protected(q->blk_trace,
-				lockdep_is_held(&q->blk_trace_mutex));
-
--- Steve
-
-
-> 
-> > +	}
-> > 
-> >  	if (ret == 0) {
-> >  		if (attr == &dev_attr_act_mask)
-> > --
-> > 2.25.1
-> >   
+diff --git a/certs/.gitignore b/certs/.gitignore
+index f51aea4a71ec..4d58ba042b37 100644
+--- a/certs/.gitignore
++++ b/certs/.gitignore
+@@ -1,4 +1 @@
+-#
+-# Generated files
+-#
+ x509_certificate_list
+diff --git a/drivers/atm/.gitignore b/drivers/atm/.gitignore
+index fc0ae5eb05d8..19f3ffbd1d65 100644
+--- a/drivers/atm/.gitignore
++++ b/drivers/atm/.gitignore
+@@ -1,4 +1,3 @@
+-# Ignore generated files
+ fore200e_mkfirm
+ fore200e_pca_fw.c
+ pca200e.bin
+diff --git a/drivers/video/logo/.gitignore b/drivers/video/logo/.gitignore
+index 9dda1b26b2e4..1551a75afdbd 100644
+--- a/drivers/video/logo/.gitignore
++++ b/drivers/video/logo/.gitignore
+@@ -1,6 +1,3 @@
+-#
+-# Generated files
+-#
+ *_mono.c
+ *_vga16.c
+ *_clut224.c
+diff --git a/kernel/.gitignore b/kernel/.gitignore
+index 34d1e77ee9df..0a423a3ca2e1 100644
+--- a/kernel/.gitignore
++++ b/kernel/.gitignore
+@@ -1,6 +1,3 @@
+-#
+-# Generated files
+-#
+ kheaders.md5
+ timeconst.h
+ hz.bc
+diff --git a/lib/.gitignore b/lib/.gitignore
+index f2a39c9e5485..9af73655a239 100644
+--- a/lib/.gitignore
++++ b/lib/.gitignore
+@@ -1,6 +1,3 @@
+-#
+-# Generated files
+-#
+ gen_crc32table
+ gen_crc64table
+ crc32table.h
+diff --git a/scripts/.gitignore b/scripts/.gitignore
+index ef45f96cd7a5..9fe29efbcb95 100644
+--- a/scripts/.gitignore
++++ b/scripts/.gitignore
+@@ -1,6 +1,3 @@
+-#
+-# Generated files
+-#
+ bin2c
+ kallsyms
+ unifdef
+diff --git a/scripts/kconfig/.gitignore b/scripts/kconfig/.gitignore
+index b5bf92f66d11..588988711e07 100644
+--- a/scripts/kconfig/.gitignore
++++ b/scripts/kconfig/.gitignore
+@@ -1,6 +1,3 @@
+-#
+-# Generated files
+-#
+ *.moc
+ *conf-cfg
+ 
+diff --git a/scripts/selinux/mdp/.gitignore b/scripts/selinux/mdp/.gitignore
+index 654546d8dffd..0d9f827dc14b 100644
+--- a/scripts/selinux/mdp/.gitignore
++++ b/scripts/selinux/mdp/.gitignore
+@@ -1,2 +1 @@
+-# Generated file
+ mdp
+diff --git a/security/apparmor/.gitignore b/security/apparmor/.gitignore
+index d5b291e94264..0ace1d1dec44 100644
+--- a/security/apparmor/.gitignore
++++ b/security/apparmor/.gitignore
+@@ -1,6 +1,3 @@
+-#
+-# Generated include files
+-#
+ net_names.h
+ capability_names.h
+ rlim_names.h
+diff --git a/sound/oss/.gitignore b/sound/oss/.gitignore
+index 12a3920d6fb6..8fd8fd3eff62 100644
+--- a/sound/oss/.gitignore
++++ b/sound/oss/.gitignore
+@@ -1,3 +1,2 @@
+-#Ignore generated files
+ pss_boot.h
+ trix_boot.h
+-- 
+2.17.1
 
