@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F303BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EE5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96502166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C5122166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204215;
-	bh=jau1VO2RurX6p/hY4tlELu2JvfoYnyg42A+M1rbMYNE=;
+	s=default; t=1583204221;
+	bh=VwhYKLy1NhWaPZdxdXJS0pwQhJAtWfm9/KXs9tu/rec=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yi2UnreETCfeqdN3onv2F2XtXq9rGD5bJoevOebyvFG/TCV/hZl+ZjwjmC7ZLYqB1
-	 DVLP2sgDjy5n7EwFvvxZCnOT7RNVvMHMGLJT42ioLvk1JnCp+jfpBIz0xG+IUEvAnD
-	 eOPh3Frpswto7yVweNLlQQFXN6o5tcuMZsXfXs0E=
+	b=pgMXsBEujDG/Qa+rmc1i+TtJoVMGMdDbbH0i8sLCSGCDwrPUw6k6MW1f+Dv/gJNLy
+	 NuM+i+JITexcoTdcJp7KWgZFH5daJ0YnYpj42fx8CuEhGsnSdhSRiB4r/TqpcXY5dL
+	 qXmsdNHIS9ikmWtjfiwA0cr5vA/gdwz+dSht5Hx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbgCCC4y (ORCPT
+        id S1728444AbgCCCs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:56:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44404 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727890AbgCCCse (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:34 -0500
+        id S1728381AbgCCCsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:19 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F8EA24684;
-        Tue,  3 Mar 2020 02:48:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E163824680;
+        Tue,  3 Mar 2020 02:48:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203713;
-        bh=jau1VO2RurX6p/hY4tlELu2JvfoYnyg42A+M1rbMYNE=;
+        s=default; t=1583203698;
+        bh=VwhYKLy1NhWaPZdxdXJS0pwQhJAtWfm9/KXs9tu/rec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sbHL02uwW85F1b2zKW+X0aHPEjATGwhw+LQiPUchxX9I9zU23tUZiNRHMZe1Lj86p
-         blDTP7uTHZy1w2+KxzqNlRTBsnXOEjpfsu/Hk58hmwzjspPcUB/yqfF3DUkZ6XkhVu
-         cPeyOYdStpCRIyUEtYfqjatMZLTfH+4ibYhhArH4=
+        b=wyci/qHSKzipQnQZGEfbmeMyRN3UWYrB9dtTNc2CjeZAozWmMD3luEWHaDGn/XpWx
+         Rdj3MZKAHcwazUQDrBUMEIwtLMgHIs5V/01hypiZ3Dh6BHCNkY4l4ewBJ9ZA2KmpzB
+         gCVcf0UrubynrfoWwQbrLJrqg38QQd8J5rUGVrqU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 43/58] s390/qdio: fill SL with absolute addresses
-Date:   Mon,  2 Mar 2020 21:47:25 -0500
-Message-Id: <20200303024740.9511-43-sashal@kernel.org>
+Cc:     Paul Cercueil <paul@crapouillou.net>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 31/58] net: ethernet: dm9000: Handle -EPROBE_DEFER in dm9000_parse_dt()
+Date:   Mon,  2 Mar 2020 21:47:13 -0500
+Message-Id: <20200303024740.9511-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -62,110 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Paul Cercueil <paul@crapouillou.net>
 
-[ Upstream commit e9091ffd6a0aaced111b5d6ead5eaab5cd7101bc ]
+[ Upstream commit 9a6a0dea16177ccaecc116f560232e63bec115f1 ]
 
-As the comment says, sl->sbal holds an absolute address. qeth currently
-solves this through wild casting, while zfcp doesn't care.
+The call to of_get_mac_address() can return -EPROBE_DEFER, for instance
+when the MAC address is read from a NVMEM driver that did not probe yet.
 
-Handle this properly in the code that actually builds the SL.
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com> [for qdio]
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Cc: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: Mathieu Malaterre <malat@debian.org>
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/qdio.h      |  2 +-
- drivers/s390/cio/qdio_setup.c     |  3 ++-
- drivers/s390/net/qeth_core_main.c | 23 +++++++++++------------
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/davicom/dm9000.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/s390/include/asm/qdio.h b/arch/s390/include/asm/qdio.h
-index e3f238e8c6116..4f35b1055f30a 100644
---- a/arch/s390/include/asm/qdio.h
-+++ b/arch/s390/include/asm/qdio.h
-@@ -227,7 +227,7 @@ struct qdio_buffer {
-  * @sbal: absolute SBAL address
-  */
- struct sl_element {
--	unsigned long sbal;
-+	u64 sbal;
- } __attribute__ ((packed));
+diff --git a/drivers/net/ethernet/davicom/dm9000.c b/drivers/net/ethernet/davicom/dm9000.c
+index cce90b5925d93..70060c51854fd 100644
+--- a/drivers/net/ethernet/davicom/dm9000.c
++++ b/drivers/net/ethernet/davicom/dm9000.c
+@@ -1405,6 +1405,8 @@ static struct dm9000_plat_data *dm9000_parse_dt(struct device *dev)
+ 	mac_addr = of_get_mac_address(np);
+ 	if (!IS_ERR(mac_addr))
+ 		ether_addr_copy(pdata->dev_addr, mac_addr);
++	else if (PTR_ERR(mac_addr) == -EPROBE_DEFER)
++		return ERR_CAST(mac_addr);
  
- /**
-diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
-index cd164886132fd..ee0b3c5862110 100644
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/export.h>
-+#include <linux/io.h>
- #include <asm/qdio.h>
- 
- #include "cio.h"
-@@ -207,7 +208,7 @@ static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
- 
- 	/* fill in sl */
- 	for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++)
--		q->sl->element[j].sbal = (unsigned long)q->sbal[j];
-+		q->sl->element[j].sbal = virt_to_phys(q->sbal[j]);
+ 	return pdata;
  }
- 
- static void setup_queues(struct qdio_irq *irq_ptr,
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 23852888eb2ca..b727d1e34523e 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -4716,10 +4716,10 @@ static void qeth_qdio_establish_cq(struct qeth_card *card,
- 	if (card->options.cq == QETH_CQ_ENABLED) {
- 		int offset = QDIO_MAX_BUFFERS_PER_Q *
- 			     (card->qdio.no_in_queues - 1);
--		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--			in_sbal_ptrs[offset + i] = (struct qdio_buffer *)
--				virt_to_phys(card->qdio.c_q->bufs[i].buffer);
--		}
-+
-+		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+			in_sbal_ptrs[offset + i] =
-+				card->qdio.c_q->bufs[i].buffer;
- 
- 		queue_start_poll[card->qdio.no_in_queues - 1] = NULL;
- 	}
-@@ -4753,10 +4753,9 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_qib_param;
- 	}
--	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--		in_sbal_ptrs[i] = (struct qdio_buffer *)
--			virt_to_phys(card->qdio.in_q->bufs[i].buffer);
--	}
-+
-+	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+		in_sbal_ptrs[i] = card->qdio.in_q->bufs[i].buffer;
- 
- 	queue_start_poll = kcalloc(card->qdio.no_in_queues, sizeof(void *),
- 				   GFP_KERNEL);
-@@ -4777,11 +4776,11 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_queue_start_poll;
- 	}
-+
- 	for (i = 0, k = 0; i < card->qdio.no_out_queues; ++i)
--		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; ++j, ++k) {
--			out_sbal_ptrs[k] = (struct qdio_buffer *)virt_to_phys(
--				card->qdio.out_qs[i]->bufs[j]->buffer);
--		}
-+		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++, k++)
-+			out_sbal_ptrs[k] =
-+				card->qdio.out_qs[i]->bufs[j]->buffer;
- 
- 	memset(&init_data, 0, sizeof(struct qdio_initialize));
- 	init_data.cdev                   = CARD_DDEV(card);
 -- 
 2.20.1
 
