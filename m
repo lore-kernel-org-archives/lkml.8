@@ -2,58 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D27C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B43CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F1020866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1851F215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258515;
-	bh=UFx5DEXiFUfVTRW6CG4s7+7JeUlESCSJAD4fsfTcsGc=;
+	s=default; t=1583258519;
+	bh=2dl2EyDbGRDd5Mjd5tpTxIts+FmRV8BUsLtK9qsQGy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pEMPaZL2xFiAV3WKPXsTyofGKpka/SBqoFfD4U6dtP7x5+eQAESCV1YV0aB40IzSE
-	 xhkeFxiDhqMfhemvwySca6Kjayd8Smy/pwEB7KWt9CyekMlUPFdo7vQ4ja2lKKtuS4
-	 czG6fsQBoFzydc7MSlMFZ86uU8jP7lKYfWfSYlFw=
+	b=dRo+1LYVPn3MehN1Ug2KXV4csNYpp3wu4omphH47WOQw4PoU0YIcU/HCBI6VV8r+g
+	 /BMwkjQpfdqh35LZw3cYy071h9yJQhqHsJSN6WS44XsyNncXPNWy/AZCuhbgq2kDJB
+	 kfOAsDdbyZdycOKtoX4tMwrKn88inyIYOCwZAYzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388089AbgCCSBy (ORCPT
+        id S2388102AbgCCSB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46192 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:01:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388069AbgCCSBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:01:51 -0500
+        id S2388093AbgCCSBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:54 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4480206D5;
-        Tue,  3 Mar 2020 18:01:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0881F20836;
+        Tue,  3 Mar 2020 18:01:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258509;
-        bh=UFx5DEXiFUfVTRW6CG4s7+7JeUlESCSJAD4fsfTcsGc=;
+        s=default; t=1583258514;
+        bh=2dl2EyDbGRDd5Mjd5tpTxIts+FmRV8BUsLtK9qsQGy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cxOnuXemsNTxvRg/Uv20ZiVqvcmTMuscjO0zzMnNwMAjkVRfJ0JRLNwPeS4NMhbNy
-         i01frR699XvFHaCfDGDFKuAnjPdMiRRFfcmKCk9NWwIpn1JCCS/hITd82s4XAC3+Xq
-         D9ZGKlBPwV08pvaO39JK3S71SscKto78SdHrGwcw=
+        b=bM/jaOuq7m/J6QtEZiJVG5jlpDy7Cm+Zd1xlu6i660xMMUAIdG9H/BMiY6UgRzDiW
+         NKKj7eb6l6B80Ggz3hemAK2tZIPeoQcx3y2SQeKpMETB0FzzFG6QhahzZHp6/bFthS
+         TOHE7lVs1XRIB13m52QPl0KKbC6NQjGD8sQMANQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 77/87] kprobes: Set unoptimized flag after unoptimizing code
-Date:   Tue,  3 Mar 2020 18:44:08 +0100
-Message-Id: <20200303174357.166761258@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 4.19 79/87] perf hists browser: Restore ESC as "Zoom out" of DSO/thread/etc
+Date:   Tue,  3 Mar 2020 18:44:10 +0100
+Message-Id: <20200303174357.353299760@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -66,89 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-commit f66c0447cca1281116224d474cdb37d6a18e4b5b upstream.
+commit 3f7774033e6820d25beee5cf7aefa11d4968b951 upstream.
 
-Set the unoptimized flag after confirming the code is completely
-unoptimized. Without this fix, when a kprobe hits the intermediate
-modified instruction (the first byte is replaced by an INT3, but
-later bytes can still be a jump address operand) while unoptimizing,
-it can return to the middle byte of the modified code, which causes
-an invalid instruction exception in the kernel.
+We need to set actions->ms.map since 599a2f38a989 ("perf hists browser:
+Check sort keys before hot key actions"), as in that patch we bail out
+if map is NULL.
 
-Usually, this is a rare case, but if we put a probe on the function
-call while text patching, it always causes a kernel panic as below:
-
- # echo p text_poke+5 > kprobe_events
- # echo 1 > events/kprobes/enable
- # echo 0 > events/kprobes/enable
-
-invalid opcode: 0000 [#1] PREEMPT SMP PTI
- RIP: 0010:text_poke+0x9/0x50
- Call Trace:
-  arch_unoptimize_kprobe+0x22/0x28
-  arch_unoptimize_kprobes+0x39/0x87
-  kprobe_optimizer+0x6e/0x290
-  process_one_work+0x2a0/0x610
-  worker_thread+0x28/0x3d0
-  ? process_one_work+0x610/0x610
-  kthread+0x10d/0x130
-  ? kthread_park+0x80/0x80
-  ret_from_fork+0x3a/0x50
-
-text_poke() is used for patching the code in optprobes.
-
-This can happen even if we blacklist text_poke() and other functions,
-because there is a small time window during which we show the intermediate
-code to other CPUs.
-
- [ mingo: Edited the changelog. ]
-
-Tested-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bristot@redhat.com
-Fixes: 6274de4984a6 ("kprobes: Support delayed unoptimizing")
-Link: https://lkml.kernel.org/r/157483422375.25881.13508326028469515760.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 599a2f38a989 ("perf hists browser: Check sort keys before hot key actions")
+Link: https://lkml.kernel.org/n/tip-wp1ssoewy6zihwwexqpohv0j@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/kprobes.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ tools/perf/ui/browsers/hists.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -523,6 +523,8 @@ static void do_unoptimize_kprobes(void)
- 	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
- 	/* Loop free_list for disarming */
- 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
-+		/* Switching from detour code to origin */
-+		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
- 		/* Disarm probes if marked disabled */
- 		if (kprobe_disabled(&op->kp))
- 			arch_disarm_kprobe(&op->kp);
-@@ -662,6 +664,7 @@ static void force_unoptimize_kprobe(stru
- {
- 	lockdep_assert_cpus_held();
- 	arch_unoptimize_kprobe(op);
-+	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
- 	if (kprobe_disabled(&op->kp))
- 		arch_disarm_kprobe(&op->kp);
- }
-@@ -689,7 +692,6 @@ static void unoptimize_kprobe(struct kpr
- 		return;
- 	}
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -2931,6 +2931,7 @@ static int perf_evsel__hists_browse(stru
  
--	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
- 	if (!list_empty(&op->list)) {
- 		/* Dequeue from the optimization queue */
- 		list_del_init(&op->list);
+ 				continue;
+ 			}
++			actions->ms.map = map;
+ 			top = pstack__peek(browser->pstack);
+ 			if (top == &browser->hists->dso_filter) {
+ 				/*
 
 
