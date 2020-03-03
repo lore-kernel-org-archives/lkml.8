@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04884C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC9BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1973214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B54662146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257614;
-	bh=9PwNu2g7oUKKYUVITgy4zOf2x0VPzKjJy7pC1BQMiC0=;
+	s=default; t=1583257617;
+	bh=/wvHWtSABa6XrGoPvgU/g74uNC1TiUDqH775k+bJX6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=USCH8NrO6aC0QlLYOb3Dqo9vEau2BALVz9EQfIhCNURHLBE2hyAnX/ND3AIPvBLmg
-	 mFwOgHTE9jSq3g07GzdDyAvuLjbYmMCBWfH8/w6F9GVsC/0+wFIDZ8r1AXZv7SFMFs
-	 7UssPfEo7d8DXaSiHlQ5dqSq2YgssNBEFLxyJt2o=
+	b=1zk0DqmbxFP0aQhY6cdzZTBrNuID3hbo6z6tVZ6D/om6CqV+DnInu0a7HofqmWSeV
+	 V3kMm+HLHXpUOT+nhEGI56Z+IMXoGdngqkFYW+P2bVtq52hSYrT/NVHHy81zPOzi9d
+	 T5j7JlWqruMzJzbC6m9CwfRhIVRJqHfpjBG431pY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731253AbgCCRqx (ORCPT
+        id S1730220AbgCCRq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:46:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53558 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:46:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731242AbgCCRqu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:46:50 -0500
+        id S1731249AbgCCRqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:46:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 08A312146E;
-        Tue,  3 Mar 2020 17:46:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 930FB20870;
+        Tue,  3 Mar 2020 17:46:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257609;
-        bh=9PwNu2g7oUKKYUVITgy4zOf2x0VPzKjJy7pC1BQMiC0=;
+        s=default; t=1583257612;
+        bh=/wvHWtSABa6XrGoPvgU/g74uNC1TiUDqH775k+bJX6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wS+MDIk/mpvWqcNIGUsWaY4jzAMDz/Jv8DRDygxLVxvEIVMrqvATn8tOJIOqYEEcS
-         lJJ+hvhMqCf3MH0SFLR1q1/A1das4glYuf5nCH3mFvl7xAlO4IRu1y1ZJhh8+BhIu7
-         PvsrAn6g4WC+NQqIbTRMmvpfPUjUIWovBIPZgfkA=
+        b=y/Vt2wRk9bopVW4wxixvtlWgsU+cuemeBCK/bnvRtJSxG1FHHl5UHfuTOcFDtV9x/
+         Fc42y78N5dENGRzG02vVvKtijTjzBzeZLCxklm3xMjSmuasxd8RZbfYFz++KnC6hd1
+         w9AfCNHZQFJn/J3B/EcEa8vRYhLUcK9bdt1yUdxI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arthur Kiyanovski <akiyano@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 060/176] net: ena: fix incorrectly saving queue numbers when setting RSS indirection table
-Date:   Tue,  3 Mar 2020 18:42:04 +0100
-Message-Id: <20200303174311.530512580@linuxfoundation.org>
+Subject: [PATCH 5.5 061/176] net: ena: fix corruption of dev_idx_to_host_tbl
+Date:   Tue,  3 Mar 2020 18:42:05 +0100
+Message-Id: <20200303174311.676580695@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -63,26 +63,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 92569fd27f5cb0ccbdf7c7d70044b690e89a0277 ]
+[ Upstream commit e3f89f91e98ce07dc0f121a3b70d21aca749ba39 ]
 
-The indirection table has the indices of the Rx queues. When we store it
-during set indirection operation, we convert the indices to our internal
-representation of the indices.
+The function ena_com_ind_tbl_convert_from_device() has an overflow
+bug as explained below. Either way, this function is not needed at
+all since we don't retrieve the indirection table from the device
+at any point which means that this conversion is not needed.
 
-Our internal representation of the indices is: even indices for Tx and
-uneven indices for Rx, where every Tx/Rx pair are in a consecutive order
-starting from 0. For example if the driver has 3 queues (3 for Tx and 3
-for Rx) then the indices are as follows:
-0  1  2  3  4  5
-Tx Rx Tx Rx Tx Rx
+The bug:
+The for loop iterates over all io_sq_queues, when passing the actual
+number of used queues the io_sq_queues[i].idx equals 0 since they are
+uninitialized which results in the following code to be executed till
+the end of the loop:
 
-The BUG:
-The issue is that when we satisfy a get request for the indirection
-table, we don't convert the indices back to the original representation.
+dev_idx_to_host_tbl[0] = i;
 
-The FIX:
-Simply apply the inverse function for the indices of the indirection
-table after we set it.
+This results dev_idx_to_host_tbl[0] in being equal to
+ENA_TOTAL_NUM_QUEUES - 1.
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
 Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
@@ -90,65 +87,55 @@ Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 24 ++++++++++++++++++-
- drivers/net/ethernet/amazon/ena/ena_netdev.h  |  2 ++
- 2 files changed, 25 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 28 -----------------------
+ 1 file changed, 28 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index 8be9df885bf4f..610a7c63e1742 100644
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -636,6 +636,28 @@ static u32 ena_get_rxfh_key_size(struct net_device *netdev)
- 	return ENA_HASH_KEY_SIZE;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 8ab192cb26b74..74743fd8a1e0a 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -1281,30 +1281,6 @@ static int ena_com_ind_tbl_convert_to_device(struct ena_com_dev *ena_dev)
+ 	return 0;
  }
  
-+static int ena_indirection_table_get(struct ena_adapter *adapter, u32 *indir)
-+{
-+	struct ena_com_dev *ena_dev = adapter->ena_dev;
-+	int i, rc;
-+
-+	if (!indir)
-+		return 0;
-+
-+	rc = ena_com_indirect_table_get(ena_dev, indir);
-+	if (rc)
-+		return rc;
-+
-+	/* Our internal representation of the indices is: even indices
-+	 * for Tx and uneven indices for Rx. We need to convert the Rx
-+	 * indices to be consecutive
-+	 */
-+	for (i = 0; i < ENA_RX_RSS_TABLE_SIZE; i++)
-+		indir[i] = ENA_IO_RXQ_IDX_TO_COMBINED_IDX(indir[i]);
-+
-+	return rc;
-+}
-+
- static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
- 			u8 *hfunc)
+-static int ena_com_ind_tbl_convert_from_device(struct ena_com_dev *ena_dev)
+-{
+-	u16 dev_idx_to_host_tbl[ENA_TOTAL_NUM_QUEUES] = { (u16)-1 };
+-	struct ena_rss *rss = &ena_dev->rss;
+-	u8 idx;
+-	u16 i;
+-
+-	for (i = 0; i < ENA_TOTAL_NUM_QUEUES; i++)
+-		dev_idx_to_host_tbl[ena_dev->io_sq_queues[i].idx] = i;
+-
+-	for (i = 0; i < 1 << rss->tbl_log_size; i++) {
+-		if (rss->rss_ind_tbl[i].cq_idx > ENA_TOTAL_NUM_QUEUES)
+-			return -EINVAL;
+-		idx = (u8)rss->rss_ind_tbl[i].cq_idx;
+-
+-		if (dev_idx_to_host_tbl[idx] > ENA_TOTAL_NUM_QUEUES)
+-			return -EINVAL;
+-
+-		rss->host_rss_ind_tbl[i] = dev_idx_to_host_tbl[idx];
+-	}
+-
+-	return 0;
+-}
+-
+ static void ena_com_update_intr_delay_resolution(struct ena_com_dev *ena_dev,
+ 						 u16 intr_delay_resolution)
  {
-@@ -644,7 +666,7 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
- 	u8 func;
- 	int rc;
+@@ -2638,10 +2614,6 @@ int ena_com_indirect_table_get(struct ena_com_dev *ena_dev, u32 *ind_tbl)
+ 	if (!ind_tbl)
+ 		return 0;
  
--	rc = ena_com_indirect_table_get(adapter->ena_dev, indir);
-+	rc = ena_indirection_table_get(adapter, indir);
- 	if (rc)
- 		return rc;
+-	rc = ena_com_ind_tbl_convert_from_device(ena_dev);
+-	if (unlikely(rc))
+-		return rc;
+-
+ 	for (i = 0; i < (1 << rss->tbl_log_size); i++)
+ 		ind_tbl[i] = rss->host_rss_ind_tbl[i];
  
-diff --git a/drivers/net/ethernet/amazon/ena/ena_netdev.h b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-index bffd778f2ce34..2fe5eeea6b695 100644
---- a/drivers/net/ethernet/amazon/ena/ena_netdev.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_netdev.h
-@@ -129,6 +129,8 @@
- 
- #define ENA_IO_TXQ_IDX(q)	(2 * (q))
- #define ENA_IO_RXQ_IDX(q)	(2 * (q) + 1)
-+#define ENA_IO_TXQ_IDX_TO_COMBINED_IDX(q)	((q) / 2)
-+#define ENA_IO_RXQ_IDX_TO_COMBINED_IDX(q)	(((q) - 1) / 2)
- 
- #define ENA_MGMNT_IRQ_IDX		0
- #define ENA_IO_IRQ_FIRST_IDX		1
 -- 
 2.20.1
 
