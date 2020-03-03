@@ -2,51 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E94EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E500EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 430CA24684
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B273A246D6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203709;
-	bh=HBrpjshP9o/0uIYBDnOR2VB3PHUj1bRV4+rvjl1a4eg=;
+	s=default; t=1583203723;
+	bh=CWEtkoDz7AAcoaT1SOeJLtCyrIg9HCHGi9wZwmIhtwY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z6KVm9znAMNgD4L0JS7kTQoG9pUzEkznPmT8MA6/uIqQr6HjGiY0EMNnbZIvNqtd+
-	 yKi/qVU/0ecL9xDbB70pNrsay5O0YJ4TnTGwL6eOnsava8KsPCYWMdJ8r1xiXoBcgu
-	 vRTrSMNa/L/XaBTVVC4DWV5/5Qq1c3zGtZxcdGJA=
+	b=Rtv23f6ellMFnGt9L4aNMVdN060kJN4UaHoCcklLSUfwnp4ra1ZhWJm2o9uEDhg9T
+	 6Ar6CBjRJobfYP9HvF8OGExQYKcQNURrnQqdIMtyKP/7T9eLl9HqrkaDYQ5p8+Z5AZ
+	 C6xqwXkYhlfC3U7L1mjLLeFwJdKHdl7e4X62nFos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbgCCCs1 (ORCPT
+        id S1728515AbgCCCsm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43750 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728342AbgCCCsM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:12 -0500
+        id S1728449AbgCCCsb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B42BC246A1;
-        Tue,  3 Mar 2020 02:48:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D799E24680;
+        Tue,  3 Mar 2020 02:48:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203692;
-        bh=HBrpjshP9o/0uIYBDnOR2VB3PHUj1bRV4+rvjl1a4eg=;
+        s=default; t=1583203710;
+        bh=CWEtkoDz7AAcoaT1SOeJLtCyrIg9HCHGi9wZwmIhtwY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aleMQn4rqdhM5u/QP+JNjh6MoMlgISnLlN/qIOvhRx02mwogYr3pNzgLTcZpSHVAz
-         czS7J6Qz5vdngGof8TLDLqrS8yyy7yT8I5A0ZzKlXKppf+nUKxGoZhRRmi8Wf1vJ8V
-         MmCM50xxQOGspJtNZUPZ75j/Hh96dzVyBzrjujkI=
+        b=mQdyIADm6ZfVghfLtNESl1venYawusPYXn7gyAAu1zGNAQZCh+6ncghXvVeTDuNnc
+         uKLQwfX8NsB7L+C3+KM+v9RUO7p+lErSi2nkHzyIt7q66G2OjUU6y4RZ5b6yZcQg7I
+         EaF3PMrndd0u/Ze/NQninMdP81Lsq852jFJKBZCE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 26/58] net: dsa: b53: Ensure the default VID is untagged
-Date:   Mon,  2 Mar 2020 21:47:08 -0500
-Message-Id: <20200303024740.9511-26-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Leif Liddy <leif.liddy@gmail.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-nvme@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.4 41/58] nvme-pci: Use single IRQ vector for old Apple models
+Date:   Mon,  2 Mar 2020 21:47:23 -0500
+Message-Id: <20200303024740.9511-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -59,38 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-[ Upstream commit d965a5432d4c3e6b9c3d2bc1d4a800013bbf76f6 ]
+[ Upstream commit 98f7b86a0becc1154b1a6df6e75c9695dfd87e0d ]
 
-We need to ensure that the default VID is untagged otherwise the switch
-will be sending tagged frames and the results can be problematic. This
-is especially true with b53 switches that use VID 0 as their default
-VLAN since VID 0 has a special meaning.
+People reported that old Apple machines are not working properly
+if the non-first IRQ vector is in use.
 
-Fixes: fea83353177a ("net: dsa: b53: Fix default VLAN ID")
-Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Set quirk for that models to limit IRQ to use first vector only.
+
+Based on original patch by GitHub user npx001.
+
+Link: https://github.com/Dunedan/mbp-2016-linux/issues/9
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Leif Liddy <leif.liddy@gmail.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/b53/b53_common.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/nvme/host/pci.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/b53/b53_common.c b/drivers/net/dsa/b53/b53_common.c
-index 7ed667b304d1f..d618650533b65 100644
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1353,6 +1353,9 @@ void b53_vlan_add(struct dsa_switch *ds, int port,
- 
- 		b53_get_vlan_entry(dev, vid, vl);
- 
-+		if (vid == 0 && vid == b53_default_pvid(dev))
-+			untagged = true;
-+
- 		vl->members |= BIT(port);
- 		if (untagged && !dsa_is_cpu_port(ds, port))
- 			vl->untag |= BIT(port);
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 944f89fc15946..654f14cef9d2a 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -3113,7 +3113,8 @@ static const struct pci_device_id nvme_id_table[] = {
+ 		.driver_data = NVME_QUIRK_NO_DEEPEST_PS |
+ 				NVME_QUIRK_IGNORE_DEV_SUBNQN, },
+ 	{ PCI_DEVICE_CLASS(PCI_CLASS_STORAGE_EXPRESS, 0xffffff) },
+-	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2001),
++		.driver_data = NVME_QUIRK_SINGLE_VECTOR },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2003) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_APPLE, 0x2005),
+ 		.driver_data = NVME_QUIRK_SINGLE_VECTOR |
 -- 
 2.20.1
 
