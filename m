@@ -2,366 +2,189 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84621C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB18CC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4949C21D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B922A21D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:06:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bmAF3JWZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KtWRNYb3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgCCBAd (ORCPT
+        id S1726951AbgCCBGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 20:00:33 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11858 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726773AbgCCBAc (ORCPT
+        Mon, 2 Mar 2020 20:06:10 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46319 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbgCCBGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 20:00:32 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e5dac220000>; Mon, 02 Mar 2020 17:00:18 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 02 Mar 2020 17:00:31 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 02 Mar 2020 17:00:31 -0800
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
- 2020 01:00:30 +0000
-Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 3 Mar 2020 01:00:30 +0000
-Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e5dac2d001f>; Mon, 02 Mar 2020 17:00:29 -0800
-From:   Ralph Campbell <rcampbell@nvidia.com>
-To:     <dri-devel@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <nouveau@lists.freedesktop.org>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "Ralph Campbell" <rcampbell@nvidia.com>
-Subject: [PATCH v2] nouveau/hmm: map pages after migration
-Date:   Mon, 2 Mar 2020 17:00:23 -0800
-Message-ID: <20200303010023.2983-1-rcampbell@nvidia.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 2 Mar 2020 20:06:09 -0500
+Received: by mail-lj1-f195.google.com with SMTP id h18so1542967ljl.13
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 17:06:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1Mm7g4ThWIBVvq83U2u9/ErkVb6lacOR4YWjhrtHPMc=;
+        b=KtWRNYb3o/jtauqC79PfPfeY+JnnTfoxEwz5eIiSy0wc6OavhpI+hgWk/kfj/zVSpa
+         tS0kPTLlAuIOgQopl2h6a+vNEsLFXV7Ab/CFvYl7b4oagIjx3jfqTXdruHoR97bj+8Ww
+         +q1I0KbH4zyyXpds65ciRLw0HfHMMDC0+DOR9PTJXJcDz8oTZsXODgA+rzFQ1w7KdbKu
+         fd4CGQCrsT0m7iKfH6JKTJT+5K6/XRC4Q1Rr3AIhDyRzpvHDhUJfdSK6uazjacSUxvEG
+         6tW4Qa8VVqrS2rhuCme1vp9Hju4vlb0zOdj6MXixh2+U2KuKJjxhc6Llr5B78m+i0RLh
+         tNfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1Mm7g4ThWIBVvq83U2u9/ErkVb6lacOR4YWjhrtHPMc=;
+        b=pP+Aqud0hskYFpIxbGVYNVXpbfnu/RwnjUGW0ScPqGkAk1RjGauz8+VVSgLtemJm7q
+         Gy2zOnqoKi0H15NDo5nCJnLSxjtIsQ1FIhqwR6EzYn0nqe1/D2l5rRxYWkemAu3+6iJC
+         3Jry2QgSn0iHDAZVMBTfMU8sEbSx4l0Uvqe3jCiGGe29nCqYn5PipLh55bdNuA6VAUr8
+         +u+AL51zXUZtcK4ZoiTp+ytwpzwSTotNC8VLO2vA8ggItoduf12a7RzXLqGS3/p6CSBi
+         QTY0Z/ljySc41YaKt4qyZ477Q2O3DekiUl934yg+NzmTfymgmg5UYZ+CfesqrBmR/XDd
+         oJkQ==
+X-Gm-Message-State: ANhLgQ03Y0J/DrhC4GqgqoHl+sJu3g2xyTYbn3uFP6u+dCKX1paP9M1G
+        p3ODMsJvWm1LkXxRPsccQ8t5ysNAPjoKPGtuygFnDA==
+X-Google-Smtp-Source: ADFU+vvV70jM7BzUx8uPcSYxs3eYc9iPMdp0foKtqfROXrafn4q8tiylUhJK4O7Th3gji0LUIdEoT3zq5Dh9VTGqY/s=
+X-Received: by 2002:a2e:7d0e:: with SMTP id y14mr924639ljc.158.1583197566576;
+ Mon, 02 Mar 2020 17:06:06 -0800 (PST)
 MIME-Version: 1.0
-X-NVConfidentiality: public
+References: <cover.1581555616.git.ashish.kalra@amd.com> <CALCETrXE9cWd3TbBZMsAwmSwWpDYFsicLZ=amHLWsvE0burQSw@mail.gmail.com>
+ <20200213230916.GB8784@ashkalra_ubuntu_server> <CALCETrUQBsof3fMf-Dj7RDJJ9GDdVGNOML_ZyeSmJtcp_LhdPQ@mail.gmail.com>
+ <20200217194959.GA14833@ashkalra_ubuntu_server>
+In-Reply-To: <20200217194959.GA14833@ashkalra_ubuntu_server>
+From:   Steve Rutherford <srutherford@google.com>
+Date:   Mon, 2 Mar 2020 17:05:29 -0800
+Message-ID: <CABayD+dVEMBhva5DOtBph+Ms559q014pbjP9=6ycJ5KpiiJzVg@mail.gmail.com>
+Subject: Re: [PATCH 00/12] SEV Live Migration Patchset.
+To:     Ashish Kalra <ashish.kalra@amd.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583197218; bh=VM/GObbgHQMpS+HiC4HrNLp5DB1tYqNPFUeLAghZ4TE=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=bmAF3JWZrjJw+REMWKCRILuRkCfGsGeAHORL/SiS4W8k3LK4FJEPqHkUvKbsTuarQ
-         J5cTpBVw4fAcoi3sAHehaQUbLGVOOr0d/PdP9LFE/8JCHw+U4gdYyEKzE0cNyqqu6e
-         irbKhY+GsJqgGv6l+U0tOYIg9AbnPeGXJpSxMQXytATjPTvataSBsFl7jSKh72VLyL
-         j0QM2CBaEPyNLVtMo1QccpxSwvQipx5Nb2E4nRHReREXhgy/XsPFzBQ2Q/9wNuZirC
-         LYWcOG8089kbDtjG7mdLdEd+9ck0QpFlovQKGxktrZRDDnaypi/N4OfaFUa+ETUaTh
-         gV2wTNRHHXzqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When memory is migrated to the GPU, it is likely to be accessed by GPU
-code soon afterwards. Instead of waiting for a GPU fault, map the
-migrated memory into the GPU page tables with the same access permissions
-as the source CPU page table entries. This preserves copy on write
-semantics.
+I think this patch series might be incompatible with kexec, but I'm
+not sure since I'm really not familiar with that subsystem. It seems
+like you need to explicitly mark all shared pages as encrypted again
+before rebooting into the new kernel. If you don't do this, and the
+newly booted kernel believes RAM is encrypted and has always been, you
+won't flip formerly decrypted shared device pages back to encrypted.
+For example, if the swiotlb moves, you need to tell KVM that the old
+swiotlb pages are now encrypted.
 
-Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
-Cc: Ben Skeggs <bskeggs@redhat.com>
----
+I could imagine this being handled implicitly by the way kexec handles
+freeing memory, but I would find this surprising. I only see
+enlightenment for handling SME's interaction with the initial image in
+the kexec implementation.
 
-Originally this patch was targeted for Jason's rdma tree since other HMM
-related changes were queued there. Now that those have been merged, this
-patch just contains changes to nouveau so it could go through any tree.
-I guess Ben Skeggs' tree would be appropriate.
-
-Changes since v1:
- Rebase to linux-5.6.0-rc4
- Address Christoph Hellwig's comments
-
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 44 ++++++++-----
- drivers/gpu/drm/nouveau/nouveau_svm.c  | 85 ++++++++++++++++++++++++++
- drivers/gpu/drm/nouveau/nouveau_svm.h  |  5 ++
- 3 files changed, 118 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouve=
-au/nouveau_dmem.c
-index 0ad5d87b5a8e..172e0c98cec5 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -25,11 +25,13 @@
- #include "nouveau_dma.h"
- #include "nouveau_mem.h"
- #include "nouveau_bo.h"
-+#include "nouveau_svm.h"
-=20
- #include <nvif/class.h>
- #include <nvif/object.h>
- #include <nvif/if500b.h>
- #include <nvif/if900b.h>
-+#include <nvif/if000c.h>
-=20
- #include <linux/sched/mm.h>
- #include <linux/hmm.h>
-@@ -558,10 +560,11 @@ nouveau_dmem_init(struct nouveau_drm *drm)
- }
-=20
- static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm=
-,
--		unsigned long src, dma_addr_t *dma_addr)
-+		unsigned long src, dma_addr_t *dma_addr, u64 *pfn)
- {
- 	struct device *dev =3D drm->dev->dev;
- 	struct page *dpage, *spage;
-+	unsigned long paddr;
-=20
- 	spage =3D migrate_pfn_to_page(src);
- 	if (!spage || !(src & MIGRATE_PFN_MIGRATE))
-@@ -569,17 +572,21 @@ static unsigned long nouveau_dmem_migrate_copy_one(st=
-ruct nouveau_drm *drm,
-=20
- 	dpage =3D nouveau_dmem_page_alloc_locked(drm);
- 	if (!dpage)
--		return 0;
-+		goto out;
-=20
- 	*dma_addr =3D dma_map_page(dev, spage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
- 	if (dma_mapping_error(dev, *dma_addr))
- 		goto out_free_page;
-=20
-+	paddr =3D nouveau_dmem_page_addr(dpage);
- 	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_VRAM,
--			nouveau_dmem_page_addr(dpage), NOUVEAU_APER_HOST,
--			*dma_addr))
-+			paddr, NOUVEAU_APER_HOST, *dma_addr))
- 		goto out_dma_unmap;
-=20
-+	*pfn =3D NVIF_VMM_PFNMAP_V0_V | NVIF_VMM_PFNMAP_V0_VRAM |
-+		((paddr >> PAGE_SHIFT) << NVIF_VMM_PFNMAP_V0_ADDR_SHIFT);
-+	if (src & MIGRATE_PFN_WRITE)
-+		*pfn |=3D NVIF_VMM_PFNMAP_V0_W;
- 	return migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
-=20
- out_dma_unmap:
-@@ -587,18 +594,19 @@ static unsigned long nouveau_dmem_migrate_copy_one(st=
-ruct nouveau_drm *drm,
- out_free_page:
- 	nouveau_dmem_page_free_locked(drm, dpage);
- out:
-+	*pfn =3D NVIF_VMM_PFNMAP_V0_NONE;
- 	return 0;
- }
-=20
- static void nouveau_dmem_migrate_chunk(struct nouveau_drm *drm,
--		struct migrate_vma *args, dma_addr_t *dma_addrs)
-+		struct migrate_vma *args, dma_addr_t *dma_addrs, u64 *pfns)
- {
- 	struct nouveau_fence *fence;
- 	unsigned long addr =3D args->start, nr_dma =3D 0, i;
-=20
- 	for (i =3D 0; addr < args->end; i++) {
- 		args->dst[i] =3D nouveau_dmem_migrate_copy_one(drm, args->src[i],
--				dma_addrs + nr_dma);
-+				dma_addrs + nr_dma, pfns + i);
- 		if (args->dst[i])
- 			nr_dma++;
- 		addr +=3D PAGE_SIZE;
-@@ -607,15 +615,12 @@ static void nouveau_dmem_migrate_chunk(struct nouveau=
-_drm *drm,
- 	nouveau_fence_new(drm->dmem->migrate.chan, false, &fence);
- 	migrate_vma_pages(args);
- 	nouveau_dmem_fence_done(&fence);
-+	nouveau_pfns_map(drm, args->vma->vm_mm, args->start, pfns, i);
-=20
- 	while (nr_dma--) {
- 		dma_unmap_page(drm->dev->dev, dma_addrs[nr_dma], PAGE_SIZE,
- 				DMA_BIDIRECTIONAL);
- 	}
--	/*
--	 * FIXME optimization: update GPU page table to point to newly migrated
--	 * memory.
--	 */
- 	migrate_vma_finalize(args);
- }
-=20
-@@ -632,7 +637,8 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- 		.vma		=3D vma,
- 		.start		=3D start,
- 	};
--	unsigned long c, i;
-+	unsigned long i;
-+	u64 *pfns;
- 	int ret =3D -ENOMEM;
-=20
- 	args.src =3D kcalloc(max, sizeof(*args.src), GFP_KERNEL);
-@@ -646,19 +652,25 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- 	if (!dma_addrs)
- 		goto out_free_dst;
-=20
--	for (i =3D 0; i < npages; i +=3D c) {
--		c =3D min(SG_MAX_SINGLE_ALLOC, npages);
--		args.end =3D start + (c << PAGE_SHIFT);
-+	pfns =3D nouveau_pfns_alloc(max);
-+	if (!pfns)
-+		goto out_free_dma;
-+
-+	for (i =3D 0; i < npages; i +=3D max) {
-+		args.end =3D start + (max << PAGE_SHIFT);
- 		ret =3D migrate_vma_setup(&args);
- 		if (ret)
--			goto out_free_dma;
-+			goto out_free_pfns;
-=20
- 		if (args.cpages)
--			nouveau_dmem_migrate_chunk(drm, &args, dma_addrs);
-+			nouveau_dmem_migrate_chunk(drm, &args, dma_addrs,
-+						   pfns);
- 		args.start =3D args.end;
- 	}
-=20
- 	ret =3D 0;
-+out_free_pfns:
-+	nouveau_pfns_free(pfns);
- out_free_dma:
- 	kfree(dma_addrs);
- out_free_dst:
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index df9bf1fd1bc0..8c629918a3c6 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -70,6 +70,12 @@ struct nouveau_svm {
- #define SVM_DBG(s,f,a...) NV_DEBUG((s)->drm, "svm: "f"\n", ##a)
- #define SVM_ERR(s,f,a...) NV_WARN((s)->drm, "svm: "f"\n", ##a)
-=20
-+struct nouveau_pfnmap_args {
-+	struct nvif_ioctl_v0 i;
-+	struct nvif_ioctl_mthd_v0 m;
-+	struct nvif_vmm_pfnmap_v0 p;
-+};
-+
- struct nouveau_ivmm {
- 	struct nouveau_svmm *svmm;
- 	u64 inst;
-@@ -782,6 +788,85 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 	return NVIF_NOTIFY_KEEP;
- }
-=20
-+static inline struct nouveau_pfnmap_args *
-+nouveau_pfns_to_args(void *pfns)
-+{
-+	struct nvif_vmm_pfnmap_v0 *p =3D
-+		container_of(pfns, struct nvif_vmm_pfnmap_v0, phys);
-+
-+	return container_of(p, struct nouveau_pfnmap_args, p);
-+}
-+
-+u64 *
-+nouveau_pfns_alloc(unsigned long npages)
-+{
-+	struct nouveau_pfnmap_args *args;
-+
-+	args =3D kzalloc(struct_size(args, p.phys, npages), GFP_KERNEL);
-+	if (!args)
-+		return NULL;
-+
-+	args->i.type =3D NVIF_IOCTL_V0_MTHD;
-+	args->m.method =3D NVIF_VMM_V0_PFNMAP;
-+	args->p.page =3D PAGE_SHIFT;
-+
-+	return args->p.phys;
-+}
-+
-+void
-+nouveau_pfns_free(u64 *pfns)
-+{
-+	struct nouveau_pfnmap_args *args =3D nouveau_pfns_to_args(pfns);
-+
-+	kfree(args);
-+}
-+
-+static struct nouveau_svmm *
-+nouveau_find_svmm(struct nouveau_svm *svm, struct mm_struct *mm)
-+{
-+	struct nouveau_ivmm *ivmm;
-+
-+	list_for_each_entry(ivmm, &svm->inst, head) {
-+		if (ivmm->svmm->notifier.mm =3D=3D mm)
-+			return ivmm->svmm;
-+	}
-+	return NULL;
-+}
-+
-+void
-+nouveau_pfns_map(struct nouveau_drm *drm, struct mm_struct *mm,
-+		 unsigned long addr, u64 *pfns, unsigned long npages)
-+{
-+	struct nouveau_svm *svm =3D drm->svm;
-+	struct nouveau_svmm *svmm;
-+	struct nouveau_pfnmap_args *args;
-+	int ret;
-+
-+	if (!svm)
-+		return;
-+
-+	mutex_lock(&svm->mutex);
-+	svmm =3D nouveau_find_svmm(svm, mm);
-+	if (!svmm) {
-+		mutex_unlock(&svm->mutex);
-+		return;
-+	}
-+	mutex_unlock(&svm->mutex);
-+
-+	args =3D nouveau_pfns_to_args(pfns);
-+	args->p.addr =3D addr;
-+	args->p.size =3D npages << PAGE_SHIFT;
-+
-+	mutex_lock(&svmm->mutex);
-+
-+	svmm->vmm->vmm.object.client->super =3D true;
-+	ret =3D nvif_object_ioctl(&svmm->vmm->vmm.object, args, sizeof(*args) +
-+				npages * sizeof(args->p.phys[0]), NULL);
-+	svmm->vmm->vmm.object.client->super =3D false;
-+
-+	mutex_unlock(&svmm->mutex);
-+}
-+
- static void
- nouveau_svm_fault_buffer_fini(struct nouveau_svm *svm, int id)
- {
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.h b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.h
-index e839d8189461..0649f8d587a8 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.h
-@@ -18,6 +18,11 @@ void nouveau_svmm_fini(struct nouveau_svmm **);
- int nouveau_svmm_join(struct nouveau_svmm *, u64 inst);
- void nouveau_svmm_part(struct nouveau_svmm *, u64 inst);
- int nouveau_svmm_bind(struct drm_device *, void *, struct drm_file *);
-+
-+u64 *nouveau_pfns_alloc(unsigned long npages);
-+void nouveau_pfns_free(u64 *pfns);
-+void nouveau_pfns_map(struct nouveau_drm *drm, struct mm_struct *mm,
-+		      unsigned long addr, u64 *pfns, unsigned long npages);
- #else /* IS_ENABLED(CONFIG_DRM_NOUVEAU_SVM) */
- static inline void nouveau_svm_init(struct nouveau_drm *drm) {}
- static inline void nouveau_svm_fini(struct nouveau_drm *drm) {}
---=20
-2.20.1
-
+On Mon, Feb 17, 2020 at 11:50 AM Ashish Kalra <ashish.kalra@amd.com> wrote:
+>
+> On Fri, Feb 14, 2020 at 10:58:46AM -0800, Andy Lutomirski wrote:
+> > On Thu, Feb 13, 2020 at 3:09 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
+> > >
+> > > On Wed, Feb 12, 2020 at 09:43:41PM -0800, Andy Lutomirski wrote:
+> > > > On Wed, Feb 12, 2020 at 5:14 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+> > > > >
+> > > > > From: Ashish Kalra <ashish.kalra@amd.com>
+> > > > >
+> > > > > This patchset adds support for SEV Live Migration on KVM/QEMU.
+> > > >
+> > > > I skimmed this all and I don't see any description of how this all works.
+> > > >
+> > > > Does any of this address the mess in svm_register_enc_region()?  Right
+> > > > now, when QEMU (or a QEMU alternative) wants to allocate some memory
+> > > > to be used for guest encrypted pages, it mmap()s some memory and the
+> > > > kernel does get_user_pages_fast() on it.  The pages are kept pinned
+> > > > for the lifetime of the mapping.  This is not at all okay.  Let's see:
+> > > >
+> > > >  - The memory is pinned and it doesn't play well with the Linux memory
+> > > > management code.  You just wrote a big patch set to migrate the pages
+> > > > to a whole different machines, but we apparently can't even migrate
+> > > > them to a different NUMA node or even just a different address.  And
+> > > > good luck swapping it out.
+> > > >
+> > > >  - The memory is still mapped in the QEMU process, and that mapping is
+> > > > incoherent with actual guest access to the memory.  It's nice that KVM
+> > > > clflushes it so that, in principle, everything might actually work,
+> > > > but this is gross.  We should not be exposing incoherent mappings to
+> > > > userspace.
+> > > >
+> > > > Perhaps all this fancy infrastructure you're writing for migration and
+> > > > all this new API surface could also teach the kernel how to migrate
+> > > > pages from a guest *to the same guest* so we don't need to pin pages
+> > > > forever.  And perhaps you could put some thought into how to improve
+> > > > the API so that it doesn't involve nonsensical incoherent mappings.o
+> > >
+> > > As a different key is used to encrypt memory in each VM, the hypervisor
+> > > can't simply copy the the ciphertext from one VM to another to migrate
+> > > the VM.  Therefore, the AMD SEV Key Management API provides a new sets
+> > > of function which the hypervisor can use to package a guest page for
+> > > migration, while maintaining the confidentiality provided by AMD SEV.
+> > >
+> > > There is a new page encryption bitmap created in the kernel which
+> > > keeps tracks of encrypted/decrypted state of guest's pages and this
+> > > bitmap is updated by a new hypercall interface provided to the guest
+> > > kernel and firmware.
+> > >
+> > > KVM_GET_PAGE_ENC_BITMAP ioctl can be used to get the guest page encryption
+> > > bitmap. The bitmap can be used to check if the given guest page is
+> > > private or shared.
+> > >
+> > > During the migration flow, the SEND_START is called on the source hypervisor
+> > > to create an outgoing encryption context. The SEV guest policy dictates whether
+> > > the certificate passed through the migrate-set-parameters command will be
+> > > validated. SEND_UPDATE_DATA is called to encrypt the guest private pages.
+> > > After migration is completed, SEND_FINISH is called to destroy the encryption
+> > > context and make the VM non-runnable to protect it against cloning.
+> > >
+> > > On the target machine, RECEIVE_START is called first to create an
+> > > incoming encryption context. The RECEIVE_UPDATE_DATA is called to copy
+> > > the received encrypted page into guest memory. After migration has
+> > > completed, RECEIVE_FINISH is called to make the VM runnable.
+> > >
+> >
+> > Thanks!  This belongs somewhere in the patch set.
+> >
+> > You still haven't answered my questions about the existing coherency
+> > issues and whether the same infrastructure can be used to migrate
+> > guest pages within the same machine.
+>
+> Page Migration and Live Migration are separate features and one of my
+> colleagues is currently working on making page migration possible and removing
+> SEV Guest pinning requirements.
+> >
+> > Also, you're making guest-side and host-side changes.  What ensures
+> > that you don't try to migrate a guest that doesn't support the
+> > hypercall for encryption state tracking?
+>
+> This is a good question and it is still an open-ended question. There
+> are two possibilities here: guest does not have any unencrypted pages
+> (for e.g booting 32-bit) and so it does not make any hypercalls, and
+> the other possibility is that the guest does not have support for
+> the newer hypercall.
+>
+> In the first case, all the guest pages are then assumed to be
+> encrypted and live migration happens as such.
+>
+> For the second case, we have been discussing this internally,
+> and one option is to extend the KVM capabilites/feature bits to check for this ?
+>
+> Thanks,
+> Ashish
