@@ -2,137 +2,187 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C44C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:11:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD36DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FFAA214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A16802166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:12:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G2GjwNv9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbgCCGLL (ORCPT
+        id S1727479AbgCCGME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:11:11 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18172 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725308AbgCCGLK (ORCPT
+        Tue, 3 Mar 2020 01:12:04 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:37181 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbgCCGME (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:11:10 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02365udp190994
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Mar 2020 01:11:09 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfn16w0kt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:11:08 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Tue, 3 Mar 2020 06:11:06 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Mar 2020 06:10:59 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0236AwXB26017888
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Mar 2020 06:10:58 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37ED242045;
-        Tue,  3 Mar 2020 06:10:58 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC7E14203F;
-        Tue,  3 Mar 2020 06:10:57 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Mar 2020 06:10:57 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C45C3A024B;
-        Tue,  3 Mar 2020 17:10:52 +1100 (AEDT)
-Subject: Re: [PATCH v3 03/27] powerpc: Map & release OpenCAPI LPC memory
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-4-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Tue, 3 Mar 2020 17:10:56 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 01:12:04 -0500
+Received: by mail-ot1-f68.google.com with SMTP id b3so1904619otp.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 22:12:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Gq/3yKSGvZrh++9IegruTZ10brzhg9cnheydTKKfza0=;
+        b=G2GjwNv9lN32Lho4nclFA19SKiJf2vjcB7YJjjntip7ZmL5NB/zTb/C/qNY5lF6ohw
+         xZj1d9Zi7FmqdQZP39pTh9yYMxTUvzFIcHglxvFcGwF2O7ni1gGwXEMzXiOnov+FjUso
+         nUchSYqjnJAklZ5PZRIgMGmxymmWzexAS+H10mnAsEqYk3yVUvnucz40TBPtAih4G6wx
+         hXCY/2/ylat0wl7M3+Rb+47FdzfxkjQh5XYvf078iLuRVx8M4xgHSSA/dwzEzDiY3RV2
+         uFFB/3ZGqHlE64cWHlQxtSnz45fbgCfMDMDCQoif5QBxjpoqK8iO7s0AzfqBttW6ntZn
+         ascw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Gq/3yKSGvZrh++9IegruTZ10brzhg9cnheydTKKfza0=;
+        b=gwKnq9BUgMiaKMYXKzzgVjV6M6OnKXQS2YWWNSfOF61bEwEurR6WgmY1b+3zxfuHN/
+         QDngOHjcFfq4q3/hoIg3glh+F3Rcu2pjVKdbwPI7+j52IoE7RfTdqrsFlFqUbhDzc1Jh
+         lhCYM2Ed3tEBW0WOhG2ztn9+0o8uYIdGHF8UMrwxHWoBRrKC0jZ/unZn8MlQTFWQ2HID
+         auzK0ynMFo8XyPa9I/6kDwa6yxiJGxq/+4iKz1Ke9zV1iar/P4+pXnYhr07yvRuBm54t
+         a75qQtavABj42Zfe1bUBUSle+MlMIXt4z4ApYWkMidcjIH2v/exBKJJ4jyr2iNevOaKL
+         csTw==
+X-Gm-Message-State: ANhLgQ3czrlbBMdV6aHw5b58G5jglTcAfZwjR6ki4RmTYB13U6RWA71D
+        vKniSqHsD52RysbBkiqUyNs27Q==
+X-Google-Smtp-Source: ADFU+vv95CXgWq8Xutk77esPJtjt3xQD8GBhtSJlxQcGmNWM+9/c8qSQT4iINbrY94/MJlh9qRtClw==
+X-Received: by 2002:a05:6830:114:: with SMTP id i20mr2230238otp.320.1583215922975;
+        Mon, 02 Mar 2020 22:12:02 -0800 (PST)
+Received: from eggly.attlocal.net (172-10-233-147.lightspeed.sntcca.sbcglobal.net. [172.10.233.147])
+        by smtp.gmail.com with ESMTPSA id x69sm3512317oix.50.2020.03.02.22.12.01
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 02 Mar 2020 22:12:02 -0800 (PST)
+Date:   Mon, 2 Mar 2020 22:11:45 -0800 (PST)
+From:   Hugh Dickins <hughd@google.com>
+X-X-Sender: hugh@eggly.anvils
+To:     "Huang, Ying" <ying.huang@intel.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>
+Subject: Re: [PATCH] mm, migrate: Check return value of try_to_unmap()
+In-Reply-To: <20200303033645.280694-1-ying.huang@intel.com>
+Message-ID: <alpine.LSU.2.11.2003022150540.1344@eggly.anvils>
+References: <20200303033645.280694-1-ying.huang@intel.com>
+User-Agent: Alpine 2.11 (LSU 23 2013-08-11)
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-4-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030306-0020-0000-0000-000003AFE2AD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030306-0021-0000-0000-00002208104D
-Message-Id: <33ff636c-6b85-ed0d-275b-3e8697b5316f@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-03_01:2020-03-02,2020-03-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- phishscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0 bulkscore=0
- mlxlogscore=581 suspectscore=0 mlxscore=0 malwarescore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030047
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/2/20 2:26 pm, Alastair D'Silva wrote:> +#ifdef 
-CONFIG_MEMORY_HOTPLUG_SPARSE
-> +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
-> +{
-> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
-> +	struct pnv_phb *phb = hose->private_data;
-> +	u32 bdfn = pci_dev_id(pdev);
-> +	__be64 base_addr_be64;
-> +	u64 base_addr;
-> +	int rc;
-> +
-> +	rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size, &base_addr_be64);
+On Tue, 3 Mar 2020, Huang, Ying wrote:
+> From: Huang Ying <ying.huang@intel.com>
+> 
+> During the page migration, try_to_unmap() is called to replace the
+> page table entries with the migration entries.  Now its return value
+> is ignored, that is generally OK in most cases.  But in theory, it's
+> possible that try_to_unmap() return false (failure) for the page
+> migration after arch_unmap_one() is called in unmap code.  Even if
+> without arch_unmap_one(), it makes code more robust for the future
+> code changing to check the return value.
 
-Sparse warning:
+No. This patch serves no purpose, and introduces a bug.
 
-https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15776//artifact/linux/report.txt
+More robust? Robustness is provided by the later expected_count
+checks, with freezing where necessary.
 
-I think in patch 1 we need to change a uint64_t to a __be64.
+Saving time by not going further if try_to_unmap() failed?
+That's done by the page_mapped() checks immediately following
+the try_to_unmap() calls (just out of sight in two cases).
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+> 
+> Known issue: I don't know what is the appropriate error code for
+> try_to_unmap() failure.  Whether EIO is OK?
 
+-EAGAIN is the rc already being used for this case,
+and which indicates that retries may be appropriate
+(but they're often scary overkill).
+
+> 
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Zi Yan <ziy@nvidia.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> ---
+>  mm/migrate.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/migrate.c b/mm/migrate.c
+> index 3900044cfaa6..981f8374a6ef 100644
+> --- a/mm/migrate.c
+> +++ b/mm/migrate.c
+> @@ -1116,8 +1116,11 @@ static int __unmap_and_move(struct page *page, struct page *newpage,
+>  		/* Establish migration ptes */
+>  		VM_BUG_ON_PAGE(PageAnon(page) && !PageKsm(page) && !anon_vma,
+>  				page);
+> -		try_to_unmap(page,
+> -			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
+> +		if (!try_to_unmap(page,
+> +			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS)) {
+> +			rc = -EIO;
+> +			goto out_unlock_both;
+
+No: even if try_to_unmap() says that it did not entirely succeed,
+it may have unmapped some ptes, inserting migration entries in their
+place. Those need to be replaced by proper ptes before the page is
+unlocked, which page_was_mapped 1 and remove_migration_ptes() do;
+but this goto skips those.
+ 
+> +		}
+>  		page_was_mapped = 1;
+>  	}
+>  
+> @@ -1337,8 +1340,11 @@ static int unmap_and_move_huge_page(new_page_t get_new_page,
+>  		goto put_anon;
+>  
+>  	if (page_mapped(hpage)) {
+> -		try_to_unmap(hpage,
+> -			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS);
+> +		if (!try_to_unmap(hpage,
+> +			TTU_MIGRATION|TTU_IGNORE_MLOCK|TTU_IGNORE_ACCESS)) {
+> +			rc = -EIO;
+> +			goto unlock_both;
+
+Same as above.
+
+> +		}
+>  		page_was_mapped = 1;
+>  	}
+>  
+> @@ -1349,6 +1355,7 @@ static int unmap_and_move_huge_page(new_page_t get_new_page,
+>  		remove_migration_ptes(hpage,
+>  			rc == MIGRATEPAGE_SUCCESS ? new_hpage : hpage, false);
+>  
+> +unlock_both:
+>  	unlock_page(new_hpage);
+>  
+>  put_anon:
+> @@ -2558,8 +2565,7 @@ static void migrate_vma_unmap(struct migrate_vma *migrate)
+>  			continue;
+>  
+>  		if (page_mapped(page)) {
+> -			try_to_unmap(page, flags);
+> -			if (page_mapped(page))
+> +			if (!try_to_unmap(page, flags))
+>  				goto restore;
+>  		}
+>  
+> -- 
+> 2.25.0
