@@ -2,150 +2,131 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11970C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97A9CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8FDD20863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:26:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70D7F20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:28:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="jTYYh8x3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hMFIc0CL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgCCJ0d (ORCPT
+        id S1728146AbgCCJ2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:26:33 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:37669 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727357AbgCCJ0d (ORCPT
+        Tue, 3 Mar 2020 04:28:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25394 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728049AbgCCJ2H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:26:33 -0500
-Received: by mail-il1-f193.google.com with SMTP id a6so2162377ilc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:26:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q9Z8EsyPHV9U0NaiC6B9M0rvBM6gtbnKLyzu2j7BTPk=;
-        b=jTYYh8x31RkzNU33Z6lQeUgOoxxpnukS+yid4FC8FJzzyyH0SDDGWJ7wmGFqxzt1U3
-         ifsrEQ7nwWxkNrLVlPAYrCXiE7lSYj+WiO72qZu3u+/Oo03L4Xpoloy0eSa5/wZjMVQH
-         faFgkLebRgrbn85uVDC/g5bh+gX1xho/fGSc0=
+        Tue, 3 Mar 2020 04:28:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583227686;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=JawvsztqURHUMrivAZK9itm+6zuMO8VTLICNdnI7dxo=;
+        b=hMFIc0CLGIWvyEMhAvtDytMosd8AHGgA2I9YUdZtQsGEu6eqEDBQcUuXU5MRCBWiYHLxVX
+        GCB6HpBs78v99997mZSeKdDsW6RhbzMy7XFkNYfKR1A2GweLWMySM2KBHhafaNrpnTqWQm
+        0A5YG50M8EtIdAtyM4SmiTi52W1YxkU=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198-eSL3z9yoN5CjaJRzZsY-5A-1; Tue, 03 Mar 2020 04:28:04 -0500
+X-MC-Unique: eSL3z9yoN5CjaJRzZsY-5A-1
+Received: by mail-wr1-f71.google.com with SMTP id m13so964855wrw.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:28:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q9Z8EsyPHV9U0NaiC6B9M0rvBM6gtbnKLyzu2j7BTPk=;
-        b=rrvV7sv8DSnqbWS6OJhcuaOigYtkteEq0Ck0azDF/dd7j/dsl7xH93Mrt/Kcq6dOZv
-         dZ4WNhV2SYcwFhcT8zsTNeUTDqlD/Gd8iAklFtq++75NwDVTAAGOsptQXgmbtwZm7NN5
-         WQm+wfWH0fJxo8YnLntsEDOTfkwKBvw01vhbiJfSDJNujyxy3+O8/iDL27MHhrnK63A3
-         gZaf99Kr3TNND4+h2DKWoQbSoZSnEjgzwO2ahxo2r9+6+D3lW1dTydZigt6oFvqYRixr
-         15NxWyBjTWFIb2eiItjL1nXYl1k92U2JC5qPfAgydeFSLVO66vk9jZzh1RhCfR2TxdLt
-         TUmA==
-X-Gm-Message-State: ANhLgQ0J7+UmSWA25Ljg2lZZA3ga2bqthl2+wwtQUGZ+rqjbKqfvMQlw
-        ZidxKWUyJq+TgpQj8wdjJ3fXte8wfQe/th6s9oydKg==
-X-Google-Smtp-Source: ADFU+vskIDQQ4v2+q55l4lXqoUZZbVj8UY7SarjpCJCCHM9M7LqyjVaTqkIaH0IvB20GTwnkNr3zZG8eQdj4RMYQWMA=
-X-Received: by 2002:a92:8d41:: with SMTP id s62mr3559102ild.63.1583227592332;
- Tue, 03 Mar 2020 01:26:32 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JawvsztqURHUMrivAZK9itm+6zuMO8VTLICNdnI7dxo=;
+        b=EXitnmR9b7FuhCZM+1Fa0odjj5dWovsbuVI2OEKgwQIRkQxcDDLXMXTkO/LUJM/UJL
+         GnSBHmWxtXQMHn3uuTu283TzZ+sFSQPWjK2OC1G93nH2+m7+iIMrAjYpyj75r9ee9bMi
+         iSXQVuN4vBJLBMEPwkSGOfRV/EciIQ4rxMazrLDynohVYFlrSTDYwasEy5khNZgjW77g
+         lUmCGbuPm/HYyedyo55ylTNoHx+XAQZ6wTvNuU0PScC2V/uZErcWDqKChxGK4Itzy5dk
+         lKjnkhb6KnSVtHo2fi3JXeN5azWoRUGNnMyMfBrrM6/3+lx2M8Wz1O6o/dse+3qjf7Ky
+         7E7w==
+X-Gm-Message-State: ANhLgQ2jelGq83EX2KLHJmYaMrBd9xL5/xuqD11j9yYQkRYCNuWALaU+
+        5mhCIKk8tGZDVHGpKitr3RQSb0Gj81xYInWXx/x1IxwGFn+l4M98voPqu0EiiD2uhsnA21vvmMf
+        SnSqq0MPIxf2RE22pbX8tC5Mi
+X-Received: by 2002:a5d:68ce:: with SMTP id p14mr3888598wrw.315.1583227683197;
+        Tue, 03 Mar 2020 01:28:03 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsJpUVTnRWkgQAQclEelI+BOvdB7TqEFgh/PbQcMZ6SzEsdA+mGSHrg8PNex6myJcsME0a9aA==
+X-Received: by 2002:a5d:68ce:: with SMTP id p14mr3888556wrw.315.1583227682873;
+        Tue, 03 Mar 2020 01:28:02 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:4c52:2f3b:d346:82de? ([2001:b07:6468:f312:4c52:2f3b:d346:82de])
+        by smtp.gmail.com with ESMTPSA id a6sm3075433wmh.32.2020.03.03.01.28.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 01:28:02 -0800 (PST)
+Subject: Re: [PATCH v3 0/7] KVM: x86/mmu: nVMX: 5-level paging cleanup and
+ enabling
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200303020240.28494-1-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <748ad2db-f2da-d177-7ec8-54523465e64a@redhat.com>
+Date:   Tue, 3 Mar 2020 10:28:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
- <1582316494.3376.45.camel@HansenPartnership.com> <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
- <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
- <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com> <1509948.1583226773@warthog.procyon.org.uk>
-In-Reply-To: <1509948.1583226773@warthog.procyon.org.uk>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 3 Mar 2020 10:26:21 +0100
-Message-ID: <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200303020240.28494-1-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 10:13 AM David Howells <dhowells@redhat.com> wrote:
->
-> Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> > I'm doing a patch.   Let's see how it fares in the face of all these
-> > preconceptions.
->
-> Don't forget the efficiency criterion.  One reason for going with fsinfo(2) is
-> that scanning /proc/mounts when there are a lot of mounts in the system is
-> slow (not to mention the global lock that is held during the read).
->
-> Now, going with sysfs files on top of procfs links might avoid the global
-> lock, and you can avoid rereading the options string if you export a change
-> notification, but you're going to end up injecting a whole lot of pathwalk
-> latency into the system.
+On 03/03/20 03:02, Sean Christopherson wrote:
+> Clean up MMU code related to 5 level paging, expose 5-level EPT to L1, and
+> additional clean up on top (mostly renames of functions/variables that
+> caused me no end of confusion when trying to figure out what was broken
+> at various times).
+> 
+> v3:
+>   - Dropped fixes for existing 5-level bugs (merged for 5.6).
+>   - Use get_guest_pgd() instead of get_guest_cr3_or_eptp(). [Paolo]
+>   - Add patches to fix MMU role calculation to play nice with 5-level
+>     paging without requiring additional CR4.LA_57 bit.
+> 
+> v2:
+>   - Increase the nested EPT array sizes to accomodate 5-level paging in
+>     the patch that adds support for 5-level nested EPT, not in the bug
+>     fix for 5-level shadow paging.
+> 
+> Sean Christopherson (7):
+>   KVM: x86/mmu: Don't drop level/direct from MMU role calculation
+>   KVM: x86/mmu: Drop kvm_mmu_extended_role.cr4_la57 hack
+>   KVM: nVMX: Allow L1 to use 5-level page walks for nested EPT
+>   KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
+>   KVM: nVMX: Rename EPTP validity helper and associated variables
+>   KVM: x86/mmu: Rename kvm_mmu->get_cr3() to ->get_guest_pgd()
+>   KVM: nVMX: Drop unnecessary check on ept caps for execute-only
+> 
+>  arch/x86/include/asm/kvm_host.h |  3 +-
+>  arch/x86/include/asm/vmx.h      | 12 +++++++
+>  arch/x86/kvm/mmu/mmu.c          | 59 +++++++++++++++++----------------
+>  arch/x86/kvm/mmu/paging_tmpl.h  |  4 +--
+>  arch/x86/kvm/svm.c              |  2 +-
+>  arch/x86/kvm/vmx/nested.c       | 52 ++++++++++++++++++-----------
+>  arch/x86/kvm/vmx/nested.h       |  4 +--
+>  arch/x86/kvm/vmx/vmx.c          |  3 +-
+>  arch/x86/kvm/x86.c              |  2 +-
+>  9 files changed, 82 insertions(+), 59 deletions(-)
+> 
 
-Completely irrelevant.  Cached lookup is so much optimized, that you
-won't be able to see any of it.
+Queued, thanks.  I have a cleanup on top to unify set_cr3 and
+set_tdp_cr3, which I'll post after testing it.
 
-No, I don't think this is going to be a performance issue at all, but
-if anything we could introduce a syscall
+Paolo
 
-  ssize_t readfile(int dfd, const char *path, char *buf, size_t
-bufsize, int flags);
-
-that is basically the equivalent of open + read + close, or even a
-vectored variant that reads multiple files.  But that's off topic
-again, since I don't think there's going to be any performance issue
-even with plain I/O syscalls.
-
->
-> On top of that, it isn't going to help with the case that I'm working towards
-> implementing where a container manager can monitor for mounts taking place
-> inside the container and supervise them.  What I'm proposing is that during
-> the action phase (eg. FSCONFIG_CMD_CREATE), fsconfig() would hand an fd
-> referring to the context under construction to the manager, which would then
-> be able to call fsinfo() to query it and fsconfig() to adjust it, reject it or
-> permit it.  Something like:
->
->         fd = receive_context_to_supervise();
->         struct fsinfo_params params = {
->                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
->                 .request        = FSINFO_ATTR_SB_OPTIONS,
->         };
->         fsinfo(fd, NULL, &params, sizeof(params), buffer, sizeof(buffer));
->         supervise_parameters(buffer);
->         fsconfig(fd, FSCONFIG_SET_FLAG, "hard", NULL, 0);
->         fsconfig(fd, FSCONFIG_SET_STRING, "vers", "4.2", 0);
->         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_CREATE, NULL, NULL, 0);
->         struct fsinfo_params params = {
->                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
->                 .request        = FSINFO_ATTR_SB_NOTIFICATIONS,
->         };
->         struct fsinfo_sb_notifications sbnotify;
->         fsinfo(fd, NULL, &params, sizeof(params), &sbnotify, sizeof(sbnotify));
->         watch_super(fd, "", AT_EMPTY_PATH, watch_fd, 0x03);
->         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_PERMIT, NULL, NULL, 0);
->         close(fd);
->
-> However, the supervised mount may be happening in a completely different set
-> of namespaces, in which case the supervisor presumably wouldn't be able to see
-> the links in procfs and the relevant portions of sysfs.
-
-It would be a "jump" link to the otherwise invisible directory.
-
-Thanks,
-Miklos
