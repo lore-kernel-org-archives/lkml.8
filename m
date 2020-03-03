@@ -7,48 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33DDC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81008C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A87624697
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 546C3246E4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203811;
-	bh=FupRIPkoup1tnxLuEqow0cu0Uqe3EcqIS3/6snGndwQ=;
+	s=default; t=1583203816;
+	bh=AKiDxTBGwqzIwKAfhtt+V4AulIjqGDPCCSzA6zfwocA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qSHMqrqRl/1q8297/D/dPtPTg8hKzjG8TvRAd7vpwEZ1X6bhZzMcO5xPmM0O0w1ED
-	 vbXWwSaFTsmwKN/FEOb9Ypn8M3NNN/v7NBGbP4P0Ea4f3IBvCnOd24E0bq0VhLIrX3
-	 9OOEJBNCN+p+eJnDLU3OHmpgnLUaEy26lDIF0hgI=
+	b=twkwI+wXoiLMTLpFlHodjzSW2OCX9HTXB2wceSb1UQwdB94dFD5pGvVImcPh12hpd
+	 uT1e4WvhIqBGjjrmtOFiT3ySqQB4O2RRpBcdNHgruCb3ZFV85m2IUnNroIdk0n/O0Q
+	 SB6OZxouQUmOnqhl6AyS18s/lnMRmMm8tuMX3ZbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728430AbgCCCuJ (ORCPT
+        id S1729108AbgCCCuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:50:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46710 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:50:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729073AbgCCCuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:07 -0500
+        id S1728481AbgCCCuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:10 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBA66246E3;
-        Tue,  3 Mar 2020 02:50:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A3CB246E6;
+        Tue,  3 Mar 2020 02:50:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203806;
-        bh=FupRIPkoup1tnxLuEqow0cu0Uqe3EcqIS3/6snGndwQ=;
+        s=default; t=1583203810;
+        bh=AKiDxTBGwqzIwKAfhtt+V4AulIjqGDPCCSzA6zfwocA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eoVSTi+tyt0aHwiZQcDwJz5wD3G/EjymsziqfFMVlT7OJ77MC2QdWnYuZHHFw5K9F
-         XPtEATsGfZ0HxInqm+cFVqAwz6/FNIWB0abcKKzyG25bOdMeUe/Fj8BYBesgwzbOa6
-         w92yYcsIZHViGOcHQS7/EnykLt8HfB0LVU7BU/xA=
+        b=zfQI0oGGWyF4pshb4rsmgzjcf40NJHKTBOrr+98VuJyu2Wrq65cW4RIYjqDIZF4vz
+         ozD5TzOja7pqF/wBBnWjrSy09O/dH+nzn1IDrtfjxuOR2KmsuMf7TF3vuixqmNyEQI
+         ZVIv6N6zXLQwXW7lGPPZpDpCx5Hg/PTowCC7qnjw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michal Nazarewicz <mina86@mina86.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 03/13] usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
-Date:   Mon,  2 Mar 2020 21:49:52 -0500
-Message-Id: <20200303025002.10600-3-sashal@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Todd Kjos <tkjos@google.com>,
+        Alistair Delva <adelva@google.com>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        freedreno@lists.freedesktop.org,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.9 05/13] drm: msm: Fix return type of dsi_mgr_connector_mode_valid for kCFI
+Date:   Mon,  2 Mar 2020 21:49:54 -0500
+Message-Id: <20200303025002.10600-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303025002.10600-1-sashal@kernel.org>
 References: <20200303025002.10600-1-sashal@kernel.org>
@@ -61,51 +69,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+From: John Stultz <john.stultz@linaro.org>
 
-[ Upstream commit 43d565727a3a6fd24e37c7c2116475106af71806 ]
+[ Upstream commit 7fd2dfc3694922eb7ace4801b7208cf9f62ebc7d ]
 
-ffs_aio_cancel() can be called from both interrupt and thread context. Make
-sure that the current IRQ state is saved and restored by using
-spin_{un,}lock_irq{save,restore}().
+I was hitting kCFI crashes when building with clang, and after
+some digging finally narrowed it down to the
+dsi_mgr_connector_mode_valid() function being implemented as
+returning an int, instead of an enum drm_mode_status.
 
-Otherwise undefined behavior might occur.
+This patch fixes it, and appeases the opaque word of the kCFI
+gods (seriously, clang inlining everything makes the kCFI
+backtraces only really rough estimates of where things went
+wrong).
 
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Thanks as always to Sami for his help narrowing this down.
+
+Cc: Rob Clark <robdclark@gmail.com>
+Cc: Sean Paul <sean@poorly.run>
+Cc: Sami Tolvanen <samitolvanen@google.com>
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Alistair Delva <adelva@google.com>
+Cc: Amit Pundir <amit.pundir@linaro.org>
+Cc: Sumit Semwal <sumit.semwal@linaro.org>
+Cc: freedreno@lists.freedesktop.org
+Cc: clang-built-linux@googlegroups.com
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Amit Pundir <amit.pundir@linaro.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/function/f_fs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index d1278d2d544b4..b5747f1270a6d 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1077,18 +1077,19 @@ static int ffs_aio_cancel(struct kiocb *kiocb)
- {
- 	struct ffs_io_data *io_data = kiocb->private;
- 	struct ffs_epfile *epfile = kiocb->ki_filp->private_data;
-+	unsigned long flags;
- 	int value;
- 
- 	ENTER();
- 
--	spin_lock_irq(&epfile->ffs->eps_lock);
-+	spin_lock_irqsave(&epfile->ffs->eps_lock, flags);
- 
- 	if (likely(io_data && io_data->ep && io_data->req))
- 		value = usb_ep_dequeue(io_data->ep, io_data->req);
- 	else
- 		value = -EINVAL;
- 
--	spin_unlock_irq(&epfile->ffs->eps_lock);
-+	spin_unlock_irqrestore(&epfile->ffs->eps_lock, flags);
- 
- 	return value;
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index c8d1f19c9a6d9..10d49d43c17eb 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -306,7 +306,7 @@ static int dsi_mgr_connector_get_modes(struct drm_connector *connector)
+ 	return num;
  }
+ 
+-static int dsi_mgr_connector_mode_valid(struct drm_connector *connector,
++static enum drm_mode_status dsi_mgr_connector_mode_valid(struct drm_connector *connector,
+ 				struct drm_display_mode *mode)
+ {
+ 	int id = dsi_mgr_connector_get_id(connector);
 -- 
 2.20.1
 
