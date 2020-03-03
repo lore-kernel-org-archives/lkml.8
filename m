@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCE4C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFB8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DA372146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B9D220728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258038;
-	bh=Y2gDl/DBouWsnZ7k9yTDr+JWTxGOv496eoFBcZNk5EU=;
+	s=default; t=1583258042;
+	bh=DRIj/511LI9YCCerkUGQuQURMrZ2X0geKBW/bOYrSwk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yoTSwg5+hEvONFtH8Lhw6FQaFAOr7pnsNxwLhXRm603bL7NT5UR4zWULn5VKiw/jA
-	 thfMFxw6ocAozBsq68qAkF6Vcin0LxlDud313S9zOv4siOrOib2J/+WGz87XJwo8Cj
-	 nc602uLgwISmbHk3HT++7T91DT9E/9v1+10qdmk4=
+	b=uh7hADxdhnY5XWhcs+BX3RyNwUX17lyV0sWvSTnNzUPh0flrY24eGeVCpe+47YoC+
+	 ykx4+Emt9pPgnb9jUIFR9UUp+E30qFSmDFoD4rF9Oq3D9uYzsJ6XAyjIt0xQxjkJdJ
+	 Iv30tjV8sullibC49ayqU8u95jDnNV2dhzmqDXpg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732446AbgCCRx5 (ORCPT
+        id S1732457AbgCCRyA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:53:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34542 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731636AbgCCRxv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:51 -0500
+        id S1732431AbgCCRxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B42A220CC7;
-        Tue,  3 Mar 2020 17:53:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 243092146E;
+        Tue,  3 Mar 2020 17:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258031;
-        bh=Y2gDl/DBouWsnZ7k9yTDr+JWTxGOv496eoFBcZNk5EU=;
+        s=default; t=1583258033;
+        bh=DRIj/511LI9YCCerkUGQuQURMrZ2X0geKBW/bOYrSwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YOuXJ2SqfDPN7X8m6gC3BqfaVuJWSJXRdH9NURM6QJqbr0TW+tybNt46qZTpbK41n
-         mxUKGx80FjcBLacJA4I41boJyuQTDpkS/uSYqu4cZl2cLEwhTE4CxF9P+zeRwwPlUA
-         nIMNIRVpvQVXh6TsXCQxraLeNZjYEEp3QQP73B8Q=
+        b=nNSkFHdmnvFEd9dPcb/FDGvOw9gG/Qn034rPTs45n/FdtimMqc+zvXObEVyuiRzs0
+         3lV+vA3B8gBMFKbwxSMVs2x23FKUZzUzAb762G2bDCprWDlXwu3of4TMftx32FRljt
+         U2UMzpoyCh1647JSwSmFYa0QO3AuYnZXejBD6kB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aric Cyr <aric.cyr@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
+        stable@vger.kernel.org, Yongqiang Sun <yongqiang.sun@amd.com>,
+        Eric Yang <eric.yang2@amd.com>,
         Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 043/152] drm/amd/display: Check engine is not NULL before acquiring
-Date:   Tue,  3 Mar 2020 18:42:21 +0100
-Message-Id: <20200303174307.275923002@linuxfoundation.org>
+Subject: [PATCH 5.4 044/152] drm/amd/display: Limit minimum DPPCLK to 100MHz.
+Date:   Tue,  3 Mar 2020 18:42:22 +0100
+Message-Id: <20200303174307.397662650@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -62,38 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aric Cyr <aric.cyr@amd.com>
+From: Yongqiang Sun <yongqiang.sun@amd.com>
 
-[ Upstream commit 2b63d0ec0daf79ba503fa8bfa25e07dc3da274f3 ]
+[ Upstream commit 6c81917a0485ee2a1be0dc23321ac10ecfd9578b ]
 
 [Why]
-Engine can be NULL in some cases, so we must not acquire it.
+Underflow is observed when plug in a 4K@60 monitor with
+1366x768 eDP due to DPPCLK is too low.
 
 [How]
-Check for NULL engine before acquiring.
+Limit minimum DPPCLK to 100MHz.
 
-Signed-off-by: Aric Cyr <aric.cyr@amd.com>
-Reviewed-by: Harry Wentland <harry.wentland@amd.com>
+Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Reviewed-by: Eric Yang <eric.yang2@amd.com>
 Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/dce/dce_aux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-index c3f9f4185ce8d..cf877238fff9d 100644
---- a/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-+++ b/drivers/gpu/drm/amd/display/dc/dce/dce_aux.c
-@@ -386,7 +386,7 @@ static bool acquire(
- {
- 	enum gpio_result result;
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
+index 787f94d815f42..dd92f9c295b45 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
+@@ -91,6 +91,12 @@ void rn_update_clocks(struct clk_mgr *clk_mgr_base,
+ 		rn_vbios_smu_set_min_deep_sleep_dcfclk(clk_mgr, clk_mgr_base->clks.dcfclk_deep_sleep_khz);
+ 	}
  
--	if (!is_engine_available(engine))
-+	if ((engine == NULL) || !is_engine_available(engine))
- 		return false;
- 
- 	result = dal_ddc_open(ddc, GPIO_MODE_HARDWARE,
++	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
++	if (!IS_DIAG_DC(dc->ctx->dce_environment)) {
++		if (new_clocks->dppclk_khz < 100000)
++			new_clocks->dppclk_khz = 100000;
++	}
++
+ 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
+ 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
+ 			dpp_clock_lowered = true;
 -- 
 2.20.1
 
