@@ -2,53 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2CAC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B11EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19F552073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA7A2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258827;
-	bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
+	s=default; t=1583258828;
+	bh=ycZ1bxyQLndLiWxf3ue2qQI22SoB6PZQUs2l7+PFo+s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IUs9KQQ8AziWU2Fo5oMZDmGyKKeaLeuiQjCRen7uB2isRFOb2N1sNiRCBbpzkl8Wh
-	 GTVFjfWW+Ew9K8xl2vi9JbSJvQlivbIk64Ywf+lyp3Vyr3WX4yZ0IaN+sWyl3+HmMc
-	 yswwLGy9awn0cGY0lVzHA/GLAHOTEeCMT9RWFKKM=
+	b=jnKCwi7ge3S/CO4FUUHkrzA6JBDtr29+ljZhb8xvyYVniKVv30TJ1tp9vHAwxdtew
+	 Ou4qScESq4/F/Fc5yp2QN62mi6F/1yQ0cE94iPY1lCfR+mBBks2423RxYwJFvRrN25
+	 HCmhOcfcFeyIteaoyYFshuF8WV6KV4guDKYpzW3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732712AbgCCRz1 (ORCPT
+        id S1732703AbgCCRzZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:55:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36946 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:55:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732090AbgCCRzW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:55:22 -0500
+        id S1732690AbgCCRzU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:55:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EAC95206D5;
-        Tue,  3 Mar 2020 17:55:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8609B2072D;
+        Tue,  3 Mar 2020 17:55:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258121;
-        bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
+        s=default; t=1583258119;
+        bh=ycZ1bxyQLndLiWxf3ue2qQI22SoB6PZQUs2l7+PFo+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L041XZ+5lGmnP5b26A5GGktLNSP88tWbGPKihONYyvdLrxa8yuk/X/GHXHb0we81u
-         7w/QMFrhaYbbZkNoQ83Gs4Z3mRa7zvSPhZwdVjOrhjuEcArZbnnT8WcEucAxLTj4MM
-         7mj8hvbuxYEEEDtZvgLsZ9jCONL+skwDiE/FM/28=
+        b=Nwf7AAGrcMpvID0MBdJpbJgBS67mxbGsrsyMsNPijZ9P7Q7RBssQ8jV6qUpqu+6Og
+         KvtRV/mqwUycggvNSd8PEYbDKuX7H3hWUIRz9tNIQ2bPvLsoXGRAIOahptJmrpARQn
+         nuCXOEE7ivR7laRHbO6F+yzeHXLpg7S/hGwY3N+U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 052/152] net: ena: fix incorrect default RSS key
-Date:   Tue,  3 Mar 2020 18:42:30 +0100
-Message-Id: <20200303174308.333750993@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Korsnes <jkorsnes@cisco.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Armando Visconti <armando.visconti@st.com>,
+        Jiri Kosina <jkosina@suse.cz>
+Subject: [PATCH 5.4 078/152] HID: core: increase HID report buffer size to 8KiB
+Date:   Tue,  3 Mar 2020 18:42:56 +0100
+Message-Id: <20200303174311.385582971@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,83 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Johan Korsnes <jkorsnes@cisco.com>
 
-[ Upstream commit 0d1c3de7b8c78a5e44b74b62ede4a63629f5d811 ]
+commit 84a4062632462c4320704fcdf8e99e89e94c0aba upstream.
 
-Bug description:
-When running "ethtool -x <if_name>" the key shows up as all zeros.
+We have a HID touch device that reports its opens and shorts test
+results in HID buffers of size 8184 bytes. The maximum size of the HID
+buffer is currently set to 4096 bytes, causing probe of this device to
+fail. With this patch we increase the maximum size of the HID buffer to
+8192 bytes, making device probe and acquisition of said buffers succeed.
 
-When we use "ethtool -X <if_name> hfunc toeplitz hkey <some:random:key>" to
-set the key and then try to retrieve it using "ethtool -x <if_name>" then
-we return the correct key because we return the one we saved.
+Signed-off-by: Johan Korsnes <jkorsnes@cisco.com>
+Cc: Alan Stern <stern@rowland.harvard.edu>
+Cc: Armando Visconti <armando.visconti@st.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Bug cause:
-We don't fetch the key from the device but instead return the key
-that we have saved internally which is by default set to zero upon
-allocation.
-
-Fix:
-This commit fixes the issue by initializing the key to a random value
-using netdev_rss_key_fill().
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 15 +++++++++++++++
- drivers/net/ethernet/amazon/ena/ena_com.h |  1 +
- 2 files changed, 16 insertions(+)
+ include/linux/hid.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index e54c44fdcaa73..d6b894b06fa30 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -1041,6 +1041,19 @@ static int ena_com_get_feature(struct ena_com_dev *ena_dev,
- 				      feature_ver);
- }
+--- a/include/linux/hid.h
++++ b/include/linux/hid.h
+@@ -492,7 +492,7 @@ struct hid_report_enum {
+ };
  
-+static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
-+{
-+	struct ena_admin_feature_rss_flow_hash_control *hash_key =
-+		(ena_dev->rss).hash_key;
-+
-+	netdev_rss_key_fill(&hash_key->key, sizeof(hash_key->key));
-+	/* The key is stored in the device in u32 array
-+	 * as well as the API requires the key to be passed in this
-+	 * format. Thus the size of our array should be divided by 4
-+	 */
-+	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
-+}
-+
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
- {
- 	struct ena_rss *rss = &ena_dev->rss;
-@@ -2631,6 +2644,8 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
- 	if (unlikely(rc))
- 		goto err_hash_key;
+ #define HID_MIN_BUFFER_SIZE	64		/* make sure there is at least a packet size of space */
+-#define HID_MAX_BUFFER_SIZE	4096		/* 4kb */
++#define HID_MAX_BUFFER_SIZE	8192		/* 8kb */
+ #define HID_CONTROL_FIFO_SIZE	256		/* to init devices with >100 reports */
+ #define HID_OUTPUT_FIFO_SIZE	64
  
-+	ena_com_hash_key_fill_default_key(ena_dev);
-+
- 	rc = ena_com_hash_ctrl_init(ena_dev);
- 	if (unlikely(rc))
- 		goto err_hash_ctrl;
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.h b/drivers/net/ethernet/amazon/ena/ena_com.h
-index 0ce37d54ed108..9b5bd28ed0ac6 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.h
-@@ -44,6 +44,7 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/wait.h>
-+#include <linux/netdevice.h>
- 
- #include "ena_common_defs.h"
- #include "ena_admin_defs.h"
--- 
-2.20.1
-
 
 
