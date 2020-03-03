@@ -2,51 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F251C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 581C9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 028C32072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C47320656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259243;
-	bh=Qjyvv69TvJ2XwxB8JdC7/51eE9UYXSmJQHfW9d9906o=;
+	s=default; t=1583259248;
+	bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VldO3rL6c9UbcOgA2pleUNwC9mLg7REB2mhmGdbfDBFqj+FPtxANVJZlJv/BjyO4k
-	 JexRxP9O46FUjRyA/Afqh+azWR4FEI0FM2WQoRVkMxbODwogY+TkKViAdpbkc9Itha
-	 +tdbORPeEtHE1SPM/PLPSBeRjQKLTiol99yNBYUI=
+	b=TTN7szxcYoSS512ojqej2veoFglgHU2unsrgoVPJAAPgD+t7DZd39KEkydpwR6ekC
+	 +whdIm/wOCuSKzZULnPdWsobbeHagClGN6wtr5Juc6MTwr8O3013lRWvjLDjarQapK
+	 r29xZzu175Tb6pjl9KabflVmmTycPBsGGwxNIMj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732271AbgCCSOC (ORCPT
+        id S1732552AbgCCSNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:14:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50816 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:13:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730845AbgCCRpB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:01 -0500
+        id S1729578AbgCCRq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:46:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3101C208C3;
-        Tue,  3 Mar 2020 17:45:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E41020870;
+        Tue,  3 Mar 2020 17:46:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257500;
-        bh=Qjyvv69TvJ2XwxB8JdC7/51eE9UYXSmJQHfW9d9906o=;
+        s=default; t=1583257617;
+        bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILMpViOVKF6movICu85TSEgEhPPib7xVCOy3bWtky0h+DXtKv1Vf53hM7FndDYlzk
-         0yUvU6pl146XbddLTKd6bB42NEDuVjjengegPVq4TJud/QKA9nq964/ef2Xj96VxCx
-         wCu/SB3F/7dv69t+qam32e8m/Kvv9PpVc+68ThKg=
+        b=dmWeXrUM3Wvg+NAp82RwR5WPUJ1LGbbRkicEQrUB7pHOUYRom7KTLnf8UMsqS/fws
+         XCLno+LXxRg6vKHOs2Jj29GBIifemtHlhljVupOgBtB5OakGp2RO8tHxl8OD7wsUiW
+         roNbgfHwFijIsArfdEyKvmr7H0TQpIelcBgVMBO4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 002/176] net: dsa: b53: Ensure the default VID is untagged
-Date:   Tue,  3 Mar 2020 18:41:06 +0100
-Message-Id: <20200303174304.875613458@linuxfoundation.org>
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 063/176] net: ena: ena-com.c: prevent NULL pointer dereference
+Date:   Tue,  3 Mar 2020 18:42:07 +0100
+Message-Id: <20200303174311.916368094@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,35 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit d965a5432d4c3e6b9c3d2bc1d4a800013bbf76f6 ]
+[ Upstream commit c207979f5ae10ed70aff1bb13f39f0736973de99 ]
 
-We need to ensure that the default VID is untagged otherwise the switch
-will be sending tagged frames and the results can be problematic. This
-is especially true with b53 switches that use VID 0 as their default
-VLAN since VID 0 has a special meaning.
+comp_ctx can be NULL in a very rare case when an admin command is executed
+during the execution of ena_remove().
 
-Fixes: fea83353177a ("net: dsa: b53: Fix default VLAN ID")
-Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+The bug scenario is as follows:
+
+* ena_destroy_device() sets the comp_ctx to be NULL
+* An admin command is executed before executing unregister_netdev(),
+  this can still happen because our device can still receive callbacks
+  from the netdev infrastructure such as ethtool commands.
+* When attempting to access the comp_ctx, the bug occurs since it's set
+  to NULL
+
+Fix:
+Added a check that comp_ctx is not NULL
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/b53/b53_common.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -1353,6 +1353,9 @@ void b53_vlan_add(struct dsa_switch *ds,
- 
- 		b53_get_vlan_entry(dev, vid, vl);
- 
-+		if (vid == 0 && vid == b53_default_pvid(dev))
-+			untagged = true;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index 74743fd8a1e0a..304531332e70a 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -200,6 +200,11 @@ static void comp_ctxt_release(struct ena_com_admin_queue *queue,
+ static struct ena_comp_ctx *get_comp_ctxt(struct ena_com_admin_queue *queue,
+ 					  u16 command_id, bool capture)
+ {
++	if (unlikely(!queue->comp_ctx)) {
++		pr_err("Completion context is NULL\n");
++		return NULL;
++	}
 +
- 		vl->members |= BIT(port);
- 		if (untagged && !dsa_is_cpu_port(ds, port))
- 			vl->untag |= BIT(port);
+ 	if (unlikely(command_id >= queue->q_depth)) {
+ 		pr_err("command id is larger than the queue size. cmd_id: %u queue size %d\n",
+ 		       command_id, queue->q_depth);
+-- 
+2.20.1
+
 
 
