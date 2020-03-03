@@ -2,128 +2,351 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6F2C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2727BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F81C215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9FD62166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="DRJO6Duu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727717AbgCCHtQ (ORCPT
+        id S1727730AbgCCHtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:49:16 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:34818 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbgCCHtN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:49:13 -0500
-Received: by mail-io1-f69.google.com with SMTP id w16so1741742iot.2
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 23:49:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ZGg9d9RlpkSp9tiCdOBj7hjE3h8DLuUCRNUsn/fFdXk=;
-        b=U7cdaeAMetpt/9C3/bDwioJOanM/Ca4qk1Yn68dK8VoN2mBgfHR/4YhH8BiXch1T34
-         eZqQ18r9JTI6CcLxCEiOO49BtlW7BRnvL7zuZhmgI53VPvQaSlZmsgKcRqvIdbi4t6x/
-         nl+9Hg96DVIaeqd+Xwb7jZ4SC6Q1ZKCViOA81Vn8dqlY3AggMMsBuP5+tY0061CP6RBT
-         V3p6/Om+e7U0sFzrG+2bBsYVWXzU6g7f+BOlq+UfOUaFUEFsbuW1ewWKUOkH6/ivR23q
-         z8hzbTkotUphy+kYlJ0TtcsM0/l/y2EKLzjamTVZrnzndSspns6vz5Bdg2r/S0oSMadL
-         5PlA==
-X-Gm-Message-State: ANhLgQ3MAqKVQIXdwNXfTAPRxTZqYNORjTS7C7k/giRNctheL4PlqdpX
-        c/bD6bhQsdcXhFqI49wITBi6/Z5koFi9h24zAvv2QE81LZ2W
-X-Google-Smtp-Source: ADFU+vtq+Z0tEgLDgWc5E+/2DcRrLjUJQjPO+lwYFDXxBFzQQa9nltg2I6T05x3FDEkDFpd29Ba1cz1kElMF5vTpjV48wKj1xo52
+        Tue, 3 Mar 2020 02:49:22 -0500
+Received: from mail-db8eur05on2078.outbound.protection.outlook.com ([40.107.20.78]:23798
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727594AbgCCHtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 02:49:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SlPcfEOtr1u585vRLxFTaJt+60BD4Nssto6ThPjnDssVNIkctoVMiABPNETpdA8CwP9zuRHn5RDz3ii8aH3Ltrv4yVkVnor5CunI2oVf8vWaOckd/pzQXNUb+Vqax4sJoLEhbjTVHCqU2AzDbvZ5qN++vL+uiCCljLWKLKG+V48NCoUBO6P/DZSaMBwkLRGQuy4y2bKUfvQuJuIKisc8hkqfEDBRhWTmtG6D2FnHC6yGphtajg1jxlGhMFuRmTXw/fl7FxjkIn/XnlxvB8Bdj8ju0yN2LKB9In81gTDXZzkIuTfYwLUyToJ8ehmgOEMDYVvqs1pKdHWWsZPVs6wnRg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2IUUtzyZiT9A+3b/0gSn47gsIUIm5W29iNixTA2SaXI=;
+ b=ekpjhTQijlOYEcDQbvzXTgdmy2C5lVFLNL7K32CMWphl1q+78p4kd/s18qimLlYhUWhr5iccPWEWEuMHGV9077e6i7kg9y+W2OnitVSYHrGlmgdmp7RzzkS5EpmG0yyljen9akgIrwJAsCEO0Y6FQwZM7wxq1SLDV4OOD/QGU9Ou47JpPkwmqdZRULy+FeaUSf71FVmUjH40ahvmCv3qtbe/ojL1EFsWblSW4zH+KkQa0vOgD+o1x55Fm30nkdsEr/ZzH3lF1AfB2IVFuw9vAsgb8icW5+x92swffg3LCgM4KZjJEid9rV6Ff1u+bPfJwPzkEEB1ZSFOaGjDXwqeew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2IUUtzyZiT9A+3b/0gSn47gsIUIm5W29iNixTA2SaXI=;
+ b=DRJO6DuuthrLdPg7Id37bLcTUYc5E4GB0VhVEdNPLK5+WKcMJXBRAYlk56P1p3mqRySjuJWr/ZBkzyDKeIZbvF2xY0EX0i3W/VS2yOEQ+sSiZhIhAOzYrYqMnOsSlfLpgeGYjVLsniGBmnzj5AXIYrQNKIgyeV2BG1mt/MT1Ggk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4114.eurprd04.prod.outlook.com (52.134.94.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.18; Tue, 3 Mar 2020 07:49:14 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
+ 07:49:14 +0000
+From:   peng.fan@nxp.com
+To:     shawnguo@kernel.org, s.hauer@pengutronix.de,
+        jassisinghbrar@gmail.com, o.rempel@pengutronix.de
+Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
+        Anson.Huang@nxp.com, leonard.crestez@nxp.com, aisheng.dong@nxp.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH V5 2/4] mailbox: imx: restructure code to make easy for new MU
+Date:   Tue,  3 Mar 2020 15:42:37 +0800
+Message-Id: <1583221359-9285-3-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583221359-9285-1-git-send-email-peng.fan@nxp.com>
+References: <1583221359-9285-1-git-send-email-peng.fan@nxp.com>
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR06CA0250.apcprd06.prod.outlook.com
+ (2603:1096:4:ac::34) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:2c0c:: with SMTP id s12mr2801014ios.91.1583221752863;
- Mon, 02 Mar 2020 23:49:12 -0800 (PST)
-Date:   Mon, 02 Mar 2020 23:49:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000002e20b9059fee8a94@google.com>
-Subject: WARNING in idr_destroy
-From:   syzbot <syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com>
-To:     airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, maarten.lankhorst@linux.intel.com,
-        mripard@kernel.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0250.apcprd06.prod.outlook.com (2603:1096:4:ac::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2772.15 via Frontend Transport; Tue, 3 Mar 2020 07:49:10 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 241683e1-32f5-4b59-f44d-08d7bf475e0a
+X-MS-TrafficTypeDiagnostic: AM0PR04MB4114:|AM0PR04MB4114:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB4114E44E58CA3ED63C2788E188E40@AM0PR04MB4114.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3513;
+X-Forefront-PRVS: 03319F6FEF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(199004)(189003)(8936002)(69590400007)(52116002)(9686003)(6486002)(5660300002)(6512007)(8676002)(66946007)(81166006)(66556008)(66476007)(81156014)(26005)(36756003)(6666004)(956004)(478600001)(86362001)(4326008)(2906002)(2616005)(316002)(16526019)(6506007)(186003)(15650500001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4114;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: M5zwrqrsPdmyvkyNNW4EeadpAOD26HgCE2ST53LZ405QJVUDpl8t5lGmFdclwNB0qutWrCuZxbCpZKMjyUSB8jo/Ik2mj1hIpWYPjQlSq+DYd1hB2SB9THuzMMIkjOHB9KnWMjHOxRFYUV4kCOSs7eBIaHHCMMYvkW9K6UfdmxQTPIk7WqCEzaX3b2V3c9afsrwRcBq678d3P773EcXW3vut8xs7ilFIe+pGwAQy4QWpDXeKTRb2egYOxDY4/Dr/DRrl6NlKzIn+X8iy4ccYy/zMUiAXDn5Gyowv8CueOEhrrk1nHEPvxFcB5Hjf3iCWO86Hqpzl8ZLkBYyeTgaJEkLEshLGp2I8F/AipUdUWZZITHLF7+lTlUOjr/+z1m37OkV8uDmX5BzfdsL2wpG0/A/kGzRmbnScA9ZBsBK2o5RY/aQThEfDSlwTIm8/AgNHcZIR9Bh7WEUT3C3t5BAOM6A5SgtZgFHsnXt8YtkXyyWvx+B9ePL8AfpdY8jpBSv4
+X-MS-Exchange-AntiSpam-MessageData: qKL5Osl6Us6F692hQE/lSdEAKBBfImRF2Lwpk9P1oDnTzzjX/l71XD3Se2lZvHCdf8uHRbuyVEGAGnyr0huClzVsilfhLHPeg6l2N/x2c8S/rQHn2yfT1yvsYblsOUV7d52jJwPJAQZAxVQWtcAWeA==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 241683e1-32f5-4b59-f44d-08d7bf475e0a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 07:49:14.0672
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: p+BX58rTPBbDeeXVIJf4wRf1oSHKQ+zL0qG7L2gED3STcUpEsu5WI7P1aJOdTH84LDYx/XBwa9/BbvHib/1AMQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Peng Fan <peng.fan@nxp.com>
 
-syzbot found the following crash on:
+Add imx_mu_generic_tx for data send and imx_mu_generic_rx for interrupt
+data receive.
 
-HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=10e978e3e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-dashboard link: https://syzkaller.appspot.com/bug?extid=05835159fe322770fe3d
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14e978e3e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10b1a819e00000
+Pack original mu chans related code into imx_mu_init_generic
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+05835159fe322770fe3d@syzkaller.appspotmail.com
+Add tx/rx/init hooks into imx_mu_dcfg
 
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007fc6b3362d90 R14: 0000000000000004 R15: 000000000000002d
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 12260 at lib/radix-tree.c:682 radix_tree_free_nodes lib/radix-tree.c:682 [inline]
-WARNING: CPU: 0 PID: 12260 at lib/radix-tree.c:682 idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 12260 Comm: syz-executor386 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- panic+0x264/0x7a9 kernel/panic.c:221
- __warn+0x209/0x210 kernel/panic.c:582
- report_bug+0x1b6/0x2f0 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
- do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:radix_tree_free_nodes lib/radix-tree.c:682 [inline]
-RIP: 0010:idr_destroy+0x1ae/0x260 lib/radix-tree.c:1572
-Code: b5 63 f9 48 89 df 48 c7 c6 c0 0a 13 88 e8 6a ce 50 f9 4c 3b 65 b8 74 57 e8 cf b5 63 f9 4d 89 fc e9 67 ff ff ff e8 c2 b5 63 f9 <0f> 0b eb d5 89 f9 80 e1 07 38 c1 7c 84 e8 c0 de a0 f9 e9 7a ff ff
-RSP: 0018:ffffc90005107ba0 EFLAGS: 00010293
-RAX: ffffffff881363be RBX: ffff888087dba998 RCX: ffff888094062300
-RDX: 0000000000000000 RSI: 0000000000000040 RDI: ffff888087dba988
-RBP: ffffc90005107be8 R08: ffffffff88136330 R09: ffffed1012a78181
-R10: ffffed1012a78181 R11: 0000000000000000 R12: ffff888087dba980
-R13: 0000000000000000 R14: dffffc0000000000 R15: 0000000000000000
- drm_mode_create_lease_ioctl+0x1347/0x1860 drivers/gpu/drm/drm_lease.c:583
- drm_ioctl_kernel+0x2cf/0x410 drivers/gpu/drm/drm_ioctl.c:786
- drm_ioctl+0x52f/0x890 drivers/gpu/drm/drm_ioctl.c:886
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl fs/ioctl.c:763 [inline]
- __do_sys_ioctl fs/ioctl.c:772 [inline]
- __se_sys_ioctl+0x113/0x190 fs/ioctl.c:770
- __x64_sys_ioctl+0x7b/0x90 fs/ioctl.c:770
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x44a4b9
-Code: e8 0c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b cc fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fc6b3362d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 000000000044a4b9
-RDX: 0000000020000040 RSI: ffffffffffffffc6 RDI: 0000000000000003
-RBP: 00000000006dbc20 R08: 0000000000000001 R09: 0000000000000039
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
-R13: 00007fc6b3362d90 R14: 0000000000000004 R15: 000000000000002d
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+With these, it will be a bit easy to introduce i.MX8/8X SCU type
+MU dedicated to communicate with SCU.
 
-
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+V5:
+ imx_mu_dcfg moved to below imx_mu_priv
+ Add init hooks
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+V4:
+ Pack MU chans init to imx_mu_init_generic
+V3:
+ New patch, restructure code.
+
+ drivers/mailbox/imx-mailbox.c | 137 +++++++++++++++++++++++++-----------------
+ 1 file changed, 83 insertions(+), 54 deletions(-)
+
+diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
+index 2cdcdc5f1119..df6c4ecd913c 100644
+--- a/drivers/mailbox/imx-mailbox.c
++++ b/drivers/mailbox/imx-mailbox.c
+@@ -36,13 +36,6 @@ enum imx_mu_chan_type {
+ 	IMX_MU_TYPE_RXDB,	/* Rx doorbell */
+ };
+ 
+-struct imx_mu_dcfg {
+-	u32	xTR[4];		/* Transmit Registers */
+-	u32	xRR[4];		/* Receive Registers */
+-	u32	xSR;		/* Status Register */
+-	u32	xCR;		/* Control Register */
+-};
+-
+ struct imx_mu_con_priv {
+ 	unsigned int		idx;
+ 	char			irq_desc[IMX_MU_CHAN_NAME_SIZE];
+@@ -67,18 +60,14 @@ struct imx_mu_priv {
+ 	bool			side_b;
+ };
+ 
+-static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
+-	.xTR	= {0x0, 0x4, 0x8, 0xc},
+-	.xRR	= {0x10, 0x14, 0x18, 0x1c},
+-	.xSR	= 0x20,
+-	.xCR	= 0x24,
+-};
+-
+-static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
+-	.xTR	= {0x20, 0x24, 0x28, 0x2c},
+-	.xRR	= {0x40, 0x44, 0x48, 0x4c},
+-	.xSR	= 0x60,
+-	.xCR	= 0x64,
++struct imx_mu_dcfg {
++	int (*tx)(struct imx_mu_priv *priv, struct imx_mu_con_priv *cp, void *data);
++	int (*rx)(struct imx_mu_priv *priv, struct imx_mu_con_priv *cp);
++	void (*init)(struct imx_mu_priv *priv);
++	u32	xTR[4];		/* Transmit Registers */
++	u32	xRR[4];		/* Receive Registers */
++	u32	xSR;		/* Status Register */
++	u32	xCR;		/* Control Register */
+ };
+ 
+ static struct imx_mu_priv *to_imx_mu_priv(struct mbox_controller *mbox)
+@@ -111,6 +100,40 @@ static u32 imx_mu_xcr_rmw(struct imx_mu_priv *priv, u32 set, u32 clr)
+ 	return val;
+ }
+ 
++static int imx_mu_generic_tx(struct imx_mu_priv *priv,
++			     struct imx_mu_con_priv *cp,
++			     void *data)
++{
++	u32 *arg = data;
++
++	switch (cp->type) {
++	case IMX_MU_TYPE_TX:
++		imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
++		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
++		break;
++	case IMX_MU_TYPE_TXDB:
++		imx_mu_xcr_rmw(priv, IMX_MU_xCR_GIRn(cp->idx), 0);
++		tasklet_schedule(&cp->txdb_tasklet);
++		break;
++	default:
++		dev_warn_ratelimited(priv->dev, "Send data on wrong channel type: %d\n", cp->type);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int imx_mu_generic_rx(struct imx_mu_priv *priv,
++			     struct imx_mu_con_priv *cp)
++{
++	u32 dat;
++
++	dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
++	mbox_chan_received_data(cp->chan, (void *)&dat);
++
++	return 0;
++}
++
+ static void imx_mu_txdb_tasklet(unsigned long data)
+ {
+ 	struct imx_mu_con_priv *cp = (struct imx_mu_con_priv *)data;
+@@ -123,7 +146,7 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
+ 	struct mbox_chan *chan = p;
+ 	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+ 	struct imx_mu_con_priv *cp = chan->con_priv;
+-	u32 val, ctrl, dat;
++	u32 val, ctrl;
+ 
+ 	ctrl = imx_mu_read(priv, priv->dcfg->xCR);
+ 	val = imx_mu_read(priv, priv->dcfg->xSR);
+@@ -152,8 +175,7 @@ static irqreturn_t imx_mu_isr(int irq, void *p)
+ 		imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_TIEn(cp->idx));
+ 		mbox_chan_txdone(chan, 0);
+ 	} else if (val == IMX_MU_xSR_RFn(cp->idx)) {
+-		dat = imx_mu_read(priv, priv->dcfg->xRR[cp->idx]);
+-		mbox_chan_received_data(chan, (void *)&dat);
++		priv->dcfg->rx(priv, cp);
+ 	} else if (val == IMX_MU_xSR_GIPn(cp->idx)) {
+ 		imx_mu_write(priv, IMX_MU_xSR_GIPn(cp->idx), priv->dcfg->xSR);
+ 		mbox_chan_received_data(chan, NULL);
+@@ -169,23 +191,8 @@ static int imx_mu_send_data(struct mbox_chan *chan, void *data)
+ {
+ 	struct imx_mu_priv *priv = to_imx_mu_priv(chan->mbox);
+ 	struct imx_mu_con_priv *cp = chan->con_priv;
+-	u32 *arg = data;
+-
+-	switch (cp->type) {
+-	case IMX_MU_TYPE_TX:
+-		imx_mu_write(priv, *arg, priv->dcfg->xTR[cp->idx]);
+-		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
+-		break;
+-	case IMX_MU_TYPE_TXDB:
+-		imx_mu_xcr_rmw(priv, IMX_MU_xCR_GIRn(cp->idx), 0);
+-		tasklet_schedule(&cp->txdb_tasklet);
+-		break;
+-	default:
+-		dev_warn_ratelimited(priv->dev, "Send data on wrong channel type: %d\n", cp->type);
+-		return -EINVAL;
+-	}
+ 
+-	return 0;
++	return priv->dcfg->tx(priv, cp, data);
+ }
+ 
+ static int imx_mu_startup(struct mbox_chan *chan)
+@@ -280,6 +287,22 @@ static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
+ 
+ static void imx_mu_init_generic(struct imx_mu_priv *priv)
+ {
++	unsigned int i;
++
++	for (i = 0; i < IMX_MU_CHANS; i++) {
++		struct imx_mu_con_priv *cp = &priv->con_priv[i];
++
++		cp->idx = i % 4;
++		cp->type = i >> 2;
++		cp->chan = &priv->mbox_chans[i];
++		priv->mbox_chans[i].con_priv = cp;
++		snprintf(cp->irq_desc, sizeof(cp->irq_desc),
++			 "imx_mu_chan[%i-%i]", cp->type, cp->idx);
++	}
++
++	priv->mbox.num_chans = IMX_MU_CHANS;
++	priv->mbox.of_xlate = imx_mu_xlate;
++
+ 	if (priv->side_b)
+ 		return;
+ 
+@@ -293,7 +316,6 @@ static int imx_mu_probe(struct platform_device *pdev)
+ 	struct device_node *np = dev->of_node;
+ 	struct imx_mu_priv *priv;
+ 	const struct imx_mu_dcfg *dcfg;
+-	unsigned int i;
+ 	int ret;
+ 
+ 	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+@@ -329,32 +351,19 @@ static int imx_mu_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	for (i = 0; i < IMX_MU_CHANS; i++) {
+-		struct imx_mu_con_priv *cp = &priv->con_priv[i];
+-
+-		cp->idx = i % 4;
+-		cp->type = i >> 2;
+-		cp->chan = &priv->mbox_chans[i];
+-		priv->mbox_chans[i].con_priv = cp;
+-		snprintf(cp->irq_desc, sizeof(cp->irq_desc),
+-			 "imx_mu_chan[%i-%i]", cp->type, cp->idx);
+-	}
+-
+ 	priv->side_b = of_property_read_bool(np, "fsl,mu-side-b");
+ 
++	priv->dcfg->init(priv);
++
+ 	spin_lock_init(&priv->xcr_lock);
+ 
+ 	priv->mbox.dev = dev;
+ 	priv->mbox.ops = &imx_mu_ops;
+ 	priv->mbox.chans = priv->mbox_chans;
+-	priv->mbox.num_chans = IMX_MU_CHANS;
+-	priv->mbox.of_xlate = imx_mu_xlate;
+ 	priv->mbox.txdone_irq = true;
+ 
+ 	platform_set_drvdata(pdev, priv);
+ 
+-	imx_mu_init_generic(priv);
+-
+ 	return devm_mbox_controller_register(dev, &priv->mbox);
+ }
+ 
+@@ -367,6 +376,26 @@ static int imx_mu_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
++	.tx	= imx_mu_generic_tx,
++	.rx	= imx_mu_generic_rx,
++	.init	= imx_mu_init_generic,
++	.xTR	= {0x0, 0x4, 0x8, 0xc},
++	.xRR	= {0x10, 0x14, 0x18, 0x1c},
++	.xSR	= 0x20,
++	.xCR	= 0x24,
++};
++
++static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
++	.tx	= imx_mu_generic_tx,
++	.rx	= imx_mu_generic_rx,
++	.init	= imx_mu_init_generic,
++	.xTR	= {0x20, 0x24, 0x28, 0x2c},
++	.xRR	= {0x40, 0x44, 0x48, 0x4c},
++	.xSR	= 0x60,
++	.xCR	= 0x64,
++};
++
+ static const struct of_device_id imx_mu_dt_ids[] = {
+ 	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
+ 	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
+-- 
+2.16.4
+
