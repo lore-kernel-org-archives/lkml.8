@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C66C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60727C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18864208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B1A208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258977;
-	bh=nSQ2JwEEUlpH+KtDNU/5jZzofFq9d1NFcnnlpJQLjAI=;
+	s=default; t=1583258967;
+	bh=c21TfbwGAmY04joA/5Jg2fRADSeF3iapOKvmXyOEypY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cW5eEkCn9bzRw9iQsTP7ykPSfmwsNaCFGomwnh2Gbt06TtgtHWzzzMmWmTXfVFS1F
-	 df1iNQrrdE7/WgARZnDGnNopTBalUhgtzgPGv9oOlo7EBMGjWhMeWmF8rZ8OfdT1ys
-	 RxFDMnzac8R2YEWekeaedb9bo81B54/U0q8p8u6M=
+	b=hRXD1MnGHzxa6UG7k51bJ499o7NSl4DWaHXrU9y3AOYXm3jRd8K8g2W/8s2BtuKBS
+	 va8eR+r/RUI0foeRXSmkV/BkHNH3UbH0s54Vk+pHDxrXB48/sKBAVWYqhbZHk8+X1z
+	 RIr7Woo9uSEMPemKmEm8SgKQuFeSOmvePws0m4Vo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732854AbgCCSJf (ORCPT
+        id S1732172AbgCCRwd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:09:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60538 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:52:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730562AbgCCRwO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:52:14 -0500
+        id S1731400AbgCCRw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:52:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3AA4120CC7;
-        Tue,  3 Mar 2020 17:52:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5867A20728;
+        Tue,  3 Mar 2020 17:52:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257932;
-        bh=nSQ2JwEEUlpH+KtDNU/5jZzofFq9d1NFcnnlpJQLjAI=;
+        s=default; t=1583257948;
+        bh=c21TfbwGAmY04joA/5Jg2fRADSeF3iapOKvmXyOEypY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lHootr17igh5pkxxq6dbgJ78HSWt2vWf7YIVrjkeDwKYsC/K6jQyn94raJzWNGnaj
-         IFXJEJz11uCYNtgUh1UmVTLIs3Bwipl/RxfTeya3yFsdKDKRc9ZK/6y+zQ1+LHSImQ
-         HSxsQ6/UQo4/bRcq0a6CblvtkW7HJIa1juOFg+YM=
+        b=THojV6H1QZ//0SGx+HqZLKqLy6TocuvfEVNhpsK1kemRx2/eoXG8WwKp80gCC+2q0
+         5AMBygOf8NF5k8DiMwOLLcp/4hqD7Q3fi7acsUH/b1abQeukSu2hDs0sT1V1kGbcL+
+         GI0/TLUaU4cgHXl3jfiBCd/UPIql+Xbccucm1q4w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 5.5 163/176] thermal: brcmstb_thermal: Do not use DT coefficients
-Date:   Tue,  3 Mar 2020 18:43:47 +0100
-Message-Id: <20200303174323.076645343@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 006/152] net: mscc: fix in frame extraction
+Date:   Tue,  3 Mar 2020 18:41:44 +0100
+Message-Id: <20200303174303.216257661@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
-References: <20200303174304.593872177@linuxfoundation.org>
+In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
+References: <20200303174302.523080016@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,100 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
 
-commit e1ff6fc22f19e2af8adbad618526b80067911d40 upstream.
+[ Upstream commit a81541041ceb55bcec9a8bb8ad3482263f0a205a ]
 
-At the time the brcmstb_thermal driver and its binding were merged, the
-DT binding did not make the coefficients properties a mandatory one,
-therefore all users of the brcmstb_thermal driver out there have a non
-functional implementation with zero coefficients. Even if these
-properties were provided, the formula used for computation is incorrect.
+Each extracted frame on Ocelot has an IFH. The frame and IFH are extracted
+by reading chuncks of 4 bytes from a register.
 
-The coefficients are entirely process specific (right now, only 28nm is
-supported) and not board or SoC specific, it is therefore appropriate to
-hard code them in the driver given the compatibility string we are
-probed with which has to be updated whenever a new process is
-introduced.
+In case the IFH and frames were read corretly it would try to read the next
+frame. In case there are no more frames in the queue, it checks if there
+were any previous errors and in that case clear the queue. But this check
+will always succeed also when there are no errors. Because when extracting
+the IFH the error is checked against 4(number of bytes read) and then the
+error is set only if the extraction of the frame failed. So in a happy case
+where there are no errors the err variable is still 4. So it could be
+a case where after the check that there are no more frames in the queue, a
+frame will arrive in the queue but because the error is not reseted, it
+would try to flush the queue. So the frame will be lost.
 
-We remove the existing coefficients definition since subsequent patches
-are going to add support for a new process and will introduce new
-coefficients as well.
+The fix consist in resetting the error after reading the IFH.
 
-Fixes: 9e03cf1b2dd5 ("thermal: add brcmstb AVS TMON driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-Link: https://lore.kernel.org/r/20200114190607.29339-2-f.fainelli@gmail.com
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/thermal/broadcom/brcmstb_thermal.c |   31 ++++++++---------------------
- 1 file changed, 9 insertions(+), 22 deletions(-)
+ drivers/net/ethernet/mscc/ocelot_board.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/thermal/broadcom/brcmstb_thermal.c
-+++ b/drivers/thermal/broadcom/brcmstb_thermal.c
-@@ -49,7 +49,7 @@
- #define AVS_TMON_TP_TEST_ENABLE		0x20
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -112,6 +112,14 @@ static irqreturn_t ocelot_xtr_irq_handle
+ 		if (err != 4)
+ 			break;
  
- /* Default coefficients */
--#define AVS_TMON_TEMP_SLOPE		-487
-+#define AVS_TMON_TEMP_SLOPE		487
- #define AVS_TMON_TEMP_OFFSET		410040
++		/* At this point the IFH was read correctly, so it is safe to
++		 * presume that there is no error. The err needs to be reset
++		 * otherwise a frame could come in CPU queue between the while
++		 * condition and the check for error later on. And in that case
++		 * the new frame is just removed and not processed.
++		 */
++		err = 0;
++
+ 		ocelot_parse_ifh(ifh, &info);
  
- /* HW related temperature constants */
-@@ -108,23 +108,12 @@ struct brcmstb_thermal_priv {
- 	struct thermal_zone_device *thermal;
- };
- 
--static void avs_tmon_get_coeffs(struct thermal_zone_device *tz, int *slope,
--				int *offset)
--{
--	*slope = thermal_zone_get_slope(tz);
--	*offset = thermal_zone_get_offset(tz);
--}
--
- /* Convert a HW code to a temperature reading (millidegree celsius) */
- static inline int avs_tmon_code_to_temp(struct thermal_zone_device *tz,
- 					u32 code)
- {
--	const int val = code & AVS_TMON_TEMP_MASK;
--	int slope, offset;
--
--	avs_tmon_get_coeffs(tz, &slope, &offset);
--
--	return slope * val + offset;
-+	return (AVS_TMON_TEMP_OFFSET -
-+		(int)((code & AVS_TMON_TEMP_MAX) * AVS_TMON_TEMP_SLOPE));
- }
- 
- /*
-@@ -136,20 +125,18 @@ static inline int avs_tmon_code_to_temp(
- static inline u32 avs_tmon_temp_to_code(struct thermal_zone_device *tz,
- 					int temp, bool low)
- {
--	int slope, offset;
--
- 	if (temp < AVS_TMON_TEMP_MIN)
--		return AVS_TMON_TEMP_MAX; /* Maximum code value */
--
--	avs_tmon_get_coeffs(tz, &slope, &offset);
-+		return AVS_TMON_TEMP_MAX;	/* Maximum code value */
- 
--	if (temp >= offset)
-+	if (temp >= AVS_TMON_TEMP_OFFSET)
- 		return 0;	/* Minimum code value */
- 
- 	if (low)
--		return (u32)(DIV_ROUND_UP(offset - temp, abs(slope)));
-+		return (u32)(DIV_ROUND_UP(AVS_TMON_TEMP_OFFSET - temp,
-+					  AVS_TMON_TEMP_SLOPE));
- 	else
--		return (u32)((offset - temp) / abs(slope));
-+		return (u32)((AVS_TMON_TEMP_OFFSET - temp) /
-+			      AVS_TMON_TEMP_SLOPE);
- }
- 
- static int brcmstb_get_temp(void *data, int *temp)
+ 		dev = ocelot->ports[info.port]->dev;
 
 
