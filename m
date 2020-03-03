@@ -2,82 +2,138 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 836C9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F14DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5717B20838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 318C020838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:32:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="eiOxIkKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728672AbgCCKbJ (ORCPT
+        id S1728657AbgCCKcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:31:09 -0500
-Received: from smtp25.cstnet.cn ([159.226.251.25]:39436 "EHLO cstnet.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728520AbgCCKbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:31:09 -0500
-Received: from ubuntu.localdomain (unknown [183.131.110.115])
-        by APP-05 (Coremail) with SMTP id zQCowAD3_9PcMV5eXSnmBg--.57413S2;
-        Tue, 03 Mar 2020 18:30:54 +0800 (CST)
-From:   Xu Wang <vulab@iscas.ac.cn>
-To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
-Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] NFS: move dprintk after nfs_alloc_fattr in nfs3_proc_lookup
-Date:   Tue,  3 Mar 2020 18:30:52 +0800
-Message-Id: <20200303103052.6103-1-vulab@iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
-X-CM-TRANSID: zQCowAD3_9PcMV5eXSnmBg--.57413S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7WryUCw1DZr1DAFykCw1Utrb_yoWfCwb_ur
-        W2kr4xWw1rKr48Jr47G3yIyrZa93yrKFn2ka1fGFWxtrWUGayqka95urnxXa47CrWYkr45
-        A3srurWayr43CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbFAYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
-        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
-        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
-        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
-        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
-        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26F4j6r4UJw
-        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
-        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
-        WUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
-        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
-        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
-        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8sZ23UUUUU==
-X-Originating-IP: [183.131.110.115]
-X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCwIEA1z4jG8zTgAAs0
+        Tue, 3 Mar 2020 05:32:23 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60365 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728372AbgCCKcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:32:22 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WtcN0RCtz9sPg;
+        Tue,  3 Mar 2020 21:32:20 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1583231540;
+        bh=plIVQelLQN+Lhv6LVRXDSOs7Mt1qf+ql5n8cFWM5qC8=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=eiOxIkKNxkhy8BuTzjl2C8S7V8FWoaXiEldT4NoOUCn0HUgadrF25e6taTW9pGf1w
+         5I64che4K4w228Sj/uxYo0Lw7zi0NJjb+VsYtmOZwU+/3dWjkAe1KfsvGDFG6m/UzB
+         KOq6cXj4eEXSpsYkJZof2d1KTxZXD8vGFxOjR3LtMhC9R1Bw2S9CzzZXBjXFVje9UQ
+         1O9maQhH6RCyv5+xSdQjDZmwIHeFuU5Fkodz+72JYsA+9qrBTZn72OuwphM2O6LJBQ
+         1PF7WZ2ARePgjBcFQGFGN6d8fq3RlFSulZrELavsjYJSYO0TEBe+MUaH6ofC8U3KmR
+         m8X8oF93qTwJw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        kvm-ppc@vger.kernel.org
+Subject: Re: [PATCH 2/6] powerpc: kvm: no need to check return value of debugfs_create functions
+In-Reply-To: <20200303095849.GA1399072@kroah.com>
+References: <20200209105901.1620958-1-gregkh@linuxfoundation.org> <20200209105901.1620958-2-gregkh@linuxfoundation.org> <87imjlswxc.fsf@mpe.ellerman.id.au> <20200303085039.GA1323622@kroah.com> <87d09tsrf0.fsf@mpe.ellerman.id.au> <20200303095849.GA1399072@kroah.com>
+Date:   Tue, 03 Mar 2020 21:32:19 +1100
+Message-ID: <874kv5sp8s.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In nfs3_proc_lookup, if nfs_alloc_fattr fails, will only print
-"NFS call lookup". This may be confusing, move dprintk after
-nfs_alloc_fattr.
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> On Tue, Mar 03, 2020 at 08:45:23PM +1100, Michael Ellerman wrote:
+>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> > On Tue, Mar 03, 2020 at 06:46:23PM +1100, Michael Ellerman wrote:
+>> >> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> >> > When calling debugfs functions, there is no need to ever check the
+>> >> > return value.  The function can work or not, but the code logic should
+>> >> > never do something different based on this.
+>> >> 
+>> >> Except it does need to do something different, if the file was created
+>> >> it needs to be removed in the remove path.
+>> >> 
+>> >> > diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
+>> >> > index bfe4f106cffc..8e4791c6f2af 100644
+>> >> > --- a/arch/powerpc/kvm/timing.c
+>> >> > +++ b/arch/powerpc/kvm/timing.c
+>> >> > @@ -207,19 +207,12 @@ static const struct file_operations kvmppc_exit_timing_fops = {
+>> >> >  void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
+>> >> >  {
+>> >> >  	static char dbg_fname[50];
+>> >> > -	struct dentry *debugfs_file;
+>> >> >  
+>> >> >  	snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
+>> >> >  		 current->pid, id);
+>> >> > -	debugfs_file = debugfs_create_file(dbg_fname, 0666,
+>> >> > -					kvm_debugfs_dir, vcpu,
+>> >> > -					&kvmppc_exit_timing_fops);
+>> >> > -
+>> >> > -	if (!debugfs_file) {
+>> >> > -		printk(KERN_ERR"%s: error creating debugfs file %s\n",
+>> >> > -			__func__, dbg_fname);
+>> >> > -		return;
+>> >> > -	}
+>> >> > +	debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
+>> >> > +			    &kvmppc_exit_timing_fops);
+>> >> > +
+>> >> >  
+>> >> >  	vcpu->arch.debugfs_exit_timing = debugfs_file;
+>> >
+>> > Ugh, you are right, how did I miss that?  How is 0-day missing this?
+>> > It's been in my tree for a long time, odd.
+>> 
+>> This code isn't enabled by default, or in any defconfig. So it's only
+>> allmodconfig that would trip it, I guess 0-day isn't doing powerpc
+>> allmodconfig builds.
+>> 
+>> >> I squashed this in, which seems to work:
+>> ...
+>> >>  
+>> >>  void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
+>> >>  {
+>> >> -       if (vcpu->arch.debugfs_exit_timing) {
+>> >> +       if (!IS_ERR_OR_NULL(vcpu->arch.debugfs_exit_timing)) {
+>> >>                 debugfs_remove(vcpu->arch.debugfs_exit_timing);
+>> >>                 vcpu->arch.debugfs_exit_timing = NULL;
+>> >>         }
+>> >
+>> > No, this can just be:
+>> > 	debugfs_remove(vcpu->arch.debugfs_exit_timing);
+>> >
+>> > No need to check anything, just call it and the debugfs code can handle
+>> > it just fine.
+>> 
+>> Oh duh, of course, I should have checked.
+>> 
+>> I'd still like to NULL out the debugfs_exit_timing member, so I'll do:
+>> 
+>> void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
+>> {
+>> 	debugfs_remove(vcpu->arch.debugfs_exit_timing);
+>> 	vcpu->arch.debugfs_exit_timing = NULL;
+>> }
+>
+> Fair enough, but I doubt it ever matters :)
 
-Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
----
- fs/nfs/nfs3proc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yeah, but I'm paranoid and I have no way to test this code :)
 
-diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
-index a46d1d5d16d8..2397ceedba8a 100644
---- a/fs/nfs/nfs3proc.c
-+++ b/fs/nfs/nfs3proc.c
-@@ -179,11 +179,11 @@ nfs3_proc_lookup(struct inode *dir, struct dentry *dentry,
- 	if (nfs_lookup_is_soft_revalidate(dentry))
- 		task_flags |= RPC_TASK_TIMEOUT;
- 
--	dprintk("NFS call  lookup %pd2\n", dentry);
- 	res.dir_attr = nfs_alloc_fattr();
- 	if (res.dir_attr == NULL)
- 		return -ENOMEM;
- 
-+	dprintk("NFS call  lookup %pd2\n", dentry);
- 	nfs_fattr_init(fattr);
- 	status = rpc_call_sync(NFS_CLIENT(dir), &msg, task_flags);
- 	nfs_refresh_inode(dir, res.dir_attr);
--- 
-2.17.1
+> Thanks for the fixups, sorry for sending a broken patch, my fault.
 
+No worries, we have too many CONFIG options.
+
+cheers
