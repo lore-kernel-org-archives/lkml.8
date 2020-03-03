@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BBAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B76E7C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0FCB246D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FC74246EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203826;
-	bh=ABU12IfNmFeJk/drjZr/gSCCysZwfcqqTJ7L/m1fD/w=;
+	s=default; t=1583203828;
+	bh=JWZ9FwWt1KKnILBTWu7vLkJhY59MMHT8tRRn+QvVnhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mzFwTCyajCjKWtK7l5jatSSRaPiMQtsV99KVdm9vC9rnUw/5+OXhLNC+wYmxDULH7
-	 gxHdfrvjaNPGA4S1jZed1Boy4eJ8396540Txh/yXJzTcRs3vz+73y6m+pbsI85VKvD
-	 0IBRtk0Sv8smKSXLHwdx3l4dLowescZvOIBvoKmU=
+	b=WrIAwoaQhT3YY3eZ7YByVhU54jTisMhX8tZgRxIbZ2Vz7kg3i7CM3spcAKEVWgt5V
+	 Ax36b+wWCPOtFSIg5L1XJlXH+uKAhkqsXjYoZhMdlKs4MUNlzITVuhkxTPUhn613g7
+	 5fZprwAAMIowYoIVtTgi80c69i9VTwItyiJk/4kU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729162AbgCCCuZ (ORCPT
+        id S1729170AbgCCCu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:50:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46976 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:50:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbgCCCuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:16 -0500
+        id S1729114AbgCCCuR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE3472468D;
-        Tue,  3 Mar 2020 02:50:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 099F0246DE;
+        Tue,  3 Mar 2020 02:50:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203815;
-        bh=ABU12IfNmFeJk/drjZr/gSCCysZwfcqqTJ7L/m1fD/w=;
+        s=default; t=1583203817;
+        bh=JWZ9FwWt1KKnILBTWu7vLkJhY59MMHT8tRRn+QvVnhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tHfsE9DX56H6V0vyed2WCfbBV4qKlECEXi6wNly6q7Oe64niwLy8NgAh9rH44vxUs
-         Qz1/9UtxwiGcOB4QOwOvWe2dWB6h9V621n1kbDtk/blcg4vbSlIdyv6eoOWTQWB6k9
-         nMBs2si35KbnSihpuERicj3lvCfKQW2HtQPbbzGs=
+        b=hiPLmha1XMBj7OSfwknAmjJgIebYzH/J20gg3il9H70TgQXA7VDWyEkXBOwddVm2M
+         uj9dsj//fcVqw5DMCJE90KCBQ1wmLIjQKP9jBV5QDdV/cOPYhE+MzWnXhxnFFyIIw9
+         nmWHu8KB8aXZlDjxRq/sR2jrMWJQYB2cXS5MCj5Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Marek Vasut <marex@denx.de>,
@@ -46,9 +46,9 @@ Cc:     Marek Vasut <marex@denx.de>,
         Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
         YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/13] net: ks8851-ml: Fix 16-bit data access
-Date:   Mon,  2 Mar 2020 21:49:58 -0500
-Message-Id: <20200303025002.10600-9-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 10/13] net: ks8851-ml: Fix 16-bit IO operation
+Date:   Mon,  2 Mar 2020 21:49:59 -0500
+Message-Id: <20200303025002.10600-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303025002.10600-1-sashal@kernel.org>
 References: <20200303025002.10600-1-sashal@kernel.org>
@@ -63,10 +63,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit edacb098ea9c31589276152f09b4439052c0f2b1 ]
+[ Upstream commit 58292104832fef6cb4a89f736012c0e0724c3442 ]
 
-The packet data written to and read from Micrel KSZ8851-16MLLI must be
-byte-swapped in 16-bit mode, add this byte-swapping.
+The Micrel KSZ8851-16MLLI datasheet DS00002357B page 12 states that
+BE[3:0] signals are active high. This contradicts the measurements
+of the behavior of the actual chip, where these signals behave as
+active low. For example, to read the CIDER register, the bus must
+expose 0xc0c0 during the address phase, which means BE[3:0]=4'b1100.
 
 Signed-off-by: Marek Vasut <marex@denx.de>
 Cc: David S. Miller <davem@davemloft.net>
@@ -80,27 +83,27 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 721f851674531..20356976b9772 100644
+index 20356976b9772..d94e151cff12b 100644
 --- a/drivers/net/ethernet/micrel/ks8851_mll.c
 +++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -515,7 +515,7 @@ static inline void ks_inblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		*wptr++ = (u16)ioread16(ks->hw_addr);
-+		*wptr++ = be16_to_cpu(ioread16(ks->hw_addr));
- }
+@@ -484,7 +484,7 @@ static int msg_enable;
  
- /**
-@@ -529,7 +529,7 @@ static inline void ks_outblk(struct ks_net *ks, u16 *wptr, u32 len)
+ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  {
- 	len >>= 1;
- 	while (len--)
--		iowrite16(*wptr++, ks->hw_addr);
-+		iowrite16(cpu_to_be16(*wptr++), ks->hw_addr);
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	return ioread16(ks->hw_addr);
  }
+@@ -499,7 +499,7 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  
- static void ks_disable_int(struct ks_net *ks)
+ static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	iowrite16(value, ks->hw_addr);
+ }
 -- 
 2.20.1
 
