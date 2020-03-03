@@ -2,52 +2,51 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A340DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D77AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC1E2072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E49082072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257942;
-	bh=KjgFi/6YT/H1W0J/f5IdJMe0Gr2e1J10/BXIEZG8s0Y=;
+	s=default; t=1583257945;
+	bh=Qjyvv69TvJ2XwxB8JdC7/51eE9UYXSmJQHfW9d9906o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BgPdB0nN0uAg5UqEtw61uc98jwYdNUpRA7Yai2SZ0JmAgdlc7sIT0KewxJ8dwwW7D
-	 psG3UZrfI6DNRPafgDRHI5Wp8HwkmDAwHb81ZFeViME3qQQPb0hFu58bTAb7TnnjrX
-	 kOr2sJnXCo+E6NZZwf9eSzjkcbSx5scEjTIOCg2c=
+	b=ow/DBwvRI2hKpYfRfK9TL2kBCueXl7wE20yoobBXJQ+0A89dXllCEeVNRbpoibRqz
+	 j/Yfvw0cURiUB5Z4gF/nHIo+Pr7Ruhx8eTS+i1q2shu5iIUV7xYvwAZ97ynMUUALQY
+	 vyjzLdmisGKhYO2xtksH2GE+kcUjcseU8oi1aXXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732140AbgCCRwV (ORCPT
+        id S1732146AbgCCRwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:52:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60672 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:52:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731275AbgCCRwS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:52:18 -0500
+        id S1730992AbgCCRwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:52:21 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9046424671;
-        Tue,  3 Mar 2020 17:52:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1974A206D5;
+        Tue,  3 Mar 2020 17:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257938;
-        bh=KjgFi/6YT/H1W0J/f5IdJMe0Gr2e1J10/BXIEZG8s0Y=;
+        s=default; t=1583257940;
+        bh=Qjyvv69TvJ2XwxB8JdC7/51eE9UYXSmJQHfW9d9906o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hplU/+RD1uJExG3C52rhkMI3Efj2yD7VUcFiC9CQvKK3Wym9F6GKPHYPxP5LErMhQ
-         vl3RIi3C1VPutxsJgyjiCtT5AKFA7xNRzHgxJjlONcC+duwMQagSDlk8gMtDyaec3B
-         1GBkX/jFlzMJ12/5flwu02d1oUslIPycdR4bJbPY=
+        b=cWwjf1iR1K4kmsOb7EfHq1hSDQ1GudygyapqbozeWhjv5oD60d5VW21pf5dZ7I3tH
+         uW1wfNF9Kb8CYcI8u37KbmUpO9JoFapABtqk18FO8Vh9HSD5D2uoMaVjjSPxV/WvY6
+         MKgW1EDb+wI8TEay3cZFxmdc2FOc8xovBZO8H2Hw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aristeu Rozanski <aris@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 002/152] EDAC: skx_common: downgrade message importance on missing PCI device
-Date:   Tue,  3 Mar 2020 18:41:40 +0100
-Message-Id: <20200303174302.813659020@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 003/152] net: dsa: b53: Ensure the default VID is untagged
+Date:   Tue,  3 Mar 2020 18:41:41 +0100
+Message-Id: <20200303174302.912933039@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,42 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aristeu Rozanski <aris@redhat.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 854bb48018d5da261d438b2232fa683bdb553979 ]
+[ Upstream commit d965a5432d4c3e6b9c3d2bc1d4a800013bbf76f6 ]
 
-Both skx_edac and i10nm_edac drivers are loaded based on the matching CPU being
-available which leads the module to be automatically loaded in virtual machines
-as well. That will fail due the missing PCI devices. In both drivers the first
-function to make use of the PCI devices is skx_get_hi_lo() will simply print
+We need to ensure that the default VID is untagged otherwise the switch
+will be sending tagged frames and the results can be problematic. This
+is especially true with b53 switches that use VID 0 as their default
+VLAN since VID 0 has a special meaning.
 
-	EDAC skx: Can't get tolm/tohm
-
-for each CPU core, which is noisy. This patch makes it a debug message.
-
-Signed-off-by: Aristeu Rozanski <aris@redhat.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/20191204212325.c4k47p5hrnn3vpb5@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: fea83353177a ("net: dsa: b53: Fix default VLAN ID")
+Fixes: 061f6a505ac3 ("net: dsa: Add ndo_vlan_rx_{add, kill}_vid implementation")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/edac/skx_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/b53/b53_common.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
-index d8ff63d91b860..a04349c6d17ef 100644
---- a/drivers/edac/skx_common.c
-+++ b/drivers/edac/skx_common.c
-@@ -235,7 +235,7 @@ int skx_get_hi_lo(unsigned int did, int off[], u64 *tolm, u64 *tohm)
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -1353,6 +1353,9 @@ void b53_vlan_add(struct dsa_switch *ds,
  
- 	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, did, NULL);
- 	if (!pdev) {
--		skx_printk(KERN_ERR, "Can't get tolm/tohm\n");
-+		edac_dbg(2, "Can't get tolm/tohm\n");
- 		return -ENODEV;
- 	}
+ 		b53_get_vlan_entry(dev, vid, vl);
  
--- 
-2.20.1
-
++		if (vid == 0 && vid == b53_default_pvid(dev))
++			untagged = true;
++
+ 		vl->members |= BIT(port);
+ 		if (untagged && !dsa_is_cpu_port(ds, port))
+ 			vl->untag |= BIT(port);
 
 
