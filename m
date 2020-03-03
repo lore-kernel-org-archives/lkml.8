@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C676FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DA8AC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3086208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1270208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258978;
-	bh=ala5iqwtAVhgx3k4LxKBFPyVmpRQnPLjInTzeG/NRUE=;
+	s=default; t=1583258982;
+	bh=ZX8ylstOYNYN8SRncwF592s0hK32DUaiDh/ok8GJDC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AKI8PxarUFGZqpv2lc21efPiUb1+VZtBaOtX3E06U80WzH3ytqIQWB+ImzfCwah95
-	 29Oe0gZ9+mYkP8HT7twWGlmp3cVFQx6t/vREYEvq0WQyadKiAv2LiOvzaqtqTTMS2r
-	 eQKieqrDuLNokPrvR6y4OggPnIywgO1P/QRHt+Yo=
+	b=qtP5o/lByVXtszbsW4z0ohAW+G7HH20OXkUEZjDPCDD2SFdUCbRWQV2TtsbpYldsO
+	 BTi8CeM3mrWN37fmWwQAa73UohyQJi4rd27g1njtd14z3Li+P8nuGQXfxLThcJfkvd
+	 Ii0B2ICC6Cf6LIx+yAEdezW7nQgfSItmOD9FAkco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732096AbgCCRwE (ORCPT
+        id S1732072AbgCCRv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:52:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:51:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60154 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732081AbgCCRwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:52:00 -0500
+        id S1731820AbgCCRvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:55 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93D41206D5;
-        Tue,  3 Mar 2020 17:51:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97B6920CC7;
+        Tue,  3 Mar 2020 17:51:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257920;
-        bh=ala5iqwtAVhgx3k4LxKBFPyVmpRQnPLjInTzeG/NRUE=;
+        s=default; t=1583257915;
+        bh=ZX8ylstOYNYN8SRncwF592s0hK32DUaiDh/ok8GJDC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kYmCMggwHSbDhcQhfiVFFiy3lXHwk8po2xKI7ivkWntDM6E05A+gXz/JW/z/Q6aP7
-         b8VXEQRHiGd2oOWrm4Gv7fsPumG18PHvReXSyhdJP+bwCzV2b935UF/Rsm480oqZbh
-         d13YJiCtLNMQjIagT/DijLhjZHbCqT5qj1IDSB50=
+        b=zs1AOFYEIIOlPafL/Cnk/WlA0BqMrE7+NvzEpqSOKOZMes/bWlzm42aCAT9i9RyJs
+         yfKcjAshpZprbdCTOCFZmCui/tRK3nOEhvTcIttVVBWNgjz1afrTt7WZtGnrtRvWqF
+         VdSyZbP3TPJCGzBHh6kXOrhOIwa0nSMibE7Cu+n0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Subject: [PATCH 5.5 168/176] xfs: clear kernel only flags in XFS_IOC_ATTRMULTI_BY_HANDLE
-Date:   Tue,  3 Mar 2020 18:43:52 +0100
-Message-Id: <20200303174323.478185167@linuxfoundation.org>
+        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.5 166/176] bus: tegra-aconnect: Remove PM_CLK dependency
+Date:   Tue,  3 Mar 2020 18:43:50 +0100
+Message-Id: <20200303174323.314385414@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,69 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Sameer Pujar <spujar@nvidia.com>
 
-commit 953aa9d136f53e226448dbd801a905c28f8071bf upstream.
+commit 2f56acf818a08a9187ac8ec6e3d994fc13dc368d upstream.
 
-Don't allow passing arbitrary flags as they change behavior including
-memory allocation that the call stack is not prepared for.
+The ACONNECT bus driver does not use pm-clk interface anymore and hence
+the dependency can be removed from its Kconfig option.
 
-Fixes: ddbca70cc45c ("xfs: allocate xattr buffer on demand")
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: 0d7dab926130 ("bus: tegra-aconnect: use devm_clk_*() helpers")
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/xfs/libxfs/xfs_attr.h |    7 +++++--
- fs/xfs/xfs_ioctl.c       |    2 ++
- fs/xfs/xfs_ioctl32.c     |    2 ++
- 3 files changed, 9 insertions(+), 2 deletions(-)
+ drivers/bus/Kconfig |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/fs/xfs/libxfs/xfs_attr.h
-+++ b/fs/xfs/libxfs/xfs_attr.h
-@@ -26,7 +26,7 @@ struct xfs_attr_list_context;
-  *========================================================================*/
- 
- 
--#define ATTR_DONTFOLLOW	0x0001	/* -- unused, from IRIX -- */
-+#define ATTR_DONTFOLLOW	0x0001	/* -- ignored, from IRIX -- */
- #define ATTR_ROOT	0x0002	/* use attrs in root (trusted) namespace */
- #define ATTR_TRUST	0x0004	/* -- unused, from IRIX -- */
- #define ATTR_SECURE	0x0008	/* use attrs in security namespace */
-@@ -37,7 +37,10 @@ struct xfs_attr_list_context;
- #define ATTR_KERNOVAL	0x2000	/* [kernel] get attr size only, not value */
- 
- #define ATTR_INCOMPLETE	0x4000	/* [kernel] return INCOMPLETE attr keys */
--#define ATTR_ALLOC	0x8000	/* allocate xattr buffer on demand */
-+#define ATTR_ALLOC	0x8000	/* [kernel] allocate xattr buffer on demand */
-+
-+#define ATTR_KERNEL_FLAGS \
-+	(ATTR_KERNOTIME | ATTR_KERNOVAL | ATTR_INCOMPLETE | ATTR_ALLOC)
- 
- #define XFS_ATTR_FLAGS \
- 	{ ATTR_DONTFOLLOW, 	"DONTFOLLOW" }, \
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -462,6 +462,8 @@ xfs_attrmulti_by_handle(
- 
- 	error = 0;
- 	for (i = 0; i < am_hreq.opcount; i++) {
-+		ops[i].am_flags &= ~ATTR_KERNEL_FLAGS;
-+
- 		ops[i].am_error = strncpy_from_user((char *)attr_name,
- 				ops[i].am_attrname, MAXNAMELEN);
- 		if (ops[i].am_error == 0 || ops[i].am_error == MAXNAMELEN)
---- a/fs/xfs/xfs_ioctl32.c
-+++ b/fs/xfs/xfs_ioctl32.c
-@@ -450,6 +450,8 @@ xfs_compat_attrmulti_by_handle(
- 
- 	error = 0;
- 	for (i = 0; i < am_hreq.opcount; i++) {
-+		ops[i].am_flags &= ~ATTR_KERNEL_FLAGS;
-+
- 		ops[i].am_error = strncpy_from_user((char *)attr_name,
- 				compat_ptr(ops[i].am_attrname),
- 				MAXNAMELEN);
+--- a/drivers/bus/Kconfig
++++ b/drivers/bus/Kconfig
+@@ -139,7 +139,6 @@ config TEGRA_ACONNECT
+ 	tristate "Tegra ACONNECT Bus Driver"
+ 	depends on ARCH_TEGRA_210_SOC
+ 	depends on OF && PM
+-	select PM_CLK
+ 	help
+ 	  Driver for the Tegra ACONNECT bus which is used to interface with
+ 	  the devices inside the Audio Processing Engine (APE) for Tegra210.
 
 
