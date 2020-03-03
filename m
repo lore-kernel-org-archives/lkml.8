@@ -2,155 +2,102 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09069C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C276FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D55852073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jU4quvUi"
+	by mail.kernel.org (Postfix) with ESMTP id A1D3420836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729726AbgCCRBR (ORCPT
+        id S1730494AbgCCRBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:01:17 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:47486 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbgCCRBQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:01:16 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023GsOhe127300;
-        Tue, 3 Mar 2020 17:00:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=YHBXFBSktgQjLaRBFzopaXSA2ylIlKhMSsg5ZAsockc=;
- b=jU4quvUitJTwIwf5TegZ6FvIOBcS7nc9vzYDmvRycgAyYS2EIZXF4yJGEcLYrT3KdvuV
- jhRwojj9cPlXqOkY6n5kvVVh5G0J0mOX6h2eaYotu+Vqjpw4ByxwHjDLm4fFJo61pLRo
- H15BnFMK6Nmmx9uaHL2jKDU5x/l8JQAbgTk30omrZLmb+HN2S+d72h7gTcX1QAQI+pB+
- taCAcpWazu99ZdDj9UPHFQGKFfTGOwvQsMb6orDhb+8sLl+XznEFUvdYGO1dnPpJfAxg
- w/EOHLbWP8RmoSrRnwywhAKt7G3HJdQx4RcbxkUHJw8pUKTOr1XrBUdm//7T8wTxEqYK NQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2yffwqrknh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 17:00:17 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023GmTDr053801;
-        Tue, 3 Mar 2020 17:00:16 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2yg1p4vf44-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 17:00:16 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 023H0AJR001636;
-        Tue, 3 Mar 2020 17:00:11 GMT
-Received: from char.us.oracle.com (/10.152.32.25)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 09:00:10 -0800
-Received: by char.us.oracle.com (Postfix, from userid 1000)
-        id 7873A6A0129; Tue,  3 Mar 2020 12:03:53 -0500 (EST)
-Date:   Tue, 3 Mar 2020 12:03:53 -0500
-From:   Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-To:     Ashish Kalra <ashish.kalra@amd.com>
-Cc:     Konrad Rzeszutek Wilk <konrad@darnok.org>, hch@lst.de,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        x86@kernel.org, luto@kernel.org, peterz@infradead.org,
-        dave.hansen@linux-intel.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, brijesh.singh@amd.com,
-        Thomas.Lendacky@amd.com
-Subject: Re: [PATCH v2] swiotlb: Adjust SWIOTBL bounce buffer size for SEV
- guests.
-Message-ID: <20200303170353.GC31627@char.us.oracle.com>
-References: <20191209231346.5602-1-Ashish.Kalra@amd.com>
- <20191220015245.GA7010@localhost.localdomain>
- <20200121200947.GA24884@ashkalra_ubuntu_server>
- <20200121205403.GC75374@Konrads-MacBook-Pro.local>
- <20200124230008.GA1565@ashkalra_ubuntu_server>
- <20200204193500.GA15564@ashkalra_ubuntu_server>
+        Tue, 3 Mar 2020 12:01:33 -0500
+Received: from foss.arm.com ([217.140.110.172]:49824 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727175AbgCCRBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:01:33 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C5CE2F;
+        Tue,  3 Mar 2020 09:01:32 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B8393F534;
+        Tue,  3 Mar 2020 09:01:30 -0800 (PST)
+Date:   Tue, 3 Mar 2020 17:01:16 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4 0/5] Add support for PCIe endpoint mode in Tegra194
+Message-ID: <20200303170103.GA9641@e121166-lin.cambridge.arm.com>
+References: <20200303105418.2840-1-vidyas@nvidia.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204193500.GA15564@ashkalra_ubuntu_server>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030116
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- phishscore=0 clxscore=1011 bulkscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030116
+In-Reply-To: <20200303105418.2840-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 07:35:00PM +0000, Ashish Kalra wrote:
-> Hello Konrad,
+On Tue, Mar 03, 2020 at 04:24:13PM +0530, Vidya Sagar wrote:
+> Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
+> either in root port mode or in end point mode but only in one mode at a time.
+> Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
+> patch series adds support for PCIe endpoint mode in both the driver as well as
+> in DT.
+> This patch series depends on the changes made for Synopsys DesignWare endpoint
+> mode subsystem that are recently accepted.
+> @ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
+> which in turn depends on the patch made by Kishon
+> @ https://patchwork.kernel.org/patch/10975123/
+> which is also under review.
 > 
-> Looking fwd. to your feedback regarding support of other memory
-> encryption architectures such as Power, S390, etc.
+> V4:
+> * Started using threaded irqs instead of kthreads
+
+Hi Vidya,
+
+sorry for the bother, may I ask you to rebase the series (after
+answering Thierry's query) on top of my pci/endpoint branch please ?
+
+Please resend it and I will merge patches {1,2,5} then.
+
+Thanks,
+Lorenzo
+
+> V3:
+> * Re-ordered patches in the series to make the driver change as the last patch
+> * Took care of Thierry's review comments
 > 
-> Thanks,
-> Ashish
+> V2:
+> * Addressed Thierry & Bjorn's review comments
+> * Added EP mode specific binding documentation to already existing binding documentation file
+> * Removed patch that enables GPIO controller nodes explicitly as they are enabled already
 > 
-> On Fri, Jan 24, 2020 at 11:00:08PM +0000, Ashish Kalra wrote:
-> > On Tue, Jan 21, 2020 at 03:54:03PM -0500, Konrad Rzeszutek Wilk wrote:
-> > > > 
-> > > > Additional memory calculations based on # of PCI devices and
-> > > > their memory ranges will make it more complicated with so
-> > > > many other permutations and combinations to explore, it is
-> > > > essential to keep this patch as simple as possible by 
-> > > > adjusting the bounce buffer size simply by determining it
-> > > > from the amount of provisioned guest memory.
-> > >> 
-> > >> Please rework the patch to:
-> > >> 
-> > >>  - Use a log solution instead of the multiplication.
-> > >>    Feel free to cap it at a sensible value.
-> > 
-> > Ok.
-> > 
-> > >> 
-> > >>  - Also the code depends on SWIOTLB calling in to the
-> > >>    adjust_swiotlb_default_size which looks wrong.
-> > >> 
-> > >>    You should not adjust io_tlb_nslabs from swiotlb_size_or_default.
-> > 
-> > >>    That function's purpose is to report a value.
-> > >> 
-> > >>  - Make io_tlb_nslabs be visible outside of the SWIOTLB code.
-> > >> 
-> > >>  - Can you utilize the IOMMU_INIT APIs and have your own detect which would
-> > >>    modify the io_tlb_nslabs (and set swiotbl=1?).
-> > 
-> > This seems to be a nice option, but then IOMMU_INIT APIs are
-> > x86-specific and this swiotlb buffer size adjustment is also needed
-> > for other memory encryption architectures like Power, S390, etc.
-
-Oh dear. That I hadn't considered.
-> > 
-> > >> 
-> > >>    Actually you seem to be piggybacking on pci_swiotlb_detect_4gb - so
-> > >>    perhaps add in this code ? Albeit it really should be in it's own
-> > >>    file, not in arch/x86/kernel/pci-swiotlb.c
-> > 
-> > Actually, we piggyback on pci_swiotlb_detect_override which sets
-> > swiotlb=1 as x86_64_start_kernel() and invocation of sme_early_init()
-> > forces swiotlb on, but again this is all x86 architecture specific.
-
-Then it looks like the best bet is to do it from within swiotlb_init?
-We really can't do it from swiotlb_size_or_default - that function
-should just return a value and nothing else.
-
-> > 
-> > Thanks,
-> > Ashish
+> Vidya Sagar (5):
+>   soc/tegra: bpmp: Update ABI header
+>   dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
+>   arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+>   arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
+>     platform
+>   PCI: tegra: Add support for PCIe endpoint mode in Tegra194
+> 
+>  .../bindings/pci/nvidia,tegra194-pcie.txt     | 125 +++-
+>  .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  18 +
+>  arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  99 +++
+>  drivers/pci/controller/dwc/Kconfig            |  30 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c    | 681 +++++++++++++++++-
+>  include/soc/tegra/bpmp-abi.h                  |  10 +-
+>  6 files changed, 918 insertions(+), 45 deletions(-)
+> 
+> -- 
+> 2.17.1
+> 
