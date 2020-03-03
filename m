@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C02C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8305EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FD14214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D6F820CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257539;
-	bh=oBFlDE9A/gis0xHj4tQtmtNTj/P1n3aibbo6E0lXCWU=;
+	s=default; t=1583257542;
+	bh=9O5ymUWpNt3jhqdPiucuIYgwSShPohd5ByDTUrD1C6E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gX6qT8SvNOgJrBoL3eY7+0M19k0f7lnZwFE8CFkB843WDueTnLG7bLePlDlf+PfI1
-	 1ddPps1PsesBRl3EBvcXuRbWL9wOIjoAMD630rA/6VxGCILKHQpO93g0uUx6f/89n0
-	 uKZkCEUPT+guZTUBSni+6Zp2fU0pX5/TGc96yW2U=
+	b=nM9i+px7gNO6JXYibo8Aj9J/rxOLJf2/ljFKo/gfKfqMqHJ2PyCGn5yFuDN623tlL
+	 /WwBhbks8krQjmi7Gpi/Rxss00MlsZ8c9U35HRjrjQrPB3Qxd+peCvcO8wq1EiWsO3
+	 +qYeiS/B6b5WGL4UzRA9BiTQorar5Yz3Wy0QnD4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730961AbgCCRph (ORCPT
+        id S1730974AbgCCRpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:45:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51654 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730944AbgCCRpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:33 -0500
+        id S1730944AbgCCRpi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:45:38 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B1E2146E;
-        Tue,  3 Mar 2020 17:45:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 962AC2146E;
+        Tue,  3 Mar 2020 17:45:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257532;
-        bh=oBFlDE9A/gis0xHj4tQtmtNTj/P1n3aibbo6E0lXCWU=;
+        s=default; t=1583257538;
+        bh=9O5ymUWpNt3jhqdPiucuIYgwSShPohd5ByDTUrD1C6E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TfA0iesupeAvuKg0m2Pe1A3gTceU1kcHUG81PV9azjrFO7BjJ/gUC6MndIV1DQa4i
-         d3rUSBH99aDCJHkq7cFriFglxXcq74Z1g8occK1w8XSOO96RhjzeoRP68AJ1XI06z3
-         QV1oAbejDiKhpkZ6wA2QO5u8oARaH0wQM4oJ9gB0=
+        b=O/zrZ+ljo8G9ONmjAYJT2F7r8PdcyJvyGKkKb1Vb6bq3JkyVk1gssLOtGI2Nb+BCB
+         53jqvmaiVIpDgFp37h2x6M+7FKICxmHlSYDvNasi6kbXeG+5Wl3YdAFNKBo/hZsNTj
+         p/d7t9NTxxvPk3C+gkvJ6U0WQnrsJht4XTXniX7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 030/176] dax: pass NOWAIT flag to iomap_apply
-Date:   Tue,  3 Mar 2020 18:41:34 +0100
-Message-Id: <20200303174307.996781661@linuxfoundation.org>
+Subject: [PATCH 5.5 032/176] cfg80211: check wiphy driver existence for drvinfo report
+Date:   Tue,  3 Mar 2020 18:41:36 +0100
+Message-Id: <20200303174308.233945992@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,41 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Moyer <jmoyer@redhat.com>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 96222d53842dfe54869ec4e1b9d4856daf9105a2 ]
+[ Upstream commit bfb7bac3a8f47100ebe7961bd14e924c96e21ca7 ]
 
-fstests generic/471 reports a failure when run with MOUNT_OPTIONS="-o
-dax".  The reason is that the initial pwrite to an empty file with the
-RWF_NOWAIT flag set does not return -EAGAIN.  It turns out that
-dax_iomap_rw doesn't pass that flag through to iomap_apply.
+When preparing ethtool drvinfo, check if wiphy driver is defined
+before dereferencing it. Driver may not exist, e.g. if wiphy is
+attached to a virtual platform device.
 
-With this patch applied, generic/471 passes for me.
-
-Signed-off-by: Jeff Moyer <jmoyer@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/x49r1z86e1d.fsf@segfault.boston.devel.redhat.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Link: https://lore.kernel.org/r/20200203105644.28875-1-sergey.matyukevich.os@quantenna.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dax.c | 3 +++
- 1 file changed, 3 insertions(+)
+ net/wireless/ethtool.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index 1f1f0201cad18..0b0d8819cb1bb 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1207,6 +1207,9 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		lockdep_assert_held(&inode->i_rwsem);
- 	}
+diff --git a/net/wireless/ethtool.c b/net/wireless/ethtool.c
+index a9c0f368db5d2..24e18405cdb48 100644
+--- a/net/wireless/ethtool.c
++++ b/net/wireless/ethtool.c
+@@ -7,9 +7,13 @@
+ void cfg80211_get_drvinfo(struct net_device *dev, struct ethtool_drvinfo *info)
+ {
+ 	struct wireless_dev *wdev = dev->ieee80211_ptr;
++	struct device *pdev = wiphy_dev(wdev->wiphy);
  
-+	if (iocb->ki_flags & IOCB_NOWAIT)
-+		flags |= IOMAP_NOWAIT;
-+
- 	while (iov_iter_count(iter)) {
- 		ret = iomap_apply(inode, pos, iov_iter_count(iter), flags, ops,
- 				iter, dax_iomap_actor);
+-	strlcpy(info->driver, wiphy_dev(wdev->wiphy)->driver->name,
+-		sizeof(info->driver));
++	if (pdev->driver)
++		strlcpy(info->driver, pdev->driver->name,
++			sizeof(info->driver));
++	else
++		strlcpy(info->driver, "N/A", sizeof(info->driver));
+ 
+ 	strlcpy(info->version, init_utsname()->release, sizeof(info->version));
+ 
 -- 
 2.20.1
 
