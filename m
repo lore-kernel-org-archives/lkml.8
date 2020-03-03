@@ -2,112 +2,136 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6D43C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D2FC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0F9F20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:29:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="icVbOLMY"
+	by mail.kernel.org (Postfix) with ESMTP id A691220870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730304AbgCCR3h (ORCPT
+        id S1730395AbgCCRcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:29:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57823 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727440AbgCCR3g (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:29:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583256576;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OrfJnMYXSp8JuLlI51btEW+NHNdpcFTSzHFKKNkjZ3g=;
-        b=icVbOLMYPVorVQptZ1XFRS6OGN5Ml2EL0Y5Lj+V2KkCZ33vDsJnl3Q8R75T2tJJgDzBdN1
-        wDF1doPoNeut2NUOehgLxoiQH5Mkp+4S5srTGVxa2U5KXXXQpCJd05eb0WkCgcE8T4MRii
-        G7GOHEcKXSDw04tlYzxJTOYQOznZwvs=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-255-k4EmAwWJOxaF8xFyyIDScA-1; Tue, 03 Mar 2020 12:29:33 -0500
-X-MC-Unique: k4EmAwWJOxaF8xFyyIDScA-1
-Received: by mail-wr1-f69.google.com with SMTP id j32so1535931wre.13
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:29:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OrfJnMYXSp8JuLlI51btEW+NHNdpcFTSzHFKKNkjZ3g=;
-        b=BMwm4sZKf65hR4iW1crLf35CVFzZIA7cL+wE3C8sRw2XN2wi9PGI9RiQRGzmusfGoy
-         Xjpb2ptgi3lYUtixMLcCKPRvgAOxQdzPBQwAErCAxVKOoTZEtwHccM2qT6Sxz/5p1waY
-         VodTVkvLKoDac+r76ACxU6BY3PRSznSxeMrYYup0xzWbeh8xj5GFbtXoV9NEtjDvILkK
-         5q6rwiSq3UfkmGpQrAxhV9oxp3SbkXGhXAdHm5yegP+JtOG1TVYaQ5LXzu2VWVhTlA88
-         gkxseniRqon9oOGJ+K4Gtqe29oMYAU2CAUqWlik2bvOMM0KjhmuIJrImJIdfneIuNIa8
-         WiPg==
-X-Gm-Message-State: ANhLgQ0n1vKjT0mwjIDHqT430Ky6yCV8AjV0Y1S9po3exaQe413EOFNI
-        vWguehP22N4I2gcwzyofeHPT/1Sf/j8h8gsHB1NEnjeBG/P4jJbLxD5sXSgS2SG4HQIlI0ceuIb
-        6CHhXOr6vsh29IBiZCN2k3HvB
-X-Received: by 2002:adf:ab4e:: with SMTP id r14mr6584101wrc.350.1583256572436;
-        Tue, 03 Mar 2020 09:29:32 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vupGdoUnfoghBjUL1FIu3d71GoeGRPzgmv5uLVuiDEfNO0XORZcpwr/9jEOAVGm1kpiW/5Fyw==
-X-Received: by 2002:adf:ab4e:: with SMTP id r14mr6584088wrc.350.1583256572246;
-        Tue, 03 Mar 2020 09:29:32 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.254.94])
-        by smtp.gmail.com with ESMTPSA id n8sm33290957wrm.46.2020.03.03.09.29.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 09:29:31 -0800 (PST)
-Subject: Re: [PATCH v2 06/13] KVM: x86: Refactor emulate tracepoint to
- explicitly take context
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
- <20200218232953.5724-7-sean.j.christopherson@intel.com>
- <8736axjmte.fsf@vitty.brq.redhat.com> <20200303164813.GL1439@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <2f3f7aff-2bd0-fa62-4b66-9f90f125e44e@redhat.com>
-Date:   Tue, 3 Mar 2020 18:29:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 3 Mar 2020 12:32:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44474 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730375AbgCCRcl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:32:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D0F79B028;
+        Tue,  3 Mar 2020 17:32:38 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Eric Anholt <eric@anholt.net>
+Cc:     wahrenst@gmx.net, devicetree@vger.kernel.org,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
+Date:   Tue,  3 Mar 2020 18:32:16 +0100
+Message-Id: <20200303173217.3987-1-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <20200303164813.GL1439@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/20 17:48, Sean Christopherson wrote:
->>>  	TP_fast_assign(
->>>  		__entry->csbase = kvm_x86_ops->get_segment_base(vcpu, VCPU_SREG_CS);
->> This seems the only usage of 'vcpu' parameter now; I checked and even
->> after switching to dynamic emulation context allocation we still set
->> ctxt->vcpu in alloc_emulate_ctxt(), can we get rid of 'vcpu' parameter
->> here then (and use ctxt->vcpu instead)?
-> Hmm, ya, not sure what I was thinking here.
-> 
+The register based driver turned out to be unstable, specially on RPi3a+
+but not limited to it. While a fix is being worked on, we roll back to
+using firmware based scheme.
 
-As long as we have one use of vcpu, I'd rather skip this patch and
-adjust patch 8 to use "->".  Even the other "explicitly take context"
-parts are kinda debatable since you still have to do emul_to_vcpu.
-Throwing a handful of
+Fixes: e1dc2b2e1bef ("ARM: bcm283x: Switch V3D over to using the PM driver instead of firmware")
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
 
-- 	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
-+ 	struct x86_emulate_ctxt *ctxt = vcpu->arch.emulate_ctxt;
+See https://github.com/raspberrypi/linux/issues/3046 for more reference.
+Note: I tested this on RPi3b, RPi3a+ and RPi2b.
 
-into patch 8 is not bad at all and limits the churn.
+ arch/arm/boot/dts/bcm2835-common.dtsi     |  1 -
+ arch/arm/boot/dts/bcm2835-rpi-common.dtsi | 12 ++++++++++++
+ arch/arm/boot/dts/bcm2835.dtsi            |  1 +
+ arch/arm/boot/dts/bcm2836.dtsi            |  1 +
+ arch/arm/boot/dts/bcm2837.dtsi            |  1 +
+ 5 files changed, 15 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/bcm2835-rpi-common.dtsi
 
-Paolo
+diff --git a/arch/arm/boot/dts/bcm2835-common.dtsi b/arch/arm/boot/dts/bcm2835-common.dtsi
+index 2b1d9d4c0cde..4119271c979d 100644
+--- a/arch/arm/boot/dts/bcm2835-common.dtsi
++++ b/arch/arm/boot/dts/bcm2835-common.dtsi
+@@ -130,7 +130,6 @@ v3d: v3d@7ec00000 {
+ 			compatible = "brcm,bcm2835-v3d";
+ 			reg = <0x7ec00000 0x1000>;
+ 			interrupts = <1 10>;
+-			power-domains = <&pm BCM2835_POWER_DOMAIN_GRAFX_V3D>;
+ 		};
+ 
+ 		vc4: gpu {
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-common.dtsi b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+new file mode 100644
+index 000000000000..b78a57534611
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2835-rpi-common.dtsi
+@@ -0,0 +1,12 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * This include file covers the common peripherals and configuration between
++ * bcm2835, bcm2836 and bcm2837 implementations that interact with RPi's
++ * firmware interface.
++ */
++
++#include <dt-bindings/power/raspberrypi-power.h>
++
++&v3d {
++	power-domains = <&power RPI_POWER_DOMAIN_V3D>;
++};
+diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
+index 53bf4579cc22..0549686134ea 100644
+--- a/arch/arm/boot/dts/bcm2835.dtsi
++++ b/arch/arm/boot/dts/bcm2835.dtsi
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "bcm283x.dtsi"
+ #include "bcm2835-common.dtsi"
++#include "bcm2835-rpi-common.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm2835";
+diff --git a/arch/arm/boot/dts/bcm2836.dtsi b/arch/arm/boot/dts/bcm2836.dtsi
+index 82d6c4662ae4..b390006aef79 100644
+--- a/arch/arm/boot/dts/bcm2836.dtsi
++++ b/arch/arm/boot/dts/bcm2836.dtsi
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "bcm283x.dtsi"
+ #include "bcm2835-common.dtsi"
++#include "bcm2835-rpi-common.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm2836";
+diff --git a/arch/arm/boot/dts/bcm2837.dtsi b/arch/arm/boot/dts/bcm2837.dtsi
+index 9e95fee78e19..0199ec98cd61 100644
+--- a/arch/arm/boot/dts/bcm2837.dtsi
++++ b/arch/arm/boot/dts/bcm2837.dtsi
+@@ -1,5 +1,6 @@
+ #include "bcm283x.dtsi"
+ #include "bcm2835-common.dtsi"
++#include "bcm2835-rpi-common.dtsi"
+ 
+ / {
+ 	compatible = "brcm,bcm2837";
+-- 
+2.25.1
 
