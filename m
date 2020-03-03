@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A3CC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 773BEC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 210D62073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 486D72073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258832;
-	bh=t0ILfPI1THySAeKMScXdX+yW20YuVW1b/Uuz9HQq564=;
+	s=default; t=1583258837;
+	bh=+mchgu3W1Zhiq9EjAEp+MD9MvnwX3VIu2UILJKHK1ww=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t8JmrOPUzy+zsVe3hTm5A65HugJLn26GkyjDNfvy4aTxrFUMugdgOt+quuv0bGktC
-	 3xRfl0TaeI1oyOyGf7YXomqiOpBoYq2+tzeDjoL5aiz29beH7xcox/fmForKs2UIp7
-	 VzyKBNsGuR7PyaQ3lJ+rNfRzDAYd/6Kp6tC1LNqg=
+	b=U5weDfkqVrZ7oDF5wc5mj8N9epcGVK/aOTOiESFD7Fvb9qGrxEQ5Bv1bv+UUL58kT
+	 CoFdFJK/aU2ujYFwE/gJUif2YfJce1yrjoN+xC8uld660qbn87gToNfYsvF475j6m6
+	 iL6syRWVEBhmaFgczDoC9vxJl24DGMlvDSGuM3cU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388318AbgCCSHL (ORCPT
+        id S2388326AbgCCSHP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:07:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36668 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:07:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732653AbgCCRzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:55:14 -0500
+        id S1732662AbgCCRzL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:55:11 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F21C32072D;
-        Tue,  3 Mar 2020 17:55:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D538206D5;
+        Tue,  3 Mar 2020 17:55:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258113;
-        bh=t0ILfPI1THySAeKMScXdX+yW20YuVW1b/Uuz9HQq564=;
+        s=default; t=1583258111;
+        bh=+mchgu3W1Zhiq9EjAEp+MD9MvnwX3VIu2UILJKHK1ww=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qbjnqB7BUQKm//bsTsZd7TLHiedMVNh8z+Wl3pSXRgoNQEEurRjAZLh4J+p9brjO6
-         cZ7y45YUfob0rKqYwWyrpvo/VLYrzTTFzO18cyJO5LofZFgv9nVuEUD6ev8Zj5eqtZ
-         Vf7vyeIIb13jzOb1Ow04NiGdi+l3LXGcr77xEuzg=
+        b=zl9UwJG+Z40Cce0RHVFglY1L3X7wl6ioSdUyg7nvaqJBHi1Udhfu7i48wkXLNKOQ3
+         ydrkRSbMaX0xuHRRYXK3cpdnF6MaDPyZEoxveWsowCn06rbCnu0eNwIA7/cpcBQxe5
+         Nm5Lb/9MnSLkBPHGs7WSngU+P3vp9G5zJ+oz0DMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Zden=C4=9Bk=20Rampas?= <zdenda.rampas@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 5.4 076/152] HID: ite: Only bind to keyboard USB interface on Acer SW5-012 keyboard dock
-Date:   Tue,  3 Mar 2020 18:42:54 +0100
-Message-Id: <20200303174311.156521538@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kiszka <jan.kiszka@web.de>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Oliver Upton <oupton@google.com>
+Subject: [PATCH 5.4 075/152] KVM: VMX: check descriptor table exits on instruction emulation
+Date:   Tue,  3 Mar 2020 18:42:53 +0100
+Message-Id: <20200303174311.022080640@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,61 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Oliver Upton <oupton@google.com>
 
-commit beae56192a2570578ae45050e73c5ff9254f63e6 upstream.
+commit 86f7e90ce840aa1db407d3ea6e9b3a52b2ce923c upstream.
 
-Commit 8f18eca9ebc5 ("HID: ite: Add USB id match for Acer SW5-012 keyboard
-dock") added the USB id for the Acer SW5-012's keyboard dock to the
-hid-ite driver to fix the rfkill driver not working.
+KVM emulates UMIP on hardware that doesn't support it by setting the
+'descriptor table exiting' VM-execution control and performing
+instruction emulation. When running nested, this emulation is broken as
+KVM refuses to emulate L2 instructions by default.
 
-Most keyboard docks with an ITE 8595 keyboard/touchpad controller have the
-"Wireless Radio Control" bits which need the special hid-ite driver on the
-second USB interface (the mouse interface) and their touchpad only supports
-mouse emulation, so using generic hid-input handling for anything but
-the "Wireless Radio Control" bits is fine. On these devices we simply bind
-to all USB interfaces.
+Correct this regression by allowing the emulation of descriptor table
+instructions if L1 hasn't requested 'descriptor table exiting'.
 
-But unlike other ITE8595 using keyboard docks, the Acer Aspire Switch 10
-(SW5-012)'s touchpad not only does mouse emulation it also supports
-HID-multitouch and all the keys including the "Wireless Radio Control"
-bits have been moved to the first USB interface (the keyboard intf).
-
-So we need hid-ite to handle the first (keyboard) USB interface and have
-it NOT bind to the second (mouse) USB interface so that that can be
-handled by hid-multitouch.c and we get proper multi-touch support.
-
-This commit changes the hid_device_id for the SW5-012 keyboard dock to
-only match on hid devices from the HID_GROUP_GENERIC group, this way
-hid-ite will not bind the the mouse/multi-touch interface which has
-HID_GROUP_MULTITOUCH_WIN_8 as group.
-This fixes the regression to mouse-emulation mode introduced by adding
-the keyboard dock USB id.
-
+Fixes: 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest mode")
+Reported-by: Jan Kiszka <jan.kiszka@web.de>
 Cc: stable@vger.kernel.org
-Fixes: 8f18eca9ebc5 ("HID: ite: Add USB id match for Acer SW5-012 keyboard dock")
-Reported-by: Zdeněk Rampas <zdenda.rampas@gmail.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Jim Mattson <jmattson@google.com>
+Signed-off-by: Oliver Upton <oupton@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-ite.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/vmx.c |   15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
---- a/drivers/hid/hid-ite.c
-+++ b/drivers/hid/hid-ite.c
-@@ -41,8 +41,9 @@ static const struct hid_device_id ite_de
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_ITE, USB_DEVICE_ID_ITE8595) },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_258A, USB_DEVICE_ID_258A_6A88) },
- 	/* ITE8595 USB kbd ctlr, with Synaptics touchpad connected to it. */
--	{ HID_USB_DEVICE(USB_VENDOR_ID_SYNAPTICS,
--			 USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
-+	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
-+		     USB_VENDOR_ID_SYNAPTICS,
-+		     USB_DEVICE_ID_SYNAPTICS_ACER_SWITCH5_012) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(hid, ite_devices);
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7165,6 +7165,7 @@ static int vmx_check_intercept_io(struct
+ 	else
+ 		intercept = nested_vmx_check_io_bitmaps(vcpu, port, size);
+ 
++	/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
+ 	return intercept ? X86EMUL_UNHANDLEABLE : X86EMUL_CONTINUE;
+ }
+ 
+@@ -7194,6 +7195,20 @@ static int vmx_check_intercept(struct kv
+ 	case x86_intercept_outs:
+ 		return vmx_check_intercept_io(vcpu, info);
+ 
++	case x86_intercept_lgdt:
++	case x86_intercept_lidt:
++	case x86_intercept_lldt:
++	case x86_intercept_ltr:
++	case x86_intercept_sgdt:
++	case x86_intercept_sidt:
++	case x86_intercept_sldt:
++	case x86_intercept_str:
++		if (!nested_cpu_has2(vmcs12, SECONDARY_EXEC_DESC))
++			return X86EMUL_CONTINUE;
++
++		/* FIXME: produce nested vmexit and return X86EMUL_INTERCEPTED.  */
++		break;
++
+ 	/* TODO: check more intercepts... */
+ 	default:
+ 		break;
 
 
