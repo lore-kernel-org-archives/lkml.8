@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D1E9C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F33EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355BF2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00222072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258492;
-	bh=yU2kZtFS3ltY6Jna+OJ5Utgiexm9WIBhlzlLm8dooSA=;
+	s=default; t=1583258494;
+	bh=5XFHckxjy6Hnk7i+dseR4uft0gsRbCy8DyDOHd1HOaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DjSyGW5thVmaS8tEGB1kVeMpPcj2egd7tr2BR35JZ8LMDym6ZhECi0hoYluZzVSMa
-	 qKLxFwQ1wdWmYLqw5mtCgGzhARlr79D2zsyu93JYayBuCfxL4SXOYqKr/Qp0Osg32a
-	 PSMKCKN941V3ApFvxvHzqIekzae/pVnxDUeYeT7c=
+	b=Lh76b8hQh1zhB+9HQLCOB0fR1QPfZkWEOIHeG6yw3cG+gmqD4egPZaEkQc219d67d
+	 pPpFvLCfi8M3upLARSA6YPL/Txr6pcKjnMBwzmFpP/lkGX1HSEOa1i6eTX6Y2OXmK/
+	 oF6K+egDlnVC/4ccjmA3Ehknb+UPqCp6SPDXgk3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388002AbgCCSBa (ORCPT
+        id S2388009AbgCCSBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45598 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:01:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387993AbgCCSB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:01:29 -0500
+        id S2387993AbgCCSBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:31 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36CB22072D;
-        Tue,  3 Mar 2020 18:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E016320836;
+        Tue,  3 Mar 2020 18:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258488;
-        bh=yU2kZtFS3ltY6Jna+OJ5Utgiexm9WIBhlzlLm8dooSA=;
+        s=default; t=1583258491;
+        bh=5XFHckxjy6Hnk7i+dseR4uft0gsRbCy8DyDOHd1HOaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MriTJ+1PAbs7GuoXBc8LcVk9MoAW4cAUOqphxHmo+QxtwYsEENsXnCX3Gj74dI5LF
-         PFqi9Y9yvPwgt1qwIJqfTStO5OSsf1eKNJXcUaUy3I36BeiWacPELhYmKfXBELaq53
-         zqE/mMMxMX2/PI0YyEN7imn0xBQx77AmdD3cx9x8=
+        b=pql4/BHpEYsauSQkT4o9zCy6L00bIvkPi9E4NGcXnqYbGrMN8EP8w5vBU37ndMM8V
+         HGSqwHkwjlDJ4nVi2cybnn9TyxtA7JXpVwX3OpXH2a8bwx3++ql9I9xSv8i5xzROwp
+         XWYKhAI5R49K/Bfk86DKOA6sSgpo58r2lRrm52CY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Saeed Bshara <saeedb@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
+        stable@vger.kernel.org,
+        Horatiu Vultur <horatiu.vultur@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 66/87] net: ena: make ena rxfh support ETH_RSS_HASH_NO_CHANGE
-Date:   Tue,  3 Mar 2020 18:43:57 +0100
-Message-Id: <20200303174356.248325484@linuxfoundation.org>
+Subject: [PATCH 4.19 30/87] net: mscc: fix in frame extraction
+Date:   Tue,  3 Mar 2020 18:43:21 +0100
+Message-Id: <20200303174353.436641100@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -61,72 +61,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Horatiu Vultur <horatiu.vultur@microchip.com>
 
-commit 470793a78ce344bd53d31e0c2d537f71ba957547 upstream.
+[ Upstream commit a81541041ceb55bcec9a8bb8ad3482263f0a205a ]
 
-As the name suggests ETH_RSS_HASH_NO_CHANGE is received upon changing
-the key or indirection table using ethtool while keeping the same hash
-function.
+Each extracted frame on Ocelot has an IFH. The frame and IFH are extracted
+by reading chuncks of 4 bytes from a register.
 
-Also add a function for retrieving the current hash function from
-the ena-com layer.
+In case the IFH and frames were read corretly it would try to read the next
+frame. In case there are no more frames in the queue, it checks if there
+were any previous errors and in that case clear the queue. But this check
+will always succeed also when there are no errors. Because when extracting
+the IFH the error is checked against 4(number of bytes read) and then the
+error is set only if the extraction of the frame failed. So in a happy case
+where there are no errors the err variable is still 4. So it could be
+a case where after the check that there are no more frames in the queue, a
+frame will arrive in the queue but because the error is not reseted, it
+would try to flush the queue. So the frame will be lost.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Saeed Bshara <saeedb@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+The fix consist in resetting the error after reading the IFH.
+
+Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c     |    5 +++++
- drivers/net/ethernet/amazon/ena/ena_com.h     |    8 ++++++++
- drivers/net/ethernet/amazon/ena/ena_ethtool.c |    3 +++
- 3 files changed, 16 insertions(+)
+ drivers/net/ethernet/mscc/ocelot_board.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -860,6 +860,11 @@ static void ena_com_hash_key_fill_defaul
- 	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
- }
+--- a/drivers/net/ethernet/mscc/ocelot_board.c
++++ b/drivers/net/ethernet/mscc/ocelot_board.c
+@@ -105,6 +105,14 @@ static irqreturn_t ocelot_xtr_irq_handle
+ 		if (err != 4)
+ 			break;
  
-+int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev)
-+{
-+	return ena_dev->rss.hash_func;
-+}
++		/* At this point the IFH was read correctly, so it is safe to
++		 * presume that there is no error. The err needs to be reset
++		 * otherwise a frame could come in CPU queue between the while
++		 * condition and the check for error later on. And in that case
++		 * the new frame is just removed and not processed.
++		 */
++		err = 0;
 +
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
- {
- 	struct ena_rss *rss = &ena_dev->rss;
---- a/drivers/net/ethernet/amazon/ena/ena_com.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.h
-@@ -632,6 +632,14 @@ int ena_com_rss_init(struct ena_com_dev
-  */
- void ena_com_rss_destroy(struct ena_com_dev *ena_dev);
+ 		ocelot_parse_ifh(ifh, &info);
  
-+/* ena_com_get_current_hash_function - Get RSS hash function
-+ * @ena_dev: ENA communication layer struct
-+ *
-+ * Return the current hash function.
-+ * @return: 0 or one of the ena_admin_hash_functions values.
-+ */
-+int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev);
-+
- /* ena_com_fill_hash_function - Fill RSS hash function
-  * @ena_dev: ENA communication layer struct
-  * @func: The hash function (Toeplitz or crc)
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -749,6 +749,9 @@ static int ena_set_rxfh(struct net_devic
- 	}
- 
- 	switch (hfunc) {
-+	case ETH_RSS_HASH_NO_CHANGE:
-+		func = ena_com_get_current_hash_function(ena_dev);
-+		break;
- 	case ETH_RSS_HASH_TOP:
- 		func = ENA_ADMIN_TOEPLITZ;
- 		break;
+ 		dev = ocelot->ports[info.port]->dev;
 
 
