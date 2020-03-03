@@ -2,62 +2,155 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3D31C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09433C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:56:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA1A206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4F7206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:56:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qBx14dYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgCCW4F (ORCPT
+        id S1728174AbgCCW4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:56:05 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:36964 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbgCCW4E (ORCPT
+        Tue, 3 Mar 2020 17:56:42 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:55034 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727942AbgCCW4m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:56:04 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id F015715A0DD51;
-        Tue,  3 Mar 2020 14:56:03 -0800 (PST)
-Date:   Tue, 03 Mar 2020 14:56:03 -0800 (PST)
-Message-Id: <20200303.145603.153230929931919209.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     sgoutham@marvell.com, lcherian@marvell.com, gakula@marvell.com,
-        jerinj@marvell.com, netdev@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] octeontx2-af: fix spelling mistake "backpessure" ->
- "backpressure"
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200303075437.6704-1-colin.king@canonical.com>
-References: <20200303075437.6704-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 03 Mar 2020 14:56:04 -0800 (PST)
+        Tue, 3 Mar 2020 17:56:42 -0500
+Received: by mail-pj1-f65.google.com with SMTP id dw13so2026408pjb.4
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:56:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=i6kpogp9bxrLw7A3jcVS9T1o1PQC08WdktCFke64Jzw=;
+        b=qBx14dYtavLY/4KbnpXE3WBfas6G8ozp3z3JSwbIOEsfsRCLtaHp2RyY4DwcGYS32Y
+         +ojmhvcLz4f70TrvCojtqwq6aswQiqryZqbi2jAbXHBzNWTWYaveDqEcrQ5IecaXT5UZ
+         FbRuLLS0+uDci32R3QHQVDf8/9bTvVi0BoCaztH+1MDy2aok6Jpjn+p2wAzrM42bXH7j
+         s7f3PLqk6xUg8YYOWhQ8KEeaTmBNwzOKkLduWkjeTFT6BQIjPixFuoGPG/1Q0JuVzJzv
+         2w7JbYThZLaMJwMJd6IlSpp+eI0WA0flw9SYu6TkPiHaYnVZlSms9hFEGbL2T7ynbQJv
+         kieQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=i6kpogp9bxrLw7A3jcVS9T1o1PQC08WdktCFke64Jzw=;
+        b=szYXpkTheqVuPjfBE6VFM606a1BRWUNPp8rRHmUeEJtjgrYTgJDECc+xqa8ZAgH6IQ
+         gMfC/prO1FR9PIt76eW2yqvtckdSjaN13CFSNsg9xRBxlrRq8ykT2XDYhoW9+/9ybYbU
+         zCTuF4zn7pglXeho3ZI7mNHZTiM/CLZGEpBHpZ0DFolvapMYoOO7vhsWOAFuO4ZE2qsL
+         hE3E9v3ZzY5MsLONFooM5yZZWPEAL36oGK9rzlxJg487YPW7+nlTuqVt6j/wifWnBFVx
+         WYdigoglV4Q+5uOcVQyPplqwIqwluNBOe0pmF1U4M/BTJ2j0bRElGmokeiQyKximiKMO
+         ecDg==
+X-Gm-Message-State: ANhLgQ3Edsy+M9AYVpPYiPhK987OL7oZYII5oSA0tZRHAEH8pfoVinWG
+        gu4jh4eGc+ltp1wJ/We1aeIUHnNi7sg=
+X-Google-Smtp-Source: ADFU+vtQmzqE7QX4VKsuZYUzxGTrlpmS1U6Y07/os795RX+gaORo/uPB5E9+2e24r6epyqEilswE7A==
+X-Received: by 2002:a17:902:9a84:: with SMTP id w4mr176363plp.21.1583276201061;
+        Tue, 03 Mar 2020 14:56:41 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id d1sm17598719pfc.3.2020.03.03.14.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:56:40 -0800 (PST)
+Date:   Tue, 3 Mar 2020 15:56:38 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-remoteproc@vger.kernel.org, afd@ti.com, s-anna@ti.com,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv7 03/15] remoteproc/omap: Add a sanity check for DSP boot
+ address alignment
+Message-ID: <20200303225638.GB8197@xps15>
+References: <20200221101936.16833-1-t-kristo@ti.com>
+ <20200221101936.16833-4-t-kristo@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221101936.16833-4-t-kristo@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Tue,  3 Mar 2020 07:54:37 +0000
-
-> From: Colin Ian King <colin.king@canonical.com>
+On Fri, Feb 21, 2020 at 12:19:24PM +0200, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
 > 
-> There is a spelling mistake in a dev_warn message. Fix it.
+> The DSP remote processors on OMAP SoCs require a boot register to
+> be programmed with a boot address, and this boot address needs to
+> be on a 1KB boundary. The current code is simply masking the boot
+> address appropriately without performing any sanity checks before
+> releasing the resets. An unaligned boot address results in an
+> undefined execution behavior and can result in various bus errors
+> like MMU Faults or L3 NoC errors. Such errors are hard to debug and
+> can be easily avoided by adding a sanity check for the alignment
+> before booting a DSP remote processor.
 > 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Please specify the appropriate target tree in your patch submissions,
-this patch only applies to net-next because that's the only place
-where the octeontx2-af changes exist that you are changing.
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
-Applied, thank you.
+> ---
+> v7:
+>   - minor kerneldoc update (added return value details for
+>     omap_rproc_write_dsp_boot_addr)
+> 
+>  drivers/remoteproc/omap_remoteproc.c | 20 +++++++++++++++++---
+>  1 file changed, 17 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index d47d5ded651a..64b559caadff 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -121,14 +121,25 @@ static void omap_rproc_kick(struct rproc *rproc, int vqid)
+>   * @rproc: handle of a remote processor
+>   *
+>   * Set boot address for a supported DSP remote processor.
+> + *
+> + * Return: 0 on success, or -EINVAL if boot address is not aligned properly
+>   */
+> -static void omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+> +static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
+>  {
+> +	struct device *dev = rproc->dev.parent;
+>  	struct omap_rproc *oproc = rproc->priv;
+>  	struct omap_rproc_boot_data *bdata = oproc->boot_data;
+>  	u32 offset = bdata->boot_reg;
+>  
+> +	if (rproc->bootaddr & (SZ_1K - 1)) {
+> +		dev_err(dev, "invalid boot address 0x%x, must be aligned on a 1KB boundary\n",
+> +			rproc->bootaddr);
+> +		return -EINVAL;
+> +	}
+> +
+>  	regmap_write(bdata->syscon, offset, rproc->bootaddr);
+> +
+> +	return 0;
+>  }
+>  
+>  /*
+> @@ -145,8 +156,11 @@ static int omap_rproc_start(struct rproc *rproc)
+>  	int ret;
+>  	struct mbox_client *client = &oproc->client;
+>  
+> -	if (oproc->boot_data)
+> -		omap_rproc_write_dsp_boot_addr(rproc);
+> +	if (oproc->boot_data) {
+> +		ret = omap_rproc_write_dsp_boot_addr(rproc);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+>  	client->dev = dev;
+>  	client->tx_done = NULL;
+> -- 
+> 2.17.1
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
