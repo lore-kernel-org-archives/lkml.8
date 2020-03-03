@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A169FC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56DF7C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C9202146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3428320CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257681;
-	bh=lLXV8zXFcoeh5vspB0Dmm2DndBeHVgQLc1e/L5frTEo=;
+	s=default; t=1583257684;
+	bh=OR6SV+RZfA6Kg3yPJNOhpuudvHbA8yRXIsYbCOpjxIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VbyBlN320MJ0iITlsCvPB+KZzcmCUXYR/HIsqqe8oi4GMpbwcxVOXMdxWeA5dyONR
-	 zcTiJFQ5N3GRbjozQDjThFc+D7xRPUdsvwwHVpBTrK1vakiJoJ/fR1kb49ChOhBlKD
-	 KDGHLZ98IQRiRec9bs7WMYjDPjL/69BOLRCecJgs=
+	b=AQf1haWCqnO5pWdR1/z4yvVAQj//oai9Z+/9zDSZ9RGMDBsBKVd7ZNFZMu2N3sgEQ
+	 nwJAX9RrLiFNgMIrMtu4OhRDNa5iGLW49uIYk58j33Pbhjy3EgOEsy7v3rCe5Umwed
+	 3Ndkh1r+lsaJQPSDTxKiI04uBpxeOmcRstr5q8Q4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731463AbgCCRr7 (ORCPT
+        id S1731468AbgCCRsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730257AbgCCRr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:47:57 -0500
+        id S1729786AbgCCRr7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:47:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6D0B20870;
-        Tue,  3 Mar 2020 17:47:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67FA9208C3;
+        Tue,  3 Mar 2020 17:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257675;
-        bh=lLXV8zXFcoeh5vspB0Dmm2DndBeHVgQLc1e/L5frTEo=;
+        s=default; t=1583257677;
+        bh=OR6SV+RZfA6Kg3yPJNOhpuudvHbA8yRXIsYbCOpjxIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BnL+P3yX21xjiLq/brkXizgCjR+vaFi4SLSsybvLR2/AGKvzej+p1kESw/A69bIx/
-         np2msSvWv4hdRReHpglnQVnyMPVja6h33+HArC0+AXa+HXcZYVE+9E8ut8eEJajZwL
-         vnUtbf9mL8kAcbIfq8r1jiwiTOKlT5MVkaJQj9iw=
+        b=eUo8DvKOhWcFLNcBwVoWFo0g0TuO27VbcLK7VrgRFrBTKREkURAj0z3TLxMaHDRFt
+         9AosCWl+qdE8HCqlRc4AheaOsqbhNmI0yAJGbNEnq3YvDz2XHmCUkYoqDtCSpt5Cyz
+         1KSW1BqpHuDyzA0Zw6Ux6nAijFguMABbsuY6r1aY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com,
-        syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com,
-        Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.5 086/176] audit: always check the netlink payload length in audit_receive_msg()
-Date:   Tue,  3 Mar 2020 18:42:30 +0100
-Message-Id: <20200303174314.645746047@linuxfoundation.org>
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.5 087/176] ACPICA: Introduce ACPI_ACCESS_BYTE_WIDTH() macro
+Date:   Tue,  3 Mar 2020 18:42:31 +0100
+Message-Id: <20200303174314.785347810@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,148 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Moore <paul@paul-moore.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 756125289285f6e55a03861bf4b6257aa3d19a93 upstream.
+commit 1dade3a7048ccfc675650cd2cf13d578b095e5fb upstream.
 
-This patch ensures that we always check the netlink payload length
-in audit_receive_msg() before we take any action on the payload
-itself.
+Sometimes it is useful to find the access_width field value in bytes and
+not in bits so add a helper that can be used for this purpose.
 
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com
-Reported-by: syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Suggested-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Cc: 4.16+ <stable@vger.kernel.org> # 4.16+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/audit.c |   40 +++++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 19 deletions(-)
+ include/acpi/actypes.h |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/kernel/audit.c
-+++ b/kernel/audit.c
-@@ -1100,13 +1100,11 @@ static void audit_log_feature_change(int
- 	audit_log_end(ab);
- }
+--- a/include/acpi/actypes.h
++++ b/include/acpi/actypes.h
+@@ -532,11 +532,12 @@ typedef u64 acpi_integer;
+ 	 strnlen (a, ACPI_NAMESEG_SIZE) == ACPI_NAMESEG_SIZE)
  
--static int audit_set_feature(struct sk_buff *skb)
-+static int audit_set_feature(struct audit_features *uaf)
- {
--	struct audit_features *uaf;
- 	int i;
+ /*
+- * Algorithm to obtain access bit width.
++ * Algorithm to obtain access bit or byte width.
+  * Can be used with access_width of struct acpi_generic_address and access_size of
+  * struct acpi_resource_generic_register.
+  */
+ #define ACPI_ACCESS_BIT_WIDTH(size)     (1 << ((size) + 2))
++#define ACPI_ACCESS_BYTE_WIDTH(size)    (1 << ((size) - 1))
  
- 	BUILD_BUG_ON(AUDIT_LAST_FEATURE + 1 > ARRAY_SIZE(audit_feature_names));
--	uaf = nlmsg_data(nlmsg_hdr(skb));
- 
- 	/* if there is ever a version 2 we should handle that here */
- 
-@@ -1174,6 +1172,7 @@ static int audit_receive_msg(struct sk_b
- {
- 	u32			seq;
- 	void			*data;
-+	int			data_len;
- 	int			err;
- 	struct audit_buffer	*ab;
- 	u16			msg_type = nlh->nlmsg_type;
-@@ -1187,6 +1186,7 @@ static int audit_receive_msg(struct sk_b
- 
- 	seq  = nlh->nlmsg_seq;
- 	data = nlmsg_data(nlh);
-+	data_len = nlmsg_len(nlh);
- 
- 	switch (msg_type) {
- 	case AUDIT_GET: {
-@@ -1210,7 +1210,7 @@ static int audit_receive_msg(struct sk_b
- 		struct audit_status	s;
- 		memset(&s, 0, sizeof(s));
- 		/* guard against past and future API changes */
--		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
-+		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
- 		if (s.mask & AUDIT_STATUS_ENABLED) {
- 			err = audit_set_enabled(s.enabled);
- 			if (err < 0)
-@@ -1314,7 +1314,9 @@ static int audit_receive_msg(struct sk_b
- 			return err;
- 		break;
- 	case AUDIT_SET_FEATURE:
--		err = audit_set_feature(skb);
-+		if (data_len < sizeof(struct audit_features))
-+			return -EINVAL;
-+		err = audit_set_feature(data);
- 		if (err)
- 			return err;
- 		break;
-@@ -1326,6 +1328,8 @@ static int audit_receive_msg(struct sk_b
- 
- 		err = audit_filter(msg_type, AUDIT_FILTER_USER);
- 		if (err == 1) { /* match or error */
-+			char *str = data;
-+
- 			err = 0;
- 			if (msg_type == AUDIT_USER_TTY) {
- 				err = tty_audit_push();
-@@ -1333,26 +1337,24 @@ static int audit_receive_msg(struct sk_b
- 					break;
- 			}
- 			audit_log_user_recv_msg(&ab, msg_type);
--			if (msg_type != AUDIT_USER_TTY)
-+			if (msg_type != AUDIT_USER_TTY) {
-+				/* ensure NULL termination */
-+				str[data_len - 1] = '\0';
- 				audit_log_format(ab, " msg='%.*s'",
- 						 AUDIT_MESSAGE_TEXT_MAX,
--						 (char *)data);
--			else {
--				int size;
--
-+						 str);
-+			} else {
- 				audit_log_format(ab, " data=");
--				size = nlmsg_len(nlh);
--				if (size > 0 &&
--				    ((unsigned char *)data)[size - 1] == '\0')
--					size--;
--				audit_log_n_untrustedstring(ab, data, size);
-+				if (data_len > 0 && str[data_len - 1] == '\0')
-+					data_len--;
-+				audit_log_n_untrustedstring(ab, str, data_len);
- 			}
- 			audit_log_end(ab);
- 		}
- 		break;
- 	case AUDIT_ADD_RULE:
- 	case AUDIT_DEL_RULE:
--		if (nlmsg_len(nlh) < sizeof(struct audit_rule_data))
-+		if (data_len < sizeof(struct audit_rule_data))
- 			return -EINVAL;
- 		if (audit_enabled == AUDIT_LOCKED) {
- 			audit_log_common_recv_msg(audit_context(), &ab,
-@@ -1364,7 +1366,7 @@ static int audit_receive_msg(struct sk_b
- 			audit_log_end(ab);
- 			return -EPERM;
- 		}
--		err = audit_rule_change(msg_type, seq, data, nlmsg_len(nlh));
-+		err = audit_rule_change(msg_type, seq, data, data_len);
- 		break;
- 	case AUDIT_LIST_RULES:
- 		err = audit_list_rules_send(skb, seq);
-@@ -1379,7 +1381,7 @@ static int audit_receive_msg(struct sk_b
- 	case AUDIT_MAKE_EQUIV: {
- 		void *bufp = data;
- 		u32 sizes[2];
--		size_t msglen = nlmsg_len(nlh);
-+		size_t msglen = data_len;
- 		char *old, *new;
- 
- 		err = -EINVAL;
-@@ -1455,7 +1457,7 @@ static int audit_receive_msg(struct sk_b
- 
- 		memset(&s, 0, sizeof(s));
- 		/* guard against past and future API changes */
--		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
-+		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
- 		/* check if new data is valid */
- 		if ((s.enabled != 0 && s.enabled != 1) ||
- 		    (s.log_passwd != 0 && s.log_passwd != 1))
+ /*******************************************************************************
+  *
 
 
