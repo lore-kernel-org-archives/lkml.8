@@ -2,79 +2,94 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7623FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:39:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F989C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 533A6217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58282217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:40:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbgCCAje (ORCPT
+        id S1726992AbgCCAkA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 19:39:34 -0500
-Received: from mga12.intel.com ([192.55.52.136]:60888 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgCCAje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 19:39:34 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 16:39:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="351688462"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga001.fm.intel.com with ESMTP; 02 Mar 2020 16:39:32 -0800
-Date:   Mon, 2 Mar 2020 16:39:32 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
-        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com
-Subject: Re: [PATCH v27 04/22] x86/sgx: Add SGX microarchitectural data
- structures
-Message-ID: <20200303003932.GA27842@linux.intel.com>
-References: <20200223172559.6912-1-jarkko.sakkinen@linux.intel.com>
- <20200223172559.6912-5-jarkko.sakkinen@linux.intel.com>
+        Mon, 2 Mar 2020 19:40:00 -0500
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:39001 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgCCAj7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 19:39:59 -0500
+X-Originating-IP: 50.39.173.182
+Received: from localhost (50-39-173-182.bvtn.or.frontiernet.net [50.39.173.182])
+        (Authenticated sender: josh@joshtriplett.org)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 773441BF206;
+        Tue,  3 Mar 2020 00:39:55 +0000 (UTC)
+Date:   Mon, 2 Mar 2020 16:39:52 -0800
+From:   Josh Triplett <josh@joshtriplett.org>
+To:     "Machulsky, Zorik" <zorik@amazon.com>
+Cc:     "Belgazal, Netanel" <netanel@amazon.com>,
+        "Kiyanovski, Arthur" <akiyano@amazon.com>,
+        "Tzalik, Guy" <gtzalik@amazon.com>,
+        "Bshara, Saeed" <saeedb@amazon.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ena: Speed up initialization 90x by reducing poll delays
+Message-ID: <20200303003952.GA264245@localhost>
+References: <20200229002813.GA177044@localhost>
+ <8B4A52CD-FC5A-4256-B7DE-A659B50654CE@amazon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200223172559.6912-5-jarkko.sakkinen@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <8B4A52CD-FC5A-4256-B7DE-A659B50654CE@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 07:25:41PM +0200, Jarkko Sakkinen wrote:
-> Define the SGX microarchitectural data structures used by various SGX
-> opcodes. This is not an exhaustive representation of all SGX data
-> structures but only those needed by the kernel.
+On Mon, Mar 02, 2020 at 11:16:32PM +0000, Machulsky, Zorik wrote:
 > 
-> The data structures are described in:
+> ï»¿On 2/28/20, 4:29 PM, "Josh Triplett" <josh@joshtriplett.org> wrote:
 > 
->   Intel SDM: 37.6 INTEL® SGX DATA STRUCTURES OVERVIEW
-> 
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> ---
+>     Before initializing completion queue interrupts, the ena driver uses
+>     polling to wait for responses on the admin command queue. The ena driver
+>     waits 5ms between polls, but the hardware has generally finished long
+>     before that. Reduce the poll time to 10us.
+>     
+>     On a c5.12xlarge, this improves ena initialization time from 173.6ms to
+>     1.920ms, an improvement of more than 90x. This improves server boot time
+>     and time to network bringup.
+>  
+> Thanks Josh,
+> We agree that polling rate should be increased, but prefer not to do it aggressively and blindly.
+> For example linear backoff approach might be a better choice. Please let us re-work a little this 
+> patch and bring it to review. Thanks!
 
-...
+That's fine, as long as it has the same net improvement on boot time.
 
-> +#define SGX_SSA_GPRS_SIZE		182
+I'd appreciate the opportunity to test any alternate approach you might
+have.
 
-SSA GPRs size is 184.  Per table 37.9 in the SDM:
+(Also, as long as you're working on this, you might wish to make a
+similar change to the EFA driver, and to the FreeBSD drivers.)
 
-  Field    OFFSET (Bytes)    Size (Bytes)
-
-  GSBASE   176               8
-
-Reported by a third party, I'm just the messenger and not that good at math :-).
+>     Before:
+>     [    0.531722] calling  ena_init+0x0/0x63 @ 1
+>     [    0.531722] ena: Elastic Network Adapter (ENA) v2.1.0K
+>     [    0.531751] ena 0000:00:05.0: Elastic Network Adapter (ENA) v2.1.0K
+>     [    0.531946] PCI Interrupt Link [LNKD] enabled at IRQ 11
+>     [    0.547425] ena: ena device version: 0.10
+>     [    0.547427] ena: ena controller version: 0.0.1 implementation version 1
+>     [    0.709497] ena 0000:00:05.0: Elastic Network Adapter (ENA) found at mem febf4000, mac addr 06:c4:22:0e:dc:da, Placement policy: Low Latency
+>     [    0.709508] initcall ena_init+0x0/0x63 returned 0 after 173616 usecs
+>     
+>     After:
+>     [    0.526965] calling  ena_init+0x0/0x63 @ 1
+>     [    0.526966] ena: Elastic Network Adapter (ENA) v2.1.0K
+>     [    0.527056] ena 0000:00:05.0: Elastic Network Adapter (ENA) v2.1.0K
+>     [    0.527196] PCI Interrupt Link [LNKD] enabled at IRQ 11
+>     [    0.527211] ena: ena device version: 0.10
+>     [    0.527212] ena: ena controller version: 0.0.1 implementation version 1
+>     [    0.528925] ena 0000:00:05.0: Elastic Network Adapter (ENA) found at mem febf4000, mac addr 06:c4:22:0e:dc:da, Placement policy: Low Latency
+>     [    0.528934] initcall ena_init+0x0/0x63 returned 0 after 1920 usecs
