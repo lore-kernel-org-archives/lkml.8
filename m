@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83AB7C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD660C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523D8217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B09CE21D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203966;
-	bh=9B8Qnr631MfRuBnxFI5I6OfrDDH6d19nhO8jBXeyet0=;
+	s=default; t=1583203972;
+	bh=sd3a7H0pWwvY+u5/WATbfuFmteSNC/5unf0og6H8u0g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WgneIG2Kvl3lTBfMnMqDNSv9zkvWJAoBeEK33qBNrGwLIze5itAA4LGIFPTTlCr24
-	 GobQvHemY5CtR4iLUPB482D0ImZlhwhpTOXHrfSQq2xtImw3VZ608B+2sGylzmb5gK
-	 RtTCOx+0CuoRH1gEnN7gH45T627G4H52odXJy8F8=
+	b=qQ8sVxELSv2vmtfBcDBMzIEej8Ha0m7RtrFWCWIxna5AdSfJG+8IAPWGNEALMEBx3
+	 LypxCQH3jyz8pWY2PRqoONwQ0XD23cNauwBwRdbVTXVERLEcUoztntMgIH1lsNz73F
+	 5GFBAl5Ze9/JTE2CyI2hNeuzSz3M8+l2CiQVyzg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728999AbgCCCty (ORCPT
+        id S1728552AbgCCCwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:49:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46252 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:52:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727824AbgCCCtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:47 -0500
+        id S1728990AbgCCCtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:53 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 500A02468D;
-        Tue,  3 Mar 2020 02:49:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93D4E24680;
+        Tue,  3 Mar 2020 02:49:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203787;
-        bh=9B8Qnr631MfRuBnxFI5I6OfrDDH6d19nhO8jBXeyet0=;
+        s=default; t=1583203792;
+        bh=sd3a7H0pWwvY+u5/WATbfuFmteSNC/5unf0og6H8u0g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOFC01svzdwOwPN1AdUhwB5CIomimHpG8JpAyP9SLFoJKJNEGB69PwZQEc6Vaj4nJ
-         ccFxO8Edxo3LChRJXaZrzKE+awk/uUeyT5nQGaf1OR/8UQLrJUoujZnM1Rysig/1RN
-         b6+mYtcnq6TFR4kXrqLL8QLSuFXQXZdLN5IfCLjo=
+        b=R4c2s9bToAT1DdMUTedt6lbssdTwX/MuyVwdT9newtPGBFRa8KRxmj8h8lFJOnBN1
+         /5qeza97xxMU+7pRm3nQfQdrU3mawu6hobIN95o8V2tfuw2k1EZtAHjMFMrQ666M94
+         4tkTamTztwchbFTyyx8A1TrqpXz2U9iGcQ89M94k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pavel Belous <pbelous@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
+Cc:     Marek Vasut <marex@denx.de>,
         "David S . Miller" <davem@davemloft.net>,
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 10/22] net: atlantic: fix potential error handling
-Date:   Mon,  2 Mar 2020 21:49:21 -0500
-Message-Id: <20200303024933.10371-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 14/22] net: ks8851-ml: Fix 16-bit IO operation
+Date:   Mon,  2 Mar 2020 21:49:25 -0500
+Message-Id: <20200303024933.10371-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024933.10371-1-sashal@kernel.org>
 References: <20200303024933.10371-1-sashal@kernel.org>
@@ -61,42 +61,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Belous <pbelous@marvell.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 380ec5b9af7f0d57dbf6ac067fd9f33cff2fef71 ]
+[ Upstream commit 58292104832fef6cb4a89f736012c0e0724c3442 ]
 
-Code inspection found that in case of mapping error we do return current
-'ret' value. But beside error, it is used to count number of descriptors
-allocated for the packet. In that case map_skb function could return '1'.
+The Micrel KSZ8851-16MLLI datasheet DS00002357B page 12 states that
+BE[3:0] signals are active high. This contradicts the measurements
+of the behavior of the actual chip, where these signals behave as
+active low. For example, to read the CIDER register, the bus must
+expose 0xc0c0 during the address phase, which means BE[3:0]=4'b1100.
 
-Changing it to return zero (number of mapped descriptors for skb)
-
-Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
-Signed-off-by: Pavel Belous <pbelous@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-index a69f5f1ad32a8..7a900f76c9ac3 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -519,8 +519,10 @@ static unsigned int aq_nic_map_skb(struct aq_nic_s *self,
- 				     dx_buff->len,
- 				     DMA_TO_DEVICE);
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index fb5f4055e1592..799154d7c0470 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -484,7 +484,7 @@ static int msg_enable;
  
--	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa)))
-+	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa))) {
-+		ret = 0;
- 		goto exit;
-+	}
+ static u16 ks_rdreg16(struct ks_net *ks, int offset)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	return ioread16(ks->hw_addr);
+ }
+@@ -499,7 +499,7 @@ static u16 ks_rdreg16(struct ks_net *ks, int offset)
  
- 	first = dx_buff;
- 	dx_buff->len_pkt = skb->len;
+ static void ks_wrreg16(struct ks_net *ks, int offset, u16 value)
+ {
+-	ks->cmd_reg_cache = (u16)offset | ((BE1 | BE0) << (offset & 0x02));
++	ks->cmd_reg_cache = (u16)offset | ((BE3 | BE2) >> (offset & 0x02));
+ 	iowrite16(ks->cmd_reg_cache, ks->hw_addr_cmd);
+ 	iowrite16(value, ks->hw_addr);
+ }
 -- 
 2.20.1
 
