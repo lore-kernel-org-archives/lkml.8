@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5FCC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D97C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A28A20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7DC220656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258199;
-	bh=MHH9f6Sl1J/Q2oNgbCemXFSvYVS6iwJBMMPs+2grVhE=;
+	s=default; t=1583258202;
+	bh=cb8y8QAIKJEZ/s6kUey14C4RaZL75F8O2HRemztVjCA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JKmXgaYVxUvomXZRokezicmlZ+fS/0JN+muja8GE4dExcQ34vFwdyMwwvstxE/3wE
-	 cJS9wm0yJRyTcxonhVn8isftrsdtlwkmkmuGZP3j5cLe3Qb3gcdWC5WaAakT1lAeSR
-	 0zl+SPSrEz+90B0iDvlp2SGcw1DUviQg16rCulZk=
+	b=P2AHpk3NwPOTBhxFQh9C6qBPxWzJfWJ/VPhi2V+nkz3q7xSU3qq+lCmAmcVgOoHI9
+	 4LtrCPqy4QL3GzHYc2AXOyiGo0CcVl3CXO60t6uoIId0EMoXIke4y22pk8Udop0oxq
+	 35udt0+wa/ds19HZlQBpO8+H1UtfOAeaSTRObNx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732932AbgCCR4i (ORCPT
+        id S1732943AbgCCR4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:56:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38848 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:56:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732913AbgCCR4f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:56:35 -0500
+        id S1732616AbgCCR4c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:56:32 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69B1C20728;
-        Tue,  3 Mar 2020 17:56:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF12C20656;
+        Tue,  3 Mar 2020 17:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258194;
-        bh=MHH9f6Sl1J/Q2oNgbCemXFSvYVS6iwJBMMPs+2grVhE=;
+        s=default; t=1583258192;
+        bh=cb8y8QAIKJEZ/s6kUey14C4RaZL75F8O2HRemztVjCA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ILKth2RM+mUEkFyLomseSLe1kGNwWXGLZ1bE3ir4PRc5yHg1kdPnFG5nPdnTBxOTo
-         smzO+20D1/gWQuDGsoUpe1eGcuVwhllUFnmA7VM9v/EQtnLaXFyCFLpgZ2WHAx5URr
-         ZCins7hMafzhtw6/uVL4ULJZ5ztjSq7E/Byib3/E=
+        b=fytTEX8kT1OFHiAzrtulqM37QxMdqdTLzub/bwzh9fZtzscJU1NNvAAVEiAiv0cac
+         SPXrdAD+3NnziBcbUVG8Isrqeeho4+BmMuNFiEDsJ5JVzRsNTtcOwcVy/uHToLSiOu
+         IiIPRk7uPZjk4wfNSndhRtJg/PQSx/2foIPR/AXU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com,
-        Jozsef Kadlecsik <kadlec@netfilter.org>
-Subject: [PATCH 5.4 090/152] netfilter: ipset: Fix forceadd evaluation path
-Date:   Tue,  3 Mar 2020 18:43:08 +0100
-Message-Id: <20200303174312.803632057@linuxfoundation.org>
+        Christophe Vu-Brugier <cvubrugier@fastmail.fm>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Pavel Belous <pbelous@marvell.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 107/152] net: atlantic: fix use after free kasan warn
+Date:   Tue,  3 Mar 2020 18:43:25 +0100
+Message-Id: <20200303174314.806720778@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,34 +63,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jozsef Kadlecsik <kadlec@netfilter.org>
+From: Pavel Belous <pbelous@marvell.com>
 
-commit 8af1c6fbd9239877998c7f5a591cb2c88d41fb66 upstream.
+commit a4980919ad6a7be548d499bc5338015e1a9191c6 upstream.
 
-When the forceadd option is enabled, the hash:* types should find and replace
-the first entry in the bucket with the new one if there are no reuseable
-(deleted or timed out) entries. However, the position index was just not set
-to zero and remained the invalid -1 if there were no reuseable entries.
+skb->len is used to calculate statistics after xmit invocation.
 
-Reported-by: syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com
-Fixes: 23c42a403a9c ("netfilter: ipset: Introduction of new commands and protocol version 7")
-Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Under a stress load it may happen that skb will be xmited,
+rx interrupt will come and skb will be freed, all before xmit function
+is even returned.
+
+Eventually, skb->len will access unallocated area.
+
+Moving stats calculation into tx_clean routine.
+
+Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
+Reported-by: Christophe Vu-Brugier <cvubrugier@fastmail.fm>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Pavel Belous <pbelous@marvell.com>
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/ipset/ip_set_hash_gen.h |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c  |    4 ----
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.c |    7 +++++--
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
---- a/net/netfilter/ipset/ip_set_hash_gen.h
-+++ b/net/netfilter/ipset/ip_set_hash_gen.h
-@@ -931,6 +931,8 @@ mtype_add(struct ip_set *set, void *valu
- 		}
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@ -598,10 +598,6 @@ int aq_nic_xmit(struct aq_nic_s *self, s
+ 	if (likely(frags)) {
+ 		err = self->aq_hw_ops->hw_ring_tx_xmit(self->aq_hw,
+ 						       ring, frags);
+-		if (err >= 0) {
+-			++ring->stats.tx.packets;
+-			ring->stats.tx.bytes += skb->len;
+-		}
+ 	} else {
+ 		err = NETDEV_TX_BUSY;
  	}
- 	if (reuse || forceadd) {
-+		if (j == -1)
-+			j = 0;
- 		data = ahash_data(n, j, set->dsize);
- 		if (!deleted) {
- #ifdef IP_SET_HASH_WITH_NETS
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
+@@ -243,9 +243,12 @@ bool aq_ring_tx_clean(struct aq_ring_s *
+ 			}
+ 		}
+ 
+-		if (unlikely(buff->is_eop))
+-			dev_kfree_skb_any(buff->skb);
++		if (unlikely(buff->is_eop)) {
++			++self->stats.rx.packets;
++			self->stats.tx.bytes += buff->skb->len;
+ 
++			dev_kfree_skb_any(buff->skb);
++		}
+ 		buff->pa = 0U;
+ 		buff->eop_index = 0xffffU;
+ 		self->sw_head = aq_ring_next_dx(self, self->sw_head);
 
 
