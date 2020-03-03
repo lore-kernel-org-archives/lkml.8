@@ -2,172 +2,158 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72E2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6811EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A957420870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38CD420848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:28:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="QDxMwgoN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KXqGqes3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgCCW0l (ORCPT
+        id S1727847AbgCCW2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:26:41 -0500
-Received: from gateway36.websitewelcome.com ([192.185.188.18]:17635 "EHLO
-        gateway36.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727026AbgCCW0l (ORCPT
+        Tue, 3 Mar 2020 17:28:20 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37392 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727335AbgCCW2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:26:41 -0500
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway36.websitewelcome.com (Postfix) with ESMTP id 9D7D340260820
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 15:17:13 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 9Fc3jFW5RAGTX9Fc3jNfcl; Tue, 03 Mar 2020 16:02:03 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Ov8U0/V3EL/OzxBcysm37ohdrH/vifyJsx+ocJmx8J0=; b=QDxMwgoNK7dQfmEmgjrj67RHGN
-        KUJ6y4wrfcxBIYLAqMLTwTlVBO6e0kZCuWOYBfXDnIzPDcEHdyA6SAstcJbyKb5p9KDjwq/nHOf6F
-        hmZwFD6W7wNGH5c3UwjLmvXxdcS3LNV6oBvmvBOBkO8FYQJgYEvJrUuuLdGx2Nqoh8fzGBh3aEEdW
-        7laQex2xlTopGAoEGzT35LvvMpREl8ispVH0YLsEswxx7tVFWSvOixDrvlCDWBUEWr/TYMhb5vGdP
-        suhga6py/O/LfVsYySMTpW5RJf6zFW1pcsCAyo3AYzauuSe3syZbVbTZ29ZhNxT7t7S9bh1uS+mU3
-        PqZF287w==;
-Received: from [201.162.240.151] (port=26880 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j9Fbz-00118U-IR; Tue, 03 Mar 2020 16:02:00 -0600
-Date:   Tue, 3 Mar 2020 16:05:03 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH][next] drm/i915: Replace zero-length array with
- flexible-array member
-Message-ID: <20200303220503.GA2663@embeddedor>
+        Tue, 3 Mar 2020 17:28:19 -0500
+Received: by mail-wr1-f66.google.com with SMTP id q8so6502812wrm.4
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:28:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=e4V+8aTWhdIlLEzf4Eox/9Ord8vKJnS3U23eYxJI4AQ=;
+        b=KXqGqes3H3m8InAE8AGrElj7zAvDMD6xwXVFASzk6WwjuCdFaB4vMPGC2jaTP1ee28
+         35OsUP23/42wx2xoQArttVKCiXPzhmAaFjJdOSCM1/+hSxiItYlTXPpd12zHHTVpnPQx
+         /hKiRvHeqRGFZ/uA8E+RhYTTuO/5+L3wxwB6c=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=e4V+8aTWhdIlLEzf4Eox/9Ord8vKJnS3U23eYxJI4AQ=;
+        b=CmMc/3atE5e7ydNhNToliqPkli0qmWRhk2mDsbb0X61N8d6rVSG88R/IMCVatZ04SX
+         dQrTRnSOdkKpVDslWltF35BFdDa+L/d19UoL1czkPxx2bTkqEEJPX548kf6eoUhb7l6e
+         rASzxUOgb+nXh9glRgBX4cjP3Y/dMuOhg5rAh5VEcYQLSnYceSvW/hqdr4nG6S76huNH
+         UuzTfzuU/i5Ba4Omf1Bh9fuEBkisZmYfWLQlzaE/CQIqV81hJDmq8PSjiLtSfFTCmM77
+         v3PJqn267sFx/d5jJziKS+TIs/zpMp6I4W1LCHgEJWclwivXsK0ZuoLZKTnGlIE4nMZz
+         ngYg==
+X-Gm-Message-State: ANhLgQ2h48NXs20pC4HzQJpK8SD14EM5STFAfv/RAiFwnj6IQI/3y+X8
+        fGnZAHCYWMC/350GFMkMUDz/2A==
+X-Google-Smtp-Source: ADFU+vsO7rRWvBSAQDxjBwGmKgf0DoG0NPF8tyeTqymolzH6Fse1dadJP4xsklXMM6Et8L73vKrO0w==
+X-Received: by 2002:a5d:608b:: with SMTP id w11mr198197wrt.366.1583274495670;
+        Tue, 03 Mar 2020 14:28:15 -0800 (PST)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id n13sm773557wmd.21.2020.03.03.14.28.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:28:15 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 3 Mar 2020 23:28:12 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: Re: [PATCH bpf-next 2/7] bpf: JIT helpers for fmod_ret progs
+Message-ID: <20200303222812.GA5265@chromium.org>
+References: <20200303140950.6355-1-kpsingh@chromium.org>
+ <20200303140950.6355-3-kpsingh@chromium.org>
+ <CAEf4BzZJ2E2rmyz7k4F7s=EXPbaAX7XncvUcHukX_FYDWeD7BA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.151
-X-Source-L: No
-X-Exim-ID: 1j9Fbz-00118U-IR
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [201.162.240.151]:26880
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZJ2E2rmyz7k4F7s=EXPbaAX7XncvUcHukX_FYDWeD7BA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On 03-Mär 14:26, Andrii Nakryiko wrote:
+> On Tue, Mar 3, 2020 at 6:13 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > * Split the invoke_bpf program to prepare for special handling of
+> >   fmod_ret programs introduced in a subsequent patch.
+> > * Move the definition of emit_cond_near_jump and emit_nops as they are
+> >   needed for fmod_ret.
+> > * Refactor branch target alignment into its own function
+> >   align16_branch_target.
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+> >  arch/x86/net/bpf_jit_comp.c | 158 ++++++++++++++++++++----------------
+> >  1 file changed, 90 insertions(+), 68 deletions(-)
+> >
+> > diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+> > index 15c7d28bc05c..475e354c2e88 100644
+> > --- a/arch/x86/net/bpf_jit_comp.c
+> > +++ b/arch/x86/net/bpf_jit_comp.c
+> > @@ -1361,35 +1361,100 @@ static void restore_regs(const struct btf_func_model *m, u8 **prog, int nr_args,
+> >                          -(stack_size - i * 8));
+> >  }
+> >
+> 
+> [...]
+> 
+> > +
+> > +/* From Intel 64 and IA-32 Architectures Optimization
+> > + * Reference Manual, 3.4.1.4 Code Alignment, Assembly/Compiler
+> > + * Coding Rule 11: All branch targets should be 16-byte
+> > + * aligned.
+> > + */
+> > +static void align16_branch_target(u8 **pprog)
+> > +{
+> > +       u8 *target, *prog = *pprog;
+> > +
+> > +       target = PTR_ALIGN(prog, 16);
+> > +       if (target != prog)
+> > +               emit_nops(&prog, target - prog);
+> > +       if (target != prog)
+> > +               pr_err("calcultion error\n");
+> 
+> this wasn't in the original code, do you feel like it's more important
+> to check this and print error?
+> 
+> also typo: calculation error, but then it's a bit brief and
+> uninformative message. So I don't know, maybe just drop it?
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
+Ah, good catch! this is deinitely not intended to be here.
+It's a debug artifact and needs to dropped indeed.
 
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
+- KP
 
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/gpu/drm/i915/display/intel_vbt_defs.h | 4 ++--
- drivers/gpu/drm/i915/gt/intel_lrc.c           | 2 +-
- drivers/gpu/drm/i915/i915_gpu_error.h         | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/display/intel_vbt_defs.h b/drivers/gpu/drm/i915/display/intel_vbt_defs.h
-index 05c7cbe32eb4..aef7fe932d1a 100644
---- a/drivers/gpu/drm/i915/display/intel_vbt_defs.h
-+++ b/drivers/gpu/drm/i915/display/intel_vbt_defs.h
-@@ -462,7 +462,7 @@ struct bdb_general_definitions {
- 	 * number = (block_size - sizeof(bdb_general_definitions))/
- 	 *	     defs->child_dev_size;
- 	 */
--	u8 devices[0];
-+	u8 devices[];
- } __packed;
- 
- /*
-@@ -839,7 +839,7 @@ struct bdb_mipi_config {
- 
- struct bdb_mipi_sequence {
- 	u8 version;
--	u8 data[0]; /* up to 6 variable length blocks */
-+	u8 data[]; /* up to 6 variable length blocks */
- } __packed;
- 
- /*
-diff --git a/drivers/gpu/drm/i915/gt/intel_lrc.c b/drivers/gpu/drm/i915/gt/intel_lrc.c
-index b9b3f78f1324..a49ddda649b9 100644
---- a/drivers/gpu/drm/i915/gt/intel_lrc.c
-+++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
-@@ -216,7 +216,7 @@ struct virtual_engine {
- 
- 	/* And finally, which physical engines this virtual engine maps onto. */
- 	unsigned int num_siblings;
--	struct intel_engine_cs *siblings[0];
-+	struct intel_engine_cs *siblings[];
- };
- 
- static struct virtual_engine *to_virtual_engine(struct intel_engine_cs *engine)
-diff --git a/drivers/gpu/drm/i915/i915_gpu_error.h b/drivers/gpu/drm/i915/i915_gpu_error.h
-index 0d1f6c8ff355..5a6561f7a210 100644
---- a/drivers/gpu/drm/i915/i915_gpu_error.h
-+++ b/drivers/gpu/drm/i915/i915_gpu_error.h
-@@ -42,7 +42,7 @@ struct i915_vma_coredump {
- 	int num_pages;
- 	int page_count;
- 	int unused;
--	u32 *pages[0];
-+	u32 *pages[];
- };
- 
- struct i915_request_coredump {
--- 
-2.25.0
-
+> 
+> > +}
+> > +
+> > +static int emit_cond_near_jump(u8 **pprog, void *func, void *ip, u8 jmp_cond)
+> > +{
+> > +       u8 *prog = *pprog;
+> > +       int cnt = 0;
+> > +       s64 offset;
+> > +
+> > +       offset = func - (ip + 2 + 4);
+> > +       if (!is_simm32(offset)) {
+> > +               pr_err("Target %p is out of range\n", func);
+> > +               return -EINVAL;
+> > +       }
+> > +       EMIT2_off32(0x0F, jmp_cond + 0x10, offset);
+> > +       *pprog = prog;
+> > +       return 0;
+> > +}
+> > +
+> 
+> [...]
