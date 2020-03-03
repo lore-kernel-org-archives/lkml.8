@@ -2,74 +2,223 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA91AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E68CAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82D5620857
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA6C020863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:27:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="aCgy0rMy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728352AbgCCMTJ (ORCPT
+        id S1729231AbgCCM1J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:19:09 -0500
-Received: from mail-out.m-online.net ([212.18.0.10]:44324 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727901AbgCCMTJ (ORCPT
+        Tue, 3 Mar 2020 07:27:09 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34544 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728079AbgCCM1J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:19:09 -0500
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 48WwzY09P2z1rh7v;
-        Tue,  3 Mar 2020 13:18:58 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 48WwzQ0tXSz1qyDf;
-        Tue,  3 Mar 2020 13:18:58 +0100 (CET)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id N18NRUUMe8GX; Tue,  3 Mar 2020 13:18:56 +0100 (CET)
-X-Auth-Info: 36mG5rV5unE/6I7rRTDnY+xJnd34FsjeHM1hXyvCHi4=
-Received: from [IPv6:::1] (unknown [195.140.253.167])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 3 Mar 2020 07:27:09 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583238428; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=PAoNPVcXTrqPhTcM9ikOQwaGpe1OSq6wLsvaFY2qg6o=; b=aCgy0rMyxMfpoOM+tUmi+uQ80wbgmJCxndDnTyj81VVdjcE0r+yM/g2+m19tcS9SvGXn128z
+ YeqKS9PJTFmD29uw5D6Pz4WnU57Apu2d6kmVb1nsZnpKvCuZw3j0+8SB6Ya6ppwR8L77jcvx
+ m+x59/yL2HueOYxH/A0Cm9C2j9Y=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5e4d1b.7f0e112fbb20-smtp-out-n03;
+ Tue, 03 Mar 2020 12:27:07 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B13D5C4479D; Tue,  3 Mar 2020 12:27:07 +0000 (UTC)
+Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Tue,  3 Mar 2020 13:18:56 +0100 (CET)
-Subject: Re: [PATCH v1] net: phy: tja11xx: add TJA1102 support
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        David Jander <david@protonic.nl>
-References: <20200303073715.32301-1-o.rempel@pengutronix.de>
-From:   Marek Vasut <marex@denx.de>
-Message-ID: <0c95d6ac-b345-4218-ebad-683fbf1f4d60@denx.de>
-Date:   Tue, 3 Mar 2020 13:18:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200303073715.32301-1-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id F3148C4479C;
+        Tue,  3 Mar 2020 12:27:02 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F3148C4479C
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+From:   Maulik Shah <mkshah@codeaurora.org>
+To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        bjorn.andersson@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org,
+        Maulik Shah <mkshah@codeaurora.org>,
+        devicetree@vger.kernel.orgi
+Subject: [PATCH v10 1/3] arm64: dts: qcom: sc7180: Add cpuidle low power states
+Date:   Tue,  3 Mar 2020 17:56:53 +0530
+Message-Id: <1583238415-18686-2-git-send-email-mkshah@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1583238415-18686-1-git-send-email-mkshah@codeaurora.org>
+References: <1583238415-18686-1-git-send-email-mkshah@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 8:37 AM, Oleksij Rempel wrote:
-> TJA1102 is an dual T1 PHY chip. Both PHYs are separately addressable.
-> PHY 0 can be identified by PHY ID. PHY 1 has no PHY ID and can be
-> configured in device tree by setting compatible =
-> "ethernet-phy-id0180.dc81".
-> 
-> PHY 1 has less suported registers and functionality. For current driver
-> it will affect only the HWMON support.
+Add device bindings for cpuidle states for cpu devices.
 
-Can't you do some magic with match_phy_device (like in
-8b95599c55ed24b36cf44a4720067cfe67edbcb4) to discern the second half of
-the PHY ?
+Cc: devicetree@vger.kernel.orgi
+Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+---
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 78 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 253274d..f5c08ce 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -94,6 +94,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <1024>;
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_0>;
+@@ -113,6 +116,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <1024>;
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_100>;
+@@ -129,6 +135,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x200>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <1024>;
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_200>;
+@@ -145,6 +154,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x300>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <1024>;
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_300>;
+@@ -161,6 +173,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x400>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <1024>;
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_400>;
+@@ -177,6 +192,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x500>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&LITTLE_CPU_SLEEP_0
++					   &LITTLE_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <1024>;
+ 			dynamic-power-coefficient = <100>;
+ 			next-level-cache = <&L2_500>;
+@@ -193,6 +211,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x600>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&BIG_CPU_SLEEP_0
++					   &BIG_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <1740>;
+ 			dynamic-power-coefficient = <405>;
+ 			next-level-cache = <&L2_600>;
+@@ -209,6 +230,9 @@
+ 			compatible = "arm,armv8";
+ 			reg = <0x0 0x700>;
+ 			enable-method = "psci";
++			cpu-idle-states = <&BIG_CPU_SLEEP_0
++					   &BIG_CPU_SLEEP_1
++					   &CLUSTER_SLEEP_0>;
+ 			capacity-dmips-mhz = <1740>;
+ 			dynamic-power-coefficient = <405>;
+ 			next-level-cache = <&L2_700>;
+@@ -255,6 +279,60 @@
+ 				};
+ 			};
+ 		};
++
++		idle-states {
++			entry-method = "psci";
++
++			LITTLE_CPU_SLEEP_0: cpu-sleep-0-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "little-power-down";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <549>;
++				exit-latency-us = <901>;
++				min-residency-us = <1774>;
++				local-timer-stop;
++			};
++
++			LITTLE_CPU_SLEEP_1: cpu-sleep-0-1 {
++				compatible = "arm,idle-state";
++				idle-state-name = "little-rail-power-down";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <702>;
++				exit-latency-us = <915>;
++				min-residency-us = <4001>;
++				local-timer-stop;
++			};
++
++			BIG_CPU_SLEEP_0: cpu-sleep-1-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "big-power-down";
++				arm,psci-suspend-param = <0x40000003>;
++				entry-latency-us = <523>;
++				exit-latency-us = <1244>;
++				min-residency-us = <2207>;
++				local-timer-stop;
++			};
++
++			BIG_CPU_SLEEP_1: cpu-sleep-1-1 {
++				compatible = "arm,idle-state";
++				idle-state-name = "big-rail-power-down";
++				arm,psci-suspend-param = <0x40000004>;
++				entry-latency-us = <526>;
++				exit-latency-us = <1854>;
++				min-residency-us = <5555>;
++				local-timer-stop;
++			};
++
++			CLUSTER_SLEEP_0: cluster-sleep-0 {
++				compatible = "arm,idle-state";
++				idle-state-name = "cluster-power-down";
++				arm,psci-suspend-param = <0x40003444>;
++				entry-latency-us = <3263>;
++				exit-latency-us = <6562>;
++				min-residency-us = <9926>;
++				local-timer-stop;
++			};
++		};
+ 	};
+ 
+ 	memory@80000000 {
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
