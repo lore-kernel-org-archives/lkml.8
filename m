@@ -2,111 +2,89 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF06C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAE0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B33632073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:56:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2099A2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:56:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UxyfZJ/j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DcahoXq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731481AbgCCT4V (ORCPT
+        id S1731501AbgCCT45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:56:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52165 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728731AbgCCT4V (ORCPT
+        Tue, 3 Mar 2020 14:56:57 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38017 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728731AbgCCT44 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:56:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583265380;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1qj8ZdJngAl1BYhYQ8Pb9xB95Ex95TcCgPbQcv0M/tM=;
-        b=UxyfZJ/jkSbSLiW+AJefYRpGIBKxl6DZjGd+OuCynr6V1FqsBbaLwUtctSaS+l/VjycJne
-        ACISo83ghohUdDAaNifHvvxS2h72iSrVAZ7ppJ1q8LCiVtveVKzonh6cjUqYmFQC1YsPRS
-        Pn3gupG215TFOC3oexLS7/pi2pPMxu8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-2UFrHnTtP1mOYL1rblVYZQ-1; Tue, 03 Mar 2020 14:56:16 -0500
-X-MC-Unique: 2UFrHnTtP1mOYL1rblVYZQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CEEE4DBA5;
-        Tue,  3 Mar 2020 19:56:13 +0000 (UTC)
-Received: from ovpn-118-56.phx2.redhat.com (ovpn-118-56.phx2.redhat.com [10.3.118.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 04D7510016EB;
-        Tue,  3 Mar 2020 19:56:11 +0000 (UTC)
-Message-ID: <f9e97d7214906f7b34aa587b868071a6f673c69a.camel@redhat.com>
-Subject: Re: [PATCH RT 21/23] sched: migrate_enable: Busy loop until the
- migration request is completed
-From:   Scott Wood <swood@redhat.com>
-To:     zanussi@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>
-Date:   Tue, 03 Mar 2020 13:56:11 -0600
-In-Reply-To: <fd4bda7ad49f46545a03424fd1327dff8a8b8171.1582814004.git.zanussi@kernel.org>
-References: <cover.1582814004.git.zanussi@kernel.org>
-         <fd4bda7ad49f46545a03424fd1327dff8a8b8171.1582814004.git.zanussi@kernel.org>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Tue, 3 Mar 2020 14:56:56 -0500
+Received: by mail-wm1-f66.google.com with SMTP id u9so4175301wml.3;
+        Tue, 03 Mar 2020 11:56:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=37CbNVhbFufQTtYlKIlj10Tv/j2n35ElGgexHS8GKhw=;
+        b=DcahoXq4wmP2g0InoVkEwZ9ne7HYZGOtIqHwpbrH78ZPhyKlMIXNP25prL6w7y7VhG
+         IDRfIt4mrPa2RcIg883wHjiL/fBhJXhCFqg7PTsuNNtj6EnVB9vzmMDZ/jDGYMarV5tD
+         W8TmNFNox9D/azYx15FF/FnRDwB15s8sCS0N6jjAYHzHwg7tevIXZT5bNokjUfiEcfco
+         AieDlCJuZET+lNb7Pdr56OdJ9XUJRigr7NOtPCYNhRtaeYSrL4/UZudg3pwy7oyLxyRU
+         QFomldIxO6LF6IbxPB82t1hh7xrm4Qth8lfCQdhl4ZTsun/hdWxgqJGjCNPKb/Iq+O/p
+         SJvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=37CbNVhbFufQTtYlKIlj10Tv/j2n35ElGgexHS8GKhw=;
+        b=JdRmTNeWwrEGZiLJf6xH4VI7DtKk1IqGCBYaQyWId7S7JdTkF8WtOoaAdy6Khk3GLj
+         A5aHIVBm0xon9xmPzz4h+F6qbP63VdokNkw0JF4PPYRPy7Og9ENEiYvetRNkz+/VkbHF
+         IJuUkkUBvfvyx1b3kO6QuUB3RBat+94qmrJOGcErn1G1xSYitxdE8TGhDnh0fKt5xvdt
+         UJYTsLA6K9jvnW4KrwJ44fNSyvh4iIuNWfRlzfcrwlzN03to+IwyMTc+alJS0Vuf0Nn3
+         Xlhjwy1mxwm46fFskJRH+Qscc4hS0yj11CCuCFjiVicMuWoB+mOFRy9Ez4G/xuBFcDPw
+         H3ZQ==
+X-Gm-Message-State: ANhLgQ1BlBscY1sGtkbiPM/548tAunOWw+rW4kxLhNcJ6bHpA++hZz4o
+        G9NSJlcG+OIwO9syjFHN/sS3F3U=
+X-Google-Smtp-Source: ADFU+vtr14ipf1Gev15PJYSi9koe25wZb3R+6IYXA1pPllZz5T0/1vLfbQLViYlX4FJ+cTPF976Ziw==
+X-Received: by 2002:a1c:6a13:: with SMTP id f19mr202513wmc.134.1583265414942;
+        Tue, 03 Mar 2020 11:56:54 -0800 (PST)
+Received: from avx2 ([46.53.249.49])
+        by smtp.gmail.com with ESMTPSA id p10sm30460639wrx.81.2020.03.03.11.56.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 11:56:54 -0800 (PST)
+Date:   Tue, 3 Mar 2020 22:56:50 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/5] Simplify /proc/$pid/maps implementation
+Message-ID: <20200303195650.GB17768@avx2>
+References: <20200229165910.24605-1-willy@infradead.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200229165910.24605-1-willy@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-27 at 08:33 -0600, zanussi@kernel.org wrote:
-> From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+On Sat, Feb 29, 2020 at 08:59:05AM -0800, Matthew Wilcox wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 > 
-> v4.14.170-rt75-rc2 stable review patch.
-> If anyone has any objections, please let me know.
+> Back in 2005, we merged a patch from Akamai that sped up /proc/$pid/maps
+> by using f_version to stash the user virtual address that we'd just
+> displayed.  That wasn't necessary; we can just use the private *ppos for
+> the same purpose.  There have also been some other odd choices made over
+> the years that use the seq_file infrastructure in some non-idiomatic ways.
 > 
-> -----------
-> 
-> 
-> [ Upstream commit 140d7f54a5fff02898d2ca9802b39548bf7455f1 ]
-> 
-> If user task changes the CPU affinity mask of a running task it will
-> dispatch migration request if the current CPU is no longer allowed. This
-> might happen shortly before a task enters a migrate_disable() section.
-> Upon leaving the migrate_disable() section, the task will notice that
-> the current CPU is no longer allowed and will will dispatch its own
-> migration request to move it off the current CPU.
-> While invoking __schedule() the first migration request will be
-> processed and the task returns on the "new" CPU with "arg.done = 0". Its
-> own migration request will be processed shortly after and will result in
-> memory corruption if the stack memory, designed for request, was used
-> otherwise in the meantime.
-> 
-> Spin until the migration request has been processed if it was accepted.
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-> ---
->  kernel/sched/core.c | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+> Tested by using 'dd' with various different 'bs=' parameters to check that
+> calling ->start, ->stop and ->next at various offsets work as expected.
 
-As I said in https://marc.info/?l=linux-rt-users&m=158258256415340&w=2 if
-you take thhis you should take the followup 2dcd94b443c5dcbc ("sched:
-migrate_enable: Use per-cpu cpu_stop_work")
-
--Scott
-
-
+/proc part looks OK, I only ask to include this description into first
+patch, so it doesn't get lost. Often 0/N patch is the most interesting
+part of a series.
