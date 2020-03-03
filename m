@@ -2,102 +2,133 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 694A6C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948BBC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44DF820728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:40:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F2420716
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:40:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731367AbgCCSkp (ORCPT
+        id S1731477AbgCCSkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:40:45 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:45149 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbgCCSko (ORCPT
+        Tue, 3 Mar 2020 13:40:51 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52660 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728787AbgCCSkv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:40:44 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j9CTA-0003Uu-LP; Tue, 03 Mar 2020 19:40:40 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id F00981C1A9F;
-        Tue,  3 Mar 2020 19:40:39 +0100 (CET)
-Date:   Tue, 03 Mar 2020 18:40:39 -0000
-From:   "tip-bot2 for Cyril Hrubis" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/urgent] sys/sysinfo: Respect boottime inside time namespace
-Cc:     Cyril Hrubis <chrubis@suse.cz>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20200303150638.7329-1-chrubis@suse.cz>
-References: <20200303150638.7329-1-chrubis@suse.cz>
+        Tue, 3 Mar 2020 13:40:51 -0500
+Received: from static-50-53-33-191.bvtn.or.frontiernet.net ([50.53.33.191] helo=[192.168.192.153])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <john.johansen@canonical.com>)
+        id 1j9CTH-0003o1-Gx; Tue, 03 Mar 2020 18:40:47 +0000
+Subject: Re: [PATCH] security/apparmor/label.c: Clean code by removing
+ redundant instructions
+To:     mateusznosek0@gmail.com, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     serge@hallyn.com, jmorris@namei.org
+References: <20200303183023.32004-1-mateusznosek0@gmail.com>
+From:   John Johansen <john.johansen@canonical.com>
+Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Canonical
+Message-ID: <e73b378a-acf0-0669-9e06-6633b5b25f86@canonical.com>
+Date:   Tue, 3 Mar 2020 10:40:44 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Message-ID: <158326083954.28353.16922158200341050554.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200303183023.32004-1-mateusznosek0@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/urgent branch of tip:
+On 3/3/20 10:30 AM, mateusznosek0@gmail.com wrote:
+> From: Mateusz Nosek <mateusznosek0@gmail.com>
+> 
+> Previously 'label->proxy->label' value checking
+> and conditional reassigning were done twice in the same function.
+> The second one is redundant and can be removed.
+> 
+> Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+Acked-by: John Johansen <john.johansen@canonical.com>
 
-Commit-ID:     ecc421e05bab97cf3ff4fe456ade47ef84dba8c2
-Gitweb:        https://git.kernel.org/tip/ecc421e05bab97cf3ff4fe456ade47ef84dba8c2
-Author:        Cyril Hrubis <chrubis@suse.cz>
-AuthorDate:    Tue, 03 Mar 2020 16:06:38 +01:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 03 Mar 2020 19:34:32 +01:00
+I will pull this into apparmor-next
 
-sys/sysinfo: Respect boottime inside time namespace
 
-The sysinfo() syscall includes uptime in seconds but has no correction for
-time namespaces which makes it inconsistent with the /proc/uptime inside of
-a time namespace.
+> ---
+>  security/apparmor/label.c | 6 ------
+>  1 file changed, 6 deletions(-)
+> 
+> diff --git a/security/apparmor/label.c b/security/apparmor/label.c
+> index ba3987242282..676eebcbfd68 100644
+> --- a/security/apparmor/label.c
+> +++ b/security/apparmor/label.c
+> @@ -311,8 +311,6 @@ int aa_vec_unique(struct aa_profile **vec, int n, int flags)
+>  
+>  static void label_destroy(struct aa_label *label)
+>  {
+> -	struct aa_label *tmp;
+> -
+>  	AA_BUG(!label);
+>  
+>  	if (!label_isprofile(label)) {
+> @@ -333,10 +331,6 @@ static void label_destroy(struct aa_label *label)
+>  
+>  	aa_free_secid(label->secid);
+>  
+> -	tmp = rcu_dereference_protected(label->proxy->label, true);
+> -	if (tmp == label)
+> -		rcu_assign_pointer(label->proxy->label, NULL);
+> -
+>  	aa_put_proxy(label->proxy);
+>  	label->proxy = (struct aa_proxy *) PROXY_POISON + 1;
+>  }
+> 
 
-Add the missing time namespace adjustment call.
-
-Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Dmitry Safonov <dima@arista.com>
-Link: https://lkml.kernel.org/r/20200303150638.7329-1-chrubis@suse.cz
-
----
- kernel/sys.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/sys.c b/kernel/sys.c
-index f9bc5c3..d325f3a 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -47,6 +47,7 @@
- #include <linux/syscalls.h>
- #include <linux/kprobes.h>
- #include <linux/user_namespace.h>
-+#include <linux/time_namespace.h>
- #include <linux/binfmts.h>
- 
- #include <linux/sched.h>
-@@ -2546,6 +2547,7 @@ static int do_sysinfo(struct sysinfo *info)
- 	memset(info, 0, sizeof(struct sysinfo));
- 
- 	ktime_get_boottime_ts64(&tp);
-+	timens_add_boottime(&tp);
- 	info->uptime = tp.tv_sec + (tp.tv_nsec ? 1 : 0);
- 
- 	get_avenrun(info->loads, 0, SI_LOAD_SHIFT - FSHIFT);
