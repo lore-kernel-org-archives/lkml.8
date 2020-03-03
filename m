@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FCCC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7435EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55E60206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF412146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258054;
-	bh=mYVq59/icy0FJB4PO/fo2pWze3ZggxVI6qyA2COpnic=;
+	s=default; t=1583258058;
+	bh=OozF0n4biiFo40h+gvtJt74tu01cqRvrmfum7rt5Q3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hqAWSKX3B9ZFI4nYLjfhnH/h8HF0PNmpilt0S11Q21iB+X69v858Oacah5x1tRBGA
-	 tx0M9pPAJIh0oPuJmm8t72LAgS1GbL1QddJnfuKttpG9yf/pt2CHxi78DQbEJcmxiH
-	 XRSa7iE5WQ/PTWPI/SHnrpruHd/7F8loP4ditgSE=
+	b=j6RfRXusYSZOj6mY7wOSSqv23KVskyIT32BL1ARE1mlIYTD+jdj/M2mYgkps/9m11
+	 p339emEqfJWOgYGb4W4xefhgwAIPmsgw+OMmT7vSzFAfp6F65YeZTzMh4YJvW1zZdP
+	 WISTPO+03hmx+KizXrs62uG882dKSlNrkvjFwsGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732506AbgCCRyN (ORCPT
+        id S1732339AbgCCRyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35272 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35330 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732492AbgCCRyM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:12 -0500
+        id S1732331AbgCCRyP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AAB0206D5;
-        Tue,  3 Mar 2020 17:54:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C0532146E;
+        Tue,  3 Mar 2020 17:54:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258051;
-        bh=mYVq59/icy0FJB4PO/fo2pWze3ZggxVI6qyA2COpnic=;
+        s=default; t=1583258054;
+        bh=OozF0n4biiFo40h+gvtJt74tu01cqRvrmfum7rt5Q3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CddN4VYR1WWun4netlMcM0Lx6Sc4sx+IBie29oOF7bXE1TKCkaxqTJcaqxH7RLtZQ
-         IWSaeE+f7HPTRHBoNuxSc+p/Ir25sLUlVjDfBsRaCKHHVUcqnA3d5B0VKVzCsN6SFv
-         1yEl3bcufWLVTPZaiPZ96axd8OjOnw9gMxRWUtLU=
+        b=1toMsWJUG0o9ZntDbKB7b3mTzyca0e2262QSobW+ypIpBH5w7jVHcvj5Bl1dZbfw+
+         2UmPXaEX8hi0VzMR1/QeHNBPWpFrCRVLZdEbyAbwkkc1nh6QDNJJxDhVtigFWeopTp
+         6fUakvi3N+ify0DiFxvVp5mkw7Fx1isc3EhnnGXg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
         Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 015/152] bnxt_en: Improve device shutdown method.
-Date:   Tue,  3 Mar 2020 18:41:53 +0100
-Message-Id: <20200303174304.229062032@linuxfoundation.org>
+Subject: [PATCH 5.4 016/152] bnxt_en: Issue PCIe FLR in kdump kernel to cleanup pending DMAs.
+Date:   Tue,  3 Mar 2020 18:41:54 +0100
+Message-Id: <20200303174304.335852104@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -63,35 +63,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 5567ae4a8d569d996d0d88d0eceb76205e4c7ce5 ]
+[ Upstream commit 8743db4a9acfd51f805ac0c87bcaae92c42d1061 ]
 
-Especially when bnxt_shutdown() is called during kexec, we need to
-disable MSIX and disable Bus Master to completely quiesce the device.
-Make these 2 calls unconditionally in the shutdown method.
+If crashed kernel does not shutdown the NIC properly, PCIe FLR
+is required in the kdump kernel in order to initialize all the
+functions properly.
 
-Fixes: c20dc142dd7b ("bnxt_en: Disable bus master during PCI shutdown and driver unload.")
+Fixes: d629522e1d66 ("bnxt_en: Reduce memory usage when running in kdump kernel.")
 Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
 --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
 +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -11908,10 +11908,10 @@ static void bnxt_shutdown(struct pci_dev
- 		dev_close(dev);
+@@ -11712,6 +11712,14 @@ static int bnxt_init_one(struct pci_dev
+ 	if (version_printed++ == 0)
+ 		pr_info("%s", version);
  
- 	bnxt_ulp_shutdown(bp);
-+	bnxt_clear_int_mode(bp);
-+	pci_disable_device(pdev);
- 
- 	if (system_state == SYSTEM_POWER_OFF) {
--		bnxt_clear_int_mode(bp);
--		pci_disable_device(pdev);
- 		pci_wake_from_d3(pdev, bp->wol);
- 		pci_set_power_state(pdev, PCI_D3hot);
- 	}
++	/* Clear any pending DMA transactions from crash kernel
++	 * while loading driver in capture kernel.
++	 */
++	if (is_kdump_kernel()) {
++		pci_clear_master(pdev);
++		pcie_flr(pdev);
++	}
++
+ 	max_irqs = bnxt_get_max_irq(pdev);
+ 	dev = alloc_etherdev_mq(sizeof(*bp), max_irqs);
+ 	if (!dev)
 
 
