@@ -2,100 +2,142 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96F1C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7605EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC82920866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CC6B20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:43:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u63NjWYt"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LTbJ6z6h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730109AbgCCPnX (ORCPT
+        id S1730124AbgCCPnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:43:23 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:44928 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbgCCPnX (ORCPT
+        Tue, 3 Mar 2020 10:43:50 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:42689 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730110AbgCCPnt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:43:23 -0500
-Received: by mail-pg1-f194.google.com with SMTP id a14so1692031pgb.11;
-        Tue, 03 Mar 2020 07:43:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=yVsYqPYn8VlY/Xr0vLshTuy/KHxsb6yKrL/whDXq2nQ=;
-        b=u63NjWYtBbIKnMGnZA3qD99y4hm4ZM8DTS/EiXtc/ljVUruQ6mlWYwg55/jqXlGhMn
-         ECDBhgWH7Wou0JHw6NPNSocMxuA4QPqWJsgGQhhD5IkxY4ETICeRgOl1CacgswX5vsTU
-         10pzH2cDLtN3ROnRS9DHqUGR8yubxIkbaMC0x4dklbWBGxbyf+k4hFox+D9B+ex6d0qw
-         C4I+Dshd6QFpOU63RwpD8ZFCN5Xq/v3glPJ7gPyc3G5NFtzaqwJH3MXanOtJ6EDAEzQF
-         2uGCMUqmqG1ViBixVSPucooxJvmI7XFuQQV2BFdt7SFX5RgGQqqohVi+RmU4Pv/DcAR/
-         dbcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=yVsYqPYn8VlY/Xr0vLshTuy/KHxsb6yKrL/whDXq2nQ=;
-        b=HIsXFqUQtaWyCX3eVpifkguju1D7rebFr53Cyh6zAv0gZe+RIQG5RcX8BlhtTydxhY
-         +pHQJ30IODAp8LeMr+oJ36lPBMLmu1FvqTBG3nXBvjp9cmttPgrn4FFMQWdrUWWoz5Fa
-         LPWtSk7l6uRPDZqawaKnVLdXjBMoTc+C7ggQg9msKtRSobmxFzgvMl/W8yqP97bdrzZE
-         BP2hDDVHS16ylaICPW0MJnvmq5x0WbXNNtVyjMHEh1+9kzisD9TwYmGo7VLa8rIIkQBv
-         cAoquImN+XYW+TzcC7Y8BD0marmBXDaH6MsUXE6WKrESEr3EVvLKRcUdjneVa9diLgzZ
-         fFdA==
-X-Gm-Message-State: ANhLgQ1h2b1Ggz9SfSq9jqAeL23NuZbwsONs/2e4It4sxrCA93PTfefQ
-        3AwwOx29AFfj7o3bOjjyiZkPhTER
-X-Google-Smtp-Source: ADFU+vuJPRqrMCk9b+dLAyaEyEFqSgz/Cqgg6gIaP3mcIKUZJf49QtdQtiws0cnndIqyrZYwLQsE8Q==
-X-Received: by 2002:a63:7a1a:: with SMTP id v26mr4604508pgc.152.1583250202039;
-        Tue, 03 Mar 2020 07:43:22 -0800 (PST)
-Received: from VM_0_35_centos.localdomain ([150.109.62.251])
-        by smtp.gmail.com with ESMTPSA id 64sm25131037pfd.48.2020.03.03.07.43.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Mar 2020 07:43:21 -0800 (PST)
-From:   Qiujun Huang <hqjagain@gmail.com>
-To:     sfrench@samba.org
-Cc:     linux-cifs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qiujun Huang <hqjagain@gmail.com>
-Subject: [PATCH] fs/cifs/cifsacl: fix sid_to_id
-Date:   Tue,  3 Mar 2020 23:43:17 +0800
-Message-Id: <1583250197-10786-1-git-send-email-hqjagain@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 3 Mar 2020 10:43:49 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583250229; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=0RtZ3Aoyz/ucJdUBS4KVjKUFDbZ/LAxf/VkAI5mTDEI=; b=LTbJ6z6h0IF46LXoB6TK20B1oo8DhguJ2jhU3ichRcQPAqwjH0xpGZWndq+/evnDAXE9bmFZ
+ 8IM4XLNBupwvfmCBGBI8H816pnT49VCqvFURhJ45buthWkdZWU/V4ywFGiEPQWn492vPNqi0
+ xH+hYx0pEmbsHI+AaxEOGXfQRKo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5e7b1e.7f27a42232d0-smtp-out-n03;
+ Tue, 03 Mar 2020 15:43:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E1AB1C447A2; Tue,  3 Mar 2020 15:43:24 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 52BD4C43383;
+        Tue,  3 Mar 2020 15:43:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 52BD4C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Tue, 3 Mar 2020 08:43:21 -0700
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org,
+        smasetty@codeaurora.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        freedreno@lists.freedesktop.org
+Subject: Re: [Freedreno] [PATCH v3 1/2] dt-bindings: display: msm: Convert
+ GMU bindings to YAML
+Message-ID: <20200303154321.GA24212@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Sam Ravnborg <sam@ravnborg.org>,
+        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
+        David Airlie <airlied@linux.ie>, linux-arm-msm@vger.kernel.org,
+        smasetty@codeaurora.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>,
+        freedreno@lists.freedesktop.org
+References: <1583173424-21832-1-git-send-email-jcrouse@codeaurora.org>
+ <1583173424-21832-2-git-send-email-jcrouse@codeaurora.org>
+ <20200302204906.GA32123@ravnborg.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302204906.GA32123@ravnborg.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix it to return the errcode.
+On Mon, Mar 02, 2020 at 09:49:06PM +0100, Sam Ravnborg wrote:
+> Hi Jordan.
+> 
+> On Mon, Mar 02, 2020 at 11:23:43AM -0700, Jordan Crouse wrote:
+> > Convert display/msm/gmu.txt to display/msm/gmu.yaml and remove the old
+> > text bindings.
+> > 
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > ---
+> > 
+> >  .../devicetree/bindings/display/msm/gmu.txt        | 116 -------------------
+> > -
+> > -Required properties:
+> > -- compatible: "qcom,adreno-gmu-XYZ.W", "qcom,adreno-gmu"
+> > -    for example: "qcom,adreno-gmu-630.2", "qcom,adreno-gmu"
+> > -  Note that you need to list the less specific "qcom,adreno-gmu"
+> > -  for generic matches and the more specific identifier to identify
+> > -  the specific device.
+> > -- reg: Physical base address and length of the GMU registers.
+> > -- reg-names: Matching names for the register regions
+> > -  * "gmu"
+> > -  * "gmu_pdc"
+> > -  * "gmu_pdc_seg"
+> > -- interrupts: The interrupt signals from the GMU.
+> > -- interrupt-names: Matching names for the interrupts
+> > -  * "hfi"
+> > -  * "gmu"
+> > -- clocks: phandles to the device clocks
+> > -- clock-names: Matching names for the clocks
+> > -   * "gmu"
+> > -   * "cxo"
+> > -   * "axi"
+> > -   * "mnoc"
+> The new binding - and arch/arm64/boot/dts/qcom/sdm845.dtsi agrees that
+> "mnoc" is wrong.
+> 
+> > -- power-domains: should be:
+> > -	<&clock_gpucc GPU_CX_GDSC>
+> > -	<&clock_gpucc GPU_GX_GDSC>
+> > -- power-domain-names: Matching names for the power domains
+> > -- iommus: phandle to the adreno iommu
+> > -- operating-points-v2: phandle to the OPP operating points
+> > -
+> > -Optional properties:
+> > -- sram: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+> > -        SoCs. See Documentation/devicetree/bindings/sram/qcom,ocmem.yaml.
+> This property is not included in the new binding.
 
-Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
----
- fs/cifs/cifsacl.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Yeah, that guy shouldn't be here. I'm not sure how it got there in the first
+place but I'll update the commit log. Thanks for the poke.
 
-diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
-index 716574a..a8d2aa8 100644
---- a/fs/cifs/cifsacl.c
-+++ b/fs/cifs/cifsacl.c
-@@ -400,6 +400,7 @@
- 	if (!sidstr)
- 		return -ENOMEM;
- 
-+	rc = 0;
- 	saved_cred = override_creds(root_cred);
- 	sidkey = request_key(&cifs_idmap_key_type, sidstr, "");
- 	if (IS_ERR(sidkey)) {
-@@ -454,7 +455,7 @@
- 		fattr->cf_uid = fuid;
- 	else
- 		fattr->cf_gid = fgid;
--	return 0;
-+	return rc;
- }
- 
- int
+Jordan
+
+> Everything else looked fine to me.
+> With sram added - or expalined in commit why it is dropped:
+> Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> 
+> 	Sam
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
 -- 
-1.8.3.1
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
