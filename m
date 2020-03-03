@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E23B2C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A567EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9A520656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823E5206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258213;
-	bh=GPrGqR4C1RaxmXPThvzNhzBjg4F8I9Wxl4QeqHftEbo=;
+	s=default; t=1583258216;
+	bh=6baVSeaPeZngpOF0zDPEwvISGo1cuZHYG8DXixry+zQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=moem0/V6ZNv065DKCWMJ0VzVIfnOzG28r4HuKmaY9+GfXUhBhCeSVCIqOFF+83k8G
-	 BoTT1z/6zuU6T379oRu94eTR3XAW4lgqlq7IeOdZNMSOxiJwfykKWWpv5EGp7DMSaV
-	 bHJurcGbc/tXTPwX/fDXD63ktrqAnrMe8jvc5DGY=
+	b=Cf9H/TYk//b8GjCTf0UcDamhxwVBGyiA77zDPnjIpgAErW/zsiyFW3AZ0MOp7looR
+	 953Z9pNvR2pogqWKyhoGsbHQVUxBo7cEnUX9BeiIA6/DrWLAwzunCeFEkVRP1oN4lX
+	 h7Y37xT/pDX+WBKj6xzdnNzmca33H/6tNi+785PY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732977AbgCCR4w (ORCPT
+        id S1732951AbgCCR4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:56:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39150 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:56:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732346AbgCCR4s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:56:48 -0500
+        id S1732942AbgCCR4k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:56:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FB8A20656;
-        Tue,  3 Mar 2020 17:56:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48EF520728;
+        Tue,  3 Mar 2020 17:56:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258207;
-        bh=GPrGqR4C1RaxmXPThvzNhzBjg4F8I9Wxl4QeqHftEbo=;
+        s=default; t=1583258199;
+        bh=6baVSeaPeZngpOF0zDPEwvISGo1cuZHYG8DXixry+zQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JjhjxpTtfCp91QQlTtnz4K9dGFG4/zOtk3zM5MClPa9FuXVLilDkYElQxhN3HuMg5
-         AgN8CKHMWK5BuaTwMwjUpD+aelp+xwI5Wuh7bgg3JZc53IuBm3h7nBEojqE4Tg6nuk
-         in8Jqt68w2MMTNoyxdwr8dT/RYg2cT9/pP0Q1QsQ=
+        b=u72DMeE5ADaJ94R2neJvGyhBAvYGfmCFcyHp6Htzwo98BEZGYLkCLoeRUTQRT1MLo
+         TvANQ8i6nwmhQdcAEz9abuAg7ceR+brkSRXh9VmPlT2iG0PuTz+UEzRqioBi2WrxFs
+         P3WH2sGLeG14y31IvnvdWF6wHZTKDoekfH7ABNiU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 5.4 112/152] selftests: Install settings files to fix TIMEOUT failures
-Date:   Tue,  3 Mar 2020 18:43:30 +0100
-Message-Id: <20200303174315.478536626@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 109/152] net: atlantic: fix out of range usage of active_vlans array
+Date:   Tue,  3 Mar 2020 18:43:27 +0100
+Message-Id: <20200303174315.082944131@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -59,79 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Dmitry Bogdanov <dbogdanov@marvell.com>
 
-commit b9167c8078c3527de6da241c8a1a75a9224ed90a upstream.
+commit 5a292c89a84d49b598f8978f154bdda48b1072c0 upstream.
 
-Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
-timeout per test") added a 45 second timeout for tests, and also added
-a way for tests to customise the timeout via a settings file.
+fix static checker warning:
+ drivers/net/ethernet/aquantia/atlantic/aq_filters.c:166 aq_check_approve_fvlan()
+ error: passing untrusted data to 'test_bit()'
 
-For example the ftrace tests take multiple minutes to run, so they
-were given longer in commit b43e78f65b1d ("tracing/selftests: Turn off
-timeout setting").
-
-This works when the tests are run from the source tree. However if the
-tests are installed with "make -C tools/testing/selftests install",
-the settings files are not copied into the install directory. When the
-tests are then run from the install directory the longer timeouts are
-not applied and the tests timeout incorrectly.
-
-So add the settings files to TEST_FILES of the appropriate Makefiles
-to cause the settings files to be installed using the existing install
-logic.
-
-Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second timeout per test")
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Fixes: 7975d2aff5af: ("net: aquantia: add support of rx-vlan-filter offload")
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/ftrace/Makefile    |    2 +-
- tools/testing/selftests/livepatch/Makefile |    2 ++
- tools/testing/selftests/rseq/Makefile      |    2 ++
- tools/testing/selftests/rtc/Makefile       |    2 ++
- 4 files changed, 7 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_filters.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/tools/testing/selftests/ftrace/Makefile
-+++ b/tools/testing/selftests/ftrace/Makefile
-@@ -2,7 +2,7 @@
- all:
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_filters.c
+@@ -158,7 +158,7 @@ aq_check_approve_fvlan(struct aq_nic_s *
+ 	}
  
- TEST_PROGS := ftracetest
--TEST_FILES := test.d
-+TEST_FILES := test.d settings
- EXTRA_CLEAN := $(OUTPUT)/logs/*
- 
- include ../lib.mk
---- a/tools/testing/selftests/livepatch/Makefile
-+++ b/tools/testing/selftests/livepatch/Makefile
-@@ -6,4 +6,6 @@ TEST_PROGS := \
- 	test-callbacks.sh \
- 	test-shadow-vars.sh
- 
-+TEST_FILES := settings
-+
- include ../lib.mk
---- a/tools/testing/selftests/rseq/Makefile
-+++ b/tools/testing/selftests/rseq/Makefile
-@@ -19,6 +19,8 @@ TEST_GEN_PROGS_EXTENDED = librseq.so
- 
- TEST_PROGS = run_param_test.sh
- 
-+TEST_FILES := settings
-+
- include ../lib.mk
- 
- $(OUTPUT)/librseq.so: rseq.c rseq.h rseq-*.h
---- a/tools/testing/selftests/rtc/Makefile
-+++ b/tools/testing/selftests/rtc/Makefile
-@@ -6,4 +6,6 @@ TEST_GEN_PROGS = rtctest
- 
- TEST_GEN_PROGS_EXTENDED = setdate
- 
-+TEST_FILES := settings
-+
- include ../lib.mk
+ 	if ((aq_nic->ndev->features & NETIF_F_HW_VLAN_CTAG_FILTER) &&
+-	    (!test_bit(be16_to_cpu(fsp->h_ext.vlan_tci),
++	    (!test_bit(be16_to_cpu(fsp->h_ext.vlan_tci) & VLAN_VID_MASK,
+ 		       aq_nic->active_vlans))) {
+ 		netdev_err(aq_nic->ndev,
+ 			   "ethtool: unknown vlan-id specified");
 
 
