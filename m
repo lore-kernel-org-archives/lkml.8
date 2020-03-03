@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8CDC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F32C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A6E2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7564E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258761;
-	bh=yzQRHWd1ErCrLsmponrFrgfSO6ue2Qh77DHNaM3MvBg=;
+	s=default; t=1583258765;
+	bh=eHsNYiS8BfkX9qA8ffEl7jMHW4jucE1t/ZyyG5T/pTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jbTE43aYMXrsbN3hzmINCbjWUEG+c67/91Kr5Xj8YuXGOK5+VrJ4GdtGmOwQdU9Ct
-	 UvP17ItrSDfjrohRMNyYQOoW3wGs0GvPIbPAHYgsHViI82vR1tf3faA2o3xLb9o44T
-	 /CUuOiik7VIu1/LwXBFXsl+oe7meeB3c17P6EntY=
+	b=bE/IN4tbAeYdqLy6FayNoWGQksWX5rbpYKElcxblfTMRUQHJyghpdP9rUg5yc5a/L
+	 pMRpKUiv2jrzIkqHWHGEV0Wdh6nAGEPeXCYxO6PXfJfCEKidQs6JMbtOHpUcl8KX48
+	 ceBrmrSK6ehVsogo7QtN+yolEwqXvywxkUHkOvSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733076AbgCCR50 (ORCPT
+        id S1733218AbgCCSGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:57:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39788 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:06:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732743AbgCCR5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:57:19 -0500
+        id S1733068AbgCCR5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:57:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83A1320CC7;
-        Tue,  3 Mar 2020 17:57:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EAE22072D;
+        Tue,  3 Mar 2020 17:57:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258238;
-        bh=yzQRHWd1ErCrLsmponrFrgfSO6ue2Qh77DHNaM3MvBg=;
+        s=default; t=1583258242;
+        bh=eHsNYiS8BfkX9qA8ffEl7jMHW4jucE1t/ZyyG5T/pTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qO6Jc58pY9GsFhsdwko8sZ6tvds/bxbblIBcI58cz0zJFNds9b9U+OAL0bF4Ur5Un
-         Ro0/6KUiBsrJSmYhvFxjlKm9VP6qxbdYsJiTtRrKSofmgVQ8HQmTRMCUFAylSI6hn2
-         tvHKBMg5YawD/LDlkQ5jFxdFRV/itzNxCL9gFu1Q=
+        b=hM1piE0+6OZnUm47XQyXvvbq7CbaJ6n8n6WbDHI4UVtkLSsEn0m9/O/je/nume3XQ
+         mtJ5OOc9Mu2U3VNX8arsObMv2S53YEiVGnCLcQMFB582m0CdDSPX+lgch8Dp1H2HaU
+         rzlmkEs6RxN/dWvIl1B9+xJAxh6izyUnA5l+Q1W0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 5.4 123/152] f2fs: fix to add swap extent correctly
-Date:   Tue,  3 Mar 2020 18:43:41 +0100
-Message-Id: <20200303174316.780515898@linuxfoundation.org>
+        stable@vger.kernel.org, Lijun Ou <oulijun@huawei.com>,
+        Weihang Li <liweihang@huawei.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.4 125/152] RDMA/hns: Bugfix for posting a wqe with sge
+Date:   Tue,  3 Mar 2020 18:43:43 +0100
+Message-Id: <20200303174316.998866588@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -59,120 +60,169 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chao Yu <yuchao0@huawei.com>
+From: Lijun Ou <oulijun@huawei.com>
 
-commit 3e5e479a39ce9ed60cd63f7565cc1d9da77c2a4e upstream.
+commit 468d020e2f02867b8ec561461a1689cd4365e493 upstream.
 
-As Youling reported in mailing list:
+Driver should first check whether the sge is valid, then fill the valid
+sge and the caculated total into hardware, otherwise invalid sges will
+cause an error.
 
-https://www.linuxquestions.org/questions/linux-newbie-8/the-file-system-f2fs-is-broken-4175666043/
-
-https://www.linux.org/threads/the-file-system-f2fs-is-broken.26490/
-
-There is a test case can corrupt f2fs image:
-- dd if=/dev/zero of=/swapfile bs=1M count=4096
-- chmod 600 /swapfile
-- mkswap /swapfile
-- swapon --discard /swapfile
-
-The root cause is f2fs_swap_activate() intends to return zero value
-to setup_swap_extents() to enable SWP_FS mode (swap file goes through
-fs), in this flow, setup_swap_extents() setups swap extent with wrong
-block address range, result in discard_swap() erasing incorrect address.
-
-Because f2fs_swap_activate() has pinned swapfile, its data block
-address will not change, it's safe to let swap to handle IO through
-raw device, so we can get rid of SWAP_FS mode and initial swap extents
-inside f2fs_swap_activate(), by this way, later discard_swap() can trim
-in right address range.
-
-Fixes: 4969c06a0d83 ("f2fs: support swap file w/ DIO")
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 52e3b42a2f58 ("RDMA/hns: Filter for zero length of sge in hip08 kernel mode")
+Fixes: 7bdee4158b37 ("RDMA/hns: Fill sq wqe context of ud type in hip08")
+Link: https://lore.kernel.org/r/1578571852-13704-1-git-send-email-liweihang@huawei.com
+Signed-off-by: Lijun Ou <oulijun@huawei.com>
+Signed-off-by: Weihang Li <liweihang@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/data.c |   32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ drivers/infiniband/hw/hns/hns_roce_hw_v2.c |   41 +++++++++++++++++------------
+ 1 file changed, 25 insertions(+), 16 deletions(-)
 
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -3030,7 +3030,8 @@ int f2fs_migrate_page(struct address_spa
- 
- #ifdef CONFIG_SWAP
- /* Copied from generic_swapfile_activate() to check any holes */
--static int check_swap_activate(struct file *swap_file, unsigned int max)
-+static int check_swap_activate(struct swap_info_struct *sis,
-+				struct file *swap_file, sector_t *span)
- {
- 	struct address_space *mapping = swap_file->f_mapping;
- 	struct inode *inode = mapping->host;
-@@ -3041,6 +3042,8 @@ static int check_swap_activate(struct fi
- 	sector_t last_block;
- 	sector_t lowest_block = -1;
- 	sector_t highest_block = 0;
-+	int nr_extents = 0;
-+	int ret;
- 
- 	blkbits = inode->i_blkbits;
- 	blocks_per_page = PAGE_SIZE >> blkbits;
-@@ -3052,7 +3055,8 @@ static int check_swap_activate(struct fi
- 	probe_block = 0;
- 	page_no = 0;
- 	last_block = i_size_read(inode) >> blkbits;
--	while ((probe_block + blocks_per_page) <= last_block && page_no < max) {
-+	while ((probe_block + blocks_per_page) <= last_block &&
-+			page_no < sis->max) {
- 		unsigned block_in_page;
- 		sector_t first_block;
- 
-@@ -3092,13 +3096,27 @@ static int check_swap_activate(struct fi
- 				highest_block = first_block;
- 		}
- 
-+		/*
-+		 * We found a PAGE_SIZE-length, PAGE_SIZE-aligned run of blocks
-+		 */
-+		ret = add_swap_extent(sis, page_no, 1, first_block);
-+		if (ret < 0)
-+			goto out;
-+		nr_extents += ret;
- 		page_no++;
- 		probe_block += blocks_per_page;
- reprobe:
- 		continue;
- 	}
--	return 0;
--
-+	ret = nr_extents;
-+	*span = 1 + highest_block - lowest_block;
-+	if (page_no == 0)
-+		page_no = 1;	/* force Empty message */
-+	sis->max = page_no;
-+	sis->pages = page_no - 1;
-+	sis->highest_bit = page_no - 1;
-+out:
-+	return ret;
- bad_bmap:
- 	pr_err("swapon: swapfile has holes\n");
- 	return -EINVAL;
-@@ -3120,14 +3138,14 @@ static int f2fs_swap_activate(struct swa
- 	if (ret)
- 		return ret;
- 
--	ret = check_swap_activate(file, sis->max);
--	if (ret)
-+	ret = check_swap_activate(sis, file, span);
-+	if (ret < 0)
- 		return ret;
- 
- 	set_inode_flag(inode, FI_PIN_FILE);
- 	f2fs_precache_extents(inode);
- 	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
--	return 0;
-+	return ret;
+--- a/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
++++ b/drivers/infiniband/hw/hns/hns_roce_hw_v2.c
+@@ -110,7 +110,7 @@ static void set_atomic_seg(struct hns_ro
  }
  
- static void f2fs_swap_deactivate(struct file *file)
+ static void set_extend_sge(struct hns_roce_qp *qp, const struct ib_send_wr *wr,
+-			   unsigned int *sge_ind)
++			   unsigned int *sge_ind, int valid_num_sge)
+ {
+ 	struct hns_roce_v2_wqe_data_seg *dseg;
+ 	struct ib_sge *sg;
+@@ -123,7 +123,7 @@ static void set_extend_sge(struct hns_ro
+ 
+ 	if (qp->ibqp.qp_type == IB_QPT_RC || qp->ibqp.qp_type == IB_QPT_UC)
+ 		num_in_wqe = HNS_ROCE_V2_UC_RC_SGE_NUM_IN_WQE;
+-	extend_sge_num = wr->num_sge - num_in_wqe;
++	extend_sge_num = valid_num_sge - num_in_wqe;
+ 	sg = wr->sg_list + num_in_wqe;
+ 	shift = qp->hr_buf.page_shift;
+ 
+@@ -159,14 +159,16 @@ static void set_extend_sge(struct hns_ro
+ static int set_rwqe_data_seg(struct ib_qp *ibqp, const struct ib_send_wr *wr,
+ 			     struct hns_roce_v2_rc_send_wqe *rc_sq_wqe,
+ 			     void *wqe, unsigned int *sge_ind,
++			     int valid_num_sge,
+ 			     const struct ib_send_wr **bad_wr)
+ {
+ 	struct hns_roce_dev *hr_dev = to_hr_dev(ibqp->device);
+ 	struct hns_roce_v2_wqe_data_seg *dseg = wqe;
+ 	struct hns_roce_qp *qp = to_hr_qp(ibqp);
++	int j = 0;
+ 	int i;
+ 
+-	if (wr->send_flags & IB_SEND_INLINE && wr->num_sge) {
++	if (wr->send_flags & IB_SEND_INLINE && valid_num_sge) {
+ 		if (le32_to_cpu(rc_sq_wqe->msg_len) >
+ 		    hr_dev->caps.max_sq_inline) {
+ 			*bad_wr = wr;
+@@ -190,7 +192,7 @@ static int set_rwqe_data_seg(struct ib_q
+ 		roce_set_bit(rc_sq_wqe->byte_4, V2_RC_SEND_WQE_BYTE_4_INLINE_S,
+ 			     1);
+ 	} else {
+-		if (wr->num_sge <= HNS_ROCE_V2_UC_RC_SGE_NUM_IN_WQE) {
++		if (valid_num_sge <= HNS_ROCE_V2_UC_RC_SGE_NUM_IN_WQE) {
+ 			for (i = 0; i < wr->num_sge; i++) {
+ 				if (likely(wr->sg_list[i].length)) {
+ 					set_data_seg_v2(dseg, wr->sg_list + i);
+@@ -203,19 +205,21 @@ static int set_rwqe_data_seg(struct ib_q
+ 				     V2_RC_SEND_WQE_BYTE_20_MSG_START_SGE_IDX_S,
+ 				     (*sge_ind) & (qp->sge.sge_cnt - 1));
+ 
+-			for (i = 0; i < HNS_ROCE_V2_UC_RC_SGE_NUM_IN_WQE; i++) {
++			for (i = 0; i < wr->num_sge &&
++			     j < HNS_ROCE_V2_UC_RC_SGE_NUM_IN_WQE; i++) {
+ 				if (likely(wr->sg_list[i].length)) {
+ 					set_data_seg_v2(dseg, wr->sg_list + i);
+ 					dseg++;
++					j++;
+ 				}
+ 			}
+ 
+-			set_extend_sge(qp, wr, sge_ind);
++			set_extend_sge(qp, wr, sge_ind, valid_num_sge);
+ 		}
+ 
+ 		roce_set_field(rc_sq_wqe->byte_16,
+ 			       V2_RC_SEND_WQE_BYTE_16_SGE_NUM_M,
+-			       V2_RC_SEND_WQE_BYTE_16_SGE_NUM_S, wr->num_sge);
++			       V2_RC_SEND_WQE_BYTE_16_SGE_NUM_S, valid_num_sge);
+ 	}
+ 
+ 	return 0;
+@@ -243,6 +247,7 @@ static int hns_roce_v2_post_send(struct
+ 	unsigned int sge_idx;
+ 	unsigned int wqe_idx;
+ 	unsigned long flags;
++	int valid_num_sge;
+ 	void *wqe = NULL;
+ 	bool loopback;
+ 	int attr_mask;
+@@ -292,8 +297,16 @@ static int hns_roce_v2_post_send(struct
+ 		qp->sq.wrid[wqe_idx] = wr->wr_id;
+ 		owner_bit =
+ 		       ~(((qp->sq.head + nreq) >> ilog2(qp->sq.wqe_cnt)) & 0x1);
++		valid_num_sge = 0;
+ 		tmp_len = 0;
+ 
++		for (i = 0; i < wr->num_sge; i++) {
++			if (likely(wr->sg_list[i].length)) {
++				tmp_len += wr->sg_list[i].length;
++				valid_num_sge++;
++			}
++		}
++
+ 		/* Corresponding to the QP type, wqe process separately */
+ 		if (ibqp->qp_type == IB_QPT_GSI) {
+ 			ud_sq_wqe = wqe;
+@@ -329,9 +342,6 @@ static int hns_roce_v2_post_send(struct
+ 				       V2_UD_SEND_WQE_BYTE_4_OPCODE_S,
+ 				       HNS_ROCE_V2_WQE_OP_SEND);
+ 
+-			for (i = 0; i < wr->num_sge; i++)
+-				tmp_len += wr->sg_list[i].length;
+-
+ 			ud_sq_wqe->msg_len =
+ 			 cpu_to_le32(le32_to_cpu(ud_sq_wqe->msg_len) + tmp_len);
+ 
+@@ -367,7 +377,7 @@ static int hns_roce_v2_post_send(struct
+ 			roce_set_field(ud_sq_wqe->byte_16,
+ 				       V2_UD_SEND_WQE_BYTE_16_SGE_NUM_M,
+ 				       V2_UD_SEND_WQE_BYTE_16_SGE_NUM_S,
+-				       wr->num_sge);
++				       valid_num_sge);
+ 
+ 			roce_set_field(ud_sq_wqe->byte_20,
+ 				     V2_UD_SEND_WQE_BYTE_20_MSG_START_SGE_IDX_M,
+@@ -422,12 +432,10 @@ static int hns_roce_v2_post_send(struct
+ 			memcpy(&ud_sq_wqe->dgid[0], &ah->av.dgid[0],
+ 			       GID_LEN_V2);
+ 
+-			set_extend_sge(qp, wr, &sge_idx);
++			set_extend_sge(qp, wr, &sge_idx, valid_num_sge);
+ 		} else if (ibqp->qp_type == IB_QPT_RC) {
+ 			rc_sq_wqe = wqe;
+ 			memset(rc_sq_wqe, 0, sizeof(*rc_sq_wqe));
+-			for (i = 0; i < wr->num_sge; i++)
+-				tmp_len += wr->sg_list[i].length;
+ 
+ 			rc_sq_wqe->msg_len =
+ 			 cpu_to_le32(le32_to_cpu(rc_sq_wqe->msg_len) + tmp_len);
+@@ -548,10 +556,11 @@ static int hns_roce_v2_post_send(struct
+ 				roce_set_field(rc_sq_wqe->byte_16,
+ 					       V2_RC_SEND_WQE_BYTE_16_SGE_NUM_M,
+ 					       V2_RC_SEND_WQE_BYTE_16_SGE_NUM_S,
+-					       wr->num_sge);
++					       valid_num_sge);
+ 			} else if (wr->opcode != IB_WR_REG_MR) {
+ 				ret = set_rwqe_data_seg(ibqp, wr, rc_sq_wqe,
+-							wqe, &sge_idx, bad_wr);
++							wqe, &sge_idx,
++							valid_num_sge, bad_wr);
+ 				if (ret)
+ 					goto out;
+ 			}
 
 
