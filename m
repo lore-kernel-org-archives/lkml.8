@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AB5C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7BBAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB30246EB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FCB246D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203824;
-	bh=xrSwneQSyxbFcrpnGduhSn7IJJUdsBkAyHBLcwBerkc=;
+	s=default; t=1583203826;
+	bh=ABU12IfNmFeJk/drjZr/gSCCysZwfcqqTJ7L/m1fD/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GfTBgCl9lzJ/ZMjpUBzOWRqn26E4LU4wvELede9L+YdzozqE/DEOE99y6FxR3+7/+
-	 +hHhgZRSIq2s/VNzb5GN+ozjY+OIIs14OoHhdzmcBN5WBhFZBqv51QuV4ZKC6EfvEx
-	 G4j4A0imTvc81zrv2VsM73ambvAfCcHw27Drcbtc=
+	b=mzFwTCyajCjKWtK7l5jatSSRaPiMQtsV99KVdm9vC9rnUw/5+OXhLNC+wYmxDULH7
+	 gxHdfrvjaNPGA4S1jZed1Boy4eJ8396540Txh/yXJzTcRs3vz+73y6m+pbsI85VKvD
+	 0IBRtk0Sv8smKSXLHwdx3l4dLowescZvOIBvoKmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbgCCCuX (ORCPT
+        id S1729162AbgCCCuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:50:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46862 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:50:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729100AbgCCCuN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:13 -0500
+        id S1728482AbgCCCuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:16 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E35D024697;
-        Tue,  3 Mar 2020 02:50:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE3472468D;
+        Tue,  3 Mar 2020 02:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203812;
-        bh=xrSwneQSyxbFcrpnGduhSn7IJJUdsBkAyHBLcwBerkc=;
+        s=default; t=1583203815;
+        bh=ABU12IfNmFeJk/drjZr/gSCCysZwfcqqTJ7L/m1fD/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2DgQf99OWgQfK/1CZpv80i8qUW97R8gKDtsM/RvR4hpCTtdZYwlHEsTM93Jn4xI0o
-         eElUa4w2ai9pv5mH7M+BBunWYeNu11InzfIwAsqjIZzAOiv2+SJ/vcubuv51JW6peA
-         np3P0qYQ9xqxn1C0LiIDxJ2KKV60K3ZtA0RK1wX4=
+        b=tHfsE9DX56H6V0vyed2WCfbBV4qKlECEXi6wNly6q7Oe64niwLy8NgAh9rH44vxUs
+         Qz1/9UtxwiGcOB4QOwOvWe2dWB6h9V621n1kbDtk/blcg4vbSlIdyv6eoOWTQWB6k9
+         nMBs2si35KbnSihpuERicj3lvCfKQW2HtQPbbzGs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Marek Vasut <marex@denx.de>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.9 07/13] net: phy: restore mdio regs in the iproc mdio driver
-Date:   Mon,  2 Mar 2020 21:49:56 -0500
-Message-Id: <20200303025002.10600-7-sashal@kernel.org>
+        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 09/13] net: ks8851-ml: Fix 16-bit data access
+Date:   Mon,  2 Mar 2020 21:49:58 -0500
+Message-Id: <20200303025002.10600-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303025002.10600-1-sashal@kernel.org>
 References: <20200303025002.10600-1-sashal@kernel.org>
@@ -63,63 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+From: Marek Vasut <marex@denx.de>
 
-[ Upstream commit 6f08e98d62799e53c89dbf2c9a49d77e20ca648c ]
+[ Upstream commit edacb098ea9c31589276152f09b4439052c0f2b1 ]
 
-The mii management register in iproc mdio block
-does not have a retention register so it is lost on suspend.
-Save and restore value of register while resuming from suspend.
+The packet data written to and read from Micrel KSZ8851-16MLLI must be
+byte-swapped in 16-bit mode, add this byte-swapping.
 
-Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
-Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Lukas Wunner <lukas@wunner.de>
+Cc: Petr Stetiar <ynezz@true.cz>
+Cc: YueHaibing <yuehaibing@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio-bcm-iproc.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/phy/mdio-bcm-iproc.c b/drivers/net/phy/mdio-bcm-iproc.c
-index 46fe1ae919a30..51ce3ea17fb37 100644
---- a/drivers/net/phy/mdio-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-bcm-iproc.c
-@@ -188,6 +188,23 @@ static int iproc_mdio_remove(struct platform_device *pdev)
- 	return 0;
+diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
+index 721f851674531..20356976b9772 100644
+--- a/drivers/net/ethernet/micrel/ks8851_mll.c
++++ b/drivers/net/ethernet/micrel/ks8851_mll.c
+@@ -515,7 +515,7 @@ static inline void ks_inblk(struct ks_net *ks, u16 *wptr, u32 len)
+ {
+ 	len >>= 1;
+ 	while (len--)
+-		*wptr++ = (u16)ioread16(ks->hw_addr);
++		*wptr++ = be16_to_cpu(ioread16(ks->hw_addr));
  }
  
-+#ifdef CONFIG_PM_SLEEP
-+int iproc_mdio_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
-+
-+	/* restore the mii clock configuration */
-+	iproc_mdio_config_clk(priv->base);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops iproc_mdio_pm_ops = {
-+	.resume = iproc_mdio_resume
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct of_device_id iproc_mdio_of_match[] = {
- 	{ .compatible = "brcm,iproc-mdio", },
- 	{ /* sentinel */ },
-@@ -198,6 +215,9 @@ static struct platform_driver iproc_mdio_driver = {
- 	.driver = {
- 		.name = "iproc-mdio",
- 		.of_match_table = iproc_mdio_of_match,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm = &iproc_mdio_pm_ops,
-+#endif
- 	},
- 	.probe = iproc_mdio_probe,
- 	.remove = iproc_mdio_remove,
+ /**
+@@ -529,7 +529,7 @@ static inline void ks_outblk(struct ks_net *ks, u16 *wptr, u32 len)
+ {
+ 	len >>= 1;
+ 	while (len--)
+-		iowrite16(*wptr++, ks->hw_addr);
++		iowrite16(cpu_to_be16(*wptr++), ks->hw_addr);
+ }
+ 
+ static void ks_disable_int(struct ks_net *ks)
 -- 
 2.20.1
 
