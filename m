@@ -2,154 +2,69 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF221C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EAAC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A528320863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Lz3S0tth"
+	by mail.kernel.org (Postfix) with ESMTP id 328E120866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbgCCPos (ORCPT
+        id S1730165AbgCCPoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:44:48 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44993 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729416AbgCCPor (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:44:47 -0500
-Received: by mail-io1-f66.google.com with SMTP id u17so4012825iog.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 07:44:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ZG+Z5PlJjVm8PVRrvVFjKYG60wCcDQJcM/cIXR7GgWs=;
-        b=Lz3S0tthIYaC3IENsF36JWiCsuLYH86LS7/c5LNNFUEJdwftjJ3tcQmCn4mVtCUG+o
-         XseDzhB4vzz/3J+8RSvuHvNBmm78EbXQEYUrGpskbzlT0lU51zA5VhjKVW5EOc0mrWso
-         QKzxShqhorVF33vtLXFwI7HEZoQD6SVTfR//8ia1gWa4HyuJ78V1DbQi8ljs30PCwUbL
-         5urcNDkfNkyj+1/5qRoCUz1PYUOcI0v1EQRD4tP5gftHukoNMnV8YNXLdD4VL64vaRFr
-         IiTgTTZWvn3m3Iyr38KQDBs8ijMhd/Xl4ltF3hqoGqwJ3s0YIl5rWElbuumej2uE3WFV
-         aqiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ZG+Z5PlJjVm8PVRrvVFjKYG60wCcDQJcM/cIXR7GgWs=;
-        b=G57sPdBHGkzhT3ib3puGrYnE8h6fpSBvAJuJU1hBTbJfgj2AFnVmL40roJ22w/+HYF
-         0vAR5SQl4y1FSONmqZX/poD406wx5T6oKdapO8Wc653adGdSgMzRN4pNcJCskwkIe8Ne
-         tHBCGdcVayBwnCu6CsrL8cpdk/fFLL8lmnMbH9tZPC1J2h0BlthY1o9ZVj9IBJU1NP03
-         M6fnuaaDMaV6bO1X93n/Cqk1MoVKUkWohMPFyjKHiGok8cJU2cpkoc2phk9fhhiJUG4e
-         70NyvHKA+wuw7oL03YAabw3vu6dPiF4VkpA65USxZcfa6Tjyq0+UGhOHmMzBlKzQqZZ9
-         t66A==
-X-Gm-Message-State: ANhLgQ1PX53xha0DH6b3vB9BpzM7uEirlHWzKw2jI09VhYTwt2R7S5zb
-        d6ZclI1/qwqdawjxmdNnNWnhcgAru6I=
-X-Google-Smtp-Source: ADFU+vtxG3oWgwLPSPn/IZ0T3hF+eib4xFsRFf/5PavaMAyfTas5IKEm4Hjr+94AF9p8J0X/cfg78w==
-X-Received: by 2002:a5e:c207:: with SMTP id v7mr4350463iop.88.1583250286473;
-        Tue, 03 Mar 2020 07:44:46 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id e65sm8011244ilg.2.2020.03.03.07.44.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 07:44:45 -0800 (PST)
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jann Horn <jannh@google.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home>
- <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com>
- <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
- <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
- <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
- <20200303142407.GA47158@kroah.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
-Date:   Tue, 3 Mar 2020 08:44:43 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 3 Mar 2020 10:44:55 -0500
+Received: from mga11.intel.com ([192.55.52.93]:1498 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729325AbgCCPoy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:44:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 07:44:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="228953508"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 03 Mar 2020 07:44:53 -0800
+Date:   Tue, 3 Mar 2020 07:44:53 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH v2 36/66] KVM: x86: Handle GBPAGE CPUID adjustment for
+ EPT in VMX code
+Message-ID: <20200303154453.GF1439@linux.intel.com>
+References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
+ <20200302235709.27467-37-sean.j.christopherson@intel.com>
+ <90df7276-e586-9082-3d80-6b45e0fb4670@redhat.com>
+ <20200303153550.GC1439@linux.intel.com>
+ <c789abc9-9687-82ae-d133-bd3a6d838ca5@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200303142407.GA47158@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c789abc9-9687-82ae-d133-bd3a6d838ca5@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 7:24 AM, Greg Kroah-Hartman wrote:
-> On Tue, Mar 03, 2020 at 03:13:26PM +0100, Jann Horn wrote:
->> On Tue, Mar 3, 2020 at 3:10 PM Greg Kroah-Hartman
->> <gregkh@linuxfoundation.org> wrote:
->>>
->>> On Tue, Mar 03, 2020 at 02:43:16PM +0100, Greg Kroah-Hartman wrote:
->>>> On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
->>>>> On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
->>>>> <gregkh@linuxfoundation.org> wrote:
->>>>>
->>>>>>> Unlimited beers for a 21-line kernel patch?  Sign me up!
->>>>>>>
->>>>>>> Totally untested, barely compiled patch below.
->>>>>>
->>>>>> Ok, that didn't even build, let me try this for real now...
->>>>>
->>>>> Some comments on the interface:
->>>>
->>>> Ok, hey, let's do this proper :)
->>>
->>> Alright, how about this patch.
->>>
->>> Actually tested with some simple sysfs files.
->>>
->>> If people don't strongly object, I'll add "real" tests to it, hook it up
->>> to all arches, write a manpage, and all the fun fluff a new syscall
->>> deserves and submit it "for real".
->>
->> Just FYI, io_uring is moving towards the same kind of thing... IIRC
->> you can already use it to batch a bunch of open() calls, then batch a
->> bunch of read() calls on all the new fds and close them at the same
->> time. And I think they're planning to add support for doing
->> open()+read()+close() all in one go, too, except that it's a bit
->> complicated because passing forward the file descriptor in a generic
->> way is a bit complicated.
+On Tue, Mar 03, 2020 at 04:40:32PM +0100, Paolo Bonzini wrote:
+> On 03/03/20 16:35, Sean Christopherson wrote:
+> > Oof, that took me a long time to process.  You're saying that KVM can
+> > allow the guest to use GBPAGES when shadow paging is enabled because KVM
+> > can effectively emulate GBPAGES.  And IIUC, you're also saying that
+> > cpuid.GBPAGES should never be influenced by EPT restrictions.
+> > 
+> > That all makes sense.
 > 
-> It is complicated, I wouldn't recommend using io_ring for reading a
-> bunch of procfs or sysfs files, that feels like a ton of overkill with
-> too much setup/teardown to make it worth while.
-> 
-> But maybe not, will have to watch and see how it goes.
+> Yes, exactly.
 
-It really isn't, and I too thinks it makes more sense than having a
-system call just for the explicit purpose of open/read/close. As Jann
-said, you can't currently do a linked sequence of open/read/close,
-because the fd passing between them isn't done. But that will come in
-the future. If the use case is "a bunch of files", then you could
-trivially do "open bunch", "read bunch", "close bunch" in three separate
-steps.
-
-Curious what the use case is for this that warrants a special system
-call?
-
--- 
-Jens Axboe
-
+I'll tack that on to the front of the series.  Should it be tagged Fixes?
+Feels like a fix, but is also more than a bit scary.
