@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886F2C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9131C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568F8246BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7780724673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203738;
-	bh=umPpQzOU4eFA5s5p0KGpojStj0PTG+oVqhQ8CLaVrow=;
+	s=default; t=1583203740;
+	bh=wy9W+fQwofwFUAdAK7CWRsY2cm5mGzcAMji3HmIrySs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sQxz+xf2gpOTaBoNzW6f9ZCKfgIIrlde3U66cMPgKI8Xor19fWRTNQfAg7numKxjZ
-	 8DqOISBYz/+qKP8cjFBtVOdhrtPiNx3lgVGvuKP+JVSkLwJpG29obyFXZipPJP4X6y
-	 MDxvs98c6d9btkypaJXHiS1drXvHmV3tl9yKRKIQ=
+	b=Ti17yG3FKyxhC7Bau6XlxblYmsvrUqeVk4nVBUrrqe1Yel5jHLWReEZhhIDPZiz8r
+	 UKatN/Dmwih9MSExfKlFtrC6dlJ1uKyVoX6UA3ZAe+fpiRlHAgDpCkz7teE521M49v
+	 n+Ft5D9bR47DAu5LWTn8T3qxgaPWUpLFyd4wZ3wk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbgCCCsz (ORCPT
+        id S1728628AbgCCCs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44546 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728499AbgCCCsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:42 -0500
+        id S1728527AbgCCCso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:44 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94D91246D8;
-        Tue,  3 Mar 2020 02:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8598246D5;
+        Tue,  3 Mar 2020 02:48:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203721;
-        bh=umPpQzOU4eFA5s5p0KGpojStj0PTG+oVqhQ8CLaVrow=;
+        s=default; t=1583203723;
+        bh=wy9W+fQwofwFUAdAK7CWRsY2cm5mGzcAMji3HmIrySs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wn5ePJPKsR6GVaAvqfml9e4xYHYYyP53XzvWYP2CFN4oZMwAKqq/0KDi6P6y2QhiN
-         ODG3bOPvVAarESpkFRbNKCME7GabyS3YP3DYy/CIEE0nf8e/U7kemOf+RpZpbitMk3
-         DJYicxK7u9vNFIulGfEptAdknT5jbs5XDgzctdF4=
+        b=GTltTELmIXG/BObiEvMTL6CZ6fVorX0lDOXbL88UMJly3TfoXjfl2MNubqKqBRCk1
+         qE2A92JJJPXeWS7SVGXbqxbNCxLFzSOBrN11hPJpXTnT1/aEYCzpUygkSIo+1usqIR
+         jI5rbOJZHUNHSiky32uh65oKMmLxGLiTdN17skuE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 50/58] bnxt_en: Improve device shutdown method.
-Date:   Mon,  2 Mar 2020 21:47:32 -0500
-Message-Id: <20200303024740.9511-50-sashal@kernel.org>
+Cc:     Guo Ren <guoren@linux.alibaba.com>,
+        Mo Qihui <qihui.mo@verisilicon.com>,
+        Zhange Jian <zhang_jian5@dahuatech.com>,
+        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 52/58] csky/mm: Fixup export invalid_pte_table symbol
+Date:   Mon,  2 Mar 2020 21:47:34 -0500
+Message-Id: <20200303024740.9511-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -60,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Guo Ren <guoren@linux.alibaba.com>
 
-[ Upstream commit 5567ae4a8d569d996d0d88d0eceb76205e4c7ce5 ]
+[ Upstream commit 7f4a567332f035ab16b29010fbd04a0f10183c77 ]
 
-Especially when bnxt_shutdown() is called during kexec, we need to
-disable MSIX and disable Bus Master to completely quiesce the device.
-Make these 2 calls unconditionally in the shutdown method.
+There is no present bit in csky pmd hardware, so we need to prepare invalid_pte_table
+for empty pmd entry and the functions (pmd_none & pmd_present) in pgtable.h need
+invalid_pte_talbe to get result. If a module use these functions, we need export the
+symbol for it.
 
-Fixes: c20dc142dd7b ("bnxt_en: Disable bus master during PCI shutdown and driver unload.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
+Cc: Mo Qihui <qihui.mo@verisilicon.com>
+Cc: Zhange Jian <zhang_jian5@dahuatech.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/csky/mm/init.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 68618891b0e42..e03e610dd1831 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -11908,10 +11908,10 @@ static void bnxt_shutdown(struct pci_dev *pdev)
- 		dev_close(dev);
+diff --git a/arch/csky/mm/init.c b/arch/csky/mm/init.c
+index d4c2292ea46bc..00e96278b3776 100644
+--- a/arch/csky/mm/init.c
++++ b/arch/csky/mm/init.c
+@@ -31,6 +31,7 @@
  
- 	bnxt_ulp_shutdown(bp);
-+	bnxt_clear_int_mode(bp);
-+	pci_disable_device(pdev);
- 
- 	if (system_state == SYSTEM_POWER_OFF) {
--		bnxt_clear_int_mode(bp);
--		pci_disable_device(pdev);
- 		pci_wake_from_d3(pdev, bp->wol);
- 		pci_set_power_state(pdev, PCI_D3hot);
- 	}
+ pgd_t swapper_pg_dir[PTRS_PER_PGD] __page_aligned_bss;
+ pte_t invalid_pte_table[PTRS_PER_PTE] __page_aligned_bss;
++EXPORT_SYMBOL(invalid_pte_table);
+ unsigned long empty_zero_page[PAGE_SIZE / sizeof(unsigned long)]
+ 						__page_aligned_bss;
+ EXPORT_SYMBOL(empty_zero_page);
 -- 
 2.20.1
 
