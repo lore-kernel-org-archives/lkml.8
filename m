@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A68FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3163FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0944206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C9F20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:52:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257916;
-	bh=2o5tI0QQbtYWwGNX7U5m4+4KDXD+MHoW19fv1Xr8ZPY=;
+	s=default; t=1583257922;
+	bh=DtpDea+8OatmEQy5UDzS7om+u5SF9Zt+/qclYmZu9qI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BfAARro2pX7FVonMr0lZaFe3yT+wLKJhzD/kUpeYa4WWabOfiAYgm5koeFgCAfpqz
-	 ZSlmsqFi1qdMtGOw8WznrW4Pw1IoX+OSZmSPO8kwyoILKpsPS1rRSUP91pOb1vhb4Q
-	 uP8jPCQy2B16KFASeT+bmTzHSMe6XdU2OvuiQIUs=
+	b=HngMVzy7OWz+oH45OthU8Douf1e9u9x01XmzyumAuOBXUURgumcMwsE9aqx2r/EI6
+	 iZ3iuwX26nayHkZxos2rKIBoZV6d85UzQM1wC8dl9I8qoMRto3QjSLfoe4yw/55n1Q
+	 aLqIKis9yJ+BEDfWRHojr+q5b+JnzHviM7DZaJts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732068AbgCCRvz (ORCPT
+        id S1732083AbgCCRwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:51:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60104 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:52:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732060AbgCCRvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:53 -0500
+        id S1732071AbgCCRv6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C884206D5;
-        Tue,  3 Mar 2020 17:51:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E892214D8;
+        Tue,  3 Mar 2020 17:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257912;
-        bh=2o5tI0QQbtYWwGNX7U5m4+4KDXD+MHoW19fv1Xr8ZPY=;
+        s=default; t=1583257917;
+        bh=DtpDea+8OatmEQy5UDzS7om+u5SF9Zt+/qclYmZu9qI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pr8r3JTOZMC823rQ6LolZENUnluQWVB0fm3uCke0cMOJBD/SVR+aiOZsJVyqMWxaO
-         s01PGzJZz/u/XVF4uvf1z7Px4yAxHfPk+5RN/96u+v0iIq0mIEC65JWmfEmEKcUe4x
-         qfAfzCmfYUqmWDkYmCtNG36wdqmW+CWo7mnS8cjk=
+        b=A3jHh51fUh6tV4wMR1R/ZUjiqj5LWdwsv660VLEbND6TUP2tInPlM9RJytCpnoWxM
+         ApiMEFE0qRhHdTwc9jDTvHoAD5qb1zvYJsTYHCIkRK9E5/OsT6ilEIPkpSDd3xtYrT
+         LkVBPsOAVKS+LS6xWXWKwNxycC3/H5nR2VZ+d3FE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.5 165/176] netfilter: nf_flowtable: fix documentation
-Date:   Tue,  3 Mar 2020 18:43:49 +0100
-Message-Id: <20200303174323.235372209@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>
+Subject: [PATCH 5.5 167/176] clk: qcom: rpmh: Sort OF match table
+Date:   Tue,  3 Mar 2020 18:43:51 +0100
+Message-Id: <20200303174323.396746970@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,39 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@redhat.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-commit 78e06cf430934fc3768c342cbebdd1013dcd6fa7 upstream.
+commit 9e0cda721d18f44f1cd74d3a426931d71c1f1b30 upstream.
 
-In the flowtable documentation there is a missing semicolon, the command
-as is would give this error:
+sc7180 was added to the end of the match table, sort the table.
 
-    nftables.conf:5:27-33: Error: syntax error, unexpected devices, expecting newline or semicolon
-                    hook ingress priority 0 devices = { br0, pppoe-data };
-                                            ^^^^^^^
-    nftables.conf:4:12-13: Error: invalid hook (null)
-            flowtable ft {
-                      ^^
-
-Fixes: 19b351f16fd9 ("netfilter: add flowtable documentation")
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: eee28109f871 ("clk: qcom: clk-rpmh: Add support for RPMHCC for SC7180")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Link: https://lkml.kernel.org/r/20200124175934.3937473-1-bjorn.andersson@linaro.org
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- Documentation/networking/nf_flowtable.txt |    2 +-
+ drivers/clk/qcom/clk-rpmh.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/Documentation/networking/nf_flowtable.txt
-+++ b/Documentation/networking/nf_flowtable.txt
-@@ -76,7 +76,7 @@ flowtable and add one rule to your forwa
+--- a/drivers/clk/qcom/clk-rpmh.c
++++ b/drivers/clk/qcom/clk-rpmh.c
+@@ -481,9 +481,9 @@ static int clk_rpmh_probe(struct platfor
+ }
  
-         table inet x {
- 		flowtable f {
--			hook ingress priority 0 devices = { eth0, eth1 };
-+			hook ingress priority 0; devices = { eth0, eth1 };
- 		}
-                 chain y {
-                         type filter hook forward priority 0; policy accept;
+ static const struct of_device_id clk_rpmh_match_table[] = {
++	{ .compatible = "qcom,sc7180-rpmh-clk", .data = &clk_rpmh_sc7180},
+ 	{ .compatible = "qcom,sdm845-rpmh-clk", .data = &clk_rpmh_sdm845},
+ 	{ .compatible = "qcom,sm8150-rpmh-clk", .data = &clk_rpmh_sm8150},
+-	{ .compatible = "qcom,sc7180-rpmh-clk", .data = &clk_rpmh_sc7180},
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, clk_rpmh_match_table);
 
 
