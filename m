@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1753C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28102C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 890E32073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE17F208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258774;
-	bh=gpikvpddbqae2gPURe5GT/qh2Ex9KhFH7h4ggeLOnDg=;
+	s=default; t=1583258781;
+	bh=wTcF9WEoEKpJZpatL6EVhWOfkZuQtSgt2tCvKj6VhhY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uSQrAwvH77HdM5f2Vmb/VlRN3RuZJpnw6WU7EPLScxMbjI8SiYLiWw51u3WBRfQ0L
-	 nJfBXgoeKMelUdRjmha9hQ7bhr0Kho5zvXz3nWfUe8YMW4nMXb9pxtHGXDWV4wFqzy
-	 0iRIjjldRj/JWhyBnzHftB1oC9sW8UBlg9p3bY8M=
+	b=hv71/jWgWSGki+hCKPZVThAEG09WXd9sK77u2wJmQr4NlxBB8GjF7yy9ikkgMD+wg
+	 dcK0Ah5vIxQojuCiOe8/JUEBBINJiT2/802uYCBmFzUrwx/upultTR++ejCNQoYG+C
+	 Kx0ntWhir+cCD+9HOrlwvbBp/0oXbRV2rV8VETY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387894AbgCCSGN (ORCPT
+        id S2387914AbgCCSGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:06:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39684 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:06:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733029AbgCCR5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:57:14 -0500
+        id S1732684AbgCCR5H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:57:07 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA01220656;
-        Tue,  3 Mar 2020 17:57:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34AEE214DB;
+        Tue,  3 Mar 2020 17:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258233;
-        bh=gpikvpddbqae2gPURe5GT/qh2Ex9KhFH7h4ggeLOnDg=;
+        s=default; t=1583258225;
+        bh=wTcF9WEoEKpJZpatL6EVhWOfkZuQtSgt2tCvKj6VhhY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G12YCjZHVmeBozpPepVZyUlPa7dwa+VmxHLdCvLkLrzrjfYZPbrG+hpk1/8HIa9XY
-         ECPLgVHPH5/IznNT31+B9dX3PnfBPXWcH10IkXVA5baq/femxS2t/dApR6DwvYUIH0
-         5pOKFDd55S78r98ahAuXAQGqzxajhYEnn/KqWWdo=
+        b=t8QIcqt8TbCYEkwDCL3AYA57dHi2EZyyGkUwZHMQ38p5ciuZjCb9zTn/7Atkhr2e0
+         cJRmptMuhDJFNCFCx7GTNy73E+X2CgOe/90jUnPHydlWftHMZsilxGslFT5NHfN3ei
+         3X/oekOkDiDbv2ToMZz8QWsibUETvIj1Ix71Fc48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 121/152] KVM: Check for a bad hva before dropping into the ghc slow path
-Date:   Tue,  3 Mar 2020 18:43:39 +0100
-Message-Id: <20200303174316.530248562@linuxfoundation.org>
+        stable@vger.kernel.org, Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 118/152] mwifiex: drop most magic numbers from mwifiex_process_tdls_action_frame()
+Date:   Tue,  3 Mar 2020 18:43:36 +0100
+Message-Id: <20200303174316.178066107@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,77 +59,225 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Brian Norris <briannorris@chromium.org>
 
-commit fcfbc617547fc6d9552cb6c1c563b6a90ee98085 upstream.
+commit 70e5b8f445fd27fde0c5583460e82539a7242424 upstream.
 
-When reading/writing using the guest/host cache, check for a bad hva
-before checking for a NULL memslot, which triggers the slow path for
-handing cross-page accesses.  Because the memslot is nullified on error
-by __kvm_gfn_to_hva_cache_init(), if the bad hva is encountered after
-crossing into a new page, then the kvm_{read,write}_guest() slow path
-could potentially write/access the first chunk prior to detecting the
-bad hva.
+Before commit 1e58252e334d ("mwifiex: Fix heap overflow in
+mmwifiex_process_tdls_action_frame()"),
+mwifiex_process_tdls_action_frame() already had too many magic numbers.
+But this commit just added a ton more, in the name of checking for
+buffer overflows. That seems like a really bad idea.
 
-Arguably, performing a partial access is semantically correct from an
-architectural perspective, but that behavior is certainly not intended.
-In the original implementation, memslot was not explicitly nullified
-and therefore the partial access behavior varied based on whether the
-memslot itself was null, or if the hva was simply bad.  The current
-behavior was introduced as a seemingly unintentional side effect in
-commit f1b9dd5eb86c ("kvm: Disallow wraparound in
-kvm_gfn_to_hva_cache_init"), which justified the change with "since some
-callers don't check the return code from this function, it sit seems
-prudent to clear ghc->memslot in the event of an error".
+Let's make these magic numbers a little less magic, by
+(a) factoring out 'pos[1]' as 'ie_len'
+(b) using 'sizeof' on the appropriate source or destination fields where
+    possible, instead of bare numbers
+(c) dropping redundant checks, per below.
 
-Regardless of intent, the partial access is dependent on _not_ checking
-the result of the cache initialization, which is arguably a bug in its
-own right, at best simply weird.
+Regarding redundant checks: the beginning of the loop has this:
 
-Fixes: 8f964525a121 ("KVM: Allow cross page reads and writes from cached translations.")
-Cc: Jim Mattson <jmattson@google.com>
-Cc: Andrew Honig <ahonig@google.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+                if (pos + 2 + pos[1] > end)
+                        break;
+
+but then individual 'case's include stuff like this:
+
+ 			if (pos > end - 3)
+ 				return;
+ 			if (pos[1] != 1)
+				return;
+
+Note that the second 'return' (validating the length, pos[1]) combined
+with the above condition (ensuring 'pos + 2 + length' doesn't exceed
+'end'), makes the first 'return' (whose 'if' can be reworded as 'pos >
+end - pos[1] - 2') redundant. Rather than unwind the magic numbers
+there, just drop those conditions.
+
+Fixes: 1e58252e334d ("mwifiex: Fix heap overflow in mmwifiex_process_tdls_action_frame()")
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- virt/kvm/kvm_main.c |   12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/wireless/marvell/mwifiex/tdls.c |   75 ++++++++++------------------
+ 1 file changed, 28 insertions(+), 47 deletions(-)
 
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -2275,12 +2275,12 @@ int kvm_write_guest_offset_cached(struct
- 	if (slots->generation != ghc->generation)
- 		__kvm_gfn_to_hva_cache_init(slots, ghc, ghc->gpa, ghc->len);
+--- a/drivers/net/wireless/marvell/mwifiex/tdls.c
++++ b/drivers/net/wireless/marvell/mwifiex/tdls.c
+@@ -894,7 +894,7 @@ void mwifiex_process_tdls_action_frame(s
+ 	u8 *peer, *pos, *end;
+ 	u8 i, action, basic;
+ 	u16 cap = 0;
+-	int ie_len = 0;
++	int ies_len = 0;
  
--	if (unlikely(!ghc->memslot))
--		return kvm_write_guest(kvm, gpa, data, len);
--
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
+ 	if (len < (sizeof(struct ethhdr) + 3))
+ 		return;
+@@ -916,7 +916,7 @@ void mwifiex_process_tdls_action_frame(s
+ 		pos = buf + sizeof(struct ethhdr) + 4;
+ 		/* payload 1+ category 1 + action 1 + dialog 1 */
+ 		cap = get_unaligned_le16(pos);
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_REQ_FIX_LEN;
+ 		pos += 2;
+ 		break;
  
-+	if (unlikely(!ghc->memslot))
-+		return kvm_write_guest(kvm, gpa, data, len);
+@@ -926,7 +926,7 @@ void mwifiex_process_tdls_action_frame(s
+ 		/* payload 1+ category 1 + action 1 + dialog 1 + status code 2*/
+ 		pos = buf + sizeof(struct ethhdr) + 6;
+ 		cap = get_unaligned_le16(pos);
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_RESP_FIX_LEN;
+ 		pos += 2;
+ 		break;
+ 
+@@ -934,7 +934,7 @@ void mwifiex_process_tdls_action_frame(s
+ 		if (len < (sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN))
+ 			return;
+ 		pos = buf + sizeof(struct ethhdr) + TDLS_CONFIRM_FIX_LEN;
+-		ie_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
++		ies_len = len - sizeof(struct ethhdr) - TDLS_CONFIRM_FIX_LEN;
+ 		break;
+ 	default:
+ 		mwifiex_dbg(priv->adapter, ERROR, "Unknown TDLS frame type.\n");
+@@ -947,33 +947,33 @@ void mwifiex_process_tdls_action_frame(s
+ 
+ 	sta_ptr->tdls_cap.capab = cpu_to_le16(cap);
+ 
+-	for (end = pos + ie_len; pos + 1 < end; pos += 2 + pos[1]) {
+-		if (pos + 2 + pos[1] > end)
++	for (end = pos + ies_len; pos + 1 < end; pos += 2 + pos[1]) {
++		u8 ie_len = pos[1];
 +
- 	r = __copy_to_user((void __user *)ghc->hva + offset, data, len);
- 	if (r)
- 		return -EFAULT;
-@@ -2308,12 +2308,12 @@ int kvm_read_guest_cached(struct kvm *kv
- 	if (slots->generation != ghc->generation)
- 		__kvm_gfn_to_hva_cache_init(slots, ghc, ghc->gpa, ghc->len);
++		if (pos + 2 + ie_len > end)
+ 			break;
  
--	if (unlikely(!ghc->memslot))
--		return kvm_read_guest(kvm, ghc->gpa, data, len);
--
- 	if (kvm_is_error_hva(ghc->hva))
- 		return -EFAULT;
+ 		switch (*pos) {
+ 		case WLAN_EID_SUPP_RATES:
+-			if (pos[1] > 32)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
+ 				return;
+-			sta_ptr->tdls_cap.rates_len = pos[1];
+-			for (i = 0; i < pos[1]; i++)
++			sta_ptr->tdls_cap.rates_len = ie_len;
++			for (i = 0; i < ie_len; i++)
+ 				sta_ptr->tdls_cap.rates[i] = pos[i + 2];
+ 			break;
  
-+	if (unlikely(!ghc->memslot))
-+		return kvm_read_guest(kvm, ghc->gpa, data, len);
-+
- 	r = __copy_from_user(data, (void __user *)ghc->hva, len);
- 	if (r)
- 		return -EFAULT;
+ 		case WLAN_EID_EXT_SUPP_RATES:
+-			if (pos[1] > 32)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates))
+ 				return;
+ 			basic = sta_ptr->tdls_cap.rates_len;
+-			if (pos[1] > 32 - basic)
++			if (ie_len > sizeof(sta_ptr->tdls_cap.rates) - basic)
+ 				return;
+-			for (i = 0; i < pos[1]; i++)
++			for (i = 0; i < ie_len; i++)
+ 				sta_ptr->tdls_cap.rates[basic + i] = pos[i + 2];
+-			sta_ptr->tdls_cap.rates_len += pos[1];
++			sta_ptr->tdls_cap.rates_len += ie_len;
+ 			break;
+ 		case WLAN_EID_HT_CAPABILITY:
+-			if (pos > end - sizeof(struct ieee80211_ht_cap) - 2)
+-				return;
+-			if (pos[1] != sizeof(struct ieee80211_ht_cap))
++			if (ie_len != sizeof(struct ieee80211_ht_cap))
+ 				return;
+ 			/* copy the ie's value into ht_capb*/
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.ht_capb, pos + 2,
+@@ -981,59 +981,45 @@ void mwifiex_process_tdls_action_frame(s
+ 			sta_ptr->is_11n_enabled = 1;
+ 			break;
+ 		case WLAN_EID_HT_OPERATION:
+-			if (pos > end -
+-			    sizeof(struct ieee80211_ht_operation) - 2)
+-				return;
+-			if (pos[1] != sizeof(struct ieee80211_ht_operation))
++			if (ie_len != sizeof(struct ieee80211_ht_operation))
+ 				return;
+ 			/* copy the ie's value into ht_oper*/
+ 			memcpy(&sta_ptr->tdls_cap.ht_oper, pos + 2,
+ 			       sizeof(struct ieee80211_ht_operation));
+ 			break;
+ 		case WLAN_EID_BSS_COEX_2040:
+-			if (pos > end - 3)
+-				return;
+-			if (pos[1] != 1)
++			if (ie_len != sizeof(pos[2]))
+ 				return;
+ 			sta_ptr->tdls_cap.coex_2040 = pos[2];
+ 			break;
+ 		case WLAN_EID_EXT_CAPABILITY:
+-			if (pos > end - sizeof(struct ieee_types_header))
+-				return;
+-			if (pos[1] < sizeof(struct ieee_types_header))
++			if (ie_len < sizeof(struct ieee_types_header))
+ 				return;
+-			if (pos[1] > 8)
++			if (ie_len > 8)
+ 				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.extcap, pos,
+ 			       sizeof(struct ieee_types_header) +
+-			       min_t(u8, pos[1], 8));
++			       min_t(u8, ie_len, 8));
+ 			break;
+ 		case WLAN_EID_RSN:
+-			if (pos > end - sizeof(struct ieee_types_header))
++			if (ie_len < sizeof(struct ieee_types_header))
+ 				return;
+-			if (pos[1] < sizeof(struct ieee_types_header))
+-				return;
+-			if (pos[1] > IEEE_MAX_IE_SIZE -
++			if (ie_len > IEEE_MAX_IE_SIZE -
+ 			    sizeof(struct ieee_types_header))
+ 				return;
+ 			memcpy((u8 *)&sta_ptr->tdls_cap.rsn_ie, pos,
+ 			       sizeof(struct ieee_types_header) +
+-			       min_t(u8, pos[1], IEEE_MAX_IE_SIZE -
++			       min_t(u8, ie_len, IEEE_MAX_IE_SIZE -
+ 				     sizeof(struct ieee_types_header)));
+ 			break;
+ 		case WLAN_EID_QOS_CAPA:
+-			if (pos > end - 3)
+-				return;
+-			if (pos[1] != 1)
++			if (ie_len != sizeof(pos[2]))
+ 				return;
+ 			sta_ptr->tdls_cap.qos_info = pos[2];
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end -
+-				    sizeof(struct ieee80211_vht_operation) - 2)
+-					return;
+-				if (pos[1] !=
++				if (ie_len !=
+ 				    sizeof(struct ieee80211_vht_operation))
+ 					return;
+ 				/* copy the ie's value into vhtoper*/
+@@ -1043,10 +1029,7 @@ void mwifiex_process_tdls_action_frame(s
+ 			break;
+ 		case WLAN_EID_VHT_CAPABILITY:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end -
+-				    sizeof(struct ieee80211_vht_cap) - 2)
+-					return;
+-				if (pos[1] != sizeof(struct ieee80211_vht_cap))
++				if (ie_len != sizeof(struct ieee80211_vht_cap))
+ 					return;
+ 				/* copy the ie's value into vhtcap*/
+ 				memcpy((u8 *)&sta_ptr->tdls_cap.vhtcap, pos + 2,
+@@ -1056,9 +1039,7 @@ void mwifiex_process_tdls_action_frame(s
+ 			break;
+ 		case WLAN_EID_AID:
+ 			if (priv->adapter->is_hw_11ac_capable) {
+-				if (pos > end - 4)
+-					return;
+-				if (pos[1] != 2)
++				if (ie_len != sizeof(u16))
+ 					return;
+ 				sta_ptr->tdls_cap.aid =
+ 					get_unaligned_le16((pos + 2));
 
 
