@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0C03C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8ABCC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F4AA20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C474F20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259057;
-	bh=p7OhjitPqPkZxr0MXCzNjNv1tyl0e5vLJ5xugonGZCQ=;
+	s=default; t=1583259060;
+	bh=31kHG0BAluI6gkdGu5e/N0FV4Jh66A/f502Pb61ffs4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xgwnwqAnHu4CW3C0v5Sfp1YVik4TQqDsOPkiGv8fslPrUomVV2s6pLewJrDLWfyQ3
-	 myJV0YBTkOnaQAA0ww8NbUKmn009mylB4ugEMi/4mfspPaNyJIUkqs+crUUxInhKUd
-	 0kNPmWya0+diNGGhSMY4BQSgD9aGy6SdTNaOzIE4=
+	b=zq5FzmSk7l2ylZsrxfLlha1EoSVKpvYzQQDVyrcmtgiwBuh4mP2nYD58DiCV7JtZY
+	 f48MJ5VSBAAGbNAzdEAs/xNlZknlvUL6C8qPdg4rmsD1y4GiKjg61PGP28xNISFQ2D
+	 EKfH7FMqroMQTaq3gHFuXP5PwLpLv1+0oL9oF1m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730979AbgCCRuT (ORCPT
+        id S1732425AbgCCSK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:50:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57664 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:10:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731061AbgCCRuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:50:07 -0500
+        id S1731869AbgCCRuP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:50:15 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 792942146E;
-        Tue,  3 Mar 2020 17:50:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A316020870;
+        Tue,  3 Mar 2020 17:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257806;
-        bh=p7OhjitPqPkZxr0MXCzNjNv1tyl0e5vLJ5xugonGZCQ=;
+        s=default; t=1583257815;
+        bh=31kHG0BAluI6gkdGu5e/N0FV4Jh66A/f502Pb61ffs4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gmEHGZ+z8OezK/NorgB2hHd0VbXiNzY0Wg6g6X59xI/LWbjiGv1UMwmIUtgQRJiya
-         PY5PIfJntx4h9XfcEPPYlvJthiU/lGcWOiCyeZ7yoaHhtzYmoAz8paNNj5uOO49NiY
-         W3iuiDOdtzRxusoV5rk+KuxAikdgBlDvuQBTgeeg=
+        b=Bsez5VXT6JMh0hr45pnt736Oa8vsZWi41VhqBl0MJjOZA0RjjiDvDmeYqjqgi+saT
+         yYszcX1VkhSxES7acFszLLMaxFYrF/CjSldphi8EbSfeRQ3neQa08IuWNy5o3Ya4HQ
+         d6mUjycRJg6TLYpRmCqD9xfk4sTdroL+FvbOVW28=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 5.5 107/176] HID: alps: Fix an error handling path in alps_input_configured()
-Date:   Tue,  3 Mar 2020 18:42:51 +0100
-Message-Id: <20200303174317.217651653@linuxfoundation.org>
+        stable@vger.kernel.org, Artem Bityutskiy <dedekind1@gmail.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH 5.5 100/176] cpufreq: Fix policy initialization for internal governor drivers
+Date:   Tue,  3 Mar 2020 18:42:44 +0100
+Message-Id: <20200303174316.398372405@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,36 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit 8d2e77b39b8fecb794e19cd006a12f90b14dd077 upstream.
+commit f5739cb0b56590d68d8df8a44659893b6d0084c3 upstream.
 
-They are issues:
-   - if 'input_allocate_device()' fails and return NULL, there is no need
-     to free anything and 'input_free_device()' call is a no-op. It can
-     be axed.
-   - 'ret' is known to be 0 at this point, so we must set it to a
-     meaningful value before returning
+Before commit 1e4f63aecb53 ("cpufreq: Avoid creating excessively
+large stack frames") the initial value of the policy field in struct
+cpufreq_policy set by the driver's ->init() callback was implicitly
+passed from cpufreq_init_policy() to cpufreq_set_policy() if the
+default governor was neither "performance" nor "powersave".  After
+that commit, however, cpufreq_init_policy() must take that case into
+consideration explicitly and handle it as appropriate, so make that
+happen.
 
-Fixes: 2562756dde55 ("HID: add Alps I2C HID Touchpad-Stick support")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 1e4f63aecb53 ("cpufreq: Avoid creating excessively large stack frames")
+Link: https://lore.kernel.org/linux-pm/39fb762880c27da110086741315ca8b111d781cd.camel@gmail.com/
+Reported-by: Artem Bityutskiy <dedekind1@gmail.com>
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-alps.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/cpufreq/cpufreq.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/drivers/hid/hid-alps.c
-+++ b/drivers/hid/hid-alps.c
-@@ -730,7 +730,7 @@ static int alps_input_configured(struct
- 	if (data->has_sp) {
- 		input2 = input_allocate_device();
- 		if (!input2) {
--			input_free_device(input2);
-+			ret = -ENOMEM;
- 			goto exit;
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1074,9 +1074,17 @@ static int cpufreq_init_policy(struct cp
+ 			pol = policy->last_policy;
+ 		} else if (def_gov) {
+ 			pol = cpufreq_parse_policy(def_gov->name);
+-		} else {
+-			return -ENODATA;
++			/*
++			 * In case the default governor is neiter "performance"
++			 * nor "powersave", fall back to the initial policy
++			 * value set by the driver.
++			 */
++			if (pol == CPUFREQ_POLICY_UNKNOWN)
++				pol = policy->policy;
  		}
++		if (pol != CPUFREQ_POLICY_PERFORMANCE &&
++		    pol != CPUFREQ_POLICY_POWERSAVE)
++			return -ENODATA;
+ 	}
  
+ 	return cpufreq_set_policy(policy, gov, pol);
 
 
