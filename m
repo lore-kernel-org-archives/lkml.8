@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E68C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D1EAC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A3020656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A448206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259054;
-	bh=E3YVgtsw6Ht4SRsv2+bJ31Iqon7r6QazEhUVanUXS3Q=;
+	s=default; t=1583259056;
+	bh=icjx1nfYvX+1hOO+Y5IzkEJ3RQYFaw/dvsLTD1cUB0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jVfXg82UYUHl6JrcJk9Dn0dGIzobvFT7BYGXYMrB+0hCtmFw5qyGlpMoyeprrqhBY
-	 Q65yb7/oqo+UuDmfz256MjYTm9VGQRmPY4Ncj80Yi5OlhgRUl/NVMzdVmTxZ+Awxpa
-	 mznd9/TdSCsjdBR76SwOjDClr0PPYLHkOw4wCP0Q=
+	b=IjRuGe+0Yxm6jz6XrOXA2TI0xFVa2HmafvtqV+iA6BCT793ripQKki0tIm/i8b7td
+	 gXVzcROghEerkSqNqyZBYDmrdBBReVsLA4AtoXAxuORNPFAVwfGBidj6qTzGtUBb36
+	 XqUTW2X8Asf7Qe3LTAg8bGdi5DmlH0xNBg3P+B2Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731307AbgCCRuX (ORCPT
+        id S1731881AbgCCRuV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:50:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57938 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:50:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731118AbgCCRuS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:50:18 -0500
+        id S1731256AbgCCRuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:50:12 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1490420CC7;
-        Tue,  3 Mar 2020 17:50:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FD8E21556;
+        Tue,  3 Mar 2020 17:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257817;
-        bh=E3YVgtsw6Ht4SRsv2+bJ31Iqon7r6QazEhUVanUXS3Q=;
+        s=default; t=1583257811;
+        bh=icjx1nfYvX+1hOO+Y5IzkEJ3RQYFaw/dvsLTD1cUB0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PleMDdzS/8ySrfKkqnOecbIg7+StsyVUTCdCH+ITCprnSZffyT05+XoNOqVpbgWuw
-         nW1g3IxL+jvn6Fri7+dRhJZ1ceg34ioyuCL2hA7oAOweZDWGZ4oBM36XLd49k6ajRb
-         BmQAd3yHj/kvpdqP+wNh9Dy52P/dkClrxHL/AvMU=
+        b=b7yJFcZrIOr0cLA1y/IEuJzLefhYsEe5tXXqOpJQtcXlfUHjVYFcl2H5m6evwkZww
+         qgZnIK491dRamX8cFwaiT91nYHt5vEIj8zVN1iftdzqznVE/lS+cg8TFJaiaLhTNVd
+         7RwBSC2QS3S2Gj8ZyudMvmxKo3GVFbTozURxv1YY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 5.5 133/176] selftests: Install settings files to fix TIMEOUT failures
-Date:   Tue,  3 Mar 2020 18:43:17 +0100
-Message-Id: <20200303174320.136453781@linuxfoundation.org>
+        stable@vger.kernel.org, Anup Patel <anup.patel@wdc.com>,
+        Atish Patra <atish.patra@wdc.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>
+Subject: [PATCH 5.5 109/176] RISC-V: Dont enable all interrupts in trap_init()
+Date:   Tue,  3 Mar 2020 18:42:53 +0100
+Message-Id: <20200303174317.441494377@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,79 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Anup Patel <anup.patel@wdc.com>
 
-commit b9167c8078c3527de6da241c8a1a75a9224ed90a upstream.
+commit 6a1ce99dc4bde564e4a072936f9d41f4a439140e upstream.
 
-Commit 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second
-timeout per test") added a 45 second timeout for tests, and also added
-a way for tests to customise the timeout via a settings file.
+Historically, we have been enabling all interrupts for each
+HART in trap_init(). Ideally, we should only enable M-mode
+interrupts for M-mode kernel and S-mode interrupts for S-mode
+kernel in trap_init().
 
-For example the ftrace tests take multiple minutes to run, so they
-were given longer in commit b43e78f65b1d ("tracing/selftests: Turn off
-timeout setting").
+Currently, we get suprious S-mode interrupts on Kendryte K210
+board running M-mode NO-MMU kernel because we are enabling all
+interrupts in trap_init(). To fix this, we only enable software
+and external interrupt in trap_init(). In future, trap_init()
+will only enable software interrupt and PLIC driver will enable
+external interrupt using CPU notifiers.
 
-This works when the tests are run from the source tree. However if the
-tests are installed with "make -C tools/testing/selftests install",
-the settings files are not copied into the install directory. When the
-tests are then run from the install directory the longer timeouts are
-not applied and the tests timeout incorrectly.
-
-So add the settings files to TEST_FILES of the appropriate Makefiles
-to cause the settings files to be installed using the existing install
-logic.
-
-Fixes: 852c8cbf34d3 ("selftests/kselftest/runner.sh: Add 45 second timeout per test")
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: a4c3733d32a7 ("riscv: abstract out CSR names for supervisor vs machine mode")
+Signed-off-by: Anup Patel <anup.patel@wdc.com>
+Reviewed-by: Atish Patra <atish.patra@wdc.com>
+Tested-by: Palmer Dabbelt <palmerdabbelt@google.com> [QMEU virt machine with SMP]
+[Palmer: Move the Fixes up to a newer commit]
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/ftrace/Makefile    |    2 +-
- tools/testing/selftests/livepatch/Makefile |    2 ++
- tools/testing/selftests/rseq/Makefile      |    2 ++
- tools/testing/selftests/rtc/Makefile       |    2 ++
- 4 files changed, 7 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/traps.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/testing/selftests/ftrace/Makefile
-+++ b/tools/testing/selftests/ftrace/Makefile
-@@ -2,7 +2,7 @@
- all:
- 
- TEST_PROGS := ftracetest
--TEST_FILES := test.d
-+TEST_FILES := test.d settings
- EXTRA_CLEAN := $(OUTPUT)/logs/*
- 
- include ../lib.mk
---- a/tools/testing/selftests/livepatch/Makefile
-+++ b/tools/testing/selftests/livepatch/Makefile
-@@ -8,4 +8,6 @@ TEST_PROGS := \
- 	test-state.sh \
- 	test-ftrace.sh
- 
-+TEST_FILES := settings
-+
- include ../lib.mk
---- a/tools/testing/selftests/rseq/Makefile
-+++ b/tools/testing/selftests/rseq/Makefile
-@@ -19,6 +19,8 @@ TEST_GEN_PROGS_EXTENDED = librseq.so
- 
- TEST_PROGS = run_param_test.sh
- 
-+TEST_FILES := settings
-+
- include ../lib.mk
- 
- $(OUTPUT)/librseq.so: rseq.c rseq.h rseq-*.h
---- a/tools/testing/selftests/rtc/Makefile
-+++ b/tools/testing/selftests/rtc/Makefile
-@@ -6,4 +6,6 @@ TEST_GEN_PROGS = rtctest
- 
- TEST_GEN_PROGS_EXTENDED = setdate
- 
-+TEST_FILES := settings
-+
- include ../lib.mk
+--- a/arch/riscv/kernel/traps.c
++++ b/arch/riscv/kernel/traps.c
+@@ -156,6 +156,6 @@ void __init trap_init(void)
+ 	csr_write(CSR_SCRATCH, 0);
+ 	/* Set the exception vector address */
+ 	csr_write(CSR_TVEC, &handle_exception);
+-	/* Enable all interrupts */
+-	csr_write(CSR_IE, -1);
++	/* Enable interrupts */
++	csr_write(CSR_IE, IE_SIE | IE_EIE);
+ }
 
 
