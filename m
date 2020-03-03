@@ -2,137 +2,124 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98877C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:03:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A844C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0692083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B02020828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:05:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583247959;
+	bh=Yj6h4dssuFF08mHyGZ6Wq8pC3m3TSRR+2Af48gW4S18=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pK8AwOMCGFMxng4Mu6nhbqKCXQTOovW62Rp9owBeMwtYiu2S8eNrZsHU8WgitAYSQ
+	 waH+eyL5mJ8lmXKtjUijGuTGxBjmDz6FqliTZ51GTxQCGp32T9N7fyhacIrAkqMw8A
+	 OQg5qleOyq6OsLcu+/iIWwd0TGN/T0HW4FcU+deI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbgCCPDu (ORCPT
+        id S1729626AbgCCPF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:03:50 -0500
-Received: from foss.arm.com ([217.140.110.172]:48408 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727851AbgCCPDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:03:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75598101E;
-        Tue,  3 Mar 2020 07:03:49 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F1493F6C4;
-        Tue,  3 Mar 2020 07:03:47 -0800 (PST)
-Date:   Tue, 3 Mar 2020 15:03:45 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Remi Pommarel <repk@triplefau.lt>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
- platforms
-Message-ID: <20200303150345.GB6334@e121166-lin.cambridge.arm.com>
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
- <7h8sklbcmo.fsf@baylibre.com>
+        Tue, 3 Mar 2020 10:05:58 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:51123 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729203AbgCCPF6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:05:58 -0500
+Received: by mail-pj1-f68.google.com with SMTP id nm6so1051620pjb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 07:05:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EJlk4vseHEZQNTu5RktfpfUYNqbSHALuLxr/byHAa5o=;
+        b=AbXcuchxrH/SezOUg01TfDFnCEMP9H2+mUtXqpkviz/UY+1e/wM7VO8+bm2wPF7nD5
+         Ty7BexSnGrMTadtmQeFecAjRe7OwsXU3kXU36iQEGzJqw+y6fTzGdGzi0o/x2d02m0wk
+         uHC+nMuYlc8SzX6ie+Vyzwdfy4TM2AKlR9o+MbWbaTZIgjClORlnb/6ekezOHFY5LET2
+         3gABCM4+0tS47I4e9lThl/ZWzqv+pdWX01E8sRqH3Xu0y+rN8EG515BCBhiSpAuMe5la
+         lrGex4HV1SWyIOlcZzMEEjy+1koACHGzvaUxr7jjPfuYayO1Tn2nLuzA5/T5XhMhnk3K
+         /JYg==
+X-Gm-Message-State: ANhLgQ3T+sOkDO5v5mr/dzcTRB1JtPZDUGJ7d7YF+Y5YDEZAErcKgEtQ
+        CBRUL8wPxUBcKp/W9aWIOnY=
+X-Google-Smtp-Source: ADFU+vvTxf1NzgWfZYzJ8GbzPeBNam9FqG3QGqSv38U4NELY++fYfkEU+ka9o+pZjh34yS/9HW0yBw==
+X-Received: by 2002:a17:902:61:: with SMTP id 88mr4641415pla.17.1583247956836;
+        Tue, 03 Mar 2020 07:05:56 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id y15sm1098933pfl.149.2020.03.03.07.05.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 07:05:55 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id B8C8C4042C; Tue,  3 Mar 2020 15:05:54 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 15:05:54 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Junyong Sun <sunjy516@gmail.com>
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
+        linux-kernel@vger.kernel.org, sunjunyong@xiaomi.com
+Subject: Re: [PATCH v2] firmware: fix a double abort case with
+ fw_load_sysfs_fallback
+Message-ID: <20200303150554.GI11244@42.do-not-panic.com>
+References: <1583202968-28792-1-git-send-email-sunjunyong@xiaomi.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <7h8sklbcmo.fsf@baylibre.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1583202968-28792-1-git-send-email-sunjunyong@xiaomi.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 05:07:43PM +0100, Kevin Hilman wrote:
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+On Tue, Mar 03, 2020 at 10:36:08AM +0800, Junyong Sun wrote:
+> fw_sysfs_wait_timeout may return err with -ENOENT
+> at fw_load_sysfs_fallback and firmware is already
+> in abort status, no need to abort again, so skip it.
 > 
-> > On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
-> >> PCIe device probing failures have been seen on AXG platforms and were
-> >> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
-> >> in MIPI's PHY registers solved the problem. This bit controls band gap
-> >> reference.
-> >> 
-> >> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
-> >> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
-> >> a PHY driver to control this bit instead, as well as setting the band
-> >> gap one in order to get reliable PCIE communication.
-> >> 
-> >> While at it add another PHY driver to control PCIE only PHY registers,
-> >> making AXG code more similar to G12A platform thus allowing to remove
-> >> some specific platform handling in pci-meson driver.
-> >> 
-> >> Please note that CLKID_MIPI_ENABLE removable will be done in a different
-> >> serie.
-> >> 
-> >> Changes since v5:
-> >>  - Add additionalProperties in device tree binding documentation
-> >>  - Make analog PHY required
-> >> 
-> >> Changes since v4:
-> >>  - Rename the shared MIPI/PCIe PHY to analog
-> >>  - Chain the MIPI/PCIe PHY to the PCIe one
-> >> 
-> >> Changes since v3:
-> >>  - Go back to the shared MIPI/PCIe phy driver solution from v2
-> >>  - Remove syscon usage
-> >>  - Add all dt-bindings documentation
-> >> 
-> >> Changes since v2:
-> >>  - Remove shared MIPI/PCIE device driver and use syscon to access register
-> >>    in PCIE only driver instead
-> >>  - Include devicetree documentation
-> >> 
-> >> Changes sinve v1:
-> >>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
-> >>  - Add a PHY driver for PCIE_PHY registers
-> >>  - Modify pci-meson.c to make use of both PHYs and remove specific
-> >>    handling for AXG and G12A
-> >> 
-> >> [1] https://lkml.org/lkml/2019/12/16/119
-> >> 
-> >> Remi Pommarel (7):
-> >>   dt-bindings: Add AXG PCIE PHY bindings
-> >>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
-> >>   dt-bindings: PCI: meson: Update PCIE bindings documentation
-> >>   arm64: dts: meson-axg: Add PCIE PHY nodes
-> >>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
-> >>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-> >>   PCI: amlogic: Use AXG PCIE
-> >> 
-> >>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
-> >>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
-> >>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
-> >>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
-> >>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
-> >>  drivers/phy/amlogic/Kconfig                   |  22 ++
-> >>  drivers/phy/amlogic/Makefile                  |  12 +-
-> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
-> >>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
-> >>  9 files changed, 543 insertions(+), 112 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
-> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
-> >
-> > Hi Remi,
-> >
-> > I am ready to pull this series in, do you want me to ? Or you prefer
-> > it to go via a different tree upstream ?
+> This issue is caused by concurrent situation like below:
+> when thread 1# wait firmware loading, thread 2# may write
+> -1 to abort loading and wakeup thread 1# before it timeout.
+> so wait_for_completion_killable_timeout of thread 1# would
+> return remaining time which is != 0 with fw_st->status
+> FW_STATUS_ABORTED.And the results would be converted into
+> err -ENOENT in __fw_state_wait_common and transfered to
+> fw_load_sysfs_fallback in thread 1#.
+> The -ENOENT means firmware status is already at ABORTED,
+> so fw_load_sysfs_fallback no need to get mutex to abort again.
+> -----------------------------
+> thread 1#,wait for loading
+> fw_load_sysfs_fallback
+>  ->fw_sysfs_wait_timeout
+>     ->__fw_state_wait_common
+>        ->wait_for_completion_killable_timeout
 > 
-> To avoid conflicts, I'll take the DT patch (PATCH 4/7) through my
-> amlogic tree, but feel free to take the rest.
+> in __fw_state_wait_common,
+> ...
+> 93    ret = wait_for_completion_killable_timeout(&fw_st->completion, timeout);
+> 94    if (ret != 0 && fw_st->status == FW_STATUS_ABORTED)
+> 95       return -ENOENT;
+> 96    if (!ret)
+> 97	 return -ETIMEDOUT;
+> 98
+> 99    return ret < 0 ? ret : 0;
+> -----------------------------
+> thread 2#, write -1 to abort loading
+> firmware_loading_store
+>  ->fw_load_abort
+>    ->__fw_load_abort
+>      ->fw_state_aborted
+>        ->__fw_state_set
+>          ->complete_all
+> 
+> in __fw_state_set,
+> ...
+> 111    if (status == FW_STATUS_DONE || status == FW_STATUS_ABORTED)
+> 112       complete_all(&fw_st->completion);
+> -------------------------------------------
+> BTW,the double abort issue would not cause kernel panic or create an issue,
+> but slow down it sometimes.The change is just a minor optimization.
+> 
+> Signed-off-by: Junyong Sun <sunjunyong@xiaomi.com>
 
-That works for me Kevin, thanks !
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Lorenzo
+  Luis
