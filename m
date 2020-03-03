@@ -2,96 +2,154 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A183C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF221C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DAD520863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A528320863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:44:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Lz3S0tth"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730144AbgCCPoZ (ORCPT
+        id S1730155AbgCCPos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:44:25 -0500
-Received: from muru.com ([72.249.23.125]:58578 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgCCPoY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:44:24 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id A551480EE;
-        Tue,  3 Mar 2020 15:45:08 +0000 (UTC)
-Date:   Tue, 3 Mar 2020 07:44:20 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc:     linux-omap@vger.kernel.org, "Andrew F . Davis" <afd@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Jyri Sarha <jsarha@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH 3/3] bus: ti-sysc: Implement display subsystem reset quirk
-Message-ID: <20200303154420.GS37466@atomide.com>
-References: <20200224191230.30972-1-tony@atomide.com>
- <20200224191230.30972-4-tony@atomide.com>
- <7d4af3b5-5dd7-76b3-4d3f-4698bfde288c@ti.com>
- <20200303151349.GQ37466@atomide.com>
- <8cadd536-668a-4309-1878-7db2362717d2@ti.com>
+        Tue, 3 Mar 2020 10:44:48 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44993 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729416AbgCCPor (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:44:47 -0500
+Received: by mail-io1-f66.google.com with SMTP id u17so4012825iog.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 07:44:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZG+Z5PlJjVm8PVRrvVFjKYG60wCcDQJcM/cIXR7GgWs=;
+        b=Lz3S0tthIYaC3IENsF36JWiCsuLYH86LS7/c5LNNFUEJdwftjJ3tcQmCn4mVtCUG+o
+         XseDzhB4vzz/3J+8RSvuHvNBmm78EbXQEYUrGpskbzlT0lU51zA5VhjKVW5EOc0mrWso
+         QKzxShqhorVF33vtLXFwI7HEZoQD6SVTfR//8ia1gWa4HyuJ78V1DbQi8ljs30PCwUbL
+         5urcNDkfNkyj+1/5qRoCUz1PYUOcI0v1EQRD4tP5gftHukoNMnV8YNXLdD4VL64vaRFr
+         IiTgTTZWvn3m3Iyr38KQDBs8ijMhd/Xl4ltF3hqoGqwJ3s0YIl5rWElbuumej2uE3WFV
+         aqiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZG+Z5PlJjVm8PVRrvVFjKYG60wCcDQJcM/cIXR7GgWs=;
+        b=G57sPdBHGkzhT3ib3puGrYnE8h6fpSBvAJuJU1hBTbJfgj2AFnVmL40roJ22w/+HYF
+         0vAR5SQl4y1FSONmqZX/poD406wx5T6oKdapO8Wc653adGdSgMzRN4pNcJCskwkIe8Ne
+         tHBCGdcVayBwnCu6CsrL8cpdk/fFLL8lmnMbH9tZPC1J2h0BlthY1o9ZVj9IBJU1NP03
+         M6fnuaaDMaV6bO1X93n/Cqk1MoVKUkWohMPFyjKHiGok8cJU2cpkoc2phk9fhhiJUG4e
+         70NyvHKA+wuw7oL03YAabw3vu6dPiF4VkpA65USxZcfa6Tjyq0+UGhOHmMzBlKzQqZZ9
+         t66A==
+X-Gm-Message-State: ANhLgQ1PX53xha0DH6b3vB9BpzM7uEirlHWzKw2jI09VhYTwt2R7S5zb
+        d6ZclI1/qwqdawjxmdNnNWnhcgAru6I=
+X-Google-Smtp-Source: ADFU+vtxG3oWgwLPSPn/IZ0T3hF+eib4xFsRFf/5PavaMAyfTas5IKEm4Hjr+94AF9p8J0X/cfg78w==
+X-Received: by 2002:a5e:c207:: with SMTP id v7mr4350463iop.88.1583250286473;
+        Tue, 03 Mar 2020 07:44:46 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id e65sm8011244ilg.2.2020.03.03.07.44.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 07:44:45 -0800 (PST)
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+ <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com>
+ <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+ <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
+ <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
+ <20200303142407.GA47158@kroah.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
+Date:   Tue, 3 Mar 2020 08:44:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8cadd536-668a-4309-1878-7db2362717d2@ti.com>
+In-Reply-To: <20200303142407.GA47158@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [200303 15:36]:
-> On 03/03/2020 17:13, Tony Lindgren wrote:
-> > Hi,
-> > 
-> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [200303 06:03]:
-> > > On 24/02/2020 21:12, Tony Lindgren wrote:
-> > > > +	/* Remap the whole module range to be able to reset dispc outputs */
-> > > > +	devm_iounmap(ddata->dev, ddata->module_va);
-> > > > +	ddata->module_va = devm_ioremap(ddata->dev,
-> > > > +					ddata->module_pa,
-> > > > +					ddata->module_size);
-> > > 
-> > > Why is this needed? The range is not mapped when sysc_pre_reset_quirk_dss()
-> > > is called? This will unmap and remap twice, as this function is called
-> > > twice. And then left mapped.
-> > 
-> > That's because by default we only ioremap the module revision, sysconfig
-> > and sysstatus register are and provide the rest as a range for the child
-> > nodes.
-> > 
-> > In the dss quirk case we need to tinker with registers also in the dispc
-> > range, and at the parent dss probe time dispc has not probed yet.
-> > 
-> > We may be able to eventually move the reset quirk to dispc, but then
-> > it won't happen in the current setup until after dss top level driver
-> > has loaded.
-> > 
-> > We leave the module range ioremapped as we still need to access
-> > sysconfig related registers for PM runtime.
+On 3/3/20 7:24 AM, Greg Kroah-Hartman wrote:
+> On Tue, Mar 03, 2020 at 03:13:26PM +0100, Jann Horn wrote:
+>> On Tue, Mar 3, 2020 at 3:10 PM Greg Kroah-Hartman
+>> <gregkh@linuxfoundation.org> wrote:
+>>>
+>>> On Tue, Mar 03, 2020 at 02:43:16PM +0100, Greg Kroah-Hartman wrote:
+>>>> On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
+>>>>> On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
+>>>>> <gregkh@linuxfoundation.org> wrote:
+>>>>>
+>>>>>>> Unlimited beers for a 21-line kernel patch?  Sign me up!
+>>>>>>>
+>>>>>>> Totally untested, barely compiled patch below.
+>>>>>>
+>>>>>> Ok, that didn't even build, let me try this for real now...
+>>>>>
+>>>>> Some comments on the interface:
+>>>>
+>>>> Ok, hey, let's do this proper :)
+>>>
+>>> Alright, how about this patch.
+>>>
+>>> Actually tested with some simple sysfs files.
+>>>
+>>> If people don't strongly object, I'll add "real" tests to it, hook it up
+>>> to all arches, write a manpage, and all the fun fluff a new syscall
+>>> deserves and submit it "for real".
+>>
+>> Just FYI, io_uring is moving towards the same kind of thing... IIRC
+>> you can already use it to batch a bunch of open() calls, then batch a
+>> bunch of read() calls on all the new fds and close them at the same
+>> time. And I think they're planning to add support for doing
+>> open()+read()+close() all in one go, too, except that it's a bit
+>> complicated because passing forward the file descriptor in a generic
+>> way is a bit complicated.
 > 
-> Ok, makes sense. I guess a minor improvement would be to unmap & remap once
-> in sysc_pre_reset_quirk_dss before calling sysc_quirk_dispc.
+> It is complicated, I wouldn't recommend using io_ring for reading a
+> bunch of procfs or sysfs files, that feels like a ton of overkill with
+> too much setup/teardown to make it worth while.
+> 
+> But maybe not, will have to watch and see how it goes.
 
-Yeah well we'd have to sprawl the module specific quirk checks
-there too then.
+It really isn't, and I too thinks it makes more sense than having a
+system call just for the explicit purpose of open/read/close. As Jann
+said, you can't currently do a linked sequence of open/read/close,
+because the fd passing between them isn't done. But that will come in
+the future. If the use case is "a bunch of files", then you could
+trivially do "open bunch", "read bunch", "close bunch" in three separate
+steps.
 
-I thought about using the whole module range for modules with a large
-IO range, but so far DSS is the only one needing a quirk hadling
-covering also child modules like this.
+Curious what the use case is for this that warrants a special system
+call?
 
-Regards,
+-- 
+Jens Axboe
 
-Tony
