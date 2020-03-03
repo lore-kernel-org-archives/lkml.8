@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F08C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 903A4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 261212166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4742166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204165;
-	bh=ssKvFUgnI1L6vedipqOf+KiYAXpk4XNBlD8QG1x3TBg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=vB+6OlxaxtBkkA4EsfjjQUgQErdKU6Vv8tVZImDmBbPCpPPUtQLTod9+2HmD8mF2y
-	 RSO99NH5RXXm67mxtaUZ4fz75KD9r4fPDY3+6jFUvzLxLzKRmvwQuICFfbP6HbxS0d
-	 XYXsE+rArOfkTeURfOR4taKJ2WNGDU7PMWLIJVBM=
+	s=default; t=1583204172;
+	bh=ujHYlmvzzmARpzykN3UJl7tQFXD5glbjjzu9OoZqoc4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=eBOGmaxjXEMuYPhiz9zly0KqdWTukojqLUYTKCx1yUmlOOXsjA0vau4Xd2AJe3i+D
+	 I1rctMXimGTPuUmqCqqra6OSHlrPTfswbtlpQDNl2/v5gPpfgzI4iA4jycMDJ1gOPY
+	 cBA/vSnGXgAbvW5eFMJlvs2rgu5GdFLW3Hr1Zyz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgCCC4D (ORCPT
+        id S1728566AbgCCCsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:56:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44818 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728594AbgCCCsy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:54 -0500
+        id S1728467AbgCCCsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9E8D24680;
-        Tue,  3 Mar 2020 02:48:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0214246D5;
+        Tue,  3 Mar 2020 02:48:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203733;
-        bh=ssKvFUgnI1L6vedipqOf+KiYAXpk4XNBlD8QG1x3TBg=;
-        h=From:To:Cc:Subject:Date:From;
-        b=OZfSeyrUqh8nAz5gSywhf8iRItSkPMcuOTmr/8nRhqgxh9+hg6TsYjzxplCrurT2f
-         aacSXVwGxZ1N5kLlbzOD8EpttTpBKApl6Dq+n31CXzTIGM8Y90uktf8Up7p3+MOhgH
-         34XYGxydM/h2S+eVbqrB/B+f5RryTyWPf8m+xY6M=
+        s=default; t=1583203716;
+        bh=ujHYlmvzzmARpzykN3UJl7tQFXD5glbjjzu9OoZqoc4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=mCbK/NiQMUcFcCo7Fg383r9rVy27soXJ4BKpunCau8qKalfceY/WWAZNDBBonOJla
+         z7FLjKQmgA0DFEMaUQpji9ovgzX1jjPGd5XYLIs3hDdNSlw45GDEowLBOR+fRuDryA
+         tLYMzOWfXh0zqgyEn+6LWMOt+hmkkiQ/ynra2YTI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, alsa-devel@alsa-project.org
-Subject: [PATCH AUTOSEL 4.19 01/32] ALSA: hda: do not override bus codec_mask in link_get()
-Date:   Mon,  2 Mar 2020 21:48:20 -0500
-Message-Id: <20200303024851.10054-1-sashal@kernel.org>
+Cc:     Michal Swiatkowski <michal.swiatkowski@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        Sasha Levin <sashal@kernel.org>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 46/58] ice: Don't tell the OS that link is going down
+Date:   Mon,  2 Mar 2020 21:47:28 -0500
+Message-Id: <20200303024740.9511-46-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
+References: <20200303024740.9511-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,59 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+From: Michal Swiatkowski <michal.swiatkowski@intel.com>
 
-[ Upstream commit 43bcb1c0507858cdc95e425017dcc33f8105df39 ]
+[ Upstream commit 8a55c08d3bbc9ffc9639f69f742e59ebd99f913b ]
 
-snd_hdac_ext_bus_link_get() does not work correctly in case
-there are multiple codecs on the bus. It unconditionally
-resets the bus->codec_mask value. As per documentation in
-hdaudio.h and existing use in client code, this field should
-be used to store bit flag of detected codecs on the bus.
+Remove code that tell the OS that link is going down when user
+change flow control via ethtool. When link is up it isn't certain
+that link goes down after 0x0605 aq command. If link doesn't go
+down, OS thinks that link is down, but physical link is up. To
+reset this state user have to take interface down and up.
 
-By overwriting value of the codec_mask, information on all
-detected codecs is lost. No current user of hdac is impacted,
-but use of bus->codec_mask is planned in future patches
-for SOF.
+If link goes down after 0x0605 command, FW send information
+about that and after that driver tells the OS that the link goes
+down. So this code in ethtool is unnecessary.
 
-Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Reviewed-by: Takashi Iwai <tiwai@suse.de>
-Link: https://lore.kernel.org/r/20200206200223.7715-1-kai.vehmanen@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Michal Swiatkowski <michal.swiatkowski@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/hda/ext/hdac_ext_controller.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_ethtool.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/sound/hda/ext/hdac_ext_controller.c b/sound/hda/ext/hdac_ext_controller.c
-index 60cb00fd0c693..84b44cdae28a1 100644
---- a/sound/hda/ext/hdac_ext_controller.c
-+++ b/sound/hda/ext/hdac_ext_controller.c
-@@ -262,6 +262,7 @@ EXPORT_SYMBOL_GPL(snd_hdac_ext_bus_link_power_down_all);
- int snd_hdac_ext_bus_link_get(struct hdac_bus *bus,
- 				struct hdac_ext_link *link)
- {
-+	unsigned long codec_mask;
- 	int ret = 0;
+diff --git a/drivers/net/ethernet/intel/ice/ice_ethtool.c b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+index 1fe9f6050635d..62673e27af0e8 100644
+--- a/drivers/net/ethernet/intel/ice/ice_ethtool.c
++++ b/drivers/net/ethernet/intel/ice/ice_ethtool.c
+@@ -2916,13 +2916,6 @@ ice_set_pauseparam(struct net_device *netdev, struct ethtool_pauseparam *pause)
+ 	else
+ 		return -EINVAL;
  
- 	mutex_lock(&bus->lock);
-@@ -283,9 +284,11 @@ int snd_hdac_ext_bus_link_get(struct hdac_bus *bus,
- 		 *  HDA spec section 4.3 - Codec Discovery
- 		 */
- 		udelay(521);
--		bus->codec_mask = snd_hdac_chip_readw(bus, STATESTS);
--		dev_dbg(bus->dev, "codec_mask = 0x%lx\n", bus->codec_mask);
--		snd_hdac_chip_writew(bus, STATESTS, bus->codec_mask);
-+		codec_mask = snd_hdac_chip_readw(bus, STATESTS);
-+		dev_dbg(bus->dev, "codec_mask = 0x%lx\n", codec_mask);
-+		snd_hdac_chip_writew(bus, STATESTS, codec_mask);
-+		if (!bus->codec_mask)
-+			bus->codec_mask = codec_mask;
- 	}
+-	/* Tell the OS link is going down, the link will go back up when fw
+-	 * says it is ready asynchronously
+-	 */
+-	ice_print_link_msg(vsi, false);
+-	netif_carrier_off(netdev);
+-	netif_tx_stop_all_queues(netdev);
+-
+ 	/* Set the FC mode and only restart AN if link is up */
+ 	status = ice_set_fc(pi, &aq_failures, link_up);
  
- 	mutex_unlock(&bus->lock);
 -- 
 2.20.1
 
