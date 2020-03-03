@@ -2,126 +2,171 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DA1C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8AF7C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79FF20838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E9BA20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:13:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jFnI/p5s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbgCCONF (ORCPT
+        id S1729219AbgCCON4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:13:05 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52598 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725932AbgCCOND (ORCPT
+        Tue, 3 Mar 2020 09:13:56 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44739 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729153AbgCCONz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:13:03 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 023Du93Y137492
-        for <linux-kernel@vger.kernel.org>; Tue, 3 Mar 2020 09:13:02 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmg19cnv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:13:01 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 3 Mar 2020 14:12:58 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Mar 2020 14:12:55 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 023ECrkS50069520
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Mar 2020 14:12:54 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D75FC4204B;
-        Tue,  3 Mar 2020 14:12:53 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C2484203F;
-        Tue,  3 Mar 2020 14:12:53 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.80])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Mar 2020 14:12:53 +0000 (GMT)
-Date:   Tue, 3 Mar 2020 15:12:52 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        virtualization@lists.linux-foundation.org,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Subject: Re: [PATCH 0/2] virtio-blk: improve handling of DMA mapping
- failures
-In-Reply-To: <20200213123728.61216-1-pasic@linux.ibm.com>
-References: <20200213123728.61216-1-pasic@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Tue, 3 Mar 2020 09:13:55 -0500
+Received: by mail-ot1-f67.google.com with SMTP id v22so3054518otq.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:13:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3rR9D2f+H/e0fSVL00Hp9urV4+rGAWYmYmqAOeH9QiI=;
+        b=jFnI/p5sGaE8Le8fiAMY42PMLKHkTRTf1QlMJPXMCzYAPy8+oJUNnB2h44tAjiv4WG
+         E9NYrTbliI2We1ehAL0n+Hp9Uz00HJzBmAhv3SsJrGYr5I8MUaiLc9NcTAhanR5CacZG
+         4nZqO6O/Nw1BwSiM3dynOT07TZhRVAMtw54DqT2ZNy6GlXhYvAgYGea/T1S+AWSkeBn5
+         fgGolr4CvH475/Z9IH+BEEgzi9UE3ij4Bo4SOMnhHoU4hSdxHnlbdOQmD4hKG1hAgPND
+         qG4XEhYVHTYOSDJvJtAYMaKtgNWLtGbBsegtIJruZParsVY787NBAVWV/6XtuB4GAc+v
+         D2gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3rR9D2f+H/e0fSVL00Hp9urV4+rGAWYmYmqAOeH9QiI=;
+        b=l0KS5akAU1GfxqyIqD9xjX9VHC+TPoG+eFJbGELPhCq1eHYOqC94GsUbagDfQm/yVy
+         ZfwHph41ZbRKgrgJdf+mRh/ii0PDrN7FEvA242V8AEOyapfe5fTW9zxoJCGIxaTHR9qZ
+         pZ6McbvyzwBRQIQlMnpOCiHqrubOVe3ZpDTWkHHuAt/Sq1Y9LwWNmOd+wHQRvLSO4KSg
+         G5vKOb0dQ/qj9m5xVyNr4Wx906X6Ho6pgmXlqcUnm1AHNw+dBn8oAogroRwL8/PHbvCM
+         f8cP8+dMpgN1VRg2sdxHR1z+Svip5eF7cjHNQSAyOGAhl1ZeHyGYErMxbL0XuFujVVh7
+         FIrw==
+X-Gm-Message-State: ANhLgQ3SX6gkYPHfOk3E8loOHbKKfcONuv/J2F4gYlLAp3p9ldbDzS4t
+        iXZQ4qXomzKbjsRbdnxXK3FRuGyhTbjQm/CP0K1HkA==
+X-Google-Smtp-Source: ADFU+vufO6VrHobavK+ZbGNW4cEy5kqvLT7wd3WR4i93yBzOJEjSq9F6npSTRWuvRj2vM5/2ga1joTBYwWqaeS0xT0I=
+X-Received: by 2002:a9d:7358:: with SMTP id l24mr837663otk.228.1583244833306;
+ Tue, 03 Mar 2020 06:13:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030314-0020-0000-0000-000003B0199C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030314-0021-0000-0000-000022084913
-Message-Id: <20200303151252.59d45e86.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-03_04:2020-03-03,2020-03-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- lowpriorityscore=0 malwarescore=0 adultscore=0 suspectscore=0
- priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030107
+References: <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home> <20200303130347.GA2302029@kroah.com>
+ <20200303131434.GA2373427@kroah.com> <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+ <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
+In-Reply-To: <20200303141030.GA2811@kroah.com>
+From:   Jann Horn <jannh@google.com>
+Date:   Tue, 3 Mar 2020 15:13:26 +0100
+Message-ID: <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Feb 2020 13:37:26 +0100
-Halil Pasic <pasic@linux.ibm.com> wrote:
+On Tue, Mar 3, 2020 at 3:10 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Mar 03, 2020 at 02:43:16PM +0100, Greg Kroah-Hartman wrote:
+> > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
+> > > On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > > > Unlimited beers for a 21-line kernel patch?  Sign me up!
+> > > > >
+> > > > > Totally untested, barely compiled patch below.
+> > > >
+> > > > Ok, that didn't even build, let me try this for real now...
+> > >
+> > > Some comments on the interface:
+> >
+> > Ok, hey, let's do this proper :)
+>
+> Alright, how about this patch.
+>
+> Actually tested with some simple sysfs files.
+>
+> If people don't strongly object, I'll add "real" tests to it, hook it up
+> to all arches, write a manpage, and all the fun fluff a new syscall
+> deserves and submit it "for real".
 
-> Two patches are handling new edge cases introduced by doing DMA mappings
-> (which can fail) in virtio core.
-> 
-> I stumbled upon this while stress testing I/O for Protected Virtual
-> Machines. I deliberately chose a tiny swiotlb size and have generated
-> load with fio. With more than one virtio-blk disk in use I experienced
-> hangs.
-> 
-> The goal of this series is to fix those hangs.
-> 
-> Halil Pasic (2):
->   virtio-blk: fix hw_queue stopped on arbitrary error
->   virtio-blk: improve virtqueue error to BLK_STS
-> 
->  drivers/block/virtio_blk.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
-> 
-> 
-> base-commit: 39bed42de2e7d74686a2d5a45638d6a5d7e7d473
+Just FYI, io_uring is moving towards the same kind of thing... IIRC
+you can already use it to batch a bunch of open() calls, then batch a
+bunch of read() calls on all the new fds and close them at the same
+time. And I think they're planning to add support for doing
+open()+read()+close() all in one go, too, except that it's a bit
+complicated because passing forward the file descriptor in a generic
+way is a bit complicated.
 
-ping
+> It feels like I'm doing something wrong in that the actuall syscall
+> logic is just so small.  Maybe I'll benchmark this thing to see if it
+> makes any real difference...
+>
+> thanks,
+>
+> greg k-h
+>
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Subject: [PATCH] readfile: implement readfile syscall
+>
+> It's a tiny syscall, meant to allow a user to do a single "open this
+> file, read into this buffer, and close the file" all in a single shot.
+>
+> Should be good for reading "tiny" files like sysfs, procfs, and other
+> "small" files.
+>
+> There is no restarting the syscall, am trying to keep it simple.  At
+> least for now.
+>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[...]
+> +SYSCALL_DEFINE5(readfile, int, dfd, const char __user *, filename,
+> +               char __user *, buffer, size_t, bufsize, int, flags)
+> +{
+> +       int retval;
+> +       int fd;
+> +
+> +       /* Mask off all O_ flags as we only want to read from the file */
+> +       flags &= ~(VALID_OPEN_FLAGS);
+> +       flags |= O_RDONLY | O_LARGEFILE;
+> +
+> +       fd = do_sys_open(dfd, filename, flags, 0000);
+> +       if (fd <= 0)
+> +               return fd;
+> +
+> +       retval = ksys_read(fd, buffer, bufsize);
+> +
+> +       __close_fd(current->files, fd);
+> +
+> +       return retval;
+> +}
 
-Hi Michael, hi Jason,
-
-I got some favorable reviews for this, but AFAIK I got nothing form the
-maintainers yet.
-
-Is some of you going to pick these?
-
-Regards,
-Halil
-
+If you're gonna do something like that, wouldn't you want to also
+elide the use of the file descriptor table completely? do_sys_open()
+will have to do atomic operations in the fd table and stuff, which is
+probably moderately bad in terms of cacheline bouncing if this is used
+in a multithreaded context; and as a side effect, the fd would be
+inherited by anyone who calls fork() concurrently. You'll probably
+want to use APIs like do_filp_open() and filp_close(), or something
+like that, instead.
