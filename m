@@ -2,99 +2,141 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2D2C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A57E8C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A76620CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258485;
-	bh=qVx15RFKk4PNvGJ/mLn44ftM9J4PGdu5vcJo9CUXlkY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dF7U/THPlXtF3GZxDa0oIs06frgCptXWwGQZjWr0tgr+Lz8Umpnu6WfKcQcu3Ivh3
-	 Me1K2QlJrVSFjISqpT6rgDFFg1Ie3y0XrczQ8UE3jlg8Xa/jlMKBgMlOOdolc/fS+l
-	 phqPw7neZHu0FTL+hzkVGWb8LVWEqZoBE9TzXNH0=
+	by mail.kernel.org (Postfix) with ESMTP id 82DBD20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387967AbgCCSBX (ORCPT
+        id S2387991AbgCCSB2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45446 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:01:28 -0500
+Received: from mga18.intel.com ([134.134.136.126]:23690 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387627AbgCCSBW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:01:22 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 339A42072D;
-        Tue,  3 Mar 2020 18:01:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258481;
-        bh=qVx15RFKk4PNvGJ/mLn44ftM9J4PGdu5vcJo9CUXlkY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PPz0ia5Q839z0KJk1hBP2WM7CHtb4qPvvYG6eMyPT1gWOPZ8QlY9nl3pnB6U2kR62
-         AD2q9iUkdxM6DH2mDleafxMIKX6342oGW4tJ2UIxQ6TqXe7nxa4uYEdmlY/MW0wVMU
-         +L7/2C7tuiBPFnuQgX/ed4wjGysqF9uZlzSAE85g=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Belous <pbelous@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 64/87] net: atlantic: fix potential error handling
-Date:   Tue,  3 Mar 2020 18:43:55 +0100
-Message-Id: <20200303174356.086143384@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
-References: <20200303174349.075101355@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1731827AbgCCSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:26 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 10:01:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="440678485"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 03 Mar 2020 10:01:22 -0800
+Date:   Tue, 3 Mar 2020 10:01:22 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Jim Mattson <jmattson@google.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH 2/6] KVM: x86: Fix CPUID range check for Centaur and
+ Hypervisor ranges
+Message-ID: <20200303180122.GO1439@linux.intel.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-3-sean.j.christopherson@intel.com>
+ <CALMp9eThBnN3ktAfwhNs7L-O031JDFqjb67OMPooGvmkcdhK4A@mail.gmail.com>
+ <CALMp9eR0Mw8iPv_Z43gfCEbErHQ6EXX8oghJJb5Xge+47ZU9yQ@mail.gmail.com>
+ <20200303045838.GF27842@linux.intel.com>
+ <CALMp9eSYZKUBko4ZViNbasRGJs2bAO2fREHX9maDbLrYj8yDhQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALMp9eSYZKUBko4ZViNbasRGJs2bAO2fREHX9maDbLrYj8yDhQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Belous <pbelous@marvell.com>
+On Tue, Mar 03, 2020 at 09:42:42AM -0800, Jim Mattson wrote:
+> Unfathomable was the wrong word.
 
-commit 380ec5b9af7f0d57dbf6ac067fd9f33cff2fef71 upstream.
+I dunno, one could argue that the behavior of Intel CPUs for CPUID is
+unfathomable and I was just trying to follow suit :-D
 
-Code inspection found that in case of mapping error we do return current
-'ret' value. But beside error, it is used to count number of descriptors
-allocated for the packet. In that case map_skb function could return '1'.
+>  I can see what you're trying to do. I
+> just don't think it's defensible. I suspect that Intel CPU architects
+> will be surprised and disappointed to find that the maximum effective
+> value of CPUID.0H:EAX is now 255, and that they have to define
+> CPUID.100H:EAX as the "maximum leaf between 100H and 1FFH" if they
+> want to define any leaves between 100H and 1FFH.
 
-Changing it to return zero (number of mapped descriptors for skb)
+Hmm, ya, I agree that applying a 0xffffff00 mask to all classes of CPUID
+ranges is straight up wrong.
 
-Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
-Signed-off-by: Pavel Belous <pbelous@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Furthermore, AMD has only ceded 4000_0000h through 4000_00FFh to
+> hypervisors, so kvm's use of 40000100H through 400001FFH appears to be
+> a land grab, akin to VIA's unilateral grab of the C0000000H leaves.
+> Admittedly, one could argue that the 40000000H leaves are not AMD's to
+> apportion, since AMD and Intel appear to have reached a detente by
+> splitting the available space down the middle. Intel, who seems to be
+> the recognized authority for this range, declares the entire range
+> from 40000000H through 4FFFFFFFH to be invalid. Make of that what you
+> will.
+> 
+> In any event, no one has ever documented what's supposed to happen if
+> you leave gaps in the 4xxxxxxxH range when defining synthesized CPUID
+> leaves under kvm.
 
----
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Probably stating the obvious, but for me, the least suprising thing is for
+such leafs to output zeros.  It also feels safer, e.g. a guest that's
+querying hypervisor support is less likely to be led astray by all zeros
+than by a random feature bits being set.
 
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -399,8 +399,10 @@ static unsigned int aq_nic_map_skb(struc
- 				     dx_buff->len,
- 				     DMA_TO_DEVICE);
- 
--	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa)))
-+	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa))) {
-+		ret = 0;
- 		goto exit;
-+	}
- 
- 	first = dx_buff;
- 	dx_buff->len_pkt = skb->len;
+What about something like this?  Along with a comment and documentation...
 
+static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+{
+	struct kvm_cpuid_entry2 *max;
 
+	if (function >= 0x40000000 && function <= 0x4fffffff)
+		max = kvm_find_cpuid_entry(vcpu, function & 0xffffff00, 0);
+	else
+		max = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
+	return max && function <= max->eax;
+}
+
+> On Mon, Mar 2, 2020 at 8:58 PM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> >
+> > On Mon, Mar 02, 2020 at 08:25:31PM -0800, Jim Mattson wrote:
+> > > On Mon, Mar 2, 2020 at 7:25 PM Jim Mattson <jmattson@google.com> wrote:
+> > > >
+> > > > On Mon, Mar 2, 2020 at 11:57 AM Sean Christopherson
+> > > > <sean.j.christopherson@intel.com> wrote:
+> > > >
+> > > > > The bad behavior can be visually confirmed by dumping CPUID output in
+> > > > > the guest when running Qemu with a stable TSC, as Qemu extends the limit
+> > > > > of range 0x40000000 to 0x40000010 to advertise VMware's cpuid_freq,
+> > > > > without defining zeroed entries for 0x40000002 - 0x4000000f.
+> > > >
+> > > > I think it could be reasonably argued that this is a userspace bug.
+> > > > Clearly, when userspace explicitly supplies the results for a leaf,
+> > > > those results override the default CPUID values for that leaf. But I
+> > > > haven't seen it documented anywhere that leaves *not* explicitly
+> > > > supplied by userspace will override the default CPUID values, just
+> > > > because they happen to appear in some magic range.
+> > >
+> > > In fact, the more I think about it, the original change is correct, at
+> > > least in this regard. Your "fix" introduces undocumented and
+> > > unfathomable behavior.
+> >
+> > Heh, the takeaway from this is that whatever we decide on needs to be
+> > documented somewhere :-)
+> >
+> > I wouldn't say it's unfathomable, conceptually it seems like the intent
+> > of the hypervisor range was to mimic the basic and extended ranges.  The
+> > whole thing is arbitrary behavior.  Of course if Intel CPUs would just
+> > return 0s on undefined leafs it would be a lot less arbitrary :-)
+> >
+> > Anyways, I don't have a strong opinion on whether this patch stays or goes.
