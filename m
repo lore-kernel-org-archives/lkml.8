@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ACB9C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0A2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABB820870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C22B21739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258363;
-	bh=CObFl1cb5UvCfomOI018fcjAEGpaCccIR6+DPEZK/Do=;
+	s=default; t=1583258370;
+	bh=zGGFlC45Ss+kUat2WZSaxY+SC7iXu20FUF8Aw8wQ1Yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bcbg5nLlzLJxIarFruJm+QFRvkFcgcyvodiXI5VtZ54mHr7QzlQSTpRsQgTSGsGY7
-	 1BWAff1AlxiPLtT6SARxQHRwM2S3hFPMrcYzCC/uLyz0GGG0HQOACIMlpxN8EJglk8
-	 6Wn7VEUWrkDD22FZ4cZj8Ey42tDykeSY08kcwd5Q=
+	b=xx6QnXe+kO0AaOnqD6ln81+35z14qw3ZfzFeDhsALsyNsYebJ62uJJRNfzCIQ4dxK
+	 wOpogj5mugP5avM3LY/Mex9LRKpwrccPCb84G1iycElrQt3j3w9Z/3IMtMbt6RYP6H
+	 sP4tcHQIDclYMfCuB8RICgj55REa2VUonsFo3QqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387596AbgCCR7V (ORCPT
+        id S2387607AbgCCR70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:59:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42588 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:59:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731109AbgCCR7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:59:20 -0500
+        id S1731109AbgCCR7X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:59:23 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86CEE214D8;
-        Tue,  3 Mar 2020 17:59:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0114B20870;
+        Tue,  3 Mar 2020 17:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258360;
-        bh=CObFl1cb5UvCfomOI018fcjAEGpaCccIR6+DPEZK/Do=;
+        s=default; t=1583258362;
+        bh=zGGFlC45Ss+kUat2WZSaxY+SC7iXu20FUF8Aw8wQ1Yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VWKQKGO7pLNFg5S1uSR/jcmdENzXUukeauIeFc5rVFNH3yAEHmOT+jwBu6WcYfMR9
-         8SFpuepMGzka7TvHApJcpMOIsazWBtGHXAXMvMXpAz/DAOgHDT9ozVtajxEMs7d1/y
-         bbsXEVY7OZqnfL1yPYV3C63Srfz4UMaq0vTqpfO4=
+        b=VgVP9jCspfIWRyJoQSGh3Z7R00gOQoufN9IFzXJ0KsW2xf5t/vmPLy51ezju5z5kG
+         p4ftwUiEG1e54boXJNnida+DL3/x7prESJO36BddH2OSYEiL4lCq42L1/ZbE5C1gKV
+         0h16fDwYTE9ZWL9bALOYUTU/i8eEsbL7y5m/HdxQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Ajay Kaher <akaher@vmware.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 02/87] iwlwifi: pcie: fix rb_allocator workqueue allocation
-Date:   Tue,  3 Mar 2020 18:42:53 +0100
-Message-Id: <20200303174349.250817378@linuxfoundation.org>
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 20/87] net: ena: rss: store hash function as values and not bits
+Date:   Tue,  3 Mar 2020 18:43:11 +0100
+Message-Id: <20200303174351.885129454@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -60,64 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-commit 8188a18ee2e48c9a7461139838048363bfce3fef upstream
+[ Upstream commit 4844470d472d660c26149ad764da2406adb13423 ]
 
-We don't handle failures in the rb_allocator workqueue allocation
-correctly. To fix that, move the code earlier so the cleanup is
-easier and we don't have to undo all the interrupt allocations in
-this case.
+The device receives, stores and retrieves the hash function value as bits
+and not as their enum value.
 
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-[Ajay: Modified to apply on v4.19.y and v4.14.y]
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
+The bug:
+* In ena_com_set_hash_function() we set
+  cmd.u.flow_hash_func.selected_func to the bit value of rss->hash_func.
+ (1 << rss->hash_func)
+* In ena_com_get_hash_function() we retrieve the hash function and store
+  it's bit value in rss->hash_func. (Now the bit value of rss->hash_func
+  is stored in rss->hash_func instead of it's enum value)
+
+The fix:
+This commit fixes the issue by converting the retrieved hash function
+values from the device to the matching enum value of the set bit using
+ffs(). ffs() finds the first set bit's index in a word. Since the function
+returns 1 for the LSB's index, we need to subtract 1 from the returned
+value (note that BIT(0) is 1).
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 15 +++++++++++----
- 1 file changed, 11 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 4f5571123f70a..24da496151353 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3283,6 +3283,15 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 	spin_lock_init(&trans_pcie->reg_lock);
- 	mutex_init(&trans_pcie->mutex);
- 	init_waitqueue_head(&trans_pcie->ucode_write_waitq);
-+
-+	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
-+						   WQ_HIGHPRI | WQ_UNBOUND, 1);
-+	if (!trans_pcie->rba.alloc_wq) {
-+		ret = -ENOMEM;
-+		goto out_free_trans;
-+	}
-+	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
-+
- 	trans_pcie->tso_hdr_page = alloc_percpu(struct iwl_tso_hdr_page);
- 	if (!trans_pcie->tso_hdr_page) {
- 		ret = -ENOMEM;
-@@ -3485,10 +3494,6 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
- 		trans_pcie->inta_mask = CSR_INI_SET_MASK;
- 	 }
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index ebc36d15441ce..397fb49156a9a 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2134,7 +2134,11 @@ int ena_com_get_hash_function(struct ena_com_dev *ena_dev,
+ 	if (unlikely(rc))
+ 		return rc;
  
--	trans_pcie->rba.alloc_wq = alloc_workqueue("rb_allocator",
--						   WQ_HIGHPRI | WQ_UNBOUND, 1);
--	INIT_WORK(&trans_pcie->rba.rx_alloc, iwl_pcie_rx_allocator_work);
--
- #ifdef CONFIG_IWLWIFI_PCIE_RTPM
- 	trans->runtime_pm_mode = IWL_PLAT_PM_MODE_D0I3;
- #else
-@@ -3501,6 +3506,8 @@ out_free_ict:
- 	iwl_pcie_free_ict(trans);
- out_no_pci:
- 	free_percpu(trans_pcie->tso_hdr_page);
-+	destroy_workqueue(trans_pcie->rba.alloc_wq);
-+out_free_trans:
- 	iwl_trans_free(trans);
- 	return ERR_PTR(ret);
- }
+-	rss->hash_func = get_resp.u.flow_hash_func.selected_func;
++	/* ffs() returns 1 in case the lsb is set */
++	rss->hash_func = ffs(get_resp.u.flow_hash_func.selected_func);
++	if (rss->hash_func)
++		rss->hash_func--;
++
+ 	if (func)
+ 		*func = rss->hash_func;
+ 
 -- 
 2.20.1
 
