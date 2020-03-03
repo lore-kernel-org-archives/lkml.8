@@ -2,113 +2,131 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C094C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:28:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831A2C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C86020838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:28:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5964720838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:29:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ubjlZr8/"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iOMaPNxc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbgCCN2P (ORCPT
+        id S1728930AbgCCN3j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:28:15 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:46768 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbgCCN2P (ORCPT
+        Tue, 3 Mar 2020 08:29:39 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:37754 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbgCCN3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:28:15 -0500
-Received: by mail-qk1-f196.google.com with SMTP id u124so3269286qkh.13;
-        Tue, 03 Mar 2020 05:28:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k+RjkZNVBTQF8AzTpSWG5LJtd246vYUWKTAxkIql6+A=;
-        b=ubjlZr8/2D8teU3kDdJ1ja7NFLKRlRFYQh2yQl8Hf+UWLS0oYFNiSPRq+w8OH82yza
-         /ZHs6DMPovozJLnZuwLfhcOnO2NM1W6R6fHKOnNASOVMAToExkyYm2nd14sdxyNDDZz7
-         7D4Dp5HHVf8jD1ODqLYJaVACJmQ1wPc7Imr5Mbb1zSkJkoBhO8DdOyRdItV8sKizqZ+C
-         0q/j42mk3+AwbiepGWVxBb5wC5CSx9AQq46ZTXBOlUci8fT5mfyG6gd/UcSPnIGnMb5D
-         9hksY2ZysGt+cuG0SFidqvROLBGIjZAUe0UgLRpFpFoO27Z5K3g6UPBOOJnGC1ZqMEnB
-         RLyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k+RjkZNVBTQF8AzTpSWG5LJtd246vYUWKTAxkIql6+A=;
-        b=jloYufHAsnas85oQ5ciMsyPEH/CSR90CMLP1luMyZnJuZ+kMw97VaCYuOYlXQt0gYI
-         7fOpnnZiw2wwMpI4D7hQ7j0Q/I9BcXAD/jvp3wqhQ2LrIaQsAXwYV0/VJggO2Vmf8sJx
-         0CfxPf6FBDJ/nqYccq//2yM3uMJuxVa+Zh0XRMxyATUH8lRpUlAht1I1whr9MgrPEAYz
-         1kal8z1TJqHW8YgkXVJ8cmHV8Xzk7YHvBvs+iq9cKMBOoJcUbnwicBO+V7pKNlKKu4yg
-         fzsayCcvZSnex/cQ7MuUvNc/mpdroB2bK4Nd/29I1P+LaxcShmbU/6QiHPEHjUG+nlwC
-         Aeuw==
-X-Gm-Message-State: ANhLgQ1QWBwf8Oq6PnE7wHw1npb5iivUKpcXWoM8WoQOrSjt5PopeD4e
-        Z6Zmd3hkje0DJuYjAbbFw2fvyUJ3fc8CtiUfJOI=
-X-Google-Smtp-Source: ADFU+vu04x+YnOzO9JpwN7FD1ENNIDZ5TTmQijEEFjWkxq672wtKoTEdKtSNfTli5L1H3kjL7ZhIlHNPAR1qn952Wzg=
-X-Received: by 2002:a05:620a:806:: with SMTP id s6mr4228410qks.235.1583242094163;
- Tue, 03 Mar 2020 05:28:14 -0800 (PST)
+        Tue, 3 Mar 2020 08:29:38 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023DT1K8045670;
+        Tue, 3 Mar 2020 13:29:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=lywn+pXwQavPqQdE6SkAkcnIUijT/MHwbu+5k7sKG5c=;
+ b=iOMaPNxccKV9x+LC9JY55/fzfYHh18XIPa3G7BEf/pGFKBm7jxoR8Ixcl7S49Gpa07Kk
+ sN9YF4cVGXAqZBkDoShgb0L614lKbX+w/8QxEtUETvDAdB44VBAJf7PCtYZfd6viyONp
+ CQxIuT5AO2+/vT02/6QyfX81UqjQQ2qgVYYMxr7WCSZFYd2I9rceXgnlElWcx9JDlfRa
+ 9TLJSsd0sBjsjH02b46fbMGvqaXv//kRQ6Qa0OdU4ARhJML0ChGUHFw1/7vJ4gaRTsli
+ udV96Kh62uTDnqibDRzo6McLaQKdmji9K96XCIq3io8xTZ6LCo3azEjfiArMgbyxSndQ fw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yghn32yg2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 13:29:01 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023DR2RR127560;
+        Tue, 3 Mar 2020 13:29:00 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2yg1gxeuuk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 13:29:00 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 023DSvk6001632;
+        Tue, 3 Mar 2020 13:28:58 GMT
+Received: from [192.168.1.14] (/114.88.246.185)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Mar 2020 05:28:57 -0800
+Subject: Re: [PATCH] blktrace: fix dereference after null check
+To:     Cengiz Can <cengiz@kernel.wtf>, Jens Axboe <axboe@kernel.dk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200303073358.57799-1-cengiz@kernel.wtf>
+From:   Bob Liu <bob.liu@oracle.com>
+Message-ID: <ec24c6d8-617f-1460-0420-bc2ac3f346c6@oracle.com>
+Date:   Tue, 3 Mar 2020 21:29:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-References: <20200302182552.724cf197@canb.auug.org.au> <ccba6f43-a803-62e7-193f-cba0704a163a@infradead.org>
- <CACRpkdZ3guZGLmZwtQSMT+NV=wL5dr4pdwKb7vhQ4Ut_K0dKYA@mail.gmail.com>
-In-Reply-To: <CACRpkdZ3guZGLmZwtQSMT+NV=wL5dr4pdwKb7vhQ4Ut_K0dKYA@mail.gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 3 Mar 2020 21:28:02 +0800
-Message-ID: <CADBw62o-nvBu4QLD4f10sFCd4E+C68ghUwaUPfL-LeD5Ctrpog@mail.gmail.com>
-Subject: Re: linux-next: Tree for Mar 2 (pinctrl/sprd/pinctrl-sprd.c)
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Baolin Wang <baolin.wang@spreadtrum.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200303073358.57799-1-cengiz@kernel.wtf>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=2 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003030103
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
+ impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1011 suspectscore=2
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 3/3/20 3:33 PM, Cengiz Can wrote:
+> There was a recent change in blktrace.c that added a RCU protection to
+> `q->blk_trace` in order to fix a use-after-free issue during access.
+> 
+> However the change missed an edge case that can lead to dereferencing of
+> `bt` pointer even when it's NULL:
+> 
+> ```
+>         bt->act_mask = value; // bt can still be NULL here
+> ```
+> 
+> Added a reassignment into the NULL check block to fix the issue.
+> 
+> Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
+> 
+> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+> ---
+>  Huge thanks goes to Steven Rostedt for his assistance.
+> 
+>  kernel/trace/blktrace.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index 4560878f0bac..29ea88f10b87 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -1896,8 +1896,10 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
+>  	}
+> 
+>  	ret = 0;
+> -	if (bt == NULL)
+> +	if (bt == NULL) {
+>  		ret = blk_trace_setup_queue(q, bdev);
+> +		bt = q->blk_trace;
 
-On Tue, Mar 3, 2020 at 8:44 PM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Mon, Mar 2, 2020 at 5:36 PM Randy Dunlap <rdunlap@infradead.org> wrote:
-> > On 3/1/20 11:25 PM, Stephen Rothwell wrote:
-> > > Hi all,
-> > >
-> > > Changes since 20200228:
-> > >
-> >
-> > on i386 or x86_64:
-> >
-> > kconfig warnings and build error:
-> >
-> > WARNING: unmet direct dependencies detected for PINCTRL_SPRD
-> >   Depends on [n]: PINCTRL [=y] && OF [=n] && (ARCH_SPRD || COMPILE_TEST [=y])
-> >   Selected by [m]:
-> >   - PINCTRL_SPRD_SC9860 [=m] && PINCTRL [=y]
-> >
-> > ../drivers/pinctrl/sprd/pinctrl-sprd.c: In function 'sprd_dt_node_to_map':
-> > ../drivers/pinctrl/sprd/pinctrl-sprd.c:282:8: error: implicit declaration of function 'pinconf_generic_parse_dt_config'; did you mean 'pinconf_generic_dump_config'? [-Werror=implicit-function-declaration]
-> >   ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
-> >         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >         pinconf_generic_dump_config
->
-> Should be fixed with
->
-> depends on OF=y
->
-> in drivers/pinctrl/sprd/Kconfig
->
-> Baolin are you onto it?
+The return value 'ret' should be judged, it's wrong to set 'bt' if blk_trace_setup_queue()
+return failure.
 
-Yes, I've sent out a patch to fix this issue, and I saw you've applied it.
-Sorry, I forgot replying in this thread.
+> +	}
+> 
+>  	if (ret == 0) {
+>  		if (attr == &dev_attr_act_mask)
+> --
+> 2.25.1
+> 
 
--- 
-Baolin Wang
