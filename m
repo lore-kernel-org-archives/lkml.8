@@ -2,118 +2,113 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBF5C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:24:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF935C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD8EB20828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:24:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iOUOcnNn"
+	by mail.kernel.org (Postfix) with ESMTP id B466A2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbgCCGYp (ORCPT
+        id S1727611AbgCCGZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:24:45 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43647 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727517AbgCCGYp (ORCPT
+        Tue, 3 Mar 2020 01:25:01 -0500
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:46791 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727458AbgCCGZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:24:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583216682;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=0uDbQSrL5bY0m8ESxsGOghE60Coq5rSinBwFrYLBRO8=;
-        b=iOUOcnNnF5yTfIxsyIRmmfiQJPxZ4dLrjalUIFvsDpC7tnvSwpIALMhuyWQg1nliE3qdG4
-        /i1oTH1eYckKDgtEnVwrXpWucbbuynmXbfwDYsbKOAopv8X2hRfil30PI9rHQOR6PrfiSI
-        sgPCarPV5j1x5ZLrCffKiHIXLhpbqfA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-78-2eioPBa8MCibtDp9ku-Nuw-1; Tue, 03 Mar 2020 01:24:40 -0500
-X-MC-Unique: 2eioPBa8MCibtDp9ku-Nuw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 514041005510;
-        Tue,  3 Mar 2020 06:24:39 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-150.ams2.redhat.com [10.36.116.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 632E360C05;
-        Tue,  3 Mar 2020 06:24:38 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id A4BCC17535; Tue,  3 Mar 2020 07:24:37 +0100 (CET)
-Date:   Tue, 3 Mar 2020 07:24:37 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Alistair Francis <alistair23@gmail.com>
-Cc:     Alistair Francis <alistair.francis@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org, daniel@ffwll.ch,
-        airlied@linux.ie, Khem Raj <raj.khem@gmail.com>
-Subject: Re: [PATCH] drm/bochs: Remove vga write
-Message-ID: <20200303062437.tjoje5huts6oldrv@sirius.home.kraxel.org>
-References: <20200227210454.18217-1-alistair.francis@wdc.com>
- <20200228095748.uu4sqkz6y477eabc@sirius.home.kraxel.org>
- <CAKmqyKOTjyRL9vxZrZW8Q+yBM0n-Nw-o-Cn3dUDDfAAa7Nswrg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKmqyKOTjyRL9vxZrZW8Q+yBM0n-Nw-o-Cn3dUDDfAAa7Nswrg@mail.gmail.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Tue, 3 Mar 2020 01:25:01 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=teawaterz@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0TrXXqrK_1583216687;
+Received: from localhost(mailfrom:teawaterz@linux.alibaba.com fp:SMTPD_---0TrXXqrK_1583216687)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 03 Mar 2020 14:24:52 +0800
+From:   Hui Zhu <teawater@gmail.com>
+To:     fengguang.wu@qq.com, linux-kernel@vger.kernel.org
+Cc:     Hui Zhu <teawater@gmail.com>, Hui Zhu <teawaterz@linux.alibaba.com>
+Subject: [PATCH for vm-scalability] Makefile: Add static build option
+Date:   Tue,  3 Mar 2020 14:24:44 +0800
+Message-Id: <1583216684-29427-1-git-send-email-teawater@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 02:14:02PM -0800, Alistair Francis wrote:
-> On Fri, Feb 28, 2020 at 1:57 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
-> >
-> > On Thu, Feb 27, 2020 at 01:04:54PM -0800, Alistair Francis wrote:
-> > > The QEMU model for the Bochs display has no VGA memory section at offset
-> > > 0x400 [1]. By writing to this register Linux can create a write to
-> > > unassigned memory which depending on machine and architecture can result
-> > > in a store fault.
-> > >
-> > > I don't see any reference to this address at OSDev [2] or in the Bochs
-> > > source code.
-> > >
-> > > Removing this write still allows graphics to work inside QEMU with
-> > > the bochs-display.
-> >
-> > It's not that simple.  The driver also handles the qemu stdvga (-device
-> > VGA, -device secondary-vga) which *does* need the vga port write.
-> > There is no way for the guest to figure whenever the device is
-> > secondary-vga or bochs-display.
-> >
-> > So how about fixing things on the host side?  Does qemu patch below
-> > help?
-> 
-> That patch looks like it will fix the problem, but it doesn't seem
-> like the correct fix. I would rather avoid adding a large chunk of
-> dummy I/O to handle the two devices.
+Sometimes vm-scalability needs to work in an environment without an
+libraries.  Supporting static build is helpful.
 
-It's just a single handler for the parent mmio region, so we have a
-defined default action instead of undefined behavior.
+This commit add static build option:
+make STATIC=1
 
-Patch just posted to qemu-devel, lets see what others think ...
+Signed-off-by: Hui Zhu <teawaterz@linux.alibaba.com>
+---
+ Makefile | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
-> > Maybe another possible approach is to enable/disable vga access per
-> > arch.  On x86 this doesn't cause any problems.  I guess you are on
-> > risc-v?
-> 
-> I would prefer this option. I do see this on RISC-V, but I suspect the
-> issue will appear on other architectures (although how they handle I/O
-> failures in QEMU is a different story).
-> 
-> Can I just do the VGA write if x86?
-
-I know ppc needs it too.  Not sure about other architectures.  I'd
-suggest to do it the other way around: blacklist known-problematic
-archs.
-
-cheers,
-  Gerd
+diff --git a/Makefile b/Makefile
+index 73b2ff3..eadc090 100644
+--- a/Makefile
++++ b/Makefile
+@@ -6,6 +6,13 @@ EXECUTABLES :=	usemem \
+ 		usemem_direct_write \
+ 		usemem_mbind
+ 
++ifdef STATIC
++	EXTRA_LDFLAGS := -static
++else
++	EXTRA_LDFLAGS :=
++endif
++
++
+ all:	$(EXECUTABLES)
+ 
+ clean:
+@@ -15,31 +22,31 @@ distclean: clean
+ 	rm -f $(EXECUTABLES)
+ 
+ usemem: usemem.o usemem_hugepages.o usemem_mincore.o
+-	gcc -pthread -Wall -O -g usemem_mincore.o usemem_hugepages.o usemem.o -o usemem
++	gcc -pthread -Wall -O -g $(EXTRA_LDFLAGS) usemem_mincore.o usemem_hugepages.o usemem.o -o usemem
+ 
+ usemem.o: usemem.c
+-	gcc -O -c -Wall -g  usemem.c -o usemem.o
++	gcc -O -c -Wall -g $(EXTRA_LDFLAGS) usemem.c -o usemem.o
+ 
+ usemem_hugepages.o: usemem_hugepages.c
+-	gcc -Wall -O -c -g usemem_hugepages.c -o usemem_hugepages.o
++	gcc -Wall -O -c -g $(EXTRA_LDFLAGS) usemem_hugepages.c -o usemem_hugepages.o
+ 
+ usemem_mincore.o: usemem_mincore.c
+-	gcc -Wall -O -c -g usemem_mincore.c -o usemem_mincore.o
++	gcc -Wall -O -c -g $(EXTRA_LDFLAGS) usemem_mincore.c -o usemem_mincore.o
+ 
+ usemem_migrate: usemem_migrate.c
+-	gcc -Wall -O -g -o usemem_migrate usemem_migrate.c -lnuma
++	gcc -Wall -O -g $(EXTRA_LDFLAGS) -o usemem_migrate usemem_migrate.c -lnuma
+ 
+ usemem_ksm: usemem_ksm.c usemem_hugepages.c
+-	gcc -Wall -g -o usemem_ksm usemem_ksm.c usemem_hugepages.c
++	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_ksm usemem_ksm.c usemem_hugepages.c
+ 
+ usemem_mbind: usemem_mbind.c
+-	gcc -Wall -g -o usemem_mbind usemem_mbind.c -lnuma
++	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_mbind usemem_mbind.c -lnuma
+ 
+ usemem_ksm_hugepages: usemem_ksm_hugepages.c
+-	gcc -Wall -g -o usemem_ksm_hugepages usemem_ksm_hugepages.c
++	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_ksm_hugepages usemem_ksm_hugepages.c
+ 
+ usemem_direct_write: usemem_direct_write.c
+-	gcc -Wall -g -o usemem_direct_write usemem_direct_write.c
++	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_direct_write usemem_direct_write.c
+ 
+ usemem_remap: usemem_remap.c
+-	gcc -Wall -g -o usemem_remap usemem_remap.c
++	gcc -Wall -g $(EXTRA_LDFLAGS) -o usemem_remap usemem_remap.c
+-- 
+2.7.4
 
