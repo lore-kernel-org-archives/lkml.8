@@ -2,158 +2,90 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE64DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F82C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869642083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:50:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5844C20828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="MW2mTsXD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9/JqnZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729057AbgCCOud (ORCPT
+        id S1729670AbgCCOwN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:50:33 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35665 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729301AbgCCOuc (ORCPT
+        Tue, 3 Mar 2020 09:52:13 -0500
+Received: from mail-lf1-f41.google.com ([209.85.167.41]:35194 "EHLO
+        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729138AbgCCOwN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:50:32 -0500
-Received: by mail-wm1-f68.google.com with SMTP id m3so3149577wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:50:31 -0800 (PST)
+        Tue, 3 Mar 2020 09:52:13 -0500
+Received: by mail-lf1-f41.google.com with SMTP id z9so3013277lfa.2;
+        Tue, 03 Mar 2020 06:52:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:autocrypt:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=95qYeRJ+EqgeIXpFElFGwO6Mzf1AwrTksppp0Wb/3Ic=;
-        b=MW2mTsXDxJgpJP9zD2yidQQr6W3aDEvzV9+bW76HRAKRq3iHYe/RK8T5ISunb5pcJZ
-         M4UT1WWHuL1g59APzkkcurRfuOo5XfaRQMFwQ3u41HnYv4UPS/fwtp0urYGZgMQwgFUM
-         AzTG9JO2zbHiXfwSSDbjvUAqExvzu5X3iO/Q2TFu56qiIx7qL48IGiqW20lgvpnirSYF
-         PA3+IxmsfPlyK7tPbQqbZdXDChhz/Aqy/Ld+wgfObzXj4WejwBT4h/utPlJOpuf6ZRRp
-         AvWLdTtctOPFoaUVXfwTdzSiuzK1eNJhfmRfNfcA6kJj9TxRQpfZBjmflLquSejPOw9m
-         Vg0g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YSesgEwKuIBfRjb3D6rghMgTaq2QLhVxxb+yvFprsHU=;
+        b=N9/JqnZo39MgJ7UX+Yc1KAct18f+YcXWyJAE3ApycATyPTtF7RgVKrXa83f6+2Bq7d
+         L8Z12akelacBMh0bc7uF8beWJUD19foqto6e+VJIIhKV72D3bnB+20Nna/TWtOKanzBl
+         LCnWP4W6W7msmSTj5rh8pehEEmT4n5oPnPG8XxfxEWp/tpZ7059Ae6LLiCqdaVQJHaNI
+         j+Z4U1uFeYtXqEPPDavjKhrn+otqHkncSq+tdobkNEKhlaeADZOnZthQbato8RLX4yB8
+         FW6EPxoutKio9w3A5StQUgozmvyVjW6NAJit3tpxR3QZayUkKLEB13THJrZjbLPo7444
+         nRog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=95qYeRJ+EqgeIXpFElFGwO6Mzf1AwrTksppp0Wb/3Ic=;
-        b=hry24kX11MzgqbrQdv77cfrc7mFUR3IM1JJF5FprYsvaNXWen3slmkmHHzyHb5q8bh
-         +63i3pVPrKoMcoQNUe8qdHT6VrEDaHRSQnUwZPMNcql/S/Zs1zlZmTCekYzo10VW7yqh
-         +sOOCUYy2OWIPxTaDOwbYQZ9jdP8DLpJhr/CcT6D2S4OBMWos/ZFadKB/0yNRwD+ms7a
-         leWo9Huua7PXE/1bbbSqB9/xgbj4UN53EjyT8jBnX/RTMfEI8IvNrLbDyIRRPpZGIFqA
-         qvTEiE/dSdDalhCozdwdUIpaNhIUF62msXbHgx82+0RCE8msZOTTTmv557VecDXH4zdW
-         cY2g==
-X-Gm-Message-State: ANhLgQ0aqoBkU7DcPIvzonenjJuR3TQH2XJHjn+MtRgGAUhbr7Zni+16
-        MCbtsTjwKOoef0iHdVycd4S1jCGN5UsD5Q==
-X-Google-Smtp-Source: ADFU+vv1VI7ZYNZH0PZA6DiT24j1TFj+59KahgZVzwD2Y8KEHkyGKOD5nMG6V+xPjWJaJ0hILFx7RQ==
-X-Received: by 2002:a7b:c18f:: with SMTP id y15mr4958689wmi.168.1583247030313;
-        Tue, 03 Mar 2020 06:50:30 -0800 (PST)
-Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id i12sm19708508wrw.64.2020.03.03.06.50.29
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YSesgEwKuIBfRjb3D6rghMgTaq2QLhVxxb+yvFprsHU=;
+        b=tzaLx5T7s8tPfI+Hqd10PoisiSyGEoU60pKzzhW6XH84241lkqDnT/Ms7hzOqYRulq
+         mvMjgZwwJ3A31xNGMKYxCYalMYcobNCf/IRxy1LwTKXitaPcKUnpsterP5ebkdkbYdVf
+         6aFy3GTq7MBKEFBwK1OY4JPeLzkoh7G8YcW9TfYyKs991y1dfEGudTn61ltiyiyE7Ac+
+         JJdsHzM5joTlJo2HddAf7XLWzgPLpXfqDhjQ1/tRuhr3AZp94ovg7dXCGrq5R40izKME
+         s+Lfb6FUAuOlbzB2vkS4Q9+rxIdyKibdzYzTEdguXPSVFJUfzBetDrXDj57NIrWbSVb7
+         vfbA==
+X-Gm-Message-State: ANhLgQ2/WbR9twXMW3DPzz1mXaNFGWSiVkTiB6r/UHtRUtcgjGkdQJgD
+        ByVSkRxIEOIOeypcuR/4ltP18Vl2
+X-Google-Smtp-Source: ADFU+vt+Hda+OcEsW87pxEsFqBcqlkHXCcQzYKTyKxjdeDZNADrgVxUP8SzNLJpKFRCEfBtF4gBglQ==
+X-Received: by 2002:ac2:4911:: with SMTP id n17mr3069057lfi.79.1583247129730;
+        Tue, 03 Mar 2020 06:52:09 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id i5sm13008574ljj.29.2020.03.03.06.52.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 06:50:29 -0800 (PST)
-Subject: Re: [PATCH 1/2] dt-bindings: arm: amlogic: add support for the
- Beelink GT-King
-To:     Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1582985353-83371-1-git-send-email-christianshewitt@gmail.com>
- <1582985353-83371-2-git-send-email-christianshewitt@gmail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <e5f7ca01-af85-bb39-b12f-93469da54b83@baylibre.com>
-Date:   Tue, 3 Mar 2020 15:50:29 +0100
+        Tue, 03 Mar 2020 06:52:08 -0800 (PST)
+Subject: Re: [PATCH v2] media: staging: tegra-vde: Use
+ devm_platform_ioremap_resource_byname()
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <20200302172904.460-1-digetx@gmail.com>
+ <20200303073134.GF4118@kadam>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <0e4c875b-e859-2621-9252-dbd6a69d244c@gmail.com>
+Date:   Tue, 3 Mar 2020 17:52:07 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1582985353-83371-2-git-send-email-christianshewitt@gmail.com>
+In-Reply-To: <20200303073134.GF4118@kadam>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/02/2020 15:09, Christian Hewitt wrote:
-> The Shenzen AZW (Beelink) GT-King is based on the Amlogic W400 reference
-> board with an S922X chip.
+03.03.2020 10:31, Dan Carpenter пишет:
+> Thanks!
 > 
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/amlogic.yaml | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/amlogic.yaml b/Documentation/devicetree/bindings/arm/amlogic.yaml
-> index f74aba4..6bf9bbc 100644
-> --- a/Documentation/devicetree/bindings/arm/amlogic.yaml
-> +++ b/Documentation/devicetree/bindings/arm/amlogic.yaml
-> @@ -148,6 +148,7 @@ properties:
->        - description: Boards with the Amlogic Meson G12B S922X SoC
->          items:
->            - enum:
-> +              - azw,gtking
->                - hardkernel,odroid-n2
->                - khadas,vim3
->                - ugoos,am6
-> 
+> Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+Awesome, thank you :)
