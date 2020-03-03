@@ -2,121 +2,71 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2DB2C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6CBC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BDA720CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:09:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J55yNkh6"
+	by mail.kernel.org (Postfix) with ESMTP id 7C60920CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgCCHJ4 (ORCPT
+        id S1727541AbgCCHNS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:09:56 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:24434 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725879AbgCCHJz (ORCPT
+        Tue, 3 Mar 2020 02:13:18 -0500
+Received: from cmccmta2.chinamobile.com ([221.176.66.80]:7362 "EHLO
+        cmccmta2.chinamobile.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbgCCHNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:09:55 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583219394; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=g1igezX6bhKy+1gVBsKMmqM1Yvay0uel4aitex+BcCs=; b=J55yNkh6E/KtRxGghg4ql7IL6O6heuv9BBtaGacVMN68K89Zi7EFOLIg/3C3+KE8nyRSGQFx
- IPXt8dnGn84WqLV9e//1J6HPhb2GXKW3HFqvbVpVlmhWbgpYJ1D8qNFa45gzesq29MR2xjsa
- 4w4QvbOwPCXo0+K+Meugwb8i6kQ=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5e02bd.7fee8e273538-smtp-out-n01;
- Tue, 03 Mar 2020 07:09:49 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D806BC43383; Tue,  3 Mar 2020 07:09:47 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB6BBC433A2;
-        Tue,  3 Mar 2020 07:09:43 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB6BBC433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v2 3/4] arm64: dts: qcom: sc7180: Enable soc sleep stats
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        devicetree@vger.kernel.org
-References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
- <1582274986-17490-4-git-send-email-mkshah@codeaurora.org>
- <20200228063444.GA857139@builder>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <aef0ea05-7941-0a9a-ab0f-875e5ebcb899@codeaurora.org>
-Date:   Tue, 3 Mar 2020 12:39:41 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 02:13:18 -0500
+Received: from spf.mail.chinamobile.com (unknown[172.16.121.19]) by rmmx-syy-dmz-app06-12006 (RichMail) with SMTP id 2ee65e5e035d2c5-c6d2e; Tue, 03 Mar 2020 15:12:30 +0800 (CST)
+X-RM-TRANSID: 2ee65e5e035d2c5-c6d2e
+X-RM-TagInfo: emlType=0                                       
+X-RM-SPAM-FLAG: 00000000
+Received: from localhost.localdomain (unknown[112.3.208.44])
+        by rmsmtp-syy-appsvr10-12010 (RichMail) with SMTP id 2eea5e5e03553e9-cdb48;
+        Tue, 03 Mar 2020 15:12:30 +0800 (CST)
+X-RM-TRANSID: 2eea5e5e03553e9-cdb48
+From:   tangbin <tangbin@cmss.chinamobile.com>
+To:     gregkh@linuxfoundation.org
+Cc:     jslaby@suse.com, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        tangbin <tangbin@cmss.chinamobile.com>
+Subject: [PATCH 2/2] tty:serial:mvebu-uart:fix a wrong return
+Date:   Tue,  3 Mar 2020 15:13:09 +0800
+Message-Id: <20200303071309.17172-1-tangbin@cmss.chinamobile.com>
+X-Mailer: git-send-email 2.20.1.windows.1
 MIME-Version: 1.0
-In-Reply-To: <20200228063444.GA857139@builder>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+in this place,the right return should be
+return PTR_ERR(),not return -PTR_ERR()
 
-On 2/28/2020 12:04 PM, Bjorn Andersson wrote:
-> On Fri 21 Feb 00:49 PST 2020, Maulik Shah wrote:
->
->> SoC sleep stats provides various low power mode stats.
->>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> index 8011c5f..eee6d92 100644
->> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->> @@ -745,6 +745,11 @@
->>   			};
->>   		};
->>   
->> +		rpmh_sleep_stats: soc-sleep-stats@c3f0000 {
-> I don't see any reason to reference this node, so you should be able to
-> omit the label(?)
-Done. Will update in next revision.
+Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
+---
+ drivers/tty/serial/mvebu-uart.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Maulik
->
->> +			compatible = "qcom,rpmh-sleep-stats";
->> +			reg = <0 0xc3f0000 0 0x400>;
-> Please pad the address to 8 digits and sort the nodes by address.
->
-> Regards,
-> Bjorn
-Done. Will update in next revision.
-
-Thanks,
-Maulik
->
->> +		};
->> +
->>   		tcsr_mutex_regs: syscon@1f40000 {
->>   			compatible = "syscon";
->>   			reg = <0 0x01f40000 0 0x40000>;
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
-
+diff --git a/drivers/tty/serial/mvebu-uart.c b/drivers/tty/serial/mvebu-uart.c
+index c12a12556..4e9a59071 100644
+--- a/drivers/tty/serial/mvebu-uart.c
++++ b/drivers/tty/serial/mvebu-uart.c
+@@ -851,7 +851,7 @@ static int mvebu_uart_probe(struct platform_device *pdev)
+ 
+ 	port->membase = devm_ioremap_resource(&pdev->dev, reg);
+ 	if (IS_ERR(port->membase))
+-		return -PTR_ERR(port->membase);
++		return PTR_ERR(port->membase);
+ 
+ 	mvuart = devm_kzalloc(&pdev->dev, sizeof(struct mvebu_uart),
+ 			      GFP_KERNEL);
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+2.20.1.windows.1
+
+
+
