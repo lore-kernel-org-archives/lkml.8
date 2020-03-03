@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A031FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E05C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DFF724680
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D5B824699
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203752;
-	bh=vOSBD3sjHzK6riGbNN96CcuhfOs6Oto3eXhPhUlUcHs=;
+	s=default; t=1583203759;
+	bh=boJ5gw0h0Qgei1gSZTEeFQR9eGRccGArYE5YnhpcY6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZiPB7u7+gkKbNNgm43bDD+I+AS/ylsIuTHHjX1p1xQRTnCz53HEe8cktrEn0C06cK
-	 hfvbnMHqEyI6W74Tpxq7O6wGtsxHrQb2xVT8Ihy9kZHUjekQdUCPKtw88UWEsOsrhX
-	 D3ZG6crUiu3Fyqau0wIshSWz2SoxNiigCVqKK25w=
+	b=ZBPseVfRIEoO3g0Ivs085GJzu3abkdUfTkN7QmVf3kOxlEkrWNgvMinXVXYRbmZ49
+	 pEsFwh/exqjU83dj1ASpyuo/oLLsJtVagqfUTl+qfvpmpI2wohejGbngquFH2gB42B
+	 H1lyLxSqXRYrA3C6Y0x1uC30b2ExQFb/6JUeqGXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728154AbgCCCtL (ORCPT
+        id S1728739AbgCCCtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:49:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44732 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:49:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728571AbgCCCsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:50 -0500
+        id S1728565AbgCCCtL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 19C2E24699;
-        Tue,  3 Mar 2020 02:48:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81477246BB;
+        Tue,  3 Mar 2020 02:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203729;
-        bh=vOSBD3sjHzK6riGbNN96CcuhfOs6Oto3eXhPhUlUcHs=;
+        s=default; t=1583203750;
+        bh=boJ5gw0h0Qgei1gSZTEeFQR9eGRccGArYE5YnhpcY6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wUPWWxIVr8Im0SifjCUsvyYX5x1+HBoMauyeZvn9xo8yOCNJ/0aOUAFJJ+zOmgz7s
-         uLJBgpHBY7qLS2qVEtexQwLNTBqZA+xHMxFb903voiPRz0bcRTALKqnCw5F5eFQ63C
-         rihPkAk8FhkxzCpS361sL1y9lx/BVADJDfXfViHQ=
+        b=v8l1s0eN7dKoa44aGUfqPQweNi1ZLMkA3WNq97rfCo7GAic0d/BxDPqO0j6rWpzIp
+         3YOkDC+b8njHRKEr2bK6RRCeyB0mzQq82t3RcppmMDCDUo73BfFfvvpqKKFtI7asdB
+         SZH/OE9E9aqINcq62qAjwVrn5bd0gNuAkoNdKbe4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hangbin Liu <liuhangbin@gmail.com>,
-        Petr Machata <petrm@mellanox.com>,
+Cc:     Pavel Belous <pbelous@marvell.com>,
+        Christophe Vu-Brugier <cvubrugier@fastmail.fm>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 58/58] selftests: forwarding: vxlan_bridge_1d: use more proper tos value
-Date:   Mon,  2 Mar 2020 21:47:40 -0500
-Message-Id: <20200303024740.9511-58-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/32] net: atlantic: fix use after free kasan warn
+Date:   Mon,  2 Mar 2020 21:48:33 -0500
+Message-Id: <20200303024851.10054-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
-References: <20200303024740.9511-1-sashal@kernel.org>
+In-Reply-To: <20200303024851.10054-1-sashal@kernel.org>
+References: <20200303024851.10054-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -61,39 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hangbin Liu <liuhangbin@gmail.com>
+From: Pavel Belous <pbelous@marvell.com>
 
-[ Upstream commit 9b64208f74fbd0e920475ecfe9326f8443fdc3a5 ]
+[ Upstream commit a4980919ad6a7be548d499bc5338015e1a9191c6 ]
 
-0x11 and 0x12 set the ECN bits based on RFC2474, it would be better to avoid
-that. 0x14 and 0x18 would be better and works as well.
+skb->len is used to calculate statistics after xmit invocation.
 
-Reported-by: Petr Machata <petrm@mellanox.com>
-Fixes: 4e867c9a50ff ("selftests: forwarding: vxlan_bridge_1d: fix tos value")
-Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Under a stress load it may happen that skb will be xmited,
+rx interrupt will come and skb will be freed, all before xmit function
+is even returned.
+
+Eventually, skb->len will access unallocated area.
+
+Moving stats calculation into tx_clean routine.
+
+Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
+Reported-by: Christophe Vu-Brugier <cvubrugier@fastmail.fm>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Pavel Belous <pbelous@marvell.com>
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c  | 4 ----
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.c | 7 +++++--
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
-index 353613fc19475..ce6bea9675c07 100755
---- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
-+++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
-@@ -516,9 +516,9 @@ test_tos()
- 	RET=0
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+index 8cc34b0bedc3a..d1de11b575f44 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@ -530,10 +530,6 @@ int aq_nic_xmit(struct aq_nic_s *self, struct sk_buff *skb)
+ 	if (likely(frags)) {
+ 		err = self->aq_hw_ops->hw_ring_tx_xmit(self->aq_hw,
+ 						       ring, frags);
+-		if (err >= 0) {
+-			++ring->stats.tx.packets;
+-			ring->stats.tx.bytes += skb->len;
+-		}
+ 	} else {
+ 		err = NETDEV_TX_BUSY;
+ 	}
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
+index b3c7994d73eb1..b03e5fd4327e3 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
+@@ -162,9 +162,12 @@ bool aq_ring_tx_clean(struct aq_ring_s *self)
+ 			}
+ 		}
  
- 	tc filter add dev v1 egress pref 77 prot ip \
--		flower ip_tos 0x11 action pass
--	vxlan_ping_test $h1 192.0.2.3 "-Q 0x11" v1 egress 77 10
--	vxlan_ping_test $h1 192.0.2.3 "-Q 0x12" v1 egress 77 0
-+		flower ip_tos 0x14 action pass
-+	vxlan_ping_test $h1 192.0.2.3 "-Q 0x14" v1 egress 77 10
-+	vxlan_ping_test $h1 192.0.2.3 "-Q 0x18" v1 egress 77 0
- 	tc filter del dev v1 egress pref 77 prot ip
+-		if (unlikely(buff->is_eop))
+-			dev_kfree_skb_any(buff->skb);
++		if (unlikely(buff->is_eop)) {
++			++self->stats.rx.packets;
++			self->stats.tx.bytes += buff->skb->len;
  
- 	log_test "VXLAN: envelope TOS inheritance"
++			dev_kfree_skb_any(buff->skb);
++		}
+ 		buff->pa = 0U;
+ 		buff->eop_index = 0xffffU;
+ 		self->sw_head = aq_ring_next_dx(self, self->sw_head);
 -- 
 2.20.1
 
