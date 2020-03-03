@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78ADC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05288C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A394F2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA6B208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257499;
-	bh=cPIDczceOYeNftk8UdQbndOtgBdNXF1w/uSqn6SUOS0=;
+	s=default; t=1583257504;
+	bh=VHB/2UQrEaUcS1UIdXBYTk2YJO1lakDX0jwhcHajoT4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i2ft6ut9T9xXLyn87bjWGWHEK+XV981+vA2s8SCNwYhfjDIclCBfgzQmAiDhcqoPb
-	 iUoRpAQ5KiRy8TCce4kiVzowcTOWOdJlVYbCk1VvJ7GILDEo/NInjZMdJA8sZXr7op
-	 bTZTlseuUHd5UkxQ76lQpAwxEix4LeYkXZsFJ9dk=
+	b=qfZCZeXfiyvIWPUW4SliVM6OKSRJHzYSJIa6lOG26gkp3Nqy3xx3TYGVfvhg6vwLa
+	 oqHav86vTPeQ+BXtr22DciJTFA0NTIGFUJax7JPTWGSFKna406szKsgpyjVTJCzSFA
+	 z0Ds/q+wyQYMYT0ZAqsh2bN44suoqCZnqc8fwbYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbgCCRo6 (ORCPT
+        id S1730859AbgCCRpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:44:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50580 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50736 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729311AbgCCRow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:44:52 -0500
+        id S1730838AbgCCRo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:44:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0C4C208C3;
-        Tue,  3 Mar 2020 17:44:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D47F9208C3;
+        Tue,  3 Mar 2020 17:44:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257492;
-        bh=cPIDczceOYeNftk8UdQbndOtgBdNXF1w/uSqn6SUOS0=;
+        s=default; t=1583257497;
+        bh=VHB/2UQrEaUcS1UIdXBYTk2YJO1lakDX0jwhcHajoT4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eb4BCsmHAFPRjun14b8akCLJtiIw9/vqnMFxP+d1hohyR0Fyubqnmx5pwuxrg54Ql
-         4Aj/20hQ0ZAAqHJ5goJKgrpHrtTpm4FcXhdmBHTUHeGxpngsQd/6zpvFMK4n+LKwiI
-         eEwgbrWMfy5q0DIPyE5rHNOx+XSHCJaGYd2asy4A=
+        b=cqw3P4v3owVjkAV90oF3YtO7d4zYZ4xq+wA0euZRvmOfgeNlr98tlGEB5BKEDhiMW
+         7iHJw5ifDoYLox2qbnBftwQX7MDZBJ0qyZfINWcUgd8fdSguhGZ6N+4+K8ieVjA/vz
+         0pM+8/b+FhsU1OfbGzaV6r96SRe3PdNpcDieCUw4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        stable@vger.kernel.org,
+        Benjamin Poirier <bpoirier@cumulusnetworks.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 017/176] net: export netdev_next_lower_dev_rcu()
-Date:   Tue,  3 Mar 2020 18:41:21 +0100
-Message-Id: <20200303174306.567616409@linuxfoundation.org>
+Subject: [PATCH 5.5 019/176] ipv6: Fix route replacement with dev-only route
+Date:   Tue,  3 Mar 2020 18:41:23 +0100
+Message-Id: <20200303174306.774116370@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,82 +61,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Benjamin Poirier <bpoirier@cumulusnetworks.com>
 
-[ Upstream commit 7151affeef8d527f50b4b68a871fd28bd660023f ]
+[ Upstream commit e404b8c7cfb31654c9024d497cec58a501501692 ]
 
-netdev_next_lower_dev_rcu() will be used to implement a function,
-which is to walk all lower interfaces.
-There are already functions that they walk their lower interface.
-(netdev_walk_all_lower_dev_rcu, netdev_walk_all_lower_dev()).
-But, there would be cases that couldn't be covered by given
-netdev_walk_all_lower_dev_{rcu}() function.
-So, some modules would want to implement own function,
-which is to walk all lower interfaces.
+After commit 27596472473a ("ipv6: fix ECMP route replacement") it is no
+longer possible to replace an ECMP-able route by a non ECMP-able route.
+For example,
+	ip route add 2001:db8::1/128 via fe80::1 dev dummy0
+	ip route replace 2001:db8::1/128 dev dummy0
+does not work as expected.
 
-In the next patch, netdev_next_lower_dev_rcu() will be used.
-In addition, this patch removes two unused prototypes in netdevice.h.
+Tweak the replacement logic so that point 3 in the log of the above commit
+becomes:
+3. If the new route is not ECMP-able, and no matching non-ECMP-able route
+exists, replace matching ECMP-able route (if any) or add the new route.
 
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+We can now summarize the entire replace semantics to:
+When doing a replace, prefer replacing a matching route of the same
+"ECMP-able-ness" as the replace argument. If there is no such candidate,
+fallback to the first route found.
+
+Fixes: 27596472473a ("ipv6: fix ECMP route replacement")
+Signed-off-by: Benjamin Poirier <bpoirier@cumulusnetworks.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/netdevice.h |    7 +++----
- net/core/dev.c            |    6 +++---
- 2 files changed, 6 insertions(+), 7 deletions(-)
+ net/ipv6/ip6_fib.c                       |    7 ++++---
+ tools/testing/selftests/net/fib_tests.sh |    6 ++++++
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -72,6 +72,8 @@ void netdev_set_default_ethtool_ops(stru
- #define NET_RX_SUCCESS		0	/* keep 'em coming, baby */
- #define NET_RX_DROP		1	/* packet dropped */
+--- a/net/ipv6/ip6_fib.c
++++ b/net/ipv6/ip6_fib.c
+@@ -1068,8 +1068,7 @@ static int fib6_add_rt2node(struct fib6_
+ 					found++;
+ 					break;
+ 				}
+-				if (rt_can_ecmp)
+-					fallback_ins = fallback_ins ?: ins;
++				fallback_ins = fallback_ins ?: ins;
+ 				goto next_iter;
+ 			}
  
-+#define MAX_NEST_DEV 8
+@@ -1112,7 +1111,9 @@ next_iter:
+ 	}
+ 
+ 	if (fallback_ins && !found) {
+-		/* No ECMP-able route found, replace first non-ECMP one */
++		/* No matching route with same ecmp-able-ness found, replace
++		 * first matching route
++		 */
+ 		ins = fallback_ins;
+ 		iter = rcu_dereference_protected(*ins,
+ 				    lockdep_is_held(&rt->fib6_table->tb6_lock));
+--- a/tools/testing/selftests/net/fib_tests.sh
++++ b/tools/testing/selftests/net/fib_tests.sh
+@@ -910,6 +910,12 @@ ipv6_rt_replace_mpath()
+ 	check_route6 "2001:db8:104::/64 via 2001:db8:101::3 dev veth1 metric 1024"
+ 	log_test $? 0 "Multipath with single path via multipath attribute"
+ 
++	# multipath with dev-only
++	add_initial_route6 "nexthop via 2001:db8:101::2 nexthop via 2001:db8:103::2"
++	run_cmd "$IP -6 ro replace 2001:db8:104::/64 dev veth1"
++	check_route6 "2001:db8:104::/64 dev veth1 metric 1024"
++	log_test $? 0 "Multipath with dev-only"
 +
- /*
-  * Transmit return codes: transmit return codes originate from three different
-  * namespaces:
-@@ -4323,11 +4325,8 @@ void *netdev_lower_get_next(struct net_d
- 	     ldev; \
- 	     ldev = netdev_lower_get_next(dev, &(iter)))
- 
--struct net_device *netdev_all_lower_get_next(struct net_device *dev,
-+struct net_device *netdev_next_lower_dev_rcu(struct net_device *dev,
- 					     struct list_head **iter);
--struct net_device *netdev_all_lower_get_next_rcu(struct net_device *dev,
--						 struct list_head **iter);
--
- int netdev_walk_all_lower_dev(struct net_device *dev,
- 			      int (*fn)(struct net_device *lower_dev,
- 					void *data),
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -146,7 +146,6 @@
- #include "net-sysfs.h"
- 
- #define MAX_GRO_SKBS 8
--#define MAX_NEST_DEV 8
- 
- /* This should be increased if a protocol with a bigger head is added. */
- #define GRO_MAX_HEAD (MAX_HEADER + 128)
-@@ -7135,8 +7134,8 @@ static int __netdev_walk_all_lower_dev(s
- 	return 0;
- }
- 
--static struct net_device *netdev_next_lower_dev_rcu(struct net_device *dev,
--						    struct list_head **iter)
-+struct net_device *netdev_next_lower_dev_rcu(struct net_device *dev,
-+					     struct list_head **iter)
- {
- 	struct netdev_adjacent *lower;
- 
-@@ -7148,6 +7147,7 @@ static struct net_device *netdev_next_lo
- 
- 	return lower->dev;
- }
-+EXPORT_SYMBOL(netdev_next_lower_dev_rcu);
- 
- static u8 __netdev_upper_depth(struct net_device *dev)
- {
+ 	# route replace fails - invalid nexthop 1
+ 	add_initial_route6 "nexthop via 2001:db8:101::2 nexthop via 2001:db8:103::2"
+ 	run_cmd "$IP -6 ro replace 2001:db8:104::/64 nexthop via 2001:db8:111::3 nexthop via 2001:db8:103::3"
 
 
