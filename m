@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CA5C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B28C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7407120726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BDE320726
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727624AbgCCHVx (ORCPT
+        id S1727642AbgCCHV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:21:53 -0500
-Received: from twhmllg3.macronix.com ([211.75.127.131]:31761 "EHLO
+        Tue, 3 Mar 2020 02:21:56 -0500
+Received: from twhmllg3.macronix.com ([211.75.127.131]:31770 "EHLO
         TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727600AbgCCHVw (ORCPT
+        with ESMTP id S1727612AbgCCHVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:21:52 -0500
+        Tue, 3 Mar 2020 02:21:53 -0500
 Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id 0237LRLB023026;
-        Tue, 3 Mar 2020 15:21:30 +0800 (GMT-8)
+        by TWHMLLG3.macronix.com with ESMTP id 0237LRLC023026;
+        Tue, 3 Mar 2020 15:21:31 +0800 (GMT-8)
         (envelope-from masonccyang@mxic.com.tw)
 From:   Mason Yang <masonccyang@mxic.com.tw>
 To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
@@ -32,124 +32,83 @@ Cc:     frieder.schrempf@kontron.de, tglx@linutronix.de, stefan@agner.ch,
         rfontana@redhat.com, linux-mtd@lists.infradead.org,
         yuehaibing@huawei.com, s.hauer@pengutronix.de,
         Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v3 2/4] mtd: rawnand: Add support Macronix Block Protection function
-Date:   Tue,  3 Mar 2020 15:21:22 +0800
-Message-Id: <1583220084-10890-3-git-send-email-masonccyang@mxic.com.tw>
+Subject: [PATCH v3 3/4] mtd: rawnand: Add support manufacturer specific suspend/resume operation
+Date:   Tue,  3 Mar 2020 15:21:23 +0800
+Message-Id: <1583220084-10890-4-git-send-email-masonccyang@mxic.com.tw>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
 References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG3.macronix.com 0237LRLB023026
+X-MAIL: TWHMLLG3.macronix.com 0237LRLC023026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Macronix AC/AD series support using SET_FEATURES to change
-Block Portection and Unprotection. By GET_FEATURES operation
-to detect if block protection support.
+Patch nand_suspend() & nand_resume() for manufacturer specific
+suspend/resume operation.
 
 Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/mtd/nand/raw/nand_macronix.c | 72 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+ drivers/mtd/nand/raw/nand_base.c | 11 ++++++++---
+ include/linux/mtd/rawnand.h      |  4 ++++
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
-index 3ff7ce0..a4cd12c 100644
---- a/drivers/mtd/nand/raw/nand_macronix.c
-+++ b/drivers/mtd/nand/raw/nand_macronix.c
-@@ -11,6 +11,10 @@
- #define MACRONIX_READ_RETRY_BIT BIT(0)
- #define MACRONIX_NUM_READ_RETRY_MODES 6
+diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
+index 769be81..b44e460 100644
+--- a/drivers/mtd/nand/raw/nand_base.c
++++ b/drivers/mtd/nand/raw/nand_base.c
+@@ -4327,7 +4327,9 @@ static int nand_suspend(struct mtd_info *mtd)
+ 	struct nand_chip *chip = mtd_to_nand(mtd);
  
-+#define ONFI_FEATURE_ADDR_MXIC_PROTECTION 0xA0
-+#define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
-+#define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
-+
- struct nand_onfi_vendor_macronix {
- 	u8 reserved;
- 	u8 reliability_func;
-@@ -91,6 +95,73 @@ static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
- 		     ONFI_FEATURE_ADDR_TIMING_MODE, 1);
- }
- 
-+/*
-+ * Macronix NAND supports Block Protection by Protectoin(PT) pin;
-+ * active high at power-on which protects the entire chip even the #WP is
-+ * disabled. Lock/unlock protection area can be partition according to
-+ * protection bits, i.e. upper 1/2 locked, upper 1/4 locked and so on.
-+ */
-+static int mxic_nand_lock(struct nand_chip *chip, loff_t ofs, uint64_t len)
-+{
-+	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-+	int ret;
-+
-+	feature[0] = MXIC_BLOCK_PROTECTION_ALL_LOCK;
-+	nand_select_target(chip, 0);
-+	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
-+				feature);
-+	nand_deselect_target(chip);
-+	if (ret)
-+		pr_err("%s all blocks failed\n", __func__);
-+
-+	return ret;
-+}
-+
-+static int mxic_nand_unlock(struct nand_chip *chip, loff_t ofs, uint64_t len)
-+{
-+	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-+	int ret;
-+
-+	feature[0] = MXIC_BLOCK_PROTECTION_ALL_UNLOCK;
-+	nand_select_target(chip, 0);
-+	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
-+				feature);
-+	nand_deselect_target(chip);
-+	if (ret)
-+		pr_err("%s all blocks failed\n", __func__);
-+
-+	return ret;
-+}
-+
-+static void macronix_nand_block_protection_support(struct nand_chip *chip)
-+{
-+	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
-+	int ret;
-+
-+	bitmap_set(chip->parameters.get_feature_list,
-+		   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
-+
-+	feature[0] = MXIC_BLOCK_PROTECTION_ALL_UNLOCK;
-+	nand_select_target(chip, 0);
-+	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
-+				feature);
-+	nand_deselect_target(chip);
-+	if (ret || feature[0] != MXIC_BLOCK_PROTECTION_ALL_LOCK) {
-+		if (ret)
-+			pr_err("Block protection check failed\n");
-+
-+		bitmap_clear(chip->parameters.get_feature_list,
-+			     ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
-+		return;
-+	}
-+
-+	bitmap_set(chip->parameters.set_feature_list,
-+		   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
-+
-+	chip->lock_area = mxic_nand_lock;
-+	chip->unlock_area = mxic_nand_unlock;
-+}
-+
- static int macronix_nand_init(struct nand_chip *chip)
- {
- 	if (nand_is_slc(chip))
-@@ -98,6 +169,7 @@ static int macronix_nand_init(struct nand_chip *chip)
- 
- 	macronix_nand_fix_broken_get_timings(chip);
- 	macronix_nand_onfi_init(chip);
-+	macronix_nand_block_protection_support(chip);
+ 	mutex_lock(&chip->lock);
+-	chip->suspended = 1;
++	if (chip->_suspend)
++		if (!chip->_suspend(chip))
++			chip->suspended = 1;
+ 	mutex_unlock(&chip->lock);
  
  	return 0;
+@@ -4342,11 +4344,14 @@ static void nand_resume(struct mtd_info *mtd)
+ 	struct nand_chip *chip = mtd_to_nand(mtd);
+ 
+ 	mutex_lock(&chip->lock);
+-	if (chip->suspended)
++	if (chip->suspended) {
++		if (chip->_resume)
++			chip->_resume(chip);
+ 		chip->suspended = 0;
+-	else
++	} else {
+ 		pr_err("%s called for a chip which is not in suspended state\n",
+ 			__func__);
++	}
+ 	mutex_unlock(&chip->lock);
  }
+ 
+diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
+index bc2fa3c..c0055ed 100644
+--- a/include/linux/mtd/rawnand.h
++++ b/include/linux/mtd/rawnand.h
+@@ -1064,6 +1064,8 @@ struct nand_legacy {
+  * @lock:		lock protecting the suspended field. Also used to
+  *			serialize accesses to the NAND device.
+  * @suspended:		set to 1 when the device is suspended, 0 when it's not.
++ * @_suspend:		[REPLACEABLE] specific NAND device suspend operation
++ * @_resume:		[REPLACEABLE] specific NAND device resume operation
+  * @bbt:		[INTERN] bad block table pointer
+  * @bbt_td:		[REPLACEABLE] bad block table descriptor for flash
+  *			lookup.
+@@ -1119,6 +1121,8 @@ struct nand_chip {
+ 
+ 	struct mutex lock;
+ 	unsigned int suspended : 1;
++	int (*_suspend)(struct nand_chip *chip);
++	void (*_resume)(struct nand_chip *chip);
+ 
+ 	uint8_t *oob_poi;
+ 	struct nand_controller *controller;
 -- 
 1.9.1
 
