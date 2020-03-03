@@ -2,195 +2,173 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F5F3C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:04:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C19C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B7EA20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:04:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18C212083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:07:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583255086;
-	bh=bk85Xz7NknJrsTjKyhov1Bic6DhuQc8uI72oheQ6XTo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=gufF2+ns14KOExQvscZK5F2ED4cxLu7helnjh3RMUOHO/4EZgcjqZNzoaBgyPo8fh
-	 G2QlBNSlAKDqXERPVJ/Lw3AKNYKHtXSeKGanCVeLttYTca867MD4OJM8uHh4gFiqJc
-	 1GhKObqKS57nGwB26cFOtL+fixkzLOr9ETrD6Ucs=
+	s=default; t=1583255228;
+	bh=IrpmFs+0/+bn4sD7somCGB6rxRCplaHxuMiqdN38XOM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iuKNZIz5RmT8WIo/6FnhOZ0782GBgt83PgnpLg4D8LBWuT1br8rQMRLuKxTFYSX8m
+	 bZI0rXjM+rc0tXX6QVym3XVKCqZS0M9MhyREMSTcZBSrshdpL6xLOYxP27MkYFw9x+
+	 CikBMgsbPMM0kETZa0C+7t6NCP8wbY0J2MugsHK0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbgCCREp (ORCPT
+        id S1730555AbgCCRHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:04:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:07:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58864 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729000AbgCCREo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:04:44 -0500
-Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        id S1729755AbgCCRHG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:07:06 -0500
+Received: from onda.lan (tmo-101-56.customers.d1-online.com [80.187.101.56])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4203D20836;
-        Tue,  3 Mar 2020 17:04:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12E872080C;
+        Tue,  3 Mar 2020 17:07:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583255083;
-        bh=bk85Xz7NknJrsTjKyhov1Bic6DhuQc8uI72oheQ6XTo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=qNCb/zCik+KlUt63trn4jH/HOKpvdCE0AYNJTPur9ziG9LAGwYOv73I5VIFmF/7JB
-         ZPj90kUy1w8igSGgUR6q7Rm7LT8wQzr+IOxG6YOa4of9kqMYaQDpcYl6ccbs12k2uT
-         GCmC54BnsdxA3oveFfm/0R/btd6caA/zk3wSzX7E=
-Date:   Tue, 3 Mar 2020 11:04:42 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v16 3/9] PCI/ERR: Remove service dependency in
- pcie_do_recovery()
-Message-ID: <20200303170442.GA89997@google.com>
+        s=default; t=1583255226;
+        bh=IrpmFs+0/+bn4sD7somCGB6rxRCplaHxuMiqdN38XOM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=pxrk51gfNUerXnSfOy7TNMJJsorC6Is70R8g/JDGLPL+S5iTPE9aArmPesiSUJtMH
+         u5uXUDSRcrIYUy5aDxxOxiKFIe3PyNlV+M3MqgzmOiG7akeGOkqPUvSsLe2EHXVz+b
+         lXKmUTDKrrtLKzthCNsfOiCEYuqCT8JrW9RFLcrA=
+Date:   Tue, 3 Mar 2020 18:07:02 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 00/12] Convert some DT documentation files to ReST
+Message-ID: <20200303180702.677ba664@onda.lan>
+In-Reply-To: <20200303180109.670ad7f8@onda.lan>
+References: <cover.1583135507.git.mchehab+huawei@kernel.org>
+        <20200302123554.08ac0c34@lwn.net>
+        <20200303080947.5f381004@onda.lan>
+        <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
+        <20200303180109.670ad7f8@onda.lan>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <152c530a3ca8780ae85c2325f97f5f35f5d3602f.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 04:59:45PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Currently we pass PCIe service type parameter to pcie_do_recovery()
-> function which was in-turn used by reset_link() function to identify
-> the underlying pci_port_service_driver and then initiate the driver
-> specific reset_link call. Instead of using this roundabout way, we
-> can just pass the driver specific reset_link callback function when
-> calling pcie_do_recovery() function.
+Em Tue, 3 Mar 2020 18:01:09 +0100
+Mauro Carvalho Chehab <mchehab+huawei@kernel.org> escreveu:
 
-I love this!  And I think pcie_port_find_service() is now unused.  I
-can add a patch to remove it.
+> Em Tue, 3 Mar 2020 10:20:25 -0600
+> Rob Herring <robh@kernel.org> escreveu:
+> 
+> > On Tue, Mar 3, 2020 at 1:09 AM Mauro Carvalho Chehab
+> > <mchehab+huawei@kernel.org> wrote:  
+> > >
+> > > Em Mon, 2 Mar 2020 12:35:54 -0700
+> > > Jonathan Corbet <corbet@lwn.net> escreveu:
+> > >    
+> > > > On Mon,  2 Mar 2020 08:59:25 +0100
+> > > > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+> > > >    
+> > > > > While most of the devicetree stuff has its own format (with is now being
+> > > > > converted to YAML format), some documents there are actually
+> > > > > describing the DT concepts and how to contribute to it.
+> > > > >
+> > > > > IMHO, those documents would fit perfectly as part of the documentation
+> > > > > body, as part of the firmare documents set.
+> > > > >
+> > > > > This patch series manually converts some DT documents that, on my
+> > > > > opinion, would belong to it.    
+> > > >
+> > > > Did you consider putting this stuff into the firmware-guide while you were
+> > > > at it?  It's not a perfect fit, I guess, but it doesn't seem too awkward
+> > > > either.    
+> > >
+> > > I placed it just below the firmware-guide at the main index file.
+> > >
+> > > I have split thoughts about moving the files to there, though. From
+> > > one side, it may fit better from the PoV of organizing the documentation.
+> > >
+> > > From other side, newcomers working with DT may expect looking at the
+> > > text files inside Documentation/devicetree/.
+> > >
+> > > Maybe I could add an extra patch at the end of this series with the
+> > > move, adding a "RFC" on his title. This way, we can better discuss it,
+> > > and either merge the last one or not depending on the comments.    
+> > 
+> > Keep in mind that we generate a standalone DT only tree[1] with the
+> > documentation, dts files and headers. So things should be structured
+> > such that all the DT documentation could be built by itself without
+> > dependencies on the 'kernel documentation'. I'm not asking for that to
+> > be done in this series, but just don't do anything to make that
+> > harder. I don't *think* have, but just want to make sure that's clear.  
+> 
+> So, I guess it is better to keep the .rst files under Documentation/devicetree,
+> instead of moving them to Documentation/firmware-guide.
+> 
+> Well, if moved, I guess it would be easy to modify the scripts that produce
+> the documentation to also parse something a new directory inside
+> Documentation/firmware-guide.
+> 
+> >   
+> > > > It also seems like it would be good to CC the devicetree folks, or at
+> > > > least the devicetree mailing list?    
+> > 
+> > I was wondering what happened to the cover letter on v2...
+> >   
+> > > Yeah, that would make sense. I'm using get-maintainers script to
+> > > prepare the c/c list, as it is simply too much work to find the
+> > > right maintainers by hand, for every single patch.
+> > >
+> > > I just noticed today that there's just *one entry* at MAINTAINERS
+> > > file for Documentation/devicetree, and that points to you:
+> > >
+> > >         DOCUMENTATION
+> > >         M:      Jonathan Corbet <corbet@lwn.net>
+> > >         L:      linux-doc@vger.kernel.org
+> > >         S:      Maintained
+> > >         F:      Documentation/
+> > >         F:      scripts/documentation-file-ref-check
+> > >         F:      scripts/kernel-doc
+> > >         F:      scripts/sphinx-pre-install
+> > >         X:      Documentation/ABI/
+> > >         X:      Documentation/firmware-guide/acpi/
+> > >         X:      Documentation/devicetree/    
+> > 
+> > You mean doesn't point to Jon as 'X' is exclude. You missed this entry:
+> > 
+> > OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> > M:      Rob Herring <robh+dt@kernel.org>
+> > M:      Mark Rutland <mark.rutland@arm.com>
+> > L:      devicetree@vger.kernel.org
+> > T:      git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
+> > Q:      http://patchwork.ozlabs.org/project/devicetree-bindings/list/
+> > S:      Maintained
+> > F:      Documentation/devicetree/
+> > F:      arch/*/boot/dts/
+> > F:      include/dt-bindings/  
+> 
+> Yeah, I remember I saw something like the above in the past. However,
+> I'm not seeing this entry at the MAINTAINERS file at next-20200303 anymore.
+> 
+> Did someone removed such entry?
 
-> This change will also enable non PCIe service driver to call
-> pcie_do_recovery() function. This is required for adding Error
-> Disconnect Recover (EDR) support.
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/pci.h      |  2 +-
->  drivers/pci/pcie/aer.c | 11 +++++------
->  drivers/pci/pcie/dpc.c |  2 +-
->  drivers/pci/pcie/err.c | 16 ++++++++--------
->  4 files changed, 15 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index a4c360515a69..2962200bfe35 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -548,7 +548,7 @@ static inline int pci_dev_specific_disable_acs_redir(struct pci_dev *dev)
->  
->  /* PCI error reporting and recovery */
->  void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
-> -		      u32 service);
-> +		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev));
->  
->  bool pcie_wait_for_link(struct pci_dev *pdev, bool active);
->  #ifdef CONFIG_PCIEASPM
-> diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
-> index 4a818b07a1af..1235eca0a2e6 100644
-> --- a/drivers/pci/pcie/aer.c
-> +++ b/drivers/pci/pcie/aer.c
-> @@ -102,6 +102,7 @@ struct aer_stats {
->  #define ERR_UNCOR_ID(d)			(d >> 16)
->  
->  static int pcie_aer_disable;
-> +static pci_ers_result_t aer_root_reset(struct pci_dev *dev);
->  
->  void pci_no_aer(void)
->  {
-> @@ -1053,11 +1054,9 @@ static void handle_error_source(struct pci_dev *dev, struct aer_err_info *info)
->  					info->status);
->  		pci_aer_clear_device_status(dev);
->  	} else if (info->severity == AER_NONFATAL)
-> -		pcie_do_recovery(dev, pci_channel_io_normal,
-> -				 PCIE_PORT_SERVICE_AER);
-> +		pcie_do_recovery(dev, pci_channel_io_normal, aer_root_reset);
->  	else if (info->severity == AER_FATAL)
-> -		pcie_do_recovery(dev, pci_channel_io_frozen,
-> -				 PCIE_PORT_SERVICE_AER);
-> +		pcie_do_recovery(dev, pci_channel_io_frozen, aer_root_reset);
->  	pci_dev_put(dev);
->  }
->  
-> @@ -1094,10 +1093,10 @@ static void aer_recover_work_func(struct work_struct *work)
->  		cper_print_aer(pdev, entry.severity, entry.regs);
->  		if (entry.severity == AER_NONFATAL)
->  			pcie_do_recovery(pdev, pci_channel_io_normal,
-> -					 PCIE_PORT_SERVICE_AER);
-> +					 aer_root_reset);
->  		else if (entry.severity == AER_FATAL)
->  			pcie_do_recovery(pdev, pci_channel_io_frozen,
-> -					 PCIE_PORT_SERVICE_AER);
-> +					 aer_root_reset);
->  		pci_dev_put(pdev);
->  	}
->  }
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 6b116d7fdb89..114358d62ddf 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -227,7 +227,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
->  	}
->  
->  	/* We configure DPC so it only triggers on ERR_FATAL */
-> -	pcie_do_recovery(pdev, pci_channel_io_frozen, PCIE_PORT_SERVICE_DPC);
-> +	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
->  
->  	return IRQ_HANDLED;
->  }
-> diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> index eefefe03857a..05f87bc9d011 100644
-> --- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
-> @@ -162,14 +162,13 @@ static pci_ers_result_t default_reset_link(struct pci_dev *dev)
->  	return rc ? PCI_ERS_RESULT_DISCONNECT : PCI_ERS_RESULT_RECOVERED;
->  }
->  
-> -static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
-> +static pci_ers_result_t reset_link(struct pci_dev *dev,
-> +			pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
->  {
->  	pci_ers_result_t status;
-> -	struct pcie_port_service_driver *driver = NULL;
->  
-> -	driver = pcie_port_find_service(dev, service);
-> -	if (driver && driver->reset_link) {
-> -		status = driver->reset_link(dev);
-> +	if (reset_cb) {
-> +		status = reset_cb(dev);
->  	} else if (pcie_downstream_port(dev)) {
->  		status = default_reset_link(dev);
->  	} else {
-> @@ -187,8 +186,9 @@ static pci_ers_result_t reset_link(struct pci_dev *dev, u32 service)
->  	return status;
->  }
->  
-> -void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
-> -		      u32 service)
-> +void pcie_do_recovery(struct pci_dev *dev,
-> +		      enum pci_channel_state state,
-> +		      pci_ers_result_t (*reset_cb)(struct pci_dev *pdev))
->  {
->  	pci_ers_result_t status = PCI_ERS_RESULT_CAN_RECOVER;
->  	struct pci_bus *bus;
-> @@ -209,7 +209,7 @@ void pcie_do_recovery(struct pci_dev *dev, enum pci_channel_state state,
->  		pci_walk_bus(bus, report_normal_detected, &status);
->  
->  	if (state == pci_channel_io_frozen) {
-> -		status = reset_link(dev, service);
-> +		status = reset_link(dev, reset_cb);
->  		if (status != PCI_ERS_RESULT_RECOVERED)
->  			goto failed;
->  	}
-> -- 
-> 2.21.0
-> 
+Sorry, false alarm. 
+
+It is there at next. 
+
+I guess it is time for call it a day.
+
+That doesn't explain why I didn't add DT ML to the c/c. I'll try to 
+verify what's going on tomorrow.
+
+Regards,
+Mauro
