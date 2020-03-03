@@ -2,138 +2,132 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F14DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CD1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318C020838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A81F20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:32:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="eiOxIkKN"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="EgBq0A2u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728657AbgCCKcX (ORCPT
+        id S1728715AbgCCKcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:32:23 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:60365 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728372AbgCCKcW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:32:22 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WtcN0RCtz9sPg;
-        Tue,  3 Mar 2020 21:32:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1583231540;
-        bh=plIVQelLQN+Lhv6LVRXDSOs7Mt1qf+ql5n8cFWM5qC8=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=eiOxIkKNxkhy8BuTzjl2C8S7V8FWoaXiEldT4NoOUCn0HUgadrF25e6taTW9pGf1w
-         5I64che4K4w228Sj/uxYo0Lw7zi0NJjb+VsYtmOZwU+/3dWjkAe1KfsvGDFG6m/UzB
-         KOq6cXj4eEXSpsYkJZof2d1KTxZXD8vGFxOjR3LtMhC9R1Bw2S9CzzZXBjXFVje9UQ
-         1O9maQhH6RCyv5+xSdQjDZmwIHeFuU5Fkodz+72JYsA+9qrBTZn72OuwphM2O6LJBQ
-         1PF7WZ2ARePgjBcFQGFGN6d8fq3RlFSulZrELavsjYJSYO0TEBe+MUaH6ofC8U3KmR
-         m8X8oF93qTwJw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        kvm-ppc@vger.kernel.org
-Subject: Re: [PATCH 2/6] powerpc: kvm: no need to check return value of debugfs_create functions
-In-Reply-To: <20200303095849.GA1399072@kroah.com>
-References: <20200209105901.1620958-1-gregkh@linuxfoundation.org> <20200209105901.1620958-2-gregkh@linuxfoundation.org> <87imjlswxc.fsf@mpe.ellerman.id.au> <20200303085039.GA1323622@kroah.com> <87d09tsrf0.fsf@mpe.ellerman.id.au> <20200303095849.GA1399072@kroah.com>
-Date:   Tue, 03 Mar 2020 21:32:19 +1100
-Message-ID: <874kv5sp8s.fsf@mpe.ellerman.id.au>
+        Tue, 3 Mar 2020 05:32:46 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36321 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728692AbgCCKcq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:32:46 -0500
+Received: by mail-il1-f194.google.com with SMTP id b15so2321755iln.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:32:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4OjMBCp185rGeJiYNbICf2InVl2PDcWD4SEMMWbNn20=;
+        b=EgBq0A2ueanm2MvysZvBDL8USSRx6pTzWx2f04bJ4DFxzma7xFHZNG2+Rg4SZkgd+O
+         K26n1FQBeiKe8uXeeDPX7xyIybxQZzyZVVzfse2xhJ/Cz1Oj1bDVo17iaVLZVj0WRG8s
+         nQx5gnQ9btpq29VS2/nKW+UhtVD3Ik2avMa90=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4OjMBCp185rGeJiYNbICf2InVl2PDcWD4SEMMWbNn20=;
+        b=ARfCP3A9y4xVztZwoTg9sAgNl0ppzIqjBg6mPKjCDzKF1IN5H+Ji7GhqaiC+eMQptk
+         pzy9cmu+4DDEGz6Zzyv7JgoGwMvfKGL9FerS/KzDLdqhnkijjJDzJjXeUz3Gnp0DIKLp
+         JMaerlq5tU1UW5qdU9VJXV/eZXndntSNgubimLAgZZE7OjHxCfMhZBr918RSY7w8dwt3
+         Xy012+r1ouV+rqMHy6Eju3Z1u9zVeMuGuz1o7/kruOJ7ZWkfapa4Zhugodw98HnL73cA
+         FTAzV1I2YT5/EZEFVTWzQPOkGf0Oll0r83/oSz5Oj2RAvqxUTXpi91MjWaZs/E0tQh6l
+         QToQ==
+X-Gm-Message-State: ANhLgQ0CYvMw+Bn7SlPmOi18YUU97ayKtBgzc/v6YnRmfa+eN2/u+yJF
+        BIOOqFyceVmsNJTzADP7ZgpWxgww+YZC4tUUlqJRpA==
+X-Google-Smtp-Source: ADFU+vtBUu4UN/503DlgMuAkB/+JNw29l5C01S+SzUIIjaQZb5bNvIbrd2zfhpo/xTL/HkTPnrVFO0z7X5d23lRKXyY=
+X-Received: by 2002:a92:89cb:: with SMTP id w72mr3979428ilk.252.1583231564670;
+ Tue, 03 Mar 2020 02:32:44 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
+ <1582316494.3376.45.camel@HansenPartnership.com> <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
+ <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
+ <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
+ <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <CAJfpegtemv64mpmTRT6ViHmsWq4nNE4KQvuHkNCYozRU7dQd8Q@mail.gmail.com> <06d2dbf0-4580-3812-bb14-34c6aa615747@redhat.com>
+In-Reply-To: <06d2dbf0-4580-3812-bb14-34c6aa615747@redhat.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 3 Mar 2020 11:32:33 +0100
+Message-ID: <CAJfpegsW5S3dRhhfGyAnhLEDjBxMQRBda5fsnXQ+=S=4YR0MCA@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Steven Whitehouse <swhiteho@redhat.com>
+Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> On Tue, Mar 03, 2020 at 08:45:23PM +1100, Michael Ellerman wrote:
->> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->> > On Tue, Mar 03, 2020 at 06:46:23PM +1100, Michael Ellerman wrote:
->> >> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
->> >> > When calling debugfs functions, there is no need to ever check the
->> >> > return value.  The function can work or not, but the code logic should
->> >> > never do something different based on this.
->> >> 
->> >> Except it does need to do something different, if the file was created
->> >> it needs to be removed in the remove path.
->> >> 
->> >> > diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
->> >> > index bfe4f106cffc..8e4791c6f2af 100644
->> >> > --- a/arch/powerpc/kvm/timing.c
->> >> > +++ b/arch/powerpc/kvm/timing.c
->> >> > @@ -207,19 +207,12 @@ static const struct file_operations kvmppc_exit_timing_fops = {
->> >> >  void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
->> >> >  {
->> >> >  	static char dbg_fname[50];
->> >> > -	struct dentry *debugfs_file;
->> >> >  
->> >> >  	snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
->> >> >  		 current->pid, id);
->> >> > -	debugfs_file = debugfs_create_file(dbg_fname, 0666,
->> >> > -					kvm_debugfs_dir, vcpu,
->> >> > -					&kvmppc_exit_timing_fops);
->> >> > -
->> >> > -	if (!debugfs_file) {
->> >> > -		printk(KERN_ERR"%s: error creating debugfs file %s\n",
->> >> > -			__func__, dbg_fname);
->> >> > -		return;
->> >> > -	}
->> >> > +	debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
->> >> > +			    &kvmppc_exit_timing_fops);
->> >> > +
->> >> >  
->> >> >  	vcpu->arch.debugfs_exit_timing = debugfs_file;
->> >
->> > Ugh, you are right, how did I miss that?  How is 0-day missing this?
->> > It's been in my tree for a long time, odd.
->> 
->> This code isn't enabled by default, or in any defconfig. So it's only
->> allmodconfig that would trip it, I guess 0-day isn't doing powerpc
->> allmodconfig builds.
->> 
->> >> I squashed this in, which seems to work:
->> ...
->> >>  
->> >>  void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
->> >>  {
->> >> -       if (vcpu->arch.debugfs_exit_timing) {
->> >> +       if (!IS_ERR_OR_NULL(vcpu->arch.debugfs_exit_timing)) {
->> >>                 debugfs_remove(vcpu->arch.debugfs_exit_timing);
->> >>                 vcpu->arch.debugfs_exit_timing = NULL;
->> >>         }
->> >
->> > No, this can just be:
->> > 	debugfs_remove(vcpu->arch.debugfs_exit_timing);
->> >
->> > No need to check anything, just call it and the debugfs code can handle
->> > it just fine.
->> 
->> Oh duh, of course, I should have checked.
->> 
->> I'd still like to NULL out the debugfs_exit_timing member, so I'll do:
->> 
->> void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
->> {
->> 	debugfs_remove(vcpu->arch.debugfs_exit_timing);
->> 	vcpu->arch.debugfs_exit_timing = NULL;
->> }
+On Tue, Mar 3, 2020 at 11:22 AM Steven Whitehouse <swhiteho@redhat.com> wrote:
 >
-> Fair enough, but I doubt it ever matters :)
+> Hi,
+>
+> On 03/03/2020 09:48, Miklos Szeredi wrote:
+> > On Tue, Mar 3, 2020 at 10:26 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
+> >> On Tue, Mar 3, 2020 at 10:13 AM David Howells <dhowells@redhat.com> wrote:
+> >>> Miklos Szeredi <miklos@szeredi.hu> wrote:
+> >>>
+> >>>> I'm doing a patch.   Let's see how it fares in the face of all these
+> >>>> preconceptions.
+> >>> Don't forget the efficiency criterion.  One reason for going with fsinfo(2) is
+> >>> that scanning /proc/mounts when there are a lot of mounts in the system is
+> >>> slow (not to mention the global lock that is held during the read).
+> > BTW, I do feel that there's room for improvement in userspace code as
+> > well.  Even quite big mount table could be scanned for *changes* very
+> > efficiently.  l.e. cache previous contents of /proc/self/mountinfo and
+> > compare with new contents, line-by-line.  Only need to parse the
+> > changed/added/removed lines.
+> >
+> > Also it would be pretty easy to throttle the number of updates so
+> > systemd et al. wouldn't hog the system with unnecessary processing.
+> >
+> > Thanks,
+> > Miklos
+> >
+>
+> At least having patches to compare would allow us to look at the
+> performance here and gain some numbers, which would be helpful to frame
+> the discussions. However I'm not seeing how it would be easy to throttle
+> updates... they occur at whatever rate they are generated and this can
+> be fairly high. Also I'm not sure that I follow how the notifications
+> and the dumping of the whole table are synchronized in this case, either.
 
-Yeah, but I'm paranoid and I have no way to test this code :)
+What I meant is optimizing current userspace without additional kernel
+infrastructure.   Since currently there's only the monolithic
+/proc/self/mountinfo, it's reasonable that if the rate of change is
+very high, then we don't re-read this table on every change, only
+within a reasonable time limit (e.g. 1s) to provide timely updates.
+Re-reading the table on every change would (does?) slow down the
+system so that the actual updates would even be slower, so throttling
+in this case very much  makes sense.
 
-> Thanks for the fixups, sorry for sending a broken patch, my fault.
+Once we have per-mount information from the kernel, throttling updates
+probably does not make sense.
 
-No worries, we have too many CONFIG options.
-
-cheers
+Thanks,
+Miklos
