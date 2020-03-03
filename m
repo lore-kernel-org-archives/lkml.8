@@ -2,102 +2,103 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F998C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:52:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425CAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:52:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E98072465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:52:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11AD92465E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:52:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qj2EFX/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727067AbgCCBwB (ORCPT
+        id S1727069AbgCCBwj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 20:52:01 -0500
-Received: from mga04.intel.com ([192.55.52.120]:21371 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgCCBwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 20:52:01 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 17:52:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="274000129"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Mar 2020 17:51:57 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Mel Gorman <mgorman@suse.de>, David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Johannes Weiner" <hannes@cmpxchg.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        "Alexander Duyck" <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-References: <20200228033819.3857058-1-ying.huang@intel.com>
-        <20200228034248.GE29971@bombadil.infradead.org>
-        <87a7538977.fsf@yhuang-dev.intel.com>
-        <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
-        <871rqf850z.fsf@yhuang-dev.intel.com> <20200228094954.GB3772@suse.de>
-        <87h7z76lwf.fsf@yhuang-dev.intel.com> <20200302151607.GC3772@suse.de>
-Date:   Tue, 03 Mar 2020 09:51:56 +0800
-In-Reply-To: <20200302151607.GC3772@suse.de> (Mel Gorman's message of "Mon, 2
-        Mar 2020 15:16:07 +0000")
-Message-ID: <87zhcy5hoj.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 2 Mar 2020 20:52:39 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38708 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgCCBwi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 20:52:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=NSfLdsm5L9JTNJGf8ZM7w0TrSlZzxMgfaVEelZp4YqA=; b=qj2EFX/WYxnKXYE1pca5FuJSgX
+        iywR9Np684IGNBma4IquuP12AvVpkZ0F9A/o/eLXK6yS79LNgrQXP7cCDKzJo4YlI2YYwPQov18jF
+        Cw73pwtaykBx8dQ/8aPmI0/rKrcKGC5glWks+YtFUWDtzgt3VFQeG2fyo6fe0COfRV5zThdkLtgt/
+        bp2Thi5KrjiKfaIUrftLUvCdy/pxmw9nOthcf/J6lWYw0TinuPXYT/8MhNbmZsCdB0ZPauEQwKeC5
+        71LTUgNbum0dFS+K6IEwFk48BRGFNxJQxXpf8AIylbhVoVVOqnVARp4AlZHH6PFoaEQJg1DYpvKqr
+        32pNcUcQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j8wjd-0000f0-H0; Tue, 03 Mar 2020 01:52:37 +0000
+Subject: Re: [PATCH v3] Documentation: bootconfig: Update boot configuration
+ documentation
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>
+References: <158313621831.3082.9886161529613724376.stgit@devnote2>
+ <158313622831.3082.8237132211731864948.stgit@devnote2>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <8c032093-c652-5e33-36ad-732f73beabab@infradead.org>
+Date:   Mon, 2 Mar 2020 17:52:36 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <158313622831.3082.8237132211731864948.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mel Gorman <mgorman@suse.de> writes:
-> On Mon, Mar 02, 2020 at 07:23:12PM +0800, Huang, Ying wrote:
->> If some applications cannot tolerate the latency incurred by the memory
->> allocation and zeroing.  Then we cannot discard instead of migrate
->> always.  While in some situations, less memory pressure can help.  So
->> it's better to let the administrator and the application choose the
->> right behavior in the specific situation?
->> 
->
-> Is there an application you have in mind that benefits from discarding
-> MADV_FREE pages instead of migrating them?
->
-> Allowing the administrator or application to tune this would be very
-> problematic. An application would require an update to the system call
-> to take advantage of it and then detect if the running kernel supports
-> it. An administrator would have to detect that MADV_FREE pages are being
-> prematurely discarded leading to a slowdown and that is hard to detect.
-> It could be inferred from monitoring compaction stats and checking
-> if compaction activity is correlated with higher minor faults in the
-> target application. Proving the correlation would require using the perf
-> software event PERF_COUNT_SW_PAGE_FAULTS_MIN and matching the addresses
-> to MADV_FREE regions that were freed prematurely. That is not an obvious
-> debugging step to take when an application detects latency spikes.
->
-> Now, you could add a counter specifically for MADV_FREE pages freed for
-> reasons other than memory pressure and hope the administrator knows about
-> the counter and what it means. That type of knowledge could take a long
-> time to spread so it's really very important that there is evidence of
-> an application that suffers due to the current MADV_FREE and migration
-> behaviour.
+On 3/2/20 12:03 AM, Masami Hiramatsu wrote:
+> Update boot configuration documentation.
+> 
+>  - Not using "config" abbreviation but configuration or description.
+>  - Rewrite descriptions of node and its maxinum number.
+>  - Add a section of use cases of boot configuration.
+>  - Move how to use bootconfig to earlier section.
+>  - Fix some typos, indents and format mistakes.
+> 
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+> Changes in v3:
+>  - Specify that comments also count in size.
+>  - Fix a confusing sentence.
+>  - Add O=<builddir> to make command.
 
-OK.  I understand that this patchset isn't a universal win, so we need
-some way to justify it.  I will try to find some application for that.
 
-Another thought, as proposed by David Hildenbrand, it's may be a
-universal win to discard clean MADV_FREE pages when migrating if there are
-already memory pressure on the target node.  For example, if the free
-memory on the target node is lower than high watermark?
+Hi Masami-san,
 
-Best Regards,
-Huang, Ying
+I think that you misunderstood me.  I am asking that you
+make "make O=builddir -C tools/bootconfig" work properly, i.e.,
+the bootconfig binary should be built in the <builddir>.
+
+Presently when I enter that command, the bootconfig binary
+is still built in the kernel source tree.
+
+> Changes in v2:
+>  - Fixes additional typos (Thanks Markus and Randy!)
+>  - Change a section title to "Tree Structured Key".
+> ---
+>  Documentation/admin-guide/bootconfig.rst |  181 +++++++++++++++++++-----------
+>  Documentation/trace/boottime-trace.rst   |    2 
+>  2 files changed, 117 insertions(+), 66 deletions(-)
+> 
+
+
+All of the other changes look good to me.
+
+thanks.
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
