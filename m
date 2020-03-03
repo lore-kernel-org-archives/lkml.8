@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FFBC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF7DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C76A72166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25E3B2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204266;
-	bh=Ph+idRUyoWdvzU3oSvbTAZBlrlP+V+AFEYvR7CbBB1Q=;
+	s=default; t=1583204272;
+	bh=eoNayO3uiDva1CrJ3Fk5TV4cI6wo6Xy7e7/LDxK2Xuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YaIqYaQ2Mi42oS9eSDjiI0TBWbzXYQoOxogiuoKM/v5k9s5OpzddaoME/1Pv2IZSo
-	 4CvrvEazhpbOy90M5BJqlaoEaMp58ddVwnGuz0tVTKk+30yubXwYHZmXXFVJOlbIrj
-	 6C5gF8klKUx7RStz+ywts+2RJlNRhEQ1OoPUWrA0=
+	b=ht9CdIRPtQjf3+iuNFanW+9ZfMwuc/GJRaLL2N6obUNuPHhOkzD1JB9zt/pqiTaF0
+	 WZnh4+duBIk23JaV7OTQWsxludQjvGjywjBzEZZZMxZuD7gW5DlbLdiUbjM+tMu8G0
+	 H7Wx9plvdWvOT/Aaudu6/M5eBiq1W9RRiKX6rW1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726928AbgCCC5p (ORCPT
+        id S1727693AbgCCCsP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:57:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43860 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728365AbgCCCsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:17 -0500
+        id S1728271AbgCCCsF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46D052465E;
-        Tue,  3 Mar 2020 02:48:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B9B824681;
+        Tue,  3 Mar 2020 02:48:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203696;
-        bh=Ph+idRUyoWdvzU3oSvbTAZBlrlP+V+AFEYvR7CbBB1Q=;
+        s=default; t=1583203685;
+        bh=eoNayO3uiDva1CrJ3Fk5TV4cI6wo6Xy7e7/LDxK2Xuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLbdteu/eLA4UrYjDulNomniQS4EOUCDN+m0v/5jId1JdMC2cA/I0Rcwxr0DVgid5
-         qSy8p6iWCUoupCuOmeaI6ZmlWsB7pNY5W4hjQWnkk2+lwjFCn8bkq2yXg2oF8NxicS
-         pXcoxV8rxvNDNm3kgEyEsmPjsBUNXOwzHvJ7OZCM=
+        b=k9IvxhW1TINoo9CDjopJqBbi+AcGegK4JVRA/XcvnJ5MEWw5ZXj27PTDT7eLNmU6/
+         5NC3dMvcMbENU7inOuPrGWZJWpunafK8ab8chcHzaGdewJNsnsWY1GW/YUfo5tut/I
+         /47rMIWySkIpg37P5ILiYRKAY+agR9G3UjW96LYY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marex@denx.de>,
+Cc:     Hangbin Liu <liuhangbin@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 29/58] net: ks8851-ml: Fix 16-bit data access
-Date:   Mon,  2 Mar 2020 21:47:11 -0500
-Message-Id: <20200303024740.9511-29-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 20/58] selftests: forwarding: vxlan_bridge_1d: fix tos value
+Date:   Mon,  2 Mar 2020 21:47:02 -0500
+Message-Id: <20200303024740.9511-20-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -61,46 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-[ Upstream commit edacb098ea9c31589276152f09b4439052c0f2b1 ]
+[ Upstream commit 4e867c9a50ff1a07ed0b86c3b1c8bc773933d728 ]
 
-The packet data written to and read from Micrel KSZ8851-16MLLI must be
-byte-swapped in 16-bit mode, add this byte-swapping.
+After commit 71130f29979c ("vxlan: fix tos value before xmit") we start
+strict vxlan xmit tos value by RT_TOS(), which limits the tos value less
+than 0x1E. With current value 0x40 the test will failed with "v1: Expected
+to capture 10 packets, got 0". So let's choose a smaller tos value for
+testing.
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
+Fixes: d417ecf533fe ("selftests: forwarding: vxlan_bridge_1d: Add a TOS test")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index e2fb20154511e..5ae206ae5d2b3 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -197,7 +197,7 @@ static inline void ks_inblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		*wptr++ = (u16)ioread16(ks->hw_addr);
-+		*wptr++ = be16_to_cpu(ioread16(ks->hw_addr));
- }
+diff --git a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
+index bb10e33690b25..353613fc19475 100755
+--- a/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
++++ b/tools/testing/selftests/net/forwarding/vxlan_bridge_1d.sh
+@@ -516,9 +516,9 @@ test_tos()
+ 	RET=0
  
- /**
-@@ -211,7 +211,7 @@ static inline void ks_outblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		iowrite16(*wptr++, ks->hw_addr);
-+		iowrite16(cpu_to_be16(*wptr++), ks->hw_addr);
- }
+ 	tc filter add dev v1 egress pref 77 prot ip \
+-		flower ip_tos 0x40 action pass
+-	vxlan_ping_test $h1 192.0.2.3 "-Q 0x40" v1 egress 77 10
+-	vxlan_ping_test $h1 192.0.2.3 "-Q 0x30" v1 egress 77 0
++		flower ip_tos 0x11 action pass
++	vxlan_ping_test $h1 192.0.2.3 "-Q 0x11" v1 egress 77 10
++	vxlan_ping_test $h1 192.0.2.3 "-Q 0x12" v1 egress 77 0
+ 	tc filter del dev v1 egress pref 77 prot ip
  
- static void ks_disable_int(struct ks_net *ks)
+ 	log_test "VXLAN: envelope TOS inheritance"
 -- 
 2.20.1
 
