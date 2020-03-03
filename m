@@ -2,169 +2,142 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D36C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CA0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F6D20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AC520857
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:00:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pBdyV79X"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D0GntM6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgCCM55 (ORCPT
+        id S1728431AbgCCNAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:57:57 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:46062 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727585AbgCCM54 (ORCPT
+        Tue, 3 Mar 2020 08:00:36 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34828 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727767AbgCCNAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:57:56 -0500
-Received: by mail-pg1-f196.google.com with SMTP id m15so1494277pgv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 04:57:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=Lg++IdYMeQd94pD/ZLBO5CJLpoQAjy8oNL8AZop1ans=;
-        b=pBdyV79X5PzDSeKMLl78uCsyMMfApV/dm6Xt0abLb0CDLkPTIcuZfFfifhGyzHBFhQ
-         uPB4L44CjJt97iTH9OX3ExajyF+uak9tl+MDBZELIkQQfJI1y1OkWiBWc7V5K5uXdoeX
-         u6kP+HaiPiyu0ajhimW8fQaIwSIqfZ0BTiecuD48wzWbijj3BWVCVPXQ/vW7aH9X9HfV
-         2XV3ry/BiJQIAjFEAV05BQrRjLk0QxP8gwLS54uTMj/wr7EVFpSiKBZf/OQXoqV5xBCi
-         760oD2HdWo/B0hn2swU9vOQ+0n7r9yfX4BWiryhqSt8waHinEjBMk+4TlYNMMItRsRIC
-         jZdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=Lg++IdYMeQd94pD/ZLBO5CJLpoQAjy8oNL8AZop1ans=;
-        b=CG9uXCQB79FRUo/CqC0rbNGW1gSl63zjsKayRYJD9gAxhTy+5moxFR9mIImSHLZxkt
-         O7x2NyxV9fnei27fYAsjpJFc9Ri7m+JdpF6i4bTHbENiJWWc/DfkMmpZUtl1XMq2Fmqq
-         dGKD7D5DjyDfo+QPUp299ibug1EMAD8A57SUWU4vzB0I0ZL/mR8r7szuqNtgzMFqlc8G
-         VxiP/+LoK3vEmX8xljbWtu3O5eIrw9Jkq0fPArIhoMKvic6t7SOZD4my482t2VXV3kwV
-         MRhek0ECokaAGdQL5rbagzEPHlSEH23Zxmn4w0HSvvSx/X38d0RHOvOAiyvfJipIQ7Xo
-         BAew==
-X-Gm-Message-State: ANhLgQ1YcM143/dQJRXc/bmuDeTSWahgk/1k+PvXoDmIXAk7qwqq/F4S
-        294Cb6pSenU981hUJL5trXaXxg==
-X-Google-Smtp-Source: ADFU+vvmaCiGdnLf7VVnD73qoTDE9qAVS2O4FvZFUlSW1+1T1yr52B7c7d1Vy26Nlbvk0udV+zchMA==
-X-Received: by 2002:a63:91c1:: with SMTP id l184mr3862200pge.341.1583240275667;
-        Tue, 03 Mar 2020 04:57:55 -0800 (PST)
-Received: from [10.122.2.74] ([45.135.186.15])
-        by smtp.gmail.com with ESMTPSA id x66sm13299097pgb.9.2020.03.03.04.57.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Mar 2020 04:57:54 -0800 (PST)
-Subject: Re: Re: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
-To:     Auger Eric <eric.auger@redhat.com>,
-        Tomasz Nowicki <tnowicki@marvell.com>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>
-Cc:     "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "vincent.stehle@arm.com" <vincent.stehle@arm.com>,
-        "zhangfei.gao@gmail.com" <zhangfei.gao@gmail.com>,
-        "tina.zhang@intel.com" <tina.zhang@intel.com>,
-        wangzhou1 <wangzhou1@hisilicon.com>,
-        Kenneth Lee <kenneth-lee-2012@foxmail.com>
-References: <20190711135625.20684-1-eric.auger@redhat.com>
- <a35234a6-e386-fc8e-fcc4-5db4601b00d2@marvell.com>
- <3741c034-08f1-9dbb-ab06-434f3a8bd782@redhat.com>
-From:   zhangfei <zhangfei.gao@linaro.org>
-Message-ID: <e0133df5-073b-13e1-8399-ff48bfaef5e5@linaro.org>
-Date:   Tue, 3 Mar 2020 20:57:27 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 3 Mar 2020 08:00:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583240435;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=bQH3gFaN0+ndXt7bwldiJXwZh7UdzaebXE8uKCbRSZ4=;
+        b=D0GntM6E2M5M/qEUYJeVxyQRk6WBtVx5Ry9FbrW/RbnXD/sAz8rVRVzhCsu7b7MD+X+Hef
+        Js9haa/qKdFKruTVmKfhKJqfD1pFJWCkGEHdFzzSoZxN4pNjdak2uBk4igK9V6XJ2hz2MD
+        9UNG1f+u43eSvolSJybKK9D8pqhQvRg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-307-gBMWLwVAOniOuvpMzbp2MA-1; Tue, 03 Mar 2020 08:00:31 -0500
+X-MC-Unique: gBMWLwVAOniOuvpMzbp2MA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A1E37800D5B;
+        Tue,  3 Mar 2020 13:00:28 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-227.str.redhat.com [10.33.192.227])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6C17B60C80;
+        Tue,  3 Mar 2020 13:00:13 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        =?utf-8?Q?Andr=C3=A9?= Almeida <andrealmeid@collabora.com>,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
+        ryao@gentoo.org, dvhart@infradead.org, mingo@redhat.com,
+        z.figura12@gmail.com, steven@valvesoftware.com,
+        steven@liquorix.net, malteskarupke@web.de, carlos@redhat.com,
+        adhemerval.zanella@linaro.org, libc-alpha@sourceware.org
+Subject: Re: 'simple' futex interface [Was: [PATCH v3 1/4] futex: Implement mechanism to wait on any of several futexes]
+References: <20200213214525.183689-1-andrealmeid@collabora.com>
+        <20200213214525.183689-2-andrealmeid@collabora.com>
+        <20200228190717.GM18400@hirez.programming.kicks-ass.net>
+        <20200228194958.GO14946@hirez.programming.kicks-ass.net>
+        <87tv3aflqm.fsf@nanos.tec.linutronix.de>
+        <967d5047-2cb6-d6d8-6107-edb99a4c9696@valvesoftware.com>
+        <87o8thg031.fsf@nanos.tec.linutronix.de>
+        <beb82055-96fa-cb64-a06e-9d7a0946587b@valvesoftware.com>
+        <20200303120050.GC2596@hirez.programming.kicks-ass.net>
+Date:   Tue, 03 Mar 2020 14:00:12 +0100
+In-Reply-To: <20200303120050.GC2596@hirez.programming.kicks-ass.net> (Peter
+        Zijlstra's message of "Tue, 3 Mar 2020 13:00:50 +0100")
+Message-ID: <87pndth9ur.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <3741c034-08f1-9dbb-ab06-434f3a8bd782@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Eric
+* Peter Zijlstra:
 
-On 2019/11/20 下午6:18, Auger Eric wrote:
+> So how about we introduce new syscalls:
 >
->>> This series brings the VFIO part of HW nested paging support
->>> in the SMMUv3.
->>>
->>> The series depends on:
->>> [PATCH v9 00/14] SMMUv3 Nested Stage Setup (IOMMU part)
->>> (https://www.spinics.net/lists/kernel/msg3187714.html)
->>>
->>> 3 new IOCTLs are introduced that allow the userspace to
->>> 1) pass the guest stage 1 configuration
->>> 2) pass stage 1 MSI bindings
->>> 3) invalidate stage 1 related caches
->>>
->>> They map onto the related new IOMMU API functions.
->>>
->>> We introduce the capability to register specific interrupt
->>> indexes (see [1]). A new DMA_FAULT interrupt index allows to register
->>> an eventfd to be signaled whenever a stage 1 related fault
->>> is detected at physical level. Also a specific region allows
->>> to expose the fault records to the user space.
->>>
->>> Best Regards
->>>
->>> Eric
->>>
->>> This series can be found at:
->>> https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
->> I think you have already tested on ThunderX2, but as a formality, for
->> the whole series:
->>
->> Tested-by: Tomasz Nowicki <tnowicki@marvell.com>
->> qemu: https://github.com/eauger/qemu/tree/v4.1.0-rc0-2stage-rfcv5
->> kernel: https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9 +
->> Shameer's fix patch
->>
->> In my test I assigned Intel 82574L NIC and perform iperf tests.
-> Thank you for your testing efforts.
->> Other folks from Marvell claimed this to be important feature so I asked
->> them to review and speak up on mailing list.
-> That's nice to read that!  So it is time for me to rebase both the iommu
-> and vfio parts. I will submit something quickly. Then I would encourage
-> the review efforts to focus first on the iommu part.
+>   sys_futex_wait(void *uaddr, unsigned long val, unsigned long flags, ktime_t *timo);
 >
+>   struct futex_wait {
+> 	void *uaddr;
+> 	unsigned long val;
+> 	unsigned long flags;
+>   };
+>   sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
+> 		  unsigned long flags, ktime_t *timo);
 >
-vSVA feature is also very important to us, it will be great if vSVA can 
-be supported in guest world.
+>   sys_futex_wake(void *uaddr, unsigned int nr, unsigned long flags);
+>
+>   sys_futex_cmp_requeue(void *uaddr1, void *uaddr2, unsigned int nr_wake,
+> 			unsigned int nr_requeue, unsigned long cmpval, unsigned long flags);
+>
+> Where flags:
+>
+>   - has 2 bits for size: 8,16,32,64
+>   - has 2 more bits for size (requeue) ??
+>   - has ... bits for clocks
+>   - has private/shared
+>   - has numa
 
-We just submitted uacce for accelerator, which will be supporting SVA on 
-host, thanks to Jean's effort.
+What's the actual type of *uaddr?  Does it vary by size (which I assume
+is in bits?)?  Are there alignment constraints?
 
-https://lkml.org/lkml/2020/2/11/54
+These system calls seemed to be type-polymorphic still, which is
+problematic for defining a really nice C interface.  I would really like
+to have a strongly typed interface for this, with a nice struct futex
+wrapper type (even if it means that we need four of them).
 
+Will all architectures support all sizes?  If not, how do we probe which
+size/flags combinations are supported?
 
-However, supporting vSVA in guest is also a key component for accelerator.
+> For NUMA I propose that when NUMA_FLAG is set, uaddr-4 will be 'int
+> node_id', with the following semantics:
+>
+>  - on WAIT, node_id is read and when 0 <= node_id <= nr_nodes, is
+>    directly used to index into per-node hash-tables. When -1, it is
+>    replaced by the current node_id and an smp_mb() is issued before we
+>    load and compare the @uaddr.
+>
+>  - on WAKE/REQUEUE, it is an immediate index.
 
-Looking forward this going to be happen.
+Does this mean the first waiter determines the NUMA index, and all
+future waiters use the same chain even if they are on different nodes?
 
+I think documenting this as a node index would be a mistake.  It could
+be an arbitrary hint for locating the corresponding kernel data
+structures.
 
-Any respin, I will be very happy to test.
+> Any invalid value with result in EINVAL.
 
+Using uaddr-4 is slightly tricky with a 64-bit futex value, due to the
+need to maintain alignment and avoid padding.
 
-Thanks
-
-
-
+Thanks,
+Florian
 
