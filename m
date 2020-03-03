@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131F9C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BF6C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B6F206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57865206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258464;
-	bh=j/cTGtyx0i2W8prlaQJxrHhlNQJqNPuJz2rSwBTjyBw=;
+	s=default; t=1583258467;
+	bh=mS3NzTj/wGe/utVr3qRFvWIQqqxdgLTCV8BCqRPCDtA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYpNRJkvHhw9mnshTZYR3XFvyw0G76v1JEwWLfZGQSRIIqtMlgjUmxhZhnzy2cRTY
-	 wOiJbkYxd7pVx6edgbysSoYweiOaZN1mH1Lm49LldnVrSnDeejy2oz8IEfXzYad8Vk
-	 ztRRmVUR9tceBpJNSnALACuihei/kK3XALh3AI0c=
+	b=R1gds0ZYRF+hBdVYyu6NF+W+pFK7ktFLE/c209PK4U97vucZKoAVS7O0gc70zXqfk
+	 CYCLeY5kgjXotpensEFz5dDjxByLbHNTdecAbb7CVZzdelwkuQLJRnJiGJcjdMEW4g
+	 y/x8xZV2ILd/pa7NHO+2OisiqpDra35qLFBWZ/ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387890AbgCCSBC (ORCPT
+        id S2387903AbgCCSBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44924 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:01:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387871AbgCCSA6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:00:58 -0500
+        id S2387871AbgCCSBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:03 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E1E920728;
-        Tue,  3 Mar 2020 18:00:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D23CD206D5;
+        Tue,  3 Mar 2020 18:01:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258457;
-        bh=j/cTGtyx0i2W8prlaQJxrHhlNQJqNPuJz2rSwBTjyBw=;
+        s=default; t=1583258463;
+        bh=mS3NzTj/wGe/utVr3qRFvWIQqqxdgLTCV8BCqRPCDtA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TmrvZTKOZj9U55NLQGLQrhosanzkHPwOxWN6GAUUJIOlgyYYCcsjGHI84HepumxTy
-         Byelepg53pcDWJwgEMUJCdToMtC4wv4rHY3voEXLj15pLGfJqtVoCFXMWf0cvcuES+
-         DNM0wPfW6BrjPIAIZNOZqLMI6B7wKpqYdoRxxzvU=
+        b=Cw3R4cj9JCtnesdL4zIU56dXEwjG6UKzu/qx8pkGC37HvLf9i2sjv5YU06srrviEW
+         weWFd3B5iX/SNFG4KUOakS1lzMayVM/RQiW1dKQWUKwqv/zFasoDLGXP3jpZNhPIwG
+         wJ91EkwiVh2L6kOqczwx0J24tLxYJwUKrgqmBpqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Laight <David.Laight@ACULAB.COM>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.19 55/87] i2c: altera: Fix potential integer overflow
-Date:   Tue,  3 Mar 2020 18:43:46 +0100
-Message-Id: <20200303174355.303363758@linuxfoundation.org>
+        stable@vger.kernel.org, Tina Zhang <tina.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH 4.19 57/87] drm/i915/gvt: Fix orphan vgpu dmabuf_objs lifetime
+Date:   Tue,  3 Mar 2020 18:43:48 +0100
+Message-Id: <20200303174355.470594194@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -61,38 +59,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Tina Zhang <tina.zhang@intel.com>
 
-commit 54498e8070e19e74498a72c7331348143e7e1f8c upstream.
+commit b549c252b1292aea959cd9b83537fcb9384a6112 upstream.
 
-Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
-instead of 64-bit.
+Deleting dmabuf item's list head after releasing its container can lead
+to KASAN-reported issue:
 
-Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
-and there is no need for div_u64().
+  BUG: KASAN: use-after-free in __list_del_entry_valid+0x15/0xf0
+  Read of size 8 at addr ffff88818a4598a8 by task kworker/u8:3/13119
 
-Addresses-Coverity: 1458369 ("Unintentional integer overflow")
-Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
-Suggested-by: David Laight <David.Laight@ACULAB.COM>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+So fix this issue by puting deleting dmabuf_objs ahead of releasing its
+container.
+
+Fixes: dfb6ae4e14bd6 ("drm/i915/gvt: Handle orphan dmabuf_objs")
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200225053527.8336-2-tina.zhang@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-altera.c |    2 +-
+ drivers/gpu/drm/i915/gvt/dmabuf.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/i2c/busses/i2c-altera.c
-+++ b/drivers/i2c/busses/i2c-altera.c
-@@ -182,7 +182,7 @@ static void altr_i2c_init(struct altr_i2
- 	/* SCL Low Time */
- 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
- 	/* SDA Hold Time, 300ns */
--	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
-+	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
- 
- 	/* Mask all master interrupt bits */
- 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
+--- a/drivers/gpu/drm/i915/gvt/dmabuf.c
++++ b/drivers/gpu/drm/i915/gvt/dmabuf.c
+@@ -95,12 +95,12 @@ static void dmabuf_gem_object_free(struc
+ 			dmabuf_obj = container_of(pos,
+ 					struct intel_vgpu_dmabuf_obj, list);
+ 			if (dmabuf_obj == obj) {
++				list_del(pos);
+ 				intel_gvt_hypervisor_put_vfio_device(vgpu);
+ 				idr_remove(&vgpu->object_idr,
+ 					   dmabuf_obj->dmabuf_id);
+ 				kfree(dmabuf_obj->info);
+ 				kfree(dmabuf_obj);
+-				list_del(pos);
+ 				break;
+ 			}
+ 		}
 
 
