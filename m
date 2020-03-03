@@ -2,155 +2,116 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7D5C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D36EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5BB920857
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:01:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jx1mKKrA"
+	by mail.kernel.org (Postfix) with ESMTP id 1A1DD20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:02:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgCCNBC (ORCPT
+        id S1729149AbgCCNCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:01:02 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44590 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728361AbgCCNBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:01:02 -0500
-Received: by mail-lj1-f196.google.com with SMTP id a10so3361116ljp.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:01:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NKj+1Rf5TnGZp4SiLcelNGaJtNpD2JrLWM1tk/In9ck=;
-        b=jx1mKKrApcRXamn0UdmROfGB/dWjaSxTUv6iyGimgChB2LNGywfc217cKIVp8ywKB0
-         5AFhGnzfgGLxwjwKwQ5z2C+zKUW7FUnqWZ7M9GUvS2VLhIBz95aJVpVDlX4gr5rt6Jl2
-         uhCZdMUDn5WD6z+3sbZ39l67QTde69vqXP09FAuXwfCWfPzVtplTJjgCUH5BLVXmE3Qe
-         es3YU6cEE1TTCOgADetZuNWd7uC0DwwbRLe1A6RZTX25hMYSpWDKZcDtPqPvDYSKJhNi
-         mhomdgxZ541z06qXd4tS9oeGlCUjzy2f9jyanXnJ+Qfuwm5McojSZczPgwijviXEPVgX
-         8uoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NKj+1Rf5TnGZp4SiLcelNGaJtNpD2JrLWM1tk/In9ck=;
-        b=ogYBq7PD5+KKW2cDBusXUTCb2uCpz5wK2ZkDvfjEbNdgBd/Q5/RONMHpg1emeTgFoI
-         aX+BMmSscMhZWoKaUVfR7c7v0BD0scXqBRS7Wq0Jlimp9oMA+KHJwG6msC0Z2crrud+d
-         nSiLmCDZpI/p+trpSmjVOgsaXSNqFckTYz5vyvAlqLC4mRLT11dmb8hDzrvxZN2Xddn9
-         /z6NbwuPtjnbDsv5AcWcu6BjcdYWks7Nyla7YOu2WTPa1DHUySTDywBscAmIxfCbPfh+
-         dw7Q+s4mfVuYq+vgT0vKLZWWyfJcrzzUpDVCi0tD2HZ73no4b8Af7otZsLPcrmetv+dV
-         k3Hw==
-X-Gm-Message-State: ANhLgQ3ste7OQDHTt5ucxQImQ8uSp9v2yWW0AG9OlkzL8b84Uw77EoVX
-        sKOXnzc3Z+cvBQi0YrBFHMY3DlF+yDWbGmD+h2Ciww==
-X-Google-Smtp-Source: ADFU+vt6Xgq2BT1BgAbHQx9inuBc+XGlWT4URTEZQQUd8DrO3mUIikmr/9q5Su6eUhpueU4LIGXp9eMIsusx2RPh1T0=
-X-Received: by 2002:a05:651c:2c7:: with SMTP id f7mr2343804ljo.125.1583240459705;
- Tue, 03 Mar 2020 05:00:59 -0800 (PST)
+        Tue, 3 Mar 2020 08:02:50 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58640 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728496AbgCCNCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:02:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 2F724AF68;
+        Tue,  3 Mar 2020 13:02:47 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 13:02:41 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     "Huang, Ying" <ying.huang@intel.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
+Message-ID: <20200303130241.GE3772@suse.de>
+References: <20200228033819.3857058-1-ying.huang@intel.com>
+ <20200228034248.GE29971@bombadil.infradead.org>
+ <87a7538977.fsf@yhuang-dev.intel.com>
+ <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
+ <871rqf850z.fsf@yhuang-dev.intel.com>
+ <20200228094954.GB3772@suse.de>
+ <87h7z76lwf.fsf@yhuang-dev.intel.com>
+ <20200302151607.GC3772@suse.de>
+ <87zhcy5hoj.fsf@yhuang-dev.intel.com>
 MIME-Version: 1.0
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
- <87eevf4hnq.fsf@nanos.tec.linutronix.de> <20200224224059.GC1508@skl-build> <87mu95ne3q.fsf@nanos.tec.linutronix.de>
-In-Reply-To: <87mu95ne3q.fsf@nanos.tec.linutronix.de>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 3 Mar 2020 14:00:48 +0100
-Message-ID: <CACRpkdadbWvsnyrH_+sRha2C0fJU0EFEO9UyO7wHybZT-R1jzA@mail.gmail.com>
-Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time GPIO
- Driver with PHC interface changes to support additional H/W Features
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Jonathan Cameron <jic23@kernel.org>
-Cc:     "Christopher S. Hall" <christopher.s.hall@intel.com>,
-        netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        jacob.e.keller@intel.com,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sean V Kelley <sean.v.kelley@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <87zhcy5hoj.fsf@yhuang-dev.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 12:06 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> "Christopher S. Hall" <christopher.s.hall@intel.com> writes:
+On Tue, Mar 03, 2020 at 09:51:56AM +0800, Huang, Ying wrote:
+> Mel Gorman <mgorman@suse.de> writes:
+> > On Mon, Mar 02, 2020 at 07:23:12PM +0800, Huang, Ying wrote:
+> >> If some applications cannot tolerate the latency incurred by the memory
+> >> allocation and zeroing.  Then we cannot discard instead of migrate
+> >> always.  While in some situations, less memory pressure can help.  So
+> >> it's better to let the administrator and the application choose the
+> >> right behavior in the specific situation?
+> >> 
+> >
+> > Is there an application you have in mind that benefits from discarding
+> > MADV_FREE pages instead of migrating them?
+> >
+> > Allowing the administrator or application to tune this would be very
+> > problematic. An application would require an update to the system call
+> > to take advantage of it and then detect if the running kernel supports
+> > it. An administrator would have to detect that MADV_FREE pages are being
+> > prematurely discarded leading to a slowdown and that is hard to detect.
+> > It could be inferred from monitoring compaction stats and checking
+> > if compaction activity is correlated with higher minor faults in the
+> > target application. Proving the correlation would require using the perf
+> > software event PERF_COUNT_SW_PAGE_FAULTS_MIN and matching the addresses
+> > to MADV_FREE regions that were freed prematurely. That is not an obvious
+> > debugging step to take when an application detects latency spikes.
+> >
+> > Now, you could add a counter specifically for MADV_FREE pages freed for
+> > reasons other than memory pressure and hope the administrator knows about
+> > the counter and what it means. That type of knowledge could take a long
+> > time to spread so it's really very important that there is evidence of
+> > an application that suffers due to the current MADV_FREE and migration
+> > behaviour.
+> 
+> OK.  I understand that this patchset isn't a universal win, so we need
+> some way to justify it.  I will try to find some application for that.
+> 
+> Another thought, as proposed by David Hildenbrand, it's may be a
+> universal win to discard clean MADV_FREE pages when migrating if there are
+> already memory pressure on the target node.  For example, if the free
+> memory on the target node is lower than high watermark?
+> 
 
-> > Apart from clock import/export applications, timestamping single I/O
-> > events are potentially valuable for industrial control applications
-> > (e.g. motor position sensing vs. time). As time sync precision
-> > requirements for these applications are tightened, standard GPIO
-> > timing precision will not be good enough.
+That is an extremely specific corner case that is not likely to occur.
+NUMA balancing is not going to migrate a MADV_FREE page under these
+circumstances as a write cancels MADV_FREE is read attempt will probably
+fail to allocate a destination page in alloc_misplaced_dst_page so the
+data gets lost instead of remaining remote. sys_movepages is a possibility
+but the circumstances of an application delibertly trying to migrate to
+a loaded node is low. Compaction never migrates cross-node so the state
+of a remote node under pressure do not matter.
 
-If you are using (from userspace) the GPIO character device
-and open the events using e.g. tools/gpio/gpio-event-mon.c
-you get GPIO events to userspace.
+Once again, there needs to be a reasonable use case to be able to
+meaningfully balance between the benefits and risks of changing the
+MADV_FREE semantics.
 
-This uses a threaded interrupt with an top half (fastpath)
-that timestamps it as the IRQ comes in using
-ktime_get_ns(). It's as good as we can get it with just
-software and IRQs (I think).
-
-This uses a KFIFO to userspace, same approach as the IIO
-subsystem.
-
-> Anyway, the device we are talking about is a GPIO device with inputs and
-> outputs plus bells and whistles attached to it.
->
-> On the input side this provides a timestamp taken by the hardware when
-> the input level changes, i.e. hardware based time stamping instead of
-> software based interrupt arrival timestamping. Looks like an obvious
-> extension to the GPIO subsystem.
-
-That looks like something I/we would want to support all the way
-to userspace so people can do their funny industrial stuff in some
-standard manner.
-
-IIO has a config file in sysfs that lets them select the source of the
-timestamp like so (drivers/iio/industrialio-core.c):
-
-s64 iio_get_time_ns(const struct iio_dev *indio_dev)
-{
-        struct timespec64 tp;
-
-        switch (iio_device_get_clock(indio_dev)) {
-        case CLOCK_REALTIME:
-                return ktime_get_real_ns();
-        case CLOCK_MONOTONIC:
-                return ktime_get_ns();
-        case CLOCK_MONOTONIC_RAW:
-                return ktime_get_raw_ns();
-        case CLOCK_REALTIME_COARSE:
-                return ktime_to_ns(ktime_get_coarse_real());
-        case CLOCK_MONOTONIC_COARSE:
-                ktime_get_coarse_ts64(&tp);
-                return timespec64_to_ns(&tp);
-        case CLOCK_BOOTTIME:
-                return ktime_get_boottime_ns();
-        case CLOCK_TAI:
-                return ktime_get_clocktai_ns();
-        default:
-                BUG();
-        }
-}
-
-After discussion with Arnd we concluded the only timestamp that
-makes sense is ktime_get_ns(). So in GPIO we just use that, all the
-userspace I can think of certainly prefers monotonic time.
-(If tglx does not agree with that I stand corrected to whatever
-he says, I suppose.)
-
-Anyway in GPIO we could also make it configurable for users who
-know what they are doing.
-
-HW timestamps would be something more elaborate and
-nice CLOCK_HW_SPECIFIC or so. Some of the IIO sensors also
-have that, we just don't expose it as of now.
-
-Yours,
-Linus Walleij
+-- 
+Mel Gorman
+SUSE Labs
