@@ -2,221 +2,138 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3366C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:47:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA9DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EEBE215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72FF420726
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:49:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L38YK67b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727514AbgCCGrZ (ORCPT
+        id S1727506AbgCCGtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:47:25 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:46273 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgCCGrZ (ORCPT
+        Tue, 3 Mar 2020 01:49:11 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43521 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbgCCGtL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:47:25 -0500
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1j91Kr-0005ML-6Y; Tue, 03 Mar 2020 07:47:21 +0100
-Subject: Re: [PATCH V4 2/4] mailbox: imx: restructure code to make easy for
- new MU
-To:     Peng Fan <peng.fan@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>
-Cc:     Aisheng Dong <aisheng.dong@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-References: <1583200380-15623-1-git-send-email-peng.fan@nxp.com>
- <1583200380-15623-3-git-send-email-peng.fan@nxp.com>
- <f4b3384d-ee24-e254-2799-69e57625995b@pengutronix.de>
- <AM0PR04MB4481BD4CC61A8E30B8ECB68488E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <e2ba35db-d9dc-83c1-0261-867a706dd285@pengutronix.de>
-Date:   Tue, 3 Mar 2020 07:47:20 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 01:49:11 -0500
+Received: by mail-qt1-f194.google.com with SMTP id v22so2013827qtp.10;
+        Mon, 02 Mar 2020 22:49:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LQ7+Ef/3tVnwWmKN5BTMdijO3IVFIc6ME1MwlKqUcZU=;
+        b=L38YK67bV0n3eydzwXR5khhw+tDh2beuqoeaMGhMYIOfYvnYJ97k7oHDPvEg4AUfts
+         C958CfObeXA65i+SX6PAsgsHLSF67UNUAkpJUL9dHVe14CNKx2mCk/Kvr8w1LneAhpX0
+         ZuEEZGnxyK0LLulkVzQaHEUBD/jf42ixwCaR3dyB4ytufkN+vjXmfPxdSxRuLv6/rJT+
+         7Q7tfHRvg9eWW8lI/lhWr905QqrGmPw0aWW2xwSa2uFaINdhikWK0DyA+Sp0ZCuT8OQ3
+         ZD1WxSRWmeKRetxj8aSSKNiTLPIhijzu9j3SlRqTi5eRI/2waj7tM5bhHK4kETaEG9w2
+         1vZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LQ7+Ef/3tVnwWmKN5BTMdijO3IVFIc6ME1MwlKqUcZU=;
+        b=Dd56v+jmD4C2qPLDRRiml7o2S5ArLPq4HvMSNFaMBKa3cWFLGVKV72EyjE5Q8CUxmI
+         3Ka9oIMj05UHidfQj0i59yyE0tGiFfBr8WbUqytwi2r5neBSyynEabW1Pf5nFqKbFpp4
+         RrEYZ3heWErXsSEAmtM05m1qvSMdcyevH52TdUKfiQXPIPexmpUZBkTI45b0Saxu2ydd
+         fC44SmzpHVnHMaUPGsiTj0tGtsZ3pBzBk7jS+Ii/9vqWL2631P5Yp7ggL98OWSberOST
+         zN6tDQKxVuh0t6ySLDgMyLQUsqR1WgiD9W/oYvWnTrr2wbKaABpuxVxZGs2+ZvCFSZUA
+         ftRg==
+X-Gm-Message-State: ANhLgQ2ULOxv0pbuHYOgr2tdgpaS4y9BqnvJsVjS4LlRhFEzmLcsrmJW
+        QA/G8SEo5Zl+9f+hWxD+1yr4YDaqkMggftPHo0VzO9j5
+X-Google-Smtp-Source: ADFU+vs4R8qEKRNY1/lZafw5dUr172u+Evb/NOh748tQmYp5cP0msuGg8tZjIX/zixgCsh2nB8cC2fQr5vW4zn5Ag7g=
+X-Received: by 2002:ac8:4408:: with SMTP id j8mr3106825qtn.3.1583218150151;
+ Mon, 02 Mar 2020 22:49:10 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <AM0PR04MB4481BD4CC61A8E30B8ECB68488E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <d7239f3c7379e402f665fc8927f635ac56691380.1582776447.git.baolin.wang7@gmail.com>
+ <202002290858.UhNBgssD%lkp@intel.com> <CADBw62pAtWkoSqX=d=3qvi+JLwb28OnMd2VHSaC130ScYpNJ1g@mail.gmail.com>
+ <89d9811d-9c6d-6e53-4da7-60026c1b0ced@intel.com>
+In-Reply-To: <89d9811d-9c6d-6e53-4da7-60026c1b0ced@intel.com>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Tue, 3 Mar 2020 14:48:58 +0800
+Message-ID: <CADBw62og=tuq1E695ujUM_PsFHySOymmevB2o1XaYGXZe8y3Dg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] pinctrl: sprd: Allow the SPRD pinctrl driver building
+ into a module
+To:     Rong Chen <rong.a.chen@intel.com>
+Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rong,
 
+On Tue, Mar 3, 2020 at 2:43 PM Rong Chen <rong.a.chen@intel.com> wrote:
+>
+>
+>
+> On 3/2/20 10:33 AM, Baolin Wang wrote:
+> > Hi
+> >
+> > On Sat, Feb 29, 2020 at 8:41 AM kbuild test robot <lkp@intel.com> wrote:
+> >> Hi Baolin,
+> >>
+> >> I love your patch! Yet something to improve:
+> >>
+> >> [auto build test ERROR on pinctrl/devel]
+> >> [also build test ERROR on v5.6-rc3 next-20200228]
+> >> [if your patch is applied to the wrong git tree, please drop us a note to help
+> >> improve the system. BTW, we also suggest to use '--base' option to specify the
+> >> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> >>
+> >> url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/pinctrl-Export-some-needed-symbols-at-module-load-time/20200227-121948
+> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+> >> config: i386-randconfig-d003-20200229 (attached as .config)
+> >> compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
+> >> reproduce:
+> >>          # save the attached .config to linux build tree
+> >>          make ARCH=i386
+> >>
+> >> If you fix the issue, kindly add following tag
+> >> Reported-by: kbuild test robot <lkp@intel.com>
+> >>
+> >> All errors (new ones prefixed by >>):
+> >>
+> >>     drivers/pinctrl/sprd/pinctrl-sprd.c: In function 'sprd_dt_node_to_map':
+> >>>> drivers/pinctrl/sprd/pinctrl-sprd.c:282:8: error: implicit declaration of function 'pinconf_generic_parse_dt_config'; did you mean 'pinconf_generic_dump_config'? [-Werror=implicit-function-declaration]
+> >>       ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
+> >>             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >>             pinconf_generic_dump_config
+> >>     cc1: some warnings being treated as errors
+> > I followed your attached configuration, but I can not reproduce your
+> > building error. Did I miss anything else? Thanks.
+> >
+> > CONFIG_PINCTRL=y
+> > CONFIG_PINMUX=y
+> > CONFIG_GENERIC_PINMUX_FUNCTIONS=y
+> > CONFIG_PINCONF=y
+> > CONFIG_GENERIC_PINCONF=y
+> > CONFIG_PINCTRL_SPRD=y
+> > CONFIG_PINCTRL_SPRD_SC9860=y
+> >
+>
+> Hi Baolin,
+>
+> We can reproduce this error with attached config and our branch
+> "https://github.com/0day-ci/linux/commits/Baolin-Wang/pinctrl-Export-some-needed-symbols-at-module-load-time/20200227-121948",
+> could you try again?
 
-On 03.03.20 07:27, Peng Fan wrote:
-> Hi Oleksij,
-> 
->> Subject: Re: [PATCH V4 2/4] mailbox: imx: restructure code to make easy for
->> new MU
->>
->>
->>
->> On 03.03.20 02:52, peng.fan@nxp.com wrote:
->>> From: Peng Fan <peng.fan@nxp.com>
->>>
->>> Add imx_mu_generic_tx for data send and imx_mu_generic_rx for
->>> interrupt data receive.
->>>
->>> Pack original mu chans related code into imx_mu_init_generic
->>>
->>> With these, it will be a bit easy to introduce i.MX8/8X SCU type MU
->>> dedicated to communicate with SCU.
->>>
->>> Signed-off-by: Peng Fan <peng.fan@nxp.com>
->>> ---
->>> V4:
->>>    Pack MU chans init to imx_mu_init_generic
->>> V3:
->>>    New patch, restructure code.
->>>
->>>    drivers/mailbox/imx-mailbox.c | 127
->> ++++++++++++++++++++++++++----------------
->>>    1 file changed, 78 insertions(+), 49 deletions(-)
->>>
->>> diff --git a/drivers/mailbox/imx-mailbox.c
->>> b/drivers/mailbox/imx-mailbox.c index 2cdcdc5f1119..e98f3550f995
->>> 100644
->>> --- a/drivers/mailbox/imx-mailbox.c
->>> +++ b/drivers/mailbox/imx-mailbox.c
->>> @@ -36,7 +36,12 @@ enum imx_mu_chan_type {
->>>    	IMX_MU_TYPE_RXDB,	/* Rx doorbell */
->>>    };
->>>
->>> +struct imx_mu_priv;
->>> +struct imx_mu_con_priv;
->>
->> Please move imx_mu_dcfg below struct imx_mu_priv. It was my mistaked, i
->> missed this point.
-> 
-> That's fine.
-> 
->>
->>>    struct imx_mu_dcfg {
->>> +	int (*tx)(struct imx_mu_priv *priv, struct imx_mu_con_priv *cp, void
->> *data);
->>> +	int (*rx)(struct imx_mu_priv *priv, struct imx_mu_con_priv *cp);
->>
->> please add init function here as well.
-> 
-> ok. I'll add as below:
-> 
-> int (*init)(struct imx_mu_priv *priv);
-> 
->>
->>>    	u32	xTR[4];		/* Transmit Registers */
->>>    	u32	xRR[4];		/* Receive Registers */
->>>    	u32	xSR;		/* Status Register */
-> [....]
-> 
->>> -
->>>    	priv->side_b = of_property_read_bool(np, "fsl,mu-side-b");
->>>
->>> +	imx_mu_init_generic(priv);
->>
->> please use priv->dcfg->init(priv);
-> 
-> I assume you agree the code I packed in imx_mu_init_generic.
-
-yes
-
-> I just need to assign init = imx_mu_init_generic; And use priv->dcfg->init(priv),
-> right?
-
-right.
-
-> Thanks,
-> Peng.
-> 
->>
->>> +
->>>    	spin_lock_init(&priv->xcr_lock);
->>>
->>>    	priv->mbox.dev = dev;
->>>    	priv->mbox.ops = &imx_mu_ops;
->>>    	priv->mbox.chans = priv->mbox_chans;
->>> -	priv->mbox.num_chans = IMX_MU_CHANS;
->>> -	priv->mbox.of_xlate = imx_mu_xlate;
->>>    	priv->mbox.txdone_irq = true;
->>>
->>>    	platform_set_drvdata(pdev, priv);
->>>
->>> -	imx_mu_init_generic(priv);
->>> -
->>>    	return devm_mbox_controller_register(dev, &priv->mbox);
->>>    }
->>>
->>> @@ -367,6 +378,24 @@ static int imx_mu_remove(struct platform_device
->> *pdev)
->>>    	return 0;
->>>    }
->>>
->>> +static const struct imx_mu_dcfg imx_mu_cfg_imx6sx = {
->>> +	.tx	= imx_mu_generic_tx,
->>> +	.rx	= imx_mu_generic_rx,
->>> +	.xTR	= {0x0, 0x4, 0x8, 0xc},
->>> +	.xRR	= {0x10, 0x14, 0x18, 0x1c},
->>> +	.xSR	= 0x20,
->>> +	.xCR	= 0x24,
->>> +};
->>> +
->>> +static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
->>> +	.tx	= imx_mu_generic_tx,
->>> +	.rx	= imx_mu_generic_rx,
->>> +	.xTR	= {0x20, 0x24, 0x28, 0x2c},
->>> +	.xRR	= {0x40, 0x44, 0x48, 0x4c},
->>> +	.xSR	= 0x60,
->>> +	.xCR	= 0x64,
->>> +};
->>> +
->>>    static const struct of_device_id imx_mu_dt_ids[] = {
->>>    	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
->>>    	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
->>>
->>
->> Kind regards,
->> Oleksij Rempel
->>
->> --
->> Pengutronix e.K.                           |
->> |
->> Industrial Linux Solutions                 |
->> https://eur01.safelinks.protection.outlook.com/?url=http%3A%2F%2Fwww.p
->> engutronix.de%2F&amp;data=02%7C01%7Cpeng.fan%40nxp.com%7Ce59c2b
->> ea2efd47dc8fb408d7bf39f68c%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C
->> 0%7C0%7C637188127988825530&amp;sdata=d%2FN82zkoGy7m3yXf6Q8h9
->> OWYs0ldZlozDzPwAnOMDkI%3D&amp;reserved=0  |
->> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0
->> |
->> Amtsgericht Hildesheim, HRA 2686           | Fax:
->> +49-5121-206917-5555 |
-
-Kind regards,
-Oleksij Rempel
+I can reproduce the warning on X86 platform now, and I've already sent
+out a patch to fix it. Thanks
+https://lkml.org/lkml/2020/3/2/1551
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Baolin Wang
