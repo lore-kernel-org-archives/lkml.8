@@ -2,162 +2,101 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A45C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AC23C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:03:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A4520842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:02:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OwKTbi1b"
+	by mail.kernel.org (Postfix) with ESMTP id 19B2720842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:03:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgCCJC6 (ORCPT
+        id S1727988AbgCCJDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:02:58 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55589 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727644AbgCCJC5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:02:57 -0500
-Received: by mail-wm1-f68.google.com with SMTP id 6so2137162wmi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:02:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=B1QblP7nlvPoNJZA/tUgIvHTmiBly/VSI1OGHQaKg+M=;
-        b=OwKTbi1blcqQFKiDiaZ7M8YGUpnC5WkQLBl9WWGtLYHog/QtZ04RdAQnMLSMHZtb2M
-         s6xrnO5ChC5bT7HUh4U/TxnmJezcfnoKV+qAeWzn9BW+1nGx5jHYxKtlSgGt6nXA9we0
-         eCRpYfcICgUJ0hZ0BubEXvr1dZ71Pe/7VytqXE3dZ51nW2DI6P9B+l3NKpO+ZmW8JZYq
-         0f3TIU47wOMrCaHt31bcmNjkobvrQmlDT7qfG+g+usS2oqjsi1WOmNf5W8mqZodX8p4Z
-         yCQ3mSNy39s75qRrSToJtqeH5wvGTtVcVFUWGovkpQPiv25Eim2dTVqhvaPHYQ8aosqg
-         Np3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=B1QblP7nlvPoNJZA/tUgIvHTmiBly/VSI1OGHQaKg+M=;
-        b=qVLIjxrj78uBaeGKcNx3n0gP06NwRC43V0esKtV8jC+ouzYUrb3H4l3F9JLXtteGWT
-         sz1AFpXPcQlAD3MYTRBdeMtMeQlHHt2OskKAuwnVBqFU7h0vdNCebGzodSI+UnbBlfAx
-         mUQzlEgbDnqE50pxcP/6B0ZssxFeUOnfemxSfobqlQKdk7Iu2IkX0Az1gh9AlVSy4zH3
-         VBNjuoD9ql5yV4cR4txbVRQ2RoKa69c1NF7qgdjHGiA+DyULWcwHpwWYpysLACJJperS
-         DZqBPvlzoHj/pue0vQ1NPVSxacH4RNb40even4AOsIS0hJNopoyBrAgr8LQIT8Bg4n6f
-         2ANA==
-X-Gm-Message-State: ANhLgQ0hvMyixdkyKKddO8E3I1sA44rkErek8cTULSAof/ppDLemqXZV
-        0BYF1RDz8jXIuZAbzne+If1yRgQP7fQ=
-X-Google-Smtp-Source: ADFU+vvrfaX7BjMx5oSgNO9L53mjK70aWOuTuKyuwy/dDbSeKMXjVOtrYR0cJi11GINNNvfVwzOk8g==
-X-Received: by 2002:a1c:4d3:: with SMTP id 202mr3313975wme.172.1583226174464;
-        Tue, 03 Mar 2020 01:02:54 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:995:2d3a:cb24:4f79? ([2a01:e34:ed2f:f020:995:2d3a:cb24:4f79])
-        by smtp.googlemail.com with ESMTPSA id d17sm2737694wmb.36.2020.03.03.01.02.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 01:02:54 -0800 (PST)
-Subject: Re: [PATCH v2] thermal: qoriq: fix a compiling issue
-To:     andy.tang@nxp.com, rui.zhang@intel.com, edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200303084641.35687-1-andy.tang@nxp.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <e62c49e7-9929-1546-0e39-07bfd0615b17@linaro.org>
-Date:   Tue, 3 Mar 2020 10:02:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200303084641.35687-1-andy.tang@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 3 Mar 2020 04:03:39 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:39638 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbgCCJDi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:03:38 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 73DCA201322;
+        Tue,  3 Mar 2020 10:03:36 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 651C0201312;
+        Tue,  3 Mar 2020 10:03:36 +0100 (CET)
+Received: from fsr-ub1664-175.ea.freescale.net (fsr-ub1664-175.ea.freescale.net [10.171.82.40])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F89820414;
+        Tue,  3 Mar 2020 10:03:35 +0100 (CET)
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Rob Herring <robh@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>
+Cc:     NXP Linux Team <linux-imx@nxp.com>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-clk@vger.kernel.org, Abel Vesa <abel.vesa@nxp.com>
+Subject: [RFC 00/11] Add generic MFD i.MX mix and audiomix support
+Date:   Tue,  3 Mar 2020 11:03:15 +0200
+Message-Id: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/2020 09:46, andy.tang@nxp.com wrote:
-> From: Yuantian Tang <andy.tang@nxp.com>
-> 
-> Qoriq thermal driver is used by both PowerPC and ARM architecture.
-> When built for PowerPC architecture, it reports error:
-> undefined reference to `.__devm_regmap_init_mmio_clk'
-> To fix it, select config REGMAP_MMIO.
-> 
-> Fixes: 4316237bd627 (thermal: qoriq: Convert driver to use regmap API)
-> 
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
-> v2:
-> 	- add Fixes tag
-> 
->  drivers/thermal/Kconfig | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> index 5a05db5438d6..5a0df0e54ce3 100644
+The i.MX8MP has some new IPs called mixes. They are formed usually by some
+GPRs that can be split into different functionalities. The first example
+here is the audiomix which has dedicated registers that can be registered
+as a clock controller and some other registers that can be registered as
+a reset controller, plus some dedicated ones that will be registered as
+syscon and used by each dedicated audio IP.
 
-Applied, thanks
+More mixes to be following the same structure are to come, like hdmimix,
+dispmix and mediamix. They will all be populated and registered by the MFD
+imx-mix generic driver.
 
+Abel Vesa (11):
+  mfd: Add i.MX generic mix support
+  arm64: dts: imx8mp: Add AIPS 4 and 5
+  arm64: dts: imx8mp: Add audiomix node
+  clk: imx: Add gate shared for i.MX8MP audiomix
+  clk: imx: pll14xx: Add the device as argument when registering
+  clk: imx: Add helpers for passing the device as argument
+  dt-bindings: clocks: imx8mp: Add ids for audiomix clocks
+  clk: imx: Add audiomix clock controller support
+  arm64: dts: imx8mp: Add audiomix clock controller node
+  reset: imx: Add audiomix reset controller support
+  arm64: dts: imx8mp: Add audiomix reset controller node
+
+ arch/arm64/boot/dts/freescale/imx8mp.dtsi      |  37 ++++
+ drivers/clk/imx/Makefile                       |   2 +-
+ drivers/clk/imx/clk-audiomix.c                 | 237 +++++++++++++++++++++++++
+ drivers/clk/imx/clk-gate-shared.c              | 111 ++++++++++++
+ drivers/clk/imx/clk-pll14xx.c                  |   6 +-
+ drivers/clk/imx/clk.h                          |  46 ++++-
+ drivers/mfd/Kconfig                            |  11 ++
+ drivers/mfd/Makefile                           |   1 +
+ drivers/mfd/imx-mix.c                          |  48 +++++
+ drivers/reset/Kconfig                          |   7 +
+ drivers/reset/Makefile                         |   1 +
+ drivers/reset/reset-imx-audiomix.c             | 122 +++++++++++++
+ include/dt-bindings/clock/imx8mp-clock.h       |  62 +++++++
+ include/dt-bindings/reset/imx-audiomix-reset.h |  15 ++
+ 14 files changed, 699 insertions(+), 7 deletions(-)
+ create mode 100644 drivers/clk/imx/clk-audiomix.c
+ create mode 100644 drivers/clk/imx/clk-gate-shared.c
+ create mode 100644 drivers/mfd/imx-mix.c
+ create mode 100644 drivers/reset/reset-imx-audiomix.c
+ create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.7.4
 
