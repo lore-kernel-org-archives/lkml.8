@@ -4,54 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60727C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C676FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36B1A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3086208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258967;
-	bh=c21TfbwGAmY04joA/5Jg2fRADSeF3iapOKvmXyOEypY=;
+	s=default; t=1583258978;
+	bh=ala5iqwtAVhgx3k4LxKBFPyVmpRQnPLjInTzeG/NRUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hRXD1MnGHzxa6UG7k51bJ499o7NSl4DWaHXrU9y3AOYXm3jRd8K8g2W/8s2BtuKBS
-	 va8eR+r/RUI0foeRXSmkV/BkHNH3UbH0s54Vk+pHDxrXB48/sKBAVWYqhbZHk8+X1z
-	 RIr7Woo9uSEMPemKmEm8SgKQuFeSOmvePws0m4Vo=
+	b=AKI8PxarUFGZqpv2lc21efPiUb1+VZtBaOtX3E06U80WzH3ytqIQWB+ImzfCwah95
+	 29Oe0gZ9+mYkP8HT7twWGlmp3cVFQx6t/vREYEvq0WQyadKiAv2LiOvzaqtqTTMS2r
+	 eQKieqrDuLNokPrvR6y4OggPnIywgO1P/QRHt+Yo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732172AbgCCRwd (ORCPT
+        id S1732096AbgCCRwE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:52:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60880 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:52:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731400AbgCCRw3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:52:29 -0500
+        id S1732081AbgCCRwA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:52:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5867A20728;
-        Tue,  3 Mar 2020 17:52:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93D41206D5;
+        Tue,  3 Mar 2020 17:51:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257948;
-        bh=c21TfbwGAmY04joA/5Jg2fRADSeF3iapOKvmXyOEypY=;
+        s=default; t=1583257920;
+        bh=ala5iqwtAVhgx3k4LxKBFPyVmpRQnPLjInTzeG/NRUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=THojV6H1QZ//0SGx+HqZLKqLy6TocuvfEVNhpsK1kemRx2/eoXG8WwKp80gCC+2q0
-         5AMBygOf8NF5k8DiMwOLLcp/4hqD7Q3fi7acsUH/b1abQeukSu2hDs0sT1V1kGbcL+
-         GI0/TLUaU4cgHXl3jfiBCd/UPIql+Xbccucm1q4w=
+        b=kYmCMggwHSbDhcQhfiVFFiy3lXHwk8po2xKI7ivkWntDM6E05A+gXz/JW/z/Q6aP7
+         b8VXEQRHiGd2oOWrm4Gv7fsPumG18PHvReXSyhdJP+bwCzV2b935UF/Rsm480oqZbh
+         d13YJiCtLNMQjIagT/DijLhjZHbCqT5qj1IDSB50=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Horatiu Vultur <horatiu.vultur@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 006/152] net: mscc: fix in frame extraction
-Date:   Tue,  3 Mar 2020 18:41:44 +0100
-Message-Id: <20200303174303.216257661@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: [PATCH 5.5 168/176] xfs: clear kernel only flags in XFS_IOC_ATTRMULTI_BY_HANDLE
+Date:   Tue,  3 Mar 2020 18:43:52 +0100
+Message-Id: <20200303174323.478185167@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
-References: <20200303174302.523080016@linuxfoundation.org>
+In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
+References: <20200303174304.593872177@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,50 +59,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Horatiu Vultur <horatiu.vultur@microchip.com>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit a81541041ceb55bcec9a8bb8ad3482263f0a205a ]
+commit 953aa9d136f53e226448dbd801a905c28f8071bf upstream.
 
-Each extracted frame on Ocelot has an IFH. The frame and IFH are extracted
-by reading chuncks of 4 bytes from a register.
+Don't allow passing arbitrary flags as they change behavior including
+memory allocation that the call stack is not prepared for.
 
-In case the IFH and frames were read corretly it would try to read the next
-frame. In case there are no more frames in the queue, it checks if there
-were any previous errors and in that case clear the queue. But this check
-will always succeed also when there are no errors. Because when extracting
-the IFH the error is checked against 4(number of bytes read) and then the
-error is set only if the extraction of the frame failed. So in a happy case
-where there are no errors the err variable is still 4. So it could be
-a case where after the check that there are no more frames in the queue, a
-frame will arrive in the queue but because the error is not reseted, it
-would try to flush the queue. So the frame will be lost.
-
-The fix consist in resetting the error after reading the IFH.
-
-Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ddbca70cc45c ("xfs: allocate xattr buffer on demand")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mscc/ocelot_board.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
 
---- a/drivers/net/ethernet/mscc/ocelot_board.c
-+++ b/drivers/net/ethernet/mscc/ocelot_board.c
-@@ -112,6 +112,14 @@ static irqreturn_t ocelot_xtr_irq_handle
- 		if (err != 4)
- 			break;
+---
+ fs/xfs/libxfs/xfs_attr.h |    7 +++++--
+ fs/xfs/xfs_ioctl.c       |    2 ++
+ fs/xfs/xfs_ioctl32.c     |    2 ++
+ 3 files changed, 9 insertions(+), 2 deletions(-)
+
+--- a/fs/xfs/libxfs/xfs_attr.h
++++ b/fs/xfs/libxfs/xfs_attr.h
+@@ -26,7 +26,7 @@ struct xfs_attr_list_context;
+  *========================================================================*/
  
-+		/* At this point the IFH was read correctly, so it is safe to
-+		 * presume that there is no error. The err needs to be reset
-+		 * otherwise a frame could come in CPU queue between the while
-+		 * condition and the check for error later on. And in that case
-+		 * the new frame is just removed and not processed.
-+		 */
-+		err = 0;
+ 
+-#define ATTR_DONTFOLLOW	0x0001	/* -- unused, from IRIX -- */
++#define ATTR_DONTFOLLOW	0x0001	/* -- ignored, from IRIX -- */
+ #define ATTR_ROOT	0x0002	/* use attrs in root (trusted) namespace */
+ #define ATTR_TRUST	0x0004	/* -- unused, from IRIX -- */
+ #define ATTR_SECURE	0x0008	/* use attrs in security namespace */
+@@ -37,7 +37,10 @@ struct xfs_attr_list_context;
+ #define ATTR_KERNOVAL	0x2000	/* [kernel] get attr size only, not value */
+ 
+ #define ATTR_INCOMPLETE	0x4000	/* [kernel] return INCOMPLETE attr keys */
+-#define ATTR_ALLOC	0x8000	/* allocate xattr buffer on demand */
++#define ATTR_ALLOC	0x8000	/* [kernel] allocate xattr buffer on demand */
 +
- 		ocelot_parse_ifh(ifh, &info);
++#define ATTR_KERNEL_FLAGS \
++	(ATTR_KERNOTIME | ATTR_KERNOVAL | ATTR_INCOMPLETE | ATTR_ALLOC)
  
- 		dev = ocelot->ports[info.port]->dev;
+ #define XFS_ATTR_FLAGS \
+ 	{ ATTR_DONTFOLLOW, 	"DONTFOLLOW" }, \
+--- a/fs/xfs/xfs_ioctl.c
++++ b/fs/xfs/xfs_ioctl.c
+@@ -462,6 +462,8 @@ xfs_attrmulti_by_handle(
+ 
+ 	error = 0;
+ 	for (i = 0; i < am_hreq.opcount; i++) {
++		ops[i].am_flags &= ~ATTR_KERNEL_FLAGS;
++
+ 		ops[i].am_error = strncpy_from_user((char *)attr_name,
+ 				ops[i].am_attrname, MAXNAMELEN);
+ 		if (ops[i].am_error == 0 || ops[i].am_error == MAXNAMELEN)
+--- a/fs/xfs/xfs_ioctl32.c
++++ b/fs/xfs/xfs_ioctl32.c
+@@ -450,6 +450,8 @@ xfs_compat_attrmulti_by_handle(
+ 
+ 	error = 0;
+ 	for (i = 0; i < am_hreq.opcount; i++) {
++		ops[i].am_flags &= ~ATTR_KERNEL_FLAGS;
++
+ 		ops[i].am_error = strncpy_from_user((char *)attr_name,
+ 				compat_ptr(ops[i].am_attrname),
+ 				MAXNAMELEN);
 
 
