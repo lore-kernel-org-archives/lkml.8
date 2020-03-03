@@ -2,106 +2,114 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C206C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5ABC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAD720866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2554A20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:34:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="BDwb6Aqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728928AbgCCLdO (ORCPT
+        id S1729005AbgCCLeC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 06:33:14 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2502 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727851AbgCCLdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 06:33:13 -0500
-Received: from LHREML714-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 57CFC58127DD808F5752;
-        Tue,  3 Mar 2020 11:33:12 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML714-CAH.china.huawei.com (10.201.108.37) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 3 Mar 2020 11:33:11 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 3 Mar 2020
- 11:33:11 +0000
-Subject: Re: [Patch v3 3/3] iommu: avoid taking iova_rbtree_lock twice
-To:     <joro@8bytes.org>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>
-References: <20191218043951.10534-1-xiyou.wangcong@gmail.com>
- <20191218043951.10534-4-xiyou.wangcong@gmail.com>
- <2ff1002c-28b3-a863-49d2-3eab5b5ea778@arm.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <4b74d40a-22d1-af53-fcb6-5d70183705a8@huawei.com>
-Date:   Tue, 3 Mar 2020 11:33:10 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 3 Mar 2020 06:34:02 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:42329 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727972AbgCCLeB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 06:34:01 -0500
+Received: by mail-il1-f195.google.com with SMTP id x2so2425916ila.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 03:34:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6byiiSiBg+O9qfUoKK2ksV0ZQAH63X1Hb8rEqsCdvnA=;
+        b=BDwb6Aqrx0xtaZxAiJzRl8XeyjQnOY6DfKQWnfKlSJyw80tDndkNTO1YIRtxXiY32u
+         jX+rF79QYJ93n6uKhvAsKktrD0A98qVn8g0o2FP4zpYgjGgDbSp4ye0NeZ/S6xaEu/9P
+         jinoTbqOhlXGvA2nE26OcaLpGlhLDzhcnIkuA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6byiiSiBg+O9qfUoKK2ksV0ZQAH63X1Hb8rEqsCdvnA=;
+        b=NPaYDyUkb97MDw407I/fZnR4jm0ltI1dkU9fZ7EOoWC0L7Qh4QIWhXD9BDEFK0tiPA
+         OKQ5Oxn3odOzzqnJ/uflIe+0gY/OLFbi7ppT3eAfqTaTWRfnPGBt9G+btdBAcUsbI7dR
+         z405AwxYKk385vx0D0K+6w/ZjSPSEIsOfLSsFYhjnHxhKt+nSWE3xMv3qT9wddzf9oGF
+         XkJx6TlzGlebT8+HPYd1Zh1dIa7R6as8vyRyomMjtGbuRB1uLSHsLzy/x1pr6jrCuQk8
+         moDt0ycuQTpc6xWa1Hc5nbwHiom/Q3ZqHBbvMREDIHhNSqQA+n0t3SPhFy4o0X2EHOpS
+         Kq+w==
+X-Gm-Message-State: ANhLgQ2EqjkwnVhiQ4DZZFHJo0XG2mYA7143vQkjV4NbjtUoh/erMLk7
+        KJht4Qv0cHKLQuUVLvhCI324lGt+qiLlD+CsjBuqtw==
+X-Google-Smtp-Source: ADFU+vtdZi1ZHmFd0i6HeNGyBbTzdkdeTY8UruU2lDGdtfEbDHYjU8QcXctIQ1YFTTxOKq3DU5hMTC1oZ34IhqBV7I8=
+X-Received: by 2002:a92:89cb:: with SMTP id w72mr4195534ilk.252.1583235239625;
+ Tue, 03 Mar 2020 03:33:59 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <2ff1002c-28b3-a863-49d2-3eab5b5ea778@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <1582644535.3361.8.camel@HansenPartnership.com>
+ <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303100045.zqntjjjv6npvs5zl@wittgenstein> <CAJfpegu_O=wQsewDWdM39dhkrEoMPG4ZBkTQOsWTgFnYmvrLeA@mail.gmail.com>
+ <20200303102541.diud7za3vvjvqco4@wittgenstein>
+In-Reply-To: <20200303102541.diud7za3vvjvqco4@wittgenstein>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 3 Mar 2020 12:33:48 +0100
+Message-ID: <CAJfpegu7CTmE8XfL-Oqp3KkjJNU5FM+VJxohFfK9dO+xnJAdYA@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Christian Brauner <christian.brauner@ubuntu.com>
+Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21/01/2020 09:56, Robin Murphy wrote:
-> On 18/12/2019 4:39 am, Cong Wang wrote:
->> Both find_iova() and __free_iova() take iova_rbtree_lock,
->> there is no reason to take and release it twice inside
->> free_iova().
->>
->> Fold them into one critical section by calling the unlock
->> versions instead.
-> 
-> Makes sense to me.
-> 
-> Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+On Tue, Mar 3, 2020 at 11:25 AM Christian Brauner
+<christian.brauner@ubuntu.com> wrote:
+>
+> On Tue, Mar 03, 2020 at 11:13:50AM +0100, Miklos Szeredi wrote:
+> > On Tue, Mar 3, 2020 at 11:00 AM Christian Brauner
+> > <christian.brauner@ubuntu.com> wrote:
 
-Reviewed-by: John Garry <john.garry@huawei.com>
+> > > More magic links to beam you around sounds like a bad idea. We had a
+> > > bunch of CVEs around them in containers and they were one of the major
+> > > reasons behind us pushing for openat2(). That's why it has a
+> > > RESOLVE_NO_MAGICLINKS flag.
+> >
+> > No, that link wouldn't beam you around at all, it would end up in an
+> > internally mounted instance of a mountfs, a safe place where no
+>
+> Even if it is a magic link to a safe place it's a magic link. They
+> aren't a great solution to this problem. fsinfo() is cleaner and
+> simpler as it creates a context for a supervised mount which gives the a
+> managing application fine-grained control and makes it easily
+> extendable.
 
-Could we at least get this patch picked up? It should be ok to take in 
-isolation, since there is some debate on the other 2 patches in this 
-series. Thanks
+Yeah, it's a nice and clean interface in the ioctl(2) sense. Sure,
+fsinfo() is way better than ioctl(), but it at the core it's still the
+same syscall multiplexer, do everything hack.
 
-> 
->> Cc: Joerg Roedel <joro@8bytes.org>
->> Cc: John Garry <john.garry@huawei.com>
->> Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
->> ---
->>   drivers/iommu/iova.c | 8 ++++++--
->>   1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/iommu/iova.c b/drivers/iommu/iova.c
->> index 184d4c0e20b5..f46f8f794678 100644
->> --- a/drivers/iommu/iova.c
->> +++ b/drivers/iommu/iova.c
->> @@ -390,10 +390,14 @@ EXPORT_SYMBOL_GPL(__free_iova);
->>   void
->>   free_iova(struct iova_domain *iovad, unsigned long pfn)
->>   {
->> -    struct iova *iova = find_iova(iovad, pfn);
->> +    unsigned long flags;
->> +    struct iova *iova;
->> +    spin_lock_irqsave(&iovad->iova_rbtree_lock, flags);
->> +    iova = private_find_iova(iovad, pfn);
->>       if (iova)
->> -        __free_iova(iovad, iova);
->> +        private_free_iova(iovad, iova);
->> +    spin_unlock_irqrestore(&iovad->iova_rbtree_lock, flags);
->>   }
->>   EXPORT_SYMBOL_GPL(free_iova);
->>
-> .
+> Also, we're apparently at the point where it seems were suggesting
+> another (pseudo)filesystem to get information about filesystems.
 
+Implementation detail.  Why would you care?
+
+Thanks,
+Miklos
