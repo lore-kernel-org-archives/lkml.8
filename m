@@ -2,148 +2,83 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D29EBC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B445DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A767420866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:52:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583236326;
-	bh=bqw6gnhe8DaJUx8gH+mJ8ulDLAoF7VExRZOOBVm+YKs=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=dnE2ZBTG+vPCQrGp6W4UeaI1X0dFzDJx+lqMZqeZApGbpJH53u5nu3UBkMa3LgumF
-	 BaCvqj87YpkWqvrYhrTwvogvFEarWzs35ab4+BqxIOR8d0uCpI7iLpZE3b7yEPkzuU
-	 gqaS9G8nmG7nGPVHA0oBFBTLxJSZ0LMOdTRHmNuI=
+	by mail.kernel.org (Postfix) with ESMTP id 9346F206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:55:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729098AbgCCLwF (ORCPT
+        id S1729110AbgCCLzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 06:52:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60268 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgCCLwF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 06:52:05 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B87B206E6;
-        Tue,  3 Mar 2020 11:52:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583236324;
-        bh=bqw6gnhe8DaJUx8gH+mJ8ulDLAoF7VExRZOOBVm+YKs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JXF0uiz3jtCtvEfEVSqRNYIHGXTV5VZNnZ6EJWoeHcnrED/zkBjXc76Dram1Y0K5p
-         m0MnsWtFgIg4xvHwJ4kC8++CU/FgIrZvv0NF6an83SPnbX5U95/g87cnuPyqKE05de
-         GX98dfLrD4jns48F0p2vzD5A/5kYkpCqykMUKNrE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j965i-009exf-61; Tue, 03 Mar 2020 11:52:02 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        Will Deacon <will@kernel.org>, stable@vger.kernel.org
-Subject: [PATCH] iommu/dma: Fix MSI reservation allocation
-Date:   Tue,  3 Mar 2020 11:51:54 +0000
-Message-Id: <20200303115154.32263-1-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Tue, 3 Mar 2020 06:55:10 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42039 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729071AbgCCLzJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 06:55:09 -0500
+Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <l.stach@pengutronix.de>)
+        id 1j968f-0000I7-0k; Tue, 03 Mar 2020 12:55:05 +0100
+Message-ID: <4c61fde86c5e0dced249221dbc0a8d4207d5bffa.camel@pengutronix.de>
+Subject: Re: [PATCH 0/5] drm/etnaviv: Ignore MC bit when checking for
+ runtime suspend
+From:   Lucas Stach <l.stach@pengutronix.de>
+To:     Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Date:   Tue, 03 Mar 2020 12:55:04 +0100
+In-Reply-To: <cover.1583176306.git.agx@sigxcpu.org>
+References: <cover.1583176306.git.agx@sigxcpu.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, robin.murphy@arm.com, jroedel@suse.de, eric.auger@redhat.com, will@kernel.org, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
+X-SA-Exim-Mail-From: l.stach@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
-structures doesn't match the way iommu_put_dma_cookie() frees them.
+On Mo, 2020-03-02 at 20:13 +0100, Guido Günther wrote:
+> At least GC7000 fails to enter runtime suspend for long periods of time since
+> the MC becomes busy again even when the FE is idle. The rest of the series
+> makes detecting similar issues easier to debug in the future by checking
+> all known bits in debugfs and also warning in the EBUSY case.
 
-The former performs a single allocation of all the required structures,
-while the latter tries to free them one at a time. It doesn't quite
-work for the main use case (the GICv3 ITS where the range is 64kB)
-when the base ganule size is 4kB.
+Thanks, series applied to etnaviv/next.
 
-This leads to a nice slab corruption on teardown, which is easily
-observable by simply creating a VF on a SRIOV-capable device, and
-tearing it down immediately (no need to even make use of it).
+> Tested on GC7000 with a reduced runtime delay of 50ms. Patches are
+> against next-20200226.
 
-Fix it by allocating iommu_dma_msi_page structures one at a time.
+I've already wondered if 200ms is too long, 50ms sounds more
+reasonable. Do you have any numbers on the power draw on the i.MX8M
+with idle GPU, vs. being fully power gated? 
 
-Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Eric Auger <eric.auger@redhat.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: stable@vger.kernel.org
----
- drivers/iommu/dma-iommu.c | 36 ++++++++++++++++++++++++------------
- 1 file changed, 24 insertions(+), 12 deletions(-)
+Regards,
+Lucas
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index a2e96a5fd9a7..01fa64856c12 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -171,25 +171,37 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
- 		phys_addr_t start, phys_addr_t end)
- {
- 	struct iova_domain *iovad = &cookie->iovad;
--	struct iommu_dma_msi_page *msi_page;
--	int i, num_pages;
-+	struct iommu_dma_msi_page *msi_page, *tmp;
-+	int i, num_pages, ret = 0;
-+	phys_addr_t base;
- 
--	start -= iova_offset(iovad, start);
-+	base = start -= iova_offset(iovad, start);
- 	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
- 
--	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
--	if (!msi_page)
--		return -ENOMEM;
--
- 	for (i = 0; i < num_pages; i++) {
--		msi_page[i].phys = start;
--		msi_page[i].iova = start;
--		INIT_LIST_HEAD(&msi_page[i].list);
--		list_add(&msi_page[i].list, &cookie->msi_page_list);
-+		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
-+		if (!msi_page) {
-+			ret = -ENOMEM;
-+			break;
-+		}
-+		msi_page->phys = start;
-+		msi_page->iova = start;
-+		INIT_LIST_HEAD(&msi_page->list);
-+		list_add(&msi_page->list, &cookie->msi_page_list);
- 		start += iovad->granule;
- 	}
- 
--	return 0;
-+	if (ret) {
-+		list_for_each_entry_safe(msi_page, tmp,
-+					 &cookie->msi_page_list, list) {
-+			if (msi_page->phys >= base && msi_page->phys < start) {
-+				list_del(&msi_page->list);
-+				kfree(msi_page);
-+			}
-+		}
-+	}
-+
-+	return ret;
- }
- 
- static int iova_reserve_pci_windows(struct pci_dev *dev,
--- 
-2.20.1
+> Thanks to Lucas Stach for pointing me in the right direction.
+> 
+> Guido Günther (5):
+>   drm/etnaviv: Fix typo in comment
+>   drm/etnaviv: Update idle bits
+>   drm/etnaviv: Consider all kwnown idle bits in debugfs
+>   drm/etnaviv: Ignore MC when checking runtime suspend idleness
+>   drm/etnaviv: Warn when GPU doesn't idle fast enough
+> 
+>  drivers/gpu/drm/etnaviv/etnaviv_gpu.c  | 26 ++++++++++++++++++++++----
+>  drivers/gpu/drm/etnaviv/state_hi.xml.h |  7 +++++++
+>  2 files changed, 29 insertions(+), 4 deletions(-)
+> 
 
