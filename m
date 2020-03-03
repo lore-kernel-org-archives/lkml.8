@@ -2,65 +2,96 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 328F7C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797CDC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1323420838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551BF20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:33:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VFKQTpXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728653AbgCCKdO (ORCPT
+        id S1728736AbgCCKdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:33:14 -0500
-Received: from mga02.intel.com ([134.134.136.20]:1280 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728480AbgCCKdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:33:13 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 02:33:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="351795474"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 03 Mar 2020 02:33:10 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 03 Mar 2020 12:33:10 +0200
-Date:   Tue, 3 Mar 2020 12:33:10 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 3/3] Revert "thunderbolt: Prevent crash if non-active
- NVMem file is read"
-Message-ID: <20200303103310.GN2540@lahna.fi.intel.com>
-References: <PSXP216MB0438FE68DAAFC23CB9AAD5E180E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <PSXP216MB04388C56BECC4CE5EC81EA2680E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        Tue, 3 Mar 2020 05:33:33 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:50054 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728426AbgCCKdd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:33:33 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023AXMFu005259;
+        Tue, 3 Mar 2020 04:33:22 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583231602;
+        bh=H23/C9c6D1Bn7rFt5P52oUsGTGwNGkRyxfjO34gCRzc=;
+        h=From:To:CC:Subject:Date;
+        b=VFKQTpXi/80VK2MnN/qbPYsMYvGxB/0mL7cf3fYGW9RoLsmJaReCFxMQQwNT9dXBW
+         hW1Lbp2WG31Vtx39Z7dT9qJMLBaLR1CFRktt0NDrOHS3uma/uhMEU5lRn3pfrlDBrM
+         8k6euOn/HIURI+6xrDbM/mYdlfw67AdTcUXc2aWA=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023AXMuB105817
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Mar 2020 04:33:22 -0600
+Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 04:33:22 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE110.ent.ti.com
+ (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 04:33:22 -0600
+Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 023AXJvb114370;
+        Tue, 3 Mar 2020 04:33:19 -0600
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Alan Mikhak <alan.mikhak@sifive.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     Tom Joseph <tjoseph@cadence.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v2 0/5] PCI: functions/pci-epf-test: Add DMA data transfer
+Date:   Tue, 3 Mar 2020 16:07:47 +0530
+Message-ID: <20200303103752.13076-1-kishon@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB04388C56BECC4CE5EC81EA2680E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 03:43:29PM +0000, Nicholas Johnson wrote:
-> This reverts commit 03cd45d2e219301880cabc357e3cf478a500080f.
-> 
-> Since NVMEM subsystem gained support for write-only instances, this
-> workaround is no longer required, so drop it.
-> 
-> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Patch series uses dma engine APIs in pci-epf-test to transfer data using
+DMA. It also adds an option "-d" in pcitest for the user to indicate
+whether DMA has to be used for data transfer. This also prints
+throughput information for data transfer.
 
-Assuming this goes through The NVMem tree:
+Changes from v1:
+*) Fixed some of the function names from pci_epf_* to pci_epf_test_*
+since the DMA support is now been moved to pci-epf-test.c
 
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Kishon Vijay Abraham I (5):
+  PCI: endpoint: functions/pci-epf-test: Add DMA support to transfer
+    data
+  PCI: endpoint: functions/pci-epf-test: Print throughput information
+  misc: pci_endpoint_test: Use streaming DMA APIs for buffer allocation
+  tools: PCI: Add 'd' command line option to support DMA
+  misc: pci_endpoint_test: Add support to get DMA option from userspace
 
-If that's not the case, please let me know. I can also take them through
-the Thunderbolt tree.
+ drivers/misc/pci_endpoint_test.c              | 165 ++++++++++--
+ drivers/pci/endpoint/functions/pci-epf-test.c | 253 +++++++++++++++++-
+ include/uapi/linux/pcitest.h                  |   5 +
+ tools/pci/pcitest.c                           |  20 +-
+ 4 files changed, 412 insertions(+), 31 deletions(-)
+
+-- 
+2.17.1
+
