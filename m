@@ -2,146 +2,163 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D92CC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:58:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E81C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:58:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3054920842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:58:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583225890;
-	bh=KBIL2H1eGtzbKq5+lV7p4WavBpeD/QOWtwGZXygvL4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=otvYHUOXNdKbpF8yxocy2qT59MCCDpZGQr9+JmVfx6GwS71+tjKg/vCMTtJCN8/ZS
-	 zhmSA3CGfaQ5yVdpUrgU53gkYlC/5z1vJVKB/2Ab6hGU8E90dGR15fZVD4nvKDP/Ly
-	 9r/PwE1WXh8IwNnX3PzQvnf2zFH0dVVPr0WKAxzg=
+	by mail.kernel.org (Postfix) with ESMTP id D217520842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:58:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727949AbgCCI6J (ORCPT
+        id S1727905AbgCCI6b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:58:09 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51572 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727820AbgCCI6I (ORCPT
+        Tue, 3 Mar 2020 03:58:31 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:34855 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgCCI6b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:58:08 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a132so2140549wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:58:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=o3nAJyS427GVNyXsslN2Pau0rWQbZoVpqZd5vhmDcbo=;
-        b=tZcfn5hggmSYfUmewSPycxLwEXrzWSo5yFlO6Fj2G/1GApsalpYcY/dFxmqjGiFWbw
-         k1VVE2ajw6/tPrOrOZHs4q2r+7WoGpWfx7lQxXlUD6wm54lshIHjlzoRbln5ctLXZ/sE
-         pciAtg6RclRnUIu0NqoYPUc6BgjNMHoyhH97Xq8zyHU83mpyMTudbWMzdvczqpyXAy/k
-         RaZMvtxm7f8qNcy4Ywnh7RDtzjnhuBx7TttiXJBwytlcp59K0mUF2bMhCaSsR7MQyHVz
-         QAzK4VPApCIBjhjRcafI5nppQbUk9LfUOZYsuV5JeXZHjqYQd5OipmND91lB6Itz1Qhi
-         Hi1g==
-X-Gm-Message-State: ANhLgQ2Rkin0nCFDizFuqPbhsVdktJeCBmbVg6txGKUR/XEQh4o3PZmt
-        8TFHFBx4lqZlkFVbg7DKPjQ=
-X-Google-Smtp-Source: ADFU+vsiSyGnf4NyZB71E2Xs4HRY4mlABNwI6En59X2klzFiehq8MNIym6DH+Eheu4txeMlKQO5MBA==
-X-Received: by 2002:a1c:2747:: with SMTP id n68mr3180805wmn.14.1583225887031;
-        Tue, 03 Mar 2020 00:58:07 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id b10sm32893984wrw.61.2020.03.03.00.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 00:58:06 -0800 (PST)
-Date:   Tue, 3 Mar 2020 09:58:05 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Mel Gorman <mgorman@suse.de>, David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-Message-ID: <20200303085805.GB4380@dhcp22.suse.cz>
-References: <20200228034248.GE29971@bombadil.infradead.org>
- <87a7538977.fsf@yhuang-dev.intel.com>
- <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
- <871rqf850z.fsf@yhuang-dev.intel.com>
- <20200228094954.GB3772@suse.de>
- <87h7z76lwf.fsf@yhuang-dev.intel.com>
- <20200302151607.GC3772@suse.de>
- <87zhcy5hoj.fsf@yhuang-dev.intel.com>
- <20200303080945.GX4380@dhcp22.suse.cz>
- <87o8td4yf9.fsf@yhuang-dev.intel.com>
+        Tue, 3 Mar 2020 03:58:31 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j93NM-0006xr-6q; Tue, 03 Mar 2020 08:58:04 +0000
+Date:   Tue, 3 Mar 2020 09:58:02 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCHv4] exec: Fix a deadlock in ptrace
+Message-ID: <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87a74zmfc9.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87k142lpfz.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <875zfmloir.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nmjulm.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <87o8td4yf9.fsf@yhuang-dev.intel.com>
+In-Reply-To: <202003021531.C77EF10@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03-03-20 16:47:54, Huang, Ying wrote:
-> Michal Hocko <mhocko@kernel.org> writes:
+On Mon, Mar 02, 2020 at 06:26:47PM -0800, Kees Cook wrote:
+> On Mon, Mar 02, 2020 at 10:18:07PM +0000, Bernd Edlinger wrote:
+> > This fixes a deadlock in the tracer when tracing a multi-threaded
+> > application that calls execve while more than one thread are running.
+> > 
+> > I observed that when running strace on the gcc test suite, it always
+> > blocks after a while, when expect calls execve, because other threads
+> > have to be terminated.  They send ptrace events, but the strace is no
+> > longer able to respond, since it is blocked in vm_access.
+> > 
+> > The deadlock is always happening when strace needs to access the
+> > tracees process mmap, while another thread in the tracee starts to
+> > execve a child process, but that cannot continue until the
+> > PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
+> > 
+> > strace          D    0 30614  30584 0x00000000
+> > Call Trace:
+> > __schedule+0x3ce/0x6e0
+> > schedule+0x5c/0xd0
+> > schedule_preempt_disabled+0x15/0x20
+> > __mutex_lock.isra.13+0x1ec/0x520
+> > __mutex_lock_killable_slowpath+0x13/0x20
+> > mutex_lock_killable+0x28/0x30
+> > mm_access+0x27/0xa0
+> > process_vm_rw_core.isra.3+0xff/0x550
+> > process_vm_rw+0xdd/0xf0
+> > __x64_sys_process_vm_readv+0x31/0x40
+> > do_syscall_64+0x64/0x220
+> > entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > expect          D    0 31933  30876 0x80004003
+> > Call Trace:
+> > __schedule+0x3ce/0x6e0
+> > schedule+0x5c/0xd0
+> > flush_old_exec+0xc4/0x770
+> > load_elf_binary+0x35a/0x16c0
+> > search_binary_handler+0x97/0x1d0
+> > __do_execve_file.isra.40+0x5d4/0x8a0
+> > __x64_sys_execve+0x49/0x60
+> > do_syscall_64+0x64/0x220
+> > entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > The proposed solution is to take the cred_guard_mutex only
+> > in a critical section at the beginning, and at the end of the
+> > execve function, and let PTRACE_ATTACH fail with EAGAIN while
+> > execve is not complete, but other functions like vm_access are
+> > allowed to complete normally.
 > 
-> > On Tue 03-03-20 09:51:56, Huang, Ying wrote:
-> >> Mel Gorman <mgorman@suse.de> writes:
-> >> > On Mon, Mar 02, 2020 at 07:23:12PM +0800, Huang, Ying wrote:
-> >> >> If some applications cannot tolerate the latency incurred by the memory
-> >> >> allocation and zeroing.  Then we cannot discard instead of migrate
-> >> >> always.  While in some situations, less memory pressure can help.  So
-> >> >> it's better to let the administrator and the application choose the
-> >> >> right behavior in the specific situation?
-> >> >> 
-> >> >
-> >> > Is there an application you have in mind that benefits from discarding
-> >> > MADV_FREE pages instead of migrating them?
-> >> >
-> >> > Allowing the administrator or application to tune this would be very
-> >> > problematic. An application would require an update to the system call
-> >> > to take advantage of it and then detect if the running kernel supports
-> >> > it. An administrator would have to detect that MADV_FREE pages are being
-> >> > prematurely discarded leading to a slowdown and that is hard to detect.
-> >> > It could be inferred from monitoring compaction stats and checking
-> >> > if compaction activity is correlated with higher minor faults in the
-> >> > target application. Proving the correlation would require using the perf
-> >> > software event PERF_COUNT_SW_PAGE_FAULTS_MIN and matching the addresses
-> >> > to MADV_FREE regions that were freed prematurely. That is not an obvious
-> >> > debugging step to take when an application detects latency spikes.
-> >> >
-> >> > Now, you could add a counter specifically for MADV_FREE pages freed for
-> >> > reasons other than memory pressure and hope the administrator knows about
-> >> > the counter and what it means. That type of knowledge could take a long
-> >> > time to spread so it's really very important that there is evidence of
-> >> > an application that suffers due to the current MADV_FREE and migration
-> >> > behaviour.
-> >> 
-> >> OK.  I understand that this patchset isn't a universal win, so we need
-> >> some way to justify it.  I will try to find some application for that.
-> >> 
-> >> Another thought, as proposed by David Hildenbrand, it's may be a
-> >> universal win to discard clean MADV_FREE pages when migrating if there are
-> >> already memory pressure on the target node.  For example, if the free
-> >> memory on the target node is lower than high watermark?
-> >
-> > This is already happening because if the target node is short on memory
-> > it will start to reclaim and if MADV_FREE pages are at the tail of
-> > inactive file LRU list then they will be dropped. Please note how that
-> > follows proper aging and doesn't introduce any special casing. Really
-> > MADV_FREE is an inactive cache for anonymous memory and we treat it like
-> > inactive page cache. This is not carved in stone of course but it really
-> > requires very good justification to change.
+> Sorry to be bummer, but I don't think this will work. A few more things
+> during the exec process depend on cred_guard_mutex being held.
 > 
-> If my understanding were correct, the newly migrated clean MADV_FREE
-> pages will be put at the head of inactive file LRU list instead of the
-> tail.  So it's possible that some useful file cache pages will be
-> reclaimed.
+> If I'm reading this patch correctly, this changes the lifetime of the
+> cred_guard_mutex lock to be:
+> 	- during prepare_bprm_creds()
+> 	- from flush_old_exec() through install_exec_creds()
+> Before, cred_guard_mutex was held from prepare_bprm_creds() through
+> install_exec_creds().
+> 
+> That means, for example, that check_unsafe_exec()'s documented invariant
+> is violated:
+>     /*
+>      * determine how safe it is to execute the proposed program
+>      * - the caller must hold ->cred_guard_mutex to protect against
+>      *   PTRACE_ATTACH or seccomp thread-sync
+>      */
+>     static void check_unsafe_exec(struct linux_binprm *bprm) ...
+> which is looking at no_new_privs as well as other details, and making
+> decisions about the bprm state from the current state.
+> 
+> I think it also means that the potentially multiple invocations
+> of bprm_fill_uid() (via prepare_binprm() via binfmt_script.c and
+> binfmt_misc.c) would be changing bprm->cred details (uid, gid) without
+> a lock (another place where current's no_new_privs is evaluated).
+> 
+> Related, it also means that cred_guard_mutex is unheld for every
+> invocation of search_binary_handler() (which can loop via the previously
+> mentioned binfmt_script.c and binfmt_misc.c), if any of them have hidden
+> dependencies on cred_guard_mutex. (Thought I only see bprm_fill_uid()
+> currently.)
 
-This is the case also when you migrate other pages, right? We simply
-cannot preserve the aging.
-
--- 
-Michal Hocko
-SUSE Labs
+So one issue I see with having to reacquire the cred_guard_mutex might
+be that this would allow tasks holding the cred_guard_mutex to block a
+killed exec'ing task from exiting, right?
