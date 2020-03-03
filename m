@@ -2,104 +2,97 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 882C6C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6432FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:35:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BAAB2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C53B20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:35:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="DNKD3ACu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GHga60VN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbgCCMfk (ORCPT
+        id S1728905AbgCCMfz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:35:40 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:57298 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728565AbgCCMfH (ORCPT
+        Tue, 3 Mar 2020 07:35:55 -0500
+Received: from mail-wm1-f41.google.com ([209.85.128.41]:40849 "EHLO
+        mail-wm1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728415AbgCCMfz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:35:07 -0500
-X-UUID: 622ff6f04c904130a46c57e334950472-20200303
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=Z5N9h3ZP3DBfqF0Eth6jRlSgWjKGDGeyQ0XnduA9Fgk=;
-        b=DNKD3ACufsMNgcZI45uhQLffkqa56ggsPmDAkhPR/zJ/SoIqlF6QADmB5I6Nk0xht+cVQrYiPkbCtKZkfRrZ7KEK8HOen0YLd4UYEP1VJq7sZh76W8C/OAejMcsmH1T0AIXOF/e3aRprAOm5p2hKf3RV7O+X7LRZ8Tjsk8iHtPA=;
-X-UUID: 622ff6f04c904130a46c57e334950472-20200303
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <xia.jiang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1967406519; Tue, 03 Mar 2020 20:35:01 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 3 Mar 2020 20:34:08 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 3 Mar 2020 20:35:41 +0800
-From:   Xia Jiang <xia.jiang@mediatek.com>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rick Chang <rick.chang@mediatek.com>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        <srv_heupstream@mediatek.com>, Xia Jiang <xia.jiang@mediatek.com>
-Subject: [PATCH v7 05/11] media: platform: Change case for improving code quality
-Date:   Tue, 3 Mar 2020 20:34:40 +0800
-Message-ID: <20200303123446.20095-6-xia.jiang@mediatek.com>
-X-Mailer: git-send-email 2.18.0
-In-Reply-To: <20200303123446.20095-1-xia.jiang@mediatek.com>
-References: <20200303123446.20095-1-xia.jiang@mediatek.com>
+        Tue, 3 Mar 2020 07:35:55 -0500
+Received: by mail-wm1-f41.google.com with SMTP id e26so2653940wme.5;
+        Tue, 03 Mar 2020 04:35:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=rz2M9V+ocKeCKBO1DTovHWBHdLHnzUuWHLb/2ndomPg=;
+        b=GHga60VNe5FeroqHZ/v9n4E2vp3rgvzrlblLNbqORO7SNQfyDjLW5AON9gM6Uwb6xQ
+         NuH/FL2Z7dX+BUNOj+YEiLciP9jJgIftKg/HXqpl1XainX2ArMEwtLj+EimmO0+IEUiv
+         hhqudlhUeULciWh1yPbxzzyAhuFz4if+ORNrQIbSUOo503U5vshuNOiOf2byKeefwgoH
+         oNp3wtIuF18eqbb4I51cXPZoPk6KmLKzwYAu0DuDR9lw4L9zQHm2L1CsgUGinhEIaXJ2
+         WCl3PuFlmwE8n0h5hym+lNEOR9OhS6f7rEVjMGcXFDAzGqmq2xBKNYXWbLJfhVWyYTP0
+         vpIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=rz2M9V+ocKeCKBO1DTovHWBHdLHnzUuWHLb/2ndomPg=;
+        b=VZ4mlvVbGmrXyBUPW26a4RijXHEb3mGS0EvxbopNnbZdDLcReWhtlyeh2WE1crm669
+         Xc1sjOKuBCPLsCPifR6cjctmzP/PD4++yD/yqbj0QdrRqKJDx+u7tyC0pCs77JhVH3+7
+         q/0NQNSLZuBB2VB8g7ojlTTgul2ucaXtIxInW2TsH0Dx/cGDkQ4BqynqtbYlYndOYeNJ
+         7iAQLrbwp1A2lzlexkPbp6CPu9qmMTD4ygZRGB1sQ8vsUZEL0XlyN5Rwumw6VF2/ujMP
+         3J/Hn0pW6iDrN1wby7C0p+TPunkDV0/7t8W435HG4ilY9A/Zc3ZgnBzTeooO9smSovA/
+         Lnbw==
+X-Gm-Message-State: ANhLgQ2lGA9Olt1KoGWzsdGffIs8yNYKsW/qwcVxbypUEqw8GdkdqnlP
+        87zjiHMOm3XH5jfb/Nt1iWGmF37d
+X-Google-Smtp-Source: ADFU+vufeWSmB8RAOO4F2s3ATVOHiD1EGO8AhsT03Q02Af0id3T2mAwbnruorwSjWm0o//ef43PtVg==
+X-Received: by 2002:a7b:c204:: with SMTP id x4mr4179246wmi.20.1583238952930;
+        Tue, 03 Mar 2020 04:35:52 -0800 (PST)
+Received: from [10.34.28.108] (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id k126sm3401852wme.4.2020.03.03.04.35.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 04:35:52 -0800 (PST)
+Subject: Re: [RFC] crypto: xts - limit accepted key length
+To:     "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>,
+        Andrei Botila <andrei.botila@oss.nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <b8c0cbbf0cb94e389bae5ae3da77596d@DM6PR20MB2762.namprd20.prod.outlook.com>
+ <CY4PR0401MB3652818432E5A28BC5089E15C3E70@CY4PR0401MB3652.namprd04.prod.outlook.com>
+From:   Milan Broz <gmazyland@gmail.com>
+Message-ID: <72e1866a-9202-8d5b-f67b-8d9a63d888a7@gmail.com>
+Date:   Tue, 3 Mar 2020 13:35:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <CY4PR0401MB3652818432E5A28BC5089E15C3E70@CY4PR0401MB3652.namprd04.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Q2hhbmdlIHJlZ2lzdGVyIG9mZnNldCBoZXggbnVtYmVyYWxzIGZyb20gdXBlcmNhc2UgdG8gbG93
-ZXJjYXNlLg0KDQpTaWduZWQtb2ZmLWJ5OiBYaWEgSmlhbmcgPHhpYS5qaWFuZ0BtZWRpYXRlay5j
-b20+DQotLS0NCiBkcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVnL210a19qcGVnX3JlZy5o
-IHwgMTggKysrKysrKysrLS0tLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygr
-KSwgOSBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0v
-bXRrLWpwZWcvbXRrX2pwZWdfcmVnLmggYi9kcml2ZXJzL21lZGlhL3BsYXRmb3JtL210ay1qcGVn
-L210a19qcGVnX3JlZy5oDQppbmRleCA5NGRiMDRlOWNkYjYuLjI5NDVkYTg0MmRmYSAxMDA2NDQN
-Ci0tLSBhL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfcmVnLmgNCisr
-KyBiL2RyaXZlcnMvbWVkaWEvcGxhdGZvcm0vbXRrLWpwZWcvbXRrX2pwZWdfcmVnLmgNCkBAIC0y
-MCwyOSArMjAsMjkgQEANCiAjZGVmaW5lIEJJVF9JTlFTVF9NQVNLX0FMTElSUQkJMHgzNw0KIA0K
-ICNkZWZpbmUgSlBHREVDX1JFR19SRVNFVAkJMHgwMDkwDQotI2RlZmluZSBKUEdERUNfUkVHX0JS
-Wl9GQUNUT1IJCTB4MDBGOA0KLSNkZWZpbmUgSlBHREVDX1JFR19EVV9OVU0JCTB4MDBGQw0KKyNk
-ZWZpbmUgSlBHREVDX1JFR19CUlpfRkFDVE9SCQkweDAwZjgNCisjZGVmaW5lIEpQR0RFQ19SRUdf
-RFVfTlVNCQkweDAwZmMNCiAjZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERSMF9ZCQkweDAxNDAN
-CiAjZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERSMF9VCQkweDAxNDQNCiAjZGVmaW5lIEpQR0RF
-Q19SRUdfREVTVF9BRERSMF9WCQkweDAxNDgNCi0jZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERS
-MV9ZCQkweDAxNEMNCisjZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERSMV9ZCQkweDAxNGMNCiAj
-ZGVmaW5lIEpQR0RFQ19SRUdfREVTVF9BRERSMV9VCQkweDAxNTANCiAjZGVmaW5lIEpQR0RFQ19S
-RUdfREVTVF9BRERSMV9WCQkweDAxNTQNCiAjZGVmaW5lIEpQR0RFQ19SRUdfU1RSSURFX1kJCTB4
-MDE1OA0KLSNkZWZpbmUgSlBHREVDX1JFR19TVFJJREVfVVYJCTB4MDE1Qw0KKyNkZWZpbmUgSlBH
-REVDX1JFR19TVFJJREVfVVYJCTB4MDE1Yw0KICNkZWZpbmUgSlBHREVDX1JFR19JTUdfU1RSSURF
-X1kJCTB4MDE2MA0KICNkZWZpbmUgSlBHREVDX1JFR19JTUdfU1RSSURFX1VWCTB4MDE2NA0KLSNk
-ZWZpbmUgSlBHREVDX1JFR19XRE1BX0NUUkwJCTB4MDE2Qw0KKyNkZWZpbmUgSlBHREVDX1JFR19X
-RE1BX0NUUkwJCTB4MDE2Yw0KICNkZWZpbmUgSlBHREVDX1JFR19QQVVTRV9NQ1VfTlVNCTB4MDE3
-MA0KLSNkZWZpbmUgSlBHREVDX1JFR19PUEVSQVRJT05fTU9ERQkweDAxN0MNCisjZGVmaW5lIEpQ
-R0RFQ19SRUdfT1BFUkFUSU9OX01PREUJMHgwMTdjDQogI2RlZmluZSBKUEdERUNfUkVHX0ZJTEVf
-QUREUgkJMHgwMjAwDQotI2RlZmluZSBKUEdERUNfUkVHX0NPTVBfSUQJCTB4MDIwQw0KKyNkZWZp
-bmUgSlBHREVDX1JFR19DT01QX0lECQkweDAyMGMNCiAjZGVmaW5lIEpQR0RFQ19SRUdfVE9UQUxf
-TUNVX05VTQkweDAyMTANCiAjZGVmaW5lIEpQR0RFQ19SRUdfQ09NUDBfREFUQV9VTklUX05VTQkw
-eDAyMjQNCi0jZGVmaW5lIEpQR0RFQ19SRUdfRFVfQ1RSTAkJMHgwMjNDDQorI2RlZmluZSBKUEdE
-RUNfUkVHX0RVX0NUUkwJCTB4MDIzYw0KICNkZWZpbmUgSlBHREVDX1JFR19UUklHCQkJMHgwMjQw
-DQogI2RlZmluZSBKUEdERUNfUkVHX0ZJTEVfQlJQCQkweDAyNDgNCi0jZGVmaW5lIEpQR0RFQ19S
-RUdfRklMRV9UT1RBTF9TSVpFCTB4MDI0Qw0KKyNkZWZpbmUgSlBHREVDX1JFR19GSUxFX1RPVEFM
-X1NJWkUJMHgwMjRjDQogI2RlZmluZSBKUEdERUNfUkVHX1FUX0lECQkweDAyNzANCiAjZGVmaW5l
-IEpQR0RFQ19SRUdfSU5URVJSVVBUX1NUQVRVUwkweDAyNzQNCiAjZGVmaW5lIEpQR0RFQ19SRUdf
-U1RBVFVTCQkweDAyNzgNCi0tIA0KMi4xOC4wDQo=
+On 02/03/2020 09:33, Van Leeuwen, Pascal wrote:
+> Hmm ... in principle IEEE-1619 also defines XTS *only* for AES. So by that  same
+> reasoning, you should also not allow any usage of XTS beyond AES. Yet it is
+> actually being actively used(?) with other ciphers in the Linux kernel.
+Just FYI - yes, it is actively used with other ciphers.
 
+There is a lot of LUKS devices that use Serpent or Twofish with XTS mode.
+
+The same for TrueCrypt/VeraCrypt, here sometimes it is used also in cipher chain
+(both native binaries or cryptsetup code use dm-crypt with crypto API here).
+
+XTS mode is designed for storage encryption only - and at least for disk encryption
+I have never seen request for 192bit keys...
+
+Milan
