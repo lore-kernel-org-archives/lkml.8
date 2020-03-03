@@ -2,104 +2,108 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BE7C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98E9B2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:21:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="FBoRlyCm"
+	by mail.kernel.org (Postfix) with ESMTP id 140F02072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730775AbgCCTVX (ORCPT
+        id S1730783AbgCCTWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:21:23 -0500
-Received: from mout.gmx.net ([212.227.17.22]:35201 "EHLO mout.gmx.net"
+        Tue, 3 Mar 2020 14:22:43 -0500
+Received: from mga12.intel.com ([192.55.52.136]:14655 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729516AbgCCTVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:21:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1583263278;
-        bh=z5MdokEfnohRClHDpHvNTwSEsQsAEZU56XPFTiszgjQ=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=FBoRlyCmC3WWcgtT3nbPmB3SkrAwUgVgkhxQabrxUhtoVAlJ5io97hAwd2Sq4tdw4
-         xxzrXF73hE+Pb8oHR3Ap89aWjGMmdHn3KaJWaJ9XXiWVZO3kqpvSqk9um1cVxpZd0/
-         L/leIqBK161YDttYGkrVDcoP3c0f0yegMjNfHxj4=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from longitude ([5.146.195.177]) by mail.gmx.com (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N4QsY-1jXqki3JqQ-011RMb; Tue, 03
- Mar 2020 20:21:18 +0100
-From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-To:     linux-doc@vger.kernel.org
-Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: [PATCH] Documentation: management-style: Fix formatting of emphsized word
-Date:   Tue,  3 Mar 2020 20:21:12 +0100
-Message-Id: <20200303192113.20761-1-j.neuschaefer@gmx.net>
-X-Mailer: git-send-email 2.20.1
+        id S1729833AbgCCTWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:22:43 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 11:22:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="274348369"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 03 Mar 2020 11:22:42 -0800
+Date:   Tue, 3 Mar 2020 11:22:42 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     "Luck, Tony" <tony.luck@intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark D Rustad <mrustad@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Xiaoyao Li <xiaoyao.li@intel.com>
+Subject: Re: [PATCH] x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
+Message-ID: <20200303192242.GU1439@linux.intel.com>
+References: <20200206164614.GA20622@agluck-desk2.amr.corp.intel.com>
+ <6735A646-3817-4030-B9B9-11492BB1B8F0@amacapital.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:asG4HO3fQkYF44OwjHkqrNtzg8cnJIwXuYEfJr8bzc74H5Tm4iW
- Itg01JLHuHBQr4bj3g75vJlPGFHTDuHToUuyStrii0XXY+i24phdtS5WVRisv18yHcTLJyO
- ZwxY/XOEdKNyjqOt+QKw66f9+9c7Te9zUUWNs5PadfgciunW9JBVLOnyfljX7wEkL+PQ83N
- Curd/Vxr2TkA/AZN+F5EA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pV+ZI0r+ksc=:vU9kIoEpyVXr0hx0sw8XSk
- XvZA15e5OcwyyfI5saPPbL6dqml6csbcWtTcOXWqHifV/UX9cQd5EhIw8qrT45GHnU2VqvM+N
- 8yto4nKmQ6RkZ6OVxXNRXEsHz4+krgQydJLpUJfWnb7RY9/0107mUBKh2QHNfrhMq6W/jiPuM
- Vg0fQUAY49vnhm0e9KlOeUjSGWIeMDwUUx1G+ynv4hFbs9lCQw/3t6IrgcieFjwounOSxKop9
- TZOzSBPc007bdsCZeMiBUyxnbuIDXbye2lIVWs4DhIsVV05e0XZzbuP4jnTAwVbg1s7MpCT/c
- Hxkyy6UmEItzHt32LSbgktVkVY6hQknhjiTKa9JOHeGJT8syHR9bUBfHyDlQ90jl5hU2De+tp
- M/E5GMtiiFyhG0kXIXQJlyL3Oug/n4wzIYH6shYAJpiVaQFEXoHFjyeiUpkecmP/LZMZVBtdk
- 5t/khNIObkQkfvimOAI3NDBLFncUltqUjc+IVgHH6gF8ieEx0E384E0EzNHUyHtRlBDhT0Zbl
- NCiuQvxU15JxGGGzexQhfCVUTgmzEsYJ5PWHcaRAkePuoFXIbmp2Pfw0b0a8wP/3WDwWv1x67
- LuDwWW5Yd43s8GKFHS/4qXb6CBZdmMM4FWmodKK1B1RJ5oAkY67BLD8o+JkmnrXcdirImJ3n6
- Z4hepjw66obHkmfA5KqqS+I5nM0Aum37gU1y3Jkvm4kCpgtonnh9cSl1W8U7LNIzq5HJZ7uoW
- I7UO1j5ibisTOOLZxtyYvD6skz95F2kOAFtkobobKBv0dbOoC0vC7uUskLbrXFm2rEJm7kPax
- 72et1WwaizQBxrCWPa4Aneq9cOgZq/JkvuW2iykpkKzmJmzWetNvzEZqGErZnV4hpY2BglkdS
- Gb9QCrXVQ//QSQw+ZCMXjitG1MyI3ICJVdu/xoy//uKgln5R1pGwWFElEwhnsiGU7zH3tmyK7
- FbHzMVgOCjJas4SQ84qFHbohZii6FAnrgLGjOAZdag8rfhnO09QusQpMXlJxMdqrb1AEtFGYl
- BpfZkd7dNNA8a+5qai3eJWaFgUt98CzW3NOaAUKLcn3w3kXJHBPNqfTPYSNuN11ZsDuguhoL5
- iBFqkBRf+dq3Em/QXs5aDD8WIcEJRgsH4XxS3kT6npJlmdr9lwDlO35kR2GJW7ERUJhjX4KZ9
- vTwIsxxgLc+2Df8LMlE3V26J8BvmUk6COpD0h66zcYDWdZ0d4Bsu8ec2mTlRaInUkKRKTKzfL
- jH4cnoc/vmHja/tBx
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6735A646-3817-4030-B9B9-11492BB1B8F0@amacapital.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 7f2b3c65b9a1 ("Documentation/ManagementStyle: convert it to ReST
-markup") converted _underlined_ to *emphasized* words, but forgot about
-an underscore in this case.
+On Thu, Feb 06, 2020 at 11:37:04AM -0800, Andy Lutomirski wrote:
+> 
+> > On Feb 6, 2020, at 8:46 AM, Luck, Tony <tony.luck@intel.com> wrote:
+> > 
+> > ﻿On Wed, Feb 05, 2020 at 05:18:23PM -0800, Andy Lutomirski wrote:
+> >>> On Wed, Feb 5, 2020 at 4:49 PM Luck, Tony <tony.luck@intel.com> wrote:
+> >>> 
+> >>> In a context switch from a task that is detecting split locks
+> >>> to one that is not (or vice versa) we need to update the TEST_CTRL
+> >>> MSR. Currently this is done with the common sequence:
+> >>>        read the MSR
+> >>>        flip the bit
+> >>>        write the MSR
+> >>> in order to avoid changing the value of any reserved bits in the MSR.
+> >>> 
+> >>> Cache the value of the TEST_CTRL MSR when we read it during initialization
+> >>> so we can avoid an expensive RDMSR instruction during context switch.
+> >> 
+> >> If something else that is per-cpu-ish gets added to the MSR in the
+> >> future, I will personally make fun of you for not making this percpu.
+> > 
+> > Xiaoyao Li has posted a version using a percpu cache value:
+> > 
+> > https://lore.kernel.org/r/20200206070412.17400-4-xiaoyao.li@intel.com
+> > 
+> > So take that if it makes you happier.  My patch only used the
+> > cached value to store the state of the reserved bits in the MSR
+> > and assumed those are the same for all cores.
+> > 
+> > Xiaoyao Li's version updates with what was most recently written
+> > on each thread (but doesn't, and can't, make use of that because we
+> > know that the other thread on the core may have changed the actual
+> > value in the MSR).
+> > 
+> > If more bits are implemented that need to be set at run time, we
+> > are likely up the proverbial creek. I'll see if I can find out if
+> > there are plans for that.
+> > 
+> 
+> I suppose that this whole thing is a giant mess, especially since at least
+> one bit there is per-physical-core. Sigh.
+> 
+> So I don’t have a strong preference.
 
-Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
-=2D--
- Documentation/process/management-style.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/process/management-style.rst b/Documentation/pr=
-ocess/management-style.rst
-index 186753ff3d2d..dfbc69bf49d4 100644
-=2D-- a/Documentation/process/management-style.rst
-+++ b/Documentation/process/management-style.rst
-@@ -227,7 +227,7 @@ incompetence will grudgingly admit that you at least d=
-idn't try to weasel
- out of it.
-
- Then make the developer who really screwed up (if you can find them) know
--**in_private** that they screwed up.  Not just so they can avoid it in th=
-e
-+**in private** that they screwed up.  Not just so they can avoid it in th=
-e
- future, but so that they know they owe you one.  And, perhaps even more
- importantly, they're also likely the person who can fix it.  Because, let=
-'s
- face it, it sure ain't you.
-=2D-
-2.20.1
-
+I'd prefer to go with this patch, i.e. not percpu, to remove the temptation
+of incorrectly optimizing away toggling SPLIT_LOCK_DETECT.
