@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFB83C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:48:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA26CC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:48:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC45D214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:48:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B81520CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:48:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583264921;
-	bh=3fdeTMTVLyvy2AI3VyujYmwAndWHM4zwmv0d3on0KZ0=;
+	s=default; t=1583264925;
+	bh=agBSg6xfa4NmUWzblX7S1g3hrA1NtlKGQJ5KXkt+MA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lgIMi4p28vBkVtjQE19MMb03GXFeCdO9YqxtRHNIspEit+n0l7qIHGMXeCdLqVFEm
-	 0W2LUIQbV1Wl9zcV1S9IAfZZZ72He1PksTvIAcdWGTwDrxvkmT1OwuSXDQoOaTIOQx
-	 e7pH2TnRE6BQLtTX2PXfTYqdviXxZ0nZL0zqrSOs=
+	b=ll6ae9SnSk/gFkFlEjdUaYZ9SlGS0rVGpd4GyF01e1sr+R9VsSWFDrAzZmGPAlpLD
+	 odzCXV3D9Y7a36578gdWQvkhmghblPyOVGR/GuCcRqpBcIa2F2Z+kpKOsshoFMYmT4
+	 eL5h+sLHm2otV7+3e409dxt64H7zFGz7/MEtMlW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731352AbgCCTsl (ORCPT
+        id S1731379AbgCCTso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:48:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57814 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 14:48:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729609AbgCCTsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:48:40 -0500
+        id S1729609AbgCCTsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:48:43 -0500
 Received: from quaco.ghostprotocols.net (unknown [179.97.37.151])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A052B208C3;
-        Tue,  3 Mar 2020 19:48:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D5E4215A4;
+        Tue,  3 Mar 2020 19:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583264920;
-        bh=3fdeTMTVLyvy2AI3VyujYmwAndWHM4zwmv0d3on0KZ0=;
+        s=default; t=1583264922;
+        bh=agBSg6xfa4NmUWzblX7S1g3hrA1NtlKGQJ5KXkt+MA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PP7aIFSX20lnS9RbHKgq6WeZEQb2H/N7JXsaKm1j5+gCRKx03iJLb4b+FUyhDjDo5
-         T/WXFZppvN5GDqCXniEtRv8afpehywV3KF7xztl2T2vYCZUd55pQB+fCYimwVydVhP
-         0m1qKiLDFYY0bwyx3T0xbGVR1Tsi+yGgl67ultZw=
+        b=y9dtSdKBbE/nwOFKqtLLTp9Aqip0+NEzuVGv8osb3f3Ily8/HsTOy/C8hzOTBDiAJ
+         vFFuvuNsjqRkm6MpWWVxNWt3XNUDOiAIeA8atAnsAOMhUbfOjxg2RjkftAQwTihM9G
+         4Z+4qsr/itALiMjo5yNZE6kYSsryx5NS5hSuyROI=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,13 +47,14 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH 2/5] perf env: Do not return pointers to local variables
-Date:   Tue,  3 Mar 2020 16:48:24 -0300
-Message-Id: <20200303194827.6461-3-acme@kernel.org>
+Subject: [PATCH 3/5] perf parse-events: Use asprintf() instead of strncpy() to read tracepoint files
+Date:   Tue,  3 Mar 2020 16:48:25 -0300
+Message-Id: <20200303194827.6461-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200303194827.6461-1-acme@kernel.org>
 References: <20200303194827.6461-1-acme@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -62,46 +63,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-It is possible to return a pointer to a local variable when looking up
-the architecture name for the running system and no normalization is
-done on that value, i.e. we may end up returning the uts.machine local
-variable.
+Make the code more compact by using asprintf() instead of malloc()+strncpy() which also uses
+less memory and avoids these warnings with gcc 10:
 
-While this doesn't happen on most arches, as normalization takes place,
-lets fix this by making that a static variable and optimize it a bit by
-not always running uname(), only the first time.
+    CC       /tmp/build/perf/util/cloexec.o
+  In file included from /usr/include/string.h:495,
+                   from util/parse-events.h:12,
+                   from util/parse-events.c:18:
+  In function ‘strncpy’,
+      inlined from ‘tracepoint_id_to_path’ at util/parse-events.c:271:5:
+  /usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ offset [275, 511] from the object at ‘sys_dirent’ is out of the bounds of referenced subobject ‘d_name’ with type ‘char[256]’ at offset 19 [-Werror=array-bounds]
+    106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/dirent.h:61,
+                   from util/parse-events.c:5:
+  util/parse-events.c: In function ‘tracepoint_id_to_path’:
+  /usr/include/bits/dirent.h:33:10: note: subobject ‘d_name’ declared here
+     33 |     char d_name[256];  /* We must not include limits.h! */
+        |          ^~~~~~
+  In file included from /usr/include/string.h:495,
+                   from util/parse-events.h:12,
+                   from util/parse-events.c:18:
+  In function ‘strncpy’,
+      inlined from ‘tracepoint_id_to_path’ at util/parse-events.c:273:5:
+  /usr/include/bits/string_fortified.h:106:10: error: ‘__builtin_strncpy’ offset [275, 511] from the object at ‘evt_dirent’ is out of the bounds of referenced subobject ‘d_name’ with type ‘char[256]’ at offset 19 [-Werror=array-bounds]
+    106 |   return __builtin___strncpy_chk (__dest, __src, __len, __bos (__dest));
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  In file included from /usr/include/dirent.h:61,
+                   from util/parse-events.c:5:
+  util/parse-events.c: In function ‘tracepoint_id_to_path’:
+  /usr/include/bits/dirent.h:33:10: note: subobject ‘d_name’ declared here
+     33 |     char d_name[256];  /* We must not include limits.h! */
+        |          ^~~~~~
+    CC       /tmp/build/perf/util/call-path.o
 
-Noticed in fedora rawhide running with:
-
-  [perfbuilder@a5ff49d6e6e4 ~]$ gcc --version
-  gcc (GCC) 10.0.1 20200216 (Red Hat 10.0.1-0.8)
-
-Reported-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/20200302145535.GA28183@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/env.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/parse-events.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
-index 6242a9215df7..4154f944f474 100644
---- a/tools/perf/util/env.c
-+++ b/tools/perf/util/env.c
-@@ -343,11 +343,11 @@ static const char *normalize_arch(char *arch)
- 
- const char *perf_env__arch(struct perf_env *env)
- {
--	struct utsname uts;
- 	char *arch_name;
- 
- 	if (!env || !env->arch) { /* Assume local operation */
--		if (uname(&uts) < 0)
-+		static struct utsname uts = { .machine[0] = '\0', };
-+		if (uts.machine[0] == '\0' && uname(&uts) < 0)
- 			return NULL;
- 		arch_name = uts.machine;
- 	} else
+diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
+index c01ba6f8fdad..a14995835d85 100644
+--- a/tools/perf/util/parse-events.c
++++ b/tools/perf/util/parse-events.c
+@@ -257,21 +257,15 @@ struct tracepoint_path *tracepoint_id_to_path(u64 config)
+ 				path = zalloc(sizeof(*path));
+ 				if (!path)
+ 					return NULL;
+-				path->system = malloc(MAX_EVENT_LENGTH);
+-				if (!path->system) {
++				if (asprintf(&path->system, "%.*s", MAX_EVENT_LENGTH, sys_dirent->d_name) < 0) {
+ 					free(path);
+ 					return NULL;
+ 				}
+-				path->name = malloc(MAX_EVENT_LENGTH);
+-				if (!path->name) {
++				if (asprintf(&path->name, "%.*s", MAX_EVENT_LENGTH, evt_dirent->d_name) < 0) {
+ 					zfree(&path->system);
+ 					free(path);
+ 					return NULL;
+ 				}
+-				strncpy(path->system, sys_dirent->d_name,
+-					MAX_EVENT_LENGTH);
+-				strncpy(path->name, evt_dirent->d_name,
+-					MAX_EVENT_LENGTH);
+ 				return path;
+ 			}
+ 		}
 -- 
 2.21.1
 
