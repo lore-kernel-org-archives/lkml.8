@@ -2,110 +2,190 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD617C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BFE7C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F6A222B48
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:14:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJZUDSvZ"
+	by mail.kernel.org (Postfix) with ESMTP id 75FBB206D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbgCCEOq (ORCPT
+        id S1727414AbgCCEQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:14:46 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46766 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727052AbgCCEOp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:14:45 -0500
-Received: by mail-qk1-f194.google.com with SMTP id u124so2079062qkh.13;
-        Mon, 02 Mar 2020 20:14:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=e/yk7+ePR4UtnpfkQ11p/1R+rxFd28+s/3MR8pBHbkM=;
-        b=NJZUDSvZr2Hke22ZDjqTxy7uY06oaXg+hUkBLtFjEcOrTthrFpTnaTNkfB1r3m/UPV
-         bYJG44P9dmYiEwdBtAiAA6bBZbv6GL2brr45BREnFlIBtKEQi5cn1wmCoNsVfSQVrVpy
-         iHb1baVDGSh7NClRWvPeeg4YNvjZgOBr5BbSgP50ybspPc3pPVPCkvE85V7JEr1izcPR
-         m2N5RCH16/8gWeS6q4NwKYjqAScKGmIToI9MHsewpAHaMG3yoohCteG5Bo6rVH52zg7a
-         BGFOi058cCW2syIDkNMpw31OHbTCTXsQovOOrjvlysm7eaNgyJ3qEA/cAo92ruIK209e
-         64lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=e/yk7+ePR4UtnpfkQ11p/1R+rxFd28+s/3MR8pBHbkM=;
-        b=BPqrNmUymzsU9/QbyY63vwLjliD/MfLFDFxsaLJH3RmNosGEoZ/frp5XHlI55ybQ6E
-         RMoc1omMg48vjOIMGXvOKDgQe6G+o3Wj/+u64cTN1AB7P5CEfCcQfkXgKOJ6muGG4P5h
-         ct7prSh+A9KyxdGKu2hWYi82YRPkJdFvycYQ0oGZkyH03S7BWmOmwPVFsStws5yU4En6
-         ilcVhNX/UvLa0CQwX0t1EeMKOTiFj1161xOsXLWjiGeHlq/FPwPzq7ZcSgpyxio5qnv0
-         rw3Ddd4dYtLkVqsNKqxZdmBlf9PPqkP74+Deb9EtT8U1LAQR+9r20acdC1ncjgcw0IUu
-         3hgA==
-X-Gm-Message-State: ANhLgQ0ioFhZcLin45p1Jyj7tmh6/dgYFqjkftmwyv6CI1YH4hpBeVdT
-        ePWZkx/xZzrCR91hGso+5yZHdlWjFCo=
-X-Google-Smtp-Source: ADFU+vstdfZgsFwwnQ843hMIFfCj5PLqChP+Jc8jZZFxIyeRO7s2iu23cWxTQ4nq1CrWYMZaW57GFA==
-X-Received: by 2002:a37:7182:: with SMTP id m124mr2409544qkc.477.1583208884632;
-        Mon, 02 Mar 2020 20:14:44 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id l16sm7153873qke.68.2020.03.02.20.14.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 20:14:44 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 2 Mar 2020 23:14:42 -0500
-To:     Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/5] efi/x86: Remove extra headroom for setup block
-Message-ID: <20200303041442.GA3518342@rani.riverdale.lan>
-References: <20200301230537.2247550-1-nivedita@alum.mit.edu>
- <20200301230537.2247550-5-nivedita@alum.mit.edu>
- <db83f5a1-b827-2a31-0ca9-a04df8257324@nextfour.com>
+        Mon, 2 Mar 2020 23:16:41 -0500
+Received: from mga07.intel.com ([134.134.136.100]:38597 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726998AbgCCEQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 23:16:41 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 20:16:40 -0800
+X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
+   d="scan'208";a="233468716"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.67]) ([10.255.30.67])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 02 Mar 2020 20:16:37 -0800
+Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when function
+ is out-of-range
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-2-sean.j.christopherson@intel.com>
+ <6b41fc5c-f7f4-b20d-cfb5-95bf13cc7534@intel.com>
+ <20200303040851.GD27842@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <c32f1043-8178-9e9a-ce81-ab28b5d0583a@intel.com>
+Date:   Tue, 3 Mar 2020 12:16:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <db83f5a1-b827-2a31-0ca9-a04df8257324@nextfour.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200303040851.GD27842@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 04:21:30AM +0000, Mika Penttilä wrote:
+On 3/3/2020 12:08 PM, Sean Christopherson wrote:
+> On Tue, Mar 03, 2020 at 10:50:03AM +0800, Xiaoyao Li wrote:
+>> On 3/3/2020 3:57 AM, Sean Christopherson wrote:
+>>> Rework kvm_cpuid() to query entry->function when adjusting the output
+>>> values so that the original function (in the aptly named "function") is
+>>> preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
+>>> trace the max function for a range instead of the requested function if
+>>> the requested function is out-of-range and an entry for the max function
+>>> exists.
+>>>
+>>> Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
+>>> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+>>> Cc: Jim Mattson <jmattson@google.com>
+>>> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> ---
+>>>   arch/x86/kvm/cpuid.c | 15 +++++++--------
+>>>   1 file changed, 7 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>> index b1c469446b07..6be012937eba 100644
+>>> --- a/arch/x86/kvm/cpuid.c
+>>> +++ b/arch/x86/kvm/cpuid.c
+>>> @@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+>>>   	return max && function <= max->eax;
+>>>   }
+>>> +/* Returns true if the requested leaf/function exists in guest CPUID. */
+>>>   bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>>>   	       u32 *ecx, u32 *edx, bool check_limit)
+>>>   {
+>>> -	u32 function = *eax, index = *ecx;
+>>> +	const u32 function = *eax, index = *ecx;
+>>>   	struct kvm_cpuid_entry2 *entry;
+>>> -	struct kvm_cpuid_entry2 *max;
+>>>   	bool found;
+>>>   	entry = kvm_find_cpuid_entry(vcpu, function, index);
+>>> @@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+>>>   	 */
+>>>   	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
+>>>   	    !cpuid_function_in_range(vcpu, function)) {
+>>> -		max = kvm_find_cpuid_entry(vcpu, 0, 0);
+>>> -		if (max) {
+>>> -			function = max->eax;
+>>> -			entry = kvm_find_cpuid_entry(vcpu, function, index);
+>>> -		}
+>>> +		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
+>>> +		if (entry)
+>>> +			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
+>>
+>> There is a problem.
+>>
+>> when queried leaf is out of range on Intel CPU, it returns the maximum basic
+>> leaf, and any dependence on input ECX (i.e., subleaf) value in the basic
+>> leaf is honored. As disclaimed in SDM of CPUID instruction.
 > 
+> That's what the code above does.
 > 
-> On 2.3.2020 1.05, Arvind Sankar wrote:
-> > commit 223e3ee56f77 ("efi/x86: add headroom to decompressor BSS to
-> > account for setup block") added headroom to the PE image to account for
-> > the setup block, which wasn't used for the decompression buffer.
-> >
-> > Now that we decompress from the start of the image, this is no longer
-> > required.
-> >
-> > Add a check to make sure that the head section of the compressed kernel
-> > won't overwrite itself while relocating. This is only for
-> > future-proofing as with current limits on the setup and the actual size
-> > of the head section, this can never happen.
-> >
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+>> The ECX should be honored if and only the leaf has a significant index.
+>> If the leaf doesn't has a significant index, it just ignores the EDX input
 > 
-> To make clear, the kernel (head_32.s and head_64.s) still relocates
-> itself to the end of the buffer and does in-place decompression. So this
-> is just to make init sz smaller.
+> s/EDX/ECX
 > 
+>> in bare metal.
+>>
+>> So it should be something like:
+>>
+>> if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
+>> 	!cpuid_function_in_range(vcpu, function)) {
+>> 	entry = kvm_find_cpuid_entry(vcpu, 0, 0);
+>> 	if (entry) {
+>> 		entry = kvm_find_cpuid_entry(vcpu, entry->eax, 0);
+>> 		if (entry &&
+>> 		    entry->flags & KVM_CPUID_FLAG_SIGNIFCANT_INDEX ) {
 > 
+> This is unnecessary IMO.  The only scenario where SIGNFICANT_INDEX is 0
+> and cpuid_entry(entry->eax, 0) != cpuid_entry(entry->eax, index) is if
+> userspace created a cpuid entry for index>0 with SIGNFICANT_INDEX.  
 
-Not init_size itself, but it reduces the size allocated for the PE
-image. Do you want me to update the comment to make that clearer?
+I just forgot that is_matching_cpuid_entry() has taken SIGNIFICANT_INDEX 
+into account.
+
+Please ignore my stupid noise.
+
+> a busted model, e.g. it'd be the SDM equivalent of an Intel CPU having
+> different output for CPUID.0x16.0 and CPUID.16.5 despite the SDM stating
+> that the CPUID.0x16 ignores the index.
+> 
+> E.g. on my system with a max basic leaf of 0x16
+> 
+> $ cpuid -1 -r
+> CPU:
+>     0x00000000 0x00: eax=0x00000016 ebx=0x756e6547 ecx=0x6c65746e edx=0x49656e69
+> ...
+>     0x00000016 0x00: eax=0x00000e74 ebx=0x0000125c ecx=0x00000064 edx=0x00000000
+> 
+> $ cpuid -1 -r -l 0x16
+> CPU:
+>     0x00000016 0x00: eax=0x00000e74 ebx=0x0000125c ecx=0x00000064 edx=0x00000000
+> ~ $ cpuid -1 -r -l 0x16 -s 4
+> CPU:
+>     0x00000016 0x04: eax=0x00000e74 ebx=0x0000125c ecx=0x00000064 edx=0x00000000
+> ~ $ cpuid -1 -r -l 0x16 -s 466
+> CPU:
+>     0x00000016 0x1d2: eax=0x00000e74 ebx=0x0000125c ecx=0x00000064 edx=0x00000000
+> 
+> 
+> If it returned anything else for CPUID.0x16.0x4 then it'd be a CPU bug.
+> Same thing here, it's a userspace bug if it creates a CPUID entry that
+> shouldn't exist.  E.g. ignoring Intel's silly "max basic leaf" behavior
+> for the moment, if userspace created a entry for CPUID.0x0.N it would
+> break the Linux kernel's cpu_detect(), as it doesn't initialize ECX when
+> doing CPUID.0x0.
+> 
+>> 			entry = kvm_find_cpuid_entry(vcpu, entry->eax,
+>> 						     index);
+>> 		}
+>> 	}
+>> }
+>>
+>>>   	}
+>>>   	if (entry) {
+>>>   		*eax = entry->eax;
+>>>   		*ebx = entry->ebx;
+>>>   		*ecx = entry->ecx;
+>>>   		*edx = entry->edx;
+>>> -		if (function == 7 && index == 0) {
+>>> +
+>>> +		if (entry->function == 7 && index == 0) {
+>>>   			u64 data;
+>>>   		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+>>>   			    (data & TSX_CTRL_CPUID_CLEAR))
+>>>
+>>
+
