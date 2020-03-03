@@ -2,227 +2,142 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4DDC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074F1C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52ED820848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:26:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583274377;
-	bh=IQRk+eFyYJbHwb5eI2wYOOU5Ad0xyo8Ui/jniBEGSF8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MHPuAIFNrVgRkjqNBRdBdAfZsvZBF4WgtdbKDOEwrbuspm6suj01c4kYB/n0CaMiD
-	 kItO9AwsiaNEkZjm7Ee2n2QRGvNMiW9dTHyj58PioTO3VqFQHJcelyQN3nJ2UcOmym
-	 TjQAB2ngu1+h4BCTLdYCF9eyCyo0G5FuODZYNj5M=
+	by mail.kernel.org (Postfix) with ESMTP id D1FE420848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:26:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Imebv53X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbgCCW0Q (ORCPT
+        id S1727924AbgCCW0W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:26:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33282 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726747AbgCCW0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:26:15 -0500
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A37E20870
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 22:26:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583274374;
-        bh=IQRk+eFyYJbHwb5eI2wYOOU5Ad0xyo8Ui/jniBEGSF8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=H1iXvAO8KqFpuVbyeWy2cJXvNy03pBgZ3Z4aFPJy1/64efKNP8vtdwTu47HOQ8DEd
-         LjJrSdVI4VJg9GPFvawj+9RlHGZolWEDJx9ocnJE9WBk5JAQtxx+eBhE5A8GEWpPux
-         ZZF7PYIUeJL970gwHM6u2b3y2na2ZGVqVo+oeKvM=
-Received: by mail-wr1-f41.google.com with SMTP id z15so6524825wrl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:26:14 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0jEEnC7XrmqQ98U8L1CnVjChXX7/RPzjIfmHmKiU7kN3YZZJWi
-        Q28JIJFzDeRfICjnmSf0i07tsMOPdwsleEhV9DwpXw==
-X-Google-Smtp-Source: ADFU+vu1fLRYbCKGQ/5O+V3FsnX68e8PkwyG8jiBMrqAlOtj12J1JrgdIvP+mFodyfHh5And3nvSwNdP+60iKiui/Gs=
-X-Received: by 2002:adf:e742:: with SMTP id c2mr193882wrn.262.1583274372835;
- Tue, 03 Mar 2020 14:26:12 -0800 (PST)
+        Tue, 3 Mar 2020 17:26:22 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:38074 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727769AbgCCW0W (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 17:26:22 -0500
+Received: by mail-qk1-f196.google.com with SMTP id h22so5142407qke.5;
+        Tue, 03 Mar 2020 14:26:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wagrVCzS/XTiayLok4nktlIE6b9GM+kU+mOoA/5BUNQ=;
+        b=Imebv53X2yi2WO2vBjXJnc2vvyk3l9qMBZXaUJaOUOgVd0pHdwWbRO8ViUIGKuFEya
+         k3cBuospCwoqTF8lPuQofzal2lkaGUwsaw96sH1TrytGrqawdqkvDq2op7vcPso25yq2
+         iZi3BsykiP20586JqH3pd3J+M5kx/F39T0F2Ef6RpPyvGQnwFEYFeTF2i0TfnwlgBz7O
+         3uUutbiMzQc9XD4rZmBXqfTuWctktVmS+kssFTpj+n7FuBzvkXGZhUOiDun2ND+/VVCr
+         b4vnW/SVEMNvgqMN50J/CfTUcFMTnIdaC/TpVcnCK/J5jBUwQZjkNTOZaAMr+zmaoOS9
+         OxsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wagrVCzS/XTiayLok4nktlIE6b9GM+kU+mOoA/5BUNQ=;
+        b=eBLJZ4dgXs08JOqjGf8GmdBHDIpV/p+89HgXRxTZReC5QP8fGayuaABmNAlp60d/ex
+         CIVznFW6DWkNX20mGgzx6Ht8OjueSoau1YIiqnxmCdPWZRA56NA2OU2Rz+NBt1Sb7X+z
+         Y9CkBPpOeKlpTKr5+0DvJUgtVm2SbzFtHE1Z+ktOURuQPRTBRJYdQ8zTDCa4nEmXQHfR
+         QQ38kCwfQFPRlDem315QcxUbQvrCbSAUQsWTbf7Z5nipYRjeZzU1+VzpuIIZTItJ0ogT
+         Ki641z1+y8D1/ngFn1TmvvHU0pEI6IwxxzAQeufjwXm27wJ/4RmC+XAGvsf16HleTgQj
+         rxJg==
+X-Gm-Message-State: ANhLgQ16hO1Jl4bGguS6Q640LzEaBds4m0GrSb4CAB7vnEP6KGUYScbG
+        +wOW64ABfrZoeGuI/J+ARbHhHjG/4RUeOuBpcFM=
+X-Google-Smtp-Source: ADFU+vvV2oNfqztGhuZHjThFr3r5hmgjU00PGxySl8X9BewWNLNQv3zc5Elq9UNraKBA9K6n4/Y9SqH3Z3Fj4IK0I18=
+X-Received: by 2002:a05:620a:99d:: with SMTP id x29mr231581qkx.39.1583274380969;
+ Tue, 03 Mar 2020 14:26:20 -0800 (PST)
 MIME-Version: 1.0
-References: <20200301230537.2247550-1-nivedita@alum.mit.edu> <20200303221205.4048668-1-nivedita@alum.mit.edu>
-In-Reply-To: <20200303221205.4048668-1-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Tue, 3 Mar 2020 23:26:01 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_S_BwKRXhRz2=AoNj2E8sxuXSfZwg2poLDq96FmaoVtA@mail.gmail.com>
-Message-ID: <CAKv+Gu_S_BwKRXhRz2=AoNj2E8sxuXSfZwg2poLDq96FmaoVtA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] Minimize the need to move the kernel in the EFI stub
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200303140950.6355-1-kpsingh@chromium.org> <20200303140950.6355-3-kpsingh@chromium.org>
+In-Reply-To: <20200303140950.6355-3-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 3 Mar 2020 14:26:09 -0800
+Message-ID: <CAEf4BzZJ2E2rmyz7k4F7s=EXPbaAX7XncvUcHukX_FYDWeD7BA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/7] bpf: JIT helpers for fmod_ret progs
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 at 23:12, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+On Tue, Mar 3, 2020 at 6:13 AM KP Singh <kpsingh@chromium.org> wrote:
 >
-> This series adds the ability to use the entire PE image space for
-> decompression, provides the preferred address to the PE loader via the
-> header, and finally restricts efi_relocate_kernel to cases where we
-> really need it rather than whenever we were loaded at something other
-> than preferred address.
+> From: KP Singh <kpsingh@google.com>
 >
-> Based on tip:efi/core + the cleanup series [1]
-> [1] https://lore.kernel.org/linux-efi/20200301230436.2246909-1-nivedita@alum.mit.edu/
+> * Split the invoke_bpf program to prepare for special handling of
+>   fmod_ret programs introduced in a subsequent patch.
+> * Move the definition of emit_cond_near_jump and emit_nops as they are
+>   needed for fmod_ret.
+> * Refactor branch target alignment into its own function
+>   align16_branch_target.
 >
-> Changes from v1
-> - clarify a few comments
-> - cleanups to code formatting
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
+>  arch/x86/net/bpf_jit_comp.c | 158 ++++++++++++++++++++----------------
+>  1 file changed, 90 insertions(+), 68 deletions(-)
 >
-> Arvind Sankar (5):
->   x86/boot/compressed/32: Save the output address instead of
->     recalculating it
->   efi/x86: Decompress at start of PE image load address
->   efi/x86: Add kernel preferred address to PE header
->   efi/x86: Remove extra headroom for setup block
->   efi/x86: Don't relocate the kernel unless necessary
+> diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+> index 15c7d28bc05c..475e354c2e88 100644
+> --- a/arch/x86/net/bpf_jit_comp.c
+> +++ b/arch/x86/net/bpf_jit_comp.c
+> @@ -1361,35 +1361,100 @@ static void restore_regs(const struct btf_func_model *m, u8 **prog, int nr_args,
+>                          -(stack_size - i * 8));
+>  }
 >
 
-Thanks. I have queued these up in efi/next, along with your mixed mode cleanups.
+[...]
 
+> +
+> +/* From Intel 64 and IA-32 Architectures Optimization
+> + * Reference Manual, 3.4.1.4 Code Alignment, Assembly/Compiler
+> + * Coding Rule 11: All branch targets should be 16-byte
+> + * aligned.
+> + */
+> +static void align16_branch_target(u8 **pprog)
+> +{
+> +       u8 *target, *prog = *pprog;
+> +
+> +       target = PTR_ALIGN(prog, 16);
+> +       if (target != prog)
+> +               emit_nops(&prog, target - prog);
+> +       if (target != prog)
+> +               pr_err("calcultion error\n");
 
->  arch/x86/boot/compressed/head_32.S      | 42 +++++++++++++++-------
->  arch/x86/boot/compressed/head_64.S      | 42 ++++++++++++++++++++--
->  arch/x86/boot/header.S                  |  6 ++--
->  arch/x86/boot/tools/build.c             | 44 ++++++++++++++++-------
->  drivers/firmware/efi/libstub/x86-stub.c | 48 ++++++++++++++++++++++---
->  5 files changed, 147 insertions(+), 35 deletions(-)
->
-> Range-diff against v1:
-> 1:  0cdb6bf27a24 ! 1:  2ecbf60b9ecd x86/boot/compressed/32: Save the output address instead of recalculating it
->     @@ Metadata
->       ## Commit message ##
->          x86/boot/compressed/32: Save the output address instead of recalculating it
->
->     -    In preparation for being able to decompress starting at a different
->     -    address than startup_32, save the calculated output address instead of
->     -    recalculating it later.
->     +    In preparation for being able to decompress into a buffer starting at a
->     +    different address than startup_32, save the calculated output address
->     +    instead of recalculating it later.
->
->          We now keep track of three addresses:
->                  %edx: startup_32 as we were loaded by bootloader
-> 2:  d4df840752ac ! 2:  e2bdbe6cb692 efi/x86: Decompress at start of PE image load address
->     @@ arch/x86/boot/compressed/head_64.S: SYM_FUNC_START(efi32_pe_entry)
->         movl    -4(%ebp), %esi                  // loaded_image
->         movl    LI32_image_base(%esi), %esi     // loaded_image->image_base
->         movl    %ebx, %ebp                      // startup_32 for efi32_pe_stub_entry
->     ++  /*
->     ++   * We need to set the image_offset variable here since startup_32 will
->     ++   * use it before we get to the 64-bit efi_pe_entry in C code.
->     ++   */
->      +  subl    %esi, %ebx
->      +  movl    %ebx, image_offset(%ebp)        // save image_offset
->         jmp     efi32_pe_stub_entry
->     @@ drivers/firmware/efi/libstub/x86-stub.c: unsigned long efi_main(efi_handle_t han
->                         efi_printk("efi_relocate_kernel() failed!\n");
->                         goto fail;
->                 }
->     ++          /*
->     ++           * Now that we've copied the kernel elsewhere, we no longer
->     ++           * have a setup block before startup_32, so reset image_offset
->     ++           * to zero in case it was set earlier.
->     ++           */
->      +          image_offset = 0;
->         }
->
-> 3:  4bae68f25b90 ! 3:  ea840f78f138 efi/x86: Add kernel preferred address to PE header
->     @@ arch/x86/boot/header.S: optional_header:
->
->       extra_header_fields:
->      +  # PE specification requires ImageBase to be 64k-aligned
->     -+  .set    ImageBase, (LOAD_PHYSICAL_ADDR+0xffff) & ~0xffff
->     ++  .set    image_base, (LOAD_PHYSICAL_ADDR + 0xffff) & ~0xffff
->       #ifdef CONFIG_X86_32
->      -  .long   0                               # ImageBase
->     -+  .long   ImageBase                       # ImageBase
->     ++  .long   image_base                      # ImageBase
->       #else
->      -  .quad   0                               # ImageBase
->     -+  .quad   ImageBase                       # ImageBase
->     ++  .quad   image_base                      # ImageBase
->       #endif
->         .long   0x20                            # SectionAlignment
->         .long   0x20                            # FileAlignment
-> 4:  2330a25c6b0f ! 4:  c25a9b507d6d efi/x86: Remove extra headroom for setup block
->     @@ Commit message
->          account for setup block") added headroom to the PE image to account for
->          the setup block, which wasn't used for the decompression buffer.
->
->     -    Now that we decompress from the start of the image, this is no longer
->     -    required.
->     +    Now that the decompression buffer is located at the start of the image,
->     +    and includes the setup block, this is no longer required.
->
->          Add a check to make sure that the head section of the compressed kernel
->          won't overwrite itself while relocating. This is only for
-> 5:  2081f91cbe75 ! 5:  d3dc3af1c7b8 efi/x86: Don't relocate the kernel unless necessary
->     @@ arch/x86/boot/tools/build.c: static void update_pecoff_text(unsigned int text_st
->          * Size of code: Subtract the size of the first sector (512 bytes)
->
->       ## drivers/firmware/efi/libstub/x86-stub.c ##
->     +@@
->     +
->     + #include "efistub.h"
->     +
->     ++/* Maximum physical address for 64-bit kernel with 4-level paging */
->     ++#define MAXMEM_X86_64_4LEVEL (1ull << 46)
->     ++
->     + static efi_system_table_t *sys_table;
->     + extern const bool efi_is64;
->     + extern u32 image_offset;
->      @@ drivers/firmware/efi/libstub/x86-stub.c: unsigned long efi_main(efi_handle_t handle,
->                              struct boot_params *boot_params)
->       {
->     @@ drivers/firmware/efi/libstub/x86-stub.c: unsigned long efi_main(efi_handle_t han
->      -   * address, relocate it.
->      +   * If the kernel isn't already loaded at a suitable address,
->      +   * relocate it.
->     ++   *
->      +   * It must be loaded above LOAD_PHYSICAL_ADDR.
->     -+   * The maximum address for 64-bit is 1 << 46 for 4-level paging.
->     ++   *
->     ++   * The maximum address for 64-bit is 1 << 46 for 4-level paging. This
->     ++   * is defined as the macro MAXMEM, but unfortunately that is not a
->     ++   * compile-time constant if 5-level paging is configured, so we instead
->     ++   * define our own macro for use here.
->     ++   *
->      +   * For 32-bit, the maximum address is complicated to figure out, for
->      +   * now use KERNEL_IMAGE_SIZE, which will be 512MiB, the same as what
->      +   * KASLR uses.
->     ++   *
->      +   * Also relocate it if image_offset is zero, i.e. we weren't loaded by
->      +   * LoadImage, but we are not aligned correctly.
->          */
->      -  if (bzimage_addr - image_offset != hdr->pref_address) {
->     ++
->      +  buffer_start = ALIGN(bzimage_addr - image_offset,
->      +                       hdr->kernel_alignment);
->      +  buffer_end = buffer_start + hdr->init_size;
->      +
->     -+  if (buffer_start < LOAD_PHYSICAL_ADDR
->     -+      || IS_ENABLED(CONFIG_X86_32) && buffer_end > KERNEL_IMAGE_SIZE
->     -+      || IS_ENABLED(CONFIG_X86_64) && buffer_end > 1ull << 46
->     -+      || image_offset == 0 && !IS_ALIGNED(bzimage_addr,
->     -+                                          hdr->kernel_alignment)) {
->     ++  if ((buffer_start < LOAD_PHYSICAL_ADDR)                              ||
->     ++      (IS_ENABLED(CONFIG_X86_32) && buffer_end > KERNEL_IMAGE_SIZE)    ||
->     ++      (IS_ENABLED(CONFIG_X86_64) && buffer_end > MAXMEM_X86_64_4LEVEL) ||
->     ++      (image_offset == 0 && !IS_ALIGNED(bzimage_addr,
->     ++                                        hdr->kernel_alignment))) {
->                 status = efi_relocate_kernel(&bzimage_addr,
->                                              hdr->init_size, hdr->init_size,
->                                              hdr->pref_address,
-> --
-> 2.24.1
->
+this wasn't in the original code, do you feel like it's more important
+to check this and print error?
+
+also typo: calculation error, but then it's a bit brief and
+uninformative message. So I don't know, maybe just drop it?
+
+> +}
+> +
+> +static int emit_cond_near_jump(u8 **pprog, void *func, void *ip, u8 jmp_cond)
+> +{
+> +       u8 *prog = *pprog;
+> +       int cnt = 0;
+> +       s64 offset;
+> +
+> +       offset = func - (ip + 2 + 4);
+> +       if (!is_simm32(offset)) {
+> +               pr_err("Target %p is out of range\n", func);
+> +               return -EINVAL;
+> +       }
+> +       EMIT2_off32(0x0F, jmp_cond + 0x10, offset);
+> +       *pprog = prog;
+> +       return 0;
+> +}
+> +
+
+[...]
