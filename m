@@ -2,158 +2,141 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26503C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DD0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB3F8206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:17:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811A5206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:20:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Va1fmd4J";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="I6Y/yrMK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JoEYFdqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbgCCWRv (ORCPT
+        id S1727576AbgCCWUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:17:51 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:12682 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726766AbgCCWRv (ORCPT
+        Tue, 3 Mar 2020 17:20:16 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:33658 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726809AbgCCWUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:17:51 -0500
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 023MFRWE032483;
-        Tue, 3 Mar 2020 14:17:39 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=date : from : to : cc :
- subject : message-id : references : content-type : in-reply-to :
- mime-version; s=facebook; bh=oeiPRpVowtMN7tTumZLA2VCI6/Dh9OLasJPzFeiZYQE=;
- b=Va1fmd4J4nvG1RxhkMD4/vQFigYZqJGAXzFxfVSYKZuau5v9AfqG9UWmoEptlqFYoFFi
- XIEbZiTqAJEkM01/vgZFoFruajhD2nphAARVjxJqpSP350F1HJXATHrTbLc+w6PJGQCV
- qin9AgN5Dsq0w6r40HMf9EQJhCnbHMwhu4s= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yhbxwnsjn-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 03 Mar 2020 14:17:39 -0800
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Tue, 3 Mar 2020 14:17:34 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IeV3QIOLSt18fnuYPK8KHnInK/16iTycPaKOrP0T7opJvDpT4RkxIhOO4tXZKoToDWsKgt0GaavPmPpEYqP9dk11JEy7QJx2hqW9YhUjJvmgFTa+4fRZnVoYZ5IwN3A6/EJAgRgKKJqAA0YdtqB7v8Ai1FNI5LZYuwL+9xBYcANa4Pdj39m5JoFlpCVkBuS4/HNqwVbBQgwMoIqFToYUQMl/BHZVUYv9ynKX2cLOZLPGua60dpgFRP18XuLNNsb31JuzAlWH3iJ83N1OBEGm85LiCkKv0z8LQ+liPGHf9jLUQGUtFZcvsSBeq8L+mdQNT1s5RBPeoKmZ1CWict5vmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oeiPRpVowtMN7tTumZLA2VCI6/Dh9OLasJPzFeiZYQE=;
- b=m3NLd62LwYTCo9IHh5lQ5ZczV8F1TXHyO3QYVjP1p0BdHXZQDVAPTX2pIVU5DUjy22RJx1JW5Q/Vs77d5Eb/QpuGdxXm89XQeTwFVd9Kc/2UjgMayZN29dAHO5dSwi6DDSrSSX+YbU6EAdfzdMLjR6d9JNb6Sq6zsRIsmezO0Ri/Y+TlcQRD1OoVNKbefJusNSXJEeTI4mBFU1N1d0vvIlKtk/r9OjnIRdkramWJE9mtETA7UD7bLbFSZ/ItyYiCKLexH/mTM3jm5TpR+QTgpdPYP7WfzG/5bZQD36/Z4yp74xjMpOQhMLSoGqZzqsPPMKyL4oq0NZfqDAFIWRK33A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oeiPRpVowtMN7tTumZLA2VCI6/Dh9OLasJPzFeiZYQE=;
- b=I6Y/yrMKq0Iqalgj84K+F/tAZ84tvAk6Xeolnj/5HEeXAdD6ULT5DXmGY756h0klDbTKuOQgputBcT4irba26tHDfIkm/QMUB8jzOoGWDOt/gnE6BlNbhS5mrPyjXX2Xto4DEACFuFtwB7yO5iO9OfEjsNeniDlexDW2u4Txmdw=
-Received: from MWHPR15MB1661.namprd15.prod.outlook.com (2603:10b6:300:124::23)
- by MWHPR15MB1951.namprd15.prod.outlook.com (2603:10b6:320:30::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Tue, 3 Mar
- 2020 22:17:33 +0000
-Received: from MWHPR15MB1661.namprd15.prod.outlook.com
- ([fe80::90a5:3eb0:b2a8:dc5e]) by MWHPR15MB1661.namprd15.prod.outlook.com
- ([fe80::90a5:3eb0:b2a8:dc5e%11]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
- 22:17:33 +0000
-Date:   Tue, 3 Mar 2020 14:17:29 -0800
-From:   Roman Gushchin <guro@fb.com>
-To:     Andreas Dilger <adilger@dilger.ca>
-CC:     Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        linux-ext4 <linux-ext4@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Perepechko <andrew.perepechko@seagate.com>,
-        Theodore Ts'o <tytso@mit.edu>, Gioh Kim <gioh.kim@lge.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH v2] ext4: use non-movable memory for superblock readahead
-Message-ID: <20200303221729.GA722016@carbon.dhcp.thefacebook.com>
-References: <20200229001411.128010-1-guro@fb.com>
- <26E49EB9-DAD4-4BAB-A7A7-7DC6B45CD2B8@dilger.ca>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <26E49EB9-DAD4-4BAB-A7A7-7DC6B45CD2B8@dilger.ca>
-X-ClientProxiedBy: MWHPR1201CA0008.namprd12.prod.outlook.com
- (2603:10b6:301:4a::18) To MWHPR15MB1661.namprd15.prod.outlook.com
- (2603:10b6:300:124::23)
+        Tue, 3 Mar 2020 17:20:16 -0500
+Received: by mail-pf1-f195.google.com with SMTP id n7so2221790pfn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:20:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=A0VgoCajNQtcqmr3sAxZ7zwAICIrcd2LUoNAPqwJhMc=;
+        b=JoEYFdqH8VMWl/v3oH9VXqNGlxqWFgnorIuL0o80ZngwzS/ndHRTcASbqclRrUjUFS
+         JqDXYy6BFgb8RRrFi0Wguy7MFjm1Rx9YwjkChVADEVVdGOzA/Nh6wAc8Fvp7yZSOaCZ4
+         cOzTqLmgjn4ShkaCTeB0wEWh3WU2S1mivlUnz8Qn+B2nvfX/AnGjrvd8CNWkq1bd8XQm
+         p0PKu/SVvr1mTlYxgKG5QdG7UrmbLeScp3lDEyEy4N7EHsPCemUBKHbsMhp+PqtNrEMC
+         iDc3Chr898nqiTtFwHk+hlM7QURM5bO50ptPMclx9dGGCYyAG7mOlQR5af5uVt1+dBGK
+         B3qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=A0VgoCajNQtcqmr3sAxZ7zwAICIrcd2LUoNAPqwJhMc=;
+        b=o5fNbUNPZcMQSpzJjgj7VYbpzj7z6a18NMRzv3U+tKpxw+PgBqlTrutf4abHgyOtui
+         VKuc3ZpJFGeTdM4pwV68WPnc5kcTYFxT5RGmseL0FQE7BotVf7ZmUvAXhhsFhZw29Pvd
+         99IuTmLNRvfOmgcI2STlUg3RCHaeBWcW2BMmR4xLFuvh4h1kl1WV+/GazVoYXrYmknYj
+         NUSQgl3CR3hAyoHaGBNHUEcKRyzWP1hGl0Co/xd2yLNchvEKNnLnWyIATswREfqpdQkE
+         xAxTH5YUEF85suJ2JDl27Zq9xrT9i5H+ZON6qJvfHuFdCI3e45n22uZVh/Ay95G59lpZ
+         h5QQ==
+X-Gm-Message-State: ANhLgQ0GnZQq/BBkjSHEL9O1AVHX4KmkdYcO8Ceg1QioKAT5LCHIaR2Z
+        Ra7SUikrlEQFYPjj4HiLGpdSP7nVlx7BNGXDF31yVQ==
+X-Google-Smtp-Source: ADFU+vt4X4Q2+Uu+la/wP/hFUKrg/nR+9uZ1co62ESgEa0STG5Q0XI3VwZlAqZ1ci3kOGA0/3riqiLDrYgRWJ+NHPxM=
+X-Received: by 2002:a62:37c7:: with SMTP id e190mr6303201pfa.165.1583274014576;
+ Tue, 03 Mar 2020 14:20:14 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from carbon.dhcp.thefacebook.com (2620:10d:c090:500::5:cf7) by MWHPR1201CA0008.namprd12.prod.outlook.com (2603:10b6:301:4a::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Tue, 3 Mar 2020 22:17:32 +0000
-X-Originating-IP: [2620:10d:c090:500::5:cf7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d6d901be-8e05-4d0e-9f1e-08d7bfc0ab75
-X-MS-TrafficTypeDiagnostic: MWHPR15MB1951:
-X-Microsoft-Antispam-PRVS: <MWHPR15MB1951CAD29B2BC78B468B0553BEE40@MWHPR15MB1951.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:346;
-X-Forefront-PRVS: 03319F6FEF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(396003)(376002)(366004)(136003)(189003)(199004)(66946007)(53546011)(52116002)(7696005)(66476007)(6916009)(81166006)(81156014)(6666004)(6506007)(316002)(33656002)(8676002)(54906003)(55016002)(1076003)(66556008)(478600001)(9686003)(16526019)(2906002)(8936002)(5660300002)(186003)(86362001)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1951;H:MWHPR15MB1661.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RUvMMA+i20aa9E41YG17FQb474X4yvx/MFvKzXDX5z8PsMv5DuH7on+2LDTudOqXCVzzkaPnSeMlkdTe/G2beBnSJaFSG+iw8HIulDZl2iBmoPoomEZYBjtEYcfyHv3oy/whiETkeH4f1J/LCBZ6sGI0noyQILaqodsSNqYlpP5vasYDLESzCcrY2VCh+QKjL7wdIysixH5uvDC9uEXnIeGmUvtvK19XAVJk5dLTcrkKIq8DTM5ol2KMFTnVwxbkC9QpHEh5LwxzCq/NYvnNhlBEdTbxhPAQSxVhorMMiihH+D71Fp1WRpmKw+MpLdVIvLDfSFKF1AfyBXXlY5uhcld1oHkK58jwo99FXyCnXtksYWjypMtxcs5aw8p4sXO5zwbPgyfhTTV0BpWEUz6poLin7/d7YYz1KRU7+q0nPPwFLL+EppNgwRnUUNC1+6BO
-X-MS-Exchange-AntiSpam-MessageData: nWeGk7L6jTLmKDLiidFXtdV8ebJE6rzPCxxpUE1ulrGRHtJzdOLjTjA3f2nv/TcXWlCLz4HR5ipp4BlZJvoHc9A8G1f82QmXadoaGBidxlg4GQHYcvQgLhvJkvODoFoN2XsUrrAFjQPBPg/jmwpaYof0MeMOKrZNr1t6LXbsqHHEm6h114vKve8Spmpumguq
-X-MS-Exchange-CrossTenant-Network-Message-Id: d6d901be-8e05-4d0e-9f1e-08d7bfc0ab75
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 22:17:32.9981
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: WR8tbktagvFcLi0imIpM3ADNlK/uncPr+BjQSrtonfVctQh7ja8tSIYIWVNpiGBc
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1951
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-03_07:2020-03-03,2020-03-03 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
- mlxscore=0 lowpriorityscore=0 spamscore=0 phishscore=0 adultscore=0
- mlxlogscore=801 bulkscore=0 malwarescore=0 suspectscore=1 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030143
-X-FB-Internal: deliver
+References: <c41cc67321d0b366e356440e6dbc9eceb1babfe4.1583105749.git.stefan@agner.ch>
+In-Reply-To: <c41cc67321d0b366e356440e6dbc9eceb1babfe4.1583105749.git.stefan@agner.ch>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 3 Mar 2020 14:20:03 -0800
+Message-ID: <CAKwvOdmvOq9X3zR17TsEZpJ83BYC1vX=pYMPyZ6Db3xeHUxzag@mail.gmail.com>
+Subject: Re: [PATCH] crypto: arm/ghash-ce - define fpu before fpu registers
+ are referenced
+To:     Stefan Agner <stefan@agner.ch>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Russell King <linux@armlinux.org.uk>,
+        Manoj Gupta <manojgupta@google.com>,
+        Jian Cai <jiancai@google.com>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Ard.Biesheuvel@arm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 12:49:13AM -0700, Andreas Dilger wrote:
-> On Feb 28, 2020, at 5:14 PM, Roman Gushchin <guro@fb.com> wrote:
-> > 
-> > Since commit a8ac900b8163 ("ext4: use non-movable memory for the
-> > superblock") buffers for ext4 superblock were allocated using
-> > the sb_bread_unmovable() helper which allocated buffer heads
-> > out of non-movable memory blocks. It was necessarily to not block
-> > page migrations and do not cause cma allocation failures.
-> > 
-> > However commit 85c8f176a611 ("ext4: preload block group descriptors")
-> > broke this by introducing pre-reading of the ext4 superblock.
-> > The problem is that __breadahead() is using __getblk() underneath,
-> > which allocates buffer heads out of movable memory.
-> > 
-> > It resulted in page migration failures I've seen on a machine
-> > with an ext4 partition and a preallocated cma area.
-> > 
-> > Fix this by introducing sb_breadahead_unmovable() and
-> > __breadahead_gfp() helpers which use non-movable memory for buffer
-> > head allocations and use them for the ext4 superblock readahead.
-> > 
-> > v2: found a similar issue in __ext4_get_inode_loc()
-> > 
-> > Fixes: 85c8f176a611 ("ext4: preload block group descriptors")
-> > Signed-off-by: Roman Gushchin <guro@fb.com>
-> 
-> Reviewed-by: Andreas Dilger <adilger@dilger.ca>
+On Sun, Mar 1, 2020 at 3:37 PM Stefan Agner <stefan@agner.ch> wrote:
+>
+> Building ARMv7 with Clang's integrated assembler leads to errors such
+> as:
+> arch/arm/crypto/ghash-ce-core.S:34:11: error: register name expected
+>  t3l .req d16
+>           ^
+>
+> Since no FPU has selected yet Clang considers d16 not a valid register.
+> Moving the FPU directive on-top allows Clang to parse the registers and
+> allows to successfully build this file with Clang's integrated assembler.
 
-Is it good to go?
-Can it go through the ext4 tree?
+Certainly a side effect of having a single pass assembler...This does
+fix what otherwise looks like a slew of errors for us, thanks for the
+patch.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Tested-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Thanks!
+
+
+>
+> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> ---
+>  arch/arm/crypto/ghash-ce-core.S | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/crypto/ghash-ce-core.S b/arch/arm/crypto/ghash-ce-core.S
+> index 534c9647726d..9f51e3fa4526 100644
+> --- a/arch/arm/crypto/ghash-ce-core.S
+> +++ b/arch/arm/crypto/ghash-ce-core.S
+> @@ -8,6 +8,9 @@
+>  #include <linux/linkage.h>
+>  #include <asm/assembler.h>
+>
+> +       .arch           armv8-a
+> +       .fpu            crypto-neon-fp-armv8
+> +
+>         SHASH           .req    q0
+>         T1              .req    q1
+>         XL              .req    q2
+> @@ -88,8 +91,6 @@
+>         T3_H            .req    d17
+>
+>         .text
+> -       .arch           armv8-a
+> -       .fpu            crypto-neon-fp-armv8
+>
+>         .macro          __pmull_p64, rd, rn, rm, b1, b2, b3, b4
+>         vmull.p64       \rd, \rn, \rm
+> --
+> 2.25.1
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/c41cc67321d0b366e356440e6dbc9eceb1babfe4.1583105749.git.stefan%40agner.ch.
+
+
+
+--
+Thanks,
+~Nick Desaulniers
