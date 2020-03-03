@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90828C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A798C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6860420866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063E920836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258533;
-	bh=nBp8M//Wwkue4wWaCuCCtoO0nyJNfejoIKWOMt6EWGA=;
+	s=default; t=1583258536;
+	bh=YVVksQWhRHSA7KzDODPmjPlyQ38Pa39Pr6eqLBlAPZE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BsFip0sqlhQF0nAa+xwT7/3AQUQPrX4e4SePZRX+e1+Eqi2gJGOemy920wMSqKV3Z
-	 xURzVwTmNtYm85I/SPXj+Z1mx0O+C01qDKpdek3DtJRpYrqn3IRAwvgb1NOL97a4wZ
-	 ApKyS1wz244258NAJf3O35xgZlrC963P4v7UGhVY=
+	b=CjbvDnzHf2SZVogGdbni3NV5wK5VS5UclTVyBG5L/iBbLeWPcHZUxaao2kMM32iNy
+	 EmdL24egmBXDTrYqeuCxTQywVpvVElxZEDfnaiHdy87n8qT3cUEsUsgPHGbNoJRx9P
+	 0CVLcXktZTSKSrleDi33hFvyXvgTL1/wx4XnCnz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388163AbgCCSCM (ORCPT
+        id S2388172AbgCCSCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:02:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46696 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:02:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387746AbgCCSCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:02:10 -0500
+        id S2387746AbgCCSCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:02:13 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A91B2072D;
-        Tue,  3 Mar 2020 18:02:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C81620836;
+        Tue,  3 Mar 2020 18:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258530;
-        bh=nBp8M//Wwkue4wWaCuCCtoO0nyJNfejoIKWOMt6EWGA=;
+        s=default; t=1583258532;
+        bh=YVVksQWhRHSA7KzDODPmjPlyQ38Pa39Pr6eqLBlAPZE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NiKNuv5cmtMdbpALga2Xv0WeDOwIM3worO9FQaRQIRWBS0zZWk/4p5TiaWZ603tra
-         +KeB0Q263WL3VD9mo95QBqPgyGimzOCH8hkZ6mKFa9IE+fARkhukM+Z9laU4H8EoZd
-         ch+voi5YuTc5lsFDH/w81ZmJT13l/yJxohR8aG3c=
+        b=L8aWh46ni3rzMrtiz3+BguKyvklzRtmizKCZ8Y/Fkv9NDwiEMrj6oAAV1TJIU0zHS
+         dIGUBJRQoNvOyv/B+6+54uuZ//gM8+PG4Z8G07mX2qsyUcfr94zK6QzhSIf3NuctPh
+         j1sYy1Dam64eQ8o+I6VdUpZnGr1erKLaFFTsrNvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        linux-crypto@vger.kernel.org
-Subject: [PATCH 4.19 85/87] padata: always acquire cpu_hotplug_lock before pinst->lock
-Date:   Tue,  3 Mar 2020 18:44:16 +0100
-Message-Id: <20200303174357.941131711@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yang <richardw.yang@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 86/87] mm/huge_memory.c: use head to check huge zero page
+Date:   Tue,  3 Mar 2020 18:44:17 +0100
+Message-Id: <20200303174358.045254973@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -62,67 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Jordan <daniel.m.jordan@oracle.com>
+From: Wei Yang <richardw.yang@linux.intel.com>
 
-commit 38228e8848cd7dd86ccb90406af32de0cad24be3 upstream.
+commit cb829624867b5ab10bc6a7036d183b1b82bfe9f8 upstream.
 
-lockdep complains when padata's paths to update cpumasks via CPU hotplug
-and sysfs are both taken:
+The page could be a tail page, if this is the case, this BUG_ON will
+never be triggered.
 
-  # echo 0 > /sys/devices/system/cpu/cpu1/online
-  # echo ff > /sys/kernel/pcrypt/pencrypt/parallel_cpumask
+Link: http://lkml.kernel.org/r/20200110032610.26499-1-richardw.yang@linux.intel.com
+Fixes: e9b61f19858a ("thp: reintroduce split_huge_page()")
 
-  ======================================================
-  WARNING: possible circular locking dependency detected
-  5.4.0-rc8-padata-cpuhp-v3+ #1 Not tainted
-  ------------------------------------------------------
-  bash/205 is trying to acquire lock:
-  ffffffff8286bcd0 (cpu_hotplug_lock.rw_sem){++++}, at: padata_set_cpumask+0x2b/0x120
-
-  but task is already holding lock:
-  ffff8880001abfa0 (&pinst->lock){+.+.}, at: padata_set_cpumask+0x26/0x120
-
-  which lock already depends on the new lock.
-
-padata doesn't take cpu_hotplug_lock and pinst->lock in a consistent
-order.  Which should be first?  CPU hotplug calls into padata with
-cpu_hotplug_lock already held, so it should have priority.
-
-Fixes: 6751fb3c0e0c ("padata: Use get_online_cpus/put_online_cpus")
-Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Eric Biggers <ebiggers@kernel.org>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Steffen Klassert <steffen.klassert@secunet.com>
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/padata.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/huge_memory.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -671,8 +671,8 @@ int padata_set_cpumask(struct padata_ins
- 	struct cpumask *serial_mask, *parallel_mask;
- 	int err = -EINVAL;
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2661,7 +2661,7 @@ int split_huge_page_to_list(struct page
+ 	unsigned long flags;
+ 	pgoff_t end;
  
--	mutex_lock(&pinst->lock);
- 	get_online_cpus();
-+	mutex_lock(&pinst->lock);
+-	VM_BUG_ON_PAGE(is_huge_zero_page(page), page);
++	VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
+ 	VM_BUG_ON_PAGE(!PageLocked(page), page);
+ 	VM_BUG_ON_PAGE(!PageCompound(page), page);
  
- 	switch (cpumask_type) {
- 	case PADATA_CPU_PARALLEL:
-@@ -690,8 +690,8 @@ int padata_set_cpumask(struct padata_ins
- 	err =  __padata_set_cpumasks(pinst, parallel_mask, serial_mask);
- 
- out:
--	put_online_cpus();
- 	mutex_unlock(&pinst->lock);
-+	put_online_cpus();
- 
- 	return err;
- }
 
 
