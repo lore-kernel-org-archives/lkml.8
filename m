@@ -2,157 +2,150 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D25DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF87BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:37:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0689620870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:37:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7833120870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:37:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="hg/CFqGA";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="lW323dlA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730770AbgCCThF (ORCPT
+        id S1730872AbgCCThd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:37:05 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35700 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730691AbgCCThE (ORCPT
+        Tue, 3 Mar 2020 14:37:33 -0500
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:59887 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728776AbgCCThd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:37:04 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c7so5952063edu.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:37:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PBhHEEvkyvTqJUIeskr6E9PxwbWHltx4bOMIa0nWNlI=;
-        b=k0CN52kfaQSrU0vhHAsHAaeZKCT/mzcnizfqKi9Ww28fmClOjKMhv5QxYf0nhbSv5f
-         WsmJKV3XkebOq7gvuwlHq/ER1sJu2EM4SvpYnhuZ4QBLjTA6KIDTTj4XkfvOme7ta48F
-         rg9ITvUV5abS+JVxJAqqvCFmkZn+X4oAixtjGrfuVSmwfFESBySd1O7lQuHwMnVNUKws
-         PUupLqzTtMcVz7YESyLHUmDYBVgmeX3QPhPDo30FPww/nGyV3lsktqVfj/omYQKfOTHO
-         rYctsYn95+v5dcLaWR8CccBpSy4tr5Cfr0ZAF22phQjQuhnqfVbHQfAPMD3peSIzIj5Q
-         ITtw==
-X-Gm-Message-State: ANhLgQ2OD7aPTNT9rMLcQX17fGbHeIUkLYrGTf/rigBeNvkT4ireScEE
-        PyMp+dDB8cTZ9VXZqpOx740=
-X-Google-Smtp-Source: ADFU+vujWG4mhhwgFbY7jL5PWOYmiaZfGajGy7CqmtPLIEZCdmfdgCiolJp1Cq7fqRElIbD0or0rUQ==
-X-Received: by 2002:aa7:cfc6:: with SMTP id r6mr5340823edy.15.1583264223101;
-        Tue, 03 Mar 2020 11:37:03 -0800 (PST)
-Received: from a483e7b01a66.ant.amazon.com (54-240-197-230.amazon.com. [54.240.197.230])
-        by smtp.gmail.com with ESMTPSA id v25sm976168edx.89.2020.03.03.11.37.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 11:37:02 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] xenbus: req->body should be updated before
- req->state
-To:     Dongli Zhang <dongli.zhang@oracle.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, joe.jin@oracle.com
-References: <20200303184752.20821-1-dongli.zhang@oracle.com>
-From:   Julien Grall <julien@xen.org>
-Message-ID: <4ed129f9-ff23-f228-6833-77e37c2bb7b2@xen.org>
-Date:   Tue, 3 Mar 2020 19:37:01 +0000
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200303184752.20821-1-dongli.zhang@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Tue, 3 Mar 2020 14:37:33 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id 0CE6E21FC6;
+        Tue,  3 Mar 2020 14:37:32 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Tue, 03 Mar 2020 14:37:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        content-transfer-encoding:content-type:in-reply-to:date:to:cc
+        :subject:from:message-id; s=fm2; bh=u0IrEIXKCPqF9SikuisdIghTkg0j
+        7+8C1skbUGpp0p8=; b=hg/CFqGAMIkShJAKOhOwEMupcwe/MBOezh6zMZhlEclX
+        XLJTZigMmqeY4trM0DekrEP28xXqiqiCrjYpVvzqj0gBycW6Ro+kXdwgGNEqp6N9
+        TIB6jrPjnfM7wi3EFVjjbAzdR5ktH93gCsn/f7tCmJVlICfhu62flm0AvWKVedAI
+        w7x3pg2Bi79SKa3vaDiASVdCvlT7hWkm7seFAq620B7ELVMK+U7DkvLJGommnkq6
+        opxhPzkLBgBuHjoeCVqKIpQXbxWJZ660HnkiEpBQYxl6KLkol7mEsLfHz7Oj8k/J
+        sef+JBjijk6rFC4xjTSrjs2+/MknHeyyL0imdExfcg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=u0IrEI
+        XKCPqF9SikuisdIghTkg0j7+8C1skbUGpp0p8=; b=lW323dlAALeDy5hsb+8RmK
+        SGDUenHi6HLukau7SutbXUDiNzQmN+KXAYWgW//+bpSA6n4FvJFQ96pIVV3E9UeE
+        6F/gSYi0NKVrZJU/doPWBtIujyTyfwEjDrYO7Xkrkvw8g4acZGapBzM6w7ZQjc3I
+        UnXJ0k73TjZRkT0JlgVsMO0kMvpGlEDp6GftHgSeL4Gb1kI5J9dMFDUFfrsIZD1Q
+        nKg7xpY2Wloe+lXVEj5tpNgDR0vTblzhA4+c5Jr276wYN5rFEhnkxjVfQzMqh91G
+        X4tdUITmVRsS47jbRbzIGL5hNtPujg4ZJg0scPmEpkzKuUvKJgdeDihgp4EjwtKQ
+        ==
+X-ME-Sender: <xms:-rFeXuWt-RADQjgPJ6QFNpotFT54BM0njm5aIiKyG4h70dqog4a_sQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddtiedgudeftdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecufghrlhcuvffnffculdejtddmnecujfgurhepgf
+    gtjgffvffuhffksehtqhertddttdejnecuhfhrohhmpedfffgrnhhivghlucgiuhdfuceo
+    ugiguhesugiguhhuuhdrgiihiieqnecukfhppeduieefrdduudegrddufedvrddunecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugig
+    uhhuuhdrgiihii
+X-ME-Proxy: <xmx:-rFeXnNsidxuMTbA5XnsHN-ziCzt3xiLvXeVejJdL0lC3H-QCsF83Q>
+    <xmx:-rFeXjapRvO8aaAzLF1DEhX8ND8zo7gEpXccfJzkPUSwDhfAVxUPhQ>
+    <xmx:-rFeXhTXV7LwaEpssrSa9665B7CgJgZtRTwYN84fxA5uYbRMkNlqoQ>
+    <xmx:_LFeXsV0zJh4F0dTBvi9oJxz9hgkTIXx0sgMc9KiwuEHgr_ILIHucg>
+Received: from localhost (unknown [163.114.132.1])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 66B15328006A;
+        Tue,  3 Mar 2020 14:37:29 -0500 (EST)
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Originaldate: Tue Mar 3, 2020 at 11:19 AM
+Originalfrom: "Daniel Xu" <dxu@dxuuu.xyz>
+Original: =?utf-8?q?On_Tue_Mar_3,_2020_at_8:19_AM,_Tejun_Heo_wrote:
+ =0D=0A>_Hello,?= =?utf-8?q?=0D=0A>=0D=0A>_
+ =0D=0A>_On_Mon,_Mar_02,_2020_at_05:39:00PM_-0800?=
+ =?utf-8?q?,_Daniel_Xu_wrote:=0D=0A>_>_+static_int_kernfs=5Fvfs=5Fuser=5Fx?=
+ =?utf-8?q?attr=5Fset(const_struct_xattr=5Fhandler_*handler,=0D=0A>_>_+=09?=
+ =?utf-8?q?=09=09=09_____struct_dentry_*unused,_struct_inode_*inode,=0D=0A?=
+ =?utf-8?q?>_>_+=09=09=09=09_____const_char_*suffix,_const_void_*value,=0D?=
+ =?utf-8?q?=0A>_>_+=09=09=09=09_____size=5Ft_size,_int_flags)=0D=0A>_>_+{?=
+ =?utf-8?q?=0D=0A>_...=0D=0A>_>_+=09if_(value_&&_atomic=5Finc=5Freturn(nr)?=
+ =?utf-8?q?_>_KERNFS=5FMAX=5FUSER=5FXATTRS)_{=0D=0A>_>_+=09=09ret_=3D_-ENO?=
+ =?utf-8?q?SPC;=0D=0A>_>_+=09=09goto_dec=5Fout;=0D=0A>_>_+=09}=0D=0A>=0D?=
+ =?utf-8?q?=0A>_=0D=0A>_So,_we_limit_the_number_of_user_xattrs_here_but=0D?=
+ =?utf-8?q?=0A>=0D=0A>_=0D=0A>_>_+=09ret_=3D_kernfs=5Fvfs=5Fxattr=5Fset(ha?=
+ =?utf-8?q?ndler,_unused,_inode,_suffix,_value,=0D=0A>_>_+=09=09=09=09___s?=
+ =?utf-8?q?ize,_flags);=0D=0A>=0D=0A>_=0D=0A>_This_will_call_into_simple?=
+ =?utf-8?q?=5Fxattr=5Fset()_which_doesn't_put_any_further=0D=0A>_restricti?=
+ =?utf-8?q?on_on_size_and_just_calls_GFP=5FKERNEL_kmalloc_on_it_allowing?=
+ =?utf-8?q?=0D=0A>_users_incur_high-order_allocations._Maybe_it'd_make_sen?=
+ =?utf-8?q?se_to_limit=0D=0A>_both_the_number_and_size=3F=0D=0A=0D=0AAh_ye?=
+ =?utf-8?q?ah_good_point._Will_add.=0D=0A?=
+In-Reply-To: <C11FYO0Q9WJU.2MLRRFOQ3E878@dlxu-fedora-R90QNFJV>
+Date:   Tue, 03 Mar 2020 11:37:28 -0800
+To:     "Daniel Xu" <dxu@dxuuu.xyz>, "Tejun Heo" <tj@kernel.org>
+Cc:     <cgroups@vger.kernel.org>, <lizefan@huawei.com>,
+        <hannes@cmpxchg.org>, <linux-kernel@vger.kernel.org>,
+        <gregkh@linuxfoundation.org>, <kernel-team@fb.com>
+Subject: Re: [PATCH 1/2] kernfs: Add option to enable user xattrs
+From:   "Daniel Xu" <dxu@dxuuu.xyz>
+Message-Id: <C11GC2SN5D18.2S00I3KONE9ZE@dlxu-fedora-R90QNFJV>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue Mar 3, 2020 at 11:19 AM, Daniel Xu wrote:
+> On Tue Mar 3, 2020 at 8:19 AM, Tejun Heo wrote:
+> > Hello,
+> >
+> >=20
+> > On Mon, Mar 02, 2020 at 05:39:00PM -0800, Daniel Xu wrote:
+> > > +static int kernfs_vfs_user_xattr_set(const struct xattr_handler *han=
+dler,
+> > > +				     struct dentry *unused, struct inode *inode,
+> > > +				     const char *suffix, const void *value,
+> > > +				     size_t size, int flags)
+> > > +{
+> > ...
+> > > +	if (value && atomic_inc_return(nr) > KERNFS_MAX_USER_XATTRS) {
+> > > +		ret =3D -ENOSPC;
+> > > +		goto dec_out;
+> > > +	}
+> >
+> >=20
+> > So, we limit the number of user xattrs here but
+> >
+> >=20
+> > > +	ret =3D kernfs_vfs_xattr_set(handler, unused, inode, suffix, value,
+> > > +				   size, flags);
+> >
+> >=20
+> > This will call into simple_xattr_set() which doesn't put any further
+> > restriction on size and just calls GFP_KERNEL kmalloc on it allowing
+> > users incur high-order allocations. Maybe it'd make sense to limit
+> > both the number and size?
+>
+>=20
+> Ah yeah good point. Will add.
+>
 
-On 03/03/2020 18:47, Dongli Zhang wrote:
-> The req->body should be updated before req->state is updated and the
-> order should be guaranteed by a barrier.
-> 
-> Otherwise, read_reply() might return req->body = NULL.
-> 
-> Below is sample callstack when the issue is reproduced on purpose by
-> reordering the updates of req->body and req->state and adding delay in
-> code between updates of req->state and req->body.
-> 
-> [   22.356105] general protection fault: 0000 [#1] SMP PTI
-> [   22.361185] CPU: 2 PID: 52 Comm: xenwatch Not tainted 5.5.0xen+ #6
-> [   22.366727] Hardware name: Xen HVM domU, BIOS ...
-> [   22.372245] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
-> ... ...
-> [   22.392163] RSP: 0018:ffffb2d64023fdf0 EFLAGS: 00010246
-> [   22.395933] RAX: 0000000000000000 RBX: 75746e7562755f6d RCX: 0000000000000000
-> [   22.400871] RDX: 0000000000000000 RSI: ffffb2d64023fdfc RDI: 75746e7562755f6d
-> [   22.405874] RBP: 0000000000000000 R08: 00000000000001e8 R09: 0000000000cdcdcd
-> [   22.410945] R10: ffffb2d6402ffe00 R11: ffff9d95395eaeb0 R12: ffff9d9535935000
-> [   22.417613] R13: ffff9d9526d4a000 R14: ffff9d9526f4f340 R15: ffff9d9537654000
-> [   22.423726] FS:  0000000000000000(0000) GS:ffff9d953bc80000(0000) knlGS:0000000000000000
-> [   22.429898] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [   22.434342] CR2: 000000c4206a9000 CR3: 00000001ea3fc002 CR4: 00000000001606e0
-> [   22.439645] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [   22.444941] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [   22.450342] Call Trace:
-> [   22.452509]  simple_strtoull+0x27/0x70
-> [   22.455572]  xenbus_transaction_start+0x31/0x50
-> [   22.459104]  netback_changed+0x76c/0xcc1 [xen_netfront]
-> [   22.463279]  ? find_watch+0x40/0x40
-> [   22.466156]  xenwatch_thread+0xb4/0x150
-> [   22.469309]  ? wait_woken+0x80/0x80
-> [   22.472198]  kthread+0x10e/0x130
-> [   22.474925]  ? kthread_park+0x80/0x80
-> [   22.477946]  ret_from_fork+0x35/0x40
-> [   22.480968] Modules linked in: xen_kbdfront xen_fbfront(+) xen_netfront xen_blkfront
-> [   22.486783] ---[ end trace a9222030a747c3f7 ]---
-> [   22.490424] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
-> 
-> The barrier() in test_reply() is changed to virt_rmb(). The "while" is
-> changed to "do while" so that test_reply() is used as a read memory
-> barrier.
-> 
-> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-> ---
-> Changed since v1:
->    - change "barrier()" to "virt_rmb()" in test_reply()
-> 
->   drivers/xen/xenbus/xenbus_comms.c |  2 ++
->   drivers/xen/xenbus/xenbus_xs.c    | 11 +++++++----
->   2 files changed, 9 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
-> index d239fc3c5e3d..852ed161fc2a 100644
-> --- a/drivers/xen/xenbus/xenbus_comms.c
-> +++ b/drivers/xen/xenbus/xenbus_comms.c
-> @@ -313,6 +313,8 @@ static int process_msg(void)
->   			req->msg.type = state.msg.type;
->   			req->msg.len = state.msg.len;
->   			req->body = state.body;
-> +			/* write body, then update state */
-> +			virt_wmb();
->   			req->state = xb_req_state_got_reply;
->   			req->cb(req);
->   		} else
-> diff --git a/drivers/xen/xenbus/xenbus_xs.c b/drivers/xen/xenbus/xenbus_xs.c
-> index ddc18da61834..1e14c2118861 100644
-> --- a/drivers/xen/xenbus/xenbus_xs.c
-> +++ b/drivers/xen/xenbus/xenbus_xs.c
-> @@ -194,15 +194,18 @@ static bool test_reply(struct xb_req_data *req)
->   	if (req->state == xb_req_state_got_reply || !xenbus_ok())
->   		return true;
->   
-> -	/* Make sure to reread req->state each time. */
-> -	barrier();
-> +	/*
-> +	 * read req->state before other fields of struct xb_req_data
-> +	 * in the caller of test_reply(), e.g., read_reply()
-> +	 */
-> +	virt_rmb();
+It looks like in fs/xattr.c:setxattr, there is already:
 
-Looking at the code again, I am afraid the barrier only happen in the 
-false case. Should not the new barrier added in the 'true' case?
+    ...
+    if (size) {
+        if (size > XATTR_SIZE_MAX)
+            return -E2BIG;
+    ...
 
-Cheers,
+where XATTR_SIZE_MAX is defined as 64k. Do you want it even smaller?
 
--- 
-Julien Grall
+
+Thanks,
+Daniel
