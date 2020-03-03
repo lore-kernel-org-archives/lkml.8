@@ -2,58 +2,56 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4406EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD30C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 161AE21556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB29208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257473;
-	bh=xJaPOEMtNwqvbSQdzQQceUOZ4lUwtok76L2WrtwFr6o=;
+	s=default; t=1583257476;
+	bh=Jwgkt/6LEzf488NJYEsiuq9mm8TKBNnpaSlLsP94aMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PPAo0CxZmGlk3ACuX62y0r7nHMCDFVQr8M9PmG0oJMqIiyf6wy7YdWbRgGd1brHUS
-	 Q42B/Y6zTXTxBKbNwhFccdDfVunCs22gNAnjFs/+brD0SX6vqOhaF6U7QE+rWm1mTg
-	 8/MVJIeWFG/ZLPVSWtTpw1ql438FWCW906QGg+7E=
+	b=jzBDeKuoTkmWATMhQYim1FhxKHYAaOlZ8Z7puuSMsUnilTkjAmYerhxG+8Ij7d0Dw
+	 nMtqWphms6e69NMr+wjV5uUHH/XNX5VpIJ5V6fZC8R7xGBhR+/zx6WV6GfQT04ASoj
+	 qyhwwegEoJQtThrhCQwL64a5lmUIXdVYlw+TPjiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729828AbgCCRob (ORCPT
+        id S1730031AbgCCRof (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:44:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:44:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgCCRob (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:44:31 -0500
+        id S1728321AbgCCRod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:44:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AD1C20870;
-        Tue,  3 Mar 2020 17:44:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA577208C3;
+        Tue,  3 Mar 2020 17:44:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257470;
-        bh=xJaPOEMtNwqvbSQdzQQceUOZ4lUwtok76L2WrtwFr6o=;
+        s=default; t=1583257473;
+        bh=Jwgkt/6LEzf488NJYEsiuq9mm8TKBNnpaSlLsP94aMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cNTc93C9ESTHapz8tgC8R1CPQNusxIRcAqTvfgpcAY7XffBbTJGzaGwxShiuae+NU
-         disn7pWHbeBIfWjmaB82av2PJRV4tIDGC9GEW7tQUYRcSMdXRkE6NYtIIlghBd9fR8
-         9J6sJhvrLpKV9q1mEzL0tLqtzgAZnaICTA8aQV3M=
+        b=QJQCS7IgXP8Wabqg5yX+Ns1nRh3HUlf2ovzk9fUEeDCBYDRJx8ByuaxnU9n3DE4pq
+         /2lcF6j4VnA0MaR3hrhDE5NL1RTTOnnbX2yg1OVFju8KgjL++Nr78e7thzlyj845vv
+         YpkB1Nz5xeiUHb/nul442U3cVx0kc3dxYIBkscNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Aristeu Rozanski <aris@redhat.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 001/176] EDAC: skx_common: downgrade message importance on missing PCI device
-Date:   Tue,  3 Mar 2020 18:41:05 +0100
-Message-Id: <20200303174304.758365569@linuxfoundation.org>
+        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 010/176] qede: Fix race between rdma destroy workqueue and link change event
+Date:   Tue,  3 Mar 2020 18:41:14 +0100
+Message-Id: <20200303174305.760327646@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,42 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aristeu Rozanski <aris@redhat.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-[ Upstream commit 854bb48018d5da261d438b2232fa683bdb553979 ]
+[ Upstream commit af6565adb02d3129d3fae4d9d5da945abaf4417a ]
 
-Both skx_edac and i10nm_edac drivers are loaded based on the matching CPU being
-available which leads the module to be automatically loaded in virtual machines
-as well. That will fail due the missing PCI devices. In both drivers the first
-function to make use of the PCI devices is skx_get_hi_lo() will simply print
+If an event is added while the rdma workqueue is being destroyed
+it could lead to several races, list corruption, null pointer
+dereference during queue_work or init_queue.
+This fixes the race between the two flows which can occur during
+shutdown.
 
-	EDAC skx: Can't get tolm/tohm
+A kref object and a completion object are added to the rdma_dev
+structure, these are initialized before the workqueue is created.
+The refcnt is used to indicate work is being added to the
+workqueue and ensures the cleanup flow won't start while we're in
+the middle of adding the event.
+Once the work is added, the refcnt is decreased and the cleanup flow
+is safe to run.
 
-for each CPU core, which is noisy. This patch makes it a debug message.
-
-Signed-off-by: Aristeu Rozanski <aris@redhat.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Link: https://lore.kernel.org/r/20191204212325.c4k47p5hrnn3vpb5@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: cee9fbd8e2e ("qede: Add qedr framework")
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/edac/skx_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qede/qede.h      |    2 +
+ drivers/net/ethernet/qlogic/qede/qede_rdma.c |   29 ++++++++++++++++++++++++++-
+ 2 files changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/edac/skx_common.c b/drivers/edac/skx_common.c
-index 95662a4ff4c4f..99bbaf629b8d9 100644
---- a/drivers/edac/skx_common.c
-+++ b/drivers/edac/skx_common.c
-@@ -256,7 +256,7 @@ int skx_get_hi_lo(unsigned int did, int off[], u64 *tolm, u64 *tohm)
+--- a/drivers/net/ethernet/qlogic/qede/qede.h
++++ b/drivers/net/ethernet/qlogic/qede/qede.h
+@@ -163,6 +163,8 @@ struct qede_rdma_dev {
+ 	struct list_head entry;
+ 	struct list_head rdma_event_list;
+ 	struct workqueue_struct *rdma_wq;
++	struct kref refcnt;
++	struct completion event_comp;
+ 	bool exp_recovery;
+ };
  
- 	pdev = pci_get_device(PCI_VENDOR_ID_INTEL, did, NULL);
- 	if (!pdev) {
--		skx_printk(KERN_ERR, "Can't get tolm/tohm\n");
-+		edac_dbg(2, "Can't get tolm/tohm\n");
- 		return -ENODEV;
+--- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+@@ -59,6 +59,9 @@ static void _qede_rdma_dev_add(struct qe
+ static int qede_rdma_create_wq(struct qede_dev *edev)
+ {
+ 	INIT_LIST_HEAD(&edev->rdma_info.rdma_event_list);
++	kref_init(&edev->rdma_info.refcnt);
++	init_completion(&edev->rdma_info.event_comp);
++
+ 	edev->rdma_info.rdma_wq = create_singlethread_workqueue("rdma_wq");
+ 	if (!edev->rdma_info.rdma_wq) {
+ 		DP_NOTICE(edev, "qedr: Could not create workqueue\n");
+@@ -83,8 +86,23 @@ static void qede_rdma_cleanup_event(stru
  	}
+ }
  
--- 
-2.20.1
-
++static void qede_rdma_complete_event(struct kref *ref)
++{
++	struct qede_rdma_dev *rdma_dev =
++		container_of(ref, struct qede_rdma_dev, refcnt);
++
++	/* no more events will be added after this */
++	complete(&rdma_dev->event_comp);
++}
++
+ static void qede_rdma_destroy_wq(struct qede_dev *edev)
+ {
++	/* Avoid race with add_event flow, make sure it finishes before
++	 * we start accessing the list and cleaning up the work
++	 */
++	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
++	wait_for_completion(&edev->rdma_info.event_comp);
++
+ 	qede_rdma_cleanup_event(edev);
+ 	destroy_workqueue(edev->rdma_info.rdma_wq);
+ }
+@@ -310,15 +328,24 @@ static void qede_rdma_add_event(struct q
+ 	if (!edev->rdma_info.qedr_dev)
+ 		return;
+ 
++	/* We don't want the cleanup flow to start while we're allocating and
++	 * scheduling the work
++	 */
++	if (!kref_get_unless_zero(&edev->rdma_info.refcnt))
++		return; /* already being destroyed */
++
+ 	event_node = qede_rdma_get_free_event_node(edev);
+ 	if (!event_node)
+-		return;
++		goto out;
+ 
+ 	event_node->event = event;
+ 	event_node->ptr = edev;
+ 
+ 	INIT_WORK(&event_node->work, qede_rdma_handle_event);
+ 	queue_work(edev->rdma_info.rdma_wq, &event_node->work);
++
++out:
++	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
+ }
+ 
+ void qede_rdma_dev_event_open(struct qede_dev *edev)
 
 
