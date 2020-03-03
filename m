@@ -2,122 +2,192 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B92AC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F91C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4721A21D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A5D92166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204201;
-	bh=90SSNhpwGdtCb5Wj/SwJPwxBnOiLghvSP5V9od1z4d0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YlU6wsvxWRsJcppBFeCV2yzHu08fbVbUrK/OkItsT++S0HqDlS/NidujQHD1WAoL7
-	 n/j5MxjWHK3+K++OtFYCJWs//aefDt9GOcYT6uylOYTtTP8j44G5dp0upp82C7VEpU
-	 QP+Q9OCQpja9mp5u2CI7cUhJM2dGTYZt61wm5LBc=
+	s=default; t=1583204205;
+	bh=NkRFNdz3XKrMZQz4RVrE5BBAyFyLOqfqLt6eXCZ7G5A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=P+oCG4PAVcyXkTpDCW35XSVolaxUHBhtkd9V7aU9QjJ0u0AWr3tl6sOLr6ncASsmV
+	 Mc4Bm270PKiY5LSTFBLYNU2e0ZnBWWpZ+mZtUpyC+z6m1Y7tc6BeMLjjFdsT5UAro/
+	 rQgfUbSZKXSV6Op5Fz90jXhl5/GobdTYZjcTiIno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgCCC4k (ORCPT
+        id S1727938AbgCCCsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:56:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52796 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728207AbgCCC4i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:56:38 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728402AbgCCCsZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:25 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7344B24673;
-        Tue,  3 Mar 2020 02:56:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D020424697;
+        Tue,  3 Mar 2020 02:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583204198;
-        bh=90SSNhpwGdtCb5Wj/SwJPwxBnOiLghvSP5V9od1z4d0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GYIoBi1kbTh+Lde/77f7UJjW0iBtYOskQCEEyvLJMjhIzHQAxIpOTbFv03ssoBjae
-         jr6DcwUqUITJ6oIlarqn3ci5qCCMQ9aOkmLDfMB+PppHU8vHLqcSbASTYlil41FYaf
-         4vJH+pfgTWp31z1Xi55rxy6i4ukv6geXFNucKKHQ=
-Date:   Tue, 3 Mar 2020 11:56:33 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Markus Elfring <Markus.Elfring@web.de>
-Subject: Re: [PATCH v3] Documentation: bootconfig: Update boot configuration
- documentation
-Message-Id: <20200303115633.3db043ce643c5bc55915a57c@kernel.org>
-In-Reply-To: <8c032093-c652-5e33-36ad-732f73beabab@infradead.org>
-References: <158313621831.3082.9886161529613724376.stgit@devnote2>
-        <158313622831.3082.8237132211731864948.stgit@devnote2>
-        <8c032093-c652-5e33-36ad-732f73beabab@infradead.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=default; t=1583203704;
+        bh=NkRFNdz3XKrMZQz4RVrE5BBAyFyLOqfqLt6eXCZ7G5A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=icVM2Gf0zqcilKhxcwW0HNEBMyRnB9RFQUbrKtjpRZ055Yst2UyvoFWKjVDGc2dem
+         9RrOA7NwAB0sm+ovMeUX1E3WdiqXM1mGFhoX+3OdjITuU2Y0v0iCJYmSnPxiOTdMsM
+         u2Sb7WGvXaV/X6+au327e3fTK+vzKmY4owLJUaaY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Javier Martinez Canillas <javierm@redhat.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-security-module@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 36/58] efi: Only print errors about failing to get certs if EFI vars are found
+Date:   Mon,  2 Mar 2020 21:47:18 -0500
+Message-Id: <20200303024740.9511-36-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
+References: <20200303024740.9511-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 17:52:36 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+From: Javier Martinez Canillas <javierm@redhat.com>
 
-> On 3/2/20 12:03 AM, Masami Hiramatsu wrote:
-> > Update boot configuration documentation.
-> > 
-> >  - Not using "config" abbreviation but configuration or description.
-> >  - Rewrite descriptions of node and its maxinum number.
-> >  - Add a section of use cases of boot configuration.
-> >  - Move how to use bootconfig to earlier section.
-> >  - Fix some typos, indents and format mistakes.
-> > 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> > Changes in v3:
-> >  - Specify that comments also count in size.
-> >  - Fix a confusing sentence.
-> >  - Add O=<builddir> to make command.
-> 
-> 
-> Hi Masami-san,
-> 
-> I think that you misunderstood me.  I am asking that you
-> make "make O=builddir -C tools/bootconfig" work properly, i.e.,
-> the bootconfig binary should be built in the <builddir>.
-> 
-> Presently when I enter that command, the bootconfig binary
-> is still built in the kernel source tree.
+[ Upstream commit 3be54d558c75562e42bc83d665df024bd79d399b ]
 
-Oops, that's my mistake! It needs to be fixed soon.
-Thank you for reporting it!
+If CONFIG_LOAD_UEFI_KEYS is enabled, the kernel attempts to load the certs
+from the db, dbx and MokListRT EFI variables into the appropriate keyrings.
 
-(Also, I misunderstood what O= option means for tools...)
+But it just assumes that the variables will be present and prints an error
+if the certs can't be loaded, even when is possible that the variables may
+not exist. For example the MokListRT variable will only be present if shim
+is used.
 
-> 
-> > Changes in v2:
-> >  - Fixes additional typos (Thanks Markus and Randy!)
-> >  - Change a section title to "Tree Structured Key".
-> > ---
-> >  Documentation/admin-guide/bootconfig.rst |  181 +++++++++++++++++++-----------
-> >  Documentation/trace/boottime-trace.rst   |    2 
-> >  2 files changed, 117 insertions(+), 66 deletions(-)
-> > 
-> 
-> 
-> All of the other changes look good to me.
+So only print an error message about failing to get the certs list from an
+EFI variable if this is found. Otherwise these printed errors just pollute
+the kernel log ring buffer with confusing messages like the following:
 
-Thank you!
+[    5.427251] Couldn't get size: 0x800000000000000e
+[    5.427261] MODSIGN: Couldn't get UEFI db list
+[    5.428012] Couldn't get size: 0x800000000000000e
+[    5.428023] Couldn't get UEFI MokListRT
 
+Reported-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Javier Martinez Canillas <javierm@redhat.com>
+Tested-by: Hans de Goede <hdegoede@redhat.com>
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ security/integrity/platform_certs/load_uefi.c | 40 ++++++++++++-------
+ 1 file changed, 26 insertions(+), 14 deletions(-)
 
-
-> 
-> thanks.
-> -- 
-> ~Randy
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-
-
+diff --git a/security/integrity/platform_certs/load_uefi.c b/security/integrity/platform_certs/load_uefi.c
+index 81b19c52832ba..020fc7a11ef0e 100644
+--- a/security/integrity/platform_certs/load_uefi.c
++++ b/security/integrity/platform_certs/load_uefi.c
+@@ -39,16 +39,18 @@ static __init bool uefi_check_ignore_db(void)
+  * Get a certificate list blob from the named EFI variable.
+  */
+ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+-				  unsigned long *size)
++				  unsigned long *size, efi_status_t *status)
+ {
+-	efi_status_t status;
+ 	unsigned long lsize = 4;
+ 	unsigned long tmpdb[4];
+ 	void *db;
+ 
+-	status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
+-	if (status != EFI_BUFFER_TOO_SMALL) {
+-		pr_err("Couldn't get size: 0x%lx\n", status);
++	*status = efi.get_variable(name, guid, NULL, &lsize, &tmpdb);
++	if (*status == EFI_NOT_FOUND)
++		return NULL;
++
++	if (*status != EFI_BUFFER_TOO_SMALL) {
++		pr_err("Couldn't get size: 0x%lx\n", *status);
+ 		return NULL;
+ 	}
+ 
+@@ -56,10 +58,10 @@ static __init void *get_cert_list(efi_char16_t *name, efi_guid_t *guid,
+ 	if (!db)
+ 		return NULL;
+ 
+-	status = efi.get_variable(name, guid, NULL, &lsize, db);
+-	if (status != EFI_SUCCESS) {
++	*status = efi.get_variable(name, guid, NULL, &lsize, db);
++	if (*status != EFI_SUCCESS) {
+ 		kfree(db);
+-		pr_err("Error reading db var: 0x%lx\n", status);
++		pr_err("Error reading db var: 0x%lx\n", *status);
+ 		return NULL;
+ 	}
+ 
+@@ -144,6 +146,7 @@ static int __init load_uefi_certs(void)
+ 	efi_guid_t mok_var = EFI_SHIM_LOCK_GUID;
+ 	void *db = NULL, *dbx = NULL, *mok = NULL;
+ 	unsigned long dbsize = 0, dbxsize = 0, moksize = 0;
++	efi_status_t status;
+ 	int rc = 0;
+ 
+ 	if (!efi.get_variable)
+@@ -153,9 +156,12 @@ static int __init load_uefi_certs(void)
+ 	 * an error if we can't get them.
+ 	 */
+ 	if (!uefi_check_ignore_db()) {
+-		db = get_cert_list(L"db", &secure_var, &dbsize);
++		db = get_cert_list(L"db", &secure_var, &dbsize, &status);
+ 		if (!db) {
+-			pr_err("MODSIGN: Couldn't get UEFI db list\n");
++			if (status == EFI_NOT_FOUND)
++				pr_debug("MODSIGN: db variable wasn't found\n");
++			else
++				pr_err("MODSIGN: Couldn't get UEFI db list\n");
+ 		} else {
+ 			rc = parse_efi_signature_list("UEFI:db",
+ 					db, dbsize, get_handler_for_db);
+@@ -166,9 +172,12 @@ static int __init load_uefi_certs(void)
+ 		}
+ 	}
+ 
+-	mok = get_cert_list(L"MokListRT", &mok_var, &moksize);
++	mok = get_cert_list(L"MokListRT", &mok_var, &moksize, &status);
+ 	if (!mok) {
+-		pr_info("Couldn't get UEFI MokListRT\n");
++		if (status == EFI_NOT_FOUND)
++			pr_debug("MokListRT variable wasn't found\n");
++		else
++			pr_info("Couldn't get UEFI MokListRT\n");
+ 	} else {
+ 		rc = parse_efi_signature_list("UEFI:MokListRT",
+ 					      mok, moksize, get_handler_for_db);
+@@ -177,9 +186,12 @@ static int __init load_uefi_certs(void)
+ 		kfree(mok);
+ 	}
+ 
+-	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize);
++	dbx = get_cert_list(L"dbx", &secure_var, &dbxsize, &status);
+ 	if (!dbx) {
+-		pr_info("Couldn't get UEFI dbx list\n");
++		if (status == EFI_NOT_FOUND)
++			pr_debug("dbx variable wasn't found\n");
++		else
++			pr_info("Couldn't get UEFI dbx list\n");
+ 	} else {
+ 		rc = parse_efi_signature_list("UEFI:dbx",
+ 					      dbx, dbxsize,
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.20.1
+
