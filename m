@@ -2,50 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91ED3C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA103C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A7EE2467F
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FBF2072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:50:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257849;
-	bh=/0SyJCbMMFWkCsdXw7wEBRFkg92lu0ILXXsUtOZRvWU=;
+	s=default; t=1583257856;
+	bh=tCTuDfKPPmcVCVvBzYFAN8oMQCdtn+euLHGRYEqWOaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cTUn7dqQBxWDPOR79e9ZGmivB97YX/JiSG0nsQ/MgPRts9cKu4K7p0ekBOSXdBLmk
-	 K/ZKk951CFpx5HLNkn+rPqELjw06NQ2lEXIhj3tcs7SoDCsdRcoPLrGmXfACyuHifj
-	 VG6o+CUhMfHhZxj2SUBJeXWbFZtAO4G9QBnTqNDI=
+	b=YC9q9Fvpl+Xerk8Om/xxIvOeAuD1tnmrfcatuVQcnDQWV/oUQ+pI988seh7BTr52B
+	 kAC3CE48X/OP+aP4TSKtL/P35bbS53MJWR2CuVwHQvMC6K7/WjG0TosY1fdvYA6En+
+	 ZVRiuf0+R2uLTOEht4iawhPg0iSs3/ZBq5IPmoS8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731587AbgCCRus (ORCPT
+        id S1731620AbgCCRuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:50:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58478 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:50:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731454AbgCCRum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:50:42 -0500
+        id S1731240AbgCCRux (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:50:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ABF920CC7;
-        Tue,  3 Mar 2020 17:50:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D74F7206E6;
+        Tue,  3 Mar 2020 17:50:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257841;
-        bh=/0SyJCbMMFWkCsdXw7wEBRFkg92lu0ILXXsUtOZRvWU=;
+        s=default; t=1583257852;
+        bh=tCTuDfKPPmcVCVvBzYFAN8oMQCdtn+euLHGRYEqWOaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LcEYinLeD1UukmlXiuW+IXaQDVxKQcXgv6lrx9M3ujpu8Leu5qrng0FWF2kkImRPk
-         mXfk3DLd0vTSyHsyzAXe+2QO4jcIcckauavrurNagrRvLipRuHaphRKE2MY/Qd3BiD
-         3Vj6VfipWlY38Oucr1g3KW8JfnvOkmXaVUcU39kw=
+        b=LzhoMEs3kEijyUJo3mpYsh/stdr+oDlU0DhrcNeb5X0hQ4DZ6jJXFu19Fb6ccsS/2
+         zW5OZ8/YidJJHKaApjHJFXxqVNpCyNv/gEyMaLF8FZ8xS2rxrQXev3dIGkfEVVDQrp
+         R7mFt8+5jpQM+Y8zAZmLQXihYnjtvxLGD+QO2YNI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 5.5 150/176] lib/vdso: Make __arch_update_vdso_data() logic understandable
-Date:   Tue,  3 Mar 2020 18:43:34 +0100
-Message-Id: <20200303174322.011346970@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.5 153/176] perf hists browser: Restore ESC as "Zoom out" of DSO/thread/etc
+Date:   Tue,  3 Mar 2020 18:43:37 +0100
+Message-Id: <20200303174322.265649176@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -58,63 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-commit 9a6b55ac4a44060bcb782baf002859b2a2c63267 upstream.
+commit 3f7774033e6820d25beee5cf7aefa11d4968b951 upstream.
 
-The function name suggests that this is a boolean checking whether the
-architecture asks for an update of the VDSO data, but it works the other
-way round. To spare further confusion invert the logic.
+We need to set actions->ms.map since 599a2f38a989 ("perf hists browser:
+Check sort keys before hot key actions"), as in that patch we bail out
+if map is NULL.
 
-Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/20200114185946.656652824@linutronix.de
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Fixes: 599a2f38a989 ("perf hists browser: Check sort keys before hot key actions")
+Link: https://lkml.kernel.org/n/tip-wp1ssoewy6zihwwexqpohv0j@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/include/asm/vdso/vsyscall.h |    4 ++--
- include/asm-generic/vdso/vsyscall.h  |    4 ++--
- kernel/time/vsyscall.c               |    2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ tools/perf/ui/browsers/hists.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/arm/include/asm/vdso/vsyscall.h
-+++ b/arch/arm/include/asm/vdso/vsyscall.h
-@@ -34,9 +34,9 @@ struct vdso_data *__arm_get_k_vdso_data(
- #define __arch_get_k_vdso_data __arm_get_k_vdso_data
+--- a/tools/perf/ui/browsers/hists.c
++++ b/tools/perf/ui/browsers/hists.c
+@@ -3062,6 +3062,7 @@ static int perf_evsel__hists_browse(stru
  
- static __always_inline
--int __arm_update_vdso_data(void)
-+bool __arm_update_vdso_data(void)
- {
--	return !cntvct_ok;
-+	return cntvct_ok;
- }
- #define __arch_update_vdso_data __arm_update_vdso_data
- 
---- a/include/asm-generic/vdso/vsyscall.h
-+++ b/include/asm-generic/vdso/vsyscall.h
-@@ -12,9 +12,9 @@ static __always_inline struct vdso_data
- #endif /* __arch_get_k_vdso_data */
- 
- #ifndef __arch_update_vdso_data
--static __always_inline int __arch_update_vdso_data(void)
-+static __always_inline bool __arch_update_vdso_data(void)
- {
--	return 0;
-+	return true;
- }
- #endif /* __arch_update_vdso_data */
- 
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -84,7 +84,7 @@ void update_vsyscall(struct timekeeper *
- 	struct vdso_timestamp *vdso_ts;
- 	u64 nsec;
- 
--	if (__arch_update_vdso_data()) {
-+	if (!__arch_update_vdso_data()) {
- 		/*
- 		 * Some architectures might want to skip the update of the
- 		 * data page.
+ 				continue;
+ 			}
++			actions->ms.map = map;
+ 			top = pstack__peek(browser->pstack);
+ 			if (top == &browser->hists->dso_filter) {
+ 				/*
 
 
