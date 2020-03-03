@@ -2,104 +2,160 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F400C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EB8C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49453215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:50:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d8XyHeNu"
+	by mail.kernel.org (Postfix) with ESMTP id 411A82086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583225446;
+	bh=eR6LH6mxRiiMpd/1mg6HONvlCCBV3PmOyYycLqHqkdw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DrMvhlJfeRa7/csQbX8vAsU9MtPYKlX1HQrw8skc0q/iDPNF5+WTkxVAVQl2JGbzA
+	 bKlhbWtBmio/MkjG8NZVuDoBm6LwLTRlJ74xfgjy7uQHQUoQOTJLhbGYOlPmjpefXL
+	 xV4wqrzK6FwYInwA37YXR7wsbodzk4ctiOJRTbUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgCCIum (ORCPT
+        id S1727828AbgCCIup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:50:42 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39330 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727412AbgCCIul (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:50:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583225439;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=KHCYOJTmBBdpFLT9MqAvZOM7WPdtVRLxrFg9V7woKHU=;
-        b=d8XyHeNuplJ0GjhI/xS+uc3spkH4I+jcRspXPf5Pxz6tniMjB6wrMuKKGAe3mynNK/SGoY
-        4LZwtFGmJzvPuE1H4AypTgQ5hih4aL6bCHvTk5AynExwA0pSzJMovuWezDmveqSGojQYcZ
-        /SvUeHkrfAx07PXSz8iFXZGIoPezc/M=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-167-ckiZ4UOxPUSRzO9pYpGZZA-1; Tue, 03 Mar 2020 03:50:38 -0500
-X-MC-Unique: ckiZ4UOxPUSRzO9pYpGZZA-1
-Received: by mail-wm1-f70.google.com with SMTP id k65so130807wmf.7
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:50:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KHCYOJTmBBdpFLT9MqAvZOM7WPdtVRLxrFg9V7woKHU=;
-        b=bD7j0C8GyF1ochA5DMxK97PasQK0UrYeuIsc+CVm8JZaMH/wsid92OzB0c/DxOnzLn
-         kjfS7TMDhIat5glukXg+EIweSm0JVP8R1OyZONacydnfcw/Y7Wp3tnpLQA8k8Pncork7
-         UO57DZ55qweD8S5WQK+33g2jGhNsnzu1IkeUGF92ZzNtOgZAA1iClO1wPDdjCAXvRgL7
-         lKhbnvjbcG6QdiSiRRcDQZCsnbCZOp6CrlSqm6B4N5VT2LiAVQ0p7jEcLCztWFxSB0j+
-         l7r0HUpYZE5oHt6HIkWvCrecW3UjbTNSo4z2xAfHDa5wYZNZksVycjPfc6u361kf36A6
-         rtrA==
-X-Gm-Message-State: ANhLgQ27L2Yvlflked5tqU/iXxQA2ZVWfjfmMfDmNRAoCzgcoDlR2UZR
-        AexJIUBAIcrZpKgtqzqmYccyoSGMI5ay6fTOv6i9cVpF+WDhgy6pbg8oK41UOBGxYcuoPgFkUN0
-        WP/D8NJTttI0oGosHYj/Hp7A3
-X-Received: by 2002:a7b:c183:: with SMTP id y3mr3222182wmi.0.1583225437084;
-        Tue, 03 Mar 2020 00:50:37 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsHC5SYzgpmvbQfX4p+aLP1LZEoxbKKcMdLptVUvUe1f3DxH4lN1yoJQf/QIJzqiTTL5Nejkg==
-X-Received: by 2002:a7b:c183:: with SMTP id y3mr3222168wmi.0.1583225436860;
-        Tue, 03 Mar 2020 00:50:36 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:4c52:2f3b:d346:82de? ([2001:b07:6468:f312:4c52:2f3b:d346:82de])
-        by smtp.gmail.com with ESMTPSA id n3sm2748163wmc.42.2020.03.03.00.50.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 00:50:36 -0800 (PST)
-Subject: Re: [PATCH] KVM: nVMX: Properly handle userspace interrupt window
- request
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
-References: <20200303062735.31868-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <2ba06866-b83d-969f-925d-acb2743de20d@redhat.com>
-Date:   Tue, 3 Mar 2020 09:50:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 3 Mar 2020 03:50:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33744 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727412AbgCCIun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 03:50:43 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5FA920873;
+        Tue,  3 Mar 2020 08:50:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583225442;
+        bh=eR6LH6mxRiiMpd/1mg6HONvlCCBV3PmOyYycLqHqkdw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eEDuts2CyWKxUkuRazmkCwT4hZjsAxqrHnv14Uf/LNboVoyo0q8uTK5wcmrqOiCfz
+         d64lQUTg3g5FM9OQUp2chBDAGhbLXbHoANW6G9t4HWgZx/OQxWiIuJky8Iqwupvt4Q
+         ex517U3FK6IIxONywHvdH+C/N1tSRCy/KDMqPNys=
+Date:   Tue, 3 Mar 2020 09:50:39 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        kvm-ppc@vger.kernel.org
+Subject: Re: [PATCH 2/6] powerpc: kvm: no need to check return value of
+ debugfs_create functions
+Message-ID: <20200303085039.GA1323622@kroah.com>
+References: <20200209105901.1620958-1-gregkh@linuxfoundation.org>
+ <20200209105901.1620958-2-gregkh@linuxfoundation.org>
+ <87imjlswxc.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200303062735.31868-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87imjlswxc.fsf@mpe.ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/20 07:27, Sean Christopherson wrote:
-> Odds are good that this doesn't solve all the problems with running nested
-> VMX and a userspace LAPIC, but I'm at least able to boot a kernel and run
-> unit tests, i.e. it's less broken than before.  Not that it matters, I'm
-> guessing no one actually uses this configuration, e.g. running a SMP
-> guest with the current KVM+kernel hangs during boot because Qemu
-> advertises PV IPIs to the guest, which require an in-kernel LAPIC.  I
-> stumbled on this disaster when disabling the in-kernel LAPIC for a
-> completely unrelated test.  I'm happy even if it does nothing more than
-> get rid of the awful logic vmx_check_nested_events().
+On Tue, Mar 03, 2020 at 06:46:23PM +1100, Michael Ellerman wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> > When calling debugfs functions, there is no need to ever check the
+> > return value.  The function can work or not, but the code logic should
+> > never do something different based on this.
+> 
+> Except it does need to do something different, if the file was created
+> it needs to be removed in the remove path.
+> 
+> > diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
+> > index bfe4f106cffc..8e4791c6f2af 100644
+> > --- a/arch/powerpc/kvm/timing.c
+> > +++ b/arch/powerpc/kvm/timing.c
+> > @@ -207,19 +207,12 @@ static const struct file_operations kvmppc_exit_timing_fops = {
+> >  void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
+> >  {
+> >  	static char dbg_fname[50];
+> > -	struct dentry *debugfs_file;
+> >  
+> >  	snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
+> >  		 current->pid, id);
+> > -	debugfs_file = debugfs_create_file(dbg_fname, 0666,
+> > -					kvm_debugfs_dir, vcpu,
+> > -					&kvmppc_exit_timing_fops);
+> > -
+> > -	if (!debugfs_file) {
+> > -		printk(KERN_ERR"%s: error creating debugfs file %s\n",
+> > -			__func__, dbg_fname);
+> > -		return;
+> > -	}
+> > +	debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
+> > +			    &kvmppc_exit_timing_fops);
+> > +
+> >  
+> >  	vcpu->arch.debugfs_exit_timing = debugfs_file;
 
-Yes, userspace LAPIC is more or less constantly broken.  I think it
-should be deprecated in QEMU.
+Ugh, you are right, how did I miss that?  How is 0-day missing this?
+It's been in my tree for a long time, odd.
 
-Paolo
+> >  }
+> 
+> This doesn't build:
+> 
+>     arch/powerpc/kvm/timing.c:217:35: error: 'debugfs_file' undeclared (first use in this function); did you mean 'debugfs_file_put'?
+> 
+> We can't just drop the assignment, we need the dentry to do the removal:
+> 
+> void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
+> {
+> 	if (vcpu->arch.debugfs_exit_timing) {
+> 		debugfs_remove(vcpu->arch.debugfs_exit_timing);
+> 		vcpu->arch.debugfs_exit_timing = NULL;
+> 	}
+> }
+> 
+> 
+> I squashed this in, which seems to work:
+> 
+> diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
+> index 8e4791c6f2af..5b7a66f86bd5 100644
+> --- a/arch/powerpc/kvm/timing.c
+> +++ b/arch/powerpc/kvm/timing.c
+> @@ -207,19 +207,19 @@ static const struct file_operations kvmppc_exit_timing_fops = {
+>  void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
+>  {
+>         static char dbg_fname[50];
+> +       struct dentry *debugfs_file;
+>  
+>         snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
+>                  current->pid, id);
+> -       debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
+> -                           &kvmppc_exit_timing_fops);
+> -
+> +       debugfs_file = debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir,
+> +                                          vcpu, &kvmppc_exit_timing_fops);
+>  
+>         vcpu->arch.debugfs_exit_timing = debugfs_file;
 
+That works, yes.
+
+>  }
+>  
+>  void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
+>  {
+> -       if (vcpu->arch.debugfs_exit_timing) {
+> +       if (!IS_ERR_OR_NULL(vcpu->arch.debugfs_exit_timing)) {
+>                 debugfs_remove(vcpu->arch.debugfs_exit_timing);
+>                 vcpu->arch.debugfs_exit_timing = NULL;
+>         }
+
+No, this can just be:
+	debugfs_remove(vcpu->arch.debugfs_exit_timing);
+
+No need to check anything, just call it and the debugfs code can handle
+it just fine.
+
+thanks,
+
+greg k-h
