@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA70C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 627EBC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54CA62166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39DBC2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204127;
-	bh=779UrS+LZsp9ln83dBobbCiQunNu96RYkBFUGMEeamE=;
+	s=default; t=1583204133;
+	bh=D1KMiHMo8Ls72ihrKfQhp1my5vwtKsTTszaB8nmbRHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y7+cPjh0PfqELZfjgiarGXjaWW78XOq1m9kFer5QEBysJ9NFv1mc1NWxzmG1vKeMj
-	 vGtNK5qR0QmJbhk6eXIJzSBUBnYk8YE1lOEUEqV+7qhb94zpNH2oTVO7kk/unQ6jRX
-	 voq3y++NsbmwbbwkObvlujz1Ypt05bPK6igfM3jI=
+	b=CnTo6qZdFFC4U1D2CCd6aYFNHO6XH+5hVLjubGh85kIvfHTvWOY9qXFXgvs3pr8Ow
+	 wXakkS6mHKfav8ki4FMnOh1ruoIxb2kajinwbTnYjKVKTqLSoNJkD4i/FROb/PgsoT
+	 dzTBQ1CdUXNRVlDJImf+FMWdOgEHqynsEOrR81oQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgCCCzV (ORCPT
+        id S1728526AbgCCCzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:55:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45202 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:55:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728661AbgCCCtI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:08 -0500
+        id S1728651AbgCCCtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6F6824686;
-        Tue,  3 Mar 2020 02:49:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B81924699;
+        Tue,  3 Mar 2020 02:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203747;
-        bh=779UrS+LZsp9ln83dBobbCiQunNu96RYkBFUGMEeamE=;
+        s=default; t=1583203745;
+        bh=D1KMiHMo8Ls72ihrKfQhp1my5vwtKsTTszaB8nmbRHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a7erchrmM3KUTiBQ7znctioXx88at6CejBO6mPdYx/Kgjq9HhgAcK5TKeM8p2xGyh
-         cBnxgptFOD62CZvFb5VKGTmrlNHr5JUDprZUYSzHOhc9cpl0GtUL9iDUCmYjZNLd8p
-         bbNgUOFUVUIUm3qCmZiot5Gi115FVN7R1Utxv4i8=
+        b=D+ak5+aW6s6yz4JbIDzdyfAZd32vUuW0Xyq4Dyo2L3rO7kOYMhwk/anVzyGURmtFU
+         UF9vAyWFsxmO9pTP0kcG3CL7epLW1urmAtK0MQRAsU1Tsg1p31cWWiUqwB1pEV6aJZ
+         uZ+LmzxEmwcgmNTj/IbR3CJs6FARpebmKTmFEpf0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 4.19 12/32] drm/msm/dsi/pll: call vco set rate explicitly
-Date:   Mon,  2 Mar 2020 21:48:31 -0500
-Message-Id: <20200303024851.10054-12-sashal@kernel.org>
+Cc:     Tomas Henzl <thenzl@redhat.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Lee Duncan <lduncan@suse.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>,
+        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 10/32] scsi: megaraid_sas: silence a warning
+Date:   Mon,  2 Mar 2020 21:48:29 -0500
+Message-Id: <20200303024851.10054-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024851.10054-1-sashal@kernel.org>
 References: <20200303024851.10054-1-sashal@kernel.org>
@@ -61,41 +62,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harigovindan P <harigovi@codeaurora.org>
+From: Tomas Henzl <thenzl@redhat.com>
 
-[ Upstream commit c6659785dfb3f8d75f1fe637e4222ff8178f5280 ]
+[ Upstream commit 0e99b2c625da181aebf1a3d13493e3f7a5057a9c ]
 
-For a given byte clock, if VCO recalc value is exactly same as
-vco set rate value, vco_set_rate does not get called assuming
-VCO is already set to required value. But Due to GDSC toggle,
-VCO values are erased in the HW. To make sure VCO is programmed
-correctly, we forcefully call set_rate from vco_prepare.
+Add a flag to DMA memory allocation to silence a warning.
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+This driver allocates DMA memory for IO frames. This allocation may exceed
+MAX_ORDER pages for few megaraid_sas controllers (controllers with very
+high queue depth). Consequently, the driver has logic to keep reducing the
+controller queue depth until the DMA memory allocation succeeds.
+
+On impacted megaraid_sas controllers there would be multiple DMA allocation
+failures until driver settled on an allocation that fit. These failed DMA
+allocation requests caused stack traces in system logs. These were not
+harmful and this patch silences those warnings/stack traces.
+
+[mkp: clarified commit desc]
+
+Link: https://lore.kernel.org/r/20200204152413.7107-1-thenzl@redhat.com
+Signed-off-by: Tomas Henzl <thenzl@redhat.com>
+Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Reviewed-by: Lee Duncan <lduncan@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/scsi/megaraid/megaraid_sas_fusion.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-index 31205625c7346..21a69b046625a 100644
---- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-+++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-@@ -406,6 +406,12 @@ static int dsi_pll_10nm_vco_prepare(struct clk_hw *hw)
- 	if (pll_10nm->slave)
- 		dsi_pll_enable_pll_bias(pll_10nm->slave);
+diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+index b094a4e55c32f..81bd824bb9d99 100644
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -530,7 +530,8 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
  
-+	rc = dsi_pll_10nm_vco_set_rate(hw,pll_10nm->vco_current_rate, 0);
-+	if (rc) {
-+		pr_err("vco_set_rate failed, rc=%d\n", rc);
-+		return rc;
-+	}
-+
- 	/* Start PLL */
- 	pll_write(pll_10nm->phy_cmn_mmio + REG_DSI_10nm_PHY_CMN_PLL_CNTRL,
- 		  0x01);
+ 	fusion->io_request_frames =
+ 			dma_pool_alloc(fusion->io_request_frames_pool,
+-				GFP_KERNEL, &fusion->io_request_frames_phys);
++				GFP_KERNEL | __GFP_NOWARN,
++				&fusion->io_request_frames_phys);
+ 	if (!fusion->io_request_frames) {
+ 		if (instance->max_fw_cmds >= (MEGASAS_REDUCE_QD_COUNT * 2)) {
+ 			instance->max_fw_cmds -= MEGASAS_REDUCE_QD_COUNT;
+@@ -568,7 +569,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
+ 
+ 		fusion->io_request_frames =
+ 			dma_pool_alloc(fusion->io_request_frames_pool,
+-				       GFP_KERNEL,
++				       GFP_KERNEL | __GFP_NOWARN,
+ 				       &fusion->io_request_frames_phys);
+ 
+ 		if (!fusion->io_request_frames) {
 -- 
 2.20.1
 
