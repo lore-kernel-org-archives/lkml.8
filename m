@@ -2,53 +2,54 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF21C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B124C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6100B20728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3880E20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:56:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258168;
-	bh=Wn/4Yi/m96hOLe/jzp6H24+r/KiD9+YMjhMDtg05hG0=;
+	s=default; t=1583258174;
+	bh=EJaw7nSihU84X6HW/kSe1Dq4ngkgNCk0RFoO+OkqYWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZgiyWp/S3MMP4OassclER6fyHHPla+9T/HtFiWVgrf29aEJudQH+LgwJzz1AoSt1Q
-	 5i6WXPkkTxEWMzP2sJiM1qRQze/kCjudby6Np4Ol0rC0zz+/XEZDiMdweIxke+E+wZ
-	 Ak4nRpfbuIyUGl/3nYe6d7L3cCOp7ApkEOXJurAE=
+	b=0E90/vZhZElTJ+CvFsYkGDpKKXlOvpFxoyb1SgmclnFwcQlpfjN911g7PV6d1oK+q
+	 73RRV0+iM8Kqko4mxfjF7ojG7hoa0Dp25CeYbi1wav0CLQwQhfT49q/+12+blxD03P
+	 T8KJlBHTkUEYdX2OfV+tiwr1d3vkzkw7jvXvJm0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732841AbgCCR4H (ORCPT
+        id S1732857AbgCCR4N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:56:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38040 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:56:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730841AbgCCR4E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:56:04 -0500
+        id S1732833AbgCCR4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:56:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B9B2072D;
-        Tue,  3 Mar 2020 17:56:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F0EF20728;
+        Tue,  3 Mar 2020 17:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258162;
-        bh=Wn/4Yi/m96hOLe/jzp6H24+r/KiD9+YMjhMDtg05hG0=;
+        s=default; t=1583258165;
+        bh=EJaw7nSihU84X6HW/kSe1Dq4ngkgNCk0RFoO+OkqYWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TnNb8Nck8d4GvrffsOQBhst7p5z0RQx++eZyvGgAGGlDYI2JUuKP2Prdw1ufy9i4x
-         IAL2/JXZJsHbn4Ghhl/Q47wkBAOHG3IOYdr5wSq5NeDYOoDKIVoEP2t4kJuD83woJ+
-         LWGYgIFoV+KYm31WmmzZVipSX87Qs/2vt3KYOYSg=
+        b=Zypg5uvwalKTEuyQTI7sUe008ZlpTKd0440fNtfXwgfdocstRdWn4zMFW/ofdk8NW
+         jiW46yUJKaz/sp5YBOCSud0KMecfne1TsDGrdy9JPlq1LV2Xh3F03mCR/ppSEyYjcm
+         L27drFpnqyl4e9AXgmA3q6cN/2w6kcWweBKxWLEI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 049/152] net: ena: fix potential crash when rxfh key is NULL
-Date:   Tue,  3 Mar 2020 18:42:27 +0100
-Message-Id: <20200303174308.000110422@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com,
+        =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 089/152] vhost: Check docket sk_family instead of call getname
+Date:   Tue,  3 Mar 2020 18:43:07 +0100
+Message-Id: <20200303174312.678120325@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,55 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Eugenio Pérez <eperezma@redhat.com>
 
-[ Upstream commit 91a65b7d3ed8450f31ab717a65dcb5f9ceb5ab02 ]
+commit 42d84c8490f9f0931786f1623191fcab397c3d64 upstream.
 
-When ethtool -X is called without an hkey, ena_com_fill_hash_function()
-is called with key=NULL, which is passed to memcpy causing a crash.
+Doing so, we save one call to get data we already have in the struct.
 
-This commit fixes this issue by checking key is not NULL.
+Also, since there is no guarantee that getname use sockaddr_ll
+parameter beyond its size, we add a little bit of security here.
+It should do not do beyond MAX_ADDR_LEN, but syzbot found that
+ax25_getname writes more (72 bytes, the size of full_sockaddr_ax25,
+versus 20 + 32 bytes of sockaddr_ll + MAX_ADDR_LEN in syzbot repro).
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
+Reported-by: syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com
+Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+ drivers/vhost/net.c |   10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index ea62604fdf8ca..e54c44fdcaa73 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -2297,15 +2297,16 @@ int ena_com_fill_hash_function(struct ena_com_dev *ena_dev,
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1414,10 +1414,6 @@ static int vhost_net_release(struct inod
  
- 	switch (func) {
- 	case ENA_ADMIN_TOEPLITZ:
--		if (key_len > sizeof(hash_key->key)) {
--			pr_err("key len (%hu) is bigger than the max supported (%zu)\n",
--			       key_len, sizeof(hash_key->key));
--			return -EINVAL;
-+		if (key) {
-+			if (key_len != sizeof(hash_key->key)) {
-+				pr_err("key len (%hu) doesn't equal the supported size (%zu)\n",
-+				       key_len, sizeof(hash_key->key));
-+				return -EINVAL;
-+			}
-+			memcpy(hash_key->key, key, key_len);
-+			rss->hash_init_val = init_val;
-+			hash_key->keys_num = key_len >> 2;
- 		}
+ static struct socket *get_raw_socket(int fd)
+ {
+-	struct {
+-		struct sockaddr_ll sa;
+-		char  buf[MAX_ADDR_LEN];
+-	} uaddr;
+ 	int r;
+ 	struct socket *sock = sockfd_lookup(fd, &r);
+ 
+@@ -1430,11 +1426,7 @@ static struct socket *get_raw_socket(int
+ 		goto err;
+ 	}
+ 
+-	r = sock->ops->getname(sock, (struct sockaddr *)&uaddr.sa, 0);
+-	if (r < 0)
+-		goto err;
 -
--		memcpy(hash_key->key, key, key_len);
--		rss->hash_init_val = init_val;
--		hash_key->keys_num = key_len >> 2;
- 		break;
- 	case ENA_ADMIN_CRC32:
- 		rss->hash_init_val = init_val;
--- 
-2.20.1
-
+-	if (uaddr.sa.sll_family != AF_PACKET) {
++	if (sock->sk->sk_family != AF_PACKET) {
+ 		r = -EPFNOSUPPORT;
+ 		goto err;
+ 	}
 
 
