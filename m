@@ -2,124 +2,119 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C660C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D73C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1839A21556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="vAo/Y/cs"
+	by mail.kernel.org (Postfix) with ESMTP id 8C13524658
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728116AbgCCJTJ (ORCPT
+        id S1728129AbgCCJTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:19:09 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:41518 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgCCJTI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:19:08 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0239Irjt116537;
-        Tue, 3 Mar 2020 03:18:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583227133;
-        bh=QIoU5X0rCsPLgh6f6hX/m3Rq6EJWCP9dyqJ6Kiv4p2E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=vAo/Y/csINLFU/q9QAPYTZ2JEwIeZJ4Y8IizD4GSMIueqqQDl4N0j5diJFBSGWrXK
-         fOev58YKdHMS+vgGx81vAH77X+fLrdnIW+0tBpV8PdLeVf4Uc1yOgIvHrD9ROoVnRb
-         PFA4ZnXCbJ6pFCABixP8qLsnZ5QlZd35ioPRr5B4=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0239IrMv043566
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Mar 2020 03:18:53 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 03:18:52 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 03:18:52 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0239Ilcc029377;
-        Tue, 3 Mar 2020 03:18:49 -0600
-Subject: Re: [PATCH 1/3] drm/omap: Prepare DSS for probing without legacy
- platform data
-To:     Tony Lindgren <tony@atomide.com>, <linux-omap@vger.kernel.org>
-CC:     "Andrew F . Davis" <afd@ti.com>, Dave Gerlach <d-gerlach@ti.com>,
-        Faiz Abbas <faiz_abbas@ti.com>,
+        Tue, 3 Mar 2020 04:19:25 -0500
+Received: from mx2.suse.de ([195.135.220.15]:34328 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725840AbgCCJTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:19:24 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 9775CB1C7;
+        Tue,  3 Mar 2020 09:18:48 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 10:18:47 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Lech Perczak <l.perczak@camlintechnologies.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>, Nishanth Menon <nm@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Roger Quadros <rogerq@ti.com>, Suman Anna <s-anna@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <dri-devel@lists.freedesktop.org>, Jyri Sarha <jsarha@ti.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-References: <20200224191230.30972-1-tony@atomide.com>
- <20200224191230.30972-2-tony@atomide.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <d5ce999e-3b26-334e-fc62-adee4753a3ed@ti.com>
-Date:   Tue, 3 Mar 2020 11:18:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Theodore Ts'o <tytso@mit.edu>,
+        John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH] printk: queue wake_up_klogd irq_work only if per-CPU
+ areas are ready
+Message-ID: <20200303091847.uyy7gzac52lkl75m@pathway.suse.cz>
+References: <20200303044059.1325-1-sergey.senozhatsky@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200224191230.30972-2-tony@atomide.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303044059.1325-1-sergey.senozhatsky@gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/02/2020 21:12, Tony Lindgren wrote:
-> In order to probe display subsystem (DSS) components with ti-sysc
-> interconnect target module without legacy platform data and using
-> devicetree, we need to update dss probing a bit.
+On Tue 2020-03-03 13:40:59, Sergey Senozhatsky wrote:
+> Lech Perczak [0] reports that after commit 1b710b1b10ef
+> ("char/random: silence a lockdep splat with printk()")
+> user-space syslog/kmsg readers are not able to read new
+> kernel messages. The reason is printk_deferred() being
+> called too early (as was pointed out by Petr and John).
 > 
-> In the device tree, we will be defining the data also for the interconnect
-> target modules as DSS really is a private interconnect. There is some
-> information about that in 4460 TRM in "Figure 10-3. DSS Integration" for
-> example where it mentions "32-bit interconnect (SLX)".
+> Fix printk_deferred() and do not queue per-CPU irq_work
+> before per-CPU areas are initialized.
 > 
-> The changes we need to make are:
-> 
-> 1. Parse also device tree subnodes for the compatible property fixup
-> 
-> 2. Update the component code to consider device tree subnodes
-> 
-> Cc: dri-devel@lists.freedesktop.org
-> Cc: Jyri Sarha <jsarha@ti.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
-> 
-> This is needed for dropping DSS platform data that I'll be posting
-> seprately. If this looks OK, can you guys please test and ack?
-> 
-> ---
->   drivers/gpu/drm/omapdrm/dss/dss.c             | 25 ++++++++++++++++---
->   .../gpu/drm/omapdrm/dss/omapdss-boot-init.c   | 25 +++++++++++++------
->   2 files changed, 39 insertions(+), 11 deletions(-)
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index ad4606234545..d951d35a0786 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -1147,12 +1159,25 @@ static void __init log_buf_add_cpu(void)
+>  static inline void log_buf_add_cpu(void) {}
+>  #endif /* CONFIG_SMP */
+>  
+> +static void __init set_percpu_data_ready(void)
+> +{
+> +	__printk_percpu_data_ready = true;
+> +}
+> +
+>  void __init setup_log_buf(int early)
+>  {
+>  	unsigned long flags;
+>  	char *new_log_buf;
+>  	unsigned int free;
+>  
+> +	/*
+> +	 * Some archs call setup_log_buf() multiple times - first is very
+> +	 * early, e.g. from setup_arch(), and second - when percpu_areas
+> +	 * are initialised.
+> +	 */
+> +	if (!early)
+> +		set_percpu_data_ready();
+> +
+>  	if (log_buf != __log_buf)
+>  		return;
+>  
+> diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
+> index b4045e782743..d9a659a686f3 100644
+> --- a/kernel/printk/printk_safe.c
+> +++ b/kernel/printk/printk_safe.c
+> @@ -27,7 +27,6 @@
+a>   * There are situations when we want to make sure that all buffers
+>   * were handled or when IRQs are blocked.
+>   */
+> -static int printk_safe_irq_ready __read_mostly;
+>  
+>  #define SAFE_LOG_BUF_LEN ((1 << CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT) -	\
+>  				sizeof(atomic_t) -			\
+> @@ -51,7 +50,7 @@ static DEFINE_PER_CPU(struct printk_safe_seq_buf, nmi_print_seq);
+>  /* Get flushed in a more safe context. */
+>  static void queue_flush_work(struct printk_safe_seq_buf *s)
+>  {
+> -	if (printk_safe_irq_ready)
+> +	if (printk_percpu_data_ready())
+>  		irq_work_queue(&s->work);
 
-Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+This is not safe. printk_percpu_data_ready() returns true even before
+s->work gets initialized by printk_safe_init().
 
-This doesn't conflict with drm-next (with Laurent's recent patches), so it should be fine for you to 
-have this in your branch.
+Solution would be to call printk_safe_init() from
+setup_log_buf() before calling set_percpu_data_ready().
 
-And not a biggie, but I wonder if the changes to these two files should be in separate patches, due 
-to omapdss-boot-init going away. Well, probably doesn't matter.
+Or I would keep printk_safe code as it. I hope that it will get
+removed rather soon anyway.
 
-  Tomi
+Otherwise, it looks good to me.
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Best Regards,
+Petr
