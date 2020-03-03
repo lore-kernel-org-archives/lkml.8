@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 875E3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE88C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 542FB214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6440B20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257621;
-	bh=kAmeCMn1hi+tsY9/6rwz8rAJRjGcHO2DvZ5YLO9aTio=;
+	s=default; t=1583257624;
+	bh=GL+ErFHzO4uUVjyhpYexc0RZkb4zGsFm7jDq9h5knZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H6zILpns3js+NgnjSURDV3BK6ml14Sh7AG0lNfJn7nxENRlmdzMle4YW+zv4e8XJk
-	 DGPVCAPPGFRg1eWE+dY2BeUl8JKCOt9GgN51w/aem5YaJbuxQgzEYZLDSvdChSosVc
-	 rOhtF8BS17gIKEQs0o6Grr/QsKQ40odwpbGv7Gro=
+	b=SUnyi/VTFFmv6iAPggwr7LETCaWAJxv+VzKbf0hDrF1Pgrm1w2IM+BCGlHaHHzN9k
+	 JhFHjy+SYUbOeiFaX8t4utR9qCSBXmD3v04PT1WnBrrNnIfUDBZByE5v5+7rfpFhtx
+	 ZkZ5B3yOwlm+Os+oL/fUFEYEWBeoS8P5BJftAW24=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730120AbgCCRrA (ORCPT
+        id S1731273AbgCCRrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53668 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:47:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731258AbgCCRqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:46:55 -0500
+        id S1731265AbgCCRrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:47:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1399C2146E;
-        Tue,  3 Mar 2020 17:46:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BEDEE2166E;
+        Tue,  3 Mar 2020 17:46:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257614;
-        bh=kAmeCMn1hi+tsY9/6rwz8rAJRjGcHO2DvZ5YLO9aTio=;
+        s=default; t=1583257620;
+        bh=GL+ErFHzO4uUVjyhpYexc0RZkb4zGsFm7jDq9h5knZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CZrW4osmq7leyYFsC8Xe3F+SoHiGFm89M0ppSa9qvw83m9sqqqTXH62tfRqZGm/SG
-         gDrG9IzE7zfESPAMZTGEeX0aOc2LnkcnMPs8MRtRmmwM0W7yggksvyH6ekBadyYOYf
-         3vxsa3+smP7qZz4dGjBVevVcZhyMi+tH2hKtR8Mc=
+        b=ni+RyrOzH3+RpdHjEmroGzgYBCz0mCoz+O8XmxBpCpoUBu9SKq7+kMveKxscDhDYy
+         DtWpyxktAS91c8e3CApRJFzlPo5jnwwn0vfrv6iOwBLo/smFyZwEy5T5uPdlaGhb8/
+         R+AFRoEjhX2tv/L7grYFq40kh2CSpBp4jYjkHnQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dave Ertman <david.m.ertman@intel.com>,
+        Andrew Bowers <andrewx.bowers@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 062/176] net: ena: ethtool: use correct value for crc32 hash
-Date:   Tue,  3 Mar 2020 18:42:06 +0100
-Message-Id: <20200303174311.798500355@linuxfoundation.org>
+Subject: [PATCH 5.5 064/176] ice: Fix switch between FW and SW LLDP
+Date:   Tue,  3 Mar 2020 18:42:08 +0100
+Message-Id: <20200303174312.042559488@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,43 +61,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Dave Ertman <david.m.ertman@intel.com>
 
-[ Upstream commit 886d2089276e40d460731765083a741c5c762461 ]
+[ Upstream commit 53977ee47410885e7d4eee87d2c811a48a275150 ]
 
-Up till kernel 4.11 there was no enum defined for crc32 hash in ethtool,
-thus the xor enum was used for supporting crc32.
+When switching between FW and SW LLDP mode, the
+number of configured TLV apps in the driver's
+DCB configuration is getting out of synch with
+what lldpad thinks is configured.  This is causing
+a problem when shutting down lldpad.  The cleanup
+is trying to delete TLV apps that are not defined
+in the kernel.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Since the driver is keeping an accurate account
+of the apps defined, use the drivers number of
+apps to determine if there is an app to delete.
+If the number of apps is <= 1, then do not
+attempt to delete.
+
+Signed-off-by: Dave Ertman <david.m.ertman@intel.com>
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_dcb_nl.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index 610a7c63e1742..4ad69066e7846 100644
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -693,7 +693,7 @@ static int ena_get_rxfh(struct net_device *netdev, u32 *indir, u8 *key,
- 		func = ETH_RSS_HASH_TOP;
- 		break;
- 	case ENA_ADMIN_CRC32:
--		func = ETH_RSS_HASH_XOR;
-+		func = ETH_RSS_HASH_CRC32;
- 		break;
- 	default:
- 		netif_err(adapter, drv, netdev,
-@@ -739,7 +739,7 @@ static int ena_set_rxfh(struct net_device *netdev, const u32 *indir,
- 	case ETH_RSS_HASH_TOP:
- 		func = ENA_ADMIN_TOEPLITZ;
- 		break;
--	case ETH_RSS_HASH_XOR:
-+	case ETH_RSS_HASH_CRC32:
- 		func = ENA_ADMIN_CRC32;
- 		break;
- 	default:
+diff --git a/drivers/net/ethernet/intel/ice/ice_dcb_nl.c b/drivers/net/ethernet/intel/ice/ice_dcb_nl.c
+index d870c1aedc170..926c9772f0860 100644
+--- a/drivers/net/ethernet/intel/ice/ice_dcb_nl.c
++++ b/drivers/net/ethernet/intel/ice/ice_dcb_nl.c
+@@ -713,13 +713,13 @@ static int ice_dcbnl_delapp(struct net_device *netdev, struct dcb_app *app)
+ 		return -EINVAL;
+ 
+ 	mutex_lock(&pf->tc_mutex);
+-	ret = dcb_ieee_delapp(netdev, app);
+-	if (ret)
+-		goto delapp_out;
+-
+ 	old_cfg = &pf->hw.port_info->local_dcbx_cfg;
+ 
+-	if (old_cfg->numapps == 1)
++	if (old_cfg->numapps <= 1)
++		goto delapp_out;
++
++	ret = dcb_ieee_delapp(netdev, app);
++	if (ret)
+ 		goto delapp_out;
+ 
+ 	new_cfg = &pf->hw.port_info->desired_dcbx_cfg;
 -- 
 2.20.1
 
