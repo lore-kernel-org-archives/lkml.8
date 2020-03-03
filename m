@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FB0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1315CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C33DB24673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E7E217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204330;
-	bh=5KKM57E/6i1ezCg+qBrkEvzBJzmv+cHuBS7GbTFfXtc=;
+	s=default; t=1583204337;
+	bh=Y4Smq8YFSQBMaSqUWzR1a0AhnVnNhOje69/N4JfaKis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=02mBQTFWWijifi+Tu4etYQ41+8CvD3/WqlcfriwxPoFb86a7alSmdJJu1XVrsjocj
-	 3IXXosfwjrGA7u9K/L/DmZ4Ti4I9HclDkHzzxvHXniHPIPkzu3wZPocofUgi7JQ+1N
-	 V3MDEdFtbf8R6ZAcGtdRBcHI/hId891nzkC8gQSM=
+	b=DQt/FIlPtuhxXQNR3PGUpIK80QDfE4fOaeojBvH80sQRnWJGEfca23rR7PRB18qYI
+	 7cdBrCkzJGhCdzcUYATFSqjzXtfUinHqz9pv3ikenGedNpUgcWORqwT1ZAQnWWCVZm
+	 SbbZAiFCn44xOaoFJQoFZmum5bCfLYBOb1O81nE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbgCCC6p (ORCPT
+        id S1728605AbgCCC64 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:58:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43460 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:58:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbgCCCsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:02 -0500
+        id S1728225AbgCCCr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:58 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 746A0246D8;
-        Tue,  3 Mar 2020 02:48:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C90FD24681;
+        Tue,  3 Mar 2020 02:47:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203681;
-        bh=5KKM57E/6i1ezCg+qBrkEvzBJzmv+cHuBS7GbTFfXtc=;
+        s=default; t=1583203677;
+        bh=Y4Smq8YFSQBMaSqUWzR1a0AhnVnNhOje69/N4JfaKis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gSSdIjxicxgu3+YBUZrwA0x18+eTwK94d7mZ7Ny/yNCgbDv86JLM/yKbn2PFWwK9S
-         ViMxGds+VjKULWQU6hbt19DngbQ1vMJjfugUrjiu6fherp2AUlG0OpsXGf3YKUjCXL
-         0zVpbSWCIkJ27P+0kT4TBcy/Y/nO1UHHVgBQdKoY=
+        b=dVyKa4sRPOo9tSzf5u9rgXBQtirGnQNnUKyHjPFyDTp328HSchtTA6EfOgOAmVBfO
+         ALSTd11/4qQqpo7Y0qTwT+9XB3LL3vamj0VYefx9O+fz0CC4BKqYigrHzLe76SmCM/
+         U20byTAM2bFoQIXXKwf12RlhH6EFvC7ZypM3BUmI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harigovindan P <harigovi@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.4 17/58] drm/msm/dsi/pll: call vco set rate explicitly
-Date:   Mon,  2 Mar 2020 21:46:59 -0500
-Message-Id: <20200303024740.9511-17-sashal@kernel.org>
+Cc:     Stephan Gerhold <stephan@gerhold.net>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Sasha Levin <sashal@kernel.org>,
+        dri-devel@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.4 14/58] drm/modes: Allow DRM_MODE_ROTATE_0 when applying video mode parameters
+Date:   Mon,  2 Mar 2020 21:46:56 -0500
+Message-Id: <20200303024740.9511-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -61,41 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harigovindan P <harigovi@codeaurora.org>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-[ Upstream commit c6659785dfb3f8d75f1fe637e4222ff8178f5280 ]
+[ Upstream commit 5c320b6ce7510653bce68cecf80cf5b2d67e907f ]
 
-For a given byte clock, if VCO recalc value is exactly same as
-vco set rate value, vco_set_rate does not get called assuming
-VCO is already set to required value. But Due to GDSC toggle,
-VCO values are erased in the HW. To make sure VCO is programmed
-correctly, we forcefully call set_rate from vco_prepare.
+At the moment, only DRM_MODE_ROTATE_180 is allowed when we try to apply
+the rotation from the video mode parameters. It is also useful to allow
+DRM_MODE_ROTATE_0 in case there is only a reflect option in the video mode
+parameter (e.g. video=540x960,reflect_x).
 
-Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+DRM_MODE_ROTATE_0 means "no rotation" and should therefore not require
+any special handling, so we can just add it to the if condition.
+
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200117153429.54700-3-stephan@gerhold.net
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/drm_client_modeset.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-index 8f6100db90ed4..aa9385d5bfff9 100644
---- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-+++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-@@ -411,6 +411,12 @@ static int dsi_pll_10nm_vco_prepare(struct clk_hw *hw)
- 	if (pll_10nm->slave)
- 		dsi_pll_enable_pll_bias(pll_10nm->slave);
+diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
+index 12e748b202d6f..18cb88b9105e4 100644
+--- a/drivers/gpu/drm/drm_client_modeset.c
++++ b/drivers/gpu/drm/drm_client_modeset.c
+@@ -952,7 +952,8 @@ bool drm_client_rotation(struct drm_mode_set *modeset, unsigned int *rotation)
+ 	 * depending on the hardware this may require the framebuffer
+ 	 * to be in a specific tiling format.
+ 	 */
+-	if ((*rotation & DRM_MODE_ROTATE_MASK) != DRM_MODE_ROTATE_180 ||
++	if (((*rotation & DRM_MODE_ROTATE_MASK) != DRM_MODE_ROTATE_0 &&
++	     (*rotation & DRM_MODE_ROTATE_MASK) != DRM_MODE_ROTATE_180) ||
+ 	    !plane->rotation_property)
+ 		return false;
  
-+	rc = dsi_pll_10nm_vco_set_rate(hw,pll_10nm->vco_current_rate, 0);
-+	if (rc) {
-+		pr_err("vco_set_rate failed, rc=%d\n", rc);
-+		return rc;
-+	}
-+
- 	/* Start PLL */
- 	pll_write(pll_10nm->phy_cmn_mmio + REG_DSI_10nm_PHY_CMN_PLL_CNTRL,
- 		  0x01);
 -- 
 2.20.1
 
