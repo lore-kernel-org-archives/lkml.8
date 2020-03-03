@@ -2,160 +2,159 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68EB8C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36674C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 411A82086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:50:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583225446;
-	bh=eR6LH6mxRiiMpd/1mg6HONvlCCBV3PmOyYycLqHqkdw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DrMvhlJfeRa7/csQbX8vAsU9MtPYKlX1HQrw8skc0q/iDPNF5+WTkxVAVQl2JGbzA
-	 bKlhbWtBmio/MkjG8NZVuDoBm6LwLTRlJ74xfgjy7uQHQUoQOTJLhbGYOlPmjpefXL
-	 xV4wqrzK6FwYInwA37YXR7wsbodzk4ctiOJRTbUE=
+	by mail.kernel.org (Postfix) with ESMTP id 00FC820873
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfVWG1zT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgCCIup (ORCPT
+        id S1727834AbgCCIvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:50:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33744 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727412AbgCCIun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:50:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5FA920873;
-        Tue,  3 Mar 2020 08:50:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583225442;
-        bh=eR6LH6mxRiiMpd/1mg6HONvlCCBV3PmOyYycLqHqkdw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eEDuts2CyWKxUkuRazmkCwT4hZjsAxqrHnv14Uf/LNboVoyo0q8uTK5wcmrqOiCfz
-         d64lQUTg3g5FM9OQUp2chBDAGhbLXbHoANW6G9t4HWgZx/OQxWiIuJky8Iqwupvt4Q
-         ex517U3FK6IIxONywHvdH+C/N1tSRCy/KDMqPNys=
-Date:   Tue, 3 Mar 2020 09:50:39 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        kvm-ppc@vger.kernel.org
-Subject: Re: [PATCH 2/6] powerpc: kvm: no need to check return value of
- debugfs_create functions
-Message-ID: <20200303085039.GA1323622@kroah.com>
-References: <20200209105901.1620958-1-gregkh@linuxfoundation.org>
- <20200209105901.1620958-2-gregkh@linuxfoundation.org>
- <87imjlswxc.fsf@mpe.ellerman.id.au>
+        Tue, 3 Mar 2020 03:51:12 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36996 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727663AbgCCIvM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 03:51:12 -0500
+Received: by mail-pl1-f193.google.com with SMTP id q4so1024522pls.4;
+        Tue, 03 Mar 2020 00:51:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:from:subject:message-id:date:user-agent:mime-version
+         :content-transfer-encoding:content-language;
+        bh=Q5VfVmQdgg9p+OFp/l0un3xaUEDV8bc7/C90UdhrYow=;
+        b=lfVWG1zTLXyJsgrUAAZZDBmHWh76xwXI0h459ycitFK75x9l2PjFRQ4zZUAeKSAka1
+         Sars18D+gIky6FBflMkZsf7k1amtba5q5hPR3hAdl4mQfjh6j9MZm55IzZIEc/CBchIw
+         XhTrjTxaHB6nZR5th5r65ikWHVEF9sfOjJ6MPWweynQ6SQaCFlwXSc+UavYDuaOYMIoF
+         BmdbtJG8uqf5+OOZ9w9GRHdmoD/gtII+rYP8nMypw2HQllSphp5IU+FH0NO1v3DgqFNB
+         IsH3dsWosSw09c/XQ8IHx/RX38l/03BFuKKIbs/Zi1QJugndwboJcWf+hL0CsOD/ytU3
+         0j6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=Q5VfVmQdgg9p+OFp/l0un3xaUEDV8bc7/C90UdhrYow=;
+        b=t81UfKx0TeN3yt8wxcDwtfEKvJ14E2BV4vpuWFYLjvuNON7akZ5fAo9ckd7otgxO50
+         T7g+wTuSi0vEFi539XnXSmNE3RKEcZZbhc6ipgBuiDFCXA+LvmESw/9W5LDxIOeTTpyv
+         Qwa4ISqXGc/hdckDlEEC+3YvVHAT5qdhl1ztqynQ8No+IW3/QH6J0woehqq5lvHRpQcV
+         qkRYuK90wyEBvDGMytHybhP3859HQ9dUKs1/dmYK4ZIo8bTJnL8wp2tnuo30ErvlGX3/
+         MDKnNnzb7PS+7si4a+PlyuRHXLCWupR5Oz3Xoy+iAWV+3M/XTLc9ez0i29gFGNX1Qx6Y
+         iicA==
+X-Gm-Message-State: ANhLgQ2KNBKIZW/b5/Dz98Ux+ZPWKhj3KBRZk+zr2kpapeuqE+KpGDsn
+        p8uR3Nr+Xa8n1nUUXOp2/orUAv1c
+X-Google-Smtp-Source: ADFU+vuQMZQD+h00eScJp0xk94cQ+VFN3uqIz2iiWUPMWpdktm6s61EryURJK4I+3jpmSI6wQmKq3w==
+X-Received: by 2002:a17:902:eb52:: with SMTP id i18mr3320901pli.125.1583225471091;
+        Tue, 03 Mar 2020 00:51:11 -0800 (PST)
+Received: from [10.80.50.61] ([203.205.141.39])
+        by smtp.gmail.com with ESMTPSA id jx10sm1558821pjb.33.2020.03.03.00.51.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 00:51:10 -0800 (PST)
+To:     tytso@mit.edu, adilger.kernel@dilger.ca,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   brookxu <brookxu.cn@gmail.com>
+Subject: [PATCH] ext4: mark extents index blocks as dirty to avoid information
+ leakage
+Message-ID: <e988a1db-3105-07a0-6399-38af80656af1@gmail.com>
+Date:   Tue, 3 Mar 2020 16:51:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87imjlswxc.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:46:23PM +1100, Michael Ellerman wrote:
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
-> > When calling debugfs functions, there is no need to ever check the
-> > return value.  The function can work or not, but the code logic should
-> > never do something different based on this.
-> 
-> Except it does need to do something different, if the file was created
-> it needs to be removed in the remove path.
-> 
-> > diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
-> > index bfe4f106cffc..8e4791c6f2af 100644
-> > --- a/arch/powerpc/kvm/timing.c
-> > +++ b/arch/powerpc/kvm/timing.c
-> > @@ -207,19 +207,12 @@ static const struct file_operations kvmppc_exit_timing_fops = {
-> >  void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
-> >  {
-> >  	static char dbg_fname[50];
-> > -	struct dentry *debugfs_file;
-> >  
-> >  	snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
-> >  		 current->pid, id);
-> > -	debugfs_file = debugfs_create_file(dbg_fname, 0666,
-> > -					kvm_debugfs_dir, vcpu,
-> > -					&kvmppc_exit_timing_fops);
-> > -
-> > -	if (!debugfs_file) {
-> > -		printk(KERN_ERR"%s: error creating debugfs file %s\n",
-> > -			__func__, dbg_fname);
-> > -		return;
-> > -	}
-> > +	debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
-> > +			    &kvmppc_exit_timing_fops);
-> > +
-> >  
-> >  	vcpu->arch.debugfs_exit_timing = debugfs_file;
+From: Chunguang Xu <brookxu@tencent.com>
 
-Ugh, you are right, how did I miss that?  How is 0-day missing this?
-It's been in my tree for a long time, odd.
+In the scene of deleting a file, the physical block information in the
+extent will be cleared to 0, the buffer_head contains these extents is
+marked as dirty, and then managed by jbd2, which will clear the
+buffer_head's dirty flag by clear_buffer_dirty. However, when the entire
+extent block is deleted, it is revoked from the jbd2, but  the extents
+block is not redirtied.
 
-> >  }
-> 
-> This doesn't build:
-> 
->     arch/powerpc/kvm/timing.c:217:35: error: 'debugfs_file' undeclared (first use in this function); did you mean 'debugfs_file_put'?
-> 
-> We can't just drop the assignment, we need the dentry to do the removal:
-> 
-> void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
-> {
-> 	if (vcpu->arch.debugfs_exit_timing) {
-> 		debugfs_remove(vcpu->arch.debugfs_exit_timing);
-> 		vcpu->arch.debugfs_exit_timing = NULL;
-> 	}
-> }
-> 
-> 
-> I squashed this in, which seems to work:
-> 
-> diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
-> index 8e4791c6f2af..5b7a66f86bd5 100644
-> --- a/arch/powerpc/kvm/timing.c
-> +++ b/arch/powerpc/kvm/timing.c
-> @@ -207,19 +207,19 @@ static const struct file_operations kvmppc_exit_timing_fops = {
->  void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
->  {
->         static char dbg_fname[50];
-> +       struct dentry *debugfs_file;
->  
->         snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
->                  current->pid, id);
-> -       debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
-> -                           &kvmppc_exit_timing_fops);
-> -
-> +       debugfs_file = debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir,
-> +                                          vcpu, &kvmppc_exit_timing_fops);
->  
->         vcpu->arch.debugfs_exit_timing = debugfs_file;
+Not quite reasonable here, for the following concerns:
 
-That works, yes.
+1. This has the risk of information leakage and leads to an interesting
+phenomenon that deleting the entire file is no more secure than truncate
+to 1 byte, because the whole extents physical block clear to zero in cache
+will never written back as the page is not redirtied.
 
->  }
->  
->  void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
->  {
-> -       if (vcpu->arch.debugfs_exit_timing) {
-> +       if (!IS_ERR_OR_NULL(vcpu->arch.debugfs_exit_timing)) {
->                 debugfs_remove(vcpu->arch.debugfs_exit_timing);
->                 vcpu->arch.debugfs_exit_timing = NULL;
->         }
+2. For large files, the number of index block is usually very small.
+Ignoring index pages not get much more benefit in IO performance. But if
+we remark the page as dirty, the page is then written back by the system
+writeback mechanism asynchronously with little performance impact. As a
+result, the risk of information leakage can be avoided. At least not wrose
+than truncate file length to 1 byte
 
-No, this can just be:
-	debugfs_remove(vcpu->arch.debugfs_exit_timing);
+Therefore, when the index block is released, we need to remark its page
+as dirty, so that the index block on the disk will be updated and the
+data is more security.
 
-No need to check anything, just call it and the debugfs code can handle
-it just fine.
+Signed-off-by: Chunguang Xu <brookxu@tencent.com>
+---
+ fs/ext4/ext4.h      | 1 +
+ fs/ext4/ext4_jbd2.c | 8 ++++++++
+ fs/ext4/extents.c   | 3 ++-
+ 3 files changed, 11 insertions(+), 1 deletion(-)
 
-thanks,
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 61b37a0..f9a4d97 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -644,6 +644,7 @@ enum {
+ #define EXT4_FREE_BLOCKS_NOFREE_FIRST_CLUSTER    0x0010
+ #define EXT4_FREE_BLOCKS_NOFREE_LAST_CLUSTER    0x0020
+ #define EXT4_FREE_BLOCKS_RERESERVE_CLUSTER      0x0040
++#define EXT4_FREE_BLOCKS_METADATA_INDEX        0x0080
+ 
+ /*
+  * ioctl commands
+diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
+index 1f53d64..7974c62 100644
+--- a/fs/ext4/ext4_jbd2.c
++++ b/fs/ext4/ext4_jbd2.c
+@@ -275,7 +275,15 @@ int __ext4_forget(const char *where, unsigned int line, handle_t *handle,
+         ext4_set_errno(inode->i_sb, -err);
+         __ext4_abort(inode->i_sb, where, line,
+                "error %d when attempting revoke", err);
++    } else  {
++        /*
++         * we dirtied index block to ensure that related changes to
++         * the index block will be stored to disk.
++         */
++        if (is_metadata & EXT4_FREE_BLOCKS_METADATA_INDEX)
++            mark_buffer_dirty(bh);
+     }
++
+     BUFFER_TRACE(bh, "exit");
+     return err;
+ }
+diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+index 954013d..2ee0df0 100644
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -2431,7 +2431,8 @@ static int ext4_ext_rm_idx(handle_t *handle, struct inode *inode,
+     trace_ext4_ext_rm_idx(inode, leaf);
+ 
+     ext4_free_blocks(handle, inode, NULL, leaf, 1,
+-             EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET);
++             EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
++             EXT4_FREE_BLOCKS_METADATA_INDEX);
+ 
+     while (--depth >= 0) {
+         if (path->p_idx != EXT_FIRST_INDEX(path->p_hdr))
+-- 
+1.8.3.1
 
-greg k-h
