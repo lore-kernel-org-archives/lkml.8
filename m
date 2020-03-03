@@ -2,363 +2,213 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C28C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E1AC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F7420848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GGahqDHJ"
+	by mail.kernel.org (Postfix) with ESMTP id DC7FA21739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583244635;
+	bh=9Jfg6HbsgoSWln6NNn9YML4X0iSDZRQBv27wug5xFB4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DKKlPjquWFoPPSrkAnlQUoZ0ZTBbGm+9en0bj1Yij5pb6puQrFeb+ok4a7EHB6Iz+
+	 MejzICqjfQSukOz8p5NJL/IAk3TFqBLdxfTjE5GXv54OBklb0BcwoLFO1b5Dff8gSR
+	 NQyBnI2NJUDt0lFInO3kybFZIAdeKVMHXUkXK9rk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729692AbgCCOK3 (ORCPT
+        id S1729708AbgCCOKe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:10:29 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44847 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729508AbgCCOKF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:10:05 -0500
-Received: by mail-wr1-f65.google.com with SMTP id n7so4450162wrt.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:10:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=lQoEliq+3CnuiwPlrXLe8e+6syZofx1mwF4E2e5awYs=;
-        b=GGahqDHJzictTJiNXGW5spszhiDGItDK/PNcPW5WYeuwAb/gSDdxXNLjDkVLPAwTJh
-         duTTa+YNM2Wxhmi+FwkozP1CxuivGwUaDsLqvQ9FI3vs18PK0Zq5gDCPX4mnIM1/6DwN
-         KU8dA3sGArKDZsPXro0m0PGDcFn5sMFllRlOU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=lQoEliq+3CnuiwPlrXLe8e+6syZofx1mwF4E2e5awYs=;
-        b=O+UlWbyLRMxGpw/yK0ueYqDAtI9nDZBUkJGez8YI+PImqG0jidisK3/LfqMeB2WTvN
-         jyh4teFDM07Cw7H6fyhcuPNqk2ygTl09zYvtI2j5N069j56WJM6VigOdt4AXLvXJrJ6v
-         ZqhbWLuuBcyr2ZUmiZV32gy0YleUEHN+tYTFwB2QK9KJIAIOlF7MYsSl0qLrq0/Nlk6t
-         nqiajdT+Vq04lAkVtUci78arrp/kCUEJxPmksUE/OKkFrkpOqsT0sE6s1Dv6t6zfR84c
-         e0ewtHKLUX6DiGMSFaUpcAHW8+ZjDzmsZG1qwYE2RpO0bDBs7tINSMQEETveajCAkMEC
-         6FyA==
-X-Gm-Message-State: ANhLgQ0MzNRWDDuqc3dn0XvDAdOxOAbszWmP+LngAa8mOfxcvsYRp68e
-        UvMQbmQiZ03b5zU8mwEoJIoIUh6akAQ=
-X-Google-Smtp-Source: ADFU+vtl1FTTRlMd/lK6dpTv8bD65xd/SzZhMtCCq2JfqHOjQhgYpmrAf4DVp+nQKEVA/FHaC3D8bw==
-X-Received: by 2002:a5d:65cd:: with SMTP id e13mr5546109wrw.193.1583244601769;
-        Tue, 03 Mar 2020 06:10:01 -0800 (PST)
-Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:308:2811:c80d:9375:bf8a])
-        by smtp.gmail.com with ESMTPSA id h20sm11746823wrc.47.2020.03.03.06.10.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:10:01 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: [PATCH bpf-next 1/7] bpf: Refactor trampoline update code
-Date:   Tue,  3 Mar 2020 15:09:44 +0100
-Message-Id: <20200303140950.6355-2-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303140950.6355-1-kpsingh@chromium.org>
-References: <20200303140950.6355-1-kpsingh@chromium.org>
+        Tue, 3 Mar 2020 09:10:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50300 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728539AbgCCOKd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:10:33 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D33D220848;
+        Tue,  3 Mar 2020 14:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583244632;
+        bh=9Jfg6HbsgoSWln6NNn9YML4X0iSDZRQBv27wug5xFB4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0Lvg4+Gpu+ht0zZ2A+IIL6k3suH/0xmPYguJPSvELQeVGX5ZJ4Ci4nR3cajkOc7kZ
+         TSprDYs0mDay4u0BKhL88vH5BZMCZEERLOKu6ufN7mHM+knwqPu57q2i/cy3dnFYxi
+         TCOmgtjx3zErfoIVtVeywP7qd4LiiB9zD5V87UzY=
+Date:   Tue, 3 Mar 2020 15:10:30 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Karel Zak <kzak@redhat.com>, David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200303141030.GA2811@kroah.com>
+References: <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+ <20200303130347.GA2302029@kroah.com>
+ <20200303131434.GA2373427@kroah.com>
+ <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+ <20200303134316.GA2509660@kroah.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303134316.GA2509660@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On Tue, Mar 03, 2020 at 02:43:16PM +0100, Greg Kroah-Hartman wrote:
+> On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
+> > On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > 
+> > > > Unlimited beers for a 21-line kernel patch?  Sign me up!
+> > > >
+> > > > Totally untested, barely compiled patch below.
+> > >
+> > > Ok, that didn't even build, let me try this for real now...
+> > 
+> > Some comments on the interface:
+> 
+> Ok, hey, let's do this proper :)
 
-As we need to introduce a third type of attachment for trampolines, the
-flattened signature of arch_prepare_bpf_trampoline gets even more
-complicated.
+Alright, how about this patch.
 
-Refactor the prog and count argument to arch_prepare_bpf_trampoline to
-use bpf_tramp_progs to simplify the addition and accounting for new
-attachment types.
+Actually tested with some simple sysfs files.
 
-Signed-off-by: KP Singh <kpsingh@google.com>
+If people don't strongly object, I'll add "real" tests to it, hook it up
+to all arches, write a manpage, and all the fun fluff a new syscall
+deserves and submit it "for real".
+
+It feels like I'm doing something wrong in that the actuall syscall
+logic is just so small.  Maybe I'll benchmark this thing to see if it
+makes any real difference...
+
+thanks,
+
+greg k-h
+
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH] readfile: implement readfile syscall
+
+It's a tiny syscall, meant to allow a user to do a single "open this
+file, read into this buffer, and close the file" all in a single shot.
+
+Should be good for reading "tiny" files like sysfs, procfs, and other
+"small" files.
+
+There is no restarting the syscall, am trying to keep it simple.  At
+least for now.
+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/net/bpf_jit_comp.c | 31 +++++++++---------
- include/linux/bpf.h         | 13 ++++++--
- kernel/bpf/bpf_struct_ops.c | 13 +++++++-
- kernel/bpf/trampoline.c     | 63 +++++++++++++++++++++----------------
- 4 files changed, 75 insertions(+), 45 deletions(-)
+ arch/x86/entry/syscalls/syscall_32.tbl |  1 +
+ arch/x86/entry/syscalls/syscall_64.tbl |  1 +
+ fs/open.c                              | 21 +++++++++++++++++++++
+ include/linux/syscalls.h               |  2 ++
+ include/uapi/asm-generic/unistd.h      |  4 +++-
+ 5 files changed, 28 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 9ba08e9abc09..15c7d28bc05c 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -1362,12 +1362,12 @@ static void restore_regs(const struct btf_func_model *m, u8 **prog, int nr_args,
+diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+index c17cb77eb150..a79cd025e72b 100644
+--- a/arch/x86/entry/syscalls/syscall_32.tbl
++++ b/arch/x86/entry/syscalls/syscall_32.tbl
+@@ -442,3 +442,4 @@
+ 435	i386	clone3			sys_clone3			__ia32_sys_clone3
+ 437	i386	openat2			sys_openat2			__ia32_sys_openat2
+ 438	i386	pidfd_getfd		sys_pidfd_getfd			__ia32_sys_pidfd_getfd
++439	i386	readfile		sys_readfile			__ia32_sys_readfile
+diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+index 44d510bc9b78..4f518f4e0e30 100644
+--- a/arch/x86/entry/syscalls/syscall_64.tbl
++++ b/arch/x86/entry/syscalls/syscall_64.tbl
+@@ -359,6 +359,7 @@
+ 435	common	clone3			__x64_sys_clone3/ptregs
+ 437	common	openat2			__x64_sys_openat2
+ 438	common	pidfd_getfd		__x64_sys_pidfd_getfd
++439	common	readfile		__x64_sys_readfile
+ 
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/fs/open.c b/fs/open.c
+index 0788b3715731..109bad47d542 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -1340,3 +1340,24 @@ int stream_open(struct inode *inode, struct file *filp)
  }
  
- static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
--		      struct bpf_prog **progs, int prog_cnt, int stack_size)
-+		      struct bpf_tramp_progs *tp, int stack_size)
- {
- 	u8 *prog = *pprog;
- 	int cnt = 0, i;
- 
--	for (i = 0; i < prog_cnt; i++) {
-+	for (i = 0; i < tp->nr_progs; i++) {
- 		if (emit_call(&prog, __bpf_prog_enter, prog))
- 			return -EINVAL;
- 		/* remember prog start time returned by __bpf_prog_enter */
-@@ -1376,17 +1376,17 @@ static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
- 		/* arg1: lea rdi, [rbp - stack_size] */
- 		EMIT4(0x48, 0x8D, 0x7D, -stack_size);
- 		/* arg2: progs[i]->insnsi for interpreter */
--		if (!progs[i]->jited)
-+		if (!tp->progs[i]->jited)
- 			emit_mov_imm64(&prog, BPF_REG_2,
--				       (long) progs[i]->insnsi >> 32,
--				       (u32) (long) progs[i]->insnsi);
-+				       (long) tp->progs[i]->insnsi >> 32,
-+				       (u32) (long) tp->progs[i]->insnsi);
- 		/* call JITed bpf program or interpreter */
--		if (emit_call(&prog, progs[i]->bpf_func, prog))
-+		if (emit_call(&prog, tp->progs[i]->bpf_func, prog))
- 			return -EINVAL;
- 
- 		/* arg1: mov rdi, progs[i] */
--		emit_mov_imm64(&prog, BPF_REG_1, (long) progs[i] >> 32,
--			       (u32) (long) progs[i]);
-+		emit_mov_imm64(&prog, BPF_REG_1, (long) tp->progs[i] >> 32,
-+			       (u32) (long) tp->progs[i]);
- 		/* arg2: mov rsi, rbx <- start time in nsec */
- 		emit_mov_reg(&prog, true, BPF_REG_2, BPF_REG_6);
- 		if (emit_call(&prog, __bpf_prog_exit, prog))
-@@ -1458,12 +1458,13 @@ static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
-  */
- int arch_prepare_bpf_trampoline(void *image, void *image_end,
- 				const struct btf_func_model *m, u32 flags,
--				struct bpf_prog **fentry_progs, int fentry_cnt,
--				struct bpf_prog **fexit_progs, int fexit_cnt,
-+				struct bpf_tramp_progs *tprogs,
- 				void *orig_call)
- {
- 	int cnt = 0, nr_args = m->nr_args;
- 	int stack_size = nr_args * 8;
-+	struct bpf_tramp_progs *fentry = &tprogs[BPF_TRAMP_FENTRY];
-+	struct bpf_tramp_progs *fexit = &tprogs[BPF_TRAMP_FEXIT];
- 	u8 *prog;
- 
- 	/* x86-64 supports up to 6 arguments. 7+ can be added in the future */
-@@ -1492,12 +1493,12 @@ int arch_prepare_bpf_trampoline(void *image, void *image_end,
- 
- 	save_regs(m, &prog, nr_args, stack_size);
- 
--	if (fentry_cnt)
--		if (invoke_bpf(m, &prog, fentry_progs, fentry_cnt, stack_size))
-+	if (fentry->nr_progs)
-+		if (invoke_bpf(m, &prog, fentry, stack_size))
- 			return -EINVAL;
- 
- 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
--		if (fentry_cnt)
-+		if (fentry->nr_progs)
- 			restore_regs(m, &prog, nr_args, stack_size);
- 
- 		/* call original function */
-@@ -1507,8 +1508,8 @@ int arch_prepare_bpf_trampoline(void *image, void *image_end,
- 		emit_stx(&prog, BPF_DW, BPF_REG_FP, BPF_REG_0, -8);
- 	}
- 
--	if (fexit_cnt)
--		if (invoke_bpf(m, &prog, fexit_progs, fexit_cnt, stack_size))
-+	if (fexit->nr_progs)
-+		if (invoke_bpf(m, &prog, fexit, stack_size))
- 			return -EINVAL;
- 
- 	if (flags & BPF_TRAMP_F_RESTORE_REGS)
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index f13c78c6f29d..98ec10b23dbb 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -433,6 +433,16 @@ struct btf_func_model {
-  */
- #define BPF_TRAMP_F_SKIP_FRAME		BIT(2)
- 
-+/* Each call __bpf_prog_enter + call bpf_func + call __bpf_prog_exit is ~50
-+ * bytes on x86.  Pick a number to fit into BPF_IMAGE_SIZE / 2
-+ */
-+#define BPF_MAX_TRAMP_PROGS 40
+ EXPORT_SYMBOL(stream_open);
 +
-+struct bpf_tramp_progs {
-+	struct bpf_prog *progs[BPF_MAX_TRAMP_PROGS];
-+	int nr_progs;
-+};
-+
- /* Different use cases for BPF trampoline:
-  * 1. replace nop at the function entry (kprobe equivalent)
-  *    flags = BPF_TRAMP_F_RESTORE_REGS
-@@ -455,8 +465,7 @@ struct btf_func_model {
-  */
- int arch_prepare_bpf_trampoline(void *image, void *image_end,
- 				const struct btf_func_model *m, u32 flags,
--				struct bpf_prog **fentry_progs, int fentry_cnt,
--				struct bpf_prog **fexit_progs, int fexit_cnt,
-+				struct bpf_tramp_progs *tprogs,
- 				void *orig_call);
- /* these two functions are called from generated trampoline */
- u64 notrace __bpf_prog_enter(void);
-diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
-index c498f0fffb40..a011a77b21fa 100644
---- a/kernel/bpf/bpf_struct_ops.c
-+++ b/kernel/bpf/bpf_struct_ops.c
-@@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
- 	struct bpf_struct_ops_value *uvalue, *kvalue;
- 	const struct btf_member *member;
- 	const struct btf_type *t = st_ops->type;
-+	struct bpf_tramp_progs *tprogs = NULL;
- 	void *udata, *kdata;
- 	int prog_fd, err = 0;
- 	void *image;
-@@ -425,10 +426,19 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
- 			goto reset_unlock;
- 		}
- 
-+		tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(struct bpf_tramp_progs),
-+				 GFP_KERNEL);
-+		if (!tprogs) {
-+			err = -ENOMEM;
-+			goto reset_unlock;
-+		}
-+
-+		*tprogs[BPF_TRAMP_FENTRY].progs = prog;
-+		tprogs[BPF_TRAMP_FENTRY].nr_progs = 1;
- 		err = arch_prepare_bpf_trampoline(image,
- 						  st_map->image + PAGE_SIZE,
- 						  &st_ops->func_models[i], 0,
--						  &prog, 1, NULL, 0, NULL);
-+						  tprogs, NULL);
- 		if (err < 0)
- 			goto reset_unlock;
- 
-@@ -469,6 +479,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
- 	memset(uvalue, 0, map->value_size);
- 	memset(kvalue, 0, map->value_size);
- unlock:
-+	kfree(tprogs);
- 	mutex_unlock(&st_map->lock);
- 	return err;
- }
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index 704fa787fec0..9daeb094f054 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -190,40 +190,50 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
- 	return ret;
- }
- 
--/* Each call __bpf_prog_enter + call bpf_func + call __bpf_prog_exit is ~50
-- * bytes on x86.  Pick a number to fit into BPF_IMAGE_SIZE / 2
-- */
--#define BPF_MAX_TRAMP_PROGS 40
-+static struct bpf_tramp_progs *
-+bpf_trampoline_update_progs(struct bpf_trampoline *tr, int *total)
++SYSCALL_DEFINE5(readfile, int, dfd, const char __user *, filename,
++		char __user *, buffer, size_t, bufsize, int, flags)
 +{
-+	struct bpf_tramp_progs *tprogs;
-+	struct bpf_prog **progs;
-+	struct bpf_prog_aux *aux;
-+	int kind;
++	int retval;
++	int fd;
 +
-+	*total = 0;
-+	tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(struct bpf_tramp_progs),
-+			 GFP_KERNEL);
-+	if (!tprogs)
-+		return ERR_PTR(-ENOMEM);
++	/* Mask off all O_ flags as we only want to read from the file */
++	flags &= ~(VALID_OPEN_FLAGS);
++	flags |= O_RDONLY | O_LARGEFILE;
 +
-+	for (kind = 0; kind < BPF_TRAMP_MAX; kind++) {
-+		tprogs[kind].nr_progs = tr->progs_cnt[kind];
-+		*total += tr->progs_cnt[kind];
-+		progs = tprogs[kind].progs;
++	fd = do_sys_open(dfd, filename, flags, 0000);
++	if (fd <= 0)
++		return fd;
 +
-+		hlist_for_each_entry(aux, &tr->progs_hlist[kind], tramp_hlist)
-+			*progs++ = aux->prog;
-+	}
-+	return tprogs;
++	retval = ksys_read(fd, buffer, bufsize);
++
++	__close_fd(current->files, fd);
++
++	return retval;
 +}
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 1815065d52f3..3a636a913437 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -1003,6 +1003,8 @@ asmlinkage long sys_pidfd_send_signal(int pidfd, int sig,
+ 				       siginfo_t __user *info,
+ 				       unsigned int flags);
+ asmlinkage long sys_pidfd_getfd(int pidfd, int fd, unsigned int flags);
++asmlinkage long sys_readfile(int dfd, const char __user *filename,
++			     char __user *buffer, size_t bufsize, int flags);
  
- static int bpf_trampoline_update(struct bpf_trampoline *tr)
- {
- 	void *old_image = tr->image + ((tr->selector + 1) & 1) * BPF_IMAGE_SIZE/2;
- 	void *new_image = tr->image + (tr->selector & 1) * BPF_IMAGE_SIZE/2;
--	struct bpf_prog *progs_to_run[BPF_MAX_TRAMP_PROGS];
--	int fentry_cnt = tr->progs_cnt[BPF_TRAMP_FENTRY];
--	int fexit_cnt = tr->progs_cnt[BPF_TRAMP_FEXIT];
--	struct bpf_prog **progs, **fentry, **fexit;
-+	struct bpf_tramp_progs *tprogs;
- 	u32 flags = BPF_TRAMP_F_RESTORE_REGS;
--	struct bpf_prog_aux *aux;
--	int err;
-+	int err, total;
-+
-+	tprogs = bpf_trampoline_update_progs(tr, &total);
-+	if (IS_ERR(tprogs))
-+		return PTR_ERR(tprogs);
+ /*
+  * Architecture-specific system calls
+diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+index 3a3201e4618e..31f84500915d 100644
+--- a/include/uapi/asm-generic/unistd.h
++++ b/include/uapi/asm-generic/unistd.h
+@@ -855,9 +855,11 @@ __SYSCALL(__NR_clone3, sys_clone3)
+ __SYSCALL(__NR_openat2, sys_openat2)
+ #define __NR_pidfd_getfd 438
+ __SYSCALL(__NR_pidfd_getfd, sys_pidfd_getfd)
++#define __NR_readfile 439
++__SYSCALL(__NR_readfile, sys_readfile)
  
--	if (fentry_cnt + fexit_cnt == 0) {
-+	if (total == 0) {
- 		err = unregister_fentry(tr, old_image);
- 		tr->selector = 0;
- 		goto out;
- 	}
+ #undef __NR_syscalls
+-#define __NR_syscalls 439
++#define __NR_syscalls 440
  
--	/* populate fentry progs */
--	fentry = progs = progs_to_run;
--	hlist_for_each_entry(aux, &tr->progs_hlist[BPF_TRAMP_FENTRY], tramp_hlist)
--		*progs++ = aux->prog;
--
--	/* populate fexit progs */
--	fexit = progs;
--	hlist_for_each_entry(aux, &tr->progs_hlist[BPF_TRAMP_FEXIT], tramp_hlist)
--		*progs++ = aux->prog;
--
--	if (fexit_cnt)
-+	if (tprogs[BPF_TRAMP_FEXIT].nr_progs)
- 		flags = BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_SKIP_FRAME;
- 
- 	/* Though the second half of trampoline page is unused a task could be
-@@ -232,12 +242,11 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr)
- 	 * preempted task. Hence wait for tasks to voluntarily schedule or go
- 	 * to userspace.
- 	 */
-+
- 	synchronize_rcu_tasks();
- 
- 	err = arch_prepare_bpf_trampoline(new_image, new_image + BPF_IMAGE_SIZE / 2,
--					  &tr->func.model, flags,
--					  fentry, fentry_cnt,
--					  fexit, fexit_cnt,
-+					  &tr->func.model, flags, tprogs,
- 					  tr->func.addr);
- 	if (err < 0)
- 		goto out;
-@@ -252,6 +261,7 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr)
- 		goto out;
- 	tr->selector++;
- out:
-+	kfree(tprogs);
- 	return err;
- }
- 
-@@ -409,8 +419,7 @@ void notrace __bpf_prog_exit(struct bpf_prog *prog, u64 start)
- int __weak
- arch_prepare_bpf_trampoline(void *image, void *image_end,
- 			    const struct btf_func_model *m, u32 flags,
--			    struct bpf_prog **fentry_progs, int fentry_cnt,
--			    struct bpf_prog **fexit_progs, int fexit_cnt,
-+			    struct bpf_tramp_progs *tprogs,
- 			    void *orig_call)
- {
- 	return -ENOTSUPP;
+ /*
+  * 32 bit systems traditionally used different
 -- 
-2.20.1
+2.25.1
 
