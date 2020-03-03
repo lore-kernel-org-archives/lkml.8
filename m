@@ -2,159 +2,366 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D997C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84621C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29E7B21D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4949C21D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:00:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bmAF3JWZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgCCA53 (ORCPT
+        id S1726974AbgCCBAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 19:57:29 -0500
-Received: from mga02.intel.com ([134.134.136.20]:28810 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726838AbgCCA52 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 19:57:28 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 16:57:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="233579149"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 02 Mar 2020 16:57:27 -0800
-Date:   Mon, 2 Mar 2020 16:57:27 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH 2/6] KVM: x86: Fix CPUID range check for Centaur and
- Hypervisor ranges
-Message-ID: <20200303005727.GB27842@linux.intel.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-3-sean.j.christopherson@intel.com>
- <CALMp9eTNY0Wd=Wc=b8xzg0xRYE-ht5m=+cZeEb7nZup6EdYhCg@mail.gmail.com>
+        Mon, 2 Mar 2020 20:00:33 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:11858 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbgCCBAc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 20:00:32 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5dac220000>; Mon, 02 Mar 2020 17:00:18 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 02 Mar 2020 17:00:31 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 02 Mar 2020 17:00:31 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
+ 2020 01:00:30 +0000
+Received: from rnnvemgw01.nvidia.com (10.128.109.123) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 3 Mar 2020 01:00:30 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by rnnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e5dac2d001f>; Mon, 02 Mar 2020 17:00:29 -0800
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     <dri-devel@lists.freedesktop.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        <nouveau@lists.freedesktop.org>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Andrew Morton" <akpm@linux-foundation.org>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "Ralph Campbell" <rcampbell@nvidia.com>
+Subject: [PATCH v2] nouveau/hmm: map pages after migration
+Date:   Mon, 2 Mar 2020 17:00:23 -0800
+Message-ID: <20200303010023.2983-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALMp9eTNY0Wd=Wc=b8xzg0xRYE-ht5m=+cZeEb7nZup6EdYhCg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583197218; bh=VM/GObbgHQMpS+HiC4HrNLp5DB1tYqNPFUeLAghZ4TE=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=bmAF3JWZrjJw+REMWKCRILuRkCfGsGeAHORL/SiS4W8k3LK4FJEPqHkUvKbsTuarQ
+         J5cTpBVw4fAcoi3sAHehaQUbLGVOOr0d/PdP9LFE/8JCHw+U4gdYyEKzE0cNyqqu6e
+         irbKhY+GsJqgGv6l+U0tOYIg9AbnPeGXJpSxMQXytATjPTvataSBsFl7jSKh72VLyL
+         j0QM2CBaEPyNLVtMo1QccpxSwvQipx5Nb2E4nRHReREXhgy/XsPFzBQ2Q/9wNuZirC
+         LYWcOG8089kbDtjG7mdLdEd+9ck0QpFlovQKGxktrZRDDnaypi/N4OfaFUa+ETUaTh
+         gV2wTNRHHXzqA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 01:59:10PM -0800, Jim Mattson wrote:
-> On Mon, Mar 2, 2020 at 11:57 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> >
-> > Extend the mask in cpuid_function_in_range() for finding the "class" of
-> > the function to 0xfffffff00.  While there is no official definition of
-> > what constitutes a class, e.g. arguably bits 31:16 should be the class
-> > and bits 15:0 the functions within that class, the Hypervisor logic
-> > effectively uses bits 31:8 as the class by virtue of checking for
-> > different bases in increments of 0x100, e.g. KVM advertises its CPUID
-> > functions starting at 0x40000100 when HyperV features are advertised at
-> > the default base of 0x40000000.
-> 
-> This convention deserves explicit documentation outside of the commit message.
+When memory is migrated to the GPU, it is likely to be accessed by GPU
+code soon afterwards. Instead of waiting for a GPU fault, map the
+migrated memory into the GPU page tables with the same access permissions
+as the source CPU page table entries. This preserves copy on write
+semantics.
 
-No argument there.
- 
-> > Masking against 0x80000000 only handles basic and extended leafs, which
-> > results in Centaur and Hypervisor range checks being performed against
-> > the basic CPUID range, e.g. if CPUID.0x40000000.EAX=0x4000000A and there
-> > is no entry for CPUID.0x40000006, then function 0x40000006 would be
-> > incorrectly reported as out of bounds.
-> >
-> > The bad range check doesn't cause function problems for any known VMM
-> > because out-of-range semantics only come into play if the exact entry
-> > isn't found, and VMMs either support a very limited Hypervisor range,
-> > e.g. the official KVM range is 0x40000000-0x40000001 (effectively no
-> > room for undefined leafs) or explicitly defines gaps to be zero, e.g.
-> > Qemu explicitly creates zeroed entries up to the Cenatur and Hypervisor
-> > limits (the latter comes into play when providing HyperV features).
-> 
-> Does Centaur implement the bizarre Intel behavior for out-of-bound
-> entries? It seems that if there are Centaur leaves defined, the CPUD
-> semantics should be those specified by Centaur.
+Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: "J=C3=A9r=C3=B4me Glisse" <jglisse@redhat.com>
+Cc: Ben Skeggs <bskeggs@redhat.com>
+---
 
-Ah, right, because this code triggers on !=AMD, not ==Intel.  Your guess
-is as good as mine, I've dug around a few times trying to track down a spec
-for Centaur/VIA without success.
+Originally this patch was targeted for Jason's rdma tree since other HMM
+related changes were queued there. Now that those have been merged, this
+patch just contains changes to nouveau so it could go through any tree.
+I guess Ben Skeggs' tree would be appropriate.
 
-I would say that KVM's emulation behavior should probably be all or
-nothing, i.e. either due Intel's silly logic for all ranges/classes or do
-it for none.
+Changes since v1:
+ Rebase to linux-5.6.0-rc4
+ Address Christoph Hellwig's comments
 
-> > The bad behavior can be visually confirmed by dumping CPUID output in
-> > the guest when running Qemu with a stable TSC, as Qemu extends the limit
-> > of range 0x40000000 to 0x40000010 to advertise VMware's cpuid_freq,
-> > without defining zeroed entries for 0x40000002 - 0x4000000f.
-> >
-> > Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
-> > Cc: Jim Mattson <jmattson@google.com>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kvm/cpuid.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > index 6be012937eba..c320126e0118 100644
-> > --- a/arch/x86/kvm/cpuid.c
-> > +++ b/arch/x86/kvm/cpuid.c
-> > @@ -993,7 +993,7 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
-> >  {
-> >         struct kvm_cpuid_entry2 *max;
-> >
-> > -       max = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
-> > +       max = kvm_find_cpuid_entry(vcpu, function & 0xffffff00u, 0);
-> 
-> This assumes that CPUID.(function & 0xffffff00):EAX always contains
-> the maximum input value for the 256-entry range sharing the high 24
-> bits. I don't believe that convention has ever been established or
-> documented.
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 44 ++++++++-----
+ drivers/gpu/drm/nouveau/nouveau_svm.c  | 85 ++++++++++++++++++++++++++
+ drivers/gpu/drm/nouveau/nouveau_svm.h  |  5 ++
+ 3 files changed, 118 insertions(+), 16 deletions(-)
 
-Not sure if it's formally documented, but it's well established.  The
-closest thing I could find to documentation is the lkml thread where what's
-implemented today (AFAICT) was proposed.
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouve=
+au/nouveau_dmem.c
+index 0ad5d87b5a8e..172e0c98cec5 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -25,11 +25,13 @@
+ #include "nouveau_dma.h"
+ #include "nouveau_mem.h"
+ #include "nouveau_bo.h"
++#include "nouveau_svm.h"
+=20
+ #include <nvif/class.h>
+ #include <nvif/object.h>
+ #include <nvif/if500b.h>
+ #include <nvif/if900b.h>
++#include <nvif/if000c.h>
+=20
+ #include <linux/sched/mm.h>
+ #include <linux/hmm.h>
+@@ -558,10 +560,11 @@ nouveau_dmem_init(struct nouveau_drm *drm)
+ }
+=20
+ static unsigned long nouveau_dmem_migrate_copy_one(struct nouveau_drm *drm=
+,
+-		unsigned long src, dma_addr_t *dma_addr)
++		unsigned long src, dma_addr_t *dma_addr, u64 *pfn)
+ {
+ 	struct device *dev =3D drm->dev->dev;
+ 	struct page *dpage, *spage;
++	unsigned long paddr;
+=20
+ 	spage =3D migrate_pfn_to_page(src);
+ 	if (!spage || !(src & MIGRATE_PFN_MIGRATE))
+@@ -569,17 +572,21 @@ static unsigned long nouveau_dmem_migrate_copy_one(st=
+ruct nouveau_drm *drm,
+=20
+ 	dpage =3D nouveau_dmem_page_alloc_locked(drm);
+ 	if (!dpage)
+-		return 0;
++		goto out;
+=20
+ 	*dma_addr =3D dma_map_page(dev, spage, 0, PAGE_SIZE, DMA_BIDIRECTIONAL);
+ 	if (dma_mapping_error(dev, *dma_addr))
+ 		goto out_free_page;
+=20
++	paddr =3D nouveau_dmem_page_addr(dpage);
+ 	if (drm->dmem->migrate.copy_func(drm, 1, NOUVEAU_APER_VRAM,
+-			nouveau_dmem_page_addr(dpage), NOUVEAU_APER_HOST,
+-			*dma_addr))
++			paddr, NOUVEAU_APER_HOST, *dma_addr))
+ 		goto out_dma_unmap;
+=20
++	*pfn =3D NVIF_VMM_PFNMAP_V0_V | NVIF_VMM_PFNMAP_V0_VRAM |
++		((paddr >> PAGE_SHIFT) << NVIF_VMM_PFNMAP_V0_ADDR_SHIFT);
++	if (src & MIGRATE_PFN_WRITE)
++		*pfn |=3D NVIF_VMM_PFNMAP_V0_W;
+ 	return migrate_pfn(page_to_pfn(dpage)) | MIGRATE_PFN_LOCKED;
+=20
+ out_dma_unmap:
+@@ -587,18 +594,19 @@ static unsigned long nouveau_dmem_migrate_copy_one(st=
+ruct nouveau_drm *drm,
+ out_free_page:
+ 	nouveau_dmem_page_free_locked(drm, dpage);
+ out:
++	*pfn =3D NVIF_VMM_PFNMAP_V0_NONE;
+ 	return 0;
+ }
+=20
+ static void nouveau_dmem_migrate_chunk(struct nouveau_drm *drm,
+-		struct migrate_vma *args, dma_addr_t *dma_addrs)
++		struct migrate_vma *args, dma_addr_t *dma_addrs, u64 *pfns)
+ {
+ 	struct nouveau_fence *fence;
+ 	unsigned long addr =3D args->start, nr_dma =3D 0, i;
+=20
+ 	for (i =3D 0; addr < args->end; i++) {
+ 		args->dst[i] =3D nouveau_dmem_migrate_copy_one(drm, args->src[i],
+-				dma_addrs + nr_dma);
++				dma_addrs + nr_dma, pfns + i);
+ 		if (args->dst[i])
+ 			nr_dma++;
+ 		addr +=3D PAGE_SIZE;
+@@ -607,15 +615,12 @@ static void nouveau_dmem_migrate_chunk(struct nouveau=
+_drm *drm,
+ 	nouveau_fence_new(drm->dmem->migrate.chan, false, &fence);
+ 	migrate_vma_pages(args);
+ 	nouveau_dmem_fence_done(&fence);
++	nouveau_pfns_map(drm, args->vma->vm_mm, args->start, pfns, i);
+=20
+ 	while (nr_dma--) {
+ 		dma_unmap_page(drm->dev->dev, dma_addrs[nr_dma], PAGE_SIZE,
+ 				DMA_BIDIRECTIONAL);
+ 	}
+-	/*
+-	 * FIXME optimization: update GPU page table to point to newly migrated
+-	 * memory.
+-	 */
+ 	migrate_vma_finalize(args);
+ }
+=20
+@@ -632,7 +637,8 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
+ 		.vma		=3D vma,
+ 		.start		=3D start,
+ 	};
+-	unsigned long c, i;
++	unsigned long i;
++	u64 *pfns;
+ 	int ret =3D -ENOMEM;
+=20
+ 	args.src =3D kcalloc(max, sizeof(*args.src), GFP_KERNEL);
+@@ -646,19 +652,25 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
+ 	if (!dma_addrs)
+ 		goto out_free_dst;
+=20
+-	for (i =3D 0; i < npages; i +=3D c) {
+-		c =3D min(SG_MAX_SINGLE_ALLOC, npages);
+-		args.end =3D start + (c << PAGE_SHIFT);
++	pfns =3D nouveau_pfns_alloc(max);
++	if (!pfns)
++		goto out_free_dma;
++
++	for (i =3D 0; i < npages; i +=3D max) {
++		args.end =3D start + (max << PAGE_SHIFT);
+ 		ret =3D migrate_vma_setup(&args);
+ 		if (ret)
+-			goto out_free_dma;
++			goto out_free_pfns;
+=20
+ 		if (args.cpages)
+-			nouveau_dmem_migrate_chunk(drm, &args, dma_addrs);
++			nouveau_dmem_migrate_chunk(drm, &args, dma_addrs,
++						   pfns);
+ 		args.start =3D args.end;
+ 	}
+=20
+ 	ret =3D 0;
++out_free_pfns:
++	nouveau_pfns_free(pfns);
+ out_free_dma:
+ 	kfree(dma_addrs);
+ out_free_dst:
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
+u/nouveau_svm.c
+index df9bf1fd1bc0..8c629918a3c6 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+@@ -70,6 +70,12 @@ struct nouveau_svm {
+ #define SVM_DBG(s,f,a...) NV_DEBUG((s)->drm, "svm: "f"\n", ##a)
+ #define SVM_ERR(s,f,a...) NV_WARN((s)->drm, "svm: "f"\n", ##a)
+=20
++struct nouveau_pfnmap_args {
++	struct nvif_ioctl_v0 i;
++	struct nvif_ioctl_mthd_v0 m;
++	struct nvif_vmm_pfnmap_v0 p;
++};
++
+ struct nouveau_ivmm {
+ 	struct nouveau_svmm *svmm;
+ 	u64 inst;
+@@ -782,6 +788,85 @@ nouveau_svm_fault(struct nvif_notify *notify)
+ 	return NVIF_NOTIFY_KEEP;
+ }
+=20
++static inline struct nouveau_pfnmap_args *
++nouveau_pfns_to_args(void *pfns)
++{
++	struct nvif_vmm_pfnmap_v0 *p =3D
++		container_of(pfns, struct nvif_vmm_pfnmap_v0, phys);
++
++	return container_of(p, struct nouveau_pfnmap_args, p);
++}
++
++u64 *
++nouveau_pfns_alloc(unsigned long npages)
++{
++	struct nouveau_pfnmap_args *args;
++
++	args =3D kzalloc(struct_size(args, p.phys, npages), GFP_KERNEL);
++	if (!args)
++		return NULL;
++
++	args->i.type =3D NVIF_IOCTL_V0_MTHD;
++	args->m.method =3D NVIF_VMM_V0_PFNMAP;
++	args->p.page =3D PAGE_SHIFT;
++
++	return args->p.phys;
++}
++
++void
++nouveau_pfns_free(u64 *pfns)
++{
++	struct nouveau_pfnmap_args *args =3D nouveau_pfns_to_args(pfns);
++
++	kfree(args);
++}
++
++static struct nouveau_svmm *
++nouveau_find_svmm(struct nouveau_svm *svm, struct mm_struct *mm)
++{
++	struct nouveau_ivmm *ivmm;
++
++	list_for_each_entry(ivmm, &svm->inst, head) {
++		if (ivmm->svmm->notifier.mm =3D=3D mm)
++			return ivmm->svmm;
++	}
++	return NULL;
++}
++
++void
++nouveau_pfns_map(struct nouveau_drm *drm, struct mm_struct *mm,
++		 unsigned long addr, u64 *pfns, unsigned long npages)
++{
++	struct nouveau_svm *svm =3D drm->svm;
++	struct nouveau_svmm *svmm;
++	struct nouveau_pfnmap_args *args;
++	int ret;
++
++	if (!svm)
++		return;
++
++	mutex_lock(&svm->mutex);
++	svmm =3D nouveau_find_svmm(svm, mm);
++	if (!svmm) {
++		mutex_unlock(&svm->mutex);
++		return;
++	}
++	mutex_unlock(&svm->mutex);
++
++	args =3D nouveau_pfns_to_args(pfns);
++	args->p.addr =3D addr;
++	args->p.size =3D npages << PAGE_SHIFT;
++
++	mutex_lock(&svmm->mutex);
++
++	svmm->vmm->vmm.object.client->super =3D true;
++	ret =3D nvif_object_ioctl(&svmm->vmm->vmm.object, args, sizeof(*args) +
++				npages * sizeof(args->p.phys[0]), NULL);
++	svmm->vmm->vmm.object.client->super =3D false;
++
++	mutex_unlock(&svmm->mutex);
++}
++
+ static void
+ nouveau_svm_fault_buffer_fini(struct nouveau_svm *svm, int id)
+ {
+diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.h b/drivers/gpu/drm/nouvea=
+u/nouveau_svm.h
+index e839d8189461..0649f8d587a8 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_svm.h
++++ b/drivers/gpu/drm/nouveau/nouveau_svm.h
+@@ -18,6 +18,11 @@ void nouveau_svmm_fini(struct nouveau_svmm **);
+ int nouveau_svmm_join(struct nouveau_svmm *, u64 inst);
+ void nouveau_svmm_part(struct nouveau_svmm *, u64 inst);
+ int nouveau_svmm_bind(struct drm_device *, void *, struct drm_file *);
++
++u64 *nouveau_pfns_alloc(unsigned long npages);
++void nouveau_pfns_free(u64 *pfns);
++void nouveau_pfns_map(struct nouveau_drm *drm, struct mm_struct *mm,
++		      unsigned long addr, u64 *pfns, unsigned long npages);
+ #else /* IS_ENABLED(CONFIG_DRM_NOUVEAU_SVM) */
+ static inline void nouveau_svm_init(struct nouveau_drm *drm) {}
+ static inline void nouveau_svm_fini(struct nouveau_drm *drm) {}
+--=20
+2.20.1
 
-https://lore.kernel.org/lkml/48E3BBC1.2050607@goop.org/
-
-
-The relevant linux code in Linux (arch/x86/include/asm/processor.h), where
-@leaves contains the kernel's required minimum leaf to enable paravirt
-stuff for the hypervisor.
-
-static inline uint32_t hypervisor_cpuid_base(const char *sig, uint32_t leaves)
-{
-        uint32_t base, eax, signature[3];
-
-        for (base = 0x40000000; base < 0x40010000; base += 0x100) {
-                cpuid(base, &eax, &signature[0], &signature[1], &signature[2]);
-
-                if (!memcmp(sig, signature, 12) &&
-                    (leaves == 0 || ((eax - base) >= leaves)))
-                        return base;
-        }
-
-        return 0;
-}
-
-> >         return max && function <= max->eax;
-> >  }
-> >
-> > --
-> > 2.24.1
-> >
