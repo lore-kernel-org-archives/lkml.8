@@ -2,94 +2,64 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A706C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9802C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:54:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9AC2067C
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C909420866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:54:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgCCXwj (ORCPT
+        id S1728053AbgCCXy2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 18:52:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbgCCXwj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 18:52:39 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E62792067C;
-        Tue,  3 Mar 2020 23:52:37 +0000 (UTC)
-Date:   Tue, 3 Mar 2020 18:52:36 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip V4 3/4] kprobes: Fix to protect
- kick_kprobe_optimizer() by kprobe_mutex
-Message-ID: <20200303185236.23db2ebc@gandalf.local.home>
-In-Reply-To: <158270759113.18966.8938334321921933993.stgit@devnote2>
-References: <158270755997.18966.3544449431956918068.stgit@devnote2>
-        <158270759113.18966.8938334321921933993.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 3 Mar 2020 18:54:28 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:37230 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbgCCXy1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 18:54:27 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id AFDB215AABE8B;
+        Tue,  3 Mar 2020 15:54:26 -0800 (PST)
+Date:   Tue, 03 Mar 2020 15:54:26 -0800 (PST)
+Message-Id: <20200303.155426.707583465205863443.davem@davemloft.net>
+To:     madalin.bucur@oss.nxp.com
+Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        madalin.bucur@nxp.com
+Subject: Re: [PATCH net 4/4] dpaa_eth: FMan erratum A050385 workaround
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1583250939-24645-5-git-send-email-madalin.bucur@oss.nxp.com>
+References: <1583250939-24645-1-git-send-email-madalin.bucur@oss.nxp.com>
+        <1583250939-24645-5-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 03 Mar 2020 15:54:27 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 17:59:51 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Date: Tue,  3 Mar 2020 17:55:39 +0200
 
-> In kprobe_optimizer() kick_kprobe_optimizer() is called
-> without kprobe_mutex, but this can race with other caller
-> which is protected by kprobe_mutex.
-> 
-> To fix that, expand kprobe_mutex protected area to protect
-> kick_kprobe_optimizer() call.
-> 
+> +#define DPAA_FD_DATA_ALIGNMENT  ((fman_has_errata_a050385()) ? \
 
-Should we add
+You don't need parenthesis around that fman_has_errata_a050385() call.
 
- Cc: stable@vger.kernel.org
- Fixes: cd7ebe2298ff ("kprobes: Use text_poke_smp_batch for optimizing")
+> +#define dpaa_bp_size(raw_size) ((SKB_WITH_OVERHEAD(raw_size)) & \
 
-tags?
+Similar again for SKB_WITH_OVERHEAD()
 
--- Steve
-
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  kernel/kprobes.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 38d9a5d7c8a4..6d76a6e3e1a5 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -592,11 +592,12 @@ static void kprobe_optimizer(struct work_struct *work)
->  	mutex_unlock(&module_mutex);
->  	mutex_unlock(&text_mutex);
->  	cpus_read_unlock();
-> -	mutex_unlock(&kprobe_mutex);
->  
->  	/* Step 5: Kick optimizer again if needed */
->  	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
->  		kick_kprobe_optimizer();
-> +
-> +	mutex_unlock(&kprobe_mutex);
->  }
->  
->  /* Wait for completing optimization and unoptimization */
+Also, how often does this errata code trigger on effected platforms and
+what is the performance degradation from that?  I don't see this analysis
+performed anywhere.
 
