@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A10C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3383C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C91C214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDDEE208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257784;
-	bh=WqXLuGPjE0OeTW1ZYyh7Wc01TSayOhNRxj7vwyTBiOE=;
+	s=default; t=1583257789;
+	bh=4ISSmUk3GQEPzgk7PG6P3uUSjVVpssrs3uevj0Z/Es0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qxX+iddJ0YfGw3IXiK1zoD3FDgnLlIQzoBhXNog4Dz338ke/LD/gf8+XIS3rQrv13
-	 NMnThYjGHr+txtEGKOpJI/zzRS2K51bAiAuJR+XL34m68/npdtXqCjY541T/IJk6pP
-	 fuLmQugQdYyPahs57oJmBSw0y2n3yXNyyO/z6EME=
+	b=xGYGdpj6IihiojICMN/Zh1GeoMKcvvm74zE8GudD0B2h2Y7X7+R1n4ycy1BfsIuao
+	 DAOCzj7XjP5c4zeHZ1d+KlhJc0rIPoS4EpJJAtDwQTRmJFsVxFS9BA0RW0L+7dpBnV
+	 tBIpSZIswNkcv28pHwIBXpHUP/0ihIFedUVY6p7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731817AbgCCRtn (ORCPT
+        id S1731063AbgCCRts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:49:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57028 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:49:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730096AbgCCRtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:49:41 -0500
+        id S1730096AbgCCRtq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:49:46 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94ACC20CC7;
-        Tue,  3 Mar 2020 17:49:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA4492146E;
+        Tue,  3 Mar 2020 17:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257781;
-        bh=WqXLuGPjE0OeTW1ZYyh7Wc01TSayOhNRxj7vwyTBiOE=;
+        s=default; t=1583257784;
+        bh=4ISSmUk3GQEPzgk7PG6P3uUSjVVpssrs3uevj0Z/Es0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=opLPk/a+A22muGYAqTA9+/Oz/KzvJsIJeP6LkZkyKG31LxVv972quanLqTYyNDCQL
-         KkOp8Us/gH2PnpiAaeb/dGdjdyh8BJZerYw2Yhjq8mO08oJarRqTNOJgR6snaDhlmE
-         V8DbysAuwKDu7rnmcdhfBV1bja4aHywI5Qr6zAXc=
+        b=H0tVnCthiY+bpvlCZcWi3Rg+k7I4vC+1FW0KYjxF1nGHgtSD3+EsrvPLm3nDshL1v
+         GVtWILjnpeeTZiuRWb7eSlgy91VomxSLE9cvrZajGX6L5Z4ik/YGG7n+cFYOYtpbaQ
+         SvTgGGGUqdw48Kd23ixW+Z8MIXoRE0Di8/9vl82w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "Erhard F." <erhard_f@mailbox.org>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
+        stable@vger.kernel.org, Dmitry Bezrukov <dbezrukov@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 126/176] net: netlink: cap max groups which will be considered in netlink_bind()
-Date:   Tue,  3 Mar 2020 18:43:10 +0100
-Message-Id: <20200303174319.345137823@linuxfoundation.org>
+Subject: [PATCH 5.5 127/176] net: atlantic: checksum compat issue
+Date:   Tue,  3 Mar 2020 18:43:11 +0100
+Message-Id: <20200303174319.445748656@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,53 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+From: Dmitry Bezrukov <dbezrukov@marvell.com>
 
-commit 3a20773beeeeadec41477a5ba872175b778ff752 upstream.
+commit 15beab0a9d797be1b7c67458da007a62269be29a upstream.
 
-Since nl_groups is a u32 we can't bind more groups via ->bind
-(netlink_bind) call, but netlink has supported more groups via
-setsockopt() for a long time and thus nlk->ngroups could be over 32.
-Recently I added support for per-vlan notifications and increased the
-groups to 33 for NETLINK_ROUTE which exposed an old bug in the
-netlink_bind() code causing out-of-bounds access on archs where unsigned
-long is 32 bits via test_bit() on a local variable. Fix this by capping the
-maximum groups in netlink_bind() to BITS_PER_TYPE(u32), effectively
-capping them at 32 which is the minimum of allocated groups and the
-maximum groups which can be bound via netlink_bind().
+Yet another checksum offload compatibility issue was found.
 
-CC: Christophe Leroy <christophe.leroy@c-s.fr>
-CC: Richard Guy Briggs <rgb@redhat.com>
-Fixes: 4f520900522f ("netlink: have netlink per-protocol bind function return an error code.")
-Reported-by: Erhard F. <erhard_f@mailbox.org>
-Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+The known issue is that AQC HW marks tcp packets with 0xFFFF checksum
+as invalid (1). This is workarounded in driver, passing all the suspicious
+packets up to the stack for further csum validation.
+
+Another HW problem (2) is that it hides invalid csum of LRO aggregated
+packets inside of the individual descriptors. That was workarounded
+by forced scan of all LRO descriptors for checksum errors.
+
+However the scan logic was joint for both LRO and multi-descriptor
+packets (jumbos). And this causes the issue.
+
+We have to drop LRO packets with the detected bad checksum
+because of (2), but we have to pass jumbo packets to stack because of (1).
+
+When using windows tcp partner with jumbo frames but with LSO disabled
+driver discards such frames as bad checksummed. But only LRO frames
+should be dropped, not jumbos.
+
+On such a configurations tcp stream have a chance of drops and stucks.
+
+(1) 76f254d4afe2 ("net: aquantia: tcp checksum 0xffff being handled incorrectly")
+(2) d08b9a0a3ebd ("net: aquantia: do not pass lro session with invalid tcp checksum")
+
+Fixes: d08b9a0a3ebd ("net: aquantia: do not pass lro session with invalid tcp checksum")
+Signed-off-by: Dmitry Bezrukov <dbezrukov@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netlink/af_netlink.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.c          |    3 ++-
+ drivers/net/ethernet/aquantia/atlantic/aq_ring.h          |    3 ++-
+ drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c |    5 +++--
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -1014,7 +1014,8 @@ static int netlink_bind(struct socket *s
- 	if (nlk->netlink_bind && groups) {
- 		int group;
- 
--		for (group = 0; group < nlk->ngroups; group++) {
-+		/* nl_groups is a u32, so cap the maximum groups we can bind */
-+		for (group = 0; group < BITS_PER_TYPE(u32); group++) {
- 			if (!test_bit(group, &groups))
- 				continue;
- 			err = nlk->netlink_bind(net, group + 1);
-@@ -1033,7 +1034,7 @@ static int netlink_bind(struct socket *s
- 			netlink_insert(sk, nladdr->nl_pid) :
- 			netlink_autobind(sock);
- 		if (err) {
--			netlink_undo_bind(nlk->ngroups, groups, sk);
-+			netlink_undo_bind(BITS_PER_TYPE(u32), groups, sk);
- 			goto unlock;
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
+@@ -351,7 +351,8 @@ int aq_ring_rx_clean(struct aq_ring_s *s
+ 				err = 0;
+ 				goto err_exit;
+ 			}
+-			if (buff->is_error || buff->is_cso_err) {
++			if (buff->is_error ||
++			    (buff->is_lro && buff->is_cso_err)) {
+ 				buff_ = buff;
+ 				do {
+ 					next_ = buff_->next,
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.h
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.h
+@@ -78,7 +78,8 @@ struct __packed aq_ring_buff_s {
+ 			u32 is_cleaned:1;
+ 			u32 is_error:1;
+ 			u32 is_vlan:1;
+-			u32 rsvd3:4;
++			u32 is_lro:1;
++			u32 rsvd3:3;
+ 			u16 eop_index;
+ 			u16 rsvd4;
+ 		};
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+@@ -823,6 +823,8 @@ static int hw_atl_b0_hw_ring_rx_receive(
+ 			}
  		}
- 	}
+ 
++		buff->is_lro = !!(HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
++				  rxd_wb->status);
+ 		if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
+ 			buff->len = rxd_wb->pkt_len %
+ 				AQ_CFG_RX_FRAME_MAX;
+@@ -835,8 +837,7 @@ static int hw_atl_b0_hw_ring_rx_receive(
+ 				rxd_wb->pkt_len > AQ_CFG_RX_FRAME_MAX ?
+ 				AQ_CFG_RX_FRAME_MAX : rxd_wb->pkt_len;
+ 
+-			if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
+-				rxd_wb->status) {
++			if (buff->is_lro) {
+ 				/* LRO */
+ 				buff->next = rxd_wb->next_desc_ptr;
+ 				++ring->stats.rx.lro_packets;
 
 
