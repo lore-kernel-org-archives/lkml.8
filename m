@@ -2,111 +2,114 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF71C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5740C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20CAF20873
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABBD821556
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:04:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SyoM0C84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728316AbgCCKD0 (ORCPT
+        id S1728325AbgCCKES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:03:26 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54898 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727798AbgCCKDZ (ORCPT
+        Tue, 3 Mar 2020 05:04:18 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:44878 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbgCCKES (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:03:25 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 216422955E8
-Subject: Re: [PATCH] platform/chrome: cros_ec_rpmsg: Fix race with host event.
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200214082638.92070-1-pihsun@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <b8de9c57-8eae-f1a7-ae25-728f0dd16176@collabora.com>
-Date:   Tue, 3 Mar 2020 11:03:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 05:04:18 -0500
+Received: by mail-ed1-f65.google.com with SMTP id g19so3520206eds.11;
+        Tue, 03 Mar 2020 02:04:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0AD4bpZ8c1wq7SQSp4vgpTJGHedOrSryx6E4q6XFYFk=;
+        b=SyoM0C84gbHJ5Jluoig5lRyl+cLIp3NOhJximlGPzAUZdfPngJd4IIUHv1YOPdTqXd
+         nhM3ABo8W1AIKxhv9fWas516GZIDJX98ZP5GgG+RTSEKPT86ulM/LnmcwUWoudG926M5
+         JHZXwumAM9oak9e4eI0uh6005tonqOlK7tRtvA1t9+nulplTSS+PtGhsCwltVVld8Jp2
+         MkorfG49ZzzxTs/gmTqwbWB0pJKtLzlqdDIdI/Qi0hhERWGDRXrKrUXf6ZzimJhtsaDI
+         HeHe3y4gIRXmPFzSDWx9/FNHXJt8uyIn67agWXubB4Ee8PcYuSz/f+xfb+k+3SnwOfhw
+         xZXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0AD4bpZ8c1wq7SQSp4vgpTJGHedOrSryx6E4q6XFYFk=;
+        b=s7wfMCGJ46QVY4+kSOKqvQZxigyrNDQXh4WM+FHsdTAoD2o3hdwRQ0FAQwcI5oFrj9
+         F5Nob/S2YI8nsaZje4yJTsXduZpr8MPKQsZKX3DzhDj7NMTftrYyfVF1WpzSHGph9hpl
+         zlXRJQxEvrHkQC6ET/3hKa/gnJAr2jYS4NGYqeawjIrlCUHV206n1BVW+2HWkSN48Lxd
+         YE3Mg9kjeWUn1NXsweLN0oec85HocMXfUFB5UDBFClZME8ngfUu7xq1dW3RjGFJiE5GR
+         kxRzk65GqWpp1+0Uj8OWgUUWJzB3HLuiY24x9MJuIjZI73Hm88TVRr0Z2Q5oKhzrTEac
+         sEcg==
+X-Gm-Message-State: ANhLgQ3ixFHI/5Ybs/VYxJAl6rbaeXWKr6IDgIsocBsKZ0O7HaKsUAbQ
+        0L5Hu23IjvKnuSVweslG+xzT6YylIpgeRwV9oDosjA==
+X-Google-Smtp-Source: ADFU+vsLRLu5CHq+4KDeNc9afsPRrbpSLhURhzK+3Pwhm0HC+0bu+COR0T6jrEwJk36YWXYuiJcHtrPO3fI+aoD3OXU=
+X-Received: by 2002:aa7:d50b:: with SMTP id y11mr3185084edq.139.1583229855409;
+ Tue, 03 Mar 2020 02:04:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200214082638.92070-1-pihsun@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200303074414.30693-1-o.rempel@pengutronix.de>
+In-Reply-To: <20200303074414.30693-1-o.rempel@pengutronix.de>
+From:   Vladimir Oltean <olteanv@gmail.com>
+Date:   Tue, 3 Mar 2020 12:04:04 +0200
+Message-ID: <CA+h21hrkVr4-Bgop0bor9nkKDUm4dYdyuDWJ_jthjKpy98ZQ1A@mail.gmail.com>
+Subject: Re: [PATCH v1] net: dsa: sja1105: add 100baseT1_Full support
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     mkl@pengutronix.de, Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de,
+        netdev <netdev@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, david@protonic.nl,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pi-Hsun,
-
-On 14/2/20 9:26, Pi-Hsun Shih wrote:
-> Host event can be sent by remoteproc by any time, and
-> cros_ec_rpmsg_callback would be called after cros_ec_rpmsg_create_ept.
-> But the cros_ec_device is initialized after that, which cause host event
-> handler to use cros_ec_device that are not initialized properly yet.
-> 
-> Fix this by don't schedule host event handler before cros_ec_register
-> returns. Instead, remember that we have a pending host event, and
-> schedule host event handler after cros_ec_register.
-> 
-> Fixes: 71cddb7097e2 ("platform/chrome: cros_ec_rpmsg: Fix race with host command when probe failed.")
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
+On Tue, 3 Mar 2020 at 09:44, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+>
+> Validate 100baseT1_Full to make this driver work with TJA1102 PHY.
+>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 > ---
 
-Applied for 5.7
+I was expecting this patch sooner or later.
 
->  drivers/platform/chrome/cros_ec_rpmsg.c | 16 +++++++++++++++-
->  1 file changed, 15 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-> index dbc3f5523b83..7e8629e3db74 100644
-> --- a/drivers/platform/chrome/cros_ec_rpmsg.c
-> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-> @@ -44,6 +44,8 @@ struct cros_ec_rpmsg {
->  	struct completion xfer_ack;
->  	struct work_struct host_event_work;
->  	struct rpmsg_endpoint *ept;
-> +	bool has_pending_host_event;
-> +	bool probe_done;
->  };
->  
->  /**
-> @@ -177,7 +179,14 @@ static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
->  		memcpy(ec_dev->din, resp->data, len);
->  		complete(&ec_rpmsg->xfer_ack);
->  	} else if (resp->type == HOST_EVENT_MARK) {
-> -		schedule_work(&ec_rpmsg->host_event_work);
-> +		/*
-> +		 * If the host event is sent before cros_ec_register is
-> +		 * finished, queue the host event.
-> +		 */
-> +		if (ec_rpmsg->probe_done)
-> +			schedule_work(&ec_rpmsg->host_event_work);
-> +		else
-> +			ec_rpmsg->has_pending_host_event = true;
->  	} else {
->  		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
->  			 resp->type);
-> @@ -240,6 +249,11 @@ static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
->  		return ret;
->  	}
->  
-> +	ec_rpmsg->probe_done = true;
-> +
-> +	if (ec_rpmsg->has_pending_host_event)
-> +		schedule_work(&ec_rpmsg->host_event_work);
-> +
->  	return 0;
->  }
->  
-> 
-> base-commit: b19e8c68470385dd2c5440876591fddb02c8c402
-> 
+Acked-by: Vladimir Oltean <olteanv@gmail.com>
+
+I should take this opportunity and express the fact that it is strange
+for MAC drivers to have to sign off all possible copper and fiber
+media types in their .phylink_validate method. Sooner or later
+somebody is going to want to add 1000Base-T1 too. I don't think it is
+going to scale very well. Russell, with your plan to make MAC drivers
+just populate a bitmap of phy_modes (MII side), is it also going to
+get rid of media side validation?
+
+>  drivers/net/dsa/sja1105/sja1105_main.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+> index 34544b1c30dc..7b5a80ba12bd 100644
+> --- a/drivers/net/dsa/sja1105/sja1105_main.c
+> +++ b/drivers/net/dsa/sja1105/sja1105_main.c
+> @@ -866,6 +866,7 @@ static void sja1105_phylink_validate(struct dsa_switch *ds, int port,
+>         phylink_set(mask, MII);
+>         phylink_set(mask, 10baseT_Full);
+>         phylink_set(mask, 100baseT_Full);
+> +       phylink_set(mask, 100baseT1_Full);
+>         if (mii->xmii_mode[port] == XMII_MODE_RGMII)
+>                 phylink_set(mask, 1000baseT_Full);
+>
+> --
+> 2.25.0
+>
+
+Regards,
+-Vladimir
