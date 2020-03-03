@@ -2,111 +2,107 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12980C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68535C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2D1E20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:56:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zrXbi+1X"
+	by mail.kernel.org (Postfix) with ESMTP id 4C130214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:57:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727846AbgCCJ4T (ORCPT
+        id S1728364AbgCCJ5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:56:19 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:47656 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgCCJ4T (ORCPT
+        Tue, 3 Mar 2020 04:57:32 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:40736 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgCCJ5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:56:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=xjAYzYZJidsTEHXSs//Oe4SJs+qAxcjB8dKxwUENenQ=; b=zrXbi+1XYsYg1hOUfgotstGR1s
-        A/yiklisppTF0E9uRLa0vly9Whs1m5MF6QXAFqbz0RIOZTQ3IBkvmXEsEzAH7H4G/eUNCE9COhaKf
-        Jt1sB06ShmrP6pL5etFIXieKzux9rI1PRF59uv6SLpF0G2BI2GBcdWRCspKTvO/2p1jLRtrNUi6Sh
-        HA8kSw8UO5dmWtltons0CLJ0nXm+Y659s9TY0lr4a4KSUKIjb7SJaBWwJIkbCrpzdLCOQb8EEI+W+
-        eVFHzpAPkRg2pOXnstpM7fhlRyhkazF7U53uvuy8CCxYkEUPSwaZ6iuVSdlA2OHKAJpd7ZHKu3O6I
-        dRuWKx+w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j94Gm-0001E5-NN; Tue, 03 Mar 2020 09:55:20 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8918A30110E;
-        Tue,  3 Mar 2020 10:53:16 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 780FD2119B2EB; Tue,  3 Mar 2020 10:55:14 +0100 (CET)
-Date:   Tue, 3 Mar 2020 10:55:14 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Allison Randal <allison@lohutok.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
-Message-ID: <20200303095514.GA2596@hirez.programming.kicks-ass.net>
-References: <20200228000105.165012-1-thgarnie@chromium.org>
- <202003022100.54CEEE60F@keescook>
+        Tue, 3 Mar 2020 04:57:31 -0500
+Received: by mail-oi1-f193.google.com with SMTP id j80so2394692oih.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:57:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9YqxdQa1ilWOSiLraQPjm7TPTEifD+tyJWNIlA8bYpk=;
+        b=CY7XhQM8JmaGloS6gAyGBhpxfdZvfce80R8NlxmP+amLJfTKUtc9xsjd/HkPXN6dl4
+         SyinhiQ77Amdly//I8XTNns7hk1E1x9EIj13l0F1gxmHRybSd4z7EinSP+bbnM6Sj7V8
+         beqJruZD+F1Wbd+yaLsHqRUGTTSCx2MlluzKtmhbtAG3n+7rwZo57FZadiOBeF+U0CPJ
+         uIfJuCb+jHLCR+DPWZtP8BYLiVOivkZMNSrdc/c5wRfBukK16WyqOt10/3jW2JDBCjio
+         JW9XlmkR80Y8bpIc0dJKbkhe70JLLq3BsroJE2PIJ+i2dApVkhSbqtNo8G9SLL5Lv0Ak
+         nOCg==
+X-Gm-Message-State: ANhLgQ3gJ2vqgwRQXIN/xeNYKMdBTdbxpaVAlZoIEpXCEKOf+MeQPI8b
+        crmXUDjkgAfUfFCAih2lZ5qkw75wFVuNj1vaIrrBYQ==
+X-Google-Smtp-Source: ADFU+vs9z4mBtCuZweCHY2/aqnLaygT4ej9HMxCl8wm4hVja8W8jGcq442xFYlOU/W0oazaGHEEdSqsMhYOZ6MqTl2M=
+X-Received: by 2002:aca:cdd1:: with SMTP id d200mr1781294oig.153.1583229450514;
+ Tue, 03 Mar 2020 01:57:30 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003022100.54CEEE60F@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200227183748.GA31018@embeddedor>
+In-Reply-To: <20200227183748.GA31018@embeddedor>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 3 Mar 2020 10:57:19 +0100
+Message-ID: <CAMuHMdXCWtgGKM1Uqtps4CYbGsfBZtoQ8e4t8VrMoL29nP4V3w@mail.gmail.com>
+Subject: Re: [PATCH] zorro: Replace zero-length array with flexible-array member
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 09:02:15PM -0800, Kees Cook wrote:
-> On Thu, Feb 27, 2020 at 04:00:45PM -0800, Thomas Garnier wrote:
-> > Minor changes based on feedback and rebase from v10.
-> > 
-> > Splitting the previous serie in two. This part contains assembly code
-> > changes required for PIE but without any direct dependencies with the
-> > rest of the patchset.
-> > 
-> > Note: Using objtool to detect non-compliant PIE relocations is not yet
-> > possible as this patchset only includes the simplest PIE changes.
-> > Additional changes are needed in kvm, xen and percpu code.
-> > 
-> > Changes:
-> >  - patch v11 (assembly);
-> >    - Fix comments on x86/entry/64.
-> >    - Remove KASLR PIE explanation on all commits.
-> >    - Add note on objtool not being possible at this stage of the patchset.
-> 
-> This moves us closer to PIE in a clean first step. I think these patches
-> look good to go, and unblock the work in kvm, xen, and percpu code. Can
-> one of the x86 maintainers pick this series up?
+Hi Gustavo,
 
-But,... do we still need this in the light of that fine-grained kaslr
-stuff?
+Thanks for your patch!
 
-What is the actual value of this PIE crud in the face of that?
+On Thu, Feb 27, 2020 at 7:35 PM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
+>
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
+>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+>
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Note that in practice, this "undefined behavior" may lead to corrupting
+the next member, when the zero-length array is written to.
+
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
+i.e. will queue in the m68k for-v5.7 branch.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
