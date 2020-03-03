@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454F3C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D89CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE11246D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE716246D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203799;
-	bh=24cJr1a4LEBnlJsk7G8uqP4mLM4GSe5dTT5rRoG/lGY=;
+	s=default; t=1583203802;
+	bh=bMmVpf9tlllvIKkN11/OfHHoDlDHa128LFrYRoxxYGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W7dgpc+QevkF4l5EclvzQM5/LgCp9+vFDDIXW4pTw7X99CVi0qXpgImnD5xzXHeTL
-	 4xt+hn3N1pSbZ6bgW3Dlut5yE86vr129ipRnT04o1guZw/u8z00mW+JqjVtvxB7GNJ
-	 FWCGhzhlreZVj8qENoM7lXyrrcsfUSCQQ0gcBY+8=
+	b=CF7HCio82qmliA8b+OfTyAdUitlCA/ZU2qbipnaQAsDjGcOFHzmxIkXWa78I3VOcK
+	 /mFIGfhKakRG3DztvxRpdtOaDcdo6EtP3/iIrm6gCUGuCVPWJ2PogZHTZICp9Fmd4Q
+	 X6fV+7yQNHI+DueedBg0K7bk6estBbUSD9y5Rrq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgCCCt5 (ORCPT
+        id S1729034AbgCCCuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:49:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46346 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:50:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728975AbgCCCtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:51 -0500
+        id S1729020AbgCCCt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:57 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 453E024699;
-        Tue,  3 Mar 2020 02:49:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79D17246E6;
+        Tue,  3 Mar 2020 02:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203791;
-        bh=24cJr1a4LEBnlJsk7G8uqP4mLM4GSe5dTT5rRoG/lGY=;
+        s=default; t=1583203797;
+        bh=bMmVpf9tlllvIKkN11/OfHHoDlDHa128LFrYRoxxYGk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q383Bkb/lYFKZwEdG9TR4NTPSgedSlixSXYIL8VzqEyAHn0SlOL+kkGOnHXHA26FB
-         RDNdKvwHUE9PBmS4Z2e3j22WqsucfJxh9gnDC8FgPer45xbclz2cKpmb7AWeprvTMY
-         n0SbrMqwhv6ek2FA3GmYHQwEn9os1UiV2da42tFs=
+        b=gqYlp/GnexpA/fg4xvMfzly0aifviUx/+ovG6FyOIY1xaYBadomMcsHQxmgrGbb0q
+         WFTLE7cwXBF1ObW53lTZGrFCI5QNnCWNfqNzIzadOqIo51TMkX8uxYAHA14zxzBDVU
+         cfkIjPUUAIFrdRNq9yglve7NKiTPO2OKYTWg1MnA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Vasut <marex@denx.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Lukas Wunner <lukas@wunner.de>, Petr Stetiar <ynezz@true.cz>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 13/22] net: ks8851-ml: Fix 16-bit data access
-Date:   Mon,  2 Mar 2020 21:49:24 -0500
-Message-Id: <20200303024933.10371-13-sashal@kernel.org>
+Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Borislav Petkov <bp@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 18/22] x86/boot/compressed: Don't declare __force_order in kaslr_64.c
+Date:   Mon,  2 Mar 2020 21:49:29 -0500
+Message-Id: <20200303024933.10371-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024933.10371-1-sashal@kernel.org>
 References: <20200303024933.10371-1-sashal@kernel.org>
@@ -61,46 +58,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Vasut <marex@denx.de>
+From: "H.J. Lu" <hjl.tools@gmail.com>
 
-[ Upstream commit edacb098ea9c31589276152f09b4439052c0f2b1 ]
+[ Upstream commit df6d4f9db79c1a5d6f48b59db35ccd1e9ff9adfc ]
 
-The packet data written to and read from Micrel KSZ8851-16MLLI must be
-byte-swapped in 16-bit mode, add this byte-swapping.
+GCC 10 changed the default to -fno-common, which leads to
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Petr Stetiar <ynezz@true.cz>
-Cc: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+    LD      arch/x86/boot/compressed/vmlinux
+  ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition of `__force_order'; \
+    arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
+  make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compressed/vmlinux] Error 1
+
+Since __force_order is already provided in pgtable_64.c, there is no
+need to declare __force_order in kaslr_64.c.
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/20200124181811.4780-1-hjl.tools@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/micrel/ks8851_mll.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/boot/compressed/pagetable.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/micrel/ks8851_mll.c b/drivers/net/ethernet/micrel/ks8851_mll.c
-index 77d059d7f8c55..fb5f4055e1592 100644
---- a/drivers/net/ethernet/micrel/ks8851_mll.c
-+++ b/drivers/net/ethernet/micrel/ks8851_mll.c
-@@ -515,7 +515,7 @@ static inline void ks_inblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		*wptr++ = (u16)ioread16(ks->hw_addr);
-+		*wptr++ = be16_to_cpu(ioread16(ks->hw_addr));
- }
+diff --git a/arch/x86/boot/compressed/pagetable.c b/arch/x86/boot/compressed/pagetable.c
+index e691ff734cb5a..46573842d8c3e 100644
+--- a/arch/x86/boot/compressed/pagetable.c
++++ b/arch/x86/boot/compressed/pagetable.c
+@@ -36,9 +36,6 @@
+ #define __PAGE_OFFSET __PAGE_OFFSET_BASE
+ #include "../../mm/ident_map.c"
  
- /**
-@@ -529,7 +529,7 @@ static inline void ks_outblk(struct ks_net *ks, u16 *wptr, u32 len)
- {
- 	len >>= 1;
- 	while (len--)
--		iowrite16(*wptr++, ks->hw_addr);
-+		iowrite16(cpu_to_be16(*wptr++), ks->hw_addr);
- }
- 
- static void ks_disable_int(struct ks_net *ks)
+-/* Used by pgtable.h asm code to force instruction serialization. */
+-unsigned long __force_order;
+-
+ /* Used to track our page table allocation area. */
+ struct alloc_pgt_data {
+ 	unsigned char *pgt_buf;
 -- 
 2.20.1
 
