@@ -2,146 +2,141 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4968C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C76C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5512086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:03:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583240632;
-	bh=f5TALLM7M04mw4MFMI6suvBwcBH6Hd4opudh07oYOZ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LxpQRLTsAaXBZ47PBlz+kiImHVrPvjRkn38ID62pSwHMQcrXljGEURkIuwteoTApu
-	 TSMhZP+31t0GFyV+dJJ73XBEbjrb/0BEJdUSFvntJYoRexCm//y23qxbv/XYynkVYn
-	 H65pnOnlJQrXhYhOo/n5jqBdcdnYWlOJNayStDMA=
+	by mail.kernel.org (Postfix) with ESMTP id AC0E5208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:07:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FJ5SGdlB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbgCCNDv (ORCPT
+        id S1729180AbgCCNHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:03:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49700 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729249AbgCCNDu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:03:50 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36E6D20866;
-        Tue,  3 Mar 2020 13:03:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583240629;
-        bh=f5TALLM7M04mw4MFMI6suvBwcBH6Hd4opudh07oYOZ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HGZKD28dn34LE53PY7JnKdnnaep5PxSNdTqI9Rf14XPqJI6mRPHPh6qiVXbKKyccK
-         Cs5GgBp32G+tzfpxv+05TCf4nQAoKK71wdKCP/p860chfn/v9IsbG7IAEwh+XTdJig
-         iBvKRptwEaPe33EjTDzrITZpsidZvqdzKAdmvw2g=
-Date:   Tue, 3 Mar 2020 14:03:47 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Karel Zak <kzak@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200303130347.GA2302029@kroah.com>
-References: <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com>
- <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
- <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+        Tue, 3 Mar 2020 08:07:07 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54586 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728565AbgCCNHH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:07:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583240825;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tl1DdVHIR0INqv1Lc6Z+ydsIpF+tIS1d2YorStHVEYY=;
+        b=FJ5SGdlBlYEoa+SYT4XjDmg2xcKJu1ltRTiCtiLTF2tpDgzUOyBd70WTPcBWXeQ89RTIjk
+        qrU7Fd966CPcXJR8RtwvfTfacIBpJwBuzSfLqr5LjQOQeM6G6ioP+E1CNOGrvOzASe/rLq
+        WFdxWDM0HL6+QUr/wsy81rBOqglCtok=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-66-nPDHn7eqNAmtHXfpeZyfjA-1; Tue, 03 Mar 2020 08:07:04 -0500
+X-MC-Unique: nPDHn7eqNAmtHXfpeZyfjA-1
+Received: by mail-wr1-f71.google.com with SMTP id z16so1188324wrm.15
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:07:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tl1DdVHIR0INqv1Lc6Z+ydsIpF+tIS1d2YorStHVEYY=;
+        b=XPSaFRoS5uhaD+2k/kQK4NbqY97ddJrfSdYYtdkaxB71qKc+cbw5+zkUKzGccHPElw
+         VhGsM8MKSJi15du3u3f0k93juCS1DX4daXqSasqY/rrQaJy9zN/RmAf/eAw1dM/pOey2
+         OEFnsDJzh86L3CIsgekK+9a62ctr3ltQNiFMd7DMx8XwTsuYMIMJqqy5VH1rCvabQbQc
+         tYt46GJyRndYvlEMGZcIrwmAiyJvdmc0pcGqmYPz5IUNx2zfiiDAGQvDUg2eSvpybOyh
+         AHRSj/xIphyqS6EB/hNSZb/Q178IUStmFRsxDTZU2FDgosboFqtPeqiM1WxLgSVOJX/N
+         7Y/Q==
+X-Gm-Message-State: ANhLgQ30JL9KPFZWoG8N8Mh7fy2lMZM4KYq7oRvCQrv/UeZFBo+I2TOz
+        /ApklOjW8E+S9Gr8QL1Frym5v+RUHbeQSodSRAP0/eAKtse8K8u/QLyuf+FU/jyJtaxEG/aM7e8
+        KWBXu39CphdLDgY3Q3QXOc+Qf
+X-Received: by 2002:adf:ead0:: with SMTP id o16mr5553464wrn.239.1583240822803;
+        Tue, 03 Mar 2020 05:07:02 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvFs9exZ1u3AtWywZibzYcaabPn0O0rGCmokmbu9tlh8xMRqE0sD77JYX5tNmKGqzWToOmDKQ==
+X-Received: by 2002:adf:ead0:: with SMTP id o16mr5553444wrn.239.1583240822570;
+        Tue, 03 Mar 2020 05:07:02 -0800 (PST)
+Received: from [192.168.178.40] ([151.20.254.94])
+        by smtp.gmail.com with ESMTPSA id f17sm13075895wrm.3.2020.03.03.05.07.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 05:07:01 -0800 (PST)
+Subject: Re: [GIT PULL] KVM changes for Linux 5.6-rc4
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Oliver Upton <oupton@google.com>
+References: <1582570669-45822-1-git-send-email-pbonzini@redhat.com>
+ <87zhcyfvmk.fsf@vitty.brq.redhat.com>
+ <8fbeb3c2-9627-bf41-d798-bafba22073e3@redhat.com>
+ <87tv35fv5t.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <9bb75cdc-961e-0d83-0546-342298517496@redhat.com>
+Date:   Tue, 3 Mar 2020 14:07:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+In-Reply-To: <87tv35fv5t.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 12:38:14PM +0100, Karel Zak wrote:
-> On Tue, Mar 03, 2020 at 10:26:21AM +0100, Miklos Szeredi wrote:
-> > No, I don't think this is going to be a performance issue at all, but
-> > if anything we could introduce a syscall
-> > 
-> >   ssize_t readfile(int dfd, const char *path, char *buf, size_t
-> > bufsize, int flags);
+On 03/03/20 14:02, Vitaly Kuznetsov wrote:
+> Right you are,
 > 
-> off-topic, but I'll buy you many many beers if you implement it ;-),
-> because open + read + close is pretty common for /sys and /proc in
-> many userspace tools; for example ps, top, lsblk, lsmem, lsns, udevd
-> etc. is all about it.
+> a big hammer like
+> 
+> diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
+> index 2a8f2bd..52c9bce 100644
+> --- a/arch/x86/include/asm/kvm_emulate.h
+> +++ b/arch/x86/include/asm/kvm_emulate.h
+> @@ -324,14 +324,6 @@ struct x86_emulate_ctxt {
+>          */
+>  
+>         /* current opcode length in bytes */
+> -       u8 opcode_len;
+> -       u8 b;
+> -       u8 intercept;
+> -       u8 op_bytes;
+> -       u8 ad_bytes;
+> -       struct operand src;
+> -       struct operand src2;
+> -       struct operand dst;
+>         union {
+>                 int (*execute)(struct x86_emulate_ctxt *ctxt);
+>                 fastop_t fop;
+> @@ -343,6 +335,14 @@ struct x86_emulate_ctxt {
+>          * or elsewhere
+>          */
+>         bool rip_relative;
+> +       u8 opcode_len;
+> +       u8 b;
+> +       u8 intercept;
+> +       u8 op_bytes;
+> +       u8 ad_bytes;
+> +       struct operand src;
+> +       struct operand src2;
+> +       struct operand dst;
+>         u8 rex_prefix;
+>         u8 lock_prefix;
+>         u8 rep_prefix;
+> 
+> seems to make the issue go away. (For those wondering why fielf
+> shuffling makes a difference: init_decode_cache() clears
+> [rip_relative, modrm) range) How did this even work before...
+> (I'm still looking at the code, stay tuned...)
 
-Unlimited beers for a 21-line kernel patch?  Sign me up!
+On AMD, probably because all these instructions were normally trapped by L1.
 
-Totally untested, barely compiled patch below.
+Of these, however, most need not be zeroed again. op_bytes, ad_bytes,
+opcode_len and b are initialized by x86_decode_insn, and dst/src/src2
+also by decode_operand.  So only intercept is affected, adding
+"ctxt->intercept = x86_intercept_none" should be enough.
 
-Actually, I like this idea (the syscall, not just the unlimited beers).
-Maybe this could make a lot of sense, I'll write some actual tests for
-it now that syscalls are getting "heavy" again due to CPU vendors
-finally paying the price for their madness...
+Paolo
 
-thanks,
-
-greg k-h
--------------------
-
-
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 44d510bc9b78..178cd45340e2 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -359,6 +359,7 @@
- 435	common	clone3			__x64_sys_clone3/ptregs
- 437	common	openat2			__x64_sys_openat2
- 438	common	pidfd_getfd		__x64_sys_pidfd_getfd
-+439	common	readfile		__x86_sys_readfile
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/fs/open.c b/fs/open.c
-index 0788b3715731..1a830fada750 100644
---- a/fs/open.c
-+++ b/fs/open.c
-@@ -1340,3 +1340,23 @@ int stream_open(struct inode *inode, struct file *filp)
- }
- 
- EXPORT_SYMBOL(stream_open);
-+
-+SYSCALL_DEFINE5(readfile, int, dfd, const char __user *, filename,
-+		char __user *, buffer, size_t, bufsize, int, flags)
-+{
-+	int retval;
-+	int fd;
-+
-+	if (force_o_largefile())
-+		flags |= O_LARGEFILE;
-+
-+	fd = do_sys_open(dfd, filename, flags, O_RDONLY);
-+	if (fd <= 0)
-+		return fd;
-+
-+	retval = ksys_read(fd, buffer, bufsize);
-+
-+	__close_fd(current->files, fd);
-+
-+	return retval;
-+}
