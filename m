@@ -2,68 +2,108 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44470C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB996C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2191E2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9355A2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:29:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D5JkWfw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbgCCP25 (ORCPT
+        id S1729943AbgCCP3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:28:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44787 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729819AbgCCP24 (ORCPT
+        Tue, 3 Mar 2020 10:29:45 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:64117 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729382AbgCCP3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:28:56 -0500
-Received: from [5.158.153.55] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j99TW-0000TZ-N3; Tue, 03 Mar 2020 16:28:50 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 6FDC3104098; Tue,  3 Mar 2020 16:28:45 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Davidlohr Bueso <dave@stgolabs.net>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] perf bench: Share 'start', 'end', 'runtime' global vars
-In-Reply-To: <20200302150914.GB28183@kernel.org>
-References: <20200302150914.GB28183@kernel.org>
-Date:   Tue, 03 Mar 2020 16:28:45 +0100
-Message-ID: <87tv35cv9u.fsf@nanos.tec.linutronix.de>
+        Tue, 3 Mar 2020 10:29:44 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583249384; h=Date: Message-Id: Cc: To: References:
+ In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
+ Content-Type: Sender; bh=DGm1tyLTMS++kedpz+qyweZ6Iu5ZVMUBPPMKBo/asTk=;
+ b=D5JkWfw3j/hNLmRe9GpLOg3GwTe7QMKsL6M5mELT3gVbn/aP43///P2km52iUBITk9QKWWLF
+ MDVlmgdJltRq7as5oH6eH1L/cC8XvNRkMUZA9zJRpUSD2U8WnRr9oInR5BtVINvaxZeLQnmP
+ sDx9ku8CU043QR32gXKJ+aUwwBI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5e77d6.7fae349aa0a0-smtp-out-n01;
+ Tue, 03 Mar 2020 15:29:26 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4C552C4479C; Tue,  3 Mar 2020 15:29:25 +0000 (UTC)
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A491FC43383;
+        Tue,  3 Mar 2020 15:29:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A491FC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] iwlwifi: pcie: restore support for Killer Qu C0 NICs
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191224051639.6904-1-jan.steffens@gmail.com>
+References: <20191224051639.6904-1-jan.steffens@gmail.com>
+To:     "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
+Cc:     Johannes Berg <johannes.berg@intel.com>,
+        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20200303152925.4C552C4479C@smtp.codeaurora.org>
+Date:   Tue,  3 Mar 2020 15:29:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> writes:
+"Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com> wrote:
 
-> Hi,
->
-> 	Noticed with gcc 10 (fedora rawhide) that those variables were
-> not being declared as static, so end up with:
->
-> ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-> ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-> ld: /tmp/build/perf/bench/epoll-wait.o:/git/perf/tools/perf/bench/epoll-wait.c:93: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-> ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `end'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-> ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `start'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-> ld: /tmp/build/perf/bench/epoll-ctl.o:/git/perf/tools/perf/bench/epoll-ctl.c:38: multiple definition of `runtime'; /tmp/build/perf/bench/futex-hash.o:/git/perf/tools/perf/bench/futex-hash.c:40: first defined here
-> make[4]: *** [/git/perf/tools/build/Makefile.build:145: /tmp/build/perf/bench/perf-in.o] Error 1
->
-> 	Just prefixing them with 'extern' in all but one (futex-hash.c)
-> seems to be enough, ok?
+> Commit 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from
+> trans_pcie_alloc to probe") refactored the cfg mangling. Unfortunately,
+> in this process the lines which picked the right cfg for Killer Qu C0
+> NICs after C0 detection were lost. These lines were added by commit
+> b9500577d361 ("iwlwifi: pcie: handle switching killer Qu B0 NICs to
+> C0").
+> 
+> I suspect this is more of the "merge damage" which commit 7cded5658329
+> ("iwlwifi: pcie: fix merge damage on making QnJ exclusive") talks about.
+> 
+> Restore the missing lines so the driver loads the right firmware for
+> these NICs.
+> 
+> Fixes: 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from trans_pcie_alloc to probe")
+> Signed-off-by: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
 
-Don't we have header files for that?
+As Luca said, this fails to apply to wireless-drivers. Please rebase and
+resend as v2.
+
+Recorded preimage for 'drivers/net/wireless/intel/iwlwifi/pcie/drv.c'
+error: Failed to merge in the changes.
+Applying: iwlwifi: pcie: restore support for Killer Qu C0 NICs
+Using index info to reconstruct a base tree...
+M	drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+Falling back to patching base and 3-way merge...
+Auto-merging drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+CONFLICT (content): Merge conflict in drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+Patch failed at 0001 iwlwifi: pcie: restore support for Killer Qu C0 NICs
+The copy of the patch that failed is found in: .git/rebase-apply/patch
+
+Patch set to Changes Requested.
+
+-- 
+https://patchwork.kernel.org/patch/11309095/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
