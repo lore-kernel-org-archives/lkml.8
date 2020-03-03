@@ -2,93 +2,112 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C4BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE12C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC37A20873
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:01:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 637A720873
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:02:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbgCCKBa (ORCPT
+        id S1728120AbgCCKCf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:01:30 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54862 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbgCCKBa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:01:30 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 1244A29556D
-Subject: Re: [PATCH] platform: chrome: cros_ec_spi: Use new structure for SPI
- transfer delays
-To:     Sergiu Cuciurean <sergiu.cuciurean@analog.com>,
-        linux-kernel@vger.kernel.org, groeck@chromium.org,
-        bleung@chromium.org
-References: <20200227140917.10131-1-sergiu.cuciurean@analog.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <37aa3520-10c9-ca3a-228c-68dec8f8a3a7@collabora.com>
-Date:   Tue, 3 Mar 2020 11:01:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 05:02:35 -0500
+Received: from mga04.intel.com ([192.55.52.120]:53097 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726694AbgCCKCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:02:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 02:02:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
+   d="scan'208";a="412691972"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga005.jf.intel.com with ESMTP; 03 Mar 2020 02:02:27 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j94Ng-006W6Q-A9; Tue, 03 Mar 2020 12:02:28 +0200
+Date:   Tue, 3 Mar 2020 12:02:28 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf@vger.kernel.org, Luke Nelson <luke.r.nels@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@gmail.com>,
+        Xi Wang <xi.wang@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH bpf-next v4 4/4] MAINTAINERS: Add entry for RV32G BPF JIT
+Message-ID: <20200303100228.GJ1224808@smile.fi.intel.com>
+References: <20200303005035.13814-1-luke.r.nels@gmail.com>
+ <20200303005035.13814-5-luke.r.nels@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200227140917.10131-1-sergiu.cuciurean@analog.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200303005035.13814-5-luke.r.nels@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergiu
+On Mon, Mar 02, 2020 at 04:50:35PM -0800, Luke Nelson wrote:
 
-On 27/2/20 15:09, Sergiu Cuciurean wrote:
-> In a recent change to the SPI subsystem [1], a new `delay` struct was added
-> to replace the `delay_usecs`. This change replaces the current
-> `delay_usecs` with `delay` for this driver.
-> 
-> The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
-> that both `delay_usecs` & `delay` are used (in this order to preserve
-> backwards compatibility).
-> 
-> [1] commit bebcfd272df6 ("spi: introduce `delay` field for
-> `spi_transfer` + spi_transfer_delay_exec()")
-> 
-> Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
-> ---
+Commit message?
 
-Applied for 5.7
+> Cc: Björn Töpel <bjorn.topel@gmail.com>
+> Signed-off-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 
->  drivers/platform/chrome/cros_ec_spi.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/cros_ec_spi.c b/drivers/platform/chrome/cros_ec_spi.c
-> index 46786d2d679a..665ab154bb4f 100644
-> --- a/drivers/platform/chrome/cros_ec_spi.c
-> +++ b/drivers/platform/chrome/cros_ec_spi.c
-> @@ -127,7 +127,8 @@ static int terminate_request(struct cros_ec_device *ec_dev)
->  	 */
->  	spi_message_init(&msg);
->  	memset(&trans, 0, sizeof(trans));
-> -	trans.delay_usecs = ec_spi->end_of_msg_delay;
-> +	trans.delay.value = ec_spi->end_of_msg_delay;
-> +	trans.delay.unit = SPI_DELAY_UNIT_NSECS;
->  	spi_message_add_tail(&trans, &msg);
+> @@ -3213,11 +3213,20 @@ L:	bpf@vger.kernel.org
+>  S:	Maintained
+>  F:	arch/powerpc/net/
 >  
->  	ret = spi_sync_locked(ec_spi->spi, &msg);
-> @@ -416,7 +417,8 @@ static int do_cros_ec_pkt_xfer_spi(struct cros_ec_device *ec_dev,
->  	spi_message_init(&msg);
->  	if (ec_spi->start_of_msg_delay) {
->  		memset(&trans_delay, 0, sizeof(trans_delay));
-> -		trans_delay.delay_usecs = ec_spi->start_of_msg_delay;
-> +		trans_delay.delay.value = ec_spi->start_of_msg_delay;
-> +		trans_delay.delay.unit = SPI_DELAY_UNIT_USECS;
->  		spi_message_add_tail(&trans_delay, &msg);
->  	}
->  
-> 
+> -BPF JIT for RISC-V (RV64G)
+> +BPF JIT for 32-bit RISC-V (RV32G)
+> +M:	Luke Nelson <luke.r.nels@gmail.com>
+> +M:	Xi Wang <xi.wang@gmail.com>
+> +L:	bpf@vger.kernel.org
+> +S:	Maintained
+> +F:	arch/riscv/net/
+> +X:	arch/riscv/net/bpf_jit_comp.c
+> +
+> +BPF JIT for 64-bit RISC-V (RV64G)
+>  M:	Björn Töpel <bjorn.topel@gmail.com>
+> -L:	netdev@vger.kernel.org
+> +L:	bpf@vger.kernel.org
+>  S:	Maintained
+>  F:	arch/riscv/net/
+> +X:	arch/riscv/net/bpf_jit_comp32.c
+
+Obviously this breaks an order. Please, fix.
+Hint: run parse-maintainers.pl after the change.
+
+>  BPF JIT for S390
+>  M:	Ilya Leoshkevich <iii@linux.ibm.com>
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
