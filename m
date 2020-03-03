@@ -2,112 +2,172 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FBAC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22D7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:35:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F8E214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:34:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583256842;
-	bh=iPOYluEY+ZO1uyD5kIymeUNRinPpcpWzEsgkKtWHXKk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=Uaa2xDt0K9OIynMB9RL+Qztk6EDyy8fuLOBAjvFMB5YRWKqyq3KWtT4ncmL2nH12O
-	 2FobfJC+Ui1Dce9GORdpV+4iNMRk+lzG1H9bK/RVnhjVuNe0foNP5yuFG/P/uYJmst
-	 QUE7dEFZxNOod7SUobKlqvQ2qnOvirdUw0so/oIY=
+	by mail.kernel.org (Postfix) with ESMTP id BB45C20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:35:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C0CwqxMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbgCCReB (ORCPT
+        id S1730490AbgCCRfd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:34:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47176 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730440AbgCCReB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:34:01 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA97A2146E;
-        Tue,  3 Mar 2020 17:33:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583256839;
-        bh=iPOYluEY+ZO1uyD5kIymeUNRinPpcpWzEsgkKtWHXKk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PssTJb+5WAlQiBvvTwCxPLcnNVAQWPTDSLFFFkPWblU0Tw3d2NnBnuKJhMGo2iJ4/
-         udmQSQKATNt7HuovAY5BY+JsaxblFdHhEW6mvR8mZgogCM+29GHHS7gJeFvKnHGXD+
-         WvRlzPNtr7KjGCMKufGhmxLDK4SNmIVSspxzoR48=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j9BQc-009jyt-0c; Tue, 03 Mar 2020 17:33:58 +0000
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Tue, 3 Mar 2020 12:35:33 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42873 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbgCCRfd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:35:33 -0500
+Received: by mail-pf1-f196.google.com with SMTP id f5so1798918pfk.9;
+        Tue, 03 Mar 2020 09:35:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=WkVh/k4rL3AX2FwgznjQ7+FIXTpn8tc0ju3LZfBvJzE=;
+        b=C0CwqxMgPLO0t7LTxrAOMa27mMm7psOycH49YjymNlK8XTM7XP87IwiEO6Xx15MT6Y
+         54xJkgXE6eeBrzDn1nudf0b74+IMfEs1qZeotkEhr4yqcDyNOx4UXDBaw+zCgmhOXk+d
+         BbgYkqghrhPhhIkVeD+RhU9M/5zsipev2qWRr1zHHLQEPnIpc142oDSKbAx1KQd0ZG+b
+         FCkiGNKfdhBhiMb/ok8hNMlPY1V37Bi8fb8DMm9yxE02CA9LZ9AHQw4+fYS5ae9HeQ0C
+         GZInhJCdvntiq6QgA9XrOM5KI4MbQkceXY8MgLkCT+7jE2+WHpsk04z878EJA2xJLYC8
+         uOTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=WkVh/k4rL3AX2FwgznjQ7+FIXTpn8tc0ju3LZfBvJzE=;
+        b=HSt+H+e3C/VtcLbTXZU4Wbhuik77KkO0Xo4wOFfWEg7ULYzZXTKBqcUP6O1qgAAA/3
+         gHZoxZHBGhAompEm/q9B+ds4EI8mVOIeDov+iQkuz+ut/4A1Toxtm38g3sEB37Hu6uEl
+         fiV5bzofAhsMhuhsg6/DlbMPXdiOHA1yUV04/WNtSYmDPSLSFAycYY1e48SKvml3baLv
+         Iwr24iY7GTikVszJua34idNyNBemZXxsMn8RxJsd+JFxrhjl/m2AeCZoYWQzxmal+Dfy
+         /wN7lf1Jjzae9damwlHxl1VAlQyeT96fJcgcTOQzF5grpz232TtvHhdMFv5cb2bHZTE+
+         4u4Q==
+X-Gm-Message-State: ANhLgQ2qZX/9GkNrRlYGh55wUTvJsgljG+kWHPXqHj9IjWtCgIgjjjWW
+        hlG5kTEnR0z3cZrZ4pKWNtM=
+X-Google-Smtp-Source: ADFU+vvvqd3vmlVlsDufe2JJfg3YSdlTz7lAbXvviZbOmybYyAEswHgziCWsVBzZBQ9j9KCyehM5lQ==
+X-Received: by 2002:aa7:9815:: with SMTP id e21mr5375233pfl.174.1583256930511;
+        Tue, 03 Mar 2020 09:35:30 -0800 (PST)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id f1sm3045463pjq.31.2020.03.03.09.35.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 09:35:29 -0800 (PST)
+Date:   Tue, 03 Mar 2020 09:35:22 -0800
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>, john.fastabend@gmail.com,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <5e5e955a27139_60e72b06ba14c5bc67@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200228115344.17742-2-lmb@cloudflare.com>
+References: <20200228115344.17742-1-lmb@cloudflare.com>
+ <20200228115344.17742-2-lmb@cloudflare.com>
+Subject: RE: [PATCH bpf-next v2 1/9] bpf: sockmap: only check ULP for TCP
+ sockets
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 03 Mar 2020 17:33:57 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Joerg Roedel <jroedel@suse.de>,
-        Eric Auger <eric.auger@redhat.com>,
-        Will Deacon <will@kernel.org>, stable@vger.kernel.org
-Subject: Re: [PATCH] iommu/dma: Fix MSI reservation allocation
-In-Reply-To: <f0fc18a5-17a9-4c53-052b-00272bbd2691@arm.com>
-References: <20200303115154.32263-1-maz@kernel.org>
- <f0fc18a5-17a9-4c53-052b-00272bbd2691@arm.com>
-Message-ID: <dd29d82badfa11f7c0c80563d1b38804@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, jroedel@suse.de, eric.auger@redhat.com, will@kernel.org, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-03-03 17:23, Robin Murphy wrote:
-> On 03/03/2020 11:51 am, Marc Zyngier wrote:
->> The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
->> structures doesn't match the way iommu_put_dma_cookie() frees them.
->> 
->> The former performs a single allocation of all the required 
->> structures,
->> while the latter tries to free them one at a time. It doesn't quite
->> work for the main use case (the GICv3 ITS where the range is 64kB)
->> when the base ganule size is 4kB.
->> 
->> This leads to a nice slab corruption on teardown, which is easily
->> observable by simply creating a VF on a SRIOV-capable device, and
->> tearing it down immediately (no need to even make use of it).
->> 
->> Fix it by allocating iommu_dma_msi_page structures one at a time.
+Lorenz Bauer wrote:
+> The sock map code checks that a socket does not have an active upper
+> layer protocol before inserting it into the map. This requires casting
+> via inet_csk, which isn't valid for UDP sockets.
 > 
-> Bleh, you know you're supposed to be using 64K pages on those things, 
-> right? :P
-
-lalalala... ;-)
-
-[...]
-
->> +		if (!msi_page) {
->> +			ret = -ENOMEM;
+> Guard checks for ULP by checking inet_sk(sk)->is_icsk first.
 > 
-> I think we can just return here and skip the cleanup below - by the
-> time we get here the cookie itself has already been allocated and
-> initialised, so even if iommu_dma_init_domain() fails someone else has
-> already accepted the responsibility of calling iommu_put_dma_cookie()
-> at some point later, which will clean up properly.
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> ---
+>  include/linux/skmsg.h |  8 +++++++-
+>  net/core/sock_map.c   | 11 +++++++----
+>  2 files changed, 14 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+> index 112765bd146d..54a9a3e36b29 100644
+> --- a/include/linux/skmsg.h
+> +++ b/include/linux/skmsg.h
+> @@ -360,7 +360,13 @@ static inline void sk_psock_restore_proto(struct sock *sk,
+>  					  struct sk_psock *psock)
+>  {
+>  	sk->sk_prot->unhash = psock->saved_unhash;
+> -	tcp_update_ulp(sk, psock->sk_proto, psock->saved_write_space);
+> +	if (inet_sk(sk)->is_icsk) {
 
-Ah, that's a very good point. I'll refresh the patch with a simplified
-error handling.
+use sock_map_sk_has_ulp() here as well and then drop the !icsk->icsk_ulp_ops
+case in tcp_update_ulp()?
 
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> +		tcp_update_ulp(sk, psock->sk_proto, psock->saved_write_space);
+> +	} else {
+> +		sk->sk_write_space = psock->saved_write_space;
+> +		/* Pairs with lockless read in sk_clone_lock() */
+> +		WRITE_ONCE(sk->sk_prot, psock->sk_proto);
+> +	}
+>  }
+>  
+>  static inline void sk_psock_set_state(struct sk_psock *psock,
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index 2e0f465295c3..695ecacc7afa 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -94,6 +94,11 @@ static void sock_map_sk_release(struct sock *sk)
+>  	release_sock(sk);
+>  }
+>  
+> +static bool sock_map_sk_has_ulp(struct sock *sk)
+> +{
+> +	return inet_sk(sk)->is_icsk && !!inet_csk(sk)->icsk_ulp_ops;
+> +}
+> +
+>  static void sock_map_add_link(struct sk_psock *psock,
+>  			      struct sk_psock_link *link,
+>  			      struct bpf_map *map, void *link_raw)
+> @@ -384,7 +389,6 @@ static int sock_map_update_common(struct bpf_map *map, u32 idx,
+>  				  struct sock *sk, u64 flags)
+>  {
+>  	struct bpf_stab *stab = container_of(map, struct bpf_stab, map);
+> -	struct inet_connection_sock *icsk = inet_csk(sk);
+>  	struct sk_psock_link *link;
+>  	struct sk_psock *psock;
+>  	struct sock *osk;
+> @@ -395,7 +399,7 @@ static int sock_map_update_common(struct bpf_map *map, u32 idx,
+>  		return -EINVAL;
+>  	if (unlikely(idx >= map->max_entries))
+>  		return -E2BIG;
+> -	if (unlikely(rcu_access_pointer(icsk->icsk_ulp_data)))
+> +	if (sock_map_sk_has_ulp(sk))
+>  		return -EINVAL;
+>  
+>  	link = sk_psock_init_link();
+> @@ -738,7 +742,6 @@ static int sock_hash_update_common(struct bpf_map *map, void *key,
+>  				   struct sock *sk, u64 flags)
+>  {
+>  	struct bpf_htab *htab = container_of(map, struct bpf_htab, map);
+> -	struct inet_connection_sock *icsk = inet_csk(sk);
+>  	u32 key_size = map->key_size, hash;
+>  	struct bpf_htab_elem *elem, *elem_new;
+>  	struct bpf_htab_bucket *bucket;
+> @@ -749,7 +752,7 @@ static int sock_hash_update_common(struct bpf_map *map, void *key,
+>  	WARN_ON_ONCE(!rcu_read_lock_held());
+>  	if (unlikely(flags > BPF_EXIST))
+>  		return -EINVAL;
+> -	if (unlikely(icsk->icsk_ulp_data))
+> +	if (sock_map_sk_has_ulp(sk))
+>  		return -EINVAL;
+>  
+>  	link = sk_psock_init_link();
+> -- 
+> 2.20.1
+> 
