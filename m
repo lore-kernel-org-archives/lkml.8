@@ -2,185 +2,166 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65EFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E232C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B95214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:39:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LRDv2LFk"
+	by mail.kernel.org (Postfix) with ESMTP id 2E285205ED
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:40:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbgCCJjM (ORCPT
+        id S1728207AbgCCJkQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:39:12 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:60048 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727791AbgCCJjL (ORCPT
+        Tue, 3 Mar 2020 04:40:16 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35416 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgCCJkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:39:11 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0239Y00N124318;
-        Tue, 3 Mar 2020 09:38:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=MSC4Wtn4COvNsRCEoK0KFvQBDjOBfSLVQcEKZQ8ZTdg=;
- b=LRDv2LFkdT7WCfr+9xjf73IV/JlTN3jptGTipndciOQdpCVMP7EWMeE9e4b88WUmJeyk
- R/Zwo9JQkFXNZHjQhqMNwG93G1vIBc4ktNcpGGE5ktgN6Wm0BI0OhWOnd66z7MW1bCeE
- 5Vv3pd+ZgATHDhU9h25gMWfU6SCAFq9S6xnYYZX1qRJsHpPUQJeKRb6QMXOn2gqN1yKG
- sC+p5vKAv2iq56Z399oxI2nnU92nxWcDWFipLJsdO3Z77GaHv8W3f5UN4D1yVgRwiEKR
- HhsBVUBpobfztgQwQZYZxQiNtqGxH/xnPgjvW6QBPXpvCrveJxBiB84SSdim0ospP/Oh TQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by aserp2120.oracle.com with ESMTP id 2yffwqnrcg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 09:38:53 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0239WZvP182796;
-        Tue, 3 Mar 2020 09:38:52 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2yg1eka3kp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 09:38:52 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0239cjrk013071;
-        Tue, 3 Mar 2020 09:38:45 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 01:38:44 -0800
-Date:   Tue, 3 Mar 2020 12:38:32 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     Joe Perches <joe@perches.com>,
-        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dmitriy Vyukov <dvyukov@google.com>,
-        Todd Kjos <tkjos@google.com>
-Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to
- copy_from_user()
-Message-ID: <20200303093832.GD24372@kadam>
-References: <20200302130430.201037-1-glider@google.com>
- <20200302130430.201037-2-glider@google.com>
- <0eaac427354844a4fcfb0d9843cf3024c6af21df.camel@perches.com>
- <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com>
- <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
- <CAG_fn=XOyPGau9m7x8eCLJHy3m-H=nbMODewWVJ1xb2e+BPdFw@mail.gmail.com>
- <18b0d6ea5619c34ca4120a6151103dbe9bfa0cbe.camel@perches.com>
- <CAG_fn=U2T--j_uhyppqzFvMO3w3yUA529pQrCpbhYvqcfh9Z1w@mail.gmail.com>
+        Tue, 3 Mar 2020 04:40:16 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c7so3510851edu.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:40:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=OFAbsG5HWoclZnIV9XPSSAk6vvgxrvs2Q+JEJtUgXFk=;
+        b=mgg3I5gwzgI49ZeZGd4YWVDz8HmUo6mc1Z/+cAPN2MZh0Bqmc9/d4BIYYZ77APAcI+
+         nDaIx3oYH7h8Xi1ZKwcp1ewy0QxsFStYRFyi76HMRwd8D3cM1lad+doH9nU/nOoqZOHZ
+         mK/N7Y11V7TStciicF03I/KlX1eaMSaES30LH7QDkTCIXbD6At4O3I7esngnGVFSGwsH
+         8gF7ZDOwRF5Jv4KvF1BHnObcUUQD8/CvlL7Af90M8JLC2zbFfV1f2KaT39mxH76+NBRu
+         KE6JWrkjSmdFEQ1l5pmuRE7G11pvixJEi0MbeOwqcguOl77mOYYxpeSNmAaU1BlGV5OT
+         G7bg==
+X-Gm-Message-State: ANhLgQ2Zy4BSj8T4tvHf/DZiorS4uvPRkY256/CSuuKzntYq+QCNS+I/
+        W5opwad7/SVLrDZddiA9evc=
+X-Google-Smtp-Source: ADFU+vuvCABIgf24/A76cqarmO4ZugUlsKnKjfR5jFhZiMNvhDgJXuovr2UJd+Y/XJd07YnfcQ6eUg==
+X-Received: by 2002:a17:906:81ca:: with SMTP id e10mr1193257ejx.157.1583228414697;
+        Tue, 03 Mar 2020 01:40:14 -0800 (PST)
+Received: from a483e7b01a66.ant.amazon.com (54-240-197-230.amazon.com. [54.240.197.230])
+        by smtp.gmail.com with ESMTPSA id dx3sm163244ejb.0.2020.03.03.01.40.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 01:40:13 -0800 (PST)
+Subject: Re: [Xen-devel] [PATCH 1/2] xenbus: req->body should be updated
+ before req->state
+To:     Dongli Zhang <dongli.zhang@oracle.com>,
+        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
+Cc:     jgross@suse.com, boris.ostrovsky@oracle.com,
+        sstabellini@kernel.org, joe.jin@oracle.com
+References: <20200303015859.18813-1-dongli.zhang@oracle.com>
+From:   Julien Grall <julien@xen.org>
+Message-ID: <2f175c30-b6b9-5f21-6cf3-2ee89e0c475e@xen.org>
+Date:   Tue, 3 Mar 2020 09:40:12 +0000
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAG_fn=U2T--j_uhyppqzFvMO3w3yUA529pQrCpbhYvqcfh9Z1w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030074
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030074
+In-Reply-To: <20200303015859.18813-1-dongli.zhang@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:14:18AM +0100, Alexander Potapenko wrote:
-> On Mon, Mar 2, 2020 at 7:51 PM Joe Perches <joe@perches.com> wrote:
-> >
-> > On Mon, 2020-03-02 at 19:17 +0100, Alexander Potapenko wrote:
-> > > On Mon, Mar 2, 2020 at 3:00 PM Joe Perches <joe@perches.com> wrote:
-> > > > On Mon, 2020-03-02 at 14:25 +0100, Alexander Potapenko wrote:
-> > > > > On Mon, Mar 2, 2020 at 2:11 PM Joe Perches <joe@perches.com> wrote:
-> > > > > > On Mon, 2020-03-02 at 14:04 +0100, glider@google.com wrote:
-> > > > > > > Certain copy_from_user() invocations in binder.c are known to
-> > > > > > > unconditionally initialize locals before their first use, like e.g. in
-> > > > > > > the following case:
-> > > > > > []
-> > > > > > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
-> > > > > > []
-> > > > > > > @@ -3788,7 +3788,7 @@ static int binder_thread_write(struct binder_proc *proc,
-> > > > > > >
-> > > > > > >               case BC_TRANSACTION_SG:
-> > > > > > >               case BC_REPLY_SG: {
-> > > > > > > -                     struct binder_transaction_data_sg tr;
-> > > > > > > +                     struct binder_transaction_data_sg tr __no_initialize;
-> > > > > > >
-> > > > > > >                       if (copy_from_user(&tr, ptr, sizeof(tr)))
-> > > > > >
-> > > > > > I fail to see any value in marking tr with __no_initialize
-> > > > > > when it's immediately written to by copy_from_user.
-> > > > >
-> > > > > This is being done exactly because it's immediately written to by copy_to_user()
-> > > > > Clang is currently unable to figure out that copy_to_user() initializes memory.
-> > > > > So building the kernel with CONFIG_INIT_STACK_ALL=y basically leads to
-> > > > > the following code:
-> > > > >
-> > > > >   struct binder_transaction_data_sg tr;
-> > > > >   memset(&tr, 0xAA, sizeof(tr));
-> > > > >   if (copy_from_user(&tr, ptr, sizeof(tr))) {...}
-> > > > >
-> > > > > This unnecessarily slows the code down, so we add __no_initialize to
-> > > > > prevent the compiler from emitting the redundant initialization.
-> > > >
-> > > > So?  CONFIG_INIT_STACK_ALL by design slows down code.
-> > > Correct.
-> > >
-> > > > This marking would likely need to be done for nearly all
-> > > > 3000+ copy_from_user entries.
-> > > Unfortunately, yes. I was just hoping to do so for a handful of hot
-> > > cases that we encounter, but in the long-term a compiler solution must
-> > > supersede them.
-> > >
-> > > > Why not try to get something done on the compiler side
-> > > > to mark the function itself rather than the uses?
-> > > This is being worked on in the meantime as well (see
-> > > http://lists.llvm.org/pipermail/cfe-dev/2020-February/064633.html)
-> > > Do you have any particular requisitions about how this should look on
-> > > the source level?
-> >
-> > I presume something like the below when appropriate for
-> > automatic variables when not already initialized or modified.
-> > ---
-> >  include/linux/uaccess.h | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> > index 8a215c..3e034b5 100644
-> > --- a/include/linux/uaccess.h
-> > +++ b/include/linux/uaccess.h
-> > @@ -138,7 +138,8 @@ _copy_to_user(void __user *, const void *, unsigned long);
-> >  #endif
-> >
-> >  static __always_inline unsigned long __must_check
-> > -copy_from_user(void *to, const void __user *from, unsigned long n)
-> > +copy_from_user(void __no_initialize *to, const void __user *from,
-> > +              unsigned long n)
+Hi,
+
+On 03/03/2020 01:58, Dongli Zhang wrote:
+> The req->body should be updated before req->state is updated and the
+> order should be guaranteed by a barrier.
 > 
-> Shall this __no_initialize attribute denote that the whole object
-> passed to it is initialized?
-> Or do we need to encode the length as well, as Jann suggests?
-> It's also interesting what should happen if *to is pointing _inside_ a
-> local object - presumably it's unsafe to disable initialization for
-> the whole object.
+> Otherwise, read_reply() might return req->body = NULL.
+> 
+> Below is sample callstack when the issue is reproduced on purpose by
+> reordering the updates of req->body and req->state and adding delay in
+> code between updates of req->state and req->body.
+> 
+> [   22.356105] general protection fault: 0000 [#1] SMP PTI
+> [   22.361185] CPU: 2 PID: 52 Comm: xenwatch Not tainted 5.5.0xen+ #6
+> [   22.366727] Hardware name: Xen HVM domU, BIOS ...
+> [   22.372245] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
+> ... ...
+> [   22.392163] RSP: 0018:ffffb2d64023fdf0 EFLAGS: 00010246
+> [   22.395933] RAX: 0000000000000000 RBX: 75746e7562755f6d RCX: 0000000000000000
+> [   22.400871] RDX: 0000000000000000 RSI: ffffb2d64023fdfc RDI: 75746e7562755f6d
+> [   22.405874] RBP: 0000000000000000 R08: 00000000000001e8 R09: 0000000000cdcdcd
+> [   22.410945] R10: ffffb2d6402ffe00 R11: ffff9d95395eaeb0 R12: ffff9d9535935000
+> [   22.417613] R13: ffff9d9526d4a000 R14: ffff9d9526f4f340 R15: ffff9d9537654000
+> [   22.423726] FS:  0000000000000000(0000) GS:ffff9d953bc80000(0000) knlGS:0000000000000000
+> [   22.429898] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [   22.434342] CR2: 000000c4206a9000 CR3: 00000001ea3fc002 CR4: 00000000001606e0
+> [   22.439645] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [   22.444941] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [   22.450342] Call Trace:
+> [   22.452509]  simple_strtoull+0x27/0x70
+> [   22.455572]  xenbus_transaction_start+0x31/0x50
+> [   22.459104]  netback_changed+0x76c/0xcc1 [xen_netfront]
+> [   22.463279]  ? find_watch+0x40/0x40
+> [   22.466156]  xenwatch_thread+0xb4/0x150
+> [   22.469309]  ? wait_woken+0x80/0x80
+> [   22.472198]  kthread+0x10e/0x130
+> [   22.474925]  ? kthread_park+0x80/0x80
+> [   22.477946]  ret_from_fork+0x35/0x40
+> [   22.480968] Modules linked in: xen_kbdfront xen_fbfront(+) xen_netfront xen_blkfront
+> [   22.486783] ---[ end trace a9222030a747c3f7 ]---
+> [   22.490424] RIP: 0010:_parse_integer_fixup_radix+0x6/0x60
+> 
+> The "while" is changed to "do while" so that wait_event() is used as a
+> barrier.
 
-The real fix is to initialize everything manually, the automated
-initialization is a hardenning feature which many people will disable.
-So I don't think the hardenning needs to be perfect, it needs to simple
-and fast.
+The correct barrier for read_reply() should be virt_rmb(). While on x86, 
+this is equivalent to barrier(), on Arm this will be a dmb(ish) to 
+prevent the processor re-ordering memory access.
 
-regards,
-dan carpenter
+Therefore the barrier in test_reply() (called by wait_event()) is not 
+going to be sufficient for Arm.
+
+> 
+> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---
+>   drivers/xen/xenbus/xenbus_comms.c | 2 ++
+>   drivers/xen/xenbus/xenbus_xs.c    | 4 ++--
+>   2 files changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/xen/xenbus/xenbus_comms.c b/drivers/xen/xenbus/xenbus_comms.c
+> index d239fc3c5e3d..852ed161fc2a 100644
+> --- a/drivers/xen/xenbus/xenbus_comms.c
+> +++ b/drivers/xen/xenbus/xenbus_comms.c
+> @@ -313,6 +313,8 @@ static int process_msg(void)
+>   			req->msg.type = state.msg.type;
+>   			req->msg.len = state.msg.len;
+>   			req->body = state.body;
+> +			/* write body, then update state */
+> +			virt_wmb();
+>   			req->state = xb_req_state_got_reply;
+>   			req->cb(req);
+>   		} else
+> diff --git a/drivers/xen/xenbus/xenbus_xs.c b/drivers/xen/xenbus/xenbus_xs.c
+> index ddc18da61834..f5b0a6a72ad3 100644
+> --- a/drivers/xen/xenbus/xenbus_xs.c
+> +++ b/drivers/xen/xenbus/xenbus_xs.c
+> @@ -202,7 +202,7 @@ static bool test_reply(struct xb_req_data *req)
+>   
+>   static void *read_reply(struct xb_req_data *req)
+>   {
+> -	while (req->state != xb_req_state_got_reply) {
+> +	do {
+>   		wait_event(req->wq, test_reply(req));
+>   
+>   		if (!xenbus_ok())
+> @@ -216,7 +216,7 @@ static void *read_reply(struct xb_req_data *req)
+>   		if (req->err)
+>   			return ERR_PTR(req->err);
+>   
+> -	}
+> +	} while (req->state != xb_req_state_got_reply);
+>   
+>   	return req->body;
+>   }
+> 
+
+Cheers,
+
+-- 
+Julien Grall
