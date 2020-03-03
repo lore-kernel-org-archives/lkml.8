@@ -2,106 +2,155 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8640C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A68F3C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8430F206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:57:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F02D20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:01:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KiNfiBVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729122AbgCCL5D (ORCPT
+        id S1729133AbgCCMBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 06:57:03 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:39494 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgCCL5D (ORCPT
+        Tue, 3 Mar 2020 07:01:31 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:57746 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728350AbgCCMBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 06:57:03 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j96AO-0000th-AQ; Tue, 03 Mar 2020 11:56:52 +0000
-Date:   Tue, 3 Mar 2020 12:56:51 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200303115651.j5q7bsvzu5mstgw4@wittgenstein>
-References: <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303100045.zqntjjjv6npvs5zl@wittgenstein>
- <CAJfpegu_O=wQsewDWdM39dhkrEoMPG4ZBkTQOsWTgFnYmvrLeA@mail.gmail.com>
- <20200303102541.diud7za3vvjvqco4@wittgenstein>
- <CAJfpegu7CTmE8XfL-Oqp3KkjJNU5FM+VJxohFfK9dO+xnJAdYA@mail.gmail.com>
+        Tue, 3 Mar 2020 07:01:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=dWv1/bBladFHP1191u4sCJNLli40QRaahI/ayU7p77I=; b=KiNfiBVt6HQO9gSIvJQ7lyfg0v
+        gFgfulIeck8mNbXrqyOWoazcwb+/WM2ieo8XFFNFrhjbHzZFV4Xv4W/tzoNl6LUKpdI9rggJqJW9Q
+        W4eeVniRdXkkGD8QKZdJ6pz5j75q+5yvJJsEzssJLID6qOS2js/pJslU6Up3JhDF7LBL8Jd1QpYzW
+        LIMCkCIQCANCTVDjf3fuSGc+bht1bOQ1m+bNUd6O7ishBLLwLZ/kjWCmdTu56Jq6DJFK5PQ/MlCT5
+        tgtgGrLcE2v0DuVOk/v2/fiRdsfeFTfRmOV5NBjXp32p+WhHIEL0w647W/barpo9ST1Qvlau6eNC0
+        zSaLq2ig==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j96EI-0003q5-0r; Tue, 03 Mar 2020 12:00:54 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B651A30110E;
+        Tue,  3 Mar 2020 12:58:52 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B61C2203E9E26; Tue,  3 Mar 2020 13:00:50 +0100 (CET)
+Date:   Tue, 3 Mar 2020 13:00:50 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>,
+        linux-kernel@vger.kernel.org, kernel@collabora.com,
+        krisman@collabora.com, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
+        ryao@gentoo.org, dvhart@infradead.org, mingo@redhat.com,
+        z.figura12@gmail.com, steven@valvesoftware.com,
+        steven@liquorix.net, malteskarupke@web.de, carlos@redhat.com,
+        adhemerval.zanella@linaro.org, fweimer@redhat.com,
+        libc-alpha@sourceware.org
+Subject: 'simple' futex interface [Was: [PATCH v3 1/4] futex: Implement
+ mechanism to wait on any of several futexes]
+Message-ID: <20200303120050.GC2596@hirez.programming.kicks-ass.net>
+References: <20200213214525.183689-1-andrealmeid@collabora.com>
+ <20200213214525.183689-2-andrealmeid@collabora.com>
+ <20200228190717.GM18400@hirez.programming.kicks-ass.net>
+ <20200228194958.GO14946@hirez.programming.kicks-ass.net>
+ <87tv3aflqm.fsf@nanos.tec.linutronix.de>
+ <967d5047-2cb6-d6d8-6107-edb99a4c9696@valvesoftware.com>
+ <87o8thg031.fsf@nanos.tec.linutronix.de>
+ <beb82055-96fa-cb64-a06e-9d7a0946587b@valvesoftware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJfpegu7CTmE8XfL-Oqp3KkjJNU5FM+VJxohFfK9dO+xnJAdYA@mail.gmail.com>
+In-Reply-To: <beb82055-96fa-cb64-a06e-9d7a0946587b@valvesoftware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 12:33:48PM +0100, Miklos Szeredi wrote:
-> On Tue, Mar 3, 2020 at 11:25 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > On Tue, Mar 03, 2020 at 11:13:50AM +0100, Miklos Szeredi wrote:
-> > > On Tue, Mar 3, 2020 at 11:00 AM Christian Brauner
-> > > <christian.brauner@ubuntu.com> wrote:
-> 
-> > > > More magic links to beam you around sounds like a bad idea. We had a
-> > > > bunch of CVEs around them in containers and they were one of the major
-> > > > reasons behind us pushing for openat2(). That's why it has a
-> > > > RESOLVE_NO_MAGICLINKS flag.
-> > >
-> > > No, that link wouldn't beam you around at all, it would end up in an
-> > > internally mounted instance of a mountfs, a safe place where no
-> >
-> > Even if it is a magic link to a safe place it's a magic link. They
-> > aren't a great solution to this problem. fsinfo() is cleaner and
-> > simpler as it creates a context for a supervised mount which gives the a
-> > managing application fine-grained control and makes it easily
-> > extendable.
-> 
-> Yeah, it's a nice and clean interface in the ioctl(2) sense. Sure,
-> fsinfo() is way better than ioctl(), but it at the core it's still the
-> same syscall multiplexer, do everything hack.
+Hi All,
 
-In contrast to a generic ioctl() it's a domain-specific separate
-syscall. You can't suddenly set kvm options through fsinfo() I would
-hope. I find it at least debatable that a new filesystem is preferable.
-And - feel free to simply dismiss the concerns I expressed - so far
-there has not been a lot of excitement about this idea.
+Added some people harvested from glibc.git and added libc-alpha.
 
-> 
-> > Also, we're apparently at the point where it seems were suggesting
-> > another (pseudo)filesystem to get information about filesystems.
-> 
-> Implementation detail.  Why would you care?
+We currently have 2 big new futex features proposed, and still have the
+whole NUMA thing on the table.
 
-I wouldn't call this an implementation detail. That's quite a big
-design choice; it's a separate fileystem. In addition, implementation
-details need to be maintained.
+The proposed features are:
 
-Christian
+ - a vectored FUTEX_WAIT (as per the parent thread); allows userspace to
+   wait on up-to 128 futex values.
+
+ - multi-size (8,16,32) futexes (WAIT,WAKE,CMP_REQUEUE).
+
+Both these features are specific to the 'simple' futex interfaces, that
+is, they exclude all the PI / robust stuff.
+
+As is; the vectored WAIT doesn't nicely interact with the multi-size
+proposal (or for that matter with the already existing PRIVATE flag),
+for not allowing to specify flags per WAIT instance, but this should be
+fixable with some little changes to the proposed ABI.
+
+The much bigger sticking point; as already noticed by the multi-size
+patches; is that the current ABI is a limiting factor. The giant
+horrible syscall.
+
+Now, we have a whole bunch of futex ops that are already gone (FD) or
+are fundamentally broken (REQUEUE) or partially weird (WAIT_BITSET has
+CLOCK selection where WAIT does not) or unused (per glibc, WAKE_OP,
+WAKE_BITSET, WAIT_BITSET (except for that CLOCK crud)).
+
+So how about we introduce new syscalls:
+
+  sys_futex_wait(void *uaddr, unsigned long val, unsigned long flags, ktime_t *timo);
+
+  struct futex_wait {
+	void *uaddr;
+	unsigned long val;
+	unsigned long flags;
+  };
+  sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
+		  unsigned long flags, ktime_t *timo);
+
+  sys_futex_wake(void *uaddr, unsigned int nr, unsigned long flags);
+
+  sys_futex_cmp_requeue(void *uaddr1, void *uaddr2, unsigned int nr_wake,
+			unsigned int nr_requeue, unsigned long cmpval, unsigned long flags);
+
+Where flags:
+
+  - has 2 bits for size: 8,16,32,64
+  - has 2 more bits for size (requeue) ??
+  - has ... bits for clocks
+  - has private/shared
+  - has numa
+
+
+This does not provide BITSET functionality, as I found no use in glibc.
+Both wait and wake have arguments left, do we needs this?
+
+For NUMA I propose that when NUMA_FLAG is set, uaddr-4 will be 'int
+node_id', with the following semantics:
+
+ - on WAIT, node_id is read and when 0 <= node_id <= nr_nodes, is
+   directly used to index into per-node hash-tables. When -1, it is
+   replaced by the current node_id and an smp_mb() is issued before we
+   load and compare the @uaddr.
+
+ - on WAKE/REQUEUE, it is an immediate index.
+
+Any invalid value with result in EINVAL.
+
+
+Then later, we can look at doing sys_futex_{,un}lock_{,pi}(), which have
+all the mind-meld associated with robust and PI and possibly optimistic
+spinning etc.
+
+Opinions?
