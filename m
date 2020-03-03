@@ -2,140 +2,72 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291A0C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:04:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD22C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0F8A215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:04:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="DTLtzuz7"
+	by mail.kernel.org (Postfix) with ESMTP id 1AA5A20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:05:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbgCCQET (ORCPT
+        id S1730226AbgCCQFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:04:19 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:38623 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729543AbgCCQET (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:04:19 -0500
-Received: by mail-il1-f196.google.com with SMTP id f5so3211716ilq.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:04:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=XNptDHf3B9MrspnBaDkgfKgyPkZSg0/a7ZTbis3qJW4=;
-        b=DTLtzuz7Dp0xKxV+FonbxARhkpLzpHhck+yNDuY7gHlYzctkaPgZqQJP/udCFnPwb4
-         sHkly8itVnmxHs52SD803yQKTlfO4VqBM0hq42zIEhz6mL8ELRE/UsVSHsp/5HdgK9tx
-         xUuAUdTvNIpafnczzNKn0yOEY8cs7NUc0orIgDf9XUSr0MhJA2NQGgIVkgb3h8JtR+F1
-         uSKNe3KfTroRIHwmuU1xm2ABSfemzBy2nZQl+ysZc6RQkJ9n6iIImNpO8WIe2CEZLdGa
-         HTtdvp6Uu5pbtdEOtRHRKJq/PJXLVRnqBRZbyvse3nPc8ltRUYsurqjDJTUsAk1ay39z
-         f3GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XNptDHf3B9MrspnBaDkgfKgyPkZSg0/a7ZTbis3qJW4=;
-        b=Ibth6r4NS0rpTB5xOryctjgXIp/vpmfzGYQhhpWXq9pQUPX0+NjJqsni5MtZPrvWdf
-         3XYdwPQJZUxrZm4ySo5JeTEgDn2m37dW6kl/nuT666dd1EO68jI4CRkWx/wJcYDsczZ8
-         lB+CYAP/ixBOHT+uiUVIWwv7Ob71yw7TF5HjNoCmXloK+NZru6B5Ka3zyy+MG+S4qrTX
-         HtJCB7JH/lEb8VCrByMXYRPLPBIVeP77HXNpDuUDWr8xuhz8wVW0TAyg37qsEG8YpdEn
-         3sh7b7xYjfVCbFQu8k4D1zw9M6dPOH2zxaXJ5d0MxQMgpdp2mS/q3w8HDJnm9AdDKPiM
-         tFyQ==
-X-Gm-Message-State: ANhLgQ3TvWrgXWS02LLFtrJkTmeDj1vYb3lPstv5NntXQydyJD3bqpia
-        A/sPg/O0iKmtm8Tp7g47GPoSMqb+1tE=
-X-Google-Smtp-Source: ADFU+vu6PipftNRJq0p/JIHkf9QKrsEkxQTEizleEIbWFUvIukFuGzs0v5q/jcYySuktXSmLO0DySg==
-X-Received: by 2002:a92:9c52:: with SMTP id h79mr5150905ili.213.1583251457276;
-        Tue, 03 Mar 2020 08:04:17 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id c12sm7991082ile.12.2020.03.03.08.04.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 08:04:16 -0800 (PST)
-Subject: Re: [PATCH v2 4/4] io_uring: get next req on subm ref drop
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        Tue, 3 Mar 2020 11:05:05 -0500
+Received: from gentwo.org ([3.19.106.255]:43296 "EHLO gentwo.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728714AbgCCQFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:05:04 -0500
+Received: by gentwo.org (Postfix, from userid 1002)
+        id EACA73F1C0; Tue,  3 Mar 2020 16:05:03 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id E968E3EECA;
+        Tue,  3 Mar 2020 16:05:03 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 16:05:03 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Roman Gushchin <guro@fb.com>
+cc:     Wen Yang <wenyang@linux.alibaba.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Xunlei Pang <xlpang@linux.alibaba.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-References: <cover.1583181841.git.asml.silence@gmail.com>
- <444aef98f849d947d7f10e88f30244fa0bc82360.1583181841.git.asml.silence@gmail.com>
- <3ab75953-ee39-2c4e-99e2-f8c18ceb6a8d@kernel.dk>
- <52b282f5-50f3-2ee6-a055-6ef0c2c39e93@gmail.com>
- <9ead66eb-cb5d-2dab-1a78-02466958674a@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <153662f4-0ab9-8dac-1577-0df1ce35f320@kernel.dk>
-Date:   Tue, 3 Mar 2020 09:04:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+Subject: Re: [PATCH] mm/slub: improve count_partial() for
+ CONFIG_SLUB_CPU_PARTIAL
+In-Reply-To: <20200227183519.GA50628@carbon.dhcp.thefacebook.com>
+Message-ID: <alpine.DEB.2.21.2003031602460.1537@www.lameter.com>
+References: <20200222092428.99488-1-wenyang@linux.alibaba.com> <alpine.DEB.2.21.2002240126190.13486@www.lameter.com> <20200224165750.GA478187@carbon.dhcp.thefacebook.com> <alpine.DEB.2.21.2002261827440.8012@www.lameter.com>
+ <20200227183519.GA50628@carbon.dhcp.thefacebook.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <9ead66eb-cb5d-2dab-1a78-02466958674a@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 3:46 AM, Pavel Begunkov wrote:
-> On 3/3/2020 9:54 AM, Pavel Begunkov wrote:
->> On 03/03/2020 07:26, Jens Axboe wrote:
->>> On 3/2/20 1:45 PM, Pavel Begunkov wrote:
->>>> Get next request when dropping the submission reference. However, if
->>>> there is an asynchronous counterpart (i.e. read/write, timeout, etc),
->>>> that would be dangerous to do, so ignore them using new
->>>> REQ_F_DONT_STEAL_NEXT flag.
->>>
->>> Hmm, not so sure I like this one. It's not quite clear to me where we
->>> need REQ_F_DONT_STEAL_NEXT. If we have an async component, then we set
->>> REQ_F_DONT_STEAL_NEXT. So this is generally the case where our
->>> io_put_req() for submit is not the last drop. And for the other case,
->>> the put is generally in the caller anyway. So I don't really see what
->>> this extra flag buys us?
->>
->> Because io_put_work() holds a reference, no async handler can achive req->refs
->> == 0, so it won't return next upon dropping the submission ref (i.e. by
->> put_find_nxt()). And I want to have next before io_put_work(), to, instead of as
->> currently:
->>
->> run_work(work);
->> assign_cur_work(NULL); // spinlock + unlock worker->lock
->> new_work = put_work(work);
->> assign_cur_work(new_work); // the second time
->>
->> do:
->>
->> new_work = run_work(work);
->> assign_cur_work(new_work); // need new_work here
->> put_work(work);
->>
->>
->> The other way:
->>
->> io_wq_submit_work() // for all async handlers
->> {
->> 	...
->> 	// Drop submission reference.
->> 	// One extra ref will be put in io_put_work() right
->> 	// after return, and it'll be done in the same thread
->> 	if (atomic_dec_and_get(req) == 1)
->> 		steal_next(req);
->> }
->>
->> Maybe cleaner, but looks fragile as well. Would you prefer it?
-> 
-> Any chance you've measured your next-work fix? I wonder how much does it
-> hurt performance, and whether we need a terse patch for 5.6.
+On Thu, 27 Feb 2020, Roman Gushchin wrote:
 
-Unless I'm missing something, the worker will pick up the next work
-without sleeping, since the request will have finished. So it really
-should not add any extra overhead, except you'll do an extra wqe lock
-roundtrip.
+> 1) Reading /proc/slabinfo can cause latency spikes in concurrent memory allocations.
+>    This is the problem which Wen raised initially.
 
-But I'll run some testing to be totally sure.
+Ok. Maybe cache the values or do not read /proc/slabinfo? Use
+/sys/kernel/slab/... instead?
 
--- 
-Jens Axboe
+> 2) The number of active objects as displayed in /proc/slabinfo is misleadingly
+>    big if CONFIG_SLUB_CPU_PARTIAL is set.
+
+Ok that cou.d be fixed by counting the partial slabs when computing
+/proc/slabinfo output but that would increase the times even more.
+
+> Maybe mixing them in a single workaround wasn't the best idea, but what do you
+> suggest instead?
+
+Read select values from /sys/kernel/slab/.... to determine the values you
+need and avoid reading those that cause latency spikes. Use the number of
+slabs for example to estimate the number of objects instead of the number
+of objects which requires scanning through all the individual slab pages.
 
