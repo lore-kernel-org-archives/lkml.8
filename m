@@ -2,159 +2,102 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36674C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F87DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:52:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00FC820873
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3C22465A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:52:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lfVWG1zT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oE18UWg7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbgCCIvM (ORCPT
+        id S1727850AbgCCIw2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:51:12 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36996 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727663AbgCCIvM (ORCPT
+        Tue, 3 Mar 2020 03:52:28 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38718 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgCCIw2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:51:12 -0500
-Received: by mail-pl1-f193.google.com with SMTP id q4so1024522pls.4;
-        Tue, 03 Mar 2020 00:51:11 -0800 (PST)
+        Tue, 3 Mar 2020 03:52:28 -0500
+Received: by mail-lj1-f195.google.com with SMTP id w1so2594647ljh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:52:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=to:from:subject:message-id:date:user-agent:mime-version
-         :content-transfer-encoding:content-language;
-        bh=Q5VfVmQdgg9p+OFp/l0un3xaUEDV8bc7/C90UdhrYow=;
-        b=lfVWG1zTLXyJsgrUAAZZDBmHWh76xwXI0h459ycitFK75x9l2PjFRQ4zZUAeKSAka1
-         Sars18D+gIky6FBflMkZsf7k1amtba5q5hPR3hAdl4mQfjh6j9MZm55IzZIEc/CBchIw
-         XhTrjTxaHB6nZR5th5r65ikWHVEF9sfOjJ6MPWweynQ6SQaCFlwXSc+UavYDuaOYMIoF
-         BmdbtJG8uqf5+OOZ9w9GRHdmoD/gtII+rYP8nMypw2HQllSphp5IU+FH0NO1v3DgqFNB
-         IsH3dsWosSw09c/XQ8IHx/RX38l/03BFuKKIbs/Zi1QJugndwboJcWf+hL0CsOD/ytU3
-         0j6Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qP4l3miEhOsGvhCQGfIOAAIiSzN77+8PwgJ0ybST1SE=;
+        b=oE18UWg7uB5RWxPJuwXndW24hkOzqPIoL99H1Qv9tUnv8DHc3rMf1f0zZcReU+suxK
+         MR3AxZ4g8LYDpIwSSwwuNXt2h/5wYtIXq/9ywWs48ntVpfmob3K2z9XKR1NyTe1DcdLJ
+         rWIBVGOFRVEFBss2E+R8lG/26kUA5GJeIvCB//3pCq1aUo5U4cTt2ro7DlsZfdmSYnyp
+         GwWVvc3Q+29uTT6yUq/mZIPEa9uNGTtxNw53PeUQ/X8+EwfZ18BFtQXOXqXl7p56vxsd
+         3NfHITA92j/M9QzGVcq03JDG80DEYjMdRSOBePH0vVPAT06WR+Rv3flSq7igtB5TlvQD
+         BIPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:to:from:subject:message-id:date:user-agent
-         :mime-version:content-transfer-encoding:content-language;
-        bh=Q5VfVmQdgg9p+OFp/l0un3xaUEDV8bc7/C90UdhrYow=;
-        b=t81UfKx0TeN3yt8wxcDwtfEKvJ14E2BV4vpuWFYLjvuNON7akZ5fAo9ckd7otgxO50
-         T7g+wTuSi0vEFi539XnXSmNE3RKEcZZbhc6ipgBuiDFCXA+LvmESw/9W5LDxIOeTTpyv
-         Qwa4ISqXGc/hdckDlEEC+3YvVHAT5qdhl1ztqynQ8No+IW3/QH6J0woehqq5lvHRpQcV
-         qkRYuK90wyEBvDGMytHybhP3859HQ9dUKs1/dmYK4ZIo8bTJnL8wp2tnuo30ErvlGX3/
-         MDKnNnzb7PS+7si4a+PlyuRHXLCWupR5Oz3Xoy+iAWV+3M/XTLc9ez0i29gFGNX1Qx6Y
-         iicA==
-X-Gm-Message-State: ANhLgQ2KNBKIZW/b5/Dz98Ux+ZPWKhj3KBRZk+zr2kpapeuqE+KpGDsn
-        p8uR3Nr+Xa8n1nUUXOp2/orUAv1c
-X-Google-Smtp-Source: ADFU+vuQMZQD+h00eScJp0xk94cQ+VFN3uqIz2iiWUPMWpdktm6s61EryURJK4I+3jpmSI6wQmKq3w==
-X-Received: by 2002:a17:902:eb52:: with SMTP id i18mr3320901pli.125.1583225471091;
-        Tue, 03 Mar 2020 00:51:11 -0800 (PST)
-Received: from [10.80.50.61] ([203.205.141.39])
-        by smtp.gmail.com with ESMTPSA id jx10sm1558821pjb.33.2020.03.03.00.51.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 00:51:10 -0800 (PST)
-To:     tytso@mit.edu, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   brookxu <brookxu.cn@gmail.com>
-Subject: [PATCH] ext4: mark extents index blocks as dirty to avoid information
- leakage
-Message-ID: <e988a1db-3105-07a0-6399-38af80656af1@gmail.com>
-Date:   Tue, 3 Mar 2020 16:51:06 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qP4l3miEhOsGvhCQGfIOAAIiSzN77+8PwgJ0ybST1SE=;
+        b=Uy4virVhbxhdzt4CJPVmf8PdyYS5rjYg1uyYXg9Yz3OHIZXui6o1QNtJJWvl+ZEWTA
+         lHlAlQTTtak78DoqQkYvThLHu50bFN99ILMxb62vREFCf1Gudayn1K4vBLkiukDyXy9j
+         HK6cAy+cGyNvJXH2UaTnDfKpXuFq6nSpa0EJWHvDArw8yTFJ/8cvFLaucReLO1HSGlZy
+         4zZLy7VIx8AJS2/+YOMJ8g+8asicpqKcY5LHfZiGOUw+6zzwUsRbT2BpebI1VNKtrd4g
+         sHW7h2ZcWp7mHslA97UW4pZ/C2UP7Juu0CqjmvnP2OY3zffIii1XV5v2typdewrIyxHs
+         Psww==
+X-Gm-Message-State: ANhLgQ1zN7RxSP3lGFuQZBzyP4M27hPpGZeOSO4onByy6SbCZ73WQm9w
+        P8EDdQ+rdq9UqUT5GvRUrvMrPyR5HeFQCf+9Jdjzdw==
+X-Google-Smtp-Source: ADFU+vs8vnVGsuXNBfltlkRNIaMr26/HznbXiZTa8hZpumUN/ioJsPKL3uAefOfYGMsXkzIw0k0q1oJs8IuresWlrLc=
+X-Received: by 2002:a2e:8e91:: with SMTP id z17mr1754799ljk.13.1583225545328;
+ Tue, 03 Mar 2020 00:52:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <cover.1582871139.git.amit.kucheria@linaro.org>
+ <8309e39737c480b0835454cbc6db345c5a27ecd4.1582871139.git.amit.kucheria@linaro.org>
+ <a3903db0-302d-a0f3-0515-b248e24e19cd@linaro.org>
+In-Reply-To: <a3903db0-302d-a0f3-0515-b248e24e19cd@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 3 Mar 2020 14:22:14 +0530
+Message-ID: <CAP245DWhzOHBrQNhqMjVC2+8i-P8bkuM3w8bCSqGfjWemR5WvQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: tsens: Add entry for sc7180
+ tsens to binding
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunguang Xu <brookxu@tencent.com>
+On Tue, Mar 3, 2020 at 1:35 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>
+> On 28/02/2020 07:32, Amit Kucheria wrote:
+>
+> [ ... ]
+>
+> > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> > index eef13b9446a8..13e294328932 100644
+> > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
+> > @@ -39,6 +39,7 @@ properties:
+> >                - qcom,msm8996-tsens
+> >                - qcom,msm8998-tsens
+> >                - qcom,sdm845-tsens
+> > +              - qcom,sc7180-tsens
+>
+> This change is already done by
+>
+> https://patchwork.kernel.org/patch/11319259/
+>
+> I've applied it.
 
-In the scene of deleting a file, the physical block information in the
-extent will be cleared to 0, the buffer_head contains these extents is
-marked as dirty, and then managed by jbd2, which will clear the
-buffer_head's dirty flag by clear_buffer_dirty. However, when the entire
-extent block is deleted, it is revoked from the jbd2, but  the extents
-block is not redirtied.
-
-Not quite reasonable here, for the following concerns:
-
-1. This has the risk of information leakage and leads to an interesting
-phenomenon that deleting the entire file is no more secure than truncate
-to 1 byte, because the whole extents physical block clear to zero in cache
-will never written back as the page is not redirtied.
-
-2. For large files, the number of index block is usually very small.
-Ignoring index pages not get much more benefit in IO performance. But if
-we remark the page as dirty, the page is then written back by the system
-writeback mechanism asynchronously with little performance impact. As a
-result, the risk of information leakage can be avoided. At least not wrose
-than truncate file length to 1 byte
-
-Therefore, when the index block is released, we need to remark its page
-as dirty, so that the index block on the disk will be updated and the
-data is more security.
-
-Signed-off-by: Chunguang Xu <brookxu@tencent.com>
----
- fs/ext4/ext4.h      | 1 +
- fs/ext4/ext4_jbd2.c | 8 ++++++++
- fs/ext4/extents.c   | 3 ++-
- 3 files changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 61b37a0..f9a4d97 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -644,6 +644,7 @@ enum {
- #define EXT4_FREE_BLOCKS_NOFREE_FIRST_CLUSTER    0x0010
- #define EXT4_FREE_BLOCKS_NOFREE_LAST_CLUSTER    0x0020
- #define EXT4_FREE_BLOCKS_RERESERVE_CLUSTER      0x0040
-+#define EXT4_FREE_BLOCKS_METADATA_INDEX        0x0080
- 
- /*
-  * ioctl commands
-diff --git a/fs/ext4/ext4_jbd2.c b/fs/ext4/ext4_jbd2.c
-index 1f53d64..7974c62 100644
---- a/fs/ext4/ext4_jbd2.c
-+++ b/fs/ext4/ext4_jbd2.c
-@@ -275,7 +275,15 @@ int __ext4_forget(const char *where, unsigned int line, handle_t *handle,
-         ext4_set_errno(inode->i_sb, -err);
-         __ext4_abort(inode->i_sb, where, line,
-                "error %d when attempting revoke", err);
-+    } else  {
-+        /*
-+         * we dirtied index block to ensure that related changes to
-+         * the index block will be stored to disk.
-+         */
-+        if (is_metadata & EXT4_FREE_BLOCKS_METADATA_INDEX)
-+            mark_buffer_dirty(bh);
-     }
-+
-     BUFFER_TRACE(bh, "exit");
-     return err;
- }
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 954013d..2ee0df0 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -2431,7 +2431,8 @@ static int ext4_ext_rm_idx(handle_t *handle, struct inode *inode,
-     trace_ext4_ext_rm_idx(inode, leaf);
- 
-     ext4_free_blocks(handle, inode, NULL, leaf, 1,
--             EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET);
-+             EXT4_FREE_BLOCKS_METADATA | EXT4_FREE_BLOCKS_FORGET |
-+             EXT4_FREE_BLOCKS_METADATA_INDEX);
- 
-     while (--depth >= 0) {
-         if (path->p_idx != EXT_FIRST_INDEX(path->p_hdr))
--- 
-1.8.3.1
-
+Good catch! I'd forgotten I'd even reviewed it when I saw all these
+warnings with dtbs_check :-)
