@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111E4C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D82C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B122072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2DF20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259133;
-	bh=YX1TBuFdUVCTm0Ixl1Y81X3tEt1dG0LsEV4R/yy7HiI=;
+	s=default; t=1583259136;
+	bh=61cMcrHpCmck7DJMugnV0iIAxMjsJLcZIVyODY/uwUQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ItQCoGS7tQ/t1qrmwZ+OE0pTWV/mZYa68dEhOIjlQNyqV7POhtLigYbPXdqc1ylvE
-	 a/zvoG87qso05DtSXyc0TGOlxuO732E1DqMYWq8QJsnE8YN9KTeRnETAROCjbGXfRm
-	 o9uowyNvPas36ziZGRaOOwzoEK27FmdYj4Hbxc7I=
+	b=b5oXUD0xoHHIRVnRvy0ECS2MDbjFzNYjOdHhrcAaNCQqf1Y2ihI0rttx0god/rSeR
+	 3S4pK52f40ilgGryt7hTjsnxu048hHIsHrvKLGnkl4bJ0yJww+VKPKl7HKwaUexkbQ
+	 qYSKFxOQEdBAYEssk0Pb0Cnn9l4NsBGlgM2Ysi1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731667AbgCCRsp (ORCPT
+        id S1731623AbgCCRso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:48:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55880 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730348AbgCCRsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:42 -0500
+        id S1730586AbgCCRsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1ADC720870;
-        Tue,  3 Mar 2020 17:48:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0EE22146E;
+        Tue,  3 Mar 2020 17:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257721;
-        bh=YX1TBuFdUVCTm0Ixl1Y81X3tEt1dG0LsEV4R/yy7HiI=;
+        s=default; t=1583257719;
+        bh=61cMcrHpCmck7DJMugnV0iIAxMjsJLcZIVyODY/uwUQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t4U2guOPx6p54Wbph/43IDFh+8pQuWMC2+vm5k9R/T6auNFB8tuKMcBIyp44H2lHX
-         GEieB3EncfKsX+HaxYoJ/MrpkYNEC+6QeEnnczXvNgI3cxQdvyG1s02Z2ltieOFWV+
-         fIdqw1plcbFp1VCy9oiGU7DCdVySB+PkbWhfGqoE=
+        b=sPqpS7Xhfkq/qcOmLOd6WKUNSLhpZ1U/DS5nK+hgmf60p92bOx89OcOk6/x5F1ISt
+         mvfklErgL2BenTOQHW7CBfcBsKiDrV6YLl7ySJbPEsxZeHnzDkbuMzfGn3qqklXMEi
+         4svP0LJcZfE1D0Vh1toNgK8uJf6xG/CRmGajuZnc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Anton Eidelman <anton@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+        stable@vger.kernel.org, Guangbin Huang <huangguangbin2@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 078/176] nvme/tcp: fix bug on double requeue when send fails
-Date:   Tue,  3 Mar 2020 18:42:22 +0100
-Message-Id: <20200303174313.656931332@linuxfoundation.org>
+Subject: [PATCH 5.5 077/176] net: hns3: fix a copying IPv6 address error in hclge_fd_get_flow_tuples()
+Date:   Tue,  3 Mar 2020 18:42:21 +0100
+Message-Id: <20200303174313.526363215@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,52 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anton Eidelman <anton@lightbitslabs.com>
+From: Guangbin Huang <huangguangbin2@huawei.com>
 
-[ Upstream commit 2d570a7c0251c594489a2c16b82b14ae30345c03 ]
+[ Upstream commit 47327c9315b2f3ae4ab659457977a26669631f20 ]
 
-When nvme_tcp_io_work() fails to send to socket due to
-connection close/reset, error_recovery work is triggered
-from nvme_tcp_state_change() socket callback.
-This cancels all the active requests in the tagset,
-which requeues them.
+The IPv6 address defined in struct in6_addr is specified as
+big endian, but there is no specified endian in struct
+hclge_fd_rule_tuples, so it  will cause a problem if directly
+use memcpy() to copy ipv6 address between these two structures
+since this field in struct hclge_fd_rule_tuples is little endian.
 
-The failed request, however, was ended and thus requeued
-individually as well unless send returned -EPIPE.
-Another return code to be treated the same way is -ECONNRESET.
+This patch fixes this problem by using be32_to_cpu() to convert
+endian of IPv6 address of struct in6_addr before copying.
 
-Double requeue caused BUG_ON(blk_queued_rq(rq))
-in blk_mq_requeue_request() from either the individual requeue
-of the failed request or the bulk requeue from
-blk_mq_tagset_busy_iter(, nvme_cancel_request, );
-
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: d93ed94fbeaf ("net: hns3: add aRFS support for PF")
+Signed-off-by: Guangbin Huang <huangguangbin2@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c   | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 6d43b23a0fc8b..f8fa5c5b79f17 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1054,7 +1054,12 @@ static void nvme_tcp_io_work(struct work_struct *w)
- 		} else if (unlikely(result < 0)) {
- 			dev_err(queue->ctrl->ctrl.device,
- 				"failed to send request %d\n", result);
--			if (result != -EPIPE)
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index bfdb08572f0cc..5d74f5a60102a 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -6106,6 +6106,9 @@ static int hclge_get_all_rules(struct hnae3_handle *handle,
+ static void hclge_fd_get_flow_tuples(const struct flow_keys *fkeys,
+ 				     struct hclge_fd_rule_tuples *tuples)
+ {
++#define flow_ip6_src fkeys->addrs.v6addrs.src.in6_u.u6_addr32
++#define flow_ip6_dst fkeys->addrs.v6addrs.dst.in6_u.u6_addr32
 +
-+			/*
-+			 * Fail the request unless peer closed the connection,
-+			 * in which case error recovery flow will complete all.
-+			 */
-+			if ((result != -EPIPE) && (result != -ECONNRESET))
- 				nvme_tcp_fail_request(queue->request);
- 			nvme_tcp_done_send_req(queue);
- 			return;
+ 	tuples->ether_proto = be16_to_cpu(fkeys->basic.n_proto);
+ 	tuples->ip_proto = fkeys->basic.ip_proto;
+ 	tuples->dst_port = be16_to_cpu(fkeys->ports.dst);
+@@ -6114,12 +6117,12 @@ static void hclge_fd_get_flow_tuples(const struct flow_keys *fkeys,
+ 		tuples->src_ip[3] = be32_to_cpu(fkeys->addrs.v4addrs.src);
+ 		tuples->dst_ip[3] = be32_to_cpu(fkeys->addrs.v4addrs.dst);
+ 	} else {
+-		memcpy(tuples->src_ip,
+-		       fkeys->addrs.v6addrs.src.in6_u.u6_addr32,
+-		       sizeof(tuples->src_ip));
+-		memcpy(tuples->dst_ip,
+-		       fkeys->addrs.v6addrs.dst.in6_u.u6_addr32,
+-		       sizeof(tuples->dst_ip));
++		int i;
++
++		for (i = 0; i < IPV6_SIZE; i++) {
++			tuples->src_ip[i] = be32_to_cpu(flow_ip6_src[i]);
++			tuples->dst_ip[i] = be32_to_cpu(flow_ip6_dst[i]);
++		}
+ 	}
+ }
+ 
 -- 
 2.20.1
 
