@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3452C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 829FFC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C424217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58EC0217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:56:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204183;
-	bh=wvIZGTrfVEJX+/h/0jYTc6W39qvqgiRTacB6jjgXu9c=;
+	s=default; t=1583204192;
+	bh=cDrG6eBvBexdJXtqq7vBX8LWzWqJNBH8R4xqScia/FM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uOrfUrYnS929TMAxPXmWlZcwF3oUBqvqkR3iq2OPT7dL3oJrrx7KeG1I59QShHJTx
-	 7Xf7wcu2tofuQ3jMNHtwC+PnmSKZaN+GiGkMUEiDegMLEa81SfbQD7YObpeWIGGZ05
-	 5qy/LUnB7DbnPYbE5q4N7Rny2q/zJKgaRZYXrTZY=
+	b=jS6qC4qazNs7SvfqVLDnWV9fWXK63/dAgxwXUotEWnrG4tDjj3uUb/6I5WOwattny
+	 gJojpU/DJ1vZWlND4wPw/IjCkNnUZfELmFG7cK1JN4/NIEMwG0XMCqf8P4/nHM8JqG
+	 kU9nBSGZmJxobOpJncFvqpSEpkYSMB0yAHf90lNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgCCC4V (ORCPT
+        id S1728782AbgCCC4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:56:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44566 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:56:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728516AbgCCCsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:43 -0500
+        id S1728488AbgCCCsl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:41 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB250246A1;
-        Tue,  3 Mar 2020 02:48:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5918324680;
+        Tue,  3 Mar 2020 02:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203722;
-        bh=wvIZGTrfVEJX+/h/0jYTc6W39qvqgiRTacB6jjgXu9c=;
+        s=default; t=1583203720;
+        bh=cDrG6eBvBexdJXtqq7vBX8LWzWqJNBH8R4xqScia/FM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CD8yD6WCNdyAVZvkGuFRuJ5j9FTEcH11DoFzfjvM+xL1XvM5RZGiF8UWlde1JswuA
-         LzqpUFIUW4P/PU8C9GGijpOrZ9e8r/Ir3vBGSZ9byg5tXvFzgEl4ir8TF3iNbCooGW
-         wUWfjWCo6G37IZW85g32ljG/q4qn8usMZIxN4Odk=
+        b=u08PQwLzLpZqYSFQ48MhILMkzLP4JRTop7GfQPkZwf+22DTDe+JYD+TgxUIfSF242
+         wmV7THTshV+bJbIWcKIqpy3WeMpaQ/p03H98CRdPlcy0yOxM3w+2ATIcDBDYBvPsFa
+         1AaiwGZX3DqMaHoXBrEb5k7pehJoETmjJDLcf32I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+Cc:     Tim Harvey <tharvey@gateworks.com>,
+        Robert Jones <rjones@gateworks.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 51/58] bnxt_en: Issue PCIe FLR in kdump kernel to cleanup pending DMAs.
-Date:   Mon,  2 Mar 2020 21:47:33 -0500
-Message-Id: <20200303024740.9511-51-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 49/58] net: thunderx: workaround BGX TX Underflow issue
+Date:   Mon,  2 Mar 2020 21:47:31 -0500
+Message-Id: <20200303024740.9511-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -60,42 +61,153 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Tim Harvey <tharvey@gateworks.com>
 
-[ Upstream commit 8743db4a9acfd51f805ac0c87bcaae92c42d1061 ]
+[ Upstream commit 971617c3b761c876d686a2188220a33898c90e99 ]
 
-If crashed kernel does not shutdown the NIC properly, PCIe FLR
-is required in the kdump kernel in order to initialize all the
-functions properly.
+While it is not yet understood why a TX underflow can easily occur
+for SGMII interfaces resulting in a TX wedge. It has been found that
+disabling/re-enabling the LMAC resolves the issue.
 
-Fixes: d629522e1d66 ("bnxt_en: Reduce memory usage when running in kdump kernel.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Tim Harvey <tharvey@gateworks.com>
+Reviewed-by: Robert Jones <rjones@gateworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../net/ethernet/cavium/thunder/thunder_bgx.c | 62 ++++++++++++++++++-
+ .../net/ethernet/cavium/thunder/thunder_bgx.h |  9 +++
+ 2 files changed, 68 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index e03e610dd1831..374e11a91790b 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -11712,6 +11712,14 @@ static int bnxt_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (version_printed++ == 0)
- 		pr_info("%s", version);
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+index 6cc100e7d5c07..76ff42ec3ae5e 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.c
+@@ -410,10 +410,19 @@ void bgx_lmac_rx_tx_enable(int node, int bgx_idx, int lmacid, bool enable)
+ 	lmac = &bgx->lmac[lmacid];
  
-+	/* Clear any pending DMA transactions from crash kernel
-+	 * while loading driver in capture kernel.
-+	 */
-+	if (is_kdump_kernel()) {
-+		pci_clear_master(pdev);
-+		pcie_flr(pdev);
+ 	cfg = bgx_reg_read(bgx, lmacid, BGX_CMRX_CFG);
+-	if (enable)
++	if (enable) {
+ 		cfg |= CMR_PKT_RX_EN | CMR_PKT_TX_EN;
+-	else
++
++		/* enable TX FIFO Underflow interrupt */
++		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1S,
++			       GMI_TXX_INT_UNDFLW);
++	} else {
+ 		cfg &= ~(CMR_PKT_RX_EN | CMR_PKT_TX_EN);
++
++		/* Disable TX FIFO Underflow interrupt */
++		bgx_reg_modify(bgx, lmacid, BGX_GMP_GMI_TXX_INT_ENA_W1C,
++			       GMI_TXX_INT_UNDFLW);
++	}
+ 	bgx_reg_write(bgx, lmacid, BGX_CMRX_CFG, cfg);
+ 
+ 	if (bgx->is_rgx)
+@@ -1535,6 +1544,48 @@ static int bgx_init_phy(struct bgx *bgx)
+ 	return bgx_init_of_phy(bgx);
+ }
+ 
++static irqreturn_t bgx_intr_handler(int irq, void *data)
++{
++	struct bgx *bgx = (struct bgx *)data;
++	u64 status, val;
++	int lmac;
++
++	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
++		status = bgx_reg_read(bgx, lmac, BGX_GMP_GMI_TXX_INT);
++		if (status & GMI_TXX_INT_UNDFLW) {
++			pci_err(bgx->pdev, "BGX%d lmac%d UNDFLW\n",
++				bgx->bgx_id, lmac);
++			val = bgx_reg_read(bgx, lmac, BGX_CMRX_CFG);
++			val &= ~CMR_EN;
++			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
++			val |= CMR_EN;
++			bgx_reg_write(bgx, lmac, BGX_CMRX_CFG, val);
++		}
++		/* clear interrupts */
++		bgx_reg_write(bgx, lmac, BGX_GMP_GMI_TXX_INT, status);
 +	}
 +
- 	max_irqs = bnxt_get_max_irq(pdev);
- 	dev = alloc_etherdev_mq(sizeof(*bp), max_irqs);
- 	if (!dev)
++	return IRQ_HANDLED;
++}
++
++static void bgx_register_intr(struct pci_dev *pdev)
++{
++	struct bgx *bgx = pci_get_drvdata(pdev);
++	int ret;
++
++	ret = pci_alloc_irq_vectors(pdev, BGX_LMAC_VEC_OFFSET,
++				    BGX_LMAC_VEC_OFFSET, PCI_IRQ_ALL_TYPES);
++	if (ret < 0) {
++		pci_err(pdev, "Req for #%d msix vectors failed\n",
++			BGX_LMAC_VEC_OFFSET);
++		return;
++	}
++	ret = pci_request_irq(pdev, GMPX_GMI_TX_INT, bgx_intr_handler, NULL,
++			      bgx, "BGX%d", bgx->bgx_id);
++	if (ret)
++		pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
++}
++
+ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	int err;
+@@ -1550,7 +1601,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	pci_set_drvdata(pdev, bgx);
+ 
+-	err = pci_enable_device(pdev);
++	err = pcim_enable_device(pdev);
+ 	if (err) {
+ 		dev_err(dev, "Failed to enable PCI device\n");
+ 		pci_set_drvdata(pdev, NULL);
+@@ -1604,6 +1655,8 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ 	bgx_init_hw(bgx);
+ 
++	bgx_register_intr(pdev);
++
+ 	/* Enable all LMACs */
+ 	for (lmac = 0; lmac < bgx->lmac_count; lmac++) {
+ 		err = bgx_lmac_enable(bgx, lmac);
+@@ -1620,6 +1673,7 @@ static int bgx_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 
+ err_enable:
+ 	bgx_vnic[bgx->bgx_id] = NULL;
++	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
+ err_release_regions:
+ 	pci_release_regions(pdev);
+ err_disable_device:
+@@ -1637,6 +1691,8 @@ static void bgx_remove(struct pci_dev *pdev)
+ 	for (lmac = 0; lmac < bgx->lmac_count; lmac++)
+ 		bgx_lmac_disable(bgx, lmac);
+ 
++	pci_free_irq(pdev, GMPX_GMI_TX_INT, bgx);
++
+ 	bgx_vnic[bgx->bgx_id] = NULL;
+ 	pci_release_regions(pdev);
+ 	pci_disable_device(pdev);
+diff --git a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+index 25888706bdcd1..cdea493921857 100644
+--- a/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
++++ b/drivers/net/ethernet/cavium/thunder/thunder_bgx.h
+@@ -180,6 +180,15 @@
+ #define BGX_GMP_GMI_TXX_BURST		0x38228
+ #define BGX_GMP_GMI_TXX_MIN_PKT		0x38240
+ #define BGX_GMP_GMI_TXX_SGMII_CTL	0x38300
++#define BGX_GMP_GMI_TXX_INT		0x38500
++#define BGX_GMP_GMI_TXX_INT_W1S		0x38508
++#define BGX_GMP_GMI_TXX_INT_ENA_W1C	0x38510
++#define BGX_GMP_GMI_TXX_INT_ENA_W1S	0x38518
++#define  GMI_TXX_INT_PTP_LOST			BIT_ULL(4)
++#define  GMI_TXX_INT_LATE_COL			BIT_ULL(3)
++#define  GMI_TXX_INT_XSDEF			BIT_ULL(2)
++#define  GMI_TXX_INT_XSCOL			BIT_ULL(1)
++#define  GMI_TXX_INT_UNDFLW			BIT_ULL(0)
+ 
+ #define BGX_MSIX_VEC_0_29_ADDR		0x400000 /* +(0..29) << 4 */
+ #define BGX_MSIX_VEC_0_29_CTL		0x400008
 -- 
 2.20.1
 
