@@ -2,259 +2,167 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE94C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6073DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC6820728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2694D20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bnSswgv1"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="WdVoeNej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727869AbgCCW3i (ORCPT
+        id S1727919AbgCCWaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:29:38 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34884 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727322AbgCCW3h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:29:37 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 7so2220913pgr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:29:36 -0800 (PST)
+        Tue, 3 Mar 2020 17:30:19 -0500
+Received: from mail-eopbgr770075.outbound.protection.outlook.com ([40.107.77.75]:55407
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725796AbgCCWaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 17:30:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FG3usEO8TpBM61LPbNvqBvjyt8FcRKJLtCLc6JAfNIijtC6nws8F3P1ltreXLN3EjQBHvWZi13H4cKR12tyqzP4ac0FgaYuYz5/aQhkRWs3ZSxDz3+NmKsRNvxzBlCJsrhkkMelmRwfd7hMOUdbG7RH5PQLIj4cE2tsPBo2UaseLJ2mYbUeMoD8Z6C1DZVnKx7EvZMgI3f9+ALmP6d98CxPkkXXHn5EahXoqV+xOkMTLvFeYjLP7UvDsVAN5GcKDnrXLQoRa2/4PSWu1lX6CO+h2R+zRGOb7r2K0zpUnrOfMAzGr1pjt8BSnYrWk1lnyahrGLNwglco8ZtWMUtlW8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5L108zBW5eg6LCZFFxyABYk2mgxQhIC90mbNFBf6bB8=;
+ b=JuCve9Z4/584JJuUFjH9hFHNUrBqqZ0Shhp9Tr8e47HJLPz++LgIpf0eTeMkuocvUD2bON7MwEhfz4yY8WSsZ/zMbIMa90zUEQPxWnwsXrq+ZF1gjIrGM1/lf9Q28Y0ZKyn0atDtkpPEILOCERQyBjzR4l73EQHtDVHxHAK6WQwSf0lVuGSuCoZk1ybRR8n5wmsML2/FSUmoQyb/OG4d8SMjy08UopHFJRnsREsEzP3HT2dtWb1Bmg7f5E5VL2IA4XyuqOxzFnroYEw3Fcc5IiMzw31P+/7lcUisxjMhq4nGUlNjNIqaEqpGlwVcpRvyVEKIUZKXU18hjM+BJ1qd3w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=arm.com smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=qsYG18HX6uZbiPK20EisyP81AacMb1c2Icyzz8nclsQ=;
-        b=bnSswgv1wQFHCnn2gUBYrBM6J8xRuL8TpkX3sFiMTk4PrTI/zDDPpicC5ZXcMnJDM/
-         0Ry1HAMWFWQNXmkHdB7fFqsXsckAp87MBVtGcXD9f2e75GCgZbuNApH7lJCb93O1VBcf
-         eZAhsO/26YflgSqRe7KMkFSPiHe2E3+sgW/9wFTytSoZ0cHMP5HrBowLc+Bkg1oToYoY
-         1Tdm3PmBgZAtoBgYkPh4swcaX6JDf5+v6Kl//LM1ArypSYa2P3tIDUqFUj+ggonrV3um
-         F0r0YZAnpFQDAGqXCrS40dDQWYBigUnN074NBmPnOI2lZ1v5BZKascdgNBolGiNcr/Cp
-         q/ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=qsYG18HX6uZbiPK20EisyP81AacMb1c2Icyzz8nclsQ=;
-        b=AHKD5B3/p9k0irXNOFosXjqnCp1lueTQ17wpUE0KVSpBuyJ1UE2xYIk0UxRyGUmbz6
-         c1Wj47mfcvLlCMup+iANS7sRvvv+43Z1Nw+InVm33D5nxg13Sa6NYoSa2CKKDL9RNoG9
-         dFWGc94S42yTXCgFJVApOcZPdwbBFqsX4XQwKnBMVObPqiPfnJewAeSgqVcF2BXghTJg
-         q8N2zhPZxkRQF3KJeMNcFHaJzw32/iMQNdvJCTAKc/CnL7rY43woUa265JDsYDnVUN83
-         e5/Yccg+XQTqEoAZVZQoOguQtsO/Jff+BbE6jFJ0qZntbA178iVK1fmwWZZdWR1qFNNJ
-         YPNg==
-X-Gm-Message-State: ANhLgQ0mTOFhb2OGia1lUZd2cjxxEsz42wA3EyUq4UAXDEhDgwxK1M5O
-        MDrUCEBV0726z7zG9MhQ+1JZiA==
-X-Google-Smtp-Source: ADFU+vtzyIShP+G54of6bxET8G8ijzqUGU1m5d1X3O4aCk+cSDULuBvvUSQPIM3mSn/0xoX3ha8aAA==
-X-Received: by 2002:aa7:9a5e:: with SMTP id x30mr497971pfj.33.1583274575478;
-        Tue, 03 Mar 2020 14:29:35 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id d24sm26951030pfq.75.2020.03.03.14.29.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 14:29:34 -0800 (PST)
-Date:   Tue, 3 Mar 2020 14:29:34 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Christoph Hellwig <hch@lst.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
-        "Grimm, Jon" <jon.grimm@amd.com>, Joerg Roedel <joro@8bytes.org>,
-        baekhw@google.com,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
-Subject: Re: [rfc 4/6] dma-remap: dynamically expanding atomic pools
-In-Reply-To: <alpine.DEB.2.21.2003011537440.213582@chino.kir.corp.google.com>
-Message-ID: <alpine.DEB.2.21.2003031424400.41997@chino.kir.corp.google.com>
-References: <alpine.DEB.2.21.1912311738130.68206@chino.kir.corp.google.com> <b22416ec-cc28-3fd2-3a10-89840be173fa@amd.com> <alpine.DEB.2.21.2002280118461.165532@chino.kir.corp.google.com> <alpine.DEB.2.21.2003011535510.213582@chino.kir.corp.google.com>
- <alpine.DEB.2.21.2003011537440.213582@chino.kir.corp.google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5L108zBW5eg6LCZFFxyABYk2mgxQhIC90mbNFBf6bB8=;
+ b=WdVoeNejtP/t2xzh33iZgzX7kP3HhX8FujTXUREPcaRkfDWrlJfYwH++7JkUAETx55f5itM71kWD5Ek8Rey2dvfUGLGT/H5oaHdBjX8pstS4Hhlvo0CHzVhQADSvehyP2UieJu0/YEmgPKwoiLxDXBA1VYcU5zL13aZIZXcIyCU=
+Received: from SN2PR01CA0072.prod.exchangelabs.com (2603:10b6:800::40) by
+ SN6PR02MB5181.namprd02.prod.outlook.com (2603:10b6:805:6d::22) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.18; Tue, 3 Mar 2020 22:30:15 +0000
+Received: from SN1NAM02FT028.eop-nam02.prod.protection.outlook.com
+ (2603:10b6:800:0:cafe::c6) by SN2PR01CA0072.outlook.office365.com
+ (2603:10b6:800::40) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend
+ Transport; Tue, 3 Mar 2020 22:30:15 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; arm.com; dkim=none (message not signed)
+ header.d=none;arm.com; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT028.mail.protection.outlook.com (10.152.72.105) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2793.11
+ via Frontend Transport; Tue, 3 Mar 2020 22:30:14 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1j9G3J-0000Xq-RN; Tue, 03 Mar 2020 14:30:13 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <jolly.shah@xilinx.com>)
+        id 1j9G3E-0003lV-Lz; Tue, 03 Mar 2020 14:30:08 -0800
+Received: from xsj-pvapsmtp01 (mailhost.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 023MTwrf019326;
+        Tue, 3 Mar 2020 14:29:58 -0800
+Received: from [172.19.160.178]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <jollys@xilinx.com>)
+        id 1j9G34-0003G9-34; Tue, 03 Mar 2020 14:29:58 -0800
+Subject: Re: [PATCH] arch: arm64: xilinx: Make zynqmp_firmware driver optional
+To:     Sudeep Holla <sudeep.holla@arm.com>,
+        Jolly Shah <jolly.shah@xilinx.com>
+Cc:     ard.biesheuvel@linaro.org, mingo@kernel.org,
+        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
+        hkallweit1@gmail.com, keescook@chromium.org,
+        dmitry.torokhov@gmail.com, michal.simek@xilinx.com,
+        rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Tejas Patel <tejas.patel@xilinx.com>
+References: <1582675460-26914-1-git-send-email-jolly.shah@xilinx.com>
+ <20200226114601.GB8613@bogus>
+From:   Jolly Shah <jolly.shah@xilinx.com>
+Message-ID: <8aed558b-6ff8-5c7c-626e-17f982b12682@xilinx.com>
+Date:   Tue, 3 Mar 2020 14:29:57 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200226114601.GB8613@bogus>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(39860400002)(346002)(189003)(199004)(7416002)(81156014)(44832011)(31686004)(31696002)(81166006)(8676002)(336012)(4326008)(36756003)(186003)(5660300002)(26005)(356004)(316002)(107886003)(2906002)(70206006)(478600001)(53546011)(110136005)(9786002)(70586007)(426003)(2616005)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR02MB5181;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: c1db971c-dbc6-42fb-b335-08d7bfc2719e
+X-MS-TrafficTypeDiagnostic: SN6PR02MB5181:
+X-Microsoft-Antispam-PRVS: <SN6PR02MB5181A1D90FE8AA7685901CA8B8E40@SN6PR02MB5181.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 03319F6FEF
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: zkYRqTlypFytRXGSIbRdi5teuZVREpcejlP/ZNZHAD7x17JWXVAVu0fv/TsizYATJBoa11v//TjX4aY2pXV5TQQtkcYZXVTFDnOa7it0WzAybqhyxXTSHi+inRGhL0Prlh5NS/oa6twB2bhYvGRNyiUmUVExasjom7ubiwqieUPQUV4MmjYvzlXgw4ZvVjeLJ2mOhrInhQ+/joy+s7/UY6/rw8gTaZl5AsHLXHnZaUhItSiyHpGhJbRO8RGyDYG5yecE/WlDVF7YYr3POyYObkI6cY9vxOKxZ1TT/Jgo41xSwLoedsFGZE27Tn5I/WiVkqCfxGDVwPyNGC2nUCuKh21FvgHe1tJ8gn27PG4Xpt/XlcIDOQ+cjde+kQRLL1KjH2bSUbVQDvzI7SWX6zZG8c77+3IF4IzFiVeZThXeJYFKkznFohDO4p6nemStDR6p
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 22:30:14.5880
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: c1db971c-dbc6-42fb-b335-08d7bfc2719e
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR02MB5181
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 1 Mar 2020, David Rientjes wrote:
+Hi Sudeep,
 
-> When an atomic pool becomes fully depleted because it is now relied upon
-> for all non-blocking allocations through the DMA API, allow background
-> expansion of each pool by a kworker.
+ > ------Original Message------
+ > From: Sudeep.holla@arm.com <sudeep.holla@arm.com>
+ > Sent:  Wednesday, February 26, 2020 3:46AM
+ > To: Jolly Shah <jolly.shah@xilinx.com>
+ > Cc: Ard.biesheuvel@linaro.org <ard.biesheuvel@linaro.org>, 
+Mingo@kernel.org <mingo@kernel.org>, 'Greg Kh' 
+<gregkh@linuxfoundation.org>, Matt@codeblueprint.co.uk 
+<matt@codeblueprint.co.uk>, Hkallweit1@gmail.com <hkallweit1@gmail.com>, 
+Keescook@chromium.org <keescook@chromium.org>, Dmitry.torokhov@gmail.com 
+<dmitry.torokhov@gmail.com>, Michal Simek <michal.simek@xilinx.com>, 
+Rajan Vaja <rajanv@xilinx.com>, Linux-arm-kernel@lists.infradead.org 
+<linux-arm-kernel@lists.infradead.org>, Linux-kernel@vger.kernel.org 
+<linux-kernel@vger.kernel.org>, Tejas Patel <tejas.patel@xilinx.com>, 
+Sudeep.holla@arm.com <sudeep.holla@arm.com>
+ > Subject: Re: [PATCH] arch: arm64: xilinx: Make zynqmp_firmware driver 
+optional
+ >
+> On Tue, Feb 25, 2020 at 04:04:20PM -0800, Jolly Shah wrote:
+>> From: Tejas Patel <tejas.patel@xilinx.com>
+>>
+>> Make zynqmp_firmware driver as optional to disable it, if user don't
+>> want to use default zynqmp firmware interface.
+>>
 > 
-> When an atomic pool has less than the default size of memory left, kick
-> off a kworker to dynamically expand the pool in the background.  The pool
-> is doubled in size.
+> This patch on it own is simple and looks fine. However I expect the
+> single binary to work with and without this option on the same platform.
+> If zynqmp_firmware is not critical, the system should continue to work
+> fine either way. The zynqmp_firmware driver should gracefully exit with
+> error(if any).
 > 
-> This allows the default size to be kept quite low when one or more of the
-> atomic pools is not used.
-> 
-> Also switch over some node ids to the more appropriate NUMA_NO_NODE.
-> 
-> Signed-off-by: David Rientjes <rientjes@google.com>
-> ---
->  kernel/dma/remap.c | 79 ++++++++++++++++++++++++++++++++++------------
->  1 file changed, 58 insertions(+), 21 deletions(-)
-> 
-> diff --git a/kernel/dma/remap.c b/kernel/dma/remap.c
-> --- a/kernel/dma/remap.c
-> +++ b/kernel/dma/remap.c
-> @@ -10,6 +10,7 @@
->  #include <linux/genalloc.h>
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/workqueue.h>
->  
->  struct page **dma_common_find_pages(void *cpu_addr)
->  {
-> @@ -104,7 +105,10 @@ static struct gen_pool *atomic_pool_dma32 __ro_after_init;
->  static struct gen_pool *atomic_pool_normal __ro_after_init;
->  
->  #define DEFAULT_DMA_COHERENT_POOL_SIZE  SZ_256K
-> -static size_t atomic_pool_size __initdata = DEFAULT_DMA_COHERENT_POOL_SIZE;
-> +static size_t atomic_pool_size = DEFAULT_DMA_COHERENT_POOL_SIZE;
-> +
-> +/* Dynamic background expansion when the atomic pool is near capacity */
-> +struct work_struct atomic_pool_work;
->  
->  static int __init early_coherent_pool(char *p)
->  {
-> @@ -113,14 +117,14 @@ static int __init early_coherent_pool(char *p)
->  }
->  early_param("coherent_pool", early_coherent_pool);
->  
-> -static int __init __dma_atomic_pool_init(struct gen_pool **pool,
-> -					 size_t pool_size, gfp_t gfp)
-> +static int atomic_pool_expand(struct gen_pool *pool, size_t pool_size,
-> +			      gfp_t gfp)
->  {
-> -	const unsigned int order = get_order(pool_size);
->  	const unsigned long nr_pages = pool_size >> PAGE_SHIFT;
-> +	const unsigned int order = get_order(pool_size);
->  	struct page *page;
->  	void *addr;
-> -	int ret;
-> +	int ret = -ENOMEM;
->  
->  	if (dev_get_cma_area(NULL))
->  		page = dma_alloc_from_contiguous(NULL, nr_pages, order, false);
 
-There's an issue here if the pool grows too large which would result in
-order > MAX_ORDER-1.  We can fix that by limiting order to MAX_ORDER-1 and 
-doing nr_pages = 1 << order.
+Sure. Will address it in next version.
 
-I should also add support for trying smaller page allocations if our 
-preferred expansion size results in an allocation failure.
+Thanks,
+Jolly Shah
 
-Other than that, I'll remove the RFC tag and send a refreshed series by 
-the end of the week unless there are other comments or suggestions to 
-factor in.
 
-Thanks!
-
-> @@ -131,38 +135,67 @@ static int __init __dma_atomic_pool_init(struct gen_pool **pool,
->  
->  	arch_dma_prep_coherent(page, pool_size);
->  
-> -	*pool = gen_pool_create(PAGE_SHIFT, -1);
-> -	if (!*pool)
-> -		goto free_page;
-> -
->  	addr = dma_common_contiguous_remap(page, pool_size,
->  					   pgprot_dmacoherent(PAGE_KERNEL),
->  					   __builtin_return_address(0));
->  	if (!addr)
-> -		goto destroy_genpool;
-> +		goto free_page;
->  
-> -	ret = gen_pool_add_virt(*pool, (unsigned long)addr, page_to_phys(page),
-> -				pool_size, -1);
-> +	ret = gen_pool_add_virt(pool, (unsigned long)addr, page_to_phys(page),
-> +				pool_size, NUMA_NO_NODE);
->  	if (ret)
->  		goto remove_mapping;
-> -	gen_pool_set_algo(*pool, gen_pool_first_fit_order_align, NULL);
->  
-> -	pr_info("DMA: preallocated %zu KiB %pGg pool for atomic allocations\n",
-> -		pool_size >> 10, &gfp);
->  	return 0;
->  
->  remove_mapping:
->  	dma_common_free_remap(addr, pool_size);
-> -destroy_genpool:
-> -	gen_pool_destroy(*pool);
-> -	*pool = NULL;
->  free_page:
->  	if (!dma_release_from_contiguous(NULL, page, nr_pages))
->  		__free_pages(page, order);
->  out:
-> -	pr_err("DMA: failed to allocate %zu KiB %pGg pool for atomic allocation\n",
-> -		atomic_pool_size >> 10, &gfp);
-> -	return -ENOMEM;
-> +	return ret;
-> +}
-> +
-> +static void atomic_pool_resize(struct gen_pool *pool, gfp_t gfp)
-> +{
-> +	if (pool && gen_pool_avail(pool) < atomic_pool_size)
-> +		atomic_pool_expand(pool, gen_pool_size(pool), gfp);
-> +}
-> +
-> +static void atomic_pool_work_fn(struct work_struct *work)
-> +{
-> +	if (IS_ENABLED(CONFIG_ZONE_DMA))
-> +		atomic_pool_resize(atomic_pool, GFP_DMA);
-> +	if (IS_ENABLED(CONFIG_ZONE_DMA32))
-> +		atomic_pool_resize(atomic_pool_dma32, GFP_DMA32);
-> +	atomic_pool_resize(atomic_pool_normal, GFP_KERNEL);
-> +}
-> +
-> +static int __init __dma_atomic_pool_init(struct gen_pool **pool,
-> +					 size_t pool_size, gfp_t gfp)
-> +{
-> +	int ret;
-> +
-> +	*pool = gen_pool_create(PAGE_SHIFT, NUMA_NO_NODE);
-> +	if (!*pool)
-> +		return -ENOMEM;
-> +
-> +	gen_pool_set_algo(*pool, gen_pool_first_fit_order_align, NULL);
-> +
-> +	ret = atomic_pool_expand(*pool, pool_size, gfp);
-> +	if (ret) {
-> +		gen_pool_destroy(*pool);
-> +		*pool = NULL;
-> +		pr_err("DMA: failed to allocate %zu KiB %pGg pool for atomic allocation\n",
-> +		       atomic_pool_size >> 10, &gfp);
-> +		return ret;
-> +	}
-> +
-> +
-> +	pr_info("DMA: preallocated %zu KiB %pGg pool for atomic allocations\n",
-> +		pool_size >> 10, &gfp);
-> +	return 0;
->  }
->  
->  static int __init dma_atomic_pool_init(void)
-> @@ -170,6 +203,8 @@ static int __init dma_atomic_pool_init(void)
->  	int ret = 0;
->  	int err;
->  
-> +	INIT_WORK(&atomic_pool_work, atomic_pool_work_fn);
-> +
->  	ret = __dma_atomic_pool_init(&atomic_pool_normal, atomic_pool_size,
->  				     GFP_KERNEL);
->  	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
-> @@ -231,6 +266,8 @@ void *dma_alloc_from_pool(struct device *dev, size_t size,
->  		ptr = (void *)val;
->  		memset(ptr, 0, size);
->  	}
-> +	if (gen_pool_avail(pool) < atomic_pool_size)
-> +		schedule_work(&atomic_pool_work);
->  
->  	return ptr;
->  }
+> --
+> Regards,
+> Sudeep
 > 
