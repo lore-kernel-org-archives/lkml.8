@@ -2,133 +2,135 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78ADEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:09:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 460E7C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54FB020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583222990;
-	bh=TNa7U/ItCOtHe8fdWbXp9SzpzlayoeF8TIag3zlUzAg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2aypWa+V8akD0DL7/fT3RS512zalM9nqXIQGnhF38xbQXYKYtxvZ4tsO0vZJXYo1h
-	 TV/CKbL9E3gIX1XNQxFpb0hELp+FjK1OvzteQCLromxW443xLCBIonCcEe7qmgZz28
-	 D8MVAHa019W2sqWzv8llsI6o6Ys5fjhdLnQ89Q30=
+	by mail.kernel.org (Postfix) with ESMTP id 2316220CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:10:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ywYBJW8u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgCCIJt (ORCPT
+        id S1727788AbgCCIKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:09:49 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43992 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbgCCIJs (ORCPT
+        Tue, 3 Mar 2020 03:10:17 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:39785 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727686AbgCCIKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:09:48 -0500
-Received: by mail-wr1-f66.google.com with SMTP id h9so2144223wrr.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:09:47 -0800 (PST)
+        Tue, 3 Mar 2020 03:10:17 -0500
+Received: by mail-lj1-f193.google.com with SMTP id f10so611083ljn.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:10:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=IrpN0Khyn8F1w21hxzWH/afGTVD23TpSjjqucFl7FDw=;
+        b=ywYBJW8uLDNL42qTQ9U0JspTdFYKPpfxz72SXdAOUhpjlgUd7wxjhMY5iXgaLa678Q
+         HUFAyVWZbqi3NiWcOrc2Hcu3uKjRWhQ1AvpWF8WhXsOT9IflBiCK7D16gHYx9Ig++426
+         Ltwj7ZkihrH+xDKNSfnx9gJ8auSEPilIdxbHYdLca3Qms+l1Zt6zD55cGgEQ9xaCqM5x
+         aGah8U5cvou12zbmi/ewmL75AZJytjxtCSC0hO13KIL7MbMHObhI8djdmbWUnyb+qlP7
+         SZ80cPbgyoyO++/N/5+eusOi9zApdk4kGurWR5YnU/fsQUrOa53AAB4c0GtRy9I2VFap
+         ZV5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=1rZb3JfiJUNf5SBeSXRzrX8hWQKOCLyxoGXM0AHXnvQ=;
-        b=HfpAoJwA+5LhBLbEdeGePnKn31zXDDrl99DerIi8DFX/pbVgH0u3lo/9qG9btIphEf
-         YNe9IM4222TSKmxmR9p3XzF+F3VZXYe/UYqEzMDEsnUoUJ71FgKFrr9xSYytnJiRrwR6
-         CNoHEM2CzsA9WklZE0aITJfpzoxz2D18MpGCto0uMKmU7nL3H2KXFfsL7NJGtwNMMMq1
-         7e7qNAEDBJBTP7NVeQxZVWNE+60xUsIYFQ0oTQbxjdOT4lEeWmJ3zibaPgHob/TVPghS
-         PSLz2Ra1mhKguSyeoxIFq0sY8AhijQQi2nSepcoCv8ns+E0m4KW/wz7yXqylwpgxwU5B
-         zhoQ==
-X-Gm-Message-State: ANhLgQ30Q4uBRzwn5GfbHFN2YRADM9d0oebXyMBtfVCWsOL52hDUMFwQ
-        dnH1H3Hd7yfVL3HXrnJr8zM=
-X-Google-Smtp-Source: ADFU+vteu5G2rX7KcA5JXwBEO5CYyBnhqS00yIwSpMnE1zL4SniK4s+xJ33pjF7gp/5ZjrcT9BuaYw==
-X-Received: by 2002:a5d:608e:: with SMTP id w14mr4420860wrt.201.1583222986799;
-        Tue, 03 Mar 2020 00:09:46 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id j66sm2752586wmb.21.2020.03.03.00.09.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 00:09:46 -0800 (PST)
-Date:   Tue, 3 Mar 2020 09:09:45 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Mel Gorman <mgorman@suse.de>, David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-Message-ID: <20200303080945.GX4380@dhcp22.suse.cz>
-References: <20200228033819.3857058-1-ying.huang@intel.com>
- <20200228034248.GE29971@bombadil.infradead.org>
- <87a7538977.fsf@yhuang-dev.intel.com>
- <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
- <871rqf850z.fsf@yhuang-dev.intel.com>
- <20200228094954.GB3772@suse.de>
- <87h7z76lwf.fsf@yhuang-dev.intel.com>
- <20200302151607.GC3772@suse.de>
- <87zhcy5hoj.fsf@yhuang-dev.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=IrpN0Khyn8F1w21hxzWH/afGTVD23TpSjjqucFl7FDw=;
+        b=pvyfzEfV5uxs+B1aS+NevT7A9gCbUwATTiPV/ORBwBPlUU5YLXvCD6KuzxiSBU3bhR
+         qbygKJtbBud9wDWo/LCbTfLUfnoZWCfP5nW5LeGrgJmn0EKivZQ9WMguJZuND//Bu2Vo
+         IRVWgx2agM+a+rSCo7WeKO59s8hcn2UAi2zE9BJI2cCYTyaLUfsQfz9Hdn4GZlaTI2ve
+         Y5KUlujB+OylcwJTrgdp7Xl9St5LPqb/7veIO/cp48PfbiVXiXKMGl/4AB9T8Wr+H2vt
+         xww+S/1qdH0pUMCP40LQMvV8ecxL0qM/JNeyCnJYojmSCAEUhbcJUzoOSydZ3Y0qY5Rg
+         QNdQ==
+X-Gm-Message-State: ANhLgQ0P1U3hvacNCBkTH8VSvDD2J/T1+p5cYKYlbE0YxTLnjrkudVBo
+        z57yKxPr1obif2YHjuuaoRTf7bKnVJvtEcqUrucg5Q==
+X-Google-Smtp-Source: ADFU+vtcf2XGPFtkahhGncITxSY967rhTlnPD1S9kyV1c/Dr1He9t9FKOVYN3msBIiEPycAaIXOvebfpwBgQ6K3phDo=
+X-Received: by 2002:a05:651c:203:: with SMTP id y3mr1677654ljn.151.1583223014795;
+ Tue, 03 Mar 2020 00:10:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87zhcy5hoj.fsf@yhuang-dev.intel.com>
+References: <1583209826-28853-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <1583209826-28853-1-git-send-email-anshuman.khandual@arm.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 3 Mar 2020 09:10:02 +0100
+Message-ID: <CAKfTPtB8sfJaOXL9D98ydxWZ76_8FLw4Z5KWWn73fcfkdiB-Vg@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: Conditionally enable test_idle_cores()
+ forward declaration
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        linux-next@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03-03-20 09:51:56, Huang, Ying wrote:
-> Mel Gorman <mgorman@suse.de> writes:
-> > On Mon, Mar 02, 2020 at 07:23:12PM +0800, Huang, Ying wrote:
-> >> If some applications cannot tolerate the latency incurred by the memory
-> >> allocation and zeroing.  Then we cannot discard instead of migrate
-> >> always.  While in some situations, less memory pressure can help.  So
-> >> it's better to let the administrator and the application choose the
-> >> right behavior in the specific situation?
-> >> 
-> >
-> > Is there an application you have in mind that benefits from discarding
-> > MADV_FREE pages instead of migrating them?
-> >
-> > Allowing the administrator or application to tune this would be very
-> > problematic. An application would require an update to the system call
-> > to take advantage of it and then detect if the running kernel supports
-> > it. An administrator would have to detect that MADV_FREE pages are being
-> > prematurely discarded leading to a slowdown and that is hard to detect.
-> > It could be inferred from monitoring compaction stats and checking
-> > if compaction activity is correlated with higher minor faults in the
-> > target application. Proving the correlation would require using the perf
-> > software event PERF_COUNT_SW_PAGE_FAULTS_MIN and matching the addresses
-> > to MADV_FREE regions that were freed prematurely. That is not an obvious
-> > debugging step to take when an application detects latency spikes.
-> >
-> > Now, you could add a counter specifically for MADV_FREE pages freed for
-> > reasons other than memory pressure and hope the administrator knows about
-> > the counter and what it means. That type of knowledge could take a long
-> > time to spread so it's really very important that there is evidence of
-> > an application that suffers due to the current MADV_FREE and migration
-> > behaviour.
-> 
-> OK.  I understand that this patchset isn't a universal win, so we need
-> some way to justify it.  I will try to find some application for that.
-> 
-> Another thought, as proposed by David Hildenbrand, it's may be a
-> universal win to discard clean MADV_FREE pages when migrating if there are
-> already memory pressure on the target node.  For example, if the free
-> memory on the target node is lower than high watermark?
+Hi Anshuman,
 
-This is already happening because if the target node is short on memory
-it will start to reclaim and if MADV_FREE pages are at the tail of
-inactive file LRU list then they will be dropped. Please note how that
-follows proper aging and doesn't introduce any special casing. Really
-MADV_FREE is an inactive cache for anonymous memory and we treat it like
-inactive page cache. This is not carved in stone of course but it really
-requires very good justification to change.
--- 
-Michal Hocko
-SUSE Labs
+On Tue, 3 Mar 2020 at 05:30, Anshuman Khandual
+<anshuman.khandual@arm.com> wrote:
+>
+> test_idle_cores()'s definition and all it's call sites are enclosed withi=
+n
+> CONFIG_SCHED_SMT. Hence the forward declaration needs to be conditionally
+> enabled in order to prevent build warnings like the following.
+>
+> kernel/sched/fair.c:1524:20: warning: =E2=80=98test_idle_cores=E2=80=99 d=
+eclared =E2=80=98static=E2=80=99
+> but never defined [-Wunused-function]
+>  static inline bool test_idle_cores(int cpu, bool def);
+>                     ^~~~~~~~~~~~~~~
+
+similar patches has already been sent:
+https://lore.kernel.org/lkml/20200226121244.7524-1-valentin.schneider@arm.c=
+om/
+https://lore.kernel.org/patchwork/patch/1201059/
+
+>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Juri Lelli <juri.lelli@redhat.com>
+> Cc: Vincent Guittot <vincent.guittot@linaro.org>
+> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Ben Segall <bsegall@google.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: sfr@canb.auug.org.au
+> Cc: linux-next@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> This patch solves a build problem that exists on next-20200302.
+>
+>  kernel/sched/fair.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 84594f8..827087f 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -1521,7 +1521,9 @@ static inline bool is_core_idle(int cpu)
+>  }
+>
+>  /* Forward declarations of select_idle_sibling helpers */
+> +#ifdef CONFIG_SCHED_SMT
+>  static inline bool test_idle_cores(int cpu, bool def);
+> +#endif
+>
+>  struct task_numa_env {
+>         struct task_struct *p;
+> --
+> 2.7.4
+>
