@@ -7,53 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31D51C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EEAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DC8720728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B9FD2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258258;
-	bh=ul3BD1JVY1ikCvVn58M0Rw/k60t1PMUufy4IbsK5uNk=;
+	s=default; t=1583258263;
+	bh=rMQn7kjsa7T0S3IBhZrsTg2HDBVaXevtNP7v9XkF4Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TAK9y+qwrnwQZRU+wRZcdZe3OEp4bVF/Ak6jBDiBtAUeS8TfDGTdhnj93czC5zB/q
-	 Z/MVSTNapcNbgn3RbuUk0d8g+zYWhFoEZDJo+P41PtyzNCHhozSeXqcpDDuQm6iEf1
-	 94enLHeiJBavsDuQUbp29cT5KivHYkpkIK9qknbc=
+	b=d79e/Dtjx7SZg+X7/64RmVhingBrf8zatRVTMMzcyAKqGmqsJVJkEg1BQh3AREkm0
+	 JhCTA3DV1u0+PbgjK2Gtzj8FdxvXuLMuWCN2O43Y3eRmyFOAEspG7auMbmStdKbltj
+	 JjYEaJgI9fM7vSTF1n+k+SgQDqDDtavNxHo+BZcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733111AbgCCR5g (ORCPT
+        id S1733130AbgCCR5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:57:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:57:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733100AbgCCR5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:57:34 -0500
+        id S1732834AbgCCR5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:57:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41D9720656;
-        Tue,  3 Mar 2020 17:57:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 158D12072D;
+        Tue,  3 Mar 2020 17:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258253;
-        bh=ul3BD1JVY1ikCvVn58M0Rw/k60t1PMUufy4IbsK5uNk=;
+        s=default; t=1583258258;
+        bh=rMQn7kjsa7T0S3IBhZrsTg2HDBVaXevtNP7v9XkF4Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=scKyqlXvfLj82FemR4G7sVoIguC1xPTxRiZhUhHdI8W9ltUL6MrvhVJepLzTIicNz
-         4ADHMR+V2WDMSvyCv0HBdUzazUCSijuRkX13TocJYrP0ouR2N3tQJgt0xTfAdMDWH+
-         eP/3MMlqpHCw+k4a7o1I0Ta1ZawgIKEkbG1MyRNo=
+        b=xyMJncZ96Z/bNhIaE4L9NRGDtGpX2D8+byn/yuwGSxxpC01gEltZlr/gD8BeJGA/+
+         rQl4OpB8suRN+697OnJ61EpXyC1WhUtmaDwH/afhNWeBSNX71nYhO8WULve1tEyify
+         S9s8KZ1bAvNgri+F1Njjd3J2aWcje4sNSfD+8Efo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>, bristot@redhat.com,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.4 128/152] kprobes: Set unoptimized flag after unoptimizing code
-Date:   Tue,  3 Mar 2020 18:43:46 +0100
-Message-Id: <20200303174317.356855024@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Paul Burton <paulburton@kernel.org>, ralf@linux-mips.org,
+        linux-mips@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH 5.4 094/152] MIPS: VPE: Fix a double free and a memory leak in release_vpe()
+Date:   Tue,  3 Mar 2020 18:43:12 +0100
+Message-Id: <20200303174313.271395649@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -66,89 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-commit f66c0447cca1281116224d474cdb37d6a18e4b5b upstream.
+commit bef8e2dfceed6daeb6ca3e8d33f9c9d43b926580 upstream.
 
-Set the unoptimized flag after confirming the code is completely
-unoptimized. Without this fix, when a kprobe hits the intermediate
-modified instruction (the first byte is replaced by an INT3, but
-later bytes can still be a jump address operand) while unoptimizing,
-it can return to the middle byte of the modified code, which causes
-an invalid instruction exception in the kernel.
+Pointer on the memory allocated by 'alloc_progmem()' is stored in
+'v->load_addr'. So this is this memory that should be freed by
+'release_progmem()'.
 
-Usually, this is a rare case, but if we put a probe on the function
-call while text patching, it always causes a kernel panic as below:
+'release_progmem()' is only a call to 'kfree()'.
 
- # echo p text_poke+5 > kprobe_events
- # echo 1 > events/kprobes/enable
- # echo 0 > events/kprobes/enable
+With the current code, there is both a double free and a memory leak.
+Fix it by passing the correct pointer to 'release_progmem()'.
 
-invalid opcode: 0000 [#1] PREEMPT SMP PTI
- RIP: 0010:text_poke+0x9/0x50
- Call Trace:
-  arch_unoptimize_kprobe+0x22/0x28
-  arch_unoptimize_kprobes+0x39/0x87
-  kprobe_optimizer+0x6e/0x290
-  process_one_work+0x2a0/0x610
-  worker_thread+0x28/0x3d0
-  ? process_one_work+0x610/0x610
-  kthread+0x10d/0x130
-  ? kthread_park+0x80/0x80
-  ret_from_fork+0x3a/0x50
-
-text_poke() is used for patching the code in optprobes.
-
-This can happen even if we blacklist text_poke() and other functions,
-because there is a small time window during which we show the intermediate
-code to other CPUs.
-
- [ mingo: Edited the changelog. ]
-
-Tested-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: bristot@redhat.com
-Fixes: 6274de4984a6 ("kprobes: Support delayed unoptimizing")
-Link: https://lkml.kernel.org/r/157483422375.25881.13508326028469515760.stgit@devnote2
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: e01402b115ccc ("More AP / SP bits for the 34K, the Malta bits and things. Still wants")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: ralf@linux-mips.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/kprobes.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/mips/kernel/vpe.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -510,6 +510,8 @@ static void do_unoptimize_kprobes(void)
- 	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
- 	/* Loop free_list for disarming */
- 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
-+		/* Switching from detour code to origin */
-+		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
- 		/* Disarm probes if marked disabled */
- 		if (kprobe_disabled(&op->kp))
- 			arch_disarm_kprobe(&op->kp);
-@@ -649,6 +651,7 @@ static void force_unoptimize_kprobe(stru
+--- a/arch/mips/kernel/vpe.c
++++ b/arch/mips/kernel/vpe.c
+@@ -134,7 +134,7 @@ void release_vpe(struct vpe *v)
  {
- 	lockdep_assert_cpus_held();
- 	arch_unoptimize_kprobe(op);
-+	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
- 	if (kprobe_disabled(&op->kp))
- 		arch_disarm_kprobe(&op->kp);
+ 	list_del(&v->list);
+ 	if (v->load_addr)
+-		release_progmem(v);
++		release_progmem(v->load_addr);
+ 	kfree(v);
  }
-@@ -676,7 +679,6 @@ static void unoptimize_kprobe(struct kpr
- 		return;
- 	}
  
--	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
- 	if (!list_empty(&op->list)) {
- 		/* Dequeue from the optimization queue */
- 		list_del_init(&op->list);
 
 
