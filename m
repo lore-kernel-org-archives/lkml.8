@@ -2,143 +2,104 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D10FC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F6FC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F174246E9
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED9E246D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583203822;
+	bh=TmISeBl+z/riu5zI1Aow+4OtmrTWBLBSDho4zHJx+0g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q3NbnE/RK8tmlZC105SQlvNTO5Qp+68BRTlcgcd0ttXiMJgY2NQ3vPS8kr1UE7C6E
+	 VKQQJwoY8oCwbj8zk3UUoxdgUHV9ka+zaTZTtb+WXwMLgUabdPJSNuvyDbcGvbOZpD
+	 DVUOyqOM40FW9SQAcY6YCBSWWjBUpjI2UjMPZ/DI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729130AbgCCCuT (ORCPT
+        id S1729145AbgCCCuU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:50:19 -0500
-Received: from mga17.intel.com ([192.55.52.151]:48417 "EHLO mga17.intel.com"
+        Mon, 2 Mar 2020 21:50:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729082AbgCCCuJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:09 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:50:08 -0800
-X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="233439160"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.30.67]) ([10.255.30.67])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 02 Mar 2020 18:50:05 -0800
-Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when function
- is out-of-range
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-2-sean.j.christopherson@intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <6b41fc5c-f7f4-b20d-cfb5-95bf13cc7534@intel.com>
-Date:   Tue, 3 Mar 2020 10:50:03 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1727837AbgCCCuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:08 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EE34246E1;
+        Tue,  3 Mar 2020 02:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583203808;
+        bh=TmISeBl+z/riu5zI1Aow+4OtmrTWBLBSDho4zHJx+0g=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=rnm/mA6RElk4Mr15qlAUKRkqBd1GrqmVn4R+gjzqRTtiChBdLuQxU/i09JAGq7Biv
+         Dw5J67/IaFDo/+cuuai44qeEHWbuelpnjcysrEtUxcIpshoLh/Z3umebMvibrv3EIf
+         DmkFiDQPIeFM1xNUR4q1GkuQL8uSwivVqtL3ikXk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sergey Organov <sorganov@gmail.com>,
+        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 04/13] usb: gadget: serial: fix Tx stall after buffer overflow
+Date:   Mon,  2 Mar 2020 21:49:53 -0500
+Message-Id: <20200303025002.10600-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200303025002.10600-1-sashal@kernel.org>
+References: <20200303025002.10600-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200302195736.24777-2-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/2020 3:57 AM, Sean Christopherson wrote:
-> Rework kvm_cpuid() to query entry->function when adjusting the output
-> values so that the original function (in the aptly named "function") is
-> preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
-> trace the max function for a range instead of the requested function if
-> the requested function is out-of-range and an entry for the max function
-> exists.
-> 
-> Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
-> Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
-> Cc: Jim Mattson <jmattson@google.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->   arch/x86/kvm/cpuid.c | 15 +++++++--------
->   1 file changed, 7 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index b1c469446b07..6be012937eba 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
->   	return max && function <= max->eax;
->   }
->   
-> +/* Returns true if the requested leaf/function exists in guest CPUID. */
->   bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->   	       u32 *ecx, u32 *edx, bool check_limit)
->   {
-> -	u32 function = *eax, index = *ecx;
-> +	const u32 function = *eax, index = *ecx;
->   	struct kvm_cpuid_entry2 *entry;
-> -	struct kvm_cpuid_entry2 *max;
->   	bool found;
->   
->   	entry = kvm_find_cpuid_entry(vcpu, function, index);
-> @@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
->   	 */
->   	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
->   	    !cpuid_function_in_range(vcpu, function)) {
-> -		max = kvm_find_cpuid_entry(vcpu, 0, 0);
-> -		if (max) {
-> -			function = max->eax;
-> -			entry = kvm_find_cpuid_entry(vcpu, function, index);
-> -		}
-> +		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
-> +		if (entry)
-> +			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
+From: Sergey Organov <sorganov@gmail.com>
 
-There is a problem.
+[ Upstream commit e4bfded56cf39b8d02733c1e6ef546b97961e18a ]
 
-when queried leaf is out of range on Intel CPU, it returns the maximum 
-basic leaf, and any dependence on input ECX (i.e., subleaf) value in the 
-basic leaf is honored. As disclaimed in SDM of CPUID instruction.
+Symptom: application opens /dev/ttyGS0 and starts sending (writing) to
+it while either USB cable is not connected, or nobody listens on the
+other side of the cable. If driver circular buffer overflows before
+connection is established, no data will be written to the USB layer
+until/unless /dev/ttyGS0 is closed and re-opened again by the
+application (the latter besides having no means of being notified about
+the event of establishing of the connection.)
 
-The ECX should be honored if and only the leaf has a significant index.
-If the leaf doesn't has a significant index, it just ignores the EDX 
-input in bare metal.
+Fix: on open and/or connect, kick Tx to flush circular buffer data to
+USB layer.
 
-So it should be something like:
+Signed-off-by: Sergey Organov <sorganov@gmail.com>
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/usb/gadget/function/u_serial.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
-	!cpuid_function_in_range(vcpu, function)) {
-	entry = kvm_find_cpuid_entry(vcpu, 0, 0);
-	if (entry) {
-		entry = kvm_find_cpuid_entry(vcpu, entry->eax, 0);
-		if (entry &&
-		    entry->flags & KVM_CPUID_FLAG_SIGNIFCANT_INDEX ) {
-			entry = kvm_find_cpuid_entry(vcpu, entry->eax,
-						     index);
-		}
-	}
-}
-
->   	}
->   	if (entry) {
->   		*eax = entry->eax;
->   		*ebx = entry->ebx;
->   		*ecx = entry->ecx;
->   		*edx = entry->edx;
-> -		if (function == 7 && index == 0) {
-> +
-> +		if (entry->function == 7 && index == 0) {
->   			u64 data;
->   		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
->   			    (data & TSX_CTRL_CPUID_CLEAR))
-> 
+diff --git a/drivers/usb/gadget/function/u_serial.c b/drivers/usb/gadget/function/u_serial.c
+index 510a54f889635..5d7d0f2e80a5e 100644
+--- a/drivers/usb/gadget/function/u_serial.c
++++ b/drivers/usb/gadget/function/u_serial.c
+@@ -715,8 +715,10 @@ static int gs_start_io(struct gs_port *port)
+ 	port->n_read = 0;
+ 	started = gs_start_rx(port);
+ 
+-	/* unblock any pending writes into our circular buffer */
+ 	if (started) {
++		gs_start_tx(port);
++		/* Unblock any pending writes into our circular buffer, in case
++		 * we didn't in gs_start_tx() */
+ 		tty_wakeup(port->port.tty);
+ 	} else {
+ 		gs_free_requests(ep, head, &port->read_allocated);
+-- 
+2.20.1
 
