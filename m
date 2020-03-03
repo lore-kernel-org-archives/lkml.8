@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C56C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31664C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C11AA2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C399214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257516;
-	bh=Ub3p2TSJLqskWyV5CNAcadRpsni35F9PTePT2NtfYRw=;
+	s=default; t=1583257520;
+	bh=SrmmSz4itM+cotM5mCLw5iWToKeU8vurv69OY/Ze4FU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EEdGnL1vI2giirafRnDgHHrUthuF1ID8pXd9F3soOav2NUseaWQw3gLxMw4kpMLi6
-	 4SgzGYUXQb3mGEwJmoWOX58imfs8BpmLRWQoRKQZkPv9mgFDOkiJZFohRPxyzvJ42i
-	 tMlVEC/8OYpIvMFAUhuoOdXlmYW7zZRBCqspi18Q=
+	b=bgR0SX+yy64YLUk/gTFiCy5Yo9ZHj3G2F23lDhD/glqC+MVVfZebUWVniE2WjeIwi
+	 wFxkh49QFSNLYC76O67Vd4z7M8Vpr4rdy0ENgZbdeizSAjwWkEuHc1ZYmqKSugtwBY
+	 jfb/Re+dTyU7K84crzLuv78Oga5vUElT+MCjUWRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730892AbgCCRpP (ORCPT
+        id S1730902AbgCCRpS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:45:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51114 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729917AbgCCRpM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:12 -0500
+        id S1730886AbgCCRpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:45:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C76792146E;
-        Tue,  3 Mar 2020 17:45:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582B020870;
+        Tue,  3 Mar 2020 17:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257511;
-        bh=Ub3p2TSJLqskWyV5CNAcadRpsni35F9PTePT2NtfYRw=;
+        s=default; t=1583257513;
+        bh=SrmmSz4itM+cotM5mCLw5iWToKeU8vurv69OY/Ze4FU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YT4Y7OiRf9YpR/QMiItvB6anRNtPGamv390qZ5VLWxnogCe4a1trqN2F2zpFJbs2G
-         Gmgla1yGiDICGqUfKg/U0R83AemyC7w2LdibyfKvT1KNHhfWGwRNAVdJ4OwxDpHNfn
-         Wj+jmn5J8mD12abjZg+dpG1wph+emjTXNqFflf+E=
+        b=V9udS5eI1WHnPOAZzfwsGsB+BflDKJrSDmBblXumBIHOh5V3UYq5se5H+nnoYVflL
+         S3B5tYwM10x/0UwfACoVuLw/qXve+uaIqPDtVxuGwz9sKLdxoYEmE3wA5igILv4mjU
+         in71tPDgGdkMeKYNmXeMdlfDy8OXq+wEAW6Lm0As=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 023/176] net: macb: Properly handle phylink on at91rm9200
-Date:   Tue,  3 Mar 2020 18:41:27 +0100
-Message-Id: <20200303174307.222995318@linuxfoundation.org>
+Subject: [PATCH 5.5 024/176] net: rtnetlink: fix bugs in rtnl_alt_ifname()
+Date:   Tue,  3 Mar 2020 18:41:28 +0100
+Message-Id: <20200303174307.342278979@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,152 +61,128 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit ac2fcfa9fd26db67d7000677c05629c34cc94564 ]
+[ Upstream commit 44bfa9c5e5f06c72540273813e4c66beb5a8c213 ]
 
-at91ether_init was handling the phy mode and speed but since the switch to
-phylink, the NCFGR register got overwritten by macb_mac_config(). The issue
-is that the RM9200_RMII bit and the MACB_CLK_DIV32 field are cleared
-but never restored as they conflict with the PAE, GBE and PCSSEL bits.
+Since IFLA_ALT_IFNAME is an NLA_STRING, we have no
+guarantee it is nul terminated.
 
-Add new capability to differentiate between EMAC and the other versions of
-the IP and use it to set and avoid clearing the relevant bits.
+We should use nla_strdup() instead of kstrdup(), since this
+helper will make sure not accessing out-of-bounds data.
 
-Also, this fixes a NULL pointer dereference in macb_mac_link_up as the EMAC
-doesn't use any rings/bufffers/queues.
+BUG: KMSAN: uninit-value in strlen+0x5e/0xa0 lib/string.c:535
+CPU: 1 PID: 19157 Comm: syz-executor.5 Not tainted 5.5.0-rc5-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:118
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ strlen+0x5e/0xa0 lib/string.c:535
+ kstrdup+0x7f/0x1a0 mm/util.c:59
+ rtnl_alt_ifname net/core/rtnetlink.c:3495 [inline]
+ rtnl_linkprop+0x85d/0xc00 net/core/rtnetlink.c:3553
+ rtnl_newlinkprop+0x9d/0xb0 net/core/rtnetlink.c:3568
+ rtnetlink_rcv_msg+0x1153/0x1570 net/core/rtnetlink.c:5424
+ netlink_rcv_skb+0x451/0x650 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x50/0x60 net/core/rtnetlink.c:5442
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0xf9e/0x1100 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x1248/0x14d0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2330
+ ___sys_sendmsg net/socket.c:2384 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45b3b9
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff1c7b1ac78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007ff1c7b1b6d4 RCX: 000000000045b3b9
+RDX: 0000000000000000 RSI: 0000000020000040 RDI: 0000000000000003
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 00000000000009cb R14: 00000000004cb3dd R15: 000000000075bf2c
 
-Fixes: 7897b071ac3b ("net: macb: convert to phylink")
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Uninit was created at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_poison_shadow+0x66/0xd0 mm/kmsan/kmsan.c:127
+ kmsan_slab_alloc+0x8a/0xe0 mm/kmsan/kmsan_hooks.c:82
+ slab_alloc_node mm/slub.c:2774 [inline]
+ __kmalloc_node_track_caller+0xb40/0x1200 mm/slub.c:4382
+ __kmalloc_reserve net/core/skbuff.c:141 [inline]
+ __alloc_skb+0x2fd/0xac0 net/core/skbuff.c:209
+ alloc_skb include/linux/skbuff.h:1049 [inline]
+ netlink_alloc_large_skb net/netlink/af_netlink.c:1174 [inline]
+ netlink_sendmsg+0x7d3/0x14d0 net/netlink/af_netlink.c:1892
+ sock_sendmsg_nosec net/socket.c:639 [inline]
+ sock_sendmsg net/socket.c:659 [inline]
+ ____sys_sendmsg+0x12b6/0x1350 net/socket.c:2330
+ ___sys_sendmsg net/socket.c:2384 [inline]
+ __sys_sendmsg+0x451/0x5f0 net/socket.c:2417
+ __do_sys_sendmsg net/socket.c:2426 [inline]
+ __se_sys_sendmsg+0x97/0xb0 net/socket.c:2424
+ __x64_sys_sendmsg+0x4a/0x70 net/socket.c:2424
+ do_syscall_64+0xb8/0x160 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 36fbf1e52bd3 ("net: rtnetlink: add linkprop commands to add and delete alternative ifnames")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Jiri Pirko <jiri@mellanox.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/cadence/macb.h      |    1 
- drivers/net/ethernet/cadence/macb_main.c |   60 ++++++++++++++++---------------
- 2 files changed, 33 insertions(+), 28 deletions(-)
+ net/core/rtnetlink.c |   26 ++++++++++++--------------
+ 1 file changed, 12 insertions(+), 14 deletions(-)
 
---- a/drivers/net/ethernet/cadence/macb.h
-+++ b/drivers/net/ethernet/cadence/macb.h
-@@ -645,6 +645,7 @@
- #define MACB_CAPS_GEM_HAS_PTP			0x00000040
- #define MACB_CAPS_BD_RD_PREFETCH		0x00000080
- #define MACB_CAPS_NEEDS_RSTONUBR		0x00000100
-+#define MACB_CAPS_MACB_IS_EMAC			0x08000000
- #define MACB_CAPS_FIFO_MODE			0x10000000
- #define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
- #define MACB_CAPS_SG_DISABLED			0x40000000
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -533,8 +533,21 @@ static void macb_mac_config(struct phyli
- 	old_ctrl = ctrl = macb_or_gem_readl(bp, NCFGR);
+--- a/net/core/rtnetlink.c
++++ b/net/core/rtnetlink.c
+@@ -3499,27 +3499,25 @@ static int rtnl_alt_ifname(int cmd, stru
+ 	if (err)
+ 		return err;
  
- 	/* Clear all the bits we might set later */
--	ctrl &= ~(GEM_BIT(GBE) | MACB_BIT(SPD) | MACB_BIT(FD) | MACB_BIT(PAE) |
--		  GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL));
-+	ctrl &= ~(MACB_BIT(SPD) | MACB_BIT(FD) | MACB_BIT(PAE));
+-	alt_ifname = nla_data(attr);
++	alt_ifname = nla_strdup(attr, GFP_KERNEL);
++	if (!alt_ifname)
++		return -ENOMEM;
 +
-+	if (bp->caps & MACB_CAPS_MACB_IS_EMAC) {
-+		if (state->interface == PHY_INTERFACE_MODE_RMII)
-+			ctrl |= MACB_BIT(RM9200_RMII);
-+	} else {
-+		ctrl &= ~(GEM_BIT(GBE) | GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL));
-+
-+		/* We do not support MLO_PAUSE_RX yet */
-+		if (state->pause & MLO_PAUSE_TX)
-+			ctrl |= MACB_BIT(PAE);
-+
-+		if (state->interface == PHY_INTERFACE_MODE_SGMII)
-+			ctrl |= GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL);
-+	}
+ 	if (cmd == RTM_NEWLINKPROP) {
+-		alt_ifname = kstrdup(alt_ifname, GFP_KERNEL);
+-		if (!alt_ifname)
+-			return -ENOMEM;
+ 		err = netdev_name_node_alt_create(dev, alt_ifname);
+-		if (err) {
+-			kfree(alt_ifname);
+-			return err;
+-		}
++		if (!err)
++			alt_ifname = NULL;
+ 	} else if (cmd == RTM_DELLINKPROP) {
+ 		err = netdev_name_node_alt_destroy(dev, alt_ifname);
+-		if (err)
+-			return err;
+ 	} else {
+-		WARN_ON(1);
+-		return 0;
++		WARN_ON_ONCE(1);
++		err = -EINVAL;
+ 	}
  
- 	if (state->speed == SPEED_1000)
- 		ctrl |= GEM_BIT(GBE);
-@@ -544,13 +557,6 @@ static void macb_mac_config(struct phyli
- 	if (state->duplex)
- 		ctrl |= MACB_BIT(FD);
- 
--	/* We do not support MLO_PAUSE_RX yet */
--	if (state->pause & MLO_PAUSE_TX)
--		ctrl |= MACB_BIT(PAE);
--
--	if (state->interface == PHY_INTERFACE_MODE_SGMII)
--		ctrl |= GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL);
--
- 	/* Apply the new configuration, if any */
- 	if (old_ctrl ^ ctrl)
- 		macb_or_gem_writel(bp, NCFGR, ctrl);
-@@ -569,9 +575,10 @@ static void macb_mac_link_down(struct ph
- 	unsigned int q;
- 	u32 ctrl;
- 
--	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
--		queue_writel(queue, IDR,
--			     bp->rx_intr_mask | MACB_TX_INT_FLAGS | MACB_BIT(HRESP));
-+	if (!(bp->caps & MACB_CAPS_MACB_IS_EMAC))
-+		for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
-+			queue_writel(queue, IDR,
-+				     bp->rx_intr_mask | MACB_TX_INT_FLAGS | MACB_BIT(HRESP));
- 
- 	/* Disable Rx and Tx */
- 	ctrl = macb_readl(bp, NCR) & ~(MACB_BIT(RE) | MACB_BIT(TE));
-@@ -588,17 +595,19 @@ static void macb_mac_link_up(struct phyl
- 	struct macb_queue *queue;
- 	unsigned int q;
- 
--	macb_set_tx_clk(bp->tx_clk, bp->speed, ndev);
-+	if (!(bp->caps & MACB_CAPS_MACB_IS_EMAC)) {
-+		macb_set_tx_clk(bp->tx_clk, bp->speed, ndev);
- 
--	/* Initialize rings & buffers as clearing MACB_BIT(TE) in link down
--	 * cleared the pipeline and control registers.
--	 */
--	bp->macbgem_ops.mog_init_rings(bp);
--	macb_init_buffers(bp);
-+		/* Initialize rings & buffers as clearing MACB_BIT(TE) in link down
-+		 * cleared the pipeline and control registers.
-+		 */
-+		bp->macbgem_ops.mog_init_rings(bp);
-+		macb_init_buffers(bp);
- 
--	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
--		queue_writel(queue, IER,
--			     bp->rx_intr_mask | MACB_TX_INT_FLAGS | MACB_BIT(HRESP));
-+		for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
-+			queue_writel(queue, IER,
-+				     bp->rx_intr_mask | MACB_TX_INT_FLAGS | MACB_BIT(HRESP));
-+	}
- 
- 	/* Enable Rx and Tx */
- 	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(RE) | MACB_BIT(TE));
-@@ -4002,7 +4011,6 @@ static int at91ether_init(struct platfor
- 	struct net_device *dev = platform_get_drvdata(pdev);
- 	struct macb *bp = netdev_priv(dev);
- 	int err;
--	u32 reg;
- 
- 	bp->queues[0].bp = bp;
- 
-@@ -4016,11 +4024,7 @@ static int at91ether_init(struct platfor
- 
- 	macb_writel(bp, NCR, 0);
- 
--	reg = MACB_BF(CLK, MACB_CLK_DIV32) | MACB_BIT(BIG);
--	if (bp->phy_interface == PHY_INTERFACE_MODE_RMII)
--		reg |= MACB_BIT(RM9200_RMII);
--
--	macb_writel(bp, NCFGR, reg);
-+	macb_writel(bp, NCFGR, MACB_BF(CLK, MACB_CLK_DIV32) | MACB_BIT(BIG));
- 
- 	return 0;
+-	*changed = true;
+-	return 0;
++	kfree(alt_ifname);
++	if (!err)
++		*changed = true;
++	return err;
  }
-@@ -4179,7 +4183,7 @@ static const struct macb_config sama5d4_
- };
  
- static const struct macb_config emac_config = {
--	.caps = MACB_CAPS_NEEDS_RSTONUBR,
-+	.caps = MACB_CAPS_NEEDS_RSTONUBR | MACB_CAPS_MACB_IS_EMAC,
- 	.clk_init = at91ether_clk_init,
- 	.init = at91ether_init,
- };
+ static int rtnl_linkprop(int cmd, struct sk_buff *skb, struct nlmsghdr *nlh,
 
 
