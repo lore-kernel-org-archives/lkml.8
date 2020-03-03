@@ -2,88 +2,126 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A990C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A12AEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DF3B22B48
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D40E22B48
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgCCELw (ORCPT
+        id S1727255AbgCCEMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:11:52 -0500
-Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:45622 "EHLO
-        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726956AbgCCELw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:11:52 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04452;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=15;SR=0;TI=SMTPD_---0TrWPslU_1583208694;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TrWPslU_1583208694)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 03 Mar 2020 12:11:35 +0800
-Subject: Re: [PATCH v9 07/20] mm/lru: introduce TestClearPageLRU
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     cgroups@vger.kernel.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
- <1583146830-169516-8-git-send-email-alex.shi@linux.alibaba.com>
- <20200302141144.b30abe0d89306fd387e13a92@linux-foundation.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <9cacdc21-9c1f-2a17-05cb-e9cf2959cef5@linux.alibaba.com>
-Date:   Tue, 3 Mar 2020 12:11:34 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Mon, 2 Mar 2020 23:12:09 -0500
+Received: from mga12.intel.com ([192.55.52.136]:10034 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726990AbgCCEMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 23:12:09 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 20:12:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
+   d="scan'208";a="412601038"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 02 Mar 2020 20:12:08 -0800
+Date:   Mon, 2 Mar 2020 20:12:08 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when
+ function is out-of-range
+Message-ID: <20200303041208.GE27842@linux.intel.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-2-sean.j.christopherson@intel.com>
+ <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
+ <20200302204940.GG6244@linux.intel.com>
+ <16e902a8-7883-0b67-d4ee-73e8fe22f955@intel.com>
+ <20200303034532.GC27842@linux.intel.com>
+ <fcd08758-2191-8fb0-35b1-c3ce5b2cbb43@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302141144.b30abe0d89306fd387e13a92@linux-foundation.org>
-Content-Type: text/plain; charset=gbk
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fcd08758-2191-8fb0-35b1-c3ce5b2cbb43@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-ÔÚ 2020/3/3 ÉÏÎç6:11, Andrew Morton Ð´µÀ:
->> -		if (PageLRU(page)) {
->> +		if (TestClearPageLRU(page)) {
->>  			lruvec = mem_cgroup_page_lruvec(page, pgdat);
->> -			ClearPageLRU(page);
->>  			del_page_from_lru_list(page, lruvec, page_lru(page));
->>  		} else
+On Tue, Mar 03, 2020 at 12:02:39PM +0800, Xiaoyao Li wrote:
+> On 3/3/2020 11:45 AM, Sean Christopherson wrote:
+> >On Tue, Mar 03, 2020 at 10:27:47AM +0800, Xiaoyao Li wrote:
+> >>Sorry I cannot catch you. Why it's a violation of Intel's SDM?
+> >
+> >The case being discussed above would look like:
+> >
+> >KVM CPUID Entries:
+> >    Function   Index Output
+> >    0x00000000 0x00: eax=0x0000000b ebx=0x756e6547 ecx=0x6c65746e edx=0x49656e69
+> >    0x00000001 0x00: eax=0x000906ea ebx=0x03000800 ecx=0xfffa3223 edx=0x0f8bfbff
+> >    0x00000002 0x00: eax=0x00000001 ebx=0x00000000 ecx=0x0000004d edx=0x002c307d
+> >    0x00000003 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
+> >    0x00000004 0x00: eax=0x00000121 ebx=0x01c0003f ecx=0x0000003f edx=0x00000001
+> >    0x00000004 0x01: eax=0x00000122 ebx=0x01c0003f ecx=0x0000003f edx=0x00000001
+> >    0x00000004 0x02: eax=0x00000143 ebx=0x03c0003f ecx=0x00000fff edx=0x00000001
+> >    0x00000004 0x03: eax=0x00000163 ebx=0x03c0003f ecx=0x00003fff edx=0x00000006
+> >    0x00000005 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000003 edx=0x00000000
+> >    0x00000006 0x00: eax=0x00000004 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
+> >    0x00000007 0x00: eax=0x00000000 ebx=0x009c4fbb ecx=0x00000004 edx=0x84000000
+> >    0x00000008 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
+> >    0x00000009 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
+> >    0x0000000a 0x00: eax=0x07300402 ebx=0x00000000 ecx=0x00000000 edx=0x00000603
+> >--> MISSING CPUID.0xB.0
+> >    0x0000000b 0x01: eax=0x00000000 ebx=0x00000001 ecx=0x00000201 edx=0x00000003
+> >
+> >CPUID.0xB.0 does not exist, so output.ECX=0, which indicates an invalid
+> >level-type.
+> >
+> >The SDM states (for CPUID.0xB):
+> >
+> >    If an input value n in ECX returns the invalid level-type of 0 in ECX[15:8],
+> >    other input values with ECX > n also return 0 in ECX[15:8]
+> >
+> >That means returning a valid level-type in CPUID.0xB.1 as above violates
+> >the SDM's definition of how leaf 0xB works.  I'm arguing we can ignore the
+> >adjustments that would be done on output.E{C,D} for an out of range leaf
+> >because the model is bogus.
 > 
-> The code will now get exclusive access of the page->flags cacheline and
-> will dirty that cacheline, even for !PageLRU() pages.  What is the
-> performance impact of this?
+> Right.
 > 
+> So we'd better do something in KVM_SET_CPUID* , to avoid userspace set bogus
+> cpuid.
+> 
+> >>Supposing the max basic is 0x1f, and it queries cpuid(0x20, 0x5),
+> >>it should return cpuid(0x1f, 0x5).
+> >>
+> >>But based on this patch, it returns all zeros.
+> >
+> >Have you tested the patch, or is your comment based on the above discussion
+> >and/or code inspection?  Honest question, because I've thoroughly tested
+> >the above scenario and it works as you describe, but now I'm worried I
+> >completely botched my testing.
+> >
+> 
+> No, I didn't test.
+> 
+> Leaf 0xB and 0x1f are special cases when they are the maximum basic leaf,
+> because no matter what subleaf is, there is always a non-zero E[CX,DX].
+> 
+> If cpuid.0 returns maximum basic leaf as 0xB/0x1F, when queried leaf is
+> greater, it should always return a non-zero value.
 
-Hi Andrew,
-
-Thanks a lot for comments!
-
-I was tested the whole patchset with fengguang's case-lru-file-readtwice
-https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/
-which is most sensitive case on PageLRU I found. There are no clear performance
-drop.
-
-On this single patch, I just test the same case again, there is still no perf
-drop. some data is here on my 96 threads machine:
-
-		no lock_dep	w lock_dep and few other debug option
-w this patch, 	50.96MB/s		32.93MB/s
-w/o this patch, 50.50MB/s		33.53MB/s
-
-
-And also no any warning from Intel 0day yet.
-
-Thanks a lot!
-Alex
+Yes, and that's userspace's responsibility to not screw up.  E.g. if
+userspace didn't create CPUID.0xB.0 (as above) then it's not KVM's fault
+for returning zeros when the guest executes CPUID.0xB.0.
