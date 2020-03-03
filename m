@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E1EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68013C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D95F2214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FFD02146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257562;
-	bh=23q8wOej2CGk3XczCcVwpa2g7hpc7dm7DZVNhrIvC0A=;
+	s=default; t=1583257565;
+	bh=VqD6tVyfBbHhJji5Ia9DK3sC5AXzCUx+LUQ1GvO/2VQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P1w51DrSahvONa49g79dgEgd99wUXgqc3UhMEJy3u3Zai0JoIsJK1+KVD6UMLOLy0
-	 dBXvBpYO6bPEmMiRxaTukqDf23NGps3IzA/iPZ1QWqKezMXKOctIy4ofhbyDipv6/9
-	 VvSGL6ch15qTXaONS9P/d7cSd/yPUQj/ZLRNMHHw=
+	b=ApFr/YVL0UEUlgq1VJDeWp1SZji3dOTUuRnWeBAvzUL9h5/p0nUv1+3hZJF5SGceO
+	 HeCXHMz2DQ5jDttLMN3rFcfeOUP8Sj1SPG4xfUNvhDJ+F7mCAssoJHt6KCAsrK23nx
+	 MEG49ESBFVpQ6tnP30eZtZAFIXubKZTYGosB51Bg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgCCRqB (ORCPT
+        id S1730606AbgCCRqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:46:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52292 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:46:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731031AbgCCRp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:57 -0500
+        id S1731041AbgCCRqA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:46:00 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0A102187F;
-        Tue,  3 Mar 2020 17:45:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 564CB20842;
+        Tue,  3 Mar 2020 17:45:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257557;
-        bh=23q8wOej2CGk3XczCcVwpa2g7hpc7dm7DZVNhrIvC0A=;
+        s=default; t=1583257559;
+        bh=VqD6tVyfBbHhJji5Ia9DK3sC5AXzCUx+LUQ1GvO/2VQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w7SlO17Zto8OFSOYI0BMcJcbXlUZ9p4K90TjfG2l+hEHSHUfqOUCkT0WKEVK9SaGi
-         +i4nnkPaDFZsLHf4CIEGoVtM2KwDyCTo4WsYhX6VqTBA89S6OA9IJLNVmXdaS9GwG/
-         knRv5qjA1BET9DbvVJHbvXj5ETMgnMIuUICKXZ1Q=
+        b=o9PgyIB8JEtRAQ5nSih+Q031Zx/uJp1o5GwCVaGet0aVX8gfW7AorV3M1SfCb6HK8
+         z80cXvsMckIjfgcnpN4hMfZxDKHNnR8CVvuTiP4wcn+LRSNfs8d60mZl7duG3bN64m
+         1RWHBHm2TvLKLlKK/VN119Q8oKUayRjVVnUPKblg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jason Baron <jbaron@akamai.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 006/176] net: phy: restore mdio regs in the iproc mdio driver
-Date:   Tue,  3 Mar 2020 18:41:10 +0100
-Message-Id: <20200303174305.290156569@linuxfoundation.org>
+Subject: [PATCH 5.5 007/176] net: sched: correct flower port blocking
+Date:   Tue,  3 Mar 2020 18:41:11 +0100
+Message-Id: <20200303174305.408899758@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -63,60 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+From: Jason Baron <jbaron@akamai.com>
 
-commit 6f08e98d62799e53c89dbf2c9a49d77e20ca648c upstream.
+[ Upstream commit 8a9093c79863b58cc2f9874d7ae788f0d622a596 ]
 
-The mii management register in iproc mdio block
-does not have a retention register so it is lost on suspend.
-Save and restore value of register while resuming from suspend.
+tc flower rules that are based on src or dst port blocking are sometimes
+ineffective due to uninitialized stack data. __skb_flow_dissect() extracts
+ports from the skb for tc flower to match against. However, the port
+dissection is not done when when the FLOW_DIS_IS_FRAGMENT bit is set in
+key_control->flags. All callers of __skb_flow_dissect(), zero-out the
+key_control field except for fl_classify() as used by the flower
+classifier. Thus, the FLOW_DIS_IS_FRAGMENT may be set on entry to
+__skb_flow_dissect(), since key_control is allocated on the stack
+and may not be initialized.
 
-Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
-Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Since key_basic and key_control are present for all flow keys, let's
+make sure they are initialized.
+
+Fixes: 62230715fd24 ("flow_dissector: do not dissect l4 ports for fragments")
+Co-developed-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: Jason Baron <jbaron@akamai.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/phy/mdio-bcm-iproc.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ include/net/flow_dissector.h |    9 +++++++++
+ net/sched/cls_flower.c       |    1 +
+ 2 files changed, 10 insertions(+)
 
---- a/drivers/net/phy/mdio-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-bcm-iproc.c
-@@ -178,6 +178,23 @@ static int iproc_mdio_remove(struct plat
- 	return 0;
- }
+--- a/include/net/flow_dissector.h
++++ b/include/net/flow_dissector.h
+@@ -5,6 +5,7 @@
+ #include <linux/types.h>
+ #include <linux/in6.h>
+ #include <linux/siphash.h>
++#include <linux/string.h>
+ #include <uapi/linux/if_ether.h>
  
-+#ifdef CONFIG_PM_SLEEP
-+int iproc_mdio_resume(struct device *dev)
+ struct sk_buff;
+@@ -349,4 +350,12 @@ struct bpf_flow_dissector {
+ 	void			*data_end;
+ };
+ 
++static inline void
++flow_dissector_init_keys(struct flow_dissector_key_control *key_control,
++			 struct flow_dissector_key_basic *key_basic)
 +{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
-+
-+	/* restore the mii clock configuration */
-+	iproc_mdio_config_clk(priv->base);
-+
-+	return 0;
++	memset(key_control, 0, sizeof(*key_control));
++	memset(key_basic, 0, sizeof(*key_basic));
 +}
 +
-+static const struct dev_pm_ops iproc_mdio_pm_ops = {
-+	.resume = iproc_mdio_resume
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct of_device_id iproc_mdio_of_match[] = {
- 	{ .compatible = "brcm,iproc-mdio", },
- 	{ /* sentinel */ },
-@@ -188,6 +205,9 @@ static struct platform_driver iproc_mdio
- 	.driver = {
- 		.name = "iproc-mdio",
- 		.of_match_table = iproc_mdio_of_match,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm = &iproc_mdio_pm_ops,
-+#endif
- 	},
- 	.probe = iproc_mdio_probe,
- 	.remove = iproc_mdio_remove,
+ #endif
+--- a/net/sched/cls_flower.c
++++ b/net/sched/cls_flower.c
+@@ -305,6 +305,7 @@ static int fl_classify(struct sk_buff *s
+ 	struct cls_fl_filter *f;
+ 
+ 	list_for_each_entry_rcu(mask, &head->masks, list) {
++		flow_dissector_init_keys(&skb_key.control, &skb_key.basic);
+ 		fl_clear_masked_range(&skb_key, mask);
+ 
+ 		skb_flow_dissect_meta(skb, &mask->dissector, &skb_key);
 
 
