@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D5B5C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2A10C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119C9214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C91C214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257782;
-	bh=i3RE9DoqeuTrvtoJD17oadaBmZeIBy8aamchigfCcwI=;
+	s=default; t=1583257784;
+	bh=WqXLuGPjE0OeTW1ZYyh7Wc01TSayOhNRxj7vwyTBiOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sf7kuvjg8Ji+5lGiY51XEglCbHVVwuekuzOyR9yokotePJZxMRSgKZuuvcKPny8sP
-	 2RmTSltmfwKEuDEqS/k1hBHUOJSPmGTJ4zPBBuAq091nIfKY1aTfUSjrW3D1y9+pZr
-	 ENmeKKXIOTt//Iz+B3ZBGLXDDFoZNL7Dyy4BKaKI=
+	b=qxX+iddJ0YfGw3IXiK1zoD3FDgnLlIQzoBhXNog4Dz338ke/LD/gf8+XIS3rQrv13
+	 NMnThYjGHr+txtEGKOpJI/zzRS2K51bAiAuJR+XL34m68/npdtXqCjY541T/IJk6pP
+	 fuLmQugQdYyPahs57oJmBSw0y2n3yXNyyO/z6EME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731816AbgCCRtk (ORCPT
+        id S1731817AbgCCRtn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:49:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56950 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:49:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731796AbgCCRth (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:49:37 -0500
+        id S1730096AbgCCRtl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:49:41 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60D0820CC7;
-        Tue,  3 Mar 2020 17:49:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94ACC20CC7;
+        Tue,  3 Mar 2020 17:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257775;
-        bh=i3RE9DoqeuTrvtoJD17oadaBmZeIBy8aamchigfCcwI=;
+        s=default; t=1583257781;
+        bh=WqXLuGPjE0OeTW1ZYyh7Wc01TSayOhNRxj7vwyTBiOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uB7/BlhcT/lpYPyodnN4HwEtgZRks/+o2u3c3F6k/ubPSI36vcCimJqjU3E7GCAXq
-         fF0PweUc0Oavtx9UIHXMmF8MZ7FnzBdI5BXI13YQDWu64Z95JIs3A6XzLk6mIZa23p
-         /M/TxKYfQthoYaGF1MeKzJS6lB8SQLJCJw27Fhsk=
+        b=opLPk/a+A22muGYAqTA9+/Oz/KzvJsIJeP6LkZkyKG31LxVv972quanLqTYyNDCQL
+         KkOp8Us/gH2PnpiAaeb/dGdjdyh8BJZerYw2Yhjq8mO08oJarRqTNOJgR6snaDhlmE
+         V8DbysAuwKDu7rnmcdhfBV1bja4aHywI5Qr6zAXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexandra Winter <wintera@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Erhard F." <erhard_f@mailbox.org>,
+        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 124/176] s390/qeth: vnicc Fix EOPNOTSUPP precedence
-Date:   Tue,  3 Mar 2020 18:43:08 +0100
-Message-Id: <20200303174319.138458807@linuxfoundation.org>
+Subject: [PATCH 5.5 126/176] net: netlink: cap max groups which will be considered in netlink_bind()
+Date:   Tue,  3 Mar 2020 18:43:10 +0100
+Message-Id: <20200303174319.345137823@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,106 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandra Winter <wintera@linux.ibm.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-commit 6f3846f0955308b6d1b219419da42b8de2c08845 upstream.
+commit 3a20773beeeeadec41477a5ba872175b778ff752 upstream.
 
-When getting or setting VNICC parameters, the error code EOPNOTSUPP
-should have precedence over EBUSY.
+Since nl_groups is a u32 we can't bind more groups via ->bind
+(netlink_bind) call, but netlink has supported more groups via
+setsockopt() for a long time and thus nlk->ngroups could be over 32.
+Recently I added support for per-vlan notifications and increased the
+groups to 33 for NETLINK_ROUTE which exposed an old bug in the
+netlink_bind() code causing out-of-bounds access on archs where unsigned
+long is 32 bits via test_bit() on a local variable. Fix this by capping the
+maximum groups in netlink_bind() to BITS_PER_TYPE(u32), effectively
+capping them at 32 which is the minimum of allocated groups and the
+maximum groups which can be bound via netlink_bind().
 
-EBUSY is used because vnicc feature and bridgeport feature are mutually
-exclusive, which is a temporary condition.
-Whereas EOPNOTSUPP indicates that the HW does not support all or parts of
-the vnicc feature.
-This issue causes the vnicc sysfs params to show 'blocked by bridgeport'
-for HW that does not support VNICC at all.
-
-Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+CC: Christophe Leroy <christophe.leroy@c-s.fr>
+CC: Richard Guy Briggs <rgb@redhat.com>
+Fixes: 4f520900522f ("netlink: have netlink per-protocol bind function return an error code.")
+Reported-by: Erhard F. <erhard_f@mailbox.org>
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/net/qeth_l2_main.c |   29 +++++++++++++----------------
- 1 file changed, 13 insertions(+), 16 deletions(-)
+ net/netlink/af_netlink.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -1815,15 +1815,14 @@ int qeth_l2_vnicc_set_state(struct qeth_
+--- a/net/netlink/af_netlink.c
++++ b/net/netlink/af_netlink.c
+@@ -1014,7 +1014,8 @@ static int netlink_bind(struct socket *s
+ 	if (nlk->netlink_bind && groups) {
+ 		int group;
  
- 	QETH_CARD_TEXT(card, 2, "vniccsch");
- 
--	/* do not change anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic and enable/disable are supported */
- 	if (!(card->options.vnicc.sup_chars & vnicc) ||
- 	    !(card->options.vnicc.set_char_sup & vnicc))
- 		return -EOPNOTSUPP;
- 
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* set enable/disable command and store wanted characteristic */
- 	if (state) {
- 		cmd = IPA_VNICC_ENABLE;
-@@ -1869,14 +1868,13 @@ int qeth_l2_vnicc_get_state(struct qeth_
- 
- 	QETH_CARD_TEXT(card, 2, "vniccgch");
- 
--	/* do not get anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic is supported */
- 	if (!(card->options.vnicc.sup_chars & vnicc))
- 		return -EOPNOTSUPP;
- 
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* if card is ready, query current VNICC state */
- 	if (qeth_card_hw_is_reachable(card))
- 		rc = qeth_l2_vnicc_query_chars(card);
-@@ -1894,15 +1892,14 @@ int qeth_l2_vnicc_set_timeout(struct qet
- 
- 	QETH_CARD_TEXT(card, 2, "vniccsto");
- 
--	/* do not change anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic and set_timeout are supported */
- 	if (!(card->options.vnicc.sup_chars & QETH_VNICC_LEARNING) ||
- 	    !(card->options.vnicc.getset_timeout_sup & QETH_VNICC_LEARNING))
- 		return -EOPNOTSUPP;
- 
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* do we need to do anything? */
- 	if (card->options.vnicc.learning_timeout == timeout)
- 		return rc;
-@@ -1931,14 +1928,14 @@ int qeth_l2_vnicc_get_timeout(struct qet
- 
- 	QETH_CARD_TEXT(card, 2, "vniccgto");
- 
--	/* do not get anything if BridgePort is enabled */
--	if (qeth_bridgeport_is_in_use(card))
--		return -EBUSY;
--
- 	/* check if characteristic and get_timeout are supported */
- 	if (!(card->options.vnicc.sup_chars & QETH_VNICC_LEARNING) ||
- 	    !(card->options.vnicc.getset_timeout_sup & QETH_VNICC_LEARNING))
- 		return -EOPNOTSUPP;
-+
-+	if (qeth_bridgeport_is_in_use(card))
-+		return -EBUSY;
-+
- 	/* if card is ready, get timeout. Otherwise, just return stored value */
- 	*timeout = card->options.vnicc.learning_timeout;
- 	if (qeth_card_hw_is_reachable(card))
+-		for (group = 0; group < nlk->ngroups; group++) {
++		/* nl_groups is a u32, so cap the maximum groups we can bind */
++		for (group = 0; group < BITS_PER_TYPE(u32); group++) {
+ 			if (!test_bit(group, &groups))
+ 				continue;
+ 			err = nlk->netlink_bind(net, group + 1);
+@@ -1033,7 +1034,7 @@ static int netlink_bind(struct socket *s
+ 			netlink_insert(sk, nladdr->nl_pid) :
+ 			netlink_autobind(sock);
+ 		if (err) {
+-			netlink_undo_bind(nlk->ngroups, groups, sk);
++			netlink_undo_bind(BITS_PER_TYPE(u32), groups, sk);
+ 			goto unlock;
+ 		}
+ 	}
 
 
