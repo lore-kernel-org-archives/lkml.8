@@ -2,123 +2,104 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A01C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B365C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4920D20716
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C51E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:51:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="crkesGEa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hMSqR4BK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731203AbgCCTus (ORCPT
+        id S1731241AbgCCTvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:50:48 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54696 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727604AbgCCTus (ORCPT
+        Tue, 3 Mar 2020 14:51:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27360 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731209AbgCCTvd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:50:48 -0500
-Received: by mail-wm1-f65.google.com with SMTP id i9so3269384wml.4;
-        Tue, 03 Mar 2020 11:50:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=72jp2PM3m/3yJ85MPU4yuZlrGXIka+61ev8w/EuCbz4=;
-        b=crkesGEa5q/XDyLLUcvTkBPaoEV8sMnESatCqzGV9Ml+1KzVgpEZmAyJLa4/l2M9Nw
-         f4MkoDqQWnBZvOPhZK0pTAq6lPs86ip441NTvksJNf0OptjP5PHCnXIxALbUMfEQXB16
-         ZibWOcPOp3XMx+ZmZaFKjxvNm/UV6Q8SN8vvJ1kFqsvDDGGuUHkRAzvXbpwcwiOCILTD
-         5obTbidY/FA5VmwuZInXI0J/R64Wi6qI6yL7clRVLOoP5KvNBL3st8B5x3t8Cz4Ob2Px
-         s9Kb2Ty5LhTodyO9yruFS8PAvCI42eSx7eKsPFE37YwnK3pmKAhBsUEPMt6uWJ2WxFuN
-         L24g==
+        Tue, 3 Mar 2020 14:51:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583265092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DvNuRsgrlwxpJev5Ji+2rDTX8ckqvUS3GRbdlLRF5QE=;
+        b=hMSqR4BKUgl5kkqZUJru4eKb6ewI8rLuZPCPoDYeL+iDK5zzwW6pcYz/l7CZk9yZZZ0rqe
+        pV2JgMgdm2WDYOPiJpzPHQNDn4X02zbeHrtgdBM8EI2WVzXa+vsq8yIOtOBuqAygY+oAS6
+        j2+Q6NXkzmVqcEnynqNQe+L8tFQKMgs=
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
+ [209.85.219.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-152-vMyZjn2cMMqU7vI7bzYn4g-1; Tue, 03 Mar 2020 14:51:31 -0500
+X-MC-Unique: vMyZjn2cMMqU7vI7bzYn4g-1
+Received: by mail-qv1-f71.google.com with SMTP id s5so2800388qvr.15
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:51:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=72jp2PM3m/3yJ85MPU4yuZlrGXIka+61ev8w/EuCbz4=;
-        b=nksXnZrgojc3VtNwK4v5ikMc5nlWvLReF5r+EPWzrfo3QXKol8qN4ZWoivN5sIKdBy
-         J3oGbZvxUYZKDhqP+7pJ+46h0MjlYn2aGiUfv5/bW1a+5A5Cx/YPR0fX50KSAqkNed7C
-         KQAzUxOn4z8WvVyHDy+X7Z//Cfwq71Js4TK51DUVkCJwekl8G1RDTIQiP8bw1J5zZGTZ
-         4r9TlWUwiLGmwhx+ifKMAqjGr9iXrkAVfmdSBIXD+BjHk09HUELJGjAvuz1otIHeKdkY
-         uzgucqZJ/xgJ0VFsc8Pl63VMZpf48/0oszruljigzEsN2Xq69BYyOSQmieIXYg5fqqsZ
-         hy+g==
-X-Gm-Message-State: ANhLgQ0s5Hy8CqCQYorbspv19x5IaD/XqqOfboCAdPCHq2nipaJ+EVCG
-        DtAWOiXqc5enJON7F/8PhckdJzhh
-X-Google-Smtp-Source: ADFU+vtEi0RhPp2pH2g5fG3PiaqyTgYcv2kILZjhuoeZch9vDVmW/l++2KADioUHjetKQSlUrxltwA==
-X-Received: by 2002:a7b:c5da:: with SMTP id n26mr167838wmk.138.1583265046465;
-        Tue, 03 Mar 2020 11:50:46 -0800 (PST)
-Received: from ?IPv6:2003:ea:8f29:6000:f8e3:535f:f59f:a97f? (p200300EA8F296000F8E3535FF59FA97F.dip0.t-ipconnect.de. [2003:ea:8f29:6000:f8e3:535f:f59f:a97f])
-        by smtp.googlemail.com with ESMTPSA id w16sm1187802wrp.8.2020.03.03.11.50.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 11:50:45 -0800 (PST)
-Subject: Re: [PATCH v1] net: phy: tja11xx: add TJA1102 support
-To:     Marc Kleine-Budde <mkl@pengutronix.de>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        David Jander <david@protonic.nl>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20200303073715.32301-1-o.rempel@pengutronix.de>
- <eada8b95-bbfe-5dba-7e39-6202e67c26f0@gmail.com>
- <35d02d3d-0fd8-1fce-1f60-90a4a1377c78@pengutronix.de>
-From:   Heiner Kallweit <hkallweit1@gmail.com>
-Message-ID: <9dae8f4a-43b0-e379-9b14-5a2a21640044@gmail.com>
-Date:   Tue, 3 Mar 2020 20:50:40 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=DvNuRsgrlwxpJev5Ji+2rDTX8ckqvUS3GRbdlLRF5QE=;
+        b=XsJIOMGKxHwhExluYC+Gx1nOZTHnOv9KnNKqvSRKhRBE871ftiwAxiNv9Q27lSwfqD
+         uZ0oJr2bst4bHEf1th3xRO82zkJjeWKKsxRzk5fTc9PQhgqkfsu8w6a1GWuQtTB09Auf
+         JkOxA7yreGehfab30FSSYhCd6jagrTZN94yULKvgp7RWdR/unuAHjaizVBefWpH1fx9Z
+         bSOQRYFZwU3kqYXHXgh93gfOYAL67rCNkYhkFycX/zA+MakgHvZHsevmCqeRp8upD+zn
+         uKJnEKrIwdXS87deP9LNqQHgpJFlkRX+vXQfcvvQPtue+IbKMt4NjdMbT7oyTof8GmxU
+         CLfA==
+X-Gm-Message-State: ANhLgQ3EkmJ6mSVejhcKYZJI0a+49T9lgwbiNdFoF+CmkPFvfRhTZnpR
+        8uc8hwSd9RGgMGARwuE4VaUdOaUgDhgVGHgk39yT83+AyeymgS9YLXyBNR1V91zq97/oHSKRVyU
+        k3K5+WmtSnxaF/92dIMDE+Kz0
+X-Received: by 2002:a05:6214:144b:: with SMTP id b11mr4109936qvy.108.1583265089583;
+        Tue, 03 Mar 2020 11:51:29 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsspg8JhI5ihzXhOt6OuWIKvJocilynLOdCC5Pvwbi3gxDK6VrQZDaw5zx7MH666d9ns8TkKg==
+X-Received: by 2002:a05:6214:144b:: with SMTP id b11mr4109928qvy.108.1583265089398;
+        Tue, 03 Mar 2020 11:51:29 -0800 (PST)
+Received: from desoxy ([2600:380:8e4d:1b16:f190:533c:5a8b:4a57])
+        by smtp.gmail.com with ESMTPSA id h25sm2767037qtn.30.2020.03.03.11.51.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 11:51:28 -0800 (PST)
+Message-ID: <faad55e121f844d9b47afa603ad09641a58957b5.camel@redhat.com>
+Subject: Re: [v2,1/3] drm/dp: Introduce EDID-based quirks
+From:   Adam Jackson <ajax@redhat.com>
+To:     Lyude Paul <lyude@redhat.com>, intel-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org
+Cc:     Lucas De Marchi <lucas.demarchi@intel.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Jani Nikula <jani.nikula@intel.com>,
+        linux-kernel@vger.kernel.org, Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>
+Date:   Tue, 03 Mar 2020 14:51:27 -0500
+In-Reply-To: <20200211183358.157448-2-lyude@redhat.com>
+References: <20200211183358.157448-2-lyude@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.0 (3.34.0-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <35d02d3d-0fd8-1fce-1f60-90a4a1377c78@pengutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03.03.2020 09:56, Marc Kleine-Budde wrote:
-> On 3/3/20 9:46 AM, Heiner Kallweit wrote:
->> On 03.03.2020 08:37, Oleksij Rempel wrote:
->>> TJA1102 is an dual T1 PHY chip. Both PHYs are separately addressable.
->>> PHY 0 can be identified by PHY ID. PHY 1 has no PHY ID and can be
->>> configured in device tree by setting compatible =
->>> "ethernet-phy-id0180.dc81".
->     ^^^^^^^^^^^^^^^^^^^^^^^^
+On Tue, 2020-02-11 at 13:33 -0500, Lyude Paul wrote:
+> The whole point of using OUIs is so that we can recognize certain
+> devices and potentially apply quirks for them. Normally this should work
+> quite well, but there appears to be quite a number of laptop panels out
+> there that will fill the OUI but not the device ID. As such, for devices
+> like this I can't imagine it's a very good idea to try relying on OUIs
+> for applying quirks. As well, some laptop vendors have confirmed to us
+> that their panels have this exact issue.
 > 
->> I'm not sure I understand what you're doing here. The two ports of the chip
->> are separate PHY's on individual MDIO bus addresses?
-> 
-> Yes, Port 0 and Port 1 have seperate MFIO bus addresses, but only Port 0
-> has a proper phy_id (== PHY_ID_TJA1102), while Port 1 just has 0.
-> 
-> Currently we register Port 1 via the device tree compatible
-> "ethernet-phy-id0180.dc81".
-> 
-Thanks for the explanation. Missed that part, then reading the PHY ID
-of the chip is skipped. For checking whether we are port 0 or 1 it wouldn't
-even be needed to read both PHY ID registers.
-One drawback of the solution might be that it works on DT-configured
-systems only (not sure how relevant this is). A little bit more detailed
-comment may be helpful, to avoid misunderstandings like mine.
+> So, let's introduce the ability to apply DP quirks based on EDID
+> identification. We reuse the same quirk bits for OUI-based quirks, so
+> that callers can simply check all possible quirks using
+> drm_dp_has_quirk().
 
->> Reading the PHY ID registers here seems to repeat what phylib did already
->> to populate phydev->phy_id. If port 1 has PHD ID 0 then the driver wouldn't
->> bind and tja11xx_probe() would never be called (see phy_bus_match)
-> 
-> But we "force" it via the DT compatible. Another option would be to make
-> up a phyid for Port 1 and hope that it doesn't collide with a real phy
-> id in other or upcoming chips. But that sounds not like a clean solution
-> either.
-> 
-> Marc
-> 
-Heiner
+With the bug URL fixed in 2/3, series is:
+
+Reviewed-by: Adam Jackson <ajax@redhat.com>
+
+- ajax
+
