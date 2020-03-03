@@ -2,51 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 860A0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEABAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616A42146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA2EB214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257716;
-	bh=RT8k7oH6EC+25L6UM2op71QHRy3yxsAYGAHgVFgIIf4=;
+	s=default; t=1583257718;
+	bh=uaI06Q+VT+zupIXMyse4ElXQfxh08km6yMMEEHSyq+o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pPAAoiXNCJnYVsh8s3MA7qZUeJcdx/4eB67t/89akIHFA4zSfLHUUj50l/MyfZ8pA
-	 P4irz2ZaUMfpI5Ba1H+wbTsi3kPMHwaTJLfcfSXD0BK4KxivcG+2huyqQbwM8Mrr8b
-	 Bur1ZCsiY9lL4LM61szu71osne/zN062BdLx0RgI=
+	b=MNBG2hdzHBTowiZxbhcKZh+mRLVTE/9WfNAtm46QHSNOoekitweTNRUhDWLbNJnZq
+	 lYizxD6ou8udK5Ozz2WuU4MfqsPkwN62tGxVCtrwKmZtHs2vgDAt2mrCubRfOK9Y/8
+	 9qu58Du9+J2hIDVexHpBaKbbeP35hVYjsv83+8FQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731556AbgCCRsf (ORCPT
+        id S1730627AbgCCRsh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:48:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55674 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731522AbgCCRsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:32 -0500
+        id S1731527AbgCCRsd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48AFB214DB;
-        Tue,  3 Mar 2020 17:48:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1D3D20870;
+        Tue,  3 Mar 2020 17:48:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257710;
-        bh=RT8k7oH6EC+25L6UM2op71QHRy3yxsAYGAHgVFgIIf4=;
+        s=default; t=1583257713;
+        bh=uaI06Q+VT+zupIXMyse4ElXQfxh08km6yMMEEHSyq+o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wzePPiwDieN1KXgH/9qz95Km27n5xTr0OuVUw3Y0MnW20VzIRxSoZVf6C9Pe7Jo3H
-         ukpKrwVuCyC771Gu0cPLYXpJ83JHg9d4QQEzuzxwP1+yYgc7qIeqN1i1/JHCeu0RtC
-         fhrsApHAsUhej/Cg0/K0+K9fbFcoBWnGsSX9v91o=
+        b=cw03c+UxYReLX6x9gCDbiuW13PYo4uUraenBaEIu2hXOz8IAOCv/cbl33CJRqhkK/
+         Z3EtezM/ZygbSxe9KIk74SrfqL2kWfuPCV/LNIlzCtHkx6wqRvS1FaKMe8hUqZ2Y44
+         TUr2s2s8erl3smz/p6bw8+m7nm3lNTZAauJOE4Jk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
-        Shirish S <shirish.s@amd.com>
-Subject: [PATCH 5.5 099/176] amdgpu/gmc_v9: save/restore sdpif regs during S3
-Date:   Tue,  3 Mar 2020 18:42:43 +0100
-Message-Id: <20200303174316.291399930@linuxfoundation.org>
+        stable@vger.kernel.org, Yufeng Mo <moyufeng@huawei.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 075/176] net: hns3: add management table after IMP reset
+Date:   Tue,  3 Mar 2020 18:42:19 +0100
+Message-Id: <20200303174313.320196547@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,114 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shirish S <shirish.s@amd.com>
+From: Yufeng Mo <moyufeng@huawei.com>
 
-commit a3ed353cf8015ba84a0407a5dc3ffee038166ab0 upstream.
+[ Upstream commit d0db7ed397517c8b2be24a0d1abfa15df776908e ]
 
-fixes S3 issue with IOMMU + S/G  enabled @ 64M VRAM.
+In the current process, the management table is missing after the
+IMP reset. This patch adds the management table to the reset process.
 
-Suggested-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Shirish S <shirish.s@amd.com>
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: f5aac71c0327 ("net: hns3: add manager table initialization for hardware")
+Signed-off-by: Yufeng Mo <moyufeng@huawei.com>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.h                    |    1 
- drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c                      |   37 ++++++++++++-
- drivers/gpu/drm/amd/include/asic_reg/dce/dce_12_0_offset.h |    2 
- 3 files changed, 39 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_gmc.h
-@@ -192,6 +192,7 @@ struct amdgpu_gmc {
- 	uint32_t                srbm_soft_reset;
- 	bool			prt_warning;
- 	uint64_t		stolen_size;
-+	uint32_t		sdpif_register;
- 	/* apertures */
- 	u64			shared_aperture_start;
- 	u64			shared_aperture_end;
---- a/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/gmc_v9_0.c
-@@ -1204,6 +1204,19 @@ static void gmc_v9_0_init_golden_registe
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 13dbd249f35fa..bfdb08572f0cc 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -9821,6 +9821,13 @@ static int hclge_reset_ae_dev(struct hnae3_ae_dev *ae_dev)
+ 		return ret;
+ 	}
  
- /**
-+ * gmc_v9_0_restore_registers - restores regs
-+ *
-+ * @adev: amdgpu_device pointer
-+ *
-+ * This restores register values, saved at suspend.
-+ */
-+static void gmc_v9_0_restore_registers(struct amdgpu_device *adev)
-+{
-+	if (adev->asic_type == CHIP_RAVEN)
-+		WREG32(mmDCHUBBUB_SDPIF_MMIO_CNTRL_0, adev->gmc.sdpif_register);
-+}
++	ret = init_mgr_tbl(hdev);
++	if (ret) {
++		dev_err(&pdev->dev,
++			"failed to reinit manager table, ret = %d\n", ret);
++		return ret;
++	}
 +
-+/**
-  * gmc_v9_0_gart_enable - gart enable
-  *
-  * @adev: amdgpu_device pointer
-@@ -1308,6 +1321,20 @@ static int gmc_v9_0_hw_init(void *handle
- }
- 
- /**
-+ * gmc_v9_0_save_registers - saves regs
-+ *
-+ * @adev: amdgpu_device pointer
-+ *
-+ * This saves potential register values that should be
-+ * restored upon resume
-+ */
-+static void gmc_v9_0_save_registers(struct amdgpu_device *adev)
-+{
-+	if (adev->asic_type == CHIP_RAVEN)
-+		adev->gmc.sdpif_register = RREG32(mmDCHUBBUB_SDPIF_MMIO_CNTRL_0);
-+}
-+
-+/**
-  * gmc_v9_0_gart_disable - gart disable
-  *
-  * @adev: amdgpu_device pointer
-@@ -1343,9 +1370,16 @@ static int gmc_v9_0_hw_fini(void *handle
- 
- static int gmc_v9_0_suspend(void *handle)
- {
-+	int r;
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
- 
--	return gmc_v9_0_hw_fini(adev);
-+	r = gmc_v9_0_hw_fini(adev);
-+	if (r)
-+		return r;
-+
-+	gmc_v9_0_save_registers(adev);
-+
-+	return 0;
- }
- 
- static int gmc_v9_0_resume(void *handle)
-@@ -1353,6 +1387,7 @@ static int gmc_v9_0_resume(void *handle)
- 	int r;
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
- 
-+	gmc_v9_0_restore_registers(adev);
- 	r = gmc_v9_0_hw_init(adev);
- 	if (r)
- 		return r;
---- a/drivers/gpu/drm/amd/include/asic_reg/dce/dce_12_0_offset.h
-+++ b/drivers/gpu/drm/amd/include/asic_reg/dce/dce_12_0_offset.h
-@@ -7376,6 +7376,8 @@
- #define mmCRTC4_CRTC_DRR_CONTROL                                                                       0x0f3e
- #define mmCRTC4_CRTC_DRR_CONTROL_BASE_IDX                                                              2
- 
-+#define mmDCHUBBUB_SDPIF_MMIO_CNTRL_0                                                                  0x395d
-+#define mmDCHUBBUB_SDPIF_MMIO_CNTRL_0_BASE_IDX                                                         2
- 
- // addressBlock: dce_dc_fmt4_dispdec
- // base address: 0x2000
+ 	ret = hclge_init_fd_config(hdev);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "fd table init fail, ret=%d\n", ret);
+-- 
+2.20.1
+
 
 
