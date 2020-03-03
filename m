@@ -2,155 +2,107 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 373D3C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:03:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D984C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F18720CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:03:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C7A20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:03:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hiGouDg2"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Qlljubb2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbgCCQDR (ORCPT
+        id S1730193AbgCCQDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:03:17 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:41597 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729484AbgCCQDQ (ORCPT
+        Tue, 3 Mar 2020 11:03:32 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:32806 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729484AbgCCQDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:03:16 -0500
-Received: by mail-il1-f194.google.com with SMTP id q13so3204472ile.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:03:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=WJ8CT33vCQgmzyyKSord2fPnPar8kkaEbMHV5McznGQ=;
-        b=hiGouDg2FaInS+pLRzCFc0dFLEY3+qYi/nKghmXhNLPnCwCQi4EVttrrZlWfJbbU2F
-         wairFJDAsRO1GLD2GOqKjysbBffUBkPJBpF6WXD/dMcUrylikBIAyLhShy2IIz+8LpXk
-         T89ec3wN5qJWVfhT4+rX03RevMJ2die3Um06r6oa+epzjEXE+a3PdR28tuSC7/VnMP2Z
-         72AZ2KCefh3jQNHT/TiU4mEzBlRu+YMSzescXfOQY0u8EvXNf91S6kKmnClvNs0WPpI8
-         /l2jT9pOMKTqgcKWup6ZRFMwLhx6q7GxC+qRcOWNGcB/HugafPymk3Ry6MIOjcSNVsJE
-         3/1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=WJ8CT33vCQgmzyyKSord2fPnPar8kkaEbMHV5McznGQ=;
-        b=CjNNDPXuEGrXuBDZDifAvHl1o6bzdDykVd6FOaJKrPyNLFxkXc9YjrbyjCuuSSfzsU
-         mXJWT/lxZTlwWEjzUzy8mL6FmqECt03LRd6/R4my9MnKXjZOhmiBCJbZMdl+z0NM8ABD
-         LDS/H4CojPKGpV/k2ko4hfuMs1UQvrjB2y87t5tbiNLgWxnHvfXBDLrRMAXAJRmR7QvQ
-         wFryot1Ldvlpkw4L2KxEWcYVI5q3vRxtnOWI5ckuFI454vC/tl90SH4rTfmIfQnWnHTr
-         WP2P9b7rB7161o9I7EOxmuJgwS0nKGQwhsyS58wPRFTHINgMXOk45GXavu9AdJh+/lm+
-         AC0Q==
-X-Gm-Message-State: ANhLgQ23hoki+JXLyOH/KhdiNjjwWLphG0YnxtgvyruN8UI5wJOLR013
-        F0Ei7PpyJll/Mr30qt3WCnN93WNeQcQ=
-X-Google-Smtp-Source: ADFU+vsI/dTdh2QHXsAzucz/h3HCFffui/bep2tqN1oMvr4GMjM8imoAagVCMjvooJK/S8JJtpaUkg==
-X-Received: by 2002:a92:c041:: with SMTP id o1mr5740753ilf.139.1583251395477;
-        Tue, 03 Mar 2020 08:03:15 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id s2sm5434633iod.12.2020.03.03.08.03.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 08:03:14 -0800 (PST)
-Subject: Re: [PATCH v2 4/4] io_uring: get next req on subm ref drop
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1583181841.git.asml.silence@gmail.com>
- <444aef98f849d947d7f10e88f30244fa0bc82360.1583181841.git.asml.silence@gmail.com>
- <3ab75953-ee39-2c4e-99e2-f8c18ceb6a8d@kernel.dk>
- <52b282f5-50f3-2ee6-a055-6ef0c2c39e93@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <904bfed4-19cc-7c05-8410-05016f9ab578@kernel.dk>
-Date:   Tue, 3 Mar 2020 09:03:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <52b282f5-50f3-2ee6-a055-6ef0c2c39e93@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 3 Mar 2020 11:03:31 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023Fs9OZ165169;
+        Tue, 3 Mar 2020 16:03:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2020-01-29;
+ bh=mhifvgYvFG9SQGr24bsa0VTvq4k/UtMxi0xav7PMSD4=;
+ b=Qlljubb2cPKZK0SV3JQBg/3fhm36xvZOkp8DXUFGZZzYGLxaitySLu1xVdJU3uxEaJIa
+ NYRN/w/wG7L59DxXkh2FgxpnDAGFFEOWl+Fz1lR/n0dWeRC89iPdlHIESSPpNt1DFrpN
+ tyLrrPn+8YsrU9DM1wcJCH1niZY9x6Lu8spPR7LH1gbZZWiRVou6lvFSOsFzeU/87vi4
+ KwBN7bZ+CLY0E6kVhHcIFjJfzAykkgimauVaHdtOkEDhwo5p+lUe13/GN7c5v3v3Ed4m
+ VLXwm8KmSWs7q7fldLpgZE7edM0TD2HA6HgsIrtz37l5NphnSsdVsYChXcjTiKKCPmJ+ dA== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2yffwqr7ac-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 16:03:25 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023G2Vfc139732;
+        Tue, 3 Mar 2020 16:03:25 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2yg1p4rk9r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 16:03:24 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 023G3N1A007489;
+        Tue, 3 Mar 2020 16:03:23 GMT
+Received: from dhcp-10-175-165-222.vpn.oracle.com (/10.175.165.222)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Mar 2020 16:03:22 +0000
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, trishalfonso@google.com,
+        skhan@linuxfoundation.org
+Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [RFC PATCH kunit-next 0/2] kunit: extend kunit resources API
+Date:   Tue,  3 Mar 2020 16:02:39 +0000
+Message-Id: <1583251361-12748-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=490 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003030114
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=547 mlxscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 11:54 PM, Pavel Begunkov wrote:
-> On 03/03/2020 07:26, Jens Axboe wrote:
->> On 3/2/20 1:45 PM, Pavel Begunkov wrote:
->>> Get next request when dropping the submission reference. However, if
->>> there is an asynchronous counterpart (i.e. read/write, timeout, etc),
->>> that would be dangerous to do, so ignore them using new
->>> REQ_F_DONT_STEAL_NEXT flag.
->>
->> Hmm, not so sure I like this one. It's not quite clear to me where we
->> need REQ_F_DONT_STEAL_NEXT. If we have an async component, then we set
->> REQ_F_DONT_STEAL_NEXT. So this is generally the case where our
->> io_put_req() for submit is not the last drop. And for the other case,
->> the put is generally in the caller anyway. So I don't really see what
->> this extra flag buys us?
-> 
-> Because io_put_work() holds a reference, no async handler can achive req->refs
-> == 0, so it won't return next upon dropping the submission ref (i.e. by
-> put_find_nxt()). And I want to have next before io_put_work(), to, instead of as
-> currently:
-> 
-> run_work(work);
-> assign_cur_work(NULL); // spinlock + unlock worker->lock
-> new_work = put_work(work);
-> assign_cur_work(new_work); // the second time
-> 
-> do:
-> 
-> new_work = run_work(work);
-> assign_cur_work(new_work); // need new_work here
-> put_work(work);
-> 
-> 
-> The other way:
-> 
-> io_wq_submit_work() // for all async handlers
-> {
-> 	...
-> 	// Drop submission reference.
-> 	// One extra ref will be put in io_put_work() right
-> 	// after return, and it'll be done in the same thread
-> 	if (atomic_dec_and_get(req) == 1)
-> 		steal_next(req);
-> }
-> 
-> Maybe cleaner, but looks fragile as well. Would you prefer it?
+A recent RFC patch set [1] suggests some additional functionality
+may be needed around kunit resources.  It seems to require
 
-I think I prefer that, since it doesn't need random setting of a
-no-steal flag throughout. And it should be pretty solid, since we know
-that we hold one and that can only be our reference. Just needs a nice
-comment explaining that fact as well.
+1. support for resources without allocation
+2. support for lookup of such resources
+3. support for access to resources across multiple kernel threads
 
->>> @@ -3943,7 +3947,10 @@ static int io_poll_add(struct io_kiocb *req)
->>>  	if (mask) {
->>>  		io_cqring_ev_posted(ctx);
->>>  		io_put_req(req);
->>> +	} else {
->>> +		req->flags |= REQ_F_DONT_STEAL_NEXT;
->>>  	}
->>> +
->>>  	return ipt.error;
->>>  }
->>
->> Is this racy? I guess it doesn't matter since we're still holding the
->> completion reference.
-> 
-> It's done by the same thread, that uses it. There could be a race if
-> the async counterpart is going to change req->flags, but we tolerate
-> false negative (i.e.  put_req() will handle it).
+The proposed changes here are designed to address these needs.
+The idea is we first generalize the API to support adding
+resources with static data; then from there we support named
+resources.  The latter support is needed because if we are
+in a different thread context and only have the "struct kunit *"
+to work with, we need a way to identify a resource in lookup.
 
-It's relying on the fact that it's the task itself that'll run the task
-work, which can't be done by this time. Just caught my eye as something
-to look out for.
+[1] https://lkml.org/lkml/2020/2/26/1286
+
+Alan Maguire (2):
+  kunit: generalize kunit_resource API beyond allocated resources
+  kunit: add support for named resources
+
+ include/kunit/test.h      | 145 ++++++++++++++++++++++------
+ lib/kunit/kunit-test.c    | 103 ++++++++++++++++----
+ lib/kunit/string-stream.c |  14 ++-
+ lib/kunit/test.c          | 234 +++++++++++++++++++++++++++++++++-------------
+ 4 files changed, 375 insertions(+), 121 deletions(-)
 
 -- 
-Jens Axboe
+1.8.3.1
 
