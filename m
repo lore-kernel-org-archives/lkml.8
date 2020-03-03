@@ -2,149 +2,127 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A196C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29631C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215BF2073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:20:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583252440;
-	bh=Zro81PjZvB79s/jq+XpT7vaGwIFOydrEpcLyBTIre54=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mBP42n53Yd2EBgvBHhJDpLqh1O8YZ+nGc6zB/T/kUVKx/+rAFIH4PBCUQTujAQsAO
-	 ZFmwn8VrTQEJ1Ftfbu12dJskjbRvz+Wa0rpjAP/iNGetHHsqMQGlXZdeMqN46wTnWg
-	 u/aXbAtpG0T9wjQqEdX7wl36cFHLh7SOIGc/y2kA=
+	by mail.kernel.org (Postfix) with ESMTP id EF6E22051A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:21:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="T4yCaacc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730229AbgCCQUj (ORCPT
+        id S1730338AbgCCQVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:20:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729382AbgCCQUi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:20:38 -0500
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 950FF2083E;
-        Tue,  3 Mar 2020 16:20:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583252437;
-        bh=Zro81PjZvB79s/jq+XpT7vaGwIFOydrEpcLyBTIre54=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sZ3DrP5arT5Uda74vumLAa2MSbiNfVIz2luVx9rFYxLtcTC+Oo7EmkFLEhd6nGgtt
-         As4a7DIpa9oZD61Zh6Lupbal35pfS6oGqT702EMqmCMvq6nNUoTNDo0IooWVwvyBVr
-         TTmvdioo2VKymQ3tSv+czlZGw+dYuvwe1sLSIV20=
-Received: by mail-qk1-f171.google.com with SMTP id p62so3978147qkb.0;
-        Tue, 03 Mar 2020 08:20:37 -0800 (PST)
-X-Gm-Message-State: ANhLgQ30HbpvgZ6+2NJAJr37vQ32zfIyyMHCWTMWRtxKBGg3Zqv4K/C5
-        ghrd5CixpyySh60F5F08gxlu0PshloXEEFHJkg==
-X-Google-Smtp-Source: ADFU+vuMjEgENnYXMgZ0DZmjYOU7SV2y7ndmmk013/U+mJxM6sg3qyyrWb9wOcVBJrSmdtBfV9DfCHaWZOqInJyC6r0=
-X-Received: by 2002:a05:620a:1015:: with SMTP id z21mr4780777qkj.393.1583252436658;
- Tue, 03 Mar 2020 08:20:36 -0800 (PST)
+        Tue, 3 Mar 2020 11:21:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33820 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729382AbgCCQVQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:21:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583252475;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DCeZj5j9NdL7UBpxH3v0lLKGG3Zlc6FhMXze5Z03xF8=;
+        b=T4yCaaccmNxkAIVlKsp1WIjbZjGsfQvFL9OOLfrUr3dPcogt1mjlZfuvEH47kBJGT/NQgL
+        HQ4jsceMX4DwJJrsLWaIbfDRGjxWeAJHg1ekX1dVTZldjBStgJ5kCIJce4dLsId9b+GsCV
+        vLvSL7CzQlai0XOyEt1DAESFBW49x0o=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-112-dj9gmoiLOFiDN80aXb1ckA-1; Tue, 03 Mar 2020 11:21:11 -0500
+X-MC-Unique: dj9gmoiLOFiDN80aXb1ckA-1
+Received: by mail-wm1-f71.google.com with SMTP id g26so858940wmk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:21:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=DCeZj5j9NdL7UBpxH3v0lLKGG3Zlc6FhMXze5Z03xF8=;
+        b=Dyyz6s3thC1SjDAdriZ282CsHV+bjuwOkgw9HIKunnYz43eZxJBk0EL5xfirW+FJHr
+         8EXMg9IUNIdkLNgplXZLp+CjiXjsGHgMzAJuzotNaVvnpXiUOnGCflMDkUrdRWyfUEJL
+         LXUmtoYo5r47XwnQRtyUMtjiydYwBkekgrQPiGpLwsdr247XF4QVVs6tLmrVz47mNb9P
+         Uka3K2aFuFNSSkSKIhehFddumwBYjbtPyzJ1JsEhCbCvDYFOsCDt1YkNSS9QkAGQzmCi
+         5ul8mp02dmGZEWr35NDBmXZe3euTE0uDPKuACgWis4zIMizc+YACTHPoQBEqxvgoa5WS
+         Jd2w==
+X-Gm-Message-State: ANhLgQ2fYd3N1JgdmNCQe/2YRMR33Iceq9jE7KSwZ12PXfrOZqnnW148
+        qQwXTA7yHO0LrqVWk2sPcyG/wXj5p4OSojLY03IXLWQVoyZLPyEf9Yw0ZqkZst2KLPZxvAuL9RS
+        1BUEIpm/cD5A7GC9fMq3dnlJF
+X-Received: by 2002:a5d:4dc2:: with SMTP id f2mr6141666wru.293.1583252470205;
+        Tue, 03 Mar 2020 08:21:10 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvsutRpekH5hSIMUkCUQL3Af25B6EYt6WV4MX0oXaABfru5qSw5Hb/cPaoCQBFFCRN89HfuKw==
+X-Received: by 2002:a5d:4dc2:: with SMTP id f2mr6141655wru.293.1583252469994;
+        Tue, 03 Mar 2020 08:21:09 -0800 (PST)
+Received: from [192.168.178.40] ([151.20.254.94])
+        by smtp.gmail.com with ESMTPSA id z14sm31327373wrg.76.2020.03.03.08.21.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 08:21:09 -0800 (PST)
+Subject: Re: [PATCH 1/2] KVM: x86: clear stale x86_emulate_ctxt->intercept
+ value
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
+Cc:     Jim Mattson <jmattson@google.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Bandan Das <bsd@redhat.com>, Oliver Upton <oupton@google.com>,
+        linux-kernel@vger.kernel.org
+References: <20200303143316.834912-1-vkuznets@redhat.com>
+ <20200303143316.834912-2-vkuznets@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <4f933f77-6924-249a-77c5-3c904e7c052b@redhat.com>
+Date:   Tue, 3 Mar 2020 17:21:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <cover.1583135507.git.mchehab+huawei@kernel.org>
- <20200302123554.08ac0c34@lwn.net> <20200303080947.5f381004@onda.lan>
-In-Reply-To: <20200303080947.5f381004@onda.lan>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 3 Mar 2020 10:20:25 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
-Message-ID: <CAL_JsqKsZNFDSsZJ+wzgD1Eaf0fBwZ7BeUv=32jAuE29TeRfnA@mail.gmail.com>
-Subject: Re: [PATCH v2 00/12] Convert some DT documentation files to ReST
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200303143316.834912-2-vkuznets@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 1:09 AM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> Em Mon, 2 Mar 2020 12:35:54 -0700
-> Jonathan Corbet <corbet@lwn.net> escreveu:
->
-> > On Mon,  2 Mar 2020 08:59:25 +0100
-> > Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
-> >
-> > > While most of the devicetree stuff has its own format (with is now being
-> > > converted to YAML format), some documents there are actually
-> > > describing the DT concepts and how to contribute to it.
-> > >
-> > > IMHO, those documents would fit perfectly as part of the documentation
-> > > body, as part of the firmare documents set.
-> > >
-> > > This patch series manually converts some DT documents that, on my
-> > > opinion, would belong to it.
-> >
-> > Did you consider putting this stuff into the firmware-guide while you were
-> > at it?  It's not a perfect fit, I guess, but it doesn't seem too awkward
-> > either.
->
-> I placed it just below the firmware-guide at the main index file.
->
-> I have split thoughts about moving the files to there, though. From
-> one side, it may fit better from the PoV of organizing the documentation.
->
-> From other side, newcomers working with DT may expect looking at the
-> text files inside Documentation/devicetree/.
->
-> Maybe I could add an extra patch at the end of this series with the
-> move, adding a "RFC" on his title. This way, we can better discuss it,
-> and either merge the last one or not depending on the comments.
+On 03/03/20 15:33, Vitaly Kuznetsov wrote:
+> Commit c44b4c6ab80e ("KVM: emulate: clean up initializations in
+> init_decode_cache") reduced the number of fields cleared by
+> init_decode_cache() claiming that they are being cleared elsewhere,
+> 'intercept', however, seems to be left uncleared in some cases.
+> 
+> The issue I'm observing manifests itself as following:
+> after commit 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest
+> mode") Hyper-V guests on KVM stopped booting with:
+> 
+>  kvm_nested_vmexit:    rip fffff802987d6169 reason EPT_VIOLATION info1 181
+>     info2 0 int_info 0 int_info_err 0
+>  kvm_page_fault:       address febd0000 error_code 181
+>  kvm_emulate_insn:     0:fffff802987d6169: f3 a5
+>  kvm_emulate_insn:     0:fffff802987d6169: f3 a5 FAIL
+>  kvm_inj_exception:    #UD (0x0)
 
-Keep in mind that we generate a standalone DT only tree[1] with the
-documentation, dts files and headers. So things should be structured
-such that all the DT documentation could be built by itself without
-dependencies on the 'kernel documentation'. I'm not asking for that to
-be done in this series, but just don't do anything to make that
-harder. I don't *think* have, but just want to make sure that's clear.
+Slightly rephrased:
 
-> > It also seems like it would be good to CC the devicetree folks, or at
-> > least the devicetree mailing list?
+After commit 07721feee46b ("KVM: nVMX: Don't emulate instructions in guest
+mode") Hyper-V guests on KVM stopped booting with:
 
-I was wondering what happened to the cover letter on v2...
+ kvm_nested_vmexit:    rip fffff802987d6169 reason EPT_VIOLATION info1 181
+    info2 0 int_info 0 int_info_err 0
+ kvm_page_fault:       address febd0000 error_code 181
+ kvm_emulate_insn:     0:fffff802987d6169: f3 a5
+ kvm_emulate_insn:     0:fffff802987d6169: f3 a5 FAIL
+ kvm_inj_exception:    #UD (0x0)
 
-> Yeah, that would make sense. I'm using get-maintainers script to
-> prepare the c/c list, as it is simply too much work to find the
-> right maintainers by hand, for every single patch.
->
-> I just noticed today that there's just *one entry* at MAINTAINERS
-> file for Documentation/devicetree, and that points to you:
->
->         DOCUMENTATION
->         M:      Jonathan Corbet <corbet@lwn.net>
->         L:      linux-doc@vger.kernel.org
->         S:      Maintained
->         F:      Documentation/
->         F:      scripts/documentation-file-ref-check
->         F:      scripts/kernel-doc
->         F:      scripts/sphinx-pre-install
->         X:      Documentation/ABI/
->         X:      Documentation/firmware-guide/acpi/
->         X:      Documentation/devicetree/
+"f3 a5" is a "rep movsw" instruction, which should not be intercepted
+at all.  Commit c44b4c6ab80e ("KVM: emulate: clean up initializations in
+init_decode_cache") reduced the number of fields cleared by
+init_decode_cache() claiming that they are being cleared elsewhere,
+'intercept', however, is left uncleared if the instruction does not have
+any of the "slow path" flags (NotImpl, Stack, Op3264, Sse, Mmx, CheckPerm,
+NearBranch, No16 and of course Intercept itself).
 
-You mean doesn't point to Jon as 'X' is exclude. You missed this entry:
+Paolo
 
-OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-M:      Rob Herring <robh+dt@kernel.org>
-M:      Mark Rutland <mark.rutland@arm.com>
-L:      devicetree@vger.kernel.org
-T:      git git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-Q:      http://patchwork.ozlabs.org/project/devicetree-bindings/list/
-S:      Maintained
-F:      Documentation/devicetree/
-F:      arch/*/boot/dts/
-F:      include/dt-bindings/
-
-
-Rob
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/devicetree/devicetree-rebasing.git/
