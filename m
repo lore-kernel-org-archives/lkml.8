@@ -2,86 +2,110 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE47C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:47:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A6AFC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8B0920866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583250420;
-	bh=fAQdGJUTHfenkFjY5EY4IkekGQXc8jAE7JffWrzy3Bw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UTkL3Cds1OSHHaaEQDjzEemJaqU+fD1MNTWgTMCy2BuS5cF+GSoTfdKKJtmrDNkmQ
-	 cfDwRrA8sBam3ZNeHqA0asdwee1AqNydS30i7AexA2+GAclI9q6PQ+2xoKWx3XWn0a
-	 TRA2hztq1LipLtzHqKZGPJzmNfwM0Kh+2ZSm0ZDA=
+	by mail.kernel.org (Postfix) with ESMTP id 48A132086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbgCCPq7 (ORCPT
+        id S1730156AbgCCPrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:46:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58810 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 10:47:22 -0500
+Received: from mga11.intel.com ([192.55.52.93]:1722 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726079AbgCCPq7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:46:59 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 865AB20863;
-        Tue,  3 Mar 2020 15:46:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583250419;
-        bh=fAQdGJUTHfenkFjY5EY4IkekGQXc8jAE7JffWrzy3Bw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UTSJj1dBJ3EXiiMRXOwXIMu/JnjlAGKG874nqk/ykA8f77OSM478hjpP0sbUT9QpU
-         kUqOPgyThTJEyJlpnRmqfNMpsk849tkcvUrDl/2R6vmK7peaA0oqoqmvOTz4lFTN8i
-         dUGuF46DJXNrKTkEJgCsK9QBRn5bhVnzMktttEr0=
-Date:   Tue, 3 Mar 2020 16:46:56 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Tommi Rantala <tommi.t.rantala@nokia.com>
-Cc:     stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4.14] tuntap: correctly set SOCKWQ_ASYNC_NOSPACE
-Message-ID: <20200303154656.GD372992@kroah.com>
-References: <20200228084216.15816-1-tommi.t.rantala@nokia.com>
+        id S1729537AbgCCPrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:47:21 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 07:47:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="228954360"
+Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
+  by orsmga007.jf.intel.com with ESMTP; 03 Mar 2020 07:47:19 -0800
+Date:   Tue, 3 Mar 2020 23:45:22 +0800
+From:   Xu Yilun <yilun.xu@intel.com>
+To:     John Garry <john.garry@huawei.com>, luis.f.tanica@seagate.com
+Cc:     linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org,
+        gregkh@linuxfoundation.org, arnd@arndb.de
+Subject: Re: LPC Bus Driver
+Message-ID: <20200303154522.GA24568@yilunxu-OptiPlex-7050>
+References: <6daf1bb266a24c239aed34d8661fc5eaMW2PR20MB210660F6B17CB90ACD0B6E7CA0E70@MW2PR20MB2106.namprd20.prod.outlook.com>
+ <797cec65-5504-ee85-3fe4-fe2b4c90991f@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228084216.15816-1-tommi.t.rantala@nokia.com>
+In-Reply-To: <797cec65-5504-ee85-3fe4-fe2b4c90991f@huawei.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 10:42:16AM +0200, Tommi Rantala wrote:
-> From: Jason Wang <jasowang@redhat.com>
+On Tue, Mar 03, 2020 at 10:13:36AM +0000, John Garry wrote:
+> + add fpga list and Greg+Arnd for misc drivers
 > 
-> [ Upstream commit 2f3ab6221e4c87960347d65c7cab9bd917d1f637 ]
+> Hi Luis,
 > 
-> When link is down, writes to the device might fail with
-> -EIO. Userspace needs an indication when the status is resolved.  As a
-> fix, tun_net_open() attempts to wake up writers - but that is only
-> effective if SOCKWQ_ASYNC_NOSPACE has been set in the past. This is
-> not the case of vhost_net which only poll for EPOLLOUT after it meets
-> errors during sendmsg().
+> >
+> >We have this board with our own SoC, which is connected to an external CPLD (FPGA) via LPC (low pin count) bus.
+> >I've been doing some research to see what the best way of designing the drivers for it would be, and came across the Hisilicon LPC driver stuff (which I believe you're the maintainer for).
+> >
+> >Just a little background. Let's say our host (ARM) has a custom LPC controller. The LPC controller let's us perform reads/writes of CPLD registers via LPC bus. This CPLD is the only slave device attached to that bus and we only use it for reading/writing certain
+> >  registers (e.g., we use it to access some system information and for resetting the ARM during reboot).
+> >
+> >I was looking at the regmap framework and that seemed a good way to go.
 > 
-> This patch fixes this by making sure SOCKWQ_ASYNC_NOSPACE is set when
-> socket is not writable or device is down to guarantee EPOLLOUT will be
-> raised in either tun_chr_poll() or tun_sock_write_space() after device
-> is up.
-> 
-> Cc: Hannes Frederic Sowa <hannes@stressinduktion.org>
-> Cc: Eric Dumazet <edumazet@google.com>
-> Fixes: 1bd4978a88ac2 ("tun: honor IFF_UP in tun_get_user()")
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> Signed-off-by: David S. Miller <davem@davemloft.net>
-> Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
-> ---
->  drivers/net/tun.c | 19 +++++++++++++++----
->  1 file changed, 15 insertions(+), 4 deletions(-)
+> I thought that regmap only allows mapping in MMIO regions for multiplexing
+> access from multiple drivers or accessing registers outside the device HW
+> registers, but you seem to need to manually generate the LPC bus accesses to
+> access registers on the slave device.
 
-Thanks for the backport, now queued up to 4.9.y and 4.14.y.
+I'm not familar with LPC controller, but seems it could not perform
+read/write by one memory access or io access instruction
 
-greg k-h
+I didn't find an existing bus_type for LPC bus, so I think regmap is a
+good way. When you have implemented the regmap for LPC bus, you need to
+access the CPLD registers by regmap_read/write, and just pass CPLD local
+register addr as parameter.
+
+> 
+> If this FPGA is the only device which will ever be on this LPC bus, then
+> could you encode the LPC accesses directly in the FPGA driver?
+> 
+> > But then I saw the logic_pio stuff as well and now I'm not sure what the
+> best approach would be anymore
+> 
+> Logic PIO is for IO Port accesses. It could serve your purpose, but you
+> would need to use IO port accesses for your slave driver, like inb and outb.
+
+I quickly checked the logic PIO. When you implemented logic_pio for your lpc
+and CPLD, you create an map from IO port addr to CPLD register addr. You
+need to use inb/outb to access CPLD register (with some uncertain IO addrs?)
+
+I'm not sure why it is needed to access non-pio devices using PIO, it
+may be of some special purpose? 
+
+Regmap may be a general choise.
+
+> 
+> As another alternative, it might be worth considering writing an I2C
+> controller driver for your LPC host, i.e. model as an I2C bus, and have an
+> I2C client driver for the LPC slave (FPGA). I think that there are examples
+> of this in the kernel.
+
+How the host cpu is connected to LPC host?
+Why an I2C controller driver for LPC host? The LPC bus is compatible to i2c bus?
+
+Thanks,
+Yilun
+
+> 
+> All the best,
+> john
