@@ -2,301 +2,136 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F894C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491BAC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3336D214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:48:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DEB6214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:51:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OAD7nK7j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2/8tjTw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgCCFsi (ORCPT
+        id S1727368AbgCCFvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 00:48:38 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:45860 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgCCFsh (ORCPT
+        Tue, 3 Mar 2020 00:51:48 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43425 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgCCFvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 00:48:37 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 2so878146pfg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 21:48:36 -0800 (PST)
+        Tue, 3 Mar 2020 00:51:48 -0500
+Received: by mail-qk1-f193.google.com with SMTP id q18so2244196qki.10;
+        Mon, 02 Mar 2020 21:51:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=5j43Mr/bIrOBMk42mKrN2eImbOvbfPNmFOTHSb411kg=;
-        b=OAD7nK7jEoAlZecHBF+pnbuP/UPbpiVptrt3hVUEk4WE3IiIyEzFqMVYyAfhlzvDYB
-         tMbkY8MXm6lWVLO8RpQ3Wfsd1LJ6XnEYwgjQGp7KBUI503tqt0Kv3BhKjoVIgTPHSXfQ
-         zu20aUo7oMZw5nJnLi+MJqJWi+OsA9bj6ZCmU=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iLzATktCHrodymTRFz9+R7sYgPZp2WR4t6sVmb9CoD8=;
+        b=Y2/8tjTwomcDfnQI4CrB9vsGgA7c+4gX+IPFpd6xie0Z+y05cpijap953GnF9rFdDE
+         SC5lG7GF2G3PVsUtRjKkdoT/Ze/PUnTEq3Fp0SuRLCRlY2D75jheQ6UZimcFGlnljq0J
+         /VFoBpOQm3TpF8oQg/HORVe6NM0jM5iMz7EYDxfXEozYsByK2Uib08tkiok/TiR3OsGC
+         dBUYXF0m9aqi6VjdIEpJ0JBTvBHO4+L5xE+wPyR7Wy2DlqAPHui9X6mrLwCT6gmE1GAC
+         uCGgoI83igJ6k60HRp1HdkQhyymY2TlMabb+xNGmW2INVOSI7/W97Q3fP0Xkr4s6tA/d
+         2d6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=5j43Mr/bIrOBMk42mKrN2eImbOvbfPNmFOTHSb411kg=;
-        b=LyJ6yZ9ArlMbTUZsSS6kiSzf1Ibb3hkQ61o690K6PVfdxlBszyRlMEvP/YGstEROyx
-         Lczu4uzqt5ZOWdNGmNUFnsQe2rHI1KjfCrML2oi+3LLfWbUh9wQreVA+zkWR+7ioe3Uh
-         Ot17dcAEJ/Nl+vbH/DFA44qmzputKur6wRnH4ZgnzLTX8QlTWbV9CKjsLIkvNXIJAW3K
-         mfwsgYNx/zGHfhewfDF8EQ4hZO+/YPGtq/92LH3X+tbDBODZ11pGvk8Smd1lXGs1bjq8
-         RL7QwMEJbaqjC6SMvGM9nKU0zQVm7pRG/SvJ+mJysfvaz3ALwGUTI7TB4gd8ySORmesy
-         xLEw==
-X-Gm-Message-State: ANhLgQ2xTRBBtT3NQ4MSoUNBhenPnu0AVXq/kgpn/ap48CtYDXBR9u1u
-        Z0sIkXKNpPyAHrO9AJbhTu/+MhyXvuc=
-X-Google-Smtp-Source: ADFU+vvAWValoWq+mvhmEKBoPMhA9c5Z1OYRN9ioAJ+TBELqd7BE10KhyP8MTNGLiYHsRpYijY11WA==
-X-Received: by 2002:a63:e053:: with SMTP id n19mr1049656pgj.64.1583214516048;
-        Mon, 02 Mar 2020 21:48:36 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id y142sm14629115pfb.25.2020.03.02.21.48.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 21:48:35 -0800 (PST)
-Date:   Mon, 2 Mar 2020 21:48:34 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Tycho Andersen <tycho@tycho.ws>
-Cc:     linux-kernel@vger.kernel.org, Matthew Denton <mpdenton@google.com>
-Subject: Re: [PATCH] seccomp: allow TSYNC and USER_NOTIF together
-Message-ID: <202003022137.9DAB55E6F0@keescook>
-References: <20200206165027.18415-1-tycho@tycho.ws>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iLzATktCHrodymTRFz9+R7sYgPZp2WR4t6sVmb9CoD8=;
+        b=p4fzjfKiYHO20Ewq2sbd8Bx9BmhTjGFv2Rdet3e0oXM7uTfM4LVelJQ4+jvrNq6vHm
+         recVQvY9KJRlQMjemPFNpf8GA5hZPkCXQxYlGy/VgnjOvHtuAtVr/VueryO+jSRYW5VS
+         Dgz/bA0dPkivo9AN6HP76QnnZyoNTPFswvIcbIVmbD97A1JMoeIqDVVQhr85PFssYmte
+         rew4RCl99i3iyi0OQKX2z4ZSWeaZbKZ5qgetktJdEAwqvn3aq0kjFnLjH8J+49e8w7Ln
+         dqq/kFCicrW34OZ1aENtRSklztu5dlZoflXCyHfyVszs7N5lhsRwsVwuUKdeFsPR9ClD
+         CbLg==
+X-Gm-Message-State: ANhLgQ0AudiK1YPrDIIxctuKgJO057ko2eRqRr2jXivOInLXIFld8bZw
+        8PrTjExW+7eAofdxJQuAnvmkQtrRKE3R71E6WnI=
+X-Google-Smtp-Source: ADFU+vsAdJwHeWN+xr+Wfk3ncx3mNSNxdcg74ESWiG+tMxczIt6h5phl3xQyAyIyAR3X2SefIi3fSE5nmggLdi9ocbM=
+X-Received: by 2002:a37:8046:: with SMTP id b67mr2625917qkd.218.1583214706980;
+ Mon, 02 Mar 2020 21:51:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206165027.18415-1-tycho@tycho.ws>
+References: <20200303005035.13814-1-luke.r.nels@gmail.com> <20200303005035.13814-5-luke.r.nels@gmail.com>
+In-Reply-To: <20200303005035.13814-5-luke.r.nels@gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Tue, 3 Mar 2020 06:51:35 +0100
+Message-ID: <CAJ+HfNhJJeEewW+Zj2gyH_fprvM25kWCMJP1kmA3Udpjj0MNYQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 4/4] MAINTAINERS: Add entry for RV32G BPF JIT
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 09:50:27AM -0700, Tycho Andersen wrote:
-> The restriction introduced in 7a0df7fbc145 ("seccomp: Make NEW_LISTENER and
-> TSYNC flags exclusive") is mostly artificial: there is enough information
-> in a seccomp user notification to tell which thread triggered a
-> notification. The reason it was introduced is because TSYNC makes the
-> syscall return a thread-id on failure, and NEW_LISTENER returns an fd, and
-> there's no way to distinguish between these two cases (well, I suppose the
-> caller could check all fds it has, then do the syscall, and if the return
-> value was an fd that already existed, then it must be a thread id, but
-> bleh).
-> 
-> Matthew would like to use these two flags together in the Chrome sandbox
-> which wants to use TSYNC for video drivers and NEW_LISTENER to proxy
-> syscalls.
-> 
-> So, let's fix this ugliness by adding another flag, NO_TID_ON_TSYNC_ERR,
-> which tells the kernel to just return -EAGAIN on a TSYNC error. This way,
-> NEW_LISTENER (and any subsequent seccomp() commands that want to return
-> positive values) don't conflict with each other.
-> 
-> Suggested-by: Matthew Denton <mpdenton@google.com>
-> Signed-off-by: Tycho Andersen <tycho@tycho.ws>
-
-Thanks for this! (And thanks for waiting on my review!) Yeah, this
-makes things much more sensible. If we get a third thing that wants
-to be returned, we'll have to rev the userspace struct API to have an
-"output" area. :P
-
-Bike shedding below...
-
+On Tue, 3 Mar 2020 at 01:50, Luke Nelson <lukenels@cs.washington.edu> wrote=
+:
+>
+> Cc: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+> Signed-off-by: Xi Wang <xi.wang@gmail.com>
+> Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
 > ---
->  include/linux/seccomp.h                       |  3 +-
->  include/uapi/linux/seccomp.h                  |  1 +
->  kernel/seccomp.c                              | 14 +++-
->  tools/testing/selftests/seccomp/seccomp_bpf.c | 74 ++++++++++++++++++-
->  4 files changed, 86 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
-> index 03583b6d1416..e0560a941ed1 100644
-> --- a/include/linux/seccomp.h
-> +++ b/include/linux/seccomp.h
-> @@ -7,7 +7,8 @@
->  #define SECCOMP_FILTER_FLAG_MASK	(SECCOMP_FILTER_FLAG_TSYNC | \
->  					 SECCOMP_FILTER_FLAG_LOG | \
->  					 SECCOMP_FILTER_FLAG_SPEC_ALLOW | \
-> -					 SECCOMP_FILTER_FLAG_NEW_LISTENER)
-> +					 SECCOMP_FILTER_FLAG_NEW_LISTENER | \
-> +					 SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR)
->  
->  #ifdef CONFIG_SECCOMP
->  
-> diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
-> index be84d87f1f46..64678cc20e18 100644
-> --- a/include/uapi/linux/seccomp.h
-> +++ b/include/uapi/linux/seccomp.h
-> @@ -22,6 +22,7 @@
->  #define SECCOMP_FILTER_FLAG_LOG			(1UL << 1)
->  #define SECCOMP_FILTER_FLAG_SPEC_ALLOW		(1UL << 2)
->  #define SECCOMP_FILTER_FLAG_NEW_LISTENER	(1UL << 3)
-> +#define SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR	(1UL << 4)
+>  MAINTAINERS | 13 +++++++++++--
+>  1 file changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 8f27f40d22bb..fdd8b99f18db 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3213,11 +3213,20 @@ L:      bpf@vger.kernel.org
+>  S:     Maintained
+>  F:     arch/powerpc/net/
+>
+> -BPF JIT for RISC-V (RV64G)
+> +BPF JIT for 32-bit RISC-V (RV32G)
+> +M:     Luke Nelson <luke.r.nels@gmail.com>
+> +M:     Xi Wang <xi.wang@gmail.com>
+> +L:     bpf@vger.kernel.org
+> +S:     Maintained
+> +F:     arch/riscv/net/
+> +X:     arch/riscv/net/bpf_jit_comp.c
+> +
+> +BPF JIT for 64-bit RISC-V (RV64G)
+>  M:     Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+> -L:     netdev@vger.kernel.org
+> +L:     bpf@vger.kernel.org
+>  S:     Maintained
+>  F:     arch/riscv/net/
+> +X:     arch/riscv/net/bpf_jit_comp32.c
+>
 
-Bikeshed: what do you think about calling this
+Empty commit message body, but maybe that's OK. The removal of netdev
+list is following the new guidelines from commit e42da4c62abb
+("docs/bpf: Update bpf development Q/A file").
 
-SECCOMP_FILTER_FLAG_TSYNC_ESRCH
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
 
-to mean "I don't care _which_ thread, just fail" (See below about the
-ESRCH bit...)
-
->  
->  /*
->   * All BPF programs must return a 32-bit value.
-> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> index b6ea3dcb57bf..fa01ec085d60 100644
-> --- a/kernel/seccomp.c
-> +++ b/kernel/seccomp.c
-> @@ -528,8 +528,12 @@ static long seccomp_attach_filter(unsigned int flags,
->  		int ret;
->  
->  		ret = seccomp_can_sync_threads();
-> -		if (ret)
-> -			return ret;
-> +		if (ret) {
-> +			if (flags & SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR)
-> +				return -EAGAIN;
-
-Hm hm, I think EAGAIN is wrong here: this isn't likely to be a transient
-failure (unless the offending thread dies). The two ways TSYNC can fail
-are if a thread has seccomp mode 1 set, or if the thread's filter
-ancestry has already diverged. Trying again isn't really going to help
-(which is why the original motivation was to return thread details to
-help debug why TSYNC failed).
-
-In the case where the thread id can't be found (container visibility??),
-we fail with -ESRCH. That might be more sensible than -EAGAIN here. (Or
-maybe -EBUSY?)
-
-> +			else
-> +				return ret;
-> +		}
->  	}
->  
->  	/* Set log flag, if present. */
-> @@ -1288,10 +1292,12 @@ static long seccomp_set_mode_filter(unsigned int flags,
->  	 * In the successful case, NEW_LISTENER returns the new listener fd.
->  	 * But in the failure case, TSYNC returns the thread that died. If you
->  	 * combine these two flags, there's no way to tell whether something
-> -	 * succeeded or failed. So, let's disallow this combination.
-> +	 * succeeded or failed. So, let's disallow this combination if the user
-> +	 * has not explicitly requested no errors from TSYNC.
->  	 */
->  	if ((flags & SECCOMP_FILTER_FLAG_TSYNC) &&
-> -	    (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER))
-> +	    (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) &&
-> +	    ((flags & SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR) == 0))
->  		return -EINVAL;
->  
->  	/* Prepare the new filter before holding any locks. */
-> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> index ee1b727ede04..b7ec8655dd1c 100644
-> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
-> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
-> @@ -212,6 +212,10 @@ struct seccomp_notif_sizes {
->  #define SECCOMP_USER_NOTIF_FLAG_CONTINUE 0x00000001
->  #endif
->  
-> +#ifndef SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR
-> +#define SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR (1UL << 4)
-> +#endif
-> +
->  #ifndef seccomp
->  int seccomp(unsigned int op, unsigned int flags, void *args)
->  {
-> @@ -2187,7 +2191,8 @@ TEST(detect_seccomp_filter_flags)
->  	unsigned int flags[] = { SECCOMP_FILTER_FLAG_TSYNC,
->  				 SECCOMP_FILTER_FLAG_LOG,
->  				 SECCOMP_FILTER_FLAG_SPEC_ALLOW,
-> -				 SECCOMP_FILTER_FLAG_NEW_LISTENER };
-> +				 SECCOMP_FILTER_FLAG_NEW_LISTENER,
-> +				 SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR };
->  	unsigned int exclusive[] = {
->  				SECCOMP_FILTER_FLAG_TSYNC,
->  				SECCOMP_FILTER_FLAG_NEW_LISTENER };
-> @@ -2645,6 +2650,55 @@ TEST_F(TSYNC, two_siblings_with_one_divergence)
->  	EXPECT_EQ(SIBLING_EXIT_UNKILLED, (long)status);
->  }
->  
-> +TEST_F(TSYNC, two_siblings_with_one_divergence_no_tid_in_err)
-> +{
-> +	long ret, flags;
-> +	void *status;
-> +
-> +	ASSERT_EQ(0, prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
-> +		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
-> +	}
-> +
-> +	ret = seccomp(SECCOMP_SET_MODE_FILTER, 0, &self->root_prog);
-> +	ASSERT_NE(ENOSYS, errno) {
-> +		TH_LOG("Kernel does not support seccomp syscall!");
-> +	}
-> +	ASSERT_EQ(0, ret) {
-> +		TH_LOG("Kernel does not support SECCOMP_SET_MODE_FILTER!");
-> +	}
-> +	self->sibling[0].diverge = 1;
-> +	tsync_start_sibling(&self->sibling[0]);
-> +	tsync_start_sibling(&self->sibling[1]);
-> +
-> +	while (self->sibling_count < TSYNC_SIBLINGS) {
-> +		sem_wait(&self->started);
-> +		self->sibling_count++;
-> +	}
-> +
-> +	flags = SECCOMP_FILTER_FLAG_TSYNC | \
-> +		SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR;
-> +	ret = seccomp(SECCOMP_SET_MODE_FILTER, flags, &self->apply_prog);
-> +	ASSERT_EQ(EAGAIN, errno) {
-> +		TH_LOG("Did not return EAGAIN for diverged sibling.");
-> +	}
-> +	ASSERT_EQ(-1, ret) {
-> +		TH_LOG("Did not fail on diverged sibling.");
-> +	}
-> +
-> +	/* Wake the threads */
-> +	pthread_mutex_lock(&self->mutex);
-> +	ASSERT_EQ(0, pthread_cond_broadcast(&self->cond)) {
-> +		TH_LOG("cond broadcast non-zero");
-> +	}
-> +	pthread_mutex_unlock(&self->mutex);
-> +
-> +	/* Ensure they are both unkilled. */
-> +	PTHREAD_JOIN(self->sibling[0].tid, &status);
-> +	EXPECT_EQ(SIBLING_EXIT_UNKILLED, (long)status);
-> +	PTHREAD_JOIN(self->sibling[1].tid, &status);
-> +	EXPECT_EQ(SIBLING_EXIT_UNKILLED, (long)status);
-> +}
-> +
->  TEST_F(TSYNC, two_siblings_not_under_filter)
->  {
->  	long ret, sib;
-> @@ -3196,6 +3250,24 @@ TEST(user_notification_basic)
->  	EXPECT_EQ(0, WEXITSTATUS(status));
->  }
->  
-> +TEST(user_notification_with_tsync)
-> +{
-> +	int ret;
-> +	unsigned int flags;
-> +
-> +	/* these were exclusive */
-> +	flags = SECCOMP_FILTER_FLAG_NEW_LISTENER |
-> +		SECCOMP_FILTER_FLAG_TSYNC;
-> +	ASSERT_EQ(-1, user_trap_syscall(__NR_getppid, flags));
-> +	ASSERT_EQ(EINVAL, errno);
-> +
-> +	/* but now they're not */
-> +	flags |= SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR;
-> +	ret = user_trap_syscall(__NR_getppid, flags);
-> +	close(ret);
-> +	ASSERT_LE(0, ret);
-> +}
-> +
->  TEST(user_notification_kill_in_middle)
->  {
->  	pid_t pid;
-> -- 
+>  BPF JIT for S390
+>  M:     Ilya Leoshkevich <iii@linux.ibm.com>
+> --
 > 2.20.1
-> 
-
-Otherwise, yes, let's do this. Much saner. :)
-
--- 
-Kees Cook
+>
