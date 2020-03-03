@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 021ECC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F97BC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDFC821D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DE572166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204101;
-	bh=xrSwneQSyxbFcrpnGduhSn7IJJUdsBkAyHBLcwBerkc=;
+	s=default; t=1583204112;
+	bh=vGUOX+Fc8v/Nw6WwDblSI4csNM6cyIMB9lzoBuNt5d0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zcp3SIvsHQ+s76ZtF7HMZIP220WlhDdRsPrAL/oHI49gNoKevWrSXahtUvOUwf7d8
-	 BD6EVs4yVuB9fEdzOOtqY0QdR+xpL5q4dX3tfirp7bUoLbWiKZTDQ1WkdavWOapxqx
-	 D6t6bVLoDxYOyGzoZ0TjMydAUe2RbAFreWKdB+qc=
+	b=mUih+HM9BL8XPEc/E/AFro01Bpz1Sv0q2S5ffmhf4CCkyr2J7h0pWXsZNuOmDC+Is
+	 YS6utvoQio5HK24Bdt5vNPFLsEy8ZMZG+iLuQSlr6VGoeovptmXn1NyA8wLOqHxDaK
+	 f36o8W2TeFW4lINJ+YKimP48KTV3JOhsb9/vhhLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728959AbgCCCyz (ORCPT
+        id S1728673AbgCCCtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:54:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45400 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:49:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728063AbgCCCtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:13 -0500
+        id S1728565AbgCCCst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:49 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14BF124686;
-        Tue,  3 Mar 2020 02:49:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E55DC24684;
+        Tue,  3 Mar 2020 02:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203753;
-        bh=xrSwneQSyxbFcrpnGduhSn7IJJUdsBkAyHBLcwBerkc=;
+        s=default; t=1583203728;
+        bh=vGUOX+Fc8v/Nw6WwDblSI4csNM6cyIMB9lzoBuNt5d0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vQ1kYCOPTPhov2+trPn35uPXMM1Is4D/4SMFd3G9ZEFDmGzp6AWWhkVUkkxqp4U9I
-         zGHpIcq/qzNK8KiEF+M0N8cfqHXhzhYUVlUD2yme48kZ0vpa61YgJ31jd0Mtu4Tq6C
-         BxzsB2pf7/UxE3I4nbptVJ7rhvkWVMw3yxLwRqIs=
+        b=G8y3ay/MIPXr6b2OfZidn1jIRou1JAa4kgLCJVbVwUzqDZCLmga0cGNka4tqszCvk
+         WEydxVzetcJY2aeXvoZE+UTfXowz1hL7Jr04UOU9NgZlZbR8SQU2IUPUBa8joUqvXm
+         qoj+g0R7iFNzlnWR6Trz0q8lbz+CYejNp71pPiHs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.19 16/32] net: phy: restore mdio regs in the iproc mdio driver
-Date:   Mon,  2 Mar 2020 21:48:35 -0500
-Message-Id: <20200303024851.10054-16-sashal@kernel.org>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, Guo Ren <guoren@kernel.org>,
+        Guo Ren <guoren@linux.alibaba.com>,
+        Sasha Levin <sashal@kernel.org>, linux-csky@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 57/58] arch/csky: fix some Kconfig typos
+Date:   Mon,  2 Mar 2020 21:47:39 -0500
+Message-Id: <20200303024740.9511-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303024851.10054-1-sashal@kernel.org>
-References: <20200303024851.10054-1-sashal@kernel.org>
+In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
+References: <20200303024740.9511-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -63,63 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+From: Randy Dunlap <rdunlap@infradead.org>
 
-[ Upstream commit 6f08e98d62799e53c89dbf2c9a49d77e20ca648c ]
+[ Upstream commit bebd26ab623616728d6e72b5c74a47bfff5287d8 ]
 
-The mii management register in iproc mdio block
-does not have a retention register so it is lost on suspend.
-Save and restore value of register while resuming from suspend.
+Fix wording in help text for the CPU_HAS_LDSTEX symbol.
 
-Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
-Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Guo Ren <guoren@kernel.org>
+Signed-off-by: Guo Ren <guoren@linux.alibaba.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/mdio-bcm-iproc.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/csky/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/phy/mdio-bcm-iproc.c b/drivers/net/phy/mdio-bcm-iproc.c
-index 46fe1ae919a30..51ce3ea17fb37 100644
---- a/drivers/net/phy/mdio-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-bcm-iproc.c
-@@ -188,6 +188,23 @@ static int iproc_mdio_remove(struct platform_device *pdev)
- 	return 0;
- }
+diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
+index 3973847b5f42e..25de20e526e50 100644
+--- a/arch/csky/Kconfig
++++ b/arch/csky/Kconfig
+@@ -74,7 +74,7 @@ config CPU_HAS_TLBI
+ config CPU_HAS_LDSTEX
+ 	bool
+ 	help
+-	  For SMP, CPU needs "ldex&stex" instrcutions to atomic operations.
++	  For SMP, CPU needs "ldex&stex" instructions for atomic operations.
  
-+#ifdef CONFIG_PM_SLEEP
-+int iproc_mdio_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
-+
-+	/* restore the mii clock configuration */
-+	iproc_mdio_config_clk(priv->base);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops iproc_mdio_pm_ops = {
-+	.resume = iproc_mdio_resume
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct of_device_id iproc_mdio_of_match[] = {
- 	{ .compatible = "brcm,iproc-mdio", },
- 	{ /* sentinel */ },
-@@ -198,6 +215,9 @@ static struct platform_driver iproc_mdio_driver = {
- 	.driver = {
- 		.name = "iproc-mdio",
- 		.of_match_table = iproc_mdio_of_match,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm = &iproc_mdio_pm_ops,
-+#endif
- 	},
- 	.probe = iproc_mdio_probe,
- 	.remove = iproc_mdio_remove,
+ config CPU_NEED_TLBSYNC
+ 	bool
 -- 
 2.20.1
 
