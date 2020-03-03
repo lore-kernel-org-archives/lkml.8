@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE09AC3F2D9
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A48FC3F2D7
 	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8308324673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E30B424673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1583203585;
-	bh=IL3/wicU8vS8fr/u2xEEigJhcMcCof++SwVTStaXe0s=;
+	bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CHrn9Wx0alg2ELpOAC10arAD67xCq/XfhijAqVgXAKJqz0cIrP3exaPrWplm9DdiC
-	 mD1vA0O/B5bm5JhijugUKDhWmLnB50yB7Vn7OYrIgppbI/P6TXNRpa+4bJeu05w/LT
-	 1/1JdGUw0GZuQFjkGeMgWu5omWtRw4436J5Z8Mtc=
+	b=AklRR8vXSLW4WXdvtVFBfJES0H/DSOMU2PSD5T5XXH4sd+bqkukBcEP0bSR/3ZBbh
+	 S6Kn448uBugN5k8C5SHxah0DJLF1weG+kvTNAdfNiTDN/twCRAXik/B85unEieroRg
+	 zxDftVfpumQOysyN76dXhOd783uPEMSqGBN50mp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727414AbgCCCqY (ORCPT
+        id S1727331AbgCCCqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:46:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:46:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbgCCCqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:46:23 -0500
+        id S1727053AbgCCCqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B3EA2467B;
-        Tue,  3 Mar 2020 02:46:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 310EA24680;
+        Tue,  3 Mar 2020 02:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203582;
-        bh=IL3/wicU8vS8fr/u2xEEigJhcMcCof++SwVTStaXe0s=;
+        s=default; t=1583203579;
+        bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1n1+3pNCKFLN4z5GnicxGFpN4E/EZFV/9OVRs4tXFDrUF44qOKdSp4RBggA620YD
-         j7JQ0xCiws513uEpbFA3DgSrvSViBP1y2y6ef9iKrRzHDBIDWV8jpSqZ/3Bf/6qECj
-         hzQQHUU9qyGk7bPYaeaEPXr0VNVhF8+BrszQjpRk=
+        b=MmrnbpyhahB09gzJEO19QwVjJ4HFbQ8Xxz3F/sCz/1Ml9P4UM3L2W+d7LFBC0XhiI
+         OUVlB6a0mT7eJtx7+4ks3aO3b3dIxsq9dEA8bsx1ShAQwR8K4DGLF0fvd+ZLibW0Dx
+         LbAQmf8tyuO1vqOENfO2FoLgOSM2GgLgyt9HA9yI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Benc <jbenc@redhat.com>,
-        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 05/66] selftests: fix too long argument
-Date:   Mon,  2 Mar 2020 21:45:14 -0500
-Message-Id: <20200303024615.8889-5-sashal@kernel.org>
+Cc:     Daniel Golle <daniel@makrotopia.org>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 03/66] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
+Date:   Mon,  2 Mar 2020 21:45:12 -0500
+Message-Id: <20200303024615.8889-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -62,73 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Benc <jbenc@redhat.com>
+From: Daniel Golle <daniel@makrotopia.org>
 
-[ Upstream commit c363eb48ada5cf732b3f489fab799fc881097842 ]
+[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
 
-With some shells, the command construed for install of bpf selftests becomes
-too large due to long list of files:
+On AR934x this UART is usually not initialized by the bootloader
+as it is only used as a secondary serial port while the primary
+UART is a newly introduced NS16550-compatible.
+In order to make use of the ar933x-uart on AR934x without RTS/CTS
+hardware flow control, one needs to set the
+UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
+UART is used as primary/console, the bootloader on AR934x typically
+doesn't set those bits.
+Setting them explicitely on AR933x should not do any harm, so just
+set them unconditionally.
 
-make[1]: execvp: /bin/sh: Argument list too long
-make[1]: *** [../lib.mk:73: install] Error 127
-
-Currently, each of the file lists is replicated three times in the command:
-in the shell 'if' condition, in the 'echo' and in the 'rsync'. Reduce that
-by one instance by using make conditionals and separate the echo and rsync
-into two shell commands. (One would be inclined to just remove the '@' at
-the beginning of the rsync command and let 'make' echo it by itself;
-unfortunately, it appears that the '@' in the front of mkdir silences output
-also for the following commands.)
-
-Also, separate handling of each of the lists to its own shell command.
-
-The semantics of the makefile is unchanged before and after the patch. The
-ability of individual test directories to override INSTALL_RULE is retained.
-
-Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Tested-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
-Signed-off-by: Jiri Benc <jbenc@redhat.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Tested-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/lib.mk | 23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ drivers/tty/serial/ar933x_uart.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
-index 1c8a1963d03f8..3ed0134a764d4 100644
---- a/tools/testing/selftests/lib.mk
-+++ b/tools/testing/selftests/lib.mk
-@@ -83,17 +83,20 @@ else
- 	$(call RUN_TESTS, $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_PROGS))
- endif
+diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
+index 3bdd56a1021b2..ea12f10610b64 100644
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -286,6 +286,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
-+define INSTALL_SINGLE_RULE
-+	$(if $(INSTALL_LIST),@mkdir -p $(INSTALL_PATH))
-+	$(if $(INSTALL_LIST),@echo rsync -a $(INSTALL_LIST) $(INSTALL_PATH)/)
-+	$(if $(INSTALL_LIST),@rsync -a $(INSTALL_LIST) $(INSTALL_PATH)/)
-+endef
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
 +
- define INSTALL_RULE
--	@if [ "X$(TEST_PROGS)$(TEST_PROGS_EXTENDED)$(TEST_FILES)" != "X" ]; then					\
--		mkdir -p ${INSTALL_PATH};										\
--		echo "rsync -a $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(INSTALL_PATH)/";	\
--		rsync -a $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(INSTALL_PATH)/;		\
--	fi
--	@if [ "X$(TEST_GEN_PROGS)$(TEST_CUSTOM_PROGS)$(TEST_GEN_PROGS_EXTENDED)$(TEST_GEN_FILES)" != "X" ]; then					\
--		mkdir -p ${INSTALL_PATH};										\
--		echo "rsync -a $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(INSTALL_PATH)/";	\
--		rsync -a $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(INSTALL_PATH)/;		\
--	fi
-+	$(eval INSTALL_LIST = $(TEST_PROGS)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_PROGS_EXTENDED)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_FILES)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_GEN_PROGS)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_CUSTOM_PROGS)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_GEN_PROGS_EXTENDED)) $(INSTALL_SINGLE_RULE)
-+	$(eval INSTALL_LIST = $(TEST_GEN_FILES)) $(INSTALL_SINGLE_RULE)
- endef
+ 	/* reenable the UART */
+ 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
+ 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
+@@ -418,6 +422,10 @@ static int ar933x_uart_startup(struct uart_port *port)
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
  
- install: all
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* Enable RX interrupts */
+ 	up->ier = AR933X_UART_INT_RX_VALID;
+ 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
 -- 
 2.20.1
 
