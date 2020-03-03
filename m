@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DC8C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 841EBC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1246217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D7C8217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:53:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203973;
-	bh=h9VO2Y3iLgmkckLlYUSL5GxvLwG/mcpr+WlanXYTang=;
+	s=default; t=1583203980;
+	bh=0f47R/IOMTYex/I5vBuWikGmqF4Nke+6/xBNSWEcrsQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzz9ApZYcuLM2MYJQIzvn73LJ+zGQAqMW06SHBi5YpRbSea9tdgHQkSeVkEMAaj6N
-	 hdWRbjm/WIbo9ftEemFXL7dztxVBfk00cNQ1ixVAmnchsJR8tE/j1+eWTwMkCQgH7i
-	 tkqOP8byffQ1EXAxFAJBbZgy6p/Ii6nbbrkgHLNU=
+	b=lr+WTTrY+en7JLLc94HFOIrod+EmjIUGZhmmFVb9dnA3bNKBjPzDq8SHvpdMwRX8u
+	 L4NRfnTuHqOPbCkReEzcwQ3NFUIsy9xpdMwcjsMRykcn8qnpIWmc5WOl03UJytXnOi
+	 TRqxDp/uarOK/B4zauIVeQFNbfkyTH+SuVhH1YTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbgCCCws (ORCPT
+        id S1728978AbgCCCtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:52:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:49:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728997AbgCCCty (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:54 -0500
+        id S1728937AbgCCCtn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:43 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF67E2468D;
-        Tue,  3 Mar 2020 02:49:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF97246DE;
+        Tue,  3 Mar 2020 02:49:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203793;
-        bh=h9VO2Y3iLgmkckLlYUSL5GxvLwG/mcpr+WlanXYTang=;
+        s=default; t=1583203782;
+        bh=0f47R/IOMTYex/I5vBuWikGmqF4Nke+6/xBNSWEcrsQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NPeQJzpEU+5YJRYR2IzN0AKMx4mig7m3W4wmZq9aq8C/JXMKoaQ7gRYF/Ikahw5q4
-         VAeYs/lhYAWI/lB8mx/6HUX/zYZ9+Z6AMwowKna3h7r36l+dJ1THDL2PnIzyGV7sgG
-         v9eeiq8aDBa6d7vYju1xfKO0WlYT7J8OlUj/0HmU=
+        b=ONrY6pxvAGvVJicKP5qijGahU+njVZKpW/yQxRRY6SIgP36BEGmFzSpjskyV9lFUI
+         EJdTYmxzi9xJc/RSWi/JQM2k2+Z59QfxyvW4ByceKzCiTTRkyo/951NwX8m4Ml7Tbc
+         XulTGOXDvNWsbwPhImpVlPmMNXgkdBMJEeMU+Leg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 15/22] watchdog: da9062: do not ping the hw during stop()
-Date:   Mon,  2 Mar 2020 21:49:26 -0500
-Message-Id: <20200303024933.10371-15-sashal@kernel.org>
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 4.14 07/22] drm/msm/mdp5: rate limit pp done timeout warnings
+Date:   Mon,  2 Mar 2020 21:49:18 -0500
+Message-Id: <20200303024933.10371-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024933.10371-1-sashal@kernel.org>
 References: <20200303024933.10371-1-sashal@kernel.org>
@@ -60,49 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit e9a0e65eda3f78d0b04ec6136c591c000cbc3b76 ]
+[ Upstream commit ef8c9809acb0805c991bba8bdd4749fc46d44a98 ]
 
-The da9062 hw has a minimum ping cool down phase of at least 200ms. The
-driver takes that into account by setting the min_hw_heartbeat_ms to
-300ms and the core guarantees that the hw limit is observed for the
-ping() calls. But the core can't guarantee the required minimum ping
-cool down phase if a stop() command is send immediately after the ping()
-command. So it is not allowed to ping the watchdog within the stop()
-command as the driver does. Remove the ping can be done without doubts
-because the watchdog gets disabled anyway and a (re)start resets the
-watchdog counter too.
+Add rate limiting of the 'pp done time out' warnings since these
+warnings can quickly fill the dmesg buffer.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200120091729.16256-1-m.felsch@pengutronix.de
-[groeck: Updated description]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/da9062_wdt.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index 9083d3d922b0b..79383ff620199 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -126,13 +126,6 @@ static int da9062_wdt_stop(struct watchdog_device *wdd)
- 	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
- 	int ret;
+diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c
+index 4409776770012..99d356b6e9151 100644
+--- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c
++++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_crtc.c
+@@ -1004,8 +1004,8 @@ static void mdp5_crtc_wait_for_pp_done(struct drm_crtc *crtc)
+ 	ret = wait_for_completion_timeout(&mdp5_crtc->pp_completion,
+ 						msecs_to_jiffies(50));
+ 	if (ret == 0)
+-		dev_warn(dev->dev, "pp done time out, lm=%d\n",
+-			 mdp5_cstate->pipeline.mixer->lm);
++		dev_warn_ratelimited(dev->dev, "pp done time out, lm=%d\n",
++				     mdp5_cstate->pipeline.mixer->lm);
+ }
  
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret) {
--		dev_err(wdt->hw->dev, "Failed to ping the watchdog (err = %d)\n",
--			ret);
--		return ret;
--	}
--
- 	ret = regmap_update_bits(wdt->hw->regmap,
- 				 DA9062AA_CONTROL_D,
- 				 DA9062AA_TWDSCALE_MASK,
+ static void mdp5_crtc_wait_for_flush_done(struct drm_crtc *crtc)
 -- 
 2.20.1
 
