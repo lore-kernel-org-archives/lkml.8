@@ -2,158 +2,169 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 033E1C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D36C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD1D620848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:56:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F6D20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 12:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W6PJrARd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pBdyV79X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbgCCM4O (ORCPT
+        id S1728668AbgCCM55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 07:56:14 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22443 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727585AbgCCM4N (ORCPT
+        Tue, 3 Mar 2020 07:57:57 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46062 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727585AbgCCM54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 07:56:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583240171;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=StD01upWfLys6j/mJDiSTbKkVFO2v53vgbK9NTukAX0=;
-        b=W6PJrARdrd4EiLTHvBK3Sot/q7iaBKI7V8HsGqaqgKgm9ULVrv6X7dgoVY8mv0s58KmcWZ
-        Y4LmIy5NS1Kb+SiKzXzMbFI8yFX6zjkeU1wIeYVTlmfN63flUrVBJfYigckYdENYsIQ936
-        5DI0OKTxk5EecvOWC8VM9A2LGVceTCs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-157-RtCwRq53P9-lBmzYFQHFyQ-1; Tue, 03 Mar 2020 07:56:08 -0500
-X-MC-Unique: RtCwRq53P9-lBmzYFQHFyQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8BBDDB60;
-        Tue,  3 Mar 2020 12:56:06 +0000 (UTC)
-Received: from [10.36.116.59] (ovpn-116-59.ams2.redhat.com [10.36.116.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9F2885C1D6;
-        Tue,  3 Mar 2020 12:56:04 +0000 (UTC)
-Subject: Re: [PATCH] iommu/dma: Fix MSI reservation allocation
-To:     Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Joerg Roedel <jroedel@suse.de>,
-        Robin Murphy <robin.murphy@arm.com>, stable@vger.kernel.org,
-        Will Deacon <will@kernel.org>
-References: <20200303115154.32263-1-maz@kernel.org>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <b340f887-5960-390c-948d-c1b8fa14adec@redhat.com>
-Date:   Tue, 3 Mar 2020 13:56:03 +0100
+        Tue, 3 Mar 2020 07:57:56 -0500
+Received: by mail-pg1-f196.google.com with SMTP id m15so1494277pgv.12
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 04:57:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=Lg++IdYMeQd94pD/ZLBO5CJLpoQAjy8oNL8AZop1ans=;
+        b=pBdyV79X5PzDSeKMLl78uCsyMMfApV/dm6Xt0abLb0CDLkPTIcuZfFfifhGyzHBFhQ
+         uPB4L44CjJt97iTH9OX3ExajyF+uak9tl+MDBZELIkQQfJI1y1OkWiBWc7V5K5uXdoeX
+         u6kP+HaiPiyu0ajhimW8fQaIwSIqfZ0BTiecuD48wzWbijj3BWVCVPXQ/vW7aH9X9HfV
+         2XV3ry/BiJQIAjFEAV05BQrRjLk0QxP8gwLS54uTMj/wr7EVFpSiKBZf/OQXoqV5xBCi
+         760oD2HdWo/B0hn2swU9vOQ+0n7r9yfX4BWiryhqSt8waHinEjBMk+4TlYNMMItRsRIC
+         jZdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=Lg++IdYMeQd94pD/ZLBO5CJLpoQAjy8oNL8AZop1ans=;
+        b=CG9uXCQB79FRUo/CqC0rbNGW1gSl63zjsKayRYJD9gAxhTy+5moxFR9mIImSHLZxkt
+         O7x2NyxV9fnei27fYAsjpJFc9Ri7m+JdpF6i4bTHbENiJWWc/DfkMmpZUtl1XMq2Fmqq
+         dGKD7D5DjyDfo+QPUp299ibug1EMAD8A57SUWU4vzB0I0ZL/mR8r7szuqNtgzMFqlc8G
+         VxiP/+LoK3vEmX8xljbWtu3O5eIrw9Jkq0fPArIhoMKvic6t7SOZD4my482t2VXV3kwV
+         MRhek0ECokaAGdQL5rbagzEPHlSEH23Zxmn4w0HSvvSx/X38d0RHOvOAiyvfJipIQ7Xo
+         BAew==
+X-Gm-Message-State: ANhLgQ1YcM143/dQJRXc/bmuDeTSWahgk/1k+PvXoDmIXAk7qwqq/F4S
+        294Cb6pSenU981hUJL5trXaXxg==
+X-Google-Smtp-Source: ADFU+vvmaCiGdnLf7VVnD73qoTDE9qAVS2O4FvZFUlSW1+1T1yr52B7c7d1Vy26Nlbvk0udV+zchMA==
+X-Received: by 2002:a63:91c1:: with SMTP id l184mr3862200pge.341.1583240275667;
+        Tue, 03 Mar 2020 04:57:55 -0800 (PST)
+Received: from [10.122.2.74] ([45.135.186.15])
+        by smtp.gmail.com with ESMTPSA id x66sm13299097pgb.9.2020.03.03.04.57.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2020 04:57:54 -0800 (PST)
+Subject: Re: Re: [PATCH v9 00/11] SMMUv3 Nested Stage Setup (VFIO part)
+To:     Auger Eric <eric.auger@redhat.com>,
+        Tomasz Nowicki <tnowicki@marvell.com>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>
+Cc:     "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "vincent.stehle@arm.com" <vincent.stehle@arm.com>,
+        "zhangfei.gao@gmail.com" <zhangfei.gao@gmail.com>,
+        "tina.zhang@intel.com" <tina.zhang@intel.com>,
+        wangzhou1 <wangzhou1@hisilicon.com>,
+        Kenneth Lee <kenneth-lee-2012@foxmail.com>
+References: <20190711135625.20684-1-eric.auger@redhat.com>
+ <a35234a6-e386-fc8e-fcc4-5db4601b00d2@marvell.com>
+ <3741c034-08f1-9dbb-ab06-434f3a8bd782@redhat.com>
+From:   zhangfei <zhangfei.gao@linaro.org>
+Message-ID: <e0133df5-073b-13e1-8399-ff48bfaef5e5@linaro.org>
+Date:   Tue, 3 Mar 2020 20:57:27 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200303115154.32263-1-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <3741c034-08f1-9dbb-ab06-434f3a8bd782@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
-On 3/3/20 12:51 PM, Marc Zyngier wrote:
-> The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
-> structures doesn't match the way iommu_put_dma_cookie() frees them.
-> 
-> The former performs a single allocation of all the required structures,
-> while the latter tries to free them one at a time. It doesn't quite
-> work for the main use case (the GICv3 ITS where the range is 64kB)
-> when the base ganule size is 4kB.
-> 
-> This leads to a nice slab corruption on teardown, which is easily
-> observable by simply creating a VF on a SRIOV-capable device, and
-> tearing it down immediately (no need to even make use of it).
-> 
-> Fix it by allocating iommu_dma_msi_page structures one at a time.
-> 
-> Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
+Hi, Eric
+
+On 2019/11/20 下午6:18, Auger Eric wrote:
+>
+>>> This series brings the VFIO part of HW nested paging support
+>>> in the SMMUv3.
+>>>
+>>> The series depends on:
+>>> [PATCH v9 00/14] SMMUv3 Nested Stage Setup (IOMMU part)
+>>> (https://www.spinics.net/lists/kernel/msg3187714.html)
+>>>
+>>> 3 new IOCTLs are introduced that allow the userspace to
+>>> 1) pass the guest stage 1 configuration
+>>> 2) pass stage 1 MSI bindings
+>>> 3) invalidate stage 1 related caches
+>>>
+>>> They map onto the related new IOMMU API functions.
+>>>
+>>> We introduce the capability to register specific interrupt
+>>> indexes (see [1]). A new DMA_FAULT interrupt index allows to register
+>>> an eventfd to be signaled whenever a stage 1 related fault
+>>> is detected at physical level. Also a specific region allows
+>>> to expose the fault records to the user space.
+>>>
+>>> Best Regards
+>>>
+>>> Eric
+>>>
+>>> This series can be found at:
+>>> https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9
+>> I think you have already tested on ThunderX2, but as a formality, for
+>> the whole series:
+>>
+>> Tested-by: Tomasz Nowicki <tnowicki@marvell.com>
+>> qemu: https://github.com/eauger/qemu/tree/v4.1.0-rc0-2stage-rfcv5
+>> kernel: https://github.com/eauger/linux/tree/v5.3.0-rc0-2stage-v9 +
+>> Shameer's fix patch
+>>
+>> In my test I assigned Intel 82574L NIC and perform iperf tests.
+> Thank you for your testing efforts.
+>> Other folks from Marvell claimed this to be important feature so I asked
+>> them to review and speak up on mailing list.
+> That's nice to read that!  So it is time for me to rebase both the iommu
+> and vfio parts. I will submit something quickly. Then I would encourage
+> the review efforts to focus first on the iommu part.
+>
+>
+vSVA feature is also very important to us, it will be great if vSVA can 
+be supported in guest world.
+
+We just submitted uacce for accelerator, which will be supporting SVA on 
+host, thanks to Jean's effort.
+
+https://lkml.org/lkml/2020/2/11/54
+
+
+However, supporting vSVA in guest is also a key component for accelerator.
+
+Looking forward this going to be happen.
+
+
+Any respin, I will be very happy to test.
+
 
 Thanks
 
-Eric
 
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Joerg Roedel <jroedel@suse.de>
-> Cc: Eric Auger <eric.auger@redhat.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: stable@vger.kernel.org
-> ---
->  drivers/iommu/dma-iommu.c | 36 ++++++++++++++++++++++++------------
->  1 file changed, 24 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index a2e96a5fd9a7..01fa64856c12 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -171,25 +171,37 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
->  		phys_addr_t start, phys_addr_t end)
->  {
->  	struct iova_domain *iovad = &cookie->iovad;
-> -	struct iommu_dma_msi_page *msi_page;
-> -	int i, num_pages;
-> +	struct iommu_dma_msi_page *msi_page, *tmp;
-> +	int i, num_pages, ret = 0;
-> +	phys_addr_t base;
->  
-> -	start -= iova_offset(iovad, start);
-> +	base = start -= iova_offset(iovad, start);
->  	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
->  
-> -	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
-> -	if (!msi_page)
-> -		return -ENOMEM;
-> -
->  	for (i = 0; i < num_pages; i++) {
-> -		msi_page[i].phys = start;
-> -		msi_page[i].iova = start;
-> -		INIT_LIST_HEAD(&msi_page[i].list);
-> -		list_add(&msi_page[i].list, &cookie->msi_page_list);
-> +		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
-> +		if (!msi_page) {
-> +			ret = -ENOMEM;
-> +			break;
-> +		}
-> +		msi_page->phys = start;
-> +		msi_page->iova = start;
-> +		INIT_LIST_HEAD(&msi_page->list);
-> +		list_add(&msi_page->list, &cookie->msi_page_list);
->  		start += iovad->granule;
->  	}
->  
-> -	return 0;
-> +	if (ret) {
-> +		list_for_each_entry_safe(msi_page, tmp,
-> +					 &cookie->msi_page_list, list) {
-> +			if (msi_page->phys >= base && msi_page->phys < start) {
-> +				list_del(&msi_page->list);
-> +				kfree(msi_page);
-> +			}
-> +		}
-> +	}
-> +
-> +	return ret;
->  }
->  
->  static int iova_reserve_pci_windows(struct pci_dev *dev,
-> 
+
 
