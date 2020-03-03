@@ -2,126 +2,137 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C2EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:56:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B988C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A20D20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:56:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5ACA20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:57:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EWc6ytjv"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="kDnUpYpd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727968AbgCCX4K (ORCPT
+        id S1728023AbgCCX5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 18:56:10 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40271 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbgCCX4K (ORCPT
+        Tue, 3 Mar 2020 18:57:30 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44487 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727274AbgCCX53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 18:56:10 -0500
-Received: by mail-pf1-f196.google.com with SMTP id l184so2329724pfl.7;
-        Tue, 03 Mar 2020 15:56:09 -0800 (PST)
+        Tue, 3 Mar 2020 18:57:29 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 7so4279568lfz.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 15:57:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=y8gDt4+hKLFEVUT2875HZHL2GUBm9at3uoIUJ/mCCI4=;
-        b=EWc6ytjvGgIM9CPsIuRtdRj7fSSnF3G0MyQk/9TJkcVNCTJcp8ob0LqyblK66ZjQ/y
-         hArGfUegHFur9Flsc1QdJdVrI25B8ycSY5oBB6K2c8bv7zDQATa/DI3E0xux1EejQafW
-         s/Psl9Dn5u6QMtFhpLs1MvV6FQSuGoS9ZkIaFIAmbbN3DfFUhAeXSqS/ZB0K9OS4wMEx
-         ZKO+lD3dLySP0/Q2Ua2PwsQCfeynrKfoBvvK6jFiUEgT0gK7fE7nStmFZiRpOQcQRCPu
-         ShyndO2nUCe/gUhrGR5ElWkW4zxmwkccuxBJXCZ/ma3FHmL1+pkMVL1sYtFwKYjMMxs2
-         V1nA==
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fIWGur3bsHzpzpsDDYwv29XnZSnnJNIFZvGbNS4jrEo=;
+        b=kDnUpYpdn4DAr4q2+USJm5D+Fm0EG/v+rd4s9F6wFuVXBRLXddHQ+/f0t4DFkkQ+3Q
+         eBcaSIqkYIuy53rq98q1mHS3xL2RtzGAIQO2CLrUnJdK4EJtDXeVl6PdXaACwg1yxD83
+         KLoXEudsQ8rXYTgIgtth79gb8JOYaXvThTtjUTvrkO2UnUDAZKVhOyQ0sM0Dh8y0cy7T
+         x7c6ZJRQeiva4BdwyggRsrozYSAaI1lq79XSN90vSRowrZlPAbE1G13Qdg4Ro+8djiBX
+         ZGGI3UFY12ilEHoXGE8jE5rpfmGBT8LYcI/8AzDqCZMiPlySSJpfsoVgP1G8NnIC+kRj
+         tEkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=y8gDt4+hKLFEVUT2875HZHL2GUBm9at3uoIUJ/mCCI4=;
-        b=C7b+2X6gbrEpxRHwxZRpzmG1YwQ0rmyhpmt4Kx3eq3Wenf0KR46PFhN7vfv6/F13OE
-         4QAjkYG1/zJfTynwnzEyw5tm7yLEVTXB2hciffSvuoAgRjZk2A57/+CTas3jfmONqkZ2
-         P4OsYVroI9XoBwn0YSJ54i61GjRaW3iEU2MqEnqm7DAfyU7WSumWE5mXNSTY938pM9p9
-         A7jb/2fluSW/tKlJidmmXhfCkAbwH2T+4/vbZfzIyP0Wuxd7Y+KWWpWDDndhEEvxgWM5
-         NzlRp/N8y1w88OiEuVDU8rSH6CWcasNYTd/R6MzIx8P8NMQDhpUaPIhHCRMI53cWSVEv
-         ebpg==
-X-Gm-Message-State: ANhLgQ3Z5FJJJlMyP1GSibhcP1zEQMNJLvzaaohwnp21CSq3bxJWJZTE
-        Uxkg2q7j/Js6sddwJkEuNfhNZkM+
-X-Google-Smtp-Source: ADFU+vsAaImrpowO4my/J2luF3xHzX9kk5ExySiUOtQqOLJulGboUZgtWWuVBm3+VadjOoaf57hKsA==
-X-Received: by 2002:aa7:9a96:: with SMTP id w22mr232054pfi.210.1583279768806;
-        Tue, 03 Mar 2020 15:56:08 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:500::4:a0de])
-        by smtp.gmail.com with ESMTPSA id u5sm3262803pfb.153.2020.03.03.15.56.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Mar 2020 15:56:07 -0800 (PST)
-Date:   Tue, 3 Mar 2020 15:56:05 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next 2/7] bpf: JIT helpers for fmod_ret progs
-Message-ID: <20200303235604.mdlamwx4z2ws3fzy@ast-mbp>
-References: <20200303140950.6355-1-kpsingh@chromium.org>
- <20200303140950.6355-3-kpsingh@chromium.org>
- <CAEf4BzZJ2E2rmyz7k4F7s=EXPbaAX7XncvUcHukX_FYDWeD7BA@mail.gmail.com>
- <20200303222812.GA5265@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fIWGur3bsHzpzpsDDYwv29XnZSnnJNIFZvGbNS4jrEo=;
+        b=ZqVJKpXREru7elMNCZeMTjiZLdPC77jTUUAbeotI97EVYErYBRkn6GO9ZrzV1VvT+d
+         dK4tGMqvNkJQRJbgsZlLgG2IFDYsJ9wXl3N3/6sVQ1OhcjIVZqRn2xnBhA0yDG35UWBB
+         8ofel690KTvGpZGfTcQHVVlqbcGvmL/ZI+CnXiwnuTQDBHnmxaJwFkiNqD2tkMgaE1PU
+         pHPLx4Oh/8KGDea0mk3/pydUs2z/aJao1q0DhKCqDl6IqcTA1k0mMLPiOYqP4MpzPrT1
+         gbWnuAskkWYB6oxrsGD6Kamky7KfNX42gl0QReOYUX4EPl9Sc/YlcB6IhFk+QixwMDa9
+         4mPw==
+X-Gm-Message-State: ANhLgQ1M6BkbHFS2Atc8eC8DZY5po1jXKRV+JPlkXyrbnphv2qYtyCiZ
+        I4BZVfLhnLb8k1OKdHjkOW1HVlQ2A+SREaDhA4L0PA==
+X-Google-Smtp-Source: ADFU+vuSXV6dJHAw44cUBpwZDzV0Ata45u0U9iunTKOnYcvhn4CAzW/6jGOxJT8MXZjlles3cvD5zW2DxOE8xH8AoFU=
+X-Received: by 2002:a19:ca15:: with SMTP id a21mr232523lfg.67.1583279845785;
+ Tue, 03 Mar 2020 15:57:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303222812.GA5265@chromium.org>
-User-Agent: NeoMutt/20180223
+References: <20200225091130.29467-1-kishon@ti.com> <1582665067-20462-1-git-send-email-alan.mikhak@sifive.com>
+ <7e1202a3-037b-d1f3-f2bf-1b8964787ebd@ti.com> <CABEDWGz=4E8mYx0usw4A1UAMHrq+MGyKOX47yO7Cdgmcq=aOag@mail.gmail.com>
+In-Reply-To: <CABEDWGz=4E8mYx0usw4A1UAMHrq+MGyKOX47yO7Cdgmcq=aOag@mail.gmail.com>
+From:   Alan Mikhak <alan.mikhak@sifive.com>
+Date:   Tue, 3 Mar 2020 15:57:13 -0800
+Message-ID: <CABEDWGwejv-1h=pLt_o5n=Mct+6r9oQdQCLT7GZSMgBR2bDJHg@mail.gmail.com>
+Subject: Re: [PATCH 1/5] PCI: endpoint: functions/pci-epf-test: Add DMA
+ support to transfer data
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     amurray@thegoodpenguin.co.uk, arnd@arndb.de,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        linux-pci <linux-pci@vger.kernel.org>, lorenzo.pieralisi@arm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 11:28:12PM +0100, KP Singh wrote:
-> > > +static void align16_branch_target(u8 **pprog)
-> > > +{
-> > > +       u8 *target, *prog = *pprog;
+On Wed, Feb 26, 2020 at 9:39 AM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+>
+> On Tue, Feb 25, 2020 at 9:27 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> >
+> > Hi Alan,
+> >
+> > On 26/02/20 2:41 am, Alan Mikhak wrote:
+> > > @@ -380,6 +572,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+> > >         int bar;
+> > >
+> > >         cancel_delayed_work(&epf_test->cmd_handler);
+> > > +       pci_epf_clean_dma_chan(epf_test);
+> > >         pci_epc_stop(epc);
+> > >         for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+> > >                 epf_bar = &epf->bar[bar];
+> > > @@ -550,6 +743,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+> > >                 }
+> > >         }
+> > >
+> > > +       epf_test->dma_supported = true;
 > > > +
-> > > +       target = PTR_ALIGN(prog, 16);
-> > > +       if (target != prog)
-> > > +               emit_nops(&prog, target - prog);
-> > > +       if (target != prog)
-> > > +               pr_err("calcultion error\n");
-> > 
-> > this wasn't in the original code, do you feel like it's more important
-> > to check this and print error?
-> > 
-> > also typo: calculation error, but then it's a bit brief and
-> > uninformative message. So I don't know, maybe just drop it?
-> 
-> Ah, good catch! this is deinitely not intended to be here.
-> It's a debug artifact and needs to dropped indeed.
+> > > +       ret = pci_epf_init_dma_chan(epf_test);
+> > > +       if (ret)
+> > > +               epf_test->dma_supported = false;
+> > > +
+> > >         if (linkup_notifier) {
+> > >                 epf->nb.notifier_call = pci_epf_test_notifier;
+> > >                 pci_epc_register_notifier(epc, &epf->nb);
+> > >
+> > > Hi Kishon,
+> > >
+> > > Looking forward to building and trying this patch series on
+> > > a platform I work on.
 
-That spurious pr_err() caught my attention as well.
-After further analysis there is a bug here.
-The function is missing last line:
-        *pprog = prog;
-Without it the nop insertion is actually not happenning.
-Nops are being written, but next insns will overwrite them.
-When I noticed it by code review I applied the patches to my tree
-and run the tests and, as expected, all tests passed.
-The existing test_xdp_veth.sh emits the most amount of unaligned
-branches. Since then I've been thinking whether we could add a test
-to catch things like this and couldn't come up with a way to test it
-without burning a lot of code on it. So let's fix it and move on.
-Could you rename this helper? May be emit_align() and pass 16 into it?
-The code is not branch target specific. It's aligning the start
-of the next instruction.
-Also could you add a comment to:
-        align16_branch_target(&prog);
-        for (i = 0; i < fmod_ret->nr_progs; i++)
-                emit_cond_near_jump(&branches[i], prog, branches[i],
-                                    X86_JNE);
-        kfree(branches);
-to say that the loop is updating prior location to jump to aligned
-branch target ?
+Hi Kishon,
+
+I applied this v1 patch series to kernel.org linux 5.6-rc3 and built for
+x86_64 Debian and riscv. I verified that when I execute the pcitest
+command on the x86_64 host with -d flag, the riscv endpoint performs
+the transfer by using an available dma channel.
+
+Regards,
+Alan
+
+> > >
+> > > Would you please point me to where I can find the patches
+> > > which add pci_epf_init_dma_chan() and pci_epf_clean_dma_chan()
+> > > to Linux PCI Endpoint Framework?
+> >
+> > I've added these functions in pci-epf-test itself instead of adding in
+> > the core files. I realized adding it in core files may not be helpful if
+> > the endpoint function decides to use more number of DMA channels etc.,
+>
+> Thanks Kishon,
+>
+> I now realize they are in [PATCH 1/5] of this series. May I suggest renaming
+> them to pci_epf_test_init_dma_chan() and pci_epf_test_cleanup_dma_chan()?
+> With just pci_epf in their name, I was looking for them in pci-epf-core.c.
+>
+> Regards,
+> Alan
+>
+> >
+> > Thanks
+> > Kishon
