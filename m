@@ -2,68 +2,88 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19359C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B10E6C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1A67208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:12:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dashjr.org header.i=@dashjr.org header.b="vU3iV77s"
+	by mail.kernel.org (Postfix) with ESMTP id 81D4D20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:13:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583277206;
+	bh=v5pqnEcy9dq8qHJLjfOnbdzJYEeiqGUa6wuExA6D8Wc=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=rYYSxaPLVAaimLBsYtO7PS8OC39eTic6P/qUy4CvnzygavTTWoU+3+P4N+CLi90yH
+	 si7i9M9cBEUCsi/1jRKxQMjUVWnmVa/dyMWc0ulJYFAjjbrQoqUrldK2AxID0fOH1q
+	 nVOETnhtPRRhDP5djloycB+k+tEHVshwyvFcn1pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727956AbgCCXMS (ORCPT
+        id S1728176AbgCCXNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 18:12:18 -0500
-Received: from zinan.dashjr.org ([192.3.11.21]:38348 "EHLO zinan.dashjr.org"
+        Tue, 3 Mar 2020 18:13:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbgCCXMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 18:12:18 -0500
-X-Greylist: delayed 460 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Mar 2020 18:12:17 EST
-Received: from ishibashi.lan (unknown [12.190.236.222])
-        (Authenticated sender: luke-jr)
-        by zinan.dashjr.org (Postfix) with ESMTPSA id 32F3E38A0DB8
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 23:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dashjr.org; s=zinan;
-        t=1583276676; bh=f6t72RQCwA5bUyp9woz4HWHvoHO3Yr/X++Pvw8U6VmA=;
-        h=From:To:Subject:Date;
-        b=vU3iV77sSMhn7VIyYaJbX6wDARFWiAr4R0CVkErEw8bLZUL8k5os9zDUdQQwiE8Z/
-         aUilKRAV7H65nD30lZml5hcitIeTvLIQOb5usscfjrATa0RDpv5SSsI1gGFP1ZbNiI
-         kBcA5UqrcF9q9t7nXNGUhovaU3tKcTreAM1GAW0w=
-X-Hashcash: 1:25:200303:linux-kernel@vger.kernel.org::QEc3e4TtDLfHZvPM:dySN=
-From:   Luke Dashjr <luke@dashjr.org>
-To:     linux-kernel@vger.kernel.org
-Subject: Bug? Non-privileged processes can in some cases spoof the wrong sending IP
-Date:   Tue, 3 Mar 2020 23:03:35 +0000
-User-Agent: KMail/1.9.10
+        id S1727199AbgCCXNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 18:13:24 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF38920870;
+        Tue,  3 Mar 2020 23:13:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583277204;
+        bh=v5pqnEcy9dq8qHJLjfOnbdzJYEeiqGUa6wuExA6D8Wc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=FilFCPSn1GKrv2Xy01SxU+b7DWJA099psUxo16M+ysHRwoI/OCwyQXt0/i4zSFk4Y
+         DIl+D5VPQ7/b/123VxVpWch9EXnUmjsmpJEDuow9sPIPHgZa4DqLVkx/Q4PQa2wymH
+         VX8kgGR506DRCO8BAXIqtWjvUNUtEtMNxaWD1Q1A=
+Subject: Re: [PATCH 5.4 000/152] 5.4.24-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200303174302.523080016@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <70fd0fd4-018a-a433-d0d0-a44187358f08@kernel.org>
+Date:   Tue, 3 Mar 2020 16:13:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-  charset="us-ascii"
+In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <202003032303.36017.luke@dashjr.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It seems non-privileged processes can bind an IP on one interface, and then 
-send to addresses not routed through that interface, to spoof that IP on an 
-unrelated network (eg, the default route).
+On 3/3/20 10:41 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.24 release.
+> There are 152 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Thu, 05 Mar 2020 17:42:10 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.24-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-Shouldn't there be something to prevent this? Presumably it's not expected 
-behaviour, since you can't just bind to any arbitrary addresses...?
+Compiled and booted on my test system. No dmesg regressions.
 
-(FWIW I can see cases where this might be considered a security issue, but the 
-MAINTAINERS file explicitly said address leaks don't count...)
+thanks,
+-- Shuah
 
-Luke
-
-P.S. I discovered this because Chromium's WebRTC implementation attempts to 
-send UDP from configured IPv4 address; and then Linux's MASQUERADE also 
-doesn't check that it have the correct return path, so it tried to NAT my WAN 
-to my WAN, which resulted in sending out from the origin IP instead of my 
-own, and triggered my modem to disconnect me. (I guess this scenario is a bit 
-too convoluted to be considered a general DoS risk)
