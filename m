@@ -2,110 +2,135 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DDEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8C0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE00921D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0138821D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:42:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="MYCeF0bl"
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="AUHCEfaO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="W6exJ0OC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgCCBlk (ORCPT
+        id S1727201AbgCCBmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 20:41:40 -0500
-Received: from ozlabs.org ([203.11.71.1]:49307 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgCCBlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 20:41:39 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Wfr21PN1z9sRY;
-        Tue,  3 Mar 2020 12:41:37 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583199698;
-        bh=s2c3qjzt2cgMtofyjDXXR0eKGpCwrTmuZXTJn6aKR6M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=MYCeF0bl6xpeqVr/yLhfzHio4KXOJbteAFnBF2YqtlbDE3Kp2APt+vv7/amzCCEFl
-         BoRdQ4ytH3r5ahHX/NB2GrJ6oCM2OyRTAr+7zcRWqfiEmPEpymzd4imGiVdl4ymedq
-         ZPy5Xaqob2e9JD6nRpM5sfcHerlc1fkacSucpZDOfbbqDgRoyFZhkv2QtMwTlWLgyv
-         igtf5vZx0fAZdNDWaVaj5n7m4c0qNbGhF/ewIHzjB4o1k2at6A3y9s/m9nYVODY4t1
-         1PB/N4E68NK3uMpNH63l0OrnjoiMs6wo3hhagRGhvJlVEMTj3YvVBorj+nJ7EowKJU
-         ZefHYQQa56/RA==
-Date:   Tue, 3 Mar 2020 12:41:33 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build warnings after merge of the block tree
-Message-ID: <20200303124133.13309249@canb.auug.org.au>
+        Mon, 2 Mar 2020 20:42:09 -0500
+Received: from out5-smtp.messagingengine.com ([66.111.4.29]:54927 "EHLO
+        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726958AbgCCBmI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 20:42:08 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.nyi.internal (Postfix) with ESMTP id A282F222E4;
+        Mon,  2 Mar 2020 20:42:07 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Mon, 02 Mar 2020 20:42:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm2; bh=jkpN0tE9kbjSg
+        rzQw7RM0dDUJhBDaut1bqepPcL8VGQ=; b=AUHCEfaOED4Ro11FFbK7kojSeiiFt
+        XPJv/iXDh7hgB6yKgzW+75evX4zqa3gp4C8zOIu7kFNbXDG5g1E/ETyG58bq6dQ/
+        bYirfaLj5jvfQbw8ED4sYs6B+LYaO5M81sZ9ZbQe7ZqFgPdw2CrrFM+v1zSfkRJa
+        zsRjm/v64KvoBUBxXIhVpcjHgzmXZ/QsQKonqziihMezsrNB3LOWOwdYVS4TJdEV
+        ujK2TBEGbtaqs9QwcLvCSh3QEOcf84SmlqUyvSO2HJ4hDlqE051naUGM1NDX5zcC
+        Pk4CT0AD311SNo70ymQxhHHQVbUN5P6Vvp07Pohvjw8lEuEJuwHigKXDg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm2; bh=jkpN0tE9kbjSgrzQw7RM0dDUJhBDaut1bqepPcL8VGQ=; b=W6exJ0OC
+        toP4CNsLpiNs7ZsqYeZAg/I/B8ennpLkccKKs0PXhU3anKgQ4Yy+2b4eTv6zROtR
+        x4hWR5btEsAlzYbHqsHra+lhBJpauGeRoXo1L+smId/q0n6XoL0pDRU1RDtZtLIn
+        VkDf7tu2xQXcDiv8ZlwKgfKxA9m8ur2Pvjn9yeFNdru6gS3V0aD22S/zQkT2FKVP
+        uhO2isK0fP6gyz6P6YHctI5IXV6eoVA2JCDyY7hveyzz7ZDNrnhg3WFLM2QlmyGn
+        Udtfm8edNvbHNybezr5i8h3r3n3by9oqpsaZGZXAG+QqN7yhWJhRTj2AnXSVjDqS
+        zZlmNOgwfn6CWA==
+X-ME-Sender: <xms:77VdXvtbpLTQ1q63YuLjXPWDkCQDHbA54IS4eCVmCra44IP3le-MzQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddthedgfeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdljedtmdenucfjughrpefhvf
+    fufffkofgjfhgggfestdekredtredttdenucfhrhhomhepffgrnhhivghlucgiuhcuoegu
+    gihusegugihuuhhurdighiiiqeenucfkphepudeifedruddugedrudefvddruddvkeenuc
+    evlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegugihusegu
+    gihuuhhurdighiii
+X-ME-Proxy: <xmx:77VdXp4v7xBqf093L9cebsV_gFwkOL7UPLP3eDVxi3pV2fzA_deJxA>
+    <xmx:77VdXjmVKdQgezbREjFiJf6siQVIuHG1Vt4PqfOW5EYRs1frk7oK2g>
+    <xmx:77VdXpgUvQzgHS8MDPNUOXzCWPT8Wi3xXXaMtnRYl9Q4aBTVF6vZ5Q>
+    <xmx:77VdXil4uH8FoNznNIBnhRwoHhJcirogSc_RsKWx3JTQver9SosReA>
+Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [163.114.132.128])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 85F4F3061363;
+        Mon,  2 Mar 2020 20:42:06 -0500 (EST)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     cgroups@vger.kernel.org, tj@kernel.org, lizefan@huawei.com,
+        hannes@cmpxchg.org
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
+        gregkh@linuxfoundation.org, kernel-team@fb.com
+Subject: [PATCH 2/2] cgroupfs: Support user xattrs
+Date:   Mon,  2 Mar 2020 17:39:01 -0800
+Message-Id: <20200303013901.32150-3-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200303013901.32150-1-dxu@dxuuu.xyz>
+References: <20200303013901.32150-1-dxu@dxuuu.xyz>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/62+ogEgEr2Z7c_./MZMW6hz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/62+ogEgEr2Z7c_./MZMW6hz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+This patch turns on xattr support for cgroupfs. This is useful for
+letting non-root owners of delegated subtrees attach metadata to
+cgroups.
 
-Hi all,
+One use case is for subtree owners to tell a userspace out of memory
+killer to bias away from killing specific subtrees.
 
-After merging the block tree, today's linux-next build (arm
-multi_v7_defconfig) produced these warnings:
+Tests:
 
-fs/io_uring.c: In function 'io_put_kbuf':
-fs/io_uring.c:1651:27: warning: cast to pointer from integer of different s=
-ize [-Wint-to-pointer-cast]
- 1651 |  struct io_buffer *kbuf =3D (struct io_buffer *) req->rw.addr;
-      |                           ^
-fs/io_uring.c: In function 'io_rw_buffer_select':
-fs/io_uring.c:2209:27: warning: cast to pointer from integer of different s=
-ize [-Wint-to-pointer-cast]
- 2209 |  struct io_buffer *kbuf =3D (struct io_buffer *) req->rw.addr;
-      |                           ^
-fs/io_uring.c:2216:17: warning: cast from pointer to integer of different s=
-ize [-Wpointer-to-int-cast]
- 2216 |  req->rw.addr =3D (u64) kbuf;
-      |                 ^
-fs/io_uring.c: In function 'io_cleanup_req':
-fs/io_uring.c:4897:10: warning: cast to pointer from integer of different s=
-ize [-Wint-to-pointer-cast]
- 4897 |    kfree((void *)req->rw.addr);
-      |          ^
+    [/sys/fs/cgroup]# for i in $(seq 0 130); \
+        do setfattr workload.slice -n user.name$i -v wow; done
+    setfattr: workload.slice: No space left on device
+    setfattr: workload.slice: No space left on device
+    setfattr: workload.slice: No space left on device
 
-Introduced by commits
+    [/sys/fs/cgroup]# for i in $(seq 0 130); \
+        do setfattr workload.slice --remove user.name$i; done
+    setfattr: workload.slice: No such attribute
+    setfattr: workload.slice: No such attribute
+    setfattr: workload.slice: No such attribute
 
-  7efcbb97deab ("io_uring: support buffer selection for OP_READ and OP_RECV=
-")
-  8cab19f460b6 ("io_uring: add IOSQE_BUFFER_SELECT support for IORING_OP_RE=
-ADV")
+    [/sys/fs/cgroup]# for i in $(seq 0 130); \
+        do setfattr workload.slice -n user.name$i -v wow; done
+    setfattr: workload.slice: No space left on device
+    setfattr: workload.slice: No space left on device
+    setfattr: workload.slice: No space left on device
 
---=20
-Cheers,
-Stephen Rothwell
+`seq 0 130` is inclusive, and 131 - 128 = 3, which is the number of
+errors we expect to see.
 
---Sig_/62+ogEgEr2Z7c_./MZMW6hz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
+---
+ kernel/cgroup/cgroup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 75f687301bbf..21621b43a8ab 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -1954,7 +1954,8 @@ int cgroup_setup_root(struct cgroup_root *root, u16 ss_mask)
+ 
+ 	root->kf_root = kernfs_create_root(kf_sops,
+ 					   KERNFS_ROOT_CREATE_DEACTIVATED |
+-					   KERNFS_ROOT_SUPPORT_EXPORTOP,
++					   KERNFS_ROOT_SUPPORT_EXPORTOP |
++					   KERNFS_ROOT_SUPPORT_USER_XATTR,
+ 					   root_cgrp);
+ 	if (IS_ERR(root->kf_root)) {
+ 		ret = PTR_ERR(root->kf_root);
+-- 
+2.21.1
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5dtc0ACgkQAVBC80lX
-0GxZUQf+KT6vq+XHTDaAWKOwYyaOx78ckXgho3hoObDJzOwtqLphZawN86zewe77
-TccQwMAMI2exWp+cCzCXzE1RVN9IoidJUqr3gLbzIXX07G5jNiG5pwtF0/hdinhx
-U4NvT//EVLdQLkxwLSY2oE2ShhwNXG2tXnkZaEwgkvYqtMniYWLo5dC8SkvUmcwb
-HtsT7I71lTS5t2SOD6KsdXKZBh3bGq8cv4SXJdEkEIxtK42FtIYlQ5enxcFoaekM
-0Y0i5tx9VR9GryyJpvY/Bvz1oeyThIMDlOv9/BHKjCrrR5eLrOSVGAE4TgvnymQW
-bm/cx35ouqOFUhbFSLnhKpxCc5YT6Q==
-=wmUr
------END PGP SIGNATURE-----
-
---Sig_/62+ogEgEr2Z7c_./MZMW6hz--
