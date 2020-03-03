@@ -2,123 +2,93 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 830F6C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6020C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5765A20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:22:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v7cg1KPn"
+	by mail.kernel.org (Postfix) with ESMTP id 986DC20863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730115AbgCCRWM (ORCPT
+        id S1730147AbgCCRW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:22:12 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:35948 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729570AbgCCRWM (ORCPT
+        Tue, 3 Mar 2020 12:22:27 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:39327 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729404AbgCCRW1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:22:12 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023HMBTi113154;
-        Tue, 3 Mar 2020 11:22:11 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583256131;
-        bh=SBRUU+j3XyFM6R2K8Qs7x9a1C38P7C+RT5tCbBFb0hI=;
-        h=From:To:CC:Subject:Date;
-        b=v7cg1KPn7IPdLZAVsY8/27/RR2l/nN/JHJRMrmyrf+EvYnjV8LHzuUAqDypAq5NQ+
-         U5M37Me3JuTQ+RqasRWnfiGIJJei/PY1n0I2SrZIT19bIbPQ0afRfGFO3Apd6e4KN/
-         oLSJ87u3nPajtUs3837qNK5DNjfYtJDlXqpYWiGs=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023HMBKj077381
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Mar 2020 11:22:11 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 11:22:10 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 11:22:10 -0600
-Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023HMAq0014433;
-        Tue, 3 Mar 2020 11:22:10 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-CC:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Benoit Parrot <bparrot@ti.com>,
-        <stable@vger.kernel.org>
-Subject: [Patch] media: ti-vpe: cal: fix a kernel oops when unloading module
-Date:   Tue, 3 Mar 2020 11:26:29 -0600
-Message-ID: <20200303172629.21339-1-bparrot@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Mar 2020 12:22:27 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-105.corp.google.com [104.133.0.105] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 023HM9dR009316
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 3 Mar 2020 12:22:13 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 818CE42045B; Tue,  3 Mar 2020 12:22:09 -0500 (EST)
+Date:   Tue, 3 Mar 2020 12:22:09 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     lampahome <pahome.chen@mirlab.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: why do we need utf8 normalization when compare name?
+Message-ID: <20200303172209.GB61444@mit.edu>
+References: <CAB3eZfv4VSj6_XBBdHK12iX_RakhvXnTCFAmQfwogR34uySo3Q@mail.gmail.com>
+ <20200302103754.nsvtne2vvduug77e@yavin>
+ <20200302104741.b5lypijqlbpq5lgz@yavin>
+ <CAB3eZfuAXaT4YTBSZ4sGe=NP8=71OT8wu7zXMzOjkd4NzjtXag@mail.gmail.com>
+ <20200303070928.aawxoyeq77wnc3ts@yavin>
+ <CAB3eZfu1=-FwJTnnH=sfg=J2gkeF0bgMs43V5tSkxdqP+m+R9A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAB3eZfu1=-FwJTnnH=sfg=J2gkeF0bgMs43V5tSkxdqP+m+R9A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After the switch to use v4l2_async_notifier_add_subdev() and
-v4l2_async_notifier_cleanup(), unloading the ti_cal module would casue a
-kernel oops.
+On Tue, Mar 03, 2020 at 06:13:56PM +0800, lampahome wrote:
+> 
+> > And yes, once the strings are normalised and encoded as UTF-8 you then
+> > do a byte-by-byte comparison (if the comparison is case-insensitive then
+> > fs/unicode/... will case-fold the Unicode symbols during normalisation).
+> 
+> What I'm confused is why encoded as utf-8 after normalize finished?
+> From above, turn "ñ" (U+00F1) and "n◌̃" (U+006E U+0303) into the same
+> Unicode string. Then why should we just compare bytes from normalized.
 
-This was root cause to the fact that v4l2_async_notifier_cleanup() tries
-to kfree the asd pointer passed into v4l2_async_notifier_add_subdev().
+For the same reason why we don't upcase or downcase all of the letters
+in a directory with case-folding.  The term for this is
+"case-preserving, case-insensitive" matching.  So that means that if
+you save a file as "Makefile", ls will return "Makefile", and not
+"MAKEFILE" or "makefile".
 
-In our case the asd reference was from a statically allocated struct.
-So in effect v4l2_async_notifier_cleanup() was trying to free a pointer
-that was not kalloc.
+Of course, if you delete or truncate "makefile", it will affect the
+file stored in the directory as "Makefile", and the file system will
+not allow a directory with case-folding enabled to contain "makefile"
+and "Makefile" at the same time.
 
-So here we switch to using a kzalloc struct instead of a static one.
+Simiarly, with normalization, we preserve the existing utf-8 form
+(both the composed and decomposed forms are valid utf-8), but we
+compare without taking the composition form into account.
 
-Fixes: d079f94c9046 ("media: platform: Switch to v4l2_async_notifier_add_subdev")
+Cheers,
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Benoit Parrot <bparrot@ti.com>
----
- drivers/media/platform/ti-vpe/cal.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+					- Ted
 
-diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index 6d4cbb8782ed..18fe2cb9dd17 100644
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -372,8 +372,6 @@ struct cal_ctx {
- 	struct v4l2_subdev	*sensor;
- 	struct v4l2_fwnode_endpoint	endpoint;
- 
--	struct v4l2_async_subdev asd;
--
- 	struct v4l2_fh		fh;
- 	struct cal_dev		*dev;
- 	struct cc_data		*cc;
-@@ -2032,7 +2030,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
- 
- 	parent = pdev->dev.of_node;
- 
--	asd = &ctx->asd;
- 	endpoint = &ctx->endpoint;
- 
- 	ep_node = NULL;
-@@ -2040,6 +2037,10 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
- 	sensor_node = NULL;
- 	ret = -EINVAL;
- 
-+	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
-+	if (!asd)
-+		goto cleanup_exit;
-+
- 	ctx_dbg(3, ctx, "Scanning Port node for csi2 port: %d\n", inst);
- 	for (index = 0; index < CAL_NUM_CSI2_PORTS; index++) {
- 		port = of_get_next_port(parent, port);
--- 
-2.17.1
+P.S.  Some people may hate this, but if the goal is interoperability
+with how Windows and MacOS does things, this is basically what they do
+as well.  (Well, mostly; MacOS is a little weird for historical
+reasons.)
+
+P.P.S.  And before you comment on it, as one Internationalization
+expert once said, I18N *is* complicated.  It truly would be easier to
+teach all of the world to speak a single language and use it as the
+"Federation Standard" language, ala Star Trek.  For better or for
+worse, that's not happening, and so we deal with the world as it is,
+not as we would like it to be.  :-)
 
