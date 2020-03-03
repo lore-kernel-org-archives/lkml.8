@@ -2,88 +2,73 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D19C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0AEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4E420848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD48C215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583211565;
+	bh=1QbMXScDoBHGeiga9CbK0y7yvrt3pgJfz3o3lM15WeA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dz4kG3FkA+qsNmzx3fF0r+gJ5iPPYliJbG4QdCq9iktwqCbJVWuFLDU9bys1KL6x+
+	 oMBQZn1Y7Nf1T64acsjHi2YC9R54HlZN/bPAyc/Bk+x+DDLWlezORZgZn5erIVteSV
+	 IxABOQKPUGdR8BKPXQz3HJJyAaSGzJ1Z6kzf7kD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgCCE6k (ORCPT
+        id S1727425AbgCCE7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:58:40 -0500
-Received: from mga03.intel.com ([134.134.136.65]:34653 "EHLO mga03.intel.com"
+        Mon, 2 Mar 2020 23:59:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726928AbgCCE6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:58:39 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 20:58:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
-   d="scan'208";a="232146450"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga007.fm.intel.com with ESMTP; 02 Mar 2020 20:58:38 -0800
-Date:   Mon, 2 Mar 2020 20:58:38 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Jim Mattson <jmattson@google.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH 2/6] KVM: x86: Fix CPUID range check for Centaur and
- Hypervisor ranges
-Message-ID: <20200303045838.GF27842@linux.intel.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-3-sean.j.christopherson@intel.com>
- <CALMp9eThBnN3ktAfwhNs7L-O031JDFqjb67OMPooGvmkcdhK4A@mail.gmail.com>
- <CALMp9eR0Mw8iPv_Z43gfCEbErHQ6EXX8oghJJb5Xge+47ZU9yQ@mail.gmail.com>
+        id S1726928AbgCCE7Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 23:59:24 -0500
+Received: from localhost (unknown [122.167.124.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62FBA20848;
+        Tue,  3 Mar 2020 04:59:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583211564;
+        bh=1QbMXScDoBHGeiga9CbK0y7yvrt3pgJfz3o3lM15WeA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZGXFKyNd0xOUOZVcL95og+gk5DsbSRDV98jHlAbr/pwL4wZSa5tYC1aQT7unaX2mC
+         AhnHjlS4f7eXV0apaW4Ucv1qlh7BaL1UX1oo1xayKvQyDBsBtie2U2RGuOAOD+z85r
+         cnIekMp/w3nWweFfCpusqx1pBheDxZSeeeqHHMxo=
+Date:   Tue, 3 Mar 2020 10:29:19 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+Subject: Re: [PATCH v2] soundwire: bus: provide correct return value on error
+Message-ID: <20200303045919.GO4148@vkoul-mobl>
+References: <20200227220949.4013-1-pierre-louis.bossart@linux.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALMp9eR0Mw8iPv_Z43gfCEbErHQ6EXX8oghJJb5Xge+47ZU9yQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200227220949.4013-1-pierre-louis.bossart@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 08:25:31PM -0800, Jim Mattson wrote:
-> On Mon, Mar 2, 2020 at 7:25 PM Jim Mattson <jmattson@google.com> wrote:
-> >
-> > On Mon, Mar 2, 2020 at 11:57 AM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
-> >
-> > > The bad behavior can be visually confirmed by dumping CPUID output in
-> > > the guest when running Qemu with a stable TSC, as Qemu extends the limit
-> > > of range 0x40000000 to 0x40000010 to advertise VMware's cpuid_freq,
-> > > without defining zeroed entries for 0x40000002 - 0x4000000f.
-> >
-> > I think it could be reasonably argued that this is a userspace bug.
-> > Clearly, when userspace explicitly supplies the results for a leaf,
-> > those results override the default CPUID values for that leaf. But I
-> > haven't seen it documented anywhere that leaves *not* explicitly
-> > supplied by userspace will override the default CPUID values, just
-> > because they happen to appear in some magic range.
+On 27-02-20, 16:09, Pierre-Louis Bossart wrote:
+> From: Bard Liao <yung-chuan.liao@linux.intel.com>
 > 
-> In fact, the more I think about it, the original change is correct, at
-> least in this regard. Your "fix" introduces undocumented and
-> unfathomable behavior.
+> It seems to be a typo. It makes more sense to return the return value
+> of sdw_update() instead of the value we want to update.
 
-Heh, the takeaway from this is that whatever we decide on needs to be
-documented somewhere :-)
+Applied, thanks
 
-I wouldn't say it's unfathomable, conceptually it seems like the intent
-of the hypervisor range was to mimic the basic and extended ranges.  The
-whole thing is arbitrary behavior.  Of course if Intel CPUs would just
-return 0s on undefined leafs it would be a lot less arbitrary :-)
- 
-Anyways, I don't have a strong opinion on whether this patch stays or goes.
+-- 
+~Vinod
