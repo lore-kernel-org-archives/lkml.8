@@ -2,155 +2,91 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37483C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF28C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:51:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E8D6217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:51:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583254266;
-	bh=E3YuWjLi8CFv4x/taRFjxRmhZUj1cjoEOp26VkTIAyY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=U12WjvoCzrUic2Op5/Y4/PUJEHWdCFew+QnyNQHopWX24B9OUF22ijvI7E7SzQYSv
-	 J2kahvc6En2esWlKrJZkdESw82pj5c7slzEYruJoPhZ3IgLEZ5T+bmuuQcyRGpK4+G
-	 HHrUc4KuWUZIYaxzTHxBRM8KtNO0ZuDg+k9GJ5IE=
+	by mail.kernel.org (Postfix) with ESMTP id 58C9120870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:51:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PrhC/74b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730088AbgCCQvF (ORCPT
+        id S1730412AbgCCQvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:51:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54108 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727507AbgCCQvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:51:04 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE9BD20863;
-        Tue,  3 Mar 2020 16:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583254263;
-        bh=E3YuWjLi8CFv4x/taRFjxRmhZUj1cjoEOp26VkTIAyY=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=ORgqnXKIIEGgZy1ibtF5cMGTJyuUVhpIxPaEn3wqU8aYFM6+1nlyrIhBASiTFP9FV
-         /CQutSWJRviqXOma/n/u0FrItRn/7y1nE0YH3RmBqo4De9orTUI+1zOBRCDfleN8Rt
-         9ycN6AnOVqNusARwJZFie6zPPu6CbIoMxmVwfjaw=
-Message-ID: <acb1753c78a019fb0d54ba29077cef144047f70f.camel@kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
- [ver #17]
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jann Horn <jannh@google.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Date:   Tue, 03 Mar 2020 11:51:00 -0500
-In-Reply-To: <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
-References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
-         <1509948.1583226773@warthog.procyon.org.uk>
-         <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
-         <20200303113814.rsqhljkch6tgorpu@ws.net.home>
-         <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com>
-         <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
-         <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
-         <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
-         <20200303142407.GA47158@kroah.com>
-         <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 3 Mar 2020 11:51:08 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33418 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730216AbgCCQvH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:51:07 -0500
+Received: by mail-ot1-f65.google.com with SMTP id a20so3708897otl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:51:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qHOn5vqQErDHAkJzL6biRHoTSOSlgdzSHmMDR1rwOSw=;
+        b=PrhC/74bze2iem1KsYtIHMvUu/v2Av2MYk8EydsyRsT6ErJ1YQjmNh0R/wDKNLwWyQ
+         giq1Pswj3xm3xsbBxVlb00LD6jgh8VspNAcUdojVVHgzs6YNMORKfgfiLcxXKihiD2U4
+         VPumlwmRJK94sUJBBlqZZYGZUQDwIbA2T5iHVgWPvH96kjWeV0LugsEESIk6ALCIRDQm
+         RBXbpHeIFbrG+TdqIZuAbNbugBhyCIMZGQaFYAf3mlAz6FH7d7jAZcPCS1yweB7G38bo
+         a3New9pxIAHaKb1Yr5Al4Jz6nhSG737F7DafcGI95pWkYx4GRRGQsLd7Cs4k3E6agMnj
+         8xSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qHOn5vqQErDHAkJzL6biRHoTSOSlgdzSHmMDR1rwOSw=;
+        b=cLSZD0VxFIWYo543C6ebYzAr5HIPJAJGacgecQMaGOtPQB67NW8mC42ZMpfb8OdnTG
+         6s72u4l9z4671PjwBU78bYABOtp0oMDZv9k6mJZsUjPDAcbYnQfL2Xzngg4N9XSmqTlv
+         XSxiUd7JqQzSAehIgbCC0cDxkT3kLXgXeiIAcfUWZvjmW+/1C8SGixF5A/TSQO61WtDC
+         scFESQ5oFCvlANt/hKCG6PWUAXKkSUM5mQHFWE+4KJg2//4Z7xoGMDK9ASp+U/gwFAgY
+         KAoXSzx41eolp4KVge4NIIhm6AbrffAHLsUGCAwESfTccIiMnjAICUeF45wpaGk8/yd5
+         xgRg==
+X-Gm-Message-State: ANhLgQ2oCLKUW3jVWXjAdjcdl5W9Xrs074QHCmmktlohwlaiHy5A+O7J
+        QXNilQFDXolb6pg/7zIrJYLGVnDY5k0kSXzzn8G0RQ==
+X-Google-Smtp-Source: ADFU+vs5bHTlzYDWcHBa7hol10zll+6LrbecnEkuqNf6A/g6QQbYC6octS5rirZT91tqzWiEaJRDmLwA3XoTOV7oDBs=
+X-Received: by 2002:a05:6830:118c:: with SMTP id u12mr3866768otq.124.1583254265433;
+ Tue, 03 Mar 2020 08:51:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200303013901.32150-1-dxu@dxuuu.xyz>
+In-Reply-To: <20200303013901.32150-1-dxu@dxuuu.xyz>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 3 Mar 2020 08:50:54 -0800
+Message-ID: <CALvZod5m3otRRqcLBebbgiZbhoYWAMbMg+ESkacJuj64OP=H4Q@mail.gmail.com>
+Subject: Re: [PATCH 0/2] Support user xattrs in cgroupfs
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     Cgroups <cgroups@vger.kernel.org>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-03 at 08:44 -0700, Jens Axboe wrote:
-> On 3/3/20 7:24 AM, Greg Kroah-Hartman wrote:
-> > On Tue, Mar 03, 2020 at 03:13:26PM +0100, Jann Horn wrote:
-> > > On Tue, Mar 3, 2020 at 3:10 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > > On Tue, Mar 03, 2020 at 02:43:16PM +0100, Greg Kroah-Hartman wrote:
-> > > > > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
-> > > > > > On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
-> > > > > > <gregkh@linuxfoundation.org> wrote:
-> > > > > > 
-> > > > > > > > Unlimited beers for a 21-line kernel patch?  Sign me up!
-> > > > > > > > 
-> > > > > > > > Totally untested, barely compiled patch below.
-> > > > > > > 
-> > > > > > > Ok, that didn't even build, let me try this for real now...
-> > > > > > 
-> > > > > > Some comments on the interface:
-> > > > > 
-> > > > > Ok, hey, let's do this proper :)
-> > > > 
-> > > > Alright, how about this patch.
-> > > > 
-> > > > Actually tested with some simple sysfs files.
-> > > > 
-> > > > If people don't strongly object, I'll add "real" tests to it, hook it up
-> > > > to all arches, write a manpage, and all the fun fluff a new syscall
-> > > > deserves and submit it "for real".
-> > > 
-> > > Just FYI, io_uring is moving towards the same kind of thing... IIRC
-> > > you can already use it to batch a bunch of open() calls, then batch a
-> > > bunch of read() calls on all the new fds and close them at the same
-> > > time. And I think they're planning to add support for doing
-> > > open()+read()+close() all in one go, too, except that it's a bit
-> > > complicated because passing forward the file descriptor in a generic
-> > > way is a bit complicated.
-> > 
-> > It is complicated, I wouldn't recommend using io_ring for reading a
-> > bunch of procfs or sysfs files, that feels like a ton of overkill with
-> > too much setup/teardown to make it worth while.
-> > 
-> > But maybe not, will have to watch and see how it goes.
-> 
-> It really isn't, and I too thinks it makes more sense than having a
-> system call just for the explicit purpose of open/read/close. As Jann
-> said, you can't currently do a linked sequence of open/read/close,
-> because the fd passing between them isn't done. But that will come in
-> the future. If the use case is "a bunch of files", then you could
-> trivially do "open bunch", "read bunch", "close bunch" in three separate
-> steps.
-> 
-> Curious what the use case is for this that warrants a special system
-> call?
-> 
+Hi Daniel,
 
-Agreed. I'd really rather see something more general-purpose than the
-proposed readfile(). At least with NFS and SMB, you can compound
-together fairly arbitrary sorts of operations, and it'd be nice to be
-able to pattern calls into the kernel for those sorts of uses.
+On Mon, Mar 2, 2020 at 5:42 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
+>
+> User extended attributes are useful as metadata storage for kernfs
+> consumers like cgroups. Especially in the case of cgroups, it is useful
+> to have a central metadata store that multiple processes/services can
+> use to coordinate actions.
+>
+> A concrete example is for userspace out of memory killers. We want to
+> let delegated cgroup subtree owners (running as non-root) to be able to
+> say "please avoid killing this cgroup". In server environments this is
+> less important as everyone is running as root.
 
-So, NFSv4 has the concept of a current_stateid that is maintained by the
-server. So basically you can do all this (e.g.) in a single compound:
+I would recommend removing the "everyone is running as root" statement
+as it is not generally true.
 
-open <some filehandle get a stateid>
-write <using that stateid>
-close <same stateid>
-
-It'd be nice to be able to do something similar with io_uring. Make it
-so that when you do an open, you set the "current fd" inside the
-kernel's context, and then be able to issue io_uring requests that
-specify a magic "fd" value that use it.
-
-That would be a really useful pattern.
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Shakeel
