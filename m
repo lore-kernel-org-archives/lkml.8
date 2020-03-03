@@ -2,92 +2,123 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A0C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8E8C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F8520828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583247565;
-	bh=Po21GpAsxJXHa8omSA0fH0AF3jSqp6NBSXKyNPFTq40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cueXat6pVPEtJ8oCtLgCAGxupc7r7OURhsfahfVGVIsdasEW7OujWmMElODWnU9qE
-	 Q+8/f6lMdXTGErgCcYu4cN1mu80TYoUp3JRSN/QbFEM/AH4VKINtiyeH7SMMloiKck
-	 XGn8xZkRhEErcbBKh/BS//1MsOsTkahrq/J0rW0k=
+	by mail.kernel.org (Postfix) with ESMTP id F0C6D20828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbgCCO7X (ORCPT
+        id S1729757AbgCCO7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:59:23 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40330 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728975AbgCCO7X (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:59:23 -0500
-Received: by mail-ot1-f65.google.com with SMTP id x19so3270759otp.7;
-        Tue, 03 Mar 2020 06:59:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jxXZabJF36zBqHLvSkp1BT+uIXDUsdzVqIFAD0M2EXo=;
-        b=Ec0whZDOP87o26kq8TtpXG6lXy8JX2l9/TEDXRM3pM6nb9lBbOKZOxZvVrdZ5I2eUi
-         RZ4BaU0h7pqdc+x3TvbVYaWGa26lk/KgwS6boEnOidBJnKiss4o/G8PWvdC8zqUl2IfT
-         nn1zhdr0QKcF7Qd/32SA+83cKF6cPoEvaNJLWOUbbnVivV9OA2YAi29MJZJpW1FKtbsB
-         MBfoBHXQxON3UNjwz4FpL8qw/0MSHC0o4K2AXT0x0y6JVKjxwxSehYmzOmjiBbkGh0ZA
-         V3hPphBqgKm6MCnDHiJJzUua/MDZJHuA8AQfoVdN46qrpHlXSETdRlILcX3ek95A02TG
-         wVig==
-X-Gm-Message-State: ANhLgQ0wg6VVuqTcbxvNCkxCa6ldIRtMQbQ0WPG7k8TDM4MM/GN+koWI
-        G7blP8ffL/8ZigRuQh6ppg==
-X-Google-Smtp-Source: ADFU+vs0akez33tRS244m5eGi3FSV87z7OM5KR9hAV09veZ9Jb9+CkWsSjCrP6apKPamqlw3XwLehQ==
-X-Received: by 2002:a9d:748c:: with SMTP id t12mr3506779otk.38.1583247562238;
-        Tue, 03 Mar 2020 06:59:22 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c7sm7904442otm.63.2020.03.03.06.59.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:59:21 -0800 (PST)
-Received: (nullmailer pid 32405 invoked by uid 1000);
-        Tue, 03 Mar 2020 14:59:20 -0000
-Date:   Tue, 3 Mar 2020 08:59:20 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ansuel Smith <ansuelsmth@gmail.com>
-Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
-        John Crispin <john@phrozen.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
-Message-ID: <20200303145920.GA32328@bogus>
-References: <robh@kernel.org>
- <20200226214812.390-1-ansuelsmth@gmail.com>
+        Tue, 3 Mar 2020 09:59:32 -0500
+Received: from mga14.intel.com ([192.55.52.115]:39776 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729041AbgCCO7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:59:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 06:59:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="351853842"
+Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.118]) ([10.239.161.118])
+  by fmsmga001.fm.intel.com with ESMTP; 03 Mar 2020 06:59:26 -0800
+Subject: Re: [RFC PATCH v4 00/19] Core scheduling v4
+To:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Aubrey Li <aubrey.intel@gmail.com>
+Cc:     Aaron Lu <aaron.lwe@gmail.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Paul Turner <pjt@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Dario Faggioli <dfaggioli@suse.com>,
+        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+References: <cover.1572437285.git.vpillai@digitalocean.com>
+ <5e3cea14-28d1-bf1e-cabe-fb5b48fdeadc@linux.intel.com>
+ <3c3c56c1-b8dc-652c-535e-74f6dcf45560@linux.intel.com>
+ <CANaguZAz+mw1Oi8ecZt+JuCWbf=g5UvKrdSvAeM82Z1c+9oWAw@mail.gmail.com>
+ <e322a252-f983-e3f3-f823-16d0c16b2867@linux.intel.com>
+ <20200212230705.GA25315@sinkpad>
+ <29d43466-1e18-6b42-d4d0-20ccde20ff07@linux.intel.com>
+ <CAERHkruG4y8si9FrBp7cZNEdfP7EzxbmYwvdF2EvHLf=mU1mgg@mail.gmail.com>
+ <20200225034438.GA617271@ziqianlu-desktop.localdomain>
+ <CANaguZD205ccu1V_2W-QuMRrJA9SjJ5ng1do4NCdLy8NDKKrbA@mail.gmail.com>
+ <CAERHkrscBs8WoHSGtnH9mVsN3thfkE0CCQYPRE=XFUWWkQooQQ@mail.gmail.com>
+ <CANaguZDQZg-Z6aNpeLcjQ-cGm3X8CQOkZ_hnJNUyqDRM=yVDFQ@mail.gmail.com>
+ <bcd601e7-3f15-e340-bebe-a6ca3635dacb@linux.intel.com>
+From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
+Message-ID: <a55bb7a5-bb20-d3f3-e634-4dfda1ac6005@linux.intel.com>
+Date:   Tue, 3 Mar 2020 22:59:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226214812.390-1-ansuelsmth@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <bcd601e7-3f15-e340-bebe-a6ca3635dacb@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 22:48:12 +0100, Ansuel Smith wrote:
-> Add missing definition of rpm clk for ipq806x soc
+On 2020/2/29 7:55, Tim Chen wrote:
+> On 2/26/20 1:54 PM, Vineeth Remanan Pillai wrote:
 > 
-> Signed-off-by: John Crispin <john@phrozen.org>
-> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
-> Acked-by: John Crispin <john@phrozen.org>
-> ---
->  .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
->  drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
->  include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
->  3 files changed, 40 insertions(+)
+>> rq->curr being NULL can mean that the sibling is idle or forced idle.
+>> In both the cases, I think it makes sense to migrate a task so that it can
+>> compete with the other sibling for a chance to run. This function
+>> can_migrate_task actually only says if this task is eligible and
+>> later part of the code decides whether it is okay to migrate it
+>> based on factors like load and util and capacity. So I think its
+>> fine to declare the task as eligible if the dest core is running
+>> idle. Does this thinking make sense?
+>>
+>> On our testing, it did not show much degradation in performance with
+>> this change. I am reworking the fix by removing the check for
+>> task_est_util. It doesn't seem to be valid to check for util to migrate
+>> the task.
+>>
 > 
+> In Aaron's test case, there is a great imbalance in the load on one core
+> where all the grp A tasks are vs the other cores where the grp B tasks are
+> spread around.  Normally, load balancer will move the tasks for grp A.
+> 
+> Aubrey's can_migrate_task patch prevented the load balancer to migrate tasks if the core
+> cookie on the target queue don't match.  The thought was it will induce
+> force idle and reduces cpu utilization if we migrate task to it.
+> That kept all the grp A tasks from getting migrated and kept the imbalance
+> indefinitely in Aaron's test case.
+> 
+> Perhaps we should also look at the load imbalance between the src rq and
+> target rq.  If the imbalance is big (say two full cpu bound tasks worth
+> of load), we should migrate anyway despite the cookie mismatch.  We are willing
+> to pay a bit for the force idle by balancing the load out more.
+> I think Aubrey's patch on can_migrate_task should be more friendly to
+> Aaron's test scenario if such logic is incorporated.
+> 
+> In Vinnet's fix, we only look at the currently running task's weight in
+> src and dst rq.  Perhaps the load on the src and dst rq needs to be considered
+> to prevent too great an imbalance between the run queues?
 
-Acked-by: Rob Herring <robh@kernel.org>
+We are trying to migrate a task, can we just use cfs.h_nr_running? This signal
+is used to find the busiest run queue as well.
+
+Thanks,
+-Aubrey
+
