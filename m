@@ -2,235 +2,120 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D9CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5331BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550CE20838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:35:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GrSBi/jS"
+	by mail.kernel.org (Postfix) with ESMTP id 29A6620637
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:35:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583231759;
+	bh=/zMw2q7ULuAGKPfuZ9bQk/oOfY11qHXyuqXWfDzlkVQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=EVq0u4/eUOGGbEaj65MPAkpGXmBdxJcAIZFbos5GDa0dOK8jhnIU0ny78btyr/9XY
+	 IoI+TYV5QqSTPjT6lnVZCJX2Ry/iz9Vz9CqBvU2JS/EFaTp7LmWIEttDkk6w1/UszZ
+	 hCzTxcFPq9Hag/ALrMxpvZnAyWSjKBXuvqRNwrc8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgCCKfP (ORCPT
+        id S1728732AbgCCKf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:35:15 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17390 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbgCCKfP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:35:15 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e5e32ba0000>; Tue, 03 Mar 2020 02:34:34 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 03 Mar 2020 02:35:14 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 03 Mar 2020 02:35:14 -0800
-Received: from [10.25.75.175] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
- 2020 10:35:09 +0000
-Subject: Re: [PATCH V3 5/5] PCI: tegra: Add support for PCIe endpoint mode in
- Tegra194
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <andrew.murray@arm.com>, <kishon@ti.com>,
-        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200113181411.32743-1-vidyas@nvidia.com>
- <20200113181411.32743-6-vidyas@nvidia.com>
- <20200227114816.GA11443@e121166-lin.cambridge.arm.com>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <8a7edc61-48bf-704f-8d3f-7cf2c390517e@nvidia.com>
-Date:   Tue, 3 Mar 2020 16:05:06 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200227114816.GA11443@e121166-lin.cambridge.arm.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+        Tue, 3 Mar 2020 05:35:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39562 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728572AbgCCKf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:35:57 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A1F220409;
+        Tue,  3 Mar 2020 10:35:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583231757;
+        bh=/zMw2q7ULuAGKPfuZ9bQk/oOfY11qHXyuqXWfDzlkVQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=JYWTPz/zRcNERJktYI8HnUz6UuozjhxnH5EQ/4UaZZ2Dnojffn1OjGpzq44+X+0eF
+         EITtpC+eKeRmHEv8cz36F0vTDb4ahlJPb27pGheZmw1Le9tJhNOlpSaHKN36yl1YYm
+         uytS2CbICjflzbg8H7GeRbXOpozPt9wLLCYd8jgc=
+Date:   Tue, 3 Mar 2020 19:35:50 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>, Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH 0/2] Introduce Control-flow Enforcement opcodes
+Message-Id: <20200303193550.692bf2be0ee800c21bd05215@kernel.org>
+In-Reply-To: <20200204171425.28073-1-yu-cheng.yu@intel.com>
+References: <20200204171425.28073-1-yu-cheng.yu@intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583231674; bh=ek4DSuMZku9rZzSkXPTOxyHMpIhIJu7DYX4wErCmPqc=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=GrSBi/jSUgozuR6As5RRTMgXYiV3n6MeudoPBJYjfUJL3AOS8dzmafd+0C++HRT7s
-         lVcIbpqMg4gfv1okFkvImr8yvbJWXUP8yRLD00yhMmmusUAp9P+FVnUyM4JQDSM8m1
-         /CPBTq9StHUS6IMDYrvDHsc67PwHFdKP3YZdj+LCEO5plSyqHddg8b4SMgM42MYENi
-         eOYPlnDiEUjR0/Z9sPsWcC3PUAyxjx5qfu9uO5OI2AeEXGUcR0VzJEpYDQ6N4biMk7
-         T9R6fNTudloSCJH56O6ciJcyfMrjF4Y0zuVVMFvvXZeGJtPlZuuCr97AMEo0Ht0g3W
-         W3xL0yHo9DFJA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+On Tue,  4 Feb 2020 09:14:23 -0800
+Yu-cheng Yu <yu-cheng.yu@intel.com> wrote:
+
+> Control-flow Enforcement (CET) introduces 10 new instructions [1].  Add
+> them to the opcode map.  This series has been separated from the CET
+> patches [2] for ease of review.
+> 
+> [1] Detailed information on CET can be found in "Intel 64 and IA-32
+>     Architectures Software Developer's Manual":
+> 
+>     https://software.intel.com/en-us/download/intel-64-and-ia-32-
+>     architectures-sdm-combined-volumes-1-2a-2b-2c-2d-3a-3b-3c-3d-and-4
+> 
+> [2] CET patches:
+> 
+>     https://lkml.kernel.org/r/20190813205225.12032-1-yu-cheng.yu@intel.com/
+>     https://lkml.kernel.org/r/20190813205359.12196-1-yu-cheng.yu@intel.com/
+
+Sorry, somewhat I've missed this series...
+
+This looks good to me.
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+for this series.
+
+Thank you,
+
+> 
+> Adrian Hunter (1):
+>   x86/insn: perf tools: Add CET instructions to the new instructions
+>     test
+> 
+> Yu-cheng Yu (1):
+>   x86/insn: Add Control-flow Enforcement (CET) instructions to the
+>     opcode map
+> 
+>  arch/x86/lib/x86-opcode-map.txt              |  17 +-
+>  tools/arch/x86/lib/x86-opcode-map.txt        |  17 +-
+>  tools/perf/arch/x86/tests/insn-x86-dat-32.c  | 112 +++++++++
+>  tools/perf/arch/x86/tests/insn-x86-dat-64.c  | 196 +++++++++++++++
+>  tools/perf/arch/x86/tests/insn-x86-dat-src.c | 236 +++++++++++++++++++
+>  5 files changed, 566 insertions(+), 12 deletions(-)
+> 
+> -- 
+> 2.21.0
+> 
 
 
-On 2/27/2020 5:18 PM, Lorenzo Pieralisi wrote:
-> External email: Use caution opening links or attachments
-> 
-> 
-> On Mon, Jan 13, 2020 at 11:44:11PM +0530, Vidya Sagar wrote:
->> Add support for the endpoint mode of Synopsys DesignWare core based
->> dual mode PCIe controllers present in Tegra194 SoC.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> V3:
->> * Addressed Thierry's review comments
-> 
-> I need his ACK to merge this series.
-> 
-> [...]
-> 
->> +static int tegra_pcie_ep_work_thread(void *p)
->> +{
->> +     struct tegra_pcie_dw *pcie = (struct tegra_pcie_dw *)p;
->> +     u32 event;
->> +
->> +     while (true) {
->> +             wait_event_interruptible(pcie->wq,
->> +                                      !kfifo_is_empty(&pcie->event_fifo));
->> +
->> +             if (kthread_should_stop())
->> +                     break;
->> +
->> +             if (!kfifo_get(&pcie->event_fifo, &event)) {
->> +                     dev_warn(pcie->dev, "EVENT FIFO is empty\n");
->> +                     continue;
->> +             }
->> +
->> +             switch (event) {
->> +             case EP_PEX_RST_DEASSERT:
->> +                     dev_info(pcie->dev, "EVENT: EP_PEX_RST_DEASSERT\n");
->> +                     pex_ep_event_pex_rst_deassert(pcie);
->> +                     break;
->> +
->> +             case EP_PEX_RST_ASSERT:
->> +                     dev_info(pcie->dev, "EVENT: EP_PEX_RST_ASSERT\n");
->> +                     pex_ep_event_pex_rst_assert(pcie);
->> +                     break;
->> +
->> +             case EP_HOT_RST_DONE:
->> +                     dev_info(pcie->dev, "EVENT: EP_HOT_RST_DONE\n");
->> +                     pex_ep_event_hot_rst_done(pcie);
->> +                     break;
->> +
->> +             case EP_BME_CHANGE:
->> +                     dev_info(pcie->dev, "EVENT: EP_BME_CHANGE\n");
->> +                     pex_ep_event_bme_change(pcie);
->> +                     break;
->> +
->> +             case EP_EVENT_EXIT:
->> +                     dev_info(pcie->dev, "EVENT: EP_EVENT_EXIT\n");
->> +                     return 0;
->> +
->> +             default:
->> +                     dev_warn(pcie->dev, "Invalid PCIe EP event: %u\n",
->> +                              event);
->> +                     break;
->> +             }
->> +     }
->> +
->> +     return 0;
->> +}
->> +
->> +static irqreturn_t tegra_pcie_ep_pex_rst_irq(int irq, void *arg)
->> +{
->> +     struct tegra_pcie_dw *pcie = arg;
->> +
->> +     if (gpiod_get_value(pcie->pex_rst_gpiod)) {
->> +             if (!kfifo_put(&pcie->event_fifo, EP_PEX_RST_ASSERT)) {
->> +                     dev_err(pcie->dev, "EVENT FIFO is full\n");
->> +                     return IRQ_HANDLED;
->> +             }
->> +     } else {
->> +             if (!kfifo_put(&pcie->event_fifo, EP_PEX_RST_DEASSERT)) {
->> +                     dev_err(pcie->dev, "EVENT FIFO is full\n");
->> +                     return IRQ_HANDLED;
->> +             }
->> +     }
->> +
->> +     wake_up(&pcie->wq);
->> +
->> +     return IRQ_HANDLED;
->> +}
->> +
-> 
-> [...]
-> 
->> +static int tegra_pcie_config_ep(struct tegra_pcie_dw *pcie,
->> +                             struct platform_device *pdev)
->> +{
->> +     struct dw_pcie *pci = &pcie->pci;
->> +     struct device *dev = pcie->dev;
->> +     struct dw_pcie_ep *ep;
->> +     struct resource *res;
->> +     char *name;
->> +     int ret;
->> +
->> +     ep = &pci->ep;
->> +     ep->ops = &pcie_ep_ops;
->> +
->> +     res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
->> +     if (!res)
->> +             return -EINVAL;
->> +
->> +     ep->phys_base = res->start;
->> +     ep->addr_size = resource_size(res);
->> +     ep->page_size = SZ_64K;
->> +
->> +     ret = gpiod_set_debounce(pcie->pex_rst_gpiod, PERST_DEBOUNCE_TIME);
->> +     if (ret < 0) {
->> +             dev_err(dev, "Failed to set PERST GPIO debounce time: %d\n",
->> +                     ret);
->> +             return ret;
->> +     }
->> +
->> +     ret = gpiod_to_irq(pcie->pex_rst_gpiod);
->> +     if (ret < 0) {
->> +             dev_err(dev, "Failed to get IRQ for PERST GPIO: %d\n", ret);
->> +             return ret;
->> +     }
->> +     pcie->pex_rst_irq = (unsigned int)ret;
->> +
->> +     name = devm_kasprintf(dev, GFP_KERNEL, "tegra_pcie_%u_pex_rst_irq",
->> +                           pcie->cid);
->> +     if (!name) {
->> +             dev_err(dev, "Failed to create PERST IRQ string\n");
->> +             return -ENOMEM;
->> +     }
->> +
->> +     irq_set_status_flags(pcie->pex_rst_irq, IRQ_NOAUTOEN);
->> +
->> +     ret = devm_request_irq(dev, pcie->pex_rst_irq,
->> +                            tegra_pcie_ep_pex_rst_irq,
->> +                            IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
->> +                            name, (void *)pcie);
-> 
-> I have the impression that a threaded IRQ is what you need, which
-> will also remove some boilerplate in the process. Any reason why
-> you can't use a threaded IRQ instead of a standalone kthread ?
-No reason specifically. We started with kthreads and continued with 
-that. I'll post a new series with threaded IRQ. It should be doable.
-
-Thanks,
-Vidya Sagar
-> 
-> Thanks,
-> Lorenzo
-> 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
