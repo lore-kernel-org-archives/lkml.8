@@ -2,89 +2,114 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3CADC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A0FC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AADEB21D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9682F21D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:32:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gvtKrk97"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ku+HgPVx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726859AbgCCDZ5 (ORCPT
+        id S1727018AbgCCDc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:25:57 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:34432 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726876AbgCCDZ4 (ORCPT
+        Mon, 2 Mar 2020 22:32:26 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:55304 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgCCDc0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 22:25:56 -0500
-Received: by mail-il1-f194.google.com with SMTP id n11so1516812ild.1
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 19:25:55 -0800 (PST)
+        Mon, 2 Mar 2020 22:32:26 -0500
+Received: by mail-pj1-f65.google.com with SMTP id a18so700287pjs.5;
+        Mon, 02 Mar 2020 19:32:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wzQcjQiljMZHk04fD58LGKeytnaqThE2ImCl62xxtGw=;
-        b=gvtKrk97dyg8vZFA/UyhjwGK7wwLRLzO4JaKCmDnLPB4uaVOIWceJk3AVrSWG+tqn+
-         i38ENLxtrVWCUEezxMcaWvK1ydOlXaZyDFBOHwQRYG34ddB9vCoOZHaW3FY4aBIgOIow
-         qMvVJF1R2Y+In3LSEoce8WHpTlsDOVkVWe5f8NgQQ+t0kCsPHNYPlZcO8m7PbJjIFdUQ
-         /RQ/Cs1N4e1qXZQRvabsrcNXQloJUPZbwatzhaZe1OxCbiUpGhBAy1I2WdBrWGIZnZaj
-         vjHYWQ/6nk03klg/mtoRuhHh8HfURPYXbwuVz+PzgRzk8ugRU4ZUDractKKJTIbJ/X6J
-         0FEg==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=lAJWYCHPBwbTZmy3CiLGkMtDA8pTL5n25oGIItGeMNY=;
+        b=ku+HgPVxDA+o9Bbry1KSvBM5GvloyefWo5xjpCjFE4hhNhcMujErT+uE7rUw26W6sw
+         r3KUouVZo2G1fqyRz6CFCJ3MUQYnL+lTJdz6IoBMNTNmQc5FdmAX6XLG4kyNwCdEgikw
+         fz9D6ImwTBdBuQiDL2pBa/H0C7DSzrzpv+mkiQtnsc6RwpwqvfUVOYjP5zBargbW1ehs
+         PRUqOyqKsH8crBsRoBp7sSteit0FMjG6BGuI8pkyI1bpKhY+QxHpMtA0yx9d44vEIa7V
+         J/3HPjHLPXpVFJx4gzePGVVOj9qNG7P9IiOuRvDXipj0VuYehEs4Z2Yz/oF8I9T9X0Ze
+         DwTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wzQcjQiljMZHk04fD58LGKeytnaqThE2ImCl62xxtGw=;
-        b=sAFwc/geqLS3v7G1842Yd9NuOEf3Nd8AWijOAMQBlR6z1YNlKjRrPe+YBRSuvMPyxY
-         BZQzRyHyIubAMyBiqUcnjOabxc8r3iCx+bqFB5WuXwPJfgEET+qlg2AVKsawTCv1qpR4
-         e1FBGqLX3gU+UATsQAJApbR0hAR4a1axq30juB0C/GeD73jSwSHCzgLgi/dVvqUPhOBy
-         fenVzrbZxclD0YUZH2ak8OndXEn318iTrwRvTids37CUxCbNvLzjtWtA4C1NABlhZ7vR
-         KKcDkc4f9hXiCtas9s+l2UwCfyWnZzxF+Y5CQ8/o/0Lf1jOdHzKQd3PncS3nQBPd4Koh
-         lpAA==
-X-Gm-Message-State: ANhLgQ0TMUyq5vNN/kM96G8+vKdM6bmPCDImfNWOLhJlA5P3KN/llskt
-        WXwp16T4BwA+58y7uY1P2QSxXUnv06pYCLhqEiMsrg==
-X-Google-Smtp-Source: ADFU+vsXeBNw6lE9vPufNiNNr1E9nPXO3ou8dsPEfPthJokT+oEqBw0I0OoQKRXOLzdC/aMa2lzH9rdkH3GNL5fM9Lw=
-X-Received: by 2002:a92:981b:: with SMTP id l27mr2882984ili.118.1583205954541;
- Mon, 02 Mar 2020 19:25:54 -0800 (PST)
-MIME-Version: 1.0
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com> <20200302195736.24777-3-sean.j.christopherson@intel.com>
-In-Reply-To: <20200302195736.24777-3-sean.j.christopherson@intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Mon, 2 Mar 2020 19:25:43 -0800
-Message-ID: <CALMp9eThBnN3ktAfwhNs7L-O031JDFqjb67OMPooGvmkcdhK4A@mail.gmail.com>
-Subject: Re: [PATCH 2/6] KVM: x86: Fix CPUID range check for Centaur and
- Hypervisor ranges
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=lAJWYCHPBwbTZmy3CiLGkMtDA8pTL5n25oGIItGeMNY=;
+        b=b3EdVhtmzCTBCtCw+You1XGLxbOKKdak/M+krlWC9zDiMr220zMBA3QlJx3SmyXkBc
+         URCx2AwkjvF0VUUJI3Uqg82fZLiATH0WwpYDDaOx8Mhojp9zAgOFMmTO7idE0TqAiovS
+         45RNhcppAoNDLziCxnW09GsKPCKwH00NVXrLfzPbrux33mq8wG/Tpnt8TDl/eWl0OFAE
+         +p9PQ8yGEbx6CkgENcc8kNSAADyuvFOPdcZ7OBgxu10dtn2NMx3MqXePzeX47QpbMi8w
+         0jthHT/Loeo0IC6I5Vi2QOWG4dExmJH7eb8sAYnL4sMvs9zBOyr/mJLHXNWJK4oehPoQ
+         Wrkw==
+X-Gm-Message-State: ANhLgQ0MPznX7eEzMhZ5gXd4H6KqXu+oPLxUdlI05mkzFILpMMf7UJr0
+        tolcf1G9pQjHRVff/ll3yrk=
+X-Google-Smtp-Source: ADFU+vtn8ib+G38fQML2jOCEFGVkNU/EFpfxLPffDUyi+Y6XsnNWcHHfrxaWEtuVaQSAeJDZWx5SOA==
+X-Received: by 2002:a17:902:d394:: with SMTP id e20mr2240529pld.239.1583206344690;
+        Mon, 02 Mar 2020 19:32:24 -0800 (PST)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id d77sm9344494pfd.109.2020.03.02.19.32.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 02 Mar 2020 19:32:24 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     linus.walleij@linaro.org
+Cc:     rdunlap@infradead.org, orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        baolin.wang7@gmail.com, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: sprd: Fix the kconfig warning
+Date:   Tue,  3 Mar 2020 11:32:15 +0800
+Message-Id: <eeb12d7843fb06f80e19f98eb25711231c3b610f.1583205650.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 11:57 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
+On X86 plaform, if the CONFIG_OF is not selected, and set the
+CONFIG_SPRD_SC9860 as 'm', that will cause below waring:
 
-> The bad behavior can be visually confirmed by dumping CPUID output in
-> the guest when running Qemu with a stable TSC, as Qemu extends the limit
-> of range 0x40000000 to 0x40000010 to advertise VMware's cpuid_freq,
-> without defining zeroed entries for 0x40000002 - 0x4000000f.
+WARNING: unmet direct dependencies detected for PINCTRL_SPRD
+  Depends on [n]: PINCTRL [=y] && OF [=n] && (ARCH_SPRD || COMPILE_TEST [=y])
+  Selected by [m]:
+  - PINCTRL_SPRD_SC9860 [=m] && PINCTRL [=y]
 
-I think it could be reasonably argued that this is a userspace bug.
-Clearly, when userspace explicitly supplies the results for a leaf,
-those results override the default CPUID values for that leaf. But I
-haven't seen it documented anywhere that leaves *not* explicitly
-supplied by userspace will override the default CPUID values, just
-because they happen to appear in some magic range.
+Thus move the configuration dependency under CONFIG_PINCTRL_SPRD_SC9860
+to fix the warning.
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
+---
+ drivers/pinctrl/sprd/Kconfig | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pinctrl/sprd/Kconfig b/drivers/pinctrl/sprd/Kconfig
+index c9e7f0b..eef35d0 100644
+--- a/drivers/pinctrl/sprd/Kconfig
++++ b/drivers/pinctrl/sprd/Kconfig
+@@ -4,9 +4,7 @@
+ #
+ 
+ config PINCTRL_SPRD
+-	tristate "Spreadtrum pinctrl driver"
+-	depends on OF
+-	depends on ARCH_SPRD || COMPILE_TEST
++	tristate
+ 	select PINMUX
+ 	select PINCONF
+ 	select GENERIC_PINCONF
+@@ -16,6 +14,8 @@ config PINCTRL_SPRD
+ 
+ config PINCTRL_SPRD_SC9860
+ 	tristate "Spreadtrum SC9860 pinctrl driver"
++	depends on OF
++	depends on ARCH_SPRD || COMPILE_TEST
+ 	select PINCTRL_SPRD
+ 	help
+ 	  Say Y here to enable Spreadtrum SC9860 pinctrl driver
+-- 
+1.9.1
+
