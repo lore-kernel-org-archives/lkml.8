@@ -2,182 +2,188 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D2FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F2DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C41B920873
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF8EE215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:46:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vqB1iBHL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GjObYFTA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgCCIpj (ORCPT
+        id S1727743AbgCCIqt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:45:39 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:37950 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgCCIpj (ORCPT
+        Tue, 3 Mar 2020 03:46:49 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36165 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725818AbgCCIqt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:45:39 -0500
-Received: by mail-lf1-f67.google.com with SMTP id x22so949296lff.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:45:36 -0800 (PST)
+        Tue, 3 Mar 2020 03:46:49 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j16so3260603wrt.3;
+        Tue, 03 Mar 2020 00:46:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=zUsO2nMCM9HhiGl3c+blkV/sJUEioZQL7RWJ6Sg9JxU=;
-        b=vqB1iBHLkBD4wUmjvlLQvfF/SLBKh7Esz8WadNOSMsr9hQAVQ/XWaHqwLbNd0HM9uo
-         OZzk/GFChVY+IC6rmxLI8jRZyYjU+zutSqTQYZ/OQPdC2ARoqGrc1DXDCC0iBR4Z2fkS
-         GdivGwsfpiJ3TAyKJXcivV92m2p0vrOIvLR+Ya0ecL8Vxt1atKIWjBa7KXe2MpaiobXL
-         R/z28l4DexE6qZRLp5Q6fTXlVhZu4L/B/ybHbJDrWP3B+UHy+fok7on18SyKKfjINPF/
-         rbhxWkFTSqegYYaPWPc3o2AN30fAJG2rj9vUfk17976Ln/q3crARUHZbFboeMePhRI46
-         Gz+g==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bP8XvFl8R4YFVa1gOdjRlY+8HK04lqQH7mcmvwAZAJY=;
+        b=GjObYFTAzE8rFA8uaHRt9vBguf3GQ4s+wj1lB1DVJG1aStFtYQxUhD2yAmPn+GKk2U
+         4weAX/X9EpNGmlEipOB94qnHFe5+WiSev8J3AAxH2S9GD9CG/q+i1E0VCy1Qo/kTNP3M
+         sPG5WhWfOHr0PgWxBSaBaG7fDFub5t/7OZkYlM0jtn6hR8h0KPPC25+eEAjCvRNbRjJS
+         pq28zFhe4ijt0uULSZeClaE6I0gNY7qe8nkYSTp2E73MeKOUKHsxOhXgXSHW9UucPGZs
+         YjlhYf31HRI+l1dCJPbWvEqA6jvhjFBcR0OdnBBmFA1vffWViNvdmAwCi7G2OPRYuvwk
+         fsmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=zUsO2nMCM9HhiGl3c+blkV/sJUEioZQL7RWJ6Sg9JxU=;
-        b=G1gMROE8xCrjr6Ud4u553SwxbYxIt+TvbpeAPjpla+OJWaUzrctQ8qFjtK61/hFRh3
-         UlXOGpIpV4cqvibME2D5i/hbGz8fAK0gE71zzGgHdWSJucvDrnpbUd/4dtKqw406BkqO
-         CMa5g2stkiH4t8onxxhmdPZcypTxq4w+uwUVjbD7iiGkTKvPQlBLUszN6E46wDFOMoUZ
-         Kds9x69AKik4LFKlcKhb8zcApNxJ3/ETeOQIkyCgPPAmwLdtH3LaJcmYOmanyzh1MPBU
-         Pu2Z99KJbZkedMXh16OMSfZUw2cUTJrK3GaZq9igQwRcdSa4xwd28zn4s3VkrNZ2gNal
-         i2TQ==
-X-Gm-Message-State: ANhLgQ3rXjSB6EiCZKQcJQI7CHWym2uuVs+9a//w5YDZzJ5h+v7trTV0
-        xcEu9oBpPydE7EVJuS5KgHYMAmAW0ucbo8X4oES12ffXNgKQFA==
-X-Google-Smtp-Source: ADFU+vsXA4t58U0AaanSATOsRmnvKEdms25FguKqsYCaaKaf1gkgQwMMWnC8G6EEojjD1DzrywKiB/u4TgSS+Qmzg74=
-X-Received: by 2002:ac2:4467:: with SMTP id y7mr2120942lfl.167.1583225135820;
- Tue, 03 Mar 2020 00:45:35 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bP8XvFl8R4YFVa1gOdjRlY+8HK04lqQH7mcmvwAZAJY=;
+        b=NX8fWqylWIz/0oIE/WHWC2UZ2E6tukRX7Kt3KcgjdXZOK5m9LAsqEix4sRvhhm+GJh
+         qo7PXMtSedJM/m3hbksu3BVv/5pnip/8MnF73dIpjpKATKham+XnjwDUAC3E74lmOPPr
+         U6HSihDCzb0SLFREXeQpmuiUIv4NhUM94rUBwxwNmnVAyFTBODHxxpRqvmQqinFhJqYo
+         1X1eusimSSxg6homdVyGQ68h+OorG9Is07bswMAtLoOJo7x4k5tDEWFwHmrN4D+RUH4q
+         TqxR3uqQpihosXKwYyXn1TtiLJqlhE4SnwS0pTv7xjq6r3qK9wcdV6zhxI8sohC+j/kx
+         kRYw==
+X-Gm-Message-State: ANhLgQ06i+MlxTtSsA/mqyVsrHmqYqonjD4+DhoSw5aV9FcRYy3Hw/2M
+        1RYxkzpXvdbe1DWRwOCc+dM=
+X-Google-Smtp-Source: ADFU+vu+A3P/TC8dTmyi5tKf23KZ5V9N9wV9ldGhrc91Dm2ea+Ql9x3yFTm5HbwAAZ8qK0tvd2DhVQ==
+X-Received: by 2002:adf:e98f:: with SMTP id h15mr4456890wrm.263.1583225204458;
+        Tue, 03 Mar 2020 00:46:44 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f29:6000:6062:15dd:9144:874b? (p200300EA8F296000606215DD9144874B.dip0.t-ipconnect.de. [2003:ea:8f29:6000:6062:15dd:9144:874b])
+        by smtp.googlemail.com with ESMTPSA id k126sm2508176wme.4.2020.03.03.00.46.43
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 00:46:43 -0800 (PST)
+Subject: Re: [PATCH v1] net: phy: tja11xx: add TJA1102 support
+To:     Oleksij Rempel <o.rempel@pengutronix.de>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        Marek Vasut <marex@denx.de>, David Jander <david@protonic.nl>
+References: <20200303073715.32301-1-o.rempel@pengutronix.de>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <eada8b95-bbfe-5dba-7e39-6202e67c26f0@gmail.com>
+Date:   Tue, 3 Mar 2020 09:46:39 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 3 Mar 2020 14:15:24 +0530
-Message-ID: <CA+G9fYs==eMEmY_OpdhyCHO_1Z5f_M8CAQQTh-AOf5xAvBHKAQ@mail.gmail.com>
-Subject: fs/buffer.c: WARNING: alloc_page_buffers while mke2fs
-To:     linux-fsdevel@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Jan Kara <jack@suse.cz>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Michal Hocko <mhocko@kernel.org>, ak@linux.intel.com,
-        jlayton@redhat.com, tim.c.chen@linux.intel.com,
-        willy@infradead.org, LTP List <ltp@lists.linux.it>,
-        Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
-        lkft-triage@lists.linaro.org,
-        Anders Roxell <anders.roxell@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200303073715.32301-1-o.rempel@pengutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Sorry for the spam]
+On 03.03.2020 08:37, Oleksij Rempel wrote:
+> TJA1102 is an dual T1 PHY chip. Both PHYs are separately addressable.
+> PHY 0 can be identified by PHY ID. PHY 1 has no PHY ID and can be
+> configured in device tree by setting compatible =
+> "ethernet-phy-id0180.dc81".
+> 
+> PHY 1 has less suported registers and functionality. For current driver
+> it will affect only the HWMON support.
+> 
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+> ---
+>  drivers/net/phy/nxp-tja11xx.c | 43 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+> 
+> diff --git a/drivers/net/phy/nxp-tja11xx.c b/drivers/net/phy/nxp-tja11xx.c
+> index b705d0bd798b..52090cfaa54e 100644
+> --- a/drivers/net/phy/nxp-tja11xx.c
+> +++ b/drivers/net/phy/nxp-tja11xx.c
+> @@ -15,6 +15,7 @@
+>  #define PHY_ID_MASK			0xfffffff0
+>  #define PHY_ID_TJA1100			0x0180dc40
+>  #define PHY_ID_TJA1101			0x0180dd00
+> +#define PHY_ID_TJA1102			0x0180dc80
+>  
+>  #define MII_ECTRL			17
+>  #define MII_ECTRL_LINK_CONTROL		BIT(15)
+> @@ -190,6 +191,7 @@ static int tja11xx_config_init(struct phy_device *phydev)
+>  			return ret;
+>  		break;
+>  	case PHY_ID_TJA1101:
+> +	case PHY_ID_TJA1102:
+>  		ret = phy_set_bits(phydev, MII_COMMCFG, MII_COMMCFG_AUTO_OP);
+>  		if (ret)
+>  			return ret;
+> @@ -337,6 +339,31 @@ static int tja11xx_probe(struct phy_device *phydev)
+>  	if (!priv)
+>  		return -ENOMEM;
+>  
+> +	/* Use the phyid to distinguish between port 0 and port 1 of the
+> +	 * TJA1102. Port 0 has a proper phyid, while port 1 reads 0.
+> +	 */
+> +	if ((phydev->phy_id & PHY_ID_MASK) == PHY_ID_TJA1102) {
+> +		int ret;
+> +		u32 id;
+> +
+> +		ret = phy_read(phydev, MII_PHYSID1);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		id = ret;
+> +		ret = phy_read(phydev, MII_PHYSID2);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		id |= ret << 16;
+> +
+> +		/* TJA1102 Port 1 has phyid 0 and doesn't support temperature
+> +		 * and undervoltage alarms.
+> +		 */
+> +		if (id == 0)
+> +			return 0;
 
-Linux-next 5.6.0-rc3-next-20200302 running on arm64 juno-r2 device while
-running LTP syscalls chown tests.
+I'm not sure I understand what you're doing here. The two ports of the chip
+are separate PHY's on individual MDIO bus addresses?
+Reading the PHY ID registers here seems to repeat what phylib did already
+to populate phydev->phy_id. If port 1 has PHD ID 0 then the driver wouldn't
+bind and tja11xx_probe() would never be called (see phy_bus_match)
 
-Suspecting commits are (did not do git bisect),
-b1473d5f3d0 fs/buffer.c: dump more info for __getblk_gfp() stall problem
-b10a7ae6565 fs/buffer.c: add debug print for __getblk_gfp() stall problem
+> +	}
+> +
+>  	priv->hwmon_name = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
+>  	if (!priv->hwmon_name)
+>  		return -ENOMEM;
+> @@ -385,6 +412,21 @@ static struct phy_driver tja11xx_driver[] = {
+>  		.get_sset_count = tja11xx_get_sset_count,
+>  		.get_strings	= tja11xx_get_strings,
+>  		.get_stats	= tja11xx_get_stats,
+> +	}, {
+> +		PHY_ID_MATCH_MODEL(PHY_ID_TJA1102),
+> +		.name		= "NXP TJA1102",
+> +		.features       = PHY_BASIC_T1_FEATURES,
+> +		.probe		= tja11xx_probe,
+> +		.soft_reset	= tja11xx_soft_reset,
+> +		.config_init	= tja11xx_config_init,
+> +		.read_status	= tja11xx_read_status,
+> +		.suspend	= genphy_suspend,
+> +		.resume		= genphy_resume,
+> +		.set_loopback   = genphy_loopback,
+> +		/* Statistics */
+> +		.get_sset_count = tja11xx_get_sset_count,
+> +		.get_strings	= tja11xx_get_strings,
+> +		.get_stats	= tja11xx_get_stats,
+>  	}
+>  };
+>  
+> @@ -393,6 +435,7 @@ module_phy_driver(tja11xx_driver);
+>  static struct mdio_device_id __maybe_unused tja11xx_tbl[] = {
+>  	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1100) },
+>  	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1101) },
+> +	{ PHY_ID_MATCH_MODEL(PHY_ID_TJA1102) },
+>  	{ }
+>  };
+>  
+> 
 
-steps to reproduce:
--------------------
-  - Boot kernel Linux-next 5.6.0-rc3-next-20200302 on arm64 device
-  - cd /opt/ltp
-  - ./runltp -s chown -I 10 -d /scratch -p -q
-
-* /scratch is a mounted hard drive for LTP test files.
-
-chown03_16    2  TCONF  :
-/usr/src/debug/ltp/20190930-r0/git/testcases/kernel/syscalls/chown/../utils/compat_16.h:168:
-Remaining cases not appropriate for configuration
-mke2fs 1.43.8 (1-Jan-2018)
-[   97.998689] ------------[ cut here ]------------
-[   98.003346] WARNING: CPU: 2 PID: 340 at
-include/linux/sched/mm.h:323 alloc_page_buffers+0x210/0x288
-[   98.012409] Modules linked in: rfkill tda998x cec drm_kms_helper
-drm crct10dif_ce fuse
-[   98.020369] CPU: 2 PID: 340 Comm: kworker/u12:6 Not tainted
-5.6.0-rc3-next-20200302 #1
-[   98.028302] Hardware name: ARM Juno development board (r2) (DT)
-[   98.034242] Workqueue: loop0 loop_workfn
-[   98.038176] pstate: 60000005 (nZCv daif -PAN -UAO)
-[   98.042980] pc : alloc_page_buffers+0x210/0x288
-[   98.047522] lr : alloc_page_buffers+0x50/0x288
-[   98.051972] sp : ffff000904a76c00
-[   98.055291] x29: ffff000904a76c00 x28: ffff000900126000
-[   98.060617] x27: ffff0008e0ad0888 x26: ffffffe001ff3908
-[   98.065941] x25: 0000000000408c40 x24: ffffffe001ff3900
-[   98.071265] x23: 0000000000000401 x22: ffff0008e0ad0780
-[   98.076589] x21: 0000000000001000 x20: 0000000000000000
-[   98.081913] x19: ffff0009022fd980 x18: 0000000000000000
-[   98.087236] x17: 0000000000000000 x16: 0000000000000000
-[   98.092559] x15: 0000000000000000 x14: ffffa00010468954
-[   98.097883] x13: ffffa00010259490 x12: ffff9ffc003fe727
-[   98.103207] x11: 1ffffffc003fe726 x10: ffff9ffc003fe726
-[   98.108531] x9 : dfffa00000000000 x8 : 0000000000000001
-[   98.113855] x7 : ffffffe001ff3937 x6 : ffffffe001ff3934
-[   98.119179] x5 : 00006003ffc018da x4 : 000000000000002d
-[   98.124503] x3 : dfffa00000000000 x2 : 0000000000000007
-[   98.129826] x1 : ffff0009022fe300 x0 : ffff000900126000
-[   98.135150] Call trace:
-[   98.137605]  alloc_page_buffers+0x210/0x288
-[   98.141799]  __getblk_gfp+0x1d4/0x400
-[   98.145475]  ext4_read_block_bitmap_nowait+0x148/0xbc8
-[   98.150628]  ext4_mb_init_cache+0x25c/0x9b0
-[   98.154821]  ext4_mb_init_group+0x270/0x390
-[   98.159014]  ext4_mb_good_group+0x264/0x270
-[   98.163208]  ext4_mb_regular_allocator+0x480/0x798
-[   98.168011]  ext4_mb_new_blocks+0x958/0x10f8
-[   98.172294]  ext4_ext_map_blocks+0xec8/0x1618
-[   98.176660]  ext4_map_blocks+0x1b8/0x8a0
-[   98.180592]  ext4_writepages+0x830/0xf10
-[   98.184523]  do_writepages+0xb4/0x198
-[   98.188195]  __filemap_fdatawrite_range+0x170/0x1c8
-[   98.193086]  filemap_write_and_wait_range+0x40/0xb0
-[   98.197974]  ext4_punch_hole+0x4a4/0x660
-[   98.201907]  ext4_fallocate+0x294/0x1190
-[   98.205839]  loop_process_work+0x690/0x1100
-[   98.210032]  loop_workfn+0x2c/0x110
-[   98.213529]  process_one_work+0x3e0/0x648
-[   98.217546]  worker_thread+0x70/0x670
-[   98.221217]  kthread+0x1b8/0x1c0
-[   98.224452]  ret_from_fork+0x10/0x18
-[   98.228033] ---[ end trace 75d39f61d945043e ]---
-chown04     0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
-chown04     0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra opts=''
-chown04     1  TPASS  :  chown failed: TEST_ERRNO=EPERM(1): Operation
-not permitted
-chown04     2  TPASS  :  chown failed: TEST_ERRNO=EACCES(13): Permission denied
-chown04     3  TPASS  :  chown failed: TEST_ERRNO=EFAULT(14): Bad address
-chown04     4  TPASS  :  chown failed: TEST_ERRNO=ENAMETOOLONG(36):
-File name too long
-chown04     5  TPASS  :  chown failed: TEST_ERRNO=ENOENT(2): No such
-file or directory
-chown04     6  TPASS  :  chown failed: TEST_ERRNO=ENOTDIR(20): Not a directory
-chown04     7  TPASS  :  chown failed: TEST_ERRNO=ELOOP(40): Too many
-levels of symbolic links
-chown04     8  TPASS  :  chown failed: TEST_ERRNO=EROFS(30): Read-only
-file system
-mke2fs 1.43.8 (1-Jan-2018)
-chown04_16    0  TINFO  :  Using test device LTP_DEV='/dev/loop0'
-chown04_16    0  TINFO  :  Formatting /dev/loop0 with ext2 opts='' extra opts=''
-chown04_16    1  TCONF  :
-/usr/src/debug/ltp/20190930-r0/git/testcases/kernel/syscalls/chown/../utils/compat_16.h:168:
-16-bit version of chown() is not supported on your platform
-chown04_16    2  TCONF  :
-/usr/src/debug/ltp/20190930-r0/git/testcases/kernel/syscalls/chown/../utils/compat_16.h:168:
-Remaining cases not appropriate for configuration
-
-Ref:
-https://lkft.validation.linaro.org/scheduler/job/1262252#L2152
-https://lkft.validation.linaro.org/scheduler/job/1262374#L1313
-https://lkft.validation.linaro.org/scheduler/job/1262121#L2153
-https://lkft.validation.linaro.org/scheduler/job/1262105#L2116
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
