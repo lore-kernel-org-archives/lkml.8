@@ -2,262 +2,109 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3694AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20EACC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:10:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E3B20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E98DB20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ePznjHvi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727451AbgCCWGU (ORCPT
+        id S1727441AbgCCWKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:06:20 -0500
-Received: from mga11.intel.com ([192.55.52.93]:31911 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbgCCWGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:06:19 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 14:06:19 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="263367311"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 03 Mar 2020 14:06:18 -0800
-Date:   Tue, 3 Mar 2020 14:06:18 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Yang Weijiang <weijiang.yang@intel.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, jmattson@google.com,
-        yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v9 4/7] KVM: VMX: Load CET states on vmentry/vmexit
-Message-ID: <20200303220618.GB1439@linux.intel.com>
-References: <20191227021133.11993-1-weijiang.yang@intel.com>
- <20191227021133.11993-5-weijiang.yang@intel.com>
+        Tue, 3 Mar 2020 17:10:31 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1946 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgCCWKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 17:10:31 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5ed5820002>; Tue, 03 Mar 2020 14:09:06 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 03 Mar 2020 14:10:30 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 03 Mar 2020 14:10:30 -0800
+Received: from [10.26.11.142] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
+ 2020 22:10:27 +0000
+Subject: Re: [PATCH 4.19 00/87] 4.19.108-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20200303174349.075101355@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <89b83a6d-83e1-f022-7e3a-899cc3eb44b8@nvidia.com>
+Date:   Tue, 3 Mar 2020 22:10:25 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191227021133.11993-5-weijiang.yang@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583273346; bh=k8kfYBKjflXak5hVHGLW4Lo/HMol0YZZLdnsQW/LMmw=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ePznjHviJOrM7whqTeUber7Rqa5FFcfzWX58zPzezcx7SsK4QeAwFklSqvXMkbD8b
+         ESK6DZrq1jMwX1U6GwVNV7X8UZZaBsRvjR2ppIpgiEWBYPsidQhGjAAe9jVEGzWQWQ
+         QJO3tgTlaNPRZPNxen+S9RBhrYIS3KUTTTyyYy4+tf2iJRgZy1wf2i8XBgBSLkALCv
+         PvnEggF5/o85rCtOwz81Xza9nr1ECzI/uDR5TWE3HL9JBj+YzbYEpJ8J6Z5a48ltJR
+         AmPhgtTwvcRwPmMCICxaOeqlpNvuO5ifASU7B66Pl0cdfmNmr+3zDCuklg8t+8GGMd
+         ya84zZIlkmO8g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Dec 27, 2019 at 10:11:30AM +0800, Yang Weijiang wrote:
-> "Load {guest,host} CET state" bit controls whether guest/host
-> CET states will be loaded at VM entry/exit. Before doing that,
-> KVM needs to check if CET can be enabled both on host and guest.
+
+On 03/03/2020 17:42, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.108 release.
+> There are 87 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Note:
-> 1)The processor does not allow CR4.CET to be set if CR0.WP = 0,
->   similarly, it does not allow CR0.WP to be cleared while CR4.CET = 1.
->   In either case, KVM would inject #GP to guest.
+> Responses should be made by Thu, 05 Mar 2020 17:43:27 +0000.
+> Anything received after that time might be too late.
 > 
-> 2)SHSTK and IBT features share one control MSR:
->   MSR_IA32_{U,S}_CET, which means it's difficult to hide
->   one feature from another in the case of SHSTK != IBT,
->   after discussed in community, it's agreed to allow Guest
->   control two features independently as it won't introduce
->   security hole.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.108-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
+> and the diffstat can be found below.
 > 
-> Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> ---
->  arch/x86/kvm/vmx/capabilities.h | 10 ++++++
->  arch/x86/kvm/vmx/vmx.c          | 56 +++++++++++++++++++++++++++++++--
->  arch/x86/kvm/x86.c              |  3 ++
->  3 files changed, 67 insertions(+), 2 deletions(-)
+> thanks,
 > 
-> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-> index 7aa69716d516..4a67d35a42a2 100644
-> --- a/arch/x86/kvm/vmx/capabilities.h
-> +++ b/arch/x86/kvm/vmx/capabilities.h
-> @@ -106,6 +106,16 @@ static inline bool vmx_mpx_supported(void)
->  		(vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS);
->  }
->  
-> +static inline bool cpu_has_load_guest_cet_states_ctrl(void)
-> +{
-> +	return ((vmcs_config.vmentry_ctrl) & VM_ENTRY_LOAD_GUEST_CET_STATE);
-> +}
-> +
-> +static inline bool cpu_has_load_host_cet_states_ctrl(void)
-> +{
-> +	return ((vmcs_config.vmexit_ctrl) & VM_EXIT_LOAD_HOST_CET_STATE);
+> greg k-h
 
-No need for parantheses around vmcs_config.vmexit_ctrl.
+All tests passing for Tegra ...
 
-> +}
-> +
->  static inline bool cpu_has_vmx_tpr_shadow(void)
->  {
->  	return vmcs_config.cpu_based_exec_ctrl & CPU_BASED_TPR_SHADOW;
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 61fc846c7ef3..95063cc7da89 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -44,6 +44,7 @@
->  #include <asm/spec-ctrl.h>
->  #include <asm/virtext.h>
->  #include <asm/vmx.h>
-> +#include <asm/cet.h>
->  
->  #include "capabilities.h"
->  #include "cpuid.h"
-> @@ -2445,7 +2446,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->  	      VM_EXIT_LOAD_IA32_EFER |
->  	      VM_EXIT_CLEAR_BNDCFGS |
->  	      VM_EXIT_PT_CONCEAL_PIP |
-> -	      VM_EXIT_CLEAR_IA32_RTIT_CTL;
-> +	      VM_EXIT_CLEAR_IA32_RTIT_CTL |
-> +	      VM_EXIT_LOAD_HOST_CET_STATE;
->  	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_EXIT_CTLS,
->  				&_vmexit_control) < 0)
->  		return -EIO;
-> @@ -2469,7 +2471,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->  	      VM_ENTRY_LOAD_IA32_EFER |
->  	      VM_ENTRY_LOAD_BNDCFGS |
->  	      VM_ENTRY_PT_CONCEAL_PIP |
-> -	      VM_ENTRY_LOAD_IA32_RTIT_CTL;
-> +	      VM_ENTRY_LOAD_IA32_RTIT_CTL |
-> +	      VM_ENTRY_LOAD_GUEST_CET_STATE;
->  	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_ENTRY_CTLS,
->  				&_vmentry_control) < 0)
->  		return -EIO;
-> @@ -3027,6 +3030,25 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
->  	vmcs_writel(GUEST_CR3, guest_cr3);
->  }
->  
-> +bool is_cet_bit_allowed(struct kvm_vcpu *vcpu)
+Test results for stable-v4.19:
+    11 builds:	11 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
 
-This should be static.  I'd also include cr4 in the name, e.g.
+Linux version:	4.19.108-rc1-g619f84afab6a
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-  static bool is_cr4_set_allowed(...)
+Cheers
+Jon
 
-
-> +{
-> +	u64 kvm_xss = kvm_supported_xss();
-> +	unsigned long cr0;
-> +	bool cet_allowed;
-> +
-> +	cr0 = kvm_read_cr0(vcpu);
-> +
-> +	/* Right now, only user-mode CET is supported.*/
-> +	cet_allowed = (kvm_xss & XFEATURE_MASK_CET_USER) &&
-> +		      (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> +		      guest_cpuid_has(vcpu, X86_FEATURE_IBT));
-
-Probably makes sense to add a "is_cet_supported()" helper.  That'd reduce
-the amount of copy+paste and would probably add clarity to most flows.
-
-> +
-> +	if ((cr0 & X86_CR0_WP) && cet_allowed)
-> +		return true;
-> +
-> +	return false;
-
-	return (cr0 & X86_CR0_WP) && cet_allowed;
-
-Even better, especially if you add is_cet_supported(), to avoid VMREAD of
-CR0 when CET isn't supported.
-
-	return is_cet_supported() && (kvm_read_cr0(vcpu) & X86_CR0_WP);
-
-At that point, you can probably even forgo the helper, e.g.
-
-	if ((cr4 & X86_CR4_CET) &&
-	    (!is_cet_supported() || !(kvm_read_cr0(vcpu) & X86_CR0_WP)))
-		return 1;
-
-> +}
-> +
->  int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> @@ -3067,6 +3089,9 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
->  			return 1;
->  	}
->  
-> +	if ((cr4 & X86_CR4_CET) && !is_cet_bit_allowed(vcpu))
-> +		return 1;
-> +
->  	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
->  		return 1;
->  
-> @@ -3930,6 +3955,12 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
->  
->  	if (cpu_has_load_ia32_efer())
->  		vmcs_write64(HOST_IA32_EFER, host_efer);
-> +
-> +	if (cpu_has_load_host_cet_states_ctrl()) {
-> +		vmcs_writel(HOST_S_CET, 0);
-> +		vmcs_writel(HOST_INTR_SSP_TABLE, 0);
-> +		vmcs_writel(HOST_SSP, 0);
-> +	}
->  }
->  
->  void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
-> @@ -6499,7 +6530,9 @@ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
->  static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> +	u64 kvm_xss = kvm_supported_xss();
->  	unsigned long cr3, cr4;
-> +	bool cet_allowed;
->  
->  	/* Record the guest's net vcpu time for enforced NMI injections. */
->  	if (unlikely(!enable_vnmi &&
-> @@ -6530,6 +6563,25 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  		vmx->loaded_vmcs->host_state.cr3 = cr3;
->  	}
->  
-> +	/* Right now, only user-mode CET is supported.*/
-> +	cet_allowed = (kvm_xss & XFEATURE_MASK_CET_USER) &&
-> +		      (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> +		      guest_cpuid_has(vcpu, X86_FEATURE_IBT));
-> +
-> +	if (cpu_has_load_guest_cet_states_ctrl() && cet_allowed)
-> +		vmcs_set_bits(VM_ENTRY_CONTROLS,
-> +			      VM_ENTRY_LOAD_GUEST_CET_STATE);
-> +	else
-> +		vmcs_clear_bits(VM_ENTRY_CONTROLS,
-> +				VM_ENTRY_LOAD_GUEST_CET_STATE);
-> +
-> +	if (cpu_has_load_host_cet_states_ctrl() && cet_allowed)
-> +		vmcs_set_bits(VM_EXIT_CONTROLS,
-> +			      VM_EXIT_LOAD_HOST_CET_STATE);
-> +	else
-> +		vmcs_clear_bits(VM_EXIT_CONTROLS,
-> +				VM_EXIT_LOAD_HOST_CET_STATE);
-
-Why are you clearing VMCS bits in vmx_vcpu_run()?  Unless I'm missing
-something, these can go in vmx_cpuid_update().
-
-> +
->  	cr4 = cr4_read_shadow();
->  	if (unlikely(cr4 != vmx->loaded_vmcs->host_state.cr4)) {
->  		vmcs_writel(HOST_CR4, cr4);
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index a9b1140d0508..b27d97eaec24 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -788,6 +788,9 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
->  	if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
->  		return 1;
->  
-> +	if (!(cr0 & X86_CR0_WP) && kvm_read_cr4_bits(vcpu, X86_CR4_CET))
-> +		return 1;
-> +
->  	kvm_x86_ops->set_cr0(vcpu, cr0);
->  
->  	if ((cr0 ^ old_cr0) & X86_CR0_PG) {
-> -- 
-> 2.17.2
-> 
+-- 
+nvpublic
