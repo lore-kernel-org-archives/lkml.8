@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F15C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8894C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E190320870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9244721739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258079;
-	bh=lFkez4BwPFZEiyY8daJsLPtmtS941mquHO3XEQQhqyU=;
+	s=default; t=1583258081;
+	bh=8ITaZFZgUihDSQO1mZwt+UkaagCefQ1Nx1g4etIaBuU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g9axEUI+Krc1gEwI/7Gra59pXOHrOciBpJhKnMs9KpjFcSWiu3Q5khaqpe4qtr8uB
-	 fqWyQq7mPx5bZA6kHS8wglwiJ8n7CpBj0Zhtr2Lkyytoo9eMnYSf78DFXyajgP4sjx
-	 RPC15Btfvud0lKPrV26melkxixrQGeBokMdBMPNE=
+	b=iRbW9XlrJo8nH9khqwU+r3gxaeo7C5xTDxu6Y3bNIjQlyDIsxyb2xKM5F9QwjfPjj
+	 XQFhbknAQBxEkNqkgElEFhzEfPKHCw8lH2jzzVBK3txKD5p10VHaMnwMVpJwNDKup3
+	 cN/ABqqBuyxxUwLH9ICn/8jq44dv/HyDvYhh16Mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732556AbgCCRyh (ORCPT
+        id S1732566AbgCCRyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35778 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732544AbgCCRyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:35 -0500
+        id S1732178AbgCCRyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 501B62146E;
-        Tue,  3 Mar 2020 17:54:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B7EF52146E;
+        Tue,  3 Mar 2020 17:54:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258074;
-        bh=lFkez4BwPFZEiyY8daJsLPtmtS941mquHO3XEQQhqyU=;
+        s=default; t=1583258077;
+        bh=8ITaZFZgUihDSQO1mZwt+UkaagCefQ1Nx1g4etIaBuU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rT093dUEA/GipTrfTlF9L2oN1k7bPVB/KjOQw84tnQj6xaVrmOZu3Z3Q+8ZsxvKmG
-         PzTMMh1zIUY0YxqbudfXhjKs3drAtOgHgzErdjo05jG0B40VX6VJoQUBXvDwWTMChX
-         7tOZ1aU2H396jLDjHMd/sU7mug3FkXUVYOUF1iU8=
+        b=vlGkQbCGU4GAV1dQHsWquTdafzp36tHZsb30ppOrRI3lidqjWDYSAZXGC8x+jbZ3a
+         ponVCealLZ4kegCfZXb7KQQ7D8FN5RkUe0/H6Ts9MeZ5qGFqmav9kG2BCJJdhuZY/K
+         ondn0Z1Qe8NgZMLf5CGiXcKXipANU9X7a2BrDJpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 062/152] bcache: ignore pending signals when creating gc and allocator thread
-Date:   Tue,  3 Mar 2020 18:42:40 +0100
-Message-Id: <20200303174309.501274295@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
+        Johannes Berg <johannes.berg@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 063/152] cfg80211: add missing policy for NL80211_ATTR_STATUS_CODE
+Date:   Tue,  3 Mar 2020 18:42:41 +0100
+Message-Id: <20200303174309.611895497@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -59,100 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
 
-[ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
+[ Upstream commit ea75080110a4c1fa011b0a73cb8f42227143ee3e ]
 
-When run a cache set, all the bcache btree node of this cache set will
-be checked by bch_btree_check(). If the bcache btree is very large,
-iterating all the btree nodes will occupy too much system memory and
-the bcache registering process might be selected and killed by system
-OOM killer. kthread_run() will fail if current process has pending
-signal, therefore the kthread creating in run_cache_set() for gc and
-allocator kernel threads are very probably failed for a very large
-bcache btree.
+The nl80211_policy is missing for NL80211_ATTR_STATUS_CODE attribute.
+As a result, for strictly validated commands, it's assumed to not be
+supported.
 
-Indeed such OOM is safe and the registering process will exit after
-the registration done. Therefore this patch flushes pending signals
-during the cache set start up, specificly in bch_cache_allocator_start()
-and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
-large cahced data set.
-
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+Link: https://lore.kernel.org/r/20200213131608.10541-2-sergey.matyukevich.os@quantenna.com
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/bcache/alloc.c | 18 ++++++++++++++++--
- drivers/md/bcache/btree.c | 13 +++++++++++++
- 2 files changed, 29 insertions(+), 2 deletions(-)
+ net/wireless/nl80211.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
-index a1df0d95151c6..8bc1faf71ff2f 100644
---- a/drivers/md/bcache/alloc.c
-+++ b/drivers/md/bcache/alloc.c
-@@ -67,6 +67,7 @@
- #include <linux/blkdev.h>
- #include <linux/kthread.h>
- #include <linux/random.h>
-+#include <linux/sched/signal.h>
- #include <trace/events/bcache.h>
- 
- #define MAX_OPEN_BUCKETS 128
-@@ -733,8 +734,21 @@ int bch_open_buckets_alloc(struct cache_set *c)
- 
- int bch_cache_allocator_start(struct cache *ca)
- {
--	struct task_struct *k = kthread_run(bch_allocator_thread,
--					    ca, "bcache_allocator");
-+	struct task_struct *k;
-+
-+	/*
-+	 * In case previous btree check operation occupies too many
-+	 * system memory for bcache btree node cache, and the
-+	 * registering process is selected by OOM killer. Here just
-+	 * ignore the SIGKILL sent by OOM killer if there is, to
-+	 * avoid kthread_run() being failed by pending signals. The
-+	 * bcache registering process will exit after the registration
-+	 * done.
-+	 */
-+	if (signal_pending(current))
-+		flush_signals(current);
-+
-+	k = kthread_run(bch_allocator_thread, ca, "bcache_allocator");
- 	if (IS_ERR(k))
- 		return PTR_ERR(k);
- 
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 46a8b5a91c386..a6e05503b7723 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -34,6 +34,7 @@
- #include <linux/random.h>
- #include <linux/rcupdate.h>
- #include <linux/sched/clock.h>
-+#include <linux/sched/signal.h>
- #include <linux/rculist.h>
- #include <linux/delay.h>
- #include <trace/events/bcache.h>
-@@ -1908,6 +1909,18 @@ static int bch_gc_thread(void *arg)
- 
- int bch_gc_thread_start(struct cache_set *c)
- {
-+	/*
-+	 * In case previous btree check operation occupies too many
-+	 * system memory for bcache btree node cache, and the
-+	 * registering process is selected by OOM killer. Here just
-+	 * ignore the SIGKILL sent by OOM killer if there is, to
-+	 * avoid kthread_run() being failed by pending signals. The
-+	 * bcache registering process will exit after the registration
-+	 * done.
-+	 */
-+	if (signal_pending(current))
-+		flush_signals(current);
-+
- 	c->gc_thread = kthread_run(bch_gc_thread, c, "bcache_gc");
- 	return PTR_ERR_OR_ZERO(c->gc_thread);
- }
+diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
+index c74646b7a751f..1930513f541e1 100644
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -437,6 +437,7 @@ const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
+ 	[NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_CONTROL_PORT_OVER_NL80211] = { .type = NLA_FLAG },
+ 	[NL80211_ATTR_PRIVACY] = { .type = NLA_FLAG },
++	[NL80211_ATTR_STATUS_CODE] = { .type = NLA_U16 },
+ 	[NL80211_ATTR_CIPHER_SUITE_GROUP] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_WPA_VERSIONS] = { .type = NLA_U32 },
+ 	[NL80211_ATTR_PID] = { .type = NLA_U32 },
 -- 
 2.20.1
 
