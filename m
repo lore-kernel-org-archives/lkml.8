@@ -2,56 +2,57 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C2BC3F2D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F8DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09A1A24655
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02E76214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="BrdCUfbZ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="ooc+HVSS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbgCCKXN (ORCPT
+        id S1728699AbgCCKXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:23:13 -0500
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:53726 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728602AbgCCKXM (ORCPT
+        Tue, 3 Mar 2020 05:23:30 -0500
+Received: from ste-pvt-msa2.bahnhof.se ([213.80.101.71]:46432 "EHLO
+        ste-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728426AbgCCKXN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:23:12 -0500
+        Tue, 3 Mar 2020 05:23:13 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id AC0FF3F361;
-        Tue,  3 Mar 2020 11:23:10 +0100 (CET)
-Authentication-Results: pio-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="BrdCUfbZ";
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 163063F5F8;
+        Tue,  3 Mar 2020 11:23:11 +0100 (CET)
+Authentication-Results: ste-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=ooc+HVSS;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id aneFWmOjDdSg; Tue,  3 Mar 2020 11:23:05 +0100 (CET)
+Authentication-Results: ste-ftg-msa2.bahnhof.se (amavisd-new);
+        dkim=pass (1024-bit key) header.d=shipmail.org
+Received: from ste-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (ste-ftg-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id H1AtZ37jKCHw; Tue,  3 Mar 2020 11:23:05 +0100 (CET)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 2FEB53F58A;
-        Tue,  3 Mar 2020 11:23:05 +0100 (CET)
+        by ste-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 893243F5C7;
+        Tue,  3 Mar 2020 11:22:59 +0100 (CET)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 1B3E2362F4A;
-        Tue,  3 Mar 2020 11:23:00 +0100 (CET)
+        by mail1.shipmail.org (Postfix) with ESMTPSA id C1216360106;
+        Tue,  3 Mar 2020 11:22:58 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1583230980; bh=//T+e7C6mwQ8JpjmYfA8kjZLOQU35A3GBaxr0Y/tn4A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BrdCUfbZMqPuREx8TMwbc72OELJFPECyUzX2ewb2IQ231PHq4vlpub+gjauR/5nfJ
-         ZC2UfiSe8IxsioAzDeLU8p7iQygd9eVy2nLZwhO8zWX3+WMxLWkfFCsljCAv5PFojY
-         uBaWgXkeRTqiLdGJK6cOlfyM/a50m/wOC4yo79Rs=
+        t=1583230978; bh=9zQpb0Yu5vi5x1E2gCIg8Of6OQHCH5naHd9tV6eM+p0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ooc+HVSSHZjrkhrqsQJUD9eRetqU2KivMwKoQSQtdS36lS+0LE6fGD0BnhHe+8zK6
+         GYG81uYzTV0IjXfgHfcB/qdOXVbMCV8DIWJg/YsYsRZfdIten8RYVQMxFnplLEC+0t
+         sDcfSLaPhVCa4WEg7qH6ajGg0P38qylT3t3BkwrM=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
 Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
-        Thomas Hellstrom <thellstrom@vmware.com>,
+        =?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas_os@shipmail.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Michal Hocko <mhocko@suse.com>,
         "Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -59,14 +60,11 @@ Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
         Ralph Campbell <rcampbell@nvidia.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Roland Scheidegger <sroland@vmware.com>
-Subject: [PATCH v5 8/9] drm/vmwgfx: Introduce a huge page aligning TTM range manager
-Date:   Tue,  3 Mar 2020 11:22:46 +0100
-Message-Id: <20200303102247.4635-9-thomas_os@shipmail.org>
+        Dan Williams <dan.j.williams@intel.com>
+Subject: [PATCH v5 0/9] Huge page-table entries for TTM
+Date:   Tue,  3 Mar 2020 11:22:38 +0100
+Message-Id: <20200303102247.4635-1-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200303102247.4635-1-thomas_os@shipmail.org>
-References: <20200303102247.4635-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -75,16 +73,150 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+In order to reduce CPU usage [1] and in theory TLB misses this patchset enables
+huge- and giant page-table entries for TTM and TTM-enabled graphics drivers.
 
-Using huge page-table entries requires that the physical address of the
-start of a buffer object is huge page size aligned.
-Make a special version of the TTM range manager that accomplishes this,
-but falls back to a smaller page size alignment (PUD->PMD, PMD->NORMAL)
-to avoid eviction.
-If other drivers want to use it in the future, it can be made a
-TTM generic helper. Note that drivers can force eviction for a certain
-alignment by assigning the TTM GPU alignment correspondingly.
+Patch 1 and 2 introduce a vma_is_special_huge() function to make the mm code
+take the same path as DAX when splitting huge- and giant page table entries,
+(which currently means zapping the page-table entry and rely on re-faulting).
+
+Patch 3 makes the mm code split existing huge page-table entries
+on huge_fault fallbacks. Typically on COW or on buffer-objects that want
+write-notify. COW and write-notification is always done on the lowest
+page-table level. See the patch log message for additional considerations.
+
+Patch 4 introduces functions to allow the graphics drivers to manipulate
+the caching- and encryption flags of huge page-table entries without ugly
+hacks.
+
+Patch 5 implements the huge_fault handler in TTM.
+This enables huge page-table entries, provided that the kernel is configured
+to support transhuge pages, either by default or using madvise().
+However, they are unlikely to be inserted unless the kernel buffer object
+pfns and user-space addresses align perfectly. There are various options
+here, but since buffer objects that reside in system pages typically start
+at huge page boundaries if they are backed by huge pages, we try to enforce
+buffer object starting pfns and user-space addresses to be huge page-size
+aligned if their size exceeds a huge page-size. If pud-size transhuge
+("giant") pages are enabled by the arch, the same holds for those.
+
+Patch 6 implements a specialized huge_fault handler for vmwgfx.
+The vmwgfx driver may perform dirty-tracking and needs some special code
+to handle that correctly.
+
+Patch 7 implements a drm helper to align user-space addresses according
+to the above scheme, if possible.
+
+Patch 8 implements a TTM range manager for vmwgfx that does the same for
+graphics IO memory. This may later be reused by other graphics drivers
+if necessary.
+
+Patch 9 finally hooks up the helpers of patch 7 and 8 to the vmwgfx driver.
+A similar change is needed for graphics drivers that want a reasonable
+likelyhood of actually using huge page-table entries.
+
+If a buffer object size is not huge-page or giant-page aligned,
+its size will NOT be inflated by this patchset. This means that the buffer
+object tail will use smaller size page-table entries and thus no memory
+overhead occurs. Drivers that want to pay the memory overhead price need to
+implement their own scheme to inflate buffer-object sizes.
+
+PMD size huge page-table-entries have been tested with vmwgfx and found to
+work well both with system memory backed and IO memory backed buffer objects.
+
+PUD size giant page-table-entries have seen limited (fault and COW) testing
+using a modified kernel (to support 1GB page allocations) and a fake vmwgfx
+TTM memory type. The vmwgfx driver does otherwise not support 1GB-size IO
+memory resources.
+
+Comments and suggestions welcome.
+Thomas
+
+Changes since RFC:
+* Check for buffer objects present in contigous IO Memory (Christian König)
+* Rebased on the vmwgfx emulated coherent memory functionality. That rebase
+  adds patch 5.
+Changes since v1:
+* Make the new TTM range manager vmwgfx-specific. (Christian König)
+* Minor fixes for configs that don't support or only partially support
+  transhuge pages.
+Changes since v2:
+* Minor coding style and doc fixes in patch 5/9 (Christian König)
+* Patch 5/9 doesn't touch mm. Remove from the patch title.
+Changes since v3:
+* Added reviews and acks
+* Implemented ugly but generic ttm_pgprot_is_wrprotecting() instead of arch
+  specific code.
+Changes since v4:
+* Added timings (Andrew Morton)
+* Updated function documentation (Andrew Morton)
+
+[1]
+The below test program generates the following gnu time output when run on a
+vmwgfx-enabled kernel without the patch series:
+
+4.78user 6.02system 0:10.91elapsed 99%CPU (0avgtext+0avgdata 1624maxresident)k
+0inputs+0outputs (0major+640077minor)pagefaults 0swaps
+
+and with the patch series:
+
+1.71user 3.60system 0:05.40elapsed 98%CPU (0avgtext+0avgdata 1656maxresident)k
+0inputs+0outputs (0major+20079minor)pagefaults 0swaps
+
+A consistent number of reduced graphics page-faults can be seen with normal
+graphics applications, but due to the aggressive buffer object caching in
+vmwgfx user-space drivers the CPU time reduction is within the error marginal.
+
+#include <unistd.h>
+#include <string.h>
+#include <sys/mman.h>
+#include <xf86drm.h>
+
+static void checkerr(int ret, const char *name)
+{
+  if (ret < 0) {
+    perror(name);
+    exit(-1);
+  }
+}
+
+int main(int agc, const char *argv[])
+{
+    struct drm_mode_create_dumb c_arg = {0};
+    struct drm_mode_map_dumb m_arg = {0};
+    struct drm_mode_destroy_dumb d_arg = {0};
+    int ret, i, fd;
+    void *map;
+
+    fd = open("/dev/dri/card0", O_RDWR);
+    checkerr(fd, argv[0]);
+
+    for (i = 0; i < 10000; ++i) {
+      c_arg.bpp = 32;
+      c_arg.width = 1024;
+      c_arg.height = 1024;      
+      ret = drmIoctl(fd, DRM_IOCTL_MODE_CREATE_DUMB, &c_arg);
+      checkerr(fd, argv[0]);
+
+      m_arg.handle = c_arg.handle;
+      ret = drmIoctl(fd, DRM_IOCTL_MODE_MAP_DUMB, &m_arg);
+      checkerr(fd, argv[0]);
+      
+      map = mmap(NULL, c_arg.size, PROT_READ | PROT_WRITE, MAP_SHARED, fd,
+	       m_arg.offset);
+      checkerr(map == MAP_FAILED ? -1 : 0, argv[0]);
+
+      (void) madvise((void *) map, c_arg.size, MADV_HUGEPAGE);
+      memset(map, 0x67, c_arg.size);
+      munmap(map, c_arg.size);
+
+      d_arg.handle = c_arg.handle;
+      ret = drmIoctl(fd, DRM_IOCTL_MODE_DESTROY_DUMB, &d_arg);
+      checkerr(ret, argv[0]);
+    }
+    
+    close(fd);
+}
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -94,216 +226,5 @@ Cc: Ralph Campbell <rcampbell@nvidia.com>
 Cc: "Jérôme Glisse" <jglisse@redhat.com>
 Cc: "Christian König" <christian.koenig@amd.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Reviewed-by: Roland Scheidegger <sroland@vmware.com>
-Acked-by: Christian König <christian.koenig@amd.com>
----
- drivers/gpu/drm/vmwgfx/Makefile     |   1 +
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.h |   7 ++
- drivers/gpu/drm/vmwgfx/vmwgfx_thp.c | 166 ++++++++++++++++++++++++++++
- 3 files changed, 174 insertions(+)
- create mode 100644 drivers/gpu/drm/vmwgfx/vmwgfx_thp.c
 
-diff --git a/drivers/gpu/drm/vmwgfx/Makefile b/drivers/gpu/drm/vmwgfx/Makefile
-index c877a21a0739..421dd2a497a5 100644
---- a/drivers/gpu/drm/vmwgfx/Makefile
-+++ b/drivers/gpu/drm/vmwgfx/Makefile
-@@ -11,4 +11,5 @@ vmwgfx-y := vmwgfx_execbuf.o vmwgfx_gmr.o vmwgfx_kms.o vmwgfx_drv.o \
- 	    vmwgfx_validation.o vmwgfx_page_dirty.o \
- 	    ttm_object.o ttm_lock.o
- 
-+vmwgfx-$(CONFIG_TRANSPARENT_HUGEPAGE) += vmwgfx_thp.o
- obj-$(CONFIG_DRM_VMWGFX) := vmwgfx.o
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-index bb2757c98f0a..fe5b7293b8d1 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
-@@ -1435,6 +1435,13 @@ vm_fault_t vmw_bo_vm_huge_fault(struct vm_fault *vmf,
- 				enum page_entry_size pe_size);
- #endif
- 
-+/* Transparent hugepage support - vmwgfx_thp.c */
-+#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-+extern const struct ttm_mem_type_manager_func vmw_thp_func;
-+#else
-+#define vmw_thp_func ttm_bo_manager_func
-+#endif
-+
- /**
-  * VMW_DEBUG_KMS - Debug output for kernel mode-setting
-  *
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_thp.c b/drivers/gpu/drm/vmwgfx/vmwgfx_thp.c
-new file mode 100644
-index 000000000000..b7c816ba7166
---- /dev/null
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_thp.c
-@@ -0,0 +1,166 @@
-+// SPDX-License-Identifier: GPL-2.0 OR MIT
-+/*
-+ * Huge page-table-entry support for IO memory.
-+ *
-+ * Copyright (C) 2007-2019 Vmware, Inc. All rights reservedd.
-+ */
-+#include "vmwgfx_drv.h"
-+#include <drm/ttm/ttm_module.h>
-+#include <drm/ttm/ttm_bo_driver.h>
-+#include <drm/ttm/ttm_placement.h>
-+
-+/**
-+ * struct vmw_thp_manager - Range manager implementing huge page alignment
-+ *
-+ * @mm: The underlying range manager. Protected by @lock.
-+ * @lock: Manager lock.
-+ */
-+struct vmw_thp_manager {
-+	struct drm_mm mm;
-+	spinlock_t lock;
-+};
-+
-+static int vmw_thp_insert_aligned(struct drm_mm *mm, struct drm_mm_node *node,
-+				  unsigned long align_pages,
-+				  const struct ttm_place *place,
-+				  struct ttm_mem_reg *mem,
-+				  unsigned long lpfn,
-+				  enum drm_mm_insert_mode mode)
-+{
-+	if (align_pages >= mem->page_alignment &&
-+	    (!mem->page_alignment || align_pages % mem->page_alignment == 0)) {
-+		return drm_mm_insert_node_in_range(mm, node,
-+						   mem->num_pages,
-+						   align_pages, 0,
-+						   place->fpfn, lpfn, mode);
-+	}
-+
-+	return -ENOSPC;
-+}
-+
-+static int vmw_thp_get_node(struct ttm_mem_type_manager *man,
-+			    struct ttm_buffer_object *bo,
-+			    const struct ttm_place *place,
-+			    struct ttm_mem_reg *mem)
-+{
-+	struct vmw_thp_manager *rman = (struct vmw_thp_manager *) man->priv;
-+	struct drm_mm *mm = &rman->mm;
-+	struct drm_mm_node *node;
-+	unsigned long align_pages;
-+	unsigned long lpfn;
-+	enum drm_mm_insert_mode mode = DRM_MM_INSERT_BEST;
-+	int ret;
-+
-+	node = kzalloc(sizeof(*node), GFP_KERNEL);
-+	if (!node)
-+		return -ENOMEM;
-+
-+	lpfn = place->lpfn;
-+	if (!lpfn)
-+		lpfn = man->size;
-+
-+	mode = DRM_MM_INSERT_BEST;
-+	if (place->flags & TTM_PL_FLAG_TOPDOWN)
-+		mode = DRM_MM_INSERT_HIGH;
-+
-+	spin_lock(&rman->lock);
-+	if (IS_ENABLED(CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD)) {
-+		align_pages = (HPAGE_PUD_SIZE >> PAGE_SHIFT);
-+		if (mem->num_pages >= align_pages) {
-+			ret = vmw_thp_insert_aligned(mm, node, align_pages,
-+						     place, mem, lpfn, mode);
-+			if (!ret)
-+				goto found_unlock;
-+		}
-+	}
-+
-+	align_pages = (HPAGE_PMD_SIZE >> PAGE_SHIFT);
-+	if (mem->num_pages >= align_pages) {
-+		ret = vmw_thp_insert_aligned(mm, node, align_pages, place, mem,
-+					     lpfn, mode);
-+		if (!ret)
-+			goto found_unlock;
-+	}
-+
-+	ret = drm_mm_insert_node_in_range(mm, node, mem->num_pages,
-+					  mem->page_alignment, 0,
-+					  place->fpfn, lpfn, mode);
-+found_unlock:
-+	spin_unlock(&rman->lock);
-+
-+	if (unlikely(ret)) {
-+		kfree(node);
-+	} else {
-+		mem->mm_node = node;
-+		mem->start = node->start;
-+	}
-+
-+	return 0;
-+}
-+
-+
-+
-+static void vmw_thp_put_node(struct ttm_mem_type_manager *man,
-+			     struct ttm_mem_reg *mem)
-+{
-+	struct vmw_thp_manager *rman = (struct vmw_thp_manager *) man->priv;
-+
-+	if (mem->mm_node) {
-+		spin_lock(&rman->lock);
-+		drm_mm_remove_node(mem->mm_node);
-+		spin_unlock(&rman->lock);
-+
-+		kfree(mem->mm_node);
-+		mem->mm_node = NULL;
-+	}
-+}
-+
-+static int vmw_thp_init(struct ttm_mem_type_manager *man,
-+			unsigned long p_size)
-+{
-+	struct vmw_thp_manager *rman;
-+
-+	rman = kzalloc(sizeof(*rman), GFP_KERNEL);
-+	if (!rman)
-+		return -ENOMEM;
-+
-+	drm_mm_init(&rman->mm, 0, p_size);
-+	spin_lock_init(&rman->lock);
-+	man->priv = rman;
-+	return 0;
-+}
-+
-+static int vmw_thp_takedown(struct ttm_mem_type_manager *man)
-+{
-+	struct vmw_thp_manager *rman = (struct vmw_thp_manager *) man->priv;
-+	struct drm_mm *mm = &rman->mm;
-+
-+	spin_lock(&rman->lock);
-+	if (drm_mm_clean(mm)) {
-+		drm_mm_takedown(mm);
-+		spin_unlock(&rman->lock);
-+		kfree(rman);
-+		man->priv = NULL;
-+		return 0;
-+	}
-+	spin_unlock(&rman->lock);
-+	return -EBUSY;
-+}
-+
-+static void vmw_thp_debug(struct ttm_mem_type_manager *man,
-+			  struct drm_printer *printer)
-+{
-+	struct vmw_thp_manager *rman = (struct vmw_thp_manager *) man->priv;
-+
-+	spin_lock(&rman->lock);
-+	drm_mm_print(&rman->mm, printer);
-+	spin_unlock(&rman->lock);
-+}
-+
-+const struct ttm_mem_type_manager_func vmw_thp_func = {
-+	.init = vmw_thp_init,
-+	.takedown = vmw_thp_takedown,
-+	.get_node = vmw_thp_get_node,
-+	.put_node = vmw_thp_put_node,
-+	.debug = vmw_thp_debug
-+};
--- 
-2.21.1
 
