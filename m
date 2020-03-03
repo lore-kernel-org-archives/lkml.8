@@ -2,134 +2,92 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61C83C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 706A0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35FAD20828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EkYGi/Lz"
+	by mail.kernel.org (Postfix) with ESMTP id 47F8520828
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583247565;
+	bh=Po21GpAsxJXHa8omSA0fH0AF3jSqp6NBSXKyNPFTq40=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cueXat6pVPEtJ8oCtLgCAGxupc7r7OURhsfahfVGVIsdasEW7OujWmMElODWnU9qE
+	 Q+8/f6lMdXTGErgCcYu4cN1mu80TYoUp3JRSN/QbFEM/AH4VKINtiyeH7SMMloiKck
+	 XGn8xZkRhEErcbBKh/BS//1MsOsTkahrq/J0rW0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729710AbgCCO7V (ORCPT
+        id S1729743AbgCCO7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:59:21 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31809 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728975AbgCCO7U (ORCPT
+        Tue, 3 Mar 2020 09:59:23 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40330 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728975AbgCCO7X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:59:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583247559;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Q3INcNmfvd0keaFFtSvq7kLrMBsEvlegDlXL3LDjJtw=;
-        b=EkYGi/Lz6IwyKMUHm/arpMCGRnYzpEJc1+RORYLgOP9UheVQJGmVnVXlc3T8DuHPcdMh2z
-        VYEFVWQLNkrShCuAM2AoKJPzLJhY9/zgKvXX5XwubRTjwkJAtFSlDcNE36FQoWYmDFPL91
-        gYXA1mEk8lklbQsdzXDPkioj+8DHTHw=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-_nU7jHx4OhmJDuQj8ReilQ-1; Tue, 03 Mar 2020 09:59:17 -0500
-X-MC-Unique: _nU7jHx4OhmJDuQj8ReilQ-1
-Received: by mail-wr1-f70.google.com with SMTP id w8so537137wrn.7
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:59:17 -0800 (PST)
+        Tue, 3 Mar 2020 09:59:23 -0500
+Received: by mail-ot1-f65.google.com with SMTP id x19so3270759otp.7;
+        Tue, 03 Mar 2020 06:59:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Q3INcNmfvd0keaFFtSvq7kLrMBsEvlegDlXL3LDjJtw=;
-        b=Z/DeoOsLuA/zCxYkDaLvXiUcyRkCxyA9n1L5ff/LmwTKf9Y4GfOL0IsjHub7dHGIi/
-         MtK5ktQVa8IqXxFmxd6/6SM0eOrcxjueCIMO2Hkqi8yiKy8wxN6ro+ZG7n91TRlkAY/U
-         jqSsAzznQAzyxFkVjrkc++53mfDCcAEbWaCPzq5rBBlDVzbeKFtJe992BfUm28dK3ok0
-         X5ojZjMkCveUqr8n23meT8f4U4y4glbkyj/lChIBCN4EbRaQltqyT5TXoD2863aFWrsI
-         T/9ponAkWQAdD0I1uLs9eYxZiAtEPHtz9wAVl9bDj0r8jplP8Slo9YW0g1U2xLwIJpZ5
-         xlUA==
-X-Gm-Message-State: ANhLgQ03WGNYZV2aLn0ygM3RSXXGV2umOdK30Up+lCD2SpAhaf995BJG
-        efWUFGPBPpS6AoGOpqguJORQnqssjpldkC7xD2ivlUZSZcGrzFgGcEjiuoOWExYq/MYl0LIm8oU
-        xJQDq1RLkL1YnXAQqZNlAF8Hm
-X-Received: by 2002:a05:600c:217:: with SMTP id 23mr3142879wmi.32.1583247556403;
-        Tue, 03 Mar 2020 06:59:16 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vt1RLURtABBn8aSSBG+jqW4QAi/m+dn0RH1ZEcCXqdMzBZSlAaAyddA7kBq72kciM4FXajzwQ==
-X-Received: by 2002:a05:600c:217:: with SMTP id 23mr3142865wmi.32.1583247556134;
-        Tue, 03 Mar 2020 06:59:16 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.254.94])
-        by smtp.gmail.com with ESMTPSA id 12sm4252542wmo.30.2020.03.03.06.59.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 06:59:15 -0800 (PST)
-Subject: Re: [PATCH v2 36/66] KVM: x86: Handle GBPAGE CPUID adjustment for EPT
- in VMX code
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
- <20200302235709.27467-37-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <90df7276-e586-9082-3d80-6b45e0fb4670@redhat.com>
-Date:   Tue, 3 Mar 2020 15:59:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jxXZabJF36zBqHLvSkp1BT+uIXDUsdzVqIFAD0M2EXo=;
+        b=Ec0whZDOP87o26kq8TtpXG6lXy8JX2l9/TEDXRM3pM6nb9lBbOKZOxZvVrdZ5I2eUi
+         RZ4BaU0h7pqdc+x3TvbVYaWGa26lk/KgwS6boEnOidBJnKiss4o/G8PWvdC8zqUl2IfT
+         nn1zhdr0QKcF7Qd/32SA+83cKF6cPoEvaNJLWOUbbnVivV9OA2YAi29MJZJpW1FKtbsB
+         MBfoBHXQxON3UNjwz4FpL8qw/0MSHC0o4K2AXT0x0y6JVKjxwxSehYmzOmjiBbkGh0ZA
+         V3hPphBqgKm6MCnDHiJJzUua/MDZJHuA8AQfoVdN46qrpHlXSETdRlILcX3ek95A02TG
+         wVig==
+X-Gm-Message-State: ANhLgQ0wg6VVuqTcbxvNCkxCa6ldIRtMQbQ0WPG7k8TDM4MM/GN+koWI
+        G7blP8ffL/8ZigRuQh6ppg==
+X-Google-Smtp-Source: ADFU+vs0akez33tRS244m5eGi3FSV87z7OM5KR9hAV09veZ9Jb9+CkWsSjCrP6apKPamqlw3XwLehQ==
+X-Received: by 2002:a9d:748c:: with SMTP id t12mr3506779otk.38.1583247562238;
+        Tue, 03 Mar 2020 06:59:22 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c7sm7904442otm.63.2020.03.03.06.59.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 06:59:21 -0800 (PST)
+Received: (nullmailer pid 32405 invoked by uid 1000);
+        Tue, 03 Mar 2020 14:59:20 -0000
+Date:   Tue, 3 Mar 2020 08:59:20 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Ansuel Smith <ansuelsmth@gmail.com>
+Cc:     Ansuel Smith <ansuelsmth@gmail.com>,
+        John Crispin <john@phrozen.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] clk: qcom: clk-rpm: add missing rpm clk for ipq806x
+Message-ID: <20200303145920.GA32328@bogus>
+References: <robh@kernel.org>
+ <20200226214812.390-1-ansuelsmth@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302235709.27467-37-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200226214812.390-1-ansuelsmth@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/20 00:56, Sean Christopherson wrote:
-> Move the clearing of the GBPAGE CPUID bit into VMX to eliminate an
-> instance of the undesirable "unsigned f_* = *_supported ? F(*) : 0"
-> pattern in the common CPUID handling code, and to pave the way toward
-> eliminating ->get_lpage_level().
+On Wed, 26 Feb 2020 22:48:12 +0100, Ansuel Smith wrote:
+> Add missing definition of rpm clk for ipq806x soc
 > 
-> No functional change intended.
+> Signed-off-by: John Crispin <john@phrozen.org>
+> Signed-off-by: Ansuel Smith <ansuelsmth@gmail.com>
+> Acked-by: John Crispin <john@phrozen.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,rpmcc.txt  |  1 +
+>  drivers/clk/qcom/clk-rpm.c                    | 35 +++++++++++++++++++
+>  include/dt-bindings/clock/qcom,rpmcc.h        |  4 +++
+>  3 files changed, 40 insertions(+)
+> 
 
-And no functional change is done indeed but there is a preexisting bug 
-that should be fixed.
-
-cpu_has_vmx_ept_1g_page() has no relationship to whether 1GB pages should be
-marked as supported in CPUID.  This has no ill effect because we're only
-clearing the bit, but it results in 1GB pages not being available when
-EPT is disabled (even though they are actually supported thanks to
-shadowing).
-
-The right fix should be this:
-
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 84b9a488a443..8bbba8eb4ce5 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -416,8 +416,7 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 	int r, i, max_idx;
- 	unsigned f_nx = is_efer_nx() ? F(NX) : 0;
- #ifdef CONFIG_X86_64
--	unsigned f_gbpages = (kvm_x86_ops->get_lpage_level() == PT_PDPE_LEVEL)
--				? F(GBPAGES) : 0;
-+	unsigned f_gbpages = F(GBPAGES);
- 	unsigned f_lm = F(LM);
- #else
- 	unsigned f_gbpages = 0;
-@@ -691,6 +690,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid_array *array, u32 function)
- 	case 0x80000001:
- 		entry->edx &= kvm_cpuid_8000_0001_edx_x86_features;
- 		cpuid_entry_mask(entry, CPUID_8000_0001_EDX);
-+		if (!tdp_enabled)
-+			cpuid_entry_set(entry, X86_FEATURE_GBPAGES);
- 		entry->ecx &= kvm_cpuid_8000_0001_ecx_x86_features;
- 		cpuid_entry_mask(entry, CPUID_8000_0001_ECX);
- 		break;
-
-Paolo
-
+Acked-by: Rob Herring <robh@kernel.org>
