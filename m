@@ -8,152 +8,103 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F16CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CAEC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E903D20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78B4720870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:42:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TeHtPEkl"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="eB87Lvzp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731018AbgCCTmV (ORCPT
+        id S1731046AbgCCTmn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:42:21 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33196 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730501AbgCCTmU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:42:20 -0500
-Received: by mail-pg1-f194.google.com with SMTP id m5so2035613pgg.0;
-        Tue, 03 Mar 2020 11:42:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=h8tgpVg/WfkWXXsiT8gGieydhGIhOktjnYkunJLTkFE=;
-        b=TeHtPEkldUQWf/PJsAtcT4UKWLar2Eif6QpmqiA7ZBzu8z8t9N0sV1KcoHYSSDR3uE
-         zeYClIONCtKoqETptiKgDam11vqgHkqS1sqMquDOGA9L8BGuGvl8LmRC/OOJ0UY4ZuGf
-         VudfxiBsJNTc4FiNhuVD1g6vHWypvmro5M9okhyISWYUlaNEm49AIQ0qjMt7rSsOI31n
-         pbUZZlv2NX7MO1CUNd9gr6n2vWE8cMag/fjD6Cnw3NbhyUpWhLYVwoZ3tt1tJnO0hvE4
-         yXyCkLDkZNrwV6txnJ9dyeSHlMGlh+2trsGJJoYL1c2qUtbhoE71aQ6vmEmqKzV5kOVO
-         V9vQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=h8tgpVg/WfkWXXsiT8gGieydhGIhOktjnYkunJLTkFE=;
-        b=CDgNb/EMMin8Y2lY5HAziuR9Gi64sYzlLhzq5FSqPyS8uHyKl/Y7YeNyl22orcnV7p
-         Hap/25c13z0GEg+RO7dQWDCSAiezCLA3iAoh4kmcPpbMXnlgz4/1gYzKfc8APfFXbYbU
-         8vSmRpjvBYQD1U4Ch9kyTCDa0yzc4zUu/7GzfdWxYokTofaJeOJ/11KcSCYF4GyqwLWO
-         j5rI8i131dE9r4JY6PnrGZ3LRk3uQ0qq5cQC3xtKKz23TUIqHPT+CYZcgoaHf9klIoLP
-         t3NfvYFpGS17adGzsOV4RYPdgq5iCHbHpfA/3BrEM1PkCje7ScCprJm4JEiXJ+CblWph
-         mmmA==
-X-Gm-Message-State: ANhLgQ3bHg3ouFzrK0K6to9GbfKNZdWhkd1hbA/jSYz5eDSasCQhB3PK
-        sOcRWKIZp5LmJAl7XqH+7g==
-X-Google-Smtp-Source: ADFU+vsIKjRLmDIQjJnuD8KDsJHg1Wjco2HXTvq6p5IDaeqCtmTHOBvLcd0q5Mu3WaP3xJoG+TiSiA==
-X-Received: by 2002:a62:aa14:: with SMTP id e20mr5529174pff.178.1583264539508;
-        Tue, 03 Mar 2020 11:42:19 -0800 (PST)
-Received: from madhuparna-HP-Notebook.nitk.ac.in ([2402:3a80:1ee0:eafa:280b:b5cb:5e89:a52d])
-        by smtp.gmail.com with ESMTPSA id r9sm13737565pfq.72.2020.03.03.11.42.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 11:42:18 -0800 (PST)
-From:   madhuparnabhowmik10@gmail.com
-To:     rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-Subject: [PATCH 2/2] drivers: base: power: wakeup.c: Use built-in RCU list checking
-Date:   Wed,  4 Mar 2020 01:12:09 +0530
-Message-Id: <20200303194209.24685-1-madhuparnabhowmik10@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Mar 2020 14:42:43 -0500
+Received: from mout.gmx.net ([212.227.17.22]:51695 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729805AbgCCTmn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:42:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1583264548;
+        bh=Xgx8WIi3rVuj8yf+6PVppo0/SP9PD759lC8C/ZJevX4=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=eB87LvzpY4fH8lVAN/IclVKOQbJf21KNtSAXc7/AUx46dVjybVaZxNfZ4ptBYtUgQ
+         iHzGKR8oYupmK0SgQSAXwIC+kAIh+NllSXDKT0GYMMvaiFT3TDnCcMLsaMyWxfSxVj
+         EyMP6P9lCmC8A/wGDNTT0n4mbJHZyAR5yfXhthZw=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.177]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MCsQ4-1jHyrM1mIC-008vBq; Tue, 03
+ Mar 2020 20:42:28 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Nick Hu <nickhu@andestech.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: dev-tools: kmemleak: Update list of architectures
+Date:   Tue,  3 Mar 2020 20:42:15 +0100
+Message-Id: <20200303194215.23756-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:68jtXPhX06Lu0qfwyrgusjtXB5xCqXNNE/R44+RUrOHmvDBNEdm
+ NIiNnf+gsJzqBZPBuKBjjb29J4LB7iEZtOS/zH59Jj1NWplJMi6nRQPFL28DH9aRPG1PEnO
+ IEbMpeM+euZ2hlHFz/N+eXEpkpem8vA576N+BgqWCakTV1s6jpw1VTFkza8A6Csz7NBtHsJ
+ 84hSagB4hFEd0SNNKRFJg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:MMUK9BaEfMo=:MxmQ3bsAR7UBqjddUaoy/4
+ rQLobsayQQeUuuxlesKNFdMDaLbeme0DwvyaYW2tN7ouYxLIhentVrt1qfGCJiwkPM1oGLBRj
+ 5kFeNaDrNcQISCFu008xp6EfQxpWQZEvQNymYSuVQ4aQ1ZRz6rI5hWehjZrDbgxtM6c3UytP0
+ BQxQfM4vKBcIG4qrrc1e9ZVTgI/nGYW9XohjUYWadH463qLOb15VgIOS+GsY1blT1rUSuXHam
+ O3Biz/eDkGjwCG2vSGSUKJyIH2C8UAH7P55r/2+ePEXcrOWWnZh2vTlGecFTka4NsHEhAtQDt
+ HZicvMCQmRvl+qGxz0qK+iRq4p72zU8xceuudwJcvKidxrzHgnzCT4Y+8x3FRkMXbQ5v6Q7u9
+ SSycZcq3QThgY+cqNtWobwxK966RNW1vrhA5XDVHA1CVtSX6upZFFLPuhmcVsvulCKzQ2qP2M
+ LDj9avTFs5chUFm/gDbaFBEOM4NkNJdezH7T4AUvD8pG59fUIm3DHx/h4SQsEDKLgLT6EqZ3H
+ P952jEWmxC57NMwFoasPc6fNWEhtQ1B760KsB7VlyWjX3mOLaLjFlGIA4kyDnY1GwKxCLN4QG
+ H1PxBafNWjdEartrUVdpoUbi6zjUVJuwhwx2TAFwv2MkWuRMYaQBxI6+nhqkaKAerFZE/LlwL
+ jtfTJs2JUlc1L24dpV2zgwkcKAtgTZywKVXWdQcCvqhNaMW0mp3rO4JAUpgeLr0hxIQpdTAO5
+ O/jAy1LOS3QmS1xotQ+ax56NH6AOZ3E/fihRXg57hc5Amg0CMAH5DsmJCEz3WfLo9udj8Re3G
+ 9xkfLmAk1xop/P4O/gOjM7Tte2SL3QhWv9w0Wn/fOdcQZxI8DrZZr7JDgT912TIcdEbDGTZSE
+ WTu6DjSPO4fqTOGvWm2xHA+SMydVE0x12bdTiOUn98m5DEEImxaedJSrZCqTo3Bw7SBYojglR
+ IvB6nOzgkaWWKg6q4+sPJcRSdDGzGqYkSfINRQC+N9oASahReFLKqJ8nYQgI/AbpAlCrR4VOc
+ RDuIdohHgJrCD7KljUSpVL1BKw2nCnCJOJFE7aeOXEO5b4Qx6ymRn3FBMgPoN+mVTyX3HqaT8
+ hvXEtgEJ60QpHT7R7r5YbhWjlMsO77MrejM6FmbhJwIaqYi8dfKm8v2ulSpuXStJPssUyomA/
+ JyO0H50dXdunm1QfHFcMzJHAwXPaH+OOJmgz1zWfGAApvXSsXzzg8Zb5Bgn6gS6kflNlRhQcw
+ q9b0Jl5nLtAu95qjt
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+* Don't list powerpc twice (once as ppc)
+* Drop tile, which has been removed from the source tree
+* Mention arm64, nds32, arc, and xtensa
 
-Pass cond argument to list_for_each_entry_rcu() to fix the
-following false positive lockdep warning and other uses of
-list_for_each_entry_rcu() in wakeup.c.
-(CONFIG_PROVE_RCU_LIST = y)
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/dev-tools/kmemleak.rst | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-[  331.934648] =============================
-[  331.934650] WARNING: suspicious RCU usage
-[  331.934653] 5.6.0-rc1+ #5 Not tainted
-[  331.934655] -----------------------------
-[  331.934657] drivers/base/power/wakeup.c:408 RCU-list traversed in non-reader section!!
+diff --git a/Documentation/dev-tools/kmemleak.rst b/Documentation/dev-tool=
+s/kmemleak.rst
+index 3a289e8a1d12..fce262883984 100644
+=2D-- a/Documentation/dev-tools/kmemleak.rst
++++ b/Documentation/dev-tools/kmemleak.rst
+@@ -8,7 +8,8 @@ with the difference that the orphan objects are not freed =
+but only
+ reported via /sys/kernel/debug/kmemleak. A similar method is used by the
+ Valgrind tool (``memcheck --leak-check``) to detect the memory leaks in
+ user-space applications.
+-Kmemleak is supported on x86, arm, powerpc, sparc, sh, microblaze, ppc, m=
+ips, s390 and tile.
++Kmemleak is supported on x86, arm, arm64, powerpc, sparc, sh, microblaze,=
+ mips,
++s390, nds32, arc and xtensa.
 
-[  333.025156] =============================
-[  333.025161] WARNING: suspicious RCU usage
-[  333.025168] 5.6.0-rc1+ #5 Not tainted
-[  333.025173] -----------------------------
-[  333.025180] drivers/base/power/wakeup.c:424 RCU-list traversed in non-reader section!!
-
-Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
----
- drivers/base/power/wakeup.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 27f3e60608e5..7e33a8d829dc 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -24,6 +24,9 @@ suspend_state_t pm_suspend_target_state;
- #define pm_suspend_target_state	(PM_SUSPEND_ON)
- #endif
- 
-+#define list_for_each_entry_rcu_locked(pos, head, member) \
-+	list_for_each_entry_rcu(pos, head, member, \
-+		srcu_read_lock_held(&wakeup_srcu))
- /*
-  * If set, the suspend/hibernate code will abort transitions to a sleep state
-  * if wakeup events are registered during or immediately before the transition.
-@@ -405,7 +408,7 @@ void device_wakeup_arm_wake_irqs(void)
- 	int srcuidx;
- 
- 	srcuidx = srcu_read_lock(&wakeup_srcu);
--	list_for_each_entry_rcu(ws, &wakeup_sources, entry)
-+	list_for_each_entry_rcu_locked(ws, &wakeup_sources, entry)
- 		dev_pm_arm_wake_irq(ws->wakeirq);
- 	srcu_read_unlock(&wakeup_srcu, srcuidx);
- }
-@@ -421,7 +424,7 @@ void device_wakeup_disarm_wake_irqs(void)
- 	int srcuidx;
- 
- 	srcuidx = srcu_read_lock(&wakeup_srcu);
--	list_for_each_entry_rcu(ws, &wakeup_sources, entry)
-+	list_for_each_entry_rcu_locked(ws, &wakeup_sources, entry)
- 		dev_pm_disarm_wake_irq(ws->wakeirq);
- 	srcu_read_unlock(&wakeup_srcu, srcuidx);
- }
-@@ -874,7 +877,7 @@ void pm_print_active_wakeup_sources(void)
- 	struct wakeup_source *last_activity_ws = NULL;
- 
- 	srcuidx = srcu_read_lock(&wakeup_srcu);
--	list_for_each_entry_rcu(ws, &wakeup_sources, entry) {
-+	list_for_each_entry_rcu_locked(ws, &wakeup_sources, entry) {
- 		if (ws->active) {
- 			pm_pr_dbg("active wakeup source: %s\n", ws->name);
- 			active = 1;
-@@ -1025,7 +1028,7 @@ void pm_wakep_autosleep_enabled(bool set)
- 	int srcuidx;
- 
- 	srcuidx = srcu_read_lock(&wakeup_srcu);
--	list_for_each_entry_rcu(ws, &wakeup_sources, entry) {
-+	list_for_each_entry_rcu_locked(ws, &wakeup_sources, entry) {
- 		spin_lock_irq(&ws->lock);
- 		if (ws->autosleep_enabled != set) {
- 			ws->autosleep_enabled = set;
-@@ -1104,7 +1107,7 @@ static void *wakeup_sources_stats_seq_start(struct seq_file *m,
- 	}
- 
- 	*srcuidx = srcu_read_lock(&wakeup_srcu);
--	list_for_each_entry_rcu(ws, &wakeup_sources, entry) {
-+	list_for_each_entry_rcu_locked(ws, &wakeup_sources, entry) {
- 		if (n-- <= 0)
- 			return ws;
- 	}
--- 
-2.17.1
+ Usage
+ -----
+=2D-
+2.20.1
 
