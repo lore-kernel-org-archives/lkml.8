@@ -2,93 +2,111 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C79C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12980C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E4C20866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:52:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2D1E20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:56:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="ONFZwebO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zrXbi+1X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbgCCJwY (ORCPT
+        id S1727846AbgCCJ4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:52:24 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34397 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727820AbgCCJwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:52:24 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WskF721yz9sRR;
-        Tue,  3 Mar 2020 20:52:21 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1583229142;
-        bh=Vn8yx1vqIZSvptmQMeeChkpykb4Gd+dJ6/ZPDLdhV2Y=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=ONFZwebOWNefVNSTqvVn/BXSyDwOLi7R5m+Sz74TQ9rktEzbSx3jI9Mm1ibrxkyIQ
-         kqMYuh9TgzSJlFqOEgos5GKTsol5YPczZGJ2DH8Q5kQw1YXAXUSF162+rXtsx2cBoE
-         Essy42eaVAXr9+UM0EOlU7MZAl2uVm70IzYFzbMVywr6+F9l0UBAcJogj7XwrPPIWW
-         wJud3siIgP9D8rp3PbUCRVd/qbQf4N3Ip3MXCsZQFr7LNpyVNVN5YxhSKYy6kTs7sw
-         gOBKz97zD5t2ld/9tCt4uPEuRGLLlqrsauRnXJlWrA8Ps3SYGXF9Kf1t/8vpg8RB5D
-         0emccjJ3WMp6g==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Oliver O'Halloran <oohall@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Subject: Re: [PATCH 6/6] powerpc: powernv: no need to check return value of debugfs_create functions
-In-Reply-To: <CAOSf1CEKwjDkp-=SMjmJfQirxdGCkadougZbdDS6FK1muNNCZw@mail.gmail.com>
-References: <20200209105901.1620958-1-gregkh@linuxfoundation.org> <20200209105901.1620958-6-gregkh@linuxfoundation.org> <CAOSf1CEKwjDkp-=SMjmJfQirxdGCkadougZbdDS6FK1muNNCZw@mail.gmail.com>
-Date:   Tue, 03 Mar 2020 20:52:20 +1100
-Message-ID: <87a74xsr3f.fsf@mpe.ellerman.id.au>
+        Tue, 3 Mar 2020 04:56:19 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:47656 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgCCJ4T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:56:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=xjAYzYZJidsTEHXSs//Oe4SJs+qAxcjB8dKxwUENenQ=; b=zrXbi+1XYsYg1hOUfgotstGR1s
+        A/yiklisppTF0E9uRLa0vly9Whs1m5MF6QXAFqbz0RIOZTQ3IBkvmXEsEzAH7H4G/eUNCE9COhaKf
+        Jt1sB06ShmrP6pL5etFIXieKzux9rI1PRF59uv6SLpF0G2BI2GBcdWRCspKTvO/2p1jLRtrNUi6Sh
+        HA8kSw8UO5dmWtltons0CLJ0nXm+Y659s9TY0lr4a4KSUKIjb7SJaBWwJIkbCrpzdLCOQb8EEI+W+
+        eVFHzpAPkRg2pOXnstpM7fhlRyhkazF7U53uvuy8CCxYkEUPSwaZ6iuVSdlA2OHKAJpd7ZHKu3O6I
+        dRuWKx+w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j94Gm-0001E5-NN; Tue, 03 Mar 2020 09:55:20 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8918A30110E;
+        Tue,  3 Mar 2020 10:53:16 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 780FD2119B2EB; Tue,  3 Mar 2020 10:55:14 +0100 (CET)
+Date:   Tue, 3 Mar 2020 10:55:14 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        kernel-hardening@lists.openwall.com, kristen@linux.intel.com,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
+Message-ID: <20200303095514.GA2596@hirez.programming.kicks-ass.net>
+References: <20200228000105.165012-1-thgarnie@chromium.org>
+ <202003022100.54CEEE60F@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003022100.54CEEE60F@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Oliver O'Halloran" <oohall@gmail.com> writes:
-> On Mon, Feb 10, 2020 at 12:12 AM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
->>
->> When calling debugfs functions, there is no need to ever check the
->> return value.  The function can work or not, but the code logic should
->> never do something different based on this.
->
-> For memtrace debugfs is the only way to actually use the feature. It'd
-> be nice if it still printed out *something* if it failed to create the
-> files rather than just being mysteriously absent
+On Mon, Mar 02, 2020 at 09:02:15PM -0800, Kees Cook wrote:
+> On Thu, Feb 27, 2020 at 04:00:45PM -0800, Thomas Garnier wrote:
+> > Minor changes based on feedback and rebase from v10.
+> > 
+> > Splitting the previous serie in two. This part contains assembly code
+> > changes required for PIE but without any direct dependencies with the
+> > rest of the patchset.
+> > 
+> > Note: Using objtool to detect non-compliant PIE relocations is not yet
+> > possible as this patchset only includes the simplest PIE changes.
+> > Additional changes are needed in kvm, xen and percpu code.
+> > 
+> > Changes:
+> >  - patch v11 (assembly);
+> >    - Fix comments on x86/entry/64.
+> >    - Remove KASLR PIE explanation on all commits.
+> >    - Add note on objtool not being possible at this stage of the patchset.
+> 
+> This moves us closer to PIE in a clean first step. I think these patches
+> look good to go, and unblock the work in kvm, xen, and percpu code. Can
+> one of the x86 maintainers pick this series up?
 
-That's true, but the current code doesn't actually do that anyway.
+But,... do we still need this in the light of that fine-grained kaslr
+stuff?
 
->> diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
->> index eb2e75dac369..d6d64f8718e6 100644
->> --- a/arch/powerpc/platforms/powernv/memtrace.c
->> +++ b/arch/powerpc/platforms/powernv/memtrace.c
->> @@ -187,11 +187,6 @@ static int memtrace_init_debugfs(void)
->>
->>                 snprintf(ent->name, 16, "%08x", ent->nid);
->>                 dir = debugfs_create_dir(ent->name, memtrace_debugfs_dir);
->> -               if (!dir) {
->> -                       pr_err("Failed to create debugfs directory for node %d\n",
->> -                               ent->nid);
->> -                       return -1;
->> -               }
-
-debugfs_create_dir() doesn't return NULL on error, it returns
-ERR_PTR(-ENOMEM), which will not trigger that pr_err().
-
-So I've merged this and if someone wants to they can send a follow-up to
-do proper error checking in memtrace.c
-
-cheers
+What is the actual value of this PIE crud in the face of that?
