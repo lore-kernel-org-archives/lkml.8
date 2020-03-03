@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2CA3C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E476C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 706932146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0AD8214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257590;
-	bh=ZgrOXiqRzy5igwgxlz+b0I01l7sWc+pNE3y9vXxcG64=;
+	s=default; t=1583257593;
+	bh=Wn/4Yi/m96hOLe/jzp6H24+r/KiD9+YMjhMDtg05hG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VVN1jgmHTZNorp7PKUoOVg6SVu0dUQis9K+80mx35WNOltixMeSz2Yc7+A+Cyum/z
-	 zgLKnknHyzYn4HlDtfCRIY8TOgEM8wKiJe9kmDfL8MYh1dImiX3CmqxhpZt3X1uU/R
-	 /L0uXSEuUghMVCVntT1tTWkBHeeUqSoebq24pQRQ=
+	b=lk1zDCeU74nwAMR9w6Mi/s9cyezdF457i1wioQzenLlmVmswDNRs+JJO4EqUVEMkP
+	 LROTqy93ioH4gbjxLN6NdcnljqPUjnr4mACPuHCf52s8UZnwNxVRYeLus5La9zzDzN
+	 zqsrZmwsLgO0vc1RSPP1dx2bbnEFliJFv8GKk0qg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731154AbgCCRq3 (ORCPT
+        id S1731167AbgCCRqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:46:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53008 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:46:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731129AbgCCRq0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:46:26 -0500
+        id S1731155AbgCCRq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:46:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2B21208C3;
-        Tue,  3 Mar 2020 17:46:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FF20208C3;
+        Tue,  3 Mar 2020 17:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257586;
-        bh=ZgrOXiqRzy5igwgxlz+b0I01l7sWc+pNE3y9vXxcG64=;
+        s=default; t=1583257588;
+        bh=Wn/4Yi/m96hOLe/jzp6H24+r/KiD9+YMjhMDtg05hG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1wM9NWNOyz5ir7s9nt9FHtWjpOV7/9bpd26DJdvHdAM+O0bTEdUBj7OCS46JLQAQG
-         he8vNUcDNp3ZCICDfUro0awjfvED8lOb3htrrs4yJSpguBVvV4M8RZP4dhhmIS5tIK
-         Nr0sX3iEwI6r+sOC0DzyJVA5ieUfskGD1zGTFliE=
+        b=bUaGmzHXIhUdYoI3r7TbjltGTTRl1X46mEbJYm1V8NHGZR0xEWeiK+WL8mnVZq98j
+         W+ors46T2unnGmIaKGnji1cT4c+RCTGFAQKJcEMsgrlAwt4jNFZRZfhrHWySXjdtUh
+         f1hC+8rqpEfAE3J8EHZvgOXtwNzzMkx3B48YvbK8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Brett Creeley <brett.creeley@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 052/176] i40e: Fix the conditional for i40e_vc_validate_vqs_bitmaps
-Date:   Tue,  3 Mar 2020 18:41:56 +0100
-Message-Id: <20200303174310.559819072@linuxfoundation.org>
+Subject: [PATCH 5.5 053/176] net: ena: fix potential crash when rxfh key is NULL
+Date:   Tue,  3 Mar 2020 18:41:57 +0100
+Message-Id: <20200303174310.665950959@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,47 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brett Creeley <brett.creeley@intel.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit f27f37a04a69890ac85d9155f03ee2d23b678d8f ]
+[ Upstream commit 91a65b7d3ed8450f31ab717a65dcb5f9ceb5ab02 ]
 
-Commit d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap
-validation") introduced a necessary change for verifying how queue
-bitmaps from the iavf driver get validated. Unfortunately, the
-conditional was reversed. Fix this.
+When ethtool -X is called without an hkey, ena_com_fill_hash_function()
+is called with key=NULL, which is passed to memcpy causing a crash.
 
-Fixes: d9d6a9aed3f6 ("i40e: Fix virtchnl_queue_select bitmap validation")
-Signed-off-by: Brett Creeley <brett.creeley@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+This commit fixes this issue by checking key is not NULL.
+
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-index 69523ac85639e..56b9e445732ba 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_virtchnl_pf.c
-@@ -2362,7 +2362,7 @@ static int i40e_vc_enable_queues_msg(struct i40e_vf *vf, u8 *msg)
- 		goto error_param;
- 	}
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index ea62604fdf8ca..e54c44fdcaa73 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -2297,15 +2297,16 @@ int ena_com_fill_hash_function(struct ena_com_dev *ena_dev,
  
--	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
-+	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
- 		aq_ret = I40E_ERR_PARAM;
- 		goto error_param;
- 	}
-@@ -2424,7 +2424,7 @@ static int i40e_vc_disable_queues_msg(struct i40e_vf *vf, u8 *msg)
- 		goto error_param;
- 	}
- 
--	if (i40e_vc_validate_vqs_bitmaps(vqs)) {
-+	if (!i40e_vc_validate_vqs_bitmaps(vqs)) {
- 		aq_ret = I40E_ERR_PARAM;
- 		goto error_param;
- 	}
+ 	switch (func) {
+ 	case ENA_ADMIN_TOEPLITZ:
+-		if (key_len > sizeof(hash_key->key)) {
+-			pr_err("key len (%hu) is bigger than the max supported (%zu)\n",
+-			       key_len, sizeof(hash_key->key));
+-			return -EINVAL;
++		if (key) {
++			if (key_len != sizeof(hash_key->key)) {
++				pr_err("key len (%hu) doesn't equal the supported size (%zu)\n",
++				       key_len, sizeof(hash_key->key));
++				return -EINVAL;
++			}
++			memcpy(hash_key->key, key, key_len);
++			rss->hash_init_val = init_val;
++			hash_key->keys_num = key_len >> 2;
+ 		}
+-
+-		memcpy(hash_key->key, key, key_len);
+-		rss->hash_init_val = init_val;
+-		hash_key->keys_num = key_len >> 2;
+ 		break;
+ 	case ENA_ADMIN_CRC32:
+ 		rss->hash_init_val = init_val;
 -- 
 2.20.1
 
