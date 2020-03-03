@@ -2,117 +2,79 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A087EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D05C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E5A120870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:59:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jCHZxkko"
+	by mail.kernel.org (Postfix) with ESMTP id 880A820866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:59:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727939AbgCCX7l (ORCPT
+        id S1728154AbgCCX7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 18:59:41 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:41199 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727274AbgCCX7k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 18:59:40 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y17so4301838lfe.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 15:59:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Ep7YwJ1cSlx/EG1MvH0nW0IG2SdE9N1g2AvP7NSxP1Q=;
-        b=jCHZxkkoQbFtzw3oJIeqzx3ybE1ypCB/gQqxwJX7mDyeDnNo2othEGc6L7RReLgt6f
-         E7wyMQE8emqs/hMxJNkC0eowip7GM2a77vD4uT6RSzEYmb4mCTCqFqb0LAURWhyIm0rR
-         fK42QAAQoFwrVIlXuZnjo1RLe2YDU2CZtGlzykpN7Gm5N0AXDsA6Wzz2PIu6cOY+mkow
-         p96sjfsjOGC9ncXpvwTSKcEctrDMm9kg2wtRF4bClgZEkH/GcDe01WRwFph1VpD2ggKg
-         b1YKHsP1W4ObjWXdfesX8kriJlidMsuO+BIfvrAiLG+JV8V56oQ4yT67AEoXku+9m35J
-         fzig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Ep7YwJ1cSlx/EG1MvH0nW0IG2SdE9N1g2AvP7NSxP1Q=;
-        b=CD0pBCkSLsCrsjZDnnBKZ5ZRpMN4vafqsWl/HPf9Q7XQTPsV2kOM0cMEikeSo2fqcd
-         ICAlaiIrTVeS2q6z6gKEviJ5c9uKuYTCXhj0gsNFGmIHHHjs9dRYpbZbqDZESFjCP+K4
-         QBG/SFZjuDtuzSdsIiuDpbaocONmV4unynN84cveo7SvqHYjfMRn5puc7yF4Vbsp5MFt
-         2cCP2FOPIOgZGcwuJi3uJlO4ozgf47vM7xPBfpJ9DR00NG+pdttyD2zr+WoCnYXTLJR4
-         ucA2WCdU0MBmMiznvXXCKSsA5XWa7m6g6aNGnjGolba9ptGML7QE0krKxeaNd1nGW0G3
-         cUwQ==
-X-Gm-Message-State: ANhLgQ1g3RwSuaT1IiyUfBlqbHLEpRKIcay5CrXgrvkOuRIOv4EDgnKq
-        lGIGl+6akbuGJ7ueh1VlepRyw2xFo2kn+fnPyRLawKefkMQ=
-X-Google-Smtp-Source: ADFU+vsYdW1PWvdtTgFwZdS0gcHuzS2Ejh4OwwOiq2uZGhxcRiL165XFJD8NN5wd2hf6HXHJ7Ikk/4Cf5nRu7kPpYg0=
-X-Received: by 2002:ac2:5f7c:: with SMTP id c28mr248231lfc.204.1583279978879;
- Tue, 03 Mar 2020 15:59:38 -0800 (PST)
+        Tue, 3 Mar 2020 18:59:48 -0500
+Received: from mga07.intel.com ([134.134.136.100]:48033 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728079AbgCCX7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 18:59:46 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 15:59:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="287159299"
+Received: from skuppusw-mobl5.amr.corp.intel.com (HELO [10.24.9.56]) ([10.24.9.56])
+  by FMSMGA003.fm.intel.com with ESMTP; 03 Mar 2020 15:59:45 -0800
+Subject: Re: [PATCH v16 3/9] PCI/ERR: Remove service dependency in
+ pcie_do_recovery()
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ashok.raj@intel.com
+References: <20200303170442.GA89997@google.com>
+From:   "Kuppuswamy, Sathyanarayanan" 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <0059035b-2339-fa52-667f-7b9bbdd34ee8@linux.intel.com>
+Date:   Tue, 3 Mar 2020 15:59:45 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200303005645.237763-1-rajatja@google.com> <fe4e0010826d4d18843b148dc088c2b01c7e2072.camel@hadess.net>
-In-Reply-To: <fe4e0010826d4d18843b148dc088c2b01c7e2072.camel@hadess.net>
-From:   Rajat Jain <rajatja@google.com>
-Date:   Tue, 3 Mar 2020 15:59:02 -0800
-Message-ID: <CACK8Z6HFC6Vx8NcnZ1Hi7btxdEpsNjumWTyDkufVMtOunOPjuQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] Input: Add keycodes for keyboard backlight control
-To:     Bastien Nocera <hadess@hadess.net>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Dmitry Torokhov <dtor@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200303170442.GA89997@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 12:15 AM Bastien Nocera <hadess@hadess.net> wrote:
->
-> On Mon, 2020-03-02 at 16:56 -0800, Rajat Jain wrote:
-> > New keyboards can have backlight control keys. Allocating keycodes
-> > for them. Such keyboards are already available in ChromeOS.
-> >
-> > Signed-off-by: Rajat Jain <rajatja@google.com>
-> > ---
-> >  include/uapi/linux/input-event-codes.h | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/input-event-codes.h
-> > b/include/uapi/linux/input-event-codes.h
-> > index 0f1db1cccc3fd..e12a19dc30262 100644
-> > --- a/include/uapi/linux/input-event-codes.h
-> > +++ b/include/uapi/linux/input-event-codes.h
-> > @@ -652,6 +652,10 @@
-> >  /* Electronic privacy screen control */
-> >  #define KEY_PRIVACY_SCREEN_TOGGLE    0x279
-> >
-> > +/* Keyboard Backlight control */
-> > +#define KEY_KBD_BKLIGHT_UP              0x280
-> > +#define KEY_KBD_BKLIGHT_DOWN            0x281
->
-> There's already KEY_KBDILLUMDOWN and KEY_KBDILLUMUP, used since the
-> aluminium PowerBook G4 in 2005 (commit
-> 146a4b3bdfb5641bfbf975e29680b482b8b343ba)
+Hi Bjorn,
 
-Thank you for pointing out. Yes, I think those key codes will work for
-me. I will use those instead.
+On 3/3/2020 9:04 AM, Bjorn Helgaas wrote:
+> On Thu, Feb 27, 2020 at 04:59:45PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
+>> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+>>
+>> Currently we pass PCIe service type parameter to pcie_do_recovery()
+>> function which was in-turn used by reset_link() function to identify
+>> the underlying pci_port_service_driver and then initiate the driver
+>> specific reset_link call. Instead of using this roundabout way, we
+>> can just pass the driver specific reset_link callback function when
+>> calling pcie_do_recovery() function.
+> 
+> I love this!  And I think pcie_port_find_service() is now unused.  I
+> can add a patch to remove it.
+I can submit a patch to remove it in next version.
 
-Please consider this patch withdrawn.
+Along with this, I think we also need to remove reset_link pointer from 
+pcie_port_service_driver. Also we need to make relevant changes in 
+Documentation/PCI/pcieaer-howto.rst as well.
 
-Thanks & Best Regards,
+I will wait for you to review rest of the patches before sending the 
+next version. Please let me know if you want me to just fix this and 
+send it.
 
-Rajat Jain
-
->
-> > +
-> >  /*
-> >   * Some keyboards have keys which do not have a defined meaning,
-> > these keys
-> >   * are intended to be programmed / bound to macros by the user. For
-> > most
->
+> -- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
