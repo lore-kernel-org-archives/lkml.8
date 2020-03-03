@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3B3DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A68FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA77C20728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0944206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257913;
-	bh=WfzeI94fS+gc37RIiNNQGbYoTUUCUwAIis3PYtelong=;
+	s=default; t=1583257916;
+	bh=2o5tI0QQbtYWwGNX7U5m4+4KDXD+MHoW19fv1Xr8ZPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QhR5AUHz4SR9bnkQ3Fe8OrEeTiWAaWKFJ64T7zOL0MHvcRccv+3IfgFyIPXi44rmT
-	 I22QRpxHKp3nINe8U3YyUHiysSk5DeZ0mvu/+w3klW/Uvu9d363JeSxTjFQgZ0sfmv
-	 ckhujRtUHJV4qKvNOJvDxg7vtW5or6bUnp8bNrvI=
+	b=BfAARro2pX7FVonMr0lZaFe3yT+wLKJhzD/kUpeYa4WWabOfiAYgm5koeFgCAfpqz
+	 ZSlmsqFi1qdMtGOw8WznrW4Pw1IoX+OSZmSPO8kwyoILKpsPS1rRSUP91pOb1vhb4Q
+	 uP8jPCQy2B16KFASeT+bmTzHSMe6XdU2OvuiQIUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732059AbgCCRvw (ORCPT
+        id S1732068AbgCCRvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:51:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60062 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:51:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729853AbgCCRvu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:50 -0500
+        id S1732060AbgCCRvx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:53 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00C632146E;
-        Tue,  3 Mar 2020 17:51:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C884206D5;
+        Tue,  3 Mar 2020 17:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257909;
-        bh=WfzeI94fS+gc37RIiNNQGbYoTUUCUwAIis3PYtelong=;
+        s=default; t=1583257912;
+        bh=2o5tI0QQbtYWwGNX7U5m4+4KDXD+MHoW19fv1Xr8ZPY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uW5PoP0ILuiEq9tWP4k41kWGKWpFc2GoOv7D6Mw/YBtiL/IQEe8PFhDEzLpIAwVA2
-         vfXGDADoEpz5UP6yy4DPvHpU7WC9UuO8YbgkZdWd0sgsSOUzVTRX3ht0Wi/5hNk2r7
-         bbsBACnEjN9oPcbR6t+DUhcNztIHdDrF6qu0eUUs=
+        b=Pr8r3JTOZMC823rQ6LolZENUnluQWVB0fm3uCke0cMOJBD/SVR+aiOZsJVyqMWxaO
+         s01PGzJZz/u/XVF4uvf1z7Px4yAxHfPk+5RN/96u+v0iIq0mIEC65JWmfEmEKcUe4x
+         qfAfzCmfYUqmWDkYmCtNG36wdqmW+CWo7mnS8cjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>,
-        Jon Cargille <jcargill@google.com>
-Subject: [PATCH 5.5 176/176] kvm: nVMX: VMWRITE checks unsupported field before read-only field
-Date:   Tue,  3 Mar 2020 18:44:00 +0100
-Message-Id: <20200303174324.138623964@linuxfoundation.org>
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.5 165/176] netfilter: nf_flowtable: fix documentation
+Date:   Tue,  3 Mar 2020 18:43:49 +0100
+Message-Id: <20200303174323.235372209@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,55 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Matteo Croce <mcroce@redhat.com>
 
-commit 693e02cc24090c379217138719d9d84e50036b24 upstream.
+commit 78e06cf430934fc3768c342cbebdd1013dcd6fa7 upstream.
 
-According to the SDM, VMWRITE checks to see if the secondary source
-operand corresponds to an unsupported VMCS field before it checks to
-see if the secondary source operand corresponds to a VM-exit
-information field and the processor does not support writing to
-VM-exit information fields.
+In the flowtable documentation there is a missing semicolon, the command
+as is would give this error:
 
-Fixes: 49f705c5324aa ("KVM: nVMX: Implement VMREAD and VMWRITE")
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Oliver Upton <oupton@google.com>
-Reviewed-by: Jon Cargille <jcargill@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+    nftables.conf:5:27-33: Error: syntax error, unexpected devices, expecting newline or semicolon
+                    hook ingress priority 0 devices = { br0, pppoe-data };
+                                            ^^^^^^^
+    nftables.conf:4:12-13: Error: invalid hook (null)
+            flowtable ft {
+                      ^^
+
+Fixes: 19b351f16fd9 ("netfilter: add flowtable documentation")
+Signed-off-by: Matteo Croce <mcroce@redhat.com>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ Documentation/networking/nf_flowtable.txt |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4940,6 +4940,12 @@ static int handle_vmwrite(struct kvm_vcp
+--- a/Documentation/networking/nf_flowtable.txt
++++ b/Documentation/networking/nf_flowtable.txt
+@@ -76,7 +76,7 @@ flowtable and add one rule to your forwa
  
- 
- 	field = kvm_register_readl(vcpu, (((vmx_instruction_info) >> 28) & 0xf));
-+
-+	offset = vmcs_field_to_offset(field);
-+	if (offset < 0)
-+		return nested_vmx_failValid(vcpu,
-+			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
-+
- 	/*
- 	 * If the vCPU supports "VMWRITE to any supported field in the
- 	 * VMCS," then the "read-only" fields are actually read/write.
-@@ -4956,11 +4962,6 @@ static int handle_vmwrite(struct kvm_vcp
- 	if (!is_guest_mode(vcpu) && !is_shadow_field_rw(field))
- 		copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
- 
--	offset = vmcs_field_to_offset(field);
--	if (offset < 0)
--		return nested_vmx_failValid(vcpu,
--			VMXERR_UNSUPPORTED_VMCS_COMPONENT);
--
- 	/*
- 	 * Some Intel CPUs intentionally drop the reserved bits of the AR byte
- 	 * fields on VMWRITE.  Emulate this behavior to ensure consistent KVM
+         table inet x {
+ 		flowtable f {
+-			hook ingress priority 0 devices = { eth0, eth1 };
++			hook ingress priority 0; devices = { eth0, eth1 };
+ 		}
+                 chain y {
+                         type filter hook forward priority 0; policy accept;
 
 
