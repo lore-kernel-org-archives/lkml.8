@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04682C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8AAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C465921739
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 494BD2465E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204573;
-	bh=TRhJge8rXSTVwiWtVyAVL2+zDSITLcul7kvtQLFQMYw=;
+	s=default; t=1583204577;
+	bh=xbprZq1vSIfI+nurrzi56EZK4Gvb28onAXYXGcf0sAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XB6SHlEYQCFnJNVovqtwNDmjlXpAMab7j+vfL+YKZPGSghiFx3HAlRUblMoFszYWw
-	 OJz/0po5MsL2BL+MzpueV5YPthqkbxFdRhIawgar6exz3rL2SHgsREtbg6jAFEpGz9
-	 yQjj3s4zmHs6MVSnjlDa0hS8plCs45ZwRG4xYFkM=
+	b=nYLYWsBkjPQuEqr37MM15uh9QUBRrr8KDkB1tyX3f/Cunjd5JP36UmYfGJKV4j2Dn
+	 LlEO//gtXC5ZvlTRMh0tp8QN/9lKDt79XXO3SQosi5O1y8522D4h7KZDOIny4TVBgJ
+	 i8vk/53SXSQCId2qb/lfkrHQ+W71GqnxRbl0ptDM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbgCCCqk (ORCPT
+        id S1727556AbgCCCqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:46:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40990 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:46:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727517AbgCCCqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:46:34 -0500
+        id S1727481AbgCCCqa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86F2524673;
-        Tue,  3 Mar 2020 02:46:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F3E724677;
+        Tue,  3 Mar 2020 02:46:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203594;
-        bh=TRhJge8rXSTVwiWtVyAVL2+zDSITLcul7kvtQLFQMYw=;
+        s=default; t=1583203589;
+        bh=xbprZq1vSIfI+nurrzi56EZK4Gvb28onAXYXGcf0sAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwkQXvPNca91SWgnweGE8Om4bw6JPObRMPyoLF4WhJycbIoySCUPTiVZHeuA46dar
-         SvkNFJlT8bP5wii9ts/6uTgc/jrntxozg8f0Pdn2N7NYSwlYSWV+PmwsSk1MVMKfhn
-         mJApa0utnqGcbbPxwsLOZEP4idLzAs298laXvqlQ=
+        b=QXr9elIKqnbhsgVOS6Drpt0XOkjEwAOKG+RoN1ignxxYY9RnWrRfII6AJBTTsF+wb
+         iErm0v7ifuC97lnx8+tVi9Vc39z6YjLDLbB7EijkDLahPquDxP9y9vqfEB10PsSwQh
+         TS/HKeoPx0SkI91l9nw8Q6VEweaaNybQG3HyUQy8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stephan Gerhold <stephan@gerhold.net>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH AUTOSEL 5.5 15/66] drm/modes: Allow DRM_MODE_ROTATE_0 when applying video mode parameters
-Date:   Mon,  2 Mar 2020 21:45:24 -0500
-Message-Id: <20200303024615.8889-15-sashal@kernel.org>
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 12/66] drm/msm/mdp5: rate limit pp done timeout warnings
+Date:   Mon,  2 Mar 2020 21:45:21 -0500
+Message-Id: <20200303024615.8889-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -60,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephan Gerhold <stephan@gerhold.net>
+From: Brian Masney <masneyb@onstation.org>
 
-[ Upstream commit 5c320b6ce7510653bce68cecf80cf5b2d67e907f ]
+[ Upstream commit ef8c9809acb0805c991bba8bdd4749fc46d44a98 ]
 
-At the moment, only DRM_MODE_ROTATE_180 is allowed when we try to apply
-the rotation from the video mode parameters. It is also useful to allow
-DRM_MODE_ROTATE_0 in case there is only a reflect option in the video mode
-parameter (e.g. video=540x960,reflect_x).
+Add rate limiting of the 'pp done time out' warnings since these
+warnings can quickly fill the dmesg buffer.
 
-DRM_MODE_ROTATE_0 means "no rotation" and should therefore not require
-any special handling, so we can just add it to the if condition.
-
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200117153429.54700-3-stephan@gerhold.net
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_client_modeset.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_client_modeset.c b/drivers/gpu/drm/drm_client_modeset.c
-index 6d4a29e99ae26..3035584f6dc72 100644
---- a/drivers/gpu/drm/drm_client_modeset.c
-+++ b/drivers/gpu/drm/drm_client_modeset.c
-@@ -951,7 +951,8 @@ bool drm_client_rotation(struct drm_mode_set *modeset, unsigned int *rotation)
- 	 * depending on the hardware this may require the framebuffer
- 	 * to be in a specific tiling format.
- 	 */
--	if ((*rotation & DRM_MODE_ROTATE_MASK) != DRM_MODE_ROTATE_180 ||
-+	if (((*rotation & DRM_MODE_ROTATE_MASK) != DRM_MODE_ROTATE_0 &&
-+	     (*rotation & DRM_MODE_ROTATE_MASK) != DRM_MODE_ROTATE_180) ||
- 	    !plane->rotation_property)
- 		return false;
+diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+index 05cc04f729d63..e1cc541e0ef2e 100644
+--- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
++++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
+@@ -1109,8 +1109,8 @@ static void mdp5_crtc_wait_for_pp_done(struct drm_crtc *crtc)
+ 	ret = wait_for_completion_timeout(&mdp5_crtc->pp_completion,
+ 						msecs_to_jiffies(50));
+ 	if (ret == 0)
+-		dev_warn(dev->dev, "pp done time out, lm=%d\n",
+-			 mdp5_cstate->pipeline.mixer->lm);
++		dev_warn_ratelimited(dev->dev, "pp done time out, lm=%d\n",
++				     mdp5_cstate->pipeline.mixer->lm);
+ }
  
+ static void mdp5_crtc_wait_for_flush_done(struct drm_crtc *crtc)
 -- 
 2.20.1
 
