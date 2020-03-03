@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D222EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA16C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB57020870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4141B20728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258319;
-	bh=ID/GXQTXuDAQaPABtNm17V4BJtPBQdU0jqhKUuDlYp4=;
+	s=default; t=1583258321;
+	bh=sh0b3s9bLsqmhWeiQxrBH/nVixsNoQcyH5HaOhUxV2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XfVlVDef+3Snh5moYlOoLcA6gfJpO89NZQI2vyrB9akbwoiWu4q7luq1EIIjoRZIF
-	 T8G0KPTa8ixiKj+Lg5VezW5qQxxPsFPKw30zYzurPKdAwgnPPCRNAnyGfymHIrJ6fc
-	 YKQxVZpwD/kYtJ7IWYQTtIPQwPxr4q9O+3o0p5yc=
+	b=UcljlczKpvoq6Ev1YITCUzdejja7hiE8FyxKv3Jll/az87rCOXh8qqt7iGyrB5WvC
+	 YB5Jh5fS0VzFGXX8zH3nTUrQ4jbaI8J7M4ZjbeLLxRMh+xAnFvM0Z6zG2kX9+rltEu
+	 X47cfGm3WF8RU1v/kRZFo3au2uWQPo4BfKgV0GQ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387434AbgCCR6i (ORCPT
+        id S2387445AbgCCR6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:58:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41476 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:58:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387427AbgCCR6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:58:36 -0500
+        id S2387427AbgCCR6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:39 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0769206D5;
-        Tue,  3 Mar 2020 17:58:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4D8C120728;
+        Tue,  3 Mar 2020 17:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258316;
-        bh=ID/GXQTXuDAQaPABtNm17V4BJtPBQdU0jqhKUuDlYp4=;
+        s=default; t=1583258318;
+        bh=sh0b3s9bLsqmhWeiQxrBH/nVixsNoQcyH5HaOhUxV2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DkQk+5pH5AuPO9X6O9Zn5utPE4BYYldpNs/IXJJZdaj/g+b0IKC6+aeEBDLlIF91T
-         ZAE/jVuabYs7L8QtOAWsiabQVJqyiuy4hkMKvtm4Wo0kpbnwdCDvlAeCbpnaTepKsc
-         1gfp99k+SD7YneyoUoAAErsgR1mnJ9ZFG0wZm82g=
+        b=uZQAlkM90DQiq449j2JQFRdK7y9S56LYsM1BPSR9BOXKHcDihN8nsrAr4lsMT/WzX
+         uhi/meTmel7oXvGpFPUyWhae8BYhwIQLTRYPi3bufLnXkvDs58SlurATY6d6WExKNt
+         J7jbTqRTtIsXJ/w0+YLn7/n+59KwPyt4VqegkPWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaochen Shen <xiaochen.shen@intel.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.4 134/152] x86/resctrl: Check monitoring static key in the MBM overflow handler
-Date:   Tue,  3 Mar 2020 18:43:52 +0100
-Message-Id: <20200303174318.046809835@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 135/152] KVM: x86: Remove spurious kvm_mmu_unload() from vcpu destruction path
+Date:   Tue,  3 Mar 2020 18:43:53 +0100
+Message-Id: <20200303174318.156741029@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -59,69 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochen Shen <xiaochen.shen@intel.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 536a0d8e79fb928f2735db37dda95682b6754f9a upstream.
+commit 9d979c7e6ff43ca3200ffcb74f57415fd633a2da upstream.
 
-Currently, there are three static keys in the resctrl file system:
-rdt_mon_enable_key and rdt_alloc_enable_key indicate if the monitoring
-feature and the allocation feature are enabled, respectively. The
-rdt_enable_key is enabled when either the monitoring feature or the
-allocation feature is enabled.
+x86 does not load its MMU until KVM_RUN, which cannot be invoked until
+after vCPU creation succeeds.  Given that kvm_arch_vcpu_destroy() is
+called if and only if vCPU creation fails, it is impossible for the MMU
+to be loaded.
 
-If no monitoring feature is present (either hardware doesn't support a
-monitoring feature or the feature is disabled by the kernel command line
-option "rdt="), rdt_enable_key is still enabled but rdt_mon_enable_key
-is disabled.
+Note, the bogus kvm_mmu_unload() call was added during an unrelated
+refactoring of vCPU allocation, i.e. was presumably added as an
+opportunstic "fix" for a perceived leak.
 
-MBM is a monitoring feature. The MBM overflow handler intends to
-check if the monitoring feature is not enabled for fast return.
-
-So check the rdt_mon_enable_key in it instead of the rdt_enable_key as
-former is the more accurate check.
-
- [ bp: Massage commit message. ]
-
-Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/1576094705-13660-1-git-send-email-xiaochen.shen@intel.com
+Fixes: fb3f0f51d92d1 ("KVM: Dynamically allocate vcpus")
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/resctrl/internal.h |    1 +
- arch/x86/kernel/cpu/resctrl/monitor.c  |    4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c |    4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -57,6 +57,7 @@ static inline struct rdt_fs_context *rdt
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9194,10 +9194,6 @@ void kvm_arch_vcpu_destroy(struct kvm_vc
+ {
+ 	vcpu->arch.apf.msr_val = 0;
+ 
+-	vcpu_load(vcpu);
+-	kvm_mmu_unload(vcpu);
+-	vcpu_put(vcpu);
+-
+ 	kvm_arch_vcpu_free(vcpu);
  }
  
- DECLARE_STATIC_KEY_FALSE(rdt_enable_key);
-+DECLARE_STATIC_KEY_FALSE(rdt_mon_enable_key);
- 
- /**
-  * struct mon_evt - Entry in the event list of a resource
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -514,7 +514,7 @@ void mbm_handle_overflow(struct work_str
- 
- 	mutex_lock(&rdtgroup_mutex);
- 
--	if (!static_branch_likely(&rdt_enable_key))
-+	if (!static_branch_likely(&rdt_mon_enable_key))
- 		goto out_unlock;
- 
- 	d = get_domain_from_cpu(cpu, &rdt_resources_all[RDT_RESOURCE_L3]);
-@@ -543,7 +543,7 @@ void mbm_setup_overflow_handler(struct r
- 	unsigned long delay = msecs_to_jiffies(delay_ms);
- 	int cpu;
- 
--	if (!static_branch_likely(&rdt_enable_key))
-+	if (!static_branch_likely(&rdt_mon_enable_key))
- 		return;
- 	cpu = cpumask_any(&dom->cpu_mask);
- 	dom->mbm_work_cpu = cpu;
 
 
