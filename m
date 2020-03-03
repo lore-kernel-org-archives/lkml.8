@@ -2,107 +2,94 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AA0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300CFC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:20:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71C702083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024B320838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:20:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a0+yFjRB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728470AbgCCORs (ORCPT
+        id S1728394AbgCCOUH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:17:48 -0500
-Received: from out30-130.freemail.mail.aliyun.com ([115.124.30.130]:45966 "EHLO
-        out30-130.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727370AbgCCORr (ORCPT
+        Tue, 3 Mar 2020 09:20:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42924 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727311AbgCCOUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:17:47 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TrZAYVM_1583245023;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TrZAYVM_1583245023)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 03 Mar 2020 22:17:18 +0800
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Subject: [RFC PATCH] sched: fix the nonsense shares when load of cfs_rq is
- too, small
-Message-ID: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
-Date:   Tue, 3 Mar 2020 22:17:03 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Tue, 3 Mar 2020 09:20:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583245206;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gP09PkMcAbB+aqERIzsOakmbWC4dSi+WdMqM2DGrLiw=;
+        b=a0+yFjRBD0QTe5dbXgK8CcqR5OwXG4+TExXVz2Qs4HQd6wkVfduN6rseU84/GzJJNRqXXl
+        4fHjK0MJFitsiYAWCNHXNrejWH/9+qcF5BCSeR2pYiQgUjJ6D31JqDAodDop/aVV9mAvYi
+        SAYWJsFqXjNe6s7/6ku1yuMbEdtTWds=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-487-12-YiS5SOA6KUj7hkxmUvw-1; Tue, 03 Mar 2020 09:20:04 -0500
+X-MC-Unique: 12-YiS5SOA6KUj7hkxmUvw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 85E8E802698;
+        Tue,  3 Mar 2020 14:20:02 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD24D101D493;
+        Tue,  3 Mar 2020 14:19:59 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200303141030.GA2811@kroah.com>
+References: <20200303141030.GA2811@kroah.com> <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com> <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net> <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com> <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com> <20200303113814.rsqhljkch6tgorpu@ws.net.home> <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com> <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com> <20200303134316.GA2509660@kroah.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     dhowells@redhat.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Karel Zak <kzak@redhat.com>, Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1657842.1583245198.1@warthog.procyon.org.uk>
+Date:   Tue, 03 Mar 2020 14:19:58 +0000
+Message-ID: <1657843.1583245198@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During our testing, we found a case that shares no longer
-working correctly, the cgroup topology is like:
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-  /sys/fs/cgroup/cpu/A		(shares=102400)
-  /sys/fs/cgroup/cpu/A/B	(shares=2)
-  /sys/fs/cgroup/cpu/A/B/C	(shares=1024)
+> +	fd = do_sys_open(dfd, filename, flags, 0000);
+> +	if (fd <= 0)
+> +		return fd;
+> +
+> +	retval = ksys_read(fd, buffer, bufsize);
+> +
+> +	__close_fd(current->files, fd);
 
-  /sys/fs/cgroup/cpu/D		(shares=1024)
-  /sys/fs/cgroup/cpu/D/E	(shares=1024)
-  /sys/fs/cgroup/cpu/D/E/F	(shares=1024)
+If you can use dentry_open() and vfs_read(), you might be able to avoid
+dealing with file descriptors entirely.  That might make it worth a syscall.
 
-The same benchmark is running in group C & F, no other tasks are
-running, the benchmark is capable to consumed all the CPUs.
+You're going to be asked for writefile() you know ;-)
 
-We suppose the group C will win more CPU resources since it could
-enjoy all the shares of group A, but it's F who wins much more.
-
-The reason is because we have group B with shares as 2, which make
-the group A 'cfs_rq->load.weight' very small.
-
-And in calc_group_shares() we calculate shares as:
-
-  load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-  shares = (tg_shares * load) / tg_weight;
-
-Since the 'cfs_rq->load.weight' is too small, the load become 0
-in here, although 'tg_shares' is 102400, shares of the se which
-stand for group A on root cfs_rq become 2.
-
-While the se of D on root cfs_rq is far more bigger than 2, so it
-wins the battle.
-
-This patch add a check on the zero load and make it as MIN_SHARES
-to fix the nonsense shares, after applied the group C wins as
-expected.
-
-Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
----
- kernel/sched/fair.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 84594f8aeaf8..53d705f75fa4 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3182,6 +3182,8 @@ static long calc_group_shares(struct cfs_rq *cfs_rq)
- 	tg_shares = READ_ONCE(tg->shares);
-
- 	load = max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_avg);
-+	if (!load && cfs_rq->load.weight)
-+		load = MIN_SHARES;
-
- 	tg_weight = atomic_long_read(&tg->load_avg);
-
--- 
-2.14.4.44.g2045bb6
+David
 
