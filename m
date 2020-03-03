@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08484C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09880C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7E772073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85372073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259028;
-	bh=4fp9qbx9F3oLx3ltw+sBpkPbmOlFmAruNUKBp51xmhg=;
+	s=default; t=1583259030;
+	bh=mwvdgSaAumLLSTH4CcBe04nOPmVj/nufXabgBS1mi6k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SzjknI4etREf0eEdJ7s/vUV1dAWZvlKMflndI14OSLsJTuRZ+JyPfaJdv/YjWT8Ck
-	 duCuKMlrU38M37AHzriTWqWO2lY7pO7Hh9kUfi/lZP0wrt9+MYJ7TX4ZoHs8TcyJ+J
-	 BRYKKx5fHEcPimj/Zzwrmc6njWkAO2b3ahOxjOrY=
+	b=zRd0R4LDvtExecXHDlMPwutjVYRWizFp5stzXYrG2qoH9s1j6FU92o31YnB0PhEql
+	 rZDTYfctRVB/qnLnQT8s09orf6oru+iwVvoVe3JFq7w+F7ocVaOEZdjhsvp55WwW0O
+	 ybQBUR/qQNOnJGcoW9M353j3fn9SieVs2IzIHWjg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731608AbgCCRux (ORCPT
+        id S1731601AbgCCRuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:50:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58712 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:50:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731599AbgCCRut (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:50:49 -0500
+        id S1731565AbgCCRup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:50:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5F54206D5;
-        Tue,  3 Mar 2020 17:50:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9BD2214D8;
+        Tue,  3 Mar 2020 17:50:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257849;
-        bh=4fp9qbx9F3oLx3ltw+sBpkPbmOlFmAruNUKBp51xmhg=;
+        s=default; t=1583257844;
+        bh=mwvdgSaAumLLSTH4CcBe04nOPmVj/nufXabgBS1mi6k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MjcfAR2KwrVKcf18u8/+TDeLAJBd0F+navKZP4Z2UTSAHi4iiOg6H8MKyN1V14JFM
-         JoEgeifeS2z0adVUFIcrjRvvZjE6aXXBMzV2ovNbaKHgg12CtVlh+jPvXnu/cv3KXI
-         EUNt2auvGpEBxUuexvM2vQvTcoHt2VGhvGLmDzME=
+        b=t/7tfABG36EJEapjjFk9+LG7qwkVdaBm7ZvgnHCtE1WwS6PYpmojXCOicPhW2lP+X
+         B+Gg+0VuBRbFPcd6J6KmxQLWsZ5kyXPi49Mxpkk4JMek5/5FfnZtA5iWKxUdakaP1n
+         r3O/cwLgNSDWGc8nPBkNqN33RkTFdh+v22ZPBsBo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 5.5 152/176] pwm: omap-dmtimer: put_device() after of_find_device_by_node()
-Date:   Tue,  3 Mar 2020 18:43:36 +0100
-Message-Id: <20200303174322.184115425@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.5 151/176] lib/vdso: Update coarse timekeeper unconditionally
+Date:   Tue,  3 Mar 2020 18:43:35 +0100
+Message-Id: <20200303174322.100950388@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,93 +58,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit c7cb3a1dd53f63c64fb2b567d0be130b92a44d91 upstream.
+commit 9f24c540f7f8eb3a981528da9a9a636a5bdf5987 upstream.
 
-This was found by coccicheck:
+The low resolution parts of the VDSO, i.e.:
 
-	drivers/pwm/pwm-omap-dmtimer.c:304:2-8: ERROR: missing put_device;
-	call of_find_device_by_node on line 255, but without a corresponding
-	object release within this function.
+  clock_gettime(CLOCK_*_COARSE), clock_getres(), time()
 
-Reported-by: Markus Elfring <elfring@users.sourceforge.net>
-Fixes: 6604c6556db9 ("pwm: Add PWM driver for OMAP using dual-mode timers")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
+can be used even if there is no VDSO capable clocksource.
+
+But if an architecture opts out of the VDSO data update then this
+information becomes stale. This affects ARM when there is no architected
+timer available. The lack of update causes userspace to use stale data
+forever.
+
+Make the update of the low resolution parts unconditional and only skip
+the update of the high resolution parts if the architecture requests it.
+
+Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200114185946.765577901@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pwm/pwm-omap-dmtimer.c |   21 +++++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+ kernel/time/vsyscall.c |   37 +++++++++++++++++--------------------
+ 1 file changed, 17 insertions(+), 20 deletions(-)
 
---- a/drivers/pwm/pwm-omap-dmtimer.c
-+++ b/drivers/pwm/pwm-omap-dmtimer.c
-@@ -256,7 +256,7 @@ static int pwm_omap_dmtimer_probe(struct
- 	if (!timer_pdev) {
- 		dev_err(&pdev->dev, "Unable to find Timer pdev\n");
- 		ret = -ENODEV;
--		goto put;
-+		goto err_find_timer_pdev;
- 	}
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -28,11 +28,6 @@ static inline void update_vdso_data(stru
+ 	vdata[CS_RAW].mult			= tk->tkr_raw.mult;
+ 	vdata[CS_RAW].shift			= tk->tkr_raw.shift;
  
- 	timer_pdata = dev_get_platdata(&timer_pdev->dev);
-@@ -264,7 +264,7 @@ static int pwm_omap_dmtimer_probe(struct
- 		dev_dbg(&pdev->dev,
- 			 "dmtimer pdata structure NULL, deferring probe\n");
- 		ret = -EPROBE_DEFER;
--		goto put;
-+		goto err_platdata;
- 	}
+-	/* CLOCK_REALTIME */
+-	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
+-	vdso_ts->sec	= tk->xtime_sec;
+-	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
+-
+ 	/* CLOCK_MONOTONIC */
+ 	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC];
+ 	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+@@ -70,12 +65,6 @@ static inline void update_vdso_data(stru
+ 	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_TAI];
+ 	vdso_ts->sec	= tk->xtime_sec + (s64)tk->tai_offset;
+ 	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
+-
+-	/*
+-	 * Read without the seqlock held by clock_getres().
+-	 * Note: No need to have a second copy.
+-	 */
+-	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
+ }
  
- 	pdata = timer_pdata->timer_ops;
-@@ -283,19 +283,19 @@ static int pwm_omap_dmtimer_probe(struct
- 	    !pdata->write_counter) {
- 		dev_err(&pdev->dev, "Incomplete dmtimer pdata structure\n");
- 		ret = -EINVAL;
--		goto put;
-+		goto err_platdata;
- 	}
+ void update_vsyscall(struct timekeeper *tk)
+@@ -84,20 +73,17 @@ void update_vsyscall(struct timekeeper *
+ 	struct vdso_timestamp *vdso_ts;
+ 	u64 nsec;
  
- 	if (!of_get_property(timer, "ti,timer-pwm", NULL)) {
- 		dev_err(&pdev->dev, "Missing ti,timer-pwm capability\n");
- 		ret = -ENODEV;
--		goto put;
-+		goto err_timer_property;
- 	}
+-	if (!__arch_update_vdso_data()) {
+-		/*
+-		 * Some architectures might want to skip the update of the
+-		 * data page.
+-		 */
+-		return;
+-	}
+-
+ 	/* copy vsyscall data */
+ 	vdso_write_begin(vdata);
  
- 	dm_timer = pdata->request_by_node(timer);
- 	if (!dm_timer) {
- 		ret = -EPROBE_DEFER;
--		goto put;
-+		goto err_request_timer;
- 	}
+ 	vdata[CS_HRES_COARSE].clock_mode	= __arch_get_clock_mode(tk);
+ 	vdata[CS_RAW].clock_mode		= __arch_get_clock_mode(tk);
  
- 	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
-@@ -352,7 +352,14 @@ err_pwmchip_add:
- err_alloc_omap:
- 
- 	pdata->free(dm_timer);
--put:
-+err_request_timer:
++	/* CLOCK_REALTIME also required for time() */
++	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
++	vdso_ts->sec	= tk->xtime_sec;
++	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
 +
-+err_timer_property:
-+err_platdata:
+ 	/* CLOCK_REALTIME_COARSE */
+ 	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
+ 	vdso_ts->sec	= tk->xtime_sec;
+@@ -110,7 +96,18 @@ void update_vsyscall(struct timekeeper *
+ 	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
+ 	vdso_ts->sec	+= __iter_div_u64_rem(nsec, NSEC_PER_SEC, &vdso_ts->nsec);
+ 
+-	update_vdso_data(vdata, tk);
++	/*
++	 * Read without the seqlock held by clock_getres().
++	 * Note: No need to have a second copy.
++	 */
++	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
 +
-+	put_device(&timer_pdev->dev);
-+err_find_timer_pdev:
-+
- 	of_node_put(timer);
++	/*
++	 * Architectures can opt out of updating the high resolution part
++	 * of the VDSO.
++	 */
++	if (__arch_update_vdso_data())
++		update_vdso_data(vdata, tk);
  
- 	return ret;
-@@ -372,6 +379,8 @@ static int pwm_omap_dmtimer_remove(struc
+ 	__arch_update_vsyscall(vdata, tk);
  
- 	omap->pdata->free(omap->dm_timer);
- 
-+	put_device(&omap->dm_timer_pdev->dev);
-+
- 	mutex_destroy(&omap->mutex);
- 
- 	return 0;
 
 
