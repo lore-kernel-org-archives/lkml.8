@@ -2,166 +2,140 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FD57C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02239C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECD2520866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7DB214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583229536;
+	bh=4mY+eBzqEAqUVgHJBB+37VWPwTk5qHToh5K0kzSRiGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L6vG/JtJR64fOxVi5WJNfl4DpvezAINwEE3DpVANwNAZ6q1fiww/2LCjcBJsG5lzU
+	 CnP12tVGwbqz/TWnBGPNHawPtO8LhrbYUh51sFPtUpkiu7r4p4J1/lkb0hrzareONu
+	 kAL8uV+DTHuL2QKHxsEpcotZqDCqUAjyzEMuT4xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728377AbgCCJ5u (ORCPT
+        id S1728381AbgCCJ6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:57:50 -0500
-Received: from relay.sw.ru ([185.231.240.75]:57328 "EHLO relay.sw.ru"
+        Tue, 3 Mar 2020 04:58:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726694AbgCCJ5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:57:50 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1j94Id-0003K4-IT; Tue, 03 Mar 2020 12:57:15 +0300
-Subject: Re: [PATCH RFC 0/5] fs, ext4: Physical blocks placement hint for
- fallocate(0): fallocate2(). TP defrag.
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>, adilger.kernel@dilger.ca
-Cc:     viro@zeniv.linux.org.uk, snitzer@redhat.com, jack@suse.cz,
-        ebiggers@google.com, riteshh@linux.ibm.com, krisman@collabora.com,
-        surajjs@amazon.com, dmonakhov@gmail.com, mbobrowski@mbobrowski.org,
-        enwlinux@gmail.com, sblbir@amazon.com, khazhy@google.com,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-References: <158272427715.281342.10873281294835953645.stgit@localhost.localdomain>
- <20200302165637.GA6826@mit.edu>
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-Message-ID: <2b2bb85f-8062-648a-1b6e-7d655bf43c96@virtuozzo.com>
-Date:   Tue, 3 Mar 2020 12:57:15 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1727818AbgCCJ6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:58:55 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C103020866;
+        Tue,  3 Mar 2020 09:58:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583229533;
+        bh=4mY+eBzqEAqUVgHJBB+37VWPwTk5qHToh5K0kzSRiGQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RvLaQssSdeUj4EIJz4bsPbTB5s6RWxPx2KmQIq3H4ZfSpkCu4UU8sXwU5FecLG1jM
+         LwRTmFo5dE5dQuvB90IyP711StWZRPZbaOQrDHv1KcqLYhQ8MVM7ycOqXZgJvmQ+2T
+         if72tEA5TIdvg5XYBmUAu5z0dyfPhVTEm/UajgPk=
+Date:   Tue, 3 Mar 2020 10:58:49 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        kvm-ppc@vger.kernel.org
+Subject: Re: [PATCH 2/6] powerpc: kvm: no need to check return value of
+ debugfs_create functions
+Message-ID: <20200303095849.GA1399072@kroah.com>
+References: <20200209105901.1620958-1-gregkh@linuxfoundation.org>
+ <20200209105901.1620958-2-gregkh@linuxfoundation.org>
+ <87imjlswxc.fsf@mpe.ellerman.id.au>
+ <20200303085039.GA1323622@kroah.com>
+ <87d09tsrf0.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20200302165637.GA6826@mit.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87d09tsrf0.fsf@mpe.ellerman.id.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Ted,
-
-On 02.03.2020 19:56, Theodore Y. Ts'o wrote:
-> Kirill,
+On Tue, Mar 03, 2020 at 08:45:23PM +1100, Michael Ellerman wrote:
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> > On Tue, Mar 03, 2020 at 06:46:23PM +1100, Michael Ellerman wrote:
+> >> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> >> > When calling debugfs functions, there is no need to ever check the
+> >> > return value.  The function can work or not, but the code logic should
+> >> > never do something different based on this.
+> >> 
+> >> Except it does need to do something different, if the file was created
+> >> it needs to be removed in the remove path.
+> >> 
+> >> > diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
+> >> > index bfe4f106cffc..8e4791c6f2af 100644
+> >> > --- a/arch/powerpc/kvm/timing.c
+> >> > +++ b/arch/powerpc/kvm/timing.c
+> >> > @@ -207,19 +207,12 @@ static const struct file_operations kvmppc_exit_timing_fops = {
+> >> >  void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
+> >> >  {
+> >> >  	static char dbg_fname[50];
+> >> > -	struct dentry *debugfs_file;
+> >> >  
+> >> >  	snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
+> >> >  		 current->pid, id);
+> >> > -	debugfs_file = debugfs_create_file(dbg_fname, 0666,
+> >> > -					kvm_debugfs_dir, vcpu,
+> >> > -					&kvmppc_exit_timing_fops);
+> >> > -
+> >> > -	if (!debugfs_file) {
+> >> > -		printk(KERN_ERR"%s: error creating debugfs file %s\n",
+> >> > -			__func__, dbg_fname);
+> >> > -		return;
+> >> > -	}
+> >> > +	debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
+> >> > +			    &kvmppc_exit_timing_fops);
+> >> > +
+> >> >  
+> >> >  	vcpu->arch.debugfs_exit_timing = debugfs_file;
+> >
+> > Ugh, you are right, how did I miss that?  How is 0-day missing this?
+> > It's been in my tree for a long time, odd.
 > 
-> In a couple of your comments on this patch series, you mentioned
-> "defragmentation".  Is that because you're trying to use this as part
-> of e4defrag, or at least, using EXT4_IOC_MOVE_EXT?
+> This code isn't enabled by default, or in any defconfig. So it's only
+> allmodconfig that would trip it, I guess 0-day isn't doing powerpc
+> allmodconfig builds.
 > 
-> If that's the case, you should note that input parameter for that
-> ioctl is:
+> >> I squashed this in, which seems to work:
+> ...
+> >>  
+> >>  void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
+> >>  {
+> >> -       if (vcpu->arch.debugfs_exit_timing) {
+> >> +       if (!IS_ERR_OR_NULL(vcpu->arch.debugfs_exit_timing)) {
+> >>                 debugfs_remove(vcpu->arch.debugfs_exit_timing);
+> >>                 vcpu->arch.debugfs_exit_timing = NULL;
+> >>         }
+> >
+> > No, this can just be:
+> > 	debugfs_remove(vcpu->arch.debugfs_exit_timing);
+> >
+> > No need to check anything, just call it and the debugfs code can handle
+> > it just fine.
 > 
-> struct move_extent {
-> 	__u32 reserved;		/* should be zero */
-> 	__u32 donor_fd;		/* donor file descriptor */
-> 	__u64 orig_start;	/* logical start offset in block for orig */
-> 	__u64 donor_start;	/* logical start offset in block for donor */
-> 	__u64 len;		/* block length to be moved */
-> 	__u64 moved_len;	/* moved block length */
-> };
+> Oh duh, of course, I should have checked.
 > 
-> Note that the donor_start is separate from the start of the file that
-> is being defragged.  So you could have the userspace application
-> fallocate a large chunk of space for that donor file, and then use
-> that donor file to defrag multiple files if you want to close pack
-> them.
-
-The practice shows it's not so. Your suggestion was the first thing we tried,
-but it works bad and just doubles/triples IO.
-
-Let we have two files of 512Kb, and they are placed in separate 1Mb clusters:
-
-[[512Kb file][512Kb free]][[512Kb file][512Kb free]]
-
-We want to pack both of files in the same 1Mb cluster. Packed together on block device,
-they will be in the same server of underlining distributed storage file system.
-This gives a big performance improvement, and this is the price I aimed.
-
-In case of I fallocate a large hunk for both of them, I have to move them
-both to this new hunk. So, instead of moving 512Kb of data, we will have to move
-1Mb of data, i.e. double size, which is counterproductive.
-
-Imaging another situation, when we have 
-[[1020Kb file]][4Kb free]][[4Kb file][1020Kb free]]
-
-Here we may just move [4Kb file] into [4Kb free]. But your suggestion again forces
-us to move 1Mb instead of 4Kb, which makes IO 256 times worse! This is terrible!
-And this is the thing I try prevent with finding a suitable new interface.
-
-> Many years ago, back when LSF/MM colocated with a larger
-> storage-focused conference so we could manage to origanize an ext4
-> developer's workshop, we had talked about ways we create kernel
-> support for a more powerful userspace defragger, which could also
-> defragment the free space, so that future block allocations were more
-> likely to be successful.
+> I'd still like to NULL out the debugfs_exit_timing member, so I'll do:
 > 
-> The discussions surrounded interfaces where userspace could block (or
-> at least strongly dissuade unless the only other alternative was
-> returning ENOSPC) the kernel from allocating out of a certain number
-> of block groups.  And then also to have an interface where for a
-> particular process (namely, the defragger), to make the kernel
-> strongly prefer that allocations come out of an ordered list of block
-> groups.
-> 
-> (Of course these days, now that the cool kids are all embracing eBPF,
-> one could imagine a privileged interface where the defragger could
-> install some kind of eBPF program which provided enhanced policy to
-> ext4's block allocator.)
-> 
-> No one ever really followed through with this, in part because the
-> details of allowing userspace (and it would have to be privileged
-> userspace) to dictate policy to the block allocator has all sorts of
-> potential pitfalls, and in part because no company was really
-> interested in funding the engineering work.  In addition, I'll note
-> that the windows world, the need and interest for defragging has gone
-> done significantly with the advent more sophisticated file systems
-> like NTFSv5, which doesn't need defragging nearly as often as say, the
-> FAT file system.  And I think if anything, the interst in doing work
-> with e4defrag has decreased even more over the years.
-> 
-> That being said, there has been some interest in making changes to
-> both the block allocator and some kind of on-line defrag which is
-> optimized for low-end flash (such as the kind found in android
-> handsets).  There, the need to be careful that we don't end up
-> increasing the write wearout becomes even more critical, although the
-> GC work which f2fs does involve extra moving around of data blocks,
-> and phones have seemed to do fine.  Of course, the typical phone only
-> has to last 2-3 years before the battery dies, the screen gets
-> cracked, and/or the owner decides they want the latest cool toy from
-> the phone manufacturers.  :-)
-> 
-> In any case, if your goal is really some interface to support on-line
-> defragmentation for ext4, you want to consider whether the
-> EXT4_IOC_MOVE_EXTENT interface is sufficiently powerful such that you
-> don't really need to mess around with new block allocation hints.
+> void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
+> {
+> 	debugfs_remove(vcpu->arch.debugfs_exit_timing);
+> 	vcpu->arch.debugfs_exit_timing = NULL;
+> }
 
-It's powerful, but it does not allow to create an effective defragmentation
-tool for my usecase. See the examples above. I do not want to replace
-EXT4_IOC_MOVE_EXTENT I just want an interface to be able to allocate
-a space close to some existing file and reduce IO at defragmentation time.
-This is just only thing I need in this patchset.
+Fair enough, but I doubt it ever matters :)
 
-I can't climb into maintainers heads and find a thing, which will be suitable
-for you. I did my try and suggested the interface. In case of it's not OK
-for you, could you, please, suggest another one, which will work for my usecase?
-The thesis "EXT4_IOC_MOVE_EXTENT is enough for everything" does not work for me :(
-Are you OK with interface suggested by Andreas?
+Thanks for the fixups, sorry for sending a broken patch, my fault.
 
-Thanks,
-Kirill
-
-
-
-
-
-
+greg k-h
