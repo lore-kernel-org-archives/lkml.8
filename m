@@ -2,109 +2,156 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94686C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DE34C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8FA20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:21:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SIGxxnen"
+	by mail.kernel.org (Postfix) with ESMTP id 6849620836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbgCCRVR (ORCPT
+        id S1730069AbgCCRV3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:21:17 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:51376 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729148AbgCCRVQ (ORCPT
+        Tue, 3 Mar 2020 12:21:29 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:50095 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729786AbgCCRV2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:21:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583256075;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EaOtamWYiIuWCFawzzm58ZC3ME+A1/wF1UexKFuk2I8=;
-        b=SIGxxnenfeC+fID2nD0gwYMUqvRL6SFwXd49T8mHVdNaL6ZVjUODS867/DRgRoWcsrGKzy
-        shi7vGRsfw/DQ53+zBQw7dBj/gNnahSEwpt2CGZykGf9mohqSMi04ZO692wAsuB1k9d1qR
-        phscyDJKrtaYBAlg1EkLRb9+bKJdZ7Q=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-91-g1HAjTieOjWxgwPKmqx7vA-1; Tue, 03 Mar 2020 12:21:13 -0500
-X-MC-Unique: g1HAjTieOjWxgwPKmqx7vA-1
-Received: by mail-wr1-f71.google.com with SMTP id c6so1510189wrm.18
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:21:13 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EaOtamWYiIuWCFawzzm58ZC3ME+A1/wF1UexKFuk2I8=;
-        b=pCPaiWPqOBJgIiJGc1iCT921Jl9SJDYPt4dM80XvyfO9OHmQiO1jyI919FCjC1TAvW
-         aApWYrJ4jOtiOdJrCcgNn6UR1P5JVkcvB1aQrK9vDM7z+y/nAWun9f6CE5I/4Dx0XtL8
-         cYxcEZ2rHBItES9OkLWclBPDWWZJ+MzEXykC/X/oVSrFDyZVcO/cxDOMNKGuVu3DBomS
-         DtMKSW1e+bbXbDgLX7ZtnqbFC+fexyLxA4Qb42mC683bDJfWCHrng2tsVRhFlUL1wRPd
-         Uy8Fj3tLnbOGYJ692awDi+U1ZbLCYvBbtxTWzmx2Uz+83pFuhkOoyh5giEjrRyEtv/mb
-         rYHQ==
-X-Gm-Message-State: ANhLgQ0+XQdunuVAuuyk2oh+61YAKaTFzIfzNKVt5itnEfIyD0v/n7yz
-        ygn94XL6p2yo8/ZTCd/i5P33AFB+EDhn9HCu9DYyAsbPbxlxdLcWBGreyAWaO5A2QRcq7Sz/l3t
-        OArpFPKyXHkMtHsIhTogvqPCe
-X-Received: by 2002:a1c:4604:: with SMTP id t4mr2354703wma.164.1583256072710;
-        Tue, 03 Mar 2020 09:21:12 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsthN0yjaliTomJLbLDve2Pd5f9/FT246y79qVZv8d+l722UQN2hFL5YW5TJVgnnYSW5Kqgyg==
-X-Received: by 2002:a1c:4604:: with SMTP id t4mr2354680wma.164.1583256072516;
-        Tue, 03 Mar 2020 09:21:12 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.254.94])
-        by smtp.gmail.com with ESMTPSA id j16sm34379932wru.68.2020.03.03.09.21.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 09:21:12 -0800 (PST)
-Subject: Re: [PATCH 3/6] KVM: x86: Add dedicated emulator helper for grabbing
- CPUID.maxphyaddr
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Jan Kiszka <jan.kiszka@siemens.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-4-sean.j.christopherson@intel.com>
- <de2ed4e9-409a-6cb1-e295-ea946be11e82@redhat.com>
- <20200303162808.GJ1439@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <a1b18b18-0bf5-7e7d-ffd9-be1a29609296@redhat.com>
-Date:   Tue, 3 Mar 2020 18:21:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Tue, 3 Mar 2020 12:21:28 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j9BDx-0006cR-KJ; Tue, 03 Mar 2020 17:20:53 +0000
+Date:   Tue, 3 Mar 2020 18:20:52 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCHv5] exec: Fix a deadlock in ptrace
+Message-ID: <20200303172052.fvqk4r7vbtxwo3ig@wittgenstein>
+References: <875zfmloir.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nmjulm.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook>
+ <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <20200303170109.y6q2acgydyzuh3mp@wittgenstein>
 MIME-Version: 1.0
-In-Reply-To: <20200303162808.GJ1439@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200303170109.y6q2acgydyzuh3mp@wittgenstein>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/20 17:28, Sean Christopherson wrote:
->> I don't think this is a particularly useful change.  Yes, it's not
->> intuitive but is it more than a matter of documentation (and possibly
->> moving the check_cr_write snippet into a separate function)?
+On Tue, Mar 03, 2020 at 06:01:11PM +0100, Christian Brauner wrote:
+> On Tue, Mar 03, 2020 at 04:48:01PM +0000, Bernd Edlinger wrote:
+> > On 3/3/20 4:18 PM, Eric W. Biederman wrote:
+> > > Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+> > > 
+> > >> This fixes a deadlock in the tracer when tracing a multi-threaded
+> > >> application that calls execve while more than one thread are running.
+> > >>
+> > >> I observed that when running strace on the gcc test suite, it always
+> > >> blocks after a while, when expect calls execve, because other threads
+> > >> have to be terminated.  They send ptrace events, but the strace is no
+> > >> longer able to respond, since it is blocked in vm_access.
+> > >>
+> > >> The deadlock is always happening when strace needs to access the
+> > >> tracees process mmap, while another thread in the tracee starts to
+> > >> execve a child process, but that cannot continue until the
+> > >> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
+> > > 
+> > > A couple of things.
+> > > 
+> > > Why do we think it is safe to change the behavior exposed to userspace?
+> > > Not the deadlock but all of the times the current code would not
+> > > deadlock?
+> > > 
+> > > Especially given that this is a small window it might be hard for people
+> > > to track down and report so we need a strong argument that this won't
+> > > break existing userspace before we just change things.
+> > > 
+> > 
+> > Hmm, I tend to agree.
+> > 
+> > > Usually surveying all of the users of a system call that we can find
+> > > and checking to see if they might be affected by the change in behavior
+> > > is difficult enough that we usually opt for not being lazy and
+> > > preserving the behavior.
+> > > 
+> > > This patch is up to two changes in behavior now, that could potentially
+> > > affect a whole array of programs.  Adding linux-api so that this change
+> > > in behavior can be documented if/when this change goes through.
+> > > 
+> > 
+> > One is PTRACE_ACCESS possibly returning EAGAIN, yes.
+> > 
+> > We could try to restrict that behavior change to when any
+> > thread is ptraced when execve starts, can't be too complicated.
+> > 
+> > 
+> > But the other is only SYS_seccomp returning EAGAIN, when a different
+> > thread of the current process is calling execve at the same time.
+> > 
+> > I would consider it completely impossible to have any user-visual effect,
+> > since de_thread is just terminating all threads, including the thread
+> > where the -EAGAIN was returned, so we will never know what happened.
 > 
-> I really don't like duplicating the maxphyaddr logic.  I'm paranoid
-> something will come along and change the "effective" maxphyaddr and we'll
-> forget all about the emulator, e.g. SEV, TME and paravirt XO all dance
-> around maxphyaddr.
+> I think if we risk a user-space facing change we should try the simple
+> thing first before making the fix more convoluted? But it's a tough
+> call...
 
-Well, I'm paranoid about breaking everything else... :)
+Actually, to get a _rough_ estimate of the possible impact I would
+recommend you run the criu test suite (and possible the strace
+test-suite) on a kernel with and without your fix. That's what I tend to
+do when I touch code I fear will have impact on APIs that very deeply
+touch core kernel. Criu's test-suite makes heavy use of ptrace and
+usually runs into a bunch of interesting (exec) races too, and does have
+tests for handling zombies processes etc. pp.
 
-Adding a separate emulator_get_maxphyaddr function would at least
-simplify grepping, since searching for 0x80000008 isn't exactly intuitive.
+Should be relatively simple: create a vm and then criu build-dependencies,
+git clone criu; cd criu; make; cd test; ./zdtm.py run -a --keep-going
+If your system doesn't support Selinux properly, you need to disable it
+when running the tests and you also need to make sure that you're using
+python3 or change the shebang in zdtm.py to python3.
 
-Paolo
+Just a recommendation.
 
+Christian
