@@ -2,98 +2,129 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EFBC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:42:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1C9DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA72A208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B38221739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:45:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="FvTeVOpG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727653AbgCCJmt (ORCPT
+        id S1727822AbgCCJp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:42:49 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2500 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725932AbgCCJmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:42:49 -0500
-Received: from LHREML710-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id 17437D1B0E2FDFC47141;
-        Tue,  3 Mar 2020 09:42:47 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML710-CAH.china.huawei.com (10.201.108.33) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 3 Mar 2020 09:42:46 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Tue, 3 Mar 2020
- 09:42:46 +0000
-Subject: Re: [PATCH RFC 1/3] spi: Allow SPI controller override device
- buswidth
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linuxarm <linuxarm@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-References: <1582903131-160033-1-git-send-email-john.garry@huawei.com>
- <1582903131-160033-2-git-send-email-john.garry@huawei.com>
- <CAMuHMdW7Xu6EzfmVFx1+i1byy3KOS5A+h2GuMb8nkZ+-jD1=BA@mail.gmail.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <f6f21e75-7cee-89da-bb87-95327a4ec2cc@huawei.com>
-Date:   Tue, 3 Mar 2020 09:42:45 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 3 Mar 2020 04:45:27 -0500
+Received: from ozlabs.org ([203.11.71.1]:55693 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727738AbgCCJp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:45:27 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WsZD4YDzz9sRN;
+        Tue,  3 Mar 2020 20:45:24 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1583228724;
+        bh=Wo5bQeKUPhAri+IWkOD5PZEI0f97+gdXT92XXJeUOaY=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=FvTeVOpG1HL369swVAGKwuZdqRj3BH9QUPT5UA/ZR7E5xAuX9Esj/AXStB1Ufwp/o
+         QjA2R3+CuKGBGHH3MqixMIW38v3h0eUpP5sxQQWxA0p6yPZdapZMWwxaXwGjaWVSHt
+         zK0R/sxz/ci+xcCJvVi3zbBt0Rrv0T/jAZ7jt1PXRDPS3OHKqT7hY/Rl0cxnygArbk
+         zv2DhYTyCO9oVaS+AhI3jBya3LfjhHJw2ZG/CuvBjZ3gAJ2zpo00YD2XR3nIFgpgJr
+         ot9rVNJKqYM69dM4qti8YMpiXwlagy+JcXiObIoaRe3hmrALaOVbi2xxlyDej5Ppmp
+         pZb/DytQtWifA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        kvm-ppc@vger.kernel.org
+Subject: Re: [PATCH 2/6] powerpc: kvm: no need to check return value of debugfs_create functions
+In-Reply-To: <20200303085039.GA1323622@kroah.com>
+References: <20200209105901.1620958-1-gregkh@linuxfoundation.org> <20200209105901.1620958-2-gregkh@linuxfoundation.org> <87imjlswxc.fsf@mpe.ellerman.id.au> <20200303085039.GA1323622@kroah.com>
+Date:   Tue, 03 Mar 2020 20:45:23 +1100
+Message-ID: <87d09tsrf0.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <CAMuHMdW7Xu6EzfmVFx1+i1byy3KOS5A+h2GuMb8nkZ+-jD1=BA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml725-chm.china.huawei.com (10.201.108.76) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+> On Tue, Mar 03, 2020 at 06:46:23PM +1100, Michael Ellerman wrote:
+>> Greg Kroah-Hartman <gregkh@linuxfoundation.org> writes:
+>> > When calling debugfs functions, there is no need to ever check the
+>> > return value.  The function can work or not, but the code logic should
+>> > never do something different based on this.
+>> 
+>> Except it does need to do something different, if the file was created
+>> it needs to be removed in the remove path.
+>> 
+>> > diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
+>> > index bfe4f106cffc..8e4791c6f2af 100644
+>> > --- a/arch/powerpc/kvm/timing.c
+>> > +++ b/arch/powerpc/kvm/timing.c
+>> > @@ -207,19 +207,12 @@ static const struct file_operations kvmppc_exit_timing_fops = {
+>> >  void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
+>> >  {
+>> >  	static char dbg_fname[50];
+>> > -	struct dentry *debugfs_file;
+>> >  
+>> >  	snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
+>> >  		 current->pid, id);
+>> > -	debugfs_file = debugfs_create_file(dbg_fname, 0666,
+>> > -					kvm_debugfs_dir, vcpu,
+>> > -					&kvmppc_exit_timing_fops);
+>> > -
+>> > -	if (!debugfs_file) {
+>> > -		printk(KERN_ERR"%s: error creating debugfs file %s\n",
+>> > -			__func__, dbg_fname);
+>> > -		return;
+>> > -	}
+>> > +	debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
+>> > +			    &kvmppc_exit_timing_fops);
+>> > +
+>> >  
+>> >  	vcpu->arch.debugfs_exit_timing = debugfs_file;
+>
+> Ugh, you are right, how did I miss that?  How is 0-day missing this?
+> It's been in my tree for a long time, odd.
 
-Hi Geert,
+This code isn't enabled by default, or in any defconfig. So it's only
+allmodconfig that would trip it, I guess 0-day isn't doing powerpc
+allmodconfig builds.
 
-> 
-> On Fri, Feb 28, 2020 at 4:23 PM John Garry <john.garry@huawei.com> wrote:
->> Currently ACPI firmware description for a SPI device does not have any
->> method to describe the data buswidth on the board.
->>
->> So even through the controller and device may support higher modes than
->> standard SPI, it cannot be assumed that the board does - as such, that
->> device is limited to standard SPI in such a circumstance.
->>
->> As a workaround, allow the controller driver supply buswidth override bits,
->> which are used inform the core code that the controller driver knows the
->> buswidth supported on that board for that device.
-> 
-> Just wondering: can't the controller just override this (e.g. in the .setuup()
-> callback) without having to touch the generic code?
+>> I squashed this in, which seems to work:
+...
+>>  
+>>  void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
+>>  {
+>> -       if (vcpu->arch.debugfs_exit_timing) {
+>> +       if (!IS_ERR_OR_NULL(vcpu->arch.debugfs_exit_timing)) {
+>>                 debugfs_remove(vcpu->arch.debugfs_exit_timing);
+>>                 vcpu->arch.debugfs_exit_timing = NULL;
+>>         }
+>
+> No, this can just be:
+> 	debugfs_remove(vcpu->arch.debugfs_exit_timing);
+>
+> No need to check anything, just call it and the debugfs code can handle
+> it just fine.
 
-I think that this is a good idea.
+Oh duh, of course, I should have checked.
 
-However, where we call .setup() in spi_setup() looks a little too late - 
-at the point we call .setup(), most of the work on vetting/fixing the 
-mode bits is complete. And I would not want the SPI controller driver 
-just to disregard this work and overwrite the bits (in this way).
+I'd still like to NULL out the debugfs_exit_timing member, so I'll do:
 
-And if we wanted to move the .setup callback earlier, then I would be 
-worried here with 2 things:
-1. Some SPI controller drivers may rely on spi->mode being set finally 
-when .setup() is called
-2. We may need to undo the work of .setup() if we later error in 
-spi_setup(), like for invalid mode bits
+void kvmppc_remove_vcpu_debugfs(struct kvm_vcpu *vcpu)
+{
+	debugfs_remove(vcpu->arch.debugfs_exit_timing);
+	vcpu->arch.debugfs_exit_timing = NULL;
+}
 
-However, maybe another callback could be introduced, .early_setup().
 
-Thanks,
-John
+cheers
