@@ -7,54 +7,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A0EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBC0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:56:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361AE21D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:56:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6102121D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 00:56:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Z9RypMQm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="injIeMqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgCCA4x (ORCPT
+        id S1727026AbgCCA46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 19:56:53 -0500
-Received: from mail-pl1-f202.google.com ([209.85.214.202]:35924 "EHLO
-        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726752AbgCCA4w (ORCPT
+        Mon, 2 Mar 2020 19:56:58 -0500
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:54886 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726752AbgCCA45 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 19:56:52 -0500
-Received: by mail-pl1-f202.google.com with SMTP id bg1so842412plb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 16:56:50 -0800 (PST)
+        Mon, 2 Mar 2020 19:56:57 -0500
+Received: by mail-qt1-f201.google.com with SMTP id z19so1106182qts.21
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 16:56:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=MjWn1xssQfoWQqE8a57xumnRtF/eKeos54BJPVuyJV4=;
-        b=Z9RypMQmX1DwNAhQzgfwPiu4aHPUXLU7YWppGyRQBOx+02/19l5Mv6xS1CrmVHCise
-         DMj/S7jt7FrFtvKkvxIvmKI/qPyJ0niR5A1bmQCf/q8WeQkeCnojsu8MddM0cqG8GBL3
-         +iVLA8T1LvHeoIV4Ah2OWHyaectOrGPnUnACxbEbKRjXhh0m9C8FLRv0H5GMgV8BOwwv
-         4822cYDagLBndX9/hi+Mq6gootKGvIGA65N29T8czKm11A8GVSsbUcKEeTK6kmTJlXo1
-         Z+EiByzfI4wUTbbFIpuKBq8vFPum7sDOk/Kud4ZwO+gPibd0zVhWOmD3zhvMw6bYGdqW
-         9rfQ==
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=SULigJR1aTK5nhD4DW5vzLxOpw0a6L5bA6kmDOAsplI=;
+        b=injIeMqMZawiZtbu21dhSltYB0O5rhrqzMybRcK8b6oGBM9+5KYW9+Pl3/HksCicAq
+         OafNYFAgvdHTQplSo4Hp8ANg3N3TnxSepZ54fa5l0i/mschehgdcxT32ZDTK5G8pL46p
+         R2fG29+YkvYSf/WxXFXj7ZFGZPzTpE1VuEoUjM4UPBbc7BDfVNrItSzqZALf+0+TMld0
+         Za4C9Tox8rorBeZDuVqisBvsBiEx99FiywWEEZoJB7a7KLuc2S8e5oBpx4FXcSoL2ocZ
+         D01RX3pR/6WmvIyhmsah2gKKY+H2I93ABHs/nNJK5Gs+drLBYD0e0nWK3+YgpLL5sRbH
+         Ghtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=MjWn1xssQfoWQqE8a57xumnRtF/eKeos54BJPVuyJV4=;
-        b=YZe6kqbEAYwG1/8BhmZ9O1Hr26LCpx3SVtyTtRWnKL9UX8nA4d7y0fPHD9bjaNg48v
-         l48qqB4qxOsiHPze2Y+e9JUvAf1QwgEJjbJ6BPf08ionAHw6KyZAUT2zTEbFCQ8ZdFrP
-         0PdrdPpShqVxMhy0jHO7QuBfiTEY3WP06CnFVWXW7nMBRneoWWQrLzpb6mJCzrfT3Mt6
-         AU/ABkIh5jocfe0eg7kYlLXerwfJ32jrrKNI4y433HaG7Wq1HwF8NoNDf46NzA3owpZe
-         rvGZFDyf1MpCO252claHzSU8z4PI/wxc6I7IjfJVnnqZEAG+3L6e9E9XeS5WhC9g/FrG
-         Nd9g==
-X-Gm-Message-State: ANhLgQ3oKSzGKky3gst8HXxFq3f7tWBRRMOzSriR62IAUOFJD/ORLSdI
-        Fp24O1JYFucD8Sr1fZ+GvPX0w4tpbuY1
-X-Google-Smtp-Source: ADFU+vuTvBWJoDi9HjHUHwiqoNQ82VV/Guk+HqRmAyeMFXexpzrcVUJWMfZFz+RVBN7mv9wOQpa0LCXnMV/+
-X-Received: by 2002:a63:ad42:: with SMTP id y2mr1524288pgo.445.1583197010143;
- Mon, 02 Mar 2020 16:56:50 -0800 (PST)
-Date:   Mon,  2 Mar 2020 16:56:44 -0800
-Message-Id: <20200303005645.237763-1-rajatja@google.com>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=SULigJR1aTK5nhD4DW5vzLxOpw0a6L5bA6kmDOAsplI=;
+        b=DI3iOeZ9HL/iK+bvocZc8eQtSCGLjZvftg1hS4oIq9vMZ7XRygsYb+1UKoezwrbPR8
+         hpY2S8M0pKTWLwNo9VYISy7Dvbg8ZHtf13fumeJjcRlKy19sZc5n0IWgzrrjSJZNL3Pb
+         poW9JofLxUPWewPcYJy4rntKNmPgELmKVKh99dTTFrMSEuPiwmkj0u/3fqk/SqtZR0ru
+         utfv/roUGvvS6Xz4E1TrF70jyAUMsyyenlBX8KDe+5lLJTAOwnfb4qn2xqBRsByHtEt3
+         rTuKgRpmQB4NsNR1JNl5by97IE9hd2/hWQfm9i4xcE8dYRqVCh0nFv9eyzQNCOegvys5
+         YbJQ==
+X-Gm-Message-State: ANhLgQ11Azj5ocXRcQLgBuE8tiMCBbTvu0tusnKRTT1olpxXN4ErjDJd
+        yPEKTeVIZx8sablcRRl8FZzrFKbZ5x+5
+X-Google-Smtp-Source: ADFU+vvXjBgQ/YGbN50roM6YKMJ/M+jQtstx9IRDHO2a0UEkj4Q3JoN3kO4kxSzTHaSfEs4ikepPnM3qRL+n
+X-Received: by 2002:a0c:ef05:: with SMTP id t5mr2014421qvr.240.1583197015091;
+ Mon, 02 Mar 2020 16:56:55 -0800 (PST)
+Date:   Mon,  2 Mar 2020 16:56:45 -0800
+In-Reply-To: <20200303005645.237763-1-rajatja@google.com>
+Message-Id: <20200303005645.237763-2-rajatja@google.com>
 Mime-Version: 1.0
+References: <20200303005645.237763-1-rajatja@google.com>
 X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH 1/2] Input: Add keycodes for keyboard backlight control
+Subject: [PATCH 2/2] Input: Allocate keycode for SNIP key
 From:   Rajat Jain <rajatja@google.com>
 To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
         linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -66,25 +70,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New keyboards can have backlight control keys. Allocating keycodes
-for them. Such keyboards are already available in ChromeOS.
+New chromeos keyboards have a "snip" key that is basically a selective
+screenshot (allows a user to select an area of screen to be copied).
+Allocate a keyvode for it.
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
- include/uapi/linux/input-event-codes.h | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/uapi/linux/input-event-codes.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/include/uapi/linux/input-event-codes.h b/include/uapi/linux/input-event-codes.h
-index 0f1db1cccc3fd..e12a19dc30262 100644
+index e12a19dc30262..51f419657d044 100644
 --- a/include/uapi/linux/input-event-codes.h
 +++ b/include/uapi/linux/input-event-codes.h
-@@ -652,6 +652,10 @@
- /* Electronic privacy screen control */
- #define KEY_PRIVACY_SCREEN_TOGGLE	0x279
+@@ -656,6 +656,9 @@
+ #define KEY_KBD_BKLIGHT_UP              0x280
+ #define KEY_KBD_BKLIGHT_DOWN            0x281
  
-+/* Keyboard Backlight control */
-+#define KEY_KBD_BKLIGHT_UP              0x280
-+#define KEY_KBD_BKLIGHT_DOWN            0x281
++/* Selective Screenshot */
++#define KEY_SNIP                        0x282
 +
  /*
   * Some keyboards have keys which do not have a defined meaning, these keys
