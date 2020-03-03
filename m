@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4852C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D7C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B665A214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB0D4214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="o6uiTzW5"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NR4qiscK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbgCCRnt (ORCPT
+        id S1730777AbgCCRn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:43:49 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:38825 "EHLO
+        Tue, 3 Mar 2020 12:43:56 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:55853 "EHLO
         ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730468AbgCCRnZ (ORCPT
+        with ESMTP id S1729748AbgCCRnX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:43:25 -0500
+        Tue, 3 Mar 2020 12:43:23 -0500
 Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id AFD1A23E48;
-        Tue,  3 Mar 2020 18:43:21 +0100 (CET)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id C4F5523E2C;
+        Tue,  3 Mar 2020 18:43:20 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583257402;
+        t=1583257401;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mA4DIJEOOKx5ud7WDVuzopCFuAjrmiR1O7hsLd3spDg=;
-        b=o6uiTzW56vxrao9D8LKOmL3mktXiXR1rYNLwg5ODf+NBskyLs7eD7m5jjHJEfOq6NJlTnK
-        yxLcy23vOCyCk38SwmEzznsRrhfmV4UbPfGw/NXytYh+I4/oqmpL+EhZwyoIdxDi5opE0E
-        7H6tKtV6ehYjEJq4mDXIe4XFJOk7264=
+        bh=VX93nZn2AbWIOGGDfDdsClKAztru9C3qnY5D3he52bw=;
+        b=NR4qiscKZUDwQDviE1N9ER57qxAxZX5tWQuROndkUU9z1oBkjiPm9gR0mfr3FasiSbucDq
+        xE7PELfGe9uxGXq755rO+y8/Onh65xmQeGslOwc8019olRW+JITn15ak0CjA6fheEawiey
+        s8U71K4vXEUAeFvrqQLNZrUcvAMdsv0=
 From:   Michael Walle <michael@walle.cc>
 To:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
@@ -49,9 +49,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
         Vabhav Sharma <vabhav.sharma@nxp.com>,
         Yuan Yao <yao.yuan@nxp.com>, Michael Walle <michael@walle.cc>
-Subject: [PATCH v3 4/9] tty: serial: fsl_lpuart: fix DMA mapping
-Date:   Tue,  3 Mar 2020 18:43:01 +0100
-Message-Id: <20200303174306.6015-5-michael@walle.cc>
+Subject: [PATCH v3 2/9] tty: serial: fsl_lpuart: free IDs allocated by IDA
+Date:   Tue,  3 Mar 2020 18:42:59 +0100
+Message-Id: <20200303174306.6015-3-michael@walle.cc>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303174306.6015-1-michael@walle.cc>
 References: <20200303174306.6015-1-michael@walle.cc>
@@ -59,7 +59,7 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Spamd-Bar: ++++++
 X-Rspamd-Server: web
-X-Rspamd-Queue-Id: AFD1A23E48
+X-Rspamd-Queue-Id: C4F5523E2C
 X-Spamd-Result: default: False [6.40 / 15.00];
          FROM_HAS_DN(0.00)[];
          TO_DN_SOME(0.00)[];
@@ -68,7 +68,7 @@ X-Spamd-Result: default: False [6.40 / 15.00];
          TAGGED_RCPT(0.00)[dt];
          MIME_GOOD(-0.10)[text/plain];
          BROKEN_CONTENT_TYPE(1.50)[];
-         NEURAL_SPAM(0.00)[0.501];
+         NEURAL_SPAM(0.00)[0.504];
          DKIM_SIGNED(0.00)[];
          RCPT_COUNT_TWELVE(0.00)[14];
          MID_CONTAINS_FROM(1.00)[];
@@ -83,198 +83,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the correct device to request the DMA mapping. Otherwise the IOMMU
-doesn't get the mapping and it will generate a page fault.
+Since commit 3bc3206e1c0f ("serial: fsl_lpuart: Remove the alias node
+dependence") the port line number can also be allocated by IDA, but in
+case of an error the ID will no be removed again. More importantly, any
+ID will be freed in remove(), even if it wasn't allocated but instead
+fetched by of_alias_get_id(). If it was not allocated by IDA there will
+be a warning:
+  WARN(1, "ida_free called for id=%d which is not allocated.\n", id);
 
-The error messages look like:
-[   19.012140] arm-smmu 5000000.iommu: Unhandled context fault: fsr=0x402, iova=0xbbfff800, fsynr=0x3e0021, cbfrsynra=0x828, cb=9
-[   19.023593] arm-smmu 5000000.iommu: Unhandled context fault: fsr=0x402, iova=0xbbfff800, fsynr=0x3e0021, cbfrsynra=0x828, cb=9
+Move the ID allocation more to the end of the probe() so that we still
+can use plain return in the first error cases.
 
-This was tested on a custom board with a LS1028A SoC.
-
+Fixes: 3bc3206e1c0f ("serial: fsl_lpuart: Remove the alias node dependence")
 Signed-off-by: Michael Walle <michael@walle.cc>
 ---
- drivers/tty/serial/fsl_lpuart.c | 48 +++++++++++++++++++--------------
- 1 file changed, 28 insertions(+), 20 deletions(-)
+ drivers/tty/serial/fsl_lpuart.c | 39 ++++++++++++++++++++-------------
+ 1 file changed, 24 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 0b8c477b32a3..ada7fb1fa075 100644
+index 27fdc131c352..c31b8f3db6bf 100644
 --- a/drivers/tty/serial/fsl_lpuart.c
 +++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -409,6 +409,7 @@ static void lpuart_dma_tx(struct lpuart_port *sport)
- 	struct circ_buf *xmit = &sport->port.state->xmit;
- 	struct scatterlist *sgl = sport->tx_sgl;
- 	struct device *dev = sport->port.dev;
-+	struct dma_chan *chan = sport->dma_tx_chan;
- 	int ret;
+@@ -264,6 +264,7 @@ struct lpuart_port {
+ 	int			rx_dma_rng_buf_len;
+ 	unsigned int		dma_tx_nents;
+ 	wait_queue_head_t	dma_wait;
++	bool			id_allocated;
+ };
  
- 	if (sport->dma_tx_in_progress)
-@@ -427,17 +428,19 @@ static void lpuart_dma_tx(struct lpuart_port *sport)
- 		sg_set_buf(sgl + 1, xmit->buf, xmit->head);
- 	}
- 
--	ret = dma_map_sg(dev, sgl, sport->dma_tx_nents, DMA_TO_DEVICE);
-+	ret = dma_map_sg(chan->device->dev, sgl, sport->dma_tx_nents,
-+			 DMA_TO_DEVICE);
- 	if (!ret) {
- 		dev_err(dev, "DMA mapping error for TX.\n");
- 		return;
- 	}
- 
--	sport->dma_tx_desc = dmaengine_prep_slave_sg(sport->dma_tx_chan, sgl,
-+	sport->dma_tx_desc = dmaengine_prep_slave_sg(chan, sgl,
- 					ret, DMA_MEM_TO_DEV,
- 					DMA_PREP_INTERRUPT);
- 	if (!sport->dma_tx_desc) {
--		dma_unmap_sg(dev, sgl, sport->dma_tx_nents, DMA_TO_DEVICE);
-+		dma_unmap_sg(chan->device->dev, sgl, sport->dma_tx_nents,
-+			      DMA_TO_DEVICE);
- 		dev_err(dev, "Cannot prepare TX slave DMA!\n");
- 		return;
- 	}
-@@ -446,7 +449,7 @@ static void lpuart_dma_tx(struct lpuart_port *sport)
- 	sport->dma_tx_desc->callback_param = sport;
- 	sport->dma_tx_in_progress = true;
- 	sport->dma_tx_cookie = dmaengine_submit(sport->dma_tx_desc);
--	dma_async_issue_pending(sport->dma_tx_chan);
-+	dma_async_issue_pending(chan);
- }
- 
- static bool lpuart_stopped_or_empty(struct uart_port *port)
-@@ -459,11 +462,13 @@ static void lpuart_dma_tx_complete(void *arg)
- 	struct lpuart_port *sport = arg;
- 	struct scatterlist *sgl = &sport->tx_sgl[0];
- 	struct circ_buf *xmit = &sport->port.state->xmit;
-+	struct dma_chan *chan = sport->dma_tx_chan;
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&sport->port.lock, flags);
- 
--	dma_unmap_sg(sport->port.dev, sgl, sport->dma_tx_nents, DMA_TO_DEVICE);
-+	dma_unmap_sg(chan->device->dev, sgl, sport->dma_tx_nents,
-+		     DMA_TO_DEVICE);
- 
- 	xmit->tail = (xmit->tail + sport->dma_tx_bytes) & (UART_XMIT_SIZE - 1);
- 
-@@ -529,15 +534,16 @@ static bool lpuart_is_32(struct lpuart_port *sport)
- static void lpuart_flush_buffer(struct uart_port *port)
- {
- 	struct lpuart_port *sport = container_of(port, struct lpuart_port, port);
-+	struct dma_chan *chan = sport->dma_tx_chan;
- 	u32 val;
- 
- 	if (sport->lpuart_dma_tx_use) {
- 		if (sport->dma_tx_in_progress) {
--			dma_unmap_sg(sport->port.dev, &sport->tx_sgl[0],
-+			dma_unmap_sg(chan->device->dev, &sport->tx_sgl[0],
- 				sport->dma_tx_nents, DMA_TO_DEVICE);
- 			sport->dma_tx_in_progress = false;
- 		}
--		dmaengine_terminate_all(sport->dma_tx_chan);
-+		dmaengine_terminate_all(chan);
- 	}
- 
- 	if (lpuart_is_32(sport)) {
-@@ -993,6 +999,7 @@ static void lpuart_copy_rx_to_tty(struct lpuart_port *sport)
- 	struct tty_port *port = &sport->port.state->port;
- 	struct dma_tx_state state;
- 	enum dma_status dmastat;
-+	struct dma_chan *chan = sport->dma_rx_chan;
- 	struct circ_buf *ring = &sport->rx_ring;
- 	unsigned long flags;
- 	int count = 0;
-@@ -1053,10 +1060,7 @@ static void lpuart_copy_rx_to_tty(struct lpuart_port *sport)
- 
- 	spin_lock_irqsave(&sport->port.lock, flags);
- 
--	dmastat = dmaengine_tx_status(sport->dma_rx_chan,
--				sport->dma_rx_cookie,
--				&state);
--
-+	dmastat = dmaengine_tx_status(chan, sport->dma_rx_cookie, &state);
- 	if (dmastat == DMA_ERROR) {
- 		dev_err(sport->port.dev, "Rx DMA transfer failed!\n");
- 		spin_unlock_irqrestore(&sport->port.lock, flags);
-@@ -1064,7 +1068,8 @@ static void lpuart_copy_rx_to_tty(struct lpuart_port *sport)
- 	}
- 
- 	/* CPU claims ownership of RX DMA buffer */
--	dma_sync_sg_for_cpu(sport->port.dev, &sport->rx_sgl, 1, DMA_FROM_DEVICE);
-+	dma_sync_sg_for_cpu(chan->device->dev, &sport->rx_sgl, 1,
-+			    DMA_FROM_DEVICE);
- 
- 	/*
- 	 * ring->head points to the end of data already written by the DMA.
-@@ -1106,7 +1111,7 @@ static void lpuart_copy_rx_to_tty(struct lpuart_port *sport)
- 		sport->port.icount.rx += count;
- 	}
- 
--	dma_sync_sg_for_device(sport->port.dev, &sport->rx_sgl, 1,
-+	dma_sync_sg_for_device(chan->device->dev, &sport->rx_sgl, 1,
- 			       DMA_FROM_DEVICE);
- 
- 	spin_unlock_irqrestore(&sport->port.lock, flags);
-@@ -1138,6 +1143,7 @@ static inline int lpuart_start_rx_dma(struct lpuart_port *sport)
- 	struct tty_port *port = &sport->port.state->port;
- 	struct tty_struct *tty = port->tty;
- 	struct ktermios *termios = &tty->termios;
-+	struct dma_chan *chan = sport->dma_rx_chan;
- 
- 	baud = tty_get_baud_rate(tty);
- 
-@@ -1159,7 +1165,8 @@ static inline int lpuart_start_rx_dma(struct lpuart_port *sport)
+ struct lpuart_soc_data {
+@@ -2422,19 +2423,6 @@ static int lpuart_probe(struct platform_device *pdev)
+ 	if (!sport)
  		return -ENOMEM;
  
- 	sg_init_one(&sport->rx_sgl, ring->buf, sport->rx_dma_rng_buf_len);
--	nent = dma_map_sg(sport->port.dev, &sport->rx_sgl, 1, DMA_FROM_DEVICE);
-+	nent = dma_map_sg(chan->device->dev, &sport->rx_sgl, 1,
-+			  DMA_FROM_DEVICE);
- 
- 	if (!nent) {
- 		dev_err(sport->port.dev, "DMA Rx mapping error\n");
-@@ -1170,7 +1177,7 @@ static inline int lpuart_start_rx_dma(struct lpuart_port *sport)
- 	dma_rx_sconfig.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE;
- 	dma_rx_sconfig.src_maxburst = 1;
- 	dma_rx_sconfig.direction = DMA_DEV_TO_MEM;
--	ret = dmaengine_slave_config(sport->dma_rx_chan, &dma_rx_sconfig);
-+	ret = dmaengine_slave_config(chan, &dma_rx_sconfig);
- 
- 	if (ret < 0) {
- 		dev_err(sport->port.dev,
-@@ -1178,7 +1185,7 @@ static inline int lpuart_start_rx_dma(struct lpuart_port *sport)
- 		return ret;
+-	ret = of_alias_get_id(np, "serial");
+-	if (ret < 0) {
+-		ret = ida_simple_get(&fsl_lpuart_ida, 0, UART_NR, GFP_KERNEL);
+-		if (ret < 0) {
+-			dev_err(&pdev->dev, "port line is full, add device failed\n");
+-			return ret;
+-		}
+-	}
+-	if (ret >= ARRAY_SIZE(lpuart_ports)) {
+-		dev_err(&pdev->dev, "serial%d out of range\n", ret);
+-		return -EINVAL;
+-	}
+-	sport->port.line = ret;
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	sport->port.membase = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(sport->port.membase))
+@@ -2479,9 +2467,25 @@ static int lpuart_probe(struct platform_device *pdev)
+ 		}
  	}
  
--	sport->dma_rx_desc = dmaengine_prep_dma_cyclic(sport->dma_rx_chan,
-+	sport->dma_rx_desc = dmaengine_prep_dma_cyclic(chan,
- 				 sg_dma_address(&sport->rx_sgl),
- 				 sport->rx_sgl.length,
- 				 sport->rx_sgl.length / 2,
-@@ -1192,7 +1199,7 @@ static inline int lpuart_start_rx_dma(struct lpuart_port *sport)
- 	sport->dma_rx_desc->callback = lpuart_dma_rx_complete;
- 	sport->dma_rx_desc->callback_param = sport;
- 	sport->dma_rx_cookie = dmaengine_submit(sport->dma_rx_desc);
--	dma_async_issue_pending(sport->dma_rx_chan);
-+	dma_async_issue_pending(chan);
++	ret = of_alias_get_id(np, "serial");
++	if (ret < 0) {
++		ret = ida_simple_get(&fsl_lpuart_ida, 0, UART_NR, GFP_KERNEL);
++		if (ret < 0) {
++			dev_err(&pdev->dev, "port line is full, add device failed\n");
++			return ret;
++		}
++		sport->id_allocated = true;
++	}
++	if (ret >= ARRAY_SIZE(lpuart_ports)) {
++		dev_err(&pdev->dev, "serial%d out of range\n", ret);
++		ret = -EINVAL;
++		goto failed_out_of_range;
++	}
++	sport->port.line = ret;
++
+ 	ret = lpuart_enable_clks(sport);
+ 	if (ret)
+-		return ret;
++		goto failed_clock_enable;
+ 	sport->port.uartclk = lpuart_get_baud_clk_rate(sport);
  
- 	if (lpuart_is_32(sport)) {
- 		unsigned long temp = lpuart32_read(&sport->port, UARTBAUD);
-@@ -1210,11 +1217,12 @@ static void lpuart_dma_rx_free(struct uart_port *port)
- {
- 	struct lpuart_port *sport = container_of(port,
- 					struct lpuart_port, port);
-+	struct dma_chan *chan = sport->dma_rx_chan;
+ 	lpuart_ports[sport->port.line] = sport;
+@@ -2531,6 +2535,10 @@ static int lpuart_probe(struct platform_device *pdev)
+ failed_attach_port:
+ failed_irq_request:
+ 	lpuart_disable_clks(sport);
++failed_clock_enable:
++failed_out_of_range:
++	if (sport->id_allocated)
++		ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
+ 	return ret;
+ }
  
--	if (sport->dma_rx_chan)
--		dmaengine_terminate_all(sport->dma_rx_chan);
-+	if (chan)
-+		dmaengine_terminate_all(chan);
+@@ -2540,7 +2548,8 @@ static int lpuart_remove(struct platform_device *pdev)
  
--	dma_unmap_sg(sport->port.dev, &sport->rx_sgl, 1, DMA_FROM_DEVICE);
-+	dma_unmap_sg(chan->device->dev, &sport->rx_sgl, 1, DMA_FROM_DEVICE);
- 	kfree(sport->rx_ring.buf);
- 	sport->rx_ring.tail = 0;
- 	sport->rx_ring.head = 0;
+ 	uart_remove_one_port(&lpuart_reg, &sport->port);
+ 
+-	ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
++	if (sport->id_allocated)
++		ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
+ 
+ 	lpuart_disable_clks(sport);
+ 
 -- 
 2.20.1
 
