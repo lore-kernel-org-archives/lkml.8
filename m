@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0548C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A169FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F50620CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C9202146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257677;
-	bh=fLUXpRZ6kvhbDnqKO57WORhRZO9tCoIFRvf9WuY/EKk=;
+	s=default; t=1583257681;
+	bh=lLXV8zXFcoeh5vspB0Dmm2DndBeHVgQLc1e/L5frTEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=diymVKRrtkVnumHsYgGl0oT3mPbiQ3c/orYGvubuJpcpRBE237IU+/7OoXLPPT70I
-	 2595W+/2G7ZwrRuMsqX6HQ0GCEuhWY/09X9JmQKkHVdvuOtlm+uycZVqk7L6KnJ0KM
-	 ZzVqpTzucRYd/5Xqk9guKYpUKOOwbZkKj1n5RGVY=
+	b=VbyBlN320MJ0iITlsCvPB+KZzcmCUXYR/HIsqqe8oi4GMpbwcxVOXMdxWeA5dyONR
+	 zcTiJFQ5N3GRbjozQDjThFc+D7xRPUdsvwwHVpBTrK1vakiJoJ/fR1kb49ChOhBlKD
+	 KDGHLZ98IQRiRec9bs7WMYjDPjL/69BOLRCecJgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731456AbgCCRr4 (ORCPT
+        id S1731463AbgCCRr7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54872 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:47:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731445AbgCCRry (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:47:54 -0500
+        id S1730257AbgCCRr5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:47:57 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 776CE208C3;
-        Tue,  3 Mar 2020 17:47:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6D0B20870;
+        Tue,  3 Mar 2020 17:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257672;
-        bh=fLUXpRZ6kvhbDnqKO57WORhRZO9tCoIFRvf9WuY/EKk=;
+        s=default; t=1583257675;
+        bh=lLXV8zXFcoeh5vspB0Dmm2DndBeHVgQLc1e/L5frTEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AnaReL/26l4u6SNYq2yu7Bg5iCdak9/H5pmK3htQuZkmTxIrxcYpeiKYi7tRIbUKt
-         fW9MDac7sUMJNqNEEcH/lXSXA4nS7gEweV1eGehv/8Erh0IfkPW2lQnPHQBPCAmYWg
-         CAJyx7KUx+sh8SFwmBNSSqjmfrc0QIlapjhMiHYQ=
+        b=BnL+P3yX21xjiLq/brkXizgCjR+vaFi4SLSsybvLR2/AGKvzej+p1kESw/A69bIx/
+         np2msSvWv4hdRReHpglnQVnyMPVja6h33+HArC0+AXa+HXcZYVE+9E8ut8eEJajZwL
+         vnUtbf9mL8kAcbIfq8r1jiwiTOKlT5MVkaJQj9iw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com,
+        syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com,
+        syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com,
         Paul Moore <paul@paul-moore.com>
-Subject: [PATCH 5.5 085/176] audit: fix error handling in audit_data_to_entry()
-Date:   Tue,  3 Mar 2020 18:42:29 +0100
-Message-Id: <20200303174314.517029522@linuxfoundation.org>
+Subject: [PATCH 5.5 086/176] audit: always check the netlink payload length in audit_receive_msg()
+Date:   Tue,  3 Mar 2020 18:42:30 +0100
+Message-Id: <20200303174314.645746047@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,201 +63,146 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paul Moore <paul@paul-moore.com>
 
-commit 2ad3e17ebf94b7b7f3f64c050ff168f9915345eb upstream.
+commit 756125289285f6e55a03861bf4b6257aa3d19a93 upstream.
 
-Commit 219ca39427bf ("audit: use union for audit_field values since
-they are mutually exclusive") combined a number of separate fields in
-the audit_field struct into a single union.  Generally this worked
-just fine because they are generally mutually exclusive.
-Unfortunately in audit_data_to_entry() the overlap can be a problem
-when a specific error case is triggered that causes the error path
-code to attempt to cleanup an audit_field struct and the cleanup
-involves attempting to free a stored LSM string (the lsm_str field).
-Currently the code always has a non-NULL value in the
-audit_field.lsm_str field as the top of the for-loop transfers a
-value into audit_field.val (both .lsm_str and .val are part of the
-same union); if audit_data_to_entry() fails and the audit_field
-struct is specified to contain a LSM string, but the
-audit_field.lsm_str has not yet been properly set, the error handling
-code will attempt to free the bogus audit_field.lsm_str value that
-was set with audit_field.val at the top of the for-loop.
-
-This patch corrects this by ensuring that the audit_field.val is only
-set when needed (it is cleared when the audit_field struct is
-allocated with kcalloc()).  It also corrects a few other issues to
-ensure that in case of error the proper error code is returned.
+This patch ensures that we always check the netlink payload length
+in audit_receive_msg() before we take any action on the payload
+itself.
 
 Cc: stable@vger.kernel.org
-Fixes: 219ca39427bf ("audit: use union for audit_field values since they are mutually exclusive")
-Reported-by: syzbot+1f4d90ead370d72e450b@syzkaller.appspotmail.com
+Reported-by: syzbot+399c44bf1f43b8747403@syzkaller.appspotmail.com
+Reported-by: syzbot+e4b12d8d202701f08b6d@syzkaller.appspotmail.com
 Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/auditfilter.c |   71 ++++++++++++++++++++++++++++-----------------------
- 1 file changed, 39 insertions(+), 32 deletions(-)
+ kernel/audit.c |   40 +++++++++++++++++++++-------------------
+ 1 file changed, 21 insertions(+), 19 deletions(-)
 
---- a/kernel/auditfilter.c
-+++ b/kernel/auditfilter.c
-@@ -456,6 +456,7 @@ static struct audit_entry *audit_data_to
- 	bufp = data->buf;
- 	for (i = 0; i < data->field_count; i++) {
- 		struct audit_field *f = &entry->rule.fields[i];
-+		u32 f_val;
+--- a/kernel/audit.c
++++ b/kernel/audit.c
+@@ -1100,13 +1100,11 @@ static void audit_log_feature_change(int
+ 	audit_log_end(ab);
+ }
+ 
+-static int audit_set_feature(struct sk_buff *skb)
++static int audit_set_feature(struct audit_features *uaf)
+ {
+-	struct audit_features *uaf;
+ 	int i;
+ 
+ 	BUILD_BUG_ON(AUDIT_LAST_FEATURE + 1 > ARRAY_SIZE(audit_feature_names));
+-	uaf = nlmsg_data(nlmsg_hdr(skb));
+ 
+ 	/* if there is ever a version 2 we should handle that here */
+ 
+@@ -1174,6 +1172,7 @@ static int audit_receive_msg(struct sk_b
+ {
+ 	u32			seq;
+ 	void			*data;
++	int			data_len;
+ 	int			err;
+ 	struct audit_buffer	*ab;
+ 	u16			msg_type = nlh->nlmsg_type;
+@@ -1187,6 +1186,7 @@ static int audit_receive_msg(struct sk_b
+ 
+ 	seq  = nlh->nlmsg_seq;
+ 	data = nlmsg_data(nlh);
++	data_len = nlmsg_len(nlh);
+ 
+ 	switch (msg_type) {
+ 	case AUDIT_GET: {
+@@ -1210,7 +1210,7 @@ static int audit_receive_msg(struct sk_b
+ 		struct audit_status	s;
+ 		memset(&s, 0, sizeof(s));
+ 		/* guard against past and future API changes */
+-		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
++		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
+ 		if (s.mask & AUDIT_STATUS_ENABLED) {
+ 			err = audit_set_enabled(s.enabled);
+ 			if (err < 0)
+@@ -1314,7 +1314,9 @@ static int audit_receive_msg(struct sk_b
+ 			return err;
+ 		break;
+ 	case AUDIT_SET_FEATURE:
+-		err = audit_set_feature(skb);
++		if (data_len < sizeof(struct audit_features))
++			return -EINVAL;
++		err = audit_set_feature(data);
+ 		if (err)
+ 			return err;
+ 		break;
+@@ -1326,6 +1328,8 @@ static int audit_receive_msg(struct sk_b
+ 
+ 		err = audit_filter(msg_type, AUDIT_FILTER_USER);
+ 		if (err == 1) { /* match or error */
++			char *str = data;
++
+ 			err = 0;
+ 			if (msg_type == AUDIT_USER_TTY) {
+ 				err = tty_audit_push();
+@@ -1333,26 +1337,24 @@ static int audit_receive_msg(struct sk_b
+ 					break;
+ 			}
+ 			audit_log_user_recv_msg(&ab, msg_type);
+-			if (msg_type != AUDIT_USER_TTY)
++			if (msg_type != AUDIT_USER_TTY) {
++				/* ensure NULL termination */
++				str[data_len - 1] = '\0';
+ 				audit_log_format(ab, " msg='%.*s'",
+ 						 AUDIT_MESSAGE_TEXT_MAX,
+-						 (char *)data);
+-			else {
+-				int size;
+-
++						 str);
++			} else {
+ 				audit_log_format(ab, " data=");
+-				size = nlmsg_len(nlh);
+-				if (size > 0 &&
+-				    ((unsigned char *)data)[size - 1] == '\0')
+-					size--;
+-				audit_log_n_untrustedstring(ab, data, size);
++				if (data_len > 0 && str[data_len - 1] == '\0')
++					data_len--;
++				audit_log_n_untrustedstring(ab, str, data_len);
+ 			}
+ 			audit_log_end(ab);
+ 		}
+ 		break;
+ 	case AUDIT_ADD_RULE:
+ 	case AUDIT_DEL_RULE:
+-		if (nlmsg_len(nlh) < sizeof(struct audit_rule_data))
++		if (data_len < sizeof(struct audit_rule_data))
+ 			return -EINVAL;
+ 		if (audit_enabled == AUDIT_LOCKED) {
+ 			audit_log_common_recv_msg(audit_context(), &ab,
+@@ -1364,7 +1366,7 @@ static int audit_receive_msg(struct sk_b
+ 			audit_log_end(ab);
+ 			return -EPERM;
+ 		}
+-		err = audit_rule_change(msg_type, seq, data, nlmsg_len(nlh));
++		err = audit_rule_change(msg_type, seq, data, data_len);
+ 		break;
+ 	case AUDIT_LIST_RULES:
+ 		err = audit_list_rules_send(skb, seq);
+@@ -1379,7 +1381,7 @@ static int audit_receive_msg(struct sk_b
+ 	case AUDIT_MAKE_EQUIV: {
+ 		void *bufp = data;
+ 		u32 sizes[2];
+-		size_t msglen = nlmsg_len(nlh);
++		size_t msglen = data_len;
+ 		char *old, *new;
  
  		err = -EINVAL;
+@@ -1455,7 +1457,7 @@ static int audit_receive_msg(struct sk_b
  
-@@ -464,12 +465,12 @@ static struct audit_entry *audit_data_to
- 			goto exit_free;
- 
- 		f->type = data->fields[i];
--		f->val = data->values[i];
-+		f_val = data->values[i];
- 
- 		/* Support legacy tests for a valid loginuid */
--		if ((f->type == AUDIT_LOGINUID) && (f->val == AUDIT_UID_UNSET)) {
-+		if ((f->type == AUDIT_LOGINUID) && (f_val == AUDIT_UID_UNSET)) {
- 			f->type = AUDIT_LOGINUID_SET;
--			f->val = 0;
-+			f_val = 0;
- 			entry->rule.pflags |= AUDIT_LOGINUID_LEGACY;
- 		}
- 
-@@ -485,7 +486,7 @@ static struct audit_entry *audit_data_to
- 		case AUDIT_SUID:
- 		case AUDIT_FSUID:
- 		case AUDIT_OBJ_UID:
--			f->uid = make_kuid(current_user_ns(), f->val);
-+			f->uid = make_kuid(current_user_ns(), f_val);
- 			if (!uid_valid(f->uid))
- 				goto exit_free;
- 			break;
-@@ -494,11 +495,12 @@ static struct audit_entry *audit_data_to
- 		case AUDIT_SGID:
- 		case AUDIT_FSGID:
- 		case AUDIT_OBJ_GID:
--			f->gid = make_kgid(current_user_ns(), f->val);
-+			f->gid = make_kgid(current_user_ns(), f_val);
- 			if (!gid_valid(f->gid))
- 				goto exit_free;
- 			break;
- 		case AUDIT_ARCH:
-+			f->val = f_val;
- 			entry->rule.arch_f = f;
- 			break;
- 		case AUDIT_SUBJ_USER:
-@@ -511,11 +513,13 @@ static struct audit_entry *audit_data_to
- 		case AUDIT_OBJ_TYPE:
- 		case AUDIT_OBJ_LEV_LOW:
- 		case AUDIT_OBJ_LEV_HIGH:
--			str = audit_unpack_string(&bufp, &remain, f->val);
--			if (IS_ERR(str))
-+			str = audit_unpack_string(&bufp, &remain, f_val);
-+			if (IS_ERR(str)) {
-+				err = PTR_ERR(str);
- 				goto exit_free;
--			entry->rule.buflen += f->val;
--
-+			}
-+			entry->rule.buflen += f_val;
-+			f->lsm_str = str;
- 			err = security_audit_rule_init(f->type, f->op, str,
- 						       (void **)&f->lsm_rule);
- 			/* Keep currently invalid fields around in case they
-@@ -524,68 +528,71 @@ static struct audit_entry *audit_data_to
- 				pr_warn("audit rule for LSM \'%s\' is invalid\n",
- 					str);
- 				err = 0;
--			}
--			if (err) {
--				kfree(str);
-+			} else if (err)
- 				goto exit_free;
--			} else
--				f->lsm_str = str;
- 			break;
- 		case AUDIT_WATCH:
--			str = audit_unpack_string(&bufp, &remain, f->val);
--			if (IS_ERR(str))
-+			str = audit_unpack_string(&bufp, &remain, f_val);
-+			if (IS_ERR(str)) {
-+				err = PTR_ERR(str);
- 				goto exit_free;
--			entry->rule.buflen += f->val;
--
--			err = audit_to_watch(&entry->rule, str, f->val, f->op);
-+			}
-+			err = audit_to_watch(&entry->rule, str, f_val, f->op);
- 			if (err) {
- 				kfree(str);
- 				goto exit_free;
- 			}
-+			entry->rule.buflen += f_val;
- 			break;
- 		case AUDIT_DIR:
--			str = audit_unpack_string(&bufp, &remain, f->val);
--			if (IS_ERR(str))
-+			str = audit_unpack_string(&bufp, &remain, f_val);
-+			if (IS_ERR(str)) {
-+				err = PTR_ERR(str);
- 				goto exit_free;
--			entry->rule.buflen += f->val;
--
-+			}
- 			err = audit_make_tree(&entry->rule, str, f->op);
- 			kfree(str);
- 			if (err)
- 				goto exit_free;
-+			entry->rule.buflen += f_val;
- 			break;
- 		case AUDIT_INODE:
-+			f->val = f_val;
- 			err = audit_to_inode(&entry->rule, f);
- 			if (err)
- 				goto exit_free;
- 			break;
- 		case AUDIT_FILTERKEY:
--			if (entry->rule.filterkey || f->val > AUDIT_MAX_KEY_LEN)
-+			if (entry->rule.filterkey || f_val > AUDIT_MAX_KEY_LEN)
- 				goto exit_free;
--			str = audit_unpack_string(&bufp, &remain, f->val);
--			if (IS_ERR(str))
-+			str = audit_unpack_string(&bufp, &remain, f_val);
-+			if (IS_ERR(str)) {
-+				err = PTR_ERR(str);
- 				goto exit_free;
--			entry->rule.buflen += f->val;
-+			}
-+			entry->rule.buflen += f_val;
- 			entry->rule.filterkey = str;
- 			break;
- 		case AUDIT_EXE:
--			if (entry->rule.exe || f->val > PATH_MAX)
-+			if (entry->rule.exe || f_val > PATH_MAX)
- 				goto exit_free;
--			str = audit_unpack_string(&bufp, &remain, f->val);
-+			str = audit_unpack_string(&bufp, &remain, f_val);
- 			if (IS_ERR(str)) {
- 				err = PTR_ERR(str);
- 				goto exit_free;
- 			}
--			entry->rule.buflen += f->val;
--
--			audit_mark = audit_alloc_mark(&entry->rule, str, f->val);
-+			audit_mark = audit_alloc_mark(&entry->rule, str, f_val);
- 			if (IS_ERR(audit_mark)) {
- 				kfree(str);
- 				err = PTR_ERR(audit_mark);
- 				goto exit_free;
- 			}
-+			entry->rule.buflen += f_val;
- 			entry->rule.exe = audit_mark;
- 			break;
-+		default:
-+			f->val = f_val;
-+			break;
- 		}
- 	}
- 
+ 		memset(&s, 0, sizeof(s));
+ 		/* guard against past and future API changes */
+-		memcpy(&s, data, min_t(size_t, sizeof(s), nlmsg_len(nlh)));
++		memcpy(&s, data, min_t(size_t, sizeof(s), data_len));
+ 		/* check if new data is valid */
+ 		if ((s.enabled != 0 && s.enabled != 1) ||
+ 		    (s.log_passwd != 0 && s.log_passwd != 1))
 
 
