@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E2C6C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A28C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76188214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44D1214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:49:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257794;
-	bh=RBjNpK8Qs+hQfI47cgTFrU6KM7ouFwPOh+BzvMklbxE=;
+	s=default; t=1583257797;
+	bh=sDe29Kms8jsQ3jHa8tH7w8NuRA3O70rxNN7v9CocQ20=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fr8/SbIhC7rZFm8CRTfRRQJmNEKPPNNJiwKRXhOP/EK399oU47TfG7MsoiIlWNYyM
-	 gugo2wbEBfO4TflffA9wbbxbB7A0JGD74CWVgjnUl7riejcqgHZ8sNjFddLzDU187u
-	 knLFwpg0WGC9kg86GYbkkoCiotCJbiIyglgzCp7E=
+	b=obuYxuSiTnbmy6/SwSjMj9n1rsnOTJnj82ifNh7n1l6X5BTNYfM9wj8kTs4LKTOSw
+	 ZOHFClOjDpfaqWh/ycBPU2K8h9Bf7qteyd0VwVVfRp4AuR5nPuldqd8JNZln/xqXYq
+	 A3Iwe/eba7X0a5UjEDSh+IxCL0XAZcny0BkJFgRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731113AbgCCRtx (ORCPT
+        id S1731837AbgCCRtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:49:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57188 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:49:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731823AbgCCRtu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:49:50 -0500
+        id S1729925AbgCCRtv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:49:51 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C95220CC7;
-        Tue,  3 Mar 2020 17:49:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1573F2146E;
+        Tue,  3 Mar 2020 17:49:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257789;
-        bh=RBjNpK8Qs+hQfI47cgTFrU6KM7ouFwPOh+BzvMklbxE=;
+        s=default; t=1583257791;
+        bh=sDe29Kms8jsQ3jHa8tH7w8NuRA3O70rxNN7v9CocQ20=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XWmurU9V/U8yW2pYQMs14B+IM+7lwwHQKZ1kQR3v+EUpQ6GTLPKxJxDwSwKxCwfi3
-         CleoQ4cN1Ln9KlmBjTjQn9yc3GMeMJM0elb7yIvMUv0s6jk2BF3c7BDy2FcL8j8TmL
-         MEOpJHw3DbTKYdp6UeEs71T3NT0uuvL6Ml5LCEuM=
+        b=vcYkxkCbOqtZyVe/gu8ZdfV+omy8+p2zJfchG9as1a7XTf+wVziynxgYhJDB1uW0G
+         sWjKi51bJMaQ43Q6Hl0UwOUh4pVTfBgsTa8nrrXm+gv6JOzKuh276GAgBLMlhwc8RF
+         IhnlrOIoZDhI+LW80Lac57vB63qxM1+4FBcab6+s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christophe Vu-Brugier <cvubrugier@fastmail.fm>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Pavel Belous <pbelous@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
+        syzbot+4b1fe8105f8044a26162@syzkaller.appspotmail.com,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 129/176] net: atlantic: fix use after free kasan warn
-Date:   Tue,  3 Mar 2020 18:43:13 +0100
-Message-Id: <20200303174319.649509816@linuxfoundation.org>
+Subject: [PATCH 5.5 103/176] net/smc: transfer fasync_list in case of fallback
+Date:   Tue,  3 Mar 2020 18:42:47 +0100
+Message-Id: <20200303174316.760064048@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -63,62 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Belous <pbelous@marvell.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-commit a4980919ad6a7be548d499bc5338015e1a9191c6 upstream.
+commit 67f562e3e147750a02b2a91d21a163fc44a1d13e upstream.
 
-skb->len is used to calculate statistics after xmit invocation.
+SMC does not work together with FASTOPEN. If sendmsg() is called with
+flag MSG_FASTOPEN in SMC_INIT state, the SMC-socket switches to
+fallback mode. To handle the previous ioctl FIOASYNC call correctly
+in this case, it is necessary to transfer the socket wait queue
+fasync_list to the internal TCP socket.
 
-Under a stress load it may happen that skb will be xmited,
-rx interrupt will come and skb will be freed, all before xmit function
-is even returned.
-
-Eventually, skb->len will access unallocated area.
-
-Moving stats calculation into tx_clean routine.
-
-Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
-Reported-by: Christophe Vu-Brugier <cvubrugier@fastmail.fm>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Pavel Belous <pbelous@marvell.com>
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Reported-by: syzbot+4b1fe8105f8044a26162@syzkaller.appspotmail.com
+Fixes: ee9dfbef02d18 ("net/smc: handle sockopts forcing fallback")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c  |    4 ----
- drivers/net/ethernet/aquantia/atlantic/aq_ring.c |    7 +++++--
- 2 files changed, 5 insertions(+), 6 deletions(-)
+ net/smc/af_smc.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -655,10 +655,6 @@ int aq_nic_xmit(struct aq_nic_s *self, s
- 	if (likely(frags)) {
- 		err = self->aq_hw_ops->hw_ring_tx_xmit(self->aq_hw,
- 						       ring, frags);
--		if (err >= 0) {
--			++ring->stats.tx.packets;
--			ring->stats.tx.bytes += skb->len;
--		}
- 	} else {
- 		err = NETDEV_TX_BUSY;
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -470,6 +470,8 @@ static void smc_switch_to_fallback(struc
+ 	if (smc->sk.sk_socket && smc->sk.sk_socket->file) {
+ 		smc->clcsock->file = smc->sk.sk_socket->file;
+ 		smc->clcsock->file->private_data = smc->clcsock;
++		smc->clcsock->wq.fasync_list =
++			smc->sk.sk_socket->wq.fasync_list;
  	}
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-@@ -272,9 +272,12 @@ bool aq_ring_tx_clean(struct aq_ring_s *
- 			}
- 		}
+ }
  
--		if (unlikely(buff->is_eop))
--			dev_kfree_skb_any(buff->skb);
-+		if (unlikely(buff->is_eop)) {
-+			++self->stats.rx.packets;
-+			self->stats.tx.bytes += buff->skb->len;
- 
-+			dev_kfree_skb_any(buff->skb);
-+		}
- 		buff->pa = 0U;
- 		buff->eop_index = 0xffffU;
- 		self->sw_head = aq_ring_next_dx(self, self->sw_head);
 
 
