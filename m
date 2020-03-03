@@ -2,127 +2,78 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CE5C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:51:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A36EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3225020863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:51:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D65B2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbgCCQvV (ORCPT
+        id S1730470AbgCCQwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:51:21 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:49178 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730115AbgCCQvU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:51:20 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j9Akd-0004ZP-Kd; Tue, 03 Mar 2020 16:50:35 +0000
-Date:   Tue, 3 Mar 2020 17:50:34 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCHv5] exec: Fix a deadlock in ptrace
-Message-ID: <20200303165034.5w76hbatbnr64pkd@wittgenstein>
-References: <87k142lpfz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfmloir.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nmjulm.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003021531.C77EF10@keescook>
- <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
- <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nlii0b.fsf@x220.int.ebiederm.org>
+        Tue, 3 Mar 2020 11:52:05 -0500
+Received: from mga12.intel.com ([192.55.52.136]:1727 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729156AbgCCQwE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:52:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 08:52:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="228984318"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 03 Mar 2020 08:52:04 -0800
+Date:   Tue, 3 Mar 2020 08:52:04 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 08/13] KVM: x86: Dynamically allocate per-vCPU
+ emulation context
+Message-ID: <20200303165203.GM1439@linux.intel.com>
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
+ <20200218232953.5724-9-sean.j.christopherson@intel.com>
+ <87wo89i7e3.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87v9nlii0b.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87wo89i7e3.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 09:18:44AM -0600, Eric W. Biederman wrote:
-> Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+On Wed, Feb 26, 2020 at 06:29:56PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+> > @@ -9409,6 +9451,9 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+> >  
+> >  	kvm_x86_ops->vcpu_free(vcpu);
+> >  
+> > +	if (vcpu->arch.emulate_ctxt)
+> > +		kmem_cache_free(x86_emulator_cache, vcpu->arch.emulate_ctxt);
 > 
-> > This fixes a deadlock in the tracer when tracing a multi-threaded
-> > application that calls execve while more than one thread are running.
-> >
-> > I observed that when running strace on the gcc test suite, it always
-> > blocks after a while, when expect calls execve, because other threads
-> > have to be terminated.  They send ptrace events, but the strace is no
-> > longer able to respond, since it is blocked in vm_access.
-> >
-> > The deadlock is always happening when strace needs to access the
-> > tracees process mmap, while another thread in the tracee starts to
-> > execve a child process, but that cannot continue until the
-> > PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
-> 
-> A couple of things.
-> 
-> Why do we think it is safe to change the behavior exposed to userspace?
-> Not the deadlock but all of the times the current code would not
-> deadlock?
-> 
-> Especially given that this is a small window it might be hard for people
-> to track down and report so we need a strong argument that this won't
-> break existing userspace before we just change things.
-> 
-> Usually surveying all of the users of a system call that we can find
-> and checking to see if they might be affected by the change in behavior
-> is difficult enough that we usually opt for not being lazy and
-> preserving the behavior.
-> 
-> This patch is up to two changes in behavior now, that could potentially
-> affect a whole array of programs.  Adding linux-api so that this change
-> in behavior can be documented if/when this change goes through.
-> 
-> If you can split the documentation and test fixes out into separate
-> patches that would help reviewing this code, or please make it explicit
-> that the your are changing documentation about behavior that is changing
-> with this patch.
+> Checking for NULL here seems superfluous as we create the context in
+> kvm_arch_vcpu_create() unconditionally. I'd suggest we move the check to 
+> "[PATCH v2 12/13] KVM: x86: Add variable to control existence of
+> emulator" where 'enable_emulator' global is added.
 
-Agreed. I think it'd be good to do it in three patches:
-1. unrelated documentation update
-2. fix + documentation changes specific to the fix
-3. test(s)
+Ya, checking here is premature.
 
-Christian
+> > +
+> >  	free_cpumask_var(vcpu->arch.wbinvd_dirty_mask);
+> >  	kmem_cache_free(x86_fpu_cache, vcpu->arch.user_fpu);
+> >  	kmem_cache_free(x86_fpu_cache, vcpu->arch.guest_fpu);
+> 
+> -- 
+> Vitaly
+> 
