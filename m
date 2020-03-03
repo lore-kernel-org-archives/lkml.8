@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD947C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15A15C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8840620CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E67E3208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:47:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257670;
-	bh=RHF07HH/10+qbB+CsSVVFZKfwr43HSrnCB+OSo7B0FI=;
+	s=default; t=1583257675;
+	bh=lOAFURSgOaTT+A5J8jUDRQ8v5EdHCuVrQdNESG6ru54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YK3gazKr570RYahCzvo2pyDcup3bBHrtC58aMO1YPp2DINYfqOjbYMdnb4dvqaSn8
-	 jLu0lxbHKOHXZt0ScaqdWzvtprvw/xvrPKmgpLaO6Z4WKeNycLtXeRqv4j+ToEQt+2
-	 /uZXOb4J6M+EnhiOS3O7/K/nOq+5PHHf5hB8AsP8=
+	b=1HVbgfjIRLIFQFYe9IHprdhCbzfMR3INg5CQKFe8Cg25XoTYwzZJNS/cR1WRr+Qkk
+	 fXcp1tILKoms/WWKZ0kt6qfAzkyOxTiQJuRTEFUF10oOuJft+mO/8lcy034ywp7nUF
+	 Txc/N138+jAWCmU7UXFRb7CbQRsARX/nA2tMK8pM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbgCCRrt (ORCPT
+        id S1730403AbgCCRry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54702 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:47:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731418AbgCCRro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:47:44 -0500
+        id S1731426AbgCCRrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:47:47 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D43CD208C3;
-        Tue,  3 Mar 2020 17:47:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07023208C3;
+        Tue,  3 Mar 2020 17:47:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257664;
-        bh=RHF07HH/10+qbB+CsSVVFZKfwr43HSrnCB+OSo7B0FI=;
+        s=default; t=1583257667;
+        bh=lOAFURSgOaTT+A5J8jUDRQ8v5EdHCuVrQdNESG6ru54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SqHlIjlQhTyq0Fd+Nxyqi7k7rx8DvAzcWlBS6TFEvaI3HXGGzzaRGgbpot4Kn6hW6
-         k8m8qne9RF5wo8rNhFiH6ailIl5Daj5tEzx3YdH1BcuH8KnhzTPsrkP+QvH3tpbxwT
-         ook123pWKbqD0UPC26YJc7R/FUtWChMAMyJpXmco=
+        b=SxOtlqhXIGGW6QKFG3jmqLUAuPgjZjw44Lfv8vV6D6geHV4W0SSA/oMF+DsVe081L
+         ubxVuOR1NLwsq3ycO8Qb1vnOT4XZBc4NxokpdCejNmTWwi7PpsmedAcnNTgpRuELK3
+         Z4d1hpgsSxXrMTDQSFKU39he0Kkn13iANZrvKGJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Remus <jremus@linux.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.5 082/176] scsi: zfcp: fix wrong data and display format of SFP+ temperature
-Date:   Tue,  3 Mar 2020 18:42:26 +0100
-Message-Id: <20200303174314.133709004@linuxfoundation.org>
+        stable@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 5.5 083/176] docs: Fix empty parallelism argument
+Date:   Tue,  3 Mar 2020 18:42:27 +0100
+Message-Id: <20200303174314.249200773@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,60 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Block <bblock@linux.ibm.com>
+From: Kees Cook <keescook@chromium.org>
 
-commit a3fd4bfe85fbb67cf4ec1232d0af625ece3c508b upstream.
+commit adc10f5b0a03606e30c704cff1f0283a696d0260 upstream.
 
-When implementing support for retrieval of local diagnostic data from the
-FCP channel, the wrong data format was assumed for the temperature of the
-local SFP+ connector. The Fibre Channel Link Services (FC-LS-3)
-specification is not clear on the format of the stored integer, and only
-after consulting the SNIA specification SFF-8472 did we realize it is
-stored as two's complement. Thus, the used data and display format is
-wrong, and highly misleading for users when the temperature should drop
-below 0°C (however unlikely that may be).
+When there was no parallelism (no top-level -j arg and a pre-1.7
+sphinx-build), the argument passed would be empty ("") instead of just
+being missing, which would (understandably) badly confuse sphinx-build.
+Fix this by removing the quotes.
 
-To fix this, change the data format in `struct fsf_qtcb_bottom_port` from
-unsigned to signed, and change the printf format string used to generate
-`zfcp_sysfs_adapter_diag_sfp_temperature_show()` from `%hu` to `%hd`.
-
-Link: https://lore.kernel.org/r/d6e3be5428da5c9490cfff4df7cae868bc9f1a7e.1582039501.git.bblock@linux.ibm.com
-Fixes: a10a61e807b0 ("scsi: zfcp: support retrieval of SFP Data via Exchange Port Data")
-Fixes: 6028f7c4cd87 ("scsi: zfcp: introduce sysfs interface for diagnostics of local SFP transceiver")
-Cc: <stable@vger.kernel.org> # 5.5+
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Fedor Loshakov <loshakov@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reported-by: Rafael J. Wysocki <rafael@kernel.org>
+Fixes: 51e46c7a4007 ("docs, parallelism: Rearrange how jobserver reservations are made")
+Cc: stable@vger.kernel.org  # v5.5 only
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/s390/scsi/zfcp_fsf.h   |    2 +-
- drivers/s390/scsi/zfcp_sysfs.c |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ Documentation/sphinx/parallel-wrapper.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/s390/scsi/zfcp_fsf.h
-+++ b/drivers/s390/scsi/zfcp_fsf.h
-@@ -410,7 +410,7 @@ struct fsf_qtcb_bottom_port {
- 	u8 cb_util;
- 	u8 a_util;
- 	u8 res2;
--	u16 temperature;
-+	s16 temperature;
- 	u16 vcc;
- 	u16 tx_bias;
- 	u16 tx_power;
---- a/drivers/s390/scsi/zfcp_sysfs.c
-+++ b/drivers/s390/scsi/zfcp_sysfs.c
-@@ -800,7 +800,7 @@ static ZFCP_DEV_ATTR(adapter_diag, b2b_c
- 	static ZFCP_DEV_ATTR(adapter_diag_sfp, _name, 0400,		       \
- 			     zfcp_sysfs_adapter_diag_sfp_##_name##_show, NULL)
+--- a/Documentation/sphinx/parallel-wrapper.sh
++++ b/Documentation/sphinx/parallel-wrapper.sh
+@@ -30,4 +30,4 @@ if [ -n "$parallel" ] ; then
+ 	parallel="-j$parallel"
+ fi
  
--ZFCP_DEFINE_DIAG_SFP_ATTR(temperature, temperature, 5, "%hu");
-+ZFCP_DEFINE_DIAG_SFP_ATTR(temperature, temperature, 6, "%hd");
- ZFCP_DEFINE_DIAG_SFP_ATTR(vcc, vcc, 5, "%hu");
- ZFCP_DEFINE_DIAG_SFP_ATTR(tx_bias, tx_bias, 5, "%hu");
- ZFCP_DEFINE_DIAG_SFP_ATTR(tx_power, tx_power, 5, "%hu");
+-exec "$sphinx" "$parallel" "$@"
++exec "$sphinx" $parallel "$@"
 
 
