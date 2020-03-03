@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA4A4C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEC82C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C6D2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99D082073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258991;
-	bh=texoo3q8x2jij7O8X63DZtxgNyt1H6icxYPG9lvfRNo=;
+	s=default; t=1583258997;
+	bh=TWaHQuaX+udslyLnLdBDaWL8PltVKCSg+RqVLp2g4R8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uh84TVEjk7D4QFwx8RLPWobQLDMyxjaIhx/yWvn7T6iYRE78yln5mEg0/e6EHbrNZ
-	 gqtsCU8UOwZYf8JhTAPgivb0LpE2khM+uuzGEA2r4o/whNPLt64P5erx9tLOylg6tz
-	 0CfCAsRspf1xe0RMkAZGuLpGIz0kWFynVIAozoUA=
+	b=dPyMUaVdY26xt11n9CoEFKuiLLgsLloW7TkIKP3IvqmW75jVrss/fmzSWIAOi3zF2
+	 udmV2BaLcJMVcQxQD71ZVUgdOY260KHOVds9G2D7psNi9o8lLQYlvbCzowCWLl9/Ee
+	 iYKHsizMskCBa7eJnNHHd+iqPaSkwGq5QzHVPaww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732050AbgCCRvu (ORCPT
+        id S1732013AbgCCRvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:51:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60012 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:51:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730481AbgCCRvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:47 -0500
+        id S1731511AbgCCRvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8842C20728;
-        Tue,  3 Mar 2020 17:51:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D962820728;
+        Tue,  3 Mar 2020 17:51:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257907;
-        bh=texoo3q8x2jij7O8X63DZtxgNyt1H6icxYPG9lvfRNo=;
+        s=default; t=1583257894;
+        bh=TWaHQuaX+udslyLnLdBDaWL8PltVKCSg+RqVLp2g4R8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rU4i0StA/Nj/6Fd+b8fepqP6sDbPsi9cD2lLQIuHwQ8IkPMqJXsa/w76UmpRfQZim
-         lMB2P85irjh//wbr5RIG/G2kOV00bYyuHIdvsVVTtjvVQAACN7GoEb8/xm45LjdFgx
-         Gz+AxPy7jaF8IynvRNma6NrBgSqgyQ87c4BaG4E0=
+        b=OchWDomYLscnVZNWQHHKP3rDG+Vu18ic93epn4Tfjq9RMjTuZe5U1R2SprX9PrkKM
+         3f1NW5B+eZniHz3vVTp1DzzUA6x6On++LzyhnU8DqbOSrJiI1xjsaE9O17VUTpdOG/
+         EJzVfE27QFDxEsXzVe8hWKqzF2bFGHd7wx90x6sw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jim Mattson <jmattson@google.com>,
-        Liran Alon <liran.alon@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Peter Shier <pshier@google.com>,
-        Oliver Upton <oupton@google.com>,
-        Jon Cargille <jcargill@google.com>
-Subject: [PATCH 5.5 175/176] kvm: nVMX: VMWRITE checks VMCS-link pointer before VMCS field
-Date:   Tue,  3 Mar 2020 18:43:59 +0100
-Message-Id: <20200303174324.057218896@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 141/176] KVM: SVM: Override default MMIO mask if memory encryption is enabled
+Date:   Tue,  3 Mar 2020 18:43:25 +0100
+Message-Id: <20200303174321.097546108@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -64,130 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Mattson <jmattson@google.com>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-commit dd2d6042b7f4a5440705b4ffc6c4c2dba81a43b7 upstream.
+commit 52918ed5fcf05d97d257f4131e19479da18f5d16 upstream.
 
-According to the SDM, a VMWRITE in VMX non-root operation with an
-invalid VMCS-link pointer results in VMfailInvalid before the validity
-of the VMCS field in the secondary source operand is checked.
+The KVM MMIO support uses bit 51 as the reserved bit to cause nested page
+faults when a guest performs MMIO. The AMD memory encryption support uses
+a CPUID function to define the encryption bit position. Given this, it is
+possible that these bits can conflict.
 
-For consistency, modify both handle_vmwrite and handle_vmread, even
-though there was no problem with the latter.
+Use svm_hardware_setup() to override the MMIO mask if memory encryption
+support is enabled. Various checks are performed to ensure that the mask
+is properly defined and rsvd_bits() is used to generate the new mask (as
+was done prior to the change that necessitated this patch).
 
-Fixes: 6d894f498f5d1 ("KVM: nVMX: vmread/vmwrite: Use shadow vmcs12 if running L2")
-Signed-off-by: Jim Mattson <jmattson@google.com>
-Cc: Liran Alon <liran.alon@oracle.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Peter Shier <pshier@google.com>
-Reviewed-by: Oliver Upton <oupton@google.com>
-Reviewed-by: Jon Cargille <jcargill@google.com>
+Fixes: 28a1f3ac1d0c ("kvm: x86: Set highest physical address bits in non-present/reserved SPTEs")
+Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/vmx/nested.c |   59 +++++++++++++++++++---------------------------
- 1 file changed, 25 insertions(+), 34 deletions(-)
+ arch/x86/kvm/svm.c |   43 +++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
 
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -4808,32 +4808,28 @@ static int handle_vmread(struct kvm_vcpu
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1307,6 +1307,47 @@ static void shrink_ple_window(struct kvm
+ 	}
+ }
+ 
++/*
++ * The default MMIO mask is a single bit (excluding the present bit),
++ * which could conflict with the memory encryption bit. Check for
++ * memory encryption support and override the default MMIO mask if
++ * memory encryption is enabled.
++ */
++static __init void svm_adjust_mmio_mask(void)
++{
++	unsigned int enc_bit, mask_bit;
++	u64 msr, mask;
++
++	/* If there is no memory encryption support, use existing mask */
++	if (cpuid_eax(0x80000000) < 0x8000001f)
++		return;
++
++	/* If memory encryption is not enabled, use existing mask */
++	rdmsrl(MSR_K8_SYSCFG, msr);
++	if (!(msr & MSR_K8_SYSCFG_MEM_ENCRYPT))
++		return;
++
++	enc_bit = cpuid_ebx(0x8000001f) & 0x3f;
++	mask_bit = boot_cpu_data.x86_phys_bits;
++
++	/* Increment the mask bit if it is the same as the encryption bit */
++	if (enc_bit == mask_bit)
++		mask_bit++;
++
++	/*
++	 * If the mask bit location is below 52, then some bits above the
++	 * physical addressing limit will always be reserved, so use the
++	 * rsvd_bits() function to generate the mask. This mask, along with
++	 * the present bit, will be used to generate a page fault with
++	 * PFER.RSV = 1.
++	 *
++	 * If the mask bit location is 52 (or above), then clear the mask.
++	 */
++	mask = (mask_bit < 52) ? rsvd_bits(mask_bit, 51) | PT_PRESENT_MASK : 0;
++
++	kvm_mmu_set_mmio_spte_mask(mask, mask, PT_WRITABLE_MASK | PT_USER_MASK);
++}
++
+ static __init int svm_hardware_setup(void)
  {
- 	unsigned long field;
- 	u64 field_value;
-+	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long exit_qualification = vmcs_readl(EXIT_QUALIFICATION);
- 	u32 vmx_instruction_info = vmcs_read32(VMX_INSTRUCTION_INFO);
- 	int len;
- 	gva_t gva = 0;
--	struct vmcs12 *vmcs12;
-+	struct vmcs12 *vmcs12 = is_guest_mode(vcpu) ? get_shadow_vmcs12(vcpu)
-+						    : get_vmcs12(vcpu);
- 	struct x86_exception e;
- 	short offset;
+ 	int cpu;
+@@ -1361,6 +1402,8 @@ static __init int svm_hardware_setup(voi
+ 		}
+ 	}
  
- 	if (!nested_vmx_check_permission(vcpu))
- 		return 1;
- 
--	if (to_vmx(vcpu)->nested.current_vmptr == -1ull)
-+	/*
-+	 * In VMX non-root operation, when the VMCS-link pointer is -1ull,
-+	 * any VMREAD sets the ALU flags for VMfailInvalid.
-+	 */
-+	if (vmx->nested.current_vmptr == -1ull ||
-+	    (is_guest_mode(vcpu) &&
-+	     get_vmcs12(vcpu)->vmcs_link_pointer == -1ull))
- 		return nested_vmx_failInvalid(vcpu);
- 
--	if (!is_guest_mode(vcpu))
--		vmcs12 = get_vmcs12(vcpu);
--	else {
--		/*
--		 * When vmcs->vmcs_link_pointer is -1ull, any VMREAD
--		 * to shadowed-field sets the ALU flags for VMfailInvalid.
--		 */
--		if (get_vmcs12(vcpu)->vmcs_link_pointer == -1ull)
--			return nested_vmx_failInvalid(vcpu);
--		vmcs12 = get_shadow_vmcs12(vcpu);
--	}
--
- 	/* Decode instruction info and find the field to read */
- 	field = kvm_register_readl(vcpu, (((vmx_instruction_info) >> 28) & 0xf));
- 
-@@ -4912,13 +4908,20 @@ static int handle_vmwrite(struct kvm_vcp
- 	 */
- 	u64 field_value = 0;
- 	struct x86_exception e;
--	struct vmcs12 *vmcs12;
-+	struct vmcs12 *vmcs12 = is_guest_mode(vcpu) ? get_shadow_vmcs12(vcpu)
-+						    : get_vmcs12(vcpu);
- 	short offset;
- 
- 	if (!nested_vmx_check_permission(vcpu))
- 		return 1;
- 
--	if (vmx->nested.current_vmptr == -1ull)
-+	/*
-+	 * In VMX non-root operation, when the VMCS-link pointer is -1ull,
-+	 * any VMWRITE sets the ALU flags for VMfailInvalid.
-+	 */
-+	if (vmx->nested.current_vmptr == -1ull ||
-+	    (is_guest_mode(vcpu) &&
-+	     get_vmcs12(vcpu)->vmcs_link_pointer == -1ull))
- 		return nested_vmx_failInvalid(vcpu);
- 
- 	if (vmx_instruction_info & (1u << 10))
-@@ -4946,24 +4949,12 @@ static int handle_vmwrite(struct kvm_vcp
- 		return nested_vmx_failValid(vcpu,
- 			VMXERR_VMWRITE_READ_ONLY_VMCS_COMPONENT);
- 
--	if (!is_guest_mode(vcpu)) {
--		vmcs12 = get_vmcs12(vcpu);
--
--		/*
--		 * Ensure vmcs12 is up-to-date before any VMWRITE that dirties
--		 * vmcs12, else we may crush a field or consume a stale value.
--		 */
--		if (!is_shadow_field_rw(field))
--			copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
--	} else {
--		/*
--		 * When vmcs->vmcs_link_pointer is -1ull, any VMWRITE
--		 * to shadowed-field sets the ALU flags for VMfailInvalid.
--		 */
--		if (get_vmcs12(vcpu)->vmcs_link_pointer == -1ull)
--			return nested_vmx_failInvalid(vcpu);
--		vmcs12 = get_shadow_vmcs12(vcpu);
--	}
-+	/*
-+	 * Ensure vmcs12 is up-to-date before any VMWRITE that dirties
-+	 * vmcs12, else we may crush a field or consume a stale value.
-+	 */
-+	if (!is_guest_mode(vcpu) && !is_shadow_field_rw(field))
-+		copy_vmcs02_to_vmcs12_rare(vcpu, vmcs12);
- 
- 	offset = vmcs_field_to_offset(field);
- 	if (offset < 0)
++	svm_adjust_mmio_mask();
++
+ 	for_each_possible_cpu(cpu) {
+ 		r = svm_cpu_init(cpu);
+ 		if (r)
 
 
