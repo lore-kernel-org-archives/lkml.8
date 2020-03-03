@@ -2,51 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AADC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C02C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C438208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FD14214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257536;
-	bh=Rqp/ARyYPO2zu40G6KAp2PLfdRwHjZ7O81/4Wjtotyk=;
+	s=default; t=1583257539;
+	bh=oBFlDE9A/gis0xHj4tQtmtNTj/P1n3aibbo6E0lXCWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zcQmCvlpvlXh7ouQeJ4qz0Y7Pf3rhwa7wmSxaWljZt8Yml9I4ic0dFHa4LjZrDwve
-	 T4XlrFuDNQH5BgvWwawYPDsXqSSPtZdhVKl5y2HijmWvoU5QvgBEAMT54gtb7+AUF2
-	 rgMJprGxDsRZjpFMvjI/0K4Zb6rIs1km4SBfTHXk=
+	b=gX6qT8SvNOgJrBoL3eY7+0M19k0f7lnZwFE8CFkB843WDueTnLG7bLePlDlf+PfI1
+	 1ddPps1PsesBRl3EBvcXuRbWL9wOIjoAMD630rA/6VxGCILKHQpO93g0uUx6f/89n0
+	 uKZkCEUPT+guZTUBSni+6Zp2fU0pX5/TGc96yW2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbgCCRpf (ORCPT
+        id S1730961AbgCCRph (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:45:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51592 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730935AbgCCRpa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:30 -0500
+        id S1730944AbgCCRpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:45:33 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3C1A208C3;
-        Tue,  3 Mar 2020 17:45:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73B1E2146E;
+        Tue,  3 Mar 2020 17:45:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257530;
-        bh=Rqp/ARyYPO2zu40G6KAp2PLfdRwHjZ7O81/4Wjtotyk=;
+        s=default; t=1583257532;
+        bh=oBFlDE9A/gis0xHj4tQtmtNTj/P1n3aibbo6E0lXCWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H78A7KgTSyLwzX1XPWrprnqSGRg+T+DlDTrXuR7lJRMVQHNUhKTAbP3ypijE8kPlh
-         UH/aMWatdOVSyDdFgQoTgAFv6+rW4X+WIu5qfd9Iqs1BuXVb0ldwi6afKvRS4Pg0+q
-         ZbsJvdSNJCo5ygNm3jsNNCjnUGrqhsVmWU9d0734=
+        b=TfA0iesupeAvuKg0m2Pe1A3gTceU1kcHUG81PV9azjrFO7BjJ/gUC6MndIV1DQa4i
+         d3rUSBH99aDCJHkq7cFriFglxXcq74Z1g8occK1w8XSOO96RhjzeoRP68AJ1XI06z3
+         QV1oAbejDiKhpkZ6wA2QO5u8oARaH0wQM4oJ9gB0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jethro Beekman <jethro@fortanix.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 003/176] net: fib_rules: Correctly set table field when table number exceeds 8 bits
-Date:   Tue,  3 Mar 2020 18:41:07 +0100
-Message-Id: <20200303174304.979054909@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 030/176] dax: pass NOWAIT flag to iomap_apply
+Date:   Tue,  3 Mar 2020 18:41:34 +0100
+Message-Id: <20200303174307.996781661@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,31 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jethro Beekman <jethro@fortanix.com>
+From: Jeff Moyer <jmoyer@redhat.com>
 
-[ Upstream commit 540e585a79e9d643ede077b73bcc7aa2d7b4d919 ]
+[ Upstream commit 96222d53842dfe54869ec4e1b9d4856daf9105a2 ]
 
-In 709772e6e06564ed94ba740de70185ac3d792773, RT_TABLE_COMPAT was added to
-allow legacy software to deal with routing table numbers >= 256, but the
-same change to FIB rule queries was overlooked.
+fstests generic/471 reports a failure when run with MOUNT_OPTIONS="-o
+dax".  The reason is that the initial pwrite to an empty file with the
+RWF_NOWAIT flag set does not return -EAGAIN.  It turns out that
+dax_iomap_rw doesn't pass that flag through to iomap_apply.
 
-Signed-off-by: Jethro Beekman <jethro@fortanix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+With this patch applied, generic/471 passes for me.
+
+Signed-off-by: Jeff Moyer <jmoyer@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/x49r1z86e1d.fsf@segfault.boston.devel.redhat.com
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/fib_rules.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/dax.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/net/core/fib_rules.c
-+++ b/net/core/fib_rules.c
-@@ -974,7 +974,7 @@ static int fib_nl_fill_rule(struct sk_bu
+diff --git a/fs/dax.c b/fs/dax.c
+index 1f1f0201cad18..0b0d8819cb1bb 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -1207,6 +1207,9 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
+ 		lockdep_assert_held(&inode->i_rwsem);
+ 	}
  
- 	frh = nlmsg_data(nlh);
- 	frh->family = ops->family;
--	frh->table = rule->table;
-+	frh->table = rule->table < 256 ? rule->table : RT_TABLE_COMPAT;
- 	if (nla_put_u32(skb, FRA_TABLE, rule->table))
- 		goto nla_put_failure;
- 	if (nla_put_u32(skb, FRA_SUPPRESS_PREFIXLEN, rule->suppress_prefixlen))
++	if (iocb->ki_flags & IOCB_NOWAIT)
++		flags |= IOMAP_NOWAIT;
++
+ 	while (iov_iter_count(iter)) {
+ 		ret = iomap_apply(inode, pos, iov_iter_count(iter), flags, ops,
+ 				iter, dax_iomap_actor);
+-- 
+2.20.1
+
 
 
