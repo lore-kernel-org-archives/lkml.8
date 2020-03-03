@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C04C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09E8C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDC1A20656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFC52072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259200;
-	bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
+	s=default; t=1583259204;
+	bh=4BypovxFTpsOw6CslQIrS8l2iIcg0DbMZ7zyR66ltGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FbcaLpb+7RMe6XPgeizay8OTSBgPwy6IzmKNpkiKrHnTR8dEhpZVj7cTApHga2jIe
-	 csD1y2JtR7LVoc5bRwiLU7W2FjS7s75Kivumr5QRRihUcECnq2vkuia5G1a+8OHf4U
-	 RHz3cvJ4657eHxRbUQpnSkdzXHMfA/APsiIrdnBE=
+	b=Nsqw60RQyoG6Vr5jnaL2vgppOHPnBThrvlS8k0nByOMOzxLcmqjg91ZHaX0WmYDU6
+	 XvZnfzO7DKhuX1WWkmqXYXkrbWkaP2gUf0urdPxdgaUEtEsU/45zcgdL4SsAODNJa/
+	 pyTFPLvmjgsTvSOi7WeG/qblJ9XSxu9Tp/U6LJBY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbgCCRql (ORCPT
+        id S1733068AbgCCSNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:46:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53258 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:13:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731181AbgCCRqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:46:37 -0500
+        id S1730594AbgCCRqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:46:40 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0D2A20CC7;
-        Tue,  3 Mar 2020 17:46:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 150FB215A4;
+        Tue,  3 Mar 2020 17:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257596;
-        bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
+        s=default; t=1583257599;
+        bh=4BypovxFTpsOw6CslQIrS8l2iIcg0DbMZ7zyR66ltGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qEwOlymUq2pea2DxpXlc11ag2iveM70aHwIhnhBpSh04TyYbW/htVkmdpOv0T5Vvj
-         yxq/PzhEC/WnU89yasig7PdxkLlNews8RUPh8U+BPa8TVGw8DbKWu0zikHQ7ifcoTY
-         8Fd8OIvaSqEWTEr0OdW3PBci52kdABD1W9TY7a6Q=
+        b=M1TydXCepXCf4KdHSAb8+kR2D6fXgCDmoQluoHeEbryoOedM0xLInZTnspOQx0DGL
+         vWBA0OfavgDrAJLmq2tqn5I2VikH/hbPwUttJvETGX7psjHEvRamfcAwfjF9vsyUlK
+         cvTtI5sPBEXiOf2eaKZCQcnIWMjJ6nHPmH0z4+II=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 056/176] net: ena: fix incorrect default RSS key
-Date:   Tue,  3 Mar 2020 18:42:00 +0100
-Message-Id: <20200303174311.033256448@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 039/176] arm/ftrace: Fix BE text poking
+Date:   Tue,  3 Mar 2020 18:41:43 +0100
+Message-Id: <20200303174309.037410397@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -61,81 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 0d1c3de7b8c78a5e44b74b62ede4a63629f5d811 ]
+[ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
 
-Bug description:
-When running "ethtool -x <if_name>" the key shows up as all zeros.
+The __patch_text() function already applies __opcode_to_mem_*(), so
+when __opcode_to_mem_*() is not the identity (BE*), it is applied
+twice, wrecking the instruction.
 
-When we use "ethtool -X <if_name> hfunc toeplitz hkey <some:random:key>" to
-set the key and then try to retrieve it using "ethtool -x <if_name>" then
-we return the correct key because we return the one we saved.
-
-Bug cause:
-We don't fetch the key from the device but instead return the key
-that we have saved internally which is by default set to zero upon
-allocation.
-
-Fix:
-This commit fixes the issue by initializing the key to a random value
-using netdev_rss_key_fill().
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 15 +++++++++++++++
- drivers/net/ethernet/amazon/ena/ena_com.h |  1 +
- 2 files changed, 16 insertions(+)
+ arch/arm/kernel/ftrace.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index e54c44fdcaa73..d6b894b06fa30 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -1041,6 +1041,19 @@ static int ena_com_get_feature(struct ena_com_dev *ena_dev,
- 				      feature_ver);
- }
- 
-+static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
-+{
-+	struct ena_admin_feature_rss_flow_hash_control *hash_key =
-+		(ena_dev->rss).hash_key;
-+
-+	netdev_rss_key_fill(&hash_key->key, sizeof(hash_key->key));
-+	/* The key is stored in the device in u32 array
-+	 * as well as the API requires the key to be passed in this
-+	 * format. Thus the size of our array should be divided by 4
-+	 */
-+	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
-+}
-+
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
+diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
+index bda949fd84e8b..93caf757f1d5d 100644
+--- a/arch/arm/kernel/ftrace.c
++++ b/arch/arm/kernel/ftrace.c
+@@ -81,13 +81,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
  {
- 	struct ena_rss *rss = &ena_dev->rss;
-@@ -2631,6 +2644,8 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
- 	if (unlikely(rc))
- 		goto err_hash_key;
+ 	unsigned long replaced;
  
-+	ena_com_hash_key_fill_default_key(ena_dev);
-+
- 	rc = ena_com_hash_ctrl_init(ena_dev);
- 	if (unlikely(rc))
- 		goto err_hash_ctrl;
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.h b/drivers/net/ethernet/amazon/ena/ena_com.h
-index 0ce37d54ed108..9b5bd28ed0ac6 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.h
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.h
-@@ -44,6 +44,7 @@
- #include <linux/spinlock.h>
- #include <linux/types.h>
- #include <linux/wait.h>
-+#include <linux/netdevice.h>
+-	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
++	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
+ 		old = __opcode_to_mem_thumb32(old);
+-		new = __opcode_to_mem_thumb32(new);
+-	} else {
++	else
+ 		old = __opcode_to_mem_arm(old);
+-		new = __opcode_to_mem_arm(new);
+-	}
  
- #include "ena_common_defs.h"
- #include "ena_admin_defs.h"
+ 	if (validate) {
+ 		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
 -- 
 2.20.1
 
