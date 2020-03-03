@@ -7,63 +7,57 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D33EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 909ECC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCAAD20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68F08214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258732;
-	bh=aritVFXyYQEP/EoJwiebMs2HRyqo/h29Dc6/FkABBBo=;
+	s=default; t=1583258736;
+	bh=Q2MjtVvxC5xr/bDXpfVIwBo3Vncj7bgd4XFUIKTTnmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iGbOTQJ4sE4gZ0CPIDJ9yS2aFoR4DZEKSsoL6qYxOhm/3zR9SND0XOKaqNJ0rSpFs
-	 4pYKnUHhNiyzzZSP06PhgIhq0Pz7O+FC7SNqYO3DBNt3mVEDBTumwYW7WPrheGLbmy
-	 CYE0y0Vm6J2MiMhYx2ySZHHLiX0Bt8GhiY/0DQZ8=
+	b=0ZpQDsT98njY6MpFnazcrt1+BBmwuUOWGpUXFtKlskxJshkaUrsuzUwtMKsyPZfye
+	 IuAPq/5nbrrsyh1+Q80jmedZrY1SQWTbj6cHTQBuUwKMGo+C9UI3uD31sv9QYCdRgF
+	 kZ7QsP/3wcPFPm8wByM/tCb2pKaa65EPVEeOIsi0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732133AbgCCSFb (ORCPT
+        id S2388270AbgCCSFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:05:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41040 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:05:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732433AbgCCR6Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:58:16 -0500
+        id S1733280AbgCCR6O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:14 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4EFA20656;
-        Tue,  3 Mar 2020 17:58:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A4E72206D5;
+        Tue,  3 Mar 2020 17:58:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258296;
-        bh=aritVFXyYQEP/EoJwiebMs2HRyqo/h29Dc6/FkABBBo=;
+        s=default; t=1583258294;
+        bh=Q2MjtVvxC5xr/bDXpfVIwBo3Vncj7bgd4XFUIKTTnmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RUNldSignPiF3yNfCFGIDoGoyb5cwb4O4BN0F5lKNxmJ7ZgH9j7ZAr5wL4pcMPGrq
-         0Y5zso7tK6L6nTkORokOs0e6PsIGP3GApBujwvsDFQXBO4rdtqVL2PPYAM4/Fgcuf3
-         eJkzwrLSWdsY5KzzJA+lp4dWblqpMwU8gQWZV6hE=
+        b=QFVmNy6j/jBF6spNEkoqtVzhuBPaED9etbwcfvA1CNQxIEZUE6lh+CHk2/bBiGeh2
+         PxelSW7Hjb2OqWbUMYF0ozhxSPuAUSMvS5Hz/drCaXlmO2zXaK4EDfAjpKLWW0JPBr
+         ecw4xA1smFDM/jOD4o89xzIhYAK34Sr0ypjvl1O8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Leon Romanovsky <leonro@mellanox.com>, Jan Kara <jack@suse.cz>,
-        Christoph Hellwig <hch@lst.de>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        stable@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>, Qian Cai <cai@lca.pw>,
+        Oscar Salvador <osalvador@suse.de>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 148/152] mm/gup: allow FOLL_FORCE for get_user_pages_fast()
-Date:   Tue,  3 Mar 2020 18:44:06 +0100
-Message-Id: <20200303174319.624614911@linuxfoundation.org>
+Subject: [PATCH 5.4 147/152] mm/debug.c: always print flags in dump_page()
+Date:   Tue,  3 Mar 2020 18:44:05 +0100
+Message-Id: <20200303174319.499629395@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -76,62 +70,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit f4000fdf435b8301a11cf85237c561047f8c4c72 upstream.
+commit 5b57b8f22709f07c0ab5921c94fd66e8c59c3e11 upstream.
 
-Commit 817be129e6f2 ("mm: validate get_user_pages_fast flags") allowed
-only FOLL_WRITE and FOLL_LONGTERM to be passed to get_user_pages_fast().
-This, combined with the fact that get_user_pages_fast() falls back to
-"slow gup", which *does* accept FOLL_FORCE, leads to an odd situation:
-if you need FOLL_FORCE, you cannot call get_user_pages_fast().
+Commit 76a1850e4572 ("mm/debug.c: __dump_page() prints an extra line")
+inadvertently removed printing of page flags for pages that are neither
+anon nor ksm nor have a mapping.  Fix that.
 
-There does not appear to be any reason for filtering out FOLL_FORCE.
-There is nothing in the _fast() implementation that requires that we
-avoid writing to the pages.  So it appears to have been an oversight.
+Using pr_cont() again would be a solution, but the commit explicitly
+removed its use.  Avoiding the danger of mixing up split lines from
+multiple CPUs might be beneficial for near-panic dumps like this, so fix
+this without reintroducing pr_cont().
 
-Fix by allowing FOLL_FORCE to be set for get_user_pages_fast().
-
-Link: http://lkml.kernel.org/r/20200107224558.2362728-9-jhubbard@nvidia.com
-Fixes: 817be129e6f2 ("mm: validate get_user_pages_fast flags")
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Cc: Björn Töpel <bjorn.topel@intel.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Jerome Glisse <jglisse@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Link: http://lkml.kernel.org/r/9f884d5c-ca60-dc7b-219c-c081c755fab6@suse.cz
+Fixes: 76a1850e4572 ("mm/debug.c: __dump_page() prints an extra line")
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reported-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Reported-by: Michal Hocko <mhocko@kernel.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Mel Gorman <mgorman@techsingularity.net>
 Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/gup.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/debug.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -2401,7 +2401,8 @@ int get_user_pages_fast(unsigned long st
- 	unsigned long addr, len, end;
- 	int nr = 0, ret = 0;
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -47,6 +47,7 @@ void __dump_page(struct page *page, cons
+ 	struct address_space *mapping;
+ 	bool page_poisoned = PagePoisoned(page);
+ 	int mapcount;
++	char *type = "";
  
--	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM)))
-+	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
-+				       FOLL_FORCE)))
- 		return -EINVAL;
+ 	/*
+ 	 * If struct page is poisoned don't access Page*() functions as that
+@@ -78,9 +79,9 @@ void __dump_page(struct page *page, cons
+ 			page, page_ref_count(page), mapcount,
+ 			page->mapping, page_to_pgoff(page));
+ 	if (PageKsm(page))
+-		pr_warn("ksm flags: %#lx(%pGp)\n", page->flags, &page->flags);
++		type = "ksm ";
+ 	else if (PageAnon(page))
+-		pr_warn("anon flags: %#lx(%pGp)\n", page->flags, &page->flags);
++		type = "anon ";
+ 	else if (mapping) {
+ 		if (mapping->host && mapping->host->i_dentry.first) {
+ 			struct dentry *dentry;
+@@ -88,10 +89,11 @@ void __dump_page(struct page *page, cons
+ 			pr_warn("%ps name:\"%pd\"\n", mapping->a_ops, dentry);
+ 		} else
+ 			pr_warn("%ps\n", mapping->a_ops);
+-		pr_warn("flags: %#lx(%pGp)\n", page->flags, &page->flags);
+ 	}
+ 	BUILD_BUG_ON(ARRAY_SIZE(pageflag_names) != __NR_PAGEFLAGS + 1);
  
- 	start = untagged_addr(start) & PAGE_MASK;
++	pr_warn("%sflags: %#lx(%pGp)\n", type, page->flags, &page->flags);
++
+ hex_only:
+ 	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
+ 			sizeof(unsigned long), page,
 
 
