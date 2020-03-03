@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10150C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BB4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0AC24686
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD46B2467B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203601;
-	bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
+	s=default; t=1583203603;
+	bh=UKem77v3AKngJTCiKKqmdNySz2FCD1k2poQmhztolg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZkvVQx1pdxfbEUkJPYzqwthxuQrX4f0sLe6kDSIOQ8qT6PfD4KkN9NkEGVdLDva/k
-	 mtaH6VWto6rgOhDGs/MExwDJ9zXNwwPGYMK4m1Rx3EA2zbrcGgNLnLqq+1v19wKUpB
-	 vxF12bpd4kz595e/xIXv939Q7ZzY0gkvtTtHCg8c=
+	b=DVlpxHRLNPgpa6BF9K+JuWNWqTIhVdxBq2/LSamTe/sSfhL1VsAnlkjCM1Kf1rYsd
+	 +O+ld9Fa7o8+cupB29H6sT/PYLY4tHiayg4/HxDyzUEYHDPmJNG1bju48YiysivRi9
+	 zLaxbTqtG0QwFk/GEwrgaVucl9bdRc/eQQtUjC28=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbgCCCql (ORCPT
+        id S1727618AbgCCCqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:46:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41010 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:46:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727536AbgCCCqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:46:36 -0500
+        id S1727541AbgCCCqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:37 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96B3D24684;
-        Tue,  3 Mar 2020 02:46:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC9682467B;
+        Tue,  3 Mar 2020 02:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203595;
-        bh=m3/5GV8iND6nq+ZvNW2PfXvQ5eZR+5DVF27T+hS7AB4=;
+        s=default; t=1583203596;
+        bh=UKem77v3AKngJTCiKKqmdNySz2FCD1k2poQmhztolg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XDO3RL8g+zs8FuuUTjBEa/gwUz5h0Szl38OmAL77m6MGgA3r87aK7EL/O2roeQrkG
-         jOBChEuSQKZpUcelX9YL963/8rXvReBsyvxGE8V9w9W3PiWbTXecVIs6IdkRKTBKOd
-         msWZmh1brcw8WPz2CrB8OPN6eEmq9RVqp+Xlnvlo=
+        b=FVbIOifNQjxrDxrCz/NG+2ejSqvKsv2/xU1Jk1BtO7bhKBZ0nW/uAJXU5+uE5kvXx
+         S0hdlAOeSz3gXFG8h99U5B1QvxxtIK+HCNlX1tlLXsydTvp1JD731c1ZT1dvQMcUrA
+         p4r52djNnBn55wvCK0sc3/HFUNLbVTFkkzCmwJm0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tomas Henzl <thenzl@redhat.com>,
-        Sumit Saxena <sumit.saxena@broadcom.com>,
-        Lee Duncan <lduncan@suse.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        megaraidlinux.pdl@broadcom.com, linux-scsi@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 16/66] scsi: megaraid_sas: silence a warning
-Date:   Mon,  2 Mar 2020 21:45:25 -0500
-Message-Id: <20200303024615.8889-16-sashal@kernel.org>
+Cc:     Harigovindan P <harigovi@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sasha Levin <sashal@kernel.org>, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org
+Subject: [PATCH AUTOSEL 5.5 17/66] drm/msm/dsi: save pll state before dsi host is powered off
+Date:   Mon,  2 Mar 2020 21:45:26 -0500
+Message-Id: <20200303024615.8889-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -62,57 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomas Henzl <thenzl@redhat.com>
+From: Harigovindan P <harigovi@codeaurora.org>
 
-[ Upstream commit 0e99b2c625da181aebf1a3d13493e3f7a5057a9c ]
+[ Upstream commit a1028dcfd0dd97884072288d0c8ed7f30399b528 ]
 
-Add a flag to DMA memory allocation to silence a warning.
+Save pll state before dsi host is powered off. Without this change
+some register values gets resetted.
 
-This driver allocates DMA memory for IO frames. This allocation may exceed
-MAX_ORDER pages for few megaraid_sas controllers (controllers with very
-high queue depth). Consequently, the driver has logic to keep reducing the
-controller queue depth until the DMA memory allocation succeeds.
-
-On impacted megaraid_sas controllers there would be multiple DMA allocation
-failures until driver settled on an allocation that fit. These failed DMA
-allocation requests caused stack traces in system logs. These were not
-harmful and this patch silences those warnings/stack traces.
-
-[mkp: clarified commit desc]
-
-Link: https://lore.kernel.org/r/20200204152413.7107-1-thenzl@redhat.com
-Signed-off-by: Tomas Henzl <thenzl@redhat.com>
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-Reviewed-by: Lee Duncan <lduncan@suse.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
+Signed-off-by: Rob Clark <robdclark@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/megaraid/megaraid_sas_fusion.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/msm/dsi/dsi_manager.c | 5 +++++
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy.c | 4 ----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_fusion.c b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-index 46bc062d873ef..d868388018053 100644
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -594,7 +594,8 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
+diff --git a/drivers/gpu/drm/msm/dsi/dsi_manager.c b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+index 355a60b4a536f..73127948f54d9 100644
+--- a/drivers/gpu/drm/msm/dsi/dsi_manager.c
++++ b/drivers/gpu/drm/msm/dsi/dsi_manager.c
+@@ -479,6 +479,7 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 	struct msm_dsi *msm_dsi1 = dsi_mgr_get_dsi(DSI_1);
+ 	struct mipi_dsi_host *host = msm_dsi->host;
+ 	struct drm_panel *panel = msm_dsi->panel;
++	struct msm_dsi_pll *src_pll;
+ 	bool is_dual_dsi = IS_DUAL_DSI();
+ 	int ret;
  
- 	fusion->io_request_frames =
- 			dma_pool_alloc(fusion->io_request_frames_pool,
--				GFP_KERNEL, &fusion->io_request_frames_phys);
-+				GFP_KERNEL | __GFP_NOWARN,
-+				&fusion->io_request_frames_phys);
- 	if (!fusion->io_request_frames) {
- 		if (instance->max_fw_cmds >= (MEGASAS_REDUCE_QD_COUNT * 2)) {
- 			instance->max_fw_cmds -= MEGASAS_REDUCE_QD_COUNT;
-@@ -632,7 +633,7 @@ megasas_alloc_request_fusion(struct megasas_instance *instance)
+@@ -519,6 +520,10 @@ static void dsi_mgr_bridge_post_disable(struct drm_bridge *bridge)
+ 								id, ret);
+ 	}
  
- 		fusion->io_request_frames =
- 			dma_pool_alloc(fusion->io_request_frames_pool,
--				       GFP_KERNEL,
-+				       GFP_KERNEL | __GFP_NOWARN,
- 				       &fusion->io_request_frames_phys);
++	/* Save PLL status if it is a clock source */
++	src_pll = msm_dsi_phy_get_pll(msm_dsi->phy);
++	msm_dsi_pll_save_state(src_pll);
++
+ 	ret = msm_dsi_host_power_off(host);
+ 	if (ret)
+ 		pr_err("%s: host %d power off failed,%d\n", __func__, id, ret);
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+index b0cfa67d2a578..f509ebd77500f 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy.c
+@@ -724,10 +724,6 @@ void msm_dsi_phy_disable(struct msm_dsi_phy *phy)
+ 	if (!phy || !phy->cfg->ops.disable)
+ 		return;
  
- 		if (!fusion->io_request_frames) {
+-	/* Save PLL status if it is a clock source */
+-	if (phy->usecase != MSM_DSI_PHY_SLAVE)
+-		msm_dsi_pll_save_state(phy->pll);
+-
+ 	phy->cfg->ops.disable(phy);
+ 
+ 	dsi_phy_regulator_disable(phy);
 -- 
 2.20.1
 
