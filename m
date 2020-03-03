@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1D0C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC13AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBFF020728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CDB2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258025;
-	bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
+	s=default; t=1583258029;
+	bh=b0T7XcKyF7fdfoO4CCzBX1iv4p+VefjFERsskt64TYA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kqK+PsBc4eow9GdlpxiGN1AZOaAkX2FB6xIAyuMqSf3rEirP5Ip2SSTlTiAmgGvtq
-	 iOF4DJiEgzNhF+YGZ2mbKrfhjnVLMRb+EgDS6kGI3s7aiPOm5jH9UeSYIBOLlSAZDq
-	 7T1doV0xgpUFITjCuxUu3Hb9TG1K12bOYdcISEfw=
+	b=A942PrqGX3A3mozBSDuVBTbwzNSDr17pvAcBwaZQhSmYvMdTQg9czm1HGIf1axEtW
+	 X5B/AB98S3qhEEkCA0Gxae8Z6mO4u05rUg8VAuKG+QE8KZFtDN2XG49Wg18L1WiJpr
+	 z3+Wm3dUyeHWqQ1ajKEa8j07RSKHPq/9vVxw7dYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732416AbgCCRxo (ORCPT
+        id S1732034AbgCCRxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:53:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34316 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:53:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34386 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731683AbgCCRxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:41 -0500
+        id S1732414AbgCCRxo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:44 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47A2220728;
-        Tue,  3 Mar 2020 17:53:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6011F206D5;
+        Tue,  3 Mar 2020 17:53:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258020;
-        bh=+0DCorTTN4tjWO1sG8JADOF2c+tIaEeqv2Mh+42zHBw=;
+        s=default; t=1583258023;
+        bh=b0T7XcKyF7fdfoO4CCzBX1iv4p+VefjFERsskt64TYA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FaWgWIVO/lbbfsTvRWtCLGC5sAUklpTfj/4vo6JhR4XK469hC1DF5lmgVlX+Tla+N
-         z7HPEUH01JsJW8G7MYG24X9BdrnzsBFS4BCab8zPkHc1EEJ+jLSuzGtvpxx0WhFEH9
-         pI338gAbkJDJwCAYapT/Ji9YndFJEVzLUTuE+xnc=
+        b=aNuOKdoSE04fW9+E3zvAGpyzyhd6esmcllfRD7IZCPseUn0LY+koB80XlqgVzAk6V
+         nyuf3Ua7qJisfyFA4XciVfeERkSPXDUAYOwUkdFVCBfaYywR/cEft+gT3uraXFIXex
+         kLtHLgfTGvhoq0OpHoQ7z4hStpVxWWPqU4VuRxys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiubo Li <xiubli@redhat.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Patrice Chotard <patrice.chotard@st.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 039/152] ceph: do not execute direct write in parallel if O_APPEND is specified
-Date:   Tue,  3 Mar 2020 18:42:17 +0100
-Message-Id: <20200303174306.860687401@linuxfoundation.org>
+Subject: [PATCH 5.4 040/152] ARM: dts: sti: fixup sound frame-inversion for stihxxx-b2120.dtsi
+Date:   Tue,  3 Mar 2020 18:42:18 +0100
+Message-Id: <20200303174306.966171908@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,92 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiubo Li <xiubli@redhat.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-[ Upstream commit 8e4473bb50a1796c9c32b244e5dbc5ee24ead937 ]
+[ Upstream commit f24667779b5348279e5e4328312a141a730a1fc7 ]
 
-In O_APPEND & O_DIRECT mode, the data from different writers will
-be possibly overlapping each other since they take the shared lock.
+frame-inversion is "flag" not "uint32".
+This patch fixup it.
 
-For example, both Writer1 and Writer2 are in O_APPEND and O_DIRECT
-mode:
-
-          Writer1                         Writer2
-
-     shared_lock()                   shared_lock()
-     getattr(CAP_SIZE)               getattr(CAP_SIZE)
-     iocb->ki_pos = EOF              iocb->ki_pos = EOF
-     write(data1)
-                                     write(data2)
-     shared_unlock()                 shared_unlock()
-
-The data2 will overlap the data1 from the same file offset, the
-old EOF.
-
-Switch to exclusive lock instead when O_APPEND is specified.
-
-Signed-off-by: Xiubo Li <xiubli@redhat.com>
-Reviewed-by: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Reviewed-by: Patrice Chotard <patrice.chotard@st.com>
+Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ceph/file.c | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/stihxxx-b2120.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-index 11929d2bb594c..cd09e63d682b7 100644
---- a/fs/ceph/file.c
-+++ b/fs/ceph/file.c
-@@ -1418,6 +1418,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	struct ceph_cap_flush *prealloc_cf;
- 	ssize_t count, written = 0;
- 	int err, want, got;
-+	bool direct_lock = false;
- 	loff_t pos;
- 	loff_t limit = max(i_size_read(inode), fsc->max_file_size);
- 
-@@ -1428,8 +1429,11 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 	if (!prealloc_cf)
- 		return -ENOMEM;
- 
-+	if ((iocb->ki_flags & (IOCB_DIRECT | IOCB_APPEND)) == IOCB_DIRECT)
-+		direct_lock = true;
-+
- retry_snap:
--	if (iocb->ki_flags & IOCB_DIRECT)
-+	if (direct_lock)
- 		ceph_start_io_direct(inode);
- 	else
- 		ceph_start_io_write(inode);
-@@ -1519,14 +1523,15 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 
- 		/* we might need to revert back to that point */
- 		data = *from;
--		if (iocb->ki_flags & IOCB_DIRECT) {
-+		if (iocb->ki_flags & IOCB_DIRECT)
- 			written = ceph_direct_read_write(iocb, &data, snapc,
- 							 &prealloc_cf);
--			ceph_end_io_direct(inode);
--		} else {
-+		else
- 			written = ceph_sync_write(iocb, &data, pos, snapc);
-+		if (direct_lock)
-+			ceph_end_io_direct(inode);
-+		else
- 			ceph_end_io_write(inode);
--		}
- 		if (written > 0)
- 			iov_iter_advance(from, written);
- 		ceph_put_snap_context(snapc);
-@@ -1577,7 +1582,7 @@ static ssize_t ceph_write_iter(struct kiocb *iocb, struct iov_iter *from)
- 
- 	goto out_unlocked;
- out:
--	if (iocb->ki_flags & IOCB_DIRECT)
-+	if (direct_lock)
- 		ceph_end_io_direct(inode);
- 	else
- 		ceph_end_io_write(inode);
+diff --git a/arch/arm/boot/dts/stihxxx-b2120.dtsi b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+index 60e11045ad762..d051f080e52ec 100644
+--- a/arch/arm/boot/dts/stihxxx-b2120.dtsi
++++ b/arch/arm/boot/dts/stihxxx-b2120.dtsi
+@@ -46,7 +46,7 @@
+ 			/* DAC */
+ 			format = "i2s";
+ 			mclk-fs = <256>;
+-			frame-inversion = <1>;
++			frame-inversion;
+ 			cpu {
+ 				sound-dai = <&sti_uni_player2>;
+ 			};
 -- 
 2.20.1
 
