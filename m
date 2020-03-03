@@ -2,180 +2,127 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC5EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:32:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A189C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33353215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:32:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AK/rx03P"
+	by mail.kernel.org (Postfix) with ESMTP id 4945A214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbgCCQcj (ORCPT
+        id S1730396AbgCCQdE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:32:39 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43354 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727989AbgCCQci (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:32:38 -0500
-Received: by mail-pf1-f196.google.com with SMTP id s1so1697986pfh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:32:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=8obFbtbZXosEJKG//WZlSXOw7/1cIUl4XNv0HtqaUlo=;
-        b=AK/rx03P8zzwEU/tsbGqZR+NHHpLtewT9FuZzrbN0AZosCh0QeP/h0ppzqStM5et5O
-         7VN0bsmkkA6zGG2JX5Alq2aE2bN9WcEQ2Vb+fwKqZPblwN+ef97ydhQEHPDiYBJIYsdo
-         2sBxzLSi7kzgvV9mGUp7OmUPeyFKzO7/ybmPjZqeEQPjOFggRtbxgk3Lk9YJLVSFTZgy
-         fmqFxLWIFTkS2MdDToaDd1vyLjmnWg49v9Lrz7PJh+hqnVHJeRGsTj8OJKiGqtPawwqD
-         AeebfheMeE8IBJJqyFJOkrNgVZxrH3ycK2uYcc619d52NTLp1TfQkyVxYULDJN9BBLHu
-         roGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=8obFbtbZXosEJKG//WZlSXOw7/1cIUl4XNv0HtqaUlo=;
-        b=Zviij1Fs8Y6pfXEP9qKBXu98OPh8aEe4ZGzqXSalPvi4SHVdkbcyhZ9uNfsP+eRBQ3
-         JbZ4e8452JIW25GC41Xz6E6cEDgGsLw3TLeKBxWv6OqMiwpVEnptrdVAKgw235JY8n2Z
-         Nvldl73WEy1/bK15ug7is4CIlD3eu2rj0+X/FZUCu63h4iPKDlf539L/PCmdI9ZPgGT4
-         Evt0gxsEUZmC8UMVa/R12VZ4itp4tjaST8OPe5L0piROXG1qCZQS/FjllgKT1Yk+bEWv
-         ZdasE2Wm/O/BfYILRlKd/YStJoBMRk0Udrt7EJpibJFZI8WvF+YV0+J+Abb9LV4VuyGr
-         pYXw==
-X-Gm-Message-State: ANhLgQ2bydot+P0tNeHYSraNSOFb3SpPfcZ39ivszefzJbGsZPJbsw6/
-        VWyXFjd2GjXuurHKDQxbDd5It8xBAP8=
-X-Google-Smtp-Source: ADFU+vv86EwZYvOoqv6IIpJ4gZzJ54FtER/PLX6g+gJjN3fjOzVkukpWM/hzrvaTm8KPy/v/uhVYIg==
-X-Received: by 2002:a62:cd0a:: with SMTP id o10mr4918578pfg.18.1583253155971;
-        Tue, 03 Mar 2020 08:32:35 -0800 (PST)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id z17sm13299439pfk.110.2020.03.03.08.32.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 08:32:35 -0800 (PST)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Xinliang Liu <xinliang.liu@linaro.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Subject: [PATCH] drm: kirin: Revert "Fix for hikey620 display offset problem"
-Date:   Tue,  3 Mar 2020 16:32:28 +0000
-Message-Id: <20200303163228.52741-1-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Tue, 3 Mar 2020 11:33:04 -0500
+Received: from muru.com ([72.249.23.125]:58612 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727989AbgCCQdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:33:04 -0500
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 86D4180EE;
+        Tue,  3 Mar 2020 16:33:47 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 08:32:59 -0800
+From:   Tony Lindgren <tony@atomide.com>
+To:     Lokesh Vutla <lokeshvutla@ti.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-pwm@vger.kernel.org,
+        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Keerthy <j-keerthy@ti.com>, Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH v2 2/5] clocksource: timer-ti-dm: Implement cpu_pm
+ notifier for context save and restore
+Message-ID: <20200303163259.GU37466@atomide.com>
+References: <20200228095346.32177-1-lokeshvutla@ti.com>
+ <20200228095346.32177-3-lokeshvutla@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228095346.32177-3-lokeshvutla@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit ff57c6513820efe945b61863cf4a51b79f18b592.
+Hi,
 
-With the commit ff57c6513820 ("drm: kirin: Fix for hikey620
-display offset problem") we added support for handling LDI
-overflows by resetting the hardware.
+* Lokesh Vutla <lokeshvutla@ti.com> [200228 09:55]:
+> omap_dm_timer_enable() restores the entire context(including counter)
+> based on 2 conditions:
+> - If get_context_loss_count is populated and context is lost.
+> - If get_context_loss_count is not populated update unconditionally.
+> 
+> Case2 has a side effect of updating the counter register even though
+> context is not lost. When timer is configured in pwm mode, this is
+> causing undesired behaviour in the pwm period.
+> 
+> Instead of using get_context_loss_count call back, implement cpu_pm
+> notifier with context save and restore support. And delete the
+> get_context_loss_count callback all together.
 
-However, its been observed that when we do hit the LDI overflow
-condition, the irq seems to be screaming, and we do nothing but
-stream:
-  [drm:ade_irq_handler [kirin_drm]] *ERROR* LDI underflow!
-over and over to the screen
+Thanks for getting this going.
 
-I've tried a few appraoches to avoid this, but none has yet
-been successful and the cure here is worse then the original
-disease, so revert this for now.
+I noticed system timers are not working properly now though. Not
+sure what might cause that, but I spotted few issues below.
 
-Cc: Xinliang Liu <xinliang.liu@linaro.org>
-Cc: Rongrong Zou <zourongrong@gmail.com>
-Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-Cc: Chen Feng <puck.chen@hisilicon.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: dri-devel <dri-devel@lists.freedesktop.org>
-Fixes: ff57c6513820 ("drm: kirin: Fix for hikey620 display offset problem")
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- .../gpu/drm/hisilicon/kirin/kirin_ade_reg.h   |  1 -
- .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 20 -------------------
- 2 files changed, 21 deletions(-)
+> --- a/drivers/clocksource/timer-ti-dm.c
+> +++ b/drivers/clocksource/timer-ti-dm.c
+...
+> +static void omap_timer_save_context(struct omap_dm_timer *timer)
+> +{
+> +	pm_runtime_get_sync(&timer->pdev->dev);
+> +	timer->context.tclr =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
+> +	timer->context.twer =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_WAKEUP_EN_REG);
+> +	timer->context.tldr =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_LOAD_REG);
+> +	timer->context.tmar =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_MATCH_REG);
+> +	timer->context.tier = readl_relaxed(timer->irq_ena);
+> +	timer->context.tsicr =
+> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_IF_CTRL_REG);
+> +	pm_runtime_put_sync(&timer->pdev->dev);
+> +}
 
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-index 0da860200410..e2ac09894a6d 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-@@ -83,7 +83,6 @@
- #define VSIZE_OFST			20
- #define LDI_INT_EN			0x741C
- #define FRAME_END_INT_EN_OFST		1
--#define UNDERFLOW_INT_EN_OFST		2
- #define LDI_CTRL			0x7420
- #define BPP_OFST			3
- #define DATA_GATE_EN			BIT(2)
-diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-index 73cd28a6ea07..86000127d4ee 100644
---- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-+++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-@@ -46,7 +46,6 @@ struct ade_hw_ctx {
- 	struct clk *media_noc_clk;
- 	struct clk *ade_pix_clk;
- 	struct reset_control *reset;
--	struct work_struct display_reset_wq;
- 	bool power_on;
- 	int irq;
- 
-@@ -136,7 +135,6 @@ static void ade_init(struct ade_hw_ctx *ctx)
- 	 */
- 	ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
- 			FRM_END_START_MASK, REG_EFFECTIVE_IN_ADEEN_FRMEND);
--	ade_update_bits(base + LDI_INT_EN, UNDERFLOW_INT_EN_OFST, MASK(1), 1);
- }
- 
- static bool ade_crtc_mode_fixup(struct drm_crtc *crtc,
-@@ -304,17 +302,6 @@ static void ade_crtc_disable_vblank(struct drm_crtc *crtc)
- 			MASK(1), 0);
- }
- 
--static void drm_underflow_wq(struct work_struct *work)
--{
--	struct ade_hw_ctx *ctx = container_of(work, struct ade_hw_ctx,
--					      display_reset_wq);
--	struct drm_device *drm_dev = ctx->crtc->dev;
--	struct drm_atomic_state *state;
--
--	state = drm_atomic_helper_suspend(drm_dev);
--	drm_atomic_helper_resume(drm_dev, state);
--}
--
- static irqreturn_t ade_irq_handler(int irq, void *data)
- {
- 	struct ade_hw_ctx *ctx = data;
-@@ -331,12 +318,6 @@ static irqreturn_t ade_irq_handler(int irq, void *data)
- 				MASK(1), 1);
- 		drm_crtc_handle_vblank(crtc);
- 	}
--	if (status & BIT(UNDERFLOW_INT_EN_OFST)) {
--		ade_update_bits(base + LDI_INT_CLR, UNDERFLOW_INT_EN_OFST,
--				MASK(1), 1);
--		DRM_ERROR("LDI underflow!");
--		schedule_work(&ctx->display_reset_wq);
--	}
- 
- 	return IRQ_HANDLED;
- }
-@@ -919,7 +900,6 @@ static void *ade_hw_ctx_alloc(struct platform_device *pdev,
- 	if (ret)
- 		return ERR_PTR(-EIO);
- 
--	INIT_WORK(&ctx->display_reset_wq, drm_underflow_wq);
- 	ctx->crtc = crtc;
- 
- 	return ctx;
--- 
-2.17.1
+We must not use pm_runtime functions here, these notifiers run
+at a point when runtime PM is out of the picture already. And
+we really don't want to tag any modules with pm_runtime_irq_safe()
+as it takes a permanent use count on the parent device.
 
+Instead, just add atomic_t awake that runtime_resume sets at the end,
+and runtime_suspend clears first thing. Then you can check for awake
+here, and there's nothing to do here if !awake.
+
+And then runtime_suspend should save the context too and
+runtime_resume restore it :)
+
+> @@ -827,6 +830,8 @@ static int omap_dm_timer_remove(struct platform_device *pdev)
+>  	list_for_each_entry(timer, &omap_timer_list, node)
+>  		if (!strcmp(dev_name(&timer->pdev->dev),
+>  			    dev_name(&pdev->dev))) {
+> +			if (!(timer->capability & OMAP_TIMER_ALWON))
+> +				cpu_pm_unregister_notifier(&timer->nb);
+>  			list_del(&timer->node);
+>  			ret = 0;
+>  			break;
+
+For the OMAP_TIMER_ALWON checks, I believe am335x and am437x have
+OMAP_TIMER_ALWON set for timers but will still have context lost
+in deeper idle states as only the PMIC is enabled.
+
+For those cases, at least runtime_suspend and resume functions
+need to save and restore context based on setting some flag
+maybe based on of_machine_is_compatible() or soc_device_match().
+
+I guess with recent cpuidle patches, this needs to be also done
+during runtime for am335x and am437x. Maybe Dave or Keerthy have
+more comments on that part?
+
+Regards,
+
+Tony
