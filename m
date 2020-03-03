@@ -2,103 +2,122 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F0FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6FAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7627D21556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67EC21556
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:28:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTRn6QxA"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="e2hwoNpc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbgCCK17 (ORCPT
+        id S1728666AbgCCK2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:27:59 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35593 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728506AbgCCK16 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:27:58 -0500
-Received: by mail-pg1-f193.google.com with SMTP id 7so1343779pgr.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:27:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NM5OBg7wjSm9ahSxr+glEUcEzM//RBoFyXJe1qPSFMw=;
-        b=YTRn6QxAGzC6Dtyaill9cTju3svs034GwSEw8+PbDe64VmcI7OhqhJ27cpScVHEQ9+
-         HfoxdtgYcEKk9ZohGDXaPKg9zCkSs1DpukyEsUF8w6qjxKsG8xPsMaZtUiQ/jct+j8sm
-         HLSTLPTMP5Bbqom0T3ymAm9dlFUP2HPq+aJsMhgDJMgJHaauq7Lmpmt86EB9AZljBaH8
-         5jPF//rN+gqnWfwsI5JvdhUmXT/bdkkzLWWKj4Tv8QLLa63eFJy+QvgvDLqJ0t+l/LVu
-         Qy10WygnWRTm4TM+WPZmQI99R+vZkFW/OWMCVyG3IVGFTofVpy96P8lW3bETyvNhhHZt
-         Xs1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NM5OBg7wjSm9ahSxr+glEUcEzM//RBoFyXJe1qPSFMw=;
-        b=g/0ciNyKaS7MABYk+MOxWIY3SvHvSABsGCoOK4/zpNW/W1pcfRpRLGw3JnsmVmyvZm
-         IaeHIjU5UugHCM65rpCTD4g1ef3q3pkwrlaDnyTOg+uzFCa1OoErTN+WMF8lhOV6DFAw
-         oeCS4AcJniOJiekeoWWfLqrw6xkuqZigl2ALy49NCXo1bJq8XnmVINYgtcq1a8KX0M9S
-         Jobi4bp5TjZ/Qw+JcDohxFLZlY5NiaDELJbU6NePyt7PVTX9R+ELhr698l7OXVZZAZo2
-         0fvRw4Vxa/wOoIZ62KUhoRjNHg33O7d3LvFH38NXmyd9LppQWrO0K+Dc4bxcwSm2KIYO
-         XVnQ==
-X-Gm-Message-State: ANhLgQ2XRdzPFHJcqLJ6DeB7+T9ITr2MPqbH9rii185gbQXTo32oPu3a
-        0BYUG+rBEVrckkMN5tQQXc4=
-X-Google-Smtp-Source: ADFU+vsPx44QNf/M8Hqo/+8MHSsKnA29XoFso93QydvUyvwY/bq1FDvhyC5vC8WhVMldRmnV7qZtZg==
-X-Received: by 2002:aa7:8b03:: with SMTP id f3mr3531459pfd.133.1583231277793;
-        Tue, 03 Mar 2020 02:27:57 -0800 (PST)
-Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
-        by smtp.gmail.com with ESMTPSA id a71sm8700358pfa.117.2020.03.03.02.27.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 02:27:56 -0800 (PST)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Date:   Tue, 3 Mar 2020 19:27:53 +0900
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Lech Perczak <l.perczak@camlintechnologies.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH] printk: queue wake_up_klogd irq_work only if per-CPU
- areas are ready
-Message-ID: <20200303102753.GB904@jagdpanzerIV.localdomain>
-References: <20200303044059.1325-1-sergey.senozhatsky@gmail.com>
- <20200303091847.uyy7gzac52lkl75m@pathway.suse.cz>
+        Tue, 3 Mar 2020 05:28:30 -0500
+Received: from ozlabs.org ([203.11.71.1]:56809 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgCCK2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:28:30 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WtWt5nQLz9sPg;
+        Tue,  3 Mar 2020 21:28:26 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1583231306;
+        bh=rR0PX/PIXpmUWEvsjz0jV6bq6v4H0L8THPuMSsBWOU8=;
+        h=From:To:Subject:In-Reply-To:References:Date:From;
+        b=e2hwoNpcmZ8jxUWgWgFC8ksw5tR4ti8FJluJ33yhtXFlL103gKneQZTP+0Y8BQ61H
+         N719f7pQJa0nAvjekPYniWU6o7PlJ2DN2PXEIrbeNb1dLA8F409L1QX+xVs58OnhxA
+         z/2sMLice1M1cF1+EKH9YfGoNWbHcVw2raEcIsXYHBefoQacpH9zw9kcba5rjTEMpR
+         iN+uJPL3hWW6sJWLfe++SwJG1aRnLXdS3I7SCM+uiSbdpETdDFI/RMKCD6qAn7qzPa
+         YrJ1axUSSaXC7qDa9WtbIwNqoJPChWG+hwygJUgiSNOzuhqL96D8lJ4sAB3tShx4D/
+         Rj/SlH5DAZzTA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Subject: Re: eh_frame confusion
+In-Reply-To: <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
+References: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk> <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
+Date:   Tue, 03 Mar 2020 21:28:25 +1100
+Message-ID: <877e01spfa.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303091847.uyy7gzac52lkl75m@pathway.suse.cz>
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (20/03/03 10:18), Petr Mladek wrote:
-[..]
-> >  static void queue_flush_work(struct printk_safe_seq_buf *s)
-> >  {
-> > -	if (printk_safe_irq_ready)
-> > +	if (printk_percpu_data_ready())
-> >  		irq_work_queue(&s->work);
-> 
-> This is not safe. printk_percpu_data_ready() returns true even before
-> s->work gets initialized by printk_safe_init().
+"Naveen N. Rao" <naveen.n.rao@linux.ibm.com> writes:
+> Rasmus Villemoes wrote:
+>> I'm building a ppc32 kernel, and noticed that after upgrading from gcc-7
+>> to gcc-8 all object files now end up having .eh_frame section. For
+>> vmlinux, that's not a problem, because they all get discarded in
+>> arch/powerpc/kernel/vmlinux.lds.S . However, they stick around in
+>> modules, which doesn't seem to be useful - given that everything worked
+>> just fine with gcc-7, and I don't see anything in the module loader that
+>> handles .eh_frame.
+>> 
+>> The reason I care is that my target has a rather tight rootfs budget,
+>> and the .eh_frame section seem to occupy 10-30% of the file size
+>> (obviously very depending on the particular module).
+>> 
+>> Comparing the .foo.o.cmd files, I don't see change in options that might
+>> explain this (there's a bunch of new -Wno-*, and the -mspe=no spelling
+>> is apparently no longer supported in gcc-8). Both before and after, there's
+>> 
+>> -fno-dwarf2-cfi-asm
+>> 
+>> about which gcc's documentation says
+>> 
+>> '-fno-dwarf2-cfi-asm'
+>>      Emit DWARF unwind info as compiler generated '.eh_frame' section
+>>      instead of using GAS '.cfi_*' directives.
+>> 
+>> Looking into where that comes from got me even more confused, because
+>> both arm and unicore32 say
+>> 
+>> # Never generate .eh_frame
+>> KBUILD_CFLAGS           += $(call cc-option,-fno-dwarf2-cfi-asm)
+>> 
+>> while the ppc32 case at hand says
+>> 
+>> # FIXME: the module load should be taught about the additional relocs
+>> # generated by this.
+>> # revert to pre-gcc-4.4 behaviour of .eh_frame
+>
+> Michael opened a task to look into this recently and I had spent some 
+> time last week on this. The original commit/discussion adding 
+> -fno-dwarf2-cfi-asm refers to R_PPC64_REL32 relocations not being 
+> handled by our module loader:
+> http://lkml.kernel.org/r/20090224065112.GA6690@bombadil.infradead.org
 
-Good catch! I'll move printk_safe_init() call from init/main.c to
-set_percpu_data_ready().
+I opened that issue purely based on noticing the wart in the Makefile,
+not because I'd actually tested it.
 
-> Solution would be to call printk_safe_init() from
-> setup_log_buf() before calling set_percpu_data_ready().
+> However, that is now handled thanks to commit 9f751b82b491d:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9f751b82b491d
 
-I'll move the init call. But printk_safe/nmi called too-early
-will still write to no-yet-initialised per-cpu data.
+Haha, written by me, what an idiot.
 
-	-ss
+So the Makefile hack can presumably be dropped, because the module
+loader can handle the relocations.
+
+And then maybe we also want to turn off the unwind tables, but that
+would be a separate patch.
+
+> I did a test build and a simple module loaded fine, so I think 
+> -fno-dwarf2-cfi-asm is not required anymore, unless Michael has seen 
+> some breakages with it. Michael?
+
+No, as I said above it was just reading the Makefile.
+
+cheers
