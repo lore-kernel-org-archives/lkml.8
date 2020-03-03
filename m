@@ -2,92 +2,69 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06DC9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A70DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58C0214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:17:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04EAE214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:19:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Rgqg8ngo"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QBvydKp/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgCCKRe (ORCPT
+        id S1728522AbgCCKTX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:17:34 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:47784 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbgCCKRd (ORCPT
+        Tue, 3 Mar 2020 05:19:23 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:12909 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726661AbgCCKTW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:17:33 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023AHWQG008815;
-        Tue, 3 Mar 2020 04:17:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583230652;
-        bh=nAlvTGsJH+rs2JUDiU2G2Y01gpAIibR+kM4znZi5wVA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=Rgqg8ngoelAyNXn1FlQ2+qIkukdP71qhiOOBtlFRr4tRskSAc9UkzXLPDren/hAnn
-         KgPpdi82PFYFQ4J9o/DrcNgHZ4MRaZU1cntmg6suijbnOIRnRODKRZ2MvSTwAY701+
-         LxRgWEGzcWcAAMWTYKscWiJwYwBs+3irj3GqXpy0=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023AHWhB017314;
-        Tue, 3 Mar 2020 04:17:32 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 04:17:29 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 04:17:29 -0600
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 023AHONc004649;
-        Tue, 3 Mar 2020 04:17:27 -0600
-From:   Roger Quadros <rogerq@ti.com>
-To:     <t-kristo@ti.com>
-CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <nsekhar@ti.com>,
-        <vigneshr@ti.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/6] dt-bindings: syscon: Add TI's J721E specific compatible string
-Date:   Tue, 3 Mar 2020 12:17:17 +0200
-Message-ID: <20200303101722.26052-2-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200303101722.26052-1-rogerq@ti.com>
-References: <20200303101722.26052-1-rogerq@ti.com>
+        Tue, 3 Mar 2020 05:19:22 -0500
+X-UUID: ed07c36a91084c9993d6f28dde738233-20200303
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=+FkgnuhMth6UFDfn+Y38HmyJc9tDM2pj8gHrymrjp7Y=;
+        b=QBvydKp/VDcMgtpz080lQsrzctzF3az6GAHlo0/P1ikAI+6+1e1/CcB1VkcZYaxDORpttZOW76wCxGIBzGqbNYeATWR0zt8wkhdbIQqbrJTGpz0hxXitpPm9Q9mEMo7mJtosENweF/VB0ZdP8Thg6ESatuE8LK3hkPCpO5v7ow0=;
+X-UUID: ed07c36a91084c9993d6f28dde738233-20200303
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <sam.shih@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 896245368; Tue, 03 Mar 2020 18:19:18 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 3 Mar 2020 18:18:10 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 3 Mar 2020 18:19:14 +0800
+From:   Sam Shih <sam.shih@mediatek.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+CC:     John Crispin <john@phrozen.org>, <linux-pwm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Sam Shih <sam.shih@mediatek.com>
+Subject: [PATCH v2 0/1] pwm: mediatek: add longer period support
+Date:   Tue, 3 Mar 2020 18:19:14 +0800
+Message-ID: <1583230755-25986-1-git-send-email-sam.shih@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kishon Vijay Abraham I <kishon@ti.com>
-
-Add TI's J721E SoC specific compatible string.
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- Documentation/devicetree/bindings/mfd/syscon.yaml | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.yaml b/Documentation/devicetree/bindings/mfd/syscon.yaml
-index 39375e4313d2..f9aac75d423a 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.yaml
-+++ b/Documentation/devicetree/bindings/mfd/syscon.yaml
-@@ -38,6 +38,7 @@ properties:
-           - allwinner,sun8i-h3-system-controller
-           - allwinner,sun8i-v3s-system-controller
-           - allwinner,sun50i-a64-system-controller
-+          - ti,j721e-system-controller
- 
-         - const: syscon
- 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+VGhpcyBwYXRjaCBhZGQgc3VwcG9ydCBmb3IgbG9uZ2VyIHB3bSBwZXJpb2QgY29uZmlndXJhdGlv
+biwNCndoaWNoIGFsbG93aW5nIGJsaW5raW5nIExFRHMgdmlhIHB3bSBpbnRlcmZhY2UuDQoNClNh
+bSBTaGloICgxKToNCiAgcHdtOiBtZWRpYXRlazogYWRkIGxvbmdlciBwZXJpb2Qgc3VwcG9ydA0K
+DQogZHJpdmVycy9wd20vcHdtLW1lZGlhdGVrLmMgfCAzNCArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKystLS0tDQogMSBmaWxlIGNoYW5nZWQsIDMwIGluc2VydGlvbnMoKyksIDQgZGVsZXRp
+b25zKC0pDQoNCi0tIA0KMi4xNy4xDQo=
 
