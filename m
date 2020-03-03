@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F9EAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC7B7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B31F20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5AA920836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258624;
-	bh=qd721I88vNXch3ZqPReQwf2cEtykqf23s69glri4oKA=;
+	s=default; t=1583258628;
+	bh=56eSzwKVuwzQ78Xa3uPPI19YblmNRXB3c5HYqL1LEpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NBYoXvQaGCyRQCEMfu2JEU+STCG3G03w44lGYMUsSV/BsSI4uXZDJzVikRhjlLRLn
-	 /3gNRxKEp36XNF1h7krZejV49qAD1KiSgy74PjioudumzXd+/NBzhhbhNudgsbCaBr
-	 0iWU2O72+6WSdVmr4tjr1Bh2eDV8i/xzn+UvTmjc=
+	b=Rk2lR0XrSd7q/8ZKGSes57dV3upgsFzFsTQd/lXoXIO/GWbz5lPq/BH2ZaYJnxpS6
+	 CPRDvqd9Ab6BmMyfre73SjSFPwCEkpCg+bFSBgtyZgtvQTYAVfJqZf9K0efztn2RJC
+	 0JedeFJ96QAO3nBL2Zgbyg9PHAxiHNjV5zXCN05Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733146AbgCCSBI (ORCPT
+        id S2388132AbgCCSDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44998 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:03:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387879AbgCCSBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:01:00 -0500
+        id S2387548AbgCCSBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E9DD20870;
-        Tue,  3 Mar 2020 18:00:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34458206D5;
+        Tue,  3 Mar 2020 18:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258460;
-        bh=qd721I88vNXch3ZqPReQwf2cEtykqf23s69glri4oKA=;
+        s=default; t=1583258465;
+        bh=56eSzwKVuwzQ78Xa3uPPI19YblmNRXB3c5HYqL1LEpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QoaI3vGsA/MKYlHTE7x3ANS0CaZtiBAO0ojN17NwCFCqlzi6f8otFAL59Ib5NWrx0
-         l0Y7eBzl/EcdUkMQFAM/AQt5KMn7vv2zCcRHBBIIZi2UoCAcWrtKji18vY2SR3A3tG
-         50bhVTvJDE7MGL5fy+YMV6R5IMf8DEXEy1EQOKsA=
+        b=udd6n0LZ4M6tKh0/BDXy2mZa3IjOJQN/5GEHqsvURKKvcB+UgQWfSZqwFePXk2O7Y
+         AYVwfATxzR+atwKYwZEx/w80tBS6na52bPjOYGnEyAO7b9ftLPqSyo2H3dsYqIA+iJ
+         Di738KVKP143fi4yaBV9VQmcoOb0gSu3VRMey6h4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Wolfram Sang <wsa@the-dreams.de>
-Subject: [PATCH 4.19 56/87] i2c: jz4780: silence log flood on txabrt
-Date:   Tue,  3 Mar 2020 18:43:47 +0100
-Message-Id: <20200303174355.386521618@linuxfoundation.org>
+        stable@vger.kernel.org, Tina Zhang <tina.zhang@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>
+Subject: [PATCH 4.19 58/87] drm/i915/gvt: Separate display reset from ALL_ENGINES reset
+Date:   Tue,  3 Mar 2020 18:43:49 +0100
+Message-Id: <20200303174355.570310232@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -59,76 +59,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa@the-dreams.de>
+From: Tina Zhang <tina.zhang@intel.com>
 
-commit 9e661cedcc0a072d91a32cb88e0515ea26e35711 upstream.
+commit 3eb55e6f753a379e293395de8d5f3be28351a7f8 upstream.
 
-The printout for txabrt is way too talkative and is highly annoying with
-scanning programs like 'i2cdetect'. Reduce it to the minimum, the rest
-can be gained by I2C core debugging and datasheet information. Also,
-make it a debug printout, it won't help the regular user.
+ALL_ENGINES reset doesn't clobber display with the current gvt-g
+supported platforms. Thus ALL_ENGINES reset shouldn't reset the
+display engine registers emulated by gvt-g.
 
-Fixes: ba92222ed63a ("i2c: jz4780: Add i2c bus controller driver for Ingenic JZ4780")
-Reported-by: H. Nikolaus Schaller <hns@goldelico.com>
-Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+This fixes guest warning like
+
+[ 14.622026] [drm] Initialized i915 1.6.0 20200114 for 0000:00:03.0 on minor 0
+[ 14.967917] fbcon: i915drmfb (fb0) is primary device
+[ 25.100188] [drm:drm_atomic_helper_wait_for_dependencies [drm_kms_helper]] E RROR [CRTC:51:pipe A] flip_done timed out
+[ 25.100860] -----------[ cut here ]-----------
+[ 25.100861] pll on state mismatch (expected 0, found 1)
+[ 25.101024] WARNING: CPU: 1 PID: 30 at drivers/gpu/drm/i915/display/intel_dis play.c:14382 verify_single_dpll_state.isra.115+0x28f/0x320 [i915]
+[ 25.101025] Modules linked in: intel_rapl_msr intel_rapl_common kvm_intel kvm irqbypass crct10dif_pclmul crc32_pclmul ghash_clmulni_intel i915 aesni_intel cr ypto_simd cryptd glue_helper cec rc_core video drm_kms_helper joydev drm input_l eds i2c_algo_bit serio_raw fb_sys_fops syscopyarea sysfillrect sysimgblt mac_hid qemu_fw_cfg sch_fq_codel parport_pc ppdev lp parport ip_tables x_tables autofs4 e1000 psmouse i2c_piix4 pata_acpi floppy
+[ 25.101052] CPU: 1 PID: 30 Comm: kworker/u4:1 Not tainted 5.5.0+ #1
+[ 25.101053] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1 .12.1-0-ga5cab58 04/01/2014
+[ 25.101055] Workqueue: events_unbound async_run_entry_fn
+[ 25.101092] RIP: 0010:verify_single_dpll_state.isra.115+0x28f/0x320 [i915]
+[ 25.101093] Code: e0 d9 ff e9 a3 fe ff ff 80 3d e9 c2 11 00 00 44 89 f6 48 c7 c7 c0 9d 88 c0 75 3b e8 eb df d9 ff e9 c7 fe ff ff e8 d1 e0 ae c4 <0f> 0b e9 7a fe ff ff 80 3d c0 c2 11 00 00 8d 71 41 89 c2 48 c7 c7
+[ 25.101093] RSP: 0018:ffffb1de80107878 EFLAGS: 00010286
+[ 25.101094] RAX: 0000000000000000 RBX: ffffb1de80107884 RCX: 0000000000000007
+[ 25.101095] RDX: 0000000000000000 RSI: 0000000000000002 RDI: ffff94fdfdd19740
+[ 25.101095] RBP: ffffb1de80107938 R08: 0000000d6bfdc7b4 R09: 000000000000002b
+[ 25.101096] R10: ffff94fdf82dc000 R11: 0000000000000225 R12: 00000000000001f8
+[ 25.101096] R13: ffff94fdb3ca6a90 R14: ffff94fdb3ca0000 R15: 0000000000000000
+[ 25.101097] FS: 0000000000000000(0000) GS:ffff94fdfdd00000(0000) knlGS:00000 00000000000
+[ 25.101098] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 25.101098] CR2: 00007fbc3e2be9c8 CR3: 000000003339a003 CR4: 0000000000360ee0
+[ 25.101101] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[ 25.101101] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[ 25.101102] Call Trace:
+[ 25.101139] intel_atomic_commit_tail+0xde4/0x1520 [i915]
+[ 25.101141] ? flush_workqueue_prep_pwqs+0xfa/0x130
+[ 25.101142] ? flush_workqueue+0x198/0x3c0
+[ 25.101174] intel_atomic_commit+0x2ad/0x320 [i915]
+[ 25.101209] drm_atomic_commit+0x4a/0x50 [drm]
+[ 25.101220] drm_client_modeset_commit_atomic+0x1c4/0x200 [drm]
+[ 25.101231] drm_client_modeset_commit_force+0x47/0x170 [drm]
+[ 25.101250] drm_fb_helper_restore_fbdev_mode_unlocked+0x4e/0xa0 [drm_kms_hel per]
+[ 25.101255] drm_fb_helper_set_par+0x2d/0x60 [drm_kms_helper]
+[ 25.101287] intel_fbdev_set_par+0x1a/0x40 [i915]
+[ 25.101289] ? con_is_visible+0x2e/0x60
+[ 25.101290] fbcon_init+0x378/0x600
+[ 25.101292] visual_init+0xd5/0x130
+[ 25.101296] do_bind_con_driver+0x217/0x430
+[ 25.101297] do_take_over_console+0x7d/0x1b0
+[ 25.101298] do_fbcon_takeover+0x5c/0xb0
+[ 25.101299] fbcon_fb_registered+0x199/0x1a0
+[ 25.101301] register_framebuffer+0x22c/0x330
+[ 25.101306] __drm_fb_helper_initial_config_and_unlock+0x31a/0x520 [drm_kms_h elper]
+[ 25.101311] drm_fb_helper_initial_config+0x35/0x40 [drm_kms_helper]
+[ 25.101341] intel_fbdev_initial_config+0x18/0x30 [i915]
+[ 25.101342] async_run_entry_fn+0x3c/0x150
+[ 25.101343] process_one_work+0x1fd/0x3f0
+[ 25.101344] worker_thread+0x34/0x410
+[ 25.101346] kthread+0x121/0x140
+[ 25.101346] ? process_one_work+0x3f0/0x3f0
+[ 25.101347] ? kthread_park+0x90/0x90
+[ 25.101350] ret_from_fork+0x35/0x40
+[ 25.101351] --[ end trace b5b47d44cd998ba1 ]--
+
+Fixes: 6294b61ba769 ("drm/i915/gvt: add missing display part reset for vGPU reset")
+Signed-off-by: Tina Zhang <tina.zhang@intel.com>
+Reviewed-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Signed-off-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Link: http://patchwork.freedesktop.org/patch/msgid/20200221023234.28635-1-tina.zhang@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-jz4780.c |   36 ++----------------------------------
- 1 file changed, 2 insertions(+), 34 deletions(-)
+ drivers/gpu/drm/i915/gvt/vgpu.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/i2c/busses/i2c-jz4780.c
-+++ b/drivers/i2c/busses/i2c-jz4780.c
-@@ -82,25 +82,6 @@
- #define JZ4780_I2C_STA_TFNF		BIT(1)
- #define JZ4780_I2C_STA_ACT		BIT(0)
+--- a/drivers/gpu/drm/i915/gvt/vgpu.c
++++ b/drivers/gpu/drm/i915/gvt/vgpu.c
+@@ -556,9 +556,9 @@ void intel_gvt_reset_vgpu_locked(struct
  
--static const char * const jz4780_i2c_abrt_src[] = {
--	"ABRT_7B_ADDR_NOACK",
--	"ABRT_10ADDR1_NOACK",
--	"ABRT_10ADDR2_NOACK",
--	"ABRT_XDATA_NOACK",
--	"ABRT_GCALL_NOACK",
--	"ABRT_GCALL_READ",
--	"ABRT_HS_ACKD",
--	"SBYTE_ACKDET",
--	"ABRT_HS_NORSTRT",
--	"SBYTE_NORSTRT",
--	"ABRT_10B_RD_NORSTRT",
--	"ABRT_MASTER_DIS",
--	"ARB_LOST",
--	"SLVFLUSH_TXFIFO",
--	"SLV_ARBLOST",
--	"SLVRD_INTX",
--};
--
- #define JZ4780_I2C_INTST_IGC		BIT(11)
- #define JZ4780_I2C_INTST_ISTT		BIT(10)
- #define JZ4780_I2C_INTST_ISTP		BIT(9)
-@@ -538,21 +519,8 @@ done:
+ 		intel_vgpu_reset_mmio(vgpu, dmlr);
+ 		populate_pvinfo_page(vgpu);
+-		intel_vgpu_reset_display(vgpu);
  
- static void jz4780_i2c_txabrt(struct jz4780_i2c *i2c, int src)
- {
--	int i;
--
--	dev_err(&i2c->adap.dev, "txabrt: 0x%08x\n", src);
--	dev_err(&i2c->adap.dev, "device addr=%x\n",
--		jz4780_i2c_readw(i2c, JZ4780_I2C_TAR));
--	dev_err(&i2c->adap.dev, "send cmd count:%d  %d\n",
--		i2c->cmd, i2c->cmd_buf[i2c->cmd]);
--	dev_err(&i2c->adap.dev, "receive data count:%d  %d\n",
--		i2c->cmd, i2c->data_buf[i2c->cmd]);
--
--	for (i = 0; i < 16; i++) {
--		if (src & BIT(i))
--			dev_dbg(&i2c->adap.dev, "I2C TXABRT[%d]=%s\n",
--				i, jz4780_i2c_abrt_src[i]);
--	}
-+	dev_dbg(&i2c->adap.dev, "txabrt: 0x%08x, cmd: %d, send: %d, recv: %d\n",
-+		src, i2c->cmd, i2c->cmd_buf[i2c->cmd], i2c->data_buf[i2c->cmd]);
- }
- 
- static inline int jz4780_i2c_xfer_read(struct jz4780_i2c *i2c,
+ 		if (dmlr) {
++			intel_vgpu_reset_display(vgpu);
+ 			intel_vgpu_reset_cfg_space(vgpu);
+ 			/* only reset the failsafe mode when dmlr reset */
+ 			vgpu->failsafe = false;
 
 
