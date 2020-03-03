@@ -2,229 +2,301 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5D2C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:48:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F894C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E3320716
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:48:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3336D214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 05:48:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BKMLeX5z"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OAD7nK7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbgCCFsf (ORCPT
+        id S1727430AbgCCFsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 00:48:35 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:27472 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725765AbgCCFsf (ORCPT
+        Tue, 3 Mar 2020 00:48:38 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45860 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgCCFsh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 00:48:35 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583214514; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=suwHwB8/jDanXjVGBshpFCr3jGKd5l20e2TD9ZodePo=; b=BKMLeX5zI5j2mAr4DcBYLTAxLih7IxZ0hR7IEkbyLJCz/grsgDOGfNxEaIJjxFoU3tpFFTJ3
- 0CkMK2JzGAPzUclG+MCsUEsjf2xVc1LbI0sA3gZzYALx5dM3Od8aKxMTwfVuXyv2R02tGgnT
- E8Iz7W5L+oQnzJxZ77A9eisbFNo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5def9f.7fd95dae9030-smtp-out-n02;
- Tue, 03 Mar 2020 05:48:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 64951C4479D; Tue,  3 Mar 2020 05:48:15 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 68EBFC43383;
-        Tue,  3 Mar 2020 05:48:10 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 68EBFC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v9 3/3] soc: qcom: rpmh: Invoke rpmh_flush() for dirty
- caches
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1582889903-12890-1-git-send-email-mkshah@codeaurora.org>
- <1582889903-12890-4-git-send-email-mkshah@codeaurora.org>
- <CAE=gft7mT18V1QOi0LSk+kcNoOOKEdVNywj4wcO22J_d=kA+3w@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <b2a43005-0882-c25d-3452-e93978767bdb@codeaurora.org>
-Date:   Tue, 3 Mar 2020 11:18:08 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 00:48:37 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 2so878146pfg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 21:48:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=5j43Mr/bIrOBMk42mKrN2eImbOvbfPNmFOTHSb411kg=;
+        b=OAD7nK7jEoAlZecHBF+pnbuP/UPbpiVptrt3hVUEk4WE3IiIyEzFqMVYyAfhlzvDYB
+         tMbkY8MXm6lWVLO8RpQ3Wfsd1LJ6XnEYwgjQGp7KBUI503tqt0Kv3BhKjoVIgTPHSXfQ
+         zu20aUo7oMZw5nJnLi+MJqJWi+OsA9bj6ZCmU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=5j43Mr/bIrOBMk42mKrN2eImbOvbfPNmFOTHSb411kg=;
+        b=LyJ6yZ9ArlMbTUZsSS6kiSzf1Ibb3hkQ61o690K6PVfdxlBszyRlMEvP/YGstEROyx
+         Lczu4uzqt5ZOWdNGmNUFnsQe2rHI1KjfCrML2oi+3LLfWbUh9wQreVA+zkWR+7ioe3Uh
+         Ot17dcAEJ/Nl+vbH/DFA44qmzputKur6wRnH4ZgnzLTX8QlTWbV9CKjsLIkvNXIJAW3K
+         mfwsgYNx/zGHfhewfDF8EQ4hZO+/YPGtq/92LH3X+tbDBODZ11pGvk8Smd1lXGs1bjq8
+         RL7QwMEJbaqjC6SMvGM9nKU0zQVm7pRG/SvJ+mJysfvaz3ALwGUTI7TB4gd8ySORmesy
+         xLEw==
+X-Gm-Message-State: ANhLgQ2xTRBBtT3NQ4MSoUNBhenPnu0AVXq/kgpn/ap48CtYDXBR9u1u
+        Z0sIkXKNpPyAHrO9AJbhTu/+MhyXvuc=
+X-Google-Smtp-Source: ADFU+vvAWValoWq+mvhmEKBoPMhA9c5Z1OYRN9ioAJ+TBELqd7BE10KhyP8MTNGLiYHsRpYijY11WA==
+X-Received: by 2002:a63:e053:: with SMTP id n19mr1049656pgj.64.1583214516048;
+        Mon, 02 Mar 2020 21:48:36 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id y142sm14629115pfb.25.2020.03.02.21.48.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 21:48:35 -0800 (PST)
+Date:   Mon, 2 Mar 2020 21:48:34 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Tycho Andersen <tycho@tycho.ws>
+Cc:     linux-kernel@vger.kernel.org, Matthew Denton <mpdenton@google.com>
+Subject: Re: [PATCH] seccomp: allow TSYNC and USER_NOTIF together
+Message-ID: <202003022137.9DAB55E6F0@keescook>
+References: <20200206165027.18415-1-tycho@tycho.ws>
 MIME-Version: 1.0
-In-Reply-To: <CAE=gft7mT18V1QOi0LSk+kcNoOOKEdVNywj4wcO22J_d=kA+3w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206165027.18415-1-tycho@tycho.ws>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 06, 2020 at 09:50:27AM -0700, Tycho Andersen wrote:
+> The restriction introduced in 7a0df7fbc145 ("seccomp: Make NEW_LISTENER and
+> TSYNC flags exclusive") is mostly artificial: there is enough information
+> in a seccomp user notification to tell which thread triggered a
+> notification. The reason it was introduced is because TSYNC makes the
+> syscall return a thread-id on failure, and NEW_LISTENER returns an fd, and
+> there's no way to distinguish between these two cases (well, I suppose the
+> caller could check all fds it has, then do the syscall, and if the return
+> value was an fd that already existed, then it must be a thread id, but
+> bleh).
+> 
+> Matthew would like to use these two flags together in the Chrome sandbox
+> which wants to use TSYNC for video drivers and NEW_LISTENER to proxy
+> syscalls.
+> 
+> So, let's fix this ugliness by adding another flag, NO_TID_ON_TSYNC_ERR,
+> which tells the kernel to just return -EAGAIN on a TSYNC error. This way,
+> NEW_LISTENER (and any subsequent seccomp() commands that want to return
+> positive values) don't conflict with each other.
+> 
+> Suggested-by: Matthew Denton <mpdenton@google.com>
+> Signed-off-by: Tycho Andersen <tycho@tycho.ws>
 
-On 2/29/2020 3:18 AM, Evan Green wrote:
-> Hi Maulik,
-> Thanks for spinning this so promptly.
->
-> On Fri, Feb 28, 2020 at 3:38 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->> Add changes to invoke rpmh flush() from within cache_lock when the data
->> in cache is dirty.
->>
->> This is done only if OSI is not supported in PSCI. If OSI is supported
->> rpmh_flush can get invoked when the last cpu going to power collapse
->> deepest low power mode.
->>
->> Also remove "depends on COMPILE_TEST" for Kconfig option QCOM_RPMH so the
->> driver is only compiled for arm64 which supports psci_has_osi_support()
->> API.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
->> ---
->>   drivers/soc/qcom/Kconfig |  2 +-
->>   drivers/soc/qcom/rpmh.c  | 33 ++++++++++++++++++++++-----------
->>   2 files changed, 23 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
->> index d0a73e7..2e581bc 100644
->> --- a/drivers/soc/qcom/Kconfig
->> +++ b/drivers/soc/qcom/Kconfig
->> @@ -105,7 +105,7 @@ config QCOM_RMTFS_MEM
->>
->>   config QCOM_RPMH
->>          bool "Qualcomm RPM-Hardened (RPMH) Communication"
->> -       depends on ARCH_QCOM && ARM64 || COMPILE_TEST
->> +       depends on ARCH_QCOM && ARM64
->>          help
->>            Support for communication with the hardened-RPM blocks in
->>            Qualcomm Technologies Inc (QTI) SoCs. RPMH communication uses an
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index f28afe4..6a5a60c 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -12,6 +12,7 @@
->>   #include <linux/module.h>
->>   #include <linux/of.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/psci.h>
->>   #include <linux/slab.h>
->>   #include <linux/spinlock.h>
->>   #include <linux/types.h>
->> @@ -158,6 +159,13 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->>          }
->>
->>   unlock:
->> +       if (ctrlr->dirty && !psci_has_osi_support()) {
->> +               if (rpmh_flush(ctrlr)) {
->> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->> +                       return ERR_PTR(-EINVAL);
->> +               }
->> +       }
->> +
->>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>
->>          return req;
->> @@ -285,26 +293,35 @@ int rpmh_write(const struct device *dev, enum rpmh_state state,
->>   }
->>   EXPORT_SYMBOL(rpmh_write);
->>
->> -static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
->> +static int cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
->>   {
->>          unsigned long flags;
->>
->>          spin_lock_irqsave(&ctrlr->cache_lock, flags);
->> +
->>          list_add_tail(&req->list, &ctrlr->batch_cache);
->>          ctrlr->dirty = true;
->> +
->> +       if (!psci_has_osi_support()) {
->> +               if (rpmh_flush(ctrlr)) {
->> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->> +                       return -EINVAL;
->> +               }
->> +       }
->> +
->>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->> +
->> +       return 0;
->>   }
->>
->>   static int flush_batch(struct rpmh_ctrlr *ctrlr)
->>   {
->>          struct batch_cache_req *req;
->>          const struct rpmh_request *rpm_msg;
->> -       unsigned long flags;
->>          int ret = 0;
->>          int i;
->>
->>          /* Send Sleep/Wake requests to the controller, expect no response */
->> -       spin_lock_irqsave(&ctrlr->cache_lock, flags);
->>          list_for_each_entry(req, &ctrlr->batch_cache, list) {
->>                  for (i = 0; i < req->count; i++) {
->>                          rpm_msg = req->rpm_msgs + i;
->> @@ -314,7 +331,6 @@ static int flush_batch(struct rpmh_ctrlr *ctrlr)
->>                                  break;
->>                  }
->>          }
->> -       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>
->>          return ret;
->>   }
->> @@ -386,10 +402,8 @@ int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
->>                  cmd += n[i];
->>          }
->>
->> -       if (state != RPMH_ACTIVE_ONLY_STATE) {
->> -               cache_batch(ctrlr, req);
->> -               return 0;
->> -       }
->> +       if (state != RPMH_ACTIVE_ONLY_STATE)
->> +               return cache_batch(ctrlr, req);
->>
->>          for (i = 0; i < count; i++) {
->>                  struct completion *compl = &compls[i];
->> @@ -455,9 +469,6 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
->>    * Return: -EBUSY if the controller is busy, probably waiting on a response
->>    * to a RPMH request sent earlier.
->>    *
->> - * This function is always called from the sleep code from the last CPU
->> - * that is powering down the entire system. Since no other RPMH API would be
->> - * executing at this time, it is safe to run lockless.
-> Oh nice, I didn't even see that comment. We should probably replace
-> that with a comment indicating that we assume ctrlr->cache_lock is
-> already held.
->
-> Please also remove this comment in rpmh_flush():
->          /*
->           * Nobody else should be calling this function other than system PM,
->           * hence we can run without locks.
->           */
->          list_for_each_entry(p, &ctrlr->cache, list) {
->
-> -Evan
-Done, will remove in next revision.
->
->>    */
->>   int rpmh_flush(struct rpmh_ctrlr *ctrlr)
->>   {
->> --
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
+Thanks for this! (And thanks for waiting on my review!) Yeah, this
+makes things much more sensible. If we get a third thing that wants
+to be returned, we'll have to rev the userspace struct API to have an
+"output" area. :P
+
+Bike shedding below...
+
+> ---
+>  include/linux/seccomp.h                       |  3 +-
+>  include/uapi/linux/seccomp.h                  |  1 +
+>  kernel/seccomp.c                              | 14 +++-
+>  tools/testing/selftests/seccomp/seccomp_bpf.c | 74 ++++++++++++++++++-
+>  4 files changed, 86 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
+> index 03583b6d1416..e0560a941ed1 100644
+> --- a/include/linux/seccomp.h
+> +++ b/include/linux/seccomp.h
+> @@ -7,7 +7,8 @@
+>  #define SECCOMP_FILTER_FLAG_MASK	(SECCOMP_FILTER_FLAG_TSYNC | \
+>  					 SECCOMP_FILTER_FLAG_LOG | \
+>  					 SECCOMP_FILTER_FLAG_SPEC_ALLOW | \
+> -					 SECCOMP_FILTER_FLAG_NEW_LISTENER)
+> +					 SECCOMP_FILTER_FLAG_NEW_LISTENER | \
+> +					 SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR)
+>  
+>  #ifdef CONFIG_SECCOMP
+>  
+> diff --git a/include/uapi/linux/seccomp.h b/include/uapi/linux/seccomp.h
+> index be84d87f1f46..64678cc20e18 100644
+> --- a/include/uapi/linux/seccomp.h
+> +++ b/include/uapi/linux/seccomp.h
+> @@ -22,6 +22,7 @@
+>  #define SECCOMP_FILTER_FLAG_LOG			(1UL << 1)
+>  #define SECCOMP_FILTER_FLAG_SPEC_ALLOW		(1UL << 2)
+>  #define SECCOMP_FILTER_FLAG_NEW_LISTENER	(1UL << 3)
+> +#define SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR	(1UL << 4)
+
+Bikeshed: what do you think about calling this
+
+SECCOMP_FILTER_FLAG_TSYNC_ESRCH
+
+to mean "I don't care _which_ thread, just fail" (See below about the
+ESRCH bit...)
+
+>  
+>  /*
+>   * All BPF programs must return a 32-bit value.
+> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
+> index b6ea3dcb57bf..fa01ec085d60 100644
+> --- a/kernel/seccomp.c
+> +++ b/kernel/seccomp.c
+> @@ -528,8 +528,12 @@ static long seccomp_attach_filter(unsigned int flags,
+>  		int ret;
+>  
+>  		ret = seccomp_can_sync_threads();
+> -		if (ret)
+> -			return ret;
+> +		if (ret) {
+> +			if (flags & SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR)
+> +				return -EAGAIN;
+
+Hm hm, I think EAGAIN is wrong here: this isn't likely to be a transient
+failure (unless the offending thread dies). The two ways TSYNC can fail
+are if a thread has seccomp mode 1 set, or if the thread's filter
+ancestry has already diverged. Trying again isn't really going to help
+(which is why the original motivation was to return thread details to
+help debug why TSYNC failed).
+
+In the case where the thread id can't be found (container visibility??),
+we fail with -ESRCH. That might be more sensible than -EAGAIN here. (Or
+maybe -EBUSY?)
+
+> +			else
+> +				return ret;
+> +		}
+>  	}
+>  
+>  	/* Set log flag, if present. */
+> @@ -1288,10 +1292,12 @@ static long seccomp_set_mode_filter(unsigned int flags,
+>  	 * In the successful case, NEW_LISTENER returns the new listener fd.
+>  	 * But in the failure case, TSYNC returns the thread that died. If you
+>  	 * combine these two flags, there's no way to tell whether something
+> -	 * succeeded or failed. So, let's disallow this combination.
+> +	 * succeeded or failed. So, let's disallow this combination if the user
+> +	 * has not explicitly requested no errors from TSYNC.
+>  	 */
+>  	if ((flags & SECCOMP_FILTER_FLAG_TSYNC) &&
+> -	    (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER))
+> +	    (flags & SECCOMP_FILTER_FLAG_NEW_LISTENER) &&
+> +	    ((flags & SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR) == 0))
+>  		return -EINVAL;
+>  
+>  	/* Prepare the new filter before holding any locks. */
+> diff --git a/tools/testing/selftests/seccomp/seccomp_bpf.c b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> index ee1b727ede04..b7ec8655dd1c 100644
+> --- a/tools/testing/selftests/seccomp/seccomp_bpf.c
+> +++ b/tools/testing/selftests/seccomp/seccomp_bpf.c
+> @@ -212,6 +212,10 @@ struct seccomp_notif_sizes {
+>  #define SECCOMP_USER_NOTIF_FLAG_CONTINUE 0x00000001
+>  #endif
+>  
+> +#ifndef SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR
+> +#define SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR (1UL << 4)
+> +#endif
+> +
+>  #ifndef seccomp
+>  int seccomp(unsigned int op, unsigned int flags, void *args)
+>  {
+> @@ -2187,7 +2191,8 @@ TEST(detect_seccomp_filter_flags)
+>  	unsigned int flags[] = { SECCOMP_FILTER_FLAG_TSYNC,
+>  				 SECCOMP_FILTER_FLAG_LOG,
+>  				 SECCOMP_FILTER_FLAG_SPEC_ALLOW,
+> -				 SECCOMP_FILTER_FLAG_NEW_LISTENER };
+> +				 SECCOMP_FILTER_FLAG_NEW_LISTENER,
+> +				 SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR };
+>  	unsigned int exclusive[] = {
+>  				SECCOMP_FILTER_FLAG_TSYNC,
+>  				SECCOMP_FILTER_FLAG_NEW_LISTENER };
+> @@ -2645,6 +2650,55 @@ TEST_F(TSYNC, two_siblings_with_one_divergence)
+>  	EXPECT_EQ(SIBLING_EXIT_UNKILLED, (long)status);
+>  }
+>  
+> +TEST_F(TSYNC, two_siblings_with_one_divergence_no_tid_in_err)
+> +{
+> +	long ret, flags;
+> +	void *status;
+> +
+> +	ASSERT_EQ(0, prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)) {
+> +		TH_LOG("Kernel does not support PR_SET_NO_NEW_PRIVS!");
+> +	}
+> +
+> +	ret = seccomp(SECCOMP_SET_MODE_FILTER, 0, &self->root_prog);
+> +	ASSERT_NE(ENOSYS, errno) {
+> +		TH_LOG("Kernel does not support seccomp syscall!");
+> +	}
+> +	ASSERT_EQ(0, ret) {
+> +		TH_LOG("Kernel does not support SECCOMP_SET_MODE_FILTER!");
+> +	}
+> +	self->sibling[0].diverge = 1;
+> +	tsync_start_sibling(&self->sibling[0]);
+> +	tsync_start_sibling(&self->sibling[1]);
+> +
+> +	while (self->sibling_count < TSYNC_SIBLINGS) {
+> +		sem_wait(&self->started);
+> +		self->sibling_count++;
+> +	}
+> +
+> +	flags = SECCOMP_FILTER_FLAG_TSYNC | \
+> +		SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR;
+> +	ret = seccomp(SECCOMP_SET_MODE_FILTER, flags, &self->apply_prog);
+> +	ASSERT_EQ(EAGAIN, errno) {
+> +		TH_LOG("Did not return EAGAIN for diverged sibling.");
+> +	}
+> +	ASSERT_EQ(-1, ret) {
+> +		TH_LOG("Did not fail on diverged sibling.");
+> +	}
+> +
+> +	/* Wake the threads */
+> +	pthread_mutex_lock(&self->mutex);
+> +	ASSERT_EQ(0, pthread_cond_broadcast(&self->cond)) {
+> +		TH_LOG("cond broadcast non-zero");
+> +	}
+> +	pthread_mutex_unlock(&self->mutex);
+> +
+> +	/* Ensure they are both unkilled. */
+> +	PTHREAD_JOIN(self->sibling[0].tid, &status);
+> +	EXPECT_EQ(SIBLING_EXIT_UNKILLED, (long)status);
+> +	PTHREAD_JOIN(self->sibling[1].tid, &status);
+> +	EXPECT_EQ(SIBLING_EXIT_UNKILLED, (long)status);
+> +}
+> +
+>  TEST_F(TSYNC, two_siblings_not_under_filter)
+>  {
+>  	long ret, sib;
+> @@ -3196,6 +3250,24 @@ TEST(user_notification_basic)
+>  	EXPECT_EQ(0, WEXITSTATUS(status));
+>  }
+>  
+> +TEST(user_notification_with_tsync)
+> +{
+> +	int ret;
+> +	unsigned int flags;
+> +
+> +	/* these were exclusive */
+> +	flags = SECCOMP_FILTER_FLAG_NEW_LISTENER |
+> +		SECCOMP_FILTER_FLAG_TSYNC;
+> +	ASSERT_EQ(-1, user_trap_syscall(__NR_getppid, flags));
+> +	ASSERT_EQ(EINVAL, errno);
+> +
+> +	/* but now they're not */
+> +	flags |= SECCOMP_FILTER_FLAG_NO_TID_ON_TSYNC_ERR;
+> +	ret = user_trap_syscall(__NR_getppid, flags);
+> +	close(ret);
+> +	ASSERT_LE(0, ret);
+> +}
+> +
+>  TEST(user_notification_kill_in_middle)
+>  {
+>  	pid_t pid;
+> -- 
+> 2.20.1
+> 
+
+Otherwise, yes, let's do this. Much saner. :)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Kees Cook
