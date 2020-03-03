@@ -2,99 +2,110 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6593C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B02C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8111720CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB45A20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:08:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=4net.rs header.i=@4net.rs header.b="q+6FUDIS"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z5dd94nR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgCCHIM (ORCPT
+        id S1727567AbgCCHIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:08:12 -0500
-Received: from amazon.4net.rs ([159.69.148.70]:40608 "EHLO amazon.4net.rs"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbgCCHIM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:08:12 -0500
-Received: from localhost (amazon.4net.co.rs [127.0.0.1])
-        by amazon.4net.rs (Postfix) with ESMTP id A90556308DA5;
-        Tue,  3 Mar 2020 08:08:10 +0100 (CET)
-X-Virus-Scanned: amavisd-new at 4net.rs
-Received: from amazon.4net.rs ([127.0.0.1])
-        by localhost (amazon.dyn.4net.co.rs [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jvoIUfjkylYN; Tue,  3 Mar 2020 08:08:09 +0100 (CET)
-Received: from mail.4net.rs (green.4net.rs [10.188.221.8])
-        by amazon.4net.rs (Postfix) with ESMTP id CBDBA6308DA3;
-        Tue,  3 Mar 2020 08:08:09 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.4net.rs (Postfix) with ESMTP id 8CB8BCB7B785E;
-        Tue,  3 Mar 2020 08:08:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at 4net.rs
-Received: from mail.4net.rs ([127.0.0.1])
-        by localhost (green.4net.rs [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id mWQk5sHWq3_6; Tue,  3 Mar 2020 08:08:09 +0100 (CET)
-Received: from mail.4net.rs (localhost [127.0.0.1])
-        by mail.4net.rs (Postfix) with ESMTP id 65106C9AA7822;
-        Tue,  3 Mar 2020 08:08:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=4net.rs; h=subject:to:cc
-        :references:from:message-id:date:mime-version:in-reply-to
-        :content-type:content-transfer-encoding; s=4netrs; bh=EX/iTcpszK
-        0Ez1dpjbfxtmz1eo8=; b=q+6FUDISiI0OHo4p53AHwm1ti3Qgt0JhCnRjttNOcQ
-        GBpcGVF3KW4aJQz9VgHUYPd5wwY15Zm+muk3iA3hpx+XZPBZQaXOEtd0jAjbrnJG
-        4JjxDinO1YXI43gueHX3g0uZD/ynXf0lH1+g3v6NzNqE2zq2aWXgLWBa/RTvapuZ
-        0=
-DomainKey-Signature: a=rsa-sha1; c=nofws; d=4net.rs; h=subject:to:cc
-        :references:from:message-id:date:mime-version:in-reply-to
-        :content-type:content-transfer-encoding; q=dns; s=4netrs; b=nxho
-        JU6k4O6gJ+tZESC/S8BWSTcZczEEpVuvGaq4+dZ531AWrYF5XI11aIkufIs9VvTv
-        kF9RRNepdqUA2YDHAsR3Ds50TJ6/JoFufMvReLbb4Lf4A2YODoqntbdh0ReHT3ND
-        0rTaqE2jCSuR3AxQm46K9o9KGVZEAKcE+tTl4kY=
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        by mail.4net.rs (Postfix) with ESMTPSA id 3953ECB7B785E;
-        Tue,  3 Mar 2020 08:08:09 +0100 (CET)
-Subject: Re: [Intel-gfx] Linux 5.6-rc2
-To:     linux-kernel@vger.kernel.org
-Cc:     intel-gfx@lists.freedesktop.org
-References: <CAHk-=wgqwiBLGvwTqU2kJEPNmafPpPe_K0XgBU-A58M+mkwpgQ@mail.gmail.com>
- <99fb887f-4a1b-6c15-64a6-9d089773cdd4@4net.rs>
- <CAPM=9ty3NuSHBd+StNGxVCE9jkmppQ_VTr+jMRgB07qW3dRwrA@mail.gmail.com>
- <f9081410ef1135003720fa29d27aa10b9d12d509.camel@intel.com>
- <a1c918b663805e8213a1229edb87883c@4net.rs> <87sgiqpu1s.fsf@intel.com>
-From:   Sinisa <sinisa@4net.rs>
-Message-ID: <5d9ef6ef-7bde-172f-f35d-14e1cc98c0b4@4net.rs>
-Date:   Tue, 3 Mar 2020 08:08:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Tue, 3 Mar 2020 02:08:47 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:21210 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725818AbgCCHIr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 02:08:47 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583219326; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=JQgDVzvKpA6KDke26m4pq5Tx8FwlU3RlXuRZ0AGWW+I=; b=Z5dd94nRMst5+lnPd0NQiQbOpxi94CmNyiYQOFbHJzWGKOGQokemqw9PzzGKlely5CXoVGAO
+ d4rncDuUvS5m8ixfCmdWmOP38T/BX3J9YNy87qSVT2rWoSIlvfKp151PbOKbum4ckOhukGCs
+ He+xTZ1XOThdgrXuDxrKaPp2vPM=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5e027d.7fb47f39d8f0-smtp-out-n03;
+ Tue, 03 Mar 2020 07:08:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8CE4AC433A2; Tue,  3 Mar 2020 07:08:44 +0000 (UTC)
+Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mkshah)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BE80CC43383;
+        Tue,  3 Mar 2020 07:08:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BE80CC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
+Subject: Re: [PATCH v2 4/4] arm64: defconfig: Enable SoC sleep stats driver
+ for Qualcomm
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
+        ilina@codeaurora.org, lsrao@codeaurora.org
+References: <1582274986-17490-1-git-send-email-mkshah@codeaurora.org>
+ <1582274986-17490-5-git-send-email-mkshah@codeaurora.org>
+ <20200228063718.GB857139@builder>
+From:   Maulik Shah <mkshah@codeaurora.org>
+Message-ID: <7f788abe-0ea9-bf7a-63f8-b83e9cf2f58d@codeaurora.org>
+Date:   Tue, 3 Mar 2020 12:38:38 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <87sgiqpu1s.fsf@intel.com>
+In-Reply-To: <20200228063718.GB857139@builder>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 6:04 PM, Jani Nikula wrote:
-> On Mon, 02 Mar 2020, Siniša Bandin <sinisa@4net.rs> wrote:
->> Sorry to bother, but still a "no go" in rc4 (at the same time, 5.5.7
->> works OK).
->>
->> Is there anything else I could do to help fix this?
-> Please wait for the patch to be actually merged to Linus' tree. I assume
-> it'll make it to v5.6-rc5.
+
+On 2/28/2020 12:07 PM, Bjorn Andersson wrote:
+> On Fri 21 Feb 00:49 PST 2020, Maulik Shah wrote:
 >
-> Thanks,
-> Jani.
-OK, thank you.
+>> Enable SoC sleep stats driver. The driver gives statistics for
+>> various SoC level low power modes.
+>>
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> ---
+>>   arch/arm64/configs/defconfig | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+>> index 0f21288..c63399d 100644
+>> --- a/arch/arm64/configs/defconfig
+>> +++ b/arch/arm64/configs/defconfig
+>> @@ -767,6 +767,7 @@ CONFIG_QCOM_SMD_RPM=y
+>>   CONFIG_QCOM_SMP2P=y
+>>   CONFIG_QCOM_SMSM=y
+>>   CONFIG_QCOM_SOCINFO=m
+>> +CONFIG_QCOM_SOC_SLEEP_STATS=y
+> Afaict the driver is not crucial to boot the system or to collect the
+> statics, so you should be able to make this =m.
+>
+> Regards,
+> Bjorn
+Done. Will update in next revision.
 
-I'll wait patiently...
+Thanks,
+Maulik
+>>   CONFIG_ARCH_R8A774A1=y
+>>   CONFIG_ARCH_R8A774B1=y
+>>   CONFIG_ARCH_R8A774C0=y
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
 
-Srdačan pozdrav / Best regards / Freundliche Grüße / Cordialement,
-Siniša Bandin
-
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
