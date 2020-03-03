@@ -7,54 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF45BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DDACC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7754020836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14ACB20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:05:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258697;
-	bh=ggxuYCgz1u3GcE7u9ixBow/LaXc7aRuMwLgM6eGzt54=;
+	s=default; t=1583258701;
+	bh=LkB/ld1v7E5olWXI7Cv6NehVA818PbkX17uUoHk2kUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iVTO8NMOsEYn4HoXjX2kgkeQgNZZ3rMU+JXEUVL72IBheyclI3Ckjx33XDye4oKjt
-	 Z5wPqtMqqF5cBpAPOpXj6rPvYGU4qVg6NjcydSruIGkFGFsvMlyqa0mE11vAH+KeZK
-	 ZpOb+VX4Ig5P5dJ5HRb/Fhz0/WGIYJSwDz875ONA=
+	b=qSP2x3/6aqBjfM5RLLarp4yq4nk5Nn1IXFdvIJna9uFbiuyu1rQNkKrUHle+saGYf
+	 yE+5zTmlsa7PtjCnKzddOyAQwZzaVW7/d49oaZ4rWbEHokxXLD/eVlQmvI3muAU+5j
+	 7wddb3OpY6tVeV2z3tJvjxLmsmc/pJR3iAjSEDAc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387507AbgCCR7A (ORCPT
+        id S2388175AbgCCSE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:59:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41846 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:04:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387479AbgCCR6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:58:52 -0500
+        id S2387502AbgCCR67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B9CA206D5;
-        Tue,  3 Mar 2020 17:58:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C01E02146E;
+        Tue,  3 Mar 2020 17:58:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258331;
-        bh=ggxuYCgz1u3GcE7u9ixBow/LaXc7aRuMwLgM6eGzt54=;
+        s=default; t=1583258339;
+        bh=LkB/ld1v7E5olWXI7Cv6NehVA818PbkX17uUoHk2kUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KkYGNTA2ToL5z103Bb8+7edXWanLk3XB4Re4NOLg9XxASW5M0tKB/4K6o/mGstgc2
-         PNpSUUTi+MqLS6QfSzbK6hlllx0HzKKmsHpducLh+CANTaua/cJwYhsbxHUrQQJHfC
-         yo+CEx51CLzCL+p7muAMSox5GK04o27WLqokLE2s=
+        b=QRRSNPn3n533Nz2dI9NgXpAOHaE0eHboS1URzX5W8utRsF9onX3CMiJYyphJwFgdm
+         RfgTXrdXNvZyXIGnvbSbh47kHA+FbjnEWKMVELcEVsvIMJTNaZHiajW2N8Kou3BXkK
+         ryTK49My4m7qlSr/SoeYYRMziBw8GsrcqAfrsGHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 01/87] irqchip/gic-v3-its: Fix misuse of GENMASK macro
-Date:   Tue,  3 Mar 2020 18:42:52 +0100
-Message-Id: <20200303174349.180457479@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Osipenko <digetx@gmail.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 12/87] arm/ftrace: Fix BE text poking
+Date:   Tue,  3 Mar 2020 18:43:03 +0100
+Message-Id: <20200303174350.172336594@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -63,34 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Perches <joe@perches.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit 20faba848752901de23a4d45a1174d64d2069dde ]
+[ Upstream commit be993e44badc448add6a18d6f12b20615692c4c3 ]
 
-Arguments are supposed to be ordered high then low.
+The __patch_text() function already applies __opcode_to_mem_*(), so
+when __opcode_to_mem_*() is not the identity (BE*), it is applied
+twice, wrecking the instruction.
 
-Signed-off-by: Joe Perches <joe@perches.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Link: https://lkml.kernel.org/r/ab5deb4fc3cd604cb620054770b7d00016d736bc.1562734889.git.joe@perches.com
+Fixes: 42e51f187f86 ("arm/ftrace: Use __patch_text()")
+Reported-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/kernel/ftrace.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index bf7b69449b438..f9b73336a39ee 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -208,7 +208,7 @@ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
- 
- static struct its_collection *valid_col(struct its_collection *col)
+diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
+index ee673c09aa6c0..dd0215fb6fe23 100644
+--- a/arch/arm/kernel/ftrace.c
++++ b/arch/arm/kernel/ftrace.c
+@@ -106,13 +106,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
  {
--	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(0, 15)))
-+	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(15, 0)))
- 		return NULL;
+ 	unsigned long replaced;
  
- 	return col;
+-	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
++	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
+ 		old = __opcode_to_mem_thumb32(old);
+-		new = __opcode_to_mem_thumb32(new);
+-	} else {
++	else
+ 		old = __opcode_to_mem_arm(old);
+-		new = __opcode_to_mem_arm(new);
+-	}
+ 
+ 	if (validate) {
+ 		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
 -- 
 2.20.1
 
