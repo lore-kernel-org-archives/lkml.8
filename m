@@ -2,85 +2,106 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A7AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06700C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7D420838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:33:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583242427;
-	bh=6WOLOOvalCJq579tIa110eukyM4w1wJEZkYifeOpeHY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0T1Bn+tVbG/85SN7J/34Vrwn8OmNERcX32y3Zg6XlBtYBCGjvR4n221yKsoWpN2Al
-	 RkGSrjZGTbTB3WYf0kDpS+pRHi41N5kB+tI53qAvWr3GCcBlq05AYnWpL5GOqnt8Py
-	 JvLx8vMCOXNKelzv0hPEui9uIEO68tgfRjg8t4qY=
+	by mail.kernel.org (Postfix) with ESMTP id CC44220842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:34:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="eEQq5fiM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729495AbgCCNdq (ORCPT
+        id S1729459AbgCCNey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:33:46 -0500
-Received: from foss.arm.com ([217.140.110.172]:47094 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726465AbgCCNdq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:33:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 848E6FEC;
-        Tue,  3 Mar 2020 05:33:45 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 087E73F534;
-        Tue,  3 Mar 2020 05:33:44 -0800 (PST)
-Date:   Tue, 3 Mar 2020 13:33:43 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] regulator: anatop: Drop error message for -EPROBE_DEFER
-Message-ID: <20200303133343.GG3866@sirena.org.uk>
-References: <1583205261-1994-1-git-send-email-Anson.Huang@nxp.com>
- <20200303123010.GB3866@sirena.org.uk>
- <DB3PR0402MB39166725152B1B076E035F8EF5E40@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+        Tue, 3 Mar 2020 08:34:54 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:44058 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbgCCNey (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:34:54 -0500
+Received: by mail-il1-f194.google.com with SMTP id x7so2716980ilq.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:34:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=szeredi.hu; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=d8UZDr3lZGFyJivNM6em5ybzB9qz5QGiZZazZdznXqk=;
+        b=eEQq5fiMKdVd42vqfExJKz3i8PtBQaz26xc++cNx+VS/zkeI5e09ipMisnSMiHdrf5
+         u+xmYZFz/xI0z/5+EySdWurVl96IIsUyghbPc5Vppji0ZZ9iQNhE7e1tgdNfKcxWAAes
+         y80ESNGhn+KNkkn+eLigS588MUERmZAN3AgMs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=d8UZDr3lZGFyJivNM6em5ybzB9qz5QGiZZazZdznXqk=;
+        b=IoYUrXED3NxodQ8fkOzSOfydRl8+Ir3mA00ZD+YVayHROS7ZXVPJXIzcOTdsCbtqFT
+         Q5N9ctvffp9s1Rr100AAfCOT2Cfp+LvHyLMVituctp2N2ph51Pg7Et16Flib2qd5Ysd/
+         o9dsT2wwORG/Gb5yg15nfRW1xJSWVTphJb0aDj19a+zhBeqsVhRFAI34xDQXlrPjO78l
+         vPFxj6F5H+jImsDh/s/dHNi8CvtFvtAe2XeLDJhgYx2a5hiLYGzJS1l4sHzwK9T2MSoX
+         5t0Hc7JxpC3NtfTnAiXIqE4bvLPcaU7bcV2f5zZBj+OLYyzSw8kvV4iDHxf3c2lBgEV0
+         zdRw==
+X-Gm-Message-State: ANhLgQ3IlPRuY+rsLM0ji8s7xietbqlaRfIn13aKlEtg8WnJxvdTGvKk
+        W2ZKAdEOusJvsEP8HjFtx1EZxhfCnZcH7q6jjzpSTQ==
+X-Google-Smtp-Source: ADFU+vse5bB7gLvCvFy8XryGmsALFqGE4Oyf3LKEtJstP+x5Mc4KlKOxwSw8ylASXSSbsPp5ZHBKAyS4fw1aRsVzAO8=
+X-Received: by 2002:a92:8847:: with SMTP id h68mr4667878ild.212.1583242493712;
+ Tue, 03 Mar 2020 05:34:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="bO4vSxwwZtUjUWHo"
-Content-Disposition: inline
-In-Reply-To: <DB3PR0402MB39166725152B1B076E035F8EF5E40@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-X-Cookie: Drilling for oil is boring.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1582644535.3361.8.camel@HansenPartnership.com>
+ <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home> <20200303130347.GA2302029@kroah.com>
+ <20200303131434.GA2373427@kroah.com>
+In-Reply-To: <20200303131434.GA2373427@kroah.com>
+From:   Miklos Szeredi <miklos@szeredi.hu>
+Date:   Tue, 3 Mar 2020 14:34:42 +0100
+Message-ID: <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Karel Zak <kzak@redhat.com>, David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 
---bO4vSxwwZtUjUWHo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> > Unlimited beers for a 21-line kernel patch?  Sign me up!
+> >
+> > Totally untested, barely compiled patch below.
+>
+> Ok, that didn't even build, let me try this for real now...
 
-On Tue, Mar 03, 2020 at 01:23:19PM +0000, Anson Huang wrote:
+Some comments on the interface:
 
-> Make sense, will lower the message to debug level for -EPROBE_DEFER, it is just
-> because that user ever complained about the error message in normal level for
-> defer probe scenario, that is why I do this patch.
+O_LARGEFILE can be unconditional, since offsets are not exposed to the caller.
 
-Yes, lowering the severity makes sense.
+Use the openat2 style arguments; limit the accepted flags to sane ones
+(e.g. don't let this syscall create a file).
 
---bO4vSxwwZtUjUWHo
-Content-Type: application/pgp-signature; name="signature.asc"
+If buffer is too small to fit the whole file, return error.
 
------BEGIN PGP SIGNATURE-----
+Verify that the number of bytes read matches the file size, otherwise
+return error (may need to loop?).
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5eXLYACgkQJNaLcl1U
-h9Cpqwf/diH8U0BhTFPucJH/RmKh/PiXw1z+Tx4QeXHdDwF121HZlOCbORSYhGRw
-5tiCcQn7tAvaCrEWK2hzGRiCyGrSuIphzD42gOjWhfPOFzccYOzDRLJHngdp4Noj
-gKpCs8nxqWVk/yO04mugAbVDciAiC+Upvf5OXgjPunWh5YmUX3ZbXoY7hOdKK2Gb
-MX/R1SFvNRwoAufSDe5OmKZT6zy0TbLiiNewapPPVD5WP4+8totDkoQqi1PkMoL7
-amNtsvKaLAApd0cdTdjgV0RuZlvur6tk7i15rHXX5USzXXs9rWhMAOLefBSKD/eP
-9kGUGezR/gywdCYJHcSx8OZcq8lhXw==
-=RfM9
------END PGP SIGNATURE-----
-
---bO4vSxwwZtUjUWHo--
+Thanks,
+Miklos
