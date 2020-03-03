@@ -2,167 +2,115 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D968C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A93C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:01:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E18E21775
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5932721739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:01:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EIYNgH7l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qFn5BwiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbgCCIBY (ORCPT
+        id S1727708AbgCCIB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:01:24 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51068 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727565AbgCCIBX (ORCPT
+        Tue, 3 Mar 2020 03:01:29 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40906 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbgCCIB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:01:23 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a5so1954100wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:01:21 -0800 (PST)
+        Tue, 3 Mar 2020 03:01:28 -0500
+Received: by mail-wr1-f66.google.com with SMTP id r17so3077881wrj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:01:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1KFVCRDxDtzub9zZu4H3xTogihEXNQAo7KqjGf/X5ds=;
-        b=EIYNgH7ltAnh/xuunt1NPohmKiypqOkqB+g7AB19td4meB3xEI9LzjrtpsSEUoFA5m
-         k93KAhkLIKXtXdu7WekEm5Ofn7EhY8huVn18GNJ8633kgdpWpBuy6oHiZ1K+n5AqYgQR
-         r7BvnXMo2/BIDIYw95KSNU/+OQ60UQ5SnAwOZjrN0WTKL/2dE1yBSMn/wJTVX4Uk9wcx
-         dxXcZtrLUfz1BbCJLrvANf3UVMyKyjWC7UMrixWttACi937C0WGvGAFkZ1tZ/vTI8IeT
-         XULbHPuvRIn69wpxyQ/CKRMwi4sR1bIN8ikjjR57ijE3aQMmVAlYzj8Sf7nJk7v+ZNXA
-         grqQ==
+        bh=8qyfM3kBipc3zwdrUhToF5IgGdBPcQiWJ6luYEueav4=;
+        b=qFn5BwiDB32laJoxuwCmHsGVWOL1HvHHP8hgiaGq3mPO3Lh21cc48jsuZWS1gQGk9V
+         lyQpuyJlA+dHbPTWoo7fOBFV/Sb+PJ3UZ6qJKVZ1K8452c99LNHqS0mC98ZeEtAZlULk
+         y73YAoVYOhfm6SqQe8L7Q+Er0EN+QmR1lv9UCGCyg1g0wDAU1pv4kxgNkP/dCBQRCRjg
+         /+w7qhcHOHzaSiCSoxvCY90qj9M8deX1b5gfL9LaOFAPc6nKGR0gonFWOsS9JmQY9sfk
+         ngaSEJYVfihTTJmyCha9sYGdPvaDRoDeeTYSobz7sTX2IAunvb25+AmOYeNnpi6Pqy7o
+         PAvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1KFVCRDxDtzub9zZu4H3xTogihEXNQAo7KqjGf/X5ds=;
-        b=PVSFn1PNIlCjZZKZKujZgiS3my+EWrdHvXiREz02e/MM4OTQ0wai2tXBJ32ehqF0sK
-         JIwrBBMeUHzurOaWgAGEHXpOcu28YbvEcI2l6+9VS/MvgQdGTL/At0WOHIwnVGDDAphp
-         JlFrZ8CIMKVl02r7yqgQ8LECFi9Y2v9aU5vdshNvcfBDWxNtgurgn+ipQS72ZHcrrDYw
-         SGrUW+GOBuLzw56CtstMEGMDmeiJEfiGnkBg3LBmBVGLooOON2XMqFYvA+4ZYPxAbiBZ
-         J8jXsm2QLa3NtJ0qHV1AG1npKB3lfeQIFftuM6KoZ/Vtk5kSnAdxnRxCeaCUvHzeE1/N
-         mTCw==
-X-Gm-Message-State: ANhLgQ3A61OXJeZ5dd35gsl5FcWTMhYMhgXcO7SkkpGuPuf04UN/rw9w
-        0Neiyqprxj7xw9VkF+9xXWjxRIjWBTgqVZF1iwLgjw==
-X-Google-Smtp-Source: ADFU+vtMD9Hn+PWCo8WlKQENvA+VrRYcQgo1HZGruvYLZljw/sATAP3ygGaVLtX5UMG/zzD28ojIn4NQgBpDcfFk/dI=
-X-Received: by 2002:a05:600c:24b:: with SMTP id 11mr2902120wmj.1.1583222480788;
- Tue, 03 Mar 2020 00:01:20 -0800 (PST)
+        bh=8qyfM3kBipc3zwdrUhToF5IgGdBPcQiWJ6luYEueav4=;
+        b=c8mA8yb1ZC4/1rO+phdBhpqF74D9H7DWOlO3AS3UQE6mhokEZyOqiYeAKOVYRfzzyk
+         j1SP2fTNL8rqUTAhyWQeYYN80XeTvVs9dZQ11R25EGVexGyKDMvtrX7JaQRncgvEFhYf
+         13J4dcLnVTaCCxaxqJaje4m1AxYvlyzigftdHU2AOgbyRwzhIzHzQX78jXJOvQ5mpWSI
+         WMd8ifJFEDHHKYiL0gEFTh0+hBb1tL/hnkwEvLBjBPonRVD9iw9tjSuzIIiDK1YNIG7C
+         UtXrqGD541MvNtseccRLGQAWpsKiqU/2i9DjEiIqRmtWOQE9QAU0JEPBe8VH91Ij6EAy
+         ul0A==
+X-Gm-Message-State: ANhLgQ1dFA5gr7Cjqgc8QvLhqSyW2FlJE2yQ3U1UQayaee2EgkCLue/I
+        Sd6VkN0WZbBRXyako1bBM4BW6uNU24DoF8ue0c8=
+X-Google-Smtp-Source: ADFU+vtwxgHYElrwOCSYQopLGsPCdc8dwV3aljQ+jmR60/pLkTaD3Sl6smX0u9Ay68pEK2vSdclE7450Qvq6zEcswLk=
+X-Received: by 2002:adf:ab4e:: with SMTP id r14mr4222183wrc.350.1583222486603;
+ Tue, 03 Mar 2020 00:01:26 -0800 (PST)
 MIME-Version: 1.0
-References: <158318759687.2216124.4684754859068906007.stgit@dwillia2-desk3.amr.corp.intel.com>
- <158318760967.2216124.7838939599184768260.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <158318760967.2216124.7838939599184768260.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Tue, 3 Mar 2020 09:01:09 +0100
-Message-ID: <CAKv+Gu_Erea9q4Ay2wmq70EQ8844baBtvVQsv0T1DM8U8eHY6Q@mail.gmail.com>
-Subject: Re: [PATCH 2/5] efi/fake_mem: Arrange for a resource entry per
- efi_fake_mem instance
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200303072247.3641-1-o.rempel@pengutronix.de>
+In-Reply-To: <20200303072247.3641-1-o.rempel@pengutronix.de>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 3 Mar 2020 10:01:15 +0200
+Message-ID: <CAEnQRZBqYxijvQOLN9MQQEkoGbF2eXsKjqG_f+Q+rgw2cVr_6Q@mail.gmail.com>
+Subject: Re: [PATCH v1] MAINTAINERS: mailbox: imx: take over maintainership
+To:     Oleksij Rempel <o.rempel@pengutronix.de>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 23:36, Dan Williams <dan.j.williams@intel.com> wrote:
->
-> In preparation for attaching a platform device per iomem resource teach
-> the efi_fake_mem code to create an e820 entry per instance. Similar to
-> E820_TYPE_PRAM, bypass merging resource when the e820 map is sanitized.
->
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: x86@kernel.org
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Hi Oleksij,
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+Thanks for your help.
+
+On Tue, Mar 3, 2020 at 9:23 AM Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+>
+> I would like to maintain the imx-mailbox driver. I'm the author of this
+> driver and involved in reviewing of all related patches anyway. So, make
+> it official.
+>
+> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+
+Acked-by: Daniel Baluta <daniel.baluta@nxp.com>
 
 > ---
->  arch/x86/kernel/e820.c              |   16 +++++++++++++++-
->  drivers/firmware/efi/x86_fake_mem.c |   12 +++++++++---
->  2 files changed, 24 insertions(+), 4 deletions(-)
+>  MAINTAINERS | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
-> diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
-> index c5399e80c59c..96babb3a6629 100644
-> --- a/arch/x86/kernel/e820.c
-> +++ b/arch/x86/kernel/e820.c
-> @@ -305,6 +305,20 @@ static int __init cpcompare(const void *a, const void *b)
->         return (ap->addr != ap->entry->addr) - (bp->addr != bp->entry->addr);
->  }
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 38fe2f3f7b6f..8f3f6b764779 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6681,6 +6681,14 @@ S:       Maintained
+>  F:     drivers/i2c/busses/i2c-imx-lpi2c.c
+>  F:     Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
 >
-> +static bool e820_nomerge(enum e820_type type)
-> +{
-> +       /*
-> +        * These types may indicate distinct platform ranges aligned to
-> +        * numa node, protection domain, performance domain, or other
-> +        * boundaries. Do not merge them.
-> +        */
-> +       if (type == E820_TYPE_PRAM)
-> +               return true;
-> +       if (type == E820_TYPE_SOFT_RESERVED)
-> +               return true;
-> +       return false;
-> +}
+> +FREESCALE IMX MAILBOX DRIVER
+> +M:     Oleksij Rempel <o.rempel@pengutronix.de>
+> +R:     Pengutronix Kernel Team <kernel@pengutronix.de>
+> +L:     linux-kernel@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/mailbox/imx-mailbox.c
+> +F:     Documentation/devicetree/bindings/mailbox/fsl,mu.txt
 > +
->  int __init e820__update_table(struct e820_table *table)
->  {
->         struct e820_entry *entries = table->entries;
-> @@ -380,7 +394,7 @@ int __init e820__update_table(struct e820_table *table)
->                 }
->
->                 /* Continue building up new map based on this information: */
-> -               if (current_type != last_type || current_type == E820_TYPE_PRAM) {
-> +               if (current_type != last_type || e820_nomerge(current_type)) {
->                         if (last_type != 0)      {
->                                 new_entries[new_nr_entries].size = change_point[chg_idx]->addr - last_addr;
->                                 /* Move forward only if the new size was non-zero: */
-> diff --git a/drivers/firmware/efi/x86_fake_mem.c b/drivers/firmware/efi/x86_fake_mem.c
-> index e5d6d5a1b240..0bafcc1bb0f6 100644
-> --- a/drivers/firmware/efi/x86_fake_mem.c
-> +++ b/drivers/firmware/efi/x86_fake_mem.c
-> @@ -38,7 +38,7 @@ void __init efi_fake_memmap_early(void)
->                 m_start = mem->range.start;
->                 m_end = mem->range.end;
->                 for_each_efi_memory_desc(md) {
-> -                       u64 start, end;
-> +                       u64 start, end, size;
->
->                         if (md->type != EFI_CONVENTIONAL_MEMORY)
->                                 continue;
-> @@ -58,11 +58,17 @@ void __init efi_fake_memmap_early(void)
->                          */
->                         start = max(start, m_start);
->                         end = min(end, m_end);
-> +                       size = end - start + 1;
->
->                         if (end <= start)
->                                 continue;
-> -                       e820__range_update(start, end - start + 1, E820_TYPE_RAM,
-> -                                       E820_TYPE_SOFT_RESERVED);
-> +
-> +                       /*
-> +                        * Ensure each efi_fake_mem instance results in
-> +                        * a unique e820 resource
-> +                        */
-> +                       e820__range_remove(start, size, E820_TYPE_RAM, 1);
-> +                       e820__range_add(start, size, E820_TYPE_SOFT_RESERVED);
->                         e820__update_table(e820_table);
->                 }
->         }
+>  FREESCALE IMX / MXC FEC DRIVER
+>  M:     Fugang Duan <fugang.duan@nxp.com>
+>  L:     netdev@vger.kernel.org
+> --
+> 2.25.0
 >
