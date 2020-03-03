@@ -4,55 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A91C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF45BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A7C020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7754020836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258682;
-	bh=99EtiNtJdAvPT2as60AJ2VmPObSheEPp0q5rtgVAgns=;
+	s=default; t=1583258697;
+	bh=ggxuYCgz1u3GcE7u9ixBow/LaXc7aRuMwLgM6eGzt54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SPhThb0vRIeMfbVqSr5BgG1zAT8v/goZpGe3R7QGFGUvOyIvap+8QElcZr9iBnJaU
-	 cYO58i91EwwroDUyWO2X/4HWCTXvP8zuzwW6/3iWwWK+7XfSkZR5T7LCmx8LDZ5CFj
-	 4kGWxsyvO1nfuv3728pucivbFG0J0MAhfoIHUsE4=
+	b=iVTO8NMOsEYn4HoXjX2kgkeQgNZZ3rMU+JXEUVL72IBheyclI3Ckjx33XDye4oKjt
+	 Z5wPqtMqqF5cBpAPOpXj6rPvYGU4qVg6NjcydSruIGkFGFsvMlyqa0mE11vAH+KeZK
+	 ZpOb+VX4Ig5P5dJ5HRb/Fhz0/WGIYJSwDz875ONA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388126AbgCCSEk (ORCPT
+        id S2387507AbgCCR7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:04:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43124 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:59:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733015AbgCCR7n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:59:43 -0500
+        id S2387479AbgCCR6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D69F20870;
-        Tue,  3 Mar 2020 17:59:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B9CA206D5;
+        Tue,  3 Mar 2020 17:58:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258382;
-        bh=99EtiNtJdAvPT2as60AJ2VmPObSheEPp0q5rtgVAgns=;
+        s=default; t=1583258331;
+        bh=ggxuYCgz1u3GcE7u9ixBow/LaXc7aRuMwLgM6eGzt54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7ght9guWA5K/checuZ4CWV4nG6nPDL0gdtV3M4JJJXJckkq2xc9UZgF4B8tTCjoJ
-         YEw9HO8esXApwrVriTRzh4mzfzm0uLa/kH5pBX4wtG4cHOlq8TMEaboia1OcjtP0QK
-         tBXKW9pRFP70ziMy3AMrxWX33lq8LLOx/5YvgJtc=
+        b=KkYGNTA2ToL5z103Bb8+7edXWanLk3XB4Re4NOLg9XxASW5M0tKB/4K6o/mGstgc2
+         PNpSUUTi+MqLS6QfSzbK6hlllx0HzKKmsHpducLh+CANTaua/cJwYhsbxHUrQQJHfC
+         yo+CEx51CLzCL+p7muAMSox5GK04o27WLqokLE2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Joe Perches <joe@perches.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marc Zyngier <marc.zyngier@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 06/87] dax: pass NOWAIT flag to iomap_apply
-Date:   Tue,  3 Mar 2020 18:42:57 +0100
-Message-Id: <20200303174349.560203639@linuxfoundation.org>
+Subject: [PATCH 4.19 01/87] irqchip/gic-v3-its: Fix misuse of GENMASK macro
+Date:   Tue,  3 Mar 2020 18:42:52 +0100
+Message-Id: <20200303174349.180457479@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,41 +63,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Moyer <jmoyer@redhat.com>
+From: Joe Perches <joe@perches.com>
 
-[ Upstream commit 96222d53842dfe54869ec4e1b9d4856daf9105a2 ]
+[ Upstream commit 20faba848752901de23a4d45a1174d64d2069dde ]
 
-fstests generic/471 reports a failure when run with MOUNT_OPTIONS="-o
-dax".  The reason is that the initial pwrite to an empty file with the
-RWF_NOWAIT flag set does not return -EAGAIN.  It turns out that
-dax_iomap_rw doesn't pass that flag through to iomap_apply.
+Arguments are supposed to be ordered high then low.
 
-With this patch applied, generic/471 passes for me.
-
-Signed-off-by: Jeff Moyer <jmoyer@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/x49r1z86e1d.fsf@segfault.boston.devel.redhat.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Joe Perches <joe@perches.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+Link: https://lkml.kernel.org/r/ab5deb4fc3cd604cb620054770b7d00016d736bc.1562734889.git.joe@perches.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/dax.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/irqchip/irq-gic-v3-its.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/dax.c b/fs/dax.c
-index f0d932fa39c20..d09701aa6f2f4 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1301,6 +1301,9 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
- 		lockdep_assert_held(&inode->i_rwsem);
- 	}
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index bf7b69449b438..f9b73336a39ee 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -208,7 +208,7 @@ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
  
-+	if (iocb->ki_flags & IOCB_NOWAIT)
-+		flags |= IOMAP_NOWAIT;
-+
- 	while (iov_iter_count(iter)) {
- 		ret = iomap_apply(inode, pos, iov_iter_count(iter), flags, ops,
- 				iter, dax_iomap_actor);
+ static struct its_collection *valid_col(struct its_collection *col)
+ {
+-	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(0, 15)))
++	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(15, 0)))
+ 		return NULL;
+ 
+ 	return col;
 -- 
 2.20.1
 
