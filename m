@@ -2,177 +2,83 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC530C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EA0C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB37D20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EE720838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:29:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583245453;
-	bh=zQeebs9ROb6X8Gktb/55GVuE90KUd03mb0RQ2gOkonw=;
+	s=default; t=1583245771;
+	bh=3MR04Xav1gqBn5qSWHpAX5yo6X7wTkmvPFUqCLIFQXM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MHY1z+ecC9kQ2zjiuO5xSpDO8cq7VYHGu+It8r4pAzciJcKZYyWmeE+wet4wx3BVx
-	 u4RHreaWVenZ0WvZZ34DOQhna05Z+U8qCZSKA/Xrxc5eD79+DpRatnG/Xxd/7t418R
-	 x3L7kk0oLdY77kDmLERn9oS1PQlYtuEdjKrAEdGo=
+	b=UpIpiWMj4tFxYB3sd3K4hyGe1+0zK+tEZ7DK3WCUEMAHDjdpG4gegkqgGtoFXB9fK
+	 FOKlM1uCYQyr+zBLVl9XRh7Zp9ddMLT8sjVCfLXkJucz8+w4mLKblmOtAwNVv/gcrn
+	 kf1RH428Qos1wnkW5jrN4hiZDYD6az3e9WFZOi0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgCCOYM (ORCPT
+        id S1729113AbgCCO3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:24:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55098 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729318AbgCCOYL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:24:11 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6561E2083E;
-        Tue,  3 Mar 2020 14:24:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583245450;
-        bh=zQeebs9ROb6X8Gktb/55GVuE90KUd03mb0RQ2gOkonw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B60XaKRw5kiBK054K7U+jib+5PdXf4lEksUwQNb1NWVmzdDWO4HSiDI/7vOQHjTiH
-         a34CbmdY5vEOXrwr9EU5jANndisTaI+/IRthU5qTEvvz/OiRkyDIWzIkukPygjq7le
-         wLSu3A281fmBNSlgWph1n9CReeXg6U+J8c36Tv9o=
-Date:   Tue, 3 Mar 2020 15:24:07 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jann Horn <jannh@google.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200303142407.GA47158@kroah.com>
-References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home>
- <20200303130347.GA2302029@kroah.com>
- <20200303131434.GA2373427@kroah.com>
- <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
- <20200303134316.GA2509660@kroah.com>
- <20200303141030.GA2811@kroah.com>
- <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
+        Tue, 3 Mar 2020 09:29:31 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37386 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgCCO3a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:29:30 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q65so329301oif.4;
+        Tue, 03 Mar 2020 06:29:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sxXGPCpiiQ3NKqYM/EkgYrDujePt7SEpyxP3AujfUFA=;
+        b=ApVw9gM5l3HwJepUg9gsuoG+vcnV1TaJV4nmphLevYKOewM8f4FOvWLeudKvSesLgy
+         3RWsayssfVu/px4ZE0RnG6n9W5+wuLgyC8u+G5TvBbbuILqvY9gQcH5/JVFKhw2wb92n
+         BzoR2VZmW1ab2Hj5fNg2bNxxSmqylqA2y9jRd4y3T3F7mh0o3wcDfH+UAk/i1bDHov6m
+         FlhuyMpnSOXmWxZzaQapPDbuCi7MqBSa97ddqhbacY4FptO3qQAYF78R9LP8vewXTQkd
+         PUJdaE/qUxmPlzK1kzh/I7liHKBeYfrs3cpISFoA4jxdsvMdzLDiYvY3uf+ts8YTVJJN
+         +pIw==
+X-Gm-Message-State: ANhLgQ1AnqhnRlHAEeNBKVKluL8hH6ptclf17SI0avByKSm8aNmW6acq
+        vrdzY6t9fJCBrVE5JJoVWQ==
+X-Google-Smtp-Source: ADFU+vujo7i6Ogir/XUOiCRLS7rCiYKP5e3/neig9vho1p99qwZ4dRON5loaHvGTrbWgOlyo6BgFTQ==
+X-Received: by 2002:aca:44b:: with SMTP id 72mr2602805oie.67.1583245769918;
+        Tue, 03 Mar 2020 06:29:29 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n27sm7681332oie.18.2020.03.03.06.29.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 06:29:28 -0800 (PST)
+Received: (nullmailer pid 22368 invoked by uid 1000);
+        Tue, 03 Mar 2020 14:29:27 -0000
+Date:   Tue, 3 Mar 2020 08:29:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Nicolas Belin <nbelin@baylibre.com>
+Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
+        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io,
+        Nicolas Belin <nbelin@baylibre.com>
+Subject: Re: [PATCH RFC v2 1/3] dt-bindings: Document shiji vendor-prefix
+Message-ID: <20200303142927.GA22307@bogus>
+References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
+ <1582727592-4510-2-git-send-email-nbelin@baylibre.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
+In-Reply-To: <1582727592-4510-2-git-send-email-nbelin@baylibre.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 03:13:26PM +0100, Jann Horn wrote:
-> On Tue, Mar 3, 2020 at 3:10 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Mar 03, 2020 at 02:43:16PM +0100, Greg Kroah-Hartman wrote:
-> > > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
-> > > > On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > > > Unlimited beers for a 21-line kernel patch?  Sign me up!
-> > > > > >
-> > > > > > Totally untested, barely compiled patch below.
-> > > > >
-> > > > > Ok, that didn't even build, let me try this for real now...
-> > > >
-> > > > Some comments on the interface:
-> > >
-> > > Ok, hey, let's do this proper :)
-> >
-> > Alright, how about this patch.
-> >
-> > Actually tested with some simple sysfs files.
-> >
-> > If people don't strongly object, I'll add "real" tests to it, hook it up
-> > to all arches, write a manpage, and all the fun fluff a new syscall
-> > deserves and submit it "for real".
+On Wed, 26 Feb 2020 15:33:10 +0100, Nicolas Belin wrote:
+> Shenzhen Shiji Lighting Co.,Ltd is a LED manufacturer.
 > 
-> Just FYI, io_uring is moving towards the same kind of thing... IIRC
-> you can already use it to batch a bunch of open() calls, then batch a
-> bunch of read() calls on all the new fds and close them at the same
-> time. And I think they're planning to add support for doing
-> open()+read()+close() all in one go, too, except that it's a bit
-> complicated because passing forward the file descriptor in a generic
-> way is a bit complicated.
-
-It is complicated, I wouldn't recommend using io_ring for reading a
-bunch of procfs or sysfs files, that feels like a ton of overkill with
-too much setup/teardown to make it worth while.
-
-But maybe not, will have to watch and see how it goes.
-
-> > It feels like I'm doing something wrong in that the actuall syscall
-> > logic is just so small.  Maybe I'll benchmark this thing to see if it
-> > makes any real difference...
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
-> > From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Subject: [PATCH] readfile: implement readfile syscall
-> >
-> > It's a tiny syscall, meant to allow a user to do a single "open this
-> > file, read into this buffer, and close the file" all in a single shot.
-> >
-> > Should be good for reading "tiny" files like sysfs, procfs, and other
-> > "small" files.
-> >
-> > There is no restarting the syscall, am trying to keep it simple.  At
-> > least for now.
-> >
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> [...]
-> > +SYSCALL_DEFINE5(readfile, int, dfd, const char __user *, filename,
-> > +               char __user *, buffer, size_t, bufsize, int, flags)
-> > +{
-> > +       int retval;
-> > +       int fd;
-> > +
-> > +       /* Mask off all O_ flags as we only want to read from the file */
-> > +       flags &= ~(VALID_OPEN_FLAGS);
-> > +       flags |= O_RDONLY | O_LARGEFILE;
-> > +
-> > +       fd = do_sys_open(dfd, filename, flags, 0000);
-> > +       if (fd <= 0)
-> > +               return fd;
-> > +
-> > +       retval = ksys_read(fd, buffer, bufsize);
-> > +
-> > +       __close_fd(current->files, fd);
-> > +
-> > +       return retval;
-> > +}
+> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> If you're gonna do something like that, wouldn't you want to also
-> elide the use of the file descriptor table completely? do_sys_open()
-> will have to do atomic operations in the fd table and stuff, which is
-> probably moderately bad in terms of cacheline bouncing if this is used
-> in a multithreaded context; and as a side effect, the fd would be
-> inherited by anyone who calls fork() concurrently. You'll probably
-> want to use APIs like do_filp_open() and filp_close(), or something
-> like that, instead.
 
-Ah, nice, that does make more sense.  I'll play around with that, and
-benchmarking this thing later tonight.  Have to go get some stable
-kernels out first...
-
-thanks for the quick review, much appreciated.
-
-greg k-h
+Acked-by: Rob Herring <robh@kernel.org>
