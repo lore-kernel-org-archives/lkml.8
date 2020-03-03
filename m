@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8C8EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3752EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8690F2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0391C2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204248;
-	bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
+	s=default; t=1583204254;
+	bh=YD7v9zrFJtvaLsNrF546RSRmnm4uFXbq0n+c7ihwoqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zMVi6khGRKjVdb/uib1wBu+HfBahpb/jSDAgL29M5PGmBUtTLX+kMWEBCQrhWsybG
-	 pXsfmMZVn2WlXrP+1nM7O9TImEn6qpAqpaOydH35HhpIHR9NoiewIORK6VaU4xNZzl
-	 iB7vkHz5/DKePhFVN8WwtemXqY4YF1NaqA19sp6w=
+	b=gVVCfnvStPGER8qWagn6DEZQe/n/0xKHqiDThhYWKQo0QcTbIBFzhFTRdPWgXfDed
+	 4A1wkZXNbBpTrqVjCfN+WcsKMHmzga59xiL5BiQYcXbMaq/QbdykUqYJEh8dl8/mYv
+	 wth+/Wrknc7PhFsXYz5CvQTd0LPCoLsVpcK0Ng8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbgCCC51 (ORCPT
+        id S1728871AbgCCC5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:57:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44034 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:57:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbgCCCsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:21 -0500
+        id S1727174AbgCCCsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CA08246A1;
-        Tue,  3 Mar 2020 02:48:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B67724699;
+        Tue,  3 Mar 2020 02:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203701;
-        bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
+        s=default; t=1583203700;
+        bh=YD7v9zrFJtvaLsNrF546RSRmnm4uFXbq0n+c7ihwoqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U922rcbUW4cf566g89zPi3prQi7gyPRp10jWTUhAw/9kY2Uc2H7PnT+xDhs+JL89s
-         /G+pPx5eAjVeLTcALuBZ1zmpThetYl36DpFhSFq0LWQ+WLyg/+JeSM2qfaPDFzlNc2
-         IHRO6FwDsBF8lM/sQZsy14h3SaVL36S/NsRgQ204=
+        b=tSKzHGP++xgXcD5cLtpKhGlKRP3p1LsVuxshdcw4UshMf4ykviU+gsqPPYJWU8xpa
+         /YA6Fw3hjDB1gKnLs/AsBbt9Zax8YCZ4bKK92/GREs89RBbF9dj6lUcM3Eadth2jGN
+         NKSpty/p69QDGubgnTSdXFO8Dit1V0p9VjCcmBBc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 33/58] s390/cio: cio_ignore_proc_seq_next should increase position index
-Date:   Mon,  2 Mar 2020 21:47:15 -0500
-Message-Id: <20200303024740.9511-33-sashal@kernel.org>
+Cc:     Marco Felsch <m.felsch@pengutronix.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 32/58] watchdog: da9062: do not ping the hw during stop()
+Date:   Mon,  2 Mar 2020 21:47:14 -0500
+Message-Id: <20200303024740.9511-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
@@ -61,48 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Marco Felsch <m.felsch@pengutronix.de>
 
-[ Upstream commit 8b101a5e14f2161869636ff9cb4907b7749dc0c2 ]
+[ Upstream commit e9a0e65eda3f78d0b04ec6136c591c000cbc3b76 ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+The da9062 hw has a minimum ping cool down phase of at least 200ms. The
+driver takes that into account by setting the min_hw_heartbeat_ms to
+300ms and the core guarantees that the hw limit is observed for the
+ping() calls. But the core can't guarantee the required minimum ping
+cool down phase if a stop() command is send immediately after the ping()
+command. So it is not allowed to ping the watchdog within the stop()
+command as the driver does. Remove the ping can be done without doubts
+because the watchdog gets disabled anyway and a (re)start resets the
+watchdog counter too.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Link: https://lore.kernel.org/r/d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/20200120091729.16256-1-m.felsch@pengutronix.de
+[groeck: Updated description]
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/blacklist.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/watchdog/da9062_wdt.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
-index 2a3f874a21d54..9cebff8e8d740 100644
---- a/drivers/s390/cio/blacklist.c
-+++ b/drivers/s390/cio/blacklist.c
-@@ -303,8 +303,10 @@ static void *
- cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
- {
- 	struct ccwdev_iter *iter;
-+	loff_t p = *offset;
+diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
+index e149e66a6ea9f..e92f38fcb7a4a 100644
+--- a/drivers/watchdog/da9062_wdt.c
++++ b/drivers/watchdog/da9062_wdt.c
+@@ -94,13 +94,6 @@ static int da9062_wdt_stop(struct watchdog_device *wdd)
+ 	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
+ 	int ret;
  
--	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
-+	(*offset)++;
-+	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
- 		return NULL;
- 	iter = it;
- 	if (iter->devno == __MAX_SUBCHANNEL) {
-@@ -314,7 +316,6 @@ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
- 			return NULL;
- 	} else
- 		iter->devno++;
--	(*offset)++;
- 	return iter;
- }
- 
+-	ret = da9062_reset_watchdog_timer(wdt);
+-	if (ret) {
+-		dev_err(wdt->hw->dev, "Failed to ping the watchdog (err = %d)\n",
+-			ret);
+-		return ret;
+-	}
+-
+ 	ret = regmap_update_bits(wdt->hw->regmap,
+ 				 DA9062AA_CONTROL_D,
+ 				 DA9062AA_TWDSCALE_MASK,
 -- 
 2.20.1
 
