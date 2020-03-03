@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 095DBC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADF8C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC77A20836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD722208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258634;
-	bh=9JmEJ2YdNjH06+Nkw7LEfU4DK0/6CZECh7HT7bkrXC0=;
+	s=default; t=1583258642;
+	bh=385P4NgndTaCvuQzX1IJ4OHtNQLxnwiU995960d8V9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cPOdcyM1Pm9ceHjqbl6gQ+RP4d2emPMkyQsu4mgKNIS7xgXqvrtgcC+ZWznWqMBg4
-	 lRdQkKIT7JTwUTv5PTaW3sqV7AacTEFCkseK231LPEF3OW5dBwf8OyAwXuPwq8HKSj
-	 ebUw8KcOpSuUWFz8c9QeDYxFJpN3UV2nqYWIy99Y=
+	b=eQc/AEhOfyNOB/gp80vYMvWbps8o3ErCpFAVYVMp/kt+Fxli8ief2qNz8ArIU5bSX
+	 X8/CmGEBivihlLKciujYuhZWNqTE0r1xL9x9vorwmUlVtcyfv408jARo6S+dt3FDVS
+	 Viyt8iuT0oLsZa12MjBmiWqwcKK9OTeOYEC+04CU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388297AbgCCSDx (ORCPT
+        id S2387819AbgCCSAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:03:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44878 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:00:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387411AbgCCSAz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:00:55 -0500
+        id S2387806AbgCCSAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:00:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C633A206E6;
-        Tue,  3 Mar 2020 18:00:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 892AD206D5;
+        Tue,  3 Mar 2020 18:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258455;
-        bh=9JmEJ2YdNjH06+Nkw7LEfU4DK0/6CZECh7HT7bkrXC0=;
+        s=default; t=1583258435;
+        bh=385P4NgndTaCvuQzX1IJ4OHtNQLxnwiU995960d8V9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K6dn5t5N9+OcUvX9ZriwSd15z71fiNMrGHP40q5Ti8s4fVKjey+q9qcwPjBa9N92E
-         fMfGR3wkyykmHA74PAuPNbOLMQqd/tUF5isUR8t+1D/0i90OVv78SRveC8gpsz5BQa
-         Ak5o5H4H9/iU++YwK30DPYcFTzaC+hPlW86imEU0=
+        b=lIPG9btH7ppgG/wdgXmWdI1/CSXWWtFgKZwVVtsuOY5PN8Re75c0qRloXNzD8qVRY
+         sYVSvCO/d/z2LkWI1briUqIhLoZCJsKkpTXSC3GK1kd+RZagM+PD4wgAi2goKPsCQ2
+         OzHf1X+Ht+YYBdnVWc5i+Da4k27N/2D2pvhmj/6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Tommi Rantala <tommi.t.rantala@nokia.com>
-Subject: [PATCH 4.19 28/87] sysrq: Remove duplicated sysrq message
-Date:   Tue,  3 Mar 2020 18:43:19 +0100
-Message-Id: <20200303174353.286230928@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 48/87] tracing: Disable trace_printk() on post poned tests
+Date:   Tue,  3 Mar 2020 18:43:39 +0100
+Message-Id: <20200303174354.661433779@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -60,55 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Petr Mladek <pmladek@suse.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit c3fee60908db4a8594f2e4a2131998384b8fa006 upstream.
+commit 78041c0c9e935d9ce4086feeff6c569ed88ddfd4 upstream.
 
-The commit 97f5f0cd8cd0a0544 ("Input: implement SysRq as a separate input
-handler") added pr_fmt() definition. It caused a duplicated message
-prefix in the sysrq header messages, for example:
+The tracing seftests checks various aspects of the tracing infrastructure,
+and one is filtering. If trace_printk() is active during a self test, it can
+cause the filtering to fail, which will disable that part of the trace.
 
-[  177.053931] sysrq: SysRq : Show backtrace of all active CPUs
-[  742.864776] sysrq: SysRq : HELP : loglevel(0-9) reboot(b) crash(c)
+To keep the selftests from failing because of trace_printk() calls,
+trace_printk() checks the variable tracing_selftest_running, and if set, it
+does not write to the tracing buffer.
 
-Fixes: 97f5f0cd8cd0a05 ("Input: implement SysRq as a separate input handler")
-Signed-off-by: Petr Mladek <pmladek@suse.com>
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Tommi Rantala  <tommi.t.rantala@nokia.com>
+As some tracers were registered earlier in boot, the selftest they triggered
+would fail because not all the infrastructure was set up for the full
+selftest. Thus, some of the tests were post poned to when their
+infrastructure was ready (namely file system code). The postpone code did
+not set the tracing_seftest_running variable, and could fail if a
+trace_printk() was added and executed during their run.
+
+Cc: stable@vger.kernel.org
+Fixes: 9afecfbb95198 ("tracing: Postpone tracer start-up tests till the system is more robust")
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/sysrq.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ kernel/trace/trace.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -546,7 +546,6 @@ void __handle_sysrq(int key, bool check_
- 	 */
- 	orig_log_level = console_loglevel;
- 	console_loglevel = CONSOLE_LOGLEVEL_DEFAULT;
--	pr_info("SysRq : ");
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1549,6 +1549,7 @@ static __init int init_trace_selftests(v
  
-         op_p = __sysrq_get_key_op(key);
-         if (op_p) {
-@@ -555,15 +554,15 @@ void __handle_sysrq(int key, bool check_
- 		 * should not) and is the invoked operation enabled?
- 		 */
- 		if (!check_mask || sysrq_on_mask(op_p->enable_mask)) {
--			pr_cont("%s\n", op_p->action_msg);
-+			pr_info("%s\n", op_p->action_msg);
- 			console_loglevel = orig_log_level;
- 			op_p->handler(key);
- 		} else {
--			pr_cont("This sysrq operation is disabled.\n");
-+			pr_info("This sysrq operation is disabled.\n");
- 			console_loglevel = orig_log_level;
- 		}
- 	} else {
--		pr_cont("HELP : ");
-+		pr_info("HELP : ");
- 		/* Only print the help msg once per handler */
- 		for (i = 0; i < ARRAY_SIZE(sysrq_key_table); i++) {
- 			if (sysrq_key_table[i]) {
+ 	pr_info("Running postponed tracer tests:\n");
+ 
++	tracing_selftest_running = true;
+ 	list_for_each_entry_safe(p, n, &postponed_selftests, list) {
+ 		ret = run_tracer_selftest(p->type);
+ 		/* If the test fails, then warn and remove from available_tracers */
+@@ -1567,6 +1568,7 @@ static __init int init_trace_selftests(v
+ 		list_del(&p->list);
+ 		kfree(p);
+ 	}
++	tracing_selftest_running = false;
+ 
+  out:
+ 	mutex_unlock(&trace_types_lock);
 
 
