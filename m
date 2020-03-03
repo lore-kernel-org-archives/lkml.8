@@ -2,126 +2,110 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12AEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD617C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D40E22B48
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F6A222B48
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NJZUDSvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727255AbgCCEMJ (ORCPT
+        id S1727181AbgCCEOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:12:09 -0500
-Received: from mga12.intel.com ([192.55.52.136]:10034 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgCCEMJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:12:09 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 20:12:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
-   d="scan'208";a="412601038"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 02 Mar 2020 20:12:08 -0800
-Date:   Mon, 2 Mar 2020 20:12:08 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when
- function is out-of-range
-Message-ID: <20200303041208.GE27842@linux.intel.com>
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-2-sean.j.christopherson@intel.com>
- <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
- <20200302204940.GG6244@linux.intel.com>
- <16e902a8-7883-0b67-d4ee-73e8fe22f955@intel.com>
- <20200303034532.GC27842@linux.intel.com>
- <fcd08758-2191-8fb0-35b1-c3ce5b2cbb43@intel.com>
+        Mon, 2 Mar 2020 23:14:46 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:46766 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbgCCEOp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 23:14:45 -0500
+Received: by mail-qk1-f194.google.com with SMTP id u124so2079062qkh.13;
+        Mon, 02 Mar 2020 20:14:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=e/yk7+ePR4UtnpfkQ11p/1R+rxFd28+s/3MR8pBHbkM=;
+        b=NJZUDSvZr2Hke22ZDjqTxy7uY06oaXg+hUkBLtFjEcOrTthrFpTnaTNkfB1r3m/UPV
+         bYJG44P9dmYiEwdBtAiAA6bBZbv6GL2brr45BREnFlIBtKEQi5cn1wmCoNsVfSQVrVpy
+         iHb1baVDGSh7NClRWvPeeg4YNvjZgOBr5BbSgP50ybspPc3pPVPCkvE85V7JEr1izcPR
+         m2N5RCH16/8gWeS6q4NwKYjqAScKGmIToI9MHsewpAHaMG3yoohCteG5Bo6rVH52zg7a
+         BGFOi058cCW2syIDkNMpw31OHbTCTXsQovOOrjvlysm7eaNgyJ3qEA/cAo92ruIK209e
+         64lQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=e/yk7+ePR4UtnpfkQ11p/1R+rxFd28+s/3MR8pBHbkM=;
+        b=BPqrNmUymzsU9/QbyY63vwLjliD/MfLFDFxsaLJH3RmNosGEoZ/frp5XHlI55ybQ6E
+         RMoc1omMg48vjOIMGXvOKDgQe6G+o3Wj/+u64cTN1AB7P5CEfCcQfkXgKOJ6muGG4P5h
+         ct7prSh+A9KyxdGKu2hWYi82YRPkJdFvycYQ0oGZkyH03S7BWmOmwPVFsStws5yU4En6
+         ilcVhNX/UvLa0CQwX0t1EeMKOTiFj1161xOsXLWjiGeHlq/FPwPzq7ZcSgpyxio5qnv0
+         rw3Ddd4dYtLkVqsNKqxZdmBlf9PPqkP74+Deb9EtT8U1LAQR+9r20acdC1ncjgcw0IUu
+         3hgA==
+X-Gm-Message-State: ANhLgQ0ioFhZcLin45p1Jyj7tmh6/dgYFqjkftmwyv6CI1YH4hpBeVdT
+        ePWZkx/xZzrCR91hGso+5yZHdlWjFCo=
+X-Google-Smtp-Source: ADFU+vstdfZgsFwwnQ843hMIFfCj5PLqChP+Jc8jZZFxIyeRO7s2iu23cWxTQ4nq1CrWYMZaW57GFA==
+X-Received: by 2002:a37:7182:: with SMTP id m124mr2409544qkc.477.1583208884632;
+        Mon, 02 Mar 2020 20:14:44 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id l16sm7153873qke.68.2020.03.02.20.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 20:14:44 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 2 Mar 2020 23:14:42 -0500
+To:     Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/5] efi/x86: Remove extra headroom for setup block
+Message-ID: <20200303041442.GA3518342@rani.riverdale.lan>
+References: <20200301230537.2247550-1-nivedita@alum.mit.edu>
+ <20200301230537.2247550-5-nivedita@alum.mit.edu>
+ <db83f5a1-b827-2a31-0ca9-a04df8257324@nextfour.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <fcd08758-2191-8fb0-35b1-c3ce5b2cbb43@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <db83f5a1-b827-2a31-0ca9-a04df8257324@nextfour.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 12:02:39PM +0800, Xiaoyao Li wrote:
-> On 3/3/2020 11:45 AM, Sean Christopherson wrote:
-> >On Tue, Mar 03, 2020 at 10:27:47AM +0800, Xiaoyao Li wrote:
-> >>Sorry I cannot catch you. Why it's a violation of Intel's SDM?
-> >
-> >The case being discussed above would look like:
-> >
-> >KVM CPUID Entries:
-> >    Function   Index Output
-> >    0x00000000 0x00: eax=0x0000000b ebx=0x756e6547 ecx=0x6c65746e edx=0x49656e69
-> >    0x00000001 0x00: eax=0x000906ea ebx=0x03000800 ecx=0xfffa3223 edx=0x0f8bfbff
-> >    0x00000002 0x00: eax=0x00000001 ebx=0x00000000 ecx=0x0000004d edx=0x002c307d
-> >    0x00000003 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
-> >    0x00000004 0x00: eax=0x00000121 ebx=0x01c0003f ecx=0x0000003f edx=0x00000001
-> >    0x00000004 0x01: eax=0x00000122 ebx=0x01c0003f ecx=0x0000003f edx=0x00000001
-> >    0x00000004 0x02: eax=0x00000143 ebx=0x03c0003f ecx=0x00000fff edx=0x00000001
-> >    0x00000004 0x03: eax=0x00000163 ebx=0x03c0003f ecx=0x00003fff edx=0x00000006
-> >    0x00000005 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000003 edx=0x00000000
-> >    0x00000006 0x00: eax=0x00000004 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
-> >    0x00000007 0x00: eax=0x00000000 ebx=0x009c4fbb ecx=0x00000004 edx=0x84000000
-> >    0x00000008 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
-> >    0x00000009 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
-> >    0x0000000a 0x00: eax=0x07300402 ebx=0x00000000 ecx=0x00000000 edx=0x00000603
-> >--> MISSING CPUID.0xB.0
-> >    0x0000000b 0x01: eax=0x00000000 ebx=0x00000001 ecx=0x00000201 edx=0x00000003
-> >
-> >CPUID.0xB.0 does not exist, so output.ECX=0, which indicates an invalid
-> >level-type.
-> >
-> >The SDM states (for CPUID.0xB):
-> >
-> >    If an input value n in ECX returns the invalid level-type of 0 in ECX[15:8],
-> >    other input values with ECX > n also return 0 in ECX[15:8]
-> >
-> >That means returning a valid level-type in CPUID.0xB.1 as above violates
-> >the SDM's definition of how leaf 0xB works.  I'm arguing we can ignore the
-> >adjustments that would be done on output.E{C,D} for an out of range leaf
-> >because the model is bogus.
+On Mon, Mar 02, 2020 at 04:21:30AM +0000, Mika Penttilä wrote:
 > 
-> Right.
 > 
-> So we'd better do something in KVM_SET_CPUID* , to avoid userspace set bogus
-> cpuid.
-> 
-> >>Supposing the max basic is 0x1f, and it queries cpuid(0x20, 0x5),
-> >>it should return cpuid(0x1f, 0x5).
-> >>
-> >>But based on this patch, it returns all zeros.
+> On 2.3.2020 1.05, Arvind Sankar wrote:
+> > commit 223e3ee56f77 ("efi/x86: add headroom to decompressor BSS to
+> > account for setup block") added headroom to the PE image to account for
+> > the setup block, which wasn't used for the decompression buffer.
 > >
-> >Have you tested the patch, or is your comment based on the above discussion
-> >and/or code inspection?  Honest question, because I've thoroughly tested
-> >the above scenario and it works as you describe, but now I'm worried I
-> >completely botched my testing.
+> > Now that we decompress from the start of the image, this is no longer
+> > required.
 > >
+> > Add a check to make sure that the head section of the compressed kernel
+> > won't overwrite itself while relocating. This is only for
+> > future-proofing as with current limits on the setup and the actual size
+> > of the head section, this can never happen.
+> >
+> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 > 
-> No, I didn't test.
+> To make clear, the kernel (head_32.s and head_64.s) still relocates
+> itself to the end of the buffer and does in-place decompression. So this
+> is just to make init sz smaller.
 > 
-> Leaf 0xB and 0x1f are special cases when they are the maximum basic leaf,
-> because no matter what subleaf is, there is always a non-zero E[CX,DX].
 > 
-> If cpuid.0 returns maximum basic leaf as 0xB/0x1F, when queried leaf is
-> greater, it should always return a non-zero value.
 
-Yes, and that's userspace's responsibility to not screw up.  E.g. if
-userspace didn't create CPUID.0xB.0 (as above) then it's not KVM's fault
-for returning zeros when the guest executes CPUID.0xB.0.
+Not init_size itself, but it reduces the size allocated for the PE
+image. Do you want me to update the comment to make that clearer?
