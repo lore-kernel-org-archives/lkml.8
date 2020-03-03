@@ -2,124 +2,104 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=BAD_ENC_HEADER,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCC0C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF72EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F279720CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E9B2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:21:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="tkLGfZkS";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="hy/0/NtT"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="FBoRlyCm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730751AbgCCTUi (ORCPT
+        id S1730775AbgCCTVX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:20:38 -0500
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:34289 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729960AbgCCTUi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:20:38 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailout.nyi.internal (Postfix) with ESMTP id 3568A21C28;
-        Tue,  3 Mar 2020 14:20:37 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute5.internal (MEProxy); Tue, 03 Mar 2020 14:20:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        content-transfer-encoding:content-type:in-reply-to:date:cc
-        :subject:from:to:message-id; s=fm2; bh=FJ6KELxyo/zYZfyW+0Pn8m70T
-        4Tx2JSVTx48BzYMJvg=; b=tkLGfZkSv5J9psMO+WQWVj4I6UVu6g4z0tOr6y64Q
-        qasyR5Q7LFNOS3wRB1Fts5bIDy7jD6TnGYbt+QVV3wjIhzY5xzKPydwZGckLaWCv
-        iZN3EUeGwRvu65muDaE60yATilaeeEYLUxIvyWCe08GETO4Hp6O0isa1rpaaoM2c
-        Gex1JZn7kNhZnmJhCsHFOwzMK2ylg5NgqK50fMt4C+8v9RJ02un+mOtLf+4iB7FZ
-        9h08uWg/Kl2rJ5nytZZhT4JXuKH5QGKsfUUw9NsXDYyNcQFEU7Lxr80NWb5kQvyX
-        LtT7YAGyMQbu/s5aG881J7UR5CjYgftzAzqPwV/aVyvPA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=FJ6KEL
-        xyo/zYZfyW+0Pn8m70T4Tx2JSVTx48BzYMJvg=; b=hy/0/NtTPq7PPl0uM4niAG
-        Os5W20Gk/M2MwlNSZ/RxvXdWcQEE93Ilam/7BN+uUm4qeFiWW4lpWhCxBhKBWoDC
-        b42sPcbuwWU/LLmwGAE2lGmti6noCFUSjjj0ZXNMhtHVgTH8TC723SbGZdagCDMB
-        LR22vsFb7I0pumNzENvll+8iJ7thsaUXedFPzRFckiBjpr7LhfYp5q2Fb3tifKKC
-        WX5TJNBdxUhaQWozRsKVGFafjtvsXLCr/479LMPQMjG6BCH5wcAD1uKEfDnI2CaD
-        EI7T3r0f5iVSi6y5m3cjQZhH4UAH2F2IF2c2iNtr4+v8hMh+mi7BzuZDrn3Wgvvw
-        ==
-X-ME-Sender: <xms:Aq5eXs4y8Oo8tKuGok_q6Y7347suqQmjWgF9pFJ7j0z5ZMi0UmDrpQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddtiedguddvjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enfghrlhcuvffnffculdejtddmnecujfgurhepgfgtjgffuffhvffksehtqhertddttdej
-    necuhfhrohhmpedfffgrnhhivghlucgiuhdfuceougiguhesugiguhhuuhdrgiihiieqne
-    cukfhppeduieefrdduudegrddufedvrddunecuvehluhhsthgvrhfuihiivgepudenucfr
-    rghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhuuhdrgiihii
-X-ME-Proxy: <xmx:A65eXqK2Hb_XpapE0xd5An8hIHfWXzAXom1Ts-Kf9-ma66JRWm6A8A>
-    <xmx:A65eXlHX_AYZMttRpZLoBG1KBQjbI9sgtxZi2MkMenzHxkIfyAN6og>
-    <xmx:A65eXhel5VL5TzvTwbIQfLqUaxUjf4euvPk2ZgdS8EVVJLP4YyCaWQ>
-    <xmx:Ba5eXtSfRF4Gy8rfbvHCSs0SWAslArxRiny7qGVQvidDNhD2Bwr5yg>
-Received: from localhost (unknown [163.114.132.1])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 589793280060;
-        Tue,  3 Mar 2020 14:20:33 -0500 (EST)
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Mar 2020 14:21:23 -0500
+Received: from mout.gmx.net ([212.227.17.22]:35201 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729516AbgCCTVX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:21:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1583263278;
+        bh=z5MdokEfnohRClHDpHvNTwSEsQsAEZU56XPFTiszgjQ=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=FBoRlyCmC3WWcgtT3nbPmB3SkrAwUgVgkhxQabrxUhtoVAlJ5io97hAwd2Sq4tdw4
+         xxzrXF73hE+Pb8oHR3Ap89aWjGMmdHn3KaJWaJ9XXiWVZO3kqpvSqk9um1cVxpZd0/
+         L/leIqBK161YDttYGkrVDcoP3c0f0yegMjNfHxj4=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.177]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N4QsY-1jXqki3JqQ-011RMb; Tue, 03
+ Mar 2020 20:21:18 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-doc@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+Subject: [PATCH] Documentation: management-style: Fix formatting of emphsized word
+Date:   Tue,  3 Mar 2020 20:21:12 +0100
+Message-Id: <20200303192113.20761-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Originaldate: Tue Mar 3, 2020 at 8:50 AM
-Originalfrom: "Shakeel Butt" <shakeelb@google.com>
-Original: =?utf-8?q?Hi_Daniel,
- =0D=0A=0D=0AOn_Mon,_Mar_2,_2020_at_5:42_PM_Daniel_Xu_?=
- =?utf-8?q?<dxu@dxuuu.xyz>_wrote:=0D=0A>=0D=0A>_User_extended_attributes_a?=
- =?utf-8?q?re_useful_as_metadata_storage_for_kernfs=0D=0A>_consumers_like_?=
- =?utf-8?q?cgroups._Especially_in_the_case_of_cgroups,_it_is_useful=0D=0A>?=
- =?utf-8?q?_to_have_a_central_metadata_store_that_multiple_processes/servi?=
- =?utf-8?q?ces_can=0D=0A>_use_to_coordinate_actions.=0D=0A>=0D=0A>_A_concr?=
- =?utf-8?q?ete_example_is_for_userspace_out_of_memory_killers._We_want_to?=
- =?utf-8?q?=0D=0A>_let_delegated_cgroup_subtree_owners_(running_as_non-roo?=
- =?utf-8?q?t)_to_be_able_to=0D=0A>_say_"please_avoid_killing_this_cgroup".?=
- =?utf-8?q?_In_server_environments_this_is=0D=0A>_less_important_as_everyo?=
- =?utf-8?q?ne_is_running_as_root.=0D=0A=0D=0AI_would_recommend_removing_th?=
- =?utf-8?q?e_"everyone_is_running_as_root"_statement=0D=0Aas_it_is_not_gen?=
- =?utf-8?q?erally_true.=0D=0A=0D=0AShakeel=0D=0A?=
-In-Reply-To: <CALvZod5m3otRRqcLBebbgiZbhoYWAMbMg+ESkacJuj64OP
- =H4Q@mail.gmail.com>
-Date:   Tue, 03 Mar 2020 11:20:32 -0800
-Cc:     "Cgroups" <cgroups@vger.kernel.org>, "Tejun Heo" <tj@kernel.org>,
-        "Li Zefan" <lizefan@huawei.com>,
-        "Johannes Weiner" <hannes@cmpxchg.org>,
-        "LKML" <linux-kernel@vger.kernel.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Kernel Team" <kernel-team@fb.com>
-Subject: Re: [PATCH 0/2] Support user xattrs in cgroupfs
-From:   "Daniel Xu" <dxu@dxuuu.xyz>
-To:     "Shakeel Butt" <shakeelb@google.com>
-Message-Id: <C11FZ3TMTIH1.2KP5NIUPPQBWT@dlxu-fedora-R90QNFJV>
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:asG4HO3fQkYF44OwjHkqrNtzg8cnJIwXuYEfJr8bzc74H5Tm4iW
+ Itg01JLHuHBQr4bj3g75vJlPGFHTDuHToUuyStrii0XXY+i24phdtS5WVRisv18yHcTLJyO
+ ZwxY/XOEdKNyjqOt+QKw66f9+9c7Te9zUUWNs5PadfgciunW9JBVLOnyfljX7wEkL+PQ83N
+ Curd/Vxr2TkA/AZN+F5EA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pV+ZI0r+ksc=:vU9kIoEpyVXr0hx0sw8XSk
+ XvZA15e5OcwyyfI5saPPbL6dqml6csbcWtTcOXWqHifV/UX9cQd5EhIw8qrT45GHnU2VqvM+N
+ 8yto4nKmQ6RkZ6OVxXNRXEsHz4+krgQydJLpUJfWnb7RY9/0107mUBKh2QHNfrhMq6W/jiPuM
+ Vg0fQUAY49vnhm0e9KlOeUjSGWIeMDwUUx1G+ynv4hFbs9lCQw/3t6IrgcieFjwounOSxKop9
+ TZOzSBPc007bdsCZeMiBUyxnbuIDXbye2lIVWs4DhIsVV05e0XZzbuP4jnTAwVbg1s7MpCT/c
+ Hxkyy6UmEItzHt32LSbgktVkVY6hQknhjiTKa9JOHeGJT8syHR9bUBfHyDlQ90jl5hU2De+tp
+ M/E5GMtiiFyhG0kXIXQJlyL3Oug/n4wzIYH6shYAJpiVaQFEXoHFjyeiUpkecmP/LZMZVBtdk
+ 5t/khNIObkQkfvimOAI3NDBLFncUltqUjc+IVgHH6gF8ieEx0E384E0EzNHUyHtRlBDhT0Zbl
+ NCiuQvxU15JxGGGzexQhfCVUTgmzEsYJ5PWHcaRAkePuoFXIbmp2Pfw0b0a8wP/3WDwWv1x67
+ LuDwWW5Yd43s8GKFHS/4qXb6CBZdmMM4FWmodKK1B1RJ5oAkY67BLD8o+JkmnrXcdirImJ3n6
+ Z4hepjw66obHkmfA5KqqS+I5nM0Aum37gU1y3Jkvm4kCpgtonnh9cSl1W8U7LNIzq5HJZ7uoW
+ I7UO1j5ibisTOOLZxtyYvD6skz95F2kOAFtkobobKBv0dbOoC0vC7uUskLbrXFm2rEJm7kPax
+ 72et1WwaizQBxrCWPa4Aneq9cOgZq/JkvuW2iykpkKzmJmzWetNvzEZqGErZnV4hpY2BglkdS
+ Gb9QCrXVQ//QSQw+ZCMXjitG1MyI3ICJVdu/xoy//uKgln5R1pGwWFElEwhnsiGU7zH3tmyK7
+ FbHzMVgOCjJas4SQ84qFHbohZii6FAnrgLGjOAZdag8rfhnO09QusQpMXlJxMdqrb1AEtFGYl
+ BpfZkd7dNNA8a+5qai3eJWaFgUt98CzW3NOaAUKLcn3w3kXJHBPNqfTPYSNuN11ZsDuguhoL5
+ iBFqkBRf+dq3Em/QXs5aDD8WIcEJRgsH4XxS3kT6npJlmdr9lwDlO35kR2GJW7ERUJhjX4KZ9
+ vTwIsxxgLc+2Df8LMlE3V26J8BvmUk6COpD0h66zcYDWdZ0d4Bsu8ec2mTlRaInUkKRKTKzfL
+ jH4cnoc/vmHja/tBx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue Mar 3, 2020 at 8:50 AM, Shakeel Butt wrote:
-> Hi Daniel,
->
->=20
-> On Mon, Mar 2, 2020 at 5:42 PM Daniel Xu <dxu@dxuuu.xyz> wrote:
-> >
-> > User extended attributes are useful as metadata storage for kernfs
-> > consumers like cgroups. Especially in the case of cgroups, it is useful
-> > to have a central metadata store that multiple processes/services can
-> > use to coordinate actions.
-> >
-> > A concrete example is for userspace out of memory killers. We want to
-> > let delegated cgroup subtree owners (running as non-root) to be able to
-> > say "please avoid killing this cgroup". In server environments this is
-> > less important as everyone is running as root.
->
->=20
-> I would recommend removing the "everyone is running as root" statement
-> as it is not generally true.
->
->=20
-> Shakeel
+Commit 7f2b3c65b9a1 ("Documentation/ManagementStyle: convert it to ReST
+markup") converted _underlined_ to *emphasized* words, but forgot about
+an underscore in this case.
 
-Good point, thanks.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ Documentation/process/management-style.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/process/management-style.rst b/Documentation/pr=
+ocess/management-style.rst
+index 186753ff3d2d..dfbc69bf49d4 100644
+=2D-- a/Documentation/process/management-style.rst
++++ b/Documentation/process/management-style.rst
+@@ -227,7 +227,7 @@ incompetence will grudgingly admit that you at least d=
+idn't try to weasel
+ out of it.
+
+ Then make the developer who really screwed up (if you can find them) know
+-**in_private** that they screwed up.  Not just so they can avoid it in th=
+e
++**in private** that they screwed up.  Not just so they can avoid it in th=
+e
+ future, but so that they know they owe you one.  And, perhaps even more
+ importantly, they're also likely the person who can fix it.  Because, let=
+'s
+ face it, it sure ain't you.
+=2D-
+2.20.1
+
