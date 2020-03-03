@@ -2,171 +2,145 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D03BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:28:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036FEC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AFB720838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:28:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9D8720838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:29:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ay+0jYLI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730409AbgCCQ2v (ORCPT
+        id S1730341AbgCCQ3w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:28:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:49430 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730115AbgCCQ2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:28:50 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 251F22F;
-        Tue,  3 Mar 2020 08:28:50 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 962FE3F6C4;
-        Tue,  3 Mar 2020 08:28:48 -0800 (PST)
-Date:   Tue, 3 Mar 2020 16:28:46 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: Linux-next-20200302: arm64 build failed
-Message-ID: <20200303162846.GE823373@arrakis.emea.arm.com>
-References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
- <20200302104726.GA7995@willie-the-truck>
- <20200302135443.GA24831@linux.ibm.com>
- <20200302174553.GC4166275@arrakis.emea.arm.com>
- <c4c6b363-62a8-db27-6ab3-ca2f2d4d082c@arm.com>
+        Tue, 3 Mar 2020 11:29:52 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:46226 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgCCQ3w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:29:52 -0500
+Received: by mail-il1-f195.google.com with SMTP id e8so3244994ilc.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:29:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=bHqnqRwud5tCLDWzSgVYyMsZnd8YHHXZanC80bGJ5O8=;
+        b=Ay+0jYLIuqECJTZm+G8WqdQ6JLuVHhx+JTFTQfJa63acVRGTUzu0CoVgczUjzNmDsm
+         mbpjb1VcQvZ/om6X+fltyGMoKEPijNn7lnlBAP+XBfJtXtdOMosYdJsSpu0Cu4HurFY0
+         bLdEFH+OBKDCijDoDVuMmF2BQZM/wIVzEKP2CsshzzwbKjEg7x7tGutS52O24aObpqal
+         VpEeEuaunwTCMzygO9jxcjJPCez1VUGu0j6mrg7LhSMr4R4jwIMIG3MWKIu4lRQ8nNTJ
+         63GgUUbK8SfX02r3S7zHcyegwu/X/iKwDmzfQkIGMCRbghCZj4Uws9/CmMgq3ERCsBJU
+         8Enw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bHqnqRwud5tCLDWzSgVYyMsZnd8YHHXZanC80bGJ5O8=;
+        b=nQB3VVifbg/TjOb7H8iS77oshaB8JLhC9G3EAfV5Lh05KdX5hD/yN9B7X2oZhq1JN3
+         fZTxyYuUkPt/uXJwpGLoj5lC502F6sjWDdR3TunM5BHka/ndDayPWQWvcXn3UyJEH4MZ
+         MIE34xGgmhsc4R98yjO9+5YRAs+OKONyPml6WHFROFe+qSRt9Wow6ukHhjRsl5uZq/hz
+         z7jD3PvqbhfcDXD85PYMiaaaYPAHeqwA9kCMKaVvbmznTOnO8r59omOJszLm5PBPCHkC
+         KxZiz/r1QilCACkIoAmTFKW8K42ZD+YRTht6bD9AHppWd9NKktaC3hwhw6kESumJjj5G
+         c6Vg==
+X-Gm-Message-State: ANhLgQ0DKS0YwhkykVtdShuxNQ+opxfFffbIttCUk1HdAfTBcnYC5uKV
+        cyRRs77EM/HE/4hQU1pIrK3arpngXV4=
+X-Google-Smtp-Source: ADFU+vtw2ooXY8bgX36hXoMG17cL5yeCZEMPNspBFcQs1750nnNwgKLmx5NEt5gXM4Ayg1dmKdVVYQ==
+X-Received: by 2002:a92:8d41:: with SMTP id s62mr5145756ild.63.1583252990750;
+        Tue, 03 Mar 2020 08:29:50 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id j3sm4861403iob.77.2020.03.03.08.29.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 08:29:49 -0800 (PST)
+Subject: Re: [PATCH v2 4/4] io_uring: get next req on subm ref drop
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583181841.git.asml.silence@gmail.com>
+ <444aef98f849d947d7f10e88f30244fa0bc82360.1583181841.git.asml.silence@gmail.com>
+ <3ab75953-ee39-2c4e-99e2-f8c18ceb6a8d@kernel.dk>
+ <52b282f5-50f3-2ee6-a055-6ef0c2c39e93@gmail.com>
+ <9ead66eb-cb5d-2dab-1a78-02466958674a@gmail.com>
+ <153662f4-0ab9-8dac-1577-0df1ce35f320@kernel.dk>
+Message-ID: <3837e24b-4c27-78b0-869a-ebbe42fe3a3c@kernel.dk>
+Date:   Tue, 3 Mar 2020 09:29:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4c6b363-62a8-db27-6ab3-ca2f2d4d082c@arm.com>
+In-Reply-To: <153662f4-0ab9-8dac-1577-0df1ce35f320@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 09:34:45AM +0530, Anshuman Khandual wrote:
-> On 03/02/2020 11:15 PM, Catalin Marinas wrote:
-> > On Mon, Mar 02, 2020 at 03:54:43PM +0200, Mike Rapoport wrote:
-> >> On Mon, Mar 02, 2020 at 10:47:27AM +0000, Will Deacon wrote:
-> >>> [+Anshuman and Catalin]
-> >>>
-> >>> On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
-> >>>> Linux-Next 20200302 arm64 build failed due to below errors,
-> >>>> Suspecting patch causing this build break.
-> >>>>
-> >>>> 87d900aef3e2  arm/arm64: add support for folded p4d page tables
-> >>>>
-> >>>> Error log,
-> >>>> -------------
-> >>>> arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
-> >>>> include/linux/compiler.h:284:1: error: incompatible type for argument
-> >>>> 1 of 'p4d_page_paddr'
-> >>>>  ({         \
-> >>>>  ^
-> >>>> arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
-> >>>> '__phys_to_virt'
-> >>>>  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
-> >>>>                                              ^
-> >>>> arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
-> >>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
-> >>>>                                           ^~~~
-> >>>> include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
-> >>>>  #define READ_ONCE(x) __READ_ONCE(x, 1)
-> >>>>                       ^~~~~~~~~~~
-> >>>> arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
-> >>>>  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
-> >>>> + pud_index(addr) * sizeof(pud_t))
-> >>>>                                                     ^~~~~~~~~
-> >>>> arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
-> >>>> 'pud_offset_phys'
-> >>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
-> >>>>                                                ^~~~~~~~~~~~~~~
-> >>>> arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
-> >>>>    pudp = pud_offset(pgdp, addr);
-> >>>>           ^~~~~~~~~~
-> >>>
-> >>> Looks like we need an implementation of unmap_hotplug_p4d_range() to
-> >>> walk the dummy p4d level. Unfortunately, we don't have the folded p4d
-> >>> patches in the arm64 tree so we'll either need a common branch or the
-> >>> hotplug patches will need to be dropped for the moment.
-> >>
-> >> unmap_hotplug_p4d_range() is easy :)
-> >>
-> >> From c7a5d08ff51ca2057b6b0289c4423bdfd7643518 Mon Sep 17 00:00:00 2001
-> >> From: Mike Rapoport <rppt@linux.ibm.com>
-> >> Date: Mon, 2 Mar 2020 15:53:17 +0200
-> >> Subject: [PATCH] arm64/mm: implement unmap_hotplug_p4d_range
-> >>
-> >> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> >> ---
-> >>  arch/arm64/mm/mmu.c | 20 +++++++++++++++++++-
-> >>  1 file changed, 19 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> >> index 05ec8e5f1436..c76b11577558 100644
-> >> --- a/arch/arm64/mm/mmu.c
-> >> +++ b/arch/arm64/mm/mmu.c
-> >> @@ -840,6 +840,24 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
-> >>  	} while (addr = next, addr < end);
-> >>  }
-> >>  
-> >> +static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
-> >> +				unsigned long end, bool free_mapped)
-> >> +{
-> >> +	unsigned long next;
-> >> +	pgd_t *p4dp, p4d;
-> >> +
-> >> +	do {
-> >> +		next = p4d_addr_end(addr, end);
-> >> +		p4dp = p4d_offset(pgd, addr);
-> >> +		p4d = READ_ONCE(*p4dp);
-> >> +		if (p4d_none(p4d))
-> >> +			continue;
-> >> +
-> >> +		WARN_ON(!p4d_present(p4d));
-> >> +		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
-> >> +	} while (addr = next, addr < end);
-> >> +}
-> >> +
-> >>  static void unmap_hotplug_range(unsigned long addr, unsigned long end,
-> >>  				bool free_mapped)
-> >>  {
-> >> @@ -854,7 +872,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
-> >>  			continue;
-> >>  
-> >>  		WARN_ON(!pgd_present(pgd));
-> >> -		unmap_hotplug_pud_range(pgdp, addr, next, free_mapped);
-> >> +		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
-> >>  	} while (addr = next, addr < end);
-> >>  }
-> > 
-> > Thanks Mike. With the additional diff below, I can get it to build with
-> > and without the p4d clean-up patches in -next. If Anshuman confirms that
-> > they work, I can add them on top of the arm64 for-next/memory-hotremove
-> > branch.
+On 3/3/20 9:04 AM, Jens Axboe wrote:
+> On 3/3/20 3:46 AM, Pavel Begunkov wrote:
+>> On 3/3/2020 9:54 AM, Pavel Begunkov wrote:
+>>> On 03/03/2020 07:26, Jens Axboe wrote:
+>>>> On 3/2/20 1:45 PM, Pavel Begunkov wrote:
+>>>>> Get next request when dropping the submission reference. However, if
+>>>>> there is an asynchronous counterpart (i.e. read/write, timeout, etc),
+>>>>> that would be dangerous to do, so ignore them using new
+>>>>> REQ_F_DONT_STEAL_NEXT flag.
+>>>>
+>>>> Hmm, not so sure I like this one. It's not quite clear to me where we
+>>>> need REQ_F_DONT_STEAL_NEXT. If we have an async component, then we set
+>>>> REQ_F_DONT_STEAL_NEXT. So this is generally the case where our
+>>>> io_put_req() for submit is not the last drop. And for the other case,
+>>>> the put is generally in the caller anyway. So I don't really see what
+>>>> this extra flag buys us?
+>>>
+>>> Because io_put_work() holds a reference, no async handler can achive req->refs
+>>> == 0, so it won't return next upon dropping the submission ref (i.e. by
+>>> put_find_nxt()). And I want to have next before io_put_work(), to, instead of as
+>>> currently:
+>>>
+>>> run_work(work);
+>>> assign_cur_work(NULL); // spinlock + unlock worker->lock
+>>> new_work = put_work(work);
+>>> assign_cur_work(new_work); // the second time
+>>>
+>>> do:
+>>>
+>>> new_work = run_work(work);
+>>> assign_cur_work(new_work); // need new_work here
+>>> put_work(work);
+>>>
+>>>
+>>> The other way:
+>>>
+>>> io_wq_submit_work() // for all async handlers
+>>> {
+>>> 	...
+>>> 	// Drop submission reference.
+>>> 	// One extra ref will be put in io_put_work() right
+>>> 	// after return, and it'll be done in the same thread
+>>> 	if (atomic_dec_and_get(req) == 1)
+>>> 		steal_next(req);
+>>> }
+>>>
+>>> Maybe cleaner, but looks fragile as well. Would you prefer it?
+>>
+>> Any chance you've measured your next-work fix? I wonder how much does it
+>> hurt performance, and whether we need a terse patch for 5.6.
 > 
-> These two patches applied on next-20200302 works fine for hot-remove.
+> Unless I'm missing something, the worker will pick up the next work
+> without sleeping, since the request will have finished. So it really
+> should not add any extra overhead, except you'll do an extra wqe lock
+> roundtrip.
+> 
+> But I'll run some testing to be totally sure.
 
-Do they also work on top of the vanilla kernel + your hotremove patches
-(i.e. not on top of -next)?
-
-> As the second patch also fixes the first one, IMHO both should be
-> folded into a single one instead. Just wondering if this combined
-> patch which enables P4D page table should be posted on the list or do
-> I need to respin original hot remove patches again.
-
-If your unmap patches plus the fixes from Mike and me work fine on top
-of 5.6-rc3 (as well as when combined with linux-next), I'd prefer you
-respin your patches to include the p4d support from start. Otherwise, we
-create a single patch that Andrew can merge on top of the -mm tree.
+Testing with link-cp, not seeing much if anything of a difference. Not
+in wqe load either.
 
 -- 
-Catalin
+Jens Axboe
+
