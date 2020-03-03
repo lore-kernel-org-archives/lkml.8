@@ -2,71 +2,158 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45705C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3686CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF3A821556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:30:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F5C32166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:32:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583227976;
+	bh=O7EGJyPb4x4U7GSFgct/ooiwe7XwtaVqAzBZ/R5yheU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ciS1rnRH2FRRl2yw/DqBkon0Zx2Tkn339sofqak7DmISAsIz/skbS6ycUrGzmjlSq
+	 BcqzGHNzPMOWYoC8knhwBXBulqtyCgdfZHIlxScwaZ+YGuxsKRNunPJzg5BbOhQf2d
+	 szDkEaLEhC+7mSLO91Reb0p1NpyHDvxJxg/skatI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728169AbgCCJa0 (ORCPT
+        id S1728190AbgCCJcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:30:26 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10715 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727870AbgCCJa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:30:26 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 63E242D7F5A184E362CF;
-        Tue,  3 Mar 2020 17:30:22 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 3 Mar 2020
- 17:30:15 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <hverkuil@xs4all.nl>, <mchehab@kernel.org>,
-        <gregkh@linuxfoundation.org>, <yuehaibing@huawei.com>,
-        <tglx@linutronix.de>
-CC:     <linux-media@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] staging: media: usbvision: Add missing MEDIA_USB_SUPPORT dependency
-Date:   Tue, 3 Mar 2020 17:27:47 +0800
-Message-ID: <20200303092747.28360-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 3 Mar 2020 04:32:55 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43598 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727644AbgCCJcy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:32:54 -0500
+Received: by mail-wr1-f67.google.com with SMTP id h9so2449125wrr.10;
+        Tue, 03 Mar 2020 01:32:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XYpfou3pNPf/l+cdS9KAFxciOnURpc9US/Ck720UZHw=;
+        b=aqzLeWQfRDVvrZa298Hwxwy6HOoMmC3nQqu87aPqpd4t7Py35ZgwNoAgLQoxE9FCaM
+         qgw51japeUWQn+BYQLbDhcq21A98ki0WViEdYDI2gDnrm/ryTwoFvpyiy/ofuprUB7lE
+         6e+7QX1JE8j2aErOcWfb0YYNlid5n+U6vdXE3/AVDTEvHTMRpjAlgGM1Ke2q4MqH112Z
+         YvK4RAyKqF19iIs2ME4K4yshAFCzdEgIOfliIxX4MIVziY2DEyEaviU2O/sFBOSLyAyD
+         yftjwRDMrXWpLUpdKE0BjF2MWHhQsln22h/j4GTqJMVxadFzAo07ObRVBj3JF2SxqU1E
+         NSjA==
+X-Gm-Message-State: ANhLgQ1W269+2rpTNpBQ1yfAQCXEncVrMMPk0PyXMeeqlkxfMpIn57T3
+        dFy78rMMZtSZZDqa1QJQVCg=
+X-Google-Smtp-Source: ADFU+vtF+RbwIjqore5UHIM7atEL0jn316nOITsQv4Z2OqwFH4XPXNTPD5ODK8h9prUeZDx1qzGkkA==
+X-Received: by 2002:a5d:4088:: with SMTP id o8mr4722346wrp.144.1583227972535;
+        Tue, 03 Mar 2020 01:32:52 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id f17sm12224197wrm.3.2020.03.03.01.32.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 01:32:51 -0800 (PST)
+Date:   Tue, 3 Mar 2020 10:32:51 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Roman Gushchin <guro@fb.com>, Johannes Weiner <hannes@cmpxchg.org>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] memcg: css_tryget_online cleanups
+Message-ID: <20200303093251.GD4380@dhcp22.suse.cz>
+References: <20200302203109.179417-1-shakeelb@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302203109.179417-1-shakeelb@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VIDEO_USBVISION driver depends on MEDIA_USB_SUPPORT
+On Mon 02-03-20 12:31:09, Shakeel Butt wrote:
+> Currently multiple locations in memcg code, css_tryget_online() is being
+> used. However it doesn't matter whether the cgroup is online for the
+> callers. Online used to matter when we had reparenting on offlining and
+> we needed a way to prevent new ones from showing up.
+> 
+> The failure case for couple of these css_tryget_online usage is to
+> fallback to root_mem_cgroup which kind of make bypassing the memcg
+> limits possible for some workloads. For example creating an inotify
+> group in a subcontainer and then deleting that container after moving the
+> process to a different container will make all the event objects
+> allocated for that group to the root_mem_cgroup. So, using
+> css_tryget_online() is dangerous for such cases.
+> 
+> Two locations still use the online version. The swapin of offlined
+> memcg's pages and the memcg kmem cache creation. The kmem cache indeed
+> needs the online version as the kernel does the reparenting of memcg
+> kmem caches. For the swapin case, it has been left for later as the
+> fallback is not really that concerning.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 8fb12ce2ec9d ("media: usbvision: deprecate driver")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/media/usbvision/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Could you be more specific about the swap in case please?
 
-diff --git a/drivers/staging/media/usbvision/Kconfig b/drivers/staging/media/usbvision/Kconfig
-index 7903f55..c6e1afb 100644
---- a/drivers/staging/media/usbvision/Kconfig
-+++ b/drivers/staging/media/usbvision/Kconfig
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config VIDEO_USBVISION
- 	tristate "USB video devices based on Nogatech NT1003/1004/1005 (Deprecated)"
--	depends on I2C && VIDEO_V4L2
-+	depends on MEDIA_USB_SUPPORT && I2C && VIDEO_V4L2
- 	select VIDEO_TUNER
- 	select VIDEO_SAA711X if MEDIA_SUBDRV_AUTOSELECT
- 	help
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
+
+Other than that nothing really jumped at me although I have to confess
+that I am far from deeply familiar with the sk_buff charging path.
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+> ---
+> 
+> Changes since v1:
+> - replaced WARN_ON with WARN_ON_ONCE
+> 
+>  mm/memcontrol.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 62b574d0cd3c..75d8883bf975 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -656,7 +656,7 @@ __mem_cgroup_largest_soft_limit_node(struct mem_cgroup_tree_per_node *mctz)
+>  	 */
+>  	__mem_cgroup_remove_exceeded(mz, mctz);
+>  	if (!soft_limit_excess(mz->memcg) ||
+> -	    !css_tryget_online(&mz->memcg->css))
+> +	    !css_tryget(&mz->memcg->css))
+>  		goto retry;
+>  done:
+>  	return mz;
+> @@ -961,7 +961,8 @@ struct mem_cgroup *get_mem_cgroup_from_page(struct page *page)
+>  		return NULL;
+>  
+>  	rcu_read_lock();
+> -	if (!memcg || !css_tryget_online(&memcg->css))
+> +	/* Page should not get uncharged and freed memcg under us. */
+> +	if (!memcg || WARN_ON_ONCE(!css_tryget(&memcg->css)))
+>  		memcg = root_mem_cgroup;
+>  	rcu_read_unlock();
+>  	return memcg;
+> @@ -974,10 +975,13 @@ EXPORT_SYMBOL(get_mem_cgroup_from_page);
+>  static __always_inline struct mem_cgroup *get_mem_cgroup_from_current(void)
+>  {
+>  	if (unlikely(current->active_memcg)) {
+> -		struct mem_cgroup *memcg = root_mem_cgroup;
+> +		struct mem_cgroup *memcg;
+>  
+>  		rcu_read_lock();
+> -		if (css_tryget_online(&current->active_memcg->css))
+> +		/* current->active_memcg must hold a ref. */
+> +		if (WARN_ON_ONCE(!css_tryget(&current->active_memcg->css)))
+> +			memcg = root_mem_cgroup;
+> +		else
+>  			memcg = current->active_memcg;
+>  		rcu_read_unlock();
+>  		return memcg;
+> @@ -6732,7 +6736,7 @@ void mem_cgroup_sk_alloc(struct sock *sk)
+>  		goto out;
+>  	if (!cgroup_subsys_on_dfl(memory_cgrp_subsys) && !memcg->tcpmem_active)
+>  		goto out;
+> -	if (css_tryget_online(&memcg->css))
+> +	if (css_tryget(&memcg->css))
+>  		sk->sk_memcg = memcg;
+>  out:
+>  	rcu_read_unlock();
+> -- 
+> 2.25.0.265.gbab2e86ba0-goog
+
 -- 
-2.7.4
-
-
+Michal Hocko
+SUSE Labs
