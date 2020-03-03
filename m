@@ -2,97 +2,178 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CDAAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023B0C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B8B2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:14:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583241279;
-	bh=U28fY8JhI6bCyYW5i7FnUHu0QsanuxLwZ73WPobV7tM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JrNJNmLb1BQsQBmAlF96QSJ5h1dsrtlsBiCLPkT0hci1ukvj/PBI0Rv/KhDaKdmTe
-	 Tb2hQr4MiqFLa0mMcr7kEd0Bgp53P+uoGSOfNSbbRNXs3o/sCUvS7A5p5DqFIuLP8o
-	 K50kzM5cSIT0lrJHI+PYc9pNBsAeUJjvl3N39tVw=
+	by mail.kernel.org (Postfix) with ESMTP id C20E720842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:17:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OuocMO5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgCCNOi (ORCPT
+        id S1728963AbgCCNRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:14:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53058 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727872AbgCCNOh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:14:37 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DDB320842;
-        Tue,  3 Mar 2020 13:14:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583241277;
-        bh=U28fY8JhI6bCyYW5i7FnUHu0QsanuxLwZ73WPobV7tM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eBgTn54vhuoXwc2Fijp0ZPXdIVlth72dEuoUBHuO98Tt1c3mOCJGuZPVxIGH3k7cj
-         YDSguUeZHBnVrtox9b6f92pg+Di0lq1GYn5SeHgcKg3xbRTESFxU/YdG3ErowUr5e9
-         QkKhS9QtYFvlPZfoFLXn/9szhCR4vjX4/wPYPRm4=
-Date:   Tue, 3 Mar 2020 14:14:34 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Karel Zak <kzak@redhat.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200303131434.GA2373427@kroah.com>
-References: <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
- <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home>
- <20200303130347.GA2302029@kroah.com>
+        Tue, 3 Mar 2020 08:17:35 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54545 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728124AbgCCNRf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:17:35 -0500
+Received: by mail-wm1-f67.google.com with SMTP id i9so1733810wml.4;
+        Tue, 03 Mar 2020 05:17:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x1haolJvTMTs4qAKKQpFP8pY7Ez4bO8I0NW3W3vGhjY=;
+        b=OuocMO5bejjzlYN7dgw8I+8i7eYd2hQHN4Z6zRclkIyqy204aGYP9hBgL0OfmqkUs2
+         VwkGfDLA7OjW5W7CCKViNtEZZaKACTs29/be0YTbgm/2tmmJdc+zsgurpV68PSrI4n0y
+         qZGu/h11pBgohxtCnuw9NS+/rL/fghbF5xQ9vGE6m3ZCWB4kYe1/SQko1ja8UCdmqBMb
+         wMtj0pF8zR9m+qrZJof85tZdKOtQBz+s9o0hc2wRsHqnPExf3XHgaNSMhvoJxkLgV23j
+         plKLYqojWrxfJGa8HkPldn1PPKxCakR7AHxQ8v1Qd88GfCwh9lu8b/GzjTgtAxKvVLgD
+         qWIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x1haolJvTMTs4qAKKQpFP8pY7Ez4bO8I0NW3W3vGhjY=;
+        b=gjspNOzcHZj56hjMed/8JCTBxZsPZwpCkIM7lgp/4uPNljMOpLKG23PiDi8c7VQGzw
+         kmVUGdn8vlhkZGlXz23YIDt5SvsArRHgjn02dB3vMBJqOtdvtHs3w3+eROtKQb1LrzuC
+         AgZWYREP4zY2MFxYoAY/xFjHhP3ngMhotxOYQrkOi6naU+ZDwQ/lJX01tRrCEV5EEQSN
+         bi0tMn718w52MGdWq2nmvma9qlK2nMJdBHEWsREWlLg26S46aL8sOMk0fSoyhOt47xoq
+         ClqUzO9yNJwiO6KrSYAOpIAjT7UQ3aR1Cu4gEfGQrbrhIJx1eIK/sOnAXzdF7u0mow/D
+         73nw==
+X-Gm-Message-State: ANhLgQ2Slm0ctOd3oKSXotO7GLcXNDMmzPivSscGjq7sayVWFBG1x7DM
+        g19vBjvnXcuHGbRkbzmclbfxyvN5NtkjszSKuVM=
+X-Google-Smtp-Source: ADFU+vtrqxh9biAxeykoHsq+WDr8PQuEooauex3an4mdH3DhWCElhBl6tZ0babeoVFgVsf3/xOOvr2qyvHAvbWS8TDs=
+X-Received: by 2002:a1c:9e51:: with SMTP id h78mr4179705wme.44.1583241453088;
+ Tue, 03 Mar 2020 05:17:33 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303130347.GA2302029@kroah.com>
+References: <20200302205700.29746-1-daniel.baluta@oss.nxp.com>
+ <20200302205700.29746-3-daniel.baluta@oss.nxp.com> <CAFQqKeUSf_KJ3MBumZTEEUc+kUdLnL5y=kvQ2x75FziJUECqpA@mail.gmail.com>
+In-Reply-To: <CAFQqKeUSf_KJ3MBumZTEEUc+kUdLnL5y=kvQ2x75FziJUECqpA@mail.gmail.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 3 Mar 2020 15:17:21 +0200
+Message-ID: <CAEnQRZBOpYASGTuBQ2Fz6Lg=L5otR2r8yr=XhsWSCHjmaB_L8w@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] ASoC: SOF: Use multi PM domains helpers
+To:     "Sridharan, Ranjani" <ranjani.sridharan@intel.com>
+Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>, rjw@rjwysocki.net,
+        "Brown, Len" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-pm@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, khilman@kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 02:03:47PM +0100, Greg Kroah-Hartman wrote:
-> On Tue, Mar 03, 2020 at 12:38:14PM +0100, Karel Zak wrote:
-> > On Tue, Mar 03, 2020 at 10:26:21AM +0100, Miklos Szeredi wrote:
-> > > No, I don't think this is going to be a performance issue at all, but
-> > > if anything we could introduce a syscall
-> > > 
-> > >   ssize_t readfile(int dfd, const char *path, char *buf, size_t
-> > > bufsize, int flags);
-> > 
-> > off-topic, but I'll buy you many many beers if you implement it ;-),
-> > because open + read + close is pretty common for /sys and /proc in
-> > many userspace tools; for example ps, top, lsblk, lsmem, lsns, udevd
-> > etc. is all about it.
-> 
-> Unlimited beers for a 21-line kernel patch?  Sign me up!
-> 
-> Totally untested, barely compiled patch below.
+On Mon, Mar 2, 2020 at 11:26 PM Sridharan, Ranjani
+<ranjani.sridharan@intel.com> wrote:
+>
+>
+>
+> On Mon, Mar 2, 2020 at 1:00 PM Daniel Baluta <daniel.baluta@oss.nxp.com> wrote:
+>>
+>> From: Daniel Baluta <daniel.baluta@nxp.com>
+>>
+>> Use dev_multi_pm_attach / dev_multi_pm_detach instead of the hardcoded
+>> version.
+>>
+>> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
+>> ---
+>>  sound/soc/sof/imx/imx8.c | 54 +++++-----------------------------------
+>>  1 file changed, 6 insertions(+), 48 deletions(-)
+>>
+>> diff --git a/sound/soc/sof/imx/imx8.c b/sound/soc/sof/imx/imx8.c
+>> index b692752b2178..ca740538a2d5 100644
+>> --- a/sound/soc/sof/imx/imx8.c
+>> +++ b/sound/soc/sof/imx/imx8.c
+>> @@ -51,10 +51,7 @@ struct imx8_priv {
+>>         struct imx_sc_ipc *sc_ipc;
+>>
+>>         /* Power domain handling */
+>> -       int num_domains;
+>> -       struct device **pd_dev;
+>> -       struct device_link **link;
+>> -
+>> +       struct dev_multi_pm_domain_data *mpd;
+>>  };
+>>
+>>  static void imx8_get_reply(struct snd_sof_dev *sdev)
+>> @@ -207,7 +204,6 @@ static int imx8_probe(struct snd_sof_dev *sdev)
+>>         struct resource res;
+>>         u32 base, size;
+>>         int ret = 0;
+>> -       int i;
+>>
+>>         priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+>>         if (!priv)
+>> @@ -218,39 +214,9 @@ static int imx8_probe(struct snd_sof_dev *sdev)
+>>         priv->sdev = sdev;
+>>
+>>         /* power up device associated power domains */
+>> -       priv->num_domains = of_count_phandle_with_args(np, "power-domains",
+>> -                                                      "#power-domain-cells");
+>> -       if (priv->num_domains < 0) {
+>> -               dev_err(sdev->dev, "no power-domains property in %pOF\n", np);
+>> -               return priv->num_domains;
+>> -       }
+>> -
+>> -       priv->pd_dev = devm_kmalloc_array(&pdev->dev, priv->num_domains,
+>> -                                         sizeof(*priv->pd_dev), GFP_KERNEL);
+>> -       if (!priv->pd_dev)
+>> -               return -ENOMEM;
+>> -
+>> -       priv->link = devm_kmalloc_array(&pdev->dev, priv->num_domains,
+>> -                                       sizeof(*priv->link), GFP_KERNEL);
+>> -       if (!priv->link)
+>> -               return -ENOMEM;
+>> -
+>> -       for (i = 0; i < priv->num_domains; i++) {
+>> -               priv->pd_dev[i] = dev_pm_domain_attach_by_id(&pdev->dev, i);
+>> -               if (IS_ERR(priv->pd_dev[i])) {
+>> -                       ret = PTR_ERR(priv->pd_dev[i]);
+>> -                       goto exit_unroll_pm;
+>> -               }
+>> -               priv->link[i] = device_link_add(&pdev->dev, priv->pd_dev[i],
+>> -                                               DL_FLAG_STATELESS |
+>> -                                               DL_FLAG_PM_RUNTIME |
+>> -                                               DL_FLAG_RPM_ACTIVE);
+>> -               if (!priv->link[i]) {
+>> -                       ret = -ENOMEM;
+>> -                       dev_pm_domain_detach(priv->pd_dev[i], false);
+>> -                       goto exit_unroll_pm;
+>> -               }
+>> -       }
+>> +       priv->mpd = dev_multi_pm_attach(&pdev->dev);
+>> +       if (IS_ERR(priv->mpd))
+>> +               return PTR_ERR(priv->mpd);
+>>
+>>         ret = imx_scu_get_handle(&priv->sc_ipc);
+>>         if (ret) {
+>> @@ -329,25 +295,17 @@ static int imx8_probe(struct snd_sof_dev *sdev)
+>>  exit_pdev_unregister:
+>>         platform_device_unregister(priv->ipc_dev);
+>>  exit_unroll_pm:
+>
+> Can we also rename the label to exit_pm_detach maybe? It is no longer an unroll anymore right?
 
-Ok, that didn't even build, let me try this for real now...
+Sure, will do in v2.
