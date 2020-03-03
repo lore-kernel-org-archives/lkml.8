@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58FEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC63C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703B0246BB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 163BD24680
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:47:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203627;
-	bh=YD7v9zrFJtvaLsNrF546RSRmnm4uFXbq0n+c7ihwoqs=;
+	s=default; t=1583203631;
+	bh=iOTOzWvnEBWJ2lYE1qrTSa8s9PYi2HDkCLTTQGhOrkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=byWpl2XGNoBA7tb0olG3dszOQQ/AjMEI34MFwIjFAMtiQ4xjWXLXcJy3LZOD2tf94
-	 7THpXC2jrVPjSGkp8dBR2yUB3OyT5OgvhGcZS3aoaZ85c+es8WzMAWEozuOUg3c1h3
-	 rZG1SDskBlVUJNgFH/rFRZZKMKM9756jVqteN9x8=
+	b=p0c0mM6JlRegcz0ov7C5pzy8203+z9Glo/NM7eQkstxze450v4bEjGaqMnTiTdbkX
+	 k6iTe9Jw3KMCsE1Ewu8R1bHkXgXo4UeBceMBH5E2ouweKJrbMaL0GAN2008XbmsD9C
+	 i1CdKN2B7AV2UgEQ19h1AAEbnBOnxK2/L85kNy/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgCCCrG (ORCPT
+        id S1727901AbgCCCrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:47:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41820 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:47:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727848AbgCCCrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:03 -0500
+        id S1727866AbgCCCrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D73E02468D;
-        Tue,  3 Mar 2020 02:47:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42399246BB;
+        Tue,  3 Mar 2020 02:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203622;
-        bh=YD7v9zrFJtvaLsNrF546RSRmnm4uFXbq0n+c7ihwoqs=;
+        s=default; t=1583203624;
+        bh=iOTOzWvnEBWJ2lYE1qrTSa8s9PYi2HDkCLTTQGhOrkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XE+EB34PAj748G3FzLJKtm0Smka1FxJkIqan8viVapjnfvL/G86SsbVjBe+OfAugQ
-         grn/wfTTVY9b0YwEm3ja+dK0DqJy1sRz18or7XL0Iu3SZqZRQRU0BFmsaG86OH2yST
-         rlX6Rc6M5kENQX+408CYrXlvmzylO92aAbqRsKBA=
+        b=Cp9y9VJ7MGtW5ayrnILm78boSCCa6BVwzU92mj1AhBISI7+RrnnN50aN/vsmiA9qk
+         in7mXhWb2hoT7jKFgah4wqM5sCHhubPa9p7jr1Hpktmz43108NKMf+uKa9EFVaRSil
+         Afy2sXirlsR6jhKqTY894jXxgb99mZiwPr1qRubk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marco Felsch <m.felsch@pengutronix.de>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 37/66] watchdog: da9062: do not ping the hw during stop()
-Date:   Mon,  2 Mar 2020 21:45:46 -0500
-Message-Id: <20200303024615.8889-37-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 39/66] s390: make 'install' not depend on vmlinux
+Date:   Mon,  2 Mar 2020 21:45:48 -0500
+Message-Id: <20200303024615.8889-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -60,49 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Felsch <m.felsch@pengutronix.de>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit e9a0e65eda3f78d0b04ec6136c591c000cbc3b76 ]
+[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
 
-The da9062 hw has a minimum ping cool down phase of at least 200ms. The
-driver takes that into account by setting the min_hw_heartbeat_ms to
-300ms and the core guarantees that the hw limit is observed for the
-ping() calls. But the core can't guarantee the required minimum ping
-cool down phase if a stop() command is send immediately after the ping()
-command. So it is not allowed to ping the watchdog within the stop()
-command as the driver does. Remove the ping can be done without doubts
-because the watchdog gets disabled anyway and a (re)start resets the
-watchdog counter too.
+For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
+install" not depend on vmlinux"), the install targets should never
+trigger the rebuild of the kernel.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/20200120091729.16256-1-m.felsch@pengutronix.de
-[groeck: Updated description]
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+The variable, CONFIGURE, is not set by anyone. Remove it as well.
+
+Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/da9062_wdt.c | 7 -------
- 1 file changed, 7 deletions(-)
+ arch/s390/Makefile      | 2 +-
+ arch/s390/boot/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
-index e149e66a6ea9f..e92f38fcb7a4a 100644
---- a/drivers/watchdog/da9062_wdt.c
-+++ b/drivers/watchdog/da9062_wdt.c
-@@ -94,13 +94,6 @@ static int da9062_wdt_stop(struct watchdog_device *wdd)
- 	struct da9062_watchdog *wdt = watchdog_get_drvdata(wdd);
- 	int ret;
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index e0e3a465bbfd6..8dfa2cf1f05c7 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -146,7 +146,7 @@ all: bzImage
+ #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
+ KBUILD_IMAGE	:= $(boot)/bzImage
  
--	ret = da9062_reset_watchdog_timer(wdt);
--	if (ret) {
--		dev_err(wdt->hw->dev, "Failed to ping the watchdog (err = %d)\n",
--			ret);
--		return ret;
--	}
--
- 	ret = regmap_update_bits(wdt->hw->regmap,
- 				 DA9062AA_CONTROL_D,
- 				 DA9062AA_TWDSCALE_MASK,
+-install: vmlinux
++install:
+ 	$(Q)$(MAKE) $(build)=$(boot) $@
+ 
+ bzImage: vmlinux
+diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+index e2c47d3a1c891..0ff9261c915e3 100644
+--- a/arch/s390/boot/Makefile
++++ b/arch/s390/boot/Makefile
+@@ -70,7 +70,7 @@ $(obj)/compressed/vmlinux: $(obj)/startup.a FORCE
+ $(obj)/startup.a: $(OBJECTS) FORCE
+ 	$(call if_changed,ar)
+ 
+-install: $(CONFIGURE) $(obj)/bzImage
++install:
+ 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
+ 	      System.map "$(INSTALL_PATH)"
+ 
 -- 
 2.20.1
 
