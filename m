@@ -2,89 +2,117 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CAE0C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D237C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2099A2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 040BD2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 20:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DcahoXq4"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="bJ/02Edp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731501AbgCCT45 (ORCPT
+        id S1731174AbgCCUBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:56:57 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38017 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728731AbgCCT44 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:56:56 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u9so4175301wml.3;
-        Tue, 03 Mar 2020 11:56:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=37CbNVhbFufQTtYlKIlj10Tv/j2n35ElGgexHS8GKhw=;
-        b=DcahoXq4wmP2g0InoVkEwZ9ne7HYZGOtIqHwpbrH78ZPhyKlMIXNP25prL6w7y7VhG
-         IDRfIt4mrPa2RcIg883wHjiL/fBhJXhCFqg7PTsuNNtj6EnVB9vzmMDZ/jDGYMarV5tD
-         W8TmNFNox9D/azYx15FF/FnRDwB15s8sCS0N6jjAYHzHwg7tevIXZT5bNokjUfiEcfco
-         AieDlCJuZET+lNb7Pdr56OdJ9XUJRigr7NOtPCYNhRtaeYSrL4/UZudg3pwy7oyLxyRU
-         QFomldIxO6LF6IbxPB82t1hh7xrm4Qth8lfCQdhl4ZTsun/hdWxgqJGjCNPKb/Iq+O/p
-         SJvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=37CbNVhbFufQTtYlKIlj10Tv/j2n35ElGgexHS8GKhw=;
-        b=JdRmTNeWwrEGZiLJf6xH4VI7DtKk1IqGCBYaQyWId7S7JdTkF8WtOoaAdy6Khk3GLj
-         A5aHIVBm0xon9xmPzz4h+F6qbP63VdokNkw0JF4PPYRPy7Og9ENEiYvetRNkz+/VkbHF
-         IJuUkkUBvfvyx1b3kO6QuUB3RBat+94qmrJOGcErn1G1xSYitxdE8TGhDnh0fKt5xvdt
-         UJYTsLA6K9jvnW4KrwJ44fNSyvh4iIuNWfRlzfcrwlzN03to+IwyMTc+alJS0Vuf0Nn3
-         Xlhjwy1mxwm46fFskJRH+Qscc4hS0yj11CCuCFjiVicMuWoB+mOFRy9Ez4G/xuBFcDPw
-         H3ZQ==
-X-Gm-Message-State: ANhLgQ1BlBscY1sGtkbiPM/548tAunOWw+rW4kxLhNcJ6bHpA++hZz4o
-        G9NSJlcG+OIwO9syjFHN/sS3F3U=
-X-Google-Smtp-Source: ADFU+vtr14ipf1Gev15PJYSi9koe25wZb3R+6IYXA1pPllZz5T0/1vLfbQLViYlX4FJ+cTPF976Ziw==
-X-Received: by 2002:a1c:6a13:: with SMTP id f19mr202513wmc.134.1583265414942;
-        Tue, 03 Mar 2020 11:56:54 -0800 (PST)
-Received: from avx2 ([46.53.249.49])
-        by smtp.gmail.com with ESMTPSA id p10sm30460639wrx.81.2020.03.03.11.56.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 11:56:54 -0800 (PST)
-Date:   Tue, 3 Mar 2020 22:56:50 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/5] Simplify /proc/$pid/maps implementation
-Message-ID: <20200303195650.GB17768@avx2>
-References: <20200229165910.24605-1-willy@infradead.org>
+        Tue, 3 Mar 2020 15:01:54 -0500
+Received: from mout.gmx.net ([212.227.15.19]:41979 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727604AbgCCUBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 15:01:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1583265711;
+        bh=jv/j6Yf8i9cGXsU5FvFqYYqK9msqey0zt7TE3cfdcHk=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+        b=bJ/02EdpYiAsQVYrzKv7fLg484CYd/RY1bOGfxyfr9ytiQqLN1dCZPr0O0NlVlYK/
+         lCaY3QA8fwzEjsnHjz8bQO3YHQSAzfrPnt1/iwa6z9K/m4ZFa38IR9cMAXgV7A7z9A
+         oj9qG/Fl66If1pb/3FkT+flHaBLW3d7j3OytuZD0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from longitude ([5.146.195.177]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1N17UW-1jWlvB2y0A-012VDH; Tue, 03
+ Mar 2020 21:01:51 +0100
+From:   =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+To:     linux-gpio@vger.kernel.org
+Cc:     =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] gpio: uapi: Improve phrasing around arrays representing empty strings
+Date:   Tue,  3 Mar 2020 21:01:48 +0100
+Message-Id: <20200303200149.27370-1-j.neuschaefer@gmx.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200229165910.24605-1-willy@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:upu+vLIIss57IUNt/w8STuFzssxSLFOyM6rrm6WsWKGPrfU9zEI
+ h6mRx2Jvy0XTmQJX0DLh7kRa1tFUpXtalJuYByEpdLO5Krn6eB9owzAA8E4yb9I8mAo2Lec
+ CheYLmSIXsScul53zOIV465YP6mlOy17HL3VycVKsuvTgGGTXhMjYFrNMxQQMhFZVmK74FJ
+ dOWDnJ7JzKNY8POOLorbg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uTLupxLZDbo=:+O9hnbdmKZ+dJ2ToDWyV+r
+ B+EvhpSrZybqqtGlzngpng7FwKmG0Zl4+A/uRFkpdrJY+xRwZFSXD5RWm1UfKiX3LQyN8iRah
+ Z/BQ68DHUz+ck1TjlwJRYr6VznMR4Lm+zbQJMlhvK9/0hQEDvvXE++5pKwhq2++XehIlkzgXH
+ Nnvo9BEGDFlTorHAKIzSkzHxpqjcNoYDmCbzE93sa4Dxxs0V10Nudl6ro5IZ6VEx58EiC45Mt
+ ldNaFGhmokW+9WVhe/6+I8HZ2NMrEZn4FDrImHjoK3nO3klG8kAqxwnnBeSX92730/lE6UjbW
+ j2vLtKuDh5r5tNr1706kW0mkxj5SpT/18V/4am6zaNzp2DeGnG5DwSgkVCOauYaefXS6PNH1b
+ Zh/NEFXzykHwfPRJgt3wpLv9X1jew7bsO4YG+MvAhDd2043YkKsOJ/VjT+BzeS/doRI3lM2et
+ nwrQ9a6FHFWB8yvDVnMOT+AzEzOcthH9+gty+aa9mIiduDysgIaUBvivbI2+IWD5yfiATVpkV
+ uh4xE10wk2z2ZmMSp1aWZ2D2HvBs+/Mb7sKLb9e+ZoDIXOY6zneJbIQo4d9NmIuG9VRRho+8B
+ 3NHxrOyl8fldWkne3xWLTiWB5tHaR2N9U5f2TXVWvdq/3PzjTCdJv5g7Darb2m9u5nksfMHN2
+ v/ajvnnRCT+ltA7x/yhfsPaU52+7o4Or7/Lya4UboywdhFP3uS778f7ymAuNtWI3goNQnw7Bv
+ PMs5mdst7Rr8mQIDbRTIigJKk+yTTCyp+I4kPGMtVMDYO2aHDxvPy9VB6rlJdCZKQVC2rzNBn
+ 6ImAVN3EiNdcQO9cn1EqUS1zcbu1zzKXBMDeH1fqyyWUbjVi/oETVLGLgoPJ0H881yUuY/CqH
+ 6/zg8X0enjLW/mE1GaEgU/e7YY3ij2/LecEu6QOAbypkEkukkT6qz65VlDPiTC2q0BxLLMa5q
+ dlJwgQ7yxr36n4dubujQcxEldOgefr1MNlRll1fOpnafaiFueBcf2VlsXMyJICwnGUh0hycCH
+ KgIY/wma8NDrVBBuhfq0GLRFEAVaw1Q4K/FnEDdcMyAwGp48D2dDmymI8fWl2ngOriRJUttAb
+ K53jmO0XyuGMB+5ipk3GmY15rLhARxiGHZUSAKxUoAVZZNYz70rNF5yln2vs2RLDep+mvaGcU
+ P7arEx9nGVcUzJFwIz+KDE6RfiOmdori7Af9PB9QwJ0WU8BF4T5jEnt4/2g/mjcbmwZGoXA6f
+ PY+eLDf78KQ5Ng3QN
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 08:59:05AM -0800, Matthew Wilcox wrote:
-> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-> 
-> Back in 2005, we merged a patch from Akamai that sped up /proc/$pid/maps
-> by using f_version to stash the user virtual address that we'd just
-> displayed.  That wasn't necessary; we can just use the private *ppos for
-> the same purpose.  There have also been some other odd choices made over
-> the years that use the seq_file infrastructure in some non-idiomatic ways.
-> 
-> Tested by using 'dd' with various different 'bs=' parameters to check that
-> calling ->start, ->stop and ->next at various offsets work as expected.
+Character arrays can be considered empty strings (if they are
+immediately terminated), but they cannot be NULL.
 
-/proc part looks OK, I only ask to include this description into first
-patch, so it doesn't get lost. Often 0/N patch is the most interesting
-part of a series.
+Signed-off-by: Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net>
+=2D--
+ include/uapi/linux/gpio.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
+index 799cf823d493..cd88599ea3ea 100644
+=2D-- a/include/uapi/linux/gpio.h
++++ b/include/uapi/linux/gpio.h
+@@ -18,7 +18,7 @@
+  * struct gpiochip_info - Information about a certain GPIO chip
+  * @name: the Linux kernel name of this GPIO chip
+  * @label: a functional name for this GPIO chip, such as a product
+- * number, may be NULL
++ * number, may be empty
+  * @lines: number of GPIO lines on this chip
+  */
+ struct gpiochip_info {
+@@ -44,10 +44,10 @@ struct gpiochip_info {
+  * @flags: various flags for this line
+  * @name: the name of this GPIO line, such as the output pin of the line =
+on the
+  * chip, a rail or a pin header name on a board, as specified by the gpio
+- * chip, may be NULL
++ * chip, may be empty
+  * @consumer: a functional name for the consumer of this GPIO line as set=
+ by
+- * whatever is using it, will be NULL if there is no current user but may
+- * also be NULL if the consumer doesn't set this up
++ * whatever is using it, will be empty if there is no current user but ma=
+y
++ * also be empty if the consumer doesn't set this up
+  */
+ struct gpioline_info {
+ 	__u32 line_offset;
+=2D-
+2.20.1
+
