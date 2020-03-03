@@ -2,95 +2,125 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5BE0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 639D8C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E28214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:12:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D959214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uUKKRcg6"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CgZP405/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727789AbgCCJMw (ORCPT
+        id S1727995AbgCCJNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:12:52 -0500
-Received: from mail-lf1-f41.google.com ([209.85.167.41]:44012 "EHLO
-        mail-lf1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgCCJMw (ORCPT
+        Tue, 3 Mar 2020 04:13:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26589 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725440AbgCCJNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:12:52 -0500
-Received: by mail-lf1-f41.google.com with SMTP id s23so2034770lfs.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:12:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=webVfTVndS6XThgPyAVNFpl5tOTAYBInHLTGeWuHKJE=;
-        b=uUKKRcg67lNfduX3RpLlDWfBNHJ2GjUKgQGBgGOuRqYuV5zNYTC73UfjUWCPuHfu1G
-         lh4SfX4IzRtPvlYju4MQNP3JF549ulHmxvxEvOc5EC2nc3tayIO6nnc4tKBG6ge9vURA
-         NkVT4blZB1EYc7B+h6GrL5KQc79epj6O5SL5kIUi9mhF9gu7Dq2sDCM+/wb3ZeAmWdzo
-         ygNQT2H7pV0qDNffs2mqfBDdhzSjEk73pzIXxNfQ3j3VG7+mbLX2gqANl+qsJZe2qlqf
-         RzLKHgAqk0eptTUAsbUy0XKdvxKH12ho3Zwc636ubpLk+ojWO//vsA5d+I6GU/aGcbYl
-         fwfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc
-         :content-transfer-encoding;
-        bh=webVfTVndS6XThgPyAVNFpl5tOTAYBInHLTGeWuHKJE=;
-        b=innL5wQcp9HTrjL5P5NnKeg0lSofH3r1Ap7adsHTubn12F8o8asJEuepSe+Suve2zu
-         44GRy9XH+AaCJDm4Rq3g9SAfepPgE9Ry3FD3459gZO3kxdlDPe9/x5PgfP+rlp8OZbBr
-         q3wa2tgNwTzqjRMSYvThKEaf9lwlqJE8ZwY8SUr2i/LChBs5PjMeQWVIInrN11Yx5Iq+
-         MZkczpvE7lWbAcs2evxKYNvjSZ/qhbuYJMXDn1R9EwwlATPF00KqW2OMMeu6XDnvnmAm
-         3OBKCnM67YI42+X5PgAdWkGp+KCYodCJJ7K9Tj2A50RlvkwpsMksTH25zenZhh6kFOcu
-         VMdQ==
-X-Gm-Message-State: ANhLgQ0NvHPUaWPg7CDUjPA2kd0tRMUly9pLcTn3JWUJPfjosAQC+Sat
-        kbGsTD8fyx5MGlEoc62mLxsSDc6QYNetb+eyKc8qHAZHeOf+fw==
-X-Google-Smtp-Source: ADFU+vtDnSaefSMWVwHNRwxZEkgVSJ9QanzxkS5eGQPCCT38mUZH/XF7un5tlWGwHdhjyFe7fZeHWHL3J5WX6OJDOs8=
-X-Received: by 2002:ac2:4d16:: with SMTP id r22mr2053410lfi.74.1583226769821;
- Tue, 03 Mar 2020 01:12:49 -0800 (PST)
+        Tue, 3 Mar 2020 04:13:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583226783;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qMP4Yyr6RpOE+LNq0HWY7JfUV3/6ReV0xC+ZidKNJgU=;
+        b=CgZP405/WZRTwns8NWSJYEMlJLTgh63riPIRebPrXnArszTGYMYJ8cd9OlgaR1WTYBKVlO
+        Z4qTqp41f/K8iUAoDKkZzWZ6ZFrEKoe2RNtr7JfOgjiUXYZseet1FahgfOc4DEaGiMGjUm
+        1mzxO8KUAVNh5EFxpf0Cw4bzMLin85U=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-355-Y08eRkhaPm2zAg6y2Z84lg-1; Tue, 03 Mar 2020 04:12:59 -0500
+X-MC-Unique: Y08eRkhaPm2zAg6y2Z84lg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65E301005F83;
+        Tue,  3 Mar 2020 09:12:57 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-182.rdu2.redhat.com [10.10.120.182])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6012C91D74;
+        Tue,  3 Mar 2020 09:12:54 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com> <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk> <1582316494.3376.45.camel@HansenPartnership.com> <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com> <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com> <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com> <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk> <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com> <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     dhowells@redhat.com, Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 3 Mar 2020 14:42:38 +0530
-Message-ID: <CA+G9fYtE-=odd9OLrGim-D1hqgrMaoxqpGSvXCNLfAicdxS8jA@mail.gmail.com>
-Subject: =?UTF-8?B?a2VybmVsL3NjaGVkL2ZhaXIuYzoxNTI0OjIwOiB3YXJuaW5nOiDigJh0ZXN0X2lkbGVfYw==?=
-        =?UTF-8?B?b3Jlc+KAmSBkZWNsYXJlZCDigJhzdGF0aWPigJkgYnV0IG5ldmVyIGRlZmluZWQ=?=
-To:     open list <linux-kernel@vger.kernel.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, juri.lelli@redhat.com,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        lkft-triage@lists.linaro.org, anshuman.khandual@arm.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1509947.1583226773.1@warthog.procyon.org.uk>
+Date:   Tue, 03 Mar 2020 09:12:53 +0000
+Message-ID: <1509948.1583226773@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux next-20200303 arm64 build warnings
-Please refer below links for more information.
+Miklos Szeredi <miklos@szeredi.hu> wrote:
 
-make -sk KBUILD_BUILD_USER=3DTuxBuild -C/linux -j16 ARCH=3Darm64
-CROSS_COMPILE=3Daarch64-linux-gnu- HOSTCC=3Dgcc CC=3D"sccache
-aarch64-linux-gnu-gcc" O=3Dbuild Image
+> I'm doing a patch.   Let's see how it fares in the face of all these
+> preconceptions.
 
-../kernel/sched/fair.c:1524:20: warning: =E2=80=98test_idle_cores=E2=80=99 =
-declared
-=E2=80=98static=E2=80=99 but never defined [-Wunused-function]
- 1524 | static inline bool test_idle_cores(int cpu, bool def);
-      |                    ^~~~~~~~~~~~~~~
+Don't forget the efficiency criterion.  One reason for going with fsinfo(2) is
+that scanning /proc/mounts when there are a lot of mounts in the system is
+slow (not to mention the global lock that is held during the read).
 
-ref:
-https://gitlab.com/Linaro/lkft/kernel-runs/-/jobs/457079061
-http://builds.tuxbuild.com/fBmL_h3chXb8rMVt7r0aFg/build.log
-http://builds.tuxbuild.com/fBmL_h3chXb8rMVt7r0aFg/kernel.config
-http://builds.tuxbuild.com/fBmL_h3chXb8rMVt7r0aFg/bmeta.json
+Now, going with sysfs files on top of procfs links might avoid the global
+lock, and you can avoid rereading the options string if you export a change
+notification, but you're going to end up injecting a whole lot of pathwalk
+latency into the system.
 
---=20
-Linaro LKFT
-https://lkft.linaro.org
+On top of that, it isn't going to help with the case that I'm working towards
+implementing where a container manager can monitor for mounts taking place
+inside the container and supervise them.  What I'm proposing is that during
+the action phase (eg. FSCONFIG_CMD_CREATE), fsconfig() would hand an fd
+referring to the context under construction to the manager, which would then
+be able to call fsinfo() to query it and fsconfig() to adjust it, reject it or
+permit it.  Something like:
+
+	fd = receive_context_to_supervise();
+	struct fsinfo_params params = {
+		.flags		= FSINFO_FLAGS_QUERY_FSCONTEXT,
+		.request	= FSINFO_ATTR_SB_OPTIONS,
+	};
+	fsinfo(fd, NULL, &params, sizeof(params), buffer, sizeof(buffer));
+	supervise_parameters(buffer);
+	fsconfig(fd, FSCONFIG_SET_FLAG, "hard", NULL, 0);
+	fsconfig(fd, FSCONFIG_SET_STRING, "vers", "4.2", 0);
+	fsconfig(fd, FSCONFIG_CMD_SUPERVISE_CREATE, NULL, NULL, 0);
+	struct fsinfo_params params = {
+		.flags		= FSINFO_FLAGS_QUERY_FSCONTEXT,
+		.request	= FSINFO_ATTR_SB_NOTIFICATIONS,
+	};
+	struct fsinfo_sb_notifications sbnotify;
+	fsinfo(fd, NULL, &params, sizeof(params), &sbnotify, sizeof(sbnotify));
+	watch_super(fd, "", AT_EMPTY_PATH, watch_fd, 0x03);
+	fsconfig(fd, FSCONFIG_CMD_SUPERVISE_PERMIT, NULL, NULL, 0);
+	close(fd);
+
+However, the supervised mount may be happening in a completely different set
+of namespaces, in which case the supervisor presumably wouldn't be able to see
+the links in procfs and the relevant portions of sysfs.
+
+David
+
