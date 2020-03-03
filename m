@@ -2,52 +2,52 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E7EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8B5C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CB12073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E782073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258817;
-	bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
+	s=default; t=1583258822;
+	bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=euiM5hUc32Isj85Y5OqmKQCrxFclrIoOJyxBBpj8Wz/K2cfzfoX/oHuxmNfYOUVOZ
-	 6g1DTw7MGlR+G0BDMjZ54uVuz7AVII3l7bQwL372HVr7VjqUa4kQTTCIRqELFVRp0v
-	 uK/s4/GUu7ux3KNUkYjCd6gJBj1oKuxGPSQChXyg=
+	b=jQVUiLcOgJ5fDzk3dscQyphjFoE/y95aGmHe1rpmQ6t0Es8t7QOYhgfoD2QrF12YP
+	 REIZzwTRz6lKeabhk7Y42n4lL2q0R93mkH9E0h78Do1NrffeNgB7WFqvbV1loligwC
+	 l5ky8MnyjTgaqewKp7trcAUClA9B+fvdq5d9/Z7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387898AbgCCSG4 (ORCPT
+        id S2388306AbgCCSHA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:06:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37706 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:07:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730877AbgCCRzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:55:48 -0500
+        id S1732718AbgCCRz3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:55:29 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F22720728;
-        Tue,  3 Mar 2020 17:55:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 719C4206D5;
+        Tue,  3 Mar 2020 17:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258147;
-        bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
+        s=default; t=1583258128;
+        bh=toAKJpVcK8AmIRqax8RohZ3VZLNcWfijpolDJB41s/I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WanNwfAm1LmUdDDybiS9QOat0XAqeJwPyvU2mq4zKKmzsgiUQqdyfZxR/tgjSLoSu
-         RDhQW4DhZ8I2uPr4t8OnTvJadQnIJskm5eiEVA2nEe0lQ4WRwdWEioq9O2Ucpg7a1a
-         CBKWAC4zAN5r62Nl7MCNQHzibLDPOJLrbn5bgiyU=
+        b=pfdfi5MtK4ALywCP3kNrMbclBpy292C6gzMPcySN59ehouukPE3T2hVG8LK4i1ZaI
+         UkDaeWB7oTtWuENMFN80GUyvDgQUMXxhw+qe41BDQsshTJ9mmV8vrl2ELNTGxXQJaS
+         g+S8KEjnCSEH4qdOiqHQ9TAK1gT37Tk3LK5Fjkgw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 053/152] net: ena: rss: do not allocate key when not supported
-Date:   Tue,  3 Mar 2020 18:42:31 +0100
-Message-Id: <20200303174308.456949614@linuxfoundation.org>
+        stable@vger.kernel.org, Erhard Furtner <erhard_f@mailbox.org>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Michael Ellerman <mpe@ellerman.id.au>, stable@kernel.org
+Subject: [PATCH 5.4 081/152] macintosh: therm_windtunnel: fix regression when instantiating devices
+Date:   Tue,  3 Mar 2020 18:42:59 +0100
+Message-Id: <20200303174311.753116244@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,68 +60,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Wolfram Sang <wsa@the-dreams.de>
 
-[ Upstream commit 6a4f7dc82d1e3abd3feb0c60b5041056fcd9880c ]
+commit 38b17afb0ebb9ecd41418d3c08bcf9198af4349d upstream.
 
-Currently we allocate the key whether the device supports setting the
-key or not. This commit adds a check to the allocation function and
-handles the error accordingly.
+Removing attach_adapter from this driver caused a regression for at
+least some machines. Those machines had the sensors described in their
+DT, too, so they didn't need manual creation of the sensor devices. The
+old code worked, though, because manual creation came first. Creation of
+DT devices then failed later and caused error logs, but the sensors
+worked nonetheless because of the manually created devices.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+When removing attach_adaper, manual creation now comes later and loses
+the race. The sensor devices were already registered via DT, yet with
+another binding, so the driver could not be bound to it.
+
+This fix refactors the code to remove the race and only manually creates
+devices if there are no DT nodes present. Also, the DT binding is updated
+to match both, the DT and manually created devices. Because we don't
+know which device creation will be used at runtime, the code to start
+the kthread is moved to do_probe() which will be called by both methods.
+
+Fixes: 3e7bed52719d ("macintosh: therm_windtunnel: drop using attach_adapter")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=201723
+Reported-by: Erhard Furtner <erhard_f@mailbox.org>
+Tested-by: Erhard Furtner <erhard_f@mailbox.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org # v4.19+
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 24 ++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/macintosh/therm_windtunnel.c |   52 ++++++++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index d6b894b06fa30..6f758ece86f60 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -1057,6 +1057,20 @@ static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
- static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
+--- a/drivers/macintosh/therm_windtunnel.c
++++ b/drivers/macintosh/therm_windtunnel.c
+@@ -300,9 +300,11 @@ static int control_loop(void *dummy)
+ /*	i2c probing and setup						*/
+ /************************************************************************/
+ 
+-static int
+-do_attach( struct i2c_adapter *adapter )
++static void do_attach(struct i2c_adapter *adapter)
  {
- 	struct ena_rss *rss = &ena_dev->rss;
-+	struct ena_admin_feature_rss_flow_hash_control *hash_key;
-+	struct ena_admin_get_feat_resp get_resp;
-+	int rc;
++	struct i2c_board_info info = { };
++	struct device_node *np;
 +
-+	hash_key = (ena_dev->rss).hash_key;
-+
-+	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
-+				    ENA_ADMIN_RSS_HASH_FUNCTION,
-+				    ena_dev->rss.hash_key_dma_addr,
-+				    sizeof(ena_dev->rss.hash_key), 0);
-+	if (unlikely(rc)) {
-+		hash_key = NULL;
-+		return -EOPNOTSUPP;
+ 	/* scan 0x48-0x4f (DS1775) and 0x2c-2x2f (ADM1030) */
+ 	static const unsigned short scan_ds1775[] = {
+ 		0x48, 0x49, 0x4a, 0x4b, 0x4c, 0x4d, 0x4e, 0x4f,
+@@ -313,25 +315,24 @@ do_attach( struct i2c_adapter *adapter )
+ 		I2C_CLIENT_END
+ 	};
+ 
+-	if( strncmp(adapter->name, "uni-n", 5) )
+-		return 0;
+-
+-	if( !x.running ) {
+-		struct i2c_board_info info;
++	if (x.running || strncmp(adapter->name, "uni-n", 5))
++		return;
+ 
+-		memset(&info, 0, sizeof(struct i2c_board_info));
+-		strlcpy(info.type, "therm_ds1775", I2C_NAME_SIZE);
++	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,ds1775");
++	if (np) {
++		of_node_put(np);
++	} else {
++		strlcpy(info.type, "MAC,ds1775", I2C_NAME_SIZE);
+ 		i2c_new_probed_device(adapter, &info, scan_ds1775, NULL);
 +	}
  
- 	rss->hash_key =
- 		dma_alloc_coherent(ena_dev->dmadev, sizeof(*rss->hash_key),
-@@ -2640,11 +2654,15 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
- 	if (unlikely(rc))
- 		goto err_indr_tbl;
- 
-+	/* The following function might return unsupported in case the
-+	 * device doesn't support setting the key / hash function. We can safely
-+	 * ignore this error and have indirection table support only.
-+	 */
- 	rc = ena_com_hash_key_allocate(ena_dev);
--	if (unlikely(rc))
-+	if (unlikely(rc) && rc != -EOPNOTSUPP)
- 		goto err_hash_key;
+-		strlcpy(info.type, "therm_adm1030", I2C_NAME_SIZE);
++	np = of_find_compatible_node(adapter->dev.of_node, NULL, "MAC,adm1030");
++	if (np) {
++		of_node_put(np);
++	} else {
++		strlcpy(info.type, "MAC,adm1030", I2C_NAME_SIZE);
+ 		i2c_new_probed_device(adapter, &info, scan_adm1030, NULL);
 -
--	ena_com_hash_key_fill_default_key(ena_dev);
-+	else if (rc != -EOPNOTSUPP)
-+		ena_com_hash_key_fill_default_key(ena_dev);
+-		if( x.thermostat && x.fan ) {
+-			x.running = 1;
+-			x.poll_task = kthread_run(control_loop, NULL, "g4fand");
+-		}
+ 	}
+-	return 0;
+ }
  
- 	rc = ena_com_hash_ctrl_init(ena_dev);
- 	if (unlikely(rc))
--- 
-2.20.1
-
+ static int
+@@ -404,8 +405,8 @@ out:
+ enum chip { ds1775, adm1030 };
+ 
+ static const struct i2c_device_id therm_windtunnel_id[] = {
+-	{ "therm_ds1775", ds1775 },
+-	{ "therm_adm1030", adm1030 },
++	{ "MAC,ds1775", ds1775 },
++	{ "MAC,adm1030", adm1030 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, therm_windtunnel_id);
+@@ -414,6 +415,7 @@ static int
+ do_probe(struct i2c_client *cl, const struct i2c_device_id *id)
+ {
+ 	struct i2c_adapter *adapter = cl->adapter;
++	int ret = 0;
+ 
+ 	if( !i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA
+ 				     | I2C_FUNC_SMBUS_WRITE_BYTE) )
+@@ -421,11 +423,19 @@ do_probe(struct i2c_client *cl, const st
+ 
+ 	switch (id->driver_data) {
+ 	case adm1030:
+-		return attach_fan( cl );
++		ret = attach_fan(cl);
++		break;
+ 	case ds1775:
+-		return attach_thermostat(cl);
++		ret = attach_thermostat(cl);
++		break;
+ 	}
+-	return 0;
++
++	if (!x.running && x.thermostat && x.fan) {
++		x.running = 1;
++		x.poll_task = kthread_run(control_loop, NULL, "g4fand");
++	}
++
++	return ret;
+ }
+ 
+ static struct i2c_driver g4fan_driver = {
 
 
