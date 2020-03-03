@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B30C3F2DD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAAECC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2D78214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76FE24654
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="q1xapct0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="QTe1Bv5P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728670AbgCCKXT (ORCPT
+        id S1728686AbgCCKXU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:23:19 -0500
-Received: from pio-pvt-msa3.bahnhof.se ([79.136.2.42]:37312 "EHLO
-        pio-pvt-msa3.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728624AbgCCKXS (ORCPT
+        Tue, 3 Mar 2020 05:23:20 -0500
+Received: from pio-pvt-msa2.bahnhof.se ([79.136.2.41]:55636 "EHLO
+        pio-pvt-msa2.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728657AbgCCKXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Mar 2020 05:23:18 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTP id 391823F713;
-        Tue,  3 Mar 2020 11:23:17 +0100 (CET)
-Authentication-Results: pio-pvt-msa3.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=q1xapct0;
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTP id 9E08A3F528;
+        Tue,  3 Mar 2020 11:23:16 +0100 (CET)
+Authentication-Results: pio-pvt-msa2.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=QTe1Bv5P;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa3.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa3.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id A-6sDjxEzpWn; Tue,  3 Mar 2020 11:23:05 +0100 (CET)
+Received: from pio-pvt-msa2.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa2.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id zGAmtE0m4Q6X; Tue,  3 Mar 2020 11:23:05 +0100 (CET)
 Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
         (Authenticated sender: mb878879)
-        by pio-pvt-msa3.bahnhof.se (Postfix) with ESMTPA id A26123F524;
-        Tue,  3 Mar 2020 11:22:59 +0100 (CET)
+        by pio-pvt-msa2.bahnhof.se (Postfix) with ESMTPA id 3E5BC3F5BF;
+        Tue,  3 Mar 2020 11:23:05 +0100 (CET)
 Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 15E65360481;
-        Tue,  3 Mar 2020 11:22:59 +0100 (CET)
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 44329362F4B;
+        Tue,  3 Mar 2020 11:23:00 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1583230979; bh=sjfw4EDUDCZlOzwRRGyUB4kL3vTEnAR8SOHYZEwYpC8=;
+        t=1583230980; bh=Z6Gh5jLS9TIwKYVRPd0K9d2V9En4SeczebRtqfG0Dm4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q1xapct0xWHb9eW5/I4M/fB4DJFAUYfAtsyDhsYEh1lyQt6hDuSG2nOOQDlFwZ+S9
-         67vyqJIvAFDzy8MCte6k/L0G8M86vSlbFyh4h75iJABbrvJw/n9IUEoyLhFGzoadeU
-         a4V01nF2Ec5TVZl/Cq3jE9Kvv566+jDNKIicgJjU=
+        b=QTe1Bv5Px1HbbvWiF9zvyv3K8ffUfe7GvLHyyjL4OfvwANaaqirWAZN56gjgO8j0H
+         C5oGRCAoJ5XVqKRBxB7BgbyRgOSiII2mtLKwOfwmy9LXXmYsgxcUkooDTCMNKpdWyR
+         +8vsugHKbBc3VEjwNh93twHBbnj3610X8V5RkhpI=
 From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
         <thomas_os@shipmail.org>
 To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
@@ -59,10 +59,11 @@ Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
         Ralph Campbell <rcampbell@nvidia.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: [PATCH v5 2/9] mm: Introduce vma_is_special_huge
-Date:   Tue,  3 Mar 2020 11:22:40 +0100
-Message-Id: <20200303102247.4635-3-thomas_os@shipmail.org>
+        Dan Williams <dan.j.williams@intel.com>,
+        Roland Scheidegger <sroland@vmware.com>
+Subject: [PATCH v5 9/9] drm/vmwgfx: Hook up the helpers to align buffer objects
+Date:   Tue,  3 Mar 2020 11:22:47 +0100
+Message-Id: <20200303102247.4635-10-thomas_os@shipmail.org>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200303102247.4635-1-thomas_os@shipmail.org>
 References: <20200303102247.4635-1-thomas_os@shipmail.org>
@@ -76,17 +77,9 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Hellstrom <thellstrom@vmware.com>
 
-For VM_PFNMAP and VM_MIXEDMAP vmas that want to support transhuge pages
-and -page table entries, introduce vma_is_special_huge() that takes the
-same codepaths as vma_is_dax().
-
-The use of "special" follows the definition in memory.c, vm_normal_page():
-"Special" mappings do not wish to be associated with a "struct page"
-(either it doesn't exist, or it exists but they don't want to touch it)
-
-For PAGE_SIZE pages, "special" is determined per page table entry to be
-able to deal with COW pages. But since we don't have huge COW pages,
-we can classify a vma as either "special huge" or "normal huge".
+Start using the helpers that align buffer object user-space addresses and
+buffer object vram addresses to huge page boundaries.
+This is to improve the chances of allowing huge page-table entries.
 
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Michal Hocko <mhocko@suse.com>
@@ -97,71 +90,80 @@ Cc: "Jérôme Glisse" <jglisse@redhat.com>
 Cc: "Christian König" <christian.koenig@amd.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
 Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Roland Scheidegger <sroland@vmware.com>
 Acked-by: Christian König <christian.koenig@amd.com>
 ---
- include/linux/mm.h | 17 +++++++++++++++++
- mm/huge_memory.c   |  6 +++---
- 2 files changed, 20 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/drm_file.c                 |  1 +
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        | 13 +++++++++++++
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.h        |  1 +
+ drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c |  2 +-
+ 4 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 52269e56c514..e61cf3f609b4 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2863,6 +2863,23 @@ extern long copy_huge_page_from_user(struct page *dst_page,
- 				const void __user *usr_src,
- 				unsigned int pages_per_huge_page,
- 				bool allow_pagefault);
-+
-+/**
-+ * vma_is_special_huge - Are transhuge page-table entries considered special?
-+ * @vma: Pointer to the struct vm_area_struct to consider
-+ *
-+ * Whether transhuge page-table entries are considered "special" following
-+ * the definition in vm_normal_page().
-+ *
-+ * Return: true if transhuge page-table entries should be considered special,
-+ * false otherwise.
-+ */
-+static inline bool vma_is_special_huge(const struct vm_area_struct *vma)
+diff --git a/drivers/gpu/drm/drm_file.c b/drivers/gpu/drm/drm_file.c
+index 40fae356d202..1df2fca608c3 100644
+--- a/drivers/gpu/drm/drm_file.c
++++ b/drivers/gpu/drm/drm_file.c
+@@ -932,3 +932,4 @@ unsigned long drm_get_unmapped_area(struct file *file,
+ 	return current->mm->get_unmapped_area(file, uaddr, len, pgoff, flags);
+ }
+ #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
++EXPORT_SYMBOL_GPL(drm_get_unmapped_area);
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+index 827458f49112..77d85bc54ef0 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
+@@ -1223,6 +1223,18 @@ static void vmw_remove(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
+ }
+ 
++static unsigned long
++vmw_get_unmapped_area(struct file *file, unsigned long uaddr,
++		      unsigned long len, unsigned long pgoff,
++		      unsigned long flags)
 +{
-+	return vma_is_dax(vma) || (vma->vm_file &&
-+				   (vma->vm_flags & (VM_PFNMAP | VM_MIXEDMAP)));
++	struct drm_file *file_priv = file->private_data;
++	struct vmw_private *dev_priv = vmw_priv(file_priv->minor->dev);
++
++	return drm_get_unmapped_area(file, uaddr, len, pgoff, flags,
++				     &dev_priv->vma_manager);
 +}
 +
- #endif /* CONFIG_TRANSPARENT_HUGEPAGE || CONFIG_HUGETLBFS */
+ static int vmwgfx_pm_notifier(struct notifier_block *nb, unsigned long val,
+ 			      void *ptr)
+ {
+@@ -1394,6 +1406,7 @@ static const struct file_operations vmwgfx_driver_fops = {
+ 	.compat_ioctl = vmw_compat_ioctl,
+ #endif
+ 	.llseek = noop_llseek,
++	.get_unmapped_area = vmw_get_unmapped_area,
+ };
  
- #ifdef CONFIG_DEBUG_PAGEALLOC
-diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-index b08b199f9a11..ff7a8b85c3ba 100644
---- a/mm/huge_memory.c
-+++ b/mm/huge_memory.c
-@@ -1802,7 +1802,7 @@ int zap_huge_pmd(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 	orig_pmd = pmdp_huge_get_and_clear_full(tlb->mm, addr, pmd,
- 			tlb->fullmm);
- 	tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
--	if (vma_is_dax(vma)) {
-+	if (vma_is_special_huge(vma)) {
- 		if (arch_needs_pgtable_deposit())
- 			zap_deposited_table(tlb->mm, pmd);
- 		spin_unlock(ptl);
-@@ -2066,7 +2066,7 @@ int zap_huge_pud(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 	 */
- 	pudp_huge_get_and_clear_full(tlb->mm, addr, pud, tlb->fullmm);
- 	tlb_remove_pud_tlb_entry(tlb, pud, addr);
--	if (vma_is_dax(vma)) {
-+	if (vma_is_special_huge(vma)) {
- 		spin_unlock(ptl);
- 		/* No zero page support yet */
- 	} else {
-@@ -2175,7 +2175,7 @@ static void __split_huge_pmd_locked(struct vm_area_struct *vma, pmd_t *pmd,
- 		 */
- 		if (arch_needs_pgtable_deposit())
- 			zap_deposited_table(mm, pmd);
--		if (vma_is_dax(vma))
-+		if (vma_is_special_huge(vma))
- 			return;
- 		page = pmd_page(_pmd);
- 		if (!PageDirty(page) && pmd_dirty(_pmd))
+ static struct drm_driver driver = {
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
+index fe5b7293b8d1..4853bd95bf54 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.h
+@@ -929,6 +929,7 @@ extern int vmw_mmap(struct file *filp, struct vm_area_struct *vma);
+ 
+ extern void vmw_validation_mem_init_ttm(struct vmw_private *dev_priv,
+ 					size_t gran);
++
+ /**
+  * TTM buffer object driver - vmwgfx_ttm_buffer.c
+  */
+diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
+index d8ea3dd10af0..34c721ab3ff3 100644
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_ttm_buffer.c
+@@ -754,7 +754,7 @@ static int vmw_init_mem_type(struct ttm_bo_device *bdev, uint32_t type,
+ 		break;
+ 	case TTM_PL_VRAM:
+ 		/* "On-card" video ram */
+-		man->func = &ttm_bo_manager_func;
++		man->func = &vmw_thp_func;
+ 		man->gpu_offset = 0;
+ 		man->flags = TTM_MEMTYPE_FLAG_FIXED | TTM_MEMTYPE_FLAG_MAPPABLE;
+ 		man->available_caching = TTM_PL_FLAG_CACHED;
 -- 
 2.21.1
 
