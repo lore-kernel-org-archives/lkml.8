@@ -2,333 +2,238 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9296EC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8613CC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6599320848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54200215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:38:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MLgENILJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbgCCIfL (ORCPT
+        id S1727210AbgCCIi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:35:11 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:34351 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgCCIfK (ORCPT
+        Tue, 3 Mar 2020 03:38:29 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45214 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725879AbgCCIi3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:35:10 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j930U-0003nu-D0; Tue, 03 Mar 2020 08:34:26 +0000
-Date:   Tue, 3 Mar 2020 09:34:25 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCHv4] exec: Fix a deadlock in ptrace
-Message-ID: <20200303083425.jbf43axuymttijfv@wittgenstein>
-References: <87k142lpfz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfmloir.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nmjulm.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003021531.C77EF10@keescook>
- <AM6PR03MB5170B5C1B95CB1D065EE3AFAE4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003022103.196C313623@keescook>
- <AM6PR03MB5170A15099986CEC3189F251E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        Tue, 3 Mar 2020 03:38:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583224707;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GjQ3059ixcduAKYIisq1sdw/ONPw46srdTH5A+0meRY=;
+        b=MLgENILJWaHusk+EwrFam1QGN8aiXsQ7L8vAYCqrRBOfDzFk6Lp2qHgiIcNlHPnQfXtehN
+        RiTs9f5O4/qcZ7cSNEhIKYyG9IMcW38/Jkl77wrRIoQDBaZSYu/BPYlwqTcj1f1dED8TtQ
+        fARVh0rVPwm/ledns7pOI3o/SmbqySc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-466-W8fQa0E5Nw--9tO7xoev2w-1; Tue, 03 Mar 2020 03:38:26 -0500
+X-MC-Unique: W8fQa0E5Nw--9tO7xoev2w-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C692318B5FA1;
+        Tue,  3 Mar 2020 08:38:24 +0000 (UTC)
+Received: from localhost (ovpn-12-29.pek2.redhat.com [10.72.12.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2B32A60BF3;
+        Tue,  3 Mar 2020 08:38:21 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 16:38:18 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, richardw.yang@linux.intel.com,
+        osalvador@suse.de, dan.j.williams@intel.com, mhocko@suse.com,
+        rppt@linux.ibm.com, robin.murphy@arm.com
+Subject: Re: [PATCH v2 3/7] mm/sparse.c: introduce a new function
+ clear_subsection_map()
+Message-ID: <20200303083818.GB4433@MiWiFi-R3L-srv>
+References: <20200220043316.19668-1-bhe@redhat.com>
+ <20200220043316.19668-4-bhe@redhat.com>
+ <dc5ab1b1-65e2-e20f-66aa-b71d739a5b6d@redhat.com>
+ <20200301052028.GN24216@MiWiFi-R3L-srv>
+ <1346f0c2-7b1f-6feb-5e9b-2854fd0022ba@redhat.com>
+ <20200303082204.GA4433@MiWiFi-R3L-srv>
+ <53bba557-149c-54b5-c8d7-27f7b6a55eb0@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM6PR03MB5170A15099986CEC3189F251E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+In-Reply-To: <53bba557-149c-54b5-c8d7-27f7b6a55eb0@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 08:08:26AM +0000, Bernd Edlinger wrote:
-> On 3/3/20 6:29 AM, Kees Cook wrote:
-> > On Tue, Mar 03, 2020 at 04:54:34AM +0000, Bernd Edlinger wrote:
-> >> On 3/3/20 3:26 AM, Kees Cook wrote:
-> >>> On Mon, Mar 02, 2020 at 10:18:07PM +0000, Bernd Edlinger wrote:
-> >>>> [...]
+On 03/03/20 at 09:33am, David Hildenbrand wrote:
+> On 03.03.20 09:22, Baoquan He wrote:
+> > On 03/02/20 at 04:43pm, David Hildenbrand wrote:
+> >> On 01.03.20 06:20, Baoquan He wrote:
+> >>> On 02/28/20 at 03:36pm, David Hildenbrand wrote:
+> >>>> On 20.02.20 05:33, Baoquan He wrote:
+> >>>>> Wrap the codes which clear subsection map of one memory region from
+> >>>>> section_deactivate() into clear_subsection_map().
+> >>>>>
+> >>>>> Signed-off-by: Baoquan He <bhe@redhat.com>
+> >>>>> ---
+> >>>>>  mm/sparse.c | 46 ++++++++++++++++++++++++++++++++++++++--------
+> >>>>>  1 file changed, 38 insertions(+), 8 deletions(-)
+> >>>>>
+> >>>>> diff --git a/mm/sparse.c b/mm/sparse.c
+> >>>>> index 977b47acd38d..df857ee9330c 100644
+> >>>>> --- a/mm/sparse.c
+> >>>>> +++ b/mm/sparse.c
+> >>>>> @@ -726,14 +726,25 @@ static void free_map_bootmem(struct page *memmap)
+> >>>>>  }
+> >>>>>  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+> >>>>>  
+> >>>>> -static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> >>>>> -		struct vmem_altmap *altmap)
+> >>>>> +/**
+> >>>>> + * clear_subsection_map - Clear subsection map of one memory region
+> >>>>> + *
+> >>>>> + * @pfn - start pfn of the memory range
+> >>>>> + * @nr_pages - number of pfns to add in the region
+> >>>>> + *
+> >>>>> + * This is only intended for hotplug, and clear the related subsection
+> >>>>> + * map inside one section.
+> >>>>> + *
+> >>>>> + * Return:
+> >>>>> + * * -EINVAL	- Section already deactived.
+> >>>>> + * * 0		- Subsection map is emptied.
+> >>>>> + * * 1		- Subsection map is not empty.
+> >>>>> + */
+> >>>>
+> >>>> Less verbose please (in my preference: none and simplify return handling)
+> >>>>
+> >>>>> +static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> >>>>>  {
+> >>>>>  	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> >>>>>  	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
+> >>>>>  	struct mem_section *ms = __pfn_to_section(pfn);
+> >>>>> -	bool section_is_early = early_section(ms);
+> >>>>> -	struct page *memmap = NULL;
+> >>>>>  	unsigned long *subsection_map = ms->usage
+> >>>>>  		? &ms->usage->subsection_map[0] : NULL;
+> >>>>>  
+> >>>>> @@ -744,8 +755,28 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> >>>>>  	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
+> >>>>>  				"section already deactivated (%#lx + %ld)\n",
+> >>>>>  				pfn, nr_pages))
+> >>>>> -		return;
+> >>>>> +		return -EINVAL;
+> >>>>> +
+> >>>>> +	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> >>>>>  
+> >>>>> +	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
+> >>>>> +		return 0;
+> >>>>> +
+> >>>>
+> >>>> Can we please just have a
+> >>>>
+> >>>> subsection_map_empty() instead and handle that in the caller?
+> >>>> (you can then always return true in the !VMEMMAP variant)
 > >>>
-> >>> If I'm reading this patch correctly, this changes the lifetime of the
-> >>> cred_guard_mutex lock to be:
-> >>> 	- during prepare_bprm_creds()
-> >>> 	- from flush_old_exec() through install_exec_creds()
-> >>> Before, cred_guard_mutex was held from prepare_bprm_creds() through
-> >>> install_exec_creds().
-> > 
-> > BTW, I think the effect of this change (i.e. my paragraph above) should
-> > be distinctly called out in the commit log if this solution moves
-> > forward.
-> > 
-> 
-> Okay, will do.
-> 
-> >>> That means, for example, that check_unsafe_exec()'s documented invariant
-> >>> is violated:
-> >>>     /*
-> >>>      * determine how safe it is to execute the proposed program
-> >>>      * - the caller must hold ->cred_guard_mutex to protect against
-> >>>      *   PTRACE_ATTACH or seccomp thread-sync
-> >>>      */
-> >>
-> >> Oh, right, I haven't understood that hint...
-> > 
-> > I know no_new_privs is checked there, but I haven't studied the
-> > PTRACE_ATTACH part of that comment. If that is handled with the new
-> > check, this comment should be updated.
-> > 
-> 
-> Okay, I change that comment to:
-> 
-> /*
->  * determine how safe it is to execute the proposed program
->  * - the caller must have set ->cred_locked_in_execve to protect against
->  *   PTRACE_ATTACH or seccomp thread-sync
->  */
-> 
-> >>> I think it also means that the potentially multiple invocations
-> >>> of bprm_fill_uid() (via prepare_binprm() via binfmt_script.c and
-> >>> binfmt_misc.c) would be changing bprm->cred details (uid, gid) without
-> >>> a lock (another place where current's no_new_privs is evaluated).
-> >>
-> >> So no_new_privs can change from 0->1, but should not
-> >> when execve is running.
-> >>
-> >> As long as the calling thread is in execve it won't do this,
-> >> and the only other place, where it may set for other threads
-> >> is in seccomp_sync_threads, but that can easily be avoided see below.
-> > 
-> > Yeah, everything was fine until I had to go complicate things with
-> > TSYNC. ;) The real goal is making sure an exec cannot gain privs while
-> > later gaining a seccomp filter from an unpriv process. The no_new_privs
-> > flag was used to control this, but it required that the filter not get
-> > applied during exec.
-> > 
-> >>> Related, it also means that cred_guard_mutex is unheld for every
-> >>> invocation of search_binary_handler() (which can loop via the previously
-> >>> mentioned binfmt_script.c and binfmt_misc.c), if any of them have hidden
-> >>> dependencies on cred_guard_mutex. (Thought I only see bprm_fill_uid()
-> >>> currently.)
+> >>> I don't follow. Could you be more specific? or pseudo code please?
 > >>>
-> >>> For seccomp, the expectations about existing thread states risks races
-> >>> too. There are two locks held for TSYNC:
-> >>> - current->sighand->siglock is held to keep new threads from
-> >>>   appearing/disappearing, which would destroy filter refcounting and
-> >>>   lead to memory corruption.
-> >>
-> >> I don't understand what you mean here.
-> >> How can this lead to memory corruption?
-> > 
-> > Mainly this is a matter of how seccomp manages its filter hierarchy
-> > (since the filters are shared through process ancestry), so if a thread
-> > appears in the middle of TSYNC it may be racing another TSYNC and break
-> > ancestry, leading to bad reference counting on process death, etc.
-> > (Though, yes, with refcount_t now, things should never corrupt, just
-> > waste memory.)
-> > 
-> 
-> I assume for now, that the current->sighand->siglock held while iterating all
-> threads is sufficient here.
-> 
-> >>> - cred_guard_mutex is held to keep no_new_privs in sync with filters to
-> >>>   avoid no_new_privs and filter confusion during exec, which could
-> >>>   lead to exploitable setuid conditions (see below).
-> >>>
-> >>> Just racing a malicious thread during TSYNC is not a very strong
-> >>> example (a malicious thread could do lots of fun things to "current"
-> >>> before it ever got near calling TSYNC), but I think there is the risk
-> >>> of mismatched/confused states that we don't want to allow. One is a
-> >>> particularly bad state that could lead to privilege escalations (in the
-> >>> form of the old "sendmail doesn't check setuid" flaw; if a setuid process
-> >>> has a filter attached that silently fails a priv-dropping setuid call
-> >>> and continues execution with elevated privs, it can be tricked into
-> >>> doing bad things on behalf of the unprivileged parent, which was the
-> >>> primary goal of the original use of cred_guard_mutex with TSYNC[1]):
-> >>>
-> >>> thread A clones thread B
-> >>> thread B starts setuid exec
-> >>> thread A sets no_new_privs
-> >>> thread A calls seccomp with TSYNC
-> >>> thread A in seccomp_sync_threads() sets seccomp filter on self and thread B
-> >>> thread B passes check_unsafe_exec() with no_new_privs unset
-> >>> thread B reaches bprm_fill_uid() with no_new_privs unset and gains privs
-> >>> thread A still in seccomp_sync_threads() sets no_new_privs on thread B
-> >>> thread B finishes exec, now running with elevated privs, a filter chosen
-> >>>          by thread A, _and_ nnp set (which doesn't matter)
-> >>>
-> >>> With the original locking, thread B will fail check_unsafe_exec()
-> >>> because filter and nnp state are changed together, with "atomicity"
-> >>> protected by the cred_guard_mutex.
+> >>> The old code has to handle below case in which subsection_map has been
+> >>> cleared. And I introduce clear_subsection_map() to encapsulate all
+> >>> subsection map realted code so that !VMEMMAP won't have to see it any
+> >>> more.
 > >>>
 > >>
-> >> Ah, good point, thanks!
+> >> Something like this on top would be easier to understand IMHO
 > >>
-> >> This can be fixed by checking current->signal->cred_locked_for_ptrace
-> >> while the cred_guard_mutex is locked, like this for instance:
 > >>
-> >> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> >> index b6ea3dc..377abf0 100644
-> >> --- a/kernel/seccomp.c
-> >> +++ b/kernel/seccomp.c
-> >> @@ -342,6 +342,9 @@ static inline pid_t seccomp_can_sync_threads(void)
-> >>         BUG_ON(!mutex_is_locked(&current->signal->cred_guard_mutex));
-> >>         assert_spin_locked(&current->sighand->siglock);
+> >> diff --git a/mm/sparse.c b/mm/sparse.c
+> >> index dc79b00ddaaa..be5c80e9cfee 100644
+> >> --- a/mm/sparse.c
+> >> +++ b/mm/sparse.c
+> >> @@ -726,20 +726,6 @@ static void free_map_bootmem(struct page *memmap)
+> >>  }
+> >>  #endif /* CONFIG_SPARSEMEM_VMEMMAP */
 > >>  
-> >> +       if (current->signal->cred_locked_for_ptrace)
-> >> +               return -EAGAIN;
-> >> +
+> >> -/**
+> >> - * clear_subsection_map - Clear subsection map of one memory region
+> >> - *
+> >> - * @pfn - start pfn of the memory range
+> >> - * @nr_pages - number of pfns to add in the region
+> >> - *
+> >> - * This is only intended for hotplug, and clear the related subsection
+> >> - * map inside one section.
+> >> - *
+> >> - * Return:
+> >> - * * -EINVAL	- Section already deactived.
+> >> - * * 0		- Subsection map is emptied.
+> >> - * * 1		- Subsection map is not empty.
+> >> - */
+> >>  static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> >>  {
+> >>  	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> >> @@ -758,11 +744,12 @@ static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> >>  		return -EINVAL;
+> >>  
+> >>  	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+> >> +	return 0;
+> >> +}
+> >>  
+> >> -	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
+> >> -		return 0;
+> >> -
+> >> -	return 1;
+> >> +static bool is_subsection_map_empty(unsigned long pfn, unsigned long nr_pages)
+> >> +{
+> >> +	return bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION);
+> >>  }
+> >>  
+> >>  static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> >> @@ -771,11 +758,8 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> >>  	struct mem_section *ms = __pfn_to_section(pfn);
+> >>  	bool section_is_early = early_section(ms);
+> >>  	struct page *memmap = NULL;
+> >> -	int rc;
+> >> -
+> >>  
+> >> -	rc = clear_subsection_map(pfn, nr_pages);
+> >> -	if (IS_ERR_VALUE((unsigned long)rc))
+> >> +	if (unlikely(clear_subsection_map(pfn, nr_pages)))
+> >>  		return;
+> >>  	/*
+> >>  	 * There are 3 cases to handle across two configurations
+> >> @@ -794,7 +778,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> >>  	 *
+> >>  	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
+> >>  	 */
+> >> -	if (!rc) {
+> >> +	if (is_subsection_map_empty(pfn, nr_pages)) {
+> >>  		unsigned long section_nr = pfn_to_section_nr(pfn);
 > > 
-> > Hmm. I guess something like that could work. TSYNC expects to be able to
-> > report _which_ thread wrecked the call, though... I wonder if in_execve
-> > could be used to figure out the offending thread. Hm, nope, that would
-> > be outside of lock too (and all users are "current" right now, so the
-> > lock wasn't needed before).
+> > Tried this way, it's not good in this patch. Since ms->usage might be
+> > freed in this place.
 > > 
+> >                 if (!PageReserved(virt_to_page(ms->usage))) {
+> >                         kfree(ms->usage);
+> >                         ms->usage = NULL;
+> >                 }
 > 
-> I could move that in_execve = 1 to prepare_bprm_creds, if it really matters,
-> but the caller will die quickly and cannot do anything with that information
-> when another thread executes execve, right?
+> So your patch #1 is already broken. Just cache the result in patch #1.
 > 
-> >>         /* Validate all threads being eligible for synchronization. */
-> >>         caller = current;
-> >>         for_each_thread(caller, thread) {
-> >>
-> >>
-> >>> And this is just the bad state I _can_ see. I'm worried there are more...
-> >>>
-> >>> All this said, I do see a small similarity here to the work I did to
-> >>> stabilize stack rlimits (there was an ongoing problem with making multiple
-> >>> decisions for the bprm based on current's state -- but current's state
-> >>> was mutable during exec). For this, I saved rlim_stack to bprm and ignored
-> >>> current's copy until exec ended and then stored bprm's copy into current.
-> >>> If the only problem anyone can see here is the handling of no_new_privs,
-> >>> we might be able to solve that similarly, at least disentangling tsync/nnp
-> >>> from cred_guard_mutex.
-> >>>
-> >>
-> >> I still think that is solvable with using cred_locked_for_ptrace and
-> >> simply make the tsync fail if it would otherwise be blocked.
-> > 
-> > I wonder if we can find a better name than "cred_locked_for_ptrace"?
-> > Maybe "cred_unfinished" or "cred_locked_in_exec" or something?
-> > 
-> 
-> Yeah, I'd go with "cred_locked_in_execve".
-> 
-> > And the comment on bool cred_locked_for_ptrace should mention that
-> > access is only allowed under cred_guard_mutex lock.
-> > 
-> 
-> okay.
-> 
-> >>>> +	sig->cred_locked_for_ptrace = false;
-> > 
-> > This is redundant to the zalloc -- I think you can drop it (unless
-> > someone wants to keep it for clarify?)
-> > 
-> 
-> I'll remove that here and in init/init_task.c
-> 
-> > Also, I think cred_locked_for_ptrace needs checking deeper, in
-> > __ptrace_may_access(), not in ptrace_attach(), since LOTS of things make
-> > calls to ptrace_may_access() holding cred_guard_mutex, expecting that to
-> > be sufficient to see a stable version of the thread...
-> > 
-> 
-> No, these need to be addressed individually, but most users just want
-> to know if the current credentials are sufficient at this moment, but will
-> not change the credentials, as ptrace and TSYNC do. 
-> 
-> BTW: Not all users have cred_guard_mutex, see mm/migrate.c,
-> mm/mempolicy.c, kernel/futex.c, fs/proc/namespaces.c etc.
-> So adding an access to cred_locked_for_execve in ptrace_may_access is
-> probably not an option.
-> 
-> However, one nice added value by this change is this:
-> 
-> void *thread(void *arg)
-> {
-> 	ptrace(PTRACE_TRACEME, 0,0,0);
-> 	return NULL;
-> }
-> 
-> int main(void)
-> {
-> 	int pid = fork();
-> 
-> 	if (!pid) {
-> 		pthread_t pt;
-> 		pthread_create(&pt, NULL, thread, NULL);
-> 		pthread_join(pt, NULL);
-> 		execlp("echo", "echo", "passed", NULL);
-> 	}
-> 
-> 	sleep(1000);
-> 	ptrace(PTRACE_ATTACH, pid, 0,0);
-> 	kill(pid, SIGCONT);
-> 	return 0;
-> }
-> 
-> cat /proc/3812/stack 
-> [<0>] flush_old_exec+0xbf/0x760
-> [<0>] load_elf_binary+0x35a/0x16c0
-> [<0>] search_binary_handler+0x97/0x1d0
-> [<0>] __do_execve_file.isra.40+0x624/0x920
-> [<0>] __x64_sys_execve+0x49/0x60
-> [<0>] do_syscall_64+0x64/0x220
-> [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> 
-> > (I remain very nervous about weakening cred_guard_mutex without
-> > addressing the many many users...)
-> > 
-> 
-> They need to be looked at closely, that's pretty clear.
-> Most fall in the class, that just the current credentials need
-> to stay stable for a certain time.
+> bool empty;
 
-I remain rather set on wanting some very basic tests with this change.
-Imho, looking through tools/testing/selftests again we don't have nearly
-enough for these codepaths; not to say none. Basically, if someone wants
-to make a change affecting the current problem we should really have at
-least a single simple test/reproducer that can be run without digging
-through lore. And hopefully over time we'll have more tests.
+Right, good catch. Will take this way. Thanks.
 
-Christian
+> 
+> ...
+> empty = bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION);
+> ...
+> if (empty) {
+> 	...
+> }
+
