@@ -2,83 +2,133 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6EA0C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:29:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D94E6C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:30:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EE720838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:29:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B16222083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:30:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583245771;
-	bh=3MR04Xav1gqBn5qSWHpAX5yo6X7wTkmvPFUqCLIFQXM=;
+	s=default; t=1583245802;
+	bh=TcPA+2mgGtrFwfhcuBqjUOhNVvQpXnWRqswktmXfAMM=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=UpIpiWMj4tFxYB3sd3K4hyGe1+0zK+tEZ7DK3WCUEMAHDjdpG4gegkqgGtoFXB9fK
-	 FOKlM1uCYQyr+zBLVl9XRh7Zp9ddMLT8sjVCfLXkJucz8+w4mLKblmOtAwNVv/gcrn
-	 kf1RH428Qos1wnkW5jrN4hiZDYD6az3e9WFZOi0w=
+	b=Y9TYTJs33ZanhfcY60J//RAL4VZoYxnhHp/ZsqQX+zZEzJ/1uTsJ+RyPyBbFna8na
+	 7Pz7YYhl6eFVbTvoqxJyojKFykw0ZXuflk8UYeK8386ufKwEnM3hvr4D57bn5pIjTA
+	 7KxUMFvVp7Hs6+slkFW6tVhtPyr28Ocod8rI1c2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729113AbgCCO3b (ORCPT
+        id S1729183AbgCCOaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:29:31 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37386 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbgCCO3a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:29:30 -0500
-Received: by mail-oi1-f196.google.com with SMTP id q65so329301oif.4;
-        Tue, 03 Mar 2020 06:29:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sxXGPCpiiQ3NKqYM/EkgYrDujePt7SEpyxP3AujfUFA=;
-        b=ApVw9gM5l3HwJepUg9gsuoG+vcnV1TaJV4nmphLevYKOewM8f4FOvWLeudKvSesLgy
-         3RWsayssfVu/px4ZE0RnG6n9W5+wuLgyC8u+G5TvBbbuILqvY9gQcH5/JVFKhw2wb92n
-         BzoR2VZmW1ab2Hj5fNg2bNxxSmqylqA2y9jRd4y3T3F7mh0o3wcDfH+UAk/i1bDHov6m
-         FlhuyMpnSOXmWxZzaQapPDbuCi7MqBSa97ddqhbacY4FptO3qQAYF78R9LP8vewXTQkd
-         PUJdaE/qUxmPlzK1kzh/I7liHKBeYfrs3cpISFoA4jxdsvMdzLDiYvY3uf+ts8YTVJJN
-         +pIw==
-X-Gm-Message-State: ANhLgQ1AnqhnRlHAEeNBKVKluL8hH6ptclf17SI0avByKSm8aNmW6acq
-        vrdzY6t9fJCBrVE5JJoVWQ==
-X-Google-Smtp-Source: ADFU+vujo7i6Ogir/XUOiCRLS7rCiYKP5e3/neig9vho1p99qwZ4dRON5loaHvGTrbWgOlyo6BgFTQ==
-X-Received: by 2002:aca:44b:: with SMTP id 72mr2602805oie.67.1583245769918;
-        Tue, 03 Mar 2020 06:29:29 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id n27sm7681332oie.18.2020.03.03.06.29.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:29:28 -0800 (PST)
-Received: (nullmailer pid 22368 invoked by uid 1000);
-        Tue, 03 Mar 2020 14:29:27 -0000
-Date:   Tue, 3 Mar 2020 08:29:27 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Nicolas Belin <nbelin@baylibre.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        jacek.anaszewski@gmail.com, pavel@ucw.cz, dmurphy@ti.com,
-        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io,
-        Nicolas Belin <nbelin@baylibre.com>
-Subject: Re: [PATCH RFC v2 1/3] dt-bindings: Document shiji vendor-prefix
-Message-ID: <20200303142927.GA22307@bogus>
-References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
- <1582727592-4510-2-git-send-email-nbelin@baylibre.com>
+        Tue, 3 Mar 2020 09:30:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728158AbgCCOaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:30:01 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43EDD20838;
+        Tue,  3 Mar 2020 14:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583245800;
+        bh=TcPA+2mgGtrFwfhcuBqjUOhNVvQpXnWRqswktmXfAMM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=duZsmPCxeAc5VhRa0Yt6P9WfVSUnLBKf/3B/UANogYCOeSUPd8Uo99JWWas4fX3Ct
+         bFsA4K6GVvXuLmrLjvy/eSQZxixIY1E4SvnF9XQPei/asikOPZlIcrsGdX84Zs3Sgq
+         S5fk2IOfMPJ+86ehQE8QG+laU36tf2Ln3yx1WP54=
+Date:   Tue, 3 Mar 2020 15:29:58 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Karel Zak <kzak@redhat.com>, David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200303142958.GB47158@kroah.com>
+References: <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+ <20200303130347.GA2302029@kroah.com>
+ <20200303131434.GA2373427@kroah.com>
+ <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+ <20200303134316.GA2509660@kroah.com>
+ <CAJfpegtFyZqSRzo3uuXp1S2_jJJ29DL=xAwKjpEGvyG7=AzabA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1582727592-4510-2-git-send-email-nbelin@baylibre.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAJfpegtFyZqSRzo3uuXp1S2_jJJ29DL=xAwKjpEGvyG7=AzabA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 26 Feb 2020 15:33:10 +0100, Nicolas Belin wrote:
-> Shenzhen Shiji Lighting Co.,Ltd is a LED manufacturer.
+On Tue, Mar 03, 2020 at 03:10:50PM +0100, Miklos Szeredi wrote:
+> On Tue, Mar 3, 2020 at 2:43 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
 > 
-> Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+> > > If buffer is too small to fit the whole file, return error.
+> >
+> > Why?  What's wrong with just returning the bytes asked for?  If someone
+> > only wants 5 bytes from the front of a file, it should be fine to give
+> > that to them, right?
 > 
+> I think we need to signal in some way to the caller that the result
+> was truncated (see readlink(2), getxattr(2), getcwd(2)), otherwise the
+> caller might be surprised.
 
-Acked-by: Rob Herring <robh@kernel.org>
+But that's not the way a "normal" read works.  Short reads are fine, if
+the file isn't big enough.  That's how char device nodes work all the
+time as well, and this kind of is like that, or some kind of "stream" to
+read from.
+
+If you think the file is bigger, then you, as the caller, can just pass
+in a bigger buffer if you want to (i.e. you can stat the thing and
+determine the size beforehand.)
+
+Think of the "normal" use case here, a sysfs read with a PAGE_SIZE
+buffer.  That way userspace "knows" it will always read all of the data
+it can from the file, we don't have to do any seeking or determining
+real file size, or anything else like that.
+
+We return the number of bytes read as well, so we "know" if we did a
+short read, and also, you could imply, if the number of bytes read are
+the exact same as the number of bytes of the buffer, maybe the file is
+either that exact size, or bigger.
+
+This should be "simple", let's not make it complex if we can help it :)
+
+> > > Verify that the number of bytes read matches the file size, otherwise
+> > > return error (may need to loop?).
+> >
+> > No, we can't "match file size" as sysfs files do not really have a sane
+> > "size".  So I don't want to loop at all here, one-shot, that's all you
+> > get :)
+> 
+> Hmm.  I understand the no-size thing.  But looping until EOF (i.e.
+> until read return zero) might be a good idea regardless, because short
+> reads are allowed.
+
+If you want to loop, then do a userspace open/read-loop/close cycle.
+That's not what this syscall should be for.
+
+Should we call it: readfile-only-one-try-i-hope-my-buffer-is-big-enough()?  :)
+
+thanks,
+
+greg k-h
