@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84E10C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3A4C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 612A02072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD5B82072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259222;
-	bh=OfcuyefYI3hSHKkMabhA0vDxDytTX9d3JOM+9rGO+fw=;
+	s=default; t=1583259225;
+	bh=fh/0xdOoh175PJRRkgF0SxozxLY14ZyoQVxKq3XrrVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XQaMGo3Mrk6knsp+tXHuXshCgO7tQnVnh9UoKP1TXNPJrZXB4IxOs0svnEbrQsWm1
-	 DYzl490NMedlpRHRdG4DC8HfZcnxjxsmxQpNTgc0g+JGGZmbG+7pkeTBZoM71PdJXg
-	 bb7PgHtsifQFJ/XeXekEJZL5vEsS8NqbSF9TorxQ=
+	b=Aoe0C3+TQtF3z6hVChaF2ViVMo9UFugWeWufTvijBJ9XulqcfyCH377YlcmC4nPMm
+	 lYOisXZ51CmVqQk6PwlyY3G1URzp7lSYFwx7JN/O8NG1nOAm4R/P5FVHVqLy1KNZ8J
+	 U0ART9QbFsFED/jfdNkUlWJBKVMJtUO4FHHTGVdU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbgCCRpv (ORCPT
+        id S1730982AbgCCRpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:45:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52028 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730992AbgCCRpr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:47 -0500
+        id S1729831AbgCCRpf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:45:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D9DD20842;
-        Tue,  3 Mar 2020 17:45:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAE882166E;
+        Tue,  3 Mar 2020 17:45:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257546;
-        bh=OfcuyefYI3hSHKkMabhA0vDxDytTX9d3JOM+9rGO+fw=;
+        s=default; t=1583257535;
+        bh=fh/0xdOoh175PJRRkgF0SxozxLY14ZyoQVxKq3XrrVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BO8Lr5lQceqnn8eRKzz5mvqY6oxfxx2wMnt/BfPjT47Zm4KLzhDzpWnBvMWTmE9mq
-         ObSSfOlFDGds615DEEe8oBqZqNaN0hvNsvd9vSD6+JmULMcrcHiZCxodew9erurNuT
-         47SsppCz3blx0oXA4lErLHda3AjUMi6p42bfETqY=
+        b=l3sbkpZSP3Zwsc1+k/w9LiYsS3hH6AK1AMRf6Nh5wVGzMuxl46AsesKEcprK3uPLS
+         LLdaYp/z4SpzgnxFK7jYZrIrt8kgKvzjQN0s1KJnaKWJesQrZNWT3oyThQdAwCF+qi
+         RV69HWH6M71OP6uTyj4FeSwHfjLaJzEOEyNiXbuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lars Melin <larsm17@gmail.com>,
-        Aleksander Morgado <aleksander@aleksander.es>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 035/176] qmi_wwan: re-add DW5821e pre-production variant
-Date:   Tue,  3 Mar 2020 18:41:39 +0100
-Message-Id: <20200303174308.568816404@linuxfoundation.org>
+Subject: [PATCH 5.5 031/176] mac80211: consider more elements in parsing CRC
+Date:   Tue,  3 Mar 2020 18:41:35 +0100
+Message-Id: <20200303174308.110828718@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,74 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjørn Mork <bjorn@mork.no>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 88bf54603f6f2c137dfee1abf6436ceac3528d2d ]
+[ Upstream commit a04564c99bb4a92f805a58e56b2d22cc4978f152 ]
 
-Commit f25e1392fdb5 removed the support for the pre-production variant
-of the Dell DW5821e to avoid probing another USB interface unnecessarily.
-However, the pre-production samples are found in the wild, and this lack
-of support is causing problems for users of such samples.  It is therefore
-necessary to support both variants.
+We only use the parsing CRC for checking if a beacon changed,
+and elements with an ID > 63 cannot be represented in the
+filter. Thus, like we did before with WMM and Cisco vendor
+elements, just statically add these forgotten items to the
+CRC:
+ - WLAN_EID_VHT_OPERATION
+ - WLAN_EID_OPMODE_NOTIF
 
-Matching on both interfaces 0 and 1 is not expected to cause any problem
-with either variant, as only the QMI function will be probed successfully
-on either.  Interface 1 will be rejected based on the HID class for the
-production variant:
+I guess that in most cases when VHT/HE operation change, the HT
+operation also changed, and so the change was picked up, but we
+did notice that pure operating mode notification changes were
+ignored.
 
-T:  Bus=01 Lev=03 Prnt=04 Port=00 Cnt=01 Dev#= 16 Spd=480 MxCh= 0
-D:  Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs=  2
-P:  Vendor=413c ProdID=81d7 Rev=03.18
-S:  Manufacturer=DELL
-S:  Product=DW5821e Snapdragon X20 LTE
-S:  SerialNumber=0123456789ABCDEF
-C:  #Ifs= 6 Cfg#= 1 Atr=a0 MxPwr=500mA
-I:  If#= 0 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I:  If#= 1 Alt= 0 #EPs= 1 Cls=03(HID  ) Sub=00 Prot=00 Driver=usbhid
-I:  If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I:  If#= 5 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
-
-And interface 0 will be rejected based on too few endpoints for the
-pre-production variant:
-
-T: Bus=01 Lev=02 Prnt=02 Port=03 Cnt=03 Dev#= 7 Spd=480 MxCh= 0
-D: Ver= 2.10 Cls=ef(misc ) Sub=02 Prot=01 MxPS=64 #Cfgs= 2
-P: Vendor=413c ProdID=81d7 Rev= 3.18
-S: Manufacturer=DELL
-S: Product=DW5821e Snapdragon X20 LTE
-S: SerialNumber=0123456789ABCDEF
-C: #Ifs= 5 Cfg#= 1 Atr=a0 MxPwr=500mA
-I: If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=
-I: If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=qmi_wwan
-I: If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I: If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-I: If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
-
-Fixes: f25e1392fdb5 ("qmi_wwan: fix interface number for DW5821e production firmware")
-Link: https://whrl.pl/Rf0vNk
-Reported-by: Lars Melin <larsm17@gmail.com>
-Cc: Aleksander Morgado <aleksander@aleksander.es>
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20200131111300.891737-22-luca@coelho.fi
+[restrict to VHT for the mac80211 branch]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/mac80211/util.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 9485c8d1de8a3..839cef720cf64 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1363,6 +1363,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 8)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81b6, 10)},	/* Dell Wireless 5811e */
- 	{QMI_FIXED_INTF(0x413c, 0x81d7, 0)},	/* Dell Wireless 5821e */
-+	{QMI_FIXED_INTF(0x413c, 0x81d7, 1)},	/* Dell Wireless 5821e preproduction config */
- 	{QMI_FIXED_INTF(0x413c, 0x81e0, 0)},	/* Dell Wireless 5821e with eSIM support*/
- 	{QMI_FIXED_INTF(0x03f0, 0x4e1d, 8)},	/* HP lt4111 LTE/EV-DO/HSPA+ Gobi 4G Module */
- 	{QMI_FIXED_INTF(0x03f0, 0x9d1d, 1)},	/* HP lt4120 Snapdragon X5 LTE */
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index 32a7a53833c01..739e90555d8b9 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -1063,16 +1063,22 @@ _ieee802_11_parse_elems_crc(const u8 *start, size_t len, bool action,
+ 				elem_parse_failed = true;
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+-			if (elen >= sizeof(struct ieee80211_vht_operation))
++			if (elen >= sizeof(struct ieee80211_vht_operation)) {
+ 				elems->vht_operation = (void *)pos;
+-			else
+-				elem_parse_failed = true;
++				if (calc_crc)
++					crc = crc32_be(crc, pos - 2, elen + 2);
++				break;
++			}
++			elem_parse_failed = true;
+ 			break;
+ 		case WLAN_EID_OPMODE_NOTIF:
+-			if (elen > 0)
++			if (elen > 0) {
+ 				elems->opmode_notif = pos;
+-			else
+-				elem_parse_failed = true;
++				if (calc_crc)
++					crc = crc32_be(crc, pos - 2, elen + 2);
++				break;
++			}
++			elem_parse_failed = true;
+ 			break;
+ 		case WLAN_EID_MESH_ID:
+ 			elems->mesh_id = pos;
 -- 
 2.20.1
 
