@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD30C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20136C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AB29208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E691320870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257476;
-	bh=Jwgkt/6LEzf488NJYEsiuq9mm8TKBNnpaSlLsP94aMM=;
+	s=default; t=1583257480;
+	bh=yWl0oOrLkjAtwO7s3h6/9S8zd7bcqgZsDO9Vg4raUpM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jzBDeKuoTkmWATMhQYim1FhxKHYAaOlZ8Z7puuSMsUnilTkjAmYerhxG+8Ij7d0Dw
-	 nMtqWphms6e69NMr+wjV5uUHH/XNX5VpIJ5V6fZC8R7xGBhR+/zx6WV6GfQT04ASoj
-	 qyhwwegEoJQtThrhCQwL64a5lmUIXdVYlw+TPjiw=
+	b=g9Uf+FvNYagqQLIEiqeT5lojc+P4GEohpDQgkmHAfejEjy7jz0J10cLtqgkhQsve0
+	 leDlqi/NYQX7XHl1GqBH03YBgINV0fsrd2E7zzvpf80KgEzlPPuT4on/XLy4lKbnNY
+	 KSNpy4SHG15DU2NHAh0kNLom8aB++aIdn7PAU5xE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbgCCRof (ORCPT
+        id S1730159AbgCCRoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:44:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50138 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:44:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728321AbgCCRod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:44:33 -0500
+        id S1728321AbgCCRog (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:44:36 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA577208C3;
-        Tue,  3 Mar 2020 17:44:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905AA20870;
+        Tue,  3 Mar 2020 17:44:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257473;
-        bh=Jwgkt/6LEzf488NJYEsiuq9mm8TKBNnpaSlLsP94aMM=;
+        s=default; t=1583257476;
+        bh=yWl0oOrLkjAtwO7s3h6/9S8zd7bcqgZsDO9Vg4raUpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJQCS7IgXP8Wabqg5yX+Ns1nRh3HUlf2ovzk9fUEeDCBYDRJx8ByuaxnU9n3DE4pq
-         /2lcF6j4VnA0MaR3hrhDE5NL1RTTOnnbX2yg1OVFju8KgjL++Nr78e7thzlyj845vv
-         YpkB1Nz5xeiUHb/nul442U3cVx0kc3dxYIBkscNs=
+        b=JhMGxfZ9DiDyYchcspEYwUZZgyZ2ZExc86x7Nfm+MVQq07VcbD0Ryd2OYejR4nfqZ
+         lvu480cnh+1lIEcpDs1GNrNcG9fZe2nuvRdbOe4D4birqt8bGbXzq4zuC2aZkj88No
+         A4TeCGkCMP9toUxZW6vuYWCbfYamysV2pAiDhrow=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ariel Elior <ariel.elior@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
+        stable@vger.kernel.org, Ahmad Fatoum <a.fatoum@pengutronix.de>,
+        Paolo Abeni <pabeni@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 010/176] qede: Fix race between rdma destroy workqueue and link change event
-Date:   Tue,  3 Mar 2020 18:41:14 +0100
-Message-Id: <20200303174305.760327646@linuxfoundation.org>
+Subject: [PATCH 5.5 011/176] Revert "net: dev: introduce support for sch BYPASS for lockless qdisc"
+Date:   Tue,  3 Mar 2020 18:41:15 +0100
+Message-Id: <20200303174305.880221713@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,106 +60,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Paolo Abeni <pabeni@redhat.com>
 
-[ Upstream commit af6565adb02d3129d3fae4d9d5da945abaf4417a ]
+[ Upstream commit 379349e9bc3b42b8b2f8f7a03f64a97623fff323 ]
 
-If an event is added while the rdma workqueue is being destroyed
-it could lead to several races, list corruption, null pointer
-dereference during queue_work or init_queue.
-This fixes the race between the two flows which can occur during
-shutdown.
+This reverts commit ba27b4cdaaa66561aaedb2101876e563738d36fe
 
-A kref object and a completion object are added to the rdma_dev
-structure, these are initialized before the workqueue is created.
-The refcnt is used to indicate work is being added to the
-workqueue and ensures the cleanup flow won't start while we're in
-the middle of adding the event.
-Once the work is added, the refcnt is decreased and the cleanup flow
-is safe to run.
+Ahmed reported ouf-of-order issues bisected to commit ba27b4cdaaa6
+("net: dev: introduce support for sch BYPASS for lockless qdisc").
+I can't find any working solution other than a plain revert.
 
-Fixes: cee9fbd8e2e ("qede: Add qedr framework")
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+This will introduce some minor performance regressions for
+pfifo_fast qdisc. I plan to address them in net-next with more
+indirect call wrapper boilerplate for qdiscs.
+
+Reported-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+Fixes: ba27b4cdaaa6 ("net: dev: introduce support for sch BYPASS for lockless qdisc")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h      |    2 +
- drivers/net/ethernet/qlogic/qede/qede_rdma.c |   29 ++++++++++++++++++++++++++-
- 2 files changed, 30 insertions(+), 1 deletion(-)
+ net/core/dev.c |   22 ++--------------------
+ 1 file changed, 2 insertions(+), 20 deletions(-)
 
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -163,6 +163,8 @@ struct qede_rdma_dev {
- 	struct list_head entry;
- 	struct list_head rdma_event_list;
- 	struct workqueue_struct *rdma_wq;
-+	struct kref refcnt;
-+	struct completion event_comp;
- 	bool exp_recovery;
- };
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -3607,26 +3607,8 @@ static inline int __dev_xmit_skb(struct
+ 	qdisc_calculate_pkt_len(skb, q);
  
---- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-@@ -59,6 +59,9 @@ static void _qede_rdma_dev_add(struct qe
- static int qede_rdma_create_wq(struct qede_dev *edev)
- {
- 	INIT_LIST_HEAD(&edev->rdma_info.rdma_event_list);
-+	kref_init(&edev->rdma_info.refcnt);
-+	init_completion(&edev->rdma_info.event_comp);
-+
- 	edev->rdma_info.rdma_wq = create_singlethread_workqueue("rdma_wq");
- 	if (!edev->rdma_info.rdma_wq) {
- 		DP_NOTICE(edev, "qedr: Could not create workqueue\n");
-@@ -83,8 +86,23 @@ static void qede_rdma_cleanup_event(stru
- 	}
- }
+ 	if (q->flags & TCQ_F_NOLOCK) {
+-		if ((q->flags & TCQ_F_CAN_BYPASS) && READ_ONCE(q->empty) &&
+-		    qdisc_run_begin(q)) {
+-			if (unlikely(test_bit(__QDISC_STATE_DEACTIVATED,
+-					      &q->state))) {
+-				__qdisc_drop(skb, &to_free);
+-				rc = NET_XMIT_DROP;
+-				goto end_run;
+-			}
+-			qdisc_bstats_cpu_update(q, skb);
+-
+-			rc = NET_XMIT_SUCCESS;
+-			if (sch_direct_xmit(skb, q, dev, txq, NULL, true))
+-				__qdisc_run(q);
+-
+-end_run:
+-			qdisc_run_end(q);
+-		} else {
+-			rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
+-			qdisc_run(q);
+-		}
++		rc = q->enqueue(skb, q, &to_free) & NET_XMIT_MASK;
++		qdisc_run(q);
  
-+static void qede_rdma_complete_event(struct kref *ref)
-+{
-+	struct qede_rdma_dev *rdma_dev =
-+		container_of(ref, struct qede_rdma_dev, refcnt);
-+
-+	/* no more events will be added after this */
-+	complete(&rdma_dev->event_comp);
-+}
-+
- static void qede_rdma_destroy_wq(struct qede_dev *edev)
- {
-+	/* Avoid race with add_event flow, make sure it finishes before
-+	 * we start accessing the list and cleaning up the work
-+	 */
-+	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
-+	wait_for_completion(&edev->rdma_info.event_comp);
-+
- 	qede_rdma_cleanup_event(edev);
- 	destroy_workqueue(edev->rdma_info.rdma_wq);
- }
-@@ -310,15 +328,24 @@ static void qede_rdma_add_event(struct q
- 	if (!edev->rdma_info.qedr_dev)
- 		return;
- 
-+	/* We don't want the cleanup flow to start while we're allocating and
-+	 * scheduling the work
-+	 */
-+	if (!kref_get_unless_zero(&edev->rdma_info.refcnt))
-+		return; /* already being destroyed */
-+
- 	event_node = qede_rdma_get_free_event_node(edev);
- 	if (!event_node)
--		return;
-+		goto out;
- 
- 	event_node->event = event;
- 	event_node->ptr = edev;
- 
- 	INIT_WORK(&event_node->work, qede_rdma_handle_event);
- 	queue_work(edev->rdma_info.rdma_wq, &event_node->work);
-+
-+out:
-+	kref_put(&edev->rdma_info.refcnt, qede_rdma_complete_event);
- }
- 
- void qede_rdma_dev_event_open(struct qede_dev *edev)
+ 		if (unlikely(to_free))
+ 			kfree_skb_list(to_free);
 
 
