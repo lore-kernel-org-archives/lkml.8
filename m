@@ -2,228 +2,420 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD88C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE39C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DABCA215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F12020726
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:22:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="tDly5Q0r"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TGvUe/hg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgCCHWI (ORCPT
+        id S1727701AbgCCHWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:22:08 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:8795 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCCHWI (ORCPT
+        Tue, 3 Mar 2020 02:22:11 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42895 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgCCHWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:22:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583220123;
-        s=strato-dkim-0002; d=goldelico.com;
-        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=/FFJp29E0bM3pvHTu+JTqNaYJ7aZHkmiAWb7IBx82t4=;
-        b=tDly5Q0rgQXnp5SE2SQtiMZKkTKELlzQ1ExyaOKdk/JoMKZ/DZBhDg8xmu35Lg87dN
-        5fydczeSnZWO1+K96MiJpNJLQIA7Ma8+/D886QNuh4IdNw/wnXVn4c5QRGBd9ifyDbI/
-        FmEUAbpBOnJ9LHcARrsiVTZUln+0+vbyDmsWwzHQD0oOy+UVQIjNje/dFijBC82/IgmJ
-        nfn9UYWGMbclQEkRtvmxwC0/9cbFBuEtimt/3AAKpAMPMgCA0Ry1wfYKaFP7yrJqMwm/
-        Bn4G6zAmNzctHUlbgIf+pa5zmExYU5U+wW5r9ry+YcTxMHFRAhAPp3rImrxp3zPELszD
-        N50Q==
-X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDGvxw=="
-X-RZG-CLASS-ID: mo00
-Received: from imac.fritz.box
-        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
-        with ESMTPSA id y0a02cw237LkFyR
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
-        (Client did not present a certificate);
-        Tue, 3 Mar 2020 08:21:46 +0100 (CET)
-Subject: Re: [RFC v2 1/8] dt-bindings: display: add ingenic-jz4780-lcd DT Schema
-Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
-Content-Type: text/plain; charset=iso-8859-1
-From:   "H. Nikolaus Schaller" <hns@goldelico.com>
-In-Reply-To: <1583176247.3.2@crapouillou.net>
-Date:   Tue, 3 Mar 2020 08:21:37 +0100
-Cc:     Paul Boddie <paul@boddie.org.uk>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Discussions about the Letux Kernel 
-        <letux-kernel@openphoenux.org>, Sam Ravnborg <sam@ravnborg.org>,
-        Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>,
-        Rob Herring <robh@kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <12E78333-0940-4F20-863E-91272C477B58@goldelico.com>
-References: <cover.1582913973.git.hns@goldelico.com> <b4a73a1c542fab9d05d12b56c547b555b6a9b062.1582913973.git.hns@goldelico.com> <1583176247.3.2@crapouillou.net>
-To:     Paul Cercueil <paul@crapouillou.net>
-X-Mailer: Apple Mail (2.3124)
+        Tue, 3 Mar 2020 02:22:10 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l12so1983167oil.9;
+        Mon, 02 Mar 2020 23:22:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PpwWRWWvSGRJMv8VlG28tJ7B+FO78JwTeEgwMq8yfqU=;
+        b=TGvUe/hg0tOD+gSt1udmhaGBCLgTebXr2rtShM0i24HxCQr+iUD/EiNX37l6Wl/LVL
+         klaTJJvOwlPvs7rz5M1F9yoYRjgnI1wH5dSzoJcUybS9yldDi5s48aTmBEOfqSJAbQJf
+         0HYkdYsCkCcQd3QJ/vtnfBz3qkY5W7l32IKeK836lcdPrJfDlNGSRDrqUcBG7Sgq/yPX
+         YhRDuNlKfoEELm58tR0Xojm1vVZMfKdVd3j9pNjQBXuEWHn9B9gd67HVtz+2+E1qvHVI
+         a0zC+XPz7znDjwAj2lGfbjHmqa93LUN3+GTGeQT2g+4+7Rl2IPd21qd6P+ArFoGIkjMB
+         tz1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=PpwWRWWvSGRJMv8VlG28tJ7B+FO78JwTeEgwMq8yfqU=;
+        b=tUv/WqmtSWCR7q7tthU8QeaVavd0QsUMvCB7nAJGFEvoKQjYiyagibCUl9nHEeaTv0
+         QPsHjDGr/g/96ZljDroDcz7SNPDPpX9p/aKzJXXnMuVZi9lbcyM+aPYdc7YNnx1vhVVR
+         RUWTVGdcPm7sdiv27AvSdRtxsmnLKAw87Kq+Xm7E9uUhZJt7AYEsE6bSxvA6wAb5lu2z
+         DmmmK8W3ZG57ZpdeQhzT8D9j3r+WG4WkZHkVCOYPR6oWT0nV/lD40941OfMWBMprvLsV
+         mjPgaCUlmE7IkwadpmmDMuWQ3NwAZDmyF0VUMBvdD941E+M5yydXQDvsZUKhuv2gIRpk
+         5UOA==
+X-Gm-Message-State: ANhLgQ1x6jzkwt8ZuXhGWk28EkAukXaImpaoyhzPCy620skesAWKpaQE
+        uZlC1kqXZCFA88nta//Zaw/N5rV4XgqdLi46UL4=
+X-Google-Smtp-Source: ADFU+vteKO7fu7C7PR5o+I15rhGLLq5iuQffu/YpZm2GuJ2tzFs3n/Ukm7jmmwCiagl/zi78UbD7mBfTYXAH2X5bwi4=
+X-Received: by 2002:aca:2803:: with SMTP id 3mr1525923oix.162.1583220128757;
+ Mon, 02 Mar 2020 23:22:08 -0800 (PST)
+MIME-Version: 1.0
+References: <20200228165503.18054-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200228165503.18054-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAPY8ntCJEHe=fXeFcvwrSNbaFrzWSr7odO-8ntkjhSV7HYds9g@mail.gmail.com>
+In-Reply-To: <CAPY8ntCJEHe=fXeFcvwrSNbaFrzWSr7odO-8ntkjhSV7HYds9g@mail.gmail.com>
+From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date:   Tue, 3 Mar 2020 07:21:42 +0000
+Message-ID: <CA+V-a8ue-V-x5wPTJYASTOanOV9kMJKtoxNHyhKWmHzyH-S-Pw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] media: i2c: imx219: Add support for SRGGB8_1X8 format
+To:     Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul,
+Hi Dave,
 
-> Am 02.03.2020 um 20:10 schrieb Paul Cercueil <paul@crapouillou.net>:
->=20
-> Hi Nikolaus,
->=20
->=20
-> Le ven., f=E9vr. 28, 2020 at 19:19, H. Nikolaus Schaller =
-<hns@goldelico.com> a =E9crit :
->> From: Sam Ravnborg <sam@ravnborg.org>
->> Add DT bindings for the LCD controller on the jz4780 SoC
->> Based on .txt binding from Zubair Lutfullah Kakakhel
->=20
-> If you mean Documentation/devicetree/bindings/display/ingenic,lcd.txt =
-then it was written by me.
+Thank you for the review.
 
-Ah, ok. We didn't recognise this before. 6 eyes see more than 4...
+On Mon, Mar 2, 2020 at 3:12 PM Dave Stevenson
+<dave.stevenson@raspberrypi.com> wrote:
+>
+> Hi Lad.
+>
+> Thanks for the patch. A few things look wrong with it though.
+>
+> On Fri, 28 Feb 2020 at 16:55, Lad Prabhakar <prabhakar.csengg@gmail.com> wrote:
+> >
+> > imx219 sensor is capable for RAW8/RAW10 modes, this commit adds support
+> > for SRGGB8_1X8 format.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/media/i2c/imx219.c | 122 +++++++++++++++++++++++++++++--------
+> >  1 file changed, 96 insertions(+), 26 deletions(-)
+> >
+> > diff --git a/drivers/media/i2c/imx219.c b/drivers/media/i2c/imx219.c
+> > index 8b48e148f2d0..1388c9bc00bb 100644
+> > --- a/drivers/media/i2c/imx219.c
+> > +++ b/drivers/media/i2c/imx219.c
+> > @@ -90,6 +90,9 @@
+> >
+> >  #define IMX219_REG_ORIENTATION         0x0172
+> >
+> > +#define IMX219_CSI_DATA_FORMAT_A_0_7   0x018c
+> > +#define IMX219_CSI_DATA_FORMAT_A_8_15  0x018d
+> > +
+> >  /* Test Pattern Control */
+> >  #define IMX219_REG_TEST_PATTERN                0x0600
+> >  #define IMX219_TEST_PATTERN_DISABLE    0
+> > @@ -135,6 +138,16 @@ struct imx219_mode {
+> >         struct imx219_reg_list reg_list;
+> >  };
+> >
+> > +struct imx219_pixfmt {
+> > +       u32 code;
+> > +       u32 colorspace;
+> > +};
+> > +
+> > +static const struct imx219_pixfmt imx219_formats[] = {
+> > +       { MEDIA_BUS_FMT_SRGGB8_1X8, V4L2_COLORSPACE_SRGB, },
+> > +       { MEDIA_BUS_FMT_SRGGB10_1X10, V4L2_COLORSPACE_SRGB },
+>
+> Why do we need the colorspace here when they are both the same? I
+> don't see any additional formats ever being added  as the sensor
+> doesn't support them, so this seems redundant.
+>
+agreed will drop it.
 
-I just did cherry-pick this old 4.0 patch from 2015 by Zubair
-and it created a ingenic-jz4780-lcd.txt:
+> > +};
+> > +
+> >  /*
+> >   * Register sets lifted off the i2C interface from the Raspberry Pi firmware
+> >   * driver.
+> > @@ -168,8 +181,6 @@ static const struct imx219_reg mode_3280x2464_regs[] = {
+> >         {0x0171, 0x01},
+> >         {0x0174, 0x00},
+> >         {0x0175, 0x00},
+> > -       {0x018c, 0x0a},
+> > -       {0x018d, 0x0a},
+> >         {0x0301, 0x05},
+> >         {0x0303, 0x01},
+> >         {0x0304, 0x03},
+> > @@ -230,8 +241,6 @@ static const struct imx219_reg mode_1920_1080_regs[] = {
+> >         {0x0171, 0x01},
+> >         {0x0174, 0x00},
+> >         {0x0175, 0x00},
+> > -       {0x018c, 0x0a},
+> > -       {0x018d, 0x0a},
+> >         {0x0301, 0x05},
+> >         {0x0303, 0x01},
+> >         {0x0304, 0x03},
+> > @@ -290,8 +299,6 @@ static const struct imx219_reg mode_1640_1232_regs[] = {
+> >         {0x0171, 0x01},
+> >         {0x0174, 0x01},
+> >         {0x0175, 0x01},
+> > -       {0x018c, 0x0a},
+> > -       {0x018d, 0x0a},
+> >         {0x0301, 0x05},
+> >         {0x0303, 0x01},
+> >         {0x0304, 0x03},
+> >
+> > @@ -413,6 +420,8 @@ struct imx219 {
+> >         struct v4l2_subdev sd;
+> >         struct media_pad pad;
+> >
+> > +       struct v4l2_mbus_framefmt fmt;
+> > +
+> >         struct clk *xclk; /* system clock to IMX219 */
+> >         u32 xclk_freq;
+> >
+> > @@ -519,19 +528,26 @@ static int imx219_write_regs(struct imx219 *imx219,
+> >  }
+> >
+> >  /* Get bayer order based on flip setting. */
+> > -static u32 imx219_get_format_code(struct imx219 *imx219)
+> > +static u32 imx219_get_format_code(struct imx219 *imx219, u32 code)
+> >  {
+> > -       /*
+> > -        * Only one bayer order is supported.
+> > -        * It depends on the flip settings.
+> > -        */
+> > -       static const u32 codes[2][2] = {
+> > +       static const u32 codes10[2][2] = {
+> >                 { MEDIA_BUS_FMT_SRGGB10_1X10, MEDIA_BUS_FMT_SGRBG10_1X10, },
+> >                 { MEDIA_BUS_FMT_SGBRG10_1X10, MEDIA_BUS_FMT_SBGGR10_1X10, },
+> >         };
+> > +       static const u32 codes8[2][2] = {
+> > +               { MEDIA_BUS_FMT_SRGGB8_1X8, MEDIA_BUS_FMT_SGRBG8_1X8, },
+> > +               { MEDIA_BUS_FMT_SGBRG8_1X8, MEDIA_BUS_FMT_SBGGR8_1X8, },
+> > +       };
+> >
+> >         lockdep_assert_held(&imx219->mutex);
+> > -       return codes[imx219->vflip->val][imx219->hflip->val];
+> > +
+> > +       if (code == MEDIA_BUS_FMT_SRGGB10_1X10 ||
+> > +           code == MEDIA_BUS_FMT_SGRBG10_1X10 ||
+> > +           code == MEDIA_BUS_FMT_SGBRG10_1X10 ||
+> > +           code == MEDIA_BUS_FMT_SBGGR10_1X10)
+> > +               return codes10[imx219->vflip->val][imx219->hflip->val];
+> > +
+> > +       return codes8[imx219->vflip->val][imx219->hflip->val];
+>
+> Why defaulting to 8 bit? It's changing the behaviour for existing users.codes10
+>
+No it doesn't if, the format is set to 10-bit it shall look up from
+codes10 and if its 8-bit
+it does look from codes8.
 
-https://lore.kernel.org/patchwork/patch/547872/
+> >  }
+> >
+> >  static int imx219_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+> > @@ -539,13 +555,26 @@ static int imx219_open(struct v4l2_subdev *sd, struct v4l2_subdev_fh *fh)
+> >         struct imx219 *imx219 = to_imx219(sd);
+> >         struct v4l2_mbus_framefmt *try_fmt =
+> >                 v4l2_subdev_get_try_format(sd, fh->pad, 0);
+> > +       struct v4l2_mbus_framefmt *fmt;
+> >
+> >         mutex_lock(&imx219->mutex);
+> >
+> > +       fmt = &imx219->fmt;
+> > +       fmt->code = MEDIA_BUS_FMT_SRGGB8_1X8;
+>
+> Again, why defaulting to 8 bit? It's changing the behaviour for existing users.
+>
+agreed.
 
-and Sam was so kind to convert it to yaml.
+> > +       fmt->colorspace = V4L2_COLORSPACE_SRGB;
+> > +       fmt->ycbcr_enc = V4L2_MAP_YCBCR_ENC_DEFAULT(fmt->colorspace);
+> > +       fmt->quantization = V4L2_MAP_QUANTIZATION_DEFAULT(true,
+> > +                                                         fmt->colorspace,
+> > +                                                         fmt->ycbcr_enc);
+> > +       fmt->xfer_func = V4L2_MAP_XFER_FUNC_DEFAULT(fmt->colorspace);
+> > +       fmt->width = supported_modes[0].width;
+> > +       fmt->height = supported_modes[0].height;
+> > +       fmt->field = V4L2_FIELD_NONE;
+> > +
+> >         /* Initialize try_fmt */
+> >         try_fmt->width = supported_modes[0].width;
+> >         try_fmt->height = supported_modes[0].height;
+> > -       try_fmt->code = imx219_get_format_code(imx219);
+> > +       try_fmt->code = imx219_get_format_code(imx219, fmt->code);
+> >         try_fmt->field = V4L2_FIELD_NONE;
+> >
+> >         mutex_unlock(&imx219->mutex);
+> > @@ -646,16 +675,12 @@ static int imx219_enum_mbus_code(struct v4l2_subdev *sd,
+> >                                  struct v4l2_subdev_pad_config *cfg,
+> >                                  struct v4l2_subdev_mbus_code_enum *code)
+> >  {
+> > -       struct imx219 *imx219 = to_imx219(sd);
+> > -
+> > -       /*
+> > -        * Only one bayer order is supported (though it depends on the flip
+> > -        * settings)
+> > -        */
+> > -       if (code->index > 0)
+> > +       if (code->pad != 0)
+> > +               return -EINVAL;
+> > +       if (code->index >= ARRAY_SIZE(imx219_formats))
+> >                 return -EINVAL;
+> >
+> > -       code->code = imx219_get_format_code(imx219);
+> > +       code->code = imx219_formats[code->index].code;
+>
+> This can't be right as it will only ever advertise
+> MEDIA_BUS_FMT_SRGGB8_1X8 or MEDIA_BUS_FMT_SRGGB10_1X10, when the
+> actual formats supported will change based on the H&V flips.
+> MEDIA_BUS_FMT_SRGGB8_1X8. A caller therefore can't know the correct
+> format should H or V flip be active, therefore can't set the right
+> thing.
+>
+my understanding was the current driver implementation did the same it
+just exposed
+MEDIA_BUS_FMT_SRGGB10_1X10 and internally driver changed it
+accordingly with flip settings.
 
->=20
->> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
->> Cc: Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
->> Cc: H. Nikolaus Schaller <hns@goldelico.com>
->> Cc: Rob Herring <robh@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> ---
->> .../bindings/display/ingenic-jz4780-lcd.yaml  | 78 =
-+++++++++++++++++++
->> 1 file changed, 78 insertions(+)
->> create mode 100644 =
-Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
->> diff --git =
-a/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml =
-b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
->> new file mode 100644
->> index 000000000000..c71415a3a342
->> --- /dev/null
->> +++ =
-b/Documentation/devicetree/bindings/display/ingenic-jz4780-lcd.yaml
->> @@ -0,0 +1,78 @@
->> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/display/ingenic-jz4780-lcd.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Bindings for Ingenic JZ4780 LCD Controller
->> +
->> +maintainers:
->> +  - Zubair Lutfullah Kakakhel <Zubair.Kakakhel@imgtec.com>
->> +  - H. Nikolaus Schaller <hns@goldelico.com>
->=20
-> I'm the author of the driver, please put me here; and remove Zubair, =
-which 1. didn't touch the DRM driver at all, and 2. isn't working at =
-ImgTec anymore.
+> code->code = imx219_get_format_code(imx219, imx219_formats[code->index].code);
+> would look more plausible.
+>
+> >         return 0;
+> >  }
+> > @@ -669,7 +694,7 @@ static int imx219_enum_frame_size(struct v4l2_subdev *sd,
+> >         if (fse->index >= ARRAY_SIZE(supported_modes))
+> >                 return -EINVAL;
+> >
+> > -       if (fse->code != imx219_get_format_code(imx219))
+> > +       if (fse->code != imx219_get_format_code(imx219, imx219->fmt.code))
+> >                 return -EINVAL;
+> >
+> >         fse->min_width = supported_modes[fse->index].width;
+> > @@ -696,7 +721,7 @@ static void imx219_update_pad_format(struct imx219 *imx219,
+> >  {
+> >         fmt->format.width = mode->width;
+> >         fmt->format.height = mode->height;
+> > -       fmt->format.code = imx219_get_format_code(imx219);
+> > +       fmt->format.code = imx219_get_format_code(imx219, imx219->fmt.code);
+> >         fmt->format.field = V4L2_FIELD_NONE;
+> >
+> >         imx219_reset_colorspace(&fmt->format);
+> > @@ -710,7 +735,7 @@ static int __imx219_get_pad_format(struct imx219 *imx219,
+> >                 struct v4l2_mbus_framefmt *try_fmt =
+> >                         v4l2_subdev_get_try_format(&imx219->sd, cfg, fmt->pad);
+> >                 /* update the code which could change due to vflip or hflip: */
+> > -               try_fmt->code = imx219_get_format_code(imx219);
+> > +               try_fmt->code = imx219_get_format_code(imx219, try_fmt->code);
+> >                 fmt->format = *try_fmt;
+> >         } else {
+> >                 imx219_update_pad_format(imx219, imx219->mode, fmt);
+> > @@ -741,11 +766,19 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
+> >         const struct imx219_mode *mode;
+> >         struct v4l2_mbus_framefmt *framefmt;
+> >         int exposure_max, exposure_def, hblank;
+> > +       int i;
+> >
+> >         mutex_lock(&imx219->mutex);
+> >
+> > +       for (i = 0; i < ARRAY_SIZE(imx219_formats); i++)
+> > +               if (imx219_formats[i].code == fmt->format.code)
+> > +                       break;
+> > +       if (i >= ARRAY_SIZE(imx219_formats))
+> > +               i = 0;
+> > +
+>
+> Again, this doesn't take into account the H&V flips altering the Bayer
+> format. If either are engaged then you can't change between 8 & 10 bit
+> formats.
+>
+> It feels like having imx219_formats is the wrong approach.
+> We already have all the formats available in a combination of codes8
+> and codes10 (admittedly static to imx219_get_format_code). Is it
+> better to make it into a single array where there is a strict
+> requirement for the formats to be in the correct order of (eg) no
+> flip, h flip, v flip, h&v flip. A lookup can then be a straight scan
+> of the list. A correction for flip order is then index = (index & ~3)
+> | (v_flip ? 2 : 0) | (h_flip ? 1 : 0);
+>
+Agreed that would make it more cleaner.
 
-Yes that is true.
+> >         /* Bayer order varies with flips */
+> > -       fmt->format.code = imx219_get_format_code(imx219);
+> > +       fmt->format.code = imx219_get_format_code(imx219,
+> > +                                                 imx219_formats[i].code);
+> >
+> >         mode = v4l2_find_nearest_size(supported_modes,
+> >                                       ARRAY_SIZE(supported_modes),
+> > @@ -756,6 +789,7 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
+> >                 framefmt = v4l2_subdev_get_try_format(sd, cfg, fmt->pad);
+> >                 *framefmt = fmt->format;
+> >         } else if (imx219->mode != mode) {
+> > +               imx219->fmt = fmt->format;
+> >                 imx219->mode = mode;
+> >                 /* Update limits and set FPS to default */
+> >                 __v4l2_ctrl_modify_range(imx219->vblank, IMX219_VBLANK_MIN,
+> > @@ -786,6 +820,36 @@ static int imx219_set_pad_format(struct v4l2_subdev *sd,
+> >         return 0;
+> >  }
+> >
+> > +static int imx219_set_framefmt(struct imx219 *imx219)
+> > +{
+> > +       int ret;
+> > +
+> > +       switch (imx219->fmt.code) {
+> > +       case MEDIA_BUS_FMT_SRGGB8_1X8:
+> > +       case MEDIA_BUS_FMT_SGRBG8_1X8:
+> > +       case MEDIA_BUS_FMT_SGBRG8_1X8:
+> > +       case MEDIA_BUS_FMT_SBGGR8_1X8:
+> > +               ret = imx219_write_reg(imx219, IMX219_CSI_DATA_FORMAT_A_0_7,
+> > +                                      IMX219_REG_VALUE_08BIT, 0x08);
+> > +               ret |= imx219_write_reg(imx219, IMX219_CSI_DATA_FORMAT_A_8_15,
+> > +                                      IMX219_REG_VALUE_08BIT, 0x08);
+> > +               break;
+> > +       case MEDIA_BUS_FMT_SRGGB10_1X10:
+> > +       case MEDIA_BUS_FMT_SGRBG10_1X10:
+> > +       case MEDIA_BUS_FMT_SGBRG10_1X10:
+> > +       case MEDIA_BUS_FMT_SBGGR10_1X10:
+> > +               ret = imx219_write_reg(imx219, IMX219_CSI_DATA_FORMAT_A_0_7,
+> > +                                      IMX219_REG_VALUE_08BIT, 0x0a);
+> > +               ret |= imx219_write_reg(imx219, IMX219_CSI_DATA_FORMAT_A_8_15,
+> > +                                      IMX219_REG_VALUE_08BIT, 0x0a);
+> > +               break;
+>
+> As just queried on your patch adding the 640x480 mode, do we not need
+> to modify 0x0309 / OPPXCK_DIV to match the pixel format?
+>
+Yes.
 
-> Also, no need to put yourself here, unless you maintain the Ingenic =
-DRM/KMS driver.
+> How do you propose handling matching pixel rate vs link frequency
+> between the two modes?
+> I'm seeing corrupted images, which probably implies the FIFO between
+> "pipeline" and "MIPI" shown in Figure 43 of the datasheet is under or
+> over flowing.
+>
+Ill do further investigation on it.
 
-Agreed. That was suggested by Sam.
+Cheers,
+--Prabhakar
 
->=20
->> +
->> +description: |
->> +  LCD Controller is the Display Controller for the Ingenic JZ4780 =
-SoC
->> +
->> +properties:
->=20
-> You should add a '$nodename' property.
->=20
->> +  compatible:
->> +    items:
->> +      - const: ingenic,jz4780-lcd
->=20
-> The .txt lists more compatible strings. Please add them all.
->=20
->> +
->> +  reg:
->> +    maxItems: 1
->> +    description: the address & size of the LCD controller registers
->=20
-> Drop the description here,
->=20
->> +
->> +  interrupts:
->> +    maxItems: 1
->> +    description: Specifies the interrupt provided by parent
->=20
-> and here.
->=20
->> +
->> +  clocks:
->> +    maxItems: 2
->> +    description: Clock specifiers for the JZ4780_CLK_TVE =
-JZ4780_CLK_LCD0PIXCLK
->=20
-> Add one 'description:' per item.
->=20
->> +
->> +  clock-names:
->> +    items:
->> +      - const: lcd_clk
->> +      - const: lcd_pixclk
->> +
->> +  port:
->> +    type: object
->> +    description: |
->> +      A port node with endpoint definitions as defined in
->> +      Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +required:
->> +    - compatible
->> +    - reg
->> +    - interrupts
->> +    - clocks
->> +    - clock-names
->> +    - port
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  - |
->> +    #include <dt-bindings/clock/jz4780-cgu.h>
->> +    lcd: jz4780-lcdk@0x13050000 {
->=20
-> The node name does not comply with the DT spec, it should be =
-'lcd-controller'.
-
-Ok, I think I'll review all so that it does match/replace
-Documentation/devicetree/bindings/display/ingenic,lcd.txt
-and no information is lost.
-=20
->=20
-> Cheers,
-> -Paul
-
-BR and thanks,
-Nikolaus
-
+> > +       default:
+> > +               ret = -EINVAL;
+> > +       }
+> > +
+> > +       return ret;
+> > +}
+> > +
+> >  static int imx219_start_streaming(struct imx219 *imx219)
+> >  {
+> >         struct i2c_client *client = v4l2_get_subdevdata(&imx219->sd);
+> > @@ -800,6 +864,12 @@ static int imx219_start_streaming(struct imx219 *imx219)
+> >                 return ret;
+> >         }
+> >
+> > +       ret = imx219_set_framefmt(imx219);
+> > +       if (ret) {
+> > +               dev_err(&client->dev, "%s failed to set format\n", __func__);
+> > +               return ret;
+> > +       }
+> > +
+> >         /* Apply customized values from user */
+> >         ret =  __v4l2_ctrl_handler_setup(imx219->sd.ctrl_handler);
+> >         if (ret)
+> > --
+> > 2.20.1
+> >
