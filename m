@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2601C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F15C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F3B20728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E190320870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258076;
-	bh=VLksU6hkppqE603K3tVh3puBW3q6ChwtG1nI2PsGlBk=;
+	s=default; t=1583258079;
+	bh=lFkez4BwPFZEiyY8daJsLPtmtS941mquHO3XEQQhqyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k3KeAPT2EoPuni8MNH1gDQP4RvPE6AIM0NweymSk9qqDRPmM0v4cpiL1BiUjqNG5p
-	 lsWnQFeoU6WkmThxkEosUHopP8p62sMZKTpVNUeSzRpaG9+i3m8dCcT4x4/6RJtv0l
-	 yLkAy1T2ei179M5HrSvMbwV9589LnwF/Su/y/7oo=
+	b=g9axEUI+Krc1gEwI/7Gra59pXOHrOciBpJhKnMs9KpjFcSWiu3Q5khaqpe4qtr8uB
+	 fqWyQq7mPx5bZA6kHS8wglwiJ8n7CpBj0Zhtr2Lkyytoo9eMnYSf78DFXyajgP4sjx
+	 RPC15Btfvud0lKPrV26melkxixrQGeBokMdBMPNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732547AbgCCRyf (ORCPT
+        id S1732556AbgCCRyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35710 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732535AbgCCRyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:33 -0500
+        id S1732544AbgCCRyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:35 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8D7020870;
-        Tue,  3 Mar 2020 17:54:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 501B62146E;
+        Tue,  3 Mar 2020 17:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258072;
-        bh=VLksU6hkppqE603K3tVh3puBW3q6ChwtG1nI2PsGlBk=;
+        s=default; t=1583258074;
+        bh=lFkez4BwPFZEiyY8daJsLPtmtS941mquHO3XEQQhqyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ufaWM9jrvztynBvdPY5zlueR93pTixcjTG4VhbTNVy9Hhngxci8EkopQFvU5Tf77K
-         5b/KcMMt2fWkuB2Cr2/YDRManQhDiQ+zI8ygEFTITZgsjUt3zxx4uWe5j9XzRgMgR5
-         uxuQhzdJFh6uvmgP1w7j2AnXLNtVB61uiTzYQrW4=
+        b=rT093dUEA/GipTrfTlF9L2oN1k7bPVB/KjOQw84tnQj6xaVrmOZu3Z3Q+8ZsxvKmG
+         PzTMMh1zIUY0YxqbudfXhjKs3drAtOgHgzErdjo05jG0B40VX6VJoQUBXvDwWTMChX
+         7tOZ1aU2H396jLDjHMd/sU7mug3FkXUVYOUF1iU8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frank Sorenson <sorenson@redhat.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/152] cifs: Fix mode output in debugging statements
-Date:   Tue,  3 Mar 2020 18:42:39 +0100
-Message-Id: <20200303174309.382999361@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 062/152] bcache: ignore pending signals when creating gc and allocator thread
+Date:   Tue,  3 Mar 2020 18:42:40 +0100
+Message-Id: <20200303174309.501274295@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -60,70 +59,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frank Sorenson <sorenson@redhat.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit f52aa79df43c4509146140de0241bc21a4a3b4c7 ]
+[ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
 
-A number of the debug statements output file or directory mode
-in hex.  Change these to print using octal.
+When run a cache set, all the bcache btree node of this cache set will
+be checked by bch_btree_check(). If the bcache btree is very large,
+iterating all the btree nodes will occupy too much system memory and
+the bcache registering process might be selected and killed by system
+OOM killer. kthread_run() will fail if current process has pending
+signal, therefore the kthread creating in run_cache_set() for gc and
+allocator kernel threads are very probably failed for a very large
+bcache btree.
 
-Signed-off-by: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Indeed such OOM is safe and the registering process will exit after
+the registration done. Therefore this patch flushes pending signals
+during the cache set start up, specificly in bch_cache_allocator_start()
+and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
+large cahced data set.
+
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/cifsacl.c | 4 ++--
- fs/cifs/connect.c | 2 +-
- fs/cifs/inode.c   | 2 +-
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/md/bcache/alloc.c | 18 ++++++++++++++++--
+ drivers/md/bcache/btree.c | 13 +++++++++++++
+ 2 files changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
-index f842944a5c76a..1619af216677c 100644
---- a/fs/cifs/cifsacl.c
-+++ b/fs/cifs/cifsacl.c
-@@ -603,7 +603,7 @@ static void access_flags_to_mode(__le32 ace_flags, int type, umode_t *pmode,
- 			((flags & FILE_EXEC_RIGHTS) == FILE_EXEC_RIGHTS))
- 		*pmode |= (S_IXUGO & (*pbits_to_set));
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index a1df0d95151c6..8bc1faf71ff2f 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -67,6 +67,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/kthread.h>
+ #include <linux/random.h>
++#include <linux/sched/signal.h>
+ #include <trace/events/bcache.h>
  
--	cifs_dbg(NOISY, "access flags 0x%x mode now 0x%x\n", flags, *pmode);
-+	cifs_dbg(NOISY, "access flags 0x%x mode now %04o\n", flags, *pmode);
- 	return;
+ #define MAX_OPEN_BUCKETS 128
+@@ -733,8 +734,21 @@ int bch_open_buckets_alloc(struct cache_set *c)
+ 
+ int bch_cache_allocator_start(struct cache *ca)
+ {
+-	struct task_struct *k = kthread_run(bch_allocator_thread,
+-					    ca, "bcache_allocator");
++	struct task_struct *k;
++
++	/*
++	 * In case previous btree check operation occupies too many
++	 * system memory for bcache btree node cache, and the
++	 * registering process is selected by OOM killer. Here just
++	 * ignore the SIGKILL sent by OOM killer if there is, to
++	 * avoid kthread_run() being failed by pending signals. The
++	 * bcache registering process will exit after the registration
++	 * done.
++	 */
++	if (signal_pending(current))
++		flush_signals(current);
++
++	k = kthread_run(bch_allocator_thread, ca, "bcache_allocator");
+ 	if (IS_ERR(k))
+ 		return PTR_ERR(k);
+ 
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index 46a8b5a91c386..a6e05503b7723 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -34,6 +34,7 @@
+ #include <linux/random.h>
+ #include <linux/rcupdate.h>
+ #include <linux/sched/clock.h>
++#include <linux/sched/signal.h>
+ #include <linux/rculist.h>
+ #include <linux/delay.h>
+ #include <trace/events/bcache.h>
+@@ -1908,6 +1909,18 @@ static int bch_gc_thread(void *arg)
+ 
+ int bch_gc_thread_start(struct cache_set *c)
+ {
++	/*
++	 * In case previous btree check operation occupies too many
++	 * system memory for bcache btree node cache, and the
++	 * registering process is selected by OOM killer. Here just
++	 * ignore the SIGKILL sent by OOM killer if there is, to
++	 * avoid kthread_run() being failed by pending signals. The
++	 * bcache registering process will exit after the registration
++	 * done.
++	 */
++	if (signal_pending(current))
++		flush_signals(current);
++
+ 	c->gc_thread = kthread_run(bch_gc_thread, c, "bcache_gc");
+ 	return PTR_ERR_OR_ZERO(c->gc_thread);
  }
- 
-@@ -632,7 +632,7 @@ static void mode_to_access_flags(umode_t mode, umode_t bits_to_use,
- 	if (mode & S_IXUGO)
- 		*pace_flags |= SET_FILE_EXEC_RIGHTS;
- 
--	cifs_dbg(NOISY, "mode: 0x%x, access flags now 0x%x\n",
-+	cifs_dbg(NOISY, "mode: %04o, access flags now 0x%x\n",
- 		 mode, *pace_flags);
- 	return;
- }
-diff --git a/fs/cifs/connect.c b/fs/cifs/connect.c
-index 5d3c867bdc808..bcda48c038821 100644
---- a/fs/cifs/connect.c
-+++ b/fs/cifs/connect.c
-@@ -4094,7 +4094,7 @@ int cifs_setup_cifs_sb(struct smb_vol *pvolume_info,
- 	cifs_sb->mnt_gid = pvolume_info->linux_gid;
- 	cifs_sb->mnt_file_mode = pvolume_info->file_mode;
- 	cifs_sb->mnt_dir_mode = pvolume_info->dir_mode;
--	cifs_dbg(FYI, "file mode: 0x%hx  dir mode: 0x%hx\n",
-+	cifs_dbg(FYI, "file mode: %04ho  dir mode: %04ho\n",
- 		 cifs_sb->mnt_file_mode, cifs_sb->mnt_dir_mode);
- 
- 	cifs_sb->actimeo = pvolume_info->actimeo;
-diff --git a/fs/cifs/inode.c b/fs/cifs/inode.c
-index ed59e4a8db598..aafcd79c47722 100644
---- a/fs/cifs/inode.c
-+++ b/fs/cifs/inode.c
-@@ -1586,7 +1586,7 @@ int cifs_mkdir(struct inode *inode, struct dentry *direntry, umode_t mode)
- 	struct TCP_Server_Info *server;
- 	char *full_path;
- 
--	cifs_dbg(FYI, "In cifs_mkdir, mode = 0x%hx inode = 0x%p\n",
-+	cifs_dbg(FYI, "In cifs_mkdir, mode = %04ho inode = 0x%p\n",
- 		 mode, inode);
- 
- 	cifs_sb = CIFS_SB(inode->i_sb);
 -- 
 2.20.1
 
