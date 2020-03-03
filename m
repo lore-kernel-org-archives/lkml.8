@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D89CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33DDC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE716246D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A87624697
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203802;
-	bh=bMmVpf9tlllvIKkN11/OfHHoDlDHa128LFrYRoxxYGk=;
+	s=default; t=1583203811;
+	bh=FupRIPkoup1tnxLuEqow0cu0Uqe3EcqIS3/6snGndwQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CF7HCio82qmliA8b+OfTyAdUitlCA/ZU2qbipnaQAsDjGcOFHzmxIkXWa78I3VOcK
-	 /mFIGfhKakRG3DztvxRpdtOaDcdo6EtP3/iIrm6gCUGuCVPWJ2PogZHTZICp9Fmd4Q
-	 X6fV+7yQNHI+DueedBg0K7bk6estBbUSD9y5Rrq8=
+	b=qSHMqrqRl/1q8297/D/dPtPTg8hKzjG8TvRAd7vpwEZ1X6bhZzMcO5xPmM0O0w1ED
+	 vbXWwSaFTsmwKN/FEOb9Ypn8M3NNN/v7NBGbP4P0Ea4f3IBvCnOd24E0bq0VhLIrX3
+	 9OOEJBNCN+p+eJnDLU3OHmpgnLUaEy26lDIF0hgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgCCCuA (ORCPT
+        id S1728430AbgCCCuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:50:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46462 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:50:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729020AbgCCCt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:49:57 -0500
+        id S1729073AbgCCCuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:07 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79D17246E6;
-        Tue,  3 Mar 2020 02:49:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBA66246E3;
+        Tue,  3 Mar 2020 02:50:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203797;
-        bh=bMmVpf9tlllvIKkN11/OfHHoDlDHa128LFrYRoxxYGk=;
+        s=default; t=1583203806;
+        bh=FupRIPkoup1tnxLuEqow0cu0Uqe3EcqIS3/6snGndwQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gqYlp/GnexpA/fg4xvMfzly0aifviUx/+ovG6FyOIY1xaYBadomMcsHQxmgrGbb0q
-         WFTLE7cwXBF1ObW53lTZGrFCI5QNnCWNfqNzIzadOqIo51TMkX8uxYAHA14zxzBDVU
-         cfkIjPUUAIFrdRNq9yglve7NKiTPO2OKYTWg1MnA=
+        b=eoVSTi+tyt0aHwiZQcDwJz5wD3G/EjymsziqfFMVlT7OJ77MC2QdWnYuZHHFw5K9F
+         XPtEATsGfZ0HxInqm+cFVqAwz6/FNIWB0abcKKzyG25bOdMeUe/Fj8BYBesgwzbOa6
+         w92yYcsIZHViGOcHQS7/EnykLt8HfB0LVU7BU/xA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "H.J. Lu" <hjl.tools@gmail.com>, Borislav Petkov <bp@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 18/22] x86/boot/compressed: Don't declare __force_order in kaslr_64.c
-Date:   Mon,  2 Mar 2020 21:49:29 -0500
-Message-Id: <20200303024933.10371-18-sashal@kernel.org>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michal Nazarewicz <mina86@mina86.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 03/13] usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
+Date:   Mon,  2 Mar 2020 21:49:52 -0500
+Message-Id: <20200303025002.10600-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303024933.10371-1-sashal@kernel.org>
-References: <20200303024933.10371-1-sashal@kernel.org>
+In-Reply-To: <20200303025002.10600-1-sashal@kernel.org>
+References: <20200303025002.10600-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -58,42 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "H.J. Lu" <hjl.tools@gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-[ Upstream commit df6d4f9db79c1a5d6f48b59db35ccd1e9ff9adfc ]
+[ Upstream commit 43d565727a3a6fd24e37c7c2116475106af71806 ]
 
-GCC 10 changed the default to -fno-common, which leads to
+ffs_aio_cancel() can be called from both interrupt and thread context. Make
+sure that the current IRQ state is saved and restored by using
+spin_{un,}lock_irq{save,restore}().
 
-    LD      arch/x86/boot/compressed/vmlinux
-  ld: arch/x86/boot/compressed/pgtable_64.o:(.bss+0x0): multiple definition of `__force_order'; \
-    arch/x86/boot/compressed/kaslr_64.o:(.bss+0x0): first defined here
-  make[2]: *** [arch/x86/boot/compressed/Makefile:119: arch/x86/boot/compressed/vmlinux] Error 1
+Otherwise undefined behavior might occur.
 
-Since __force_order is already provided in pgtable_64.c, there is no
-need to declare __force_order in kaslr_64.c.
-
-Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/20200124181811.4780-1-hjl.tools@gmail.com
+Acked-by: Michal Nazarewicz <mina86@mina86.com>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/boot/compressed/pagetable.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/usb/gadget/function/f_fs.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/pagetable.c b/arch/x86/boot/compressed/pagetable.c
-index e691ff734cb5a..46573842d8c3e 100644
---- a/arch/x86/boot/compressed/pagetable.c
-+++ b/arch/x86/boot/compressed/pagetable.c
-@@ -36,9 +36,6 @@
- #define __PAGE_OFFSET __PAGE_OFFSET_BASE
- #include "../../mm/ident_map.c"
+diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
+index d1278d2d544b4..b5747f1270a6d 100644
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1077,18 +1077,19 @@ static int ffs_aio_cancel(struct kiocb *kiocb)
+ {
+ 	struct ffs_io_data *io_data = kiocb->private;
+ 	struct ffs_epfile *epfile = kiocb->ki_filp->private_data;
++	unsigned long flags;
+ 	int value;
  
--/* Used by pgtable.h asm code to force instruction serialization. */
--unsigned long __force_order;
--
- /* Used to track our page table allocation area. */
- struct alloc_pgt_data {
- 	unsigned char *pgt_buf;
+ 	ENTER();
+ 
+-	spin_lock_irq(&epfile->ffs->eps_lock);
++	spin_lock_irqsave(&epfile->ffs->eps_lock, flags);
+ 
+ 	if (likely(io_data && io_data->ep && io_data->req))
+ 		value = usb_ep_dequeue(io_data->ep, io_data->req);
+ 	else
+ 		value = -EINVAL;
+ 
+-	spin_unlock_irq(&epfile->ffs->eps_lock);
++	spin_unlock_irqrestore(&epfile->ffs->eps_lock, flags);
+ 
+ 	return value;
+ }
 -- 
 2.20.1
 
