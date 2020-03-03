@@ -2,78 +2,193 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA9FC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04277C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D6A21741
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:50:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE881206E6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 22:51:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fTDiEPY2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbgCCWuz (ORCPT
+        id S1728188AbgCCWv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 17:50:55 -0500
-Received: from mga14.intel.com ([192.55.52.115]:13236 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727956AbgCCWuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 17:50:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 14:50:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="319622087"
-Received: from spandruv-mobl.amr.corp.intel.com ([10.254.184.249])
-  by orsmga001.jf.intel.com with ESMTP; 03 Mar 2020 14:50:49 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     andriy.shevchenko@linux.intel.com
-Cc:     platform-driver-x86@vger.kernel.org, prarit@redhat.com,
-        linux-kernel@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH 1/2] tools/power/x86/intel-speed-select: Fix mailbox usage for CLOS_PM_QOS_CONFIG
-Date:   Tue,  3 Mar 2020 14:50:43 -0800
-Message-Id: <20200303225044.362525-2-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200303225044.362525-1-srinivas.pandruvada@linux.intel.com>
-References: <20200303225044.362525-1-srinivas.pandruvada@linux.intel.com>
+        Tue, 3 Mar 2020 17:51:29 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32797 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727026AbgCCWv3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 17:51:29 -0500
+Received: by mail-wr1-f65.google.com with SMTP id x7so43660wrr.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 14:51:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=pMsUvjiwCOPF/dDyeOX60wF1NNKJdi7xivScA5hcfdI=;
+        b=fTDiEPY2YGw4Lu1DTg0xD1e/rsCytBZOd9CmqrBJ7oF5LvzePImM+P5Xmpc8nq07ZR
+         +Jo4oPrjRllpKyj97yUOIcTndvt46U59N2S0ByhdWTpRm95HrMvWUkf5BI7mwFi1pYZl
+         Rq/XgI9uY9vSHvQJkZk0ZdexQjbN7kAPmuRvE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=pMsUvjiwCOPF/dDyeOX60wF1NNKJdi7xivScA5hcfdI=;
+        b=siTWMLOLfXdn5sl/LBPbZlCtx7dnP99dmlPRUVPaN4dE2AEYbfpPaqdAJ4glml2fLK
+         kNy1+eq4JiwFT8eujivQ4LztItDeVfUU8EN8TSMNfDVe+dXlBq47B74SSjErmBgP3RN2
+         nKl/crp3EbSrjl3rB0RlVYX6PoQoNgivDRvKVEtM63PsrNq/WReIA8KZeR1U4I7Y91YE
+         GHkeDLXHLYF/hgIVzsNy4adDoXGgqJp9fDGl04RUHyozeFK+LnnJ62K+xJ3ayq3bid+r
+         h4ZUdMUdv4ZXRqgALKp9IaYt3Bobcymgz5UO1Lhrwpyovyr2idW4nTNh9ipx9WcTreKl
+         nxkg==
+X-Gm-Message-State: ANhLgQ0+u/Ssuw/nLclerh8QCciiZTAy7LiHagiHcsy4TSTEeDOAKLp8
+        GlgmwGnNNErNmtrPOnQmpAXYQQ==
+X-Google-Smtp-Source: ADFU+vvWhmf42Ofc2H+llUP4Ha6CmqXMoyyKxm+kUuJJLsXn9lBhtDh32fl+aRZ6YozMT4jpgYBPDw==
+X-Received: by 2002:adf:a18b:: with SMTP id u11mr283288wru.148.1583275886534;
+        Tue, 03 Mar 2020 14:51:26 -0800 (PST)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id 133sm916008wmd.5.2020.03.03.14.51.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 14:51:26 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Tue, 3 Mar 2020 23:51:24 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: Re: [PATCH bpf-next 3/7] bpf: Introduce BPF_MODIFY_RETURN
+Message-ID: <20200303225124.GA12968@chromium.org>
+References: <20200303140950.6355-1-kpsingh@chromium.org>
+ <20200303140950.6355-4-kpsingh@chromium.org>
+ <CAEf4BzZVV12WoHDnQSfOKpndr3qVLEAz8itMcdqnQq8Q4njc0w@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZVV12WoHDnQSfOKpndr3qVLEAz8itMcdqnQq8Q4njc0w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even for the products using MMIO, this message needs to be sent via
-mail box. The previous fix done for this didn't properly address this.
-That fix simply removed sending command via MMIO, but still didn't
-trigger sending via mailbox.
+On 03-Mär 14:37, Andrii Nakryiko wrote:
+> On Tue, Mar 3, 2020 at 6:12 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > When multiple programs are attached, each program receives the return
+> > value from the previous program on the stack and the last program
+> > provides the return value to the attached function.
+> >
+> > The fmod_ret bpf programs are run after the fentry programs and before
+> > the fexit programs. The original function is only called if all the
+> > fmod_ret programs return 0 to avoid any unintended side-effects. The
+> > success value, i.e. 0 is not currently configurable but can be made so
+> > where user-space can specify it at load time.
+> >
+> > For example:
+> >
+> > int func_to_be_attached(int a, int b)
+> > {  <--- do_fentry
+> >
+> > do_fmod_ret:
+> >    <update ret by calling fmod_ret>
+> >    if (ret != 0)
+> >         goto do_fexit;
+> >
+> > original_function:
+> >
+> >     <side_effects_happen_here>
+> >
+> > }  <--- do_fexit
+> >
+> > The fmod_ret program attached to this function can be defined as:
+> >
+> > SEC("fmod_ret/func_to_be_attached")
+> > BPF_PROG(func_name, int a, int b, int ret)
+> 
+> same as on cover letter, return type is missing
 
-Add additional condition to check for CLOS_PM_QOS_CONFIG, when MMIO
-is supported on a platform.
+Fixed. Thanks!
 
-Fixes: cd0e63706549 (tools/power/x86/intel-speed-select: Use mailbox for CLOS_PM_QOS_CONFIG)
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- tools/power/x86/intel-speed-select/isst-config.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> > {
+> >         // This will skip the original function logic.
+> >         return 1;
+> > }
+> >
+> > The first fmod_ret program is passed 0 in its return argument.
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+> >  arch/x86/net/bpf_jit_comp.c    | 96 ++++++++++++++++++++++++++++++++--
+> >  include/linux/bpf.h            |  1 +
+> >  include/uapi/linux/bpf.h       |  1 +
+> >  kernel/bpf/btf.c               |  3 +-
+> >  kernel/bpf/syscall.c           |  1 +
+> >  kernel/bpf/trampoline.c        |  5 +-
+> >  kernel/bpf/verifier.c          |  1 +
+> >  tools/include/uapi/linux/bpf.h |  1 +
+> >  8 files changed, 103 insertions(+), 6 deletions(-)
+> >
+> 
+> [...]
+> 
+> >
+> > +       if (fmod_ret->nr_progs) {
+> > +               branches = kcalloc(fmod_ret->nr_progs, sizeof(u8 *),
+> > +                                  GFP_KERNEL);
+> > +               if (!branches)
+> > +                       return -ENOMEM;
+> > +               if (invoke_bpf_mod_ret(m, &prog, fmod_ret, stack_size,
+> > +                                      branches))
+> 
+> branches leaks here
 
-diff --git a/tools/power/x86/intel-speed-select/isst-config.c b/tools/power/x86/intel-speed-select/isst-config.c
-index 0cf3548681f8..50db0cd23d8c 100644
---- a/tools/power/x86/intel-speed-select/isst-config.c
-+++ b/tools/power/x86/intel-speed-select/isst-config.c
-@@ -572,7 +572,8 @@ int isst_send_mbox_command(unsigned int cpu, unsigned char command,
- 		"mbox_send: cpu:%d command:%x sub_command:%x parameter:%x req_data:%x\n",
- 		cpu, command, sub_command, parameter, req_data);
- 
--	if (isst_platform_info.mmio_supported && command == CONFIG_CLOS) {
-+	if (isst_platform_info.mmio_supported && command == CONFIG_CLOS &&
-+	    sub_command != CLOS_PM_QOS_CONFIG) {
- 		unsigned int value;
- 		int write = 0;
- 		int clos_id, core_id, ret = 0;
--- 
-2.24.1
+Good catch, sloppy work here by me.
 
+> 
+> > +                       return -EINVAL;
+> > +       }
+> > +
+> >         if (flags & BPF_TRAMP_F_CALL_ORIG) {
+> > -               if (fentry->nr_progs)
+> > +               if (fentry->nr_progs || fmod_ret->nr_progs)
+> >                         restore_regs(m, &prog, nr_args, stack_size);
+> >
+> >                 /* call original function */
+> > @@ -1573,6 +1649,14 @@ int arch_prepare_bpf_trampoline(void *image, void *image_end,
+> 
+> there is early return one line above here, you need to free branches
+> in that case to not leak memory
+> 
+> So I guess it's better to do goto cleanup approach at this point?
+
+yeah, agreed, updated to doing a cleanup at the end.
+
+- KP
+
+> 
+> >                 emit_stx(&prog, BPF_DW, BPF_REG_FP, BPF_REG_0, -8);
+> >         }
+> >
+> > +       if (fmod_ret->nr_progs) {
+> > +               align16_branch_target(&prog);
+> > +               for (i = 0; i < fmod_ret->nr_progs; i++)
+> > +                       emit_cond_near_jump(&branches[i], prog, branches[i],
+> > +                                           X86_JNE);
+> > +               kfree(branches);
+> > +       }
+> > +
+> 
+> [...]
