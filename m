@@ -2,179 +2,216 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32AC9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 759B4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0440720848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583242610;
-	bh=IuMkBnbn8qI7W2W1dpa5J66X6PrVzs4Mk76Hqet1E54=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=gDjhXV0Ebzp9CUKknfVCmtTkuskhLGFswrqoq6bZ4yKlwsv5azOW8bIHwKSMI+oZq
-	 CFwF+uz0i58DEKarkngHRfCeu0qHDVqV6iCrz6lshNLFj9VjkWuS3lgaCmq0OidwrZ
-	 7/Yg4yuf0VQy+RFz0TsOHS1sKrmzh84pkoKL+zrw=
+	by mail.kernel.org (Postfix) with ESMTP id 49E9620717
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729505AbgCCNgs (ORCPT
+        id S1729522AbgCCNgz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:36:48 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:25963 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728359AbgCCNgs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:36:48 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 023Da7N6031722;
-        Tue, 3 Mar 2020 22:36:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 023Da7N6031722
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583242567;
-        bh=8FGBy+riSt4rwct2pwA55KsvMYYZXWMXoGZn5qEOkjE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=grxSx57ZX+gurmyI7mvzc52XjJyAxcPdujUCO7skfH02HvR2S5TGpOJuRPrRLYS9K
-         4peS2kE6aZME2d9MvI5tlttoNLf5iOkQ+GbR2t7xFCOkoMAuvpH/zBvgNJuBElToHC
-         R3lkjaCHDtrQ9UzercMLGEC/hJiV9C6uCNNTga5Z6UaSYlWn4Ze1+kYx+0QRtkQLd/
-         2iGBEZfwYR3D6mqtEbWH5WimGV8ucr1pegmBBQQNxLABqy6C5xLhmPu+qHAsEAY4Es
-         d/Jqmk2/hIjoLCwzIy7KalG53TnxyboDykbdOpRxmJJ2eom53kHuFnh26vDgp7CSR0
-         RbiYxn3e3ot8A==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-spdx@vger.kernel.org,
+        Tue, 3 Mar 2020 08:36:55 -0500
+Received: from mga01.intel.com ([192.55.52.88]:26134 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729508AbgCCNgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:36:54 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 05:36:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="263198836"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Mar 2020 05:36:50 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 81022213; Tue,  3 Mar 2020 15:36:49 +0200 (EET)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Lee Jones <lee.jones@linaro.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH 1/2] .gitignore: remove too obvious comments
-Date:   Tue,  3 Mar 2020 22:35:58 +0900
-Message-Id: <20200303133600.9263-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Zha Qipeng <qipeng.zha@intel.com>,
+        "David E . Box" <david.e.box@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v8 03/19] platform/x86: intel_scu_ipc: Move legacy SCU IPC API to a separate header
+Date:   Tue,  3 Mar 2020 16:36:33 +0300
+Message-Id: <20200303133649.39819-4-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
+References: <20200303133649.39819-1-mika.westerberg@linux.intel.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some .gitignore files have comments like "Generated files",
-"Ignore generated files" at the header part, but they are
-too obvious.
+In preparation for introducing a new API for SCU IPC, move the legacy
+API and constants to a separate header that is is subject to be removed
+eventually.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
+ arch/x86/include/asm/intel_scu_ipc.h        | 56 +------------------
+ arch/x86/include/asm/intel_scu_ipc_legacy.h | 62 +++++++++++++++++++++
+ 2 files changed, 63 insertions(+), 55 deletions(-)
+ create mode 100644 arch/x86/include/asm/intel_scu_ipc_legacy.h
 
- certs/.gitignore               | 3 ---
- drivers/atm/.gitignore         | 1 -
- drivers/video/logo/.gitignore  | 3 ---
- kernel/.gitignore              | 3 ---
- lib/.gitignore                 | 3 ---
- scripts/.gitignore             | 3 ---
- scripts/kconfig/.gitignore     | 3 ---
- scripts/selinux/mdp/.gitignore | 1 -
- security/apparmor/.gitignore   | 3 ---
- sound/oss/.gitignore           | 1 -
- 10 files changed, 24 deletions(-)
-
-diff --git a/certs/.gitignore b/certs/.gitignore
-index f51aea4a71ec..4d58ba042b37 100644
---- a/certs/.gitignore
-+++ b/certs/.gitignore
-@@ -1,4 +1 @@
--#
--# Generated files
--#
- x509_certificate_list
-diff --git a/drivers/atm/.gitignore b/drivers/atm/.gitignore
-index fc0ae5eb05d8..19f3ffbd1d65 100644
---- a/drivers/atm/.gitignore
-+++ b/drivers/atm/.gitignore
-@@ -1,4 +1,3 @@
--# Ignore generated files
- fore200e_mkfirm
- fore200e_pca_fw.c
- pca200e.bin
-diff --git a/drivers/video/logo/.gitignore b/drivers/video/logo/.gitignore
-index 9dda1b26b2e4..1551a75afdbd 100644
---- a/drivers/video/logo/.gitignore
-+++ b/drivers/video/logo/.gitignore
-@@ -1,6 +1,3 @@
--#
--# Generated files
--#
- *_mono.c
- *_vga16.c
- *_clut224.c
-diff --git a/kernel/.gitignore b/kernel/.gitignore
-index 34d1e77ee9df..0a423a3ca2e1 100644
---- a/kernel/.gitignore
-+++ b/kernel/.gitignore
-@@ -1,6 +1,3 @@
--#
--# Generated files
--#
- kheaders.md5
- timeconst.h
- hz.bc
-diff --git a/lib/.gitignore b/lib/.gitignore
-index f2a39c9e5485..9af73655a239 100644
---- a/lib/.gitignore
-+++ b/lib/.gitignore
-@@ -1,6 +1,3 @@
--#
--# Generated files
--#
- gen_crc32table
- gen_crc64table
- crc32table.h
-diff --git a/scripts/.gitignore b/scripts/.gitignore
-index ef45f96cd7a5..9fe29efbcb95 100644
---- a/scripts/.gitignore
-+++ b/scripts/.gitignore
-@@ -1,6 +1,3 @@
--#
--# Generated files
--#
- bin2c
- kallsyms
- unifdef
-diff --git a/scripts/kconfig/.gitignore b/scripts/kconfig/.gitignore
-index b5bf92f66d11..588988711e07 100644
---- a/scripts/kconfig/.gitignore
-+++ b/scripts/kconfig/.gitignore
-@@ -1,6 +1,3 @@
--#
--# Generated files
--#
- *.moc
- *conf-cfg
+diff --git a/arch/x86/include/asm/intel_scu_ipc.h b/arch/x86/include/asm/intel_scu_ipc.h
+index c53d18f9440b..2d0e485842fd 100644
+--- a/arch/x86/include/asm/intel_scu_ipc.h
++++ b/arch/x86/include/asm/intel_scu_ipc.h
+@@ -3,22 +3,6 @@
+ #define  _ASM_X86_INTEL_SCU_IPC_H_
  
-diff --git a/scripts/selinux/mdp/.gitignore b/scripts/selinux/mdp/.gitignore
-index 654546d8dffd..0d9f827dc14b 100644
---- a/scripts/selinux/mdp/.gitignore
-+++ b/scripts/selinux/mdp/.gitignore
-@@ -1,2 +1 @@
--# Generated file
- mdp
-diff --git a/security/apparmor/.gitignore b/security/apparmor/.gitignore
-index d5b291e94264..0ace1d1dec44 100644
---- a/security/apparmor/.gitignore
-+++ b/security/apparmor/.gitignore
-@@ -1,6 +1,3 @@
--#
--# Generated include files
--#
- net_names.h
- capability_names.h
- rlim_names.h
-diff --git a/sound/oss/.gitignore b/sound/oss/.gitignore
-index 12a3920d6fb6..8fd8fd3eff62 100644
---- a/sound/oss/.gitignore
-+++ b/sound/oss/.gitignore
-@@ -1,3 +1,2 @@
--#Ignore generated files
- pss_boot.h
- trix_boot.h
+ #include <linux/ioport.h>
+-#include <linux/notifier.h>
+-
+-#define IPCMSG_INDIRECT_READ	0x02
+-#define IPCMSG_INDIRECT_WRITE	0x05
+-
+-#define IPCMSG_COLD_OFF		0x80	/* Only for Tangier */
+-
+-#define IPCMSG_WARM_RESET	0xF0
+-#define IPCMSG_COLD_RESET	0xF1
+-#define IPCMSG_SOFT_RESET	0xF2
+-#define IPCMSG_COLD_BOOT	0xF3
+-
+-#define IPCMSG_VRTC		0xFA	 /* Set vRTC device */
+-	/* Command id associated with message IPCMSG_VRTC */
+-	#define IPC_CMD_VRTC_SETTIME      1 /* Set time */
+-	#define IPC_CMD_VRTC_SETALARM     2 /* Set alarm */
+ 
+ struct device;
+ struct intel_scu_ipc_dev;
+@@ -37,44 +21,6 @@ struct intel_scu_ipc_dev *
+ intel_scu_ipc_register(struct device *parent,
+ 		       const struct intel_scu_ipc_data *scu_data);
+ 
+-/* Read single register */
+-int intel_scu_ipc_ioread8(u16 addr, u8 *data);
+-
+-/* Read a vector */
+-int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
+-
+-/* Write single register */
+-int intel_scu_ipc_iowrite8(u16 addr, u8 data);
+-
+-/* Write a vector */
+-int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
+-
+-/* Update single register based on the mask */
+-int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
+-
+-/* Issue commands to the SCU with or without data */
+-int intel_scu_ipc_simple_command(int cmd, int sub);
+-int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
+-			  u32 *out, int outlen);
+-
+-extern struct blocking_notifier_head intel_scu_notifier;
+-
+-static inline void intel_scu_notifier_add(struct notifier_block *nb)
+-{
+-	blocking_notifier_chain_register(&intel_scu_notifier, nb);
+-}
+-
+-static inline void intel_scu_notifier_remove(struct notifier_block *nb)
+-{
+-	blocking_notifier_chain_unregister(&intel_scu_notifier, nb);
+-}
+-
+-static inline int intel_scu_notifier_post(unsigned long v, void *p)
+-{
+-	return blocking_notifier_call_chain(&intel_scu_notifier, v, p);
+-}
+-
+-#define		SCU_AVAILABLE		1
+-#define		SCU_DOWN		2
++#include <asm/intel_scu_ipc_legacy.h>
+ 
+ #endif
+diff --git a/arch/x86/include/asm/intel_scu_ipc_legacy.h b/arch/x86/include/asm/intel_scu_ipc_legacy.h
+new file mode 100644
+index 000000000000..d3a02bc07edd
+--- /dev/null
++++ b/arch/x86/include/asm/intel_scu_ipc_legacy.h
+@@ -0,0 +1,62 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_X86_INTEL_SCU_IPC_LEGACY_H_
++#define _ASM_X86_INTEL_SCU_IPC_LEGACY_H_
++
++#include <linux/notifier.h>
++
++#define IPCMSG_INDIRECT_READ	0x02
++#define IPCMSG_INDIRECT_WRITE	0x05
++
++#define IPCMSG_COLD_OFF		0x80	/* Only for Tangier */
++
++#define IPCMSG_WARM_RESET	0xF0
++#define IPCMSG_COLD_RESET	0xF1
++#define IPCMSG_SOFT_RESET	0xF2
++#define IPCMSG_COLD_BOOT	0xF3
++
++#define IPCMSG_VRTC		0xFA	/* Set vRTC device */
++/* Command id associated with message IPCMSG_VRTC */
++#define IPC_CMD_VRTC_SETTIME      1	/* Set time */
++#define IPC_CMD_VRTC_SETALARM     2	/* Set alarm */
++
++/* Read single register */
++int intel_scu_ipc_ioread8(u16 addr, u8 *data);
++
++/* Read a vector */
++int intel_scu_ipc_readv(u16 *addr, u8 *data, int len);
++
++/* Write single register */
++int intel_scu_ipc_iowrite8(u16 addr, u8 data);
++
++/* Write a vector */
++int intel_scu_ipc_writev(u16 *addr, u8 *data, int len);
++
++/* Update single register based on the mask */
++int intel_scu_ipc_update_register(u16 addr, u8 data, u8 mask);
++
++/* Issue commands to the SCU with or without data */
++int intel_scu_ipc_simple_command(int cmd, int sub);
++int intel_scu_ipc_command(int cmd, int sub, u32 *in, int inlen,
++			  u32 *out, int outlen);
++
++extern struct blocking_notifier_head intel_scu_notifier;
++
++static inline void intel_scu_notifier_add(struct notifier_block *nb)
++{
++	blocking_notifier_chain_register(&intel_scu_notifier, nb);
++}
++
++static inline void intel_scu_notifier_remove(struct notifier_block *nb)
++{
++	blocking_notifier_chain_unregister(&intel_scu_notifier, nb);
++}
++
++static inline int intel_scu_notifier_post(unsigned long v, void *p)
++{
++	return blocking_notifier_call_chain(&intel_scu_notifier, v, p);
++}
++
++#define		SCU_AVAILABLE		1
++#define		SCU_DOWN		2
++
++#endif
 -- 
-2.17.1
+2.25.1
 
