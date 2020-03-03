@@ -2,122 +2,155 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D65CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37483C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513F520870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:48:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q7W9c2h2"
+	by mail.kernel.org (Postfix) with ESMTP id 0E8D6217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:51:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583254266;
+	bh=E3YuWjLi8CFv4x/taRFjxRmhZUj1cjoEOp26VkTIAyY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=U12WjvoCzrUic2Op5/Y4/PUJEHWdCFew+QnyNQHopWX24B9OUF22ijvI7E7SzQYSv
+	 J2kahvc6En2esWlKrJZkdESw82pj5c7slzEYruJoPhZ3IgLEZ5T+bmuuQcyRGpK4+G
+	 HHrUc4KuWUZIYaxzTHxBRM8KtNO0ZuDg+k9GJ5IE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730415AbgCCQs3 (ORCPT
+        id S1730088AbgCCQvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:48:29 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49295 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730088AbgCCQs2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:48:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583254107;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tVR3fLZLUNSfxeCmLw5WmmWD0RuodP2e89qJb7tyUbA=;
-        b=Q7W9c2h23gi+SiOobHrzX2JpX7TtKFOgzTSOFQmpZ3GJfbXQoc1YySjb4ODpe09AEIuO9A
-        vbkqcyJchHNcCY2TyCIPTVIXgCTliFB53180PbnK8sog4YUt6csH4nKqajmm+etpI1ty5j
-        1gchLAR7Q7PwcqoFOK0dUOFHxdez++A=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-189-jzDLnre9PnKHkWG1ExSX1g-1; Tue, 03 Mar 2020 11:48:26 -0500
-X-MC-Unique: jzDLnre9PnKHkWG1ExSX1g-1
-Received: by mail-wm1-f71.google.com with SMTP id 7so1336395wmo.7
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:48:26 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=tVR3fLZLUNSfxeCmLw5WmmWD0RuodP2e89qJb7tyUbA=;
-        b=Ms08GxCXZ8db331lXw2zU6AIIWChitWARBu4uLc4DtPqQov5dB9D8Alb8BDYJQpdwW
-         RX8uFXyui9GDdfbDKIV28TdLatyhhJPtvPOyNHKgEcvqflXXI5JgqfjrYMIPH5qzhm9t
-         BHH7RXvbzFWFwuJ12GZ5B7s35RH82/wbw6biCFyMQe2x5IfCzhx6DBWKExSLiIe79RJR
-         IF24CWM+0soFiysL/VKoE1gZMziv+OmoM/vkExBrQ3V1CbgBMeel6Mb2XjI6FBTqY7gb
-         K8Y+Bpd5eHuD+8jTE0Gp1Ezay9nBC4CJAMW8g5ICbJqVVd6DoBaMAPa3xfx5csD95jCM
-         jZDg==
-X-Gm-Message-State: ANhLgQ1VAi2eKIohZXVxx8iP7FEVMX4bhyxoleC70mL81+T6pjAvA+Gf
-        pDVd0Fce2qZCOPMV7qgBo7px74VBbwmCh9ddW54l8H/OKnE9briESCcLCIJlENkLa+sdj7fYuO/
-        s7UQwPt3oZaVjaKcOROn5DeUz
-X-Received: by 2002:a1c:c5:: with SMTP id 188mr5045453wma.89.1583254105142;
-        Tue, 03 Mar 2020 08:48:25 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsGgm2F+r1bKNVwLZMv9knu4h001U/8h/7d1/cNm6RSBUOoIvQloC/Uy5Ldo1pOpceQ/SNfPQ==
-X-Received: by 2002:a1c:c5:: with SMTP id 188mr5045438wma.89.1583254104859;
-        Tue, 03 Mar 2020 08:48:24 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id q125sm5312013wme.19.2020.03.03.08.48.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 08:48:23 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v2 00/66] KVM: x86: Introduce KVM cpu caps
-In-Reply-To: <20200302235709.27467-1-sean.j.christopherson@intel.com>
-References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
-Date:   Tue, 03 Mar 2020 17:48:23 +0100
-Message-ID: <87wo81e65k.fsf@vitty.brq.redhat.com>
+        Tue, 3 Mar 2020 11:51:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54108 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727507AbgCCQvE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 11:51:04 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE9BD20863;
+        Tue,  3 Mar 2020 16:51:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583254263;
+        bh=E3YuWjLi8CFv4x/taRFjxRmhZUj1cjoEOp26VkTIAyY=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ORgqnXKIIEGgZy1ibtF5cMGTJyuUVhpIxPaEn3wqU8aYFM6+1nlyrIhBASiTFP9FV
+         /CQutSWJRviqXOma/n/u0FrItRn/7y1nE0YH3RmBqo4De9orTUI+1zOBRCDfleN8Rt
+         9ycN6AnOVqNusARwJZFie6zPPu6CbIoMxmVwfjaw=
+Message-ID: <acb1753c78a019fb0d54ba29077cef144047f70f.camel@kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
+ [ver #17]
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Date:   Tue, 03 Mar 2020 11:51:00 -0500
+In-Reply-To: <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
+References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+         <1509948.1583226773@warthog.procyon.org.uk>
+         <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+         <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+         <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com>
+         <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+         <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
+         <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
+         <20200303142407.GA47158@kroah.com>
+         <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Tue, 2020-03-03 at 08:44 -0700, Jens Axboe wrote:
+> On 3/3/20 7:24 AM, Greg Kroah-Hartman wrote:
+> > On Tue, Mar 03, 2020 at 03:13:26PM +0100, Jann Horn wrote:
+> > > On Tue, Mar 3, 2020 at 3:10 PM Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > > On Tue, Mar 03, 2020 at 02:43:16PM +0100, Greg Kroah-Hartman wrote:
+> > > > > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
+> > > > > > On Tue, Mar 3, 2020 at 2:14 PM Greg Kroah-Hartman
+> > > > > > <gregkh@linuxfoundation.org> wrote:
+> > > > > > 
+> > > > > > > > Unlimited beers for a 21-line kernel patch?  Sign me up!
+> > > > > > > > 
+> > > > > > > > Totally untested, barely compiled patch below.
+> > > > > > > 
+> > > > > > > Ok, that didn't even build, let me try this for real now...
+> > > > > > 
+> > > > > > Some comments on the interface:
+> > > > > 
+> > > > > Ok, hey, let's do this proper :)
+> > > > 
+> > > > Alright, how about this patch.
+> > > > 
+> > > > Actually tested with some simple sysfs files.
+> > > > 
+> > > > If people don't strongly object, I'll add "real" tests to it, hook it up
+> > > > to all arches, write a manpage, and all the fun fluff a new syscall
+> > > > deserves and submit it "for real".
+> > > 
+> > > Just FYI, io_uring is moving towards the same kind of thing... IIRC
+> > > you can already use it to batch a bunch of open() calls, then batch a
+> > > bunch of read() calls on all the new fds and close them at the same
+> > > time. And I think they're planning to add support for doing
+> > > open()+read()+close() all in one go, too, except that it's a bit
+> > > complicated because passing forward the file descriptor in a generic
+> > > way is a bit complicated.
+> > 
+> > It is complicated, I wouldn't recommend using io_ring for reading a
+> > bunch of procfs or sysfs files, that feels like a ton of overkill with
+> > too much setup/teardown to make it worth while.
+> > 
+> > But maybe not, will have to watch and see how it goes.
+> 
+> It really isn't, and I too thinks it makes more sense than having a
+> system call just for the explicit purpose of open/read/close. As Jann
+> said, you can't currently do a linked sequence of open/read/close,
+> because the fd passing between them isn't done. But that will come in
+> the future. If the use case is "a bunch of files", then you could
+> trivially do "open bunch", "read bunch", "close bunch" in three separate
+> steps.
+> 
+> Curious what the use case is for this that warrants a special system
+> call?
+> 
 
-> All AMD patches are build-tested only.
+Agreed. I'd really rather see something more general-purpose than the
+proposed readfile(). At least with NFS and SMB, you can compound
+together fairly arbitrary sorts of operations, and it'd be nice to be
+able to pattern calls into the kernel for those sorts of uses.
 
-I tried this on my AMD EPYC 7401P with QEMU and '-cpu host' and the only
-difference in CPUIDs I see is:
+So, NFSv4 has the concept of a current_stateid that is maintained by the
+server. So basically you can do all this (e.g.) in a single compound:
 
-# diff -u cpuid_with cpuid_without
---- cpuid_with	2020-03-03 11:38:34.786583429 -0500
-+++ cpuid_without	2020-03-03 11:43:58.103484420 -0500
-@@ -454,16 +454,16 @@
-       SvmRev: SVM revision = 0x1 (1)
-    SVM Secure Virtual Machine (0x8000000a/edx):
-       nested paging                          = true
--      LBR virtualization                     = true
--      SVM lock                               = true
-+      LBR virtualization                     = false
-+      SVM lock                               = false
-       NRIP save                              = true
--      MSR based TSC rate control             = true
--      VMCB clean bits support                = true
--      flush by ASID                          = true
--      decode assists                         = true
-+      MSR based TSC rate control             = false
-+      VMCB clean bits support                = false
-+      flush by ASID                          = false
-+      decode assists                         = false
-       SSSE3/SSE5 opcode set disable          = false
--      pause intercept filter                 = true
--      pause filter threshold                 = true
-+      pause intercept filter                 = false
-+      pause filter threshold                 = false
-       AVIC: AMD virtual interrupt controller = false
-       virtualized VMLOAD/VMSAVE              = false
-       virtualized GIF                        = false
+open <some filehandle get a stateid>
+write <using that stateid>
+close <same stateid>
 
-These are all 0x8000000a.EDX and Paolo already highlighted the issue
-(PATCH66).
+It'd be nice to be able to do something similar with io_uring. Make it
+so that when you do an open, you set the "current fd" inside the
+kernel's context, and then be able to issue io_uring requests that
+specify a magic "fd" value that use it.
 
+That would be a really useful pattern.
 -- 
-Vitaly
+Jeff Layton <jlayton@kernel.org>
 
