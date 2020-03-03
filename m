@@ -2,97 +2,137 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0CC4C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C44C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:11:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A356B20870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:10:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mDGa3l0i"
+	by mail.kernel.org (Postfix) with ESMTP id 3FFAA214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:11:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727196AbgCCGK4 (ORCPT
+        id S1727467AbgCCGLL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:10:56 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:46123 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbgCCGK4 (ORCPT
+        Tue, 3 Mar 2020 01:11:11 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18172 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725308AbgCCGLK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:10:56 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h18so2094157ljl.13;
-        Mon, 02 Mar 2020 22:10:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L44R33MZfBo7EJfh7yHeMAVpYiCz+bW7Ff5nJ/4YCbA=;
-        b=mDGa3l0iB+Fa9PTGs6OTbYeBy/ampfYZk7C1RYlTpL5OoFt8b+uXUEpUEXcHVdqIva
-         SRzcCxP4HA2y5CE4D9xgZexYgTdAIt8ewGax5jf2aorMSiYG1xJuKodHR9cK8/K9JGld
-         zB5zLyi96CN4BPi4qGNMSu5ctyHtYFVehiLxBW8BdT58O91MwPqFrbTkwA4ES48rsOSV
-         U68bhRgJwqRBi0KuLkhVyFr8xQlrt20MWM4Sil0TwVXHrO5SWRVmpBSCdOM8GecUKa7t
-         xWJ15KBZhcS0wuSrm0PnZT90T6dD0oMNJeFqW8AJflIDNb1vIuwPweEM8CS5Yij5QuIG
-         8hXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L44R33MZfBo7EJfh7yHeMAVpYiCz+bW7Ff5nJ/4YCbA=;
-        b=tupakajuELr6tfiGRSrrg9zs2Tkgb24Z4zswurm8lIyP7XZjVlvdajv2kUZTKxcbWU
-         PDUPczdRZ/mkIkivamlzOivZYoZSPWUKL+VZYAP/Pykza7WpCJxxcOi+pruSoA3Wwzti
-         OH9ZzizFNq2MjWaaZJeJ86Q9ViSURYD3vLe2LOM8LNYrCJKHh6ZYYM/k1ZAN6syWoxSo
-         eWR5VOhka2IseYyN1AZYMRAMtq7aRt6NFcygGAWZRXPepRK2JxxzinNZ7ivcWCKIA7kD
-         e8FeuKhP0VO1q0TZW5wmNAnWbKiL5D8KVasSpFVAP4+1L/xNt82SVwgQMRx8mSV+Bh64
-         JbCg==
-X-Gm-Message-State: ANhLgQ3pL15e00vOPUNMJHQOB3uYHzf0ez9G39XeGWCT3EiO4bd8aBDA
-        eEDxw26jB52GiI6NoOeYYrUDS2zNcdnqLzeYm2wfYOga
-X-Google-Smtp-Source: ADFU+vvBKj4kk/DGPu4e3EEo1JpMgvtQZJ67R+QKzPSOu5NVGyjMBBheD6boVCTDo8w0Yjt+bdDfmDw8ZFlvl+4PJz4=
-X-Received: by 2002:a2e:84d0:: with SMTP id q16mr1492785ljh.138.1583215854320;
- Mon, 02 Mar 2020 22:10:54 -0800 (PST)
+        Tue, 3 Mar 2020 01:11:10 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02365udp190994
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Mar 2020 01:11:09 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yfn16w0kt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:11:08 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Tue, 3 Mar 2020 06:11:06 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Mar 2020 06:10:59 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0236AwXB26017888
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Mar 2020 06:10:58 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37ED242045;
+        Tue,  3 Mar 2020 06:10:58 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC7E14203F;
+        Tue,  3 Mar 2020 06:10:57 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Mar 2020 06:10:57 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id C45C3A024B;
+        Tue,  3 Mar 2020 17:10:52 +1100 (AEDT)
+Subject: Re: [PATCH v3 03/27] powerpc: Map & release OpenCAPI LPC memory
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-4-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Tue, 3 Mar 2020 17:10:56 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <202002242114.CBED7F1@keescook> <202003022046.4185359A@keescook>
-In-Reply-To: <202003022046.4185359A@keescook>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 2 Mar 2020 22:10:42 -0800
-Message-ID: <CAADnVQKgQWmMgcxynzTRhGv1dZ=6oJDB79txrc8tmGy5sPejTg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Remove debug info from kallsyms linking
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200221032720.33893-4-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030306-0020-0000-0000-000003AFE2AD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030306-0021-0000-0000-00002208104D
+Message-Id: <33ff636c-6b85-ed0d-275b-3e8697b5316f@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_01:2020-03-02,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ phishscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0 bulkscore=0
+ mlxlogscore=581 suspectscore=0 mlxscore=0 malwarescore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 8:48 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Feb 24, 2020 at 09:16:17PM -0800, Kees Cook wrote:
-> > When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
-> > time collecting and writing the dwarf sections to the temporary output
-> > files. kallsyms does not need this information, and leaving it off
-> > halves their linking time. This is especially noticeable without
-> > CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
-> > need those details.
-> >
-> > Refactor the BTF and kallsyms generation stages slightly for more
-> > regularized temporary names. Skip debug during kallsyms links.
-> >
-> > For a full debug info build with BTF, my link time goes from 1m06s to
-> > 0m54s, saving about 12 seconds, or 18%.
-> >
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
->
-> Ping. Masahiro what do you think of this? It saves me a fair bit of time
-> on the link stage... I bet the BPF folks would be interested too. :)
+On 21/2/20 2:26 pm, Alastair D'Silva wrote:> +#ifdef 
+CONFIG_MEMORY_HOTPLUG_SPARSE
+> +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
+> +{
+> +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> +	struct pnv_phb *phb = hose->private_data;
+> +	u32 bdfn = pci_dev_id(pdev);
+> +	__be64 base_addr_be64;
+> +	u64 base_addr;
+> +	int rc;
+> +
+> +	rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size, &base_addr_be64);
 
-The build time improvement sound great.
-Could you please resubmit for bpf-next tree?
-So we can test and apply properly?
-Thanks!
+Sparse warning:
+
+https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15776//artifact/linux/report.txt
+
+I think in patch 1 we need to change a uint64_t to a __be64.
+
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
+
