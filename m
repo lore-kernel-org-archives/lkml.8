@@ -2,201 +2,132 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF07C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60945C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6688820637
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:46:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ndlxdiN1"
+	by mail.kernel.org (Postfix) with ESMTP id 3588C20836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:47:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583232427;
+	bh=7n/Rf8JqcQS1JpijhNzF28rBSFA8a0NvojUZvKIQ24k=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=uEtrYq/75gmx26su0e0zIawDrYvsspEpEW1SyfYCZva6x+03NTVcJ83Qb5a4IVzKH
+	 bo2KZa9LVx95kLkTKLttLeA3wo2dVwI/4aQl5ukortfnKgSbQAdr11KNRMMkCAY9so
+	 a+buFsAeZwx+qMvelAu10Jtb28VfNfMXTMt5Rmqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728806AbgCCKqM (ORCPT
+        id S1728869AbgCCKrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:46:12 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44347 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728645AbgCCKqL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:46:11 -0500
-Received: by mail-lj1-f195.google.com with SMTP id a10so2911084ljp.11;
-        Tue, 03 Mar 2020 02:46:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:references:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=SbkIYLaPhhKtjFKgNZ2hx+6kz6HW2Pe3O+upvQAowvo=;
-        b=ndlxdiN1wcbyOTqsSGN3SsavM1lRHbnDS1VW+VFx/V5kWY1MgYYZuc+2AyKpMAmgIz
-         nA/DqQBokmB4/Ks6eLwIt0u+RWdq2AUihfhRV5F+wIyJ1IGwjmXDWubvflRryXCrQa4Y
-         hTSTVqyOSz8NHRcoMO9FWm+x0daPEw7xhS8YMN1rDxI/6F9ZKOx2HgNvk/qVZd463yB3
-         S4ccHUvWgFZ5C6sqqI/lQmAGqCGPlTnVljkwo887Xk65f7odNN2+kY6h3+mlpt9xtWdR
-         p48n0r+NOaZN24K9/wfUuqTW+a0b68n7MIbqpc0fQO2ZPW5jFGq6W3cbGmrRLm/wggTF
-         mgxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SbkIYLaPhhKtjFKgNZ2hx+6kz6HW2Pe3O+upvQAowvo=;
-        b=TvrbbBYHFBiGVu26bUh75ZK0sSl/YMb3IA8/09heLmJqjZKcYTODnASzvF1uNdCzAk
-         NPqMMe5LLkZJ6uUBirmHXYwdAaaRTZztKpHt3/AcgXvVIiCDy+V8YVUatKLMaunPHCaE
-         nhg3HEhCtbNfiLkVULoYaCk5aiKZeWEgNc09VjSxHPzACTOuDkWekDk/lhhJpCE5Wo7z
-         gnpdjRiM7XvMJrQ3zXeBn4KIbDQn65sd2TC/bQUoq0dsSA7x/DeFuBwIvFbshWVwTT4W
-         u5IHyCaSdow49luwYgWPC/68jXA75JDTip2Mrx6LgRMS3lzr9WCMGZScDaPGRCm9d8TK
-         FTCQ==
-X-Gm-Message-State: ANhLgQ1NbpELegTifQywkN0Dl1OccrqL5M4FPNpxO9ONV8kr39h1vIA7
-        g4vNbitAnhC2sZaqoAl/WSywOfk0xVY=
-X-Google-Smtp-Source: ADFU+vsaEV75ZUdi48+sujsnA3/yGQfl7RNWuM6UT3rrS8JMnmdfqTovTbOoyrTgbyMeBPp+KeLbjw==
-X-Received: by 2002:a2e:7d0b:: with SMTP id y11mr2049353ljc.95.1583232368464;
-        Tue, 03 Mar 2020 02:46:08 -0800 (PST)
-Received: from [172.31.190.83] ([86.57.146.226])
-        by smtp.gmail.com with ESMTPSA id e8sm14017696lfc.18.2020.03.03.02.46.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 02:46:07 -0800 (PST)
-Subject: Re: [PATCH v2 4/4] io_uring: get next req on subm ref drop
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        Tue, 3 Mar 2020 05:47:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727830AbgCCKrF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:47:05 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2350E20637;
+        Tue,  3 Mar 2020 10:47:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583232425;
+        bh=7n/Rf8JqcQS1JpijhNzF28rBSFA8a0NvojUZvKIQ24k=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=B1re0zzoQUpSaSE3eSHY4t/rrebhCaAFzP6mRfhvwKGJfeR/vLa7F3nrNKaKrltov
+         rJOF7Wak5ZMKpA2oc2QxJetrmB2JOZAkOmDtd/ROriAbG0CU3G+VVcYbSOoR0t4nrJ
+         Oy1PJFZe+o1fXtF47ohscrWC6dSTkqI+gBUKyma4=
+Date:   Tue, 3 Mar 2020 19:47:00 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         linux-kernel@vger.kernel.org
-References: <cover.1583181841.git.asml.silence@gmail.com>
- <444aef98f849d947d7f10e88f30244fa0bc82360.1583181841.git.asml.silence@gmail.com>
- <3ab75953-ee39-2c4e-99e2-f8c18ceb6a8d@kernel.dk>
- <52b282f5-50f3-2ee6-a055-6ef0c2c39e93@gmail.com>
-Message-ID: <9ead66eb-cb5d-2dab-1a78-02466958674a@gmail.com>
-Date:   Tue, 3 Mar 2020 13:46:06 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <52b282f5-50f3-2ee6-a055-6ef0c2c39e93@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Subject: [OT] Pseudo module name in kallsyms (Re: [PATCH V3 03/13] kprobes:
+ Add symbols for kprobe insn pages)
+Message-Id: <20200303194700.5810cbaf49bc6eacdffa7fa4@kernel.org>
+In-Reply-To: <20200302144307.GD204976@krava>
+References: <20200228135125.567-1-adrian.hunter@intel.com>
+        <20200228135125.567-4-adrian.hunter@intel.com>
+        <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
+        <20200228172004.GI5451@krava>
+        <20200229134947.839096dbc8321cfdca980edb@kernel.org>
+        <20200229184913.4e13e516@oasis.local.home>
+        <20200302144307.GD204976@krava>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/2020 9:54 AM, Pavel Begunkov wrote:
-> On 03/03/2020 07:26, Jens Axboe wrote:
->> On 3/2/20 1:45 PM, Pavel Begunkov wrote:
->>> Get next request when dropping the submission reference. However, if
->>> there is an asynchronous counterpart (i.e. read/write, timeout, etc),
->>> that would be dangerous to do, so ignore them using new
->>> REQ_F_DONT_STEAL_NEXT flag.
->>
->> Hmm, not so sure I like this one. It's not quite clear to me where we
->> need REQ_F_DONT_STEAL_NEXT. If we have an async component, then we set
->> REQ_F_DONT_STEAL_NEXT. So this is generally the case where our
->> io_put_req() for submit is not the last drop. And for the other case,
->> the put is generally in the caller anyway. So I don't really see what
->> this extra flag buys us?
-> 
-> Because io_put_work() holds a reference, no async handler can achive req->refs
-> == 0, so it won't return next upon dropping the submission ref (i.e. by
-> put_find_nxt()). And I want to have next before io_put_work(), to, instead of as
-> currently:
-> 
-> run_work(work);
-> assign_cur_work(NULL); // spinlock + unlock worker->lock
-> new_work = put_work(work);
-> assign_cur_work(new_work); // the second time
-> 
-> do:
-> 
-> new_work = run_work(work);
-> assign_cur_work(new_work); // need new_work here
-> put_work(work);
-> 
-> 
-> The other way:
-> 
-> io_wq_submit_work() // for all async handlers
-> {
-> 	...
-> 	// Drop submission reference.
-> 	// One extra ref will be put in io_put_work() right
-> 	// after return, and it'll be done in the same thread
-> 	if (atomic_dec_and_get(req) == 1)
-> 		steal_next(req);
-> }
-> 
-> Maybe cleaner, but looks fragile as well. Would you prefer it?
+Hi,
 
-Any chance you've measured your next-work fix? I wonder how much does it
-hurt performance, and whether we need a terse patch for 5.6.
+On Mon, 2 Mar 2020 15:43:07 +0100
+Jiri Olsa <jolsa@redhat.com> wrote:
+
+> On Sat, Feb 29, 2020 at 06:49:13PM -0500, Steven Rostedt wrote:
+> > On Sat, 29 Feb 2020 13:49:47 +0900
+> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > 
+> > > On Fri, 28 Feb 2020 18:20:04 +0100
+> > > Jiri Olsa <jolsa@redhat.com> wrote:
+> > > 
+> > > > > BTW, it seems to pretend to be a module, but is there no concern of
+> > > > > confusing users? Shouldn't it be [*kprobes] so that it is non-exist
+> > > > > module name?  
+> > > > 
+> > > > note we already have bpf symbols as [bpf] module  
+> > > 
+> > > Yeah, and this series adds [kprobe(s)] and [ftrace] too.
+> > > I simply concern that the those module names implicitly become
+> > > special word (rule) and embedded in the code. If such module names
+> > > are not exposed to users, it is OK (but I hope to have some comments).
+> > > However, it is under /proc, which means users can notice it.
+> > 
+> > I share Masami's concerns. It would be good to have something
+> > differentiate local functions that are not modules. That's one way I
+> > look to see if something is a module or built in, is to see if kallsyms
+> > has it as a [].
+> > 
+> > Perhaps prepend with: '&' ?
+
+Yeah, '*' may not good from the filename point of view.
+
+> 
+> that would break some of the perf code.. IMO Arnaldo's explanation
+> makes sense and we could keep it as it is
+
+ From the in-kernel API/coding point of view,
+
++static int get_ksymbol_kprobe(struct kallsym_iter *iter)
++{
++	strlcpy(iter->module_name, "kprobe", MODULE_NAME_LEN);
++	iter->exported = 0;
++	return kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
++				  &iter->value, &iter->type,
++				  iter->name) < 0 ? 0 : 1;
+ }
+
+This clearly shows that is a iter->module_name.
+
+And also, if someone make a module names "kprobes.ko", it will also
+have [kprobes] in kallsyms. That is also confusing.
 
 
->> Few more comments below.
->>
->>> +static void io_put_req_async_submission(struct io_kiocb *req,
->>> +					struct io_wq_work **workptr)
->>> +{
->>> +	static struct io_kiocb *nxt;
->>> +
->>> +	nxt = io_put_req_submission(req);
->>> +	if (nxt)
->>> +		io_wq_assign_next(workptr, nxt);
->>> +}
->>
->> This really should be called io_put_req_async_completion() since it's
->> called on completion. The naming is confusing.
-> 
-> Ok
-> 
->>> @@ -2581,14 +2598,11 @@ static void __io_fsync(struct io_kiocb *req)
->>>  static void io_fsync_finish(struct io_wq_work **workptr)
->>>  {
->>>  	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
->>> -	struct io_kiocb *nxt = NULL;
->>>  
->>>  	if (io_req_cancelled(req))
->>>  		return;
->>>  	__io_fsync(req);
->>> -	io_put_req(req); /* drop submission reference */
->>> -	if (nxt)
->>> -		io_wq_assign_next(workptr, nxt);
->>> +	io_put_req_async_submission(req, workptr);
->>>  }
->>>  
->>>  static int io_fsync(struct io_kiocb *req, bool force_nonblock)
->>> @@ -2617,14 +2631,11 @@ static void __io_fallocate(struct io_kiocb *req)
->>>  static void io_fallocate_finish(struct io_wq_work **workptr)
->>>  {
->>>  	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
->>> -	struct io_kiocb *nxt = NULL;
->>>  
->>>  	if (io_req_cancelled(req))
->>>  		return;
->>>  	__io_fallocate(req);
->>> -	io_put_req(req); /* drop submission reference */
->>> -	if (nxt)
->>> -		io_wq_assign_next(workptr, nxt);
->>> +	io_put_req_async_submission(req, workptr);
->>>  }
->>
->> All of these cleanups are nice (except the naming, as mentioned).
->>
->>> @@ -3943,7 +3947,10 @@ static int io_poll_add(struct io_kiocb *req)
->>>  	if (mask) {
->>>  		io_cqring_ev_posted(ctx);
->>>  		io_put_req(req);
->>> +	} else {
->>> +		req->flags |= REQ_F_DONT_STEAL_NEXT;
->>>  	}
->>> +
->>>  	return ipt.error;
->>>  }
->>
->> Is this racy? I guess it doesn't matter since we're still holding the
->> completion reference.
-> 
-> It's done by the same thread, that uses it. There could be a race if the async
-> counterpart is going to change req->flags, but we tolerate false negative (i.e.
-> put_req() will handle it).
-> 
+Thank you,
 
 -- 
-Pavel Begunkov
+Masami Hiramatsu <mhiramat@kernel.org>
