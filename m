@@ -2,102 +2,163 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C276FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D83C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1D3420836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FB9520836
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730494AbgCCRBd (ORCPT
+        id S1730504AbgCCRBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:01:33 -0500
-Received: from foss.arm.com ([217.140.110.172]:49824 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbgCCRBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:01:33 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9C5CE2F;
-        Tue,  3 Mar 2020 09:01:32 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B8393F534;
-        Tue,  3 Mar 2020 09:01:30 -0800 (PST)
-Date:   Tue, 3 Mar 2020 17:01:16 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     bhelgaas@google.com, robh+dt@kernel.org, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
-        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4 0/5] Add support for PCIe endpoint mode in Tegra194
-Message-ID: <20200303170103.GA9641@e121166-lin.cambridge.arm.com>
-References: <20200303105418.2840-1-vidyas@nvidia.com>
+        Tue, 3 Mar 2020 12:01:50 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:49495 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbgCCRBu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:01:50 -0500
+Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1j9Aus-0005Fy-RG; Tue, 03 Mar 2020 17:01:10 +0000
+Date:   Tue, 3 Mar 2020 18:01:09 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Andrei Vagin <avagin@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Yuyang Du <duyuyang@gmail.com>,
+        David Hildenbrand <david@redhat.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        David Howells <dhowells@redhat.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christian Kellner <christian@kellner.me>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
+Subject: Re: [PATCHv5] exec: Fix a deadlock in ptrace
+Message-ID: <20200303170109.y6q2acgydyzuh3mp@wittgenstein>
+References: <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <875zfmloir.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nmjulm.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <202003021531.C77EF10@keescook>
+ <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
+ <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+ <87v9nlii0b.fsf@x220.int.ebiederm.org>
+ <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200303105418.2840-1-vidyas@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 04:24:13PM +0530, Vidya Sagar wrote:
-> Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
-> either in root port mode or in end point mode but only in one mode at a time.
-> Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
-> patch series adds support for PCIe endpoint mode in both the driver as well as
-> in DT.
-> This patch series depends on the changes made for Synopsys DesignWare endpoint
-> mode subsystem that are recently accepted.
-> @ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
-> which in turn depends on the patch made by Kishon
-> @ https://patchwork.kernel.org/patch/10975123/
-> which is also under review.
+On Tue, Mar 03, 2020 at 04:48:01PM +0000, Bernd Edlinger wrote:
+> On 3/3/20 4:18 PM, Eric W. Biederman wrote:
+> > Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
+> > 
+> >> This fixes a deadlock in the tracer when tracing a multi-threaded
+> >> application that calls execve while more than one thread are running.
+> >>
+> >> I observed that when running strace on the gcc test suite, it always
+> >> blocks after a while, when expect calls execve, because other threads
+> >> have to be terminated.  They send ptrace events, but the strace is no
+> >> longer able to respond, since it is blocked in vm_access.
+> >>
+> >> The deadlock is always happening when strace needs to access the
+> >> tracees process mmap, while another thread in the tracee starts to
+> >> execve a child process, but that cannot continue until the
+> >> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
+> > 
+> > A couple of things.
+> > 
+> > Why do we think it is safe to change the behavior exposed to userspace?
+> > Not the deadlock but all of the times the current code would not
+> > deadlock?
+> > 
+> > Especially given that this is a small window it might be hard for people
+> > to track down and report so we need a strong argument that this won't
+> > break existing userspace before we just change things.
+> > 
 > 
-> V4:
-> * Started using threaded irqs instead of kthreads
+> Hmm, I tend to agree.
+> 
+> > Usually surveying all of the users of a system call that we can find
+> > and checking to see if they might be affected by the change in behavior
+> > is difficult enough that we usually opt for not being lazy and
+> > preserving the behavior.
+> > 
+> > This patch is up to two changes in behavior now, that could potentially
+> > affect a whole array of programs.  Adding linux-api so that this change
+> > in behavior can be documented if/when this change goes through.
+> > 
+> 
+> One is PTRACE_ACCESS possibly returning EAGAIN, yes.
+> 
+> We could try to restrict that behavior change to when any
+> thread is ptraced when execve starts, can't be too complicated.
+> 
+> 
+> But the other is only SYS_seccomp returning EAGAIN, when a different
+> thread of the current process is calling execve at the same time.
+> 
+> I would consider it completely impossible to have any user-visual effect,
+> since de_thread is just terminating all threads, including the thread
+> where the -EAGAIN was returned, so we will never know what happened.
 
-Hi Vidya,
+I think if we risk a user-space facing change we should try the simple
+thing first before making the fix more convoluted? But it's a tough
+call...
 
-sorry for the bother, may I ask you to rebase the series (after
-answering Thierry's query) on top of my pci/endpoint branch please ?
+> 
+> 
+> > If you can split the documentation and test fixes out into separate
+> > patches that would help reviewing this code, or please make it explicit
+> > that the your are changing documentation about behavior that is changing
+> > with this patch.
+> > 
+> 
+> I am not sure if I have touched the right user documentation.
+> 
+> I only saw a document referring to a non-existent "current->cred_replace_mutex"
+> I haven't digged the git history, but that must be pre-historic IMHO.
+> It appears to me that is some developer documentation, but it's nevertheless
+> worth to keep up to date when the code changes.
+> 
+> So where would I add the possibility for PTRACE_ATTACH to return -EAGAIN ?
 
-Please resend it and I will merge patches {1,2,5} then.
+Since that would be a potentially user-visible change it would make the
+most sense to add it to man ptrace(2) if/when we land this change.
 
-Thanks,
-Lorenzo
+For developers, placing a comment in kernel/ptrace.c:ptrace_attach()
+would make the most sense? We already have something about exec
+protection in there.
 
-> V3:
-> * Re-ordered patches in the series to make the driver change as the last patch
-> * Took care of Thierry's review comments
-> 
-> V2:
-> * Addressed Thierry & Bjorn's review comments
-> * Added EP mode specific binding documentation to already existing binding documentation file
-> * Removed patch that enables GPIO controller nodes explicitly as they are enabled already
-> 
-> Vidya Sagar (5):
->   soc/tegra: bpmp: Update ABI header
->   dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
->   arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
->   arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
->     platform
->   PCI: tegra: Add support for PCIe endpoint mode in Tegra194
-> 
->  .../bindings/pci/nvidia,tegra194-pcie.txt     | 125 +++-
->  .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  18 +
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  99 +++
->  drivers/pci/controller/dwc/Kconfig            |  30 +-
->  drivers/pci/controller/dwc/pcie-tegra194.c    | 681 +++++++++++++++++-
->  include/soc/tegra/bpmp-abi.h                  |  10 +-
->  6 files changed, 918 insertions(+), 45 deletions(-)
-> 
-> -- 
-> 2.17.1
-> 
+Christian
