@@ -2,157 +2,201 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115BEC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E92CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB7F320848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:48:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583243339;
-	bh=4TW9X7YzQfRP0F4RGy0n5QUAXhhFpvKIMfq5iZ9kTXs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1k3XmVIbLHnDUxE9O2bnVM497cjxcQki4Pgol2ahq4+un7mJF/VAldLhd0s11OUhF
-	 ITn9NUmGKkrr0SpVJpZuelg1urKZlpanw5/1etLKVU3yWGjZ1i75B0m0DBxg/+6PsS
-	 iGkzoDKG3TRpoS1fjJQnpH4ZmOZKxXZCGQdTTICg=
+	by mail.kernel.org (Postfix) with ESMTP id 1BF3620838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:49:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sholland.org header.i=@sholland.org header.b="hxA0KmDJ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yN4PXMIO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbgCCNs7 (ORCPT
+        id S1728994AbgCCNti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:48:59 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:34314 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725932AbgCCNs6 (ORCPT
+        Tue, 3 Mar 2020 08:49:38 -0500
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:52473 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725944AbgCCNth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:48:58 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 11so3436895qkd.1;
-        Tue, 03 Mar 2020 05:48:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eeNzn8H18FzPdQesLxTltwdmSd8JJDcXIg9kUyzHqWE=;
-        b=WUhEHc5vql7ujIsEF3YHXKRSPLmhv/fLYpNQcZJljQqi4gtjdwhw6AbZIFvY082EsT
-         LrzFJH1uw3wD4vcFMkziFsHeadM0WGFkWAPGsvoHm1sEwZKWYU3jvijiuYlmS3FbEl4W
-         ATccS1Mzp8UkXzZkfb+SMX8fJnqeOUKNbFudgw329WdafEFjgsmDO2FD1P098aeK+ji5
-         WK9shX1psrjhZS0EvBjaqf/AoNNd/A033bf4uZh+I6Br1UBnip1h0bBG/Ow9RG7V8BOm
-         mHQe0xu2/SZnPvFdU/16fTcMa1lqkxZeGdhawwAOQOSEgGOYqdCTXIaSGZfX2Kfsw9qs
-         3BXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=eeNzn8H18FzPdQesLxTltwdmSd8JJDcXIg9kUyzHqWE=;
-        b=kUT3WBau0N+T4qPDx6qqH1Kh0cS0El8jW8BiqKl9iIUmrIah1kbFDCTKWRKm4agmjR
-         e0p6RtOZyuTpFkI42aicvZbzwQDoiL4lFACs2dlYpmRG77GKP5H9DoGoGLmagcw38RGZ
-         WVHNtAQGLg9R2QR2KAxg/Td/wl9LzyXfbUzJShvgUmus5Q4AMaFgy8soYkwCqaxfy0Da
-         JTQsGEEhHL6nGLg3cSOJ0RDBMtzGYoSHEhd/KLz/ddmh8IPobp0Ydk+4JyQVg75X6Elk
-         fJ+1jmLAwyTvM9y2Tsld1bV7BnTvRSa7lR1l9drZxz9PKrhd3xbTq9h+VxuTuefs7rTU
-         S/Aw==
-X-Gm-Message-State: ANhLgQ1KKp5MbzJ8Ilq7hZkWgtk2wYVJfT5t5Uf5FvS1J0RQYoA6eU0F
-        1MmqCW5WC3ODmU46N+9hL58=
-X-Google-Smtp-Source: ADFU+vv+/21QpMv7FaTPOu9N6rpSb7Pfkdm41cSmaitTrxEEzsg2WiPzIAFx1GdV88BpbsT9EbLvQw==
-X-Received: by 2002:a05:620a:806:: with SMTP id s6mr4315267qks.235.1583243337163;
-        Tue, 03 Mar 2020 05:48:57 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::7f70])
-        by smtp.gmail.com with ESMTPSA id e7sm3321488qtp.0.2020.03.03.05.48.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 05:48:56 -0800 (PST)
-Date:   Tue, 3 Mar 2020 08:48:55 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Marco Ballesio <balejs@google.com>
-Cc:     guro@fb.com, cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        lizefan@huawei.com, hannes@cmpxchg.org, corbet@lwn.net,
-        rjw@rjwysocki.net, pavel@ucw.cz, len.brown@intel.com,
-        linux-doc@vger.kernel.org, linux-pm@vger.kernel.org,
-        minchan@google.com, surenb@google.com, dancol@google.com
-Subject: Re: [PATCH] cgroup-v1: freezer: optionally killable freezer
-Message-ID: <20200303134855.GA186184@mtj.thefacebook.com>
-References: <20200219183231.50985-1-balejs@google.com>
+        Tue, 3 Mar 2020 08:49:37 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 27BC386E;
+        Tue,  3 Mar 2020 08:49:36 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 03 Mar 2020 08:49:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sholland.org; h=
+        subject:to:cc:references:from:message-id:date:mime-version
+        :in-reply-to:content-type:content-transfer-encoding; s=fm2; bh=D
+        Fq5AY9nqYAnwVRF+Wm04rFwZurV5Iq5A1Ozlub/24c=; b=hxA0KmDJpjbVpoBUD
+        UpNgjj4Qy4G96NuHSPKUsiFZwyocGnKNWzH7UIs8Mq5zM6gBzy58YhJHQl39ZSil
+        lwW2tmpEUNbaH7uImpPwv5nPw5swkFfrN3N/+OMApHv4S973rBeJC0kQ1xwAGcxO
+        2OJl1A3kpQ2bSnYsDrvBCXy70l8Fq3mSvb9pqucG3e3hN/SbpyXqM5E+31wOFx+o
+        D6bQ/A0ZnD5Mg9eLbhSjlXm9b9kI4dX5myrTGCxREIBzOvs+wPiws+eKjMOUMo3H
+        sQfOYXpk379dafaqs4j6f9hD80eMwMuQYdRAjtWluW2xGZxLjkUDAzdZcApXzUWk
+        SwPDQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm2; bh=DFq5AY9nqYAnwVRF+Wm04rFwZurV5Iq5A1Ozlub/2
+        4c=; b=yN4PXMIOgG5h+smyL3fy7wchkPeJkqUDP6zzStiM7VwADZkmXN7m7BWdJ
+        e0d6hfTK0l4JqFjOsL0ZJttu7I3Z4sIKtf7LND9yboGwTkSNE+yvRQEBCIpd8PIb
+        +ZLuZswKK1BHc/iwk8rlbnDIgsLzdltw3zkEa0VTupvNo/PN7Hx81NA0PoXmdx3P
+        V7Gk3JUeAqTcJWRlHKIcx+7/UGltoSraDnU//PFFcqkeVUDY8ayCn4keauACIgph
+        zQndIv/Zsh3Ysr9tOFqOQvmCksTUtLuDcjWb6J4o5XeAsryR1OBzfUPd/2PKAGH9
+        qK36dQCh+7zrbkSU0mrQmPr+K626Q==
+X-ME-Sender: <xms:bmBeXiyvFASA7E0r5uIdIXP-R_4DkzaUWwGjVfem_sXDRjSByZy7Jw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedruddtiedgiedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepuffvfhfhkffffgggjggtgfesthejredttdefjeenucfhrhhomhepufgrmhhu
+    vghlucfjohhllhgrnhguuceoshgrmhhuvghlsehshhholhhlrghnugdrohhrgheqnecukf
+    hppeejtddrudefhedrudegkedrudehudenucevlhhushhtvghrufhiiigvpedtnecurfgr
+    rhgrmhepmhgrihhlfhhrohhmpehsrghmuhgvlhesshhhohhllhgrnhgurdhorhhg
+X-ME-Proxy: <xmx:bmBeXr8E1P_YCmbtWen_o3eMtfGocmzLcNUAZ0sndYdF-nazkJzqBA>
+    <xmx:bmBeXmGJEL8efUyjtZUqV-rm6_Xs_aJzkn_KsXtZZXsqpPeoE-IoTg>
+    <xmx:bmBeXlBdT3TaVVKpIfQ5caOTcaF--zxy5YNJySyDVAXLic371Sb8Hg>
+    <xmx:b2BeXhnizlNnmM79qlv6C-VFNkN0zeLoKAhHG07WFP_ZvbcnAdQzLQ>
+Received: from [192.168.50.169] (70-135-148-151.lightspeed.stlsmo.sbcglobal.net [70.135.148.151])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2399A328006E;
+        Tue,  3 Mar 2020 08:49:34 -0500 (EST)
+Subject: Re: [PATCH v3 3/3] ASoC: simple-card: Add support for codec2codec DAI
+ links
+To:     Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20200223034533.1035-1-samuel@sholland.org>
+ <20200223034533.1035-4-samuel@sholland.org>
+From:   Samuel Holland <samuel@sholland.org>
+Message-ID: <9cdcfcb6-63c2-5b76-9de1-46719e4e7139@sholland.org>
+Date:   Tue, 3 Mar 2020 07:49:33 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200219183231.50985-1-balejs@google.com>
+In-Reply-To: <20200223034533.1035-4-samuel@sholland.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-On Wed, Feb 19, 2020 at 10:32:31AM -0800, Marco Ballesio wrote:
-> @@ -94,6 +94,18 @@ The following cgroupfs files are created by cgroup freezer.
->    Shows the parent-state.  0 if none of the cgroup's ancestors is
->    frozen; otherwise, 1.
+On 2/22/20 9:45 PM, Samuel Holland wrote:
+> Following the example in cb2cf0de1174 ("ASoC: soc-core: care Codec <->
+> Codec case by non_legacy_dai_naming"), determine if a DAI link contains
+> only codec DAIs by examining the non_legacy_dai_naming flag in each
+> DAI's component.
+> 
+> For now, we assume there is only one or a small set of valid PCM stream
+> parameters, so num_params == 1 is good enough. We also assume that the
+> same params are valid for all supported streams. params is set to the
+> subset of parameters common among all DAIs, and then the existing code
+> automatically chooses the highest quality of the remaining values when
+> the link is brought up.
+> 
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
+> ---
+>  Documentation/sound/soc/codec-to-codec.rst |  9 +++-
+>  sound/soc/generic/simple-card-utils.c      | 49 ++++++++++++++++++++++
+>  2 files changed, 56 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/sound/soc/codec-to-codec.rst b/Documentation/sound/soc/codec-to-codec.rst
+> index 810109d7500d..4eaa9a0c41fc 100644
+> --- a/Documentation/sound/soc/codec-to-codec.rst
+> +++ b/Documentation/sound/soc/codec-to-codec.rst
+> @@ -104,5 +104,10 @@ Make sure to name your corresponding cpu and codec playback and capture
+>  dai names ending with "Playback" and "Capture" respectively as dapm core
+>  will link and power those dais based on the name.
 >  
-> +* freezer.killable: Read-write
-> +
-> +  When read, returns the killable state of a cgroup - "1" if frozen
-> +  tasks will respond to fatal signals, or "0" if they won't.
-> +
-> +  When written, this property sets the killable state of the cgroup.
-> +  A value equal to "1" will switch the state of all frozen tasks in
-> +  the cgroup to TASK_INTERRUPTIBLE (similarly to cgroup v2) and will
-> +  make them react to fatal signals. A value of "0" will switch the
-> +  state of frozen tasks to TASK_UNINTERRUPTIBLE and they won't respond
-> +  to signals unless thawed or unfrozen.
-
-As Roman said, I'm not too sure about adding a new cgroup1 freezer
-interface at this point. If we do this, *maybe* a mount option would
-be more minimal?
-
-> diff --git a/kernel/freezer.c b/kernel/freezer.c
-> index dc520f01f99d..92de1bfe62cf 100644
-> --- a/kernel/freezer.c
-> +++ b/kernel/freezer.c
-> @@ -42,6 +42,9 @@ bool freezing_slow_path(struct task_struct *p)
->  	if (test_tsk_thread_flag(p, TIF_MEMDIE))
->  		return false;
+> -Note that in current device tree there is no way to mark a dai_link
+> -as codec to codec. However, it may change in future.
+> +A dai_link in a "simple-audio-card" will automatically be detected as
+> +codec to codec when all DAIs on the link belong to codec components.
+> +The dai_link will be initialized with the subset of stream parameters
+> +(channels, format, sample rate) supported by all DAIs on the link. Since
+> +there is no way to provide these parameters in the device tree, this is
+> +mostly useful for communication with simple fixed-function codecs, such
+> +as a Bluetooth controller or cellular modem.
+> diff --git a/sound/soc/generic/simple-card-utils.c b/sound/soc/generic/simple-card-utils.c
+> index 9b794775df53..54294367a40f 100644
+> --- a/sound/soc/generic/simple-card-utils.c
+> +++ b/sound/soc/generic/simple-card-utils.c
+> @@ -331,6 +331,51 @@ static int asoc_simple_init_dai(struct snd_soc_dai *dai,
+>  	return 0;
+>  }
 >  
-> +	if (cgroup_freezer_killable(p) && fatal_signal_pending(p))
-> +		return false;
+> +static int asoc_simple_init_dai_link_params(struct snd_soc_pcm_runtime *rtd,
+> +					    struct simple_dai_props *dai_props)
+> +{
+> +	struct snd_soc_dai_link *dai_link = rtd->dai_link;
+> +	struct snd_soc_component *component;
+> +	struct snd_soc_rtdcom_list *rtdcom;
+
+This variable is unused in v3. I can send a v4.
+
+> +	struct snd_soc_pcm_stream *params;
+> +	struct snd_pcm_hardware hw;
+> +	int i, ret, stream;
 > +
->  	if (pm_nosig_freezing || cgroup_freezing(p))
->  		return true;
+> +	/* Only codecs should have non_legacy_dai_naming set. */
+> +	for_each_rtd_components(rtd, i, component) {
+> +		if (!component->driver->non_legacy_dai_naming)
+> +			return 0;
+> +	}
+> +
+> +	/* Assumes the capabilities are the same for all supported streams */
+> +	for (stream = 0; stream < 2; stream++) {
+> +		ret = snd_soc_runtime_calc_hw(rtd, &hw, stream);
+> +		if (ret == 0)
+> +			break;
+> +	}
+> +
+> +	if (ret < 0) {
+> +		dev_err(rtd->dev, "simple-card: no valid dai_link params\n");
+> +		return ret;
+> +	}
+> +
+> +	params = devm_kzalloc(rtd->dev, sizeof(*params), GFP_KERNEL);
+> +	if (!params)
+> +		return -ENOMEM;
+> +
+> +	params->formats = hw.formats;
+> +	params->rates = hw.rates;
+> +	params->rate_min = hw.rate_min;
+> +	params->rate_max = hw.rate_max;
+> +	params->channels_min = hw.channels_min;
+> +	params->channels_max = hw.channels_max;
+> +
+> +	dai_link->params = params;
+> +	dai_link->num_params = 1;
+> +
+> +	return 0;
+> +}
+> +
+>  int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
+>  {
+>  	struct asoc_simple_priv *priv = snd_soc_card_get_drvdata(rtd->card);
+> @@ -347,6 +392,10 @@ int asoc_simple_dai_init(struct snd_soc_pcm_runtime *rtd)
+>  	if (ret < 0)
+>  		return ret;
 >  
-> @@ -63,7 +66,12 @@ bool __refrigerator(bool check_kthr_stop)
->  	pr_debug("%s entered refrigerator\n", current->comm);
->  
->  	for (;;) {
-> -		set_current_state(TASK_UNINTERRUPTIBLE);
-> +		bool killable = cgroup_freezer_killable(current);
+> +	ret = asoc_simple_init_dai_link_params(rtd, dai_props);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +		if (killable)
-> +			set_current_state(TASK_INTERRUPTIBLE);
-> +		else
-> +			set_current_state(TASK_UNINTERRUPTIBLE);
->  
->  		spin_lock_irq(&freezer_lock);
->  		current->flags |= PF_FROZEN;
-> @@ -75,6 +83,16 @@ bool __refrigerator(bool check_kthr_stop)
->  		if (!(current->flags & PF_FROZEN))
->  			break;
->  		was_frozen = true;
-> +
-> +		/*
-> +		 * Now we're sure that there is no pending fatal signal.
-> +		 * Clear TIF_SIGPENDING to not get out of schedule()
-> +		 * immediately (if there is a non-fatal signal pending), and
-> +		 * put the task into sleep.
-> +		 */
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL_GPL(asoc_simple_dai_init);
+> 
 
-and this looks really racy to me. What happens if this task gets a
-fatal signal here? We clear TIF_SIGPENDING and go to sleep?
-
-> +		if (killable)
-> +			clear_thread_flag(TIF_SIGPENDING);
-> +
->  		schedule();
->  	}
-
-Thanks.
-
--- 
-tejun
