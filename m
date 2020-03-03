@@ -2,109 +2,144 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF29EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D999C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90A4720842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:31:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="UTGtCeaV"
+	by mail.kernel.org (Postfix) with ESMTP id 069E120870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:32:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732641AbgCCVbM (ORCPT
+        id S1732664AbgCCVcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:31:12 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:52354 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732505AbgCCVbM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:31:12 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023LS4SG092617;
-        Tue, 3 Mar 2020 21:30:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=yp0/8z5zvQXZIVH4pA65SFCLeNa4/KuEvMX5IX0JbsQ=;
- b=UTGtCeaVWNJitx5qI5IaBY1vXZpQKmAFz1r1sU7m9wjoRGJv3tEdSU2PXc+y78ZxTIxq
- LiM4K0JoULxAL2y3ordRvn4E/mlTFW92NafQSciRwCWh09R2t6jg9zoxiyIpPwmH62p1
- tnns2MVYkro7J/HMsKxiXj1DmR7MTagygsIRUO7dWfXjpdRC5zqlJT9XNQwqxhKyyxMu
- BYfid/DIT3L2ryAVg4nyv2QSawiBpYyHn1XF8hFUbwCHO0SgOYCPfd8klK+KQzsQlVEy
- 6ptkLsfsgsZXUFx8LWKaDLzRLPbqZC+3vLndepnLYl2vpdtDp0tCZSAjjtTYsvERT2hI GQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2yffwqt3eb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 21:30:55 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023LSchb010272;
-        Tue, 3 Mar 2020 21:30:55 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2yg1p5g557-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 21:30:55 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 023LUsaQ020178;
-        Tue, 3 Mar 2020 21:30:54 GMT
-Received: from ca-dmjordan1.us.oracle.com (/10.211.9.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 13:30:53 -0800
-Date:   Tue, 3 Mar 2020 16:31:11 -0500
-From:   Daniel Jordan <daniel.m.jordan@oracle.com>
-To:     Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Will Deacon <will@kernel.org>, tj@kernel.org,
-        jiangshanlai@gmail.com, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-crypto@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>
-Subject: Re: WARNING: at kernel/workqueue.c:1473 __queue_work+0x3b8/0x3d0
-Message-ID: <20200303213111.op2vtxfmwtn7i6db@ca-dmjordan1.us.oracle.com>
-References: <20200217204803.GA13479@Red>
- <20200218163504.y5ofvaejleuf5tbh@ca-dmjordan1.us.oracle.com>
- <20200220090350.GA19858@Red>
- <20200221174223.r3y6tugavp3k5jdl@ca-dmjordan1.us.oracle.com>
- <20200228123311.GE3275@willie-the-truck>
- <20200228153331.uimy62rat2tdxxod@ca-dmjordan1.us.oracle.com>
- <20200301175351.GA11684@Red>
- <20200302172510.fspofleipqjcdxak@ca-dmjordan1.us.oracle.com>
- <20200303074819.GB9935@Red>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303074819.GB9935@Red>
-User-Agent: NeoMutt/20180716
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
- mlxlogscore=772 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=821 mlxscore=0 suspectscore=0
- phishscore=0 clxscore=1011 bulkscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030136
+        Tue, 3 Mar 2020 16:32:05 -0500
+Received: from mga06.intel.com ([134.134.136.31]:55266 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732649AbgCCVcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 16:32:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 13:32:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="263355817"
+Received: from gayuk-dev-mach.sc.intel.com ([10.3.79.171])
+  by fmsmga004.fm.intel.com with ESMTP; 03 Mar 2020 13:32:03 -0800
+From:   Gayatri Kammela <gayatri.kammela@intel.com>
+To:     platform-driver-x86@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, vishwanath.somayaji@intel.com,
+        dvhart@infradead.org, mika.westerberg@intel.com,
+        peterz@infradead.org, charles.d.prestopine@intel.com,
+        Gayatri Kammela <gayatri.kammela@intel.com>,
+        Chen Zhou <chenzhou10@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "David E . Box" <david.e.box@intel.com>
+Subject: [PATCH v4] platform/x86: intel_pmc_core: fix: Make pmc_core_lpm_display() generic for platforms that support sub-states
+Date:   Tue,  3 Mar 2020 13:28:08 -0800
+Message-Id: <d770d0ed104ae009a98d72e85eae1ce4d63866b4.1583265275.git.gayatri.kammela@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 08:48:19AM +0100, Corentin Labbe wrote:
-> The patch fix the issue. Thanks!
+Currently pmc_core_lpm_display() uses array of struct pointers i.e.,
+tgl_lpm_maps for Tiger Lake directly to iterate through and to get the
+number of status/live status registers which is hardcoded and cannot
+be re-used for future platforms that support sub-states. To maintain
+readability, make pmc_core_lpm_display() generic, so that it can re-used
+for future platforms.
 
-Thanks for trying it!
+Cc: Chen Zhou <chenzhou10@huawei.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David E. Box <david.e.box@intel.com>
+Suggested-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Gayatri Kammela <gayatri.kammela@intel.com>
+---
 
-> So you could add:
-> Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-> Tested-on: sun50i-h6-pine-h64
-> Tested-on: imx8mn-ddr4-evk
-> Tested-on: sun50i-a64-bananapi-m64
+Changes since v1:
+1) Changed the order of the patches i.e., patch 2 in v1 is made first in
+   the order for v2.
+2) Fixed the warnings reported by kbuild test robot.
 
-I definitely will if the patch turns out to be the right fix.
+Changes since v2:
+1) Add "Make pmc_core_substate_res_show() generic" patch to v3.
+2) Fixed the memory leak issue in pmc_core_lpm_display().
+3) Moved patch 2 in v2 to the last in the series in v3.
 
-thanks,
-Daniel
+Changes since v3:
+1) Addressed the comments received in v3.
+2) Sending this patch alone in v4
+
+ drivers/platform/x86/intel_pmc_core.c | 26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/platform/x86/intel_pmc_core.c b/drivers/platform/x86/intel_pmc_core.c
+index 986fe677d6fe..6ddb74d05ea6 100644
+--- a/drivers/platform/x86/intel_pmc_core.c
++++ b/drivers/platform/x86/intel_pmc_core.c
+@@ -20,6 +20,7 @@
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/platform_device.h>
++#include <linux/slab.h>
+ #include <linux/suspend.h>
+ #include <linux/uaccess.h>
+ 
+@@ -639,20 +640,35 @@ static void pmc_core_slps0_display(struct pmc_dev *pmcdev, struct device *dev,
+ 	}
+ }
+ 
++static int pmc_core_lpm_get_arr_size(const struct pmc_bit_map **maps)
++{
++	int idx;
++
++	for (idx = 0; maps[idx]; idx++)
++		;/* Nothing */
++
++	return idx;
++}
++
+ static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+ 				 struct seq_file *s, u32 offset,
+ 				 const char *str,
+ 				 const struct pmc_bit_map **maps)
+ {
+-	u32 lpm_regs[ARRAY_SIZE(tgl_lpm_maps)-1];
+-	int index, idx, len = 32, bit_mask;
++	int index, idx, len = 32, bit_mask, arr_size;
++	u32 *lpm_regs;
++
++	arr_size = pmc_core_lpm_get_arr_size(maps);
++	lpm_regs = kmalloc_array(arr_size, sizeof(*lpm_regs), GFP_KERNEL);
++	if (!lpm_regs)
++		return;
+ 
+-	for (index = 0; tgl_lpm_maps[index]; index++) {
++	for (index = 0; index < arr_size; index++) {
+ 		lpm_regs[index] = pmc_core_reg_read(pmcdev, offset);
+ 		offset += 4;
+ 	}
+ 
+-	for (idx = 0; maps[idx]; idx++) {
++	for (idx = 0; idx < arr_size; idx++) {
+ 		if (dev)
+ 			dev_dbg(dev, "\nLPM_%s_%d:\t0x%x\n", str, idx,
+ 				lpm_regs[idx]);
+@@ -671,6 +687,8 @@ static void pmc_core_lpm_display(struct pmc_dev *pmcdev, struct device *dev,
+ 					   lpm_regs[idx] & bit_mask ? 1 : 0);
+ 		}
+ 	}
++
++	kfree(lpm_regs);
+ }
+ 
+ #if IS_ENABLED(CONFIG_DEBUG_FS)
+
+base-commit: 8d92e160dd8fa62a4e52e334ff6dccc885cb6696
+-- 
+2.17.1
+
