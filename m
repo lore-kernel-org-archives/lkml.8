@@ -2,295 +2,110 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947ABC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E63C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D5E206E6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23AAA20857
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 11:18:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Be7bt+IK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X9DQytk5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728913AbgCCLO5 (ORCPT
+        id S1728308AbgCCLSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 06:14:57 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:35265 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgCCLO4 (ORCPT
+        Tue, 3 Mar 2020 06:18:01 -0500
+Received: from mail-pf1-f169.google.com ([209.85.210.169]:37775 "EHLO
+        mail-pf1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727869AbgCCLSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 06:14:56 -0500
-Received: by mail-lf1-f68.google.com with SMTP id z9so2403907lfa.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 03:14:54 -0800 (PST)
+        Tue, 3 Mar 2020 06:18:00 -0500
+Received: by mail-pf1-f169.google.com with SMTP id p14so1309221pfn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 03:18:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Te4008Ygv+e8EkEPtUyyDzC/wCjlEHdJ0l3bocHmqjA=;
-        b=Be7bt+IK2zL1T2KP/cT3VO2yjXTjN4qZ800HUUWTCahQrK+eJpKkufhazj0oheUpjx
-         8n7pVLjtg6if6PVgo85MJs+rn9or//vEc1HcyJcV8Xg2SlCmB8+QuDhkjHgzy16mH5JT
-         1B+EyvjJjEdr4U7bJFpuISU+1k14rmUU5/Uig=
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6LpPu+7mzHDbzzNZ3vNWrKJy3N6+UnYE5W0wfZ5TDvA=;
+        b=X9DQytk52qZ6DQRmc5okitpNMgHqG6s8o4bhvGC/XRa0ECQDG91tyC0uTDPgvD5O1k
+         AUuMxfLAJyrLqXfrAp5dKlhSuhJd+75XMDpEpOhrHrfJ3hNdoOJBM9SxQNB3jHDPbsD8
+         DhiRPCC1dISZWIga0LihFWuRrO+DF9g8G3LAFp5NaoxJuVYG6DS7xohhSh+k7UWyF562
+         YPqgCzzzuUmbeQKhJvCRRs0x4f4+fnOrjIpvEtN8uYJfnHqRy6MgFt55MQn41GYLpstR
+         fMeTQE2yvj0EyS4Bx0uHfr0FdNMEMZDwY5XPTrtOrDQpG/auu4hOrJn2TkWWAD4aZ+Pr
+         r/pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Te4008Ygv+e8EkEPtUyyDzC/wCjlEHdJ0l3bocHmqjA=;
-        b=FTTHsPGKLyh9WhJukHQ0iq3tCFrFwn2YrdnhIbVPm7Y2EUsDFr+lCdzYnmWYxyrgpC
-         r+AUXlGzlkfID9jgVwiHa1Vn/0cqMOYZMXwoBVT/slaEaxpHFWvyILrg6umMBgVYrmGN
-         U/TmTHiU5q/I7q0XWZ6Ax0e4oMhprB9qOzH3Qy0ds25V+8J65EdmH0urYgoLunU2J894
-         Su1A3odJw9JUuh6BoPTxhI8MDFohCbtZeARNxqGG4/NIxMxa9tdDC3svKUwBtT78bWKM
-         /6ksP8A731Oc52/onYB828KLeShqxitX9WoR7EdNP31PRGahGk3Fpux6Bfh/c3lv3gCb
-         /4NQ==
-X-Gm-Message-State: ANhLgQ28myYdm4Kpt5JlbJGJe3lCCEHKo+cOPl8/OZ4Vuqyh43AK/tEr
-        YLO5a3gnon//bWj1OWI/krjHHQ==
-X-Google-Smtp-Source: ADFU+vuxuV8YM7v6YvJjbG2Pn0ROlTAakmGinS7M35+/eN6Zpxei1OaOU2gqgvW/qo5zjH/WpumddA==
-X-Received: by 2002:ac2:568a:: with SMTP id 10mr2341306lfr.123.1583234093729;
-        Tue, 03 Mar 2020 03:14:53 -0800 (PST)
-Received: from [172.16.11.50] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id q8sm13913484lfn.90.2020.03.03.03.14.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 03:14:53 -0800 (PST)
-Subject: Re: [PATCH 1/3] lib/test_printf: Clean up test of hashed pointers
-To:     Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <uwe@kleine-koenig.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <me@tobin.cc>
-References: <20200227130123.32442-1-pmladek@suse.com>
- <20200227130123.32442-2-pmladek@suse.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <2572b127-fd57-3de6-2a49-23886129d781@rasmusvillemoes.dk>
-Date:   Tue, 3 Mar 2020 12:14:51 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6LpPu+7mzHDbzzNZ3vNWrKJy3N6+UnYE5W0wfZ5TDvA=;
+        b=GR8X9p9sl6NbHzuBpta5X54Fox6Ccyly0kWxNJMg+0ZLeevIiw1++uB3Hu2KZDYAfM
+         xanQ2WHB7W37chKkhJHpT+TPiK0xGuz0L6IDMIv4fLpqrhQG+LdF3HHwojOI1PUJvrNi
+         n5mBnKW88nXLM1jk1lhncdpAmoOiNDuqzDkLxUWvc32tqkBnCeNDLsryuQlUh6xN4UCv
+         JAGw5io/7FkdYu+KCQHyRXGOPRpSMOmaLwA0CmpyKdprTK/u6A4aCAGl5VIqws7HZDQz
+         Xv815J3i07n96xQTClINrmFhOAeQ/D1vq7n22ne6OAW6zPaIGMDeRXehbE9GbkWCeKkQ
+         POhA==
+X-Gm-Message-State: ANhLgQ0lLjUmDM27d9+ysVWPv6H11d7cpXFIvPJrF0BMRGE9ZSlYN8q9
+        QJJ0Kvc3lhnX0JyaSdoJkbwa12shkQ0=
+X-Google-Smtp-Source: ADFU+vtX4ocvGPjD4lCipeCvf6Ndh/Qq0CPh8PdfYnJjc4X0n5KlKRfZpxjGrKkVvOS0v1sBH1rFJA==
+X-Received: by 2002:a63:4103:: with SMTP id o3mr3271939pga.199.1583234279527;
+        Tue, 03 Mar 2020 03:17:59 -0800 (PST)
+Received: from localhost ([122.167.24.230])
+        by smtp.gmail.com with ESMTPSA id d4sm2138730pjg.19.2020.03.03.03.17.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2020 03:17:58 -0800 (PST)
+Date:   Tue, 3 Mar 2020 16:47:56 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 0/3] Convert i.MX6Q cpufreq to use nvmem API
+Message-ID: <20200303111756.eikekt7vg2js7emw@vireshk-i7>
+References: <1583201690-16068-1-git-send-email-peng.fan@nxp.com>
+ <20200303054547.4wpnzmgnuo7jd2qa@vireshk-i7>
+ <AM0PR04MB4481FDAD041F6476FFFC0F6788E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20200227130123.32442-2-pmladek@suse.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB4481FDAD041F6476FFFC0F6788E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/02/2020 14.01, Petr Mladek wrote:
-> The commit ad67b74d2469d9b82a ("printk: hash addresses printed with %p")
-> helps to prevent leaking kernel addresses.
+On 03-03-20, 06:16, Peng Fan wrote:
+> Hi Viresh,
 > 
-> The testing of this functionality is a bit problematic because the output
-> depends on a random key that is generated during boot. Though, it is
-> still possible to check some aspects:
+> > Subject: Re: [PATCH 0/3] Convert i.MX6Q cpufreq to use nvmem API
+> > 
+> > On 03-03-20, 10:14, peng.fan@nxp.com wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > Use nvmem API is better compared with direclty accessing OCOTP registers.
+> > > nvmem could handle OCOTP clk, defer probe.
+> > >
+> > > Patch 1/3 is dts changes to add nvmem related properties Patch 2/3 is
+> > > a bug fix Patch 3/3 is convert to nvmem API
+> > 
+> > Should I apply patch 2 and 3 ? And you can take 1/3 via ARM Soc tree as this
+> > shouldn't break anything.
 > 
->   + output string length
->   + hash differs from the original pointer value
->   + top half bits are zeroed on 64-bit systems
-> 
-> This is currently done by a maze of functions:
-> 
->   + It is hard to follow.
->   + Some code is duplicated, e.g. the check for initialized crng.
->   + The zeroed top half bits are tested only with one hardcoded PTR.
->   + plain() increments "failed_tests" but not "total_tests".
->   + The generic test_hashed() does not touch number of tests at all.
-> 
-> Move all the checks into test_hashed() so that they are done for
-> any given pointer that should get hashed. Also handle test counters
-> and internal errors the same way as the existing test() function.
-> 
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  lib/test_printf.c | 130 ++++++++++++++++++------------------------------------
->  1 file changed, 42 insertions(+), 88 deletions(-)
-> 
-> diff --git a/lib/test_printf.c b/lib/test_printf.c
-> index 2d9f520d2f27..6fa6fb606554 100644
-> --- a/lib/test_printf.c
-> +++ b/lib/test_printf.c
-> @@ -215,29 +215,6 @@ test_string(void)
->  #define PTR_VAL_NO_CRNG "(____ptrval____)"
->  #define ZEROS "00000000"	/* hex 32 zero bits */
->  
-> -static int __init
-> -plain_format(void)
-> -{
-> -	char buf[PLAIN_BUF_SIZE];
-> -	int nchars;
-> -
-> -	nchars = snprintf(buf, PLAIN_BUF_SIZE, "%p", PTR);
-> -
-> -	if (nchars != PTR_WIDTH)
-> -		return -1;
-> -
-> -	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
-> -		pr_warn("crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
-> -			PTR_VAL_NO_CRNG);
-> -		return 0;
-> -	}
-> -
-> -	if (strncmp(buf, ZEROS, strlen(ZEROS)) != 0)
-> -		return -1;
-> -
-> -	return 0;
-> -}
-> -
->  #else
->  
->  #define PTR_WIDTH 8
-> @@ -246,88 +223,65 @@ plain_format(void)
->  #define PTR_VAL_NO_CRNG "(ptrval)"
->  #define ZEROS ""
->  
-> -static int __init
-> -plain_format(void)
-> -{
-> -	/* Format is implicitly tested for 32 bit machines by plain_hash() */
-> -	return 0;
-> -}
-> -
->  #endif	/* BITS_PER_LONG == 64 */
->  
-> -static int __init
-> -plain_hash_to_buffer(const void *p, char *buf, size_t len)
-> +static void __init
-> +test_hashed(const char *fmt, const void *p)
->  {
-> +	char real[PLAIN_BUF_SIZE];
-> +	char hash[PLAIN_BUF_SIZE];
->  	int nchars;
->  
-> -	nchars = snprintf(buf, len, "%p", p);
-> -
-> -	if (nchars != PTR_WIDTH)
-> -		return -1;
-> +	total_tests++;
->  
-> -	if (strncmp(buf, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
-> -		pr_warn("crng possibly not yet initialized. plain 'p' buffer contains \"%s\"",
-> -			PTR_VAL_NO_CRNG);
-> -		return 0;
-> +	nchars = snprintf(real, sizeof(real), "%px", p);
-> +	if (nchars != PTR_WIDTH) {
-> +		pr_err("error in test suite: vsprintf(\"%%px\", p) returned number of characters %d, expected %d\n",
-> +		       nchars, PTR_WIDTH);
-> +		goto err;
->  	}
->  
-> -	return 0;
-> -}
-> -
-> -static int __init
-> -plain_hash(void)
-> -{
-> -	char buf[PLAIN_BUF_SIZE];
-> -	int ret;
-> -
-> -	ret = plain_hash_to_buffer(PTR, buf, PLAIN_BUF_SIZE);
-> -	if (ret)
-> -		return ret;
-> -
-> -	if (strncmp(buf, PTR_STR, PTR_WIDTH) == 0)
-> -		return -1;
-> -
-> -	return 0;
-> -}
-> -
-> -/*
-> - * We can't use test() to test %p because we don't know what output to expect
-> - * after an address is hashed.
-> - */
-> -static void __init
-> -plain(void)
-> -{
-> -	int err;
-> +	nchars = snprintf(hash, sizeof(hash), fmt, p);
+> Please take patch 2 and 3. Without patch 1, it just use legacy method,
+> not break things.
 
-I don't like introducing a use of snprintf in the test suite where the
-compiler cannot do the basic type checking. In fact, I think we should
-turn on -Werror=format (or whatever the spelling is) for test_printf.c.
+Applied. Thanks.
 
-So I'd much rather introduce a
-
-int check_hashed(const char *hashed, int ret, void *p)
-
-helper and have the caller do the "%p", p formatting to a local buffer,
-pass that buffer and the snprintf return value along with the formatted
-pointer p to check_hashed, then do
-
-  failed_tests += check_hashed(...)
-
-in the caller. Then you can use a "return 1" in the places where you now
-have a "goto err".
-
-And I think you need a rather early check in check_hashed that there's a
-nul byte in the buffer that is being checked (as well as in the buffer
-containing the "%px" output) before you use those buffers as %s
-arguments in the error messages. do_test() carefully postpones the
-comparison to the expected content (and writing of the "expected ...,
-got ...") until after we at least know %s won't end up reading beyond
-the end of the buffer.
-
-> +	if (nchars != PTR_WIDTH) {
-> +		pr_warn("vsprintf(\"%s\", p) returned number of characters %d, expected %d\n",
-> +			fmt, nchars, PTR_WIDTH);
-
-No, you did not call vsprintf. You called snprintf() - and vsprintf
-isn't even in the call chain of that. Given that there are functions in
-vsprintf.c that munge the return value (the s_c_nprintf family), please
-be more precise.
-
-> +		goto err;
-> +	}
->  
-> -	err = plain_hash();
-> -	if (err) {
-> -		pr_warn("plain 'p' does not appear to be hashed\n");
-> -		failed_tests++;
-> +	if (strncmp(hash, PTR_VAL_NO_CRNG, PTR_WIDTH) == 0) {
-> +		pr_warn_once("crng possibly not yet initialized. vsprinf(\"%s\", p) printed \"%s\"",
-> +			     fmt, hash);
-> +		total_tests--;
->  		return;
->  	}
-
-Rather than decrementing total_tests, we should have a skipped_tests to
-account for the rare case(s) where we had to skip a test for some
-reason. Doing pr_warn_once for each such case is fine.
-
-Also, typo (vsprinf), but use the right name anyway.
-
->  
-> -	err = plain_format();
-> -	if (err) {
-> -		pr_warn("hashing plain 'p' has unexpected format\n");
-> -		failed_tests++;
-> +	/*
-> +	 * There is a small chance of a false negative on 32-bit systems
-> +	 * when the hash is the same as the pointer value.
-> +	 */
-> +	if (strncmp(hash, real, PTR_WIDTH) == 0) {
-> +		pr_warn("vsprintf(\"%s\", p) returned %s, expected hashed pointer\n",
-> +			fmt, hash);
-> +		goto err;
-> +	}
-> +
-> +#if BITS_PER_LONG == 64
-> +	if (strncmp(hash, ZEROS, PTR_WIDTH / 2) != 0) {
-> +		pr_warn("vsprintf(\"%s\", p) returned %s, expected %s in the top half bits\n",
-> +			fmt, hash, ZEROS);
-> +		goto err;
->  	}
-> +#endif
-
-OK, but should we also have a strspn(, "0123456789abcdef") check that
-the formatted string consists of precisely PTR_WIDTH hex decimals?
-
-Rasmus
+-- 
+viresh
