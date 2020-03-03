@@ -2,171 +2,160 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0979AC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:39:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CF9C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAD4B20848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E70B20717
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:40:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAyYufih"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tuAM88xF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbgCCNjf (ORCPT
+        id S1728456AbgCCNk5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:39:35 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:39721 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbgCCNje (ORCPT
+        Tue, 3 Mar 2020 08:40:57 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:32889 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbgCCNk5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:39:34 -0500
-Received: by mail-io1-f65.google.com with SMTP id h3so3573987ioj.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:39:34 -0800 (PST)
+        Tue, 3 Mar 2020 08:40:57 -0500
+Received: by mail-wr1-f65.google.com with SMTP id x7so4431359wrr.0;
+        Tue, 03 Mar 2020 05:40:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v+eGte4iMlmki7lE3BSWzJxT4Za4lT4giftxwhoiIf8=;
-        b=lAyYufihiiIphXNW03zcvZ4unKyJpovsni0ZLH7yk9Np7+57gGQPsSRTsjlWr2sckr
-         /za3Tb2fgVGaHHkpQaCFJgpFEFtexz0xXBjo0TCZ4OIIwhYH20R4ZQq38jfGlIe1fyL0
-         w5i6bKuwFacOzyA2yZa+iFaxE5a/LfzPG5rXmBldCnedo4JJNdwOyGDO1mWvR/MHwu7x
-         EJSgnHDX1qgeORMm0z4LrwP9TDDXFYvDDgudG8YV21N2l6AAy2s+PAeZjf3ceQthIUZW
-         HgNMp38IIp9NvihRgMGqwoG7ligvPBCUE4PPh5F5YoyqsJbE+1MQO/jkYQ2HIfmiKvkH
-         xyMg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=YLrc2+FA1ilMNRmgjCWNRM7AU/9wyz5rmTyxSf5L/jk=;
+        b=tuAM88xFmr/1HHdgnU+iN9kKxRCACr7qjOAbMKA2T6ct8kOUOPCytXX5yv7PsPOpq3
+         KaI5IOFI7uye+KEltFVfEIU28ByZqcjE9dpNPgjNDv28bC9BUyhtvi8TAG10NGL1uSoE
+         S4teOUD2khVaxZC6jD2ygMa8bW/10RZfFmMHSJoEzck2ITDCYx+uBC4GpJA6Wt98JVvV
+         vNJ1/HzzD9ClQopIlsC1xOFt9E54txaUfmJ9CyDtvxk4bdtb5Ttvtop7cGrGlD1HVwOK
+         9AbPrRsbMnIzFcNha+LJ1gMXmPaDhPrJDLpJkiBz3X+xUHNEmpt+i0omU4sLz6ifb/AG
+         g+dQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v+eGte4iMlmki7lE3BSWzJxT4Za4lT4giftxwhoiIf8=;
-        b=eOsbZ4Oe5/Binl69dSURbl4MDePzMzPgKhiKZIyzaMwqCmj9Ao2SlYzuBTlOhz0IRT
-         3nwTDM4vmWcjnjLb/pqpAVuNUF8HM/jAwjvFgbW9x/H7Bwy7kLpshGGZ+Km1x9pCP3OT
-         6hV71uXATeaQiTpOif3Lk5/oPtf6g6p136WvEMOG5NAvkZTyMTruurwyBWjtQNEo8jG+
-         NwVb2bWouJACRYuw6uplDiGbEK0QVb3CiYGPg5OOMqmFPzXFZqIbQazi33yRlWHEn6Yt
-         wIeQOkFgLOsYd16aUqOTTJ87s0LwmVL3rX+3R7+3fGjYe5Pn7OEDZUUSP6rG4Kgg+Yax
-         cfaA==
-X-Gm-Message-State: ANhLgQ2Pj/xdFoeGH60vjs9qF/HbIbeEdZgGMh12sLA8l1GmofnUYiP4
-        0g0+wcReIwg/cFQPuP5fkruE60vPr51N347g+w==
-X-Google-Smtp-Source: ADFU+vvc7aWDQ7MKl9ArNhLMyXVQFtkVy7j/fJAsAOvHK3AiI6IdfB6amN4VurS8+nVRmoH+vKdT/ydF01glIxjjLZg=
-X-Received: by 2002:a05:6638:34c:: with SMTP id x12mr4058423jap.80.1583242773618;
- Tue, 03 Mar 2020 05:39:33 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=YLrc2+FA1ilMNRmgjCWNRM7AU/9wyz5rmTyxSf5L/jk=;
+        b=oi4GLqNXaSFmyF2U13kS/b04SEehGGrxXCpVMWZy2TQGHj0WYuWyO5BCPoCIMffEqS
+         4enlyTrjA5Z8A1xN8Fe261fka0bTMF0kWg85qqcSorYoWH/sK6owWtr+6rEGHHOkyQTX
+         IChpfRHLdbvv/MqQ7hkdb8kDaSAmakvVyM3mlRjmEfxHQ8ViYdj2KHPs8OWDuyR74OoM
+         aHH4rPqfJvCesGoiO813OxrYhCFBnG1McqtGG5k1y7XgMaOjl7THET1vzguUJLdNOLSY
+         83LJpZk6HFJF9pzsRS4g4qQJclEp16vTfF6m4EsBvUwx+T7ssClvKwHcGHQkCGAGyS0P
+         ws8A==
+X-Gm-Message-State: ANhLgQ2CHPoly1/LSipHOT2ZVt/clFdoeJyH9kD8bGjEGsLAOjaMRJr3
+        aXv8IHQiothhISmPNxK8dBiFu2XX
+X-Google-Smtp-Source: ADFU+vsUi9N0mZqkU864Zt1scSOjkJGbRqy/7SxuooIaUW3uRiZRk5L7SxSRfaKwnjHBqYIWc2rWJQ==
+X-Received: by 2002:adf:f641:: with SMTP id x1mr5471264wrp.248.1583242854870;
+        Tue, 03 Mar 2020 05:40:54 -0800 (PST)
+Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
+        by smtp.gmail.com with ESMTPSA id s5sm32044251wru.39.2020.03.03.05.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 05:40:53 -0800 (PST)
+Date:   Tue, 3 Mar 2020 14:40:53 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4 0/5] Add support for PCIe endpoint mode in Tegra194
+Message-ID: <20200303134053.GC2854899@ulmo>
+References: <20200303105418.2840-1-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <1582889550-9101-1-git-send-email-kernelfans@gmail.com>
- <1582889550-9101-3-git-send-email-kernelfans@gmail.com> <20200228134436.GP31668@ziepe.ca>
- <CAFgQCTvLpKeLEks-NTJUqR-RhBZ10EscH=9xMF9dLhhUBNM29w@mail.gmail.com> <20200302130829.GW31668@ziepe.ca>
-In-Reply-To: <20200302130829.GW31668@ziepe.ca>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Tue, 3 Mar 2020 21:39:22 +0800
-Message-ID: <CAFgQCTtiT1d2Y01V_-vbE8=c5hFQa6v71dvCA_F-pyFaeTMxvw@mail.gmail.com>
-Subject: Re: [PATCHv5 2/3] mm/gup: fix omission of check on FOLL_LONGTERM in
- gup fast path
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Linux-MM <linux-mm@kvack.org>, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="kVXhAStRUZ/+rrGn"
+Content-Disposition: inline
+In-Reply-To: <20200303105418.2840-1-vidyas@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 9:08 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Mon, Mar 02, 2020 at 10:25:52AM +0800, Pingfan Liu wrote:
-> > On Fri, Feb 28, 2020 at 9:44 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Fri, Feb 28, 2020 at 07:32:29PM +0800, Pingfan Liu wrote:
-> > > > FOLL_LONGTERM suggests a pin which is going to be given to hardware and
-> > > > can't move. It would truncate CMA permanently and should be excluded.
-> > > >
-> > > > FOLL_LONGTERM has already been checked in the slow path, but not checked in
-> > > > the fast path, which means a possible leak of CMA page to longterm pinned
-> > > > requirement through this crack.
-> > > >
-> > > > Place a check in try_get_compound_head() in the fast path.
-> > > >
-> > > > Some note about the check:
-> > > > Huge page's subpages have the same migrate type due to either
-> > > > allocation from a free_list[] or alloc_contig_range() with param
-> > > > MIGRATE_MOVABLE. So it is enough to check on a single subpage
-> > > > by is_migrate_cma_page(subpage)
-> > > >
-> > > > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > > > Cc: Ira Weiny <ira.weiny@intel.com>
-> > > > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > > > Cc: Mike Rapoport <rppt@linux.ibm.com>
-> > > > Cc: Dan Williams <dan.j.williams@intel.com>
-> > > > Cc: Matthew Wilcox <willy@infradead.org>
-> > > > Cc: John Hubbard <jhubbard@nvidia.com>
-> > > > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> > > > Cc: Keith Busch <keith.busch@intel.com>
-> > > > Cc: Christoph Hellwig <hch@infradead.org>
-> > > > Cc: Shuah Khan <shuah@kernel.org>
-> > > > To: linux-mm@kvack.org
-> > > > Cc: linux-kernel@vger.kernel.org
-> > > >  mm/gup.c | 26 +++++++++++++++++++-------
-> > > >  1 file changed, 19 insertions(+), 7 deletions(-)
-> > > >
-> > > > diff --git a/mm/gup.c b/mm/gup.c
-> > > > index cd8075e..f0d6804 100644
-> > > > +++ b/mm/gup.c
-> > > > @@ -33,9 +33,21 @@ struct follow_page_context {
-> > > >   * Return the compound head page with ref appropriately incremented,
-> > > >   * or NULL if that failed.
-> > > >   */
-> > > > -static inline struct page *try_get_compound_head(struct page *page, int refs)
-> > > > +static inline struct page *try_get_compound_head(struct page *page, int refs,
-> > > > +     unsigned int flags)
-> > > >  {
-> > > > -     struct page *head = compound_head(page);
-> > > > +     struct page *head;
-> > > > +
-> > > > +     /*
-> > > > +      * Huge page's subpages have the same migrate type due to either
-> > > > +      * allocation from a free_list[] or alloc_contig_range() with param
-> > > > +      * MIGRATE_MOVABLE. So it is enough to check on a single subpage.
-> > > > +      */
-> > > > +     if (unlikely(flags & FOLL_LONGTERM) &&
-> > > > +             is_migrate_cma_page(page))
-> > > > +             return NULL;
-> > >
-> > > This doesn't seem very good actually.
-> > >
-> > > If I understand properly, if the system has randomly decided to place,
-> > > say, an anonymous page in a CMA region when an application did mmap(),
-> > > then when the application tries to use this page with a LONGTERM pin
-> > > it gets an immediate failure because of the above.
-> > No, actually, it will fall back to slow path, which migrates and sever
-> > the LONGTERM pin.
-> >
-> > This patch just aims to fix the leakage in gup fast path, while in gup
-> > slow path, there is already logic to guard CMA against  LONGTERM pin.
-> > >
-> > > This not OK - the application should not be subject to random failures
-> > > related to long term pins beyond its direct control.
-> > >
-> > > Essentially, failures should only originate from the application using
-> > > specific mmap scenarios, not randomly based on something the MM did,
-> > > and certainly never for anonymous memory.
-> > >
-> > > I think the correct action here is to trigger migration of the page so
-> > > it is not in CMA.
-> > In fact, it does this. The failure in gup fast path will fall back to
-> > slow path, where __gup_longterm_locked->check_and_migrate_cma_pages()
-> > does the migration.
->
-> It is probably worth revising the commit message so this flow is clear
-OK.
 
-Thanks,
-Pingfan
+--kVXhAStRUZ/+rrGn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 03, 2020 at 04:24:13PM +0530, Vidya Sagar wrote:
+> Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can oper=
+ate
+> either in root port mode or in end point mode but only in one mode at a t=
+ime.
+> Platform P2972-0000 supports enabling endpoint mode for C5 controller. Th=
+is
+> patch series adds support for PCIe endpoint mode in both the driver as we=
+ll as
+> in DT.
+> This patch series depends on the changes made for Synopsys DesignWare end=
+point
+> mode subsystem that are recently accepted.
+> @ https://patchwork.kernel.org/project/linux-pci/list/?series=3D202211
+> which in turn depends on the patch made by Kishon
+> @ https://patchwork.kernel.org/patch/10975123/
+> which is also under review.
+>=20
+> V4:
+> * Started using threaded irqs instead of kthreads
+>=20
+> V3:
+> * Re-ordered patches in the series to make the driver change as the last =
+patch
+> * Took care of Thierry's review comments
+>=20
+> V2:
+> * Addressed Thierry & Bjorn's review comments
+> * Added EP mode specific binding documentation to already existing bindin=
+g documentation file
+> * Removed patch that enables GPIO controller nodes explicitly as they are=
+ enabled already
+>=20
+> Vidya Sagar (5):
+>   soc/tegra: bpmp: Update ABI header
+>   dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
+>   arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+>   arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
+>     platform
+>   PCI: tegra: Add support for PCIe endpoint mode in Tegra194
+
+Hi Lorenzo,
+
+I've acked patches 1, 2 and 5 of the series. I think you're going to
+need to apply patch 1 in order to satisfy a build-time dependency from
+patch 5. I can apply patches 3 and 4 to the Tegra tree since they're
+only adding device tree content that may conflict with some other
+patches that I have in the Tegra tree.
+
+Does that sound reasonable?
+
+Thierry
+
+--kVXhAStRUZ/+rrGn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5eXmUACgkQ3SOs138+
+s6FGqQ//SZc5V8LZwgjymzl/i7cT6pra9G4FiC7lOGh3wefGsiUhHtjnSMK0T1fv
+oeOyO1/dIIAWsl/qztmbf6Cq6ARu0f4bBo/ZpRAdC3CiyHn6kRmk8dChB9/JN+HY
+RshU2ZcppcNhvhSQKWkyFBj8S05T4ceTO1GAoxwTd1OuVcORYXT3gP7Fiht6sfQu
+74cIXdMELea+aDoucY2joPWmZRUkr0Rs+P1oQSSoCcETlEmM7I+cyM5QPQk1qLJK
+q6b/peT9yJ/JBQuxo/MZ2K4ebUgyEVNQsreHbTOPLzHwidFSGSjev63CDPBEdTsD
+4T+7thNE0OlFRoTfSBuaCrxtvPKpvWF+5XXYMYM2z8xyJAKZok9nz7CQPPOTUiNn
+t5Qbf/vLBjbUD22sEUaZXBlalAeJgBOK0aW4YnxOh5xfRXKz6f5T4FLOwxKc91Zu
+m3pHTaDLvm8YSXmiTbq62IvCp9Hc2fqBw3vUzbH1tvkcJA0DwH465rQx1ADM+To+
+IQOOum66ZXNRrU4ctc5eZhEGF9rRclXXirdzIDPLmAbp1fjr23+Vxr46pwSGazcY
+9tQb4UtptzcuvaWQ0HhkatEFWGHkjKKTevtRJ1J8w32/NzbaMZpGUBJIGfK8pe8z
+OGhxDwZ77g2oQ3ULktj27BDFPzP8TT42JPvi+AHOmEiJTfFKNGo=
+=Datu
+-----END PGP SIGNATURE-----
+
+--kVXhAStRUZ/+rrGn--
