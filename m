@@ -2,111 +2,142 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 581C9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90972C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C47320656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259248;
-	bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TTN7szxcYoSS512ojqej2veoFglgHU2unsrgoVPJAAPgD+t7DZd39KEkydpwR6ekC
-	 +whdIm/wOCuSKzZULnPdWsobbeHagClGN6wtr5Juc6MTwr8O3013lRWvjLDjarQapK
-	 r29xZzu175Tb6pjl9KabflVmmTycPBsGGwxNIMj0=
+	by mail.kernel.org (Postfix) with ESMTP id 6A7DB20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:14:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="B/CFMRuv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732552AbgCCSNI (ORCPT
+        id S1732790AbgCCSOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:13:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729578AbgCCRq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:46:58 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E41020870;
-        Tue,  3 Mar 2020 17:46:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257617;
-        bh=YHXFE6QN7HtiBj1Mkt+G80ciFeW6QQPn2fBKaykZeQ0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dmWeXrUM3Wvg+NAp82RwR5WPUJ1LGbbRkicEQrUB7pHOUYRom7KTLnf8UMsqS/fws
-         XCLno+LXxRg6vKHOs2Jj29GBIifemtHlhljVupOgBtB5OakGp2RO8tHxl8OD7wsUiW
-         roNbgfHwFijIsArfdEyKvmr7H0TQpIelcBgVMBO4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 063/176] net: ena: ena-com.c: prevent NULL pointer dereference
-Date:   Tue,  3 Mar 2020 18:42:07 +0100
-Message-Id: <20200303174311.916368094@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
-References: <20200303174304.593872177@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Tue, 3 Mar 2020 13:14:10 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:7598 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731646AbgCCSOG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:14:06 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e5e9e450000>; Tue, 03 Mar 2020 10:13:25 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 03 Mar 2020 10:14:06 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 03 Mar 2020 10:14:06 -0800
+Received: from [10.25.75.175] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 3 Mar
+ 2020 18:14:01 +0000
+Subject: Re: [PATCH V4 0/5] Add support for PCIe endpoint mode in Tegra194
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <andrew.murray@arm.com>, <kishon@ti.com>,
+        <gustavo.pimentel@synopsys.com>, <linux-pci@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20200303105418.2840-1-vidyas@nvidia.com>
+ <20200303170103.GA9641@e121166-lin.cambridge.arm.com>
+X-Nvconfidentiality: public
+From:   Vidya Sagar <vidyas@nvidia.com>
+Message-ID: <d1e3a42f-c179-fd03-fac0-7cd449580e5b@nvidia.com>
+Date:   Tue, 3 Mar 2020 23:43:58 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200303170103.GA9641@e121166-lin.cambridge.arm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583259205; bh=3LnLpivKc9OM9v6zIN6nnfGAUgWdkTbhy7nEOq/+B0s=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=B/CFMRuv7JlCYSA0Wkq/F0VWN5UFk8YsJJ7+/5gB9YNb3BHV0EEUhjRvSDFlhPE1+
+         Qzlh1b1H8U5n9iTNleElru4F59pcRXY5ojnQzn277lQ0PXavk+os4CSAZHsXssjK2Z
+         XMbEXXdI+HHCdX5El0mcj9kZTqAJDyoP//b7sXv52C2ZxMJjTKQBUrgjm9ShFosZek
+         mLwUKDWXtWL13U5LU5A2S8ipJtX1bd361lpvufMmPwRKFAv8zdIDJ38Rj+lmRBxjQL
+         PUS9x+kLY/Kfr2FbVOONBTxn8QoYolUksOn2WytXKafC/2/3tcH4qGyz9pMFJdpZgo
+         vuBkUZAx1fn4A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
-
-[ Upstream commit c207979f5ae10ed70aff1bb13f39f0736973de99 ]
-
-comp_ctx can be NULL in a very rare case when an admin command is executed
-during the execution of ena_remove().
-
-The bug scenario is as follows:
-
-* ena_destroy_device() sets the comp_ctx to be NULL
-* An admin command is executed before executing unregister_netdev(),
-  this can still happen because our device can still receive callbacks
-  from the netdev infrastructure such as ethtool commands.
-* When attempting to access the comp_ctx, the bug occurs since it's set
-  to NULL
-
-Fix:
-Added a check that comp_ctx is not NULL
-
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/amazon/ena/ena_com.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index 74743fd8a1e0a..304531332e70a 100644
---- a/drivers/net/ethernet/amazon/ena/ena_com.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -200,6 +200,11 @@ static void comp_ctxt_release(struct ena_com_admin_queue *queue,
- static struct ena_comp_ctx *get_comp_ctxt(struct ena_com_admin_queue *queue,
- 					  u16 command_id, bool capture)
- {
-+	if (unlikely(!queue->comp_ctx)) {
-+		pr_err("Completion context is NULL\n");
-+		return NULL;
-+	}
-+
- 	if (unlikely(command_id >= queue->q_depth)) {
- 		pr_err("command id is larger than the queue size. cmd_id: %u queue size %d\n",
- 		       command_id, queue->q_depth);
--- 
-2.20.1
 
 
+On 3/3/2020 10:31 PM, Lorenzo Pieralisi wrote:
+> External email: Use caution opening links or attachments
+> 
+> 
+> On Tue, Mar 03, 2020 at 04:24:13PM +0530, Vidya Sagar wrote:
+>> Tegra194 has three (C0, C4 & C5) dual mode PCIe controllers that can operate
+>> either in root port mode or in end point mode but only in one mode at a time.
+>> Platform P2972-0000 supports enabling endpoint mode for C5 controller. This
+>> patch series adds support for PCIe endpoint mode in both the driver as well as
+>> in DT.
+>> This patch series depends on the changes made for Synopsys DesignWare endpoint
+>> mode subsystem that are recently accepted.
+>> @ https://patchwork.kernel.org/project/linux-pci/list/?series=202211
+>> which in turn depends on the patch made by Kishon
+>> @ https://patchwork.kernel.org/patch/10975123/
+>> which is also under review.
+>>
+>> V4:
+>> * Started using threaded irqs instead of kthreads
+> 
+> Hi Vidya,
+> 
+> sorry for the bother, may I ask you to rebase the series (after
+> answering Thierry's query) on top of my pci/endpoint branch please ?
+> 
+> Please resend it and I will merge patches {1,2,5} then.
+Sure.
+I just sent V5 series rebasing patches on top of your pci/endpoint branch.
 
+Thanks,
+Vidya Sagar
+> 
+> Thanks,
+> Lorenzo
+> 
+>> V3:
+>> * Re-ordered patches in the series to make the driver change as the last patch
+>> * Took care of Thierry's review comments
+>>
+>> V2:
+>> * Addressed Thierry & Bjorn's review comments
+>> * Added EP mode specific binding documentation to already existing binding documentation file
+>> * Removed patch that enables GPIO controller nodes explicitly as they are enabled already
+>>
+>> Vidya Sagar (5):
+>>    soc/tegra: bpmp: Update ABI header
+>>    dt-bindings: PCI: tegra: Add DT support for PCIe EP nodes in Tegra194
+>>    arm64: tegra: Add PCIe endpoint controllers nodes for Tegra194
+>>    arm64: tegra: Add support for PCIe endpoint mode in P2972-0000
+>>      platform
+>>    PCI: tegra: Add support for PCIe endpoint mode in Tegra194
+>>
+>>   .../bindings/pci/nvidia,tegra194-pcie.txt     | 125 +++-
+>>   .../boot/dts/nvidia/tegra194-p2972-0000.dts   |  18 +
+>>   arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  99 +++
+>>   drivers/pci/controller/dwc/Kconfig            |  30 +-
+>>   drivers/pci/controller/dwc/pcie-tegra194.c    | 681 +++++++++++++++++-
+>>   include/soc/tegra/bpmp-abi.h                  |  10 +-
+>>   6 files changed, 918 insertions(+), 45 deletions(-)
+>>
+>> --
+>> 2.17.1
+>>
