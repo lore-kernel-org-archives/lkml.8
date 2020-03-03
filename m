@@ -6,106 +6,63 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0A1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E46C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7473820848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1635F20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:52:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727969AbgCCXvA (ORCPT
+        id S1728044AbgCCXwb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 18:51:00 -0500
-Received: from out01.mta.xmission.com ([166.70.13.231]:50906 "EHLO
-        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbgCCXu7 (ORCPT
+        Tue, 3 Mar 2020 18:52:31 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:37208 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgCCXwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 18:50:59 -0500
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j9HJS-0006h4-7F; Tue, 03 Mar 2020 16:50:58 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j9HJF-0000FX-Kq; Tue, 03 Mar 2020 16:50:57 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200223011154.GY23230@ZenIV.linux.org.uk>
-        <20200301215125.GA873525@ZenIV.linux.org.uk>
-        <CAHk-=wh1Q=H-YstHZRKfEw2McUBX2_TfTc=+5N-iH8DSGz44Qg@mail.gmail.com>
-        <20200302003926.GM23230@ZenIV.linux.org.uk>
-Date:   Tue, 03 Mar 2020 17:48:31 -0600
-In-Reply-To: <20200302003926.GM23230@ZenIV.linux.org.uk> (Al Viro's message of
-        "Mon, 2 Mar 2020 00:39:26 +0000")
-Message-ID: <87o8tdgfu8.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j9HJF-0000FX-Kq;;;mid=<87o8tdgfu8.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18MPB9/ctLiB1zinwxXNaRDXt7z8LOurDo=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v3)
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+        Tue, 3 Mar 2020 18:52:31 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A316515AABE60;
+        Tue,  3 Mar 2020 15:52:30 -0800 (PST)
+Date:   Tue, 03 Mar 2020 15:52:30 -0800 (PST)
+Message-Id: <20200303.155230.957175056528856630.davem@davemloft.net>
+To:     madalin.bucur@oss.nxp.com
+Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        madalin.bucur@nxp.com
+Subject: Re: [PATCH net 3/4] fsl/fman: detect FMan erratum A050385
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <1583250939-24645-4-git-send-email-madalin.bucur@oss.nxp.com>
+References: <1583250939-24645-1-git-send-email-madalin.bucur@oss.nxp.com>
+        <1583250939-24645-4-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 03 Mar 2020 15:52:31 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> writes:
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Date: Tue,  3 Mar 2020 17:55:38 +0200
 
-> On Sun, Mar 01, 2020 at 04:34:06PM -0600, Linus Torvalds wrote:
->> On Sun, Mar 1, 2020 at 3:51 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->> >
->> >         Extended since the last repost.  The branch is in #work.dotdot;
->> > #work.do_last is its beginning (about 2/3 of the total), slightly
->> > reworked since the last time.
->> 
->> I'm traveling, so only a quick read-through.
->> 
->> One request: can you add the total diffstat to the cover letter (along
->> with what you used as a base)?
->
-> Sure, no problem (and the base is still -rc1)
->
->> I did apply it to a branch just to look
->> at it more closely, so I can see the final diffstat that way:
->> 
->>  Documentation/filesystems/path-lookup.rst |    7 +-
->>  fs/autofs/dev-ioctl.c                     |    6 +-
->>  fs/internal.h                             |    1 -
->>  fs/namei.c                                | 1333 +++++++++------------
->>  fs/namespace.c                            |   96 +-
->>  fs/open.c                                 |    4 +-
->>  include/linux/namei.h                     |    4 +-
->>  7 files changed, 642 insertions(+), 809 deletions(-)
->> 
->> but it would have been nice to see in your explanation too.
->> 
->> Anyway, from a quick read-through, I don't see anything that raises my
->> hackles - you've fixed the goto label naming, and I didn't notice
->> anything else odd.
->> 
->> Maybe that was because I wasn't careful enough. But the final line
->> count certainly speaks for the series..
->
-> Heh...  Part of my metrics is actually "how large a sheet of paper does
-> one need to fit the call graph on" ;-)
->
-> I hope it gets serious beating, though - it touches pretty much every
-> codepath in pathname resolution.  Is there any way to sic the bots on
-> a branch, short of "push it into -next and wait for screams"?
+> @@ -37,6 +38,11 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/of_irq.h>
+>  
+> +#ifdef CONFIG_ARM64
+> +/* only some ARM64 platforms are affected */
+> +#define DPAA_FMAN_ERRATUM_A050385 1
+> +#endif
 
-Last I looked pushing a branch to kernel.org was enough for the
-kbuild bots.  Sending patches to LKML is also enough for those bots.
+Please use Kconfig for expressing this.
 
-I don't know if that kind of bot is what you need testing your code.
+Create a CONFIG_DPAA_ERRATUM_A050385 and 'select' it in the
+driver Kconfig entry when ARM64 is true.
 
-Eric
-
+Thank you.
