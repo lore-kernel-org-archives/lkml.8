@@ -2,122 +2,122 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6FAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:28:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4611FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A67EC21556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:28:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D5A8215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:28:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="e2hwoNpc"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="Tfjs5oLF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbgCCK2a (ORCPT
+        id S1728669AbgCCK24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:28:30 -0500
-Received: from ozlabs.org ([203.11.71.1]:56809 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgCCK2a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:28:30 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48WtWt5nQLz9sPg;
-        Tue,  3 Mar 2020 21:28:26 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1583231306;
-        bh=rR0PX/PIXpmUWEvsjz0jV6bq6v4H0L8THPuMSsBWOU8=;
-        h=From:To:Subject:In-Reply-To:References:Date:From;
-        b=e2hwoNpcmZ8jxUWgWgFC8ksw5tR4ti8FJluJ33yhtXFlL103gKneQZTP+0Y8BQ61H
-         N719f7pQJa0nAvjekPYniWU6o7PlJ2DN2PXEIrbeNb1dLA8F409L1QX+xVs58OnhxA
-         z/2sMLice1M1cF1+EKH9YfGoNWbHcVw2raEcIsXYHBefoQacpH9zw9kcba5rjTEMpR
-         iN+uJPL3hWW6sJWLfe++SwJG1aRnLXdS3I7SCM+uiSbdpETdDFI/RMKCD6qAn7qzPa
-         YrJ1axUSSaXC7qDa9WtbIwNqoJPChWG+hwygJUgiSNOzuhqL96D8lJ4sAB3tShx4D/
-         Rj/SlH5DAZzTA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev\@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: eh_frame confusion
-In-Reply-To: <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
-References: <3b00b45f-74b5-13e3-9a98-c3d6b3bb7286@rasmusvillemoes.dk> <1583168442.ovqnxu16tp.naveen@linux.ibm.com>
-Date:   Tue, 03 Mar 2020 21:28:25 +1100
-Message-ID: <877e01spfa.fsf@mpe.ellerman.id.au>
+        Tue, 3 Mar 2020 05:28:56 -0500
+Received: from ste-pvt-msa1.bahnhof.se ([213.80.101.70]:21878 "EHLO
+        ste-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgCCK24 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:28:56 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTP id B82083F881;
+        Tue,  3 Mar 2020 11:28:53 +0100 (CET)
+Authentication-Results: ste-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b=Tfjs5oLF;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from ste-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (ste-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id s3blhQnFXu75; Tue,  3 Mar 2020 11:28:50 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by ste-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 5AF3F3F87B;
+        Tue,  3 Mar 2020 11:28:48 +0100 (CET)
+Received: from localhost.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id 8D824360106;
+        Tue,  3 Mar 2020 11:28:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1583231328; bh=d4ZXiMRg8uF7RPcPj29OCuil/iLI6P2uZAb1Jx0dCfg=;
+        h=From:Subject:To:Cc:References:Date:In-Reply-To:From;
+        b=Tfjs5oLFNfSMESYwK4MTjhF0ZC5XKK+jn2UjEhRupIVIe6trMmNomtGfVUm9fiowd
+         Yx68aLlwxuT1F1lbN7HuwESsU9FZsM9xko1a36YM5M5kCSRySqiPKr7cy1uXMOaq1h
+         mTrypW3NnxirGzVFH+3jcydIfY9vZ5tUlNLmwQaw=
+From:   =?UTF-8?Q?Thomas_Hellstr=c3=b6m_=28VMware=29?= 
+        <thomas_os@shipmail.org>
+Subject: Ack to merge through DRM? WAS [PATCH v5 1/9] fs: Constify vma
+ argument to vma_is_dax
+To:     Alexander Viro <viro@zeniv.linux.org.uk>
+Cc:     linux-fsdevel@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200303102247.4635-1-thomas_os@shipmail.org>
+Organization: VMware Inc.
+Message-ID: <4a49f27b-71a6-0e61-70d9-5fcb6cd58c3f@shipmail.org>
+Date:   Tue, 3 Mar 2020 11:28:48 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200303102247.4635-1-thomas_os@shipmail.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Naveen N. Rao" <naveen.n.rao@linux.ibm.com> writes:
-> Rasmus Villemoes wrote:
->> I'm building a ppc32 kernel, and noticed that after upgrading from gcc-7
->> to gcc-8 all object files now end up having .eh_frame section. For
->> vmlinux, that's not a problem, because they all get discarded in
->> arch/powerpc/kernel/vmlinux.lds.S . However, they stick around in
->> modules, which doesn't seem to be useful - given that everything worked
->> just fine with gcc-7, and I don't see anything in the module loader that
->> handles .eh_frame.
->> 
->> The reason I care is that my target has a rather tight rootfs budget,
->> and the .eh_frame section seem to occupy 10-30% of the file size
->> (obviously very depending on the particular module).
->> 
->> Comparing the .foo.o.cmd files, I don't see change in options that might
->> explain this (there's a bunch of new -Wno-*, and the -mspe=no spelling
->> is apparently no longer supported in gcc-8). Both before and after, there's
->> 
->> -fno-dwarf2-cfi-asm
->> 
->> about which gcc's documentation says
->> 
->> '-fno-dwarf2-cfi-asm'
->>      Emit DWARF unwind info as compiler generated '.eh_frame' section
->>      instead of using GAS '.cfi_*' directives.
->> 
->> Looking into where that comes from got me even more confused, because
->> both arm and unicore32 say
->> 
->> # Never generate .eh_frame
->> KBUILD_CFLAGS           += $(call cc-option,-fno-dwarf2-cfi-asm)
->> 
->> while the ppc32 case at hand says
->> 
->> # FIXME: the module load should be taught about the additional relocs
->> # generated by this.
->> # revert to pre-gcc-4.4 behaviour of .eh_frame
->
-> Michael opened a task to look into this recently and I had spent some 
-> time last week on this. The original commit/discussion adding 
-> -fno-dwarf2-cfi-asm refers to R_PPC64_REL32 relocations not being 
-> handled by our module loader:
-> http://lkml.kernel.org/r/20090224065112.GA6690@bombadil.infradead.org
+Alexander,
 
-I opened that issue purely based on noticing the wart in the Makefile,
-not because I'd actually tested it.
+Could you ack merging the below patch through a DRM tree?
 
-> However, that is now handled thanks to commit 9f751b82b491d:
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=9f751b82b491d
+Thanks,
 
-Haha, written by me, what an idiot.
+Thomas Hellstrom
 
-So the Makefile hack can presumably be dropped, because the module
-loader can handle the relocations.
 
-And then maybe we also want to turn off the unwind tables, but that
-would be a separate patch.
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-> I did a test build and a simple module loaded fine, so I think 
-> -fno-dwarf2-cfi-asm is not required anymore, unless Michael has seen 
-> some breakages with it. Michael?
 
-No, as I said above it was just reading the Makefile.
+The function is used by upcoming vma_is_special_huge() with which we want
+to use a const vma argument. Since for vma_is_dax() the vma argument is
+only dereferenced for reading, constify it.
 
-cheers
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+---
+include/linux/fs.h | 2 +-
+1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 3cd4fe6b845e..2b38ce5b73ad 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3391,7 +3391,7 @@ static inline bool io_is_direct(struct file *filp)
+return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host);
+}
+-static inline bool vma_is_dax(struct vm_area_struct *vma)
++static inline bool vma_is_dax(const struct vm_area_struct *vma)
+{
+return vma->vm_file && IS_DAX(vma->vm_file->f_mapping->host);
+}
+
+-- 
+2.21.1
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
