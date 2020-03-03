@@ -2,121 +2,477 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1592BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B74FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0DC42072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44D562072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258497;
-	bh=XAUzqqs/iFZqXjyiC3BTwxXkC+Ct1BC8ORsE7GURgB4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QgflnBvPcQ7D34oB7qr8EIU+E6fwW/mwogyEEPI64qqoKPlqNOJeC7DMyhmEU0t9X
-	 f/XA4OIOKJ+a5kofqqD6eCjtyTptncQV/tUUfCTvB0Ln0s7cCDmyaYwfKcHj7sp15c
-	 PGL9UCyY1DxE7H4w1LLYKxqxvTWS4EYaxu8zdiqU=
+	s=default; t=1583258502;
+	bh=1hbl3m4Hxf0gY967O41p8JrE6SOgP2qeMfhUCwBDxGU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=E/aoOEIGywFty1/u2gts9Com8KrlNTVh4NCnJCv5o+Mh1BJ8bhZYol3+i5qGICgzJ
+	 eGM/wfy01bhsdwi/+0nbzwshk/lhFFsjcC1zY68uzZNd6LI6mTZZAu3Z9yn7rJblSM
+	 /3R0I4k4DNgkMq99KtJpLyyUN7MEt7Zt3mtdZZgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388020AbgCCSBg (ORCPT
+        id S2388041AbgCCSBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45722 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:01:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387993AbgCCSBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:01:34 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2387993AbgCCSBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:37 -0500
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1F0220656;
-        Tue,  3 Mar 2020 18:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BACD22166E
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 18:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258494;
-        bh=XAUzqqs/iFZqXjyiC3BTwxXkC+Ct1BC8ORsE7GURgB4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qH6xqAfXt2U+ESdD4kWkiIX5GjB6L957BWb2GXwtk0HFFLSl3SRqfAdgEHaIB+MWp
-         7X3b2PAoCIYUCHtooujlUdWpi7pjpsG7z5DNdHOfVCQFd7UT8X9pcmE9oVT7APkYQB
-         mNJBEac/pSibUBSH+kU/9aDwd0uGCL/s5XupZDBk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Arun Parameswaran <arun.parameswaran@broadcom.com>,
-        Scott Branden <scott.branden@broadcom.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 31/87] net: phy: restore mdio regs in the iproc mdio driver
-Date:   Tue,  3 Mar 2020 18:43:22 +0100
-Message-Id: <20200303174353.492704851@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
-References: <20200303174349.075101355@linuxfoundation.org>
-User-Agent: quilt/0.66
+        s=default; t=1583258496;
+        bh=1hbl3m4Hxf0gY967O41p8JrE6SOgP2qeMfhUCwBDxGU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=yH9UMtTYzf+YGUlfGBAUo5wq7uE6GJCjlvfTxWyDPp3tAcN2Ikn7rmk8pFe5F9bdh
+         yIeCyfwJMaY+/7iJmeismCsrCX7EzSH9E+9glKGcAO13JIYROQEdIOaYFvCIK5Aj8h
+         uqXHEnVwU5mGHFZ+40/FekIfMsKwLCLghI6xQbv0=
+Received: by mail-wr1-f50.google.com with SMTP id j16so5588055wrt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 10:01:35 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3vSmXfT4AFglAFHTeP1SzJkTQZrc224D798T/M40HjWF19MLaJ
+        pbclVEFtwaznx9NM3sBTb/Ukts0WWcik4hKoTr2iwA==
+X-Google-Smtp-Source: ADFU+vtCh+tBWrTvRcAc/NH0JeRqkB01tuIpt1Bnu3LmZDWpVgJ/bX7HfAGeJP895OCyGjQV8HtajjRojSX0FCuXtVE=
+X-Received: by 2002:adf:e742:: with SMTP id c2mr6489330wrn.262.1583258494072;
+ Tue, 03 Mar 2020 10:01:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200216182334.8121-1-ardb@kernel.org> <20200216182334.8121-17-ardb@kernel.org>
+ <20200303160353.GA20372@roeck-us.net> <CAKv+Gu_dG2dsrNBWG3fV5S40y6iRGSj7MO2gbtZhqEUg5mXgyQ@mail.gmail.com>
+ <20200303175355.GA14065@roeck-us.net>
+In-Reply-To: <20200303175355.GA14065@roeck-us.net>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 3 Mar 2020 19:01:23 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_4tbdR8zF0eerZBbiFhCh_hg20rTovxqcaByW8J4b-UA@mail.gmail.com>
+Message-ID: <CAKv+Gu_4tbdR8zF0eerZBbiFhCh_hg20rTovxqcaByW8J4b-UA@mail.gmail.com>
+Subject: Re: [PATCH 16/18] efi: add 'runtime' pointer to struct efi
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Parameswaran <arun.parameswaran@broadcom.com>
+On Tue, 3 Mar 2020 at 18:54, Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Tue, Mar 03, 2020 at 05:39:43PM +0100, Ard Biesheuvel wrote:
+> > On Tue, 3 Mar 2020 at 17:03, Guenter Roeck <linux@roeck-us.net> wrote:
+> > >
+> > > On Sun, Feb 16, 2020 at 07:23:32PM +0100, Ard Biesheuvel wrote:
+> > > > Instead of going through the EFI system table each time, just copy the
+> > > > runtime services table pointer into struct efi directly. This is the
+> > > > last use of the system table pointer in struct efi, allowing us to
+> > > > drop it in a future patch, along with a fair amount of quirky handling
+> > > > of the translated address.
+> > > >
+> > > > Note that usually, the runtime services pointer changes value during
+> > > > the call to SetVirtualAddressMap(), so grab the updated value as soon
+> > > > as that call returns. (Mixed mode uses a 1:1 mapping, and kexec boot
+> > > > enters with the updated address in the system table, so in those cases,
+> > > > we don't need to do anything here)
+> > > >
+> > > > Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> > >
+> > > This patch results in a crash with i386 efi boots if PAE (CONFIG_HIGHMEM64G=y)
+> > > is enabled. Bisect and crash logs attached. There is also a warning which
+> > > I don't recall seeing before, but it may not be caused by this patch
+> > > (I didn' bisect the warning). The warning is seen with all i386:efi boots,
+> > > not only when PAE is enabled. The warning log is also attached.
+> > >
+> > > Guenter
+> > >
+> > > ---
+> > > Qemu command line:
+> > >
+> > > qemu-system-i386 -kernel arch/x86/boot/bzImage -M pc -cpu Westmere \
+> > >         -no-reboot -m 256 -snapshot \
+> > >         -bios OVMF-pure-efi-32.fd \
+> > >         -usb -device usb-storage,drive=d0 \
+> > >         -drive file=rootfs.ext2,if=none,id=d0,format=raw \
+> > >         --append 'earlycon=uart8250,io,0x3f8,9600n8 panic=-1 slub_debug=FZPUA root=/dev/sda rootwait mem=256M console=ttyS0' \
+> > >         -nographic
+> > >
+> >
+> > I am failing to reproduce this. Do you have a .config and a copy of
+> > OVMF-pure-efi-32.fd anywhere?
+> >
+>
+> https://github.com/groeck/linux-build-test/blob/master/rootfs/firmware/OVMF-pure-efi-32.fd
+> https://github.com/groeck/linux-build-test/blob/master/rootfs/x86/rootfs.ext2.gz
+>
+> Config file is below, shortened by "make savedefconfig" on the actual
+> configuration used on next-20200303. Qemu version is 4.2, though that
+> should not really matter. Note that it isn't necessary to boot from usb,
+> that was just my test case.
+>
+> Here is a pointer to a complete log, showing the various conditions
+> resulting in the warning and the crash:
+>
+> https://kerneltests.org/builders/qemu-x86-next/builds/1310/steps/qemubuildcommand_1/logs/stdio
+>
 
-commit 6f08e98d62799e53c89dbf2c9a49d77e20ca648c upstream.
+Thanks.
 
-The mii management register in iproc mdio block
-does not have a retention register so it is lost on suspend.
-Save and restore value of register while resuming from suspend.
+How do I generate your exact .config from the below? I still cannot
+reproduce with the different firmware.
 
-Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
-Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/mdio-bcm-iproc.c |   20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
---- a/drivers/net/phy/mdio-bcm-iproc.c
-+++ b/drivers/net/phy/mdio-bcm-iproc.c
-@@ -188,6 +188,23 @@ static int iproc_mdio_remove(struct plat
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM_SLEEP
-+int iproc_mdio_resume(struct device *dev)
-+{
-+	struct platform_device *pdev = to_platform_device(dev);
-+	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
-+
-+	/* restore the mii clock configuration */
-+	iproc_mdio_config_clk(priv->base);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops iproc_mdio_pm_ops = {
-+	.resume = iproc_mdio_resume
-+};
-+#endif /* CONFIG_PM_SLEEP */
-+
- static const struct of_device_id iproc_mdio_of_match[] = {
- 	{ .compatible = "brcm,iproc-mdio", },
- 	{ /* sentinel */ },
-@@ -198,6 +215,9 @@ static struct platform_driver iproc_mdio
- 	.driver = {
- 		.name = "iproc-mdio",
- 		.of_match_table = iproc_mdio_of_match,
-+#ifdef CONFIG_PM_SLEEP
-+		.pm = &iproc_mdio_pm_ops,
-+#endif
- 	},
- 	.probe = iproc_mdio_probe,
- 	.remove = iproc_mdio_remove,
+My qemu is 3.1 btw
 
 
+>
+> ---
+> # CONFIG_LOCALVERSION_AUTO is not set
+> CONFIG_SYSVIPC=y
+> CONFIG_POSIX_MQUEUE=y
+> CONFIG_USELIB=y
+> CONFIG_AUDIT=y
+> CONFIG_NO_HZ=y
+> CONFIG_HIGH_RES_TIMERS=y
+> CONFIG_PREEMPT_VOLUNTARY=y
+> CONFIG_BSD_PROCESS_ACCT=y
+> CONFIG_TASKSTATS=y
+> CONFIG_TASK_DELAY_ACCT=y
+> CONFIG_TASK_XACCT=y
+> CONFIG_TASK_IO_ACCOUNTING=y
+> CONFIG_LOG_BUF_SHIFT=18
+> CONFIG_CGROUPS=y
+> CONFIG_CGROUP_SCHED=y
+> CONFIG_CGROUP_FREEZER=y
+> CONFIG_CPUSETS=y
+> CONFIG_CGROUP_CPUACCT=y
+> CONFIG_NAMESPACES=y
+> CONFIG_BLK_DEV_INITRD=y
+> CONFIG_EXPERT=y
+> # CONFIG_COMPAT_BRK is not set
+> CONFIG_PROFILING=y
+> CONFIG_SMP=y
+> CONFIG_NR_CPUS=8
+> CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y
+> CONFIG_MICROCODE_AMD=y
+> CONFIG_X86_MSR=y
+> CONFIG_X86_CPUID=y
+> CONFIG_X86_CHECK_BIOS_CORRUPTION=y
+> # CONFIG_MTRR_SANITIZER is not set
+> CONFIG_EFI=y
+> CONFIG_EFI_STUB=y
+> CONFIG_HZ_1000=y
+> CONFIG_KEXEC=y
+> CONFIG_CRASH_DUMP=y
+> CONFIG_HIBERNATION=y
+> CONFIG_PM_DEBUG=y
+> CONFIG_PM_TRACE_RTC=y
+> CONFIG_ACPI_DOCK=y
+> CONFIG_ACPI_BGRT=y
+> CONFIG_CPU_FREQ_DEFAULT_GOV_USERSPACE=y
+> CONFIG_CPU_FREQ_GOV_PERFORMANCE=y
+> CONFIG_CPU_FREQ_GOV_ONDEMAND=y
+> CONFIG_X86_ACPI_CPUFREQ=y
+> CONFIG_EFI_VARS=y
+> CONFIG_EFI_CAPSULE_LOADER=y
+> # CONFIG_KVM_WERROR is not set
+> CONFIG_KPROBES=y
+> CONFIG_JUMP_LABEL=y
+> CONFIG_STATIC_KEYS_SELFTEST=y
+> CONFIG_COMPAT_32BIT_TIME=y
+> CONFIG_MODULES=y
+> CONFIG_MODULE_UNLOAD=y
+> CONFIG_MODULE_FORCE_UNLOAD=y
+> # CONFIG_UNUSED_SYMBOLS is not set
+> CONFIG_BINFMT_MISC=y
+> CONFIG_NET=y
+> CONFIG_PACKET=y
+> CONFIG_UNIX=y
+> CONFIG_XFRM_USER=y
+> CONFIG_INET=y
+> CONFIG_IP_MULTICAST=y
+> CONFIG_IP_ADVANCED_ROUTER=y
+> CONFIG_IP_MULTIPLE_TABLES=y
+> CONFIG_IP_ROUTE_MULTIPATH=y
+> CONFIG_IP_ROUTE_VERBOSE=y
+> CONFIG_IP_PNP=y
+> CONFIG_IP_PNP_DHCP=y
+> CONFIG_IP_PNP_BOOTP=y
+> CONFIG_IP_PNP_RARP=y
+> CONFIG_IP_MROUTE=y
+> CONFIG_IP_PIMSM_V1=y
+> CONFIG_IP_PIMSM_V2=y
+> CONFIG_SYN_COOKIES=y
+> # CONFIG_INET_DIAG is not set
+> CONFIG_TCP_CONG_ADVANCED=y
+> # CONFIG_TCP_CONG_BIC is not set
+> # CONFIG_TCP_CONG_WESTWOOD is not set
+> # CONFIG_TCP_CONG_HTCP is not set
+> CONFIG_TCP_MD5SIG=y
+> CONFIG_INET6_AH=y
+> CONFIG_INET6_ESP=y
+> CONFIG_NETLABEL=y
+> CONFIG_NETFILTER=y
+> # CONFIG_NETFILTER_ADVANCED is not set
+> CONFIG_NF_CONNTRACK=y
+> CONFIG_NF_CONNTRACK_FTP=y
+> CONFIG_NF_CONNTRACK_IRC=y
+> CONFIG_NF_CONNTRACK_SIP=y
+> CONFIG_NF_CT_NETLINK=y
+> CONFIG_NF_NAT=y
+> CONFIG_NETFILTER_XT_TARGET_CONNSECMARK=y
+> CONFIG_NETFILTER_XT_TARGET_NFLOG=y
+> CONFIG_NETFILTER_XT_TARGET_SECMARK=y
+> CONFIG_NETFILTER_XT_TARGET_TCPMSS=y
+> CONFIG_NETFILTER_XT_MATCH_CONNTRACK=y
+> CONFIG_NETFILTER_XT_MATCH_POLICY=y
+> CONFIG_NETFILTER_XT_MATCH_STATE=y
+> CONFIG_IP_NF_IPTABLES=y
+> CONFIG_IP_NF_FILTER=y
+> CONFIG_IP_NF_TARGET_REJECT=y
+> CONFIG_IP_NF_TARGET_MASQUERADE=m
+> CONFIG_IP_NF_MANGLE=y
+> CONFIG_IP6_NF_IPTABLES=y
+> CONFIG_IP6_NF_MATCH_IPV6HEADER=y
+> CONFIG_IP6_NF_FILTER=y
+> CONFIG_IP6_NF_TARGET_REJECT=y
+> CONFIG_IP6_NF_MANGLE=y
+> CONFIG_NET_SCHED=y
+> CONFIG_NET_EMATCH=y
+> CONFIG_NET_CLS_ACT=y
+> CONFIG_HAMRADIO=y
+> CONFIG_CFG80211=y
+> CONFIG_MAC80211=y
+> CONFIG_MAC80211_LEDS=y
+> CONFIG_RFKILL=y
+> CONFIG_RFKILL_INPUT=y
+> CONFIG_PCI=y
+> CONFIG_PCIEPORTBUS=y
+> CONFIG_PCI_MSI=y
+> CONFIG_HOTPLUG_PCI=y
+> CONFIG_PCCARD=y
+> CONFIG_YENTA=y
+> CONFIG_DEVTMPFS=y
+> CONFIG_DEVTMPFS_MOUNT=y
+> CONFIG_DEBUG_DEVRES=y
+> CONFIG_PM_QOS_KUNIT_TEST=y
+> CONFIG_CONNECTOR=y
+> CONFIG_BLK_DEV_LOOP=y
+> CONFIG_VIRTIO_BLK=y
+> CONFIG_BLK_DEV_NVME=y
+> CONFIG_PCI_ENDPOINT_TEST=y
+> CONFIG_BLK_DEV_SD=y
+> CONFIG_BLK_DEV_SR=y
+> CONFIG_CHR_DEV_SG=y
+> CONFIG_SCSI_CONSTANTS=y
+> CONFIG_MEGARAID_SAS=y
+> CONFIG_SCSI_SYM53C8XX_2=y
+> CONFIG_SCSI_DC395x=y
+> CONFIG_SCSI_AM53C974=y
+> CONFIG_SCSI_VIRTIO=y
+> CONFIG_ATA=y
+> CONFIG_SATA_AHCI=y
+> CONFIG_ATA_PIIX=y
+> CONFIG_PATA_AMD=y
+> CONFIG_PATA_OLDPIIX=y
+> CONFIG_PATA_SCH=y
+> CONFIG_PATA_MPIIX=y
+> CONFIG_ATA_GENERIC=y
+> CONFIG_MD=y
+> CONFIG_BLK_DEV_MD=y
+> CONFIG_BLK_DEV_DM=y
+> CONFIG_DM_MIRROR=y
+> CONFIG_DM_ZERO=y
+> CONFIG_FUSION=y
+> CONFIG_FUSION_SAS=y
+> CONFIG_MACINTOSH_DRIVERS=y
+> CONFIG_MAC_EMUMOUSEBTN=y
+> CONFIG_NETDEVICES=y
+> CONFIG_NETCONSOLE=y
+> CONFIG_BNX2=y
+> CONFIG_TIGON3=y
+> CONFIG_NET_TULIP=y
+> CONFIG_E100=y
+> CONFIG_E1000=y
+> CONFIG_E1000E=y
+> CONFIG_SKY2=y
+> CONFIG_NE2K_PCI=y
+> CONFIG_FORCEDETH=y
+> CONFIG_8139TOO=y
+> # CONFIG_8139TOO_PIO is not set
+> CONFIG_R8169=y
+> CONFIG_FDDI=y
+> CONFIG_INPUT_POLLDEV=y
+> CONFIG_INPUT_EVDEV=y
+> CONFIG_INPUT_JOYSTICK=y
+> CONFIG_INPUT_TABLET=y
+> CONFIG_INPUT_TOUCHSCREEN=y
+> CONFIG_INPUT_MISC=y
+> # CONFIG_LEGACY_PTYS is not set
+> CONFIG_SERIAL_NONSTANDARD=y
+> CONFIG_SERIAL_8250=y
+> CONFIG_SERIAL_8250_CONSOLE=y
+> CONFIG_SERIAL_8250_NR_UARTS=32
+> CONFIG_SERIAL_8250_EXTENDED=y
+> CONFIG_SERIAL_8250_MANY_PORTS=y
+> CONFIG_SERIAL_8250_SHARE_IRQ=y
+> CONFIG_SERIAL_8250_DETECT_IRQ=y
+> CONFIG_SERIAL_8250_RSA=y
+> CONFIG_HW_RANDOM=y
+> CONFIG_NVRAM=y
+> CONFIG_HPET=y
+> # CONFIG_HPET_MMAP is not set
+> CONFIG_I2C_I801=y
+> CONFIG_WATCHDOG=y
+> CONFIG_AGP=y
+> CONFIG_AGP_AMD64=y
+> CONFIG_AGP_INTEL=y
+> CONFIG_DRM=y
+> CONFIG_DRM_I915=y
+> CONFIG_FB_MODE_HELPERS=y
+> CONFIG_FB_TILEBLITTING=y
+> CONFIG_FB_EFI=y
+> CONFIG_VGACON_SOFT_SCROLLBACK=y
+> CONFIG_FRAMEBUFFER_CONSOLE=y
+> CONFIG_LOGO=y
+> # CONFIG_LOGO_LINUX_MONO is not set
+> # CONFIG_LOGO_LINUX_VGA16 is not set
+> CONFIG_SOUND=y
+> CONFIG_SND=y
+> CONFIG_SND_HRTIMER=y
+> CONFIG_SND_SEQUENCER=y
+> CONFIG_SND_SEQ_DUMMY=y
+> CONFIG_SND_HDA_INTEL=y
+> CONFIG_SND_HDA_HWDEP=y
+> CONFIG_HIDRAW=y
+> CONFIG_HID_A4TECH=y
+> CONFIG_HID_APPLE=y
+> CONFIG_HID_BELKIN=y
+> CONFIG_HID_CHERRY=y
+> CONFIG_HID_CHICONY=y
+> CONFIG_HID_CYPRESS=y
+> CONFIG_HID_EZKEY=y
+> CONFIG_HID_GYRATION=y
+> CONFIG_HID_ITE=y
+> CONFIG_HID_KENSINGTON=y
+> CONFIG_HID_LOGITECH=y
+> CONFIG_LOGITECH_FF=y
+> CONFIG_HID_REDRAGON=y
+> CONFIG_HID_MICROSOFT=y
+> CONFIG_HID_MONTEREY=y
+> CONFIG_HID_NTRIG=y
+> CONFIG_HID_PANTHERLORD=y
+> CONFIG_PANTHERLORD_FF=y
+> CONFIG_HID_PETALYNX=y
+> CONFIG_HID_SAMSUNG=y
+> CONFIG_HID_SONY=y
+> CONFIG_HID_SUNPLUS=y
+> CONFIG_HID_TOPSEED=y
+> CONFIG_HID_PID=y
+> CONFIG_USB_HIDDEV=y
+> CONFIG_USB=y
+> CONFIG_USB_ANNOUNCE_NEW_DEVICES=y
+> CONFIG_USB_MON=y
+> CONFIG_USB_XHCI_HCD=y
+> CONFIG_USB_EHCI_HCD=y
+> CONFIG_USB_OHCI_HCD=y
+> CONFIG_USB_UHCI_HCD=y
+> CONFIG_USB_PRINTER=y
+> CONFIG_USB_STORAGE=y
+> CONFIG_USB_UAS=y
+> CONFIG_USB_TEST=y
+> CONFIG_USB_EHSET_TEST_FIXTURE=y
+> CONFIG_USB_LINK_LAYER_TEST=y
+> CONFIG_MMC=y
+> CONFIG_MMC_SDHCI=y
+> CONFIG_MMC_SDHCI_PCI=y
+> CONFIG_EDAC=y
+> CONFIG_RTC_CLASS=y
+> # CONFIG_RTC_HCTOSYS is not set
+> CONFIG_DMADEVICES=y
+> CONFIG_DMATEST=y
+> CONFIG_VIRTIO_PCI=y
+> CONFIG_VIRTIO_BALLOON=y
+> CONFIG_VIRTIO_MMIO=y
+> CONFIG_EEEPC_LAPTOP=y
+> CONFIG_EXT3_FS=y
+> CONFIG_EXT4_FS_POSIX_ACL=y
+> CONFIG_EXT4_FS_SECURITY=y
+> CONFIG_EXT4_KUNIT_TESTS=y
+> CONFIG_BTRFS_FS=y
+> CONFIG_QUOTA=y
+> CONFIG_QUOTA_NETLINK_INTERFACE=y
+> # CONFIG_PRINT_QUOTA_WARNING is not set
+> CONFIG_QFMT_V2=y
+> CONFIG_AUTOFS4_FS=y
+> CONFIG_ISO9660_FS=y
+> CONFIG_JOLIET=y
+> CONFIG_ZISOFS=y
+> CONFIG_MSDOS_FS=y
+> CONFIG_VFAT_FS=y
+> CONFIG_PROC_KCORE=y
+> CONFIG_TMPFS_POSIX_ACL=y
+> CONFIG_HUGETLBFS=y
+> CONFIG_SQUASHFS=y
+> CONFIG_SQUASHFS_XATTR=y
+> CONFIG_SQUASHFS_4K_DEVBLK_SIZE=y
+> CONFIG_NFS_FS=y
+> CONFIG_NFS_V3_ACL=y
+> CONFIG_NFS_V4=y
+> CONFIG_ROOT_NFS=y
+> CONFIG_NLS_DEFAULT="utf8"
+> CONFIG_NLS_CODEPAGE_437=y
+> CONFIG_NLS_ASCII=y
+> CONFIG_NLS_ISO8859_1=y
+> CONFIG_NLS_UTF8=y
+> CONFIG_SECURITY=y
+> CONFIG_SECURITY_NETWORK=y
+> CONFIG_SECURITY_SELINUX=y
+> CONFIG_SECURITY_SELINUX_BOOTPARAM=y
+> CONFIG_SECURITY_SELINUX_DISABLE=y
+> # CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+> CONFIG_CRC32_SELFTEST=y
+> CONFIG_GLOB_SELFTEST=y
+> CONFIG_STRING_SELFTEST=y
+> CONFIG_PRINTK_TIME=y
+> CONFIG_FRAME_WARN=1024
+> CONFIG_MAGIC_SYSRQ=y
+> CONFIG_DEBUG_RODATA_TEST=y
+> CONFIG_DEBUG_STACK_USAGE=y
+> CONFIG_DEBUG_MEMORY_INIT=y
+> # CONFIG_SCHED_DEBUG is not set
+> CONFIG_SCHEDSTATS=y
+> CONFIG_PROVE_LOCKING=y
+> CONFIG_DEBUG_LOCKDEP=y
+> CONFIG_DEBUG_ATOMIC_SLEEP=y
+> CONFIG_DEBUG_LOCKING_API_SELFTESTS=y
+> CONFIG_WW_MUTEX_SELFTEST=y
+> CONFIG_DEBUG_LIST=y
+> CONFIG_RCU_EQS_DEBUG=y
+> CONFIG_BLK_DEV_IO_TRACE=y
+> CONFIG_PROVIDE_OHCI1394_DMA_INIT=y
+> CONFIG_EARLY_PRINTK_DBGP=y
+> CONFIG_DEBUG_TLBFLUSH=y
+> CONFIG_DEBUG_BOOT_PARAMS=y
+> CONFIG_DEBUG_NMI_SELFTEST=y
+> CONFIG_UNWINDER_FRAME_POINTER=y
+> CONFIG_KUNIT=y
+> CONFIG_KUNIT_TEST=y
+> CONFIG_TEST_SORT=y
+> CONFIG_RBTREE_TEST=y
+> CONFIG_INTERVAL_TREE_TEST=y
+> CONFIG_TEST_BITMAP=y
+> CONFIG_TEST_UUID=y
+> CONFIG_TEST_FIRMWARE=y
+> CONFIG_TEST_SYSCTL=y
+> CONFIG_SYSCTL_KUNIT_TEST=y
+> CONFIG_LIST_KUNIT_TEST=y
