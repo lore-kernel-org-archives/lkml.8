@@ -2,138 +2,87 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA9DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20A2BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:52:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72FF420726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBDE621739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:52:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L38YK67b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrelZO51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727506AbgCCGtL (ORCPT
+        id S1727518AbgCCGwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:49:11 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43521 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbgCCGtL (ORCPT
+        Tue, 3 Mar 2020 01:52:47 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37808 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726164AbgCCGwr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:49:11 -0500
-Received: by mail-qt1-f194.google.com with SMTP id v22so2013827qtp.10;
-        Mon, 02 Mar 2020 22:49:10 -0800 (PST)
+        Tue, 3 Mar 2020 01:52:47 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p14so980265pfn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 22:52:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LQ7+Ef/3tVnwWmKN5BTMdijO3IVFIc6ME1MwlKqUcZU=;
-        b=L38YK67bV0n3eydzwXR5khhw+tDh2beuqoeaMGhMYIOfYvnYJ97k7oHDPvEg4AUfts
-         C958CfObeXA65i+SX6PAsgsHLSF67UNUAkpJUL9dHVe14CNKx2mCk/Kvr8w1LneAhpX0
-         ZuEEZGnxyK0LLulkVzQaHEUBD/jf42ixwCaR3dyB4ytufkN+vjXmfPxdSxRuLv6/rJT+
-         7Q7tfHRvg9eWW8lI/lhWr905QqrGmPw0aWW2xwSa2uFaINdhikWK0DyA+Sp0ZCuT8OQ3
-         ZD1WxSRWmeKRetxj8aSSKNiTLPIhijzu9j3SlRqTi5eRI/2waj7tM5bhHK4kETaEG9w2
-         1vZQ==
+        h=from:to:cc:subject:date:message-id;
+        bh=UMVONrKR+b8jzI+5t7WeqTF89uT5m1carSgINXmScQg=;
+        b=lrelZO51p6z5wWVvrMuWpeuVX0mrlYsvGCdmltMpxMdhfWVRHfCEuXJZzvJugN96rM
+         x7szzUXmfYThPoGsWLOs25vTmvDHSlNUi+oE2wDR3NiV0VuHHPuTdT7d2ZYVPgV+sB3S
+         awMWetqHxP7JgPJLME0tzEF/xGgko02k3koqiHDNOg1ihfMRHx1FW1j4PhFaPNnx/YlJ
+         mBxgsbX7dGd2mlnsvrohxC9Y5gLutciE9i1VLept+dFpqQdyIk6KGj4oKj+abhtw89oZ
+         ukQfU38NK6teNULcz2m0xWrD1Mm2R+dBheVliIKzYbFQ1pLYP37qgxSa5T3TqzRPY6J8
+         WIcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LQ7+Ef/3tVnwWmKN5BTMdijO3IVFIc6ME1MwlKqUcZU=;
-        b=Dd56v+jmD4C2qPLDRRiml7o2S5ArLPq4HvMSNFaMBKa3cWFLGVKV72EyjE5Q8CUxmI
-         3Ka9oIMj05UHidfQj0i59yyE0tGiFfBr8WbUqytwi2r5neBSyynEabW1Pf5nFqKbFpp4
-         RrEYZ3heWErXsSEAmtM05m1qvSMdcyevH52TdUKfiQXPIPexmpUZBkTI45b0Saxu2ydd
-         fC44SmzpHVnHMaUPGsiTj0tGtsZ3pBzBk7jS+Ii/9vqWL2631P5Yp7ggL98OWSberOST
-         zN6tDQKxVuh0t6ySLDgMyLQUsqR1WgiD9W/oYvWnTrr2wbKaABpuxVxZGs2+ZvCFSZUA
-         ftRg==
-X-Gm-Message-State: ANhLgQ2ULOxv0pbuHYOgr2tdgpaS4y9BqnvJsVjS4LlRhFEzmLcsrmJW
-        QA/G8SEo5Zl+9f+hWxD+1yr4YDaqkMggftPHo0VzO9j5
-X-Google-Smtp-Source: ADFU+vs4R8qEKRNY1/lZafw5dUr172u+Evb/NOh748tQmYp5cP0msuGg8tZjIX/zixgCsh2nB8cC2fQr5vW4zn5Ag7g=
-X-Received: by 2002:ac8:4408:: with SMTP id j8mr3106825qtn.3.1583218150151;
- Mon, 02 Mar 2020 22:49:10 -0800 (PST)
-MIME-Version: 1.0
-References: <d7239f3c7379e402f665fc8927f635ac56691380.1582776447.git.baolin.wang7@gmail.com>
- <202002290858.UhNBgssD%lkp@intel.com> <CADBw62pAtWkoSqX=d=3qvi+JLwb28OnMd2VHSaC130ScYpNJ1g@mail.gmail.com>
- <89d9811d-9c6d-6e53-4da7-60026c1b0ced@intel.com>
-In-Reply-To: <89d9811d-9c6d-6e53-4da7-60026c1b0ced@intel.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Tue, 3 Mar 2020 14:48:58 +0800
-Message-ID: <CADBw62og=tuq1E695ujUM_PsFHySOymmevB2o1XaYGXZe8y3Dg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: sprd: Allow the SPRD pinctrl driver building
- into a module
-To:     Rong Chen <rong.a.chen@intel.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@lists.01.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        linux-gpio@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=UMVONrKR+b8jzI+5t7WeqTF89uT5m1carSgINXmScQg=;
+        b=cpuzaM8u/XWjLMpSqat++O3towi3+GMSGiCYO7I745vxcWOTwj6Xqn6d3PKY3dz0Nh
+         XOzlYMDR0Q2KNlG3KWSkNjagQPBGu6vzlW9qWck6Q477IaYpWMAmRNywvQC38Ezu8pxX
+         wRNSMW7IPDbQELvdCW7FlvDS/+ELb5I9U8INqFTDwEzpzzxhAZf5JQByKJ4HM8Z03//o
+         DyGeo86ltyHCI2ZrTQ5VIQVup2//MZFtBQG1PBzzgObtNRzA0QauhACMNBRveodi29mo
+         +5vDnZyV6gmpnP1tot7mxNetIPjNDNpipXB6fCPEapdI8BcgXvzMeeX5MBatScyFj5TF
+         H5sg==
+X-Gm-Message-State: ANhLgQ1lj0xA7E7RawDdxeC0d1LTST/CpmHJJRpMKocQj140ZjXuF+JG
+        GVjxv2kgiWRwHeR2htt6iJvYszjJ
+X-Google-Smtp-Source: ADFU+vuKG+YA083Dv/JMYpPm8AWpjQBFGxIDbaiXi31PIXKMO9/eVyS4Uf4FNI+gAdwkGxsAYo6NZA==
+X-Received: by 2002:a63:ed14:: with SMTP id d20mr2631432pgi.267.1583218365926;
+        Mon, 02 Mar 2020 22:52:45 -0800 (PST)
+Received: from ZB-PF114XEA.360buyad.local ([103.90.76.242])
+        by smtp.gmail.com with ESMTPSA id t11sm22780754pgi.15.2020.03.02.22.52.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 22:52:45 -0800 (PST)
+From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        zhenzhong.duan@gmail.com
+Subject: [PATCH 0/2] Add -Wunused to x86 boot module and fix build warning
+Date:   Tue,  3 Mar 2020 14:52:08 +0800
+Message-Id: <20200303065210.1279-1-zhenzhong.duan@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rong,
+[PATCH 1/2] is based on previous discuss in link below
+https://lore.kernel.org/patchwork/patch/1175001/#1379873
 
-On Tue, Mar 3, 2020 at 2:43 PM Rong Chen <rong.a.chen@intel.com> wrote:
->
->
->
-> On 3/2/20 10:33 AM, Baolin Wang wrote:
-> > Hi
-> >
-> > On Sat, Feb 29, 2020 at 8:41 AM kbuild test robot <lkp@intel.com> wrote:
-> >> Hi Baolin,
-> >>
-> >> I love your patch! Yet something to improve:
-> >>
-> >> [auto build test ERROR on pinctrl/devel]
-> >> [also build test ERROR on v5.6-rc3 next-20200228]
-> >> [if your patch is applied to the wrong git tree, please drop us a note to help
-> >> improve the system. BTW, we also suggest to use '--base' option to specify the
-> >> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> >>
-> >> url:    https://github.com/0day-ci/linux/commits/Baolin-Wang/pinctrl-Export-some-needed-symbols-at-module-load-time/20200227-121948
-> >> base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-> >> config: i386-randconfig-d003-20200229 (attached as .config)
-> >> compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
-> >> reproduce:
-> >>          # save the attached .config to linux build tree
-> >>          make ARCH=i386
-> >>
-> >> If you fix the issue, kindly add following tag
-> >> Reported-by: kbuild test robot <lkp@intel.com>
-> >>
-> >> All errors (new ones prefixed by >>):
-> >>
-> >>     drivers/pinctrl/sprd/pinctrl-sprd.c: In function 'sprd_dt_node_to_map':
-> >>>> drivers/pinctrl/sprd/pinctrl-sprd.c:282:8: error: implicit declaration of function 'pinconf_generic_parse_dt_config'; did you mean 'pinconf_generic_dump_config'? [-Werror=implicit-function-declaration]
-> >>       ret = pinconf_generic_parse_dt_config(np, pctldev, &configs,
-> >>             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> >>             pinconf_generic_dump_config
-> >>     cc1: some warnings being treated as errors
-> > I followed your attached configuration, but I can not reproduce your
-> > building error. Did I miss anything else? Thanks.
-> >
-> > CONFIG_PINCTRL=y
-> > CONFIG_PINMUX=y
-> > CONFIG_GENERIC_PINMUX_FUNCTIONS=y
-> > CONFIG_PINCONF=y
-> > CONFIG_GENERIC_PINCONF=y
-> > CONFIG_PINCTRL_SPRD=y
-> > CONFIG_PINCTRL_SPRD_SC9860=y
-> >
->
-> Hi Baolin,
->
-> We can reproduce this error with attached config and our branch
-> "https://github.com/0day-ci/linux/commits/Baolin-Wang/pinctrl-Export-some-needed-symbols-at-module-load-time/20200227-121948",
-> could you try again?
+[PATCH 2/2] drop true/false change per Thomas suggestion.
 
-I can reproduce the warning on X86 platform now, and I've already sent
-out a patch to fix it. Thanks
-https://lkml.org/lkml/2020/3/2/1551
+This two patches is a series, the warning in patch2 will not trigger
+without patch1 by default.
+
+Zhenzhong Duan (2):
+  x86/boot: Add -Wunused to KBUILD_CFLAGS
+  x86/boot/KASLR: Fix unused variable warning
+
+ arch/x86/boot/compressed/Makefile | 2 +-
+ arch/x86/boot/compressed/kaslr.c  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
 -- 
-Baolin Wang
+2.17.1
+
