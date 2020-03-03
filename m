@@ -2,72 +2,82 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B012BC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:01:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF16C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:03:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904F520728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:01:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F7120842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:03:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583269427;
+	bh=P324o9tus2K6UdEaIBu5qm77rhmlVisGvzD3wMHwH3Y=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=EDi4EKh9FuVw2zvhW+Zg4cewhbG9/8Zpc2Qnl73p29lDhsoZ80QEdzpV7DIGoQJJM
+	 7gjqs0grM9CEmbNTzCq8tbxmy0+xLyQitrWt0Hy9A5YnjBipUWp5Y6KolKwiFdYBoR
+	 sUsrUSbkvTcx1q3KYjkvo3Wvfo8F757fv/lQvrdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732260AbgCCVB3 (ORCPT
+        id S1732195AbgCCVDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:01:29 -0500
-Received: from mga02.intel.com ([134.134.136.20]:43885 "EHLO mga02.intel.com"
+        Tue, 3 Mar 2020 16:03:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732026AbgCCVB2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:01:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 13:01:27 -0800
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="412891493"
-Received: from kcaccard-mobl.amr.corp.intel.com (HELO kcaccard-mobl1.jf.intel.com) ([10.24.8.183])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 13:01:27 -0800
-Message-ID: <6e7e4191612460ba96567c16b4171f2d2f91b296.camel@linux.intel.com>
-Subject: Re: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
-From:   Kristen Carlson Accardi <kristen@linux.intel.com>
-To:     Thomas Garnier <thgarnie@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Allison Randal <allison@lohutok.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux PM list <linux-pm@vger.kernel.org>
-Date:   Tue, 03 Mar 2020 13:01:26 -0800
-In-Reply-To: <CAJcbSZH1oON2VC2U8HjfC-6=M-xn5eU+JxHG2575iMpVoheKdA@mail.gmail.com>
-References: <20200228000105.165012-1-thgarnie@chromium.org>
-         <202003022100.54CEEE60F@keescook>
-         <20200303095514.GA2596@hirez.programming.kicks-ass.net>
-         <CAJcbSZH1oON2VC2U8HjfC-6=M-xn5eU+JxHG2575iMpVoheKdA@mail.gmail.com>
+        id S1729880AbgCCVDq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 16:03:46 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F091E20728;
+        Tue,  3 Mar 2020 21:03:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583269424;
+        bh=P324o9tus2K6UdEaIBu5qm77rhmlVisGvzD3wMHwH3Y=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=MuW4/BP1yEisJGZudxNcoiXAXhxEjxUT9z3yGd4XGdLtHSCe9XdlIumZCiRa/zbTN
+         6ZQY3B+MV2M6uGG7MKxJJuldYoy7d8+dboTMc9wfN25UbMLAmuBuCe2njdiZ6e56Om
+         Jbp6l8+s9pltZwwbA/+jXwo5rO9z6ZdlIfyqKTA0=
+Message-ID: <8b42bcc526a890395e8f25c2f209475101861257.camel@kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
+ [ver #17]
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jann Horn <jannh@google.com>
+Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
+        David Howells <dhowells@redhat.com>,
+        Ian Kent <raven@themaw.net>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Date:   Tue, 03 Mar 2020 16:03:41 -0500
+In-Reply-To: <f3e36d79-a324-678d-ae19-eaee14eaefbd@kernel.dk>
+References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+         <1509948.1583226773@warthog.procyon.org.uk>
+         <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+         <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+         <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com>
+         <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
+         <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
+         <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
+         <20200303142407.GA47158@kroah.com>
+         <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
+         <acb1753c78a019fb0d54ba29077cef144047f70f.camel@kernel.org>
+         <7a05adc8-1ca9-c900-7b24-305f1b3a9b86@kernel.dk>
+         <dbb06c63c17c23fcacdd99e8b2266804ee39ffe5.camel@kernel.org>
+         <dc84aa00-e570-8833-cf9f-d1001c52dd7a@kernel.dk>
+         <cb2a7273a4cac7bac5f5b323e1958242b98e605e.camel@kernel.org>
+         <f3e36d79-a324-678d-ae19-eaee14eaefbd@kernel.dk>
 Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,55 +85,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-03 at 07:43 -0800, Thomas Garnier wrote:
-> On Tue, Mar 3, 2020 at 1:55 AM Peter Zijlstra <peterz@infradead.org>
-> wrote:
-> > On Mon, Mar 02, 2020 at 09:02:15PM -0800, Kees Cook wrote:
-> > > On Thu, Feb 27, 2020 at 04:00:45PM -0800, Thomas Garnier wrote:
-> > > > Minor changes based on feedback and rebase from v10.
-> > > > 
-> > > > Splitting the previous serie in two. This part contains
-> > > > assembly code
-> > > > changes required for PIE but without any direct dependencies
-> > > > with the
-> > > > rest of the patchset.
-> > > > 
-> > > > Note: Using objtool to detect non-compliant PIE relocations is
-> > > > not yet
-> > > > possible as this patchset only includes the simplest PIE
-> > > > changes.
-> > > > Additional changes are needed in kvm, xen and percpu code.
-> > > > 
-> > > > Changes:
-> > > >  - patch v11 (assembly);
-> > > >    - Fix comments on x86/entry/64.
-> > > >    - Remove KASLR PIE explanation on all commits.
-> > > >    - Add note on objtool not being possible at this stage of
-> > > > the patchset.
+On Tue, 2020-03-03 at 13:33 -0700, Jens Axboe wrote:
+> On 3/3/20 12:43 PM, Jeff Layton wrote:
+> > On Tue, 2020-03-03 at 12:23 -0700, Jens Axboe wrote:
+> > > On 3/3/20 12:02 PM, Jeff Layton wrote:
+> > > > Basically, all you'd need to do is keep a pointer to struct file in the
+> > > > internal state for the chain. Then, allow userland to specify some magic
+> > > > fd value for subsequent chained operations that says to use that instead
+> > > > of consulting the fdtable. Maybe use -4096 (-MAX_ERRNO - 1)?
 > > > 
-> > > This moves us closer to PIE in a clean first step. I think these
-> > > patches
-> > > look good to go, and unblock the work in kvm, xen, and percpu
-> > > code. Can
-> > > one of the x86 maintainers pick this series up?
+> > > BTW, I think we need two magics here. One that says "result from
+> > > previous is fd for next", and one that says "fd from previous is fd for
+> > > next". The former allows inheritance from open -> read, the latter from
+> > > read -> write.
+> > > 
 > > 
-> > But,... do we still need this in the light of that fine-grained
-> > kaslr
-> > stuff?
+> > Do we? I suspect that in almost all of the cases, all we'd care about is
+> > the last open. Also if you have unrelated operations in there you still
+> > have to chain the fd through somehow to the next op which is a bit hard
+> > to do with that scheme.
 > > 
-> > What is the actual value of this PIE crud in the face of that?
+> > I'd just have a single magic carveout that means "use the result of last
+> > open call done in this chain". If you do a second open (or pipe, or...),
+> > then that would put the old struct file pointer and drop a new one in
+> > there.
+> > 
+> > If we really do want to enable multiple opens in a single chain though,
+> > then we might want to rethink this and consider some sort of slot table
+> > for storing open fds.
 > 
-> If I remember well, it makes it easier/better but I haven't seen a
-> recent update on that. Is that accurate Kees?
+> I think the one magic can work, you just have to define your chain
+> appropriately for the case where you have multiple opens. That's true
+> for the two magic approach as well, of course, I don't want a stack of
+> open fds, just "last open" should suffice.
+> 
 
-I believe this patchset is valuable if people are trying to brute force
-guess the kernel location, but not so awesome in the event of
-infoleaks. In the case of the current fgkaslr implementation, we only
-randomize within the existing text segment memory area - so with PIE
-the text segment base can move around more, but within that it wouldn't
-strengthen anything. So, if you have an infoleak, you learn the base
-instantly, and are just left with the same extra protection you get
-without PIE.
+Yep.
 
+> I don't like the implicit close, if your op opens an fd, something
+> should close it again. You pass it back to the application in any case
+> for io_uring, so the app can just close it. Which means that your chain
+> should just include a close for whatever fd you open, unless you plan on
+> using it in the application aftwards.
+> 
 
+Yeah sorry, I didn't word that correctly. Let me try again:
+
+My thinking was that you would still return the result of the open to
+userland, but also stash a struct file pointer in the internal chain
+representation. Then you just refer to that when you get the "magic" fd.
+
+You'd still need to explicitly close the file though if you didn't want
+to use it past the end of the current chain. So, I guess you _do_ need
+the actual fd to properly close the file in that case.
+
+On another note, what happens if you do open+write+close and the write
+fails? Does the close still happen, or would you have to issue one
+separately after getting the result?
+
+-- 
+Jeff Layton <jlayton@kernel.org>
 
