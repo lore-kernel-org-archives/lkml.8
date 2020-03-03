@@ -2,108 +2,149 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B732CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:48:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A780C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:49:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93C0220848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:48:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=szeredi.hu header.i=@szeredi.hu header.b="UnASBZv2"
+	by mail.kernel.org (Postfix) with ESMTP id 008C4214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:49:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727981AbgCCJsN (ORCPT
+        id S1728310AbgCCJtM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:48:13 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45589 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727818AbgCCJsN (ORCPT
+        Tue, 3 Mar 2020 04:49:12 -0500
+Received: from goliath.siemens.de ([192.35.17.28]:55287 "EHLO
+        goliath.siemens.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727412AbgCCJtM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:48:13 -0500
-Received: by mail-io1-f68.google.com with SMTP id w9so2807463iob.12
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:48:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=szeredi.hu; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tmUyb7I5QZ5m7l+map6/TTENM00J/X4NTs6U2t9bq9A=;
-        b=UnASBZv2HlRYHTnSbEdv3S4dGBVCqpFO4bwftl15quBrWH6ERWwR//dlevRkFdHY8u
-         Y1NGzPTLB9xA+UewKqkD/sN3CSE6cUYJqxDKljs3apGO9RPeOZ5k4nfs7l8GKFHMahrT
-         564xMuqnPGrSdkI6+TAepvlKpFkwSitRCuoro=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tmUyb7I5QZ5m7l+map6/TTENM00J/X4NTs6U2t9bq9A=;
-        b=JPaxodjX08kwRONYmMjYoCu0NfkRItC2KSoZHzBjl9ZxPwrxpk+czGqTX+5nZEi/dV
-         BaRz9+SORGfmHRSZ95j8eL7bjR6TVrrNIuI6poVChkXZdEOF+4xEsy8lWzUgif0a74dK
-         /M7u2tMHNjHPUmNBEOV5Vq2NVU88D9jXLsnpNXxGFypYnBevhDk864B+ZXZ6uT5cRDqo
-         21ykG6gumua9XPqTFixvy3CLw04EtO88ek5k6BVZmJIShZeafsjPyQityZKJY9VfHBcj
-         BZYWd4GO0uVLctWliIPl3TFwH/Nmbgo3We/ahamroDH1gW/jVCN0s8lNnoB5nrtCxo4b
-         RWRw==
-X-Gm-Message-State: ANhLgQ1WhsVlI1SvkUWyZqlWuT3mglMkkDXzoStDQStEbyGyjpmFTYwS
-        kfi0O1vYKevqJWcobtIBW0Cqp1jjdtG946PRIbD4mw==
-X-Google-Smtp-Source: ADFU+vvvtLDcbP4JULdPm70drjm3KqEySXTBU2b4yubEl0GoNv8K14LSHW2jEphUEwc0usp5xzdPCj2rr+ecQM93dBg=
-X-Received: by 2002:a02:6a10:: with SMTP id l16mr3126436jac.77.1583228892582;
- Tue, 03 Mar 2020 01:48:12 -0800 (PST)
+        Tue, 3 Mar 2020 04:49:12 -0500
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by goliath.siemens.de (8.15.2/8.15.2) with ESMTPS id 0239mh4H025629
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Mar 2020 10:48:43 +0100
+Received: from [167.87.29.4] ([167.87.29.4])
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id 0239mg1F019125;
+        Tue, 3 Mar 2020 10:48:43 +0100
+Subject: Re: [PATCH 3/6] KVM: x86: Add dedicated emulator helper for grabbing
+ CPUID.maxphyaddr
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-4-sean.j.christopherson@intel.com>
+ <de2ed4e9-409a-6cb1-e295-ea946be11e82@redhat.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <617748ab-0edd-2ccc-e86b-b86b0adf9d3b@siemens.com>
+Date:   Tue, 3 Mar 2020 10:48:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <158230810644.2185128.16726948836367716086.stgit@warthog.procyon.org.uk>
- <1582316494.3376.45.camel@HansenPartnership.com> <CAOssrKehjnTwbc6A1VagM5hG_32hy3mXZenx_PdGgcUGxYOaLQ@mail.gmail.com>
- <1582556135.3384.4.camel@HansenPartnership.com> <CAJfpegsk6BsVhUgHNwJgZrqcNP66wS0fhCXo_2sLt__goYGPWg@mail.gmail.com>
- <a657a80e-8913-d1f3-0ffe-d582f5cb9aa2@redhat.com> <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein> <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
-In-Reply-To: <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
-From:   Miklos Szeredi <miklos@szeredi.hu>
-Date:   Tue, 3 Mar 2020 10:48:01 +0100
-Message-ID: <CAJfpegtemv64mpmTRT6ViHmsWq4nNE4KQvuHkNCYozRU7dQd8Q@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <de2ed4e9-409a-6cb1-e295-ea946be11e82@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 10:26 AM Miklos Szeredi <miklos@szeredi.hu> wrote:
->
-> On Tue, Mar 3, 2020 at 10:13 AM David Howells <dhowells@redhat.com> wrote:
-> >
-> > Miklos Szeredi <miklos@szeredi.hu> wrote:
-> >
-> > > I'm doing a patch.   Let's see how it fares in the face of all these
-> > > preconceptions.
-> >
-> > Don't forget the efficiency criterion.  One reason for going with fsinfo(2) is
-> > that scanning /proc/mounts when there are a lot of mounts in the system is
-> > slow (not to mention the global lock that is held during the read).
+On 03.03.20 09:48, Paolo Bonzini wrote:
+> On 02/03/20 20:57, Sean Christopherson wrote:
+>> Add a helper to retrieve cpuid_maxphyaddr() instead of manually
+>> calculating the value in the emulator via raw CPUID output.  In addition
+>> to consolidating logic, this also paves the way toward simplifying
+>> kvm_cpuid(), whose somewhat confusing return value exists purely to
+>> support the emulator's maxphyaddr calculation.
+>>
+>> No functional change intended.
+> 
+> I don't think this is a particularly useful change.  Yes, it's not
+> intuitive but is it more than a matter of documentation (and possibly
+> moving the check_cr_write snippet into a separate function)?
 
-BTW, I do feel that there's room for improvement in userspace code as
-well.  Even quite big mount table could be scanned for *changes* very
-efficiently.  l.e. cache previous contents of /proc/self/mountinfo and
-compare with new contents, line-by-line.  Only need to parse the
-changed/added/removed lines.
+Besides the non obvious return value of the current function, this 
+approach also avoids leaving cpuid traces for querying maxphyaddr, which 
+is also not very intuitive IMHO.
 
-Also it would be pretty easy to throttle the number of updates so
-systemd et al. wouldn't hog the system with unnecessary processing.
+Jan
 
-Thanks,
-Miklos
+> 
+> Paolo
+> 
+>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> ---
+>>   arch/x86/include/asm/kvm_emulate.h |  1 +
+>>   arch/x86/kvm/emulate.c             | 10 +---------
+>>   arch/x86/kvm/x86.c                 |  6 ++++++
+>>   3 files changed, 8 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
+>> index bf5f5e476f65..ded06515d30f 100644
+>> --- a/arch/x86/include/asm/kvm_emulate.h
+>> +++ b/arch/x86/include/asm/kvm_emulate.h
+>> @@ -222,6 +222,7 @@ struct x86_emulate_ops {
+>>   
+>>   	bool (*get_cpuid)(struct x86_emulate_ctxt *ctxt, u32 *eax, u32 *ebx,
+>>   			  u32 *ecx, u32 *edx, bool check_limit);
+>> +	int (*get_cpuid_maxphyaddr)(struct x86_emulate_ctxt *ctxt);
+>>   	bool (*guest_has_long_mode)(struct x86_emulate_ctxt *ctxt);
+>>   	bool (*guest_has_movbe)(struct x86_emulate_ctxt *ctxt);
+>>   	bool (*guest_has_fxsr)(struct x86_emulate_ctxt *ctxt);
+>> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+>> index dd19fb3539e0..bf02ed51e90f 100644
+>> --- a/arch/x86/kvm/emulate.c
+>> +++ b/arch/x86/kvm/emulate.c
+>> @@ -4244,16 +4244,8 @@ static int check_cr_write(struct x86_emulate_ctxt *ctxt)
+>>   
+>>   		ctxt->ops->get_msr(ctxt, MSR_EFER, &efer);
+>>   		if (efer & EFER_LMA) {
+>> -			u64 maxphyaddr;
+>> -			u32 eax, ebx, ecx, edx;
+>> +			int maxphyaddr = ctxt->ops->get_cpuid_maxphyaddr(ctxt);
+>>   
+>> -			eax = 0x80000008;
+>> -			ecx = 0;
+>> -			if (ctxt->ops->get_cpuid(ctxt, &eax, &ebx, &ecx,
+>> -						 &edx, false))
+>> -				maxphyaddr = eax & 0xff;
+>> -			else
+>> -				maxphyaddr = 36;
+>>   			rsvd = rsvd_bits(maxphyaddr, 63);
+>>   			if (ctxt->ops->get_cr(ctxt, 4) & X86_CR4_PCIDE)
+>>   				rsvd &= ~X86_CR3_PCID_NOFLUSH;
+>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>> index ddd1d296bd20..5467ee71c25b 100644
+>> --- a/arch/x86/kvm/x86.c
+>> +++ b/arch/x86/kvm/x86.c
+>> @@ -6209,6 +6209,11 @@ static bool emulator_get_cpuid(struct x86_emulate_ctxt *ctxt,
+>>   	return kvm_cpuid(emul_to_vcpu(ctxt), eax, ebx, ecx, edx, check_limit);
+>>   }
+>>   
+>> +static int emulator_get_cpuid_maxphyaddr(struct x86_emulate_ctxt *ctxt)
+>> +{
+>> +	return cpuid_maxphyaddr(emul_to_vcpu(ctxt));
+>> +}
+>> +
+>>   static bool emulator_guest_has_long_mode(struct x86_emulate_ctxt *ctxt)
+>>   {
+>>   	return guest_cpuid_has(emul_to_vcpu(ctxt), X86_FEATURE_LM);
+>> @@ -6301,6 +6306,7 @@ static const struct x86_emulate_ops emulate_ops = {
+>>   	.fix_hypercall       = emulator_fix_hypercall,
+>>   	.intercept           = emulator_intercept,
+>>   	.get_cpuid           = emulator_get_cpuid,
+>> +	.get_cpuid_maxphyaddr= emulator_get_cpuid_maxphyaddr,
+>>   	.guest_has_long_mode = emulator_guest_has_long_mode,
+>>   	.guest_has_movbe     = emulator_guest_has_movbe,
+>>   	.guest_has_fxsr      = emulator_guest_has_fxsr,
+>>
+> 
+
+-- 
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
