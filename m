@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 932CBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB1CFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702B32146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA1562146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:46:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257574;
-	bh=AoBF/zOnnLMyVG+meZIVZEnucbOTG14LwbwVcYWVL14=;
+	s=default; t=1583257579;
+	bh=OqbTCx4juC17gkZ8FMJ4QVdYKQ0vilFA0YrhvR7L0h4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Xqx6xptRer32cH/B1UPnql7e5VRa2P83qBgC5JEXZvyBYNeoLUK1NiUcrhFa7NWW8
-	 axXWoKTi+m4h/iG16OwpQqVVaCz6N+Ego/FDUPbBHx5Gs+I6jhUvl1FlhrDtAA8vTM
-	 IlQfRL99y6sbz9OZScVJoa5mr8SOHhzIe2BzJ9YA=
+	b=0CF+FbZj9NYdhoWEY+kCjkgzsgBwTxR06dookd82369pIP+Adyg8JDfHwdrshGS6f
+	 xDCn9dalIbUCNbyk72RKYXDoWBeQ3OgD6P06D7xtSYOfH27zBJmaOia7Zrme08X1gD
+	 O4+v4IYD49X2N1fFB3TkaYTDb+k/HgX6os8SXdDE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731080AbgCCRqN (ORCPT
+        id S1731108AbgCCRqS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:46:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52676 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:46:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727894AbgCCRqL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:46:11 -0500
+        id S1731094AbgCCRqQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:46:16 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 630F9208C3;
-        Tue,  3 Mar 2020 17:46:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51585214DB;
+        Tue,  3 Mar 2020 17:46:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257570;
-        bh=AoBF/zOnnLMyVG+meZIVZEnucbOTG14LwbwVcYWVL14=;
+        s=default; t=1583257575;
+        bh=OqbTCx4juC17gkZ8FMJ4QVdYKQ0vilFA0YrhvR7L0h4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QLDdVJWabhIIvQ/eG08WspCctF7QmmzxYmaOFtAlbq0DYwF3jD9Ug8eeWmgTshWcz
-         hhEHAA8naT6g7aXMCBF7hhopAh0Wk9COW+mp6rIaZVg40aXabmw20+H5Iuk2pcN0b2
-         fdMCBqSLMPjHv3jllgqutHoMpBpgDRMQmqHhtYyY=
+        b=yV1S46nx3FHnL/ksbKKuvp5nRglMJCzW7VEpG1gQknbVmhsFdJVsW7qY+98TxhnP+
+         E4rcG8vAefaoYVGKHnPddT0vEBwPeSbwq5dB2mKhlWmlIuJA23kzStKmntJe9k8Xc5
+         p1d4ch7jrfr9H8XRSxT3XRzX1bWAtgqNGIVAjrBQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 038/176] perf/smmuv3: Use platform_get_irq_optional() for wired interrupt
-Date:   Tue,  3 Mar 2020 18:41:42 +0100
-Message-Id: <20200303174308.917792016@linuxfoundation.org>
+        stable@vger.kernel.org, Yongqiang Sun <yongqiang.sun@amd.com>,
+        Eric Yang <eric.yang2@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 048/176] drm/amd/display: Limit minimum DPPCLK to 100MHz.
+Date:   Tue,  3 Mar 2020 18:41:52 +0100
+Message-Id: <20200303174310.110563013@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,50 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Garry <john.garry@huawei.com>
+From: Yongqiang Sun <yongqiang.sun@amd.com>
 
-[ Upstream commit 0ca2c0319a7bce0e152b51b866979d62dc261e48 ]
+[ Upstream commit 6c81917a0485ee2a1be0dc23321ac10ecfd9578b ]
 
-Even though a SMMUv3 PMCG implementation may use an MSI as the form of
-interrupt source, the kernel would still complain that it does not find
-the wired (GSIV) interrupt in this case:
+[Why]
+Underflow is observed when plug in a 4K@60 monitor with
+1366x768 eDP due to DPPCLK is too low.
 
-root@(none)$ dmesg | grep arm-smmu-v3-pmcg | grep "not found"
-[   59.237219] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.8.auto: IRQ index 0 not found
-[   59.322841] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.9.auto: IRQ index 0 not found
-[   59.422155] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.10.auto: IRQ index 0 not found
-[   59.539014] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.11.auto: IRQ index 0 not found
-[   59.640329] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.12.auto: IRQ index 0 not found
-[   59.743112] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.13.auto: IRQ index 0 not found
-[   59.880577] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.14.auto: IRQ index 0 not found
-[   60.017528] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.15.auto: IRQ index 0 not found
+[How]
+Limit minimum DPPCLK to 100MHz.
 
-Use platform_get_irq_optional() to silence the warning.
-
-If neither interrupt source is found, then the driver will still warn that
-IRQ setup errored and the probe will fail.
-
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: John Garry <john.garry@huawei.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
+Reviewed-by: Eric Yang <eric.yang2@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/perf/arm_smmuv3_pmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-index d704eccc548f6..f01a57e5a5f35 100644
---- a/drivers/perf/arm_smmuv3_pmu.c
-+++ b/drivers/perf/arm_smmuv3_pmu.c
-@@ -771,7 +771,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
- 		smmu_pmu->reloc_base = smmu_pmu->reg_base;
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
+index dbf063856846e..5f683d118d2aa 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
+@@ -149,6 +149,12 @@ void rn_update_clocks(struct clk_mgr *clk_mgr_base,
+ 		rn_vbios_smu_set_min_deep_sleep_dcfclk(clk_mgr, clk_mgr_base->clks.dcfclk_deep_sleep_khz);
  	}
  
--	irq = platform_get_irq(pdev, 0);
-+	irq = platform_get_irq_optional(pdev, 0);
- 	if (irq > 0)
- 		smmu_pmu->irq = irq;
- 
++	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
++	if (!IS_DIAG_DC(dc->ctx->dce_environment)) {
++		if (new_clocks->dppclk_khz < 100000)
++			new_clocks->dppclk_khz = 100000;
++	}
++
+ 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
+ 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
+ 			dpp_clock_lowered = true;
 -- 
 2.20.1
 
