@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79052C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B143C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7E121556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEE4921556
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:45:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257509;
-	bh=mluRKHVleJz3odTpqYoxkb/BWhkKlkwuyPc0vDOyUm4=;
+	s=default; t=1583257513;
+	bh=r0NxgnUOzreuBZIgNw0VielNgiKqbr3cLyrfvZoXP2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ND3ZLeQ1z8BqLPaBHKE2NePEhJNwsta244ImMVNWs18RwaRfH2BzfzkXSY4jV13J3
-	 J6wlILiJaq3GQ7/cJw0XcLKsfCiYedBGwBWyMpO9NCNAJS/lGppO1JEwPPjvdo4h/e
-	 oLPD4QCOnx9h6yPm6B5rRIdf6GDUq3hOtvajuIWw=
+	b=YwfNUXidnMa2JgFkTnpxJ2o/2uo4hziidPXdjABa3y4jqDjEmHgfUR4PymWtUdVc8
+	 U1dnsbL9s4MXxPVYXoQ23HlQpwZiwwp3yUAGPDxcbxrFAIsRvyyjoG1Cx8YX1bzGCd
+	 EdWNY85gcihCbPrdVtwytmIBDbMFBcwP7kKPhOps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbgCCRpI (ORCPT
+        id S1730884AbgCCRpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:45:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50944 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:45:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730855AbgCCRpG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:45:06 -0500
+        id S1730855AbgCCRpJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:45:09 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD08520CC7;
-        Tue,  3 Mar 2020 17:45:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6E1208C3;
+        Tue,  3 Mar 2020 17:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257506;
-        bh=mluRKHVleJz3odTpqYoxkb/BWhkKlkwuyPc0vDOyUm4=;
+        s=default; t=1583257508;
+        bh=r0NxgnUOzreuBZIgNw0VielNgiKqbr3cLyrfvZoXP2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ArtVWcLRjGHPznIgJX8kIyJ0UEEChplAmnreRvw02dVWhaHjRLFR4O30JxYdPZ4uh
-         4isXBR6Og81DFKH+2ydl6N2kKB3HNcSh3LwnOAtFWScsTWbi812AoGIYs+fb6xw4uF
-         qiVBSTSaYEAKzaHwqjH8mt4oBViKBfoZNvhxQvwA=
+        b=Rpgx7uqXVC5vLZWhVTqa7RQF2S3yO549SdpUqG10wpGWueBQNzlXJQ1EG6VFtm2l0
+         8neA582B8B4DKwzKj793cBdq18x8Vx9gvWFYHHJu4inWP3cfh4SliNIalum6KqNkKO
+         7OnKhZow7yJ7HNFENEXUUfzXa/8Aax++f5tJ5HDo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Jiri Pirko <jiri@mellanox.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 021/176] ionic: fix fw_status read
-Date:   Tue,  3 Mar 2020 18:41:25 +0100
-Message-Id: <20200303174306.993690686@linuxfoundation.org>
+Subject: [PATCH 5.5 022/176] net: add strict checks in netdev_name_node_alt_destroy()
+Date:   Tue,  3 Mar 2020 18:41:26 +0100
+Message-Id: <20200303174307.103699900@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,59 +61,178 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 68b759a75d6257759d1e37ff13f2d0659baf1112 ]
+[ Upstream commit e08ad80551b4b33c02f2fce1522f6c227d3976cf ]
 
-The fw_status field is only 8 bits, so fix the read.  Also,
-we only want to look at the one status bit, to allow for future
-use of the other bits, and watch for a bad PCI read.
+netdev_name_node_alt_destroy() does a lookup over all
+device names of a namespace.
 
-Fixes: 97ca486592c0 ("ionic: add heartbeat check")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
+We need to make sure the name belongs to the device
+of interest, and that we do not destroy its primary
+name, since we rely on it being not deleted :
+dev->name_node would indeed point to freed memory.
+
+syzbot report was the following :
+
+BUG: KASAN: use-after-free in dev_net include/linux/netdevice.h:2206 [inline]
+BUG: KASAN: use-after-free in mld_force_mld_version net/ipv6/mcast.c:1172 [inline]
+BUG: KASAN: use-after-free in mld_in_v2_mode_only net/ipv6/mcast.c:1180 [inline]
+BUG: KASAN: use-after-free in mld_in_v1_mode+0x203/0x230 net/ipv6/mcast.c:1190
+Read of size 8 at addr ffff88809886c588 by task swapper/1/0
+
+CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ dev_net include/linux/netdevice.h:2206 [inline]
+ mld_force_mld_version net/ipv6/mcast.c:1172 [inline]
+ mld_in_v2_mode_only net/ipv6/mcast.c:1180 [inline]
+ mld_in_v1_mode+0x203/0x230 net/ipv6/mcast.c:1190
+ mld_send_initial_cr net/ipv6/mcast.c:2083 [inline]
+ mld_dad_timer_expire+0x24/0x230 net/ipv6/mcast.c:2118
+ call_timer_fn+0x1ac/0x780 kernel/time/timer.c:1404
+ expire_timers kernel/time/timer.c:1449 [inline]
+ __run_timers kernel/time/timer.c:1773 [inline]
+ __run_timers kernel/time/timer.c:1740 [inline]
+ run_timer_softirq+0x6c3/0x1790 kernel/time/timer.c:1786
+ __do_softirq+0x262/0x98c kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0x19b/0x1e0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:546 [inline]
+ smp_apic_timer_interrupt+0x1a3/0x610 arch/x86/kernel/apic/apic.c:1146
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+ </IRQ>
+RIP: 0010:native_safe_halt+0xe/0x10 arch/x86/include/asm/irqflags.h:61
+Code: 68 73 c5 f9 eb 8a cc cc cc cc cc cc e9 07 00 00 00 0f 00 2d 94 be 59 00 f4 c3 66 90 e9 07 00 00 00 0f 00 2d 84 be 59 00 fb f4 <c3> cc 55 48 89 e5 41 57 41 56 41 55 41 54 53 e8 de 2a 74 f9 e8 09
+RSP: 0018:ffffc90000d3fd68 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+RAX: 1ffffffff136761a RBX: ffff8880a99fc340 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000006 RDI: ffff8880a99fcbd4
+RBP: ffffc90000d3fd98 R08: ffff8880a99fc340 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: ffffffff8aa5a1c0 R14: 0000000000000000 R15: 0000000000000001
+ arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:686
+ default_idle_call+0x84/0xb0 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x3c8/0x6e0 kernel/sched/idle.c:269
+ cpu_startup_entry+0x1b/0x20 kernel/sched/idle.c:361
+ start_secondary+0x2f4/0x410 arch/x86/kernel/smpboot.c:264
+ secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
+
+Allocated by task 10229:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ __do_kmalloc_node mm/slab.c:3616 [inline]
+ __kmalloc_node+0x4e/0x70 mm/slab.c:3623
+ kmalloc_node include/linux/slab.h:578 [inline]
+ kvmalloc_node+0x68/0x100 mm/util.c:574
+ kvmalloc include/linux/mm.h:645 [inline]
+ kvzalloc include/linux/mm.h:653 [inline]
+ alloc_netdev_mqs+0x98/0xe40 net/core/dev.c:9797
+ rtnl_create_link+0x22d/0xaf0 net/core/rtnetlink.c:3047
+ __rtnl_newlink+0xf9f/0x1790 net/core/rtnetlink.c:3309
+ rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3377
+ rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5438
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ __sys_sendto+0x262/0x380 net/socket.c:1998
+ __do_compat_sys_socketcall net/compat.c:771 [inline]
+ __se_compat_sys_socketcall net/compat.c:719 [inline]
+ __ia32_compat_sys_socketcall+0x530/0x710 net/compat.c:719
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+
+Freed by task 10229:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ __netdev_name_node_alt_destroy+0x1ff/0x2a0 net/core/dev.c:322
+ netdev_name_node_alt_destroy+0x57/0x80 net/core/dev.c:334
+ rtnl_alt_ifname net/core/rtnetlink.c:3518 [inline]
+ rtnl_linkprop.isra.0+0x575/0x6f0 net/core/rtnetlink.c:3567
+ rtnl_dellinkprop+0x46/0x60 net/core/rtnetlink.c:3588
+ rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5438
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __compat_sys_sendmsg net/compat.c:642 [inline]
+ __do_compat_sys_sendmsg net/compat.c:649 [inline]
+ __se_compat_sys_sendmsg net/compat.c:646 [inline]
+ __ia32_compat_sys_sendmsg+0x7a/0xb0 net/compat.c:646
+ do_syscall_32_irqs_on arch/x86/entry/common.c:337 [inline]
+ do_fast_syscall_32+0x27b/0xe16 arch/x86/entry/common.c:408
+ entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+
+The buggy address belongs to the object at ffff88809886c000
+ which belongs to the cache kmalloc-4k of size 4096
+The buggy address is located 1416 bytes inside of
+ 4096-byte region [ffff88809886c000, ffff88809886d000)
+The buggy address belongs to the page:
+page:ffffea0002621b00 refcount:1 mapcount:0 mapping:ffff8880aa402000 index:0x0 compound_mapcount: 0
+flags: 0xfffe0000010200(slab|head)
+raw: 00fffe0000010200 ffffea0002610d08 ffffea0002607608 ffff8880aa402000
+raw: 0000000000000000 ffff88809886c000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809886c480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809886c500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88809886c580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                      ^
+ ffff88809886c600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809886c680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+Fixes: 36fbf1e52bd3 ("net: rtnetlink: add linkprop commands to add and delete alternative ifnames")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Jiri Pirko <jiri@mellanox.com>
+Acked-by: Jiri Pirko <jiri@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_dev.c |   11 +++++++----
- drivers/net/ethernet/pensando/ionic/ionic_if.h  |    1 +
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ net/core/dev.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/net/ethernet/pensando/ionic/ionic_dev.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_dev.c
-@@ -103,7 +103,7 @@ int ionic_heartbeat_check(struct ionic *
- {
- 	struct ionic_dev *idev = &ionic->idev;
- 	unsigned long hb_time;
--	u32 fw_status;
-+	u8 fw_status;
- 	u32 hb;
- 
- 	/* wait a little more than one second before testing again */
-@@ -111,9 +111,12 @@ int ionic_heartbeat_check(struct ionic *
- 	if (time_before(hb_time, (idev->last_hb_time + ionic->watchdog_period)))
- 		return 0;
- 
--	/* firmware is useful only if fw_status is non-zero */
--	fw_status = ioread32(&idev->dev_info_regs->fw_status);
--	if (!fw_status)
-+	/* firmware is useful only if the running bit is set and
-+	 * fw_status != 0xff (bad PCI read)
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -330,6 +330,12 @@ int netdev_name_node_alt_destroy(struct
+ 	name_node = netdev_name_node_lookup(net, name);
+ 	if (!name_node)
+ 		return -ENOENT;
++	/* lookup might have found our primary name or a name belonging
++	 * to another device.
 +	 */
-+	fw_status = ioread8(&idev->dev_info_regs->fw_status);
-+	if (fw_status == 0xff ||
-+	    !(fw_status & IONIC_FW_STS_F_RUNNING))
- 		return -ENXIO;
++	if (name_node == dev->name_node || name_node->dev != dev)
++		return -EINVAL;
++
+ 	__netdev_name_node_alt_destroy(name_node);
  
- 	/* early FW has no heartbeat, else FW will return non-zero */
---- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-@@ -2348,6 +2348,7 @@ union ionic_dev_info_regs {
- 		u8     version;
- 		u8     asic_type;
- 		u8     asic_rev;
-+#define IONIC_FW_STS_F_RUNNING	0x1
- 		u8     fw_status;
- 		u32    fw_heartbeat;
- 		char   fw_version[IONIC_DEVINFO_FWVERS_BUFLEN];
+ 	return 0;
 
 
