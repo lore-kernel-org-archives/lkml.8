@@ -2,248 +2,174 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E1BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247C7C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:50:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D0C2166E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9EC6215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:50:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ZSEvaURB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="G0It2nug";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="tyEWNc9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727750AbgCCHtd (ORCPT
+        id S1727673AbgCCHuT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:49:33 -0500
-Received: from mail-db8eur05on2078.outbound.protection.outlook.com ([40.107.20.78]:6126
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727552AbgCCHtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:49:33 -0500
+        Tue, 3 Mar 2020 02:50:19 -0500
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:50304 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbgCCHuT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 02:50:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1583221818; x=1614757818;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=NlOSpDkjdSJVMNz7NFEhP+weptJrJ09zSvzxJC+0DoE=;
+  b=G0It2nug2lMaSPwabN8vIb/gGZctLCG4U1gmCMBoaQUwbsYJQAfDInFi
+   4axTd6A7JP1j0cmEvbMHf6VIKIXgPZla5VpfwdjqxIVlewMNfRIdjVgU1
+   5tlxduES7e4seza1d8b/E47kqou98dEusE34wtmS+i772uha6ZK1EAPMV
+   iA+cAw9xJwoJi1OsTLg3zM6TX2wzMcQK24vG1QIa8yUBHBgHp/LamY+I1
+   TGnrxHiQwnlmAWkPKZ14VT4KWDp5Moi3TydiAXVLRJzKxQpFjwbXKzz+2
+   9Pt30umG2J1ZravxJdeDKMwDKcNuH87THTPxPlCPNZ2jLog8b1J4TcbRr
+   g==;
+IronPort-SDR: FFuONEQx9Cl+iPT4OGiaLWhxewuB92qYiiu50pcbvlBoDHvtrhQ1f0GfcGqqeOJHXNj23lHiQU
+ KwmDvfmfQXsSw2ELcqXRXez5i/9QKeLTPwpMfrClHbhcXocZtq2MgRDYR8sUQt+IOXElGJ6UeA
+ zbdU3tFTk3rNtpyprDTeqQmArV1NLCHY12A3LhxmhCZ1zzHb8t9GGdmq4lrE1A/d7JKgyK31/D
+ uqO+v9PmQ0sxVkgY8rcV/xrd9Lp0mi0P1SsxBvXPlFJnrifq+zF12Lt8WiHabxu/HpJm+JOduE
+ 0Ns=
+X-IronPort-AV: E=Sophos;i="5.70,510,1574092800"; 
+   d="scan'208";a="131229515"
+Received: from mail-mw2nam12lp2044.outbound.protection.outlook.com (HELO NAM12-MW2-obe.outbound.protection.outlook.com) ([104.47.66.44])
+  by ob1.hgst.iphmx.com with ESMTP; 03 Mar 2020 15:50:15 +0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=KaeBM7ih6PD2wpxf6GHyGoRniTqB/xnjBxcPLAj6ZQU66hYmK8FQ4XpRXhgYM4U+zXn0tR5kIq07i934HMnZvQqNLoewLh9b0QftRMb/LMSW46NUHQhkfX7cL5PD8qJ3SHwl86dyvjQJvTw5yllnC3PxeSSBMNo7BHp2769gvqcGjNpyXlJEn9LI2mTbJ+ldN1MvX/fjAwtrevg5VtPhBcUSQvRleWmgLWDGS58mUij0MyixVVJJgHF9TabzPPbrJCwU914t78AYOTAx7c4XrRg0Qwl38WX/3gg3B2Y0nTX+ojftRDKhG5VlUCXBuFG6yZdhl+mMnIxZ+lpBKcjG/Q==
+ b=jPnvTaKJGnKBDiRahMI9uRdzJeMoVPE4e7QSDIAaKb8hcsLjiI6fOcV7pLO3buI4y4FxBBAwnEziDVRatHaEOneyyCVFqNsmA556iqgU45+2f/mU0UTdowKYGTyyYRh6Ms/bpePW80G0WT3e8cXp0XZQNUatAH/LVKEKff+S3CF8hk4Y2S2CavuamvtKkqf/86dtqDv+r5cKnayO3+xObXLgqCu6eou9U+soXhlyQgAp6kOiCvithT1793XKeqj67qX+PR/WCFDtti73/13tIJ9J5z2SblCGq/VJthXbzskXiM26hSlZXQttj8b/5NNUdIc8Hf0jos1Mrh0r17/zCw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iTh1fa/8iZntB+c8DdyJjM+yT5Mzn4MmJJ6QW5rB08w=;
- b=GIARLsriA4exJ/0EekhwBfqBnv8kIUixWyWofrCx/0CfpVY+130Sfz/eSwNImzbR8dTB5TLaNKUXps9S1mxzBEKuP1k3lEW1kwMAVhOjNcMKOIqiTOnZDbU+xUPMFjT0cd0EMQADRWvREpYzQB0mCPAt8vGsITyeBvXxf3JxfGRecREXdHqOhEXyOaajulcIP+m0QX2eNhlS65crp0dWhYPjO3HxjTDnHCfwttU8RA97mSq2j+TkPnVKQZoVl+1VtkaQ6MjbGjSbbu2rD5NyvI6p7A3tENzxIsseCpEBNK5nbvUOjSpTINNcSSAh+jJTI6SSQCiFE2Dh2zsuBNLEcA==
+ bh=M1QZm9wfN5xfPgmYIvpp5WXK/68HtkNBVYRx0hTUy5k=;
+ b=F3wRhakffA9pbW/waqu4SCeQSXIgA4VRk20FSIvrBWYczcIAv91nFUT0nWTh3kKbkak6hwkz9gWKmIJ/L2xLTTe6XVaMu+CTl4fvhEBCyOz7oi1Y3YfMZ38NMpkKol4jkj0wwNPfiLezTha24hFuUcD1U91sVnk12+VpIcQ9z73f/DlDBDoVyztyrU9BRC9KR4BV6CftfbljKzfG3tXnIOPL0IdjsYlStkERNZ1YfLNek/d6qLQso5ihRVNCxZiUnghrRbiSAs3H920ZcKbY20FdSQXZf0e5kjhSP6k7pBFsgNONqtfuXT1HTsexMSaiv7pxjKtCXZExC8o8bbHnkQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iTh1fa/8iZntB+c8DdyJjM+yT5Mzn4MmJJ6QW5rB08w=;
- b=ZSEvaURBzplglAlK/NQbVVveAzyGltMy4knQuKuXD+s0W6xUpkUbWYQfs2C8ilpKcLask7TpPenDLiG1IkZX2p2yKfrLPqtgTlQrRXDnSKU3oXn0vgZJ5GsIWtwk2B9XCw5qVuYD96PN6SF3k5i3l5jmFWMfxTUYTN0Jgt/CQkg=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4114.eurprd04.prod.outlook.com (52.134.94.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.18; Tue, 3 Mar 2020 07:49:22 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
- 07:49:22 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com, o.rempel@pengutronix.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, leonard.crestez@nxp.com, aisheng.dong@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V5 4/4] firmware: imx-scu: Support one TX and one RX
-Date:   Tue,  3 Mar 2020 15:42:39 +0800
-Message-Id: <1583221359-9285-5-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583221359-9285-1-git-send-email-peng.fan@nxp.com>
-References: <1583221359-9285-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0250.apcprd06.prod.outlook.com
- (2603:1096:4:ac::34) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+ bh=M1QZm9wfN5xfPgmYIvpp5WXK/68HtkNBVYRx0hTUy5k=;
+ b=tyEWNc9jrmKd+RlGMq7nVQqkwVJRiIoTN129lUYWenujBm4F6jmYNFy3rS67/dBr9ZyxLXp1oiiqmeV54RfvoL7J9//RBwmtqrSmCCXBNa1IbzvG9gsjdEu/yKUOWecWPiyTQal5s1mF1CAdNvpWO5lvBXRuoNsk97aDXvjHUIU=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (2603:10b6:208:1e1::17)
+ by MN2PR04MB6654.namprd04.prod.outlook.com (2603:10b6:208:1f1::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Tue, 3 Mar
+ 2020 07:50:15 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
+ 07:50:15 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>
+CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [PATCH v1] scsi: ufs-mediatek: fix HOST_PA_TACTIVATE quirk for
+ Samsung UFS Devices
+Thread-Topic: [PATCH v1] scsi: ufs-mediatek: fix HOST_PA_TACTIVATE quirk for
+ Samsung UFS Devices
+Thread-Index: AQHV8JoHZrCjeCNY/kOFC1Lcztl966g2f1oQ
+Date:   Tue, 3 Mar 2020 07:50:14 +0000
+Message-ID: <MN2PR04MB6991B5FF18C846FC47B34B70FCE40@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <20200302135346.16797-1-stanley.chu@mediatek.com>
+In-Reply-To: <20200302135346.16797-1-stanley.chu@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [212.25.79.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 7a08b2ab-f551-408f-db98-08d7bf47829b
+x-ms-traffictypediagnostic: MN2PR04MB6654:
+x-microsoft-antispam-prvs: <MN2PR04MB66549AF2CE48AA59F05D9E96FCE40@MN2PR04MB6654.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-forefront-prvs: 03319F6FEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(189003)(199004)(7416002)(2906002)(64756008)(66556008)(66446008)(66476007)(55016002)(54906003)(8676002)(110136005)(9686003)(8936002)(81166006)(81156014)(26005)(76116006)(66946007)(4326008)(52536014)(5660300002)(33656002)(86362001)(478600001)(316002)(7696005)(186003)(71200400001)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6654;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: iNlVIVgA94bPPz47njPXhJEJLl3v3KKOK1DYj+hsdY94RiXnBV971frNI1VsC9mpCXtuuxjbtPbVZ24XAj/bsPCxp0PvDrmo4k7kHXQN5wg5s1ZaeOZv6CiYgkNCkfTyQRrJWOLHGY/CpklkYEG99bKO4aDPtpOok1jGpdk4r2lEVC7O+bJFoceEEIxiQWVR1A7SscmnuK1+GtsoSyHUkSzN37W8rtt9DQAn3VyAUq+ihbHxF1Iu8mbI8fPktTB0xwc4xFiUL3eJ6ddIzNnfT0OeYpsJj3wO9Ld5IlPHozr90C8+xPkV1juE6lBD0F5ASMEzwBZ7JJc6yQ8Cd23q/4QBARjiCQAwI9cAbDP+hCXMajUjJqYj2v+4sYZ9YnWYcGKOnWUKQib/A/YGPXXeLhFDIdHuNOtYASGU9lEmlnMYfcH+NEBfpNIx4+AOf3mT
+x-ms-exchange-antispam-messagedata: g8f/jogaibEUJzxDMji2b1JV006kWXJChosxeFJD12YnpYybapILCWIiq5oOs6f0ySs6raarQYRlIONLBi0IRaTAs6FRN0LkhqHgJVmeLIwnfNABH/JdWyOSoNCA4liAj+fQXmTBqTq3YypyzXZecQ==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR06CA0250.apcprd06.prod.outlook.com (2603:1096:4:ac::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2772.15 via Frontend Transport; Tue, 3 Mar 2020 07:49:18 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8b54005e-cd5a-4a6d-36ee-08d7bf476322
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4114:|AM0PR04MB4114:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB4114395B1C58B437C6909CD988E40@AM0PR04MB4114.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 03319F6FEF
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(39860400002)(366004)(199004)(189003)(8936002)(69590400007)(52116002)(9686003)(6486002)(5660300002)(6512007)(8676002)(66946007)(81166006)(66556008)(66476007)(81156014)(26005)(36756003)(6666004)(956004)(478600001)(86362001)(4326008)(2906002)(2616005)(316002)(16526019)(6506007)(186003)(83323001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4114;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: gz9I8vCn3QstAUt8VuA19Q/9xLBMCs7YnZzgD8EHh4r+xdc86j40m7n4xFaAapzG7ToB3ko1OpSmdJibE0aAmBmY3ANjenCSnbDWjR4/Vp6emo1U6+wvb5hHD2eBsVYPG3E7oDTisoHbA3EGbd2wySwiSL03m9DlP1gXDNJ1Sr75ARMRPxyMuOrgldMUdwKvwKnwNJTI69HsfufuvU7qqMFiz7XPNckGd1Nnr39ayYq3rwtIdQnKPLCKu6Ri+k+NkjLQXsEKog4cUKz8qwlitowRXdLn+P00i+VktP2nhLHhfn/VLLu16iuZ0Osx/LcKsZ3dJhs0fCsp7hsO0Tqk9+D+4q7fX3uhznInybYxMKUBzz9d1mCJD9nazwtVvzh8dtAWEusYxc4TIUJBxkXw8pCFncobKq1E6OMF51i6z9eoZoGIoo9f+grc6wph+pV+PhA/i5YJ8d2BC0pYEMzpQjZSKTWk0b4CvyUokqBZ8fHX/LR1iTPXUVdFL4L8F9AGsAQpl6JWXhoZ/ubfM2a/9Q==
-X-MS-Exchange-AntiSpam-MessageData: BK2MOtM9yLWw3tcKUDAuVQHblGEx6plMnSqe0pdPDAdXBsLqHSYEbZVs9c2VkR0rgTqTBsQQGBaOt5noOIDo9t5EZ7JlGMRUSBIuYyCGXIKbV577wS6D0FowtbGWM775B6/utyMfgbApnCHXDcR9iw==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8b54005e-cd5a-4a6d-36ee-08d7bf476322
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 07:49:22.5582
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7a08b2ab-f551-408f-db98-08d7bf47829b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2020 07:50:14.9417
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kgzQwxPgVZePptcwG/Fp6Xbhk3aGa1nbOxGD6c+5FTan93+0yDJqwl+XTjryFZxcbuhiKYaBBAdJ6kY+c7Ma5g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4114
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: B99//8jVKzxgeHnKiewMI3KnVEFGkoPNyt3KaGfGa8XJW9EmuKaXl4WNW8eyLyClav7EWrAMUv+VZsch6/bttw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6654
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+=20
+>=20
+> Device quirk "UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE" is enabled for all
+> Samsung devices by default currently.
+>=20
+> However MediaTek UFS host requires different host's PA_TACTIVATE
+> configuration. Hence clear this quirk first and then apply vendor-specifi=
+c
+> value in vops callback.
+>=20
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+Reviewed-by: Avri Altman <avri.altman@wdc.com>
 
-Current imx-scu requires four TX and four RX to communicate with
-SCU. This is low efficient and causes lots of mailbox interrupts.
-
-With imx-mailbox driver could support one TX to use all four transmit
-registers and one RX to use all four receive registers, imx-scu
-could use one TX and one RX.
-
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
-V5:
- None
-V4:
- None
-V3:
- Check mbox fsl,imx8-mu-scu for fast_ipc
-
- drivers/firmware/imx/imx-scu.c | 54 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 43 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index f71eaa5bf52d..e94a5585b698 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -38,6 +38,7 @@ struct imx_sc_ipc {
- 	struct device *dev;
- 	struct mutex lock;
- 	struct completion done;
-+	bool fast_ipc;
- 
- 	/* temporarily store the SCU msg */
- 	u32 *msg;
-@@ -115,6 +116,7 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
- 	struct imx_sc_ipc *sc_ipc = sc_chan->sc_ipc;
- 	struct imx_sc_rpc_msg *hdr;
- 	u32 *data = msg;
-+	int i;
- 
- 	if (!sc_ipc->msg) {
- 		dev_warn(sc_ipc->dev, "unexpected rx idx %d 0x%08x, ignore!\n",
-@@ -122,6 +124,19 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
- 		return;
- 	}
- 
-+	if (sc_ipc->fast_ipc) {
-+		hdr = msg;
-+		sc_ipc->rx_size = hdr->size;
-+		sc_ipc->msg[0] = *data++;
-+
-+		for (i = 1; i < sc_ipc->rx_size; i++)
-+			sc_ipc->msg[i] = *data++;
-+
-+		complete(&sc_ipc->done);
-+
-+		return;
-+	}
-+
- 	if (sc_chan->idx == 0) {
- 		hdr = msg;
- 		sc_ipc->rx_size = hdr->size;
-@@ -147,6 +162,7 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
- 	struct imx_sc_chan *sc_chan;
- 	u32 *data = msg;
- 	int ret;
-+	int size;
- 	int i;
- 
- 	/* Check size */
-@@ -156,7 +172,8 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
- 	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr->svc,
- 		hdr->func, hdr->size);
- 
--	for (i = 0; i < hdr->size; i++) {
-+	size = sc_ipc->fast_ipc ? 1 : hdr->size;
-+	for (i = 0; i < size; i++) {
- 		sc_chan = &sc_ipc->chans[i % 4];
- 
- 		/*
-@@ -168,8 +185,10 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
- 		 * Wait for tx_done before every send to ensure that no
- 		 * queueing happens at the mailbox channel level.
- 		 */
--		wait_for_completion(&sc_chan->tx_done);
--		reinit_completion(&sc_chan->tx_done);
-+		if (!sc_ipc->fast_ipc) {
-+			wait_for_completion(&sc_chan->tx_done);
-+			reinit_completion(&sc_chan->tx_done);
-+		}
- 
- 		ret = mbox_send_message(sc_chan->ch, &data[i]);
- 		if (ret < 0)
-@@ -246,6 +265,8 @@ static int imx_scu_probe(struct platform_device *pdev)
- 	struct imx_sc_chan *sc_chan;
- 	struct mbox_client *cl;
- 	char *chan_name;
-+	struct of_phandle_args args;
-+	int num_channel;
- 	int ret;
- 	int i;
- 
-@@ -253,11 +274,20 @@ static int imx_scu_probe(struct platform_device *pdev)
- 	if (!sc_ipc)
- 		return -ENOMEM;
- 
--	for (i = 0; i < SCU_MU_CHAN_NUM; i++) {
--		if (i < 4)
-+	ret = of_parse_phandle_with_args(pdev->dev.of_node, "mboxes",
-+					 "#mbox-cells", 0, &args);
-+	if (ret)
-+		return ret;
-+
-+	sc_ipc->fast_ipc = of_device_is_compatible(args.np, "fsl,imx8-mu-scu");
-+
-+	num_channel = sc_ipc->fast_ipc ? 2 : SCU_MU_CHAN_NUM;
-+	for (i = 0; i < num_channel; i++) {
-+		if (i < num_channel / 2)
- 			chan_name = kasprintf(GFP_KERNEL, "tx%d", i);
- 		else
--			chan_name = kasprintf(GFP_KERNEL, "rx%d", i - 4);
-+			chan_name = kasprintf(GFP_KERNEL, "rx%d",
-+					      i - num_channel / 2);
- 
- 		if (!chan_name)
- 			return -ENOMEM;
-@@ -269,13 +299,15 @@ static int imx_scu_probe(struct platform_device *pdev)
- 		cl->knows_txdone = true;
- 		cl->rx_callback = imx_scu_rx_callback;
- 
--		/* Initial tx_done completion as "done" */
--		cl->tx_done = imx_scu_tx_done;
--		init_completion(&sc_chan->tx_done);
--		complete(&sc_chan->tx_done);
-+		if (!sc_ipc->fast_ipc) {
-+			/* Initial tx_done completion as "done" */
-+			cl->tx_done = imx_scu_tx_done;
-+			init_completion(&sc_chan->tx_done);
-+			complete(&sc_chan->tx_done);
-+		}
- 
- 		sc_chan->sc_ipc = sc_ipc;
--		sc_chan->idx = i % 4;
-+		sc_chan->idx = i % (num_channel / 2);
- 		sc_chan->ch = mbox_request_channel_byname(cl, chan_name);
- 		if (IS_ERR(sc_chan->ch)) {
- 			ret = PTR_ERR(sc_chan->ch);
--- 
-2.16.4
-
+> ---
+>  drivers/scsi/ufs/ufs-mediatek.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-media=
+tek.c
+> index de650822c9d9..3b0e575d7460 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -533,8 +533,10 @@ static int ufs_mtk_apply_dev_quirks(struct ufs_hba
+> *hba)
+>         struct ufs_dev_info *dev_info =3D &hba->dev_info;
+>         u16 mid =3D dev_info->wmanufacturerid;
+>=20
+> -       if (mid =3D=3D UFS_VENDOR_SAMSUNG)
+> +       if (mid =3D=3D UFS_VENDOR_SAMSUNG) {
+> +               hba->dev_quirks &=3D ~UFS_DEVICE_QUIRK_HOST_PA_TACTIVATE;
+>                 ufshcd_dme_set(hba, UIC_ARG_MIB(PA_TACTIVATE), 6);
+> +       }
+>=20
+>         /*
+>          * Decide waiting time before gating reference clock and
+> --
+> 2.18.0
