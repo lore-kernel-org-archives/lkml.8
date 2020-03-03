@@ -2,153 +2,185 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BD0AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:34:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65EFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:39:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C5D21775
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:34:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80B95214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:39:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fpjHsJmn"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LRDv2LFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728277AbgCCJeg (ORCPT
+        id S1728206AbgCCJjM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:34:36 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:33470 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgCCJee (ORCPT
+        Tue, 3 Mar 2020 04:39:12 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:60048 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbgCCJjL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:34:34 -0500
-Received: by mail-pj1-f68.google.com with SMTP id m7so1024356pjs.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 01:34:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZvzoObnBVzlXL6MM7KZpnEWysdUu+lTn+skS3IgavUM=;
-        b=fpjHsJmnfVmUfPGfvrMJIa6ugplGKPICLu4RJXOHo7RaSJTcXOU6xdvU/x1V9fDRST
-         BJLsJpki/oC/f9dRHAMFZA1xF6eP0xXFokNg4O757ciUtd0hYZ8+7NIy+yJ+FLifOqUU
-         eCCJlsMz12M376owQxkzYeJqfKI8RhXnu0HqmwLoxZD2g/GTBqK5W9/+mOFZC+rwuAVm
-         mGhtNDIOu4GbdAzVB0pFGppcf8X2uPNu3otLH7wcodCYJAdZdc19t/aS4szxPfzW34Gr
-         CVi0ft0UB/9+hTiN+o1VrOOTPt0MjJQ2FiZ1/k7xRMDkZv/6V0iZG9a6ScYlSKmm3idf
-         UjnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZvzoObnBVzlXL6MM7KZpnEWysdUu+lTn+skS3IgavUM=;
-        b=U6Wnis1AMMmNPSkdfb/PtCHRm0HPo9pLU/B7l2TyeQSFocMxyf8k+EApdwssky3MgB
-         NlEtkyCWcqxGzAGCDJ8ROZ8d3NEJMWKHfhvLz7h4EMjkbI1VrtYV0goALCcRk5PgP7Wj
-         nReW398t2uwd2Sy9VmjKNHrJNWIIHiaP7jirrIWDSGxovzRX67CFfHlDqJFyP97nsydR
-         Ror7KFndWrBu8Fe0B4UPW49EsgzB4z5Mante4Ul2vFdom40aJYOPdxinv++t7Q+8SYa7
-         iK3b7DZIdZceKUqMgzdK2Vb9rN7XzFf8gCRribmlUJpFO/p3ZsuNGb/WDUwG2rCOIOHe
-         J7xA==
-X-Gm-Message-State: ANhLgQ3ELbvEqVxTbnhL8jNhHKEkAuBmBNa1lf36hH9jM4SrqkPtuQw4
-        X32v2pwxlwKQueDwsxLEyJzdhw==
-X-Google-Smtp-Source: ADFU+vuHS1eBdaLNvluWEEmf97yC/t9L3b5bxpdp0cpSTw/h3n9o9CnJqe7dhb9ZXXuC4PkHvw9ArQ==
-X-Received: by 2002:a17:902:8f91:: with SMTP id z17mr3422269plo.234.1583228073577;
-        Tue, 03 Mar 2020 01:34:33 -0800 (PST)
-Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id s5sm1494745pfh.47.2020.03.03.01.34.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 01:34:33 -0800 (PST)
-From:   Greentime Hu <greentime.hu@sifive.com>
-To:     green.hu@gmail.com, greentime@kernel.org, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Greentime Hu <greentime.hu@sifive.com>
-Subject: [PATCH 2/2] riscv: fix the IPI missing issue in nommu mode
-Date:   Tue,  3 Mar 2020 17:34:18 +0800
-Message-Id: <20200303093418.9180-2-greentime.hu@sifive.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200303093418.9180-1-greentime.hu@sifive.com>
-References: <20200303093418.9180-1-greentime.hu@sifive.com>
+        Tue, 3 Mar 2020 04:39:11 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0239Y00N124318;
+        Tue, 3 Mar 2020 09:38:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=MSC4Wtn4COvNsRCEoK0KFvQBDjOBfSLVQcEKZQ8ZTdg=;
+ b=LRDv2LFkdT7WCfr+9xjf73IV/JlTN3jptGTipndciOQdpCVMP7EWMeE9e4b88WUmJeyk
+ R/Zwo9JQkFXNZHjQhqMNwG93G1vIBc4ktNcpGGE5ktgN6Wm0BI0OhWOnd66z7MW1bCeE
+ 5Vv3pd+ZgATHDhU9h25gMWfU6SCAFq9S6xnYYZX1qRJsHpPUQJeKRb6QMXOn2gqN1yKG
+ sC+p5vKAv2iq56Z399oxI2nnU92nxWcDWFipLJsdO3Z77GaHv8W3f5UN4D1yVgRwiEKR
+ HhsBVUBpobfztgQwQZYZxQiNtqGxH/xnPgjvW6QBPXpvCrveJxBiB84SSdim0ospP/Oh TQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2yffwqnrcg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 09:38:53 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0239WZvP182796;
+        Tue, 3 Mar 2020 09:38:52 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2yg1eka3kp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 03 Mar 2020 09:38:52 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0239cjrk013071;
+        Tue, 3 Mar 2020 09:38:45 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Mar 2020 01:38:44 -0800
+Date:   Tue, 3 Mar 2020 12:38:32 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Alexander Potapenko <glider@google.com>
+Cc:     Joe Perches <joe@perches.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Todd Kjos <tkjos@google.com>
+Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to
+ copy_from_user()
+Message-ID: <20200303093832.GD24372@kadam>
+References: <20200302130430.201037-1-glider@google.com>
+ <20200302130430.201037-2-glider@google.com>
+ <0eaac427354844a4fcfb0d9843cf3024c6af21df.camel@perches.com>
+ <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com>
+ <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
+ <CAG_fn=XOyPGau9m7x8eCLJHy3m-H=nbMODewWVJ1xb2e+BPdFw@mail.gmail.com>
+ <18b0d6ea5619c34ca4120a6151103dbe9bfa0cbe.camel@perches.com>
+ <CAG_fn=U2T--j_uhyppqzFvMO3w3yUA529pQrCpbhYvqcfh9Z1w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAG_fn=U2T--j_uhyppqzFvMO3w3yUA529pQrCpbhYvqcfh9Z1w@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030074
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030074
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the IPI(inner processor interrupt) missing issue. It
-failed because it used hartid_mask to iterate for_each_cpu(), however the
-cpu_mask and hartid_mask may not be always the same. It will never send the
-IPI to hartid 4 because it will be skipped in for_each_cpu loop in my case.
+On Tue, Mar 03, 2020 at 10:14:18AM +0100, Alexander Potapenko wrote:
+> On Mon, Mar 2, 2020 at 7:51 PM Joe Perches <joe@perches.com> wrote:
+> >
+> > On Mon, 2020-03-02 at 19:17 +0100, Alexander Potapenko wrote:
+> > > On Mon, Mar 2, 2020 at 3:00 PM Joe Perches <joe@perches.com> wrote:
+> > > > On Mon, 2020-03-02 at 14:25 +0100, Alexander Potapenko wrote:
+> > > > > On Mon, Mar 2, 2020 at 2:11 PM Joe Perches <joe@perches.com> wrote:
+> > > > > > On Mon, 2020-03-02 at 14:04 +0100, glider@google.com wrote:
+> > > > > > > Certain copy_from_user() invocations in binder.c are known to
+> > > > > > > unconditionally initialize locals before their first use, like e.g. in
+> > > > > > > the following case:
+> > > > > > []
+> > > > > > > diff --git a/drivers/android/binder.c b/drivers/android/binder.c
+> > > > > > []
+> > > > > > > @@ -3788,7 +3788,7 @@ static int binder_thread_write(struct binder_proc *proc,
+> > > > > > >
+> > > > > > >               case BC_TRANSACTION_SG:
+> > > > > > >               case BC_REPLY_SG: {
+> > > > > > > -                     struct binder_transaction_data_sg tr;
+> > > > > > > +                     struct binder_transaction_data_sg tr __no_initialize;
+> > > > > > >
+> > > > > > >                       if (copy_from_user(&tr, ptr, sizeof(tr)))
+> > > > > >
+> > > > > > I fail to see any value in marking tr with __no_initialize
+> > > > > > when it's immediately written to by copy_from_user.
+> > > > >
+> > > > > This is being done exactly because it's immediately written to by copy_to_user()
+> > > > > Clang is currently unable to figure out that copy_to_user() initializes memory.
+> > > > > So building the kernel with CONFIG_INIT_STACK_ALL=y basically leads to
+> > > > > the following code:
+> > > > >
+> > > > >   struct binder_transaction_data_sg tr;
+> > > > >   memset(&tr, 0xAA, sizeof(tr));
+> > > > >   if (copy_from_user(&tr, ptr, sizeof(tr))) {...}
+> > > > >
+> > > > > This unnecessarily slows the code down, so we add __no_initialize to
+> > > > > prevent the compiler from emitting the redundant initialization.
+> > > >
+> > > > So?  CONFIG_INIT_STACK_ALL by design slows down code.
+> > > Correct.
+> > >
+> > > > This marking would likely need to be done for nearly all
+> > > > 3000+ copy_from_user entries.
+> > > Unfortunately, yes. I was just hoping to do so for a handful of hot
+> > > cases that we encounter, but in the long-term a compiler solution must
+> > > supersede them.
+> > >
+> > > > Why not try to get something done on the compiler side
+> > > > to mark the function itself rather than the uses?
+> > > This is being worked on in the meantime as well (see
+> > > http://lists.llvm.org/pipermail/cfe-dev/2020-February/064633.html)
+> > > Do you have any particular requisitions about how this should look on
+> > > the source level?
+> >
+> > I presume something like the below when appropriate for
+> > automatic variables when not already initialized or modified.
+> > ---
+> >  include/linux/uaccess.h | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+> > index 8a215c..3e034b5 100644
+> > --- a/include/linux/uaccess.h
+> > +++ b/include/linux/uaccess.h
+> > @@ -138,7 +138,8 @@ _copy_to_user(void __user *, const void *, unsigned long);
+> >  #endif
+> >
+> >  static __always_inline unsigned long __must_check
+> > -copy_from_user(void *to, const void __user *from, unsigned long n)
+> > +copy_from_user(void __no_initialize *to, const void __user *from,
+> > +              unsigned long n)
+> 
+> Shall this __no_initialize attribute denote that the whole object
+> passed to it is initialized?
+> Or do we need to encode the length as well, as Jann suggests?
+> It's also interesting what should happen if *to is pointing _inside_ a
+> local object - presumably it's unsafe to disable initialization for
+> the whole object.
 
-We can reproduce this case in Qemu sifive_u machine by this command.
-qemu-system-riscv64 -nographic -smp 5 -m 1G -M sifive_u -kernel \
-arch/riscv/boot/loader
+The real fix is to initialize everything manually, the automated
+initialization is a hardenning feature which many people will disable.
+So I don't think the hardenning needs to be perfect, it needs to simple
+and fast.
 
-It will hang in csd_lock_wait(csd) because the csd_unlock(csd) is not
-called. It is not called because hartid 4 doesn't receive the IPI to
-release this lock. The caller hart doesn't send the IPI to hartid 4 is
-because of hartid 4 is skipped in for_each_cpu(). It will be skipped is
-because "(cpu) < nr_cpu_ids" is not true. The hartid is 4 and nr_cpu_ids
-is 4. Therefore it should use cpumask in for_each_cpu() instead of
-hartid_mask.
-
-        /* Send a message to all CPUs in the map */
-        arch_send_call_function_ipi_mask(cfd->cpumask_ipi);
-
-        if (wait) {
-                for_each_cpu(cpu, cfd->cpumask) {
-                        call_single_data_t *csd;
-			csd = per_cpu_ptr(cfd->csd, cpu);
-                        csd_lock_wait(csd);
-                }
-        }
-
-        for ((cpu) = -1;                                \
-                (cpu) = cpumask_next((cpu), (mask)),    \
-                (cpu) < nr_cpu_ids;)
-
-It could boot to login console after this patch applied.
-
-Fixes: b2d36b5668f6 ("riscv: provide native clint access for M-mode")
-Signed-off-by: Greentime Hu <greentime.hu@sifive.com>
----
- arch/riscv/include/asm/clint.h | 8 ++++----
- arch/riscv/kernel/smp.c        | 2 +-
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/arch/riscv/include/asm/clint.h b/arch/riscv/include/asm/clint.h
-index 6eaa2eedd694..a279b17a6aad 100644
---- a/arch/riscv/include/asm/clint.h
-+++ b/arch/riscv/include/asm/clint.h
-@@ -15,12 +15,12 @@ static inline void clint_send_ipi_single(unsigned long hartid)
- 	writel(1, clint_ipi_base + hartid);
- }
- 
--static inline void clint_send_ipi_mask(const struct cpumask *hartid_mask)
-+static inline void clint_send_ipi_mask(const struct cpumask *mask)
- {
--	int hartid;
-+	int cpu;
- 
--	for_each_cpu(hartid, hartid_mask)
--		clint_send_ipi_single(hartid);
-+	for_each_cpu(cpu, mask)
-+		clint_send_ipi_single(cpuid_to_hartid_map(cpu));
- }
- 
- static inline void clint_clear_ipi(unsigned long hartid)
-diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
-index eb878abcaaf8..e0a6293093f1 100644
---- a/arch/riscv/kernel/smp.c
-+++ b/arch/riscv/kernel/smp.c
-@@ -96,7 +96,7 @@ static void send_ipi_mask(const struct cpumask *mask, enum ipi_message_type op)
- 	if (IS_ENABLED(CONFIG_RISCV_SBI))
- 		sbi_send_ipi(cpumask_bits(&hartid_mask));
- 	else
--		clint_send_ipi_mask(&hartid_mask);
-+		clint_send_ipi_mask(mask);
- }
- 
- static void send_ipi_single(int cpu, enum ipi_message_type op)
--- 
-2.25.1
-
+regards,
+dan carpenter
