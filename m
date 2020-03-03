@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3823AC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 886F2C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 102C024673
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 568F8246BB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203733;
-	bh=QylDUZK3QTKd3//3nJslpmnCls/OiFTo4MnS8zfcwbA=;
+	s=default; t=1583203738;
+	bh=umPpQzOU4eFA5s5p0KGpojStj0PTG+oVqhQ8CLaVrow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jAMfGCecIon0If3N7au3JCadXYRMS8Tw478U8RVZIjvUX6rp9NYctVrGtrL2Z7vLU
-	 hpQnV4DoIrLXEa4fyBjeIqoN/VGWU5mnkyFSgiElhCMbCw0ykmKp4JXig/zPoAj0MG
-	 szwvZjU2AlL6AyStTWfOsbOtOJHDltSdqyNE9iCw=
+	b=sQxz+xf2gpOTaBoNzW6f9ZCKfgIIrlde3U66cMPgKI8Xor19fWRTNQfAg7numKxjZ
+	 8DqOISBYz/+qKP8cjFBtVOdhrtPiNx3lgVGvuKP+JVSkLwJpG29obyFXZipPJP4X6y
+	 MDxvs98c6d9btkypaJXHiS1drXvHmV3tl9yKRKIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728589AbgCCCsv (ORCPT
+        id S1728613AbgCCCsz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:48:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44472 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:48:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728409AbgCCCsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:38 -0500
+        id S1728499AbgCCCsm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:48:42 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEF81246A1;
-        Tue,  3 Mar 2020 02:48:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94D91246D8;
+        Tue,  3 Mar 2020 02:48:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203717;
-        bh=QylDUZK3QTKd3//3nJslpmnCls/OiFTo4MnS8zfcwbA=;
+        s=default; t=1583203721;
+        bh=umPpQzOU4eFA5s5p0KGpojStj0PTG+oVqhQ8CLaVrow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ARjvncwPq8cRLXN7zBdPxDK2tctsr+3XV3TKKs2tWtxWrTOjmYEfO8nGQKWAdvos
-         HfPEa0uyNpN28eWh4x8KuUdJAlxGQvt5qEQtAJbbdYjXakcmJ6Xw0IxetSEks24IME
-         uQy+55tVfWO6TZsMDtuGgMg7LZTZy9xvK2hr1s44=
+        b=Wn5ePJPKsR6GVaAvqfml9e4xYHYYyP53XzvWYP2CFN4oZMwAKqq/0KDi6P6y2QhiN
+         ODG3bOPvVAarESpkFRbNKCME7GabyS3YP3DYy/CIEE0nf8e/U7kemOf+RpZpbitMk3
+         DJYicxK7u9vNFIulGfEptAdknT5jbs5XDgzctdF4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kees Cook <keescook@chromium.org>, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Sasha Levin <sashal@kernel.org>,
-        xen-devel@lists.xenproject.org, clang-built-linux@googlegroups.com
-Subject: [PATCH AUTOSEL 5.4 47/58] x86/xen: Distribute switch variables for initialization
-Date:   Mon,  2 Mar 2020 21:47:29 -0500
-Message-Id: <20200303024740.9511-47-sashal@kernel.org>
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 50/58] bnxt_en: Improve device shutdown method.
+Date:   Mon,  2 Mar 2020 21:47:32 -0500
+Message-Id: <20200303024740.9511-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024740.9511-1-sashal@kernel.org>
 References: <20200303024740.9511-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,64 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kees Cook <keescook@chromium.org>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 9038ec99ceb94fb8d93ade5e236b2928f0792c7c ]
+[ Upstream commit 5567ae4a8d569d996d0d88d0eceb76205e4c7ce5 ]
 
-Variables declared in a switch statement before any case statements
-cannot be automatically initialized with compiler instrumentation (as
-they are not part of any execution flow). With GCC's proposed automatic
-stack variable initialization feature, this triggers a warning (and they
-don't get initialized). Clang's automatic stack variable initialization
-(via CONFIG_INIT_STACK_ALL=y) doesn't throw a warning, but it also
-doesn't initialize such variables[1]. Note that these warnings (or silent
-skipping) happen before the dead-store elimination optimization phase,
-so even when the automatic initializations are later elided in favor of
-direct initializations, the warnings remain.
+Especially when bnxt_shutdown() is called during kexec, we need to
+disable MSIX and disable Bus Master to completely quiesce the device.
+Make these 2 calls unconditionally in the shutdown method.
 
-To avoid these problems, move such variables into the "case" where
-they're used or lift them up into the main function body.
-
-arch/x86/xen/enlighten_pv.c: In function ‘xen_write_msr_safe’:
-arch/x86/xen/enlighten_pv.c:904:12: warning: statement will never be executed [-Wswitch-unreachable]
-  904 |   unsigned which;
-      |            ^~~~~
-
-[1] https://bugs.llvm.org/show_bug.cgi?id=44916
-
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Link: https://lore.kernel.org/r/20200220062318.69299-1-keescook@chromium.org
-Reviewed-by: Juergen Gross <jgross@suse.com>
-[boris: made @which an 'unsigned int']
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Fixes: c20dc142dd7b ("bnxt_en: Disable bus master during PCI shutdown and driver unload.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/xen/enlighten_pv.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 6ea215cdeadac..6d4d8a5700b71 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -905,14 +905,15 @@ static u64 xen_read_msr_safe(unsigned int msr, int *err)
- static int xen_write_msr_safe(unsigned int msr, unsigned low, unsigned high)
- {
- 	int ret;
-+#ifdef CONFIG_X86_64
-+	unsigned int which;
-+	u64 base;
-+#endif
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 68618891b0e42..e03e610dd1831 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -11908,10 +11908,10 @@ static void bnxt_shutdown(struct pci_dev *pdev)
+ 		dev_close(dev);
  
- 	ret = 0;
+ 	bnxt_ulp_shutdown(bp);
++	bnxt_clear_int_mode(bp);
++	pci_disable_device(pdev);
  
- 	switch (msr) {
- #ifdef CONFIG_X86_64
--		unsigned which;
--		u64 base;
--
- 	case MSR_FS_BASE:		which = SEGBASE_FS; goto set;
- 	case MSR_KERNEL_GS_BASE:	which = SEGBASE_GS_USER; goto set;
- 	case MSR_GS_BASE:		which = SEGBASE_GS_KERNEL; goto set;
+ 	if (system_state == SYSTEM_POWER_OFF) {
+-		bnxt_clear_int_mode(bp);
+-		pci_disable_device(pdev);
+ 		pci_wake_from_d3(pdev, bp->wol);
+ 		pci_set_power_state(pdev, PCI_D3hot);
+ 	}
 -- 
 2.20.1
 
