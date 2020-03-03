@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7481EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CA5C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FA4320726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7407120726
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgCCHVv (ORCPT
+        id S1727624AbgCCHVx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:21:51 -0500
-Received: from twhmllg3.macronix.com ([211.75.127.131]:31755 "EHLO
+        Tue, 3 Mar 2020 02:21:53 -0500
+Received: from twhmllg3.macronix.com ([211.75.127.131]:31761 "EHLO
         TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727571AbgCCHVu (ORCPT
+        with ESMTP id S1727600AbgCCHVw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:21:50 -0500
+        Tue, 3 Mar 2020 02:21:52 -0500
 Received: from localhost.localdomain ([172.17.195.96])
-        by TWHMLLG3.macronix.com with ESMTP id 0237LRLA023026;
-        Tue, 3 Mar 2020 15:21:29 +0800 (GMT-8)
+        by TWHMLLG3.macronix.com with ESMTP id 0237LRLB023026;
+        Tue, 3 Mar 2020 15:21:30 +0800 (GMT-8)
         (envelope-from masonccyang@mxic.com.tw)
 From:   Mason Yang <masonccyang@mxic.com.tw>
 To:     miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com
@@ -32,106 +32,124 @@ Cc:     frieder.schrempf@kontron.de, tglx@linutronix.de, stefan@agner.ch,
         rfontana@redhat.com, linux-mtd@lists.infradead.org,
         yuehaibing@huawei.com, s.hauer@pengutronix.de,
         Mason Yang <masonccyang@mxic.com.tw>
-Subject: [PATCH v3 1/4] mtd: rawnand: Add support manufacturer specific lock/unlock operation
-Date:   Tue,  3 Mar 2020 15:21:21 +0800
-Message-Id: <1583220084-10890-2-git-send-email-masonccyang@mxic.com.tw>
+Subject: [PATCH v3 2/4] mtd: rawnand: Add support Macronix Block Protection function
+Date:   Tue,  3 Mar 2020 15:21:22 +0800
+Message-Id: <1583220084-10890-3-git-send-email-masonccyang@mxic.com.tw>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
 References: <1583220084-10890-1-git-send-email-masonccyang@mxic.com.tw>
-X-MAIL: TWHMLLG3.macronix.com 0237LRLA023026
+X-MAIL: TWHMLLG3.macronix.com 0237LRLB023026
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nand_lock() & nand_unlock() for manufacturer specific lock & unlock
-operation while the device supports Block Portection function.
+Macronix AC/AD series support using SET_FEATURES to change
+Block Portection and Unprotection. By GET_FEATURES operation
+to detect if block protection support.
 
 Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-Reported-by: kbuild test robot <lkp@intel.com>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/mtd/nand/raw/nand_base.c | 36 ++++++++++++++++++++++++++++++++++--
- include/linux/mtd/rawnand.h      |  5 +++++
- 2 files changed, 39 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/raw/nand_macronix.c | 72 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
 
-diff --git a/drivers/mtd/nand/raw/nand_base.c b/drivers/mtd/nand/raw/nand_base.c
-index f64e3b6..769be81 100644
---- a/drivers/mtd/nand/raw/nand_base.c
-+++ b/drivers/mtd/nand/raw/nand_base.c
-@@ -4360,6 +4360,38 @@ static void nand_shutdown(struct mtd_info *mtd)
- 	nand_suspend(mtd);
+diff --git a/drivers/mtd/nand/raw/nand_macronix.c b/drivers/mtd/nand/raw/nand_macronix.c
+index 3ff7ce0..a4cd12c 100644
+--- a/drivers/mtd/nand/raw/nand_macronix.c
++++ b/drivers/mtd/nand/raw/nand_macronix.c
+@@ -11,6 +11,10 @@
+ #define MACRONIX_READ_RETRY_BIT BIT(0)
+ #define MACRONIX_NUM_READ_RETRY_MODES 6
+ 
++#define ONFI_FEATURE_ADDR_MXIC_PROTECTION 0xA0
++#define MXIC_BLOCK_PROTECTION_ALL_LOCK 0x38
++#define MXIC_BLOCK_PROTECTION_ALL_UNLOCK 0x0
++
+ struct nand_onfi_vendor_macronix {
+ 	u8 reserved;
+ 	u8 reliability_func;
+@@ -91,6 +95,73 @@ static void macronix_nand_fix_broken_get_timings(struct nand_chip *chip)
+ 		     ONFI_FEATURE_ADDR_TIMING_MODE, 1);
  }
  
-+/**
-+ * nand_lock - [MTD Interface] Lock the NAND flash
-+ * @mtd: MTD device structure
-+ * @ofs: offset byte address
-+ * @len: number of bytes to lock (must be a multiple of block/page size)
++/*
++ * Macronix NAND supports Block Protection by Protectoin(PT) pin;
++ * active high at power-on which protects the entire chip even the #WP is
++ * disabled. Lock/unlock protection area can be partition according to
++ * protection bits, i.e. upper 1/2 locked, upper 1/4 locked and so on.
 + */
-+static int nand_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++static int mxic_nand_lock(struct nand_chip *chip, loff_t ofs, uint64_t len)
 +{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
++	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
++	int ret;
 +
-+	if (!chip->lock_area)
-+		return -ENOTSUPP;
++	feature[0] = MXIC_BLOCK_PROTECTION_ALL_LOCK;
++	nand_select_target(chip, 0);
++	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
++				feature);
++	nand_deselect_target(chip);
++	if (ret)
++		pr_err("%s all blocks failed\n", __func__);
 +
-+	return chip->lock_area(chip, ofs, len);
++	return ret;
 +}
 +
-+/**
-+ * nand_unlock - [MTD Interface] Unlock the NAND flash
-+ * @mtd: MTD device structure
-+ * @ofs: offset byte address
-+ * @len: number of bytes to unlock (must be a multiple of block/page size)
-+ */
-+static int nand_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++static int mxic_nand_unlock(struct nand_chip *chip, loff_t ofs, uint64_t len)
 +{
-+	struct nand_chip *chip = mtd_to_nand(mtd);
++	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
++	int ret;
 +
-+	if (!chip->unlock_area)
-+		return -ENOTSUPP;
++	feature[0] = MXIC_BLOCK_PROTECTION_ALL_UNLOCK;
++	nand_select_target(chip, 0);
++	ret = nand_set_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
++				feature);
++	nand_deselect_target(chip);
++	if (ret)
++		pr_err("%s all blocks failed\n", __func__);
 +
-+	return chip->unlock_area(chip, ofs, len);
++	return ret;
 +}
 +
- /* Set default functions */
- static void nand_set_defaults(struct nand_chip *chip)
++static void macronix_nand_block_protection_support(struct nand_chip *chip)
++{
++	u8 feature[ONFI_SUBFEATURE_PARAM_LEN];
++	int ret;
++
++	bitmap_set(chip->parameters.get_feature_list,
++		   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
++
++	feature[0] = MXIC_BLOCK_PROTECTION_ALL_UNLOCK;
++	nand_select_target(chip, 0);
++	ret = nand_get_features(chip, ONFI_FEATURE_ADDR_MXIC_PROTECTION,
++				feature);
++	nand_deselect_target(chip);
++	if (ret || feature[0] != MXIC_BLOCK_PROTECTION_ALL_LOCK) {
++		if (ret)
++			pr_err("Block protection check failed\n");
++
++		bitmap_clear(chip->parameters.get_feature_list,
++			     ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
++		return;
++	}
++
++	bitmap_set(chip->parameters.set_feature_list,
++		   ONFI_FEATURE_ADDR_MXIC_PROTECTION, 1);
++
++	chip->lock_area = mxic_nand_lock;
++	chip->unlock_area = mxic_nand_unlock;
++}
++
+ static int macronix_nand_init(struct nand_chip *chip)
  {
-@@ -5786,8 +5818,8 @@ static int nand_scan_tail(struct nand_chip *chip)
- 	mtd->_read_oob = nand_read_oob;
- 	mtd->_write_oob = nand_write_oob;
- 	mtd->_sync = nand_sync;
--	mtd->_lock = NULL;
--	mtd->_unlock = NULL;
-+	mtd->_lock = nand_lock;
-+	mtd->_unlock = nand_unlock;
- 	mtd->_suspend = nand_suspend;
- 	mtd->_resume = nand_resume;
- 	mtd->_reboot = nand_shutdown;
-diff --git a/include/linux/mtd/rawnand.h b/include/linux/mtd/rawnand.h
-index 4ab9bcc..bc2fa3c 100644
---- a/include/linux/mtd/rawnand.h
-+++ b/include/linux/mtd/rawnand.h
-@@ -1077,6 +1077,8 @@ struct nand_legacy {
-  * @manufacturer:	[INTERN] Contains manufacturer information
-  * @manufacturer.desc:	[INTERN] Contains manufacturer's description
-  * @manufacturer.priv:	[INTERN] Contains manufacturer private information
-+ * @lock_area:		[REPLACEABLE] specific NAND chip lock operation
-+ * @unlock_area:	[REPLACEABLE] specific NAND chip unlock operation
-  */
+ 	if (nand_is_slc(chip))
+@@ -98,6 +169,7 @@ static int macronix_nand_init(struct nand_chip *chip)
  
- struct nand_chip {
-@@ -1136,6 +1138,9 @@ struct nand_chip {
- 		const struct nand_manufacturer *desc;
- 		void *priv;
- 	} manufacturer;
-+
-+	int (*lock_area)(struct nand_chip *chip, loff_t ofs, uint64_t len);
-+	int (*unlock_area)(struct nand_chip *chip, loff_t ofs, uint64_t len);
- };
+ 	macronix_nand_fix_broken_get_timings(chip);
+ 	macronix_nand_onfi_init(chip);
++	macronix_nand_block_protection_support(chip);
  
- extern const struct mtd_ooblayout_ops nand_ooblayout_sp_ops;
+ 	return 0;
+ }
 -- 
 1.9.1
 
