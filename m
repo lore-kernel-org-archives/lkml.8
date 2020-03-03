@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9B8C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF70C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC8C21D56
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FDC21D56
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:54:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204092;
-	bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
+	s=default; t=1583204099;
+	bh=rjHWYPobdRHbKGN4H7K4flnCN8qtJdwaq+q8i9ErNKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vd5jPj8s+7xXAL2XwY4OsGnOxr4LxfGqS0MQYH6HLUvBe6OLMCBlN/jSv8ZX0VOeB
-	 9sMHmmLnfpw3yiz2KvHAYS+BDA6rLKP482eYaoQFeg2HWwGesvPtFCk/qT9x3qGGHi
-	 kBS98slWntxboM3LksBqbzlXxrKsS0jasF4s7cEo=
+	b=pz0nZkvHZx+FsNBi92Zj7avC70O9K0qWgSU8vzpDdbxeHDN45sgqRyBwy08If5tX0
+	 w8NW08QBB8yT/SpbY+6qbxG6CCOMq8H4+OCbRjFCXId9dkNN6k2xfCF+V5cs3nS5Lp
+	 od+hSFhxOZ96KWxnra/iNhE/zCuud0cKajcjTcYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728157AbgCCCtO (ORCPT
+        id S1728989AbgCCCy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:49:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44860 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:54:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728615AbgCCCs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:48:56 -0500
+        id S1728698AbgCCCtM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:49:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09B7724699;
-        Tue,  3 Mar 2020 02:48:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0143246D8;
+        Tue,  3 Mar 2020 02:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203735;
-        bh=YKfdWWef2XAP+GCkkOxxFSr7TtbFVlNDiZybrdw5O7M=;
+        s=default; t=1583203751;
+        bh=rjHWYPobdRHbKGN4H7K4flnCN8qtJdwaq+q8i9ErNKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BB/h9nPRmVyajWgpDSZd3egfFwKlRpNZEMIOO2OM8NgN5vKMgdfAb02Zut1/dvioV
-         dZoDq6Z4u6R/HEn343rZwwBjr8Dyg94TLHuPXIngqtXRAvfgU9/o7O8CrssIi+Tyd+
-         6E7HNmdjN/cLmIsgBBXRfs0Sotls7h0lET05+/hA=
+        b=dDYl9WApHvVzGQ6YMKqL1YwxJ0wDpzvmeNTZqU/NoyLKxXoOnq4DZ/qZp9Xgqaim/
+         CNb+M7d4DCzC0EdG/yysrSKNHcnn+beHE6QRRbuhgHK0/ngX7S7brX81Bo0888uCBe
+         EQXoyJa/m7U+63tZwnvWjuQ00dDzQojE+ynBA2K4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniel Golle <daniel@makrotopia.org>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-serial@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 03/32] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
-Date:   Mon,  2 Mar 2020 21:48:22 -0500
-Message-Id: <20200303024851.10054-3-sashal@kernel.org>
+Cc:     Pavel Belous <pbelous@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 15/32] net: atlantic: fix potential error handling
+Date:   Mon,  2 Mar 2020 21:48:34 -0500
+Message-Id: <20200303024851.10054-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024851.10054-1-sashal@kernel.org>
 References: <20200303024851.10054-1-sashal@kernel.org>
@@ -60,56 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Golle <daniel@makrotopia.org>
+From: Pavel Belous <pbelous@marvell.com>
 
-[ Upstream commit 87c5cbf71ecbb9e289d60a2df22eb686c70bf196 ]
+[ Upstream commit 380ec5b9af7f0d57dbf6ac067fd9f33cff2fef71 ]
 
-On AR934x this UART is usually not initialized by the bootloader
-as it is only used as a secondary serial port while the primary
-UART is a newly introduced NS16550-compatible.
-In order to make use of the ar933x-uart on AR934x without RTS/CTS
-hardware flow control, one needs to set the
-UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
-UART is used as primary/console, the bootloader on AR934x typically
-doesn't set those bits.
-Setting them explicitely on AR933x should not do any harm, so just
-set them unconditionally.
+Code inspection found that in case of mapping error we do return current
+'ret' value. But beside error, it is used to count number of descriptors
+allocated for the packet. In that case map_skb function could return '1'.
 
-Tested-by: Chuanhong Guo <gch981213@gmail.com>
-Signed-off-by: Daniel Golle <daniel@makrotopia.org>
-Link: https://lore.kernel.org/r/20200207095335.GA179836@makrotopia.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Changing it to return zero (number of mapped descriptors for skb)
+
+Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
+Signed-off-by: Pavel Belous <pbelous@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/ar933x_uart.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/net/ethernet/aquantia/atlantic/aq_nic.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/serial/ar933x_uart.c b/drivers/tty/serial/ar933x_uart.c
-index 3bdd56a1021b2..ea12f10610b64 100644
---- a/drivers/tty/serial/ar933x_uart.c
-+++ b/drivers/tty/serial/ar933x_uart.c
-@@ -286,6 +286,10 @@ static void ar933x_uart_set_termios(struct uart_port *port,
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+index d1de11b575f44..15dcfb6704e5b 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
+@@ -399,8 +399,10 @@ static unsigned int aq_nic_map_skb(struct aq_nic_s *self,
+ 				     dx_buff->len,
+ 				     DMA_TO_DEVICE);
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
-+
- 	/* reenable the UART */
- 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
- 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
-@@ -418,6 +422,10 @@ static int ar933x_uart_startup(struct uart_port *port)
- 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
- 			    AR933X_UART_CS_HOST_INT_EN);
+-	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa)))
++	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa))) {
++		ret = 0;
+ 		goto exit;
++	}
  
-+	/* enable RX and TX ready overide */
-+	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
-+		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
-+
- 	/* Enable RX interrupts */
- 	up->ier = AR933X_UART_INT_RX_VALID;
- 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
+ 	first = dx_buff;
+ 	dx_buff->len_pkt = skb->len;
 -- 
 2.20.1
 
