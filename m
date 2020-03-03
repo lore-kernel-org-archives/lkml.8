@@ -2,174 +2,192 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4E3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF51C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27A6920838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:58:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D0F2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:58:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QQnIXHnD"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="HuvM+W94"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgCCQ61 (ORCPT
+        id S1730432AbgCCQ6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:58:27 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41287 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgCCQ61 (ORCPT
+        Tue, 3 Mar 2020 11:58:49 -0500
+Received: from mail.efficios.com ([167.114.26.124]:41744 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbgCCQ6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:58:27 -0500
-Received: by mail-oi1-f193.google.com with SMTP id i1so3713130oie.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:58:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ScbkU4HAVEXYpr6J/KNSyKOPxHj3lMzwfJpy31vHYIA=;
-        b=QQnIXHnDRgDAtVyGUu1WuSHqQIHl9XOB/MvTUd8ZqZ57/hDiO++NKjWutJOotOc9Gs
-         YFdM8Mb3kAx3zmXKo2Tltvdz478H2kSlV6SkbCxs9yqVpEWqoqdrFlCfJgI2t4aPEwSz
-         NhhF5I4J9HqNFKeDw2E21bgVgCDVqUAhKs24c9NhXBdm67NPGJNVwpy0AA4XmmPKMyZF
-         M7S8XgUGhgMct5GOy1xnsBUM8edxeBMLHwngwlHPg/bLXCejvKnZkemKMbCxfiYoO553
-         OXolpr7ADo5jJnOti3uUKuqDBfyVuu+WRbWbTZKSVo6IiEPb5VEKlELPani9HF6yMjO8
-         QCYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ScbkU4HAVEXYpr6J/KNSyKOPxHj3lMzwfJpy31vHYIA=;
-        b=BBC8haKHOuBCM5ZCVF4RPaBU02tSUVn1pofOjkSKq8ea2q2u2jRAVQjKk/9zP5JmUJ
-         oCPv4U2xtV470zU682/QKPpajv+7AUzQcgVJCyTJL8n2GtvCWJWCjj3M8ZxSMfecNPPF
-         mWr7JkevPYdljiU3VjMD2BCa63g3LcWX5BqorVCM9cN+LsTU1sL4MBgZe3OsrSPdvbzC
-         WoKQZFc++B55BDKP3aiAC49j3M5BtYGnTXWfe0aYzWDXWd1ZP3zgdLomNoPmxpd4VIet
-         ayDBJbK8AJ62tQkwcgzgvcMLaEEcUh9wB0XzmWjox72BmhG5YUnDU0/CuJS8vrjQHn7B
-         9axQ==
-X-Gm-Message-State: ANhLgQ3wdnT3SO2l1IFdPsvHShoyi1Ct86Ysbx9J5ozcr16d3mwwnBLE
-        M/1ilAcAZQ++A/BmCjkGu0tAcNZnH8FNw8HN/BLkPw==
-X-Google-Smtp-Source: ADFU+vt35orZwY0yvmiwtHL/Y5b+HBGpMm3TOKv9W+oTPSR7MVPOf9AJ2fU7F+00NzOC+jaFdEOnsJtC0ykS3vIHHUM=
-X-Received: by 2002:a05:6808:8d0:: with SMTP id k16mr3125414oij.68.1583254706145;
- Tue, 03 Mar 2020 08:58:26 -0800 (PST)
-MIME-Version: 1.0
-References: <1509948.1583226773@warthog.procyon.org.uk> <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home> <20200303130347.GA2302029@kroah.com>
- <20200303131434.GA2373427@kroah.com> <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
- <20200303134316.GA2509660@kroah.com> <CAJfpegtFyZqSRzo3uuXp1S2_jJJ29DL=xAwKjpEGvyG7=AzabA@mail.gmail.com>
- <20200303142958.GB47158@kroah.com> <CAG48ez1sdUJzp85oqBw8vCpc3E4Sb26M9pj2zHhnKpb-1+f4vg@mail.gmail.com>
- <20200303165103.GA731597@kroah.com>
-In-Reply-To: <20200303165103.GA731597@kroah.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Tue, 3 Mar 2020 17:57:58 +0100
-Message-ID: <CAG48ez3Fnc9qbAE5OTpqmWmPPfGXHtYPoQEm1w6pKuZnBNNwCg@mail.gmail.com>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver #17]
+        Tue, 3 Mar 2020 11:58:48 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 9120D264E64;
+        Tue,  3 Mar 2020 11:58:47 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id rOfh5bAYWAUr; Tue,  3 Mar 2020 11:58:47 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 2C07D264E63;
+        Tue,  3 Mar 2020 11:58:47 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 2C07D264E63
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1583254727;
+        bh=IN+d9D3jOBZ17QKKFb5h3jUX+pZ2F6Dvnov6ZoaYUtI=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=HuvM+W94C7oO9MMQWyefYdT2B2o6q84eeAh1LCL5nrvYEKWBbC6ZDJ0zqakTbFpmo
+         1sHOgIy3uMzmgu1xBKJmiqbBU4gsYZCna5MGDC4BnJz9hY+9Fp6qBpPwxvcdHXt+gD
+         OVDYkf9ckb0lV/rrxzBu7U2TaXCl8XCbd3QVXbxuT58VUt4H76OswRnNvY8vFj/hZM
+         HPgcuQwqspVrPR+jgBP5nyBumVUE+rrCpvTaBzZRQJfBhm0Vo7M7K5EW0aCE5r6LNJ
+         EyKO3XtHBnIZc0HXP/KPG7KifdqYh5mn62JyDvTI/jhTohK7sIgp4QAC8BqWBFJXlD
+         EM2fqUfGS5Zeg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 9FZLOMf3N0LS; Tue,  3 Mar 2020 11:58:47 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 1A27D264E62;
+        Tue,  3 Mar 2020 11:58:47 -0500 (EST)
+Date:   Tue, 3 Mar 2020 11:58:47 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Cc:     Will Deacon <will@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        K <prasad@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Quentin Perret <qperret@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        rostedt <rostedt@goodmis.org>
+Message-ID: <34829202.16720.1583254727026.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200303065735.GA1172591@kroah.com>
+References: <20200221114404.14641-1-will@kernel.org> <20200302192811.n6o5645rsib44vco@localhost> <20200302193658.GA272023@kroah.com> <20200302193957.GA276441@kroah.com> <1183544004.13859.1583180227118.JavaMail.zimbra@efficios.com> <20200303065735.GA1172591@kroah.com>
+Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
+ kallsyms_on_each_symbol()
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3901 (ZimbraWebClient - FF73 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Unexport kallsyms_lookup_name() and kallsyms_on_each_symbol()
+Thread-Index: UzWo64vliP0RjVx637ZWPKBQifr+4A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 5:51 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> On Tue, Mar 03, 2020 at 03:40:24PM +0100, Jann Horn wrote:
-> > On Tue, Mar 3, 2020 at 3:30 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > > On Tue, Mar 03, 2020 at 03:10:50PM +0100, Miklos Szeredi wrote:
-> > > > On Tue, Mar 3, 2020 at 2:43 PM Greg Kroah-Hartman
-> > > > <gregkh@linuxfoundation.org> wrote:
-> > > > >
-> > > > > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
-> > > >
-> > > > > > If buffer is too small to fit the whole file, return error.
-> > > > >
-> > > > > Why?  What's wrong with just returning the bytes asked for?  If someone
-> > > > > only wants 5 bytes from the front of a file, it should be fine to give
-> > > > > that to them, right?
-> > > >
-> > > > I think we need to signal in some way to the caller that the result
-> > > > was truncated (see readlink(2), getxattr(2), getcwd(2)), otherwise the
-> > > > caller might be surprised.
-> > >
-> > > But that's not the way a "normal" read works.  Short reads are fine, if
-> > > the file isn't big enough.  That's how char device nodes work all the
-> > > time as well, and this kind of is like that, or some kind of "stream" to
-> > > read from.
-> > >
-> > > If you think the file is bigger, then you, as the caller, can just pass
-> > > in a bigger buffer if you want to (i.e. you can stat the thing and
-> > > determine the size beforehand.)
-> > >
-> > > Think of the "normal" use case here, a sysfs read with a PAGE_SIZE
-> > > buffer.  That way userspace "knows" it will always read all of the data
-> > > it can from the file, we don't have to do any seeking or determining
-> > > real file size, or anything else like that.
-> > >
-> > > We return the number of bytes read as well, so we "know" if we did a
-> > > short read, and also, you could imply, if the number of bytes read are
-> > > the exact same as the number of bytes of the buffer, maybe the file is
-> > > either that exact size, or bigger.
-> > >
-> > > This should be "simple", let's not make it complex if we can help it :)
-> > >
-> > > > > > Verify that the number of bytes read matches the file size, otherwise
-> > > > > > return error (may need to loop?).
-> > > > >
-> > > > > No, we can't "match file size" as sysfs files do not really have a sane
-> > > > > "size".  So I don't want to loop at all here, one-shot, that's all you
-> > > > > get :)
-> > > >
-> > > > Hmm.  I understand the no-size thing.  But looping until EOF (i.e.
-> > > > until read return zero) might be a good idea regardless, because short
-> > > > reads are allowed.
-> > >
-> > > If you want to loop, then do a userspace open/read-loop/close cycle.
-> > > That's not what this syscall should be for.
-> > >
-> > > Should we call it: readfile-only-one-try-i-hope-my-buffer-is-big-enough()?  :)
-> >
-> > So how is this supposed to work in e.g. the following case?
-[...]
-> >   int maps = open("/proc/self/maps", O_RDONLY);
-> >   static char buf[0x100000];
-> >   int res;
-> >   do {
-> >     res = read(maps, buf, sizeof(buf));
-> >   } while (res > 0);
-> > }
-[...]
-> >
-> > The kernel is randomly returning short reads *with different lengths*
-> > that are vaguely around PAGE_SIZE, no matter how big the buffer
-> > supplied by userspace is. And while repeated read() calls will return
-> > consistent state thanks to the seqfile magic, repeated readfile()
-> > calls will probably return garbage with half-complete lines.
->
-> Ah crap, I forgot about seqfile, I was only considering the "simple"
-> cases that sysfs provides.
->
-> Ok, Miklos, you were totally right, I'll loop and read until the end of
-> file or buffer, which ever comes first.
+----- On Mar 3, 2020, at 1:57 AM, Greg Kroah-Hartman gregkh@linuxfoundation.org wrote:
 
-I wonder what we should do when one of the later reads returns an
-error code. As in, we start the first read, get a short read (maybe
-because a signal arrived), try a second read, get -EINTR. Do we just
-return the error code? That'd probably work fine for most usecases -
-e.g. if "top" is reading stuff from procfs, and that gets interrupted
-by SIGWINCH or so, it doesn't matter that we've already started the
-first read; the only thing "top" really needs to know is that the read
-was a short read and it has to retry.
+> On Mon, Mar 02, 2020 at 03:17:07PM -0500, Mathieu Desnoyers wrote:
+>> ----- On Mar 2, 2020, at 2:39 PM, Greg Kroah-Hartman gregkh@linuxfoundation.org
+>> wrote:
+>> 
+>> > On Mon, Mar 02, 2020 at 08:36:58PM +0100, Greg Kroah-Hartman wrote:
+[...]
+>> >> 
+>> >> I hate to ask, but why does anyone need block_class?  or disk_name or
+>> >> disk_type?  I need to put them behind a driver core namespace or
+>> >> something soon...
+>> > 
+>> 
+>> In LTTng, we have a "statedump" which dumps all the relevant state of
+>> the kernel at trace start (or when the user asks for it) into the
+>> kernel trace. It is used to collect information which helps translating
+>> compact numeric data into human-readable information at post-processing.
+>> 
+>> For block devices, the statedump contains the mapping between the
+>> device number and the disk name [1]. It uses the "block_class",
+>> "disk_name", and "disk_type" symbols for this. Here is the
+>> post-processing output:
+>> 
+>> [14:48:41.388934812] (+?.?????????) compudjdev lttng_statedump_block_device: {
+>> cpu_id = 0 }, { dev = 1048576, diskname = "ram0" }
+>> [...]
+>> [14:48:41.442548745] (+0.003574998) compudjdev lttng_statedump_block_device: {
+>> cpu_id = 0 }, { dev = 1048591, diskname = "ram15" }
+>> [14:48:41.446064977] (+0.003516232) compudjdev lttng_statedump_block_device: {
+>> cpu_id = 0 }, { dev = 265289728, diskname = "vda" }
+>> [14:48:41.449579781] (+0.003514804) compudjdev lttng_statedump_block_device: {
+>> cpu_id = 0 }, { dev = 265289729, diskname = "vda1" }
+>> [14:48:41.453113808] (+0.003534027) compudjdev lttng_statedump_block_device: {
+>> cpu_id = 0 }, { dev = 265289744, diskname = "vdb" }
+>> [14:48:41.456640876] (+0.003527068) compudjdev lttng_statedump_block_device: {
+>> cpu_id = 0 }, { dev = 265289745, diskname = "vdb1" }
+>> 
+>> This information is then used in our I/O analyses to show information
+>> comprehensible to a user.
+> 
+> But all of that is availble to you today in userspace, why dig through
+> random kernel symbols?
+> 
+> Look in /sys/dev/block/ or in /sys/block/ for all of that information.
+> Is there something that you can only find by the internal symbols that
+> is not present today in sysfs?
+
+There is indeed additional information we are getting by iterating
+directly on the data structures and emitting tracepoints from within the
+kernel which is lost when we copy the data to user-space: the time-stamp
+at which the data is observed.
+
+Please note that the statedump approach is applied not only to block
+devices, but also to namespaces, thread scheduling, process memory
+mappings, file descriptor tables, interrupt handlers, network
+interfaces, and cpu topology. Those are more or less long running states
+which can change dynamically while a trace is being recorded. Our trace 
+post-processing tools model the overall kernel state over time by
+reconciling tracepoints tracking all state changes (e.g.
+insertions/removals) with the statedump information. The time-stamps
+available for both state-change events and statedump events is what
+allow us to do this modeling.
+
+In the case of block/genhd.c, we care about the mapping between the
+device number and the disk name, which is something which can be changed
+dynamically, and is thus valid for a given time-range in the trace.
+
+What we are trying to ensure is to gather all the relevant information
+to allow trace analyses to re-create a precise model of the kernel
+through time. In the case of genhd, that would be tuples of mapping
+between device number and name, which are valid for given time-ranges.
+
+These are recorded by the "lttng_statedump_block_device" event, which
+has a timestamp generated by the LTTng tracer, along with the
+(device_nr, disk_name) event payload. You will notice from what I stated 
+above that we are missing information about disks being 
+registered/unregistered later in the trace. Ideally, we would also like
+to add tracepoints into register_disk() and del_gendisk() (or more
+relevant functions nearby) to trace those state changes. We have those
+state-change tracking tracepoints in other subsystems, but unfortunately
+not in the block layer.
+
+This information is then used at post-processing to augment the block
+events (see include/trace/block.h) to convert the device numbers to
+human-readable strings. It is also used to provide human-readable
+rows, columns and graph labels when presenting block I/O state over
+time, and aggregated summary, on a per disk basis.
+
+If we would instead go through sysfs to export this block device
+information, we end up copying the relevant information to user-space,
+and only then write the data into a trace buffer. There ends up being a
+delay between the point at which the state is observed within the kernel
+and the sampling of the time-stamp describing when it occurs, which
+introduces many interesting race scenarios where disk
+registration/unregistration happens in parallel with a statedump and
+block device activity emitting tracepoints into the trace. We lose the
+ability to provide a reliable time-range for which the mapping between
+(device_nr, disk_name) is valid. Going through uevent also lacks
+time-stamp consistency with the block tracepoint events.
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
