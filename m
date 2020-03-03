@@ -2,139 +2,115 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D10C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A28C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE85208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92A66208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:47:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GSAXVdrI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbgCCTrI (ORCPT
+        id S1731196AbgCCTrO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:47:08 -0500
-Received: from www62.your-server.de ([213.133.104.62]:52452 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728180AbgCCTrI (ORCPT
+        Tue, 3 Mar 2020 14:47:14 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33347 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730842AbgCCTrO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:47:08 -0500
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j9DVI-0008SY-5W; Tue, 03 Mar 2020 20:46:56 +0100
-Received: from [85.7.42.192] (helo=pc-9.home)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j9DVH-000JrL-Pf; Tue, 03 Mar 2020 20:46:55 +0100
-Subject: Re: [PATCH v4] netdev attribute to control xdpgeneric skb
- linearization
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Luigi Rizzo <lrizzo@google.com>,
-        Network Development <netdev@vger.kernel.org>,
-        =?UTF-8?Q?Toke_H=c3=b8iland-J=c3=b8rgensen?= <toke@redhat.com>,
-        David Miller <davem@davemloft.net>, hawk@kernel.org,
-        "Jubran, Samih" <sameehj@amazon.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, ast@kernel.org,
-        bpf@vger.kernel.org
-References: <20200228105435.75298-1-lrizzo@google.com>
- <20200228110043.2771fddb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CA+FuTSfd80pZroxtqZDsTeEz4FaronC=pdgjeaBBfYqqi5HiyQ@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <3c27d9c0-eb17-b20f-2d10-01f3bdf8c0d6@iogearbox.net>
-Date:   Tue, 3 Mar 2020 20:46:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 3 Mar 2020 14:47:14 -0500
+Received: by mail-io1-f68.google.com with SMTP id r15so5052412iog.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:47:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=SYEGzJaqhNf5Si1WVdKYuss+VQrNfRTnUDch8h1VFp4=;
+        b=GSAXVdrI94SUESSdBleH3jDgP6jRMnxgLq0+ftHpcgUnXl6qfl6zsTSineXHyhlR0d
+         zfbbhVcRqrY5js/PG8qg3opRphcGnP8wYsOUWFeLe+98o3oLUozWOtOm7e8OS1KzR5Dp
+         xgqbUSNbW4YiZ36A2rZyuTk/6vpP/9U/nAu/0/Viu/WxXB3gFdeZ+0hsfi62pyrqrzGn
+         UwsnMjRIe3yYHfjvU983WhbxXUU5HyJPyblipc22n6c1RxWV25iMgxB7uAVyOI6mnc/l
+         N3LWJwcwCZBXZQqgNvA19yhufVFMUbfpu2P6wJJFyn6sSheWUR1PUDjoKzWy3yvQ+/yk
+         jMiw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=SYEGzJaqhNf5Si1WVdKYuss+VQrNfRTnUDch8h1VFp4=;
+        b=uNRRTwL5HfILUtRIKAJo0FNmcWg52z4tbD2DCfTUnZ9Y9ouDfS5s6mACczJGoUAqjW
+         GYmxXTBJtCO+ub751+vvKjZWNT9tVPpmpVRqSFX+zYyylcVEF36ybLEFYrZFmzmUqtWY
+         gXK0miK2AS1Ln+Hem+xkaOzr348v+JN6AwJKS/dXgE0SWwvGO4qefU5nE1wd7xiBpy42
+         zEMU/XZa7+U4XiKFuPm3hBEbsZGQMVKqlTEQftIDQrs6ZU54yLVcDKgoQqxDD8zBmOD+
+         3CRciwZ7OVGOs5nmIj+hOB/BLmxY4aMGGMVb2epcnMnFOR7W2ZGqvvRi55daNVqU0hIq
+         FUmQ==
+X-Gm-Message-State: ANhLgQ1+6rY+LErG/mnN3yoiXJ5qrc+y6QMZrmC0l8lY8wS8PvvEdzBk
+        u6Nj3JYVAYGHWCCwiyzc68N7Q5YtTRn2Edw0dEMaIg==
+X-Google-Smtp-Source: ADFU+vsurLOTxbMmQh0mQALAJjNIg4PKrV6qg1gLP2CeSmwzyJeG4Gzbcu3Be16z4ljpWT0t36ooK5e+P5aI4MVWqI4=
+X-Received: by 2002:a6b:e807:: with SMTP id f7mr5411334ioh.26.1583264833075;
+ Tue, 03 Mar 2020 11:47:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CA+FuTSfd80pZroxtqZDsTeEz4FaronC=pdgjeaBBfYqqi5HiyQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25740/Tue Mar  3 13:12:16 2020)
+References: <20200302235709.27467-1-sean.j.christopherson@intel.com> <20200302235709.27467-2-sean.j.christopherson@intel.com>
+In-Reply-To: <20200302235709.27467-2-sean.j.christopherson@intel.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Tue, 3 Mar 2020 11:47:01 -0800
+Message-ID: <CALMp9eQthG5SMFhNuF4UJeRS+FXq16pD09fv=itNPX4sPgWN6w@mail.gmail.com>
+Subject: Re: [PATCH v2 01/66] KVM: x86: Return -E2BIG when KVM_GET_SUPPORTED_CPUID
+ hits max entries
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/29/20 12:53 AM, Willem de Bruijn wrote:
-> On Fri, Feb 28, 2020 at 2:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
->> On Fri, 28 Feb 2020 02:54:35 -0800 Luigi Rizzo wrote:
->>> Add a netdevice flag to control skb linearization in generic xdp mode.
->>>
->>> The attribute can be modified through
->>>        /sys/class/net/<DEVICE>/xdpgeneric_linearize
->>> The default is 1 (on)
->>>
->>> Motivation: xdp expects linear skbs with some minimum headroom, and
->>> generic xdp calls skb_linearize() if needed. The linearization is
->>> expensive, and may be unnecessary e.g. when the xdp program does
->>> not need access to the whole payload.
->>> This sysfs entry allows users to opt out of linearization on a
->>> per-device basis (linearization is still performed on cloned skbs).
->>>
->>> On a kernel instrumented to grab timestamps around the linearization
->>> code in netif_receive_generic_xdp, and heavy netperf traffic with 1500b
->>> mtu, I see the following times (nanoseconds/pkt)
->>>
->>> The receiver generally sees larger packets so the difference is more
->>> significant.
->>>
->>> ns/pkt                   RECEIVER                 SENDER
->>>
->>>                      p50     p90     p99       p50   p90    p99
->>>
->>> LINEARIZATION:    600ns  1090ns  4900ns     149ns 249ns  460ns
->>> NO LINEARIZATION:  40ns    59ns    90ns      40ns  50ns  100ns
->>>
->>> v1 --> v2 : added Documentation
->>> v2 --> v3 : adjusted for skb_cloned
->>> v3 --> v4 : renamed to xdpgeneric_linearize, documentation
->>>
->>> Signed-off-by: Luigi Rizzo <lrizzo@google.com>
->>
->> Just load your program in cls_bpf. No extensions or knobs needed.
->>
->> Making xdpgeneric-only extensions without touching native XDP makes
->> no sense to me. Is this part of some greater vision?
-> 
-> Yes, native xdp has the same issue when handling packets that exceed a
-> page (4K+ MTU) or otherwise consist of multiple segments. The issue is
-> just more acute in generic xdp. But agreed that both need to be solved
-> together.
-> 
-> Many programs need only access to the header. There currently is not a
-> way to express this, or for xdp to convey that the buffer covers only
-> part of the packet.
+On Mon, Mar 2, 2020 at 3:57 PM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> Fix a long-standing bug that causes KVM to return 0 instead of -E2BIG
+> when userspace's array is insufficiently sized.
+>
+> This technically breaks backwards compatibility, e.g. a userspace with a
+> hardcoded cpuid->nent could theoretically be broken as it would see an
+> error instead of success if cpuid->nent is less than the number of
+> entries required to fully enumerate the host CPU.  But, the lowest known
+> cpuid->nent hardcoded by a VMM is 100 (lkvm and selftests), and the
 
-Right, my only question I had earlier was that when users ship their
-application with /sys/class/net/<DEVICE>/xdpgeneric_linearize turned off,
-how would they know how much of the data is actually pulled in? Afaik,
-some drivers might only have a linear section that covers the eth header
-and that is it. What should the BPF prog do in such case? Drop the skb
-since it does not have the rest of the data to e.g. make a XDP_PASS
-decision or fallback to tc/BPF altogether? I hinted earlier, one way to
-make this more graceful is to add a skb pointer inside e.g. struct
-xdp_rxq_info and then enable an bpf_skb_pull_data()-like helper e.g. as:
+I have an existence proof for 98. :-)
 
-BPF_CALL_2(bpf_xdp_pull_data, struct xdp_buff *, xdp, u32, len)
-{
-         struct sk_buff *skb = xdp->rxq->skb;
-
-         return skb ? bpf_try_make_writable(skb, len ? :
-                                            skb_headlen(skb)) : -ENOTSUPP;
-}
-
-Thus, when the data/data_end test fails in generic XDP, the user can
-call e.g. bpf_xdp_pull_data(xdp, 64) to make sure we pull in as much as
-is needed w/o full linearization and once done the data/data_end can be
-repeated to proceed. Native XDP will leave xdp->rxq->skb as NULL, but
-later we could perhaps reuse the same bpf_xdp_pull_data() helper for
-native with skb-less backing. Thoughts?
-
-Thanks,
-Daniel
+> largest realistic limit on Intel and AMD is well under a 100.  E.g.
+> Intel's Icelake server with all the bells and whistles tops out at ~60
+> entries (variable due to SGX sub-leafs), and AMD's CPUID documentation
+> allows for less than 50 (KVM hard caps CPUID 0xD at a single sub-leaf).
+>
+> Note, while the Fixes: tag is accurate with respect to the immediate
+> bug, it's likely that similar bugs in KVM_GET_SUPPORTED_CPUID existed
+> prior to the refactoring, e.g. Qemu contains a workaround for the broken
+> KVM_GET_SUPPORTED_CPUID behavior that predates the buggy commit by over
+> two years.  The Qemu workaround is also likely the main reason the bug
+> has gone unreported for so long.
+>
+> Qemu hack:
+>   commit 76ae317f7c16aec6b469604b1764094870a75470
+>   Author: Mark McLoughlin <markmc@redhat.com>
+>   Date:   Tue May 19 18:55:21 2009 +0100
+>
+>     kvm: work around supported cpuid ioctl() brokenness
+>
+>     KVM_GET_SUPPORTED_CPUID has been known to fail to return -E2BIG
+>     when it runs out of entries. Detect this by always trying again
+>     with a bigger table if the ioctl() fills the table.
+>
+> Fixes: 831bf664e9c1f ("KVM: Refactor and simplify kvm_dev_ioctl_get_supported_cpuid")
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
