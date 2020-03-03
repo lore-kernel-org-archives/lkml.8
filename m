@@ -2,202 +2,82 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B922C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 836C9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC2120838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:30:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jzn3p0gi"
+	by mail.kernel.org (Postfix) with ESMTP id 5717B20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgCCKa5 (ORCPT
+        id S1728672AbgCCKbJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:30:57 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44417 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728102AbgCCKa4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:30:56 -0500
-Received: by mail-io1-f66.google.com with SMTP id u17so2933918iog.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:30:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=rcEtCWKyY4PJ5b6fVubScAwepmUAP7J4BWcDeedIssM=;
-        b=jzn3p0giF74SiOTaPBBqqwDI1b0SOsC+P1EyQ68f0CbyR7bE9oYIbB+0a6w6cfEYrJ
-         oOtgh0b/CBrALw3Q455v/s8fp+IZB3q1rztlabfaJxxrERqw9t1k711MRMmoZpgC9+w6
-         zq0cUxoA8/TpF5j/xaBuAcvWlYMMvIbGcE96RSB4e2nI0qt+eRRAvntl4R8+9+58ugwJ
-         1kzV/4Md7+Iq4J52YfoPSjWx9T1XTDxsOe9nOqwhf6k7+kwFI9xZ+LyzWuWwYxB68AC8
-         PWXghlepTFKWHKMihlXM8ZAAUOFIc9vO9bIAL1kAW3cxxsN+leusc3D69V35udeAzLvL
-         6VgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=rcEtCWKyY4PJ5b6fVubScAwepmUAP7J4BWcDeedIssM=;
-        b=tqNR+1DA97otxYUo0DjaNZV1RzHzzF6kKv45LFOUt75selBT5SYoYOo7OVLYqNSSI8
-         8m0rFu2oyActADwrGZDy3e2olRYO7VLhvB9BZCkZoYEZyoJYR8uho2LfnpgEKitWm7I6
-         R1jVc720zjCgguNNTgeWtO5NstWH1vY9U3iNEONWhaD9LLfL/DxC3sXxWKrpq5A9f3Sp
-         2hKfAwneh5Xw0y9J6HbhlPqUIeuXdyPArlQ0zrJwEEjH2Kl/KZrZ8hAl5+wZb10RGk3f
-         Vk4iyHJtxfj6A7ea9Vw55eRijtcno3xCd3ZULnOBJUNwM97fLpk2BrTrapRCNFp2qzh7
-         uilw==
-X-Gm-Message-State: ANhLgQ34zpWsUSgRCfRzweT6ASBpFzNOF0djqVxoTtAcbDm3x5VVatV7
-        +qYpJ32Gt3tY30h71S0iZwjIUem2gJgGQvauRmZ6vg==
-X-Google-Smtp-Source: ADFU+vt0bR6kRdtKjr1dnQJ/JQs/OxNGUrTFNgAlZs41aO3YFGhwEoeDQRPPXNaqFM9Mz1ZZRQzyrph169enxq6eJXM=
-X-Received: by 2002:a6b:f209:: with SMTP id q9mr3506518ioh.197.1583231455856;
- Tue, 03 Mar 2020 02:30:55 -0800 (PST)
-MIME-Version: 1.0
-References: <1582727592-4510-1-git-send-email-nbelin@baylibre.com>
- <1582727592-4510-4-git-send-email-nbelin@baylibre.com> <85f536f0-0078-08a5-5eeb-e401d1ed8782@gmail.com>
-In-Reply-To: <85f536f0-0078-08a5-5eeb-e401d1ed8782@gmail.com>
-From:   Nicolas Belin <nbelin@baylibre.com>
-Date:   Tue, 3 Mar 2020 11:30:45 +0100
-Message-ID: <CAJZgTGFMks7Fm+tWpYAAjxBLgD0nk9cfBiVZcAhojaXCvqfLPA@mail.gmail.com>
-Subject: Re: [PATCH RFC v2 3/3] drivers: leds: add support for apa102c leds
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        devicetree@vger.kernel.org, baylibre-upstreaming@groups.io
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Mar 2020 05:31:09 -0500
+Received: from smtp25.cstnet.cn ([159.226.251.25]:39436 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728520AbgCCKbJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:31:09 -0500
+Received: from ubuntu.localdomain (unknown [183.131.110.115])
+        by APP-05 (Coremail) with SMTP id zQCowAD3_9PcMV5eXSnmBg--.57413S2;
+        Tue, 03 Mar 2020 18:30:54 +0800 (CST)
+From:   Xu Wang <vulab@iscas.ac.cn>
+To:     anna.schumaker@netapp.com, trond.myklebust@hammerspace.com
+Cc:     linux-nfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] NFS: move dprintk after nfs_alloc_fattr in nfs3_proc_lookup
+Date:   Tue,  3 Mar 2020 18:30:52 +0800
+Message-Id: <20200303103052.6103-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: zQCowAD3_9PcMV5eXSnmBg--.57413S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7WryUCw1DZr1DAFykCw1Utrb_yoWfCwb_ur
+        W2kr4xWw1rKr48Jr47G3yIyrZa93yrKFn2ka1fGFWxtrWUGayqka95urnxXa47CrWYkr45
+        A3srurWayr43CjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbFAYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4
+        A2jsIEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IE
+        w4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26F4j6r4UJw
+        Am72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2Ij64vIr41l4I8I
+        3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxV
+        WUGVWUWwC2zVAF1VAY17CE14v26r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAF
+        wI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcI
+        k0rVWrZr1j6s0DMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_
+        Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7IU8sZ23UUUUU==
+X-Originating-IP: [183.131.110.115]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiCwIEA1z4jG8zTgAAs0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacek,
+In nfs3_proc_lookup, if nfs_alloc_fattr fails, will only print
+"NFS call lookup". This may be confusing, move dprintk after
+nfs_alloc_fattr.
 
-That's a shame that it is not going to be upstreamed soon as it making
-my led driver much nicer :)
-So what's the plan with the multicolor framework?
-I am happy to send a new version to fix your remark and then adapt my
-driver to the future changes in the Framework.
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ fs/nfs/nfs3proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Let me know what you think.
+diff --git a/fs/nfs/nfs3proc.c b/fs/nfs/nfs3proc.c
+index a46d1d5d16d8..2397ceedba8a 100644
+--- a/fs/nfs/nfs3proc.c
++++ b/fs/nfs/nfs3proc.c
+@@ -179,11 +179,11 @@ nfs3_proc_lookup(struct inode *dir, struct dentry *dentry,
+ 	if (nfs_lookup_is_soft_revalidate(dentry))
+ 		task_flags |= RPC_TASK_TIMEOUT;
+ 
+-	dprintk("NFS call  lookup %pd2\n", dentry);
+ 	res.dir_attr = nfs_alloc_fattr();
+ 	if (res.dir_attr == NULL)
+ 		return -ENOMEM;
+ 
++	dprintk("NFS call  lookup %pd2\n", dentry);
+ 	nfs_fattr_init(fattr);
+ 	status = rpc_call_sync(NFS_CLIENT(dir), &msg, task_flags);
+ 	nfs_refresh_inode(dir, res.dir_attr);
+-- 
+2.17.1
 
-Thanks,
-
-Regards,
-
-Nicolas
-
-Le mer. 26 f=C3=A9vr. 2020 =C3=A0 21:14, Jacek Anaszewski
-<jacek.anaszewski@gmail.com> a =C3=A9crit :
->
-> Hi Nicolas,
->
-> Regardless of the fact that LED mc framework in current shape
-> will probably not materialize in mainline, I have single
-> remark regarding LED initialization. Please take a look below.
->
-> On 2/26/20 3:33 PM, Nicolas Belin wrote:
-> > Initilial commit in order to support the apa102c RGB leds. This
-> > is based on the Multicolor Framework.
-> >
-> > Reviewed-by: Corentin Labbe <clabbe@baylibre.com>
-> > Signed-off-by: Nicolas Belin <nbelin@baylibre.com>
-> > ---
-> >  drivers/leds/Kconfig        |   7 ++
-> >  drivers/leds/Makefile       |   1 +
-> >  drivers/leds/leds-apa102c.c | 291 ++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  3 files changed, 299 insertions(+)
-> >  create mode 100644 drivers/leds/leds-apa102c.c
-> >
-> > diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-> > index 5dc6535a88ef..71e29727c6ec 100644
-> > --- a/drivers/leds/Kconfig
-> > +++ b/drivers/leds/Kconfig
-> > @@ -79,6 +79,13 @@ config LEDS_AN30259A
-> >         To compile this driver as a module, choose M here: the module
-> >         will be called leds-an30259a.
-> >
-> > +config LEDS_APA102C
-> > +     tristate "LED Support for Shiji APA102C"
-> > +     depends on SPI
-> > +     depends on LEDS_CLASS_MULTI_COLOR
-> > +     help
-> > +       This option enables support for APA102C LEDs.
-> > +
-> >  config LEDS_APU
-> >       tristate "Front panel LED support for PC Engines APU/APU2/APU3 bo=
-ards"
-> >       depends on LEDS_CLASS
-> > diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-> > index b5305b7d43fb..8334cb6dc7e8 100644
-> [...]
-> > +
-> > +             led->priv                       =3D priv;
-> > +             led->ldev.max_brightness        =3D MAX_BRIGHTNESS;
-> > +             fwnode_property_read_string(child, "linux,default-trigger=
-",
-> > +                                         &led->ldev.default_trigger);
-> > +
-> > +             init_data.fwnode =3D child;
-> > +             init_data.devicename =3D APA_DEV_NAME;
-> > +             init_data.default_label =3D ":";
->
-> devicename property should be filled in new drivers only in case
-> devname_mandatory is set to true.
-> default_label property is for legacy drivers, for backward compatibility
-> with old LED naming convention.
->
-> For more information please refer to:
-> - Documentation/leds/leds-class.rst, "LED Device Naming" section
-> - struct led_init_data documention in linux/leds.h
->
-> In effect you need only fwnode here,
->
-> > +
-> > +             num_colors =3D 0;
-> > +             fwnode_for_each_child_node(child, grandchild) {
-> > +                     ret =3D fwnode_property_read_u32(grandchild, "col=
-or",
-> > +                                                    &color_id);
-> > +                     if (ret) {
-> > +                             dev_err(priv->dev, "Cannot read color\n")=
-;
-> > +                             goto child_out;
-> > +                     }
-> > +
-> > +                     set_bit(color_id, &led->mc_cdev.available_colors)=
-;
-> > +                     num_colors++;
-> > +             }
-> > +
-> > +             if (num_colors !=3D 3) {
-> > +                     ret =3D -EINVAL;
-> > +                     dev_err(priv->dev, "There should be 3 colors\n");
-> > +                     goto child_out;
-> > +             }
-> > +
-> > +             if (led->mc_cdev.available_colors !=3D IS_RGB) {
-> > +                     ret =3D -EINVAL;
-> > +                     dev_err(priv->dev, "The led is expected to be RGB=
-\n");
-> > +                     goto child_out;
-> > +             }
-> > +
-> > +             led->mc_cdev.num_leds =3D num_colors;
-> > +             led->mc_cdev.led_cdev =3D &led->ldev;
-> > +             led->ldev.brightness_set_blocking =3D apa102c_brightness_=
-set;
-> > +             ret =3D devm_led_classdev_multicolor_register_ext(priv->d=
-ev,
->
-> --
-> Best regards,
-> Jacek Anaszewski
-
-
-
---=20
-Nicolas Belin
-Software design engineer
-BayLibre
-www.baylibre.com
