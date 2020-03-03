@@ -2,102 +2,113 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F87DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:52:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C26BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:53:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C3C22465A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:52:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58BC02146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:53:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oE18UWg7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FQCbEyej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727850AbgCCIw2 (ORCPT
+        id S1727860AbgCCIxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:52:28 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38718 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbgCCIw2 (ORCPT
+        Tue, 3 Mar 2020 03:53:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58160 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727412AbgCCIxx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:52:28 -0500
-Received: by mail-lj1-f195.google.com with SMTP id w1so2594647ljh.5
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:52:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qP4l3miEhOsGvhCQGfIOAAIiSzN77+8PwgJ0ybST1SE=;
-        b=oE18UWg7uB5RWxPJuwXndW24hkOzqPIoL99H1Qv9tUnv8DHc3rMf1f0zZcReU+suxK
-         MR3AxZ4g8LYDpIwSSwwuNXt2h/5wYtIXq/9ywWs48ntVpfmob3K2z9XKR1NyTe1DcdLJ
-         rWIBVGOFRVEFBss2E+R8lG/26kUA5GJeIvCB//3pCq1aUo5U4cTt2ro7DlsZfdmSYnyp
-         GwWVvc3Q+29uTT6yUq/mZIPEa9uNGTtxNw53PeUQ/X8+EwfZ18BFtQXOXqXl7p56vxsd
-         3NfHITA92j/M9QzGVcq03JDG80DEYjMdRSOBePH0vVPAT06WR+Rv3flSq7igtB5TlvQD
-         BIPQ==
+        Tue, 3 Mar 2020 03:53:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583225632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=uA9jSqeJ7YM+hlM0Q0AtYm6l/6Ib8O+uDltLoDfxB+M=;
+        b=FQCbEyejigaDVf/O9fb3la57nVFhVeY8fBjzISJ/mLf6JtW3F+/DHdK6kgAqoU+dUVSI21
+        P9P+baqjSjx43bIP/7wd2MeeYQTroBmbRugtJYAqKnm0wwoqLJfDXQx3PAjMero0EVugGe
+        P9FMz1Xr+csgTU5pE/1Nw/SNqo1o/cs=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-157-X6gEeQ9-PAeRj66Tc1fWPw-1; Tue, 03 Mar 2020 03:53:50 -0500
+X-MC-Unique: X6gEeQ9-PAeRj66Tc1fWPw-1
+Received: by mail-wm1-f71.google.com with SMTP id g26so373455wmk.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:53:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qP4l3miEhOsGvhCQGfIOAAIiSzN77+8PwgJ0ybST1SE=;
-        b=Uy4virVhbxhdzt4CJPVmf8PdyYS5rjYg1uyYXg9Yz3OHIZXui6o1QNtJJWvl+ZEWTA
-         lHlAlQTTtak78DoqQkYvThLHu50bFN99ILMxb62vREFCf1Gudayn1K4vBLkiukDyXy9j
-         HK6cAy+cGyNvJXH2UaTnDfKpXuFq6nSpa0EJWHvDArw8yTFJ/8cvFLaucReLO1HSGlZy
-         4zZLy7VIx8AJS2/+YOMJ8g+8asicpqKcY5LHfZiGOUw+6zzwUsRbT2BpebI1VNKtrd4g
-         sHW7h2ZcWp7mHslA97UW4pZ/C2UP7Juu0CqjmvnP2OY3zffIii1XV5v2typdewrIyxHs
-         Psww==
-X-Gm-Message-State: ANhLgQ1zN7RxSP3lGFuQZBzyP4M27hPpGZeOSO4onByy6SbCZ73WQm9w
-        P8EDdQ+rdq9UqUT5GvRUrvMrPyR5HeFQCf+9Jdjzdw==
-X-Google-Smtp-Source: ADFU+vs8vnVGsuXNBfltlkRNIaMr26/HznbXiZTa8hZpumUN/ioJsPKL3uAefOfYGMsXkzIw0k0q1oJs8IuresWlrLc=
-X-Received: by 2002:a2e:8e91:: with SMTP id z17mr1754799ljk.13.1583225545328;
- Tue, 03 Mar 2020 00:52:25 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uA9jSqeJ7YM+hlM0Q0AtYm6l/6Ib8O+uDltLoDfxB+M=;
+        b=thjYRXMzOMEDH9N5eRYOfQYwHRDStjiQAM0TfkE+IFs9V6piCi4xuyfuK7/PN1pNos
+         KqMHo0Bibv2njsmCI1u0oX0wbSMWtnyrKF/HXyzdtqwCLR/HD+f/psFjowN5mXRQSRR1
+         5RsH6Wr8ER08nKfHDxdotpVGi4qeMxKh42rEj/kVn1u04RYwiNQUSnagcw4OLnRB/eha
+         S73bfs9TsC+sR9FZcDnzepwwfl67G7Cub+AhDzDCSfitL4f3JkEgJ12fd7OXfLj4vcab
+         gECx0Z4WFQRxY6xdlFZS5rEkrZ3nGn47UOn+Q7vgzxCFOcjYNnhgNAD88be2ZFHSkDij
+         rJsw==
+X-Gm-Message-State: ANhLgQ172OnJU1mirnNSj2F8RCmEpOR6lxIgpSmSGsXvxLqOkD6rYBG9
+        5bNGW903ivKga/jth1/wdVb0Oayo7jeACMkqwuUE8kilqtCMbraEgRsr/Y9+AHysotuYDdYDIDO
+        kYmhJ4gJObF/SgN8lvqM8UKH3
+X-Received: by 2002:a05:600c:20c7:: with SMTP id y7mr1606815wmm.77.1583225629641;
+        Tue, 03 Mar 2020 00:53:49 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vu19cWQ55lE5QJmKdvRAzYW7XwuOB682RJTOOcVGWM8jkkZxs+1Z+TsKH/j2igC9PJlcNhr6g==
+X-Received: by 2002:a05:600c:20c7:: with SMTP id y7mr1606787wmm.77.1583225629387;
+        Tue, 03 Mar 2020 00:53:49 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:4c52:2f3b:d346:82de? ([2001:b07:6468:f312:4c52:2f3b:d346:82de])
+        by smtp.gmail.com with ESMTPSA id b10sm2788680wmh.48.2020.03.03.00.53.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 00:53:48 -0800 (PST)
+Subject: Re: [PATCH] kvm: selftests: Support dirty log initial-all-set test
+To:     Jay Zhou <jianjay.zhou@huawei.com>, kvm@vger.kernel.org
+Cc:     peterx@redhat.com, shuah@kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wangxinxin.wang@huawei.com, weidong.huang@huawei.com,
+        liu.jinsong@huawei.com
+References: <20200303080710.1672-1-jianjay.zhou@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <0ec6b946-fa0e-6a18-0a49-f0b509cf2ced@redhat.com>
+Date:   Tue, 3 Mar 2020 09:53:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <cover.1582871139.git.amit.kucheria@linaro.org>
- <8309e39737c480b0835454cbc6db345c5a27ecd4.1582871139.git.amit.kucheria@linaro.org>
- <a3903db0-302d-a0f3-0515-b248e24e19cd@linaro.org>
-In-Reply-To: <a3903db0-302d-a0f3-0515-b248e24e19cd@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 3 Mar 2020 14:22:14 +0530
-Message-ID: <CAP245DWhzOHBrQNhqMjVC2+8i-P8bkuM3w8bCSqGfjWemR5WvQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: thermal: tsens: Add entry for sc7180
- tsens to binding
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        sivaa@codeaurora.org, Andy Gross <agross@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Linux PM list <linux-pm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200303080710.1672-1-jianjay.zhou@huawei.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 1:35 PM Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
->
-> On 28/02/2020 07:32, Amit Kucheria wrote:
->
-> [ ... ]
->
-> > diff --git a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> > index eef13b9446a8..13e294328932 100644
-> > --- a/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> > +++ b/Documentation/devicetree/bindings/thermal/qcom-tsens.yaml
-> > @@ -39,6 +39,7 @@ properties:
-> >                - qcom,msm8996-tsens
-> >                - qcom,msm8998-tsens
-> >                - qcom,sdm845-tsens
-> > +              - qcom,sc7180-tsens
->
-> This change is already done by
->
-> https://patchwork.kernel.org/patch/11319259/
->
-> I've applied it.
+On 03/03/20 09:07, Jay Zhou wrote:
+>  #ifdef USE_CLEAR_DIRTY_LOG
+> -	if (!kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2)) {
+> -		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not available, skipping tests\n");
+> +	dirty_log_manual_caps =
+> +		kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2);
+> +	if (!dirty_log_manual_caps) {
+> +		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not available, "
+> +				"skipping tests\n");
+> +		exit(KSFT_SKIP);
+> +	}
+> +	if (dirty_log_manual_caps != KVM_DIRTY_LOG_MANUAL_CAPS &&
+> +		dirty_log_manual_caps != KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE) {
+> +		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not valid caps "
+> +				"%"PRIu64", skipping tests\n",
+> +				dirty_log_manual_caps);
+>  		exit(KSFT_SKIP);
+>  	}
+>  #endif
+> 
 
-Good catch! I'd forgotten I'd even reviewed it when I saw all these
-warnings with dtbs_check :-)
+	dirty_log_manual_caps &= (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE |
+				  KVM_DIRTY_LOG_INITIALLY_SET);
+
+
+Paolo
+
