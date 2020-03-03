@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1CE5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE09AC3F2D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02682465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8308324673
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:46:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203584;
-	bh=UkPhDA+l+1mOszkHMydsWpIQS6JRfI56n/Wm5/1EY48=;
+	s=default; t=1583203585;
+	bh=IL3/wicU8vS8fr/u2xEEigJhcMcCof++SwVTStaXe0s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QgYuJETyUXHLfMgcLLFbfz0PsFWvwCjM+9EYG8ziRI/Kqg1SHuAdZtJmGX0SSw6Dp
-	 ZqLaDLnVOPAJedmYwWHiGr+xf92eBIsfbg8EVaKCqoKt7DopwOByaMyCoORfU3O7bP
-	 4s36Mv7jYIo2/+hH+9tAKy0QjQQSh4w95h6ZBRXg=
+	b=CHrn9Wx0alg2ELpOAC10arAD67xCq/XfhijAqVgXAKJqz0cIrP3exaPrWplm9DdiC
+	 mD1vA0O/B5bm5JhijugUKDhWmLnB50yB7Vn7OYrIgppbI/P6TXNRpa+4bJeu05w/LT
+	 1/1JdGUw0GZuQFjkGeMgWu5omWtRw4436J5Z8Mtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCCCqT (ORCPT
+        id S1727414AbgCCCqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:46:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:46:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727053AbgCCCqT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:46:19 -0500
+        id S1727053AbgCCCqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3572D2467B;
-        Tue,  3 Mar 2020 02:46:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B3EA2467B;
+        Tue,  3 Mar 2020 02:46:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203578;
-        bh=UkPhDA+l+1mOszkHMydsWpIQS6JRfI56n/Wm5/1EY48=;
+        s=default; t=1583203582;
+        bh=IL3/wicU8vS8fr/u2xEEigJhcMcCof++SwVTStaXe0s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MmyvsYuM5sWxwDHXe+GxevTAn4H/sHGYekTa052zRuBti+PBv6+9wJzygGM/nValG
-         K2v+nJzhm7KCOol2O1cscaIyrz+OoGhvu/D2TZIvDsFp0KoEu6+Yar0RFtsLXLt8tT
-         XLoMFVSZhdJNuxgMtnuLR91DRGdNo6VWeRQ3jo9A=
+        b=D1n1+3pNCKFLN4z5GnicxGFpN4E/EZFV/9OVRs4tXFDrUF44qOKdSp4RBggA620YD
+         j7JQ0xCiws513uEpbFA3DgSrvSViBP1y2y6ef9iKrRzHDBIDWV8jpSqZ/3Bf/6qECj
+         hzQQHUU9qyGk7bPYaeaEPXr0VNVhF8+BrszQjpRk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Chen <peter.chen@nxp.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 02/66] usb: charger: assign specific number for enum value
-Date:   Mon,  2 Mar 2020 21:45:11 -0500
-Message-Id: <20200303024615.8889-2-sashal@kernel.org>
+Cc:     Jiri Benc <jbenc@redhat.com>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 05/66] selftests: fix too long argument
+Date:   Mon,  2 Mar 2020 21:45:14 -0500
+Message-Id: <20200303024615.8889-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -59,53 +62,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Jiri Benc <jbenc@redhat.com>
 
-[ Upstream commit ca4b43c14cd88d28cfc6467d2fa075aad6818f1d ]
+[ Upstream commit c363eb48ada5cf732b3f489fab799fc881097842 ]
 
-To work properly on every architectures and compilers, the enum value
-needs to be specific numbers.
+With some shells, the command construed for install of bpf selftests becomes
+too large due to long list of files:
 
-Suggested-by: Greg KH <gregkh@linuxfoundation.org>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Link: https://lore.kernel.org/r/1580537624-10179-1-git-send-email-peter.chen@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+make[1]: execvp: /bin/sh: Argument list too long
+make[1]: *** [../lib.mk:73: install] Error 127
+
+Currently, each of the file lists is replicated three times in the command:
+in the shell 'if' condition, in the 'echo' and in the 'rsync'. Reduce that
+by one instance by using make conditionals and separate the echo and rsync
+into two shell commands. (One would be inclined to just remove the '@' at
+the beginning of the rsync command and let 'make' echo it by itself;
+unfortunately, it appears that the '@' in the front of mkdir silences output
+also for the following commands.)
+
+Also, separate handling of each of the lists to its own shell command.
+
+The semantics of the makefile is unchanged before and after the patch. The
+ability of individual test directories to override INSTALL_RULE is retained.
+
+Reported-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Tested-by: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Signed-off-by: Jiri Benc <jbenc@redhat.com>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/uapi/linux/usb/charger.h | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+ tools/testing/selftests/lib.mk | 23 +++++++++++++----------
+ 1 file changed, 13 insertions(+), 10 deletions(-)
 
-diff --git a/include/uapi/linux/usb/charger.h b/include/uapi/linux/usb/charger.h
-index 5f72af35b3ed7..ad22079125bff 100644
---- a/include/uapi/linux/usb/charger.h
-+++ b/include/uapi/linux/usb/charger.h
-@@ -14,18 +14,18 @@
-  * ACA (Accessory Charger Adapters)
-  */
- enum usb_charger_type {
--	UNKNOWN_TYPE,
--	SDP_TYPE,
--	DCP_TYPE,
--	CDP_TYPE,
--	ACA_TYPE,
-+	UNKNOWN_TYPE = 0,
-+	SDP_TYPE = 1,
-+	DCP_TYPE = 2,
-+	CDP_TYPE = 3,
-+	ACA_TYPE = 4,
- };
+diff --git a/tools/testing/selftests/lib.mk b/tools/testing/selftests/lib.mk
+index 1c8a1963d03f8..3ed0134a764d4 100644
+--- a/tools/testing/selftests/lib.mk
++++ b/tools/testing/selftests/lib.mk
+@@ -83,17 +83,20 @@ else
+ 	$(call RUN_TESTS, $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_PROGS))
+ endif
  
- /* USB charger state */
- enum usb_charger_state {
--	USB_CHARGER_DEFAULT,
--	USB_CHARGER_PRESENT,
--	USB_CHARGER_ABSENT,
-+	USB_CHARGER_DEFAULT = 0,
-+	USB_CHARGER_PRESENT = 1,
-+	USB_CHARGER_ABSENT = 2,
- };
++define INSTALL_SINGLE_RULE
++	$(if $(INSTALL_LIST),@mkdir -p $(INSTALL_PATH))
++	$(if $(INSTALL_LIST),@echo rsync -a $(INSTALL_LIST) $(INSTALL_PATH)/)
++	$(if $(INSTALL_LIST),@rsync -a $(INSTALL_LIST) $(INSTALL_PATH)/)
++endef
++
+ define INSTALL_RULE
+-	@if [ "X$(TEST_PROGS)$(TEST_PROGS_EXTENDED)$(TEST_FILES)" != "X" ]; then					\
+-		mkdir -p ${INSTALL_PATH};										\
+-		echo "rsync -a $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(INSTALL_PATH)/";	\
+-		rsync -a $(TEST_PROGS) $(TEST_PROGS_EXTENDED) $(TEST_FILES) $(INSTALL_PATH)/;		\
+-	fi
+-	@if [ "X$(TEST_GEN_PROGS)$(TEST_CUSTOM_PROGS)$(TEST_GEN_PROGS_EXTENDED)$(TEST_GEN_FILES)" != "X" ]; then					\
+-		mkdir -p ${INSTALL_PATH};										\
+-		echo "rsync -a $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(INSTALL_PATH)/";	\
+-		rsync -a $(TEST_GEN_PROGS) $(TEST_CUSTOM_PROGS) $(TEST_GEN_PROGS_EXTENDED) $(TEST_GEN_FILES) $(INSTALL_PATH)/;		\
+-	fi
++	$(eval INSTALL_LIST = $(TEST_PROGS)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_PROGS_EXTENDED)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_FILES)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_GEN_PROGS)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_CUSTOM_PROGS)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_GEN_PROGS_EXTENDED)) $(INSTALL_SINGLE_RULE)
++	$(eval INSTALL_LIST = $(TEST_GEN_FILES)) $(INSTALL_SINGLE_RULE)
+ endef
  
- #endif /* _UAPI__LINUX_USB_CHARGER_H */
+ install: all
 -- 
 2.20.1
 
