@@ -2,168 +2,261 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 746F1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 981C3C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CCB2073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6465B2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583262532;
+	bh=mKE3HtE/aTkp0UlhtxahKZBgoDUFqA0POdykfcgqlGY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=eqVtmlz0pOlv48WhVJhKiGJvrDkdyToVkZcHimbLIshZHLvwbQt2xrhhK/GoiLXpu
+	 A81yi3ZSIFrqRZKMKE5+BF6xTowJjR/NhLpCYqNBwa681BEBWufCoHQzvzuFPQWzbY
+	 ZHQKM4BzyXqAPAxOmqnwAqwRsTJVQkr3JNKC/KLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730649AbgCCTI1 (ORCPT
+        id S1730286AbgCCTIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:08:27 -0500
-Received: from mga02.intel.com ([134.134.136.20]:36432 "EHLO mga02.intel.com"
+        Tue, 3 Mar 2020 14:08:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727803AbgCCTI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:08:27 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 11:08:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="258479713"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 03 Mar 2020 11:08:26 -0800
-Date:   Tue, 3 Mar 2020 11:08:26 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
-        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/8] kvm: vmx: Extend VMX's #AC interceptor to handle
- split lock #AC happens in guest
-Message-ID: <20200303190826.GS1439@linux.intel.com>
-References: <20200206070412.17400-1-xiaoyao.li@intel.com>
- <20200206070412.17400-7-xiaoyao.li@intel.com>
+        id S1727803AbgCCTIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:08:50 -0500
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E15B20CC7
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 19:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583262529;
+        bh=mKE3HtE/aTkp0UlhtxahKZBgoDUFqA0POdykfcgqlGY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=cuPF82uYsyrRXu+Jp1Zf1mzesnqA7iSLVrZ/IxZAnf0DH1YwYVwaX0x71Pv6+DTd1
+         0phCb1txHFJa4uWhoeezmLk8AGg/0LWBaLgh5XicGpPnkUP8rRfQjJJXCzSsrfse+l
+         kpJuxlcZbqpGZKyk1I8BnbytPyjPiwjev8IgKaZ4=
+Received: by mail-wm1-f42.google.com with SMTP id u9so4043155wml.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 11:08:49 -0800 (PST)
+X-Gm-Message-State: ANhLgQ07DJKiIfhtqMIobg2tP9ExH4dPMzMVTeJF82giWoG0v9Y4W9EA
+        Ngb3KMiQNwMy2X4jxgCyE+wNoAQ/kWyTaOBiXjXq2g==
+X-Google-Smtp-Source: ADFU+vu5OPgIYhOba6bSYHkKXk/xTSx4zBMO8fWnm/mwPAvL8SdOkwFOP2xVqup7Qh/wMYCkH7of+moi3EtFkyXzRY4=
+X-Received: by 2002:a7b:cb93:: with SMTP id m19mr7779wmi.133.1583262527713;
+ Tue, 03 Mar 2020 11:08:47 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206070412.17400-7-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200301230537.2247550-1-nivedita@alum.mit.edu> <20200301230537.2247550-3-nivedita@alum.mit.edu>
+In-Reply-To: <20200301230537.2247550-3-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 3 Mar 2020 20:08:36 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu-f=mZwxAyLOzkrtSFPpxsKweRU2rKBUwTK0_r7s6gZPQ@mail.gmail.com>
+Message-ID: <CAKv+Gu-f=mZwxAyLOzkrtSFPpxsKweRU2rKBUwTK0_r7s6gZPQ@mail.gmail.com>
+Subject: Re: [PATCH 2/5] efi/x86: Decompress at start of PE image load address
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 03:04:10PM +0800, Xiaoyao Li wrote:
-> There are two types of #AC can be generated in Intel CPUs:
->  1. legacy alignment check #AC;
->  2. split lock #AC;
-> 
-> Legacy alignment check #AC can be injected to guest if guest has enabled
-> alignemnet check.
-> 
-> when host enables split lock detectin, i.e., split_lock_detect != off,
-> there will be an unexpected #AC in guest and intercepted by KVM because
-> KVM doesn't virtualize this feature to guest and hardware value of
-> MSR_TEST_CTRL.SLD bit stays unchanged when vcpu is running.
-> 
-> To handle this unexpected #AC, treat guest just like host usermode that
-> calling handle_user_split_lock():
->  - If host is sld_warn, it warns and set TIF_SLD so that __switch_to_xtra()
->    does the MSR_TEST_CTRL.SLD bit switching when control transfer to/from
->    this vcpu.
->  - If host is sld_fatal, forward #AC to userspace, the similar as sending
->    SIGBUS.
-> 
-> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+On Mon, 2 Mar 2020 at 00:05, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> When booted via PE loader, define image_offset to hold the offset of
+> startup_32 from the start of the PE image, and use it as the start of
+> the decompression buffer.
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 > ---
-> v3:
->  - Use handle_user_split_lock() to handle unexpected #AC in guest.
-> ---
->  arch/x86/kvm/vmx/vmx.c | 31 ++++++++++++++++++++++++++++---
->  1 file changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index c475fa2aaae0..822211975e6c 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -4557,6 +4557,12 @@ static int handle_machine_check(struct kvm_vcpu *vcpu)
->  	return 1;
->  }
->  
-> +static inline bool guest_cpu_alignment_check_enabled(struct kvm_vcpu *vcpu)
-> +{
-> +	return vmx_get_cpl(vcpu) == 3 && kvm_read_cr0_bits(vcpu, X86_CR0_AM) &&
-> +	       (kvm_get_rflags(vcpu) & X86_EFLAGS_AC);
-> +}
+>  arch/x86/boot/compressed/head_32.S      | 17 +++++++++++
+>  arch/x86/boot/compressed/head_64.S      | 38 +++++++++++++++++++++++--
+>  drivers/firmware/efi/libstub/x86-stub.c | 12 ++++++--
+>  3 files changed, 61 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
+> index 894182500606..98b224f5a025 100644
+> --- a/arch/x86/boot/compressed/head_32.S
+> +++ b/arch/x86/boot/compressed/head_32.S
+> @@ -100,6 +100,19 @@ SYM_FUNC_START(startup_32)
+>
+>  #ifdef CONFIG_RELOCATABLE
+>         movl    %edx, %ebx
 > +
->  static int handle_exception_nmi(struct kvm_vcpu *vcpu)
+> +#ifdef CONFIG_EFI_STUB
+> +/*
+> + * If we were loaded via the EFI LoadImage service, startup_32 will be at an
+> + * offset to the start of the space allocated for the image. efi_pe_entry will
+> + * setup image_offset to tell us where the image actually starts, so that we
+> + * can use the full available buffer.
+> + *     image_offset = startup_32 - image_base
+> + * Otherwise image_offset will be zero and have no effect on the calculations.
+> + */
+> +       subl    image_offset(%edx), %ebx
+> +#endif
+> +
+>         movl    BP_kernel_alignment(%esi), %eax
+>         decl    %eax
+>         addl    %eax, %ebx
+> @@ -226,6 +239,10 @@ SYM_DATA_START_LOCAL(gdt)
+>         .quad   0x00cf92000000ffff      /* __KERNEL_DS */
+>  SYM_DATA_END_LABEL(gdt, SYM_L_LOCAL, gdt_end)
+>
+> +#ifdef CONFIG_EFI_STUB
+> +SYM_DATA(image_offset, .long 0)
+> +#endif
+> +
+>  /*
+>   * Stack and heap for uncompression
+>   */
+> diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+> index 5d8338a693ce..1a4ea8738df0 100644
+> --- a/arch/x86/boot/compressed/head_64.S
+> +++ b/arch/x86/boot/compressed/head_64.S
+> @@ -99,6 +99,19 @@ SYM_FUNC_START(startup_32)
+>
+>  #ifdef CONFIG_RELOCATABLE
+>         movl    %ebp, %ebx
+> +
+> +#ifdef CONFIG_EFI_STUB
+> +/*
+> + * If we were loaded via the EFI LoadImage service, startup_32 will be at an
+> + * offset to the start of the space allocated for the image. efi_pe_entry will
+> + * setup image_offset to tell us where the image actually starts, so that we
+> + * can use the full available buffer.
+> + *     image_offset = startup_32 - image_base
+> + * Otherwise image_offset will be zero and have no effect on the calculations.
+> + */
+> +       subl    image_offset(%ebp), %ebx
+> +#endif
+> +
+>         movl    BP_kernel_alignment(%esi), %eax
+>         decl    %eax
+>         addl    %eax, %ebx
+> @@ -111,9 +124,8 @@ SYM_FUNC_START(startup_32)
+>  1:
+>
+>         /* Target address to relocate to for decompression */
+> -       movl    BP_init_size(%esi), %eax
+> -       subl    $_end, %eax
+> -       addl    %eax, %ebx
+> +       addl    BP_init_size(%esi), %ebx
+> +       subl    $_end, %ebx
+>
+>  /*
+>   * Prepare for entering 64 bit mode
+> @@ -299,6 +311,20 @@ SYM_CODE_START(startup_64)
+>         /* Start with the delta to where the kernel will run at. */
+>  #ifdef CONFIG_RELOCATABLE
+>         leaq    startup_32(%rip) /* - $startup_32 */, %rbp
+> +
+> +#ifdef CONFIG_EFI_STUB
+> +/*
+> + * If we were loaded via the EFI LoadImage service, startup_32 will be at an
+> + * offset to the start of the space allocated for the image. efi_pe_entry will
+> + * setup image_offset to tell us where the image actually starts, so that we
+> + * can use the full available buffer.
+> + *     image_offset = startup_32 - image_base
+> + * Otherwise image_offset will be zero and have no effect on the calculations.
+> + */
+> +       movl    image_offset(%rip), %eax
+> +       subq    %rax, %rbp
+> +#endif
+> +
+>         movl    BP_kernel_alignment(%rsi), %eax
+>         decl    %eax
+>         addq    %rax, %rbp
+> @@ -647,6 +673,10 @@ SYM_DATA_START_LOCAL(gdt)
+>         .quad   0x0000000000000000      /* TS continued */
+>  SYM_DATA_END_LABEL(gdt, SYM_L_LOCAL, gdt_end)
+>
+> +#ifdef CONFIG_EFI_STUB
+> +SYM_DATA(image_offset, .long 0)
+> +#endif
+> +
+>  #ifdef CONFIG_EFI_MIXED
+>  SYM_DATA_LOCAL(efi32_boot_args, .long 0, 0, 0)
+>  SYM_DATA(efi_is64, .byte 1)
+> @@ -712,6 +742,8 @@ SYM_FUNC_START(efi32_pe_entry)
+>         movl    -4(%ebp), %esi                  // loaded_image
+>         movl    LI32_image_base(%esi), %esi     // loaded_image->image_base
+>         movl    %ebx, %ebp                      // startup_32 for efi32_pe_stub_entry
+> +       subl    %esi, %ebx
+> +       movl    %ebx, image_offset(%ebp)        // save image_offset
+
+So I guess we are assigning image_offset here because we need it to be
+set before we get to efi_pe_entry() ?
+
+I think that deserves a comment.
+
+>         jmp     efi32_pe_stub_entry
+>
+>  2:     popl    %edi                            // restore callee-save registers
+> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
+> index 7f3e97c2aad3..0c4a6352cfd3 100644
+> --- a/drivers/firmware/efi/libstub/x86-stub.c
+> +++ b/drivers/firmware/efi/libstub/x86-stub.c
+> @@ -19,6 +19,7 @@
+>
+>  static efi_system_table_t *sys_table;
+>  extern const bool efi_is64;
+> +extern u32 image_offset;
+>
+>  __pure efi_system_table_t *efi_system_table(void)
 >  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> @@ -4622,9 +4628,6 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->  		return handle_rmode_exception(vcpu, ex_no, error_code);
->  
->  	switch (ex_no) {
-> -	case AC_VECTOR:
-> -		kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-> -		return 1;
->  	case DB_VECTOR:
->  		dr6 = vmcs_readl(EXIT_QUALIFICATION);
->  		if (!(vcpu->guest_debug &
-> @@ -4653,6 +4656,28 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->  		kvm_run->debug.arch.pc = vmcs_readl(GUEST_CS_BASE) + rip;
->  		kvm_run->debug.arch.exception = ex_no;
->  		break;
-> +	case AC_VECTOR:
-> +		/*
-> +		 * Inject #AC back to guest only when guest enables legacy
-> +		 * alignment check.
+> @@ -364,6 +365,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+>         struct boot_params *boot_params;
+>         struct setup_header *hdr;
+>         efi_loaded_image_t *image;
+> +       void *image_base;
+>         efi_guid_t proto = LOADED_IMAGE_PROTOCOL_GUID;
+>         int options_size = 0;
+>         efi_status_t status;
+> @@ -384,7 +386,10 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+>                 efi_exit(handle, status);
+>         }
+>
+> -       hdr = &((struct boot_params *)efi_table_attr(image, image_base))->hdr;
+> +       image_base = efi_table_attr(image, image_base);
+> +       image_offset = (void *)startup_32 - image_base;
+> +
+> +       hdr = &((struct boot_params *)image_base)->hdr;
+>         above4g = hdr->xloadflags & XLF_CAN_BE_LOADED_ABOVE_4G;
+>
+>         status = efi_allocate_pages(0x4000, (unsigned long *)&boot_params,
+> @@ -399,7 +404,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
+>         hdr = &boot_params->hdr;
+>
+>         /* Copy the second sector to boot_params */
+> -       memcpy(&hdr->jump, efi_table_attr(image, image_base) + 512, 512);
+> +       memcpy(&hdr->jump, image_base + 512, 512);
+>
+>         /*
+>          * Fill out some of the header fields ourselves because the
+> @@ -726,7 +731,7 @@ unsigned long efi_main(efi_handle_t handle,
+>          * If the kernel isn't already loaded at the preferred load
+>          * address, relocate it.
+>          */
+> -       if (bzimage_addr != hdr->pref_address) {
+> +       if (bzimage_addr - image_offset != hdr->pref_address) {
+>                 status = efi_relocate_kernel(&bzimage_addr,
+>                                              hdr->init_size, hdr->init_size,
+>                                              hdr->pref_address,
+> @@ -736,6 +741,7 @@ unsigned long efi_main(efi_handle_t handle,
+>                         efi_printk("efi_relocate_kernel() failed!\n");
+>                         goto fail;
+>                 }
+> +               image_offset = 0;
 
+Again, this could do with a comment why this should be 0x0 for the
+relocated image. It may all seem super obvious now, but our future
+selves are probably not as smart as we are today :-)
 
-The comment should call out that checking split_lock_detect_enabled() is an
-optimization.
-
-		/*
-		 * Reflect #AC to the guest if it's expecting the #AC, i.e. has
-		 * legacy alignment check enabled.  Pre-check host split lock
-		 * support to avoid the VMREADs needed to check legacy #AC,
-		 * i.e. reflect the #AC if the only possible source is legacy
-		 * alignment checks.
-		 */
-
-> +		 * Otherwise, it must be an unexpected split lock #AC of guest
-> +		 * since hardware SPLIT_LOCK_DETECT bit keeps unchanged set
-> +		 * when vcpu is running. In this case, treat guest the same as
-> +		 * user space application that calls handle_user_split_lock():
-> +		 *  - If sld_state = sld_warn, it sets TIF_SLD and disables SLD
-> +		 *    for this vcpu thread.
-> +		 *  - If sld_state = sld_fatal, we forward #AC to userspace,
-> +		 *    similar as sending SIGBUS.
-
-I'd prefer to avoid talking about sld_state at all and instead keep those
-details in handle_user_split_lock().
-
-
-> +		 */
-> +		if (!split_lock_detect_enabled() ||
-> +		    guest_cpu_alignment_check_enabled(vcpu)) {
-> +			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
-> +			return 1;
-> +		}
-
-Something like:
-
-		/*
-		 * Forward the #AC to userspace if kernel policy does not allow
-		 * temporarily disabling split lock detection.
-		 */
-
-> +		if (handle_user_split_lock(kvm_rip_read(vcpu)))
-> +			return 1;
-> +		/* fall through */
->  	default:
->  		kvm_run->exit_reason = KVM_EXIT_EXCEPTION;
->  		kvm_run->ex.exception = ex_no;
-> -- 
-> 2.23.0
-> 
+>         }
+>
+>         /*
+> --
+> 2.24.1
+>
