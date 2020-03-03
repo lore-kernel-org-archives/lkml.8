@@ -2,52 +2,53 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F3CC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFE4C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F7C215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1AC215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:01:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xlZ08eoA"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ShAiFsCU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbgCCQA6 (ORCPT
+        id S1730323AbgCCQBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:00:58 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54088 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730231AbgCCQA5 (ORCPT
+        Tue, 3 Mar 2020 11:01:04 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56276 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729753AbgCCQAz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:00:57 -0500
+        Tue, 3 Mar 2020 11:00:55 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023G0sEw091146;
-        Tue, 3 Mar 2020 10:00:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583251254;
-        bh=ZX0fu9+zyF8t2TW5DPMYzhJ+OA/XTXXhf31q+Y4WDUA=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=xlZ08eoA7A+iM8ArQl+yOPobs6ri7VPqee2WgyeMfA5MfK+0Kk3VDVI/Y/GIKQdtz
-         q2CNoUvPc5Ggp0ZKSx8+0JTYLV5ilkCB/Pd0pW6QC4QSa/cL4tmdnWXL4TEvMdOcs7
-         69unDaqwGp3PuVh40t/24vKiCln7rBS9UzoYpIwI=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023G0sxA056579
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Mar 2020 10:00:54 -0600
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 10:00:54 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 10:00:54 -0600
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 023G0rBt030282;
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 023G0rbT021754;
         Tue, 3 Mar 2020 10:00:53 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583251253;
+        bh=YfMSLkRxRKJplFUcpQZy4kjKb3RQ87tY18eRNwti45I=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=ShAiFsCUF/kYe7x1cksGs/+5FX8lkZWZBBCXTrB/LRtHzAexJTyvHOSIf49HchdB4
+         FuIWspdIVRouJdn6aLyW738m9k4Y933DFQnHG60CkWF2dWU5Ph56fudQW/UPQyWYRM
+         dRC/Fb0gigqebzgxgdBXwqpzN2Ga8gmfRQeD+FyU=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 023G0qnJ056564
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Mar 2020 10:00:53 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 10:00:52 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 10:00:52 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 023G0pwg030261;
+        Tue, 3 Mar 2020 10:00:52 -0600
 From:   Grygorii Strashko <grygorii.strashko@ti.com>
 To:     Murali Karicheri <m-karicheri2@ti.com>,
         Kishon Vijay Abraham I <kishon@ti.com>,
@@ -57,9 +58,9 @@ CC:     Sekhar Nori <nsekhar@ti.com>, Rob Herring <robh+dt@kernel.org>,
         netdev <netdev@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [for-next PATCH v2 4/5] arm64: dts: ti: k3-am65-mcu: add phy-gmii-sel node
-Date:   Tue, 3 Mar 2020 18:00:28 +0200
-Message-ID: <20200303160029.345-5-grygorii.strashko@ti.com>
+Subject: [for-next PATCH v2 3/5] phy: ti: gmii-sel: add support for am654x/j721e soc
+Date:   Tue, 3 Mar 2020 18:00:27 +0200
+Message-ID: <20200303160029.345-4-grygorii.strashko@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200303160029.345-1-grygorii.strashko@ti.com>
 References: <20200303160029.345-1-grygorii.strashko@ti.com>
@@ -71,31 +72,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT node for the TI AM65x SoC phy-gmii-sel PHY required for Ethernet
-ports mode selection.
+TI AM654x/J721E SoCs have the same PHY interface selection mechanism for
+CPSWx subsystem as TI SoCs (AM3/4/5/DRA7), but registers and bit-fields
+placement is different.
+
+This patch adds corresponding support for TI AM654x/J721E SoCs PHY
+interface selection.
 
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/phy/ti/phy-gmii-sel.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-index 92629cbdc184..ad89f93f30e5 100644
---- a/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-am65-mcu.dtsi
-@@ -12,6 +12,12 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges = <0x0 0x0 0x40f00000 0x20000>;
-+
-+		phy_gmii_sel: phy@4040 {
-+			compatible = "ti,am654-phy-gmii-sel";
-+			reg = <0x4040 0x4>;
-+			#phy-cells = <1>;
-+		};
- 	};
+diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
+index 1c536fc03c83..7edd5c3bc536 100644
+--- a/drivers/phy/ti/phy-gmii-sel.c
++++ b/drivers/phy/ti/phy-gmii-sel.c
+@@ -170,6 +170,21 @@ struct phy_gmii_sel_soc_data phy_gmii_sel_soc_dm814 = {
+ 	.regfields = phy_gmii_sel_fields_am33xx,
+ };
  
- 	mcu_uart0: serial@40a00000 {
++static const
++struct reg_field phy_gmii_sel_fields_am654[][PHY_GMII_SEL_LAST] = {
++	{
++		[PHY_GMII_SEL_PORT_MODE] = REG_FIELD(0x4040, 0, 1),
++		[PHY_GMII_SEL_RGMII_ID_MODE] = REG_FIELD((~0), 0, 0),
++		[PHY_GMII_SEL_RMII_IO_CLK_EN] = REG_FIELD((~0), 0, 0),
++	},
++};
++
++static const
++struct phy_gmii_sel_soc_data phy_gmii_sel_soc_am654 = {
++	.num_ports = 1,
++	.regfields = phy_gmii_sel_fields_am654,
++};
++
+ static const struct of_device_id phy_gmii_sel_id_table[] = {
+ 	{
+ 		.compatible	= "ti,am3352-phy-gmii-sel",
+@@ -187,6 +202,10 @@ static const struct of_device_id phy_gmii_sel_id_table[] = {
+ 		.compatible	= "ti,dm814-phy-gmii-sel",
+ 		.data		= &phy_gmii_sel_soc_dm814,
+ 	},
++	{
++		.compatible	= "ti,am654-phy-gmii-sel",
++		.data		= &phy_gmii_sel_soc_am654,
++	},
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, phy_gmii_sel_id_table);
 -- 
 2.17.1
 
