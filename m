@@ -2,130 +2,181 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A632EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B07CFC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE942465E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBBF20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:45:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbgCCDj3 (ORCPT
+        id S1726992AbgCCDpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 22:39:29 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:37402 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726956AbgCCDj3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 22:39:29 -0500
-Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id 0233dRo2013830
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 22:39:27 -0500
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com [209.85.160.199])
-        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id 0233dM5b003761
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 22:39:27 -0500
-Received: by mail-qt1-f199.google.com with SMTP id p12so1360736qtu.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 19:39:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=FTbJOMePSTPFZUgojgxvDoh7xnLDmsFnL2EoLai2PSI=;
-        b=FBLY9/WeC6O7JV8DSpx35cFpjlX4xCHtQkriprkCNmDj18khsX8GQEdo8Kt7n7TgBd
-         roNt1qvYGoZjW+KFY4mMjLG0FdULpkQZEo8hMrciDqjv+ZiysgtFJhbji6hsQA0zUS+D
-         yE86GZrFAvhgPTyVO79FQfFi8VNKDTFdWgTWRM2ZrxSualtt4r3bLcWjQ/lPxFlXpHfj
-         ObFBiKNl1Tz1PLmaFtAqJXhcz1QwckEAY0jQPEB6/tnQiSQYwkqvWcGLxYw9YkXKD3fh
-         bhv/lgJrGso/WmqPyGqiHeVj7bdXsmRaIC1vgAarq4QOD3fTWasbSvJdjlUg11aCQGZ3
-         4xyA==
-X-Gm-Message-State: ANhLgQ2zSGNrSsb9sPA486kUPYiiO4urzLh2R7EWKpNYu/YwoYno6t+A
-        VUCiEBiVJpE88siE1TCjJwStx+AFE9cIvsj8pAoiigm/p+M+4m+MWyv1cbZPcIxMvp2HCBYjm+i
-        8Rj5Km2y7b8cqxGg7gv2NYUogvDrDaDBZptk=
-X-Received: by 2002:a37:a7d2:: with SMTP id q201mr2452445qke.144.1583206762106;
-        Mon, 02 Mar 2020 19:39:22 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vvwQMeMav5A4bTYMSAhdKnSSxWMCEzktF52MG9KJML2CW3SBd0QJ/NKuQgC8ICg1bjcB7PuLg==
-X-Received: by 2002:a37:a7d2:: with SMTP id q201mr2452435qke.144.1583206761795;
-        Mon, 02 Mar 2020 19:39:21 -0800 (PST)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id w13sm4637470qtn.83.2020.03.02.19.39.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 19:39:20 -0800 (PST)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" 
-        <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-Cc:     "Mori.Takahiro@ab.MitsubishiElectric.co.jp" 
-        <Mori.Takahiro@ab.MitsubishiElectric.co.jp>,
-        "Motai.Hirotaka@aj.MitsubishiElectric.co.jp" 
-        <Motai.Hirotaka@aj.MitsubishiElectric.co.jp>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] staging: exfat: clean up d_entry rebuilding.
-In-Reply-To: <TY1PR01MB1578983D124E99FB66FB707190E40@TY1PR01MB1578.jpnprd01.prod.outlook.com>
-References: <20200302095716.64155-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp> <240472.1583144994@turing-police>
- <TY1PR01MB1578983D124E99FB66FB707190E40@TY1PR01MB1578.jpnprd01.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1583206759_2391P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 02 Mar 2020 22:39:19 -0500
-Message-ID: <295313.1583206759@turing-police>
+        Mon, 2 Mar 2020 22:45:34 -0500
+Received: from mga11.intel.com ([192.55.52.93]:16934 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726843AbgCCDpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 22:45:33 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 19:45:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
+   d="scan'208";a="351725731"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 02 Mar 2020 19:45:32 -0800
+Date:   Mon, 2 Mar 2020 19:45:32 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] KVM: x86: Fix tracing of CPUID.function when
+ function is out-of-range
+Message-ID: <20200303034532.GC27842@linux.intel.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-2-sean.j.christopherson@intel.com>
+ <188dc96a-6a3b-4021-061a-0f11cbb9f177@siemens.com>
+ <20200302204940.GG6244@linux.intel.com>
+ <16e902a8-7883-0b67-d4ee-73e8fe22f955@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <16e902a8-7883-0b67-d4ee-73e8fe22f955@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1583206759_2391P
-Content-Type: text/plain; charset=us-ascii
+On Tue, Mar 03, 2020 at 10:27:47AM +0800, Xiaoyao Li wrote:
+> On 3/3/2020 4:49 AM, Sean Christopherson wrote:
+> >On Mon, Mar 02, 2020 at 09:26:54PM +0100, Jan Kiszka wrote:
+> >>On 02.03.20 20:57, Sean Christopherson wrote:
+> >>>Rework kvm_cpuid() to query entry->function when adjusting the output
+> >>>values so that the original function (in the aptly named "function") is
+> >>>preserved for tracing.  This fixes a bug where trace_kvm_cpuid() will
+> >>>trace the max function for a range instead of the requested function if
+> >>>the requested function is out-of-range and an entry for the max function
+> >>>exists.
+> >>>
+> >>>Fixes: 43561123ab37 ("kvm: x86: Improve emulation of CPUID leaves 0BH and 1FH")
+> >>>Reported-by: Jan Kiszka <jan.kiszka@siemens.com>
+> >>>Cc: Jim Mattson <jmattson@google.com>
+> >>>Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> >>>Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >>>---
+> >>>  arch/x86/kvm/cpuid.c | 15 +++++++--------
+> >>>  1 file changed, 7 insertions(+), 8 deletions(-)
+> >>>
+> >>>diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> >>>index b1c469446b07..6be012937eba 100644
+> >>>--- a/arch/x86/kvm/cpuid.c
+> >>>+++ b/arch/x86/kvm/cpuid.c
+> >>>@@ -997,12 +997,12 @@ static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+> >>>  	return max && function <= max->eax;
+> >>>  }
+> >>>+/* Returns true if the requested leaf/function exists in guest CPUID. */
+> >>>  bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+> >>>  	       u32 *ecx, u32 *edx, bool check_limit)
+> >>>  {
+> >>>-	u32 function = *eax, index = *ecx;
+> >>>+	const u32 function = *eax, index = *ecx;
+> >>>  	struct kvm_cpuid_entry2 *entry;
+> >>>-	struct kvm_cpuid_entry2 *max;
+> >>>  	bool found;
+> >>>  	entry = kvm_find_cpuid_entry(vcpu, function, index);
+> >>>@@ -1015,18 +1015,17 @@ bool kvm_cpuid(struct kvm_vcpu *vcpu, u32 *eax, u32 *ebx,
+> >>>  	 */
+> >>>  	if (!entry && check_limit && !guest_cpuid_is_amd(vcpu) &&
+> >>>  	    !cpuid_function_in_range(vcpu, function)) {
+> >>>-		max = kvm_find_cpuid_entry(vcpu, 0, 0);
+> >>>-		if (max) {
+> >>>-			function = max->eax;
+> >>>-			entry = kvm_find_cpuid_entry(vcpu, function, index);
+> >>>-		}
+> >>>+		entry = kvm_find_cpuid_entry(vcpu, 0, 0);
+> >>>+		if (entry)
+> >>>+			entry = kvm_find_cpuid_entry(vcpu, entry->eax, index);
+> >>>  	}
+> >>>  	if (entry) {
+> >>>  		*eax = entry->eax;
+> >>>  		*ebx = entry->ebx;
+> >>>  		*ecx = entry->ecx;
+> >>>  		*edx = entry->edx;
+> >>>-		if (function == 7 && index == 0) {
+> >>>+
+> >>>+		if (entry->function == 7 && index == 0) {
+> >>>  			u64 data;
+> >>>  		        if (!__kvm_get_msr(vcpu, MSR_IA32_TSX_CTRL, &data, true) &&
+> >>>  			    (data & TSX_CTRL_CPUID_CLEAR))
+> >>>
+> >>
+> >>What about the !entry case below this? It was impacted by the function
+> >>capping so far, not it's no longer.
+> >
+> >Hmm, the only way the output would be different is in a really contrived
+> >scenario where userspace doesn't provide an entry for the max basic leaf.
+> >
+> >The !entry path can only be reached with "orig_function != function" if
+> >orig_function is out of range and there is no entry for the max basic leaf.
+> 
+> >The adjustments for 0xb/0x1f require the max basic leaf to be 0xb or 0x1f,
+> >and to take effect with !entry would require there to be a CPUID.max.1 but
+> >not a CPUID.max.0.  That'd be a violation of Intel's SDM, i.e. it's bogus
+> >userspace input and IMO can be ignored.
+> >
+> 
+> Sorry I cannot catch you. Why it's a violation of Intel's SDM?
 
-On Tue, 03 Mar 2020 03:07:51 +0000, "Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp" said:
+The case being discussed above would look like:
 
-> > Are you sure this is OK to do? exfat_get_entry_type() does a lot of
-> > mapping between values, using a file_dentry_t->type, while
-> > fid->type is a file_id_t->type.
+KVM CPUID Entries:
+   Function   Index Output
+   0x00000000 0x00: eax=0x0000000b ebx=0x756e6547 ecx=0x6c65746e edx=0x49656e69
+   0x00000001 0x00: eax=0x000906ea ebx=0x03000800 ecx=0xfffa3223 edx=0x0f8bfbff
+   0x00000002 0x00: eax=0x00000001 ebx=0x00000000 ecx=0x0000004d edx=0x002c307d
+   0x00000003 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
+   0x00000004 0x00: eax=0x00000121 ebx=0x01c0003f ecx=0x0000003f edx=0x00000001
+   0x00000004 0x01: eax=0x00000122 ebx=0x01c0003f ecx=0x0000003f edx=0x00000001
+   0x00000004 0x02: eax=0x00000143 ebx=0x03c0003f ecx=0x00000fff edx=0x00000001
+   0x00000004 0x03: eax=0x00000163 ebx=0x03c0003f ecx=0x00003fff edx=0x00000006
+   0x00000005 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000003 edx=0x00000000
+   0x00000006 0x00: eax=0x00000004 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
+   0x00000007 0x00: eax=0x00000000 ebx=0x009c4fbb ecx=0x00000004 edx=0x84000000
+   0x00000008 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
+   0x00000009 0x00: eax=0x00000000 ebx=0x00000000 ecx=0x00000000 edx=0x00000000
+   0x0000000a 0x00: eax=0x07300402 ebx=0x00000000 ecx=0x00000000 edx=0x00000603
+--> MISSING CPUID.0xB.0
+   0x0000000b 0x01: eax=0x00000000 ebx=0x00000001 ecx=0x00000201 edx=0x00000003
 
-> The value that vfs sets to the old_dentry of exfat_rename() is the dentry value returned by exfat_lookup(), exfat_create(), and create_dir().
-> In each function, the value of dentry->fid is initialized to fid->type at create_file(), ffsLookupFile(), and create_dir().
->
->  * create_file() <- ffsCreateFile() <-exfat_create()
->  * ffsLookupFile() <- exfat_find() <-exfat_lookup()
->  * exfat_mkdir() <- ffsCreateDir() <-create_dir()
->
-> > and at first read it's not obvious to
-> > me whether type is guaranteed to have the correct value already.
->
-> A valid value is set in fid->type for all paths.
-> What do you think?
+CPUID.0xB.0 does not exist, so output.ECX=0, which indicates an invalid
+level-type.
 
-OK, that's the part I was worried about, but I hadn't had enough caffeine
-to do that analysis.  Thanks.
+The SDM states (for CPUID.0xB):
 
-Acked-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
+   If an input value n in ECX returns the invalid level-type of 0 in ECX[15:8],
+   other input values with ECX > n also return 0 in ECX[15:8]
 
+That means returning a valid level-type in CPUID.0xB.1 as above violates
+the SDM's definition of how leaf 0xB works.  I'm arguing we can ignore the
+adjustments that would be done on output.E{C,D} for an out of range leaf
+because the model is bogus.
 
---==_Exmh_1583206759_2391P
-Content-Type: application/pgp-signature
+> Supposing the max basic is 0x1f, and it queries cpuid(0x20, 0x5),
+> it should return cpuid(0x1f, 0x5).
+> 
+> But based on this patch, it returns all zeros.
 
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXl3RZgdmEQWDXROgAQIYeRAAkZo7uu42LhGq9PsreYrqUXNm0xB/XGj6
-NZAvcAtGjsf20gasBoa0nkBE+yxBisOxu2z25nTVC6blNonyQPjBWf8S5iQVb5gd
-vmC/yboWHfQHRXhPmOSod8FK1FjrqnAKV/+EBcHvcRcpqR3BJpBN89pckVAuFVKj
-N5WJ+Guyaqhm8pNdllTla8uL5TvvpH3BOu9+y7l4vAgkJvkfjM3crScCXAlpxzmY
-EBx4NL8RSvUuhcE4PTszpYebplIe8FmfmVGBb2YoOMVchKS72swX0ME7vy2KdaoE
-7ZvAggB02ZuqSucoZonDTqrK5jLYcl7xbQBWfuBlQN10mi+wxL66HcKmsehLjjlS
-q/qJWiE7cHjSPz+3cIVWqogYazOHF0j8clQGRbTPgo/SDBca/pAVlHOck80HCGTl
-5YQWWBehNiqNC5UAODnQz4e0/RmORnecgq62NLaMgjUo6BoxgW5SEJxPJFpriACH
-NwjVHB4km/xJwOSulIOIsMki59GoXSyaBtRVPYGV/ZqenE2rCBn9TYY1JKoLtXKQ
-OLDnkSmN4VOxBh6RPZWNZ5hKDdbZ0TpyoqmpM+jxm6t2IvGG11ZZcgFWB31ZrD4d
-dD1oX7QNpXu6CxAFWzBEk6sIGIdFNGHQ1NdMQYXTF/9Zhis0zufS/tmTtAhtNylk
-qgb07J+8a1I=
-=keUw
------END PGP SIGNATURE-----
-
---==_Exmh_1583206759_2391P--
+Have you tested the patch, or is your comment based on the above discussion
+and/or code inspection?  Honest question, because I've thoroughly tested
+the above scenario and it works as you describe, but now I'm worried I
+completely botched my testing.
