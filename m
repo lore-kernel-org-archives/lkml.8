@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5584CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD6CC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26040214DB
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB57214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:06:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258790;
-	bh=wezH3LP0LPiLkBoge+fgK2CiR4BSELS3gw6fPaPAwYM=;
+	s=default; t=1583258797;
+	bh=3ZksyE+x5cTFHGDdxLkl57aHEzfo6Y3b4uDTj2f8a0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C5vNxbTFudmJXzvhtM4gq3qXJUmV6W9t2EjvY9bbKhHblFjyuFnm8T06T6gy6cE55
-	 0UKJjUggyTbC8k5hyJsW/CkKG26OzWx9bw3N+M7NHd1aW6ePVea05LqiDdUnkPiMij
-	 5q2upvpLa3XgOtfVoRtYO/YVT403gdjF8LMlhZs0=
+	b=mBRI729HEpYfg0kAfpX7D5LEHXPLPobVF8tCyNraJ0sy53URq/CvV9lTVztS498Ev
+	 OEdLzfj/3na/8n5bmbg1ZQIHdE3tba5dHZmGl93EnI8BR8v8iuuyVO9FjdBbjKrRY2
+	 /vRIQ/Y/YR4lW77r1Wpi51wAE4IcF22Hdr3HPckU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388076AbgCCSG3 (ORCPT
+        id S2388291AbgCCSGg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:06:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:06:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38408 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732929AbgCCR4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:56:37 -0500
+        id S1732592AbgCCR4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:56:20 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC4DC20728;
-        Tue,  3 Mar 2020 17:56:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1060206D5;
+        Tue,  3 Mar 2020 17:56:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258197;
-        bh=wezH3LP0LPiLkBoge+fgK2CiR4BSELS3gw6fPaPAwYM=;
+        s=default; t=1583258179;
+        bh=3ZksyE+x5cTFHGDdxLkl57aHEzfo6Y3b4uDTj2f8a0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q4KK8Ba9yH1I74KlytiOUsFdRF61UujhwL60VNwDEtM8VzLALPBI5QHclVBByCFOE
-         TJGky5p4WS/3VG0mi1ryeWjqWj2CqI1bFfYLT+kxgbkFCtTv2oA3hXbDYwdWSMz1cr
-         v4Ukqyuq7IRLSjEZ5d1XwQPnpmTzA3DixRFF+kcU=
+        b=vrw79tlv35tB5DBgoEMxWeKSGqmj0JS6KOwWJOalsaykOU/WX41QsD+gZYtZnbbjP
+         wLxmCdIAEVhsco0ZYQWIGW3ZGZXVyZl8CqAsY1MXeeBjKB7tcfOQuvs9ZYzeBh0spw
+         SdjXX7ALkKx2huW5qDe8h9jSphzz/+WZC39//4jQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavel Belous <pbelous@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Dmitry Bogdanov <dbogdanov@marvell.com>,
+        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 108/152] net: atlantic: fix potential error handling
-Date:   Tue,  3 Mar 2020 18:43:26 +0100
-Message-Id: <20200303174314.953350288@linuxfoundation.org>
+Subject: [PATCH 5.4 102/152] hv_netvsc: Fix unwanted wakeup in netvsc_attach()
+Date:   Tue,  3 Mar 2020 18:43:20 +0100
+Message-Id: <20200303174314.173454019@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,40 +59,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Belous <pbelous@marvell.com>
+From: Haiyang Zhang <haiyangz@microsoft.com>
 
-commit 380ec5b9af7f0d57dbf6ac067fd9f33cff2fef71 upstream.
+commit f6f13c125e05603f68f5bf31f045b95e6d493598 upstream.
 
-Code inspection found that in case of mapping error we do return current
-'ret' value. But beside error, it is used to count number of descriptors
-allocated for the packet. In that case map_skb function could return '1'.
+When netvsc_attach() is called by operations like changing MTU, etc.,
+an extra wakeup may happen while netvsc_attach() calling
+rndis_filter_device_add() which sends rndis messages when queue is
+stopped in netvsc_detach(). The completion message will wake up queue 0.
 
-Changing it to return zero (number of mapped descriptors for skb)
+We can reproduce the issue by changing MTU etc., then the wake_queue
+counter from "ethtool -S" will increase beyond stop_queue counter:
+     stop_queue: 0
+     wake_queue: 1
+The issue causes queue wake up, and counter increment, no other ill
+effects in current code. So we didn't see any network problem for now.
 
-Fixes: 018423e90bee ("net: ethernet: aquantia: Add ring support code")
-Signed-off-by: Pavel Belous <pbelous@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
+To fix this, initialize tx_disable to true, and set it to false when
+the NIC is ready to be attached or registered.
+
+Fixes: 7b2ee50c0cd5 ("hv_netvsc: common detach logic")
+Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_nic.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/hyperv/netvsc.c     |    2 +-
+ drivers/net/hyperv/netvsc_drv.c |    3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_nic.c
-@@ -467,8 +467,10 @@ static unsigned int aq_nic_map_skb(struc
- 				     dx_buff->len,
- 				     DMA_TO_DEVICE);
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -99,7 +99,7 @@ static struct netvsc_device *alloc_net_d
  
--	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa)))
-+	if (unlikely(dma_mapping_error(aq_nic_get_dev(self), dx_buff->pa))) {
-+		ret = 0;
- 		goto exit;
-+	}
+ 	init_waitqueue_head(&net_device->wait_drain);
+ 	net_device->destroy = false;
+-	net_device->tx_disable = false;
++	net_device->tx_disable = true;
  
- 	first = dx_buff;
- 	dx_buff->len_pkt = skb->len;
+ 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
+ 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -973,6 +973,7 @@ static int netvsc_attach(struct net_devi
+ 	}
+ 
+ 	/* In any case device is now ready */
++	nvdev->tx_disable = false;
+ 	netif_device_attach(ndev);
+ 
+ 	/* Note: enable and attach happen when sub-channels setup */
+@@ -2350,6 +2351,8 @@ static int netvsc_probe(struct hv_device
+ 	else
+ 		net->max_mtu = ETH_DATA_LEN;
+ 
++	nvdev->tx_disable = false;
++
+ 	ret = register_netdevice(net);
+ 	if (ret != 0) {
+ 		pr_err("Unable to register netdev.\n");
 
 
