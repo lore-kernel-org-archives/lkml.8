@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A555C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8409EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0285D2072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F2212072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258131;
-	bh=2/KUVOIHXpR6PaTRaKSVLZOJx88iqvjR1GFeETai+4I=;
+	s=default; t=1583258133;
+	bh=4tOmSmVMe3mvmllK6G1Y4slRC9SU/jQaGPx0xsYACAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k8l3qbcVvYtK3/YbISK0BVrNm5JZWUUspn7dFgl13uD+1MXRak70J6XqzATOPPNBJ
-	 ToxPpHiSGJyiCJZQvAPYYfQyou8V+f2ZK/+Q8uePePuYWRPrJKEO7/kgAWK0W1Icmb
-	 9xYEg6XyISnxPgstw00ZxT/zcxWnqPuYH19JESLY=
+	b=2KnyKCWlL96Uz8tFKqlpKP5T7u1EWRAtP44DeO+Oouw/SWN4a1GspA9BEb5kt/Dwq
+	 APo9/vzHoyP1oO/YGerksXmEnvIzoeXIxav4XUuofvk+RN/pqxSYuLCNiooZwmwrQ7
+	 HIudXYY4xcrNLT0oSoKQj9wr/cQ8dKDZHFjFAc80=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbgCCRz3 (ORCPT
+        id S1732727AbgCCRzc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:55:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:55:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37080 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732697AbgCCRzY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:55:24 -0500
+        id S1732713AbgCCRz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:55:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36FB8206D5;
-        Tue,  3 Mar 2020 17:55:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C58D2072D;
+        Tue,  3 Mar 2020 17:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258123;
-        bh=2/KUVOIHXpR6PaTRaKSVLZOJx88iqvjR1GFeETai+4I=;
+        s=default; t=1583258126;
+        bh=4tOmSmVMe3mvmllK6G1Y4slRC9SU/jQaGPx0xsYACAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yYMclx6WQscBElvYTl3qhiJ/Sy46x0F1VfMhvh96CVTC+ZfYGjZrg6o9jhCN7bWTU
-         tLWoUUjDX482xsC/hXVXbdFU76/x10IEVwdnZuatpy8hO22yYJk/jAvfVP1A303JzM
-         y35nSRsnFDtvMKQaRhvnXPUKGcgwpcyg7/YMeYqM=
+        b=YqLUnBvv6HYLLlkhZ78QE9kVYC3uJiUyKvcAgiGzzmeYfZYCALdZtLK5kluerNcga
+         ZMjIqGIkZhYsl7xL59bzxi2peo5JePRklkZ4xn3tM1njblFoh40QzfTaVOgItRtMKP
+         IuDqkPcJWlO50aDvhFLyYtjozK0DZ7P6OLsT+yS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@intel.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Xiaojie Yuan <xiaojie.yuan@amd.com>,
-        Evan Quan <evan.quan@amd.com>,
-        "Tianci.Yin" <tianci.yin@amd.com>,
-        =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Subject: [PATCH 5.4 079/152] drm/amdgpu: Drop DRIVER_USE_AGP
-Date:   Tue,  3 Mar 2020 18:42:57 +0100
-Message-Id: <20200303174311.499834820@linuxfoundation.org>
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        amd-gfx@lists.freedesktop.org,
+        Emil Velikov <emil.velikov@collabora.com>
+Subject: [PATCH 5.4 080/152] drm/radeon: Inline drm_get_pci_dev
+Date:   Tue,  3 Mar 2020 18:42:58 +0100
+Message-Id: <20200303174311.613425292@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -69,51 +65,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-commit 8a3bddf67ce88b96531fb22c5a75d7f4dc41d155 upstream.
+commit eb12c957735b582607e5842a06d1f4c62e185c1d upstream.
 
-This doesn't do anything except auto-init drm_agp support when you
-call drm_get_pci_dev(). Which amdgpu stopped doing with
+It's the last user, and more importantly, it's the last non-legacy
+user of anything in drm_pci.c.
 
-commit b58c11314a1706bf094c489ef5cb28f76478c704
-Author: Alex Deucher <alexander.deucher@amd.com>
-Date:   Fri Jun 2 17:16:31 2017 -0400
+The only tricky bit is the agp initialization. But a close look shows
+that radeon does not use the drm_agp midlayer (the main use of that is
+drm_bufs for legacy drivers), and instead could use the agp subsystem
+directly (like nouveau does already). Hence we can just pull this in
+too.
 
-    drm/amdgpu: drop deprecated drm_get_pci_dev and drm_put_dev
+A further step would be to entirely drop the use of drm_device->agp,
+but feels like too much churn just for this patch.
 
-No idea whether this was intentional or accidental breakage, but I
-guess anyone who manages to boot a this modern gpu behind an agp
-bridge deserves a price. A price I never expect anyone to ever collect
-:-)
-
+Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 Cc: Alex Deucher <alexander.deucher@amd.com>
 Cc: "Christian König" <christian.koenig@amd.com>
-Cc: Hawking Zhang <Hawking.Zhang@amd.com>
-Cc: Xiaojie Yuan <xiaojie.yuan@amd.com>
-Cc: Evan Quan <evan.quan@amd.com>
-Cc: "Tianci.Yin" <tianci.yin@amd.com>
-Cc: "Marek Olšák" <marek.olsak@amd.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
+Cc: amd-gfx@lists.freedesktop.org
 Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/radeon/radeon_drv.c |   43 ++++++++++++++++++++++++++++++++++--
+ drivers/gpu/drm/radeon/radeon_kms.c |    6 +++++
+ 2 files changed, 47 insertions(+), 2 deletions(-)
 
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -1421,7 +1421,7 @@ amdgpu_get_crtc_scanout_position(struct
+--- a/drivers/gpu/drm/radeon/radeon_drv.c
++++ b/drivers/gpu/drm/radeon/radeon_drv.c
+@@ -37,6 +37,7 @@
+ #include <linux/vga_switcheroo.h>
+ #include <linux/mmu_notifier.h>
+ 
++#include <drm/drm_agpsupport.h>
+ #include <drm/drm_crtc_helper.h>
+ #include <drm/drm_drv.h>
+ #include <drm/drm_fb_helper.h>
+@@ -325,6 +326,7 @@ static int radeon_pci_probe(struct pci_d
+ 			    const struct pci_device_id *ent)
+ {
+ 	unsigned long flags = 0;
++	struct drm_device *dev;
+ 	int ret;
+ 
+ 	if (!ent)
+@@ -365,7 +367,44 @@ static int radeon_pci_probe(struct pci_d
+ 	if (ret)
+ 		return ret;
+ 
+-	return drm_get_pci_dev(pdev, ent, &kms_driver);
++	dev = drm_dev_alloc(&kms_driver, &pdev->dev);
++	if (IS_ERR(dev))
++		return PTR_ERR(dev);
++
++	ret = pci_enable_device(pdev);
++	if (ret)
++		goto err_free;
++
++	dev->pdev = pdev;
++#ifdef __alpha__
++	dev->hose = pdev->sysdata;
++#endif
++
++	pci_set_drvdata(pdev, dev);
++
++	if (pci_find_capability(dev->pdev, PCI_CAP_ID_AGP))
++		dev->agp = drm_agp_init(dev);
++	if (dev->agp) {
++		dev->agp->agp_mtrr = arch_phys_wc_add(
++			dev->agp->agp_info.aper_base,
++			dev->agp->agp_info.aper_size *
++			1024 * 1024);
++	}
++
++	ret = drm_dev_register(dev, ent->driver_data);
++	if (ret)
++		goto err_agp;
++
++	return 0;
++
++err_agp:
++	if (dev->agp)
++		arch_phys_wc_del(dev->agp->agp_mtrr);
++	kfree(dev->agp);
++	pci_disable_device(pdev);
++err_free:
++	drm_dev_put(dev);
++	return ret;
+ }
+ 
+ static void
+@@ -578,7 +617,7 @@ radeon_get_crtc_scanout_position(struct
  
  static struct drm_driver kms_driver = {
  	.driver_features =
--	    DRIVER_USE_AGP | DRIVER_ATOMIC |
-+	    DRIVER_ATOMIC |
- 	    DRIVER_GEM |
- 	    DRIVER_RENDER | DRIVER_MODESET | DRIVER_SYNCOBJ,
- 	.load = amdgpu_driver_load_kms,
+-	    DRIVER_USE_AGP | DRIVER_GEM | DRIVER_RENDER,
++	    DRIVER_GEM | DRIVER_RENDER,
+ 	.load = radeon_driver_load_kms,
+ 	.open = radeon_driver_open_kms,
+ 	.postclose = radeon_driver_postclose_kms,
+--- a/drivers/gpu/drm/radeon/radeon_kms.c
++++ b/drivers/gpu/drm/radeon/radeon_kms.c
+@@ -31,6 +31,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/vga_switcheroo.h>
+ 
++#include <drm/drm_agpsupport.h>
+ #include <drm/drm_fb_helper.h>
+ #include <drm/drm_file.h>
+ #include <drm/drm_ioctl.h>
+@@ -77,6 +78,11 @@ void radeon_driver_unload_kms(struct drm
+ 	radeon_modeset_fini(rdev);
+ 	radeon_device_fini(rdev);
+ 
++	if (dev->agp)
++		arch_phys_wc_del(dev->agp->agp_mtrr);
++	kfree(dev->agp);
++	dev->agp = NULL;
++
+ done_free:
+ 	kfree(rdev);
+ 	dev->dev_private = NULL;
 
 
