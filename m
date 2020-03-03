@@ -2,129 +2,113 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FCCC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB078C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:00:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8F021556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:59:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T4oqpdq8"
+	by mail.kernel.org (Postfix) with ESMTP id 8BC8520866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:00:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbgCCJ7W (ORCPT
+        id S1728220AbgCCKAR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:59:22 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34828 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728441AbgCCJ7V (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:59:21 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0239xA8M006545;
-        Tue, 3 Mar 2020 03:59:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583229550;
-        bh=rd0eymCe4Xka8bXMlhT8cKIiDJXli0ok1kRr/8AnPJ0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=T4oqpdq8WBe6XyMwk8t82ITcaxr/QUTImzvgap7bBsPmadKsUzNRkCY9KIPCUqg7G
-         7T6SP9V8YmlEcKkEk0lzTXHyK7eO+6mo2TfluRVMcuhxZhi78Bo1EaL+F7SebD/Q8+
-         TPageqthJFm+vn9L+RLLYcdbvhRIs5VPFEzyElAU=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0239xAv4105493
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Mar 2020 03:59:10 -0600
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 03:59:09 -0600
-Received: from localhost.localdomain (10.64.41.19) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 03:59:09 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 0239wtHo052895;
-        Tue, 3 Mar 2020 03:59:07 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Tom Joseph <tjoseph@cadence.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v4 4/4] dt-bindings: PCI: cadence: Deprecate inbound/outbound specific bindings
-Date:   Tue, 3 Mar 2020 15:33:27 +0530
-Message-ID: <20200303100327.3603-5-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200303100327.3603-1-kishon@ti.com>
-References: <20200303100327.3603-1-kishon@ti.com>
+        Tue, 3 Mar 2020 05:00:17 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:40674 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726694AbgCCKAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:00:17 -0500
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 25233E88490DF10B5032;
+        Tue,  3 Mar 2020 18:00:13 +0800 (CST)
+Received: from DGGEMM421-HUB.china.huawei.com (10.1.198.38) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 3 Mar 2020 18:00:12 +0800
+Received: from DGGEMM528-MBX.china.huawei.com ([169.254.8.90]) by
+ dggemm421-hub.china.huawei.com ([10.1.198.38]) with mapi id 14.03.0439.000;
+ Tue, 3 Mar 2020 18:00:06 +0800
+From:   "Zhoujian (jay)" <jianjay.zhou@huawei.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+CC:     "peterx@redhat.com" <peterx@redhat.com>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "wangxin (U)" <wangxinxin.wang@huawei.com>,
+        "Huangweidong (C)" <weidong.huang@huawei.com>,
+        "Liujinsong (Paul)" <liu.jinsong@huawei.com>
+Subject: RE: [PATCH] kvm: selftests: Support dirty log initial-all-set test
+Thread-Topic: [PATCH] kvm: selftests: Support dirty log initial-all-set test
+Thread-Index: AQHV8TLCY4Xj3pfMjkOXUb/5I4t9Iqg2Ch2AgACW2iA=
+Date:   Tue, 3 Mar 2020 10:00:05 +0000
+Message-ID: <B2D15215269B544CADD246097EACE7474BB4E091@DGGEMM528-MBX.china.huawei.com>
+References: <20200303080710.1672-1-jianjay.zhou@huawei.com>
+ <f0c2dcb8-4415-eec9-d181-fb29d206c55c@redhat.com>
+In-Reply-To: <f0c2dcb8-4415-eec9-d181-fb29d206c55c@redhat.com>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.228.206]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Deprecate cdns,max-outbound-regions and cdns,no-bar-match-nbits as both
-these could be derived from "ranges" and "dma-ranges" property.
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml | 3 +--
- Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml      | 1 +
- Documentation/devicetree/bindings/pci/cdns-pcie.yaml           | 1 +
- 3 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-index cabbe46ff578..84a8f095d031 100644
---- a/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
-@@ -45,8 +45,6 @@ examples:
-             #size-cells = <2>;
-             bus-range = <0x0 0xff>;
-             linux,pci-domain = <0>;
--            cdns,max-outbound-regions = <16>;
--            cdns,no-bar-match-nbits = <32>;
-             vendor-id = <0x17cd>;
-             device-id = <0x0200>;
- 
-@@ -57,6 +55,7 @@ examples:
- 
-             ranges = <0x02000000 0x0 0x42000000  0x0 0x42000000  0x0 0x1000000>,
-                      <0x01000000 0x0 0x43000000  0x0 0x43000000  0x0 0x0010000>;
-+            dma-ranges = <0x02000000 0x0 0x0 0x0 0x0 0x1 0x00000000>;
- 
-             #interrupt-cells = <0x1>;
- 
-diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-index ab6e43b636ec..d1c34f83a765 100644
---- a/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-+++ b/Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
-@@ -23,5 +23,6 @@ properties:
-     minimum: 0
-     maximum: 64
-     default: 32
-+    deprecated: true
- 
-   msi-parent: true
-diff --git a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-index 6887ccc339cc..893cf7de9891 100644
---- a/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-@@ -17,6 +17,7 @@ properties:
-     minimum: 1
-     maximum: 32
-     default: 32
-+    deprecated: true
- 
-   phys:
-     description:
--- 
-2.17.1
+> -----Original Message-----
+> From: Paolo Bonzini [mailto:pbonzini@redhat.com]
+> Sent: Tuesday, March 3, 2020 4:54 PM
+> To: Zhoujian (jay) <jianjay.zhou@huawei.com>; kvm@vger.kernel.org
+> Cc: peterx@redhat.com; shuah@kernel.org; linux-kselftest@vger.kernel.org;
+> linux-kernel@vger.kernel.org; wangxin (U) <wangxinxin.wang@huawei.com>;
+> Huangweidong (C) <weidong.huang@huawei.com>; Liujinsong (Paul)
+> <liu.jinsong@huawei.com>
+> Subject: Re: [PATCH] kvm: selftests: Support dirty log initial-all-set test
+> 
+> On 03/03/20 09:07, Jay Zhou wrote:
+> >  #ifdef USE_CLEAR_DIRTY_LOG
+> > -	if (!kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2)) {
+> > -		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not available, skipping
+> tests\n");
+> > +	dirty_log_manual_caps =
+> > +		kvm_check_cap(KVM_CAP_MANUAL_DIRTY_LOG_PROTECT2);
+> > +	if (!dirty_log_manual_caps) {
+> > +		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not available, "
+> > +				"skipping tests\n");
+> > +		exit(KSFT_SKIP);
+> > +	}
+> > +	if (dirty_log_manual_caps != KVM_DIRTY_LOG_MANUAL_CAPS &&
+> > +		dirty_log_manual_caps !=
+> KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE) {
+> > +		fprintf(stderr, "KVM_CLEAR_DIRTY_LOG not valid caps "
+> > +				"%"PRIu64", skipping tests\n",
+> > +				dirty_log_manual_caps);
+> >  		exit(KSFT_SKIP);
+> >  	}
+> >  #endif
+> >
+> 
+> Thanks, instead of this final "if" it should be enough to do
+> 
+> 	dirty_log_manual_caps &= (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE
+> |
+> 				  KVM_DIRTY_LOG_INITIALLY_SET);
+> 
+> 
+> Otherwise looks good, I'll test it and eventually apply both patches.
+
+Do I need to resubmit this patch with this modification?
+
+Regards,
+Jay Zhou
+
+> 
+> Paolo
 
