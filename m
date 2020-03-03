@@ -2,133 +2,102 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94E6C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:30:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 714D5C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:30:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B16222083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:30:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583245802;
-	bh=TcPA+2mgGtrFwfhcuBqjUOhNVvQpXnWRqswktmXfAMM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y9TYTJs33ZanhfcY60J//RAL4VZoYxnhHp/ZsqQX+zZEzJ/1uTsJ+RyPyBbFna8na
-	 7Pz7YYhl6eFVbTvoqxJyojKFykw0ZXuflk8UYeK8386ufKwEnM3hvr4D57bn5pIjTA
-	 7KxUMFvVp7Hs6+slkFW6tVhtPyr28Ocod8rI1c2U=
+	by mail.kernel.org (Postfix) with ESMTP id 41BA320838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:30:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jMUin6d0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbgCCOaC (ORCPT
+        id S1729289AbgCCOaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:30:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728158AbgCCOaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:30:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 3 Mar 2020 09:30:14 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:64110 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728158AbgCCOaO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 09:30:14 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583245813; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=xsbiGq1xvCtzwgAoGazDTb4j+X7Ez28B5pIvo1OsgbI=; b=jMUin6d0BWSngPdY+o/VagXqq1osVqsaMSJxZbHMZvEfFI74Y5qDQvkbvXMICgjxN0Qw5kMO
+ XfFnxvwbMfzjrDfhqDaRR05Va3XmRBUvWju7sPr+GWtvRsoCI2I69wZ5+mUuFECmfIWsaihs
+ KP12Qsj2KayfQl6PFyxR+7x+LMo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5e69e3.7fd8bd2a34c8-smtp-out-n02;
+ Tue, 03 Mar 2020 14:29:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EA9C6C447A0; Tue,  3 Mar 2020 14:29:54 +0000 (UTC)
+Received: from codeaurora.org (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43EDD20838;
-        Tue,  3 Mar 2020 14:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583245800;
-        bh=TcPA+2mgGtrFwfhcuBqjUOhNVvQpXnWRqswktmXfAMM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=duZsmPCxeAc5VhRa0Yt6P9WfVSUnLBKf/3B/UANogYCOeSUPd8Uo99JWWas4fX3Ct
-         bFsA4K6GVvXuLmrLjvy/eSQZxixIY1E4SvnF9XQPei/asikOPZlIcrsGdX84Zs3Sgq
-         S5fk2IOfMPJ+86ehQE8QG+laU36tf2Ln3yx1WP54=
-Date:   Tue, 3 Mar 2020 15:29:58 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Karel Zak <kzak@redhat.com>, David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200303142958.GB47158@kroah.com>
-References: <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home>
- <20200303130347.GA2302029@kroah.com>
- <20200303131434.GA2373427@kroah.com>
- <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
- <20200303134316.GA2509660@kroah.com>
- <CAJfpegtFyZqSRzo3uuXp1S2_jJJ29DL=xAwKjpEGvyG7=AzabA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJfpegtFyZqSRzo3uuXp1S2_jJJ29DL=xAwKjpEGvyG7=AzabA@mail.gmail.com>
+        (Authenticated sender: stummala)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0C346C43383;
+        Tue,  3 Mar 2020 14:29:43 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0C346C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=stummala@codeaurora.org
+From:   Sahitya Tummala <stummala@codeaurora.org>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <yuchao0@huawei.com>,
+        linux-f2fs-devel@lists.sourceforge.net
+Cc:     Sahitya Tummala <stummala@codeaurora.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 1/2] f2fs: Fix mount failure due to SPO after a successful online resize FS
+Date:   Tue,  3 Mar 2020 19:59:25 +0530
+Message-Id: <1583245766-3351-1-git-send-email-stummala@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 03:10:50PM +0100, Miklos Szeredi wrote:
-> On Tue, Mar 3, 2020 at 2:43 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Mar 03, 2020 at 02:34:42PM +0100, Miklos Szeredi wrote:
-> 
-> > > If buffer is too small to fit the whole file, return error.
-> >
-> > Why?  What's wrong with just returning the bytes asked for?  If someone
-> > only wants 5 bytes from the front of a file, it should be fine to give
-> > that to them, right?
-> 
-> I think we need to signal in some way to the caller that the result
-> was truncated (see readlink(2), getxattr(2), getcwd(2)), otherwise the
-> caller might be surprised.
+Even though online resize is successfully done, a SPO immediately
+after resize, still causes below error in the next mount.
 
-But that's not the way a "normal" read works.  Short reads are fine, if
-the file isn't big enough.  That's how char device nodes work all the
-time as well, and this kind of is like that, or some kind of "stream" to
-read from.
+[   11.294650] F2FS-fs (sda8): Wrong user_block_count: 2233856
+[   11.300272] F2FS-fs (sda8): Failed to get valid F2FS checkpoint
 
-If you think the file is bigger, then you, as the caller, can just pass
-in a bigger buffer if you want to (i.e. you can stat the thing and
-determine the size beforehand.)
+This is because after FS metadata is updated in update_fs_metadata()
+if the SBI_IS_DIRTY is not dirty, then CP will not be done to reflect
+the new user_block_count.
 
-Think of the "normal" use case here, a sysfs read with a PAGE_SIZE
-buffer.  That way userspace "knows" it will always read all of the data
-it can from the file, we don't have to do any seeking or determining
-real file size, or anything else like that.
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+---
+v2:
+add cp_mutex to protect update_fs_metadata()
 
-We return the number of bytes read as well, so we "know" if we did a
-short read, and also, you could imply, if the number of bytes read are
-the exact same as the number of bytes of the buffer, maybe the file is
-either that exact size, or bigger.
+ fs/f2fs/gc.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-This should be "simple", let's not make it complex if we can help it :)
-
-> > > Verify that the number of bytes read matches the file size, otherwise
-> > > return error (may need to loop?).
-> >
-> > No, we can't "match file size" as sysfs files do not really have a sane
-> > "size".  So I don't want to loop at all here, one-shot, that's all you
-> > get :)
-> 
-> Hmm.  I understand the no-size thing.  But looping until EOF (i.e.
-> until read return zero) might be a good idea regardless, because short
-> reads are allowed.
-
-If you want to loop, then do a userspace open/read-loop/close cycle.
-That's not what this syscall should be for.
-
-Should we call it: readfile-only-one-try-i-hope-my-buffer-is-big-enough()?  :)
-
-thanks,
-
-greg k-h
+diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+index a92fa49..9b6640a 100644
+--- a/fs/f2fs/gc.c
++++ b/fs/f2fs/gc.c
+@@ -1575,11 +1575,17 @@ int f2fs_resize_fs(struct f2fs_sb_info *sbi, __u64 block_count)
+ 		goto out;
+ 	}
+ 
++	mutex_lock(&sbi->cp_mutex);
+ 	update_fs_metadata(sbi, -secs);
+ 	clear_sbi_flag(sbi, SBI_IS_RESIZEFS);
++	set_sbi_flag(sbi, SBI_IS_DIRTY);
++	mutex_unlock(&sbi->cp_mutex);
++
+ 	err = f2fs_sync_fs(sbi->sb, 1);
+ 	if (err) {
++		mutex_lock(&sbi->cp_mutex);
+ 		update_fs_metadata(sbi, secs);
++		mutex_unlock(&sbi->cp_mutex);
+ 		update_sb_metadata(sbi, secs);
+ 		f2fs_commit_super(sbi, false);
+ 	}
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
