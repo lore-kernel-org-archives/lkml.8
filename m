@@ -2,184 +2,115 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7D7C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A097AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB0D4214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D15920870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:44:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="NR4qiscK"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BerRdVgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbgCCRn4 (ORCPT
+        id S1729911AbgCCRoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:43:56 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:55853 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729748AbgCCRnX (ORCPT
+        Tue, 3 Mar 2020 12:44:20 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33025 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728321AbgCCRoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:43:23 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id C4F5523E2C;
-        Tue,  3 Mar 2020 18:43:20 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1583257401;
+        Tue, 3 Mar 2020 12:44:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583257458;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VX93nZn2AbWIOGGDfDdsClKAztru9C3qnY5D3he52bw=;
-        b=NR4qiscKZUDwQDviE1N9ER57qxAxZX5tWQuROndkUU9z1oBkjiPm9gR0mfr3FasiSbucDq
-        xE7PELfGe9uxGXq755rO+y8/Onh65xmQeGslOwc8019olRW+JITn15ak0CjA6fheEawiey
-        s8U71K4vXEUAeFvrqQLNZrUcvAMdsv0=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
-        Vabhav Sharma <vabhav.sharma@nxp.com>,
-        Yuan Yao <yao.yuan@nxp.com>, Michael Walle <michael@walle.cc>
-Subject: [PATCH v3 2/9] tty: serial: fsl_lpuart: free IDs allocated by IDA
-Date:   Tue,  3 Mar 2020 18:42:59 +0100
-Message-Id: <20200303174306.6015-3-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303174306.6015-1-michael@walle.cc>
-References: <20200303174306.6015-1-michael@walle.cc>
+        bh=+kDNjT2v7RCGN2/RZBTOd7SE7Zwpp1JBRccPdNRTagU=;
+        b=BerRdVguQkn/wVKsGfiu9xhV0/5S169JlwxlIW1vpqWB/3Pokvs0aN8YMnj74IHwdotpvC
+        jcilsBKotwU9dnY46bNOymrNQngmKDoB/I00LfPUDnX4t+COmp0naeZBkSagvDf957brSH
+        YuFmBp8y/zTbbED4mPgv0nk7iZMXi+8=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-430-0AUSjgcfMAaw3JaNKnllaA-1; Tue, 03 Mar 2020 12:44:16 -0500
+X-MC-Unique: 0AUSjgcfMAaw3JaNKnllaA-1
+Received: by mail-wm1-f69.google.com with SMTP id f207so1404662wme.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 09:44:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+kDNjT2v7RCGN2/RZBTOd7SE7Zwpp1JBRccPdNRTagU=;
+        b=FHI8CvFWQ6j48p0F4N4W999Z1dmz6ahR23GETnzzovLsNIh10ZQXDhCHEt2ktzfaDG
+         /5ijNuPVotuoxhRAi6A2YrHL1xKIE385Ob8G930H9iqAiQyRoMomz68nA7Zvm3WGb/Hc
+         R8u0vvHEs76WWTpX1nM1JN8Txr6QwIjJ1F6+O42ejCGaaAGlX6WHjCZ1PpsZ15IbrqJB
+         cmjyKDdYldoJ3S1lW5lS2uczM+8iMkAhsanrZ0Sjd+x60d8Fdn+vdlshYnKYotCB2k9y
+         NKvKTAGgIHC/fenHLNaqXGkVBUxgBQ/vPutr6lnoK7p/4ULbjNBvvQtg/g/D8PNAeH8t
+         tu7w==
+X-Gm-Message-State: ANhLgQ1Kzz1T22Ukg+MWYncUmB4UulcyxGQWW4sct7hcHHAxPtUV866O
+        IxyT6gAg5E7Cm2odT3QcZNjTW8AO2ykrYEwYewZBgndoimY9YpTKa30W05vUzC7o1xITHTmcggR
+        Z7rTXWFz9wPE0+yHseSrGftuh
+X-Received: by 2002:a1c:1bd6:: with SMTP id b205mr5290792wmb.186.1583257455561;
+        Tue, 03 Mar 2020 09:44:15 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vs8FxJrSSORXThGbCXQ++IvZ7jOiUFQ+O7eaLn60+Ha62LSmPleWl6D5qSQA/eOUulgtPkXRQ==
+X-Received: by 2002:a1c:1bd6:: with SMTP id b205mr5290768wmb.186.1583257455198;
+        Tue, 03 Mar 2020 09:44:15 -0800 (PST)
+Received: from [192.168.178.40] ([151.20.254.94])
+        by smtp.gmail.com with ESMTPSA id b16sm30986279wrq.14.2020.03.03.09.44.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 09:44:14 -0800 (PST)
+Subject: Re: [PATCH v2 06/13] KVM: x86: Refactor emulate tracepoint to
+ explicitly take context
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
+ <20200218232953.5724-7-sean.j.christopherson@intel.com>
+ <8736axjmte.fsf@vitty.brq.redhat.com> <20200303164813.GL1439@linux.intel.com>
+ <2f3f7aff-2bd0-fa62-4b66-9f90f125e44e@redhat.com>
+ <20200303174242.GN1439@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <c1ffb941-6232-7a35-a70c-4831f9632395@redhat.com>
+Date:   Tue, 3 Mar 2020 18:44:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: ++++++
-X-Rspamd-Server: web
-X-Rspamd-Queue-Id: C4F5523E2C
-X-Spamd-Result: default: False [6.40 / 15.00];
-         FROM_HAS_DN(0.00)[];
-         TO_DN_SOME(0.00)[];
-         R_MISSING_CHARSET(2.50)[];
-         TO_MATCH_ENVRCPT_ALL(0.00)[];
-         TAGGED_RCPT(0.00)[dt];
-         MIME_GOOD(-0.10)[text/plain];
-         BROKEN_CONTENT_TYPE(1.50)[];
-         NEURAL_SPAM(0.00)[0.504];
-         DKIM_SIGNED(0.00)[];
-         RCPT_COUNT_TWELVE(0.00)[14];
-         MID_CONTAINS_FROM(1.00)[];
-         RCVD_COUNT_ZERO(0.00)[0];
-         FROM_EQ_ENVFROM(0.00)[];
-         MIME_TRACE(0.00)[0:+];
-         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
-         SUSPICIOUS_RECIPS(1.50)[]
-X-Spam: Yes
+In-Reply-To: <20200303174242.GN1439@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit 3bc3206e1c0f ("serial: fsl_lpuart: Remove the alias node
-dependence") the port line number can also be allocated by IDA, but in
-case of an error the ID will no be removed again. More importantly, any
-ID will be freed in remove(), even if it wasn't allocated but instead
-fetched by of_alias_get_id(). If it was not allocated by IDA there will
-be a warning:
-  WARN(1, "ida_free called for id=%d which is not allocated.\n", id);
+On 03/03/20 18:42, Sean Christopherson wrote:
+>> As long as we have one use of vcpu, I'd rather skip this patch and
+>> adjust patch 8 to use "->".  Even the other "explicitly take context"
+>> parts are kinda debatable since you still have to do emul_to_vcpu.
+>> Throwing a handful of
+>>
+>> - 	struct x86_emulate_ctxt *ctxt = &vcpu->arch.emulate_ctxt;
+>> + 	struct x86_emulate_ctxt *ctxt = vcpu->arch.emulate_ctxt;
+>>
+>> into patch 8 is not bad at all and limits the churn.
+> Hmm, I'd prefer to explicitly pass @ctxt, even for the tracepoint.  I get
+> that it's technically unnecessary churn, but explicitly passing @ctxt means
+> that every funcition that grabs arch.emulate_ctxt (all three of 'em) checks
+> for a NULL ctxt.  That makes it trivial to visually audit that there's no
+> risk of a bad pointer dereference, and IMO having @ctxt in the prototype
+> is helpful to see "oh, this helper is called from within the emulator".
+> 
 
-Move the ID allocation more to the end of the probe() so that we still
-can use plain return in the first error cases.
+That's a good rationale, but I believe this refactoring belongs more in
+the "disable emulator" part than this one.
 
-Fixes: 3bc3206e1c0f ("serial: fsl_lpuart: Remove the alias node dependence")
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/tty/serial/fsl_lpuart.c | 39 ++++++++++++++++++++-------------
- 1 file changed, 24 insertions(+), 15 deletions(-)
-
-diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c
-index 27fdc131c352..c31b8f3db6bf 100644
---- a/drivers/tty/serial/fsl_lpuart.c
-+++ b/drivers/tty/serial/fsl_lpuart.c
-@@ -264,6 +264,7 @@ struct lpuart_port {
- 	int			rx_dma_rng_buf_len;
- 	unsigned int		dma_tx_nents;
- 	wait_queue_head_t	dma_wait;
-+	bool			id_allocated;
- };
- 
- struct lpuart_soc_data {
-@@ -2422,19 +2423,6 @@ static int lpuart_probe(struct platform_device *pdev)
- 	if (!sport)
- 		return -ENOMEM;
- 
--	ret = of_alias_get_id(np, "serial");
--	if (ret < 0) {
--		ret = ida_simple_get(&fsl_lpuart_ida, 0, UART_NR, GFP_KERNEL);
--		if (ret < 0) {
--			dev_err(&pdev->dev, "port line is full, add device failed\n");
--			return ret;
--		}
--	}
--	if (ret >= ARRAY_SIZE(lpuart_ports)) {
--		dev_err(&pdev->dev, "serial%d out of range\n", ret);
--		return -EINVAL;
--	}
--	sport->port.line = ret;
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	sport->port.membase = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(sport->port.membase))
-@@ -2479,9 +2467,25 @@ static int lpuart_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	ret = of_alias_get_id(np, "serial");
-+	if (ret < 0) {
-+		ret = ida_simple_get(&fsl_lpuart_ida, 0, UART_NR, GFP_KERNEL);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "port line is full, add device failed\n");
-+			return ret;
-+		}
-+		sport->id_allocated = true;
-+	}
-+	if (ret >= ARRAY_SIZE(lpuart_ports)) {
-+		dev_err(&pdev->dev, "serial%d out of range\n", ret);
-+		ret = -EINVAL;
-+		goto failed_out_of_range;
-+	}
-+	sport->port.line = ret;
-+
- 	ret = lpuart_enable_clks(sport);
- 	if (ret)
--		return ret;
-+		goto failed_clock_enable;
- 	sport->port.uartclk = lpuart_get_baud_clk_rate(sport);
- 
- 	lpuart_ports[sport->port.line] = sport;
-@@ -2531,6 +2535,10 @@ static int lpuart_probe(struct platform_device *pdev)
- failed_attach_port:
- failed_irq_request:
- 	lpuart_disable_clks(sport);
-+failed_clock_enable:
-+failed_out_of_range:
-+	if (sport->id_allocated)
-+		ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
- 	return ret;
- }
- 
-@@ -2540,7 +2548,8 @@ static int lpuart_remove(struct platform_device *pdev)
- 
- 	uart_remove_one_port(&lpuart_reg, &sport->port);
- 
--	ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
-+	if (sport->id_allocated)
-+		ida_simple_remove(&fsl_lpuart_ida, sport->port.line);
- 
- 	lpuart_disable_clks(sport);
- 
--- 
-2.20.1
+Paolo
 
