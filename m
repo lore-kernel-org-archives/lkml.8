@@ -2,77 +2,68 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFCBC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:39:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1873DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F5E20409
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:39:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE8820728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbgCCKjN (ORCPT
+        id S1728761AbgCCKjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:39:13 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37698 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728506AbgCCKjN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:39:13 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j94x5-0004rs-MU; Tue, 03 Mar 2020 10:39:03 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Akshu Agrawal <akshu.agrawal@amd.com>,
-        alsa-devel@alsa-project.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] ASoc: amd: use correct format specifier for a long int
-Date:   Tue,  3 Mar 2020 10:39:03 +0000
-Message-Id: <20200303103903.9259-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.0
+        Tue, 3 Mar 2020 05:39:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54280 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728341AbgCCKjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:39:46 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id B9C22AD9A;
+        Tue,  3 Mar 2020 10:39:44 +0000 (UTC)
+Date:   Tue, 3 Mar 2020 10:39:41 +0000
+From:   Mel Gorman <mgorman@suse.de>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, juri.lelli@redhat.com,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        rostedt@goodmis.org, bsegall@google.com,
+        lkft-triage@lists.linaro.org, anshuman.khandual@arm.com
+Subject: Re: kernel/sched/fair.c:1524:20: warning: ???test_idle_cores???
+ declared ???static??? but never defined
+Message-ID: <20200303103941.GD3772@suse.de>
+References: <CA+G9fYtE-=odd9OLrGim-D1hqgrMaoxqpGSvXCNLfAicdxS8jA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYtE-=odd9OLrGim-D1hqgrMaoxqpGSvXCNLfAicdxS8jA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Mar 03, 2020 at 02:42:38PM +0530, Naresh Kamboju wrote:
+> Linux next-20200303 arm64 build warnings
+> Please refer below links for more information.
+> 
+> make -sk KBUILD_BUILD_USER=TuxBuild -C/linux -j16 ARCH=arm64
+> CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=gcc CC="sccache
+> aarch64-linux-gnu-gcc" O=build Image
+> 
+> ../kernel/sched/fair.c:1524:20: warning: ???test_idle_cores??? declared
+> ???static??? but never defined [-Wunused-function]
+>  1524 | static inline bool test_idle_cores(int cpu, bool def);
+>       |                    ^~~~~~~~~~~~~~~
+> 
 
-Currently the format specifier %d is being used for a long int. Fix
-the by using %ld instead.
+There is a fix posted that addresses this but it has not reached
+tip/sched/core. I'll resend the accumulated fixes today and cc you.
 
-Fixes warning:
-sound/soc/amd/acp3x-rt5682-max9836.c:341:23: warning: format '%d'
- expects argument of type 'int', but argument 3 has type
- 'long int' [-Wformat=]
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- sound/soc/amd/acp3x-rt5682-max9836.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/amd/acp3x-rt5682-max9836.c b/sound/soc/amd/acp3x-rt5682-max9836.c
-index 511b8b1722aa..521c9ab4c29c 100644
---- a/sound/soc/amd/acp3x-rt5682-max9836.c
-+++ b/sound/soc/amd/acp3x-rt5682-max9836.c
-@@ -338,7 +338,7 @@ static int acp3x_probe(struct platform_device *pdev)
- 
- 	dmic_sel = devm_gpiod_get(&pdev->dev, "dmic", GPIOD_OUT_LOW);
- 	if (IS_ERR(dmic_sel)) {
--		dev_err(&pdev->dev, "DMIC gpio failed err=%d\n",
-+		dev_err(&pdev->dev, "DMIC gpio failed err=%ld\n",
- 			PTR_ERR(dmic_sel));
- 		return PTR_ERR(dmic_sel);
- 	}
 -- 
-2.25.0
-
+Mel Gorman
+SUSE Labs
