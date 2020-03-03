@@ -2,125 +2,125 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A50C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B6DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC10320828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C78B2073D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:14:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Sy96jZlV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iRm2UbJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbgCCQOU (ORCPT
+        id S1730300AbgCCQOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:14:20 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40209 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730168AbgCCQOT (ORCPT
+        Tue, 3 Mar 2020 11:14:46 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41550 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729960AbgCCQOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:14:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583252058;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ke7JyOZ+XUVw15fBOEBYEhZUVs/KiL71BjHy19fu+e0=;
-        b=Sy96jZlVpMK/dalzbRcBMCs6t4ZgTgQaB4F0tmp3O8C0S6XFKzVrw0OLN5Hy+9ArvCgel8
-        ivtYdoS+8qTGa0XC4h3rY6xjL8mNK4LIo4JpkA5GzHV4FmrSLWaoR2L6XtcyvwzWxpSiuH
-        wNWygPSPeV+LCx8DLLEeOe55QxZNAUM=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-qo_Jh0-OOpiCW1bWYoP3fA-1; Tue, 03 Mar 2020 11:14:16 -0500
-X-MC-Unique: qo_Jh0-OOpiCW1bWYoP3fA-1
-Received: by mail-wm1-f69.google.com with SMTP id p186so181141wmp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:14:15 -0800 (PST)
+        Tue, 3 Mar 2020 11:14:45 -0500
+Received: by mail-pf1-f193.google.com with SMTP id j9so1679778pfa.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:14:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=W6bZJgA2B8yV92ToUdbhDnWn8Wf8SVbR4fdlo/S3zYg=;
+        b=iRm2UbJAX2KPPtw/bXpNYbHTxPhnF9TrWTcUJhwMwBI16gSfrqYYcNgFsgFeeb3pjN
+         sMlsweLT6FEy/aGSKQ/hPhiIRuNmFeEb1lAGPiOu+A9QKPb7Q+/kV9PzMwnZ2HfhhAKe
+         YR3GUIsL80GB869gdjQ1UXmMYhuBzdqlzlYrFjg2IY8uaW37xHB8Y0KX6ssYmTkfVDIR
+         AyQTx0V5o3Df/Eu/eh9rT6kNPFnBvJEHo3X3thcSXE0yY/cT9sAm3PusIP2MduOEGa1g
+         rwGJ+lAkLZyW+SAwv/6Fj8dDlOsQpivJVxcE/mrDTzGXB8WzrX2iWc5NPGUuP0dGwBtP
+         fy0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=ke7JyOZ+XUVw15fBOEBYEhZUVs/KiL71BjHy19fu+e0=;
-        b=hVhOk2mlYKexQT5+gmwZe8YqGmoyQtSUocX7Xizpyu9hHRLO0zb/+87zAXwEstF967
-         5x5/G7mu+JUwz39b3xyEXlnUpSdwmGhxexNTTt2cC7TlDRDckKey7mMgiAAq6uAK+NeG
-         AcOMCwrWYAaR1DaFOD4jGiKoT8g9zft/8Shd+g87lTzV0EQkv5kgsWDpXcNAuIJOAKQi
-         oZ3HAXTbRSLOG5kfnE7Vq2tJWsLsqEEV3KW/7nE4lzIc9A/iCyqXYkI8f4tvhXwWrdxD
-         Nex3jcob2exPw40toeTRSQnHVgK/whr+2wR/jowMdTfdvU9iLgEoAltf85vrjYl+RGK/
-         e5Zw==
-X-Gm-Message-State: ANhLgQ1PKbmV6nqwVks4wAVmmR5hJ8kFv5DXwuohNAi6fijHUc+oxxhk
-        3eowc+uFjO7km4Mgqq6A1vORPq3UexNtjn48SDPaLJQpqMkCG3U07lAP0pbss/mnJRnPoinJeDw
-        JGcBiDjFmTZOErC12FzEdgGk7
-X-Received: by 2002:a5d:4385:: with SMTP id i5mr6533999wrq.73.1583252054839;
-        Tue, 03 Mar 2020 08:14:14 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vvzxW70xc/VJEcuSFwL+qOMYmCt0A4uPOJ819FvR079RmuIjM3QhoM81oK2YqUq/BXSW9GBqg==
-X-Received: by 2002:a5d:4385:: with SMTP id i5mr6533975wrq.73.1583252054588;
-        Tue, 03 Mar 2020 08:14:14 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id q16sm18640242wrj.73.2020.03.03.08.14.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 08:14:12 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v2 65/66] KVM: nSVM: Advertise and enable NRIPS for L1 iff nrips is enabled
-In-Reply-To: <20200302235709.27467-66-sean.j.christopherson@intel.com>
-References: <20200302235709.27467-1-sean.j.christopherson@intel.com> <20200302235709.27467-66-sean.j.christopherson@intel.com>
-Date:   Tue, 03 Mar 2020 17:14:12 +0100
-Message-ID: <875zflfmaz.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=W6bZJgA2B8yV92ToUdbhDnWn8Wf8SVbR4fdlo/S3zYg=;
+        b=uUWZ7slJP2G6fFXT4RjJuSugZe8Je0mLUIVZZvyGvOV8jKAc5fE4qphKwLK1eJiISq
+         wLSF6MnF6aGQTV2iOdFodpntS3/AI9dDMtmblZyj0X/bawRfBQattTLd90Tk1jZCG7Mz
+         9zPuud34L4yA9DjM9MWsQH+KGaYBmXOP0fKAznAzp5QniUSG/VfCJuQnUWiMDCIrw/h8
+         HMk9qsWV0OOGFx9YBIoTjbuwzUbi+jcu8//W/P8IuoT7/Ke+yxPmA8BoPhlmRAu6Ri/x
+         +tWPP+pyGAgTG/FkEViQKAIzN/KsP8AjJi5RxDfqNCOH1tGrFKR65E9X+e68cTALYWoF
+         6sdw==
+X-Gm-Message-State: ANhLgQ1FOO3bUunV15crezTdQ/p3i5lBsWhf7+v1ovrhiy2DckwWChXV
+        Po+77LB/eiEBn0hrsSNA1KM=
+X-Google-Smtp-Source: ADFU+vugfk5YAPZd2rPmqKWvu0ze5swsKp4lwvB0qve9j0052KotJHbV2aNn8l27fjDnDSRKs1OPxg==
+X-Received: by 2002:a63:d241:: with SMTP id t1mr4545801pgi.283.1583252084874;
+        Tue, 03 Mar 2020 08:14:44 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id q66sm23071256pgq.50.2020.03.03.08.14.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 03 Mar 2020 08:14:43 -0800 (PST)
+Date:   Tue, 3 Mar 2020 08:14:43 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Robert Jarzmik <robert.jarzmik@free.fr>,
+        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: Fix SND_SOC_ALL_CODECS imply ac97 fallout
+Message-ID: <20200303161443.GA23017@roeck-us.net>
+References: <20200224112537.14483-1-geert@linux-m68k.org>
+ <20200303143444.GA25683@roeck-us.net>
+ <CAMuHMdWZxc5KjHaOhk5xdcjSn54i3ku7b1dW6tXhXbjku1eLww@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMuHMdWZxc5KjHaOhk5xdcjSn54i3ku7b1dW6tXhXbjku1eLww@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+On Tue, Mar 03, 2020 at 03:56:25PM +0100, Geert Uytterhoeven wrote:
+> Hi Günter
+> 
+> On Tue, Mar 3, 2020 at 3:34 PM Guenter Roeck <linux@roeck-us.net> wrote:
+> > On Mon, Feb 24, 2020 at 12:25:37PM +0100, Geert Uytterhoeven wrote:
+> > > On i386 randconfig:
+> > >
+> > >     sound/soc/codecs/wm9705.o: In function `wm9705_soc_resume':
+> > >     wm9705.c:(.text+0x128): undefined reference to `snd_ac97_reset'
+> > >     sound/soc/codecs/wm9712.o: In function `wm9712_soc_resume':
+> > >     wm9712.c:(.text+0x2d1): undefined reference to `snd_ac97_reset'
+> > >     sound/soc/codecs/wm9713.o: In function `wm9713_soc_resume':
+> > >     wm9713.c:(.text+0x820): undefined reference to `snd_ac97_reset'
+> > >
+> > > Fix this by adding the missing dependencies on SND_SOC_AC97_BUS.
+> > >
+> >
+> > With this patch applied, arm:pxa_defconfig reports a variety of unmet
+> > SND_SOC dependencies, and it fails to build.
+> >
+> > ERROR: "snd_ac97_reset" [sound/soc/codecs/snd-soc-wm9713.ko] undefined!
+> > ERROR: "snd_ac97_reset" [sound/soc/codecs/snd-soc-wm9712.ko] undefined!
+> > ERROR: "snd_ac97_reset" [sound/soc/codecs/snd-soc-wm9705.ko] undefined!
+> >
+> > Reverting this patch fixes the problem.
+> 
+> Should SND_PXA2XX_SOC_AC97 in sound/soc/pxa/Kconfig select
+> SND_SOC_AC97_BUS instead of SND_SOC_AC97_BUS_NEW?
+> The latter does not exist.
+> 
 
-> Set NRIPS in KVM capabilities if and only if nrips=true, which naturally
-> incorporates the boot_cpu_has() check, and set nrips_enabled only if the
-> KVM capability is enabled.
->
-> Note, previously KVM would set nrips_enabled based purely on userspace
-> input, but at worst that would cause KVM to propagate garbage into L1,
-> i.e. userspace would simply be hosing its VM.
->
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/svm.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 8e39dcd3160d..32d9c13ec6b9 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -1377,7 +1377,7 @@ static __init void svm_set_cpu_caps(void)
->  	if (nested) {
->  		kvm_cpu_cap_set(X86_FEATURE_SVM);
->  
-> -		if (boot_cpu_has(X86_FEATURE_NRIPS))
-> +		if (nrips)
->  			kvm_cpu_cap_set(X86_FEATURE_NRIPS);
->  
->  		if (npt_enabled)
-> @@ -6031,7 +6031,8 @@ static void svm_cpuid_update(struct kvm_vcpu *vcpu)
->  				    boot_cpu_has(X86_FEATURE_XSAVES);
->  
->  	/* Update nrips enabled cache */
-> -	svm->nrips_enabled = !!guest_cpuid_has(&svm->vcpu, X86_FEATURE_NRIPS);
-> +	svm->nrips_enabled = kvm_cpu_cap_has(X86_FEATURE_NRIPS) &&
-> +			     guest_cpuid_has(&svm->vcpu, X86_FEATURE_NRIPS);
->  
->  	if (!kvm_vcpu_apicv_active(vcpu))
->  		return;
+Doing that results in:
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+sound/soc/pxa/Kconfig:24:error: recursive dependency detected!
+sound/soc/pxa/Kconfig:24:	symbol SND_PXA2XX_SOC_AC97 is selected by SND_PXA2XX_SOC_TOSA
+sound/soc/pxa/Kconfig:79:	symbol SND_PXA2XX_SOC_TOSA depends on AC97_BUS
+sound/Kconfig:109:	symbol AC97_BUS is selected by SND_SOC_AC97_BUS
+sound/soc/Kconfig:26:	symbol SND_SOC_AC97_BUS is selected by SND_PXA2XX_SOC_AC97
 
--- 
-Vitaly
-
+Guenter
