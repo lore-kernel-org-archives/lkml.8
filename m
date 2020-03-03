@@ -2,127 +2,163 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6E9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC915C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F03F2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:55:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GGrwq7Sw"
+	by mail.kernel.org (Postfix) with ESMTP id 9964C215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:57:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583218660;
+	bh=eMV16bVN0WQ9MVZE50jt1350rup/xeTAFYsN36sAH0A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c0ddiRdnV9fiKuj1Smll/sH5+D14vr0XvVa/6dzo85t3wbMKRnzKZi611tUvxHDx/
+	 JlNjtZThAcXRVLeyuyEQ5eH6An7N2QcAiz+kRJ4tRv7DMLJzFmhIgeDTjWXiGXqtD5
+	 E04+65p5Vkg4B8munq1hYOJMZXB48K6vBJkYin5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgCCGzR (ORCPT
+        id S1727521AbgCCG5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:55:17 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:44948 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgCCGzQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:55:16 -0500
-Received: by mail-qv1-f68.google.com with SMTP id b13so1183933qvt.11;
-        Mon, 02 Mar 2020 22:55:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EJd0EY7gw7xGakEhmNzQdOydvEieyJ9F8aucq7jAODI=;
-        b=GGrwq7SwLj1k2UViEIH4Y8/FIJCm+oVdSjmeIq0uqyUYByVTtZUIszyULm1jS1vX1c
-         wP572fU6T0qYVC+IJ2F6gmN+DmpsfV0+xwni6SbbYiIF+qN9yyif3yfLYU13JpnwYHy/
-         J+RITiRm8xbYAf0MZVDdD/l8QsUKWxyg6r7y1pD8mxoBcqoZkX2bWfMm5dMiUHKddemz
-         /V2rHm1DwnnvpdeSIE8o2Cr5s1x++HR3TpO4mbu6B48baeAEc9Jhmr8ZAZDyJMfCUB8m
-         d2yaTLXwcb32wpyRorg+ILRv7QxXHqujpe9Gr3niWE9rLXWmS9pu0P7qNMY0bpxv9J3C
-         4MqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EJd0EY7gw7xGakEhmNzQdOydvEieyJ9F8aucq7jAODI=;
-        b=PcZ8WfAEGav9g5kLoBXj7IGpvMclZI+4kX+c+pLapHBe1cmXAimehATmMbfgn/Yk7G
-         p3/82zI5YNfxjPOuQ9m8rcZ+RjQLrRLzmhn9H6dBz8DhnwmCVMPArdh7V9qHi44cGdAw
-         4txvAaQ81vJKvdGdvNwgI/Lo/7XrPA5fQAeHVpOuvk2WXzEMAK7OXvOvWo4gy33RbzIW
-         f5/TlTCgEdGtlqSqzWdbmm+xbbSGRK+4na0GYMfinEFbLDCwOua6FzEq9VP1t8i63/0g
-         39dnmqsQKet69/1qrx6pae1wNgkBRJS7lHMHY73575PCrzOB3r3HWXBxXyTqSFxH0jPs
-         1Ibw==
-X-Gm-Message-State: ANhLgQ2oFMJZGX33S5lIg6mbnWAjApmXBsoMoIo5MWktJFBHQPgRX24E
-        zYbt99fPktupFRLQabHKcqzRZPOVC4PDBSPt4wM=
-X-Google-Smtp-Source: ADFU+vvvjY8YdGf5kqvCLCo+zLETN8GTZWFpfSenHeWj/U2VtSGzzVY03HrA+JshFRI+r5FEsgQHlkzNymbA+aIFPno=
-X-Received: by 2002:a05:6214:8cb:: with SMTP id da11mr2684383qvb.228.1583218515450;
- Mon, 02 Mar 2020 22:55:15 -0800 (PST)
+        Tue, 3 Mar 2020 01:57:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726164AbgCCG5i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 01:57:38 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CC8C2146E;
+        Tue,  3 Mar 2020 06:57:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583218657;
+        bh=eMV16bVN0WQ9MVZE50jt1350rup/xeTAFYsN36sAH0A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iTJHmZDYmeL5xxqFPtWZLWtpCwxli2ovEUWtHm/uOEqSBBsqmXCLGYdBLsmlEiT8V
+         ArGSb2GFozas9kjLgSAgbh22MiHacOks+om+UXvoVGM8vspsw8zaf6iAWFcaYH6dOT
+         53vqyIFDN0iFwPW7tD+2ivEFDmARZUknNiUS5Wzo=
+Date:   Tue, 3 Mar 2020 07:57:35 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@android.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K . Prasad" <prasad@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Quentin Perret <qperret@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 0/3] Unexport kallsyms_lookup_name() and
+ kallsyms_on_each_symbol()
+Message-ID: <20200303065735.GA1172591@kroah.com>
+References: <20200221114404.14641-1-will@kernel.org>
+ <20200302192811.n6o5645rsib44vco@localhost>
+ <20200302193658.GA272023@kroah.com>
+ <20200302193957.GA276441@kroah.com>
+ <1183544004.13859.1583180227118.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-References: <202002242114.CBED7F1@keescook>
-In-Reply-To: <202002242114.CBED7F1@keescook>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Mon, 2 Mar 2020 22:55:04 -0800
-Message-ID: <CAEf4BzYrBoQJ1tPMRMQ_-G6e76=zj4zyC=HrY-mxH_9QK65oqg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Remove debug info from kallsyms linking
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1183544004.13859.1583180227118.JavaMail.zimbra@efficios.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 9:17 PM Kees Cook <keescook@chromium.org> wrote:
->
-> When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
-> time collecting and writing the dwarf sections to the temporary output
-> files. kallsyms does not need this information, and leaving it off
-> halves their linking time. This is especially noticeable without
-> CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
-> need those details.
->
-> Refactor the BTF and kallsyms generation stages slightly for more
-> regularized temporary names. Skip debug during kallsyms links.
->
-> For a full debug info build with BTF, my link time goes from 1m06s to
-> 0m54s, saving about 12 seconds, or 18%.
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
+On Mon, Mar 02, 2020 at 03:17:07PM -0500, Mathieu Desnoyers wrote:
+> ----- On Mar 2, 2020, at 2:39 PM, Greg Kroah-Hartman gregkh@linuxfoundation.org wrote:
+> 
+> > On Mon, Mar 02, 2020 at 08:36:58PM +0100, Greg Kroah-Hartman wrote:
+> >> On Mon, Mar 02, 2020 at 02:28:11PM -0500, Mathieu Desnoyers wrote:
+> >> > On 21-Feb-2020 11:44:01 AM, Will Deacon wrote:
+> >> > > Hi folks,
+> >> > > 
+> >> > > Despite having just a single modular in-tree user that I could spot,
+> >> > > kallsyms_lookup_name() is exported to modules and provides a mechanism
+> >> > > for out-of-tree modules to access and invoke arbitrary, non-exported
+> >> > > kernel symbols when kallsyms is enabled.
+> >> > > 
+> >> > > This patch series fixes up that one user and unexports the symbol along
+> >> > > with kallsyms_on_each_symbol(), since that could also be abused in a
+> >> > > similar manner.
+> >> > 
+> >> > Hi,
+> >> > 
+> >> > I maintain a GPL kernel tracer (LTTng) since 2005 which happens to be
+> >> > out-of-tree, even though we have made unsuccessful attempts to upstream
+> >> > it in the past. It uses kallsyms_lookup_name() to fetch a few symbols. I
+> >> > would be very glad to have them GPL-exported upstream rather than
+> >> > relying on this work-around. Here is the list of symbols we would need
+> >> > to GPL-export:
+> >> > 
+> >> > stack_trace_save
+> >> > stack_trace_save_user
+> >> > vmalloc_sync_all (CONFIG_X86)
+> >> > get_pfnblock_flags_mask
+> >> > disk_name
+> >> > block_class
+> >> > disk_type
+> >> 
+> >> I hate to ask, but why does anyone need block_class?  or disk_name or
+> >> disk_type?  I need to put them behind a driver core namespace or
+> >> something soon...
+> > 
+> 
+> In LTTng, we have a "statedump" which dumps all the relevant state of
+> the kernel at trace start (or when the user asks for it) into the
+> kernel trace. It is used to collect information which helps translating
+> compact numeric data into human-readable information at post-processing.
+> 
+> For block devices, the statedump contains the mapping between the
+> device number and the disk name [1]. It uses the "block_class",
+> "disk_name", and "disk_type" symbols for this. Here is the
+> post-processing output:
+> 
+> [14:48:41.388934812] (+?.?????????) compudjdev lttng_statedump_block_device: { cpu_id = 0 }, { dev = 1048576, diskname = "ram0" }
+> [...]
+> [14:48:41.442548745] (+0.003574998) compudjdev lttng_statedump_block_device: { cpu_id = 0 }, { dev = 1048591, diskname = "ram15" }
+> [14:48:41.446064977] (+0.003516232) compudjdev lttng_statedump_block_device: { cpu_id = 0 }, { dev = 265289728, diskname = "vda" }
+> [14:48:41.449579781] (+0.003514804) compudjdev lttng_statedump_block_device: { cpu_id = 0 }, { dev = 265289729, diskname = "vda1" }
+> [14:48:41.453113808] (+0.003534027) compudjdev lttng_statedump_block_device: { cpu_id = 0 }, { dev = 265289744, diskname = "vdb" }
+> [14:48:41.456640876] (+0.003527068) compudjdev lttng_statedump_block_device: { cpu_id = 0 }, { dev = 265289745, diskname = "vdb1" }
+> 
+> This information is then used in our I/O analyses to show information
+> comprehensible to a user.
 
-I've tested locally, seems to be generating BTF properly (I haven't
-timed anything, though). See nit below, but otherwise:
+But all of that is availble to you today in userspace, why dig through
+random kernel symbols?
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+Look in /sys/dev/block/ or in /sys/block/ for all of that information.
+Is there something that you can only find by the internal symbols that
+is not present today in sysfs?
 
->  scripts/link-vmlinux.sh | 28 +++++++++++++++++++---------
->  1 file changed, 19 insertions(+), 9 deletions(-)
->
+> > Wait, disk_type is a static variable.  And there's multiple ones of
+> > them, how does that work?
+> 
+> Yes, this is far from ideal. Here are the ones I observe in the kernel
+> sources:
+> 
+> block/genhd.c
+> 40:static const struct device_type disk_type;   <---- the one we use
+> 
+> lib/raid6/test/test.c
+> 41:static char disk_type(int d)  <---- this is a stand-alone user-space test program, not part of the kernel image.
+> 
+> crypto/async_tx/raid6test.c (depends on CONFIG_ASYNC_RAID6_TEST)
+> 44:static char disk_type(int d, int disks) <---- the compiler optimizes away this function, so this symbol is not present in the kernel image.
+> 
+> I think a better approach to solve this would be to implement and expose an
+> iterator function in the core kernel which could invoke a callback. However,
+> the main issue remains: if the only user is out-of-tree, I cannot justify
+> adding an exported kernel helper for this.
 
-[...]
+I think the best thing would be to use the userspace api :)
 
-> @@ -106,6 +114,8 @@ gen_btf()
->  {
->         local pahole_ver
->         local bin_arch
-> +       local bin_format
-> +       local bin_file
->
->         if ! [ -x "$(command -v ${PAHOLE})" ]; then
->                 echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
-> @@ -118,8 +128,9 @@ gen_btf()
->                 return 1
->         fi
->
-> -       info "BTF" ${2}
->         vmlinux_link ${1}
-> +
-> +       info "BTF" ${2}
+thanks,
 
-Any reason to exclude linking from "BTF" step? It's still a part of
-BTF generation, so seems fair to have BTF encompass both vmlinux
-linking and BTF generation/deduplication?
-
->         LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
->
->         # dump .BTF section into raw binary file to link with final vmlinux
-
-[...]
+greg k-h
