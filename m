@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8687C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CD2C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 940312072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC8382072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259184;
-	bh=eJdKrXY9up3SNWC2qqe1sddjplkQ6CTF+Cp0LH+q1tA=;
+	s=default; t=1583259195;
+	bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j+yURi/TT1KD/o5L47d78FlqnIlHFHg0lCq1xpFaJoAu3egoomK/sZTnaiiIiVwPM
-	 hQ3hKL+Xson3ActbvduYJOGTmOTrQzeYFLtWrdHEd0WsHSKaJJGHuF6kLNC57MDMHe
-	 PbqOQ565fuSTruWnZ11EVE3Lsa2dGtYAHDmrSJP4=
+	b=MmSfLVwPTtyBLTMS7BCt63brxGsGbDoAiPRnn34DUkf8yHsS/oKPQ9iy0F/usUNQG
+	 FdnlwCU5oWUmVMXPLCsG1S7bHiXoAQ4GJJX6Td0ctG9NooJ/GNsTqnRsAjPrnr1mU+
+	 zig2ByvSuZmi6Xyrhi1tkmtczOSw3EKjwoCY7YFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731314AbgCCRrQ (ORCPT
+        id S1731223AbgCCRqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:47:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54022 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:46:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53388 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730038AbgCCRrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:47:11 -0500
+        id S1731204AbgCCRqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:46:43 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C96120870;
-        Tue,  3 Mar 2020 17:47:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B23220870;
+        Tue,  3 Mar 2020 17:46:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257630;
-        bh=eJdKrXY9up3SNWC2qqe1sddjplkQ6CTF+Cp0LH+q1tA=;
+        s=default; t=1583257601;
+        bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FRznG3U+qkbZtj7daznpd4ViSyAuDeN06wG4al0i6YKCnToq+ZEgZHHtYO0RkJc6b
-         iYJY4rXd5bdPL2M1CWazq7XXTvfKq9OAyuFQ2UH6BNmLslMBp2IcYje2wGaG0IkHA5
-         C1T7oVjZ6+MTajDUmq3Oi5Zlhat7bPbN9V7VBFww=
+        b=vOCO7FXRBldF+V2uZfkYC9P/LxxTI/fi9suDMwvXnX5tXCWIJhSJSh9NdO1cMO+L2
+         9rLnfR12YvGhAmeqbSO7+BN4MrLX4cih+SjmJzWwzhi0GVsHbY0r3HjuwINy1d9xfL
+         SCuNdvzYdHKf0p1qRgQbDnx0I79wadq7vJ3UH1Qw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bruce Allan <bruce.w.allan@intel.com>,
-        Tony Nguyen <anthony.l.nguyen@intel.com>,
-        Andrew Bowers <andrewx.bowers@intel.com>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 067/176] ice: update Unit Load Status bitmask to check after reset
-Date:   Tue,  3 Mar 2020 18:42:11 +0100
-Message-Id: <20200303174312.409418787@linuxfoundation.org>
+Subject: [PATCH 5.5 057/176] net: ena: rss: do not allocate key when not supported
+Date:   Tue,  3 Mar 2020 18:42:01 +0100
+Message-Id: <20200303174311.162288906@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -62,81 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bruce Allan <bruce.w.allan@intel.com>
+From: Sameeh Jubran <sameehj@amazon.com>
 
-[ Upstream commit cf8fc2a0863f9ff27ebd2efcdb1f7d378b9fb8a6 ]
+[ Upstream commit 6a4f7dc82d1e3abd3feb0c60b5041056fcd9880c ]
 
-After a reset the Unit Load Status bits in the GLNVM_ULD register to check
-for completion should be 0x7FF before continuing.  Update the mask to check
-(minus the three reserved bits that are always set).
+Currently we allocate the key whether the device supports setting the
+key or not. This commit adds a check to the allocation function and
+handles the error accordingly.
 
-Signed-off-by: Bruce Allan <bruce.w.allan@intel.com>
-Signed-off-by: Tony Nguyen <anthony.l.nguyen@intel.com>
-Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
-Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/intel/ice/ice_common.c     | 17 ++++++++++++-----
- drivers/net/ethernet/intel/ice/ice_hw_autogen.h |  6 ++++++
- 2 files changed, 18 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 24 ++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/ice/ice_common.c b/drivers/net/ethernet/intel/ice/ice_common.c
-index fb1d930470c71..cb437a448305e 100644
---- a/drivers/net/ethernet/intel/ice/ice_common.c
-+++ b/drivers/net/ethernet/intel/ice/ice_common.c
-@@ -937,7 +937,7 @@ void ice_deinit_hw(struct ice_hw *hw)
-  */
- enum ice_status ice_check_reset(struct ice_hw *hw)
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
+index d6b894b06fa30..6f758ece86f60 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -1057,6 +1057,20 @@ static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
+ static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
  {
--	u32 cnt, reg = 0, grst_delay;
-+	u32 cnt, reg = 0, grst_delay, uld_mask;
- 
- 	/* Poll for Device Active state in case a recent CORER, GLOBR,
- 	 * or EMPR has occurred. The grst delay value is in 100ms units.
-@@ -959,13 +959,20 @@ enum ice_status ice_check_reset(struct ice_hw *hw)
- 		return ICE_ERR_RESET_FAILED;
- 	}
- 
--#define ICE_RESET_DONE_MASK	(GLNVM_ULD_CORER_DONE_M | \
--				 GLNVM_ULD_GLOBR_DONE_M)
-+#define ICE_RESET_DONE_MASK	(GLNVM_ULD_PCIER_DONE_M |\
-+				 GLNVM_ULD_PCIER_DONE_1_M |\
-+				 GLNVM_ULD_CORER_DONE_M |\
-+				 GLNVM_ULD_GLOBR_DONE_M |\
-+				 GLNVM_ULD_POR_DONE_M |\
-+				 GLNVM_ULD_POR_DONE_1_M |\
-+				 GLNVM_ULD_PCIER_DONE_2_M)
+ 	struct ena_rss *rss = &ena_dev->rss;
++	struct ena_admin_feature_rss_flow_hash_control *hash_key;
++	struct ena_admin_get_feat_resp get_resp;
++	int rc;
 +
-+	uld_mask = ICE_RESET_DONE_MASK;
++	hash_key = (ena_dev->rss).hash_key;
++
++	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
++				    ENA_ADMIN_RSS_HASH_FUNCTION,
++				    ena_dev->rss.hash_key_dma_addr,
++				    sizeof(ena_dev->rss.hash_key), 0);
++	if (unlikely(rc)) {
++		hash_key = NULL;
++		return -EOPNOTSUPP;
++	}
  
- 	/* Device is Active; check Global Reset processes are done */
- 	for (cnt = 0; cnt < ICE_PF_RESET_WAIT_COUNT; cnt++) {
--		reg = rd32(hw, GLNVM_ULD) & ICE_RESET_DONE_MASK;
--		if (reg == ICE_RESET_DONE_MASK) {
-+		reg = rd32(hw, GLNVM_ULD) & uld_mask;
-+		if (reg == uld_mask) {
- 			ice_debug(hw, ICE_DBG_INIT,
- 				  "Global reset processes done. %d\n", cnt);
- 			break;
-diff --git a/drivers/net/ethernet/intel/ice/ice_hw_autogen.h b/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
-index e8f32350fed29..6f4a70fa39037 100644
---- a/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
-+++ b/drivers/net/ethernet/intel/ice/ice_hw_autogen.h
-@@ -276,8 +276,14 @@
- #define GLNVM_GENS_SR_SIZE_S			5
- #define GLNVM_GENS_SR_SIZE_M			ICE_M(0x7, 5)
- #define GLNVM_ULD				0x000B6008
-+#define GLNVM_ULD_PCIER_DONE_M			BIT(0)
-+#define GLNVM_ULD_PCIER_DONE_1_M		BIT(1)
- #define GLNVM_ULD_CORER_DONE_M			BIT(3)
- #define GLNVM_ULD_GLOBR_DONE_M			BIT(4)
-+#define GLNVM_ULD_POR_DONE_M			BIT(5)
-+#define GLNVM_ULD_POR_DONE_1_M			BIT(8)
-+#define GLNVM_ULD_PCIER_DONE_2_M		BIT(9)
-+#define GLNVM_ULD_PE_DONE_M			BIT(10)
- #define GLPCI_CNF2				0x000BE004
- #define GLPCI_CNF2_CACHELINE_SIZE_M		BIT(1)
- #define PF_FUNC_RID				0x0009E880
+ 	rss->hash_key =
+ 		dma_alloc_coherent(ena_dev->dmadev, sizeof(*rss->hash_key),
+@@ -2640,11 +2654,15 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
+ 	if (unlikely(rc))
+ 		goto err_indr_tbl;
+ 
++	/* The following function might return unsupported in case the
++	 * device doesn't support setting the key / hash function. We can safely
++	 * ignore this error and have indirection table support only.
++	 */
+ 	rc = ena_com_hash_key_allocate(ena_dev);
+-	if (unlikely(rc))
++	if (unlikely(rc) && rc != -EOPNOTSUPP)
+ 		goto err_hash_key;
+-
+-	ena_com_hash_key_fill_default_key(ena_dev);
++	else if (rc != -EOPNOTSUPP)
++		ena_com_hash_key_fill_default_key(ena_dev);
+ 
+ 	rc = ena_com_hash_ctrl_init(ena_dev);
+ 	if (unlikely(rc))
 -- 
 2.20.1
 
