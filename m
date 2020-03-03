@@ -7,128 +7,232 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE02FC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E215C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:54:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E152146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD737215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="oFr7Llwf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BvtjiOsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbgCCGyO (ORCPT
+        id S1727549AbgCCGyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:54:14 -0500
-Received: from mout.web.de ([212.227.15.4]:41071 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgCCGyO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:54:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1583218369;
-        bh=Tw6WiExerKH3MYiejQXgfAi8Kj6gQGvgXqA0l7ZIMQY=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=oFr7LlwfL6Moph+Knido1xTrSjOI+lmXQvJUR9ZDzbi7XibS13kp1X3wftTv4U3DL
-         axHrL8MKKSL32lX5tjXiH0Vilv7aid+HoaegqAOKns3WM4FYiHU3mue6XI1X1aoVMV
-         /Ii0xhlbCvYqubhK8sa2xszCQarjVHgFiSWXfkOw=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.244.62.7]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MAdX1-1jFqvK2RNz-00Bvgl; Tue, 03
- Mar 2020 07:52:49 +0100
-Subject: Re: [v3] Documentation: bootconfig: Update boot configuration
- documentation
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-doc@vger.kernel.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Tue, 3 Mar 2020 01:54:55 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:43298 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgCCGyz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 01:54:55 -0500
+Received: by mail-wr1-f67.google.com with SMTP id h9so1927034wrr.10;
+        Mon, 02 Mar 2020 22:54:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=to:references:from:autocrypt:subject:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=HJA53stw5MpDLj7gN7o5jWXu3DD9XUs77kWYzhWWkVs=;
+        b=BvtjiOsVWH3QiQVuLBakV0xzl9OyalGGKZ+oPpzLJnr58fa3Qx6axBfc5+KcjaUhLk
+         bfaM72XDMr6s8hTQz9kj4kSXoFjVw+2q0knCglb1g9C91FEIU3pBdDd8PCAGhzzi1kzn
+         XxbkY/37YtEpQurW7N8eP79J+c+Mol1g1pQ6rwt+kE13pEmMLRKpVlZ0u0Igxuf7l2Th
+         M/FddnxjglqvmH2MCAWTAj/EWavRFeq0BcbRU+XzlweY1or1vowqwlY7cES4cbaOciIh
+         11W795LGJ3uMt2JeR178vmeSFIBSbAL+I5phLmOz5NfbjO3pVadTZnM3+8O4iXes/BQJ
+         6awg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:to:references:from:autocrypt:subject:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=HJA53stw5MpDLj7gN7o5jWXu3DD9XUs77kWYzhWWkVs=;
+        b=q1gefgb1Z43RmAF+TE5IDwsCXTOlXgv79zySrz0cUofA7dE4VrYC4qS/jT6iqAQw6A
+         iiVNkKRH9D7oA7Du9Cw0YYzRtX1A1ow9CH+FuQtCmBDMRpCUc9R4EZiklvwP/3ngWijC
+         rtEB9Q2JcVS0GjLfXtRnMlp/ylB5V44hBzSHxiXk/55o+mTImQueHGdO7ht3af/6Pj/u
+         c2qr5QRajjrTQ5J1ZfrA++FZfKC2EEnzvgilOdkE8FP6HNjQk0z1cFG7TVsOSrO2blBH
+         RnL5xnsyGQ/mM8hDSlg7EkiJ/+uEFtFhv2Zewztn573rI3GjNEEdq+O02fSJ/d4GPLEm
+         83ww==
+X-Gm-Message-State: ANhLgQ0dkdd3ikUUyqFbYPk9uhk+nJcWE9asaSPIEh1+GNr3kkmrwAld
+        +u8pshPAMKOyPkZHO+rOoXuJ82yv
+X-Google-Smtp-Source: ADFU+vu3jeFtBmGfpvyqNKIgxLHcOzw9QvXbQOyVHOZTCIfGZgWlDz4Are5+p7ZDrWO0ZSsDwTWzZg==
+X-Received: by 2002:adf:e383:: with SMTP id e3mr3945237wrm.10.1583218491532;
+        Mon, 02 Mar 2020 22:54:51 -0800 (PST)
+Received: from [192.168.43.27] ([109.126.130.242])
+        by smtp.gmail.com with ESMTPSA id v7sm25173005wrm.49.2020.03.02.22.54.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 22:54:50 -0800 (PST)
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <158313621831.3082.9886161529613724376.stgit@devnote2>
- <158313622831.3082.8237132211731864948.stgit@devnote2>
- <8c032093-c652-5e33-36ad-732f73beabab@infradead.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <12200e6e-2ef0-a0e4-9d92-35d7150342d2@web.de>
-Date:   Tue, 3 Mar 2020 07:52:38 +0100
+References: <cover.1583181841.git.asml.silence@gmail.com>
+ <444aef98f849d947d7f10e88f30244fa0bc82360.1583181841.git.asml.silence@gmail.com>
+ <3ab75953-ee39-2c4e-99e2-f8c18ceb6a8d@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Subject: Re: [PATCH v2 4/4] io_uring: get next req on subm ref drop
+Message-ID: <52b282f5-50f3-2ee6-a055-6ef0c2c39e93@gmail.com>
+Date:   Tue, 3 Mar 2020 09:54:03 +0300
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <8c032093-c652-5e33-36ad-732f73beabab@infradead.org>
+In-Reply-To: <3ab75953-ee39-2c4e-99e2-f8c18ceb6a8d@kernel.dk>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Provags-ID: V03:K1:Ri05URW0Gf7ouLqfc7nIJOjM23BryCaIGtcbrWNx4VnmoH5MvUY
- y7Tc8/Roll1Rv5yCuoiEsgXf5xoN4hg3guGQHMQv5vox0vUR7nsd7JVHKA9IO4zT2ZUjzzF
- CSnLDr6YH0LdOz+e7IdKnNy7ztZJzAQfbeh+m6kxSAGgNCSC7ypT+3YmV2vWEXyFg/Zk4lr
- 9xM8E0thhSztHU9BHH9Pw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:VQ3eeP0xYvo=:Vs4HSsGJqhz59b/40aAE6w
- 2r9O0jR+ZGb211ABVUshbRfTq7B86pPbSozFqlffTXsvl807d6wd6aennxucPij4SfbIqxiY0
- NjOfwH7361LfEukgLSHmvntfipYMhYxFCvSrLC+ClNxCPxTd75UNJ+sL2qcXcdjhdA3h84434
- A+mm4WKhWMDm8kuRmzOryOF7SPvps2UOQqFYd51OHzb3RQ40sM6IMzF6OOo8w2mO4Mae+BZN7
- GOKN3OIuRp/pKNteNP9+vftLKIoTAEYnRilSA/Ex2Yh9x0YyhTAxISFpUKo0p9cEpJ5Ov9f/O
- mxxxOx5s1lELiSzF+C0dowrxM2SjlFEM4Cl2uVNhDqLghOHEyAn7qVhk8WJVeXXY8u8tQDvKp
- 1INsk2GQhe35jA6pXb0LgkFNdWCz1GbvfwIWoE9JX2gWtsHz45LLzByic2+LlLa0hozMM0XIB
- S7tIsMQ1S2ogtNjuk0NDz6S0B2RAhjLuicJcdDOgb47MtlRVubC8v7FqYQUTEayR0AN6vP/mX
- kmDBEyMhZNdF4e5qjnYly3tnc0MrWqH+HDIONVUpsQa7uTiW1lUneVt03ZGMKjDbxSabnRzjR
- OMdEudNjxBuZgBWccmvCmEL13QJ0+veUx6M+Kb1qM8xgCS8oafcFpgvLeRpgOihxOvoT42I8W
- 8JT4crlDzzCDTQ0PmllCcS3bbM/R8HcAsEieTvzqTpvKNWyGqieqgekOPdQdK/N5ypnkFRUeO
- eIqev6ii5eN/P6fHZ1te9GVYHiU2GPh0Bb7pavrRJz5asKtfJLSd4OIqRtd9pgxs0BB1+sD0x
- XWJsFobvATt5f2rlWUFMkSj0Ara6Ac0xBPR9gqZJoUwe2bZlxmMNR66ncFm8yEAs52uTAfODa
- PUA56jt0lcmqbzOycc5N3FMeyQ19gNN9hq8duzeiCoSOzg9PMpw3E8/w/duwDPH+Gq+zB9Ui/
- iwp8BE1YqIxHfkHQtv5WxAytiLQAKwPLuhs3Cap8KPl9ICwpt0H+0yYUOVBC/lAWr02KqBr2j
- yC5+yH4syVvMXGh4Se5zeeYYyXPA3WTNt68XpA5P1EDnhYNLzToX6wSG9GHchrJlJJv/8VRuv
- 4ENJClDmTWQhozcUlgcmv8umKNmnR3oh7/L3hfllu1bPI5WQ1XlPMv4VYCpEtKVdxc5TByYv4
- Ymyk63Ri9/uHIS1bcJ562CnXB9zMrkwyd5zXuiSVoiH9gIe5rTF2c03dzKjpO33+n3BDtG6XQ
- /xhMC2hbg6ZWlO9HP
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> All of the other changes look good to me.
+On 03/03/2020 07:26, Jens Axboe wrote:
+> On 3/2/20 1:45 PM, Pavel Begunkov wrote:
+>> Get next request when dropping the submission reference. However, if
+>> there is an asynchronous counterpart (i.e. read/write, timeout, etc),
+>> that would be dangerous to do, so ignore them using new
+>> REQ_F_DONT_STEAL_NEXT flag.
+> 
+> Hmm, not so sure I like this one. It's not quite clear to me where we
+> need REQ_F_DONT_STEAL_NEXT. If we have an async component, then we set
+> REQ_F_DONT_STEAL_NEXT. So this is generally the case where our
+> io_put_req() for submit is not the last drop. And for the other case,
+> the put is generally in the caller anyway. So I don't really see what
+> this extra flag buys us?
 
-I suggest to take another closer look.
-Would you like to help with the clarification of any remaining
-software documentation concerns?
+Because io_put_work() holds a reference, no async handler can achive req->refs
+== 0, so it won't return next upon dropping the submission ref (i.e. by
+put_find_nxt()). And I want to have next before io_put_work(), to, instead of as
+currently:
 
-Regards,
-Markus
+run_work(work);
+assign_cur_work(NULL); // spinlock + unlock worker->lock
+new_work = put_work(work);
+assign_cur_work(new_work); // the second time
+
+do:
+
+new_work = run_work(work);
+assign_cur_work(new_work); // need new_work here
+put_work(work);
+
+
+The other way:
+
+io_wq_submit_work() // for all async handlers
+{
+	...
+	// Drop submission reference.
+	// One extra ref will be put in io_put_work() right
+	// after return, and it'll be done in the same thread
+	if (atomic_dec_and_get(req) == 1)
+		steal_next(req);
+}
+
+Maybe cleaner, but looks fragile as well. Would you prefer it?
+
+> Few more comments below.
+> 
+>> +static void io_put_req_async_submission(struct io_kiocb *req,
+>> +					struct io_wq_work **workptr)
+>> +{
+>> +	static struct io_kiocb *nxt;
+>> +
+>> +	nxt = io_put_req_submission(req);
+>> +	if (nxt)
+>> +		io_wq_assign_next(workptr, nxt);
+>> +}
+> 
+> This really should be called io_put_req_async_completion() since it's
+> called on completion. The naming is confusing.
+
+Ok
+
+>> @@ -2581,14 +2598,11 @@ static void __io_fsync(struct io_kiocb *req)
+>>  static void io_fsync_finish(struct io_wq_work **workptr)
+>>  {
+>>  	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+>> -	struct io_kiocb *nxt = NULL;
+>>  
+>>  	if (io_req_cancelled(req))
+>>  		return;
+>>  	__io_fsync(req);
+>> -	io_put_req(req); /* drop submission reference */
+>> -	if (nxt)
+>> -		io_wq_assign_next(workptr, nxt);
+>> +	io_put_req_async_submission(req, workptr);
+>>  }
+>>  
+>>  static int io_fsync(struct io_kiocb *req, bool force_nonblock)
+>> @@ -2617,14 +2631,11 @@ static void __io_fallocate(struct io_kiocb *req)
+>>  static void io_fallocate_finish(struct io_wq_work **workptr)
+>>  {
+>>  	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+>> -	struct io_kiocb *nxt = NULL;
+>>  
+>>  	if (io_req_cancelled(req))
+>>  		return;
+>>  	__io_fallocate(req);
+>> -	io_put_req(req); /* drop submission reference */
+>> -	if (nxt)
+>> -		io_wq_assign_next(workptr, nxt);
+>> +	io_put_req_async_submission(req, workptr);
+>>  }
+> 
+> All of these cleanups are nice (except the naming, as mentioned).
+> 
+>> @@ -3943,7 +3947,10 @@ static int io_poll_add(struct io_kiocb *req)
+>>  	if (mask) {
+>>  		io_cqring_ev_posted(ctx);
+>>  		io_put_req(req);
+>> +	} else {
+>> +		req->flags |= REQ_F_DONT_STEAL_NEXT;
+>>  	}
+>> +
+>>  	return ipt.error;
+>>  }
+> 
+> Is this racy? I guess it doesn't matter since we're still holding the
+> completion reference.
+
+It's done by the same thread, that uses it. There could be a race if the async
+counterpart is going to change req->flags, but we tolerate false negative (i.e.
+put_req() will handle it).
+
+-- 
+Pavel Begunkov
