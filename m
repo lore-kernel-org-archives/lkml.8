@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53109C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F38D6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 213F020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C744B2166E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:50:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583203852;
-	bh=bh71+yUWZJ2KgQTnvoKcgRM0pieJSYtq5owc9PoROas=;
+	s=default; t=1583203854;
+	bh=xrSwneQSyxbFcrpnGduhSn7IJJUdsBkAyHBLcwBerkc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HBOBAUaSZGLhS97jJ5evKuXhf/Kp1ZLXQ1B8EKqgJ91ii9PW5h2hJBuQbSCVqEUKh
-	 Tgvg55Jm3KVeHj9+b6ilgtHiSldf34T3sQKjkCvOUxYSmeysfZ4VKWgcMHK8hNLGjq
-	 Fnp1W9fXIys4OKfb8IVE1QfnA2P1abKD8byXZsQo=
+	b=UXFnPDDG2qoAh30VDatePxchzG+jHXx+soEWEn++6p9g6R+Ug/qXuHQFmer1Unk+p
+	 I8en89TKaCtUrFA7PUGo9SjoQ77ugPqtiLtROCg/NfOahhaE2a8Mx1pI2urJ6SVQfW
+	 s+Aj8XDR8cIQrvAA22knHIQKTAhl0cJoj2jwkETg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbgCCCuu (ORCPT
+        id S1729244AbgCCCup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:50:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47624 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 21:50:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47418 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729223AbgCCCuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:37 -0500
+        id S1729184AbgCCCua (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:50:30 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99D2A246EA;
-        Tue,  3 Mar 2020 02:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14F8A246EC;
+        Tue,  3 Mar 2020 02:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203836;
-        bh=bh71+yUWZJ2KgQTnvoKcgRM0pieJSYtq5owc9PoROas=;
+        s=default; t=1583203830;
+        bh=xrSwneQSyxbFcrpnGduhSn7IJJUdsBkAyHBLcwBerkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H/2SbyVmag9Thr/kDLggG+yQ1OzsxM9MweIcQ5SvUoyIfj+B+4J3dgQzcSMJS8Bz5
-         pBKmI+96MXfJ+zEvMuE6YWzd65TZq4vLWsnnLHl4hAHrO9FN9PBqqEotJUtX4FGrCV
-         UXYMZGh3aw+D89FIUABPxyvzPbFNiCSh2HkHlZAY=
+        b=F5Nd/Gdss8RJK9W9ORWy4Dch8Mc8tubRj87T75BAbd3+09RAMV5AWPxLhq/ml1iTn
+         TMpFEPr5rrjxiJCofhLFWBAcDXjH4p5t/HYdLoTyc6aabrN293JRCwTl2oYIwu2W+8
+         du+c+6YBzPu6+wVC/keov48MJln1Fv+0JYlW/AKw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 11/11] s390/cio: cio_ignore_proc_seq_next should increase position index
-Date:   Mon,  2 Mar 2020 21:50:21 -0500
-Message-Id: <20200303025021.10754-11-sashal@kernel.org>
+Cc:     Arun Parameswaran <arun.parameswaran@broadcom.com>,
+        Scott Branden <scott.branden@broadcom.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.4 06/11] net: phy: restore mdio regs in the iproc mdio driver
+Date:   Mon,  2 Mar 2020 21:50:16 -0500
+Message-Id: <20200303025021.10754-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303025021.10754-1-sashal@kernel.org>
 References: <20200303025021.10754-1-sashal@kernel.org>
@@ -61,48 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Arun Parameswaran <arun.parameswaran@broadcom.com>
 
-[ Upstream commit 8b101a5e14f2161869636ff9cb4907b7749dc0c2 ]
+[ Upstream commit 6f08e98d62799e53c89dbf2c9a49d77e20ca648c ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+The mii management register in iproc mdio block
+does not have a retention register so it is lost on suspend.
+Save and restore value of register while resuming from suspend.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Link: https://lore.kernel.org/r/d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: bb1a619735b4 ("net: phy: Initialize mdio clock at probe function")
+Signed-off-by: Arun Parameswaran <arun.parameswaran@broadcom.com>
+Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/blacklist.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/net/phy/mdio-bcm-iproc.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
-index 20314aad7ab7d..f329459cadf14 100644
---- a/drivers/s390/cio/blacklist.c
-+++ b/drivers/s390/cio/blacklist.c
-@@ -303,8 +303,10 @@ static void *
- cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
- {
- 	struct ccwdev_iter *iter;
-+	loff_t p = *offset;
- 
--	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
-+	(*offset)++;
-+	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
- 		return NULL;
- 	iter = it;
- 	if (iter->devno == __MAX_SUBCHANNEL) {
-@@ -314,7 +316,6 @@ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
- 			return NULL;
- 	} else
- 		iter->devno++;
--	(*offset)++;
- 	return iter;
+diff --git a/drivers/net/phy/mdio-bcm-iproc.c b/drivers/net/phy/mdio-bcm-iproc.c
+index 46fe1ae919a30..51ce3ea17fb37 100644
+--- a/drivers/net/phy/mdio-bcm-iproc.c
++++ b/drivers/net/phy/mdio-bcm-iproc.c
+@@ -188,6 +188,23 @@ static int iproc_mdio_remove(struct platform_device *pdev)
+ 	return 0;
  }
  
++#ifdef CONFIG_PM_SLEEP
++int iproc_mdio_resume(struct device *dev)
++{
++	struct platform_device *pdev = to_platform_device(dev);
++	struct iproc_mdio_priv *priv = platform_get_drvdata(pdev);
++
++	/* restore the mii clock configuration */
++	iproc_mdio_config_clk(priv->base);
++
++	return 0;
++}
++
++static const struct dev_pm_ops iproc_mdio_pm_ops = {
++	.resume = iproc_mdio_resume
++};
++#endif /* CONFIG_PM_SLEEP */
++
+ static const struct of_device_id iproc_mdio_of_match[] = {
+ 	{ .compatible = "brcm,iproc-mdio", },
+ 	{ /* sentinel */ },
+@@ -198,6 +215,9 @@ static struct platform_driver iproc_mdio_driver = {
+ 	.driver = {
+ 		.name = "iproc-mdio",
+ 		.of_match_table = iproc_mdio_of_match,
++#ifdef CONFIG_PM_SLEEP
++		.pm = &iproc_mdio_pm_ops,
++#endif
+ 	},
+ 	.probe = iproc_mdio_probe,
+ 	.remove = iproc_mdio_remove,
 -- 
 2.20.1
 
