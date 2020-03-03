@@ -2,114 +2,111 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38E3C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8EFC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1972465D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:03:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9057C2465D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:04:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XIUN+YBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgCCEDv (ORCPT
+        id S1727195AbgCCEEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:03:51 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50626 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726910AbgCCEDu (ORCPT
+        Mon, 2 Mar 2020 23:04:02 -0500
+Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:23763 "EHLO
+        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgCCEEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:03:50 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02340baI123886
-        for <linux-kernel@vger.kernel.org>; Mon, 2 Mar 2020 23:03:49 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmqak183-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 23:03:49 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Tue, 3 Mar 2020 04:03:47 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Mar 2020 04:03:44 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02343h1x54263954
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Mar 2020 04:03:43 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7928D5205F;
-        Tue,  3 Mar 2020 04:03:43 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.229.179])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 970925204E;
-        Tue,  3 Mar 2020 04:03:42 +0000 (GMT)
-Subject: Re: [PATCH v3 7/8] ima: Calculate and extend PCR with digests in
- ima_template_entry
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>,
-        James.Bottomley@HansenPartnership.com,
-        jarkko.sakkinen@linux.intel.com
-Cc:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com
-Date:   Mon, 02 Mar 2020 23:03:42 -0500
-In-Reply-To: <20200210100418.22049-1-roberto.sassu@huawei.com>
-References: <20200210100418.22049-1-roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030304-0028-0000-0000-000003E03FA6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030304-0029-0000-0000-000024A56A70
-Message-Id: <1583208222.8544.168.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_09:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0 bulkscore=0
- mlxlogscore=999 phishscore=0 adultscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030028
+        Mon, 2 Mar 2020 23:04:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1583208242; x=1614744242;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=sXeS6p7Itr7djtUdtudVwXDeytGL1G/3avUXEanK1OY=;
+  b=XIUN+YBlnRA/9jmConDwZcGeBla7CISK1xw+co9fI+3uxYdDNlI2nZlH
+   WcrWpYVmX0Ys4Sgzzhr+JKI6fCLXaV2YMYgEOjAMfzzPHFgfKYdBruRRz
+   RdKZuY6dvK9fyCJ8KLgIZy8G3CLZiP3jD2VNsTf3jZhQK98mjZLiIMit6
+   c=;
+IronPort-SDR: 4NXr8SMbetEKaQTY4fdW/KXzww/XZW3aSn+bnL3yY+9egQoy1w6JqDjzftCPrM1Hnolsmw54mg
+ Nkx4Xn7O58ew==
+X-IronPort-AV: E=Sophos;i="5.70,509,1574121600"; 
+   d="scan'208";a="20649458"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 03 Mar 2020 04:03:49 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id D0089A2CB5;
+        Tue,  3 Mar 2020 04:03:46 +0000 (UTC)
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 3 Mar 2020 04:03:46 +0000
+Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
+ EX13d01UWB002.ant.amazon.com (10.43.161.136) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 3 Mar 2020 04:03:46 +0000
+Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
+ EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
+ Tue, 3 Mar 2020 04:03:45 +0000
+From:   "Singh, Balbir" <sblbir@amazon.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
+CC:     "hch@lst.de" <hch@lst.de>,
+        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>
+Subject: Re: [PATCH v2 0/5] Add support for block disk resize notification
+Thread-Topic: [PATCH v2 0/5] Add support for block disk resize notification
+Thread-Index: AQHV7BZlqlE0eKkI5kmZncB90XbQkKg2SUiA
+Date:   Tue, 3 Mar 2020 04:03:45 +0000
+Message-ID: <f2b805c1a420a07aa9449ee0ef77766a10e9ff20.camel@amazon.com>
+References: <20200225200129.6687-1-sblbir@amazon.com>
+In-Reply-To: <20200225200129.6687-1-sblbir@amazon.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.160.8]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <97EF196BA8BC864E90A3D2B135CE2ADB@amazon.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-10 at 11:04 +0100, Roberto Sassu wrote:
-
-> @@ -219,6 +214,8 @@ int ima_restore_measurement_entry(struct ima_template_entry *entry)
->  
->  int __init ima_init_digests(void)
->  {
-> +	u16 digest_size;
-> +	u16 crypto_id;
->  	int i;
->  
->  	if (!ima_tpm_chip)
-> @@ -229,8 +226,17 @@ int __init ima_init_digests(void)
->  	if (!digests)
->  		return -ENOMEM;
->  
-> -	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++)
-> +	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
->  		digests[i].alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
-> +		digest_size = ima_tpm_chip->allocated_banks[i].digest_size;
-> +		crypto_id = ima_tpm_chip->allocated_banks[i].crypto_id;
-> +
-> +		/* for unmapped TPM algorithms digest is still a padded SHA1 */
-> +		if (crypto_id == HASH_ALGO__LAST)
-> +			digest_size = SHA1_DIGEST_SIZE;
-> +
-> +		memset(digests[i].digest, 0xff, digest_size);
-
-Shouldn't the memset here be of the actual digest size even for
-unmapped TPM algorithms.
-
-> +	}
->  
->  	return 0;
->  }
-
+T24gVHVlLCAyMDIwLTAyLTI1IGF0IDIwOjAxICswMDAwLCBCYWxiaXIgU2luZ2ggd3JvdGU6DQo+
+IEFsbG93IGJsb2NrL2dlbmhkIHRvIG5vdGlmeSB1c2VyIHNwYWNlIGFib3V0IGRpc2sgc2l6ZSBj
+aGFuZ2VzIHVzaW5nIGENCj4gbmV3IGhlbHBlciBzZXRfY2FwYWNpdHlfcmV2YWxpZGF0ZV9hbmRf
+bm90aWZ5KCksIHdoaWNoIGlzIGEgd3JhcHBlcg0KPiBvbiB0b3Agb2Ygc2V0X2NhcGFjaXR5KCku
+IHNldF9jYXBhY2l0eV9yZXZhbGlkYXRlX2FuZF9ub3RpZnkoKSB3aWxsIG9ubHkNCj4gbm90aWZ5
+DQo+IGlmZiB0aGUgY3VycmVudCBjYXBhY2l0eSBvciB0aGUgdGFyZ2V0IGNhcGFjaXR5IGlzIG5v
+dCB6ZXJvIGFuZCB0aGUNCj4gY2FwYWNpdHkgcmVhbGx5IGNoYW5nZXMuDQo+IA0KPiBCYWNrZ3Jv
+dW5kOg0KPiANCj4gQXMgYSBwYXJ0IG9mIGEgcGF0Y2ggdG8gYWxsb3cgc2VuZGluZyB0aGUgUkVT
+SVpFIGV2ZW50IG9uIGRpc2sgY2FwYWNpdHkNCj4gY2hhbmdlLCBDaHJpc3RvcGggKGhjaEBsc3Qu
+ZGUpIHJlcXVlc3RlZCB0aGF0IHRoZSBwYXRjaCBiZSBtYWRlIGdlbmVyaWMNCj4gYW5kIHRoZSBo
+YWNrcyBmb3IgdmlydGlvIGJsb2NrIGFuZCB4ZW4gYmxvY2sgZGV2aWNlcyBiZSByZW1vdmVkIGFu
+ZA0KPiBtZXJnZWQgdmlhIGEgZ2VuZXJpYyBoZWxwZXIuDQo+IA0KPiBUaGlzIHNlcmllcyBjb25z
+aXN0cyBvZiA1IGNoYW5nZXMuIFRoZSBmaXJzdCBvbmUgYWRkcyB0aGUgYmFzaWMNCj4gc3VwcG9y
+dCBmb3IgY2hhbmdpbmcgdGhlIHNpemUgYW5kIG5vdGlmeWluZy4gVGhlIGZvbGxvdyB1cCBwYXRj
+aGVzDQo+IGFyZSBwZXIgYmxvY2sgc3Vic3lzdGVtIGNoYW5nZXMuIE90aGVyIGJsb2NrIGRyaXZl
+cnMgY2FuIGFkZCB0aGVpcg0KPiBjaGFuZ2VzIGFzIG5lY2Vzc2FyeSBvbiB0b3Agb2YgdGhpcyBz
+ZXJpZXMuIFNpbmNlIG5vdCBhbGwgZGV2aWNlcw0KPiBhcmUgcmVzaXphYmxlLCB0aGUgZGVmYXVs
+dCB3YXMgdG8gYWRkIGEgbmV3IEFQSSBhbmQgbGV0IHVzZXJzDQo+IHNsb3dseSBjb252ZXJ0IG92
+ZXIgYXMgbmVlZGVkLg0KPiANCj4gVGVzdGluZzoNCj4gMS4gSSBkaWQgc29tZSBiYXNpYyB0ZXN0
+aW5nIHdpdGggYW4gTlZNRSBkZXZpY2UsIGJ5IHJlc2l6aW5nIGl0IGluDQo+IHRoZSBiYWNrZW5k
+IGFuZCBlbnN1cmVkIHRoYXQgdWRldmQgcmVjZWl2ZWQgdGhlIGV2ZW50Lg0KPiANCj4gDQo+IENo
+YW5nZWxvZyB2MjoNCj4gLSBSZW5hbWUgZGlza19zZXRfY2FwYWNpdHkgdG8gc2V0X2NhcGFjaXR5
+X3JldmFsaWRhdGVfYW5kX25vdGlmeQ0KPiAtIHNldF9jYXBhY2l0eV9yZXZhbGlkYXRlX2FuZF9u
+b3RpZnkgY2FuIGNhbGwgcmV2YWxpZGF0ZSBkaXNrDQo+ICAgaWYgbmVlZGVkLCBhIG5ldyBib29s
+IHBhcmFtZXRlciBpcyBwYXNzZWQgKHN1Z2dlc3RlZCBieSBCb2IgTGl1KQ0KPiANCg0KUGluZz8g
+SXQncyBub3QgYW4gdXJnZW50IHBhdGNoc2V0LCBJIGFtIGhhcHB5IHRvIHdhaXQgaWYgbm90aGlu
+ZyBlbHNlIGlzDQpuZWVkZWQuDQoNCkJhbGJpciBTaW5naA0K
