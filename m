@@ -2,187 +2,181 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B091AC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7047C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B63320870
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F93214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="yFYGHrso"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="JCQRnvQ0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgCCRnd (ORCPT
+        id S1730743AbgCCRni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:43:33 -0500
-Received: from gateway20.websitewelcome.com ([192.185.44.20]:45179 "EHLO
-        gateway20.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730687AbgCCRnb (ORCPT
+        Tue, 3 Mar 2020 12:43:38 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:46731 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730578AbgCCRn1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:43:31 -0500
-X-Greylist: delayed 1284 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Mar 2020 12:43:30 EST
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway20.websitewelcome.com (Postfix) with ESMTP id 516B74011005F
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 10:07:26 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 9BF6j3z3avBMd9BF6jyefd; Tue, 03 Mar 2020 11:22:04 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1Hu6Spo4STFUb0EUoANlhS9u+NnZT8+/GwsRj4J3oSU=; b=yFYGHrsokDpc1W9smKehuoCjFc
-        YB7t9dC2uNzJCKkLG6fELXz41YNYcQ/Htnt9QfB0w/QpVfIPiCadCABoiTnhtpyptmSMImy6xxjNA
-        ny6t1g0KL0AGsjSJPf8g+0zalhV6eFayG9+1gYNiyLEBZMxS1mz7cAf4ULd3Qr2HCJsXz3Fhk/vpg
-        GpuYIMIbduRQ1hkJxXFRoIMbLr6yUj2gMEs7cbitfwCZRmlZPbaGGbNsPZBA7vg9nUQXbLJ9iDRCA
-        8OeaucRonhwGtJ0gpitz2fUS33nJ38gh0WvgZl2D1s2q5dnsmNyaX5dDiI0FTv9an6TjRQQThXHNc
-        gpwYLRvg==;
-Received: from [201.162.240.41] (port=29262 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j9BF1-002hRF-PS; Tue, 03 Mar 2020 11:22:04 -0600
-Subject: Re: [PATCH][next] perf: Replace zero-length array with flexible-array
- member
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tue, 3 Mar 2020 12:43:27 -0500
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 02B1023EA8;
+        Tue,  3 Mar 2020 18:43:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1583257404;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bZm6ZfNU9396+MJXOBRUscy8hxQ1AdgyZ3RSnP5KrZU=;
+        b=JCQRnvQ0RfsASdqbjilVtJFwBdG52LcArELQ5fRw6X6RI35xaH5MOfCLY04NM464eEflCl
+        RJUHJO0PKErB3whrtEKIVbLDTLN6dUOXB4BlXPEU215VZOm8a2KhPK4iKi0gXH4EyGX/Lz
+        /5MFvkVDye0iyd+U/JfhtkG4ROVv5pQ=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200302124832.GA7504@embeddedor>
- <20200302130431.GA2562@hirez.programming.kicks-ass.net>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- xsFNBFssHAwBEADIy3ZoPq3z5UpsUknd2v+IQud4TMJnJLTeXgTf4biSDSrXn73JQgsISBwG
- 2Pm4wnOyEgYUyJd5tRWcIbsURAgei918mck3tugT7AQiTUN3/5aAzqe/4ApDUC+uWNkpNnSV
- tjOx1hBpla0ifywy4bvFobwSh5/I3qohxDx+c1obd8Bp/B/iaOtnq0inli/8rlvKO9hp6Z4e
- DXL3PlD0QsLSc27AkwzLEc/D3ZaqBq7ItvT9Pyg0z3Q+2dtLF00f9+663HVC2EUgP25J3xDd
- 496SIeYDTkEgbJ7WYR0HYm9uirSET3lDqOVh1xPqoy+U9zTtuA9NQHVGk+hPcoazSqEtLGBk
- YE2mm2wzX5q2uoyptseSNceJ+HE9L+z1KlWW63HhddgtRGhbP8pj42bKaUSrrfDUsicfeJf6
- m1iJRu0SXYVlMruGUB1PvZQ3O7TsVfAGCv85pFipdgk8KQnlRFkYhUjLft0u7CL1rDGZWDDr
- NaNj54q2CX9zuSxBn9XDXvGKyzKEZ4NY1Jfw+TAMPCp4buawuOsjONi2X0DfivFY+ZsjAIcx
- qQMglPtKk/wBs7q2lvJ+pHpgvLhLZyGqzAvKM1sVtRJ5j+ARKA0w4pYs5a5ufqcfT7dN6TBk
- LXZeD9xlVic93Ju08JSUx2ozlcfxq+BVNyA+dtv7elXUZ2DrYwARAQABzSxHdXN0YXZvIEEu
- IFIuIFNpbHZhIDxndXN0YXZvQGVtYmVkZGVkb3IuY29tPsLBfQQTAQgAJwUCWywcDAIbIwUJ
- CWYBgAULCQgHAgYVCAkKCwIEFgIDAQIeAQIXgAAKCRBHBbTLRwbbMZ6tEACk0hmmZ2FWL1Xi
- l/bPqDGFhzzexrdkXSfTTZjBV3a+4hIOe+jl6Rci/CvRicNW4H9yJHKBrqwwWm9fvKqOBAg9
- obq753jydVmLwlXO7xjcfyfcMWyx9QdYLERTeQfDAfRqxir3xMeOiZwgQ6dzX3JjOXs6jHBP
- cgry90aWbaMpQRRhaAKeAS14EEe9TSIly5JepaHoVdASuxklvOC0VB0OwNblVSR2S5i5hSsh
- ewbOJtwSlonsYEj4EW1noQNSxnN/vKuvUNegMe+LTtnbbocFQ7dGMsT3kbYNIyIsp42B5eCu
- JXnyKLih7rSGBtPgJ540CjoPBkw2mCfhj2p5fElRJn1tcX2McsjzLFY5jK9RYFDavez5w3lx
- JFgFkla6sQHcrxH62gTkb9sUtNfXKucAfjjCMJ0iuQIHRbMYCa9v2YEymc0k0RvYr43GkA3N
- PJYd/vf9vU7VtZXaY4a/dz1d9dwIpyQARFQpSyvt++R74S78eY/+lX8wEznQdmRQ27kq7BJS
- R20KI/8knhUNUJR3epJu2YFT/JwHbRYC4BoIqWl+uNvDf+lUlI/D1wP+lCBSGr2LTkQRoU8U
- 64iK28BmjJh2K3WHmInC1hbUucWT7Swz/+6+FCuHzap/cjuzRN04Z3Fdj084oeUNpP6+b9yW
- e5YnLxF8ctRAp7K4yVlvA87BTQRbLBwMARAAsHCE31Ffrm6uig1BQplxMV8WnRBiZqbbsVJB
- H1AAh8tq2ULl7udfQo1bsPLGGQboJSVN9rckQQNahvHAIK8ZGfU4Qj8+CER+fYPp/MDZj+t0
- DbnWSOrG7z9HIZo6PR9z4JZza3Hn/35jFggaqBtuydHwwBANZ7A6DVY+W0COEU4of7CAahQo
- 5NwYiwS0lGisLTqks5R0Vh+QpvDVfuaF6I8LUgQR/cSgLkR//V1uCEQYzhsoiJ3zc1HSRyOP
- otJTApqGBq80X0aCVj1LOiOF4rrdvQnj6iIlXQssdb+WhSYHeuJj1wD0ZlC7ds5zovXh+FfF
- l5qH5RFY/qVn3mNIVxeO987WSF0jh+T5ZlvUNdhedGndRmwFTxq2Li6GNMaolgnpO/CPcFpD
- jKxY/HBUSmaE9rNdAa1fCd4RsKLlhXda+IWpJZMHlmIKY8dlUybP+2qDzP2lY7kdFgPZRU+e
- zS/pzC/YTzAvCWM3tDgwoSl17vnZCr8wn2/1rKkcLvTDgiJLPCevqpTb6KFtZosQ02EGMuHQ
- I6Zk91jbx96nrdsSdBLGH3hbvLvjZm3C+fNlVb9uvWbdznObqcJxSH3SGOZ7kCHuVmXUcqoz
- ol6ioMHMb+InrHPP16aVDTBTPEGwgxXI38f7SUEn+NpbizWdLNz2hc907DvoPm6HEGCanpcA
- EQEAAcLBZQQYAQgADwUCWywcDAIbDAUJCWYBgAAKCRBHBbTLRwbbMdsZEACUjmsJx2CAY+QS
- UMebQRFjKavwXB/xE7fTt2ahuhHT8qQ/lWuRQedg4baInw9nhoPE+VenOzhGeGlsJ0Ys52sd
- XvUjUocKgUQq6ekOHbcw919nO5L9J2ejMf/VC/quN3r3xijgRtmuuwZjmmi8ct24TpGeoBK4
- WrZGh/1hAYw4ieARvKvgjXRstcEqM5thUNkOOIheud/VpY+48QcccPKbngy//zNJWKbRbeVn
- imua0OpqRXhCrEVm/xomeOvl1WK1BVO7z8DjSdEBGzbV76sPDJb/fw+y+VWrkEiddD/9CSfg
- fBNOb1p1jVnT2mFgGneIWbU0zdDGhleI9UoQTr0e0b/7TU+Jo6TqwosP9nbk5hXw6uR5k5PF
- 8ieyHVq3qatJ9K1jPkBr8YWtI5uNwJJjTKIA1jHlj8McROroxMdI6qZ/wZ1ImuylpJuJwCDC
- ORYf5kW61fcrHEDlIvGc371OOvw6ejF8ksX5+L2zwh43l/pKkSVGFpxtMV6d6J3eqwTafL86
- YJWH93PN+ZUh6i6Rd2U/i8jH5WvzR57UeWxE4P8bQc0hNGrUsHQH6bpHV2lbuhDdqo+cM9eh
- GZEO3+gCDFmKrjspZjkJbB5Gadzvts5fcWGOXEvuT8uQSvl+vEL0g6vczsyPBtqoBLa9SNrS
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <dd08a30f-c335-f196-5e9b-0673a2a9b14d@embeddedor.com>
-Date:   Tue, 3 Mar 2020 11:24:59 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
+        Jiri Slaby <jslaby@suse.com>, Peng Fan <peng.fan@nxp.com>,
+        Vabhav Sharma <vabhav.sharma@nxp.com>,
+        Yuan Yao <yao.yuan@nxp.com>, Michael Walle <michael@walle.cc>
+Subject: [PATCH v3 9/9] arm64: dts: ls1028a: add missing LPUART nodes
+Date:   Tue,  3 Mar 2020 18:43:06 +0100
+Message-Id: <20200303174306.6015-10-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200303174306.6015-1-michael@walle.cc>
+References: <20200303174306.6015-1-michael@walle.cc>
 MIME-Version: 1.0
-In-Reply-To: <20200302130431.GA2562@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.162.240.41
-X-Source-L: No
-X-Exim-ID: 1j9BF1-002hRF-PS
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [201.162.240.41]:29262
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+Content-Transfer-Encoding: 8bit
+X-Spamd-Bar: ++++++
+X-Rspamd-Server: web
+X-Rspamd-Queue-Id: 02B1023EA8
+X-Spamd-Result: default: False [6.40 / 15.00];
+         FROM_HAS_DN(0.00)[];
+         TO_DN_SOME(0.00)[];
+         R_MISSING_CHARSET(2.50)[];
+         TO_MATCH_ENVRCPT_ALL(0.00)[];
+         TAGGED_RCPT(0.00)[dt];
+         MIME_GOOD(-0.10)[text/plain];
+         BROKEN_CONTENT_TYPE(1.50)[];
+         NEURAL_SPAM(0.00)[0.479];
+         DKIM_SIGNED(0.00)[];
+         DBL_PROHIBIT(0.00)[0.34.163.48:email,0.34.124.32:email,0.34.241.80:email,0.34.202.64:email];
+         RCPT_COUNT_TWELVE(0.00)[14];
+         MID_CONTAINS_FROM(1.00)[];
+         RCVD_COUNT_ZERO(0.00)[0];
+         FROM_EQ_ENVFROM(0.00)[];
+         MIME_TRACE(0.00)[0:+];
+         ASN(0.00)[asn:31334, ipnet:2a02:810c:8000::/33, country:DE];
+         SUSPICIOUS_RECIPS(1.50)[]
+X-Spam: Yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The LS1028A has six LPUART controllers. Add the nodes.
 
+This was tested on a custom board.
 
-On 3/2/20 07:04, Peter Zijlstra wrote:
-> On Mon, Mar 02, 2020 at 06:48:32AM -0600, Gustavo A. R. Silva wrote:
->> The current codebase makes use of the zero-length array language
->> extension to the C90 standard, but the preferred mechanism to declare
->> variable-length types such as these ones is a flexible array member[1][2],
->> introduced in C99:
->>
->> struct foo {
->>         int stuff;
->>         struct boo array[];
->> };
->>
->> By making use of the mechanism above, we will get a compiler warning
->> in case the flexible array does not occur last in the structure, which
->> will help us prevent some kind of undefined behavior bugs from being
->> inadvertently introduced[3] to the codebase from now on.
->>
->> Also, notice that, dynamic memory allocations won't be affected by
->> this change:
->>
->> "Flexible array members have incomplete type, and so the sizeof operator
->> may not be applied. As a quirk of the original implementation of
->> zero-length arrays, sizeof evaluates to zero."[1]
->>
-> 
->> diff --git a/include/uapi/linux/perf_event.h b/include/uapi/linux/perf_event.h
->> index 397cfd65b3fe..d71023c46058 100644
->> --- a/include/uapi/linux/perf_event.h
->> +++ b/include/uapi/linux/perf_event.h
->> @@ -453,7 +453,7 @@ struct perf_event_query_bpf {
->>  	/*
->>  	 * User provided buffer to store program ids
->>  	 */
->> -	__u32	ids[0];
->> +	__u32	ids[];
->>  };
->>  
->>  /*
-> 
-> Just to be absolutely sure; there is no ABI difference (or any actual
-> difference in generated code), right?
-> 
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ .../arm64/boot/dts/freescale/fsl-ls1028a.dtsi | 73 +++++++++++++++++++
+ 1 file changed, 73 insertions(+)
 
-Yeah; we should have no problem with that:
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 0843cfbe7ae1..df51e81ebe84 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@ -333,6 +333,79 @@
+ 			status = "disabled";
+ 		};
+ 
++
++		lpuart0: serial@2260000 {
++			compatible = "fsl,ls1028a-lpuart";
++			reg = <0x0 0x2260000 0x0 0x1000>;
++			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 1>;
++			clock-names = "ipg";
++			dma-names = "rx","tx";
++			dmas = <&edma0 1 32>,
++			       <&edma0 1 33>;
++			status = "disabled";
++		};
++
++		lpuart1: serial@2270000 {
++			compatible = "fsl,ls1028a-lpuart";
++			reg = <0x0 0x2270000 0x0 0x1000>;
++			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 1>;
++			clock-names = "ipg";
++			dma-names = "rx","tx";
++			dmas = <&edma0 1 30>,
++			       <&edma0 1 31>;
++			status = "disabled";
++		};
++
++		lpuart2: serial@2280000 {
++			compatible = "fsl,ls1028a-lpuart";
++			reg = <0x0 0x2280000 0x0 0x1000>;
++			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 1>;
++			clock-names = "ipg";
++			dma-names = "rx","tx";
++			dmas = <&edma0 1 28>,
++			       <&edma0 1 29>;
++			status = "disabled";
++		};
++
++		lpuart3: serial@2290000 {
++			compatible = "fsl,ls1028a-lpuart";
++			reg = <0x0 0x2290000 0x0 0x1000>;
++			interrupts = <GIC_SPI 235 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 1>;
++			clock-names = "ipg";
++			dma-names = "rx","tx";
++			dmas = <&edma0 1 26>,
++			       <&edma0 1 27>;
++			status = "disabled";
++		};
++
++		lpuart4: serial@22a0000 {
++			compatible = "fsl,ls1028a-lpuart";
++			reg = <0x0 0x22a0000 0x0 0x1000>;
++			interrupts = <GIC_SPI 236 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 1>;
++			clock-names = "ipg";
++			dma-names = "rx","tx";
++			dmas = <&edma0 1 24>,
++			       <&edma0 1 25>;
++			status = "disabled";
++		};
++
++		lpuart5: serial@22b0000 {
++			compatible = "fsl,ls1028a-lpuart";
++			reg = <0x0 0x22b0000 0x0 0x1000>;
++			interrupts = <GIC_SPI 237 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 1>;
++			clock-names = "ipg";
++			dma-names = "rx","tx";
++			dmas = <&edma0 1 22>,
++			       <&edma0 1 23>;
++			status = "disabled";
++		};
++
+ 		edma0: dma-controller@22c0000 {
+ 			#dma-cells = <2>;
+ 			compatible = "fsl,ls1028a-edma", "fsl,vf610-edma";
+-- 
+2.20.1
 
-https://godbolt.org/z/oohwmB
-
-Thanks
---
-Gustavo
