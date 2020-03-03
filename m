@@ -2,108 +2,87 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE8DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E706C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F94A20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C60220675
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:21:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583241566;
-	bh=cMwa4DWNXNo1OQ3rkVmUi6YKbd5FMSezFjnnsCfdAM0=;
+	s=default; t=1583241678;
+	bh=XB238MXEfH8xpKZt76KZ0NzhaYG/4J/KJ091QcUfRwA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uewDSqa3PNMKwV5mafJRAZLhBPN+tyQ1yRhVSOVwOUQoJRdVu9lh68lt+W2UtzNrR
-	 Tn0kIMHxdEgHPwbs4Av8j25yQvikEjD2XEPUuIF4bLMNK0JQJl/y/WntwQPEFYbXMW
-	 vvZZOiixrWTOC73MGpGRqjI4k3mlNEFL1opOU2z4=
+	b=aGL4N8H8Pl6JYIKS5/wYehxS2KoZjkS3ClKWMF5SOtrxOzNtGe4bb5qUjoTptDfne
+	 I0h8geXikpeFoT2sAe+wnI/T6Y9xNP9dYi7jwCYzA+6HPXN9LuE2Z3+DrYkEA52bzO
+	 FsCby17G/p+Vs4AJNd2Fb+s0BVfQJnIrOBKCRQpQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729288AbgCCNTZ (ORCPT
+        id S1728895AbgCCNVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:19:25 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:38549 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728330AbgCCNTY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:19:24 -0500
-Received: by mail-qk1-f193.google.com with SMTP id h22so3295914qke.5;
-        Tue, 03 Mar 2020 05:19:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Dq0BrbehtK7dXyNHKSd+EsOqpyv9pUXKpu+rlI2sPy0=;
-        b=dS7oPsIcp/43xUk811EfREN9F0E/R1GAaoEagaxvwV3+zlqbGtVcU7P352DpRveBUL
-         o4ug8Ghz4tfQvW05T4Gyz6fehTJGT2/qKzvpsMjMfvX02AcUmTQ20N14TNAQGZFw93nD
-         sy98slN9mRSb1T/Ef2+8W+i8p15qvv5oODLKp2ia0CyqILrUX8bVSq8qNWdsStPTI8iD
-         ixRbGieZO9m/P702VfNAqnayQ30qKfCxC9CjmDMmWjKAI5I/b0OvBlNvtrTCjxS2KEM/
-         N+UQy03P/OkJ4BDnTmfPQLM0ECxCdhNsARPcejnqcqXFtL+788rMYq13pgmYk5mkgZRK
-         7M4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Dq0BrbehtK7dXyNHKSd+EsOqpyv9pUXKpu+rlI2sPy0=;
-        b=VFoljd7clZcYp5iDXsrXWJxF6LMAPb5bdq9x0HvdIZftGlqYMP3GYLs35qmalpAc0E
-         E+zAuC1Oxs1aKFRF6MI+vYFEWF8ZewekZbNl2W2EWDNr1rFPb+ekfXdjVdtaZ7nYrjh7
-         fsR9NkqWH1VHm0Uib2Wz2IoH7w0NBDdd3fZAYrVZnWZ9NVJVr7XXVN89BI46LToBmdo8
-         cim1mJHwtrG8Xv15LJHO82ReD4Ily0rqEp9QKAj+0zqu92dqBvtd/7A6mc3MzIK9Dc+t
-         yaSNHRsuXsKZyICcv+mqolLlWL6IzmbYKWzySSXUcsekb3h8WQi9pPnK+2Xe0I2My5zE
-         SbJQ==
-X-Gm-Message-State: ANhLgQ314g46v2o+ivvj+tTdBqzG0W84wAwG7MdRwle8tl05U5AkGPeN
-        9wiotsUlsGZtjcI6uSk44wvI3+viif8=
-X-Google-Smtp-Source: ADFU+vvF5+WTDJs1wG460WrGfpTxI7+RdZTc6LshJRnRDEWuGkFnJDLgH0/WGXKpwe1wsVKCyM/XlA==
-X-Received: by 2002:a37:aa88:: with SMTP id t130mr4252977qke.452.1583241562821;
-        Tue, 03 Mar 2020 05:19:22 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::7f70])
-        by smtp.gmail.com with ESMTPSA id j17sm12534162qth.27.2020.03.03.05.19.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 05:19:22 -0800 (PST)
-Date:   Tue, 3 Mar 2020 08:19:21 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Daniel Xu <dxu@dxuuu.xyz>
-Cc:     cgroups@vger.kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
-        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 1/2] kernfs: Add option to enable user xattrs
-Message-ID: <20200303131921.GB5186@mtj.thefacebook.com>
-References: <20200303013901.32150-1-dxu@dxuuu.xyz>
- <20200303013901.32150-2-dxu@dxuuu.xyz>
+        Tue, 3 Mar 2020 08:21:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:46920 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727753AbgCCNVR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:21:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6B1D8FEC;
+        Tue,  3 Mar 2020 05:21:16 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E33803F534;
+        Tue,  3 Mar 2020 05:21:15 -0800 (PST)
+Date:   Tue, 3 Mar 2020 13:21:14 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Samuel Holland <samuel@sholland.org>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Ondrej Jirman <megous@megous.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] ALSA: pcm: Add a standalone version of
+ snd_pcm_limit_hw_rates
+Message-ID: <20200303132114.GF3866@sirena.org.uk>
+References: <20200223034533.1035-1-samuel@sholland.org>
+ <20200223034533.1035-2-samuel@sholland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="7mxbaLlpDEyR1+x6"
 Content-Disposition: inline
-In-Reply-To: <20200303013901.32150-2-dxu@dxuuu.xyz>
+In-Reply-To: <20200223034533.1035-2-samuel@sholland.org>
+X-Cookie: Drilling for oil is boring.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-On Mon, Mar 02, 2020 at 05:39:00PM -0800, Daniel Xu wrote:
-> +static int kernfs_vfs_user_xattr_set(const struct xattr_handler *handler,
-> +				     struct dentry *unused, struct inode *inode,
-> +				     const char *suffix, const void *value,
-> +				     size_t size, int flags)
-> +{
-...
-> +	if (value && atomic_inc_return(nr) > KERNFS_MAX_USER_XATTRS) {
-> +		ret = -ENOSPC;
-> +		goto dec_out;
-> +	}
+--7mxbaLlpDEyR1+x6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So, we limit the number of user xattrs here but
+On Sat, Feb 22, 2020 at 09:45:31PM -0600, Samuel Holland wrote:
+> It can be useful to derive min/max rates of a snd_pcm_hardware without
+> having a snd_pcm_runtime, such as before constructing an ASoC DAI link.
 
-> +	ret = kernfs_vfs_xattr_set(handler, unused, inode, suffix, value,
-> +				   size, flags);
+Takashi, are you OK with me taking this patch?
 
-This will call into simple_xattr_set() which doesn't put any further
-restriction on size and just calls GFP_KERNEL kmalloc on it allowing
-users incur high-order allocations. Maybe it'd make sense to limit
-both the number and size?
+--7mxbaLlpDEyR1+x6
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks.
+-----BEGIN PGP SIGNATURE-----
 
--- 
-tejun
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5eWckACgkQJNaLcl1U
+h9Ducwf/YF/9IryVmRNLlQXZGWZvKAI5ANfSxt6KxrXJelsiOzPqfIIwJARt5zer
+SIOmcAciTHMHaIcr577bM0h9o0GocGU0Ugr9xJimGbIkHkkV8vVP5FvEG5BzDmzq
++HXwIbriuIB/ya21VXYghWnFqlLtWnaqAPm+pjGJRdwNglphNYgz+YOO/Rg7VMhp
+5LmuTTeNsEW3ZkOzsVUHE5/Dzv5k4KOGd0IXd6mnNZ/elE03NgVTNinYZTYVFF2c
+wjylTL3Lj2LAq5glbu2Jkm5DIEY/9LsB3PlYwiHVwcl/cgSfU5b+pz6oE/r2ezmT
+COhEOZGW3psRcCnqHaxjrsTwfYhNEg==
+=terh
+-----END PGP SIGNATURE-----
+
+--7mxbaLlpDEyR1+x6--
