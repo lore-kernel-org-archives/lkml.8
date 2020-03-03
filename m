@@ -2,135 +2,95 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 460E7C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3362C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2316220CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:10:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ywYBJW8u"
+	by mail.kernel.org (Postfix) with ESMTP id B142621741
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:10:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727788AbgCCIKR (ORCPT
+        id S1727799AbgCCIK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:10:17 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39785 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbgCCIKR (ORCPT
+        Tue, 3 Mar 2020 03:10:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:43716 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727654AbgCCIK0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:10:17 -0500
-Received: by mail-lj1-f193.google.com with SMTP id f10so611083ljn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:10:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=IrpN0Khyn8F1w21hxzWH/afGTVD23TpSjjqucFl7FDw=;
-        b=ywYBJW8uLDNL42qTQ9U0JspTdFYKPpfxz72SXdAOUhpjlgUd7wxjhMY5iXgaLa678Q
-         HUFAyVWZbqi3NiWcOrc2Hcu3uKjRWhQ1AvpWF8WhXsOT9IflBiCK7D16gHYx9Ig++426
-         Ltwj7ZkihrH+xDKNSfnx9gJ8auSEPilIdxbHYdLca3Qms+l1Zt6zD55cGgEQ9xaCqM5x
-         aGah8U5cvou12zbmi/ewmL75AZJytjxtCSC0hO13KIL7MbMHObhI8djdmbWUnyb+qlP7
-         SZ80cPbgyoyO++/N/5+eusOi9zApdk4kGurWR5YnU/fsQUrOa53AAB4c0GtRy9I2VFap
-         ZV5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=IrpN0Khyn8F1w21hxzWH/afGTVD23TpSjjqucFl7FDw=;
-        b=pvyfzEfV5uxs+B1aS+NevT7A9gCbUwATTiPV/ORBwBPlUU5YLXvCD6KuzxiSBU3bhR
-         qbygKJtbBud9wDWo/LCbTfLUfnoZWCfP5nW5LeGrgJmn0EKivZQ9WMguJZuND//Bu2Vo
-         IRVWgx2agM+a+rSCo7WeKO59s8hcn2UAi2zE9BJI2cCYTyaLUfsQfz9Hdn4GZlaTI2ve
-         Y5KUlujB+OylcwJTrgdp7Xl9St5LPqb/7veIO/cp48PfbiVXiXKMGl/4AB9T8Wr+H2vt
-         xww+S/1qdH0pUMCP40LQMvV8ecxL0qM/JNeyCnJYojmSCAEUhbcJUzoOSydZ3Y0qY5Rg
-         QNdQ==
-X-Gm-Message-State: ANhLgQ0P1U3hvacNCBkTH8VSvDD2J/T1+p5cYKYlbE0YxTLnjrkudVBo
-        z57yKxPr1obif2YHjuuaoRTf7bKnVJvtEcqUrucg5Q==
-X-Google-Smtp-Source: ADFU+vtcf2XGPFtkahhGncITxSY967rhTlnPD1S9kyV1c/Dr1He9t9FKOVYN3msBIiEPycAaIXOvebfpwBgQ6K3phDo=
-X-Received: by 2002:a05:651c:203:: with SMTP id y3mr1677654ljn.151.1583223014795;
- Tue, 03 Mar 2020 00:10:14 -0800 (PST)
+        Tue, 3 Mar 2020 03:10:26 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j92dB-00026M-HL; Tue, 03 Mar 2020 09:10:21 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2E9651C1A9F;
+        Tue,  3 Mar 2020 09:10:21 +0100 (CET)
+Date:   Tue, 03 Mar 2020 08:10:20 -0000
+From:   "tip-bot2 for luanshi" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/core] irqdomain: Fix function documentation of
+ __irq_domain_alloc_fwnode()
+Cc:     luanshi <zhangliguang@linux.alibaba.com>,
+        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <1583200125-58806-1-git-send-email-zhangliguang@linux.alibaba.com>
+References: <1583200125-58806-1-git-send-email-zhangliguang@linux.alibaba.com>
 MIME-Version: 1.0
-References: <1583209826-28853-1-git-send-email-anshuman.khandual@arm.com>
-In-Reply-To: <1583209826-28853-1-git-send-email-anshuman.khandual@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Tue, 3 Mar 2020 09:10:02 +0100
-Message-ID: <CAKfTPtB8sfJaOXL9D98ydxWZ76_8FLw4Z5KWWn73fcfkdiB-Vg@mail.gmail.com>
-Subject: Re: [PATCH] sched/fair: Conditionally enable test_idle_cores()
- forward declaration
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-next@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <158322302088.28353.3499023675334636073.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anshuman,
+The following commit has been merged into the irq/core branch of tip:
 
-On Tue, 3 Mar 2020 at 05:30, Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
-> test_idle_cores()'s definition and all it's call sites are enclosed withi=
-n
-> CONFIG_SCHED_SMT. Hence the forward declaration needs to be conditionally
-> enabled in order to prevent build warnings like the following.
->
-> kernel/sched/fair.c:1524:20: warning: =E2=80=98test_idle_cores=E2=80=99 d=
-eclared =E2=80=98static=E2=80=99
-> but never defined [-Wunused-function]
->  static inline bool test_idle_cores(int cpu, bool def);
->                     ^~~~~~~~~~~~~~~
+Commit-ID:     30073b2c0bcad41f1b0d01068e07fd81b812c916
+Gitweb:        https://git.kernel.org/tip/30073b2c0bcad41f1b0d01068e07fd81b812c916
+Author:        luanshi <zhangliguang@linux.alibaba.com>
+AuthorDate:    Tue, 03 Mar 2020 09:48:45 +08:00
+Committer:     Thomas Gleixner <tglx@linutronix.de>
+CommitterDate: Tue, 03 Mar 2020 09:06:25 +01:00
 
-similar patches has already been sent:
-https://lore.kernel.org/lkml/20200226121244.7524-1-valentin.schneider@arm.c=
-om/
-https://lore.kernel.org/patchwork/patch/1201059/
+irqdomain: Fix function documentation of __irq_domain_alloc_fwnode()
 
->
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Juri Lelli <juri.lelli@redhat.com>
-> Cc: Vincent Guittot <vincent.guittot@linaro.org>
-> Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Ben Segall <bsegall@google.com>
-> Cc: Mel Gorman <mgorman@suse.de>
-> Cc: sfr@canb.auug.org.au
-> Cc: linux-next@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
-> This patch solves a build problem that exists on next-20200302.
->
->  kernel/sched/fair.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 84594f8..827087f 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -1521,7 +1521,9 @@ static inline bool is_core_idle(int cpu)
->  }
->
->  /* Forward declarations of select_idle_sibling helpers */
-> +#ifdef CONFIG_SCHED_SMT
->  static inline bool test_idle_cores(int cpu, bool def);
-> +#endif
->
->  struct task_numa_env {
->         struct task_struct *p;
-> --
-> 2.7.4
->
+The function got renamed at some point, but the kernel-doc was not updated.
+
+Signed-off-by: luanshi <zhangliguang@linux.alibaba.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1583200125-58806-1-git-send-email-zhangliguang@linux.alibaba.com
+
+---
+ kernel/irq/irqdomain.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 7527e5e..fdfc213 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -46,11 +46,11 @@ const struct fwnode_operations irqchip_fwnode_ops;
+ EXPORT_SYMBOL_GPL(irqchip_fwnode_ops);
+ 
+ /**
+- * irq_domain_alloc_fwnode - Allocate a fwnode_handle suitable for
++ * __irq_domain_alloc_fwnode - Allocate a fwnode_handle suitable for
+  *                           identifying an irq domain
+  * @type:	Type of irqchip_fwnode. See linux/irqdomain.h
+- * @name:	Optional user provided domain name
+  * @id:		Optional user provided id if name != NULL
++ * @name:	Optional user provided domain name
+  * @pa:		Optional user-provided physical address
+  *
+  * Allocate a struct irqchip_fwid, and return a poiner to the embedded
