@@ -2,115 +2,94 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A9FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C13D2C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:42:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9785A20838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:41:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95EDC20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 16:42:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="L8h6Pj96"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sxQlJoDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgCCQlE (ORCPT
+        id S1730264AbgCCQmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 11:41:04 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42307 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727879AbgCCQlE (ORCPT
+        Tue, 3 Mar 2020 11:42:18 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39243 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727064AbgCCQmS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 11:41:04 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z11so5174975wro.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:41:03 -0800 (PST)
+        Tue, 3 Mar 2020 11:42:18 -0500
+Received: by mail-pl1-f196.google.com with SMTP id g6so1553790plp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 08:42:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gu5Vr9phmfw4xw3s4gMaeq4iGj88kUgqgIzkzEB9pSA=;
-        b=L8h6Pj96emL1ZWlQUdEcXi5ptNYm7JI4OVyxrrFXJi2iVfoKsg/DUbgp+xgqv5zYut
-         clP/W3TZoMbEldX/UhJqNfoeZIE+2t+OKXzvZfK3FOh3xWj39NRZ2HxSFOcNv286+iDm
-         7mMCZNORAv7Wl6JSOWiNxEQ+otRAxHtFpUJp78nouBmnXoPbzjyhPLzHnYXWCYThrlLw
-         avU3Njqzc/U6Eo2MuhYh0PQT3Kye0LMN1/DYfwPXW0veAV4ryk3bvjztrjyiBxJWgScn
-         Nr6siGFHKUiyxgE7x20a+vKmTWutuSceA+hJWYPBQncxNLyDH4YXYf+UyFoDFJPaLaWx
-         L56g==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=XhGFUrx1v6eQV+qctC2ZOoxV4HtnB/sPU/5rxwGHIJ8=;
+        b=sxQlJoDbSlbju8kAXlj03S3FItr9OTowlKd8NRmEFACViq4nO3qgLOv9p4Ulyev23X
+         vRZERcYQvD4ZWlbBFvMBIpbS5tnebQMhNibSsLceR5tNKSsJiQfmXgVjDp+3uFGc3XbG
+         IFojHEsbtzJ58RG2ZHyF99Gxae72FPN3fOEFmgQZLvRdGOOoGwNcaui7Ajjv57maNx2v
+         z2bWB8//MFTgOY/zW01WYlPbUtkAGFIOFj+TuRdlhULBoEc6Fj/pA30nBI+NTvcx9oVe
+         tGwOJ+pOmdLjsRe3HZ326pZXijx7f8gPIvFU3d1Kq2UgP7bFJbVBAd3iN0ou6u22Koot
+         SrdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gu5Vr9phmfw4xw3s4gMaeq4iGj88kUgqgIzkzEB9pSA=;
-        b=nnbjzFbORvopidC0mvwrXlW4fvsB/vCKh1LL7CFrH3OPyBPcR2KlV4HHAsEuNkoOrm
-         E0Ixsl8r5bxTqUYYKR4pXnfQV3XvPhLlDcR9+23k1mh4XOpMhtArO2CSZY+1Vn9IBE8K
-         j5i/8MbolerUJFqpl7/VMwa6acc+Q0HsAPZYR7pEwpX4jCBs5pXYhHdcdN3Kg+FVh/eL
-         LbyzNmBCWkCajY0gb0Je3lSJ9N69zWxg7Iyg7Gq1j95uGXdL1Rv/qmAdIw7HKG/vLLQ5
-         WqGXYy4ni1dSblQAYj6w2QehTNmiqHoEOK48ne4jikYo3NpAQRxDuCgkc3/rQz4vSlBK
-         600g==
-X-Gm-Message-State: ANhLgQ2+Xhldg8jykyV2LeHAu7ozjC8MAdiRMX7doszzs/QIfabnF3AG
-        SLOdjk0juTeU6Ow1V8bvEN7QNA==
-X-Google-Smtp-Source: ADFU+vvwFCvbhgW1tjtZiQgB80fxp5GDFXVUbe+L+v4+L//7+V4uMTIwvCfx4mD5dEM2KEN/9Ymr1w==
-X-Received: by 2002:adf:f607:: with SMTP id t7mr6118275wrp.36.1583253662962;
-        Tue, 03 Mar 2020 08:41:02 -0800 (PST)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id e11sm33280806wrm.80.2020.03.03.08.41.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 08:41:02 -0800 (PST)
-Subject: Re: [PATCH] sys/sysinfo: Respect boottime inside time namespace
-To:     Cyril Hrubis <chrubis@suse.cz>, linux-kernel@vger.kernel.org
-Cc:     Andrei Vagin <avagin@openvz.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Bohac <jbohac@suse.cz>
-References: <20200303150638.7329-1-chrubis@suse.cz>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <9ab86b0c-8a32-39ae-5a14-78b872be6d82@arista.com>
-Date:   Tue, 3 Mar 2020 16:40:56 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <20200303150638.7329-1-chrubis@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XhGFUrx1v6eQV+qctC2ZOoxV4HtnB/sPU/5rxwGHIJ8=;
+        b=HCM7yv/ZjIBcyFCLswNVoRjtxZDq63SjZZ74n7jEMxqwCIHagQbcIw/qRLKDkzLXXb
+         SZf794KlRpKYFoeZ0BDZfjXPSIJfPfwDDqzHFwKYjOE+mkq4h9zHZ96fUaGCBJzTIWsu
+         f/0C4bX7WLnd3lX4k02pqgfZhnhQMIVk3VdtDWeolzCqBra1VgN3RD6s/c/V5aIDO19F
+         EjPs2yMmM8fTbv9FQHs11S1Hz3d6EW9FobGpyqWiBHNTvIjQx6jk8XVOtlT4VHu01CoD
+         zg+Boq0GF28xCiftGdKzNUWOZsTE3XSjy9IHJs2I2KKBZ4VbAhk0F1J++wIfI7L6dMaJ
+         d+QQ==
+X-Gm-Message-State: ANhLgQ3wCO+iD/+F3omUGGjDW687Lu4uFA4McXB7A2/tofXnasGY1GEo
+        8tRe4fS/kfULV4x/Eh/lioY=
+X-Google-Smtp-Source: ADFU+vtGNyK1+zGHYNxi1/B2InSOJARhXWM2xnyRr/zjkbwpqKLeXBb08gR4H2rgWv5RDuBjOBWo6w==
+X-Received: by 2002:a17:90b:3581:: with SMTP id mm1mr4728583pjb.169.1583253737264;
+        Tue, 03 Mar 2020 08:42:17 -0800 (PST)
+Received: from VM_0_35_centos.localdomain ([150.109.62.251])
+        by smtp.gmail.com with ESMTPSA id 193sm2916138pfu.181.2020.03.03.08.42.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2020 08:42:16 -0800 (PST)
+From:   Qiujun Huang <hqjagain@gmail.com>
+To:     tglx@linutronix.de, peterz@infradead.org
+Cc:     mingo@redhat.com, bp@alien8.de, hpa@zytor.com, ast@kernel.org,
+        mhiramat@kernel.org, rick.p.edgecombe@intel.com, namit@vmware.com,
+        bristot@redhat.com, linux-kernel@vger.kernel.org,
+        Qiujun Huang <hqjagain@gmail.com>
+Subject: [PATCH] x86/alternatives: Mark text_poke_loc_init static
+Date:   Wed,  4 Mar 2020 00:42:12 +0800
+Message-Id: <1583253732-18988-1-git-send-email-hqjagain@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 3:06 PM, Cyril Hrubis wrote:
-> The sysinfo() syscall includes uptime in seconds this makes it
-> consistent with the /proc/uptime inside of a time namespace.
-> 
-> Signed-off-by: Cyril Hrubis <chrubis@suse.cz>
+Now, the function is only used in this file, so mark it with 'static'.
 
-Reviewed-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+---
+ arch/x86/kernel/alternative.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  kernel/sys.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/sys.c b/kernel/sys.c
-> index f9bc5c303e3f..d325f3ab624a 100644
-> --- a/kernel/sys.c
-> +++ b/kernel/sys.c
-> @@ -47,6 +47,7 @@
->  #include <linux/syscalls.h>
->  #include <linux/kprobes.h>
->  #include <linux/user_namespace.h>
-> +#include <linux/time_namespace.h>
->  #include <linux/binfmts.h>
->  
->  #include <linux/sched.h>
-> @@ -2546,6 +2547,7 @@ static int do_sysinfo(struct sysinfo *info)
->  	memset(info, 0, sizeof(struct sysinfo));
->  
->  	ktime_get_boottime_ts64(&tp);
-> +	timens_add_boottime(&tp);
->  	info->uptime = tp.tv_sec + (tp.tv_nsec ? 1 : 0);
->  
->  	get_avenrun(info->loads, 0, SI_LOAD_SHIFT - FSHIFT);
-> 
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 15ac0d5..600da3cb 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1167,7 +1167,7 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 		atomic_cond_read_acquire(&desc.refs, !VAL);
+ }
+ 
+-void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
++static void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
+ 			const void *opcode, size_t len, const void *emulate)
+ {
+ 	struct insn insn;
+-- 
+1.8.3.1
 
-Thanks for noticing,
-          Dmitry
