@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EEC8C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49103C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA21206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D1432072D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:58:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258331;
-	bh=emN2YqhmaWQTC1ham4gaISlsVWsP0a+LgTJnYCtT0ks=;
+	s=default; t=1583258334;
+	bh=wjZjliCB0YycaHItryHeRcw/Tg+G+OVyHSQRssSpdD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JWSmJ5THKz7uZbHJqe36ANFTEXaMP+OJOW0LCBndcNw7utUMijXrk4uORWQF6lRUv
-	 MxWkUIs6A15ISbA4HbhEpCSUWeoBowL8aYioORyQPOMPo08GBz89r+xz12XMQu4Jb5
-	 sfezCpredE05zR4Ps7xvO8s5euqwQfwTgI+P2Mn0=
+	b=YmCIrsWnV6nHkptORTUkyPcO7EWLqyL2a2kAQUm20nvQDeqaHwX0+p97I7umgkxrj
+	 GxMrGdI1Va3YZz/fj4nNRqYPgAqRBrPnL6lqtmI74yWxyYdlqf/1FbWUSBPNbzSn2+
+	 T2/VdX/B5ZroU8a9Zwmmkdw0nhlS2t/iJGAiMVbI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387474AbgCCR6u (ORCPT
+        id S2387485AbgCCR6x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:58:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41708 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:58:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41776 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733031AbgCCR6r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:58:47 -0500
+        id S1732865AbgCCR6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:58:50 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79B86206D5;
-        Tue,  3 Mar 2020 17:58:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7DCA2146E;
+        Tue,  3 Mar 2020 17:58:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258326;
-        bh=emN2YqhmaWQTC1ham4gaISlsVWsP0a+LgTJnYCtT0ks=;
+        s=default; t=1583258329;
+        bh=wjZjliCB0YycaHItryHeRcw/Tg+G+OVyHSQRssSpdD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oo/HqhER4amVEFRrSpu6/eMxGxRm8xRlhu8VQrVjczmmG6x+cv1ChHD7zYkoGAD7a
-         MxYtLxf4VW0U8Xo/dzsQZIu4VnkBBHf7rBRb/8t/FjTTPl66RDbezlJoYpvBSbZ/Jd
-         QYrGZ15m4V7OYI48ReQoBDPcFuca4brmJPg4hwIc=
+        b=p9w6GOZKxwNgJWgzlviRFMyi3hS0WxDEH4J5lT4yglg/ywMRcj/BW1AS8u7GVwP7F
+         mP3Yh5I1IU39SdnYYgDIH4OCcEeSHJ6nujN6kBu1n+gobanKv6NSMy16JVPdzzCZW/
+         SnajivopeZbsZDo3xX8xFfeaanHpXlFVQeI8gTVA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.4 138/152] ubifs: Fix ino_t format warnings in orphan_delete()
-Date:   Tue,  3 Mar 2020 18:43:56 +0100
-Message-Id: <20200303174318.495411434@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.4 129/152] lib/vdso: Make __arch_update_vdso_data() logic understandable
+Date:   Tue,  3 Mar 2020 18:43:47 +0100
+Message-Id: <20200303174317.468813340@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -59,54 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 155fc6ba488a8bdfd1d3be3d7ba98c9cec2b2429 upstream.
+commit 9a6b55ac4a44060bcb782baf002859b2a2c63267 upstream.
 
-On alpha and s390x:
+The function name suggests that this is a boolean checking whether the
+architecture asks for an update of the VDSO data, but it works the other
+way round. To spare further confusion invert the logic.
 
-    fs/ubifs/debug.h:158:11: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘ino_t {aka unsigned int}’ [-Wformat=]
-    ...
-    fs/ubifs/orphan.c:132:3: note: in expansion of macro ‘dbg_gen’
-       dbg_gen("deleted twice ino %lu", orph->inum);
-    ...
-    fs/ubifs/orphan.c:140:3: note: in expansion of macro ‘dbg_gen’
-       dbg_gen("delete later ino %lu", orph->inum);
-
-__kernel_ino_t is "unsigned long" on most architectures, but not on
-alpha and s390x, where it is "unsigned int".  Hence when printing an
-ino_t, it should always be cast to "unsigned long" first.
-
-Fix this by re-adding the recently removed casts.
-
-Fixes: 8009ce956c3d2802 ("ubifs: Don't leak orphans on memory during commit")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 44f57d788e7d ("timekeeping: Provide a generic update_vsyscall() implementation")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/20200114185946.656652824@linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/orphan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/asm-generic/vdso/vsyscall.h |    4 ++--
+ kernel/time/vsyscall.c              |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/ubifs/orphan.c
-+++ b/fs/ubifs/orphan.c
-@@ -129,7 +129,7 @@ static void __orphan_drop(struct ubifs_i
- static void orphan_delete(struct ubifs_info *c, struct ubifs_orphan *orph)
+--- a/include/asm-generic/vdso/vsyscall.h
++++ b/include/asm-generic/vdso/vsyscall.h
+@@ -12,9 +12,9 @@ static __always_inline struct vdso_data
+ #endif /* __arch_get_k_vdso_data */
+ 
+ #ifndef __arch_update_vdso_data
+-static __always_inline int __arch_update_vdso_data(void)
++static __always_inline bool __arch_update_vdso_data(void)
  {
- 	if (orph->del) {
--		dbg_gen("deleted twice ino %lu", orph->inum);
-+		dbg_gen("deleted twice ino %lu", (unsigned long)orph->inum);
- 		return;
- 	}
+-	return 0;
++	return true;
+ }
+ #endif /* __arch_update_vdso_data */
  
-@@ -137,7 +137,7 @@ static void orphan_delete(struct ubifs_i
- 		orph->del = 1;
- 		orph->dnext = c->orph_dnext;
- 		c->orph_dnext = orph;
--		dbg_gen("delete later ino %lu", orph->inum);
-+		dbg_gen("delete later ino %lu", (unsigned long)orph->inum);
- 		return;
- 	}
+--- a/kernel/time/vsyscall.c
++++ b/kernel/time/vsyscall.c
+@@ -84,7 +84,7 @@ void update_vsyscall(struct timekeeper *
+ 	struct vdso_timestamp *vdso_ts;
+ 	u64 nsec;
  
+-	if (__arch_update_vdso_data()) {
++	if (!__arch_update_vdso_data()) {
+ 		/*
+ 		 * Some architectures might want to skip the update of the
+ 		 * data page.
 
 
