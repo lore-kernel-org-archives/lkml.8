@@ -2,130 +2,96 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC41C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7083C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B36F20726
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAC8E20726
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Joq4xiF3";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="k55NTSMO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4cEmg0p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbgCCHWz (ORCPT
+        id S1727599AbgCCHZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:22:55 -0500
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:46803 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727565AbgCCHWy (ORCPT
+        Tue, 3 Mar 2020 02:25:02 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41175 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgCCHZB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:22:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1583220190; x=1614756190;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Pc6+4J49PN+F1vvVg2OLQRpRbHQbulJ/KzpHKRjX/a8=;
-  b=Joq4xiF3Q0Ddi2CtDfTAcm+JDl+pMXdJcH2buG0Um1bh+BVPArGKiOVH
-   mCWNqawcZb6/WKmg1Uc4Upj2MuK+sFA7OBTfQGHtuP3d58d0b71Z5mLr0
-   rkmxw+Cv6ufWvUa2DpB4+zU7Q5FrQuOFx9JQK27PIciPw32u9FONWStNu
-   ZqjnV4fhLzNVOuQXs7kxsFMEs9q11hT2rwTkbEDUD0bbRIhjsvqp3kOnY
-   yP3/uHYHkejha6yt4hcebxIY/u5QQrwHFEZZYi2BIIlYnufpxeItDetyp
-   Vjx4yM/SHTeej+uqgbou8THtVnlOikK+h9aDfyFy+Kc2kgFHBleV4mNXP
-   w==;
-IronPort-SDR: At82wve4fBmXH+oeWlL2u55JpNtce17+qrfzkDz0Soi/7C0i6odMkEtHpc1KxOPav4Y9bxDfLt
- Ews6+AXGMRWZzq2x4FaI6G15RD4nej5qAQyrcD9gKcvdJTlZBiaDQqpzCdSrojGUzgACefE05i
- RoGhq8Ek1a/AAQr2xAjKhi4thkc1CEH8b1xOMySX09u7pH2eIT01w38EDoAD/sY2TAZaDIDk2+
- m7x36tvqcUo+ADCE2mOh6C4DU2yHANrfW1LXzDK04bh5+gX72ObUGxYFCNaygDX/Y6u9chqLqr
- hiI=
-X-IronPort-AV: E=Sophos;i="5.70,510,1574092800"; 
-   d="scan'208";a="233191584"
-Received: from mail-co1nam04lp2051.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.51])
-  by ob1.hgst.iphmx.com with ESMTP; 03 Mar 2020 15:23:08 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ioMWZwmimXpqxqly4+p9nZb87yquL4u4UxIYRS6GtzBNqv1Hlf8nljHyYblzIRaHq9ZV4nrFZITakp6zAQl6TU9ljfHE9ZV9KRKWAYPcTqjbLuD8u5JgB+VOZcm1mdDKofElQjuXjqUepegLaX71LYX75pQG0BrNuyDRaYzUWNsBrlFPzL2GCfEWj7LiWRf2v9V1KsJV1cPfD0UKtj7dPHl45rFz+mXkjORpAfuc121KEDQGL74rSh1zJcczI2uZ4N7P3gbf9UvPSrnlw4T37LUKhkMjaCzI4VrMtEO/oGqDKXObEXVYvxxIswmu8LCULMxZxD+ByKvETNYcIvJy3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pc6+4J49PN+F1vvVg2OLQRpRbHQbulJ/KzpHKRjX/a8=;
- b=TdoxgZLK0g/oBug+vYeb2TUalTqPXwoXcF4cVOGpZQmxwwBgUCQSA70gBIYdRk9LweeI2VwyKrvbyCACj+BLLuSpyBlnBNAQiQ7TuIVWI+pJlBhLFWFVrLlQVs8+AD67kypAgLEOWT3QxhC93fWmuXuhP6xbDneAU0SZQDJ+EPh4Qiw4wPIo3jnbvjrX69m/+3Wgs4YlKbA6zF50JRUAX9wkE07eE/+KZ0NiURwLEW4X7mpHUtIZBUbrx5h8PZWy+9QBtF34iwHgFo//QVUwqINDFm22p/iW03bCzqQlNo1GLSwxDXo0FP9ga3mWQPYHEVMHX6aOWW7LaEaoGzX/Xg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
+        Tue, 3 Mar 2020 02:25:01 -0500
+Received: by mail-pf1-f193.google.com with SMTP id j9so1009793pfa.8
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 23:25:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Pc6+4J49PN+F1vvVg2OLQRpRbHQbulJ/KzpHKRjX/a8=;
- b=k55NTSMOTARWByw8zTc2q7h/Xwo7ZTdJHtvL9EGBFmI6AoUuw01Dba+XeCf2krxbp6Dn9LWRyo88aBuRTW4Mcc66iMdfZI6OJMnYsF4wlQfscVX63Y7xnm9mIxPD7pvphAMzVy1mN7WctVgWJk02utZIXUUiaFKgi355JcxVeng=
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com (2603:10b6:208:1e1::17)
- by MN2PR04MB6912.namprd04.prod.outlook.com (2603:10b6:208:19e::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15; Tue, 3 Mar
- 2020 07:22:51 +0000
-Received: from MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
- ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
- 07:22:51 +0000
-From:   Avri Altman <Avri.Altman@wdc.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: RE: [PATCH 40/42] docs: scsi: convert ufs.txt to ReST
-Thread-Topic: [PATCH 40/42] docs: scsi: convert ufs.txt to ReST
-Thread-Index: AQHV8GrfdZ3FrJEOdkuChcE//woOQKg2eAYA
-Date:   Tue, 3 Mar 2020 07:22:51 +0000
-Message-ID: <MN2PR04MB699177B6CD676EC86D52DA3AFCE40@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <cover.1583136624.git.mchehab+huawei@kernel.org>
- <052d45576e342a217185e91a83793b384b1592a4.1583136624.git.mchehab+huawei@kernel.org>
-In-Reply-To: <052d45576e342a217185e91a83793b384b1592a4.1583136624.git.mchehab+huawei@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Avri.Altman@wdc.com; 
-x-originating-ip: [212.25.79.133]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 4300bb6f-96ab-4ca1-3b2e-08d7bf43af32
-x-ms-traffictypediagnostic: MN2PR04MB6912:
-x-microsoft-antispam-prvs: <MN2PR04MB691272422899369A18E3249BFCE40@MN2PR04MB6912.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:400;
-x-forefront-prvs: 03319F6FEF
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(199004)(189003)(55016002)(9686003)(33656002)(5660300002)(316002)(7696005)(2906002)(6506007)(66946007)(66476007)(66556008)(76116006)(64756008)(558084003)(66446008)(26005)(186003)(4326008)(8936002)(71200400001)(86362001)(8676002)(52536014)(81166006)(478600001)(81156014)(110136005)(54906003);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6912;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VceNtpI2a0n+T0Ud+i3HcmpctHVGwQEMCMk7HlmyNdFOo9hGlFSRi+o7C7a2WDa2GwZYNWmKO09jRSIGDIG6Fc6P8NmEsQhED/HugkpvCK/M9OrCN3tVVWSdaZYHPkwLzaW8lTMAHFnHyw6qToHXVZxWSxpzK1xp7B7rI+K85PQ8xk3PcIaHs6Pu/WPrZqS8VB7AUCzhO5oEEAsDp/mN6S0Fk8xMWS6nVcShVM3Y1qy8MJKv5J996CfU923x+Y4hj8+FxrWtgY2qMRjKuhftEaVe894H44trWOoTNKAkBd95HfUERdLatykiPHABZ2Wn3KocTxHrNei6f1chLjSxqpqv6WlBcFmAxNwpf8geBI3GyzNzlQq35mmquo/M/QGYpXf8xqVtnN0ERKkuJfSvIcVY6HTwUJXIVjHVHwOzxSA3QjNWl0N+17Z3lDiCHOSo
-x-ms-exchange-antispam-messagedata: ekZ+okmHTqJjgcF6Q6WxrMhSK6446qnt5KpLXfUncXJ+yYhB1Qc04ei9B0o8GuekpKpagz2r6Rr13aCrDuHoSxUBX9INQbNJ42N0K6nwZZGTx3+rHc+OjiW+sM9W+ejXGmdjjr5BTTZAzfJITFSpPQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=87hB7A48w6ZPL5vlh3XXx7v/HdijujfroRa3zZA6PTg=;
+        b=F4cEmg0p+pH3r+ECnP2J5qwqoh94V9GbqA8chkXtNf3XsvMXqi1fta9JMBcQt98oT9
+         riwy6FKiteE8jeug8NeFdx0sXotVW5oe0YVrexPzhQHco4OHQjhjShXUunB+MpcI/uTe
+         YHVj6du0eWJG9URPJS8Lmc2gT9D5B72ZWpbglmcUCS8T6XALw6vupu5jdd/ObtUgir96
+         VM5zziwazF5GbGkkj1nO53rUK7mBowBR1h7GnTjfDbVMlh1rTIl8EokWuKFnTmE3r0cd
+         J+gsV6C2stD98bvQXQ8WZomFbhLamB14iug48KRvVrqRU2as6mW560ZG6m62mXyjr4cU
+         WyMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=87hB7A48w6ZPL5vlh3XXx7v/HdijujfroRa3zZA6PTg=;
+        b=IeD905LgUM4caxyx557k2O79VLV7f4jrGs2qYFm7gEHHmd0vXcedzaXe7KL9NBicH6
+         TEdT66/AKvL/XZQmyRTIOAdm3YOgojGr1Qqz0Pndz/IP5fDCzZPBjU0k9fXUpeLk0OkH
+         R3t7RuOaQYtvaeYB7UuIzsPtS2if1VzvTmG5n8GBCJDOKQO71OGCf9HyJk1zAIMlkVjt
+         NuMmbiRhNXJOhS7ytCLU/DjKB9STfPhOdkAreuMkRFzao8ciOYhh/JTAc8TvcJQUs2Kq
+         04rkmSIQHu5VkOkp3OUvVmpqosNyltjVSdtkQZYa2TBhG9aLl8fSC5DeYrVppjJrymae
+         db+Q==
+X-Gm-Message-State: ANhLgQ3b0Z591XP5qf0X1g5EAOop56P9yyL6qQ81nPzfjsKUgpN9FFb+
+        aaR+J4qDRFJu9XjSWa6N6UFKUm84
+X-Google-Smtp-Source: ADFU+vs8acFS4UWINjK6tNZkcDnwRkoBHOSmNR1KMgWKe5IidZKcPqznYOJg8egW2DRbqP+GTQlTQA==
+X-Received: by 2002:a63:257:: with SMTP id 84mr2769387pgc.304.1583220300675;
+        Mon, 02 Mar 2020 23:25:00 -0800 (PST)
+Received: from localhost (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
+        by smtp.gmail.com with ESMTPSA id m128sm23999659pfm.183.2020.03.02.23.24.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 23:24:59 -0800 (PST)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Tue, 3 Mar 2020 16:24:56 +0900
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <uwe@kleine-koenig.org>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>
+Subject: Re: [PATCH 0/3] lib/test_printf: Clean up basic pointer testing
+Message-ID: <20200303072456.GA904@jagdpanzerIV.localdomain>
+References: <20200227130123.32442-1-pmladek@suse.com>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4300bb6f-96ab-4ca1-3b2e-08d7bf43af32
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2020 07:22:51.7939
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JCdeiSgXvdXbvMWf5e48NmLJeGRHwfKo3X0g9CfrVTVVi4TyPzN9REnG5f7XN9Fl9lGi/TYeay8RwEoFz918Bg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6912
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200227130123.32442-1-pmladek@suse.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=20
->=20
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Acked-by: Avri Altman <avri.altman@wdc.com>
+On (20/02/27 14:01), Petr Mladek wrote:
+> 
+> The discussion about hashing NULL pointer value[1] uncovered that
+> the basic tests of pointer formatting do not follow the original
+> structure and cause confusion.
 
+FWIW, overall looks good to me.
+
+> I feel responsible for it and here is a proposed clean up.
+
+Extra points!
+
+	-ss
