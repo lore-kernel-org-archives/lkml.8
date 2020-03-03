@@ -2,53 +2,51 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A4DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A963C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7EE206D5
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F5720656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258506;
-	bh=pzGm8eK7SpJZs6fNIB004VSlto+LmlEKyxHVCC01dDE=;
+	s=default; t=1583258511;
+	bh=iC3KiavSmh80Y2SIDeaFyRbSocJf6RlacDi9Ii3VjW0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ob9SAqiN+5rJJCvlj2K6Zja4tup6RqMRsNO/F9lONWUMRCgt1XHtfwVXMIV7gRih7
-	 GS5TcKVuqFAcqARm8vHxAm42FZAcxVXByViLPbn5itNLB/V/6cd7CNVmixkXtGIJfQ
-	 t8dXW/7Zqg9EnlppVlg0Jdv2BM6dmj3TVPZWxSOU=
+	b=r/pg38MvobmE7983NZCPmlUwD3zzL/G82S1UmElQDkyHmkOse/sO+BG0rnKqtGJZM
+	 UXyD3rsGW5+KUfz0xln4gGftNph8Kbc9gsRclcEwcAEM/tJlMP4uC02t/ghMzPk4Gk
+	 QkPomGIY0gXcPromksRnwL2Wz/WTrc18vSGNBYs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388051AbgCCSBp (ORCPT
+        id S2388071AbgCCSBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:01:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45970 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:01:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46048 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387634AbgCCSBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:01:43 -0500
+        id S2388048AbgCCSBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:01:45 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1A5720656;
-        Tue,  3 Mar 2020 18:01:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 27DE220656;
+        Tue,  3 Mar 2020 18:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258502;
-        bh=pzGm8eK7SpJZs6fNIB004VSlto+LmlEKyxHVCC01dDE=;
+        s=default; t=1583258504;
+        bh=iC3KiavSmh80Y2SIDeaFyRbSocJf6RlacDi9Ii3VjW0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QKTZfJH1gAXFQv4ipzZzpZQ85OM/AI8DCrK9SNLzsrwR0bq5od1z0pQTB7TvC7w23
-         J8VmqCeBTUpxbBK2fJw/f0UtyhfneyRpUWgqjHgrXx4iVjYziSXHF4QMbz6MoOXip7
-         mQMzONO0VQI8JwijnwII2eO9oGFn6/LKBwTJQ1aw=
+        b=PsevW7h4SaacUGRa6W3SkxfHvxy2WiT5wvTb27iC0F3ToY/eAvSUp2qbXtvR2mYf9
+         fX+I01QaXMiSV672zTbHwXIiaJzVSuLgXyhqeh32JoYhU8t0aN0/cUqUDLatsCbmkJ
+         bfdMsqo67X2ZfQatNoAw8sY+Pi6NkfH04jo9lO6c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 34/87] sctp: move the format error check out of __sctp_sf_do_9_1_abort
-Date:   Tue,  3 Mar 2020 18:43:25 +0100
-Message-Id: <20200303174353.676123773@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 25/87] bcache: ignore pending signals when creating gc and allocator thread
+Date:   Tue,  3 Mar 2020 18:43:16 +0100
+Message-Id: <20200303174352.755051667@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -61,104 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Coly Li <colyli@suse.de>
 
-[ Upstream commit 245709ec8be89af46ea7ef0444c9c80913999d99 ]
+[ Upstream commit 0b96da639a4874311e9b5156405f69ef9fc3bef8 ]
 
-When T2 timer is to be stopped, the asoc should also be deleted,
-otherwise, there will be no chance to call sctp_association_free
-and the asoc could last in memory forever.
+When run a cache set, all the bcache btree node of this cache set will
+be checked by bch_btree_check(). If the bcache btree is very large,
+iterating all the btree nodes will occupy too much system memory and
+the bcache registering process might be selected and killed by system
+OOM killer. kthread_run() will fail if current process has pending
+signal, therefore the kthread creating in run_cache_set() for gc and
+allocator kernel threads are very probably failed for a very large
+bcache btree.
 
-However, in sctp_sf_shutdown_sent_abort(), after adding the cmd
-SCTP_CMD_TIMER_STOP for T2 timer, it may return error due to the
-format error from __sctp_sf_do_9_1_abort() and miss adding
-SCTP_CMD_ASSOC_FAILED where the asoc will be deleted.
+Indeed such OOM is safe and the registering process will exit after
+the registration done. Therefore this patch flushes pending signals
+during the cache set start up, specificly in bch_cache_allocator_start()
+and bch_gc_thread_start(), to make sure run_cache_set() won't fail for
+large cahced data set.
 
-This patch is to fix it by moving the format error check out of
-__sctp_sf_do_9_1_abort(), and do it before adding the cmd
-SCTP_CMD_TIMER_STOP for T2 timer.
-
-Thanks Hangbin for reporting this issue by the fuzz testing.
-
-v1->v2:
-  - improve the comment in the code as Marcelo's suggestion.
-
-Fixes: 96ca468b86b0 ("sctp: check invalid value of length parameter in error cause")
-Reported-by: Hangbin Liu <liuhangbin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Coly Li <colyli@suse.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sctp/sm_statefuns.c |   29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ drivers/md/bcache/alloc.c | 18 ++++++++++++++++--
+ drivers/md/bcache/btree.c | 13 +++++++++++++
+ 2 files changed, 29 insertions(+), 2 deletions(-)
 
---- a/net/sctp/sm_statefuns.c
-+++ b/net/sctp/sm_statefuns.c
-@@ -185,6 +185,16 @@ static inline bool sctp_chunk_length_val
- 	return true;
+diff --git a/drivers/md/bcache/alloc.c b/drivers/md/bcache/alloc.c
+index 46794cac167e7..2074860cbb16c 100644
+--- a/drivers/md/bcache/alloc.c
++++ b/drivers/md/bcache/alloc.c
+@@ -67,6 +67,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/kthread.h>
+ #include <linux/random.h>
++#include <linux/sched/signal.h>
+ #include <trace/events/bcache.h>
+ 
+ #define MAX_OPEN_BUCKETS 128
+@@ -733,8 +734,21 @@ int bch_open_buckets_alloc(struct cache_set *c)
+ 
+ int bch_cache_allocator_start(struct cache *ca)
+ {
+-	struct task_struct *k = kthread_run(bch_allocator_thread,
+-					    ca, "bcache_allocator");
++	struct task_struct *k;
++
++	/*
++	 * In case previous btree check operation occupies too many
++	 * system memory for bcache btree node cache, and the
++	 * registering process is selected by OOM killer. Here just
++	 * ignore the SIGKILL sent by OOM killer if there is, to
++	 * avoid kthread_run() being failed by pending signals. The
++	 * bcache registering process will exit after the registration
++	 * done.
++	 */
++	if (signal_pending(current))
++		flush_signals(current);
++
++	k = kthread_run(bch_allocator_thread, ca, "bcache_allocator");
+ 	if (IS_ERR(k))
+ 		return PTR_ERR(k);
+ 
+diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
+index bb40bd66a10e4..83d6739fd067b 100644
+--- a/drivers/md/bcache/btree.c
++++ b/drivers/md/bcache/btree.c
+@@ -34,6 +34,7 @@
+ #include <linux/random.h>
+ #include <linux/rcupdate.h>
+ #include <linux/sched/clock.h>
++#include <linux/sched/signal.h>
+ #include <linux/rculist.h>
+ #include <linux/delay.h>
+ #include <trace/events/bcache.h>
+@@ -1898,6 +1899,18 @@ static int bch_gc_thread(void *arg)
+ 
+ int bch_gc_thread_start(struct cache_set *c)
+ {
++	/*
++	 * In case previous btree check operation occupies too many
++	 * system memory for bcache btree node cache, and the
++	 * registering process is selected by OOM killer. Here just
++	 * ignore the SIGKILL sent by OOM killer if there is, to
++	 * avoid kthread_run() being failed by pending signals. The
++	 * bcache registering process will exit after the registration
++	 * done.
++	 */
++	if (signal_pending(current))
++		flush_signals(current);
++
+ 	c->gc_thread = kthread_run(bch_gc_thread, c, "bcache_gc");
+ 	return PTR_ERR_OR_ZERO(c->gc_thread);
  }
- 
-+/* Check for format error in an ABORT chunk */
-+static inline bool sctp_err_chunk_valid(struct sctp_chunk *chunk)
-+{
-+	struct sctp_errhdr *err;
-+
-+	sctp_walk_errors(err, chunk->chunk_hdr);
-+
-+	return (void *)err == (void *)chunk->chunk_end;
-+}
-+
- /**********************************************************
-  * These are the state functions for handling chunk events.
-  **********************************************************/
-@@ -2270,6 +2280,9 @@ enum sctp_disposition sctp_sf_shutdown_p
- 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
- 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
- 
-+	if (!sctp_err_chunk_valid(chunk))
-+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
-+
- 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
- }
- 
-@@ -2313,6 +2326,9 @@ enum sctp_disposition sctp_sf_shutdown_s
- 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
- 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
- 
-+	if (!sctp_err_chunk_valid(chunk))
-+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
-+
- 	/* Stop the T2-shutdown timer. */
- 	sctp_add_cmd_sf(commands, SCTP_CMD_TIMER_STOP,
- 			SCTP_TO(SCTP_EVENT_TIMEOUT_T2_SHUTDOWN));
-@@ -2580,6 +2596,9 @@ enum sctp_disposition sctp_sf_do_9_1_abo
- 		    sctp_bind_addr_state(&asoc->base.bind_addr, &chunk->dest))
- 		return sctp_sf_discard_chunk(net, ep, asoc, type, arg, commands);
- 
-+	if (!sctp_err_chunk_valid(chunk))
-+		return sctp_sf_pdiscard(net, ep, asoc, type, arg, commands);
-+
- 	return __sctp_sf_do_9_1_abort(net, ep, asoc, type, arg, commands);
- }
- 
-@@ -2597,16 +2616,8 @@ static enum sctp_disposition __sctp_sf_d
- 
- 	/* See if we have an error cause code in the chunk.  */
- 	len = ntohs(chunk->chunk_hdr->length);
--	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr)) {
--		struct sctp_errhdr *err;
--
--		sctp_walk_errors(err, chunk->chunk_hdr);
--		if ((void *)err != (void *)chunk->chunk_end)
--			return sctp_sf_pdiscard(net, ep, asoc, type, arg,
--						commands);
--
-+	if (len >= sizeof(struct sctp_chunkhdr) + sizeof(struct sctp_errhdr))
- 		error = ((struct sctp_errhdr *)chunk->skb->data)->cause;
--	}
- 
- 	sctp_add_cmd_sf(commands, SCTP_CMD_SET_SK_ERR, SCTP_ERROR(ECONNRESET));
- 	/* ASSOC_FAILED will DELETE_TCB. */
+-- 
+2.20.1
+
 
 
