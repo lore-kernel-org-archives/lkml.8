@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FFB8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD85C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9D220728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A04A5206D5
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258042;
-	bh=DRIj/511LI9YCCerkUGQuQURMrZ2X0geKBW/bOYrSwk=;
+	s=default; t=1583258046;
+	bh=nu12upa2YBED248NaTn+dMF9VDPyyAVLRlkgIW0kpbc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uh7hADxdhnY5XWhcs+BX3RyNwUX17lyV0sWvSTnNzUPh0flrY24eGeVCpe+47YoC+
-	 ykx4+Emt9pPgnb9jUIFR9UUp+E30qFSmDFoD4rF9Oq3D9uYzsJ6XAyjIt0xQxjkJdJ
-	 Iv30tjV8sullibC49ayqU8u95jDnNV2dhzmqDXpg=
+	b=po1QgYtmRAcbzn/5ksWAcZZB1tK4OPmn6SHfCRITv9gyCeJIxNNtuajVspZrLEHqs
+	 FASqrmGo8NuZ+R4NTpkIy/L2oaVEuNyc9TBs6uuVNYw6R98IctFNCxYDsvuFgRLOg8
+	 Jt48ZuZTSbzLuhllLtjmM+S/X5QrH6CFrOM/kGxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732457AbgCCRyA (ORCPT
+        id S1732470AbgCCRyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34592 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:54:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34754 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732431AbgCCRxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:53 -0500
+        id S1732450AbgCCRx7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:59 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 243092146E;
-        Tue,  3 Mar 2020 17:53:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C6D3206D5;
+        Tue,  3 Mar 2020 17:53:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258033;
-        bh=DRIj/511LI9YCCerkUGQuQURMrZ2X0geKBW/bOYrSwk=;
+        s=default; t=1583258039;
+        bh=nu12upa2YBED248NaTn+dMF9VDPyyAVLRlkgIW0kpbc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nNSkFHdmnvFEd9dPcb/FDGvOw9gG/Qn034rPTs45n/FdtimMqc+zvXObEVyuiRzs0
-         3lV+vA3B8gBMFKbwxSMVs2x23FKUZzUzAb762G2bDCprWDlXwu3of4TMftx32FRljt
-         U2UMzpoyCh1647JSwSmFYa0QO3AuYnZXejBD6kB8=
+        b=CneGu9/FoW0jaAvoXrdrcBp9h+f34TTWnI//m0cX/oDMQOf0KgSwTrJWE2fzP95Ox
+         Fy8/oU8/x01ul0bFXbMKgFQQ+28fjW5aFQwJD19jLDxrCWo8t+71TBKmV98l7JPmQR
+         UqJZs1yS21tp7IUq/fVOfZ59hc/SauT8kvDtkE/Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yongqiang Sun <yongqiang.sun@amd.com>,
-        Eric Yang <eric.yang2@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        stable@vger.kernel.org, Daniel Kolesa <daniel@octaforge.org>,
         Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 044/152] drm/amd/display: Limit minimum DPPCLK to 100MHz.
-Date:   Tue,  3 Mar 2020 18:42:22 +0100
-Message-Id: <20200303174307.397662650@linuxfoundation.org>
+Subject: [PATCH 5.4 046/152] amdgpu: Prevent build errors regarding soft/hard-float FP ABI tags
+Date:   Tue,  3 Mar 2020 18:42:24 +0100
+Message-Id: <20200303174307.646737321@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -62,43 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yongqiang Sun <yongqiang.sun@amd.com>
+From: Daniel Kolesa <daniel@octaforge.org>
 
-[ Upstream commit 6c81917a0485ee2a1be0dc23321ac10ecfd9578b ]
+[ Upstream commit 416611d9b6eebaeae58ed26cc7d23131c69126b1 ]
 
-[Why]
-Underflow is observed when plug in a 4K@60 monitor with
-1366x768 eDP due to DPPCLK is too low.
+On PowerPC, the compiler will tag object files with whether they
+use hard or soft float FP ABI and whether they use 64 or 128-bit
+long double ABI. On systems with 64-bit long double ABI, a tag
+will get emitted whenever a double is used, as on those systems
+a long double is the same as a double. This will prevent linkage
+as other files are being compiled with hard-float.
 
-[How]
-Limit minimum DPPCLK to 100MHz.
+On ppc64, this code will never actually get used for the time
+being, as the only currently existing hardware using it are the
+Renoir APUs. Therefore, until this is testable and can be fixed
+properly, at least make sure the build will not fail.
 
-Signed-off-by: Yongqiang Sun <yongqiang.sun@amd.com>
-Reviewed-by: Eric Yang <eric.yang2@amd.com>
-Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Daniel Kolesa <daniel@octaforge.org>
 Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c | 6 ++++++
+ drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile | 6 ++++++
  1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-index 787f94d815f42..dd92f9c295b45 100644
---- a/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-+++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/dcn21/rn_clk_mgr.c
-@@ -91,6 +91,12 @@ void rn_update_clocks(struct clk_mgr *clk_mgr_base,
- 		rn_vbios_smu_set_min_deep_sleep_dcfclk(clk_mgr, clk_mgr_base->clks.dcfclk_deep_sleep_khz);
- 	}
+diff --git a/drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile b/drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile
+index b864869cc7e3e..6fa7422c51da5 100644
+--- a/drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile
++++ b/drivers/gpu/drm/amd/display/dc/clk_mgr/Makefile
+@@ -91,6 +91,12 @@ ifdef CONFIG_DRM_AMD_DC_DCN2_1
+ ###############################################################################
+ CLK_MGR_DCN21 = rn_clk_mgr.o rn_clk_mgr_vbios_smu.o
  
-+	// workaround: Limit dppclk to 100Mhz to avoid lower eDP panel switch to plus 4K monitor underflow.
-+	if (!IS_DIAG_DC(dc->ctx->dce_environment)) {
-+		if (new_clocks->dppclk_khz < 100000)
-+			new_clocks->dppclk_khz = 100000;
-+	}
++# prevent build errors regarding soft-float vs hard-float FP ABI tags
++# this code is currently unused on ppc64, as it applies to Renoir APUs only
++ifdef CONFIG_PPC64
++CFLAGS_$(AMDDALPATH)/dc/clk_mgr/dcn21/rn_clk_mgr.o := $(call cc-option,-mno-gnu-attribute)
++endif
 +
- 	if (should_set_clock(safe_to_lower, new_clocks->dppclk_khz, clk_mgr->base.clks.dppclk_khz)) {
- 		if (clk_mgr->base.clks.dppclk_khz > new_clocks->dppclk_khz)
- 			dpp_clock_lowered = true;
+ AMD_DAL_CLK_MGR_DCN21 = $(addprefix $(AMDDALPATH)/dc/clk_mgr/dcn21/,$(CLK_MGR_DCN21))
+ 
+ AMD_DISPLAY_FILES += $(AMD_DAL_CLK_MGR_DCN21)
 -- 
 2.20.1
 
