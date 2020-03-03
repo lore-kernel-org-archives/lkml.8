@@ -2,132 +2,156 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58701C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CBFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32FEB208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:08:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CuwQcN7z"
+	by mail.kernel.org (Postfix) with ESMTP id D1AF92073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:09:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583258950;
+	bh=jgup64UFrKiSacTUai/nnQoGjwFMsP91KXVuOUvxR9Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=co2NUu7/G0UGKUJpIf7glpiO6fSThNzO3V9ufAKZwiUmC815ZfwdThcoporLkft1w
+	 0Q9zeemVI1YcGAEujUIMm7tKCb+eDQ7ajwd4oACFMDSYHNeeESGFL6AaLX+gyoU//m
+	 55GHIETpN6Z7ylM9GNu5S3RrkjF0nZY51br6Jxok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388368AbgCCSIu (ORCPT
+        id S1732261AbgCCRw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:08:50 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:45434 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388340AbgCCSIs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 13:08:48 -0500
-Received: by mail-io1-f68.google.com with SMTP id w9so4590545iob.12
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 10:08:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bf0F9jShQ+1SAJ86EUg24NgoBWAimsu/bT/Rh5FZG1s=;
-        b=CuwQcN7zp2rH8kV+uXmvxUI3vOrGBbokokTvMGaXk2y43oL3dTQDTUuv1z5mN3c5ND
-         OooyyZhHmEZvJQyA+4IQacdQJEFpkr6bBiK4NUl9k6wW85p3AlIir3ibFMmMtY6Qq9TD
-         fqESkINb02EOI4DRbF1ngP014GhCRPZbkXT/qwU80zXE1dPrV9JErVfnk+031gOZdgsK
-         QRNnTMsLgxL7szlQe0aB9Eaa89Y4rxak0iTnEtWM9Izz5KWxI73nxblN5DgWTLBv0L4z
-         amz6EmCibPpY+0h/AZaFzFcjGrMUBZG0cIsit1uvIT/NqO6tdRFUDS4UWqge63nz8lnN
-         uOqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bf0F9jShQ+1SAJ86EUg24NgoBWAimsu/bT/Rh5FZG1s=;
-        b=MRWRkdoBmvwKY+bOJC46fUQqrnGmny+p0axG+D8wSNgWeJ4LTVHvAjO50H1uxaiE4B
-         gzt/Txg09GwQbmqd6EI3fPxFxetyLPyWjKgQfBYVmfbl+0WIJz12mzTbxOXIpwKl5xvA
-         eSkSvQzZalAIAQVZGB1yJ1OJSc8eEMDaKSp1umcydlP3+DHiDraG+bk+ivChIYlrGlIb
-         XkqG/A8Cex4zRwNhrp7kX+T7UCciLKms6A7SvEZw/c71lYP+1ftIrAiAGfPCIgrpS7Pp
-         7UEAQatdqoiA6wp1FwCmy+HZ53ql/dn+CL0jAixUdscq8XunTN91u4M7w6XvTRXrgm3r
-         8JXg==
-X-Gm-Message-State: ANhLgQ2tyvJ8EyIBn8BgNN8vWeeQFNarYSD8K4LePNaKApjK3hQE0klX
-        mJTPl5sgbDomKqLZm3xNfdhqV25M8G0i1riwmE6fDA==
-X-Google-Smtp-Source: ADFU+vsDQKW3R25VEwr3nSycpnRKEuPn9Ka8m2GJ4Ff+Y0C3ACVegdgxU99TJEZiTKPoBSL+tFKcVLL9KbINqFJnp/M=
-X-Received: by 2002:a6b:4e15:: with SMTP id c21mr4776187iob.119.1583258927645;
- Tue, 03 Mar 2020 10:08:47 -0800 (PST)
+        Tue, 3 Mar 2020 12:52:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33270 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731938AbgCCRwy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:52:54 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33AF22146E;
+        Tue,  3 Mar 2020 17:52:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583257972;
+        bh=jgup64UFrKiSacTUai/nnQoGjwFMsP91KXVuOUvxR9Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FgFcqEQhWg8RRzE1dTmAjTIW2SFe44WWkxB31AYzvywyiJ5/lir6ATnXsGnu/y8nh
+         zqIA7DcPRtgb8TkEos5g+cLDTQoIkv+NhoR+lf0AWwbi1Jn703EzfmAaDKMQw59cg9
+         3BPBPHM0CXUBhcy/pkj/CpvT2qz7hpGUEn5BWCIc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 023/152] drm/msm: Set dma maximum segment size for mdss
+Date:   Tue,  3 Mar 2020 18:42:01 +0100
+Message-Id: <20200303174305.090391802@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
+References: <20200303174302.523080016@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
- <20200302195736.24777-3-sean.j.christopherson@intel.com> <CALMp9eThBnN3ktAfwhNs7L-O031JDFqjb67OMPooGvmkcdhK4A@mail.gmail.com>
- <CALMp9eR0Mw8iPv_Z43gfCEbErHQ6EXX8oghJJb5Xge+47ZU9yQ@mail.gmail.com>
- <20200303045838.GF27842@linux.intel.com> <CALMp9eSYZKUBko4ZViNbasRGJs2bAO2fREHX9maDbLrYj8yDhQ@mail.gmail.com>
- <20200303180122.GO1439@linux.intel.com>
-In-Reply-To: <20200303180122.GO1439@linux.intel.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 3 Mar 2020 10:08:36 -0800
-Message-ID: <CALMp9eRUPP_89mNwRTMpm6vg2jcaYNvj7R5yLK6HhLrub-iAEg@mail.gmail.com>
-Subject: Re: [PATCH 2/6] KVM: x86: Fix CPUID range check for Centaur and
- Hypervisor ranges
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 10:01 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Tue, Mar 03, 2020 at 09:42:42AM -0800, Jim Mattson wrote:
-> > Unfathomable was the wrong word.
->
-> I dunno, one could argue that the behavior of Intel CPUs for CPUID is
-> unfathomable and I was just trying to follow suit :-D
->
-> >  I can see what you're trying to do. I
-> > just don't think it's defensible. I suspect that Intel CPU architects
-> > will be surprised and disappointed to find that the maximum effective
-> > value of CPUID.0H:EAX is now 255, and that they have to define
-> > CPUID.100H:EAX as the "maximum leaf between 100H and 1FFH" if they
-> > want to define any leaves between 100H and 1FFH.
->
-> Hmm, ya, I agree that applying a 0xffffff00 mask to all classes of CPUID
-> ranges is straight up wrong.
->
-> > Furthermore, AMD has only ceded 4000_0000h through 4000_00FFh to
-> > hypervisors, so kvm's use of 40000100H through 400001FFH appears to be
-> > a land grab, akin to VIA's unilateral grab of the C0000000H leaves.
-> > Admittedly, one could argue that the 40000000H leaves are not AMD's to
-> > apportion, since AMD and Intel appear to have reached a detente by
-> > splitting the available space down the middle. Intel, who seems to be
-> > the recognized authority for this range, declares the entire range
-> > from 40000000H through 4FFFFFFFH to be invalid. Make of that what you
-> > will.
-> >
-> > In any event, no one has ever documented what's supposed to happen if
-> > you leave gaps in the 4xxxxxxxH range when defining synthesized CPUID
-> > leaves under kvm.
->
-> Probably stating the obvious, but for me, the least suprising thing is for
-> such leafs to output zeros.  It also feels safer, e.g. a guest that's
-> querying hypervisor support is less likely to be led astray by all zeros
-> than by a random feature bits being set.
->
-> What about something like this?  Along with a comment and documentation...
->
-> static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
-> {
->         struct kvm_cpuid_entry2 *max;
->
->         if (function >= 0x40000000 && function <= 0x4fffffff)
->                 max = kvm_find_cpuid_entry(vcpu, function & 0xffffff00, 0);
->         else
->                 max = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
->         return max && function <= max->eax;
-> }
+From: Sean Paul <seanpaul@chromium.org>
 
-I can get behind that. The behavior of the 4xxxxxxxH leaves under kvm
-is arguably up to kvm (though AMD may disagree).
+[ Upstream commit db735fc4036bbe1fbe606819b5f0ff26cc76cdff ]
+
+Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
+
+[   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
+[   12.089870] WARNING: CPU: 6 PID: 334 at /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301 debug_dma_map_sg+0x1dc/0x318
+[   12.102655] Modules linked in: joydev
+[   12.106442] CPU: 6 PID: 334 Comm: frecon Not tainted 4.19.0 #2
+[   12.112450] Hardware name: Google Cheza (rev3+) (DT)
+[   12.117566] pstate: 60400009 (nZCv daif +PAN -UAO)
+[   12.122506] pc : debug_dma_map_sg+0x1dc/0x318
+[   12.126995] lr : debug_dma_map_sg+0x1dc/0x318
+[   12.131487] sp : ffffff800cc3ba80
+[   12.134913] x29: ffffff800cc3ba80 x28: 0000000000000000
+[   12.140395] x27: 0000000000000004 x26: 0000000000000004
+[   12.145868] x25: ffffff8008e55b18 x24: 0000000000000000
+[   12.151337] x23: 00000000ffffffff x22: ffffff800921c000
+[   12.156809] x21: ffffffc0fa75b080 x20: ffffffc0f7195090
+[   12.162280] x19: ffffffc0f1c53280 x18: 0000000000000000
+[   12.167749] x17: 0000000000000000 x16: 0000000000000000
+[   12.173218] x15: 0000000000000000 x14: 0720072007200720
+[   12.178689] x13: 0720072007200720 x12: 0720072007200720
+[   12.184161] x11: 0720072007200720 x10: 0720072007200720
+[   12.189641] x9 : ffffffc0f1fc6b60 x8 : 0000000000000000
+[   12.195110] x7 : ffffff8008132ce0 x6 : 0000000000000000
+[   12.200585] x5 : 0000000000000000 x4 : ffffff8008134734
+[   12.206058] x3 : ffffff800cc3b830 x2 : ffffffc0f1fc6240
+[   12.211532] x1 : 25045a74f48a7400 x0 : 25045a74f48a7400
+[   12.217006] Call trace:
+[   12.219535]  debug_dma_map_sg+0x1dc/0x318
+[   12.223671]  get_pages+0x19c/0x20c
+[   12.227177]  msm_gem_fault+0x64/0xfc
+[   12.230874]  __do_fault+0x3c/0x140
+[   12.234383]  __handle_mm_fault+0x70c/0xdb8
+[   12.238603]  handle_mm_fault+0xac/0xc4
+[   12.242473]  do_page_fault+0x1bc/0x3d4
+[   12.246342]  do_translation_fault+0x54/0x88
+[   12.250652]  do_mem_abort+0x60/0xf0
+[   12.254250]  el0_da+0x20/0x24
+[   12.257317] irq event stamp: 67260
+[   12.260828] hardirqs last  enabled at (67259): [<ffffff8008132d0c>] console_unlock+0x214/0x608
+[   12.269693] hardirqs last disabled at (67260): [<ffffff8008080e0c>] do_debug_exception+0x5c/0x178
+[   12.278820] softirqs last  enabled at (67256): [<ffffff8008081664>] __do_softirq+0x4d4/0x520
+[   12.287510] softirqs last disabled at (67249): [<ffffff80080be574>] irq_exit+0xa8/0x100
+[   12.295742] ---[ end trace e63cfc40c313ffab ]---
+
+The root of the problem is that the default segment size for sgt is
+(UINT_MAX & PAGE_MASK), and the default segment size for device dma is
+64K. As such, if you compare the 2, you would deduce that the sg segment
+will overflow the device's capacity. In reality, the hardware can
+accommodate the larger sg segments, it's just not initializing its max
+segment properly. This patch initializes the max segment size for the
+mdss device, which gets rid of that pesky warning.
+
+Reported-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Stephen Boyd <swboyd@chromium.org>
+Tested-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Rob Clark <robdclark@gmail.com>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200121111813.REPOST.1.I92c66a35fb13f368095b05287bdabdbe88ca6922@changeid
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index c84f0a8b3f2ce..b73fbb65e14b2 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -441,6 +441,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
+ 	if (ret)
+ 		goto err_msm_uninit;
+ 
++	if (!dev->dma_parms) {
++		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
++					      GFP_KERNEL);
++		if (!dev->dma_parms)
++			return -ENOMEM;
++	}
++	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
++
+ 	msm_gem_shrinker_init(ddev);
+ 
+ 	switch (get_mdp_ver(pdev)) {
+-- 
+2.20.1
+
+
+
