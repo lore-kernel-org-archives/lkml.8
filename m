@@ -2,136 +2,108 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFA8C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDA1C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:46:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D77A20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:45:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sWbH2eXG"
+	by mail.kernel.org (Postfix) with ESMTP id E6E6A20838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:46:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583243194;
+	bh=vGEryNKJXcCT8a512mUV3y5gUnsXj9RciNHteo1Sa94=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=l1f3hXKIkRViS94HoSJhfHUvLNb5BJdAKAPXw8fdwvNq4cN1DrrivZM8kWxbrbAGd
+	 eqzsuZO6qdohJg6OODrxqZ2U3Qre2llK1XYE9hgMA1fHr45GyM7cMiPK0WoEuqZm0v
+	 EE7N/5eHKoRjXx8XeCGBEF00fMgwr/Ip9pij1Oww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbgCCNp0 (ORCPT
+        id S1728846AbgCCNqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:45:26 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:33842 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727191AbgCCNpZ (ORCPT
+        Tue, 3 Mar 2020 08:46:32 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:38270 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727167AbgCCNqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:45:25 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 11so3425018qkd.1;
-        Tue, 03 Mar 2020 05:45:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=k3SVGsAkRULOndp1bH4Vy4WDCwesGWr3P2z5Nm2yK10=;
-        b=sWbH2eXGNk7O1rQtiTzgMXTDZu43PmepDSxq/uNPdI7SoPgKCrQc597H3jFSvq2zv1
-         he75Y3Zb2UfC0zVYPysm6n3V+dKaiHAnEWWMEgHkZTWindFlUzUwSNrgbYg8JwUUAuET
-         K9VADaX7yvdP7LE2K8UTyxstGXHGw3Z7ZXBtsPfecPJGtAXaxrFtqlXDjnJJu84WC74g
-         xVAZhKs+WisQ6K5jO6DzK1ETO9PjxW2uwIGBQk8cCYnKD0MZxpdfSG41qOjKPDD84cBd
-         KkOo2PAR3ze0M7wNRVkVghDcTdire3inJI9/dDoxrSTL9HcS4rQo7xAjsJumQYgjF/Ka
-         aRzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=k3SVGsAkRULOndp1bH4Vy4WDCwesGWr3P2z5Nm2yK10=;
-        b=Bwkbv+MiRKDx2Wf92mwku23vPB6QvpIZozG8w9Utl9JyJyEQjzWxzNC+2Viuot10yr
-         G5i0Es0qd4mn52YVJLKc4GeNVLKuBKhsYV6HM8RMHDlmqVUYa73Uod7L3ytBxbtfIPic
-         sMXaeZtMKRGNrXxSk+dB7ar/Bk+ZqHko4MgNIdAfjCWPc9HD4xcxjK+fVWbuhMfl5tWu
-         EwJbgsEffxir4g2HDyYgMvcYeP97VeSfYAv5ZKtkfX5At50VwhZpjPqlg9KvpQ76g1MK
-         3eisOgb+3ZQ3cdiUybbVY5abjzdTuMhBH4Z9+pnzO42kvTQCeSeJ9+c3oy9pd3z3gmGO
-         QSQQ==
-X-Gm-Message-State: ANhLgQ1qkLdBHYpl9v2/a3H/3UBgzowPC7g3qcG1TFj88tSjiTvkToMF
-        wl1zh6rlVmdDamwWKwLrc1iQuVrHnOU=
-X-Google-Smtp-Source: ADFU+vtMcmjz2IkoUm+AEKIOmhmLZ+Zq/cFMxCPvZfbkApv9+ewkMMxJ3r0lr/5bDhlCrRFK+R2JMg==
-X-Received: by 2002:ae9:ef4c:: with SMTP id d73mr3833332qkg.201.1583243123678;
-        Tue, 03 Mar 2020 05:45:23 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id o127sm12169290qke.92.2020.03.03.05.45.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 05:45:23 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 3 Mar 2020 08:45:21 -0500
-To:     Mika =?utf-8?B?UGVudHRpbMOk?= <mika.penttila@nextfour.com>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/5] efi/x86: Decompress at start of PE image load address
-Message-ID: <20200303134521.GA3628638@rani.riverdale.lan>
-References: <20200301230537.2247550-1-nivedita@alum.mit.edu>
- <20200301230537.2247550-3-nivedita@alum.mit.edu>
- <dce7e026-ccb2-36f0-c892-83558dcc055f@nextfour.com>
+        Tue, 3 Mar 2020 08:46:32 -0500
+Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 023DkNuj001527;
+        Tue, 3 Mar 2020 22:46:24 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 023DkNuj001527
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583243184;
+        bh=I0dB0E0Ppgz9TfglvmGFKRBJvWtxB1020ETEw+zES8k=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=r8faXJ+BlS6Qk+t3Ed1/ouhSRxGoBFaiF3DCRJ25taCMU7nJDnr+svsg8p3eaXn2r
+         g9BYXlTOmA5MbqSfx+e4QRvyFdJQwqyaVx3+h/2O4V4ZhgE0uRpdd0xQq8iqgr5Dn/
+         moY4CpHlo+ip6adRt843TeyP2hQU+psGsVqQLeMiov/uEweC4zIDD+SfU1Yo+CTK3W
+         LUHPuOKsZE25mE+t/IkFyBA+dQDZdrz6VB1JBbSC5Q89dSDl6Cgikzf09kYKLQGp+H
+         6ZgiwtdWDmdQaAU/Z/qcGoo4dmQeQ2VRYlGEiWFJV7qX4M9LNVCzK3eg42X74ppr8W
+         7g9nY8pNNlmUw==
+X-Nifty-SrcIP: [209.85.217.41]
+Received: by mail-vs1-f41.google.com with SMTP id w142so2352836vsw.9;
+        Tue, 03 Mar 2020 05:46:24 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0xII2jz37IHuddeWaFM0hKABhW8mm+Oz4AyHMpqGAsRH769vMz
+        XSTMcEzRYvvG3vDNS3XNSdvuWVT380W+vpHclik=
+X-Google-Smtp-Source: ADFU+vsjmSig+hI85BfC9o+2I1Nt3rsoH9lkQysVJ+WWf8bKa68CI2DD2CprMOpxEX7H5tqzk/VJC2tBrHCTfTlcbI0=
+X-Received: by 2002:a67:bc0c:: with SMTP id t12mr2269458vsn.215.1583243183172;
+ Tue, 03 Mar 2020 05:46:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <dce7e026-ccb2-36f0-c892-83558dcc055f@nextfour.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200229003731.2728-1-robh@kernel.org> <CAK7LNAQUbfVvYYSuMNnB2OyNbuYZkzY0gsKRybe-0P9GuYZN2w@mail.gmail.com>
+ <CAL_JsqLqZYZXGg8-FnoV8EFKSK8moQjEWe93+FazEbh9GTxQpw@mail.gmail.com>
+In-Reply-To: <CAL_JsqLqZYZXGg8-FnoV8EFKSK8moQjEWe93+FazEbh9GTxQpw@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 3 Mar 2020 22:45:47 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATr5TX+CnxHhoa5qcNes6mTp9h0TJ_5=0fGzzq3M8FKxg@mail.gmail.com>
+Message-ID: <CAK7LNATr5TX+CnxHhoa5qcNes6mTp9h0TJ_5=0fGzzq3M8FKxg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] kbuild: Always validate DT binding examples
+To:     Rob Herring <robh@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:28:20AM +0000, Mika Penttilä wrote:
-> 
-> 
-> On 2.3.2020 1.05, Arvind Sankar wrote:
-> > When booted via PE loader, define image_offset to hold the offset of
-> > startup_32 from the start of the PE image, and use it as the start of
-> > the decompression buffer.
+On Tue, Mar 3, 2020 at 1:06 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, Feb 28, 2020 at 10:25 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 > >
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> > ---
-> >  arch/x86/boot/compressed/head_32.S      | 17 +++++++++++
-> >  arch/x86/boot/compressed/head_64.S      | 38 +++++++++++++++++++++++--
-> >  drivers/firmware/efi/libstub/x86-stub.c | 12 ++++++--
-> >  3 files changed, 61 insertions(+), 6 deletions(-)
-> 
-> ...
-> > --- a/drivers/firmware/efi/libstub/x86-stub.c
-> > +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> > @@ -19,6 +19,7 @@
-> >  
-> >  static efi_system_table_t *sys_table;
-> >  extern const bool efi_is64;
-> > +extern u32 image_offset;
-> >  
-> >  __pure efi_system_table_t *efi_system_table(void)
-> >  {
-> > @@ -364,6 +365,7 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
-> >  	struct boot_params *boot_params;
-> >  	struct setup_header *hdr;
-> >  	efi_loaded_image_t *image;
-> > +	void *image_base;
-> >  	efi_guid_t proto = LOADED_IMAGE_PROTOCOL_GUID;
-> >  	int options_size = 0;
-> >  	efi_status_t status;
-> > @@ -384,7 +386,10 @@ efi_status_t __efiapi efi_pe_entry(efi_handle_t handle,
-> >  		efi_exit(handle, status);
-> >  	}
-> >  
-> > -	hdr = &((struct boot_params *)efi_table_attr(image, image_base))->hdr;
-> > +	image_base = efi_table_attr(image, image_base);
-> > +	image_offset = (void *)startup_32 - image_base;
-> 
-> startup_32 == 0, so maybe something like
-> 
-> leaq	startup_32(%rip) - image_base
-> 
-> should be used ?
-> 
+> > Hi Rob,
+> >
+> > On Sat, Feb 29, 2020 at 9:37 AM Rob Herring <robh@kernel.org> wrote:
+> > >
+> > > Most folks only run dt_binding_check on the single schema they care about
+> > > by setting DT_SCHEMA_FILES. That means example is only checked against
+> > > that one schema which is not always sufficient.
+> > >
+> > > Let's address this by splitting processed-schema.yaml into 2 files: one
+> > > that's always all schemas for the examples and one that's just the schema
+> > > in DT_SCHEMA_FILES for dtbs.
+> > >
+> > > Cc: Michal Marek <michal.lkml@markovi.net>
+> > > Cc: linux-kbuild@vger.kernel.org
+> > > Co-developed-by: Masahiro Yamada <masahiroy@kernel.org>
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > > Masahiro, given you pretty much re-wrote this, I added you as
+> > > Co-developed-by.
+> >
+> >
+> >
+> > I can apply both to my kbuild tree.
+>
+> Please apply to your tree.
 
-That's what it already uses. All the files in this directory are
-compiled to be position-independent, so it uses rip-relative addressing
-on 64-bit and GOT-relative addressing on 32-bit.
+
+Done.
+Thanks.
+
+
+-- 
+Best Regards
+Masahiro Yamada
