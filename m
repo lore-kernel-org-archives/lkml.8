@@ -8,96 +8,115 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAE1FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:52:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22411C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0EF22146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:52:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB93D215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:52:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MgMEOedX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U4m4K8Iw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727532AbgCCGwv (ORCPT
+        id S1727551AbgCCGwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:52:51 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36098 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725840AbgCCGwu (ORCPT
+        Tue, 3 Mar 2020 01:52:55 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44320 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbgCCGwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:52:50 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g12so892818plo.3
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 22:52:49 -0800 (PST)
+        Tue, 3 Mar 2020 01:52:54 -0500
+Received: by mail-pf1-f193.google.com with SMTP id y5so961266pfb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 22:52:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=oX1y8GGFSSoL7MJBqOmt9bqjO2DIfXS/JFi378HqNJU=;
-        b=MgMEOedXPOf45Nouii7bB4oC99d14VM7O6RLPA2ewohE/4xlxu4lY+4suP3aYRf3aD
-         Dp1bYGb12tqHwQDClpN0YD2p2Cd+8xw9S/10ruBMKKxmVkrp3lGtTTr9JfYX9i33J82I
-         yyF0NIfaoJMcc3/wSAjDfZdEBSDTrNHH/3oNqsF6RjlZxWIhZDnSi551i2aTAGg5/7G5
-         sQQ6bysLD9O0LWCB1htpbwbBNA5A8J24870teVBp/g+VnIrKokOnwXb2cE1voUqnCxxi
-         WpfbOrv7io9ufRx8/z919QT7pYRl94OwPDE2/QWmrbkAj0/FZMD2WzukgE0FiMc63vq0
-         7f7Q==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=uN72wLEDvwlBRCICos4EhVBwO6gbBBFN6vJE7pQ2WOk=;
+        b=U4m4K8Iw9bAuO9WWHp0Vg4j6awd+MPpCjS5FDUij+lsMesZjNwYVKd+uBjUY5Xthr4
+         yJ5Qhnaea6ekz/F4NKU+Ale+QxqkMBfhPIx8jE9T8RHAQGyzuKwmN2UELjS/XLkvdDte
+         KNSkv6CRGZzDNtyRbSeQzSKIuld+rKYqn1Jxl8UjSuryBRkeVrjazEv9Fem+HAxm749E
+         UKerqe643Q2ZNkLwlys/Pm2FEV02u3Kl07ei/fz6neug80g3RjLZB6X9lQHThuiA9cxJ
+         UWb2ywKq8VgElp7eIklsDq9fvs0IwXRbFMSBEzcrRUXMX54GvQzJjvh9w6SVFZcesrhO
+         9TMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=oX1y8GGFSSoL7MJBqOmt9bqjO2DIfXS/JFi378HqNJU=;
-        b=b4m9E5wNxgpEuDlNRFV9iHEJpclEpFxKrva2/Oxi1JDiQ7KRvQD7ZEG2ZOqYUiO315
-         rx+nLFnashFRZjCwBlgZTyi/dAhIdGkgzBMYgzRVY5JbvTXn2YsPTQE7ZujczAcU4XTa
-         e/yXnLtfLrZtwOS+xzevk8lcXdbN2Ly0towRLR4lOU8gS+Eea7SkjWoLRhs/s9SiXUcM
-         DdZBgo/XD5tpqSB4WEzS4whD1Ux3gPJ+FGXXewBbjbDTxvcE0d5cXEfNMZb7EbxNvDEK
-         zMdcVAupe+yEWwmz00JMB1h2Sef+RCDH6C8rlVVy876WL1hSp5GJBl79Cep1/XWprbTt
-         LhjA==
-X-Gm-Message-State: ANhLgQ2u3oB07mdOC1EuiHDd6lZClnlasjF9e2HKsiUSAEJxcExWBRzG
-        NQeaXU9/d3hGaohCR1mOEXAuSizg
-X-Google-Smtp-Source: ADFU+vvDNb8nO5dFdp/Qn+gAtxGwt7UKdHdx6mKCWKfRZSMnUZxgVFvvZPs3RxqlzExO76SzX/a36Q==
-X-Received: by 2002:a17:902:6ac7:: with SMTP id i7mr2849117plt.66.1583218369041;
-        Mon, 02 Mar 2020 22:52:49 -0800 (PST)
+         :references:mime-version:content-transfer-encoding;
+        bh=uN72wLEDvwlBRCICos4EhVBwO6gbBBFN6vJE7pQ2WOk=;
+        b=cSpMLfYjCCVEpUS0rh2FLHnmfdggTAFOaZfUDzxWS78kgDGC6vbhKFltmdVzG5GwFo
+         FKNIE1qbvayTGjKOh7jyPbClHt0rJ576skGDKyqA/A5U9CbB2tZ9rpRQkH84yk1YuFqG
+         I6ZUgpwOp1AKTU+U8UGBGZttDraqB6/1ee/1jx79qMPiQw5ZPvw4ImUCNXOa62u3IpYM
+         os8gv3KsdJKNNSg8ALE2WVfU1U0mDQSSl35vIceHEak3QmRzUz62pDUWo0ZvFdIB/YDb
+         nIDjriLkBKIFtloOZ1Em4tbUohipoKCnRuuu/hs5fijcQAHyA8GNTSTa5c1SXLuC6Kq7
+         2n6Q==
+X-Gm-Message-State: ANhLgQ0kCCpoM6AT1j/xbxJFwlQjGi0+suhNqPxi5sv8rCK28FGrdONW
+        +k3Y5HjYUJaNBF2iMQ99+PIHg/qe
+X-Google-Smtp-Source: ADFU+vv8HFhSmpiZrdShaIugSli7Bo77oMZ2MWH1IxWfg2RFVazBtza9QrsYyp1tKhjQJNk7PU1osA==
+X-Received: by 2002:a62:c144:: with SMTP id i65mr1718852pfg.260.1583218372707;
+        Mon, 02 Mar 2020 22:52:52 -0800 (PST)
 Received: from ZB-PF114XEA.360buyad.local ([103.90.76.242])
-        by smtp.gmail.com with ESMTPSA id t11sm22780754pgi.15.2020.03.02.22.52.46
+        by smtp.gmail.com with ESMTPSA id t11sm22780754pgi.15.2020.03.02.22.52.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 22:52:48 -0800 (PST)
+        Mon, 02 Mar 2020 22:52:52 -0800 (PST)
 From:   Zhenzhong Duan <zhenzhong.duan@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     x86@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        zhenzhong.duan@gmail.com, "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 1/2] x86/boot: Add -Wunused to KBUILD_CFLAGS
-Date:   Tue,  3 Mar 2020 14:52:09 +0800
-Message-Id: <20200303065210.1279-2-zhenzhong.duan@gmail.com>
+        zhenzhong.duan@gmail.com, Borislav Petkov <bp@suse.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 2/2] x86/boot/KASLR: Fix unused variable warning
+Date:   Tue,  3 Mar 2020 14:52:10 +0800
+Message-Id: <20200303065210.1279-3-zhenzhong.duan@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200303065210.1279-1-zhenzhong.duan@gmail.com>
 References: <20200303065210.1279-1-zhenzhong.duan@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compile warning option in arch/x86/boot/compressed is different from
-other part of the kernel for some history reason. But "-Wunused" is
-safe to be added to point out unused variable issue.
+Local variable 'i' is referenced only when CONFIG_MEMORY_HOTREMOVE and
+CONFIG_ACPI are defined, but definition of variable 'i' is out of guard.
+If any of the two macros is undefined, below warning triggers during
+build, fix it by moving 'i' in the guard.
 
-Link: https://lore.kernel.org/patchwork/patch/1175001/#1379873
-Suggested-by: Borislav Petkov <bp@alien8.de>
+arch/x86/boot/compressed/kaslr.c:698:6: warning: unused variable ‘i’ [-Wunused-variable]
+
+Fixes: 690eaa532057 ("x86/boot/KASLR: Limit KASLR to extract the kernel in immovable memory only")
 Signed-off-by: Zhenzhong Duan <zhenzhong.duan@gmail.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@suse.de>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 ---
- arch/x86/boot/compressed/Makefile | 2 +-
+ arch/x86/boot/compressed/kaslr.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 26050ae0b27e..cb9743ec453a 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -37,7 +37,7 @@ KBUILD_CFLAGS += $(call cc-option,-ffreestanding)
- KBUILD_CFLAGS += $(call cc-option,-fno-stack-protector)
- KBUILD_CFLAGS += $(call cc-disable-warning, address-of-packed-member)
- KBUILD_CFLAGS += $(call cc-disable-warning, gnu)
--KBUILD_CFLAGS += -Wno-pointer-sign
-+KBUILD_CFLAGS += -Wno-pointer-sign -Wunused
- KBUILD_CFLAGS += $(call cc-option,-fmacro-prefix-map=$(srctree)/=)
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index d7408af55738..62bc46684581 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -695,7 +695,6 @@ static bool process_mem_region(struct mem_vector *region,
+ 			       unsigned long long minimum,
+ 			       unsigned long long image_size)
+ {
+-	int i;
+ 	/*
+ 	 * If no immovable memory found, or MEMORY_HOTREMOVE disabled,
+ 	 * use @region directly.
+@@ -711,6 +710,7 @@ static bool process_mem_region(struct mem_vector *region,
+ 	}
  
- KBUILD_AFLAGS  := $(KBUILD_CFLAGS) -D__ASSEMBLY__
+ #if defined(CONFIG_MEMORY_HOTREMOVE) && defined(CONFIG_ACPI)
++	int i;
+ 	/*
+ 	 * If immovable memory found, filter the intersection between
+ 	 * immovable memory and @region.
 -- 
 2.17.1
 
