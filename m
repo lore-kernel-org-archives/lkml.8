@@ -2,114 +2,105 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EA84C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4ECC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1657020CC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:43:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583264628;
-	bh=DCL8ykDk5TOwzA/Lva4sncSGdbnsdat+IzdI+ZVWZEM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=k3njmZJf/MvYko3z6uW05WKK24a0qdOhyX2C6ar0y00UiQQgL56eyd/VlyGRPXdEz
-	 ETYmgX92nPZ96B7yi5ksf40w8NSMRBLICZe4Qx38i18AzTGikWAloroHengQoJ00WF
-	 tRDvIrXf8jAwtCdbTfC5bacqTc2IvjzuKbhzXTvI=
+	by mail.kernel.org (Postfix) with ESMTP id 25CEA20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:45:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lbgtt2i/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbgCCTnr (ORCPT
+        id S1731105AbgCCTpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:43:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56852 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728180AbgCCTnr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:43:47 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4610C20870;
-        Tue,  3 Mar 2020 19:43:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583264626;
-        bh=DCL8ykDk5TOwzA/Lva4sncSGdbnsdat+IzdI+ZVWZEM=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=nsnxIjROrEOodcoUUfkk/9UAGrJoxMgXXvExx4ZJ1oy3uKRSiHXRuNctJDwDeDirA
-         7ZET8GMx3MYvCWFDkyjivIzeX3cJBF06lF6UjdaVvg/2ggQmcZ9XdalkwXSBYUv4av
-         dCAXLU/OlF9SpunpiAM6TNnLQnQyInzDnUUfblgA=
-Message-ID: <cb2a7273a4cac7bac5f5b323e1958242b98e605e.camel@kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications
- [ver #17]
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jann Horn <jannh@google.com>
-Cc:     Miklos Szeredi <miklos@szeredi.hu>, Karel Zak <kzak@redhat.com>,
-        David Howells <dhowells@redhat.com>,
-        Ian Kent <raven@themaw.net>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Date:   Tue, 03 Mar 2020 14:43:44 -0500
-In-Reply-To: <dc84aa00-e570-8833-cf9f-d1001c52dd7a@kernel.dk>
-References: <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
-         <1509948.1583226773@warthog.procyon.org.uk>
-         <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
-         <20200303113814.rsqhljkch6tgorpu@ws.net.home>
-         <20200303130347.GA2302029@kroah.com> <20200303131434.GA2373427@kroah.com>
-         <CAJfpegt0aQVvoDeBXOu2xZh+atZQ+q5uQ_JRxe46E8cZ7sHRwg@mail.gmail.com>
-         <20200303134316.GA2509660@kroah.com> <20200303141030.GA2811@kroah.com>
-         <CAG48ez3Z2V8J7dpO6t8nw7O2cMJ6z8vwLZXLAoKGH3OnCb-7JQ@mail.gmail.com>
-         <20200303142407.GA47158@kroah.com>
-         <030888a2-db3e-919d-d8ef-79dcc10779f9@kernel.dk>
-         <acb1753c78a019fb0d54ba29077cef144047f70f.camel@kernel.org>
-         <7a05adc8-1ca9-c900-7b24-305f1b3a9b86@kernel.dk>
-         <dbb06c63c17c23fcacdd99e8b2266804ee39ffe5.camel@kernel.org>
-         <dc84aa00-e570-8833-cf9f-d1001c52dd7a@kernel.dk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
-MIME-Version: 1.0
+        Tue, 3 Mar 2020 14:45:20 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34273 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728180AbgCCTpU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:45:20 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y21so2015364pfp.1;
+        Tue, 03 Mar 2020 11:45:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:message-id:in-reply-to:references:subject
+         :mime-version:content-transfer-encoding;
+        bh=4X++qMe4so4vJxEDTf+MGfWcvBuscrLBXjxPTNju6ck=;
+        b=Lbgtt2i/PhS+8hLjNvMVh1HpywfjiOTPV0Z0xmBmhU+5JHPGxCv8xjadR5nBgBq5jm
+         RFmCOmLOFV75ETGNaLlDxt25hCwbzgnHKEjcM0/L1bAQpK6jLNH8FszA+sHIO0xuT9XD
+         fr6a6zwXSonpvIUmXZC/S5Zmxz9EQZn7l6CUdwYCldLTr8kBMtTwb0M+EhyiWpdt5orx
+         wL/irCcPGMDKy8uvTT5t9PAriaY0+Aa1bBrl72Lmwjxggmw21kzK11FBFHXUsBvPU3o/
+         MX9j/Rj3P6o1/BoEgBQKl/r7gYTfg0U800hVSQBe2slCq8PlB0O+2z8qef10pmd3umZy
+         7U4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:message-id:in-reply-to
+         :references:subject:mime-version:content-transfer-encoding;
+        bh=4X++qMe4so4vJxEDTf+MGfWcvBuscrLBXjxPTNju6ck=;
+        b=SJQ39m77iUKtRd/T/TT5IFNY1PHyl2n4zqu4Iv12e7o0JOrdX+pf/yhstFq8n/t/6+
+         4L3VvDrR8QAEVMIjrae1nIYe4Asa7K8ibpJLTvj1hRG/Xd1uyH6T8MjRB9e5QCDaMd+f
+         tU0bPCxfv2jHiOE+/7/mfzJwIdQFUxyfenMFzC0KUupoA9sra9gI9/DyRd5dWX0ytJRq
+         9WtAj1T3Eutjig2MN7o2U5CDEKMrupkf75ZRO0WnuVZiKeY5g+aXoSnUjS0GbC3WiZCY
+         dbraR2MnhrUu4SFXPYxsuBQxUAyBpQsh/m0LmsXH1VLv7zFYLjRaDgifn9nJC2ykXjp4
+         MrTA==
+X-Gm-Message-State: ANhLgQ3gr0oJR8vinItw+Gp4r6t2HyG10ISQKosd5ajP4R7ar/0l4Lvj
+        /YtFazPf7ansgF/IvJcDSht3CfST
+X-Google-Smtp-Source: ADFU+vsqCtRnPJbDe5j0cZu6Bj4qwSR25RjpNBeBU3fe+jGQ0D52cUo10BDmfyWPKvIsY152JRC3Lw==
+X-Received: by 2002:a63:7e1c:: with SMTP id z28mr5591268pgc.105.1583264718907;
+        Tue, 03 Mar 2020 11:45:18 -0800 (PST)
+Received: from localhost ([184.63.162.180])
+        by smtp.gmail.com with ESMTPSA id x19sm1267433pfc.144.2020.03.03.11.45.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 11:45:18 -0800 (PST)
+Date:   Tue, 03 Mar 2020 11:45:10 -0800
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>, john.fastabend@gmail.com,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Message-ID: <5e5eb3c64247c_60e72b06ba14c5bc2e@john-XPS-13-9370.notmuch>
+In-Reply-To: <20200228115344.17742-10-lmb@cloudflare.com>
+References: <20200228115344.17742-1-lmb@cloudflare.com>
+ <20200228115344.17742-10-lmb@cloudflare.com>
+Subject: RE: [PATCH bpf-next v2 9/9] bpf, doc: update maintainers for L7 BPF
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-03 at 12:23 -0700, Jens Axboe wrote:
-> On 3/3/20 12:02 PM, Jeff Layton wrote:
-> > Basically, all you'd need to do is keep a pointer to struct file in the
-> > internal state for the chain. Then, allow userland to specify some magic
-> > fd value for subsequent chained operations that says to use that instead
-> > of consulting the fdtable. Maybe use -4096 (-MAX_ERRNO - 1)?
+Lorenz Bauer wrote:
+> Add Jakub and myself as maintainers for sockmap related code.
 > 
-> BTW, I think we need two magics here. One that says "result from
-> previous is fd for next", and one that says "fd from previous is fd for
-> next". The former allows inheritance from open -> read, the latter from
-> read -> write.
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> ---
+>  MAINTAINERS | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 495ba52038ad..8517965adde8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9351,6 +9351,8 @@ F:	include/net/l3mdev.h
+>  L7 BPF FRAMEWORK
+>  M:	John Fastabend <john.fastabend@gmail.com>
+>  M:	Daniel Borkmann <daniel@iogearbox.net>
+> +M:	Jakub Sitnicki <jakub@cloudflare.com>
+> +M:	Lorenz Bauer <lmb@cloudflare.com>
+>  L:	netdev@vger.kernel.org
+>  L:	bpf@vger.kernel.org
+>  S:	Maintained
+> -- 
+> 2.20.1
 > 
 
-Do we? I suspect that in almost all of the cases, all we'd care about is
-the last open. Also if you have unrelated operations in there you still
-have to chain the fd through somehow to the next op which is a bit hard
-to do with that scheme.
-
-I'd just have a single magic carveout that means "use the result of last
-open call done in this chain". If you do a second open (or pipe, or...),
-then that would put the old struct file pointer and drop a new one in
-there.
-
-If we really do want to enable multiple opens in a single chain though,
-then we might want to rethink this and consider some sort of slot table
-for storing open fds.
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Acked-by: John Fastabend <john.fastabend@gmail.com>
