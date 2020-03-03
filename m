@@ -2,111 +2,276 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8EFC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:04:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF87C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9057C2465D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:04:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="XIUN+YBl"
+	by mail.kernel.org (Postfix) with ESMTP id C2C842465D
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:04:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgCCEEC (ORCPT
+        id S1727242AbgCCEEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:04:02 -0500
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154]:23763 "EHLO
-        smtp-fw-6001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726942AbgCCEEC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:04:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1583208242; x=1614744242;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=sXeS6p7Itr7djtUdtudVwXDeytGL1G/3avUXEanK1OY=;
-  b=XIUN+YBlnRA/9jmConDwZcGeBla7CISK1xw+co9fI+3uxYdDNlI2nZlH
-   WcrWpYVmX0Ys4Sgzzhr+JKI6fCLXaV2YMYgEOjAMfzzPHFgfKYdBruRRz
-   RdKZuY6dvK9fyCJ8KLgIZy8G3CLZiP3jD2VNsTf3jZhQK98mjZLiIMit6
-   c=;
-IronPort-SDR: 4NXr8SMbetEKaQTY4fdW/KXzww/XZW3aSn+bnL3yY+9egQoy1w6JqDjzftCPrM1Hnolsmw54mg
- Nkx4Xn7O58ew==
-X-IronPort-AV: E=Sophos;i="5.70,509,1574121600"; 
-   d="scan'208";a="20649458"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-6001.iad6.amazon.com with ESMTP; 03 Mar 2020 04:03:49 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id D0089A2CB5;
-        Tue,  3 Mar 2020 04:03:46 +0000 (UTC)
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.249) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 3 Mar 2020 04:03:46 +0000
-Received: from EX13D01UWB002.ant.amazon.com (10.43.161.136) by
- EX13d01UWB002.ant.amazon.com (10.43.161.136) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 3 Mar 2020 04:03:46 +0000
-Received: from EX13D01UWB002.ant.amazon.com ([10.43.161.136]) by
- EX13d01UWB002.ant.amazon.com ([10.43.161.136]) with mapi id 15.00.1497.006;
- Tue, 3 Mar 2020 04:03:45 +0000
-From:   "Singh, Balbir" <sblbir@amazon.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>
-CC:     "hch@lst.de" <hch@lst.de>,
-        "Chaitanya.Kulkarni@wdc.com" <Chaitanya.Kulkarni@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-Subject: Re: [PATCH v2 0/5] Add support for block disk resize notification
-Thread-Topic: [PATCH v2 0/5] Add support for block disk resize notification
-Thread-Index: AQHV7BZlqlE0eKkI5kmZncB90XbQkKg2SUiA
-Date:   Tue, 3 Mar 2020 04:03:45 +0000
-Message-ID: <f2b805c1a420a07aa9449ee0ef77766a10e9ff20.camel@amazon.com>
-References: <20200225200129.6687-1-sblbir@amazon.com>
-In-Reply-To: <20200225200129.6687-1-sblbir@amazon.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.43.160.8]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <97EF196BA8BC864E90A3D2B135CE2ADB@amazon.com>
-Content-Transfer-Encoding: base64
+        Mon, 2 Mar 2020 23:04:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:42104 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726942AbgCCEEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 23:04:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B14F32F;
+        Mon,  2 Mar 2020 20:04:51 -0800 (PST)
+Received: from [10.162.16.51] (p8cg001049571a15.blr.arm.com [10.162.16.51])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9E2853F6CF;
+        Mon,  2 Mar 2020 20:04:48 -0800 (PST)
+Subject: Re: Linux-next-20200302: arm64 build failed
+To:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
+ <20200302104726.GA7995@willie-the-truck>
+ <20200302135443.GA24831@linux.ibm.com>
+ <20200302174553.GC4166275@arrakis.emea.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <c4c6b363-62a8-db27-6ab3-ca2f2d4d082c@arm.com>
+Date:   Tue, 3 Mar 2020 09:34:45 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20200302174553.GC4166275@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDIwLTAyLTI1IGF0IDIwOjAxICswMDAwLCBCYWxiaXIgU2luZ2ggd3JvdGU6DQo+
-IEFsbG93IGJsb2NrL2dlbmhkIHRvIG5vdGlmeSB1c2VyIHNwYWNlIGFib3V0IGRpc2sgc2l6ZSBj
-aGFuZ2VzIHVzaW5nIGENCj4gbmV3IGhlbHBlciBzZXRfY2FwYWNpdHlfcmV2YWxpZGF0ZV9hbmRf
-bm90aWZ5KCksIHdoaWNoIGlzIGEgd3JhcHBlcg0KPiBvbiB0b3Agb2Ygc2V0X2NhcGFjaXR5KCku
-IHNldF9jYXBhY2l0eV9yZXZhbGlkYXRlX2FuZF9ub3RpZnkoKSB3aWxsIG9ubHkNCj4gbm90aWZ5
-DQo+IGlmZiB0aGUgY3VycmVudCBjYXBhY2l0eSBvciB0aGUgdGFyZ2V0IGNhcGFjaXR5IGlzIG5v
-dCB6ZXJvIGFuZCB0aGUNCj4gY2FwYWNpdHkgcmVhbGx5IGNoYW5nZXMuDQo+IA0KPiBCYWNrZ3Jv
-dW5kOg0KPiANCj4gQXMgYSBwYXJ0IG9mIGEgcGF0Y2ggdG8gYWxsb3cgc2VuZGluZyB0aGUgUkVT
-SVpFIGV2ZW50IG9uIGRpc2sgY2FwYWNpdHkNCj4gY2hhbmdlLCBDaHJpc3RvcGggKGhjaEBsc3Qu
-ZGUpIHJlcXVlc3RlZCB0aGF0IHRoZSBwYXRjaCBiZSBtYWRlIGdlbmVyaWMNCj4gYW5kIHRoZSBo
-YWNrcyBmb3IgdmlydGlvIGJsb2NrIGFuZCB4ZW4gYmxvY2sgZGV2aWNlcyBiZSByZW1vdmVkIGFu
-ZA0KPiBtZXJnZWQgdmlhIGEgZ2VuZXJpYyBoZWxwZXIuDQo+IA0KPiBUaGlzIHNlcmllcyBjb25z
-aXN0cyBvZiA1IGNoYW5nZXMuIFRoZSBmaXJzdCBvbmUgYWRkcyB0aGUgYmFzaWMNCj4gc3VwcG9y
-dCBmb3IgY2hhbmdpbmcgdGhlIHNpemUgYW5kIG5vdGlmeWluZy4gVGhlIGZvbGxvdyB1cCBwYXRj
-aGVzDQo+IGFyZSBwZXIgYmxvY2sgc3Vic3lzdGVtIGNoYW5nZXMuIE90aGVyIGJsb2NrIGRyaXZl
-cnMgY2FuIGFkZCB0aGVpcg0KPiBjaGFuZ2VzIGFzIG5lY2Vzc2FyeSBvbiB0b3Agb2YgdGhpcyBz
-ZXJpZXMuIFNpbmNlIG5vdCBhbGwgZGV2aWNlcw0KPiBhcmUgcmVzaXphYmxlLCB0aGUgZGVmYXVs
-dCB3YXMgdG8gYWRkIGEgbmV3IEFQSSBhbmQgbGV0IHVzZXJzDQo+IHNsb3dseSBjb252ZXJ0IG92
-ZXIgYXMgbmVlZGVkLg0KPiANCj4gVGVzdGluZzoNCj4gMS4gSSBkaWQgc29tZSBiYXNpYyB0ZXN0
-aW5nIHdpdGggYW4gTlZNRSBkZXZpY2UsIGJ5IHJlc2l6aW5nIGl0IGluDQo+IHRoZSBiYWNrZW5k
-IGFuZCBlbnN1cmVkIHRoYXQgdWRldmQgcmVjZWl2ZWQgdGhlIGV2ZW50Lg0KPiANCj4gDQo+IENo
-YW5nZWxvZyB2MjoNCj4gLSBSZW5hbWUgZGlza19zZXRfY2FwYWNpdHkgdG8gc2V0X2NhcGFjaXR5
-X3JldmFsaWRhdGVfYW5kX25vdGlmeQ0KPiAtIHNldF9jYXBhY2l0eV9yZXZhbGlkYXRlX2FuZF9u
-b3RpZnkgY2FuIGNhbGwgcmV2YWxpZGF0ZSBkaXNrDQo+ICAgaWYgbmVlZGVkLCBhIG5ldyBib29s
-IHBhcmFtZXRlciBpcyBwYXNzZWQgKHN1Z2dlc3RlZCBieSBCb2IgTGl1KQ0KPiANCg0KUGluZz8g
-SXQncyBub3QgYW4gdXJnZW50IHBhdGNoc2V0LCBJIGFtIGhhcHB5IHRvIHdhaXQgaWYgbm90aGlu
-ZyBlbHNlIGlzDQpuZWVkZWQuDQoNCkJhbGJpciBTaW5naA0K
+
+On 03/02/2020 11:15 PM, Catalin Marinas wrote:
+> On Mon, Mar 02, 2020 at 03:54:43PM +0200, Mike Rapoport wrote:
+>> On Mon, Mar 02, 2020 at 10:47:27AM +0000, Will Deacon wrote:
+>>> [+Anshuman and Catalin]
+>>>
+>>> On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
+>>>> Linux-Next 20200302 arm64 build failed due to below errors,
+>>>> Suspecting patch causing this build break.
+>>>>
+>>>> 87d900aef3e2  arm/arm64: add support for folded p4d page tables
+>>>>
+>>>> Error log,
+>>>> -------------
+>>>> arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
+>>>> include/linux/compiler.h:284:1: error: incompatible type for argument
+>>>> 1 of 'p4d_page_paddr'
+>>>>  ({         \
+>>>>  ^
+>>>> arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
+>>>> '__phys_to_virt'
+>>>>  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
+>>>>                                              ^
+>>>> arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
+>>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>>>>                                           ^~~~
+>>>> include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
+>>>>  #define READ_ONCE(x) __READ_ONCE(x, 1)
+>>>>                       ^~~~~~~~~~~
+>>>> arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
+>>>>  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
+>>>> + pud_index(addr) * sizeof(pud_t))
+>>>>                                                     ^~~~~~~~~
+>>>> arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
+>>>> 'pud_offset_phys'
+>>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>>>>                                                ^~~~~~~~~~~~~~~
+>>>> arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
+>>>>    pudp = pud_offset(pgdp, addr);
+>>>>           ^~~~~~~~~~
+>>>
+>>> Looks like we need an implementation of unmap_hotplug_p4d_range() to
+>>> walk the dummy p4d level. Unfortunately, we don't have the folded p4d
+>>> patches in the arm64 tree so we'll either need a common branch or the
+>>> hotplug patches will need to be dropped for the moment.
+>>
+>> unmap_hotplug_p4d_range() is easy :)
+>>
+>> From c7a5d08ff51ca2057b6b0289c4423bdfd7643518 Mon Sep 17 00:00:00 2001
+>> From: Mike Rapoport <rppt@linux.ibm.com>
+>> Date: Mon, 2 Mar 2020 15:53:17 +0200
+>> Subject: [PATCH] arm64/mm: implement unmap_hotplug_p4d_range
+>>
+>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>> ---
+>>  arch/arm64/mm/mmu.c | 20 +++++++++++++++++++-
+>>  1 file changed, 19 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index 05ec8e5f1436..c76b11577558 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -840,6 +840,24 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+>>  	} while (addr = next, addr < end);
+>>  }
+>>  
+>> +static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
+>> +				unsigned long end, bool free_mapped)
+>> +{
+>> +	unsigned long next;
+>> +	pgd_t *p4dp, p4d;
+>> +
+>> +	do {
+>> +		next = p4d_addr_end(addr, end);
+>> +		p4dp = p4d_offset(pgd, addr);
+>> +		p4d = READ_ONCE(*p4dp);
+>> +		if (p4d_none(p4d))
+>> +			continue;
+>> +
+>> +		WARN_ON(!p4d_present(p4d));
+>> +		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
+>> +	} while (addr = next, addr < end);
+>> +}
+>> +
+>>  static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>>  				bool free_mapped)
+>>  {
+>> @@ -854,7 +872,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>>  			continue;
+>>  
+>>  		WARN_ON(!pgd_present(pgd));
+>> -		unmap_hotplug_pud_range(pgdp, addr, next, free_mapped);
+>> +		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
+>>  	} while (addr = next, addr < end);
+>>  }
+> 
+> Thanks Mike. With the additional diff below, I can get it to build with
+> and without the p4d clean-up patches in -next. If Anshuman confirms that
+> they work, I can add them on top of the arm64 for-next/memory-hotremove
+> branch.
+
+These two patches applied on next-20200302 works fine for hot-remove. As the
+second patch also fixes the first one, IMHO both should be folded into a
+single one instead. Just wondering if this combined patch which enables P4D
+page table should be posted on the list or do I need to respin original hot
+remove patches again.
+
+- Anshuman
+
+> 
+> ----------8<------------------------
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 56bd9227937f..2faf11860097 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -816,7 +816,7 @@ static void unmap_hotplug_pmd_range(pud_t *pudp, unsigned long addr,
+>  	} while (addr = next, addr < end);
+>  }
+>  
+> -static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+> +static void unmap_hotplug_pud_range(p4d_t *p4dp, unsigned long addr,
+>  				    unsigned long end, bool free_mapped)
+>  {
+>  	unsigned long next;
+> @@ -824,7 +824,7 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+>  
+>  	do {
+>  		next = pud_addr_end(addr, end);
+> -		pudp = pud_offset(pgdp, addr);
+> +		pudp = pud_offset(p4dp, addr);
+>  		pud = READ_ONCE(*pudp);
+>  		if (pud_none(pud))
+>  			continue;
+> @@ -848,15 +848,15 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+>  	} while (addr = next, addr < end);
+>  }
+>  
+> -static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
+> -				unsigned long end, bool free_mapped)
+> +static void unmap_hotplug_p4d_range(pgd_t *pgdp, unsigned long addr,
+> +				    unsigned long end, bool free_mapped)
+>  {
+>  	unsigned long next;
+> -	pgd_t *p4dp, p4d;
+> +	p4d_t *p4dp, p4d;
+>  
+>  	do {
+>  		next = p4d_addr_end(addr, end);
+> -		p4dp = p4d_offset(pgd, addr);
+> +		p4dp = p4d_offset(pgdp, addr);
+>  		p4d = READ_ONCE(*p4dp);
+>  		if (p4d_none(p4d))
+>  			continue;
+> @@ -961,7 +961,7 @@ static void free_empty_pmd_table(pud_t *pudp, unsigned long addr,
+>  	free_hotplug_pgtable_page(virt_to_page(pmdp));
+>  }
+>  
+> -static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
+> +static void free_empty_pud_table(p4d_t *p4dp, unsigned long addr,
+>  				 unsigned long end, unsigned long floor,
+>  				 unsigned long ceiling)
+>  {
+> @@ -970,7 +970,7 @@ static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
+>  
+>  	do {
+>  		next = pud_addr_end(addr, end);
+> -		pudp = pud_offset(pgdp, addr);
+> +		pudp = pud_offset(p4dp, addr);
+>  		pud = READ_ONCE(*pudp);
+>  		if (pud_none(pud))
+>  			continue;
+> @@ -990,17 +990,36 @@ static void free_empty_pud_table(pgd_t *pgdp, unsigned long addr,
+>  	 * entries are empty. Overlap with other regions have been
+>  	 * handled by the floor/ceiling check.
+>  	 */
+> -	pudp = pud_offset(pgdp, 0UL);
+> +	pudp = pud_offset(p4dp, 0UL);
+>  	for (i = 0; i < PTRS_PER_PUD; i++) {
+>  		if (!pud_none(READ_ONCE(pudp[i])))
+>  			return;
+>  	}
+>  
+> -	pgd_clear(pgdp);
+> +	p4d_clear(p4dp);
+>  	__flush_tlb_kernel_pgtable(start);
+>  	free_hotplug_pgtable_page(virt_to_page(pudp));
+>  }
+>  
+> +static void free_empty_p4d_table(pgd_t *pgdp, unsigned long addr,
+> +				 unsigned long end, unsigned long floor,
+> +				 unsigned long ceiling)
+> +{
+> +	p4d_t *p4dp, p4d;
+> +	unsigned long next;
+> +
+> +	do {
+> +		next = p4d_addr_end(addr, end);
+> +		p4dp = p4d_offset(pgdp, addr);
+> +		p4d = READ_ONCE(*p4dp);
+> +		if (p4d_none(p4d))
+> +			continue;
+> +
+> +		WARN_ON(!p4d_present(p4d));
+> +		free_empty_pud_table(p4dp, addr, next, floor, ceiling);
+> +	} while (addr = next, addr < end);
+> +}
+> +
+>  static void free_empty_tables(unsigned long addr, unsigned long end,
+>  			      unsigned long floor, unsigned long ceiling)
+>  {
+> @@ -1015,7 +1034,7 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
+>  			continue;
+>  
+>  		WARN_ON(!pgd_present(pgd));
+> -		free_empty_pud_table(pgdp, addr, next, floor, ceiling);
+> +		free_empty_p4d_table(pgdp, addr, next, floor, ceiling);
+>  	} while (addr = next, addr < end);
+>  }
+>  #endif
+> 
