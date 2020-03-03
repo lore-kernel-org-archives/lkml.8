@@ -2,217 +2,85 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 780AEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:05:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E147C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4591A20728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:05:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 535F820728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:06:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mk/ruRGm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eHiytz6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732303AbgCCVFN (ORCPT
+        id S1732328AbgCCVGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:05:13 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42080 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729880AbgCCVFM (ORCPT
+        Tue, 3 Mar 2020 16:06:00 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43232 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729880AbgCCVGA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:05:12 -0500
-Received: by mail-pg1-f194.google.com with SMTP id h8so2105425pgs.9;
-        Tue, 03 Mar 2020 13:05:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Z2bljJyUKfKbXAwz+ZeHKNu8pqLfKGwQsLSAZQwgS/c=;
-        b=Mk/ruRGmSOD7Z888pX93JazWTB+QzZPeVYhvVyYiAIEUD8ME9drxtADOHe1YR8Kqnf
-         zLxHWPXh/h1M3Iz0DR2B6zI3e0lJJ8KVsF5wTa33UK244qfSv+g8qI2Arq0y/vTntYGw
-         j3/uz7VwTOOScGwN6c41m7cSSCqXsVcejbBximPhJlZETBAFOFZuItGZO4otOwPX1FsU
-         3ngCtX3culCDthejh05gf69lD/FnQN4Lsvki4czxjFmSdBxvlQaQgeV4BPPysslyKl93
-         y0kyWNaRiaXSjxDtSyikhKxWkinmeAur0vkCCny+ic2oQ3rmfiHhEcJhJO0R4HHnqLpq
-         ghzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z2bljJyUKfKbXAwz+ZeHKNu8pqLfKGwQsLSAZQwgS/c=;
-        b=nDt1EBQPcz6y2ywDjoH1ZuX3mGIOty0Fh7k4mVZuJoB+/+4zAsbR/7hg2gl5ujn/Wc
-         NfKD3OJHzdK/YQGhBsndAlsxVQ5o/VYiOX02GWHOEp3QeF7gKb0jX3n5DNdjsjopQ+0j
-         Mgoo2s+fNXOX3rjU5t2txjmDnYlXFIRx2pMUN6SyzORJsZ+dZwD0p+9qQoZmQXumWsXs
-         QtT6mX8PfiM5D1GKslQjzTEErGrApWcnLC4iv9R+5Ow2ej4PBGTz+KF1KOCB/2b8/LcF
-         9wiS5Fe/ZRKraTVLtlzXfDrpTSLgl9QjLlDcv+jGSfL5sym6h/QxSnnvNC17Gmp0hy6f
-         YuIw==
-X-Gm-Message-State: ANhLgQ2qlJtDF2FIjkNiWkXd+JrJSvV6CNxfinR+oapB0KghBvAMXdgS
-        XvMX02QgRGWjqmrj2obmtrU=
-X-Google-Smtp-Source: ADFU+vtZ82hL5/NHxNqLRKZHWqxFctDV/Jfsx6om7eB1Bt9n27ByyHqbVv4s0a6nQN6hJz9kGTFuFA==
-X-Received: by 2002:a62:7594:: with SMTP id q142mr6253626pfc.130.1583269510846;
-        Tue, 03 Mar 2020 13:05:10 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c15sm124753pja.30.2020.03.03.13.05.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Mar 2020 13:05:09 -0800 (PST)
-Date:   Tue, 3 Mar 2020 13:05:08 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        logan.shaw@alliedtelesis.co.nz, linux-hwmon@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] hwmon: (adt7475) Add attenuator bypass support
-Message-ID: <20200303210508.GD14692@roeck-us.net>
-References: <20200227084642.7057-1-chris.packham@alliedtelesis.co.nz>
- <20200227084642.7057-5-chris.packham@alliedtelesis.co.nz>
+        Tue, 3 Mar 2020 16:06:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=r8BD7PDvNtyj7rApxVf93dDwSISVOUC1PGpaU2/FE/8=; b=eHiytz6XTjdrIw6LB6wROAZf/N
+        VM5R41zbAXp2ZO6UcEVb0oYbjhiQTjiDWdEHjFMnVqIz1Mokv1zy21/3QNYOzIFBn7qXptR8p39i9
+        GwVH6m1mKCwX/CbvNysb4Ug7ZWGrrlJOIpuf1gl5wQZmd8c4LaAmajRVpNheNn6s08lhU+5NjCfnQ
+        ZyK47p8WKXQ1xW9mWTfKg7E8KZLVCvld8tTgJRzKORgzoV2du4OfdvAQEz2P+x86pN04Rx/OG0x8B
+        g1U1vA3vY9RowCfkm1Ys9EG+mtuBRgAcnT57FH0byMQccCgJNqtRvNQ8jCcmLTX0Fpx1JyI5wKgZt
+        esdZvzyA==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9Ejn-0007Q7-JQ; Tue, 03 Mar 2020 21:05:59 +0000
+Date:   Tue, 3 Mar 2020 13:05:59 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Alexey Dobriyan <adobriyan@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/5] proc: Use ppos instead of m->version
+Message-ID: <20200303210559.GV29971@bombadil.infradead.org>
+References: <20200229165910.24605-1-willy@infradead.org>
+ <20200229165910.24605-4-willy@infradead.org>
+ <20200303195529.GA17768@avx2>
+ <20200303202923.GT29971@bombadil.infradead.org>
+ <20200303205303.GA10772@avx2>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227084642.7057-5-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200303205303.GA10772@avx2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 09:46:41PM +1300, Chris Packham wrote:
-> From: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
+On Tue, Mar 03, 2020 at 11:53:03PM +0300, Alexey Dobriyan wrote:
+> On Tue, Mar 03, 2020 at 12:29:23PM -0800, Matthew Wilcox wrote:
+> > On Tue, Mar 03, 2020 at 10:55:29PM +0300, Alexey Dobriyan wrote:
+> > > On Sat, Feb 29, 2020 at 08:59:08AM -0800, Matthew Wilcox wrote:
+> > > > -static void *m_next(struct seq_file *m, void *v, loff_t *pos)
+> > > > +static void *m_next(struct seq_file *m, void *v, loff_t *ppos)
+> > > 
+> > > This looks like hungarian notation.
+> > 
+> > It's the standard naming convention used throughout the VFS.  loff_t is
+> > pos, loff_t * is ppos.
+> > 
+> > $ git grep 'loff_t \*' fs/*.c |wc
+> >      77     556    5233
+> > $ git grep 'loff_t \*ppos' fs/*.c |wc
+> >      43     309    2974
+> > $ git grep 'loff_t \*pos' fs/*.c |wc
+> >      22     168    1524
 > 
-> Added support for reading DTS properties to set attenuators on
-> device probe for the ADT7473, ADT7475, ADT7476, and ADT7490.
-> 
-> Signed-off-by: Logan Shaw <logan.shaw@alliedtelesis.co.nz>
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> Yes, people copy-pasted terrible thing for years!
+> Oh well, whatever...
 
-Applied, with two small changes; see inline.
+In an environment where we sometimes pass loff_t and sometimes pass
+loff_t *, this convention is a great way to catch copy-and-paste mistakes.
+If I have 'pos += done' in a function which takes a loff_t pos, and I
+copy-and-paste it to a function which takes a 'loff_t *pos', it's going
+to create a bug that hits at runtime.  If that function takes an
+loff_t *ppos instead, it'll be a compile-time error, and I'll know to
+transform it to *ppos += done;
 
-Thanks,
-Guenter
-
-> ---
-> 
-> Notes:
->     Changes in v5:
->     - None
->     
->     Changes in v4:
->     - use vendor prefix for new property
->     
->     Changes in v3:
->     - move config2 to struct adt7475_data
->     - set_property_bit() new helper function to set/clear bit based on dt
->       property value.
->     - rename to use load_attenuators()
-> 
->  drivers/hwmon/adt7475.c | 61 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 58 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
-> index 01c2eeb02aa9..3649b18359dc 100644
-> --- a/drivers/hwmon/adt7475.c
-> +++ b/drivers/hwmon/adt7475.c
-> @@ -19,6 +19,7 @@
->  #include <linux/hwmon-vid.h>
->  #include <linux/err.h>
->  #include <linux/jiffies.h>
-> +#include <linux/of.h>
->  #include <linux/util_macros.h>
->  
->  /* Indexes for the sysfs hooks */
-> @@ -193,6 +194,7 @@ struct adt7475_data {
->  	unsigned long measure_updated;
->  	bool valid;
->  
-> +	u8 config2;
->  	u8 config4;
->  	u8 config5;
->  	u8 has_voltage;
-> @@ -1458,6 +1460,55 @@ static int adt7475_update_limits(struct i2c_client *client)
->  	return 0;
->  }
->  
-> +static int set_property_bit(const struct i2c_client *client, char *property,
-> +			  u8 *config, u8 bit_index)
-
-Aligned continuation line with '('.
-
-> +{
-> +	u32 prop_value = 0;
-> +	int ret = of_property_read_u32(client->dev.of_node, property,
-> +					&prop_value);
-> +
-> +	if (!ret) {
-> +		if (prop_value)
-> +			*config |= (1 << bit_index);
-> +		else
-> +			*config &= ~(1 << bit_index);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int load_attenuators(const struct i2c_client *client, int chip,
-> +			    struct adt7475_data *data)
-> +{
-> +	int ret;
-> +
-> +	if (chip == adt7476 || chip == adt7490) {
-> +		set_property_bit(client, "adi,bypass-attenuator-in0",
-> +				 &data->config4, 4);
-> +		set_property_bit(client, "adi,bypass-attenuator-in1",
-> +				 &data->config4, 5);
-> +		set_property_bit(client, "adi,bypass-attenuator-in3",
-> +				 &data->config4, 6);
-> +		set_property_bit(client, "adi,bypass-attenuator-in4",
-> +				 &data->config4, 7);
-> +
-> +		ret = i2c_smbus_write_byte_data(client, REG_CONFIG4,
-> +						data->config4);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else if (chip == adt7473 || chip == adt7475) {
-> +		set_property_bit(client, "adi,bypass-attenuator-in1",
-> +				 &data->config2, 5);
-> +
-> +		ret = i2c_smbus_write_byte_data(client, REG_CONFIG2,
-> +						data->config2);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int adt7475_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> @@ -1472,7 +1523,7 @@ static int adt7475_probe(struct i2c_client *client,
->  	struct adt7475_data *data;
->  	struct device *hwmon_dev;
->  	int i, ret = 0, revision, group_num = 0;
-> -	u8 config2, config3;
-> +	u8 config3;
->  
->  	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
->  	if (data == NULL)
-> @@ -1546,8 +1597,12 @@ static int adt7475_probe(struct i2c_client *client,
->  	}
->  
->  	/* Voltage attenuators can be bypassed, globally or individually */
-> -	config2 = adt7475_read(REG_CONFIG2);
-> -	if (config2 & CONFIG2_ATTN) {
-> +	data->config2 = adt7475_read(REG_CONFIG2);
-> +	ret = load_attenuators(client, chip, data);
-> +	if (ret)
-> +		dev_err(&client->dev, "Error configuring attenuator bypass\n");
-
-I would expect this to be a dev_warn() or to abort and return an error.
-Assuming you want the code to continue in this case, I changed the message
-to dev_warn(). If that is not what you want, please let me know.
-
-> +
-> +	if (data->config2 & CONFIG2_ATTN) {
->  		data->bypass_attn = (0x3 << 3) | 0x3;
->  	} else {
->  		data->bypass_attn = ((data->config4 & CONFIG4_ATTN_IN10) >> 4) |
