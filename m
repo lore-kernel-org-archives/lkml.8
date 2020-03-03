@@ -6,302 +6,135 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCC3C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B959C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99FE215A4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7734B215A4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727735AbgCCH5X (ORCPT
+        id S1727752AbgCCH5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:57:23 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41417 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725879AbgCCH5X (ORCPT
+        Tue, 3 Mar 2020 02:57:33 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36639 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725879AbgCCH5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:57:23 -0500
-Received: from soja.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:13da])
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <o.rempel@pengutronix.de>)
-        id 1j92Qb-0004Of-PV; Tue, 03 Mar 2020 08:57:21 +0100
-Subject: Re: [PATCH V5 3/4] mailbox: imx: add SCU MU support
-To:     peng.fan@nxp.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, leonard.crestez@nxp.com, aisheng.dong@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1583221359-9285-1-git-send-email-peng.fan@nxp.com>
- <1583221359-9285-4-git-send-email-peng.fan@nxp.com>
-From:   Oleksij Rempel <o.rempel@pengutronix.de>
-Message-ID: <e67a61ab-5d2d-f0d1-2fbf-ab0173287356@pengutronix.de>
-Date:   Tue, 3 Mar 2020 08:57:21 +0100
+        Tue, 3 Mar 2020 02:57:32 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j16so3090818wrt.3;
+        Mon, 02 Mar 2020 23:57:31 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=GIpTxxRTdtqR1dz04Vc7cfNzKbDxGM90ZB3jr6ZSAEY=;
+        b=W0Si6s8cP1mhaiKzmeEqo3DB/iAmGgP+VsIWaAbLHhg03p9TqIEaZFJOtw1hiHD2yt
+         IYGwwen2uI5ZhI1BgDqi50KEZk7VJPPvfGbaFirzYtq2LjNE6eZP4/wwi8rd8DQFcBkL
+         q2OGRqUd6SOBiqsE96FCIgqv4BykYHSpo5DOuBUdnm6ABx/krW3RlXfBJG9nY+Lrsy9u
+         8dY/sFjFloGi5leamhZMd2QNIK67G82FWL0qMm+Sn87M9LKJ+skW+NbXoBH3GSFhvvl8
+         6NUtBd5HOY8bw+3zvUQ7Pox8Y6Sw2APRWTCaRySj5F58x1RPqNs37dmK99x2AiacnjZv
+         zKNA==
+X-Gm-Message-State: ANhLgQ28EZ5zfjRe45NQ4Yg33mQJiUoiDiS3X6MV1g7edM5FGiFNe0Hd
+        U5i1blmqOba79zQCF0uKJszpdMYPDPA=
+X-Google-Smtp-Source: ADFU+vvHkSh56FMbU3/BkuhFPwSMZKfBKZVRcWRi0hdXpLnzJ4aJ4p6k99RgisKOlQwn0LUUXJ6xxA==
+X-Received: by 2002:a5d:63c7:: with SMTP id c7mr4283436wrw.115.1583222250356;
+        Mon, 02 Mar 2020 23:57:30 -0800 (PST)
+Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
+        by smtp.gmail.com with ESMTPSA id u25sm2442095wml.17.2020.03.02.23.57.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 02 Mar 2020 23:57:29 -0800 (PST)
+Subject: Re: [PATCH 2/2] tty:serial:mvebu-uart:fix a wrong return
+To:     tangbin <tangbin@cmss.chinamobile.com>, gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200303071309.17172-1-tangbin@cmss.chinamobile.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <22c8d64b-5360-6495-8f83-75b52e86ca08@suse.cz>
+Date:   Tue, 3 Mar 2020 08:57:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <1583221359-9285-4-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200303071309.17172-1-tangbin@cmss.chinamobile.com>
+Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:13da
-X-SA-Exim-Mail-From: o.rempel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03. 03. 20, 8:13, tangbin wrote:
+> in this place,the right return should be
+> return PTR_ERR(),not return -PTR_ERR()
 
+One because missing. Like ", because PTR_ERR already returns a negative
+error and the probe function is expected to return a negative value in
+case of error."
 
-On 03.03.20 08:42, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> i.MX8/8X SCU MU is dedicated for communication between SCU and Cortex-A
-> cores from hardware design, and could not be reused for other purpose.
-> 
-> Per i.MX8/8X Reference mannual, Chapter "12.9.2.3.2 Messaging Examples",
->   Passing short messages: Transmit register(s) can be used to pass
->   short messages from one to four words in length. For example, when
->   a four-word message is desired, only one of the registers needs to
->   have its corresponding interrupt enable bit set at the receiver side;
->   the message’s first three words are written to the registers whose
->   interrupt is masked, and the fourth word is written to the other
->   register (which triggers an interrupt at the receiver side).
-> 
-> i.MX8/8X SCU firmware IPC is an implementation of passing short
-> messages. But current imx-mailbox driver only support one word
-> message, i.MX8/8X linux side firmware has to request four TX
-> and four RX to support IPC to SCU firmware. This is low efficent
-> and more interrupts triggered compared with one TX and
-> one RX.
-> 
-> To make SCU MU work,
->    - parse the size of msg.
->    - Only enable TR0/RR0 interrupt for transmit/receive message.
->    - For TX/RX, only support one TX channel and one RX channel
->    - For RX, support receive msg larger than 4 u32 words.
->    - Support 6 channels, TX0/RX0/RXDB[0-3], not support TXDB.
-> 
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Acked-by: Jiri Slaby <jslaby@suse.cz>
 
-Reviewed-by: Oleksij Rempel <o.rempel@pengutronix.de>
-
+> Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
 > ---
-> V5:
->   Code style cleanup
->   Add more debug msg
->   Drop __packed aligned
->   idx santity check in scu xlate
+>  drivers/tty/serial/mvebu-uart.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> V4:
->   Added separate chans init and xlate function for SCU MU
->   Limit chans to TX0/RX0/RXDB[0-3], max 6 chans.
->   Santity check to msg size
-> 
-> V3:
->   Added scu type tx/rx and SCU MU type
-> 
->   drivers/mailbox/imx-mailbox.c | 134 ++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 134 insertions(+)
-> 
-> diff --git a/drivers/mailbox/imx-mailbox.c b/drivers/mailbox/imx-mailbox.c
-> index df6c4ecd913c..3f28c769a1c1 100644
-> --- a/drivers/mailbox/imx-mailbox.c
-> +++ b/drivers/mailbox/imx-mailbox.c
-> @@ -4,6 +4,7 @@
->    */
->   
->   #include <linux/clk.h>
-> +#include <linux/firmware/imx/ipc.h>
->   #include <linux/interrupt.h>
->   #include <linux/io.h>
->   #include <linux/kernel.h>
-> @@ -27,6 +28,8 @@
->   #define IMX_MU_xCR_GIRn(x)	BIT(16 + (3 - (x)))
->   
->   #define IMX_MU_CHANS		16
-> +/* TX0/RX0/RXDB[0-3] */
-> +#define IMX_MU_SCU_CHANS	6
->   #define IMX_MU_CHAN_NAME_SIZE	20
->   
->   enum imx_mu_chan_type {
-> @@ -36,6 +39,11 @@ enum imx_mu_chan_type {
->   	IMX_MU_TYPE_RXDB,	/* Rx doorbell */
->   };
->   
-> +struct imx_sc_rpc_msg_max {
-> +	struct imx_sc_rpc_msg hdr;
-> +	u32 data[7];
-> +};
-> +
->   struct imx_mu_con_priv {
->   	unsigned int		idx;
->   	char			irq_desc[IMX_MU_CHAN_NAME_SIZE];
-> @@ -134,6 +142,63 @@ static int imx_mu_generic_rx(struct imx_mu_priv *priv,
->   	return 0;
->   }
->   
-> +static int imx_mu_scu_tx(struct imx_mu_priv *priv,
-> +			 struct imx_mu_con_priv *cp,
-> +			 void *data)
-> +{
-> +	struct imx_sc_rpc_msg_max *msg = data;
-> +	u32 *arg = data;
-> +	int i;
-> +
-> +	switch (cp->type) {
-> +	case IMX_MU_TYPE_TX:
-> +		if (msg->hdr.size > sizeof(*msg)) {
-> +			/*
-> +			 * The real message size can be different to
-> +			 * struct imx_sc_rpc_msg_max size
-> +			 */
-> +			dev_err(priv->dev, "Exceed max msg size (%li) on TX, got: %i\n", sizeof(*msg), msg->hdr.size);
-> +			return -EINVAL;
-> +		}
-> +
-> +		for (i = 0; i < msg->hdr.size; i++)
-> +			imx_mu_write(priv, *arg++, priv->dcfg->xTR[i % 4]);
-> +
-> +		imx_mu_xcr_rmw(priv, IMX_MU_xCR_TIEn(cp->idx), 0);
-> +		break;
-> +	default:
-> +		dev_warn_ratelimited(priv->dev, "Send data on wrong channel type: %d\n", cp->type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int imx_mu_scu_rx(struct imx_mu_priv *priv,
-> +			 struct imx_mu_con_priv *cp)
-> +{
-> +	struct imx_sc_rpc_msg_max msg;
-> +	u32 *data = (u32 *)&msg;
-> +	int i;
-> +
-> +	imx_mu_xcr_rmw(priv, 0, IMX_MU_xCR_RIEn(0));
-> +	*data++ = imx_mu_read(priv, priv->dcfg->xRR[0]);
-> +
-> +	if (msg.hdr.size > sizeof(msg)) {
-> +		dev_err(priv->dev, "Exceed max msg size (%li) on RX, got: %i\n",
-> +			sizeof(msg), msg.hdr.size);
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (i = 1; i < msg.hdr.size; i++)
-> +		*data++ = imx_mu_read(priv, priv->dcfg->xRR[i % 4]);
-> +
-> +	imx_mu_xcr_rmw(priv, IMX_MU_xCR_RIEn(0), 0);
-> +	mbox_chan_received_data(cp->chan, (void *)&msg);
-> +
-> +	return 0;
-> +}
-> +
->   static void imx_mu_txdb_tasklet(unsigned long data)
->   {
->   	struct imx_mu_con_priv *cp = (struct imx_mu_con_priv *)data;
-> @@ -263,6 +328,42 @@ static const struct mbox_chan_ops imx_mu_ops = {
->   	.shutdown = imx_mu_shutdown,
->   };
->   
-> +static struct mbox_chan *imx_mu_scu_xlate(struct mbox_controller *mbox,
-> +					  const struct of_phandle_args *sp)
-> +{
-> +	u32 type, idx, chan;
-> +
-> +	if (sp->args_count != 2) {
-> +		dev_err(mbox->dev, "Invalid argument count %d\n", sp->args_count);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	type = sp->args[0]; /* channel type */
-> +	idx = sp->args[1]; /* index */
-> +
-> +	switch (type) {
-> +	case IMX_MU_TYPE_TX:
-> +	case IMX_MU_TYPE_RX:
-> +		if (idx != 0)
-> +			dev_err(mbox->dev, "Invalid chan idx: %d\n", idx);
-> +		chan = type;
-> +		break;
-> +	case IMX_MU_TYPE_RXDB:
-> +		chan = 2 + idx;
-> +		break;
-> +	default:
-> +		dev_err(mbox->dev, "Invalid chan type: %d\n", type);
-> +		return NULL;
-> +	}
-> +
-> +	if (chan >= mbox->num_chans) {
-> +		dev_err(mbox->dev, "Not supported channel number: %d. (type: %d, idx: %d)\n", chan, type, idx);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	return &mbox->chans[chan];
-> +}
-> +
->   static struct mbox_chan * imx_mu_xlate(struct mbox_controller *mbox,
->   				       const struct of_phandle_args *sp)
->   {
-> @@ -310,6 +411,28 @@ static void imx_mu_init_generic(struct imx_mu_priv *priv)
->   	imx_mu_write(priv, 0, priv->dcfg->xCR);
->   }
->   
-> +static void imx_mu_init_scu(struct imx_mu_priv *priv)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < IMX_MU_SCU_CHANS; i++) {
-> +		struct imx_mu_con_priv *cp = &priv->con_priv[i];
-> +
-> +		cp->idx = i < 2 ? 0 : i - 2;
-> +		cp->type = i < 2 ? i : IMX_MU_TYPE_RXDB;
-> +		cp->chan = &priv->mbox_chans[i];
-> +		priv->mbox_chans[i].con_priv = cp;
-> +		snprintf(cp->irq_desc, sizeof(cp->irq_desc),
-> +			 "imx_mu_chan[%i-%i]", cp->type, cp->idx);
-> +	}
-> +
-> +	priv->mbox.num_chans = IMX_MU_SCU_CHANS;
-> +	priv->mbox.of_xlate = imx_mu_scu_xlate;
-> +
-> +	/* Set default MU configuration */
-> +	imx_mu_write(priv, 0, priv->dcfg->xCR);
-> +}
-> +
->   static int imx_mu_probe(struct platform_device *pdev)
->   {
->   	struct device *dev = &pdev->dev;
-> @@ -396,9 +519,20 @@ static const struct imx_mu_dcfg imx_mu_cfg_imx7ulp = {
->   	.xCR	= 0x64,
->   };
->   
-> +static const struct imx_mu_dcfg imx_mu_cfg_imx8_scu = {
-> +	.tx	= imx_mu_scu_tx,
-> +	.rx	= imx_mu_scu_rx,
-> +	.init	= imx_mu_init_scu,
-> +	.xTR	= {0x0, 0x4, 0x8, 0xc},
-> +	.xRR	= {0x10, 0x14, 0x18, 0x1c},
-> +	.xSR	= 0x20,
-> +	.xCR	= 0x24,
-> +};
-> +
->   static const struct of_device_id imx_mu_dt_ids[] = {
->   	{ .compatible = "fsl,imx7ulp-mu", .data = &imx_mu_cfg_imx7ulp },
->   	{ .compatible = "fsl,imx6sx-mu", .data = &imx_mu_cfg_imx6sx },
-> +	{ .compatible = "fsl,imx8-mu-scu", .data = &imx_mu_cfg_imx8_scu },
->   	{ },
->   };
->   MODULE_DEVICE_TABLE(of, imx_mu_dt_ids);
+> diff --git a/drivers/tty/serial/mvebu-uart.c b/drivers/tty/serial/mvebu-uart.c
+> index c12a12556..4e9a59071 100644
+> --- a/drivers/tty/serial/mvebu-uart.c
+> +++ b/drivers/tty/serial/mvebu-uart.c
+> @@ -851,7 +851,7 @@ static int mvebu_uart_probe(struct platform_device *pdev)
+>  
+>  	port->membase = devm_ioremap_resource(&pdev->dev, reg);
+>  	if (IS_ERR(port->membase))
+> -		return -PTR_ERR(port->membase);
+> +		return PTR_ERR(port->membase);
+>  
+>  	mvuart = devm_kzalloc(&pdev->dev, sizeof(struct mvebu_uart),
+>  			      GFP_KERNEL);
 > 
 
-Kind regards,
-Oleksij Rempel
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+js
+suse labs
