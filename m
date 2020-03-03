@@ -2,244 +2,234 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB0CCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50669C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E4220842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:42:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E1CF208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 04:44:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mvNnPvKL"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="i/XtqTcR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727350AbgCCEm2 (ORCPT
+        id S1727389AbgCCEob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 23:42:28 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39927 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgCCEm1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 23:42:27 -0500
-Received: by mail-pf1-f196.google.com with SMTP id l7so815942pff.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 20:42:27 -0800 (PST)
+        Mon, 2 Mar 2020 23:44:31 -0500
+Received: from mail-mw2nam10on2041.outbound.protection.outlook.com ([40.107.94.41]:6181
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726956AbgCCEoa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 23:44:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IDH6T9mHD03JYQ7kvSRdp77ESeJpXhQtqcdu0XGnQfVHGwc7Iboox3bE8KgewdJdwxbzOo8aY6/iaDuhwcogFTrlt3hYSebHETIoeYY7D10eBkiAD/ZRyzqbbMsQ7m1cuJjdi0Mbgbm36/A3iZJiChZ6CirjKc4dRmgQeQm1BGA2zJzssBR7zgt2vrZ46TV2SVzb8z9ltGx0j+HtJQBLtR5Z4xdAo++Hh6LrCixOO7wvw+5DHd1N2T7rJCrHsDJyb9iVz/qhMw6F1Vc1/ywPIfCoJUAexrGBI5w9x2w+38tou98wnkmuYxk1FVOcfFA4+uUo1Tac5iEG4OD4VkTUlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kE5R2lMFhZ8iXNGQ946y18Dn0fQALIo0xlGuMTTMYgI=;
+ b=NwqODKCjtLwPAuL57YxKoa3dncHd5cxCJeJg8jY6ohP9gAlhh7ob8XiR0RK+7Z/B+TwAgvUn3ztALQWiee4mE5x/9toTb2X/Q6L6epqKePdNWJ9XeUUa2FkTgCkezr50dvHMGACw0E89QubAp90ORySOpYgXN+EOW1SOgNwFE+TVyibxyAfXsoF3KWfAwC2XNArYj6LLhLRbZ1TT4WsxGA5FAMB8eobKgivnJFwkp3nYQc63fojB2Fkt69kckSxG8Fy2thqiiS9otaClmYJoPjLx42zyHpcE2zJchUSPGfRjrCkSvJE01YL0/if1TkxKajhd3MrfaMGIo2U42edbfQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U6duRWraf8EaQi0o/dvKzroqytjT7Ei3jM9dYO7Znh0=;
-        b=mvNnPvKL2qk6jSdT/iVB8CdoDzZTE31ZGy9g/3g1FuUV7HBrgauX0+LUVlue54XNL3
-         EuVrzaJQ8eZs8U1cQkhmPYXJq7YpppJjmRDennu10PiBJjcneJ2owqrYOLSQ2dAUwIK2
-         3/gOfs5/108g/w/N8Ga4F50+a6Wg8m6rup7QFrAQBV3xj98+dsSa1reMogpZnc1X5mUH
-         5nnb2Ghh8mWRzcDSmTBbV4PDBMmc+wce1Hlz0ZFLvJENgPuXmmqAnouLVAYG1kW3XfDM
-         NCcyxrG67czwMIvexo4u8KnlYXr9t4JUdOWKZoqTJojgnhKfBD1GkAFyxzSPHZa3OPoy
-         BJ/w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=U6duRWraf8EaQi0o/dvKzroqytjT7Ei3jM9dYO7Znh0=;
-        b=ZU3ogD8krDkylqpOR6d2lfmxj6X92sZdm0tb7lSjLRHBbROTP/+h6Zrh4osuVWTVB+
-         UmhJbHbI9YSw6s9dBoIj1sZ1K5fXlEYCgyQtwT7T8AwrVSS/gFFdT/e4SABzVSFNVA17
-         eZOXaHo+KYmDQFLU0zSULpvq5KztbZOMqNwqPtRI4BxjsNMI7rO7sCDdi5EVuaEFVMFn
-         pTwDUgXXlb2855yJvI0mz9EAwHw3idZVMZ3T4jU5/ZWOFUbGsYUVeqWwR6TXdb8mNtC9
-         okP50A9AICkuOJBvCJZx/uKTGVLDeePjiA6H1yD4Gldocaftt6h/GpytscolxfsohVFW
-         dMmg==
-X-Gm-Message-State: ANhLgQ3w3RT4sL6i6Bw/tHOG6+aFV4smPjJREKx7cjq0aWbnM0a5F/2G
-        IZgw7m0VK6hp6FwWwd+ZU/rB3m5u
-X-Google-Smtp-Source: ADFU+vvAhmvbn+zxwYplvJTYDWCVbROZowmT6QIvRNLnCyZnul2KOVCgOIB5r4bZQgbC5V+GN0Qz2g==
-X-Received: by 2002:aa7:93a6:: with SMTP id x6mr2424759pff.72.1583210546365;
-        Mon, 02 Mar 2020 20:42:26 -0800 (PST)
-Received: from localhost.localdomain (167.117.30.125.dy.iij4u.or.jp. [125.30.117.167])
-        by smtp.gmail.com with ESMTPSA id x4sm23116465pff.143.2020.03.02.20.42.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 20:42:25 -0800 (PST)
-From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-To:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Lech Perczak <l.perczak@camlintechnologies.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH] printk: queue wake_up_klogd irq_work only if per-CPU areas are ready
-Date:   Tue,  3 Mar 2020 13:40:59 +0900
-Message-Id: <20200303044059.1325-1-sergey.senozhatsky@gmail.com>
-X-Mailer: git-send-email 2.25.1
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=kE5R2lMFhZ8iXNGQ946y18Dn0fQALIo0xlGuMTTMYgI=;
+ b=i/XtqTcRGu/OUDWU6GE4wffe1zwQMYs127My5K5IkwIIe8h2BI4Yc2vQH7VjhCN4hGn6e059hW5D3dCRwY7A+dpiLMf6y/FQnAZjwmi+d4dRvlfUwv2Blw0FhhEALJzSzreitrv1vkrMbdIrSxDv6WkGhHx9J0JD2DOYq70gcbs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Ashish.Kalra@amd.com; 
+Received: from SN1PR12MB2528.namprd12.prod.outlook.com (2603:10b6:802:28::33)
+ by SN1PR12MB2511.namprd12.prod.outlook.com (2603:10b6:802:23::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Tue, 3 Mar
+ 2020 04:42:47 +0000
+Received: from SN1PR12MB2528.namprd12.prod.outlook.com
+ ([fe80::7015:3d60:8f9b:5dad]) by SN1PR12MB2528.namprd12.prod.outlook.com
+ ([fe80::7015:3d60:8f9b:5dad%6]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
+ 04:42:47 +0000
+Date:   Tue, 3 Mar 2020 04:42:41 +0000
+From:   Ashish Kalra <ashish.kalra@amd.com>
+To:     Steve Rutherford <srutherford@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        David Rientjes <rientjes@google.com>, X86 ML <x86@kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Brijesh Singh <brijesh.singh@amd.com>
+Subject: Re: [PATCH 00/12] SEV Live Migration Patchset.
+Message-ID: <20200303044241.GA2578@ashkalra_ubuntu_server>
+References: <cover.1581555616.git.ashish.kalra@amd.com>
+ <CALCETrXE9cWd3TbBZMsAwmSwWpDYFsicLZ=amHLWsvE0burQSw@mail.gmail.com>
+ <20200213230916.GB8784@ashkalra_ubuntu_server>
+ <CALCETrUQBsof3fMf-Dj7RDJJ9GDdVGNOML_ZyeSmJtcp_LhdPQ@mail.gmail.com>
+ <20200217194959.GA14833@ashkalra_ubuntu_server>
+ <CABayD+dVEMBhva5DOtBph+Ms559q014pbjP9=6ycJ5KpiiJzVg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABayD+dVEMBhva5DOtBph+Ms559q014pbjP9=6ycJ5KpiiJzVg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: SN4PR0501CA0066.namprd05.prod.outlook.com
+ (2603:10b6:803:41::43) To SN1PR12MB2528.namprd12.prod.outlook.com
+ (2603:10b6:802:28::33)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ashkalra_ubuntu_server (165.204.77.1) by SN4PR0501CA0066.namprd05.prod.outlook.com (2603:10b6:803:41::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.5 via Frontend Transport; Tue, 3 Mar 2020 04:42:46 +0000
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 56ea632c-36c6-4684-c32e-08d7bf2d520f
+X-MS-TrafficTypeDiagnostic: SN1PR12MB2511:|SN1PR12MB2511:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN1PR12MB2511A3399238A01B73D589658EE40@SN1PR12MB2511.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 03319F6FEF
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(39860400002)(366004)(136003)(189003)(199004)(66946007)(66476007)(33656002)(66556008)(316002)(54906003)(956004)(1076003)(2906002)(6916009)(5660300002)(7416002)(53546011)(9686003)(8676002)(33716001)(55016002)(4326008)(478600001)(26005)(8936002)(44832011)(86362001)(6666004)(81156014)(6496006)(52116002)(16526019)(81166006)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN1PR12MB2511;H:SN1PR12MB2528.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: I1QcbbsGG8k5LgWW649WVpr2llkYbflzCZQdqxgsFBIJ6HfN7xM+ln70lRyc8XGf0h9Ru5jlu8uhrMDeXOfzmgFldhxZfXoTfZlp0d+XooG3GbnEQ9wwqFkE2DHx15Iv8zk3dfkuASTSz1uAT5AUZfb0Dz1PjEncDA5YzzfWHFk4xEaN8Fo2JI2waLJ+7pXdAyvPp+/xPFkz8hdmi+NIWeQ5FL1VX/u0C4w2eX2DaDO5gR8y0QfMKWGFsiQScdyrTqTj/UhcigaYnruPNrVcfbQ5NJWOqlJLpoaKH6vCz8KJrBY/6uo3+G2fGkw7+Vf3GNgVKhoyvkId6FUwL7KCBrVOEXKV4VJzYb4cUiXx3qHuc+3TYGAfLRs38RnCOJGd9z7m0XWhpDtC0qdCohOiptezGLBFJy3wcYfITI+Du4w/gqMCJ8ePUM5XUDAwv+Mh
+X-MS-Exchange-AntiSpam-MessageData: v591p+YEWeWOppKyqkjZQLlu96bFThZ7wjdh1/ET4zKLFAEwZ9xjm6IJEOAe56G04t0PAwRr0wRB9yeIXfpE28sPUvtWUDRL7mwzbtFtzzwrW6cRFzI9e0R92qj3ynVtKXxfqWNjm84LP+SdYWOKJg==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 56ea632c-36c6-4684-c32e-08d7bf2d520f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Mar 2020 04:42:47.5947
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YgXLosfuvzbSb8H6kZhljebazb06Y224ePoQzL0+XmQF2mWCPoHhXdCDbniu03/gV/jA/d31IBg72UTmGGqTHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN1PR12MB2511
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-printk_deferred(), similarly to printk_safe/printk_nmi,
-does not immediately attempt to print a new message on
-the consoles, avoiding calls into non-reentrant kernel
-paths, e.g. scheduler or timekeeping, which potentially
-can deadlock the system. Those printk() flavors, instead,
-rely on per-CPU flush irq_work to print messages from
-safer contexts. For same reasons (recursive scheduler or
-timekeeping calls) printk() uses per-CPU irq_work in
-order to wake up user space syslog/kmsg readers.
+On Mon, Mar 02, 2020 at 05:05:29PM -0800, Steve Rutherford wrote:
+> I think this patch series might be incompatible with kexec, but I'm
+> not sure since I'm really not familiar with that subsystem. It seems
+> like you need to explicitly mark all shared pages as encrypted again
+> before rebooting into the new kernel. If you don't do this, and the
+> newly booted kernel believes RAM is encrypted and has always been, you
+> won't flip formerly decrypted shared device pages back to encrypted.
+> For example, if the swiotlb moves, you need to tell KVM that the old
+> swiotlb pages are now encrypted.
+> 
+> I could imagine this being handled implicitly by the way kexec handles
+> freeing memory, but I would find this surprising. I only see
+> enlightenment for handling SME's interaction with the initial image in
+> the kexec implementation.
+> 
 
-However, only printk_safe/printk_nmi do make sure that
-per-CPU areas have been initialised and that it's safe
-to modify per-CPU irq_work. This means that, for instance,
-should printk_deferred() be invoked "too early", that
-is before per-CPU areas are initialised, printk_deferred()
-will perform illegal per-CPU access.
+I believe that there already is enlightenment for SEV handling in kexec
+implementation, but you are right as there is no support currently for 
+resetting the page encryption bitmap in the SEV handling code in kexec,
+similar to what we do for a guest reboot event.
 
-Lech Perczak [0] reports that after commit 1b710b1b10ef
-("char/random: silence a lockdep splat with printk()")
-user-space syslog/kmsg readers are not able to read new
-kernel messages. The reason is printk_deferred() being
-called too early (as was pointed out by Petr and John).
+This support probably needs to be added as part of the
+arch_kexec_{post,pre}_{alloc,free}_pages() interface.
 
-Fix printk_deferred() and do not queue per-CPU irq_work
-before per-CPU areas are initialized.
+Thanks,
+Ashish
 
-[0] https://lore.kernel.org/lkml/aa0732c6-5c4e-8a8b-a1c1-75ebe3dca05b@camlintechnologies.com/
-
-Signed-off-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Reported-by: Lech Perczak <l.perczak@camlintechnologies.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Theodore Ts'o <tytso@mit.edu>
-Cc: John Ogness <john.ogness@linutronix.de>
----
- kernel/printk/internal.h    |  3 +++
- kernel/printk/printk.c      | 31 +++++++++++++++++++++++++++++++
- kernel/printk/printk_safe.c | 11 +----------
- 3 files changed, 35 insertions(+), 10 deletions(-)
-
-diff --git a/kernel/printk/internal.h b/kernel/printk/internal.h
-index c8e6ab689d42..8ed2b7737063 100644
---- a/kernel/printk/internal.h
-+++ b/kernel/printk/internal.h
-@@ -23,6 +23,8 @@ __printf(1, 0) int vprintk_func(const char *fmt, va_list args);
- void __printk_safe_enter(void);
- void __printk_safe_exit(void);
- 
-+bool printk_percpu_data_ready(void);
-+
- #define printk_safe_enter_irqsave(flags)	\
- 	do {					\
- 		local_irq_save(flags);		\
-@@ -64,4 +66,5 @@ __printf(1, 0) int vprintk_func(const char *fmt, va_list args) { return 0; }
- #define printk_safe_enter_irq() local_irq_disable()
- #define printk_safe_exit_irq() local_irq_enable()
- 
-+bool printk_percpu_data_ready(void) { return false; }
- #endif /* CONFIG_PRINTK */
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index ad4606234545..d951d35a0786 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -461,6 +461,18 @@ static char __log_buf[__LOG_BUF_LEN] __aligned(LOG_ALIGN);
- static char *log_buf = __log_buf;
- static u32 log_buf_len = __LOG_BUF_LEN;
- 
-+/*
-+ * We cannot access per-CPU data (e.g. per-CPU flush irq_work) before
-+ * per_cpu_areas are initialised. This variable is set to true when
-+ * it's safe to access per-CPU data.
-+ */
-+static bool __printk_percpu_data_ready __read_mostly;
-+
-+bool printk_percpu_data_ready(void)
-+{
-+	return __printk_percpu_data_ready;
-+}
-+
- /* Return log buffer address */
- char *log_buf_addr_get(void)
- {
-@@ -1147,12 +1159,25 @@ static void __init log_buf_add_cpu(void)
- static inline void log_buf_add_cpu(void) {}
- #endif /* CONFIG_SMP */
- 
-+static void __init set_percpu_data_ready(void)
-+{
-+	__printk_percpu_data_ready = true;
-+}
-+
- void __init setup_log_buf(int early)
- {
- 	unsigned long flags;
- 	char *new_log_buf;
- 	unsigned int free;
- 
-+	/*
-+	 * Some archs call setup_log_buf() multiple times - first is very
-+	 * early, e.g. from setup_arch(), and second - when percpu_areas
-+	 * are initialised.
-+	 */
-+	if (!early)
-+		set_percpu_data_ready();
-+
- 	if (log_buf != __log_buf)
- 		return;
- 
-@@ -3009,6 +3034,9 @@ static DEFINE_PER_CPU(struct irq_work, wake_up_klogd_work) = {
- 
- void wake_up_klogd(void)
- {
-+	if (!printk_percpu_data_ready())
-+		return;
-+
- 	preempt_disable();
- 	if (waitqueue_active(&log_wait)) {
- 		this_cpu_or(printk_pending, PRINTK_PENDING_WAKEUP);
-@@ -3019,6 +3047,9 @@ void wake_up_klogd(void)
- 
- void defer_console_output(void)
- {
-+	if (!printk_percpu_data_ready())
-+		return;
-+
- 	preempt_disable();
- 	__this_cpu_or(printk_pending, PRINTK_PENDING_OUTPUT);
- 	irq_work_queue(this_cpu_ptr(&wake_up_klogd_work));
-diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
-index b4045e782743..d9a659a686f3 100644
---- a/kernel/printk/printk_safe.c
-+++ b/kernel/printk/printk_safe.c
-@@ -27,7 +27,6 @@
-  * There are situations when we want to make sure that all buffers
-  * were handled or when IRQs are blocked.
-  */
--static int printk_safe_irq_ready __read_mostly;
- 
- #define SAFE_LOG_BUF_LEN ((1 << CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT) -	\
- 				sizeof(atomic_t) -			\
-@@ -51,7 +50,7 @@ static DEFINE_PER_CPU(struct printk_safe_seq_buf, nmi_print_seq);
- /* Get flushed in a more safe context. */
- static void queue_flush_work(struct printk_safe_seq_buf *s)
- {
--	if (printk_safe_irq_ready)
-+	if (printk_percpu_data_ready())
- 		irq_work_queue(&s->work);
- }
- 
-@@ -402,14 +401,6 @@ void __init printk_safe_init(void)
- #endif
- 	}
- 
--	/*
--	 * In the highly unlikely event that a NMI were to trigger at
--	 * this moment. Make sure IRQ work is set up before this
--	 * variable is set.
--	 */
--	barrier();
--	printk_safe_irq_ready = 1;
--
- 	/* Flush pending messages that did not have scheduled IRQ works. */
- 	printk_safe_flush();
- }
--- 
-2.25.1
-
+> On Mon, Feb 17, 2020 at 11:50 AM Ashish Kalra <ashish.kalra@amd.com> wrote:
+> >
+> > On Fri, Feb 14, 2020 at 10:58:46AM -0800, Andy Lutomirski wrote:
+> > > On Thu, Feb 13, 2020 at 3:09 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
+> > > >
+> > > > On Wed, Feb 12, 2020 at 09:43:41PM -0800, Andy Lutomirski wrote:
+> > > > > On Wed, Feb 12, 2020 at 5:14 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
+> > > > > >
+> > > > > > From: Ashish Kalra <ashish.kalra@amd.com>
+> > > > > >
+> > > > > > This patchset adds support for SEV Live Migration on KVM/QEMU.
+> > > > >
+> > > > > I skimmed this all and I don't see any description of how this all works.
+> > > > >
+> > > > > Does any of this address the mess in svm_register_enc_region()?  Right
+> > > > > now, when QEMU (or a QEMU alternative) wants to allocate some memory
+> > > > > to be used for guest encrypted pages, it mmap()s some memory and the
+> > > > > kernel does get_user_pages_fast() on it.  The pages are kept pinned
+> > > > > for the lifetime of the mapping.  This is not at all okay.  Let's see:
+> > > > >
+> > > > >  - The memory is pinned and it doesn't play well with the Linux memory
+> > > > > management code.  You just wrote a big patch set to migrate the pages
+> > > > > to a whole different machines, but we apparently can't even migrate
+> > > > > them to a different NUMA node or even just a different address.  And
+> > > > > good luck swapping it out.
+> > > > >
+> > > > >  - The memory is still mapped in the QEMU process, and that mapping is
+> > > > > incoherent with actual guest access to the memory.  It's nice that KVM
+> > > > > clflushes it so that, in principle, everything might actually work,
+> > > > > but this is gross.  We should not be exposing incoherent mappings to
+> > > > > userspace.
+> > > > >
+> > > > > Perhaps all this fancy infrastructure you're writing for migration and
+> > > > > all this new API surface could also teach the kernel how to migrate
+> > > > > pages from a guest *to the same guest* so we don't need to pin pages
+> > > > > forever.  And perhaps you could put some thought into how to improve
+> > > > > the API so that it doesn't involve nonsensical incoherent mappings.o
+> > > >
+> > > > As a different key is used to encrypt memory in each VM, the hypervisor
+> > > > can't simply copy the the ciphertext from one VM to another to migrate
+> > > > the VM.  Therefore, the AMD SEV Key Management API provides a new sets
+> > > > of function which the hypervisor can use to package a guest page for
+> > > > migration, while maintaining the confidentiality provided by AMD SEV.
+> > > >
+> > > > There is a new page encryption bitmap created in the kernel which
+> > > > keeps tracks of encrypted/decrypted state of guest's pages and this
+> > > > bitmap is updated by a new hypercall interface provided to the guest
+> > > > kernel and firmware.
+> > > >
+> > > > KVM_GET_PAGE_ENC_BITMAP ioctl can be used to get the guest page encryption
+> > > > bitmap. The bitmap can be used to check if the given guest page is
+> > > > private or shared.
+> > > >
+> > > > During the migration flow, the SEND_START is called on the source hypervisor
+> > > > to create an outgoing encryption context. The SEV guest policy dictates whether
+> > > > the certificate passed through the migrate-set-parameters command will be
+> > > > validated. SEND_UPDATE_DATA is called to encrypt the guest private pages.
+> > > > After migration is completed, SEND_FINISH is called to destroy the encryption
+> > > > context and make the VM non-runnable to protect it against cloning.
+> > > >
+> > > > On the target machine, RECEIVE_START is called first to create an
+> > > > incoming encryption context. The RECEIVE_UPDATE_DATA is called to copy
+> > > > the received encrypted page into guest memory. After migration has
+> > > > completed, RECEIVE_FINISH is called to make the VM runnable.
+> > > >
+> > >
+> > > Thanks!  This belongs somewhere in the patch set.
+> > >
+> > > You still haven't answered my questions about the existing coherency
+> > > issues and whether the same infrastructure can be used to migrate
+> > > guest pages within the same machine.
+> >
+> > Page Migration and Live Migration are separate features and one of my
+> > colleagues is currently working on making page migration possible and removing
+> > SEV Guest pinning requirements.
+> > >
+> > > Also, you're making guest-side and host-side changes.  What ensures
+> > > that you don't try to migrate a guest that doesn't support the
+> > > hypercall for encryption state tracking?
+> >
+> > This is a good question and it is still an open-ended question. There
+> > are two possibilities here: guest does not have any unencrypted pages
+> > (for e.g booting 32-bit) and so it does not make any hypercalls, and
+> > the other possibility is that the guest does not have support for
+> > the newer hypercall.
+> >
+> > In the first case, all the guest pages are then assumed to be
+> > encrypted and live migration happens as such.
+> >
+> > For the second case, we have been discussing this internally,
+> > and one option is to extend the KVM capabilites/feature bits to check for this ?
+> >
+> > Thanks,
+> > Ashish
