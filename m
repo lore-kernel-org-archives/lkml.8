@@ -2,150 +2,102 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC5F4C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50E64C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7042214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D00F214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:26:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R4mC+8Wd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728663AbgCCKZw (ORCPT
+        id S1728705AbgCCK01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:25:52 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37483 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728473AbgCCKZw (ORCPT
+        Tue, 3 Mar 2020 05:26:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58577 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728473AbgCCK00 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:25:52 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j94k9-00048f-UU; Tue, 03 Mar 2020 10:25:42 +0000
-Date:   Tue, 3 Mar 2020 11:25:41 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     David Howells <dhowells@redhat.com>, Ian Kent <raven@themaw.net>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200303102541.diud7za3vvjvqco4@wittgenstein>
-References: <1582644535.3361.8.camel@HansenPartnership.com>
- <20200228155244.k4h4hz3dqhl7q7ks@wittgenstein>
- <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303100045.zqntjjjv6npvs5zl@wittgenstein>
- <CAJfpegu_O=wQsewDWdM39dhkrEoMPG4ZBkTQOsWTgFnYmvrLeA@mail.gmail.com>
+        Tue, 3 Mar 2020 05:26:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583231185;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qg05cq73WzBGGAry/Xv5FvYaaU5AB/YsxHlJBvC5Ieo=;
+        b=R4mC+8WdA6xZZ2GA6XRpNACKlT+38xyl2SCvELbCRVvDSafSve27Izc8BN/07QsfJP53AQ
+        p7HAHt8q8H4jeCL+BXkl7kiKqIRP79CUzM0rs3Be7YoCD6F5McIM47ThS9WH7ZaYeIb/2/
+        nKroAj8mZIQXLIRE13eFGiM9BGtTP/0=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-213-PPBmZvihN1ed1oEJUM2P9Q-1; Tue, 03 Mar 2020 05:26:23 -0500
+X-MC-Unique: PPBmZvihN1ed1oEJUM2P9Q-1
+Received: by mail-wr1-f72.google.com with SMTP id m18so995187wro.22
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 02:26:23 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qg05cq73WzBGGAry/Xv5FvYaaU5AB/YsxHlJBvC5Ieo=;
+        b=fTYp63N2bveU1ecm3VBw3JcQ4uZ5212WZKO6iT/LVPUtn6aGKOWR5kLyhw6c6x7p+/
+         cZD+3tT83pR9kHiK4I+FUOBVxdgndyR0W4QDCaLYXC4gKRL5uNtK7yO1PdXIY1JJHCrX
+         L5WnqZpWItBis3iAGVQQXnHnEAZEgnWndDEBQBnQwy0Mm6fmWoV+NSNSR1NKNKK8Jb94
+         IoGZ0bhsUzsUkrR3nWKpnDXM++qzqvsJVKDb5d/FnuvwgLCCb119RPqFv8flMr5GyMtP
+         0NFUWMkcf0NLwvwvHmJ4n94XO5YJg3hTJPxSnrwyGrJBi89hB0Tn8ja7D5KCP4Hkot3s
+         mIqg==
+X-Gm-Message-State: ANhLgQ10I7ut75ALg2wXZ7tM0hGgkxUL8IaPtqZ7DQ/borUfLTjt7NCr
+        Rap1lQbj44nx13G4BY3edc6g6bZ3K9BpXCVF08FtM8pU/ZpLOVNtjNN/PMIGiR+265pXjsyvgIc
+        3+we4tFDedafIy7r+fPJMsINw
+X-Received: by 2002:a7b:c010:: with SMTP id c16mr3653511wmb.148.1583231182069;
+        Tue, 03 Mar 2020 02:26:22 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vttGcMcE2BIxjss8IG6DykhJvTycSZ+bjh9Lev0XveVbRwLE+LNmMMY2pIjdVyXsWaMa0kqxA==
+X-Received: by 2002:a7b:c010:: with SMTP id c16mr3653482wmb.148.1583231181802;
+        Tue, 03 Mar 2020 02:26:21 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id l17sm32608641wro.77.2020.03.03.02.26.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 02:26:21 -0800 (PST)
+Subject: Re: [PATCH v2 08/13] KVM: x86: Dynamically allocate per-vCPU
+ emulation context
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200218232953.5724-1-sean.j.christopherson@intel.com>
+ <20200218232953.5724-9-sean.j.christopherson@intel.com>
+ <87wo89i7e3.fsf@vitty.brq.redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <83bd7c0c-ac3c-8ab5-091f-598324156d27@redhat.com>
+Date:   Tue, 3 Mar 2020 11:26:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <87wo89i7e3.fsf@vitty.brq.redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAJfpegu_O=wQsewDWdM39dhkrEoMPG4ZBkTQOsWTgFnYmvrLeA@mail.gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 11:13:50AM +0100, Miklos Szeredi wrote:
-> On Tue, Mar 3, 2020 at 11:00 AM Christian Brauner
-> <christian.brauner@ubuntu.com> wrote:
-> >
-> > On Tue, Mar 03, 2020 at 10:26:21AM +0100, Miklos Szeredi wrote:
-> > > On Tue, Mar 3, 2020 at 10:13 AM David Howells <dhowells@redhat.com> wrote:
-> > > >
-> > > > Miklos Szeredi <miklos@szeredi.hu> wrote:
-> > > >
-> > > > > I'm doing a patch.   Let's see how it fares in the face of all these
-> > > > > preconceptions.
-> > > >
-> > > > Don't forget the efficiency criterion.  One reason for going with fsinfo(2) is
-> > > > that scanning /proc/mounts when there are a lot of mounts in the system is
-> > > > slow (not to mention the global lock that is held during the read).
-> > > >
-> > > > Now, going with sysfs files on top of procfs links might avoid the global
-> > > > lock, and you can avoid rereading the options string if you export a change
-> > > > notification, but you're going to end up injecting a whole lot of pathwalk
-> > > > latency into the system.
-> > >
-> > > Completely irrelevant.  Cached lookup is so much optimized, that you
-> > > won't be able to see any of it.
-> > >
-> > > No, I don't think this is going to be a performance issue at all, but
-> > > if anything we could introduce a syscall
-> > >
-> > >   ssize_t readfile(int dfd, const char *path, char *buf, size_t
-> > > bufsize, int flags);
-> > >
-> > > that is basically the equivalent of open + read + close, or even a
-> > > vectored variant that reads multiple files.  But that's off topic
-> > > again, since I don't think there's going to be any performance issue
-> > > even with plain I/O syscalls.
-> > >
-> > > >
-> > > > On top of that, it isn't going to help with the case that I'm working towards
-> > > > implementing where a container manager can monitor for mounts taking place
-> > > > inside the container and supervise them.  What I'm proposing is that during
-> > > > the action phase (eg. FSCONFIG_CMD_CREATE), fsconfig() would hand an fd
-> > > > referring to the context under construction to the manager, which would then
-> > > > be able to call fsinfo() to query it and fsconfig() to adjust it, reject it or
-> > > > permit it.  Something like:
-> > > >
-> > > >         fd = receive_context_to_supervise();
-> > > >         struct fsinfo_params params = {
-> > > >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
-> > > >                 .request        = FSINFO_ATTR_SB_OPTIONS,
-> > > >         };
-> > > >         fsinfo(fd, NULL, &params, sizeof(params), buffer, sizeof(buffer));
-> > > >         supervise_parameters(buffer);
-> > > >         fsconfig(fd, FSCONFIG_SET_FLAG, "hard", NULL, 0);
-> > > >         fsconfig(fd, FSCONFIG_SET_STRING, "vers", "4.2", 0);
-> > > >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_CREATE, NULL, NULL, 0);
-> > > >         struct fsinfo_params params = {
-> > > >                 .flags          = FSINFO_FLAGS_QUERY_FSCONTEXT,
-> > > >                 .request        = FSINFO_ATTR_SB_NOTIFICATIONS,
-> > > >         };
-> > > >         struct fsinfo_sb_notifications sbnotify;
-> > > >         fsinfo(fd, NULL, &params, sizeof(params), &sbnotify, sizeof(sbnotify));
-> > > >         watch_super(fd, "", AT_EMPTY_PATH, watch_fd, 0x03);
-> > > >         fsconfig(fd, FSCONFIG_CMD_SUPERVISE_PERMIT, NULL, NULL, 0);
-> > > >         close(fd);
-> > > >
-> > > > However, the supervised mount may be happening in a completely different set
-> > > > of namespaces, in which case the supervisor presumably wouldn't be able to see
-> > > > the links in procfs and the relevant portions of sysfs.
-> > >
-> > > It would be a "jump" link to the otherwise invisible directory.
-> >
-> > More magic links to beam you around sounds like a bad idea. We had a
-> > bunch of CVEs around them in containers and they were one of the major
-> > reasons behind us pushing for openat2(). That's why it has a
-> > RESOLVE_NO_MAGICLINKS flag.
+On 26/02/20 18:29, Vitaly Kuznetsov wrote:
+>>  struct x86_emulate_ctxt {
+>> +	void *vcpu;
+> Why 'void *'? I changed this to 'struct kvm_vcpu *' and it seems to
+> compile just fine...
 > 
-> No, that link wouldn't beam you around at all, it would end up in an
-> internally mounted instance of a mountfs, a safe place where no
 
-Even if it is a magic link to a safe place it's a magic link. They
-aren't a great solution to this problem. fsinfo() is cleaner and
-simpler as it creates a context for a supervised mount which gives the a
-managing application fine-grained control and makes it easily
-extendable.
-Also, we're apparently at the point where it seems were suggesting
-another (pseudo)filesystem to get information about filesystems.
+I guess because it's really just an opaque pointer; using void* ensures
+that the emulator doesn't break the emulator ops abstraction.
 
-Christian
+Paolo
+
