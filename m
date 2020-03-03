@@ -2,91 +2,125 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E905C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3421C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450762073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C917A2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:20:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="g1EySrC0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729829AbgCCPRW (ORCPT
+        id S1729842AbgCCPUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:17:22 -0500
-Received: from mga04.intel.com ([192.55.52.120]:9324 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgCCPRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:17:22 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 07:17:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="228943917"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 03 Mar 2020 07:17:21 -0800
-Date:   Tue, 3 Mar 2020 07:17:21 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-Subject: Re: [PATCH v2 01/66] KVM: x86: Return -E2BIG when
- KVM_GET_SUPPORTED_CPUID hits max entries
-Message-ID: <20200303151721.GB1439@linux.intel.com>
-References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
- <20200302235709.27467-2-sean.j.christopherson@intel.com>
- <599c3a95-a0a6-b31d-56a6-c50971d4ab59@redhat.com>
-MIME-Version: 1.0
+        Tue, 3 Mar 2020 10:20:16 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:26988 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729026AbgCCPUQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:20:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583248812;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=rKMD7BQOvvf2EnNvM4tQSBZbaPpVD8OTqQcL6Q0plyw=;
+        b=g1EySrC0Ixnhoqm3wyXUEqSdTpbhbZ9bCrOUSuYfAVPAI4K3gfe9M5nYW/s9ltxSd/
+        nENcQvFen70s4ikYiBtb2CoVKw9hjFm/55AVrFxRVpsIa67lbQ1eJw7ap9+SQdMsZ6EU
+        2RPWNs+s7qCoO2lXU4waa+hOwyjcjXHEhitzssXbQFagmW6tJjtlsj4omoEasjF9XJGx
+        zcc5hY2zShc4TqmwnZMhZFDRkyYcAMEG/DP+69Evuj8v7Di6yrbaNnoJOWi40bunSl8V
+        n9XdGU238TsxVgLmbYWVWtzFhTcMJZzBwZ4Z2yYGj9fsQfXSy1sou8O5tRy8DQAw27Mf
+        JxUQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGHPrpwDGvxw=="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id y0a02cw23FJxJxq
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve X9_62_prime256v1 with 256 ECDH bits, eq. 3072 bits RSA))
+        (Client did not present a certificate);
+        Tue, 3 Mar 2020 16:19:59 +0100 (CET)
+Subject: Re: [RFC 0/8] MIPS: CI20: add HDMI out support
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
 Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <599c3a95-a0a6-b31d-56a6-c50971d4ab59@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20200303145848.GA13796@bogus>
+Date:   Tue, 3 Mar 2020 16:19:59 +0100
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Paul Boddie <paul@boddie.org.uk>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        linux-mips@vger.kernel.org,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Discussions about the Letux Kernel 
+        <letux-kernel@openphoenux.org>
+Content-Transfer-Encoding: 7bit
+Message-Id: <6A9DD709-DF42-4A68-9EA4-A2F9C7A49DBA@goldelico.com>
+References: <cover.1582744379.git.hns@goldelico.com> <20200227122325.GA7587@ravnborg.org> <8EE60F87-415A-44EA-AA49-632E232095FF@goldelico.com> <20200303145848.GA13796@bogus>
+To:     Rob Herring <robh@kernel.org>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 03:16:16PM +0100, Paolo Bonzini wrote:
-> On 03/03/20 00:56, Sean Christopherson wrote:
-> > (KVM hard caps CPUID 0xD at a single sub-leaf).
-> 
-> Hmm... no it doesn't?
-> 
->                 for (idx = 1, i = 1; idx < 64; ++idx) {
->                         u64 mask = ((u64)1 << idx);
->                         if (*nent >= maxnent)
->                                 goto out;
-> 
->                         do_host_cpuid(&entry[i], function, idx);
->                         if (idx == 1) {
->                                 entry[i].eax &= kvm_cpuid_D_1_eax_x86_features;
->                                 cpuid_mask(&entry[i].eax, CPUID_D_1_EAX);
->                                 entry[i].ebx = 0;
->                                 if (entry[i].eax & (F(XSAVES)|F(XSAVEC)))
->                                         entry[i].ebx =
->                                                 xstate_required_size(supported,
->                                                                      true);
->                         } else {
->                                 if (entry[i].eax == 0 || !(supported & mask))
->                                         continue;
->                                 if (WARN_ON_ONCE(entry[i].ecx & 1))
->                                         continue;
->                         }
->                         entry[i].ecx = 0;
->                         entry[i].edx = 0;
->                         ++*nent;
->                         ++i;
->                 }
+Hi Rob,
 
-Ah rats, I was thinking of CPUID 0x7 when I wrote that.  Maybe just reword
-it to "(KVM hard caps the number of CPUID 0xD sub-leafs)."?
+> Am 03.03.2020 um 15:58 schrieb Rob Herring <robh@kernel.org>:
+> 
+> On Thu, Feb 27, 2020 at 01:56:56PM +0100, H. Nikolaus Schaller wrote:
+>> Hi Sam,
+>> 
+>> 
+>> Or that there will appear good tools soon. E.g. some GUI
+>> based editor tool would be very helpful so that you don't have
+>> to fight with the yaml indentation rules. Like there are XML
+>> and DTD editors. And even HTML is rarely written manually any more.
+>> 
+>> IMHO such tools should have been developed and in place *before*
+>> the rule to provide DT schemata is enforced.
+> 
+> You mean tools like what is discussed here:
+> 
+> https://www.redhat.com/sysadmin/yaml-tips
+> 
+> There's also yaml-format in the dtschema repo which will reformat a file 
+> to the desired formatting. It is just a wrapper around ruamel yaml 
+> library.
 
-> I still think the patch is correct, what matters is that no KVM in
-> existence supports enough processor features to reach 100 or so subleaves.
+What I dream of is a higher level higher abstraction than a YAML
+editor because the problems I face are not only YAML syntax but that
+I don't know what should be where in a scheme file and why.
+
+So I'd like to have a Schema editor. I.e. some editor where I
+can edit a list of properties and can e.g. checkmark "required".
+And simply type a description into some text field.
+
+And the editor knows where to place the keywords -item -enum
+-oneOf -description etc. when doing a Save operation.
+
+Basically what I dream of is more like MarkDown where you write text,
+titles paragraphs etc. and that gets magically translated into 
+valid HTML. Or even better analogy: OpenOffice where you just
+write and format your text and one does not have to edit PostScript
+printer commands.
+
+But it is likely to stay a dream.
+
+BR and thanks,
+Nikolaus
+
