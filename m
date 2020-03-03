@@ -2,184 +2,113 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A92C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:22:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E3BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30442073D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:22:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46CAE20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:23:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="APHzxd1V"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NqQ3zNWR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbgCCNWP (ORCPT
+        id S1729287AbgCCNXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:22:15 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:49160 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728398AbgCCNWP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:22:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=lm1J5n5+hScBLK9U43/eb/xDYPs2lcB12KKqXk5s7Z4=; b=APHzxd1VPHRwDBmvnXDJ0inO2d
-        84Aq511ks8CXnnAYNce3jHkai6v1hWnBLyJtWSEk9BRM5Zc1QFl1kqY7EQDRUusPzey5MaU5NK7XS
-        HKyaPCLZZZhjWbZfOxbmsbRlr6vwkM6Uer11AigZDjX37lG+HDqJE3PSZ/cxDsNcoBB1pvvbAzlS5
-        SXMWFj0ctj6ImQnixJpfC/IfZKJwwFtjHhH//jSed5jzAnlsRiTCOVhNJExhvKCje7Q4Y4JR23rj8
-        KaTc7Qw9ZVaAQspH0obkzlY5FwvR/67ec2+xzAahAZOqOeTClJ7IU6jXN0l22KNR+Ctaxooay+za1
-        8cALbTRg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j97Ug-0006Jh-4i; Tue, 03 Mar 2020 13:21:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CFC6E3013A4;
-        Tue,  3 Mar 2020 14:19:52 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E99B0210C2866; Tue,  3 Mar 2020 14:21:50 +0100 (CET)
-Date:   Tue, 3 Mar 2020 14:21:50 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        krisman@collabora.com, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        ryao@gentoo.org, dvhart@infradead.org, mingo@redhat.com,
-        z.figura12@gmail.com, steven@valvesoftware.com,
-        steven@liquorix.net, malteskarupke@web.de, carlos@redhat.com,
-        adhemerval.zanella@linaro.org, libc-alpha@sourceware.org
-Subject: Re: 'simple' futex interface [Was: [PATCH v3 1/4] futex: Implement
- mechanism to wait on any of several futexes]
-Message-ID: <20200303132150.GD2596@hirez.programming.kicks-ass.net>
-References: <20200213214525.183689-1-andrealmeid@collabora.com>
- <20200213214525.183689-2-andrealmeid@collabora.com>
- <20200228190717.GM18400@hirez.programming.kicks-ass.net>
- <20200228194958.GO14946@hirez.programming.kicks-ass.net>
- <87tv3aflqm.fsf@nanos.tec.linutronix.de>
- <967d5047-2cb6-d6d8-6107-edb99a4c9696@valvesoftware.com>
- <87o8thg031.fsf@nanos.tec.linutronix.de>
- <beb82055-96fa-cb64-a06e-9d7a0946587b@valvesoftware.com>
- <20200303120050.GC2596@hirez.programming.kicks-ass.net>
- <87pndth9ur.fsf@oldenburg2.str.redhat.com>
+        Tue, 3 Mar 2020 08:23:24 -0500
+Received: from mail-eopbgr60076.outbound.protection.outlook.com ([40.107.6.76]:58981
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728591AbgCCNXX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:23:23 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=hUWO8VPqa2QMmCafOzbB8wjK/6nnB1ShtlpcjH9k+9YfzPLW22FWLwhmsPwLX0KnLQs4i7ViqyHCWp6tGbLtiKlbPBargdlK+DeY1tM2Uc5SlHQr/du99Sb4GrhwQs+iY3Kfo/uw85840/MxBkfMc7BClN50Ugjq2pRc3+19CRv+7gFw12ggfaDLfF8LaO20/3ax5rd6UlLfBQpNYuqocm4fRjrjWS9v1GSzdcid7iulUklj9Mq4WoBo42SpehUNhZO4DGwMpKTxpcW5ebEXfsniIU58m/DT/nAeZiqlKKiEYcThQbt2CoHlPLuLqeHXbL6qa/0jb0ccxvMNFaMHmg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HOwzm0AxXLInIcX+4YSH+9FOpz9/IOAQbRIe73v2tqs=;
+ b=WkB+NwGMjPJVD8S1IAUnGIHmDJsRKn2FRwxZ/U7Nd/DbAGiTez8bxZKSDJiKTmskgrt62aOICpnEJqQkImSrdbibeBucLkjfQc/vAj0st7/E1iiNr8FwYGBdXvYZF9/RXB2M+F+ONWS1ncsdF1fOU1z+OoxNS6mRadYwn81XdDOf8GFFLWKjrcMrmPCk4HigfFrmRyFKFZ1SU4VirRs/bmVBFq61uxeOXu2YrOSbBHPbgy5eL0a8w0uoXUvVRVh8qTHCu63zYH2mEmjJbDA1kZdAhiwFRlXQqGe3s2hTB0yIEyi1OkMO8NW0zweZpL0QqQkWLk2C2ytgjK9hgS4zzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HOwzm0AxXLInIcX+4YSH+9FOpz9/IOAQbRIe73v2tqs=;
+ b=NqQ3zNWRj9Di+qI9NzN561zGLl/ZDSrae14Hd0hu6sLOJaPAJk7rEBNs54/UlJEZ+DyKf0AK/rAq/f0UUa/yf0l9Eo0ft9glnE5LYeT29DeqIirMqV4+hAnyGUcuXfbuCHpda1TIkJg5XqyutnzvjiBZjwFQ+dQoRWahbeLlIwg=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3868.eurprd04.prod.outlook.com (52.134.71.147) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.19; Tue, 3 Mar 2020 13:23:20 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
+ 13:23:19 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] regulator: anatop: Drop error message for -EPROBE_DEFER
+Thread-Topic: [PATCH] regulator: anatop: Drop error message for -EPROBE_DEFER
+Thread-Index: AQHV8QquCOAMTSU+80CJNiONhxviQ6g2zOAAgAAKHvA=
+Date:   Tue, 3 Mar 2020 13:23:19 +0000
+Message-ID: <DB3PR0402MB39166725152B1B076E035F8EF5E40@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1583205261-1994-1-git-send-email-Anson.Huang@nxp.com>
+ <20200303123010.GB3866@sirena.org.uk>
+In-Reply-To: <20200303123010.GB3866@sirena.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: fc27189d-c4b4-416a-11a6-08d7bf760a81
+x-ms-traffictypediagnostic: DB3PR0402MB3868:|DB3PR0402MB3868:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3868F2F90F6BBCBE8CC1E350F5E40@DB3PR0402MB3868.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 03319F6FEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(396003)(366004)(136003)(346002)(189003)(199004)(52536014)(5660300002)(54906003)(8936002)(81156014)(81166006)(4326008)(478600001)(2906002)(8676002)(316002)(33656002)(7696005)(66446008)(64756008)(66946007)(71200400001)(15650500001)(186003)(6506007)(76116006)(26005)(86362001)(44832011)(66556008)(9686003)(66476007)(55016002)(4744005)(6916009);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3868;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nvD/CT8kBUe/5kaXKSvZAnUAL1j6wZr/4tAelL3W3zh/6wzy7rWJ8g800oe6Lg+dIr14wcWhcDG7VIDvIoAAOajLxLSqSh/XMV1kXFoVJzueIDH92RyCaZJTVmLQAeMJCeF2+iVRliHwDEO0AM9zJlS54uDGQa4HruOajF6gYhEx4QRHdvTbSlV3Pk84Lk9VJ/7W8IET5P5zuad04IJutoKbXT31QXAhqmhXBf4JHs+9wn/8KXuhG8KhOj+bnvhWtY9V9D2To3zrmmbWjDm6Fl5OfQ1bwHKRq8viGyV5KTw1csh/ddCulZbJFXZ0ndviT9JktleBFjuQs9ppFu4lLJDJ5YzXY9FtRQacWA9cN/tITrPIKW46uQVXP6k8ne6qm9e2gkJuspp8gm30cAxazG3FwYa/rSaJ1MvGEerQ0Njbp1cj5Alpxr15sKhFa8XB
+x-ms-exchange-antispam-messagedata: 4u/OF/6aAUNQuGlwqud9ZD5N5qSR0MoIPOjg0MTmY06HiQPzl8peVcAOQjHUj7BXlxr5ODejf/+zvlqEzBmZlqF1cpdbYDucUETV1y+17ADbRUPco492NNUjA/QaYv3KRJY9ZYxzDRPqm7K4YgJ1Rw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87pndth9ur.fsf@oldenburg2.str.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc27189d-c4b4-416a-11a6-08d7bf760a81
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2020 13:23:19.8352
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: M30bR5EPid6zUamXRf3nXcX4NhzBfXxUwjDoUEqNUgWXxOrUKY9r4OnoO1RG2QfFi3bauV6S7c3BJoWaasA+yw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3868
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 02:00:12PM +0100, Florian Weimer wrote:
-> * Peter Zijlstra:
-> 
-> > So how about we introduce new syscalls:
-> >
-> >   sys_futex_wait(void *uaddr, unsigned long val, unsigned long flags, ktime_t *timo);
-> >
-> >   struct futex_wait {
-> > 	void *uaddr;
-> > 	unsigned long val;
-> > 	unsigned long flags;
-> >   };
-> >   sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
-> > 		  unsigned long flags, ktime_t *timo);
-> >
-> >   sys_futex_wake(void *uaddr, unsigned int nr, unsigned long flags);
-> >
-> >   sys_futex_cmp_requeue(void *uaddr1, void *uaddr2, unsigned int nr_wake,
-> > 			unsigned int nr_requeue, unsigned long cmpval, unsigned long flags);
-> >
-> > Where flags:
-> >
-> >   - has 2 bits for size: 8,16,32,64
-> >   - has 2 more bits for size (requeue) ??
-> >   - has ... bits for clocks
-> >   - has private/shared
-> >   - has numa
-> 
-> What's the actual type of *uaddr?  Does it vary by size (which I assume
-> is in bits?)?  Are there alignment constraints?
-
-Yeah, u8, u16, u32, u64 depending on the size specified in flags.
-Naturally aligned.
-
-> These system calls seemed to be type-polymorphic still, which is
-> problematic for defining a really nice C interface.  I would really like
-> to have a strongly typed interface for this, with a nice struct futex
-> wrapper type (even if it means that we need four of them).
-
-You mean like: futex_wait1(u8 *,...) futex_wait2(u16 *,...)
-futex_wait4(u32 *,...) etc.. ?
-
-I suppose making it 16 or so syscalls (more if we want WAKE_OP or
-requeue across size) is a bit daft, so yeah, sucks.
-
-> Will all architectures support all sizes?  If not, how do we probe which
-> size/flags combinations are supported?
-
-Up to the native word size (long), IOW ILP32 will not support u64.
-
-Overlapping futexes are expressly forbidden, that is:
-
-{
-	u32 var;
-	void *addr = &var;
-}
-
-P0()
-{
-	futex_wait4(addr,...);
-}
-
-P1()
-{
-	futex_wait1(addr+1,...);
-}
-
-Will have one of them return something bad.
-
-
-> > For NUMA I propose that when NUMA_FLAG is set, uaddr-4 will be 'int
-> > node_id', with the following semantics:
-> >
-> >  - on WAIT, node_id is read and when 0 <= node_id <= nr_nodes, is
-> >    directly used to index into per-node hash-tables. When -1, it is
-> >    replaced by the current node_id and an smp_mb() is issued before we
-> >    load and compare the @uaddr.
-> >
-> >  - on WAKE/REQUEUE, it is an immediate index.
-> 
-> Does this mean the first waiter determines the NUMA index, and all
-> future waiters use the same chain even if they are on different nodes?
-
-Every new waiter could (re)set node_id, after all, when its not actually
-waiting, nobody cares what's in that field.
-
-> I think documenting this as a node index would be a mistake.  It could
-> be an arbitrary hint for locating the corresponding kernel data
-> structures.
-
-Nah, it allows explicit placement, after all, we have set_mempolicy()
-and sched_setaffinity() and all the other NUMA crud so that programs
-that think they know what they're doing, can do explicit placement.
-
-> > Any invalid value with result in EINVAL.
-> 
-> Using uaddr-4 is slightly tricky with a 64-bit futex value, due to the
-> need to maintain alignment and avoid padding.
-
-Yes, but it works, unlike uaddr+4 :-) Also, 1 and 2 byte futexes and
-NUMA_FLAG are incompatible due to this, but I feel short futexes and
-NUMA don't really make sense anyway, the only reason to use a short
-futex is to save space, so you don't want another 4 bytes for numa on
-top of that anyway.
-
+SGksIE1hcmsNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSByZWd1bGF0b3I6IGFuYXRvcDogRHJv
+cCBlcnJvciBtZXNzYWdlIGZvciAtDQo+IEVQUk9CRV9ERUZFUg0KPiANCj4gT24gVHVlLCBNYXIg
+MDMsIDIwMjAgYXQgMTE6MTQ6MjFBTSArMDgwMCwgQW5zb24gSHVhbmcgd3JvdGU6DQo+ID4gZGV2
+bV9yZWd1bGF0b3JfcmVnaXN0ZXIoKSBjb3VsZCByZXR1cm4gLUVQUk9CRV9ERUZFUiB3aGVuIHRy
+eWluZyB0bw0KPiA+IGdldCBpbml0IGRhdGEgYW5kIE5PVCBhbGwgcmVzb3VyY2VzIGFyZSBhdmFp
+bGFibGUgYXQgdGhhdCB0aW1lLCBmb3INCj4gPiB0aGlzIGNhc2UsIGVycm9yIG1lc3NhZ2Ugc2hv
+dWxkIE5PVCBiZSBwcmVzZW50LCB0aGUgZHJpdmVyIHdpbGwgY2FsbA0KPiA+IHByb2JlIGFnYWlu
+IGxhdGVyLCBzbyBkcm9wIGVycm9yIG1lc3NhZ2UgZm9yIC1FUFJPQkVfREVGRVIuDQo+IA0KPiBO
+bywgdGhpcyBpcyBub3QgZ29vZCAtIGl0IG1lYW5zIHRoYXQgaWYgdGhlcmUgaXMgc29tZSBwcm9i
+bGVtIHRoZSB1c2VyIHdpbGwgbm90DQo+IGdldCBhbnkgaW5mb3JtYXRpb24gYWJvdXQgd2h5IHRo
+ZSBkcml2ZXIgaXMgbm90IGluc3RhbnRpYXRpbmcgYW5kIGhvdyB0byBmaXggaXQuDQo+IEF0IG1v
+c3QgbG93ZXIgdGhlIG1lc3NhZ2UgdG8gZGV2X2RiZygpLg0KDQpNYWtlIHNlbnNlLCB3aWxsIGxv
+d2VyIHRoZSBtZXNzYWdlIHRvIGRlYnVnIGxldmVsIGZvciAtRVBST0JFX0RFRkVSLCBpdCBpcyBq
+dXN0DQpiZWNhdXNlIHRoYXQgdXNlciBldmVyIGNvbXBsYWluZWQgYWJvdXQgdGhlIGVycm9yIG1l
+c3NhZ2UgaW4gbm9ybWFsIGxldmVsIGZvcg0KZGVmZXIgcHJvYmUgc2NlbmFyaW8sIHRoYXQgaXMg
+d2h5IEkgZG8gdGhpcyBwYXRjaC4NCg0KVGhhbmtzLA0KQW5zb24NCg==
