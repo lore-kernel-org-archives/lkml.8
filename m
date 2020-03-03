@@ -2,218 +2,108 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDE7C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A051DC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC9C2146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:29:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="wS4MKI86"
+	by mail.kernel.org (Postfix) with ESMTP id 7BA8E20CC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 07:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583220690;
+	bh=1T0/XnPDbJDk2pBKVErlNQNAmU8fCNU87LT0UhuUwwc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xrdsl5yEGKS//36OGzUCV/t7gWR0I+gJmnDJyzuSweKuL0AZGYsylUNb3+s6iT37B
+	 zCsV9Fi54GQHZg5tcNtxrE1+F6q8t3pEbQvoPLYUdi0Ys3Weab0usQna4QbM5YxQiH
+	 k7JCdq1RB+Cwmk8U/uOkiqD7XXUT0B5c8Z8cBIlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbgCCH3j (ORCPT
+        id S1727557AbgCCHb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 02:29:39 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:39002 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbgCCH3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 02:29:38 -0500
-Received: by mail-vs1-f66.google.com with SMTP id a19so1731844vsp.6
-        for <linux-kernel@vger.kernel.org>; Mon, 02 Mar 2020 23:29:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FfJGP3VvelPHBu9uAoszVPyAW2vGFIv4G/uor0aD668=;
-        b=wS4MKI86i7vYgDExykq5E/9nAFZP1oxRif7r7AX+nw2mR4pGHUdQ54RIYxqtwLwneY
-         A5K//2Hg6Cq3gYj2GT5HQ0W+jiSbn7zSEO1wIHugA2IFFR6/VB0MtqnEPNnFUv1Ba4Qi
-         QzriKcACmsM+4l1zZQ3CGfLph9nz1xKozupNGUKPucW+PneR3xFN4GWQNkmkRa+Nh+A7
-         7w/0Lo2DjYpYQMtfVGLqq93RLdFd5x/80J4zmRxMW7jzhwB5ii3n33303mN4E59Be12d
-         5RYNVbtl7KHRuKVP0TSN7NPLddqIHzO4qXp3eG6Ebm3QBU9IXP42ewCVg/UbsTrU+k1j
-         X78Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FfJGP3VvelPHBu9uAoszVPyAW2vGFIv4G/uor0aD668=;
-        b=n0euD6L5M+O4+Spop9WncHo+BpKFC6ug90j4y29IUnccsrMSQh0p7J+v66FVtRm0EU
-         STLhE8cbCHHeNhU1+jWpYeVZEquL4WxyO0llctBO1Bq89czoYu4LTN8/0i0Y3VD+FDCV
-         xBe0aNSza3SO/L2/QA5i4SnF2itQQKaSsQKuFVJNXG8B1dFlKy3YHNmbq37aYfJanZbg
-         5iLNQHcpsl0KzZMFqOK+xUmBwND9Z7FDFoCuYniypbu6T3SZglxhOfHEtOAC/UU7AqKD
-         kW6zRmjHFkxdSL+kooLYA9fU09FO+2QIPn9mjfK8VnW0kVonTD70YiRb93jc0udaKjRI
-         VPwg==
-X-Gm-Message-State: ANhLgQ1+LUXXwnAWTJQGD973EI5pOdyvgsfCudjjC51+YUI0dmPjbZ6z
-        eTYlVi0ZYqhOqTe9uEw8LbsyH1DnBIa1PTV8V9b/Vw==
-X-Google-Smtp-Source: ADFU+vulPkBe+NP8hErcIC7CIaSa54wA7KvH3UVGqyZLPXVSP7bmLeyJKxNI+sys5rqmvRX9zk33gOx/WwmhWFhKvEk=
-X-Received: by 2002:a05:6102:3205:: with SMTP id r5mr1609818vsf.206.1583220577377;
- Mon, 02 Mar 2020 23:29:37 -0800 (PST)
+        Tue, 3 Mar 2020 02:31:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37444 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725440AbgCCHb3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 02:31:29 -0500
+Received: from onda.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3929F20CC7;
+        Tue,  3 Mar 2020 07:31:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583220688;
+        bh=1T0/XnPDbJDk2pBKVErlNQNAmU8fCNU87LT0UhuUwwc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Xyih+dCXVSGNn5XEPLi6Zc+a9ZY8ES8LVEzV1hUqsu9xNdZKXuDyOoemqaem9P0pm
+         yByEJcMpzAA5WsPqsEIf1BneOKPdfsvarmXzB0SUPSPGBtHmJ+q3CPheRHs0diFl0i
+         5B4/VCRFdSKGNYx/+gKsOCTRvpR0EkdRQx1mU9Aw=
+Date:   Tue, 3 Mar 2020 08:31:22 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 03/12] docs: dt: usage_model.rst: fix link for DT
+ usage
+Message-ID: <20200303083122.10637da3@onda.lan>
+In-Reply-To: <CAL_JsqJwKcR4UVit=VBnvOcKx0z9UuUw5aXd0Y7+2nMgk3X_zw@mail.gmail.com>
+References: <cover.1583135507.git.mchehab+huawei@kernel.org>
+        <a7e0a5597ace97503c8ff67cdab2351151c7f267.1583135507.git.mchehab+huawei@kernel.org>
+        <7a4d92e5-a1e2-6bd2-9a40-dcdb52e80801@gmail.com>
+        <CAL_JsqJwKcR4UVit=VBnvOcKx0z9UuUw5aXd0Y7+2nMgk3X_zw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
- <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
- <CAJZ5v0gB9yuVmPjJ_MvfT8aFpvP-X5JRsNfZn8+Mv5RwTednGg@mail.gmail.com> <CAJZ5v0imqwdmXzKayqs1kgHOb-mXrkr61uNxVka8J9bKca989Q@mail.gmail.com>
-In-Reply-To: <CAJZ5v0imqwdmXzKayqs1kgHOb-mXrkr61uNxVka8J9bKca989Q@mail.gmail.com>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Tue, 3 Mar 2020 15:28:48 +0800
-Message-ID: <CAPpJ_efvF0XzjevA1eL3BUJqBwxRTOPLcqWKN40Azj-n1AtjcA@mail.gmail.com>
-Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Drake <drake@endlessm.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rafael J. Wysocki <rafael@kernel.org> =E6=96=BC 2020=E5=B9=B43=E6=9C=882=E6=
-=97=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=887:45=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Mon, Mar 2, 2020 at 11:38 AM Rafael J. Wysocki <rafael@kernel.org> wro=
-te:
+Em Mon, 2 Mar 2020 15:40:37 -0600
+Rob Herring <robh+dt@kernel.org> escreveu:
+
+> On Mon, Mar 2, 2020 at 3:11 PM Frank Rowand <frowand.list@gmail.com> wrote:
 > >
-> > On Mon, Mar 2, 2020 at 6:54 AM Jian-Hong Pan <jian-hong@endlessm.com> w=
-rote:
+> > On 3/2/20 1:59 AM, Mauro Carvalho Chehab wrote:  
+> > > The devicetree.org doesn't host the Device_Tree_Usage page
+> > > anymore. So, fix the link to point to a new address.
 > > >
-> > > Daniel Drake <drake@endlessm.com> =E6=96=BC 2020=E5=B9=B42=E6=9C=8828=
-=E6=97=A5 =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=885:43=E5=AF=AB=E9=81=93=EF=BC=
-=9A
-> > > >
-> > > > On Thu, Feb 27, 2020 at 10:25 PM Rafael J. Wysocki <rjw@rjwysocki.n=
-et> wrote:
-> > > > > The purpose of this series of update of the ACPI EC driver is to =
-make its
-> > > > > initialization more straightforward.
-> > > > >
-> > > > > They fix a couple of issues, clean up some things, remove redunda=
-nt code etc.
-> > > > >
-> > > > > Please refer to the changelogs of individual patches for details.
-> > > > >
-> > > > > For easier access, the series is available in the git branch at
-> > > > >
-> > > > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.gi=
-t \
-> > > > >  acpi-ec-work
-> > > > >
-> > > > > on top of 5.6-rc3.
-> > > >
-> > > > Jian-Hong, can you please test this on Asus UX434DA?
-> > > > Check if the screen brightness hotkeys are still working after thes=
-e changes.
+> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> > > ---
+> > >  Documentation/devicetree/usage-model.rst | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
 > > >
-> > > Hi Rafael,
-> > >
-> > > Thanks for your patches, but we found an issue:
-> > > The laptops like ASUS UX434DA's screen brightness hotkeys work before
-> > > this patch series.  However, the hotkeys are failed with the patch
-> > > "ACPI: EC: Unify handling of event handler installation failures".
+> > > diff --git a/Documentation/devicetree/usage-model.rst b/Documentation/devicetree/usage-model.rst
+> > > index 326d7af10c5b..e1b42dc63f01 100644
+> > > --- a/Documentation/devicetree/usage-model.rst
+> > > +++ b/Documentation/devicetree/usage-model.rst
+> > > @@ -12,7 +12,7 @@ This article describes how Linux uses the device tree.  An overview of
+> > >  the device tree data format can be found on the device tree usage page
+> > >  at devicetree.org\ [1]_.  
 > >
-> > So I have modified the series to avoid the change that can possibly bre=
-ak this.
-> >
-> > Can you please pull the new series from
-> >
-> >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> >  acpi-ec-work
-> >
-> > (same branch) and retest?
->
-> Note that the current top-most commit in that branch is
->
-> 0957d98f50da ACPI: EC: Consolidate event handler installation code
+> > s/devicetree.org/elinux.org/  
+> 
+> I wonder if we should make the devicetree.org link work again instead.
+> Primarily just to avoid the appearance of it being Linux specific.
 
-I tested the commits in acpi-ec-work branch whose last commit is
-0957d98f50da ("ACPI: EC: Consolidate event handler installation
-code").  The screen brightness hotkeys are still failed with
-0957d98f50da ("ACPI: EC: Consolidate event handler installation
-code").
+Makes sense to me. Another alternative would be to convert this file to
+ReST and add to the Kernel docs (it should be easy to convert with pandoc).
 
-I tweak and add some debug messages:
+Yet, as those references are part of the Linux Kernel documentation, it 
+doesn't sound wrong to me to have them pointing to a linux-specific site.
 
-diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-index 85f1fe8e208a..3887f427283c 100644
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1443,23 +1443,27 @@ static bool install_gpe_event_handler(struct
-acpi_ec *ec)
-        return true;
- }
+In any case, I'll update this patch, placing all such changes altogether.
+This way, if you decide to re-add this at devicetree.org, we could simply
+drop (or revert) it.
 
--static bool install_gpio_irq_event_handler(struct acpi_ec *ec,
-+static int install_gpio_irq_event_handler(struct acpi_ec *ec,
-                                           struct acpi_device *device)
- {
-        int irq, ret;
-
-        /* ACPI reduced hardware platforms use a GpioInt specified in _CRS.=
- */
-        irq =3D acpi_dev_gpio_irq_get(device, 0);
--       if (irq < 0)
--               return false;
-+       if (irq < 0) {
-+               pr_err("%s: acpi_dev_gpio_irq_get returns %d\n", __func__, =
-irq);
-+               return irq;
-+       }
-
-        ret =3D request_irq(irq, acpi_ec_irq_handler, IRQF_SHARED, "ACPI EC=
-", ec);
--       if (ret < 0)
--               return false;
-+       if (ret < 0) {
-+               pr_err("%s: request_irq returns %d\n", __func__, ret);
-+               return ret;
-+       }
-
-        ec->irq =3D irq;
-
--       return true;
-+       return 0;
- }
-
- /**
-@@ -1517,9 +1521,11 @@ static int ec_install_handlers(struct acpi_ec
-*ec, struct acpi_device *device)
-                         * fatal, because the EC can be polled for events.
-                         */
-                } else {
--                       ready =3D install_gpio_irq_event_handler(ec, device=
-);
--                       if (!ready)
--                               return -ENXIO;
-+                       pr_err("%s: install_gpio_irq_event_handler\n",
-__func__);
-+                       int ret =3D install_gpio_irq_event_handler(ec, devi=
-ce);
-+                       if (ret)
-+                               return ret;
-+                       ready =3D true;
-                }
-                if (ready) {
-                        set_bit(EC_FLAGS_EVENT_HANDLER_INSTALLED, &ec->flag=
-s);
-
-The dmesg shows:
-
-[    0.121117] ACPI: EC: ec_install_handlers: install_gpio_irq_event_handle=
-r
-[    0.121133] ACPI: EC: install_gpio_irq_event_handler:
-acpi_dev_gpio_irq_get returns -517
-
-Originally, ec_install_handlers() will return the returned value from
-install_gpio_irq_event_handler() from acpi_dev_gpio_irq_get(), which
-is -EPROBE_DEFER, instead of -ENXIO.  However, ec_install_handlers()
-returns -ENXIO directly if install_gpio_irq_event_handler() returns
-false in patch ("ACPI: EC: Consolidate event handler installation
-code").  Here needs some modification.
-
-Jian-Hong Pan
+> 
+> The website is hosted on github[1] and I'd assume there's a way to do
+> redirects as a start.
+> 
+> Rob
+> 
+> [1] https://github.com/devicetree-org/devicetree-website
