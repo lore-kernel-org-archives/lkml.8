@@ -2,106 +2,122 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3837FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A2CC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 094CE2086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583241024;
-	bh=GUivKWtJ0hc5w+IWW+xdUUVwt4AOV4xypfGmVeG8obk=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=cQa6rlsVcS1e5yoieaSemwmrMCTPzmZxcHbhAI/mGSbuAjwHioNQS0/KmsthIo6vz
-	 NWOn1Enow9DgUsyzSaXkCEewNyyd3Pt2QIdHGB+6zSB4F1hijweI0ia12CpMiHy0pX
-	 yLj0Ap4DZpkiEHbWrrdcs2/eXXV9YxtYneloWAy0=
+	by mail.kernel.org (Postfix) with ESMTP id 980D020842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:12:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UfJIH6ox"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728879AbgCCNKX (ORCPT
+        id S1728982AbgCCNMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:10:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725932AbgCCNKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:10:22 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B309820842;
-        Tue,  3 Mar 2020 13:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583241021;
-        bh=GUivKWtJ0hc5w+IWW+xdUUVwt4AOV4xypfGmVeG8obk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=2DHptrzLvXGqjt4aF8ToOLoi8KlVSviu7WYm+bc5etPR1UyLZfjEArvUVCjms2MSo
-         JRtbUxKrFFjb6YgIKxmDMkhWTdAugW/zC/mQ4anP0LGlbUyjTr84Ek/VBshwgcBFRe
-         tCQBp8L/sdiu6b2wCS6UEg+Vo54Oy5An8iQ7SPJ8=
-Message-ID: <a4415d7d5d75e6af4cb275f753068186342ef7be.camel@kernel.org>
-Subject: Re: [PATCH v4 0/2] vfs: have syncfs() return error when there are
- writeback errors
-From:   Jeff Layton <jlayton@kernel.org>
-To:     viro@zeniv.linux.org.uk, Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, andres@anarazel.de, willy@infradead.org,
-        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
-        david@fromorbit.com, David Howells <dhowells@redhat.com>
-Date:   Tue, 03 Mar 2020 08:10:19 -0500
-In-Reply-To: <20200213210255.871579-1-jlayton@kernel.org>
-References: <20200213210255.871579-1-jlayton@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+        Tue, 3 Mar 2020 08:12:07 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:40554 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbgCCNMH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 08:12:07 -0500
+Received: by mail-lj1-f195.google.com with SMTP id 143so3443385ljj.7
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:12:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=14TETtsCeDLsnW+i1qFuKgD8Ulv00VFkHeJNS0lRmyc=;
+        b=UfJIH6oxIMmm46ZxZ24ogjsflfGT+Lg+KNYbetFEMYm/a8N6m9/vykGXOdbScN/eCP
+         WoYXG/RTGfGqIQ+J8G7aGREYVdEfoE1EwvYXziqMHpxS1GSVrnLwR9/0tvEYOnEK+hOF
+         e0gLPSgGDfOMOJDqIeoyfkL2wen6R3sfypHPK415n9g9jUu4MQZ8PBoNGlXFtN8iO44S
+         hBg8sWA57a3V+KBftwLNKB+GAMEiX7iJnOFjrkIIk/xxGCK4cWHav+LNSUuJjXddfuaA
+         GAhLw1khaNY2seLACj3eXU0AQPAM/Et3mNjvfSDRKoe8+hz03Rng8Z5Fin7cQv4EjnKW
+         tfkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=14TETtsCeDLsnW+i1qFuKgD8Ulv00VFkHeJNS0lRmyc=;
+        b=Vqj+g1+dlwuV7i3Vidw9vaPyDs+88gTIElY5UPosCO639nx9ib+riEBMSk285odUc+
+         c7OlAGVzV4g89gi+DI/Ioyr6/+8OyFYxOIbdqHfq+eO7+amhdpvUqXaOb38KqVwbcUfT
+         pmtZX2TS8lNe9Xj/mC/zmXToGtNJErzJejOfbYMlZqRPfKeOzSU5Tb62nsWVDVFyfPLo
+         xDm7Sa/TipAxG0+pntb00NnwwK9kZy9Ri+o0pCvxOxqn2r7kd2vi6E4i6xBiL7fCACJ5
+         MRLpx+hrPUliIcwTdxH9LQykzbZvs0j4z39uYeZXheMpRkpiIPSJo+iNbooc8HRXHVNu
+         eiUQ==
+X-Gm-Message-State: ANhLgQ20w3ycpyuXuZg+dqQDvGhMVsXH2EIfgMmr3z1+lJkIrFUw02bF
+        LqPpJpXFG4UVNzwkvUbamw7ExiKS4Dm0sekvX2h4DA==
+X-Google-Smtp-Source: ADFU+vvRR57tLL4WBrhYqm8T+G58WNEAyuSNZkrZl/lSurB58p0mTBMWcpMn2cgMFtRvyRc5APGlYId28bxV2yGR15s=
+X-Received: by 2002:a2e:8546:: with SMTP id u6mr2325365ljj.21.1583241125398;
+ Tue, 03 Mar 2020 05:12:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200303110258.1092-1-mgorman@techsingularity.net>
+ <20200303110258.1092-2-mgorman@techsingularity.net> <CAKfTPtC5LAU9mmfqX9qydR-GQekXrSSNTErONm493UBpZWHZsA@mail.gmail.com>
+ <20200303114444.GM3818@techsingularity.net>
+In-Reply-To: <20200303114444.GM3818@techsingularity.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 3 Mar 2020 14:11:53 +0100
+Message-ID: <CAKfTPtDzE4KZ6jDAgOqB2dn6866iiR6XJSAzTrS6GEn+nvWOFA@mail.gmail.com>
+Subject: Re: [PATCH 1/3] sched/fair: Fix statistics for find_idlest_group()
+To:     Mel Gorman <mgorman@techsingularity.net>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Phil Auld <pauld@redhat.com>, Hillf Danton <hdanton@sina.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Paul McKenney <paulmck@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-13 at 16:02 -0500, Jeff Layton wrote:
-> v4:
-> - switch to dedicated errseq_t cursor in struct file for syncfs
-> - drop ioctl for fetching the errseq_t without syncing
-> 
-> This is the fourth posting of this patchset. After thinking about it
-> more, I think multiplexing file->f_wb_err based on O_PATH open is just
-> too weird. I think it'd be better if syncfs() "just worked" as expected
-> no matter what sort of fd you use, or how you multiplex it with fsync.
-> 
-> Also (at least on x86_64) there is currently a 4 byte pad at the end of
-> the struct so this doesn't end up growing the memory utilization anyway.
-> Does anyone object to doing this?
-> 
-> I've also dropped the ioctl patch. I have a draft patch to expose that
-> via fsinfo, but that functionality is really separate from returning an
-> error to syncfs. We can look at that after the syncfs piece is settled.
-> 
-> Jeff Layton (2):
->   vfs: track per-sb writeback errors and report them to syncfs
->   buffer: record blockdev write errors in super_block that it backs
-> 
->  drivers/dax/device.c    |  1 +
->  fs/buffer.c             |  2 ++
->  fs/file_table.c         |  1 +
->  fs/open.c               |  3 +--
->  fs/sync.c               |  6 ++++--
->  include/linux/fs.h      | 16 ++++++++++++++++
->  include/linux/pagemap.h |  5 ++++-
->  7 files changed, 29 insertions(+), 5 deletions(-)
-> 
+On Tue, 3 Mar 2020 at 12:44, Mel Gorman <mgorman@techsingularity.net> wrote:
+>
+> On Tue, Mar 03, 2020 at 12:14:07PM +0100, Vincent Guittot wrote:
+> > Hi Mel,
+> >
+> > On Tue, 3 Mar 2020 at 12:03, Mel Gorman <mgorman@techsingularity.net> wrote:
+> > >
+> > > From: Vincent Guittot <vincent.guittot@linaro.org>
+> > >
+> > > From: Vincent Guittot <vincent.guittot@linaro.org>
+> > >
+> > > sgs->group_weight is not set while gathering statistics in
+> > > update_sg_wakeup_stats(). This means that a group can be classified as
+> > > fully busy with 0 running tasks if utilization is high enough.
+> > >
+> > > This path is mainly used for fork and exec.
+> > >
+> > > Fixes: 57abff067a08 ("sched/fair: Rework find_idlest_group()")
+> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> > > Signed-off-by: Ingo Molnar <mingo@kernel.org>
+> > > Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+> > > Acked-by: Mel Gorman <mgorman@techsingularity.net>
+> > > Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> > > Link: https://lore.kernel.org/r/20200218144534.4564-1-vincent.guittot@linaro.org
+> >
+> > This one has been merged in tip/sched/urgent
+> >
+>
+> I know and it appears in next but not in mainline yet. As tip/sched/core
+> is the development baseline for scheduler patches, it should have the
+> patch -- most likely via mainline to preserve git history. By including
+> it here, I wanted to highlight that anyone working on tip/sched/core at
+> the moment should include the patch if they want to avoid invalidating
+> any test results.
 
-Hi Al,
+ok. Make sense
 
-Wondering if you've had a chance to look at these yet? I think it makes
-sense -- the only part I'm not sure about is adding a field to struct
-file. That ends up inside the 4-byte pad at the end on x86_64, so my
-hope is that that's not a problem.
-
-If you're too busy at the moment, then maybe Andrew can help shepherd
-this in instead?
-
-Thanks,
--- 
-Jeff Layton <jlayton@kernel.org>
-
+>
+> --
+> Mel Gorman
+> SUSE Labs
