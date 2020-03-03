@@ -2,163 +2,149 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E81C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:58:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1053C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D217520842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBC8E20842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:59:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I38yU7mh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727905AbgCCI6b (ORCPT
+        id S1727955AbgCCI7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:58:31 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:34855 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgCCI6b (ORCPT
+        Tue, 3 Mar 2020 03:59:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33986 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727707AbgCCI7P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:58:31 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j93NM-0006xr-6q; Tue, 03 Mar 2020 08:58:04 +0000
-Date:   Tue, 3 Mar 2020 09:58:02 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Bernd Edlinger <bernd.edlinger@hotmail.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCHv4] exec: Fix a deadlock in ptrace
-Message-ID: <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
-References: <AM6PR03MB5170EB4427BF5C67EE98FF09E4E60@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87a74zmfc9.fsf@x220.int.ebiederm.org>
- <AM6PR03MB517071DEF894C3D72D2B4AE2E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87k142lpfz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfmloir.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nmjulm.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003021531.C77EF10@keescook>
+        Tue, 3 Mar 2020 03:59:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583225953;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=Kp0XyTWrMUPNYfT6+rfxcT5Op3P4n5f1CbxbxYRrw7s=;
+        b=I38yU7mhdBkcBzCooimuk0/ZYgOjnFpNMy1+7LXSWKbE4KYeao4eIoGAJtAT7j4AWDbyQ7
+        DPESJLlXPBWKcnDyL4d8YeEhBZ4GkiIZydgCCdrY6aOgSICUIXFoM4izvTYNia5afLYIy9
+        eCAViv73jrZh+946+WOOrDbYUaAexmk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-150-a7oGbn7_Mye38Dy9TKuLMQ-1; Tue, 03 Mar 2020 03:59:12 -0500
+X-MC-Unique: a7oGbn7_Mye38Dy9TKuLMQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 688FC800D48;
+        Tue,  3 Mar 2020 08:59:10 +0000 (UTC)
+Received: from [10.36.117.113] (ovpn-117-113.ams2.redhat.com [10.36.117.113])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C81A1001B0B;
+        Tue,  3 Mar 2020 08:59:09 +0000 (UTC)
+Subject: Re: [PATCH] mm/vmscan.c: Clean code by removing unnecessary
+ assignment
+To:     mateusznosek0@gmail.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org
+References: <20200229214022.11853-1-mateusznosek0@gmail.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <4f7ab7ce-de14-caa7-5609-0e4004ab3bfd@redhat.com>
+Date:   Tue, 3 Mar 2020 09:59:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <20200229214022.11853-1-mateusznosek0@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202003021531.C77EF10@keescook>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 06:26:47PM -0800, Kees Cook wrote:
-> On Mon, Mar 02, 2020 at 10:18:07PM +0000, Bernd Edlinger wrote:
-> > This fixes a deadlock in the tracer when tracing a multi-threaded
-> > application that calls execve while more than one thread are running.
-> > 
-> > I observed that when running strace on the gcc test suite, it always
-> > blocks after a while, when expect calls execve, because other threads
-> > have to be terminated.  They send ptrace events, but the strace is no
-> > longer able to respond, since it is blocked in vm_access.
-> > 
-> > The deadlock is always happening when strace needs to access the
-> > tracees process mmap, while another thread in the tracee starts to
-> > execve a child process, but that cannot continue until the
-> > PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
-> > 
-> > strace          D    0 30614  30584 0x00000000
-> > Call Trace:
-> > __schedule+0x3ce/0x6e0
-> > schedule+0x5c/0xd0
-> > schedule_preempt_disabled+0x15/0x20
-> > __mutex_lock.isra.13+0x1ec/0x520
-> > __mutex_lock_killable_slowpath+0x13/0x20
-> > mutex_lock_killable+0x28/0x30
-> > mm_access+0x27/0xa0
-> > process_vm_rw_core.isra.3+0xff/0x550
-> > process_vm_rw+0xdd/0xf0
-> > __x64_sys_process_vm_readv+0x31/0x40
-> > do_syscall_64+0x64/0x220
-> > entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > expect          D    0 31933  30876 0x80004003
-> > Call Trace:
-> > __schedule+0x3ce/0x6e0
-> > schedule+0x5c/0xd0
-> > flush_old_exec+0xc4/0x770
-> > load_elf_binary+0x35a/0x16c0
-> > search_binary_handler+0x97/0x1d0
-> > __do_execve_file.isra.40+0x5d4/0x8a0
-> > __x64_sys_execve+0x49/0x60
-> > do_syscall_64+0x64/0x220
-> > entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > The proposed solution is to take the cred_guard_mutex only
-> > in a critical section at the beginning, and at the end of the
-> > execve function, and let PTRACE_ATTACH fail with EAGAIN while
-> > execve is not complete, but other functions like vm_access are
-> > allowed to complete normally.
+On 29.02.20 22:40, mateusznosek0@gmail.com wrote:
+> From: Mateusz Nosek <mateusznosek0@gmail.com>
 > 
-> Sorry to be bummer, but I don't think this will work. A few more things
-> during the exec process depend on cred_guard_mutex being held.
+> Previously 0 was assigned to variable 'lruvec_size',
+> but the variable was never read later.
+> So the assignment can be removed.
 > 
-> If I'm reading this patch correctly, this changes the lifetime of the
-> cred_guard_mutex lock to be:
-> 	- during prepare_bprm_creds()
-> 	- from flush_old_exec() through install_exec_creds()
-> Before, cred_guard_mutex was held from prepare_bprm_creds() through
-> install_exec_creds().
+> Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+> ---
+>  mm/vmscan.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 > 
-> That means, for example, that check_unsafe_exec()'s documented invariant
-> is violated:
->     /*
->      * determine how safe it is to execute the proposed program
->      * - the caller must hold ->cred_guard_mutex to protect against
->      *   PTRACE_ATTACH or seccomp thread-sync
->      */
->     static void check_unsafe_exec(struct linux_binprm *bprm) ...
-> which is looking at no_new_privs as well as other details, and making
-> decisions about the bprm state from the current state.
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index f14c8c6069a6..a605ff36f126 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2427,10 +2427,8 @@ static void get_scan_count(struct lruvec *lruvec, struct scan_control *sc,
+>  		case SCAN_FILE:
+>  		case SCAN_ANON:
+>  			/* Scan one type exclusively */
+> -			if ((scan_balance == SCAN_FILE) != file) {
+> -				lruvec_size = 0;
+> +			if ((scan_balance == SCAN_FILE) != file)
+>  				scan = 0;
+> -			}
+>  			break;
+>  		default:
+>  			/* Look ma, no brain */
 > 
-> I think it also means that the potentially multiple invocations
-> of bprm_fill_uid() (via prepare_binprm() via binfmt_script.c and
-> binfmt_misc.c) would be changing bprm->cred details (uid, gid) without
-> a lock (another place where current's no_new_privs is evaluated).
-> 
-> Related, it also means that cred_guard_mutex is unheld for every
-> invocation of search_binary_handler() (which can loop via the previously
-> mentioned binfmt_script.c and binfmt_misc.c), if any of them have hidden
-> dependencies on cred_guard_mutex. (Thought I only see bprm_fill_uid()
-> currently.)
 
-So one issue I see with having to reacquire the cred_guard_mutex might
-be that this would allow tasks holding the cred_guard_mutex to block a
-killed exec'ing task from exiting, right?
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Thanks,
+
+David / dhildenb
+
