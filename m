@@ -2,184 +2,68 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0DCAC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19359C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F7A020848
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:08:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583276928;
-	bh=Zhexf+t5rjSF6lDODnx2yi8LXcdCC2u1PQcGluLFGWg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DUXKKJD+GFq41UoRxdHa40cuW6mXtzgLqm5bzRxJQCRMsloBKwHggugADs6ZG8+oQ
-	 ghEJq5jzgVDuE3NqCfZI+iymtTrPatzYtbE7V7z3grYWSFgc+I3cAnyGXbhFXp44gG
-	 O9dwxr40va2KyK4nF6NMO9r1mPrnZll8aWMKGRi0=
+	by mail.kernel.org (Postfix) with ESMTP id D1A67208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 23:12:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dashjr.org header.i=@dashjr.org header.b="vU3iV77s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728257AbgCCXIr (ORCPT
+        id S1727956AbgCCXMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 18:08:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45198 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 18:12:18 -0500
+Received: from zinan.dashjr.org ([192.3.11.21]:38348 "EHLO zinan.dashjr.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728098AbgCCXIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 18:08:46 -0500
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA3F320CC7
-        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 23:08:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583276926;
-        bh=Zhexf+t5rjSF6lDODnx2yi8LXcdCC2u1PQcGluLFGWg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=As1PTPsaIVmtgakMmyV/XuMuwdtOmMHI06rRAxtxmr7oz83soPqjZ0zrLoC+4PjPQ
-         fw1vnQNLbbiAjTHSw+848wXYMMN2pO/Mtg6IgLYePfQ22WUtxzgNM9kvFlfqvpJCvo
-         YAcTDjjjCOVsV98ad/Qo05ea0B6fXXSAiYFk0H2A=
-Received: by mail-wm1-f45.google.com with SMTP id m3so4669741wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 15:08:45 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3liKcj3+6+yPcH1BKtlmkrlsYrLBv9udpY6H0HRhTAsZWC0skt
-        E4GBsgm+xMSdErvCevRcpmb3yNd4TnYEeftd0ZMtDg==
-X-Google-Smtp-Source: ADFU+vvi85lSN182YUU+MdiVv0/nM2RfPEoUUxoqYxw2FXb3q7PSm8aIboX0yJXqJwlmniib7znXh1lZc96RVYeyF0w=
-X-Received: by 2002:a7b:cb93:: with SMTP id m19mr765473wmi.133.1583276924026;
- Tue, 03 Mar 2020 15:08:44 -0800 (PST)
+        id S1726766AbgCCXMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 18:12:18 -0500
+X-Greylist: delayed 460 seconds by postgrey-1.27 at vger.kernel.org; Tue, 03 Mar 2020 18:12:17 EST
+Received: from ishibashi.lan (unknown [12.190.236.222])
+        (Authenticated sender: luke-jr)
+        by zinan.dashjr.org (Postfix) with ESMTPSA id 32F3E38A0DB8
+        for <linux-kernel@vger.kernel.org>; Tue,  3 Mar 2020 23:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=dashjr.org; s=zinan;
+        t=1583276676; bh=f6t72RQCwA5bUyp9woz4HWHvoHO3Yr/X++Pvw8U6VmA=;
+        h=From:To:Subject:Date;
+        b=vU3iV77sSMhn7VIyYaJbX6wDARFWiAr4R0CVkErEw8bLZUL8k5os9zDUdQQwiE8Z/
+         aUilKRAV7H65nD30lZml5hcitIeTvLIQOb5usscfjrATa0RDpv5SSsI1gGFP1ZbNiI
+         kBcA5UqrcF9q9t7nXNGUhovaU3tKcTreAM1GAW0w=
+X-Hashcash: 1:25:200303:linux-kernel@vger.kernel.org::QEc3e4TtDLfHZvPM:dySN=
+From:   Luke Dashjr <luke@dashjr.org>
+To:     linux-kernel@vger.kernel.org
+Subject: Bug? Non-privileged processes can in some cases spoof the wrong sending IP
+Date:   Tue, 3 Mar 2020 23:03:35 +0000
+User-Agent: KMail/1.9.10
 MIME-Version: 1.0
-References: <20200301230537.2247550-1-nivedita@alum.mit.edu>
- <20200303221205.4048668-1-nivedita@alum.mit.edu> <20200303221205.4048668-6-nivedita@alum.mit.edu>
-In-Reply-To: <20200303221205.4048668-6-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 4 Mar 2020 00:08:33 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu9LON5SeJ7UMTeHxP1OcSkz_eGGunpXx_csjh_fp1PhDA@mail.gmail.com>
-Message-ID: <CAKv+Gu9LON5SeJ7UMTeHxP1OcSkz_eGGunpXx_csjh_fp1PhDA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/5] efi/x86: Don't relocate the kernel unless necessary
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Message-Id: <202003032303.36017.luke@dashjr.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 at 23:12, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Add alignment slack to the PE image size, so that we can realign the
-> decompression buffer within the space allocated for the image.
->
-> Only relocate the kernel if it has been loaded at an unsuitable address:
-> * Below LOAD_PHYSICAL_ADDR, or
-> * Above 64T for 64-bit and 512MiB for 32-bit
->
-> For 32-bit, the upper limit is conservative, but the exact limit can be
-> difficult to calculate.
->
+It seems non-privileged processes can bind an IP on one interface, and then 
+send to addresses not routed through that interface, to spoof that IP on an 
+unrelated network (eg, the default route).
 
-Could we get rid of the call to efi_low_alloc_above() in
-efi_relocate_kernel(), and just allocate top down with the right
-alignment? I'd like to get rid of efi_low_alloc() et al if we can.
+Shouldn't there be something to prevent this? Presumably it's not expected 
+behaviour, since you can't just bind to any arbitrary addresses...?
 
+(FWIW I can see cases where this might be considered a security issue, but the 
+MAINTAINERS file explicitly said address leaks don't count...)
 
+Luke
 
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> ---
->  arch/x86/boot/tools/build.c             | 16 +++++-------
->  drivers/firmware/efi/libstub/x86-stub.c | 33 ++++++++++++++++++++++---
->  2 files changed, 36 insertions(+), 13 deletions(-)
->
-> diff --git a/arch/x86/boot/tools/build.c b/arch/x86/boot/tools/build.c
-> index 3d03ad753ed5..db528961c283 100644
-> --- a/arch/x86/boot/tools/build.c
-> +++ b/arch/x86/boot/tools/build.c
-> @@ -238,21 +238,17 @@ static void update_pecoff_text(unsigned int text_start, unsigned int file_sz,
->
->         pe_header = get_unaligned_le32(&buf[0x3c]);
->
-> -#ifdef CONFIG_EFI_MIXED
->         /*
-> -        * In mixed mode, we will execute startup_32() at whichever offset in
-> -        * memory it happened to land when the PE/COFF loader loaded the image,
-> -        * which may be misaligned with respect to the kernel_alignment field
-> -        * in the setup header.
-> +        * The PE/COFF loader may load the image at an address which is
-> +        * misaligned with respect to the kernel_alignment field in the setup
-> +        * header.
->          *
-> -        * In order for startup_32 to safely execute in place at this offset,
-> -        * we need to ensure that the CONFIG_PHYSICAL_ALIGN aligned allocation
-> -        * it creates for the page tables does not extend beyond the declared
-> -        * size of the image in the PE/COFF header. So add the required slack.
-> +        * In order to avoid relocating the kernel to correct the misalignment,
-> +        * add slack to allow the buffer to be aligned within the declared size
-> +        * of the image.
->          */
->         bss_sz  += CONFIG_PHYSICAL_ALIGN;
->         init_sz += CONFIG_PHYSICAL_ALIGN;
-> -#endif
->
->         /*
->          * Size of code: Subtract the size of the first sector (512 bytes)
-> diff --git a/drivers/firmware/efi/libstub/x86-stub.c b/drivers/firmware/efi/libstub/x86-stub.c
-> index e71b8421e088..fbc4354f534c 100644
-> --- a/drivers/firmware/efi/libstub/x86-stub.c
-> +++ b/drivers/firmware/efi/libstub/x86-stub.c
-> @@ -17,6 +17,9 @@
->
->  #include "efistub.h"
->
-> +/* Maximum physical address for 64-bit kernel with 4-level paging */
-> +#define MAXMEM_X86_64_4LEVEL (1ull << 46)
-> +
->  static efi_system_table_t *sys_table;
->  extern const bool efi_is64;
->  extern u32 image_offset;
-> @@ -717,6 +720,7 @@ unsigned long efi_main(efi_handle_t handle,
->                              struct boot_params *boot_params)
->  {
->         unsigned long bzimage_addr = (unsigned long)startup_32;
-> +       unsigned long buffer_start, buffer_end;
->         struct setup_header *hdr = &boot_params->hdr;
->         efi_status_t status;
->         unsigned long cmdline_paddr;
-> @@ -728,10 +732,33 @@ unsigned long efi_main(efi_handle_t handle,
->                 efi_exit(handle, EFI_INVALID_PARAMETER);
->
->         /*
-> -        * If the kernel isn't already loaded at the preferred load
-> -        * address, relocate it.
-> +        * If the kernel isn't already loaded at a suitable address,
-> +        * relocate it.
-> +        *
-> +        * It must be loaded above LOAD_PHYSICAL_ADDR.
-> +        *
-> +        * The maximum address for 64-bit is 1 << 46 for 4-level paging. This
-> +        * is defined as the macro MAXMEM, but unfortunately that is not a
-> +        * compile-time constant if 5-level paging is configured, so we instead
-> +        * define our own macro for use here.
-> +        *
-> +        * For 32-bit, the maximum address is complicated to figure out, for
-> +        * now use KERNEL_IMAGE_SIZE, which will be 512MiB, the same as what
-> +        * KASLR uses.
-> +        *
-> +        * Also relocate it if image_offset is zero, i.e. we weren't loaded by
-> +        * LoadImage, but we are not aligned correctly.
->          */
-> -       if (bzimage_addr - image_offset != hdr->pref_address) {
-> +
-> +       buffer_start = ALIGN(bzimage_addr - image_offset,
-> +                            hdr->kernel_alignment);
-> +       buffer_end = buffer_start + hdr->init_size;
-> +
-> +       if ((buffer_start < LOAD_PHYSICAL_ADDR)                              ||
-> +           (IS_ENABLED(CONFIG_X86_32) && buffer_end > KERNEL_IMAGE_SIZE)    ||
-> +           (IS_ENABLED(CONFIG_X86_64) && buffer_end > MAXMEM_X86_64_4LEVEL) ||
-> +           (image_offset == 0 && !IS_ALIGNED(bzimage_addr,
-> +                                             hdr->kernel_alignment))) {
->                 status = efi_relocate_kernel(&bzimage_addr,
->                                              hdr->init_size, hdr->init_size,
->                                              hdr->pref_address,
-> --
-> 2.24.1
->
+P.S. I discovered this because Chromium's WebRTC implementation attempts to 
+send UDP from configured IPv4 address; and then Linux's MASQUERADE also 
+doesn't check that it have the correct return path, so it tried to NAT my WAN 
+to my WAN, which resulted in sending out from the origin IP instead of my 
+own, and triggered my modem to disconnect me. (I guess this scenario is a bit 
+too convoluted to be considered a general DoS risk)
