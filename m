@@ -2,221 +2,227 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A54C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FF4C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8F92086A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:27:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 420302086A
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 06:28:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=NextfourGroupOy.onmicrosoft.com header.i=@NextfourGroupOy.onmicrosoft.com header.b="OJ3QFok7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727511AbgCCG1i (ORCPT
+        id S1727517AbgCCG21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 01:27:38 -0500
-Received: from mga03.intel.com ([134.134.136.65]:40059 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgCCG1h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 01:27:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 22:27:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
-   d="scan'208";a="274076019"
-Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Mar 2020 22:27:36 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
-Subject: [PATCH] KVM: nVMX: Properly handle userspace interrupt window request
-Date:   Mon,  2 Mar 2020 22:27:35 -0800
-Message-Id: <20200303062735.31868-1-sean.j.christopherson@intel.com>
-X-Mailer: git-send-email 2.24.1
+        Tue, 3 Mar 2020 01:28:27 -0500
+Received: from mail-eopbgr00055.outbound.protection.outlook.com ([40.107.0.55]:50565
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725763AbgCCG20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 01:28:26 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iILTsBszfPtW15UVaE8xTl0HcBXsU67L0GhFYYYKYNYnB/eSdsPL5+6y00AcZyBjBam4ZbX1gIbyaKPV6l6fPhJuTcBYjL/B4XBv+jiv/yLr8x6aIBKsZJaX4e28Wod3E7J2A7lcr37QNNflpSf06kXM04Ki62mNk8+xgJzpUK14XwLblK/yNXAIvctTlkXnnnGiuO7m+STIMq+/EpnnvHt/GOk3RuejQHUtnUpBghsucDY6mLFQDC0ZVhMAYgwNE9OiyPicE+b7EjeyBOup35wWjkbze9IZ3A++u2qCpivr9vy7LuqwIXsCo4x/pUsypu8CfYGwYnPQggNWl0seRw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=op1VL4rG7Vj0kFzScLxGK687aMwzIOY36dnEuKl0Efs=;
+ b=SmMTwQa+4brMrxfdxSVbXbrkLrWCJCon3+Lt/E2noeanAcQyLYZh59KzAdm8Do3pij7ymfP1wcnuVozK3iAodrX0gy+GefAvhO7KKUdy77DXUVnpgBfujXuClpIDh8/9VhImHaAe1sgDmzSmLsmbtdj1E3s+L/3BCr4SxUaW353fOnEhVTBrTGLWA8melWft8VHeAPxB3Exli4TT90uihKFindc7aZ8vWuxrEtm6MdGLilpd2RkmpooGV0ZX97OwXZ21vJOMPw49PBYz3leo3q/98u81kBUXi/+xNmOctdtjY3chAD2SfAkY24BbrIv0chr3jkJX8U9RdhghcR97qA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nextfour.com; dmarc=pass action=none header.from=nextfour.com;
+ dkim=pass header.d=nextfour.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=NextfourGroupOy.onmicrosoft.com;
+ s=selector2-NextfourGroupOy-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=op1VL4rG7Vj0kFzScLxGK687aMwzIOY36dnEuKl0Efs=;
+ b=OJ3QFok7lMEwWwVhzJzug8vIwPZ8rmUX84jbzIP4Q0ujm7k9/23AvakG6c+Igm3jM9b35QQ2iQgVoS70Uw5fkCml/7r4RyRrr82StIbvQOemWkMMaGq53+UPuS3fHQijMiFPId6Ta9xHeOk5qxJu5ANnVkwN7gFqde1Hq/2D3C0=
+Received: from VI1PR03MB3775.eurprd03.prod.outlook.com (52.134.21.155) by
+ VI1PR03MB5119.eurprd03.prod.outlook.com (20.178.14.93) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.14; Tue, 3 Mar 2020 06:28:20 +0000
+Received: from VI1PR03MB3775.eurprd03.prod.outlook.com
+ ([fe80::ed88:2188:604c:bfcc]) by VI1PR03MB3775.eurprd03.prod.outlook.com
+ ([fe80::ed88:2188:604c:bfcc%7]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
+ 06:28:20 +0000
+Received: from [10.10.10.144] (194.157.170.35) by HE1PR0102CA0039.eurprd01.prod.exchangelabs.com (2603:10a6:7:7d::16) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Tue, 3 Mar 2020 06:28:19 +0000
+From:   =?utf-8?B?TWlrYSBQZW50dGlsw6Q=?= <mika.penttila@nextfour.com>
+To:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>
+CC:     "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/5] efi/x86: Decompress at start of PE image load address
+Thread-Topic: [PATCH 2/5] efi/x86: Decompress at start of PE image load
+ address
+Thread-Index: AQHV8B32wchWzmVphE6EXNWmcTrmKag2aZ2A
+Date:   Tue, 3 Mar 2020 06:28:20 +0000
+Message-ID: <dce7e026-ccb2-36f0-c892-83558dcc055f@nextfour.com>
+References: <20200301230537.2247550-1-nivedita@alum.mit.edu>
+ <20200301230537.2247550-3-nivedita@alum.mit.edu>
+In-Reply-To: <20200301230537.2247550-3-nivedita@alum.mit.edu>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0102CA0039.eurprd01.prod.exchangelabs.com
+ (2603:10a6:7:7d::16) To VI1PR03MB3775.eurprd03.prod.outlook.com
+ (2603:10a6:803:2b::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=mika.penttila@nextfour.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-pep-version: 2.0
+x-originating-ip: [194.157.170.35]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a0c8d678-2c9e-4f45-b6fb-08d7bf3c10ea
+x-ms-traffictypediagnostic: VI1PR03MB5119:
+x-microsoft-antispam-prvs: <VI1PR03MB51195E9A47E90A0ACF7ADE2783E40@VI1PR03MB5119.eurprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2887;
+x-forefront-prvs: 03319F6FEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39830400003)(136003)(346002)(366004)(396003)(376002)(189003)(199004)(6486002)(508600001)(81166006)(2616005)(85182001)(956004)(81156014)(6666004)(8936002)(8676002)(110136005)(4326008)(16526019)(54906003)(186003)(26005)(36756003)(16576012)(66446008)(66476007)(31686004)(52116002)(64756008)(86362001)(316002)(71200400001)(66946007)(66616009)(66556008)(5660300002)(31696002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR03MB5119;H:VI1PR03MB3775.eurprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nextfour.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Yj+F+OeHpbjvQ13FJVXsIwmE/FQzX2TxNRZ1UQwC/sz34vnZM+ERGG18/ZzPtaxxJe5mZFvFCAYOz/mRCKP9vRDuGEBB/pjWdMbezoyw5++JsAaaH6iIGbb7u+DyJEA5X9XvWdZ1YXkAcXcLtEJzLV4Qx1u9/CRyfMeH07KtVG5rn+anxC0WUa4yTl/zxscGoQYHwWw2XKEhgaSRCeQ/7AKOATRK62fGSq12+KyVfeoMsaa6jEtx8XFPKjedOkdMZlNYbudTwhLNPUlCefr7TWainDtMsp3tV4B0r7NgHSOWQHi9Oa0lWbXUNlXy2h67tgWljgehJGI3tDRl6EMBcizo4RzBlTSPyvntCjjU2NXR5KavCUoP3E5meczwhC9tm9D0cdRb16TESklqQ5A5qtWJ+T8Ax86hYZRjnr2tJEwvoIOrHES6O0KWJ8+Iuppi
+x-ms-exchange-antispam-messagedata: cQxDJ4xLF/VqeH2T9yf4eQSLQWxjW4S1/FvHDaoQf19TKw4hCCZkevQoRz8CG6Izri8l99Dka3apAUfkM32RfdJpEMsU+IOUcbghJrzFHm6qJj6tiEq65jNnHXAEc34Xs/f2xA/LdOuzvKLbDBu5qQ==
+x-ms-exchange-transport-forked: True
+Content-Type: multipart/mixed;
+        boundary="_002_dce7e026ccb236f0c89283558dcc055fnextfourcom_"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nextfour.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a0c8d678-2c9e-4f45-b6fb-08d7bf3c10ea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2020 06:28:20.1923
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 972e95c2-9290-4a02-8705-4014700ea294
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 9uykphOmQ5PAavhPzdout8AXVRforN5gzTzJOsfWU5gv8kW0sZu/NsqdGjloyYEgzzzBidoRcUA40nEO6VsfLJQl9/6bxUcRb0iCoikMuEs=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR03MB5119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Return true for vmx_interrupt_allowed() if the vCPU is in L2 and L1 has
-external interrupt exiting enabled.  IRQs are never blocked in hardware
-if the CPU is in the guest (L2 from L1's perspective) when IRQs trigger
-VM-Exit.
+--_002_dce7e026ccb236f0c89283558dcc055fnextfourcom_
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <24D5CE18F64E0347941A35A5EC423454@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 
-The new check percolates up to kvm_vcpu_ready_for_interrupt_injection()
-and thus vcpu_run(), and so KVM will exit to userspace if userspace has
-requested an interrupt window (to inject an IRQ into L1).
+DQoNCk9uIDIuMy4yMDIwIDEuMDUsIEFydmluZCBTYW5rYXIgd3JvdGU6DQo+IFdoZW4gYm9vdGVk
+IHZpYSBQRSBsb2FkZXIsIGRlZmluZSBpbWFnZV9vZmZzZXQgdG8gaG9sZCB0aGUgb2Zmc2V0IG9m
+DQo+IHN0YXJ0dXBfMzIgZnJvbSB0aGUgc3RhcnQgb2YgdGhlIFBFIGltYWdlLCBhbmQgdXNlIGl0
+IGFzIHRoZSBzdGFydCBvZg0KPiB0aGUgZGVjb21wcmVzc2lvbiBidWZmZXIuDQo+DQo+IFNpZ25l
+ZC1vZmYtYnk6IEFydmluZCBTYW5rYXIgPG5pdmVkaXRhQGFsdW0ubWl0LmVkdT4NCj4gLS0tDQo+
+ICBhcmNoL3g4Ni9ib290L2NvbXByZXNzZWQvaGVhZF8zMi5TICAgICAgfCAxNyArKysrKysrKysr
+Kw0KPiAgYXJjaC94ODYvYm9vdC9jb21wcmVzc2VkL2hlYWRfNjQuUyAgICAgIHwgMzggKysrKysr
+KysrKysrKysrKysrKysrKystLQ0KPiAgZHJpdmVycy9maXJtd2FyZS9lZmkvbGlic3R1Yi94ODYt
+c3R1Yi5jIHwgMTIgKysrKysrLS0NCj4gIDMgZmlsZXMgY2hhbmdlZCwgNjEgaW5zZXJ0aW9ucygr
+KSwgNiBkZWxldGlvbnMoLSkNCg0KLi4uDQo+IC0tLSBhL2RyaXZlcnMvZmlybXdhcmUvZWZpL2xp
+YnN0dWIveDg2LXN0dWIuYw0KPiArKysgYi9kcml2ZXJzL2Zpcm13YXJlL2VmaS9saWJzdHViL3g4
+Ni1zdHViLmMNCj4gQEAgLTE5LDYgKzE5LDcgQEANCj4gIA0KPiAgc3RhdGljIGVmaV9zeXN0ZW1f
+dGFibGVfdCAqc3lzX3RhYmxlOw0KPiAgZXh0ZXJuIGNvbnN0IGJvb2wgZWZpX2lzNjQ7DQo+ICtl
+eHRlcm4gdTMyIGltYWdlX29mZnNldDsNCj4gIA0KPiAgX19wdXJlIGVmaV9zeXN0ZW1fdGFibGVf
+dCAqZWZpX3N5c3RlbV90YWJsZSh2b2lkKQ0KPiAgew0KPiBAQCAtMzY0LDYgKzM2NSw3IEBAIGVm
+aV9zdGF0dXNfdCBfX2VmaWFwaSBlZmlfcGVfZW50cnkoZWZpX2hhbmRsZV90IGhhbmRsZSwNCj4g
+IAlzdHJ1Y3QgYm9vdF9wYXJhbXMgKmJvb3RfcGFyYW1zOw0KPiAgCXN0cnVjdCBzZXR1cF9oZWFk
+ZXIgKmhkcjsNCj4gIAllZmlfbG9hZGVkX2ltYWdlX3QgKmltYWdlOw0KPiArCXZvaWQgKmltYWdl
+X2Jhc2U7DQo+ICAJZWZpX2d1aWRfdCBwcm90byA9IExPQURFRF9JTUFHRV9QUk9UT0NPTF9HVUlE
+Ow0KPiAgCWludCBvcHRpb25zX3NpemUgPSAwOw0KPiAgCWVmaV9zdGF0dXNfdCBzdGF0dXM7DQo+
+IEBAIC0zODQsNyArMzg2LDEwIEBAIGVmaV9zdGF0dXNfdCBfX2VmaWFwaSBlZmlfcGVfZW50cnko
+ZWZpX2hhbmRsZV90IGhhbmRsZSwNCj4gIAkJZWZpX2V4aXQoaGFuZGxlLCBzdGF0dXMpOw0KPiAg
+CX0NCj4gIA0KPiAtCWhkciA9ICYoKHN0cnVjdCBib290X3BhcmFtcyAqKWVmaV90YWJsZV9hdHRy
+KGltYWdlLCBpbWFnZV9iYXNlKSktPmhkcjsNCj4gKwlpbWFnZV9iYXNlID0gZWZpX3RhYmxlX2F0
+dHIoaW1hZ2UsIGltYWdlX2Jhc2UpOw0KPiArCWltYWdlX29mZnNldCA9ICh2b2lkICopc3RhcnR1
+cF8zMiAtIGltYWdlX2Jhc2U7DQoNCnN0YXJ0dXBfMzIgPT0gMCwgc28gbWF5YmUgc29tZXRoaW5n
+IGxpa2UNCg0KbGVhcQlzdGFydHVwXzMyKCVyaXApIC0gaW1hZ2VfYmFzZQ0KDQpzaG91bGQgYmUg
+dXNlZCA/DQoNCg0KPiArDQo+ICsJaGRyID0gJigoc3RydWN0IGJvb3RfcGFyYW1zICopaW1hZ2Vf
+YmFzZSktPmhkcjsNCj4gIAlhYm92ZTRnID0gaGRyLT54bG9hZGZsYWdzICYgWExGX0NBTl9CRV9M
+T0FERURfQUJPVkVfNEc7DQo+ICANCj4gIAlzdGF0dXMgPSBlZmlfYWxsb2NhdGVfcGFnZXMoMHg0
+MDAwLCAodW5zaWduZWQgbG9uZyAqKSZib290X3BhcmFtcywNCj4gQEAgLTM5OSw3ICs0MDQsNyBA
+QCBlZmlfc3RhdHVzX3QgX19lZmlhcGkgZWZpX3BlX2VudHJ5KGVmaV9oYW5kbGVfdCBoYW5kbGUs
+DQo+ICAJaGRyID0gJmJvb3RfcGFyYW1zLT5oZHI7DQo+ICANCj4gIAkvKiBDb3B5IHRoZSBzZWNv
+bmQgc2VjdG9yIHRvIGJvb3RfcGFyYW1zICovDQo+IC0JbWVtY3B5KCZoZHItPmp1bXAsIGVmaV90
+YWJsZV9hdHRyKGltYWdlLCBpbWFnZV9iYXNlKSArIDUxMiwgNTEyKTsNCj4gKwltZW1jcHkoJmhk
+ci0+anVtcCwgaW1hZ2VfYmFzZSArIDUxMiwgNTEyKTsNCj4gIA0KPiAgCS8qDQo+ICAJICogRmls
+bCBvdXQgc29tZSBvZiB0aGUgaGVhZGVyIGZpZWxkcyBvdXJzZWx2ZXMgYmVjYXVzZSB0aGUNCj4g
+QEAgLTcyNiw3ICs3MzEsNyBAQCB1bnNpZ25lZCBsb25nIGVmaV9tYWluKGVmaV9oYW5kbGVfdCBo
+YW5kbGUsDQo+ICAJICogSWYgdGhlIGtlcm5lbCBpc24ndCBhbHJlYWR5IGxvYWRlZCBhdCB0aGUg
+cHJlZmVycmVkIGxvYWQNCj4gIAkgKiBhZGRyZXNzLCByZWxvY2F0ZSBpdC4NCj4gIAkgKi8NCj4g
+LQlpZiAoYnppbWFnZV9hZGRyICE9IGhkci0+cHJlZl9hZGRyZXNzKSB7DQo+ICsJaWYgKGJ6aW1h
+Z2VfYWRkciAtIGltYWdlX29mZnNldCAhPSBoZHItPnByZWZfYWRkcmVzcykgew0KPiAgCQlzdGF0
+dXMgPSBlZmlfcmVsb2NhdGVfa2VybmVsKCZiemltYWdlX2FkZHIsDQo+ICAJCQkJCSAgICAgaGRy
+LT5pbml0X3NpemUsIGhkci0+aW5pdF9zaXplLA0KPiAgCQkJCQkgICAgIGhkci0+cHJlZl9hZGRy
+ZXNzLA0KPiBAQCAtNzM2LDYgKzc0MSw3IEBAIHVuc2lnbmVkIGxvbmcgZWZpX21haW4oZWZpX2hh
+bmRsZV90IGhhbmRsZSwNCj4gIAkJCWVmaV9wcmludGsoImVmaV9yZWxvY2F0ZV9rZXJuZWwoKSBm
+YWlsZWQhXG4iKTsNCj4gIAkJCWdvdG8gZmFpbDsNCj4gIAkJfQ0KPiArCQlpbWFnZV9vZmZzZXQg
+PSAwOw0KPiAgCX0NCj4gIA0KPiAgCS8qDQoNCg==
 
-Remove the @external_intr param from vmx_check_nested_events(), which is
-actually an indicator that userspace wants an interrupt window, e.g.
-it's named @req_int_win further up the stack.  Injecting a VM-Exit into
-L1 to try and bounce out to L0 userspace is all kinds of broken and is
-no longer necessary.
+--_002_dce7e026ccb236f0c89283558dcc055fnextfourcom_
+Content-Type: application/pgp-keys; name="pEpkey.asc"
+Content-Description: pEpkey.asc
+Content-Disposition: attachment; filename="pEpkey.asc"; size=3157;
+	creation-date="Tue, 03 Mar 2020 06:28:19 GMT";
+	modification-date="Tue, 03 Mar 2020 06:28:19 GMT"
+Content-ID: <4A9F1910C31AC34EBAB648C771C7EFBA@eurprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 
-Remove the hack in nested_vmx_vmexit() that attempted to workaround the
-breakage in vmx_check_nested_events() by only filling interrupt info if
-there's an actual interrupt pending.  The hack actually made things
-worse because it caused KVM to _never_ fill interrupt info when the
-LAPIC resides in userspace (kvm_cpu_has_interrupt() queries
-interrupt.injected, which is always cleared by prepare_vmcs12() before
-reaching the hack in nested_vmx_vmexit()).
+LS0tLS1CRUdJTiBQR1AgUFVCTElDIEtFWSBCTE9DSy0tLS0tDQoNCm1RR05CRnZYMjBRQkRBREhm
+U1VzR2tvY2JsMCt0T1R5TXYyYnQxdVZnWVNDN09QQTE5d3FwWXZhTk9ZdjN1d0UNCnUxRmo0QUl3
+Tkp1cjZHZWlETzhheXZ0NHlMSzErUnQraGUxQzNlQmJvbnlPNGVIVml5QmdoYkdoN0JsM0xqemEN
+CndONVo2WmR0alBzZFVrUTROWGhoWXJDL041QXAwWi80U1VIOWwwMS9LdkgyTy9ERUZwUWVGekFY
+TG9DYVBFTnQNCmJ6bnNmdTlGN2VWV3FUa0ZtdTVLNkR3MFJaMzRHNlJQaGtFUG5Uc0VPWkZLbENT
+WkJUNFhXZWQ3dys3Y0d1R2YNCmJSVmNzQ3QwSThXNzlEQU12WTl0Qk4wOGVtUXZUeWsrWnF5SUNN
+UVFIR0dyVGhpcWVRbVZhNEcxYzBuaW5YWG0NCkNXaHZ4MUxiYUxlOFhuVG4rODV2SndTb092N2NH
+R00yUXJGY2sza1A4cGdsbEd1c0hsU0JNUkVwQWEvZmFKVk4NCmJXL1c1TS8yVGtuS3I0YjZjYWNq
+NjduOGVTalIxb0VsOVMxR09CM0xSYWRmYlJ2NDhVNXRsRFhtSlEwMHdURlcNCjZNZE5Oc0Q5dnRP
+OXJ6UkEyWlhNUnJxTTkxV0RReHdFYW9mTDc5RjU1a3E2eW5FQmJWNEdKbG11TTdHS1h4RWkNCjZw
+ZWIvVGNVeUN0YzBzRUFFUUVBQWJRclRXbHJZU0JRWlc1MGRHbHN3NlFnUEcxcGEyRXVjR1Z1ZEhS
+cGJHRkENCmJtVjRkR1p2ZFhJdVkyOXRQb2tCMUFRVEFRZ0FQZ0liQXdVTENRZ0hBZ1lWQ2drSUN3
+SUVGZ0lEQVFJZUFRSVgNCmdCWWhCRmF0YTJrVEl4ZWtsTWhPWU1RR2VjZnoyd3pGQlFKZHI5Z1VC
+UWtEdVc3TUFBb0pFTVFHZWNmejJ3ekYNCmZxME1BS1N1M2hIc1ZOZG1BaUEreDhYU3o4SEhVTnFo
+ZVEyM053U2MwZEJleDZibytGdVUwT1hLTmZhODRUZTgNCnpwQ2V5OU80bWY0L0ZyQ09temF5U2xh
+a2ZrRFZhQy9lSm5ETTV1Ny9yVy9pZnJ6a1pRMWdjcXpKcTJud1lTUzANCittbDZBcVpOYU9SWEFz
+bjlRNkZWZVlFR1BremNNK0pLcGxqQllwTUN0ckhqOG1JSCsxL0JOcGR4VGplVThPTSsNCmpKbTQy
+R1RtRXVDZGI3a1M1WXdFcTNTajZ3bXdnOFI3RFpnQTlraG9GMHcyUFdCYi9LNk1NMHZQZjZvTE9o
+RFANCk1KTXlaSjQzMUpJQ0FlTFl6V3ZCQitCdCtDYkRqQkpUcFBPYmRhYTd1VnVuOGlUVUJYZEc2
+RVNBY3VPUzlTMlENCnBRMkhVV3A1WkZxbWpmb0lCcklWTTFXSnVRZmgrSXBsWTc0MHhVUWVvd2VZ
+TVVndVFEekVFSVlPT3ZXNzVrMFANCkdUYUcxSjdJVktuRjcrRHIzcWxUd29vMWVpeVMzakxuYVlH
+VWRvS1h5dDVXcythU2liYWlIV1pUUkFQM3R6MWUNClFCUmU0Mml3aVBOUFlVOWNyaTNlMHkxT0VN
+M0Rqd0ErMmJGbm05aFEyaGVMQUV6ZkswWTBHMmJ6R00ydWJSN0INCnY2WnBBb2tCMUFRVEFRZ0FQ
+aFloQkZhdGEya1RJeGVrbE1oT1lNUUdlY2Z6Mnd6RkJRSmIxOXVMQWhzREJRa0INCjRUT0FCUXNK
+Q0FjQ0JoVUtDUWdMQWdRV0FnTUJBaDRCQWhlQUFBb0pFTVFHZWNmejJ3ekZWandMLzM1UzU0dEkN
+CmRXT0xGZXUzcHdUT3ZjKzY1SzR4V1l4cE5aMVRxWVltWW9pUG9IUERTT1pnUDlQeEV2eFk3ODZ1
+OTV4M0dPekkNCk9WbkFWRkxtYTZPeDdnbEVISThwYkNUZEs0ZTdZb2o0NHdqcWcyeTFoMWl4N2d4
+Ny94MEpyU2dadG9oMEJCeG0NCjM4UENTamg1QUtwTGt5ZmlhWktpblJUWE1SejROL0VPSHBKQlJv
+eHN5V2U4aFNsUFdGbXpRVE81SGJ5NzdNZ1ENCnAzajRLV1ZNYnUxdWVUQi9HZzgxN2hLTUViWFo5
+SnlMYVhmdDIxUjFvYU8zUDdwajhPWk9RN0F5OFBwWTlxbTgNCkVKZHo4R2VIUVZQMEhadHdJMXdZ
+YWFYS1FuMzVWRThVU21MNndUZmVtRW55bVFEMWUyYU9nVGNIb1NOR001a3gNCnNuQUd4VjcrK0pr
+Njh6K2hBVHpoajJ4SmpKNjRHdGoySlJFNU52T011RG4yM2QrcnlHblZjZmQwcHdTMU9UUEoNCmVK
+V3lZb0xCNm1sRUliT2NoUmhaeVFweGNNZktkdkJhTURNK0l2YXo0aWFldDhiWHlVdVhhMXBzR0o2
+NGpycUMNCnFiUDBzK2xBLzBPVTBidHNoTjNNWjZCSGxrR3A0WFBhSFFaVVc2dDlPSitrQnhaaXpl
+WjRvOTdRWUxrQmpRUmINCjE5dEpBUXdBcmJUTW8wbGFTaG1WODJXV1lBM1NjRmYzT3NyYmt2aTVN
+VGxyTkpTUTRjZGhNVmZHeVU2cmlOM2INCjU0OTVFQm1BQ21FRTduWjduQVJyYllUN0E1UENKUFpz
+YUU0Mnp3cTNBWjg5MEFvRWpqTEYrU2x1VUJHWmtaeisNCmxMQnhwTHh5aGxxQ2gwaUkyR3JnRVZG
+aGtlRExNSkZRT2ZUdm1HeVFRWXUzRllJMlpvNG9CcHFtaXd5WlZOaTgNCllKbUNZSksrMTFZT1I4
+U21SVC9nN3c1cG95Mldla3RIZmhJbUdwZE1FUmtUTnp6U3g5cmUra1NmRUlLRWxlQ2ENClhDZjNK
+VW4wWU1ZYlY3Z2lnV2RqR0tFYmZIODJYbm1qejFkd2pjcVBoRitUbHhsaHNvTDF3ZGh1eUJCTGpm
+SE8NCjEzLzh3YUQwRGxtdFpibmdCSW5kVkJDQmV0Qzl3cDk3MkdQamN5VkFQTHlHUWE5cGs1SklP
+Z0lVRWRNcjV0VG8NClkyZ0hqS2pKMzFrUk9FbDhWRnppdGt1K2ZzSXNaYmRQZnFwMmdPVW9xZ1ZF
+RGt5M0hZRmlhWnVsek5QVW1ZUlkNCkovR0hvOEFMVThoNE5TdkNkazk3Q3pIdmRrQjEvRThIMTlL
+dmswYVpIekZRY0JuaGt6cStuMFpiU2FUSlM3TTQNCmFxUmFJOGY3QUJFQkFBR0pBYndFR0FFSUFD
+WUNHd3dXSVFSV3JXdHBFeU1YcEpUSVRtREVCbm5IODlzTXhRVUMNClhhL1lGQVVKQTdsdXh3QUtD
+UkRFQm5uSDg5c014WUx4Qy85THUxeGpkVVRkbWQxMC81RXpBMWkwYmROQm9qQlkNCjNQSjRPNGJo
+R3BiOUtHbnhzaFRPRVduY05teXk0MHM4YUhMYmRyZ0VWS0N0a1Mra3dBcm1URmptazQ5R3pRaWUN
+CnJSTzJjTlUwV2tVZXBjWDl3cjUxcUtTYnJuZDdFMHJ6MHlNbXVXdlJIalJ0ejErRDhkUi9HSmhK
+ZFlyRUtxbmwNCnZQVm5yT05qNVp4WFc4d2pzZ1FtczVpTHVWUXp1eVJ5WDRROHhiSFJiYWlsWEVE
+TlUrSFRXUjU4YUFtdzRpeWwNCjI4N0x0RHd5VS9JU2M3T3FNMkVzVFBPaFNlWWpPbkxIWnZvdCt1
+ZnU2cU9HS2tBaUthTm53TjZwUkprVzF6S1kNCnFuUVJZMEhKNmt5cmoxWmFKdzFONEMzVm9wQkxq
+Qy9Qbm44dldBekgzNVJMKzJvaGs0MTY4ZEhhQXJVYVJOV0sNCnF1REFWK3psOGRsR0wySDVVMHlu
+cUxCNWtvU0NINHpnUURtY0gycHQyN3pCcXVxNE1ySzNwTC85emduWE9VeWENClZuUGVjTGRHakhS
+YTIyS2xkb05WT2Y0MWtJQ2wxTFo2ZllXcXhWWEl2ZUE2N0hTcWlmZHVjVVA5bjUwYVdUeWcNCkZx
+L1JFbVVlcmFVV2NZeWRFK0IrNFh0NXlJRi9WL1p3bTBvPQ0KPVoyVkoNCi0tLS0tRU5EIFBHUCBQ
+VUJMSUMgS0VZIEJMT0NLLS0tLS0NCg==
 
-Fixes: 6550c4df7e50 ("KVM: nVMX: Fix interrupt window request with "Acknowledge interrupt on exit"")
-Cc: stable@vger.kernel.org
-Cc: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
----
-
-Odds are good that this doesn't solve all the problems with running nested
-VMX and a userspace LAPIC, but I'm at least able to boot a kernel and run
-unit tests, i.e. it's less broken than before.  Not that it matters, I'm
-guessing no one actually uses this configuration, e.g. running a SMP
-guest with the current KVM+kernel hangs during boot because Qemu
-advertises PV IPIs to the guest, which require an in-kernel LAPIC.  I
-stumbled on this disaster when disabling the in-kernel LAPIC for a
-completely unrelated test.  I'm happy even if it does nothing more than
-get rid of the awful logic vmx_check_nested_events().
-
- arch/x86/include/asm/kvm_host.h |  2 +-
- arch/x86/kvm/vmx/nested.c       | 18 ++++--------------
- arch/x86/kvm/vmx/vmx.c          |  9 +++++++--
- arch/x86/kvm/x86.c              | 10 +++++-----
- 4 files changed, 17 insertions(+), 22 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index 5edf6425c747..b3e936eeb07b 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1175,7 +1175,7 @@ struct kvm_x86_ops {
- 	bool (*pt_supported)(void);
- 	bool (*pku_supported)(void);
- 
--	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
-+	int (*check_nested_events)(struct kvm_vcpu *vcpu);
- 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
- 
- 	void (*sched_in)(struct kvm_vcpu *kvm, int cpu);
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 0946122a8d3b..745cdc382ea2 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3603,7 +3603,7 @@ static void nested_vmx_update_pending_dbg(struct kvm_vcpu *vcpu)
- 			    vcpu->arch.exception.payload);
- }
- 
--static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
-+static int vmx_check_nested_events(struct kvm_vcpu *vcpu)
- {
- 	struct vcpu_vmx *vmx = to_vmx(vcpu);
- 	unsigned long exit_qual;
-@@ -3679,8 +3679,7 @@ static int vmx_check_nested_events(struct kvm_vcpu *vcpu, bool external_intr)
- 		return 0;
- 	}
- 
--	if ((kvm_cpu_has_interrupt(vcpu) || external_intr) &&
--	    nested_exit_on_intr(vcpu)) {
-+	if (kvm_cpu_has_interrupt(vcpu) && nested_exit_on_intr(vcpu)) {
- 		if (block_nested_events)
- 			return -EBUSY;
- 		nested_vmx_vmexit(vcpu, EXIT_REASON_EXTERNAL_INTERRUPT, 0, 0);
-@@ -4328,17 +4327,8 @@ void nested_vmx_vmexit(struct kvm_vcpu *vcpu, u32 exit_reason,
- 	vcpu->arch.mp_state = KVM_MP_STATE_RUNNABLE;
- 
- 	if (likely(!vmx->fail)) {
--		/*
--		 * TODO: SDM says that with acknowledge interrupt on
--		 * exit, bit 31 of the VM-exit interrupt information
--		 * (valid interrupt) is always set to 1 on
--		 * EXIT_REASON_EXTERNAL_INTERRUPT, so we shouldn't
--		 * need kvm_cpu_has_interrupt().  See the commit
--		 * message for details.
--		 */
--		if (nested_exit_intr_ack_set(vcpu) &&
--		    exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
--		    kvm_cpu_has_interrupt(vcpu)) {
-+		if (exit_reason == EXIT_REASON_EXTERNAL_INTERRUPT &&
-+		    nested_exit_intr_ack_set(vcpu)) {
- 			int irq = kvm_cpu_get_interrupt(vcpu);
- 			WARN_ON(irq < 0);
- 			vmcs12->vm_exit_intr_info = irq |
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a04017bdae05..585e89f31340 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4493,8 +4493,13 @@ static int vmx_nmi_allowed(struct kvm_vcpu *vcpu)
- 
- static int vmx_interrupt_allowed(struct kvm_vcpu *vcpu)
- {
--	return (!to_vmx(vcpu)->nested.nested_run_pending &&
--		vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
-+	if (to_vmx(vcpu)->nested.nested_run_pending)
-+		return false;
-+
-+	if (is_guest_mode(vcpu) && nested_exit_on_intr(vcpu))
-+		return true;
-+
-+	return (vmcs_readl(GUEST_RFLAGS) & X86_EFLAGS_IF) &&
- 		!(vmcs_read32(GUEST_INTERRUPTIBILITY_INFO) &
- 			(GUEST_INTR_STATE_STI | GUEST_INTR_STATE_MOV_SS));
- }
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ddd1d296bd20..928c1ba08321 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7578,7 +7578,7 @@ static void update_cr8_intercept(struct kvm_vcpu *vcpu)
- 	kvm_x86_ops->update_cr8_intercept(vcpu, tpr, max_irr);
- }
- 
--static int inject_pending_event(struct kvm_vcpu *vcpu, bool req_int_win)
-+static int inject_pending_event(struct kvm_vcpu *vcpu)
- {
- 	int r;
- 
-@@ -7614,7 +7614,7 @@ static int inject_pending_event(struct kvm_vcpu *vcpu, bool req_int_win)
- 	 * from L2 to L1.
- 	 */
- 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
--		r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
-+		r = kvm_x86_ops->check_nested_events(vcpu);
- 		if (r != 0)
- 			return r;
- 	}
-@@ -7676,7 +7676,7 @@ static int inject_pending_event(struct kvm_vcpu *vcpu, bool req_int_win)
- 		 * KVM_REQ_EVENT only on certain events and not unconditionally?
- 		 */
- 		if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events) {
--			r = kvm_x86_ops->check_nested_events(vcpu, req_int_win);
-+			r = kvm_x86_ops->check_nested_events(vcpu);
- 			if (r != 0)
- 				return r;
- 		}
-@@ -8209,7 +8209,7 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
- 			goto out;
- 		}
- 
--		if (inject_pending_event(vcpu, req_int_win) != 0)
-+		if (inject_pending_event(vcpu) != 0)
- 			req_immediate_exit = true;
- 		else {
- 			/* Enable SMI/NMI/IRQ window open exits if needed.
-@@ -8437,7 +8437,7 @@ static inline int vcpu_block(struct kvm *kvm, struct kvm_vcpu *vcpu)
- static inline bool kvm_vcpu_running(struct kvm_vcpu *vcpu)
- {
- 	if (is_guest_mode(vcpu) && kvm_x86_ops->check_nested_events)
--		kvm_x86_ops->check_nested_events(vcpu, false);
-+		kvm_x86_ops->check_nested_events(vcpu);
- 
- 	return (vcpu->arch.mp_state == KVM_MP_STATE_RUNNABLE &&
- 		!vcpu->arch.apf.halted);
--- 
-2.24.1
-
+--_002_dce7e026ccb236f0c89283558dcc055fnextfourcom_--
