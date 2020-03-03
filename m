@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD39C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D7EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 315262072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C61F20728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257903;
-	bh=Y4W9atvGmn4hDWb8DGFHdTnSI/IULFfUCaj1/x46eFo=;
+	s=default; t=1583257905;
+	bh=QqfcphkuUzCyavQxgi/91Rdbk/ME1gyPfETDf2x+bRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YR1ZitmwDWjQ0Ctv46GNC9+rM94IkSyk5PRH/Wy+nqZmXlGhTOivUgRq1KIYma6ym
-	 5Ol0sRJ6kasI4AhK58n8uP8wT8q0w8XDxy+ETZLvBgHfpdlKqCB7quubUbvS0rFqxd
-	 udFp7E77MfWEt4OFAf1pyZiiZVSXx5eqG5dq6OEk=
+	b=d2l/Rq7Zd8A22gg0BJqu+LUZZ0vLGe7DNOrtqXtsIoJK//jbQWgV+TNngb+n/Vt0B
+	 LPwr2bOepuo0gYwb8l71Ca+Nsv3ucBMXfVsnLOqtYlW5SBrh/t+K+lFfP25c8uSnKy
+	 SkjCRAJXoD8rTF7LEYv6mmhdcG5H2vWHny9WqqEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbgCCRvl (ORCPT
+        id S1732040AbgCCRvn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:51:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59798 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:51:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732022AbgCCRvj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:39 -0500
+        id S1732032AbgCCRvm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:42 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C32EE2146E;
-        Tue,  3 Mar 2020 17:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4699320870;
+        Tue,  3 Mar 2020 17:51:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257899;
-        bh=Y4W9atvGmn4hDWb8DGFHdTnSI/IULFfUCaj1/x46eFo=;
+        s=default; t=1583257901;
+        bh=QqfcphkuUzCyavQxgi/91Rdbk/ME1gyPfETDf2x+bRE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u3RFpG3WtU7x8CiiMx1/lWZvIj24ICCaSdWs/3Vx3HrnsLm9E65SabV6GRDwjIwph
-         HcdFIZLIqRa/aG1kotleMWUaSqVdlGZLg6ZAtLn6GIfbxD+6mn4hvkZ4W4b8IznTMh
-         ZXPEVrn5kfRIexH3z0zNEU/62hSDv4OjrYLgln7A=
+        b=BpgfUxq+fa7GYZZzccSCSHsStjEWKpov58ZsY+g3SRXBZDDgTdvyGedYCy54n53LV
+         4sFSQElGdBuafWZhrtKKK4JPerxqU7bHBwl5vD4rNSW7/GI0NxE7OK/2Q+w0sLW4dw
+         vAKLqDXJIEI+mZbiodjYiazuwFl/xfQdAttOj6D4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xin Long <lucien.xin@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.5 164/176] netfilter: nft_tunnel: no need to call htons() when dumping ports
-Date:   Tue,  3 Mar 2020 18:43:48 +0100
-Message-Id: <20200303174323.157054013@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yang <richardw.yang@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 173/176] mm/huge_memory.c: use head to check huge zero page
+Date:   Tue,  3 Mar 2020 18:43:57 +0100
+Message-Id: <20200303174323.892055985@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,35 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Wei Yang <richardw.yang@linux.intel.com>
 
-commit cf3e204a1ca5442190018a317d9ec181b4639bd6 upstream.
+commit cb829624867b5ab10bc6a7036d183b1b82bfe9f8 upstream.
 
-info->key.tp_src and tp_dst are __be16, when using nla_put_be16()
-to dump them, htons() is not needed, so remove it in this patch.
+The page could be a tail page, if this is the case, this BUG_ON will
+never be triggered.
 
-Fixes: af308b94a2a4 ("netfilter: nf_tables: add tunnel support")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Reviewed-by: Simon Horman <simon.horman@netronome.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Link: http://lkml.kernel.org/r/20200110032610.26499-1-richardw.yang@linux.intel.com
+Fixes: e9b61f19858a ("thp: reintroduce split_huge_page()")
+
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/netfilter/nft_tunnel.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ mm/huge_memory.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/netfilter/nft_tunnel.c
-+++ b/net/netfilter/nft_tunnel.c
-@@ -505,8 +505,8 @@ static int nft_tunnel_opts_dump(struct s
- static int nft_tunnel_ports_dump(struct sk_buff *skb,
- 				 struct ip_tunnel_info *info)
- {
--	if (nla_put_be16(skb, NFTA_TUNNEL_KEY_SPORT, htons(info->key.tp_src)) < 0 ||
--	    nla_put_be16(skb, NFTA_TUNNEL_KEY_DPORT, htons(info->key.tp_dst)) < 0)
-+	if (nla_put_be16(skb, NFTA_TUNNEL_KEY_SPORT, info->key.tp_src) < 0 ||
-+	    nla_put_be16(skb, NFTA_TUNNEL_KEY_DPORT, info->key.tp_dst) < 0)
- 		return -1;
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -2712,7 +2712,7 @@ int split_huge_page_to_list(struct page
+ 	unsigned long flags;
+ 	pgoff_t end;
  
- 	return 0;
+-	VM_BUG_ON_PAGE(is_huge_zero_page(page), page);
++	VM_BUG_ON_PAGE(is_huge_zero_page(head), head);
+ 	VM_BUG_ON_PAGE(!PageLocked(page), page);
+ 	VM_BUG_ON_PAGE(!PageCompound(page), page);
+ 
 
 
