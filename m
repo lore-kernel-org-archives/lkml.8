@@ -2,72 +2,113 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA8D4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A879C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FE5E21556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAC9214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:23:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="qBino2mt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbgCCKWb (ORCPT
+        id S1728571AbgCCKXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:22:31 -0500
-Received: from mga11.intel.com ([192.55.52.93]:44175 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728102AbgCCKWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:22:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 02:22:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
-   d="scan'208";a="351793990"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 03 Mar 2020 02:22:23 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 03 Mar 2020 12:22:22 +0200
-Date:   Tue, 3 Mar 2020 12:22:22 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Tudor.Ambarus@microchip.com
-Cc:     bbrezillon@kernel.org, vigneshr@ti.com,
-        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
-        richard@nod.at, joel@jms.id.au, andrew@aj.id.au,
-        Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com,
-        Ludovic.Desroches@microchip.com, matthias.bgg@gmail.com,
-        vz@mleia.com, michal.simek@xilinx.com, ludovic.barre@st.com,
-        john.garry@huawei.com, tglx@linutronix.de,
-        nishkadg.linux@gmail.com, michael@walle.cc, dinguyen@kernel.org,
-        thor.thayer@linux.intel.com, swboyd@chromium.org,
-        opensource@jilayne.com, kstewart@linuxfoundation.org,
-        allison@lohutok.net, jethro@fortanix.com, info@metux.net,
-        alexander.sverdlin@nokia.com, rfontana@redhat.com,
-        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 12/23] mtd: spi-nor: Move Intel bits out of core.c
-Message-ID: <20200303102222.GL2540@lahna.fi.intel.com>
-References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
- <20200302180730.1886678-13-tudor.ambarus@microchip.com>
+        Tue, 3 Mar 2020 05:23:09 -0500
+Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:53676 "EHLO
+        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728372AbgCCKXI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:23:08 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 115153F6D0;
+        Tue,  3 Mar 2020 11:23:06 +0100 (CET)
+Authentication-Results: pio-pvt-msa1.bahnhof.se;
+        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="qBino2mt";
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at bahnhof.se
+Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
+        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id PvgsKhDRp34N; Tue,  3 Mar 2020 11:23:05 +0100 (CET)
+Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        (Authenticated sender: mb878879)
+        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id 9EBFA3F313;
+        Tue,  3 Mar 2020 11:22:59 +0100 (CET)
+Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
+        by mail1.shipmail.org (Postfix) with ESMTPSA id E5CC0360366;
+        Tue,  3 Mar 2020 11:22:58 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
+        t=1583230979; bh=8QpzQ2ublJJs8/27qDaTvHB44L3rciEGT/yi+WqQA20=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qBino2mtNDn9MEUOuS7v3VA9Ik9iXNt5+MDjtavs4S1bXDjNRPSidurUroksSrR/c
+         oJPWJxcGCpHD/5eCnjmrzLli2ctgcW9++xsY08erzE3vAux3eNO7cIObMrwCYBmxg2
+         I+8I91sT0KWaIdB1AN+eB8ak8rBBH1JhwVn1ehNg=
+From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
+        <thomas_os@shipmail.org>
+To:     linux-mm@kvack.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Cc:     pv-drivers@vmware.com, linux-graphics-maintainer@vmware.com,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Roland Scheidegger <sroland@vmware.com>
+Subject: [PATCH v5 1/9] fs: Constify vma argument to vma_is_dax
+Date:   Tue,  3 Mar 2020 11:22:39 +0100
+Message-Id: <20200303102247.4635-2-thomas_os@shipmail.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200303102247.4635-1-thomas_os@shipmail.org>
+References: <20200303102247.4635-1-thomas_os@shipmail.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302180730.1886678-13-tudor.ambarus@microchip.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 06:07:51PM +0000, Tudor.Ambarus@microchip.com wrote:
-> From: Boris Brezillon <bbrezillon@kernel.org>
-> 
-> Create a SPI NOR manufacturer driver for Intel chips, and move the
-> Intel definitions outside of core.c.
-> 
-> Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Thomas Hellstrom <thellstrom@vmware.com>
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+The function is used by upcoming vma_is_special_huge() with which we want
+to use a const vma argument. Since for vma_is_dax() the vma argument is
+only dereferenced for reading, constify it.
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: "Jérôme Glisse" <jglisse@redhat.com>
+Cc: "Christian König" <christian.koenig@amd.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Reviewed-by: Roland Scheidegger <sroland@vmware.com>
+Acked-by: Christian König <christian.koenig@amd.com>
+---
+ include/linux/fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 3cd4fe6b845e..2b38ce5b73ad 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -3391,7 +3391,7 @@ static inline bool io_is_direct(struct file *filp)
+ 	return (filp->f_flags & O_DIRECT) || IS_DAX(filp->f_mapping->host);
+ }
+ 
+-static inline bool vma_is_dax(struct vm_area_struct *vma)
++static inline bool vma_is_dax(const struct vm_area_struct *vma)
+ {
+ 	return vma->vm_file && IS_DAX(vma->vm_file->f_mapping->host);
+ }
+-- 
+2.21.1
+
