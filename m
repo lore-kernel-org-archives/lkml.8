@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C26BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B65B0C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58BC02146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84AEF2146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:54:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FQCbEyej"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ADh48kCN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgCCIxy (ORCPT
+        id S1727659AbgCCIyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:53:54 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58160 "EHLO
+        Tue, 3 Mar 2020 03:54:18 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37918 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727412AbgCCIxx (ORCPT
+        with ESMTP id S1727820AbgCCIyS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:53:53 -0500
+        Tue, 3 Mar 2020 03:54:18 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583225632;
+        s=mimecast20190719; t=1583225656;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=uA9jSqeJ7YM+hlM0Q0AtYm6l/6Ib8O+uDltLoDfxB+M=;
-        b=FQCbEyejigaDVf/O9fb3la57nVFhVeY8fBjzISJ/mLf6JtW3F+/DHdK6kgAqoU+dUVSI21
-        P9P+baqjSjx43bIP/7wd2MeeYQTroBmbRugtJYAqKnm0wwoqLJfDXQx3PAjMero0EVugGe
-        P9FMz1Xr+csgTU5pE/1Nw/SNqo1o/cs=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-157-X6gEeQ9-PAeRj66Tc1fWPw-1; Tue, 03 Mar 2020 03:53:50 -0500
-X-MC-Unique: X6gEeQ9-PAeRj66Tc1fWPw-1
-Received: by mail-wm1-f71.google.com with SMTP id g26so373455wmk.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:53:50 -0800 (PST)
+        bh=OjsWUXqjUWqBSkSGCD4PbdKz2btlJQttY4xDooxfz/U=;
+        b=ADh48kCNYCMHEDMMIE7F2ggKcYH6TV9UqPz9VPM/pbLe1ikNBRhKVVhqlyIo/sOTGKBbev
+        hyS2IAI8pmIpKd/UxqCuA4Tb5YfM2us/WDmgaoL0MP37oYLCBeto878fzxXyY7voYv7A9p
+        ohgTOT7Ojf8DsE9yD+uLsgay3dMYFtg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-bEohyM4jN2WWgXZN-cfm9w-1; Tue, 03 Mar 2020 03:54:15 -0500
+X-MC-Unique: bEohyM4jN2WWgXZN-cfm9w-1
+Received: by mail-wr1-f70.google.com with SMTP id p5so906622wrj.17
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:54:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=uA9jSqeJ7YM+hlM0Q0AtYm6l/6Ib8O+uDltLoDfxB+M=;
-        b=thjYRXMzOMEDH9N5eRYOfQYwHRDStjiQAM0TfkE+IFs9V6piCi4xuyfuK7/PN1pNos
-         KqMHo0Bibv2njsmCI1u0oX0wbSMWtnyrKF/HXyzdtqwCLR/HD+f/psFjowN5mXRQSRR1
-         5RsH6Wr8ER08nKfHDxdotpVGi4qeMxKh42rEj/kVn1u04RYwiNQUSnagcw4OLnRB/eha
-         S73bfs9TsC+sR9FZcDnzepwwfl67G7Cub+AhDzDCSfitL4f3JkEgJ12fd7OXfLj4vcab
-         gECx0Z4WFQRxY6xdlFZS5rEkrZ3nGn47UOn+Q7vgzxCFOcjYNnhgNAD88be2ZFHSkDij
-         rJsw==
-X-Gm-Message-State: ANhLgQ172OnJU1mirnNSj2F8RCmEpOR6lxIgpSmSGsXvxLqOkD6rYBG9
-        5bNGW903ivKga/jth1/wdVb0Oayo7jeACMkqwuUE8kilqtCMbraEgRsr/Y9+AHysotuYDdYDIDO
-        kYmhJ4gJObF/SgN8lvqM8UKH3
-X-Received: by 2002:a05:600c:20c7:: with SMTP id y7mr1606815wmm.77.1583225629641;
-        Tue, 03 Mar 2020 00:53:49 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vu19cWQ55lE5QJmKdvRAzYW7XwuOB682RJTOOcVGWM8jkkZxs+1Z+TsKH/j2igC9PJlcNhr6g==
-X-Received: by 2002:a05:600c:20c7:: with SMTP id y7mr1606787wmm.77.1583225629387;
-        Tue, 03 Mar 2020 00:53:49 -0800 (PST)
+        bh=OjsWUXqjUWqBSkSGCD4PbdKz2btlJQttY4xDooxfz/U=;
+        b=CKrep2Y/cdbh2xukmj/Q0/mEjw67hUO4IjJgi7Sa2qPV4MUkDxYGmLLW01pzayNw0Z
+         0Gpv34PQio7fHRxvyvoD/OBQ6+xQDRa9vGtZtsD3bwUv+jkhl4j4kYkrqv5WEEEPHNZG
+         Umcvf5AtQHCR6zRtsNHF0IVWbY8xbzCcMhJD2aWzz+7ecdhteqi1REnhtpgVhZCmdXSR
+         1AwBsNnBMvlCvro8bPsaH3p+rYZkdsTpC5VAW0ZL86Zi21CMd50yQK5rAU2JL1i3VPa+
+         VAJzrnbwSQz3J9y23/BcIj6Y+T+Ad2JDl849rs2TLInAOr6MfzU7aLeWNNjVXNwO3knn
+         /Q9w==
+X-Gm-Message-State: ANhLgQ0Z8jXujgExkgUuGbnWjOtJLWsfhXOV90XmCQQP8cKQw4kse2oW
+        bM5M9OcVtBTLfigjV+ybiOuTRGFyo3VsW3YM2tM7GV7dH0uq8IqrpPQPVejkL7VmkWkCY9PPZYx
+        UpD/1ktLW1/iEAaBWksZSIjH+
+X-Received: by 2002:adf:ce12:: with SMTP id p18mr4208152wrn.88.1583225653992;
+        Tue, 03 Mar 2020 00:54:13 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vtxioLATY0Il+f/lYtoQmrW/DITC8fuFwFe+1VWyWHfMfdr9VUldKUP1b6K08oPMsyN/DiChQ==
+X-Received: by 2002:adf:ce12:: with SMTP id p18mr4208133wrn.88.1583225653782;
+        Tue, 03 Mar 2020 00:54:13 -0800 (PST)
 Received: from ?IPv6:2001:b07:6468:f312:4c52:2f3b:d346:82de? ([2001:b07:6468:f312:4c52:2f3b:d346:82de])
-        by smtp.gmail.com with ESMTPSA id b10sm2788680wmh.48.2020.03.03.00.53.48
+        by smtp.gmail.com with ESMTPSA id t124sm3204441wmg.13.2020.03.03.00.54.13
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 00:53:48 -0800 (PST)
+        Tue, 03 Mar 2020 00:54:13 -0800 (PST)
 Subject: Re: [PATCH] kvm: selftests: Support dirty log initial-all-set test
 To:     Jay Zhou <jianjay.zhou@huawei.com>, kvm@vger.kernel.org
 Cc:     peterx@redhat.com, shuah@kernel.org,
@@ -71,8 +71,8 @@ Cc:     peterx@redhat.com, shuah@kernel.org,
         liu.jinsong@huawei.com
 References: <20200303080710.1672-1-jianjay.zhou@huawei.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <0ec6b946-fa0e-6a18-0a49-f0b509cf2ced@redhat.com>
-Date:   Tue, 3 Mar 2020 09:53:49 +0100
+Message-ID: <f0c2dcb8-4415-eec9-d181-fb29d206c55c@redhat.com>
+Date:   Tue, 3 Mar 2020 09:54:13 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
@@ -106,9 +106,13 @@ On 03/03/20 09:07, Jay Zhou wrote:
 >  #endif
 > 
 
+Thanks, instead of this final "if" it should be enough to do
+
 	dirty_log_manual_caps &= (KVM_DIRTY_LOG_MANUAL_PROTECT_ENABLE |
 				  KVM_DIRTY_LOG_INITIALLY_SET);
 
+
+Otherwise looks good, I'll test it and eventually apply both patches.
 
 Paolo
 
