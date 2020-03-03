@@ -2,111 +2,155 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F234FC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:19:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54019C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD23C2072A
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:19:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583223574;
-	bh=TbDW2j/Tj/CSOGhYw85vBh91rtzcIgojV4rBABh5ZdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qJoVbazMNwsfTuXWxAI4vE2iQHS4W+VLYNpXHKrTHMZOGKeBi5HHz4ONmTGvQ4l9L
-	 jr6vaGfGzqHTyYDrQPo1rbOcqPp5aV1J38lKzgN8rZF6n++BWxtXeGq7wQPBIiT179
-	 tcPTlR+jCXps9y9PPKXoROjPHoMu9jj5/0BlKfzA=
+	by mail.kernel.org (Postfix) with ESMTP id 2F061208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 08:21:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iTWHWXN1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbgCCITd (ORCPT
+        id S1727724AbgCCIVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 03:19:33 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41305 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbgCCITd (ORCPT
+        Tue, 3 Mar 2020 03:21:40 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33296 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727552AbgCCIVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 03:19:33 -0500
-Received: by mail-wr1-f67.google.com with SMTP id v4so3126640wrs.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:19:31 -0800 (PST)
+        Tue, 3 Mar 2020 03:21:40 -0500
+Received: by mail-ot1-f68.google.com with SMTP id a20so2188742otl.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 00:21:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GUKiYpi9FYS09yZZU0VyVoSg4aODr62keM14BQquORs=;
+        b=iTWHWXN1cBYaPALi8BmMvDHdDzP0pKeUtHzIMaZWEkPiFOOdEMBDcTNEIqY961Mb8h
+         LbLyoMlq1lKaFpSLXNK3VlkxsJ5KXgQhZaXfV5s4O24srTrobcEMWdltxWq0MqlNjLW1
+         IgAJ+fkveUQq17XOSt7mVFTzXwRn4y6SiVqHI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z04jPTegah1x+XyJrZIvWmznvuMyEVD5pNJ2ECVbFc8=;
-        b=pAZhCfXJG2hgdKVvydCqct1cnlI81ChQobPPOLTFM+TV2jwjlo9iPZHbLEh+mkNKVm
-         ZnAZWCRD5iwc2IzUV9wmiPnW/hHCaqp4Abf5fiYLrVHdiXSdbjBXVgyzUQVG8c8Kg1i6
-         tvGaicyRi+uyB1BQgR2vBU1GF/HxvA1QXxFQhDZtS1hUZUuiWbXgda6Ta1gA2YWPl5FY
-         aGUOtAsu4O5nxm5Xr4Bb5biec6lLpMb4WPzCvyI4HN3jGVNfRpX9le859OO5BMFE28Pq
-         vxGKKUAV4wlOEoqQkYZs900gT8LAbSAx2SJaNkpj1eO6562SdFDy1uKkVNz4LsSfyh3K
-         5iqA==
-X-Gm-Message-State: ANhLgQ3PfprzNlpLzu/ZKTfIC7Ys2ZCpdsGGeWwskoxbbdBfxuJOwr9/
-        dLLsNl001CKMEGAanrPdQiE=
-X-Google-Smtp-Source: ADFU+vv6QbXmtXGG61XzfcFiKGH/M/nZOVa7e43A2+0bzNzWl0PZIWEdoP3t7WXQKHJWXHOegxU+EA==
-X-Received: by 2002:a5d:4d8c:: with SMTP id b12mr4172049wru.253.1583223571141;
-        Tue, 03 Mar 2020 00:19:31 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id k16sm33014397wrd.17.2020.03.03.00.19.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 00:19:30 -0800 (PST)
-Date:   Tue, 3 Mar 2020 09:19:29 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Mel Gorman <mgorman@suse.de>,
-        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-Message-ID: <20200303081929.GY4380@dhcp22.suse.cz>
-References: <20200228033819.3857058-1-ying.huang@intel.com>
- <20200228034248.GE29971@bombadil.infradead.org>
- <87a7538977.fsf@yhuang-dev.intel.com>
- <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
- <871rqf850z.fsf@yhuang-dev.intel.com>
- <20200228095048.GK3771@dhcp22.suse.cz>
- <87d09u7sm2.fsf@yhuang-dev.intel.com>
- <20200302142549.GO4380@dhcp22.suse.cz>
- <874kv66x8r.fsf@yhuang-dev.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GUKiYpi9FYS09yZZU0VyVoSg4aODr62keM14BQquORs=;
+        b=aa6wxUUU7YfGYgvI89LpbmsxSbAe3KRJuYD3KhX6lPj9G8TIHvfacvxLpDOh46hNvu
+         Q9JUl3zVxV6Us1x9d/ekHSDqzPzX15IbgjhDrqMbZdoWcXZaJPwDA/Uv927LA9cT3tOX
+         XO/yF7GRTpxbldiMAvwqyT94BTvdQYGoBrtdRn8GV9dHMOsgJCmqQYJYFJvmmKwKiQ0a
+         3ke0EbkajnRnEELXCtbTx85RxJWaG8jFn77QC+eHVokUMuTnbkxrzVZBFzVYCBDAl3Lf
+         FutjLQDot9CUTrcZ2+1Tm/L8hvt9+2J/EyxPW21Hq2vP47IEBTmi8EPiU4NeGzloVY1w
+         dxRg==
+X-Gm-Message-State: ANhLgQ345iPQwnKb687Mbn0aG6iserKUJ0+TWC0HKtUQIquZ/mcAL28D
+        eNw4fc3Gcita1XeieQTJBqPAE5YJpiKMndjqI3Q2tg==
+X-Google-Smtp-Source: ADFU+vsWv/xGzR65hrkCy9io6KB5BpW2YoarmWrhIlXJBLbFY6jxN/402N6iCd/Q1ExpqXqPKFR3bzRtUMOm2cVQ7N8=
+X-Received: by 2002:a9d:6256:: with SMTP id i22mr676037otk.106.1583223698573;
+ Tue, 03 Mar 2020 00:21:38 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <874kv66x8r.fsf@yhuang-dev.intel.com>
+References: <20200220062229.68762-1-keescook@chromium.org> <202003022038.07A611E@keescook>
+In-Reply-To: <202003022038.07A611E@keescook>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 3 Mar 2020 09:21:26 +0100
+Message-ID: <CAKMK7uHRppv==G+Ep4S48dPMKZ9EwZGOt3WwWGXJiv+bXR-0SA@mail.gmail.com>
+Subject: Re: [PATCH] drm/edid: Distribute switch variables for initialization
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Alexander Potapenko <glider@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03-03-20 09:30:28, Huang, Ying wrote:
-[...]
-> Yes.  mmap() can control whether to populate the underlying physical
-> pages.
+On Tue, Mar 3, 2020 at 5:39 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Wed, Feb 19, 2020 at 10:22:29PM -0800, Kees Cook wrote:
+> > Variables declared in a switch statement before any case statements
+> > cannot be automatically initialized with compiler instrumentation (as
+> > they are not part of any execution flow). With GCC's proposed automatic
+> > stack variable initialization feature, this triggers a warning (and the=
+y
+> > don't get initialized). Clang's automatic stack variable initialization
+> > (via CONFIG_INIT_STACK_ALL=3Dy) doesn't throw a warning, but it also
+> > doesn't initialize such variables[1]. Note that these warnings (or sile=
+nt
+> > skipping) happen before the dead-store elimination optimization phase,
+> > so even when the automatic initializations are later elided in favor of
+> > direct initializations, the warnings remain.
+> >
+> > To avoid these problems, move such variables into the "case" where
+> > they're used or lift them up into the main function body.
+> >
+> > drivers/gpu/drm/drm_edid.c: In function =E2=80=98drm_edid_to_eld=E2=80=
+=99:
+> > drivers/gpu/drm/drm_edid.c:4395:9: warning: statement will never be exe=
+cuted [-Wswitch-unreachable]
+> >  4395 |     int sad_count;
+> >       |         ^~~~~~~~~
+> >
+> > [1] https://bugs.llvm.org/show_bug.cgi?id=3D44916
+> >
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+>
+> Ping. Can someone pick this up, please?
 
-right because many usecases benefit from it. They simply know that the
-mapping will be used completely and it is worth saving overhead for #PF.
-See. there is a clear justification for that policy.
+Whatever the reasons, but your original patch didn't make it through
+to dri-devel. Can you pls resubmit?
 
-> But for migrating MADV_FREE pages, there's no control, all pages
-> will be populated again always by default.  Maybe we should avoid to do
-> that in some situations too.
+Thanks, Daniel
 
-Now let's have a look here. It is the userspace that decided to mark
-MADV_FREE pages. It is under its full control which pages are to be
-freed lazily. If the userspace wants to move those pages then it is
-likely aware they have been MADV_FREE, right? If the userspace wanted to
-save migration overhead then it could either chose to not migrate those
-pages or simply unmap them right away. So in the end we are talking
-about saving munmap/MAMDV_DONTNEED or potentially more move_pages calls
-to skip over MADV_FREE holes. Which is all nice but is there any
-userspace that really does care? Because this is a fundamental question
-here and it doesn't make much sense to discuss this left to right unless
-this is clear.
--- 
-Michal Hocko
-SUSE Labs
+>
+> Thanks!
+>
+> -Kees
+>
+> > ---
+> >  drivers/gpu/drm/drm_edid.c |    5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> > index 805fb004c8eb..2941b65b427f 100644
+> > --- a/drivers/gpu/drm/drm_edid.c
+> > +++ b/drivers/gpu/drm/drm_edid.c
+> > @@ -4392,9 +4392,9 @@ static void drm_edid_to_eld(struct drm_connector =
+*connector, struct edid *edid)
+> >                       dbl =3D cea_db_payload_len(db);
+> >
+> >                       switch (cea_db_tag(db)) {
+> > -                             int sad_count;
+> > +                     case AUDIO_BLOCK: {
+> >
+> > -                     case AUDIO_BLOCK:
+> > +                             int sad_count;
+> >                               /* Audio Data Block, contains SADs */
+> >                               sad_count =3D min(dbl / 3, 15 - total_sad=
+_count);
+> >                               if (sad_count >=3D 1)
+> > @@ -4402,6 +4402,7 @@ static void drm_edid_to_eld(struct drm_connector =
+*connector, struct edid *edid)
+> >                                              &db[1], sad_count * 3);
+> >                               total_sad_count +=3D sad_count;
+> >                               break;
+> > +                     }
+> >                       case SPEAKER_BLOCK:
+> >                               /* Speaker Allocation Data Block */
+> >                               if (dbl >=3D 1)
+> >
+>
+> --
+> Kees Cook
+
+
+
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
