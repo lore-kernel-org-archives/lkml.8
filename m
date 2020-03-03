@@ -2,200 +2,287 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 741CBC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2023C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4147C20838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AC24208C3
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 14:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20150623.gappssmtp.com header.i=@resnulli-us.20150623.gappssmtp.com header.b="IanPHeJb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LaPYKyxW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729672AbgCCOKT (ORCPT
+        id S1729585AbgCCOKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 09:10:19 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34117 "EHLO
+        Tue, 3 Mar 2020 09:10:05 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41653 "EHLO
         mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729596AbgCCOKH (ORCPT
+        with ESMTP id S1729563AbgCCOKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 09:10:07 -0500
-Received: by mail-wr1-f67.google.com with SMTP id z15so4548530wrl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:10:06 -0800 (PST)
+        Tue, 3 Mar 2020 09:10:04 -0500
+Received: by mail-wr1-f67.google.com with SMTP id v4so4493295wrs.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 06:10:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ppjTTRSxDkqsFonnJRiZqlBZgTzyFzr2NmtbUAK1iGY=;
-        b=IanPHeJbyBYiJPLkaKtGNuoBeFK0JAgtgDThLsxHwgetDpg7v7s8pzarRylOcFxTmb
-         B3AZ3le5Z1ZQ2Z8m5c1mbtsUj1gAGZtyhKNJfwWnys1eSxWAP6Eqs3dkQt33a9N+SYwP
-         R6C2t5vObT6dWQbeOjUldoxdVRhHwDVgtK3zwdZ0kQH4Nt1kXM3aGiX3owlMJeguO3pY
-         L3P5v3tUwsGryqDmN66zX2vm/eGoVy/6WZpRTEKA56NdIqXtiKUd+Xq/kZ6Ey3sM0ruj
-         dAgZwMDTPwz38kwhsM/I3HGJMp+VeeQolNGpnqpJjp7usEPbFHMtzdzeiDU6htp7lvjy
-         Ehyw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7Srq3R5TKb+eZOIHTdbDiN/5M3Qd6QPJ/nzui68J28g=;
+        b=LaPYKyxWJlGjMz95/pZU9REbjALZfvUOgHKzSRZ/MZIMk9UNZ3lSI/Y/gWHKEexun/
+         KyLKBQqMy1+OSu6ZoPE7WdMPX/G4mon3EL8WmRsCbiViDVShtqULfeoaBeVfQOBtpBv0
+         OeUYoYQdFF2HJ88dCHbKumrav8w1zbOvEeWSU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ppjTTRSxDkqsFonnJRiZqlBZgTzyFzr2NmtbUAK1iGY=;
-        b=PVDdIkxhzkSZPWAeRzlz0zbDH6YdnbFs2XQaE8HKF5+QQ5mN4P+gMfCpz4Eevc0ZtX
-         HyMNGcj5S5BlIPLodWXmPqbFs09XHOv3k4LrzVdlFbO8/qkhMO1ERY+JzAZT1wFHBA4H
-         ARw7OUMudehC49knVYPTAunVIZQZo3dYX5e1KP1DX2c/RLmzGCxGO1t7UR93vETUXbL+
-         yQUuOPPVO+eC5p1h8PGWpfvUdQy5e3+3yM8rnv14RGNsvejmPfEjnnuM8MYnFroaOLjr
-         zq/72P2c7e/nkccF4dMmlfRzcxuSSq2LictFQMR2X3N7/fsbCbLrZZ7wra7dkW8Nx/WD
-         TKkw==
-X-Gm-Message-State: ANhLgQ1T+Xayj8h44CLuAGCNHaevzucjTUF3J5J61BgdDhBAjVO6kNyH
-        caPA0btZlb2LDARX0j0ETuwRaw==
-X-Google-Smtp-Source: ADFU+vuuNH3/Wba0Bee4G2gpwQ/0j++QuGFKFTe2brqTLKFz41qc8r3aEwGHFmdnVARg/E1ccjLMqg==
-X-Received: by 2002:adf:e9c2:: with SMTP id l2mr5487794wrn.86.1583244606299;
-        Tue, 03 Mar 2020 06:10:06 -0800 (PST)
-Received: from localhost ([85.163.43.78])
-        by smtp.gmail.com with ESMTPSA id o5sm4452752wmb.8.2020.03.03.06.10.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7Srq3R5TKb+eZOIHTdbDiN/5M3Qd6QPJ/nzui68J28g=;
+        b=oMtgVlJwieqhj3zqfiAzthdWIwV0oYOkpK/RYKNcsqsu+zy2LYVRpzpH40njq+u4HK
+         aHzbNKNQfybEx8Jf/G0CNrAuFEniF4gNV6UaJevGxHIuEmdQH6ebVDx8Wz7PCE0YfBbm
+         8vKLdaqCK2cng03Tz46E9OUc40A4MKUTQqPIdpkYc6M29gu2x9+W8rvTd4/v/GVruKlG
+         lsk4sDihi84mpbEW+a1Opd7+I9u4kvwg+VorKeMz8oeVRQbx2tJqPDuKqNvUuWsHSLcC
+         EV9ezVDkdx/L+WLsULp9EnDdBECnV6EFuhufUmhz4vEX1IELmX9545ByOYMcY7f8XwTN
+         FyzA==
+X-Gm-Message-State: ANhLgQ2VAn+gaOpIhJLEtRQ6wlE0bRfQ3WM6Ggc6GuQQMRqhjE0RkzhC
+        H9ynMy16gKyTMGazB2eoZ03uBd9YPNE=
+X-Google-Smtp-Source: ADFU+vsaLTwv0HoYMSZ5CrjAZK0ILc7Ak9Sr1FoReQb/qnPKxobdpHYu8PsMMNKOsJf4VQiybpw75w==
+X-Received: by 2002:a05:6000:1c5:: with SMTP id t5mr5592675wrx.110.1583244602548;
+        Tue, 03 Mar 2020 06:10:02 -0800 (PST)
+Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:308:2811:c80d:9375:bf8a])
+        by smtp.gmail.com with ESMTPSA id h20sm11746823wrc.47.2020.03.03.06.10.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 06:10:05 -0800 (PST)
-Date:   Tue, 3 Mar 2020 15:10:04 +0100
-From:   Jiri Pirko <jiri@resnulli.us>
-To:     syzbot <syzbot+eeca95faae43d590987b@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: possible deadlock in team_port_change_check
-Message-ID: <20200303141004.GN2178@nanopsycho>
-References: <000000000000f44aca059fe3232d@google.com>
+        Tue, 03 Mar 2020 06:10:02 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+To:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: [PATCH bpf-next 2/7] bpf: JIT helpers for fmod_ret progs
+Date:   Tue,  3 Mar 2020 15:09:45 +0100
+Message-Id: <20200303140950.6355-3-kpsingh@chromium.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200303140950.6355-1-kpsingh@chromium.org>
+References: <20200303140950.6355-1-kpsingh@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000f44aca059fe3232d@google.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mon, Mar 02, 2020 at 07:13:13PM CET, syzbot+eeca95faae43d590987b@syzkaller.appspotmail.com wrote:
->Hello,
->
->syzbot found the following crash on:
->
->HEAD commit:    3b3e808c Merge tag 'mac80211-next-for-net-next-2020-02-24'..
->git tree:       net-next
->console output: https://syzkaller.appspot.com/x/log.txt?x=146c04f9e00000
->kernel config:  https://syzkaller.appspot.com/x/.config?x=6ec9623400ee72
->dashboard link: https://syzkaller.appspot.com/bug?extid=eeca95faae43d590987b
->compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->
->Unfortunately, I don't have any reproducer for this crash yet.
->
->IMPORTANT: if you fix the bug, please add the following tag to the commit:
->Reported-by: syzbot+eeca95faae43d590987b@syzkaller.appspotmail.com
->
->device team_slave_1 left promiscuous mode
->device vlan2 left promiscuous mode
->device team_slave_0 left promiscuous mode
->bridge9: port 1(@) entered disabled state
+From: KP Singh <kpsingh@google.com>
 
-Interesting. Would be great to know the output of "ip link" here.
+* Split the invoke_bpf program to prepare for special handling of
+  fmod_ret programs introduced in a subsequent patch.
+* Move the definition of emit_cond_near_jump and emit_nops as they are
+  needed for fmod_ret.
+* Refactor branch target alignment into its own function
+  align16_branch_target.
 
+Signed-off-by: KP Singh <kpsingh@google.com>
+---
+ arch/x86/net/bpf_jit_comp.c | 158 ++++++++++++++++++++----------------
+ 1 file changed, 90 insertions(+), 68 deletions(-)
 
->============================================
->WARNING: possible recursive locking detected
->5.6.0-rc2-syzkaller #0 Not tainted
->--------------------------------------------
->syz-executor.5/26255 is trying to acquire lock:
->ffff88805be96bf0 (team->team_lock_key#6){+.+.}, at: team_port_change_check+0x49/0x140 drivers/net/team/team.c:2962
->
->but task is already holding lock:
->ffff88805be96bf0 (team->team_lock_key#6){+.+.}, at: team_uninit+0x37/0x1c0 drivers/net/team/team.c:1665
->
->other info that might help us debug this:
-> Possible unsafe locking scenario:
->
->       CPU0
->       ----
->  lock(team->team_lock_key#6);
->  lock(team->team_lock_key#6);
->
-> *** DEADLOCK ***
->
-> May be due to missing lock nesting notation
->
->2 locks held by syz-executor.5/26255:
-> #0: ffffffff8a74d740 (rtnl_mutex){+.+.}, at: rtnl_lock net/core/rtnetlink.c:72 [inline]
-> #0: ffffffff8a74d740 (rtnl_mutex){+.+.}, at: rtnetlink_rcv_msg+0x405/0xaf0 net/core/rtnetlink.c:5437
-> #1: ffff88805be96bf0 (team->team_lock_key#6){+.+.}, at: team_uninit+0x37/0x1c0 drivers/net/team/team.c:1665
->
->stack backtrace:
->CPU: 0 PID: 26255 Comm: syz-executor.5 Not tainted 5.6.0-rc2-syzkaller #0
->Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->Call Trace:
-> __dump_stack lib/dump_stack.c:77 [inline]
-> dump_stack+0x197/0x210 lib/dump_stack.c:118
-> print_deadlock_bug kernel/locking/lockdep.c:2370 [inline]
-> check_deadlock kernel/locking/lockdep.c:2411 [inline]
-> validate_chain kernel/locking/lockdep.c:2954 [inline]
-> __lock_acquire.cold+0x15d/0x385 kernel/locking/lockdep.c:3954
-> lock_acquire+0x190/0x410 kernel/locking/lockdep.c:4484
-> __mutex_lock_common kernel/locking/mutex.c:956 [inline]
-> __mutex_lock+0x156/0x13c0 kernel/locking/mutex.c:1103
-> mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1118
-> team_port_change_check+0x49/0x140 drivers/net/team/team.c:2962
-> team_device_event+0x16a/0x420 drivers/net/team/team.c:2988
-> notifier_call_chain+0xc2/0x230 kernel/notifier.c:83
-> __raw_notifier_call_chain kernel/notifier.c:361 [inline]
-> raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:368
-> call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
-> call_netdevice_notifiers_info+0xba/0x130 net/core/dev.c:1933
-> call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
-> call_netdevice_notifiers net/core/dev.c:1974 [inline]
-> dev_close_many+0x32a/0x6c0 net/core/dev.c:1549
-> vlan_device_event+0x9a9/0x2370 net/8021q/vlan.c:450
-> notifier_call_chain+0xc2/0x230 kernel/notifier.c:83
-> __raw_notifier_call_chain kernel/notifier.c:361 [inline]
-> raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:368
-> call_netdevice_notifiers_info net/core/dev.c:1948 [inline]
-> call_netdevice_notifiers_info+0xba/0x130 net/core/dev.c:1933
-> call_netdevice_notifiers_extack net/core/dev.c:1960 [inline]
-> call_netdevice_notifiers net/core/dev.c:1974 [inline]
-> dev_close_many+0x32a/0x6c0 net/core/dev.c:1549
-> dev_close.part.0+0x114/0x1e0 net/core/dev.c:1571
-> dev_close+0x63/0x80 net/core/dev.c:1574
-> team_port_del+0x35c/0x800 drivers/net/team/team.c:1345
-> team_uninit+0xc3/0x1c0 drivers/net/team/team.c:1667
-> rollback_registered_many+0xa06/0x1030 net/core/dev.c:8824
-> unregister_netdevice_many.part.0+0x1b/0x1f0 net/core/dev.c:9963
-> unregister_netdevice_many+0x3b/0x50 net/core/dev.c:9962
-> rtnl_delete_link+0xda/0x130 net/core/rtnetlink.c:2933
-> rtnl_dellink+0x341/0x9e0 net/core/rtnetlink.c:2985
-> rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5440
-> netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2478
-> rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5458
-> netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
-> netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
-> netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
-> sock_sendmsg_nosec net/socket.c:652 [inline]
-> sock_sendmsg+0xd7/0x130 net/socket.c:672
-> ____sys_sendmsg+0x753/0x880 net/socket.c:2343
-> ___sys_sendmsg+0x100/0x170 net/socket.c:2397
-> __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
-> __do_sys_sendmsg net/socket.c:2439 [inline]
-> __se_sys_sendmsg net/socket.c:2437 [inline]
-> __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
-> do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> entry_SYSCALL_64_after_hwframe+0x49/0xbe
->RIP: 0033:0x45c479
->Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
->RSP: 002b:00007f8bb9fd6c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
->RAX: ffffffffffffffda RBX: 00007f8bb9fd76d4 RCX: 000000000045c479
->RDX: 0000000000000000 RSI: 00000000200002c0 RDI: 000000000000000a
->RBP: 000000000076c060 R08: 0000000000000000 R09: 0000000000000000
->R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
->R13: 00000000000009f9 R14: 00000000004cc71a R15: 000000000076c06c
->
->
->---
->This bug is generated by a bot. It may contain errors.
->See https://goo.gl/tpsmEJ for more information about syzbot.
->syzbot engineers can be reached at syzkaller@googlegroups.com.
->
->syzbot will keep track of this bug report. See:
->https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index 15c7d28bc05c..475e354c2e88 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -1361,35 +1361,100 @@ static void restore_regs(const struct btf_func_model *m, u8 **prog, int nr_args,
+ 			 -(stack_size - i * 8));
+ }
+ 
++static int invoke_bpf_prog(const struct btf_func_model *m, u8 **pprog,
++			   struct bpf_prog *p, int stack_size)
++{
++	u8 *prog = *pprog;
++	int cnt = 0;
++
++	if (emit_call(&prog, __bpf_prog_enter, prog))
++		return -EINVAL;
++	/* remember prog start time returned by __bpf_prog_enter */
++	emit_mov_reg(&prog, true, BPF_REG_6, BPF_REG_0);
++
++	/* arg1: lea rdi, [rbp - stack_size] */
++	EMIT4(0x48, 0x8D, 0x7D, -stack_size);
++	/* arg2: progs[i]->insnsi for interpreter */
++	if (!p->jited)
++		emit_mov_imm64(&prog, BPF_REG_2,
++			       (long) p->insnsi >> 32,
++			       (u32) (long) p->insnsi);
++	/* call JITed bpf program or interpreter */
++	if (emit_call(&prog, p->bpf_func, prog))
++		return -EINVAL;
++
++	/* arg1: mov rdi, progs[i] */
++	emit_mov_imm64(&prog, BPF_REG_1, (long) p >> 32,
++		       (u32) (long) p);
++	/* arg2: mov rsi, rbx <- start time in nsec */
++	emit_mov_reg(&prog, true, BPF_REG_2, BPF_REG_6);
++	if (emit_call(&prog, __bpf_prog_exit, prog))
++		return -EINVAL;
++
++	*pprog = prog;
++	return 0;
++}
++
++static void emit_nops(u8 **pprog, unsigned int len)
++{
++	unsigned int i, noplen;
++	u8 *prog = *pprog;
++	int cnt = 0;
++
++	while (len > 0) {
++		noplen = len;
++
++		if (noplen > ASM_NOP_MAX)
++			noplen = ASM_NOP_MAX;
++
++		for (i = 0; i < noplen; i++)
++			EMIT1(ideal_nops[noplen][i]);
++		len -= noplen;
++	}
++
++	*pprog = prog;
++}
++
++/* From Intel 64 and IA-32 Architectures Optimization
++ * Reference Manual, 3.4.1.4 Code Alignment, Assembly/Compiler
++ * Coding Rule 11: All branch targets should be 16-byte
++ * aligned.
++ */
++static void align16_branch_target(u8 **pprog)
++{
++	u8 *target, *prog = *pprog;
++
++	target = PTR_ALIGN(prog, 16);
++	if (target != prog)
++		emit_nops(&prog, target - prog);
++	if (target != prog)
++		pr_err("calcultion error\n");
++}
++
++static int emit_cond_near_jump(u8 **pprog, void *func, void *ip, u8 jmp_cond)
++{
++	u8 *prog = *pprog;
++	int cnt = 0;
++	s64 offset;
++
++	offset = func - (ip + 2 + 4);
++	if (!is_simm32(offset)) {
++		pr_err("Target %p is out of range\n", func);
++		return -EINVAL;
++	}
++	EMIT2_off32(0x0F, jmp_cond + 0x10, offset);
++	*pprog = prog;
++	return 0;
++}
++
+ static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
+ 		      struct bpf_tramp_progs *tp, int stack_size)
+ {
++	int i;
+ 	u8 *prog = *pprog;
+-	int cnt = 0, i;
+ 
+ 	for (i = 0; i < tp->nr_progs; i++) {
+-		if (emit_call(&prog, __bpf_prog_enter, prog))
+-			return -EINVAL;
+-		/* remember prog start time returned by __bpf_prog_enter */
+-		emit_mov_reg(&prog, true, BPF_REG_6, BPF_REG_0);
+-
+-		/* arg1: lea rdi, [rbp - stack_size] */
+-		EMIT4(0x48, 0x8D, 0x7D, -stack_size);
+-		/* arg2: progs[i]->insnsi for interpreter */
+-		if (!tp->progs[i]->jited)
+-			emit_mov_imm64(&prog, BPF_REG_2,
+-				       (long) tp->progs[i]->insnsi >> 32,
+-				       (u32) (long) tp->progs[i]->insnsi);
+-		/* call JITed bpf program or interpreter */
+-		if (emit_call(&prog, tp->progs[i]->bpf_func, prog))
+-			return -EINVAL;
+-
+-		/* arg1: mov rdi, progs[i] */
+-		emit_mov_imm64(&prog, BPF_REG_1, (long) tp->progs[i] >> 32,
+-			       (u32) (long) tp->progs[i]);
+-		/* arg2: mov rsi, rbx <- start time in nsec */
+-		emit_mov_reg(&prog, true, BPF_REG_2, BPF_REG_6);
+-		if (emit_call(&prog, __bpf_prog_exit, prog))
++		if (invoke_bpf_prog(m, &prog, tp->progs[i], stack_size))
+ 			return -EINVAL;
+ 	}
+ 	*pprog = prog;
+@@ -1531,42 +1596,6 @@ int arch_prepare_bpf_trampoline(void *image, void *image_end,
+ 	return prog - (u8 *)image;
+ }
+ 
+-static int emit_cond_near_jump(u8 **pprog, void *func, void *ip, u8 jmp_cond)
+-{
+-	u8 *prog = *pprog;
+-	int cnt = 0;
+-	s64 offset;
+-
+-	offset = func - (ip + 2 + 4);
+-	if (!is_simm32(offset)) {
+-		pr_err("Target %p is out of range\n", func);
+-		return -EINVAL;
+-	}
+-	EMIT2_off32(0x0F, jmp_cond + 0x10, offset);
+-	*pprog = prog;
+-	return 0;
+-}
+-
+-static void emit_nops(u8 **pprog, unsigned int len)
+-{
+-	unsigned int i, noplen;
+-	u8 *prog = *pprog;
+-	int cnt = 0;
+-
+-	while (len > 0) {
+-		noplen = len;
+-
+-		if (noplen > ASM_NOP_MAX)
+-			noplen = ASM_NOP_MAX;
+-
+-		for (i = 0; i < noplen; i++)
+-			EMIT1(ideal_nops[noplen][i]);
+-		len -= noplen;
+-	}
+-
+-	*pprog = prog;
+-}
+-
+ static int emit_fallback_jump(u8 **pprog)
+ {
+ 	u8 *prog = *pprog;
+@@ -1589,7 +1618,7 @@ static int emit_fallback_jump(u8 **pprog)
+ 
+ static int emit_bpf_dispatcher(u8 **pprog, int a, int b, s64 *progs)
+ {
+-	u8 *jg_reloc, *jg_target, *prog = *pprog;
++	u8 *jg_reloc, *prog = *pprog;
+ 	int pivot, err, jg_bytes = 1, cnt = 0;
+ 	s64 jg_offset;
+ 
+@@ -1639,14 +1668,7 @@ static int emit_bpf_dispatcher(u8 **pprog, int a, int b, s64 *progs)
+ 	if (err)
+ 		return err;
+ 
+-	/* From Intel 64 and IA-32 Architectures Optimization
+-	 * Reference Manual, 3.4.1.4 Code Alignment, Assembly/Compiler
+-	 * Coding Rule 11: All branch targets should be 16-byte
+-	 * aligned.
+-	 */
+-	jg_target = PTR_ALIGN(prog, 16);
+-	if (jg_target != prog)
+-		emit_nops(&prog, jg_target - prog);
++	align16_branch_target(&prog);
+ 	jg_offset = prog - jg_reloc;
+ 	emit_code(jg_reloc - jg_bytes, jg_offset, jg_bytes);
+ 
+-- 
+2.20.1
+
