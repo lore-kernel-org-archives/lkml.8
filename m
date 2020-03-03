@@ -2,97 +2,136 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D50C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65C5BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2AF4208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:16:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583262994;
-	bh=rRMdJDhihpbw492Akq7IhrH8YLKWl8VjOzCCbOZqZac=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cRSATai5f1egEXQmCuk2mFrw7LTQQM2Sr+TRO72F2NU54Ot9SuXvE45l8CuzOkexX
-	 RPflQt9dWwlDv/heHI0L7N0cWmKMEiVdNTjvo4zDGQ7Sg/RguwMLVYL1CufjOzcmMG
-	 WAwwvDob2NZwV54+mLIo+Ss0IS035XtvhDIx7aks=
+	by mail.kernel.org (Postfix) with ESMTP id 361472146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 19:18:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730704AbgCCTQc (ORCPT
+        id S1730025AbgCCTSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 14:16:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48228 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 14:18:35 -0500
+Received: from mga12.intel.com ([192.55.52.136]:14351 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729687AbgCCTQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 14:16:32 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 141212073B;
-        Tue,  3 Mar 2020 19:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583262991;
-        bh=rRMdJDhihpbw492Akq7IhrH8YLKWl8VjOzCCbOZqZac=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DsP98JqYh3FZtjF1CgaIUF1AvB9sYez3Kr5jeTN/D4eI6y+Y2osl0oCTFHFAcXdE3
-         E2uj9eZLuK/81D2DscuklPOQ5jC12DWI+V9I2qOViOeoGxqyFsUDmSREGzym4rN9s8
-         CieEbNz093Xkw5rG5vlq33olUAgybJvqxCT02uRI=
-Date:   Tue, 3 Mar 2020 19:16:25 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 00/14] iommu: Move iommu_fwspec out of 'struct device'
-Message-ID: <20200303191624.GC27329@willie-the-truck>
-References: <20200228150820.15340-1-joro@8bytes.org>
+        id S1729138AbgCCTSe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 14:18:34 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 11:18:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="412858229"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 03 Mar 2020 11:18:33 -0800
+Date:   Tue, 3 Mar 2020 11:18:33 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/8] x86/split_lock: Cache the value of MSR_TEST_CTRL
+ in percpu data
+Message-ID: <20200303191833.GT1439@linux.intel.com>
+References: <20200206070412.17400-1-xiaoyao.li@intel.com>
+ <20200206070412.17400-4-xiaoyao.li@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200228150820.15340-1-joro@8bytes.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200206070412.17400-4-xiaoyao.li@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Joerg,
-
-On Fri, Feb 28, 2020 at 04:08:06PM +0100, Joerg Roedel wrote:
-> here is a patch-set to rename iommu_param to dev_iommu and
-> establish it as a struct for generic per-device iommu-data.
-> Also move the iommu_fwspec pointer from struct device into
-> dev_iommu to have less iommu-related pointers in struct
-> device.
+On Thu, Feb 06, 2020 at 03:04:07PM +0800, Xiaoyao Li wrote:
+> Cache the value of MSR_TEST_CTRL in percpu data msr_test_ctrl_cache,
+> which will be used by KVM module.
 > 
-> The bigger part of this patch-set moves the iommu_priv
-> pointer from struct iommu_fwspec to dev_iommu, making is
-> usable for iommu-drivers which do not use fwspecs.
+> It also avoids an expensive RDMSR instruction if SLD needs to be context
+> switched.
 > 
-> The changes for that were mostly straightforward, except for
-> the arm-smmu (_not_ arm-smmu-v3) and the qcom iommu driver.
-> Unfortunatly I don't have the hardware for those, so any
-> testing of these drivers is greatly appreciated.
+> Suggested-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> ---
+>  arch/x86/include/asm/cpu.h  |  2 ++
+>  arch/x86/kernel/cpu/intel.c | 19 ++++++++++++-------
+>  2 files changed, 14 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
+> index ff567afa6ee1..2b20829db450 100644
+> --- a/arch/x86/include/asm/cpu.h
+> +++ b/arch/x86/include/asm/cpu.h
+> @@ -27,6 +27,8 @@ struct x86_cpu {
+>  };
+>  
+>  #ifdef CONFIG_HOTPLUG_CPU
+> +DECLARE_PER_CPU(u64, msr_test_ctrl_cache);
+> +
+>  extern int arch_register_cpu(int num);
+>  extern void arch_unregister_cpu(int);
+>  extern void start_cpu0(void);
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index 49535ed81c22..ff27d026cb4a 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -46,6 +46,9 @@ enum split_lock_detect_state {
+>   */
+>  static enum split_lock_detect_state sld_state = sld_off;
+>  
+> +DEFINE_PER_CPU(u64, msr_test_ctrl_cache);
+> +EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctrl_cache);
+> +
+>  /*
+>   * Processors which have self-snooping capability can handle conflicting
+>   * memory type across CPUs by snooping its own cache. However, there exists
+> @@ -1043,20 +1046,22 @@ static void __init split_lock_setup(void)
+>   */
+>  static void __sld_msr_set(bool on)
+>  {
+> -	u64 test_ctrl_val;
+> -
+> -	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
+> -
+>  	if (on)
+> -		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+> +		this_cpu_or(msr_test_ctrl_cache, MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
+>  	else
+> -		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+> +		this_cpu_and(msr_test_ctrl_cache, ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
 
-I haven't had a chance to review this properly yet, but I did take it
-for a spin on my Seattle board with MMU-400 (arm-smmu) and it seems to
-work the same as before, so:
+Updating the cache is at best unnecessary, and at worst dangerous, e.g. it
+incorrectly implies that the cached value of SPLIT_LOCK_DETECT is reliable.
 
-Tested-by: Will Deacon <will@kernel.org> # arm-smmu
+Tony's patch[*] is more what I had in mind, the only question is whether the
+kernel should be paranoid about other bits in MSR_TEST_CTL.
 
-I'll try to review the patches soon.
+[*] 20200206004944.GA11455@agluck-desk2.amr.corp.intel.com
 
-Cheers,
-
-Will
+> -	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+> +	wrmsrl(MSR_TEST_CTRL, this_cpu_read(msr_test_ctrl_cache));
+>  }
+>  
+>  static void split_lock_init(void)
+>  {
+> +	u64 test_ctrl_val;
+> +
+> +	/* Cache MSR TEST_CTRL */
+> +	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
+> +	this_cpu_write(msr_test_ctrl_cache, test_ctrl_val);
+> +
+>  	if (sld_state == sld_off)
+>  		return;
+>  
+> -- 
+> 2.23.0
+> 
