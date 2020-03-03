@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB72C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7533C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CCD72146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF1972146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:55:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258099;
-	bh=U+TwmQghRFL4tyWR71j959Q9l1ND+J3WcgVln4U0tJI=;
+	s=default; t=1583258101;
+	bh=1CKLZHDjWSPRbxdC/lD+Y2DZ+zwKh+7ZDnwzhGxcMXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PmyF8nI55pDWOo4rjCo1HsJpM5E2QmEVIu66JRbAnrFQWcf4REB6QdQi0nIf75364
-	 OE/09B9EJmjS2PqUxqfCuarylrmgIw2Ajm4/J3N03s9CjLMcN7wqXG31jeGtkSDFXX
-	 EhfTAk/KxPedGO+JZ57FrbhY81DJXfZ25mUW+26Q=
+	b=lueVlZI6Rujq9IhGnPIrAaLtd/AIS+5Di/0p4QYsYXXn53ftt950KRzTZ+P3xCMB4
+	 cLJDAoZZNLvOVdNco9nVGpf1EnYhN70sEmXZe/7wquhzOmW1OEfI/GLqE4UqBpJYbY
+	 aqpJP5fzsjpboUYhWPKtMKpxR2VMyiq2eBChtVCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732611AbgCCRy6 (ORCPT
+        id S1732623AbgCCRzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:54:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36182 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:55:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36114 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732587AbgCCRyx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:54:53 -0500
+        id S1730958AbgCCRyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:54:52 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 301472146E;
-        Tue,  3 Mar 2020 17:54:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE14A215A4;
+        Tue,  3 Mar 2020 17:54:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258092;
-        bh=U+TwmQghRFL4tyWR71j959Q9l1ND+J3WcgVln4U0tJI=;
+        s=default; t=1583258090;
+        bh=1CKLZHDjWSPRbxdC/lD+Y2DZ+zwKh+7ZDnwzhGxcMXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OB/da2m2r+vkQQuYHYjVtsyj3vlc/HDL6fWvsfBOkNqd51Xmqhfjj4tjHaOuVLTj2
-         TvvjitCKnZHQEpGfZ1Q8wczCv7RQgGr1ifc6UKT3a6XJ8K0vklYF8RRHUM7XFcZ1ds
-         Pd2lHj1RrZbf9yQoHV4MpTpPh69tK+P6xKOvCbO0=
+        b=dbqT2luXvNSSb+IRdK9mGS+7yw9ADo87guQSGPCd+gST8d8SInuleeHKIksBZCcsq
+         xaRLGkwXGh1xxQEPMck74gaUcETFGQq2yNvhOzFjFB8SVLEQSFQb8WKEmsrVoJ6tq5
+         rtJiLZ+M5nuqSd28/xFrSZx7vsoWgHckFowyZp8A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ezequiel Lara Gomez <ezegomez@amazon.com>,
-        Arthur Kiyanovski <akiyano@amazon.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org,
+        Nigel Kirkland <nigel.kirkland@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 051/152] net: ena: add missing ethtool TX timestamping indication
-Date:   Tue,  3 Mar 2020 18:42:29 +0100
-Message-Id: <20200303174308.219400407@linuxfoundation.org>
+Subject: [PATCH 5.4 068/152] nvme: prevent warning triggered by nvme_stop_keep_alive
+Date:   Tue,  3 Mar 2020 18:42:46 +0100
+Message-Id: <20200303174310.191649995@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -61,43 +64,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arthur Kiyanovski <akiyano@amazon.com>
+From: Nigel Kirkland <nigel.kirkland@broadcom.com>
 
-[ Upstream commit cf6d17fde93bdda23c9b02dd5906a12bf8c55209 ]
+[ Upstream commit 97b2512ad000a409b4073dd1a71e4157d76675cb ]
 
-Current implementation of the driver calls skb_tx_timestamp()to add a
-software tx timestamp to the skb, however the software-transmit capability
-is not reported in ethtool -T.
+Delayed keep alive work is queued on system workqueue and may be cancelled
+via nvme_stop_keep_alive from nvme_reset_wq, nvme_fc_wq or nvme_wq.
 
-This commit updates the ethtool structure to report the software-transmit
-capability in ethtool -T using the standard ethtool_op_get_ts_info().
-This function reports all software timestamping capabilities (tx and rx),
-as well as setting phc_index = -1. phc_index is the index of the PTP
-hardware clock device that will be used for hardware timestamps. Since we
-don't have such a device in ENA, using the default -1 value is the correct
-setting.
+Check_flush_dependency detects mismatched attributes between the work-queue
+context used to cancel the keep alive work and system-wq. Specifically
+system-wq does not have the WQ_MEM_RECLAIM flag, whereas the contexts used
+to cancel keep alive work have WQ_MEM_RECLAIM flag.
 
-Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
-Signed-off-by: Ezequiel Lara Gomez <ezegomez@amazon.com>
-Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Example warning:
+
+  workqueue: WQ_MEM_RECLAIM nvme-reset-wq:nvme_fc_reset_ctrl_work [nvme_fc]
+	is flushing !WQ_MEM_RECLAIM events:nvme_keep_alive_work [nvme_core]
+
+To avoid the flags mismatch, delayed keep alive work is queued on nvme_wq.
+
+However this creates a secondary concern where work and a request to cancel
+that work may be in the same work queue - namely err_work in the rdma and
+tcp transports, which will want to flush/cancel the keep alive work which
+will now be on nvme_wq.
+
+After reviewing the transports, it looks like err_work can be moved to
+nvme_reset_wq. In fact that aligns them better with transition into
+RESETTING and performing related reset work in nvme_reset_wq.
+
+Change nvme-rdma and nvme-tcp to perform err_work in nvme_reset_wq.
+
+Signed-off-by: Nigel Kirkland <nigel.kirkland@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Reviewed-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_ethtool.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/nvme/host/core.c | 10 +++++-----
+ drivers/nvme/host/rdma.c |  2 +-
+ drivers/nvme/host/tcp.c  |  2 +-
+ 3 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/net/ethernet/amazon/ena/ena_ethtool.c b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-index 8c1c73b0ced74..4472e41bd7825 100644
---- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-+++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
-@@ -805,6 +805,7 @@ static const struct ethtool_ops ena_ethtool_ops = {
- 	.get_channels		= ena_get_channels,
- 	.get_tunable		= ena_get_tunable,
- 	.set_tunable		= ena_set_tunable,
-+	.get_ts_info            = ethtool_op_get_ts_info,
- };
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index e703827d27e9c..7dacfd102a992 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -66,8 +66,8 @@ MODULE_PARM_DESC(streams, "turn on support for Streams write directives");
+  * nvme_reset_wq - hosts nvme reset works
+  * nvme_delete_wq - hosts nvme delete works
+  *
+- * nvme_wq will host works such are scan, aen handling, fw activation,
+- * keep-alive error recovery, periodic reconnects etc. nvme_reset_wq
++ * nvme_wq will host works such as scan, aen handling, fw activation,
++ * keep-alive, periodic reconnects etc. nvme_reset_wq
+  * runs reset works which also flush works hosted on nvme_wq for
+  * serialization purposes. nvme_delete_wq host controller deletion
+  * works which flush reset works for serialization.
+@@ -972,7 +972,7 @@ static void nvme_keep_alive_end_io(struct request *rq, blk_status_t status)
+ 		startka = true;
+ 	spin_unlock_irqrestore(&ctrl->lock, flags);
+ 	if (startka)
+-		schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
++		queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ);
+ }
  
- void ena_set_ethtool_ops(struct net_device *netdev)
+ static int nvme_keep_alive(struct nvme_ctrl *ctrl)
+@@ -1002,7 +1002,7 @@ static void nvme_keep_alive_work(struct work_struct *work)
+ 		dev_dbg(ctrl->device,
+ 			"reschedule traffic based keep-alive timer\n");
+ 		ctrl->comp_seen = false;
+-		schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
++		queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ);
+ 		return;
+ 	}
+ 
+@@ -1019,7 +1019,7 @@ static void nvme_start_keep_alive(struct nvme_ctrl *ctrl)
+ 	if (unlikely(ctrl->kato == 0))
+ 		return;
+ 
+-	schedule_delayed_work(&ctrl->ka_work, ctrl->kato * HZ);
++	queue_delayed_work(nvme_wq, &ctrl->ka_work, ctrl->kato * HZ);
+ }
+ 
+ void nvme_stop_keep_alive(struct nvme_ctrl *ctrl)
+diff --git a/drivers/nvme/host/rdma.c b/drivers/nvme/host/rdma.c
+index cb4c3000a57e8..4ff51da3b13fa 100644
+--- a/drivers/nvme/host/rdma.c
++++ b/drivers/nvme/host/rdma.c
+@@ -1088,7 +1088,7 @@ static void nvme_rdma_error_recovery(struct nvme_rdma_ctrl *ctrl)
+ 	if (!nvme_change_ctrl_state(&ctrl->ctrl, NVME_CTRL_RESETTING))
+ 		return;
+ 
+-	queue_work(nvme_wq, &ctrl->err_work);
++	queue_work(nvme_reset_wq, &ctrl->err_work);
+ }
+ 
+ static void nvme_rdma_wr_error(struct ib_cq *cq, struct ib_wc *wc,
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index a870144542159..244984420b41b 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -422,7 +422,7 @@ static void nvme_tcp_error_recovery(struct nvme_ctrl *ctrl)
+ 	if (!nvme_change_ctrl_state(ctrl, NVME_CTRL_RESETTING))
+ 		return;
+ 
+-	queue_work(nvme_wq, &to_tcp_ctrl(ctrl)->err_work);
++	queue_work(nvme_reset_wq, &to_tcp_ctrl(ctrl)->err_work);
+ }
+ 
+ static int nvme_tcp_process_nvme_cqe(struct nvme_tcp_queue *queue,
 -- 
 2.20.1
 
