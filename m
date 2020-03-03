@@ -2,114 +2,87 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347A0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0936C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 138B324677
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE512465E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 02:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgCCCCE (ORCPT
+        id S1727083AbgCCCCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:02:04 -0500
-Received: from mga04.intel.com ([192.55.52.120]:22013 "EHLO mga04.intel.com"
+        Mon, 2 Mar 2020 21:02:42 -0500
+Received: from mga05.intel.com ([192.55.52.43]:54060 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbgCCCCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:02:03 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
+        id S1726773AbgCCCCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:02:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:02:03 -0800
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 02 Mar 2020 18:02:41 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,509,1574150400"; 
-   d="scan'208";a="274004683"
-Received: from wtczc53028gn.jf.intel.com (HELO skl-build) ([10.54.87.17])
-  by fmsmga002.fm.intel.com with ESMTP; 02 Mar 2020 18:02:02 -0800
-Date:   Mon, 2 Mar 2020 18:01:48 -0800
-From:   "Christopher S. Hall" <christopher.s.hall@intel.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, hpa@zytor.com, mingo@redhat.com,
-        x86@kernel.org, jacob.e.keller@intel.com, davem@davemloft.net,
-        sean.v.kelley@intel.com
-Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time GPIO
- Driver with PHC interface changes to support additional H/W Features
-Message-ID: <20200303020148.GB15531@skl-build>
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
- <20200203040838.GA5851@localhost>
- <20200225233707.GA32079@skl-build>
- <20200226024707.GA10271@localhost>
+   d="scan'208";a="440384923"
+Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 02 Mar 2020 18:02:40 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7]  KVM: x86/mmu: nVMX: 5-level paging cleanup and enabling
+Date:   Mon,  2 Mar 2020 18:02:33 -0800
+Message-Id: <20200303020240.28494-1-sean.j.christopherson@intel.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200226024707.GA10271@localhost>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+Clean up MMU code related to 5 level paging, expose 5-level EPT to L1, and
+additional clean up on top (mostly renames of functions/variables that
+caused me no end of confusion when trying to figure out what was broken
+at various times).
 
-On Tue, Feb 25, 2020 at 06:47:07PM -0800, Richard Cochran wrote:
-> On Tue, Feb 25, 2020 at 03:37:07PM -0800, Christopher S. Hall wrote:
-> > On Sun, Feb 02, 2020 at 08:08:38PM -0800, Richard Cochran wrote:
-> > > The TGPIO input clock, the ART, is a free running counter, but you
-> > > want to support frequency adjustments.  Use a timecounter cyclecounter
-> > > pair.
-> > 
-> > I'm concerned about the complexity that the timecounter adds to
-> > the driver. Specifically, the complexity of dealing with any rate mismatches
-> > between the timecounter and the periodic output signal. The phase
-> > error between the output and timecounter needs to be zero.
-> 
-> If I understood correctly, the device's outputs are generated from a
-> non-adjustable counter.  So, no matter what, you will have the problem
-> of changing the pulse period in concert with the user changing the
-> desired frequency.
-> 
+v3:
+  - Dropped fixes for existing 5-level bugs (merged for 5.6).
+  - Use get_guest_pgd() instead of get_guest_cr3_or_eptp(). [Paolo]
+  - Add patches to fix MMU role calculation to play nice with 5-level
+    paging without requiring additional CR4.LA_57 bit.
 
-> > This leaves the PHC API behavior as it is currently and uses the frequency
-> > adjust API to adjust the output rate.
-> > 
-> > > Let the user dial a periodic output signal in the normal way.
-> > > 
-> > > Let the user change the frequency in the normal way, and during this
-> > > call, adjust the counter values accordingly.
-> > 
-> > Yes to both of the above.
-> 
-> So, why then do you need this?
-> 
-> +#define PTP_EVENT_COUNT_TSTAMP2 \
-> +       _IOWR(PTP_CLK_MAGIC, 19, struct ptp_event_count_tstamp)
-> 
-> If you can make the device work with the existing user space API,
-> 
-> 	ioctl(fd, PTP_PEROUT_REQUEST2, ...);
-> 	while (1) {
-> 		clock_adjtimex(FD_TO_CLOCKID(fd), ...);
-> 	}
-> 
-> that would be ideal.  But I will push back on anything like the
-> following.
-> 
-> 	ioctl(fd, PTP_PEROUT_REQUEST2, ...);
-> 	while (1) {
-> 		clock_adjtimex(FD_TO_CLOCKID(fd), ...);
-> 		ioctl(fd, PTP_EVENT_COUNT_TSTAMP, ...);
-> 	}
-> 
-> But maybe I misunderstood?
+v2:
+  - Increase the nested EPT array sizes to accomodate 5-level paging in
+    the patch that adds support for 5-level nested EPT, not in the bug
+    fix for 5-level shadow paging.
 
-Thank you for the feedback, but Thomas wants to see this as
-an extension of GPIO. I'll work on an RFC patch for that instead.
+Sean Christopherson (7):
+  KVM: x86/mmu: Don't drop level/direct from MMU role calculation
+  KVM: x86/mmu: Drop kvm_mmu_extended_role.cr4_la57 hack
+  KVM: nVMX: Allow L1 to use 5-level page walks for nested EPT
+  KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
+  KVM: nVMX: Rename EPTP validity helper and associated variables
+  KVM: x86/mmu: Rename kvm_mmu->get_cr3() to ->get_guest_pgd()
+  KVM: nVMX: Drop unnecessary check on ept caps for execute-only
 
-> Thanks,
-> Richard
+ arch/x86/include/asm/kvm_host.h |  3 +-
+ arch/x86/include/asm/vmx.h      | 12 +++++++
+ arch/x86/kvm/mmu/mmu.c          | 59 +++++++++++++++++----------------
+ arch/x86/kvm/mmu/paging_tmpl.h  |  4 +--
+ arch/x86/kvm/svm.c              |  2 +-
+ arch/x86/kvm/vmx/nested.c       | 52 ++++++++++++++++++-----------
+ arch/x86/kvm/vmx/nested.h       |  4 +--
+ arch/x86/kvm/vmx/vmx.c          |  3 +-
+ arch/x86/kvm/x86.c              |  2 +-
+ 9 files changed, 82 insertions(+), 59 deletions(-)
 
-Thanks,
-Christopher
+-- 
+2.24.1
+
