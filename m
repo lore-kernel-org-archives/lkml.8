@@ -2,173 +2,193 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B59C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:25:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 896E1C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:25:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1FC720866
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:25:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684F920842
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730289AbgCCRZZ (ORCPT
+        id S1730354AbgCCRZx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:25:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:41142 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728242AbgCCRZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:25:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BED26ACB8;
-        Tue,  3 Mar 2020 17:25:16 +0000 (UTC)
-Subject: Re: [RFC 1/3] mm/vma: Define a default value for
- VM_DATA_DEFAULT_FLAGS
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Richard Henderson <rth@twiddle.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Salter <msalter@redhat.com>, Guo Ren <guoren@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Brian Cain <bcain@codeaurora.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Nick Hu <nickhu@andestech.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jeff Dike <jdike@addtoit.com>, Chris Zankel <chris@zankel.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        uclinux-h8-devel@lists.sourceforge.jp,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org
-References: <1583131666-15531-1-git-send-email-anshuman.khandual@arm.com>
- <1583131666-15531-2-git-send-email-anshuman.khandual@arm.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <b243be54-7b5e-c6e9-fb68-46369d7d7aa4@suse.cz>
-Date:   Tue, 3 Mar 2020 18:25:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <1583131666-15531-2-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 3 Mar 2020 12:25:53 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59942 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728242AbgCCRZx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:25:53 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: dafna)
+        with ESMTPSA id C35B928E664
+From:   Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+To:     devicetree@vger.kernel.org
+Cc:     nick@shmanahar.org, dmitry.torokhov@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, nicolas.ferre@microchip.com,
+        alexandre.belloni@bootlin.com, ludovic.desroches@microchip.com,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        enric.balletbo@collabora.com, dafna.hirschfeld@collabora.com,
+        helen.koike@collabora.com, ezequiel@collabora.com,
+        kernel@collabora.com, dafna3@gmail.com
+Subject: [PATCH] dt-bindings: input: atmel_mxt_ts: convert atmel,maxtouch.txt to yaml
+Date:   Tue,  3 Mar 2020 19:25:33 +0200
+Message-Id: <20200303172533.30602-1-dafna.hirschfeld@collabora.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/2/20 7:47 AM, Anshuman Khandual wrote:
-> There are many platforms with exact same value for VM_DATA_DEFAULT_FLAGS
-> This creates a default value for VM_DATA_DEFAULT_FLAGS in line with the
-> existing VM_STACK_DEFAULT_FLAGS. While here, also define some more macros
-> with standard VMA access flag combinations that are used frequently across
-> many platforms. Apart from simplification, this reduces code duplication
-> as well.
-> 
-> Cc: Richard Henderson <rth@twiddle.net>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Mark Salter <msalter@redhat.com>
-> Cc: Guo Ren <guoren@kernel.org>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Brian Cain <bcain@codeaurora.org>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paulburton@kernel.org>
-> Cc: Nick Hu <nickhu@andestech.com>
-> Cc: Ley Foon Tan <ley.foon.tan@intel.com>
-> Cc: Jonas Bonn <jonas@southpole.se>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Guan Xuetao <gxt@pku.edu.cn>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jeff Dike <jdike@addtoit.com>
-> Cc: Chris Zankel <chris@zankel.net>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: linux-alpha@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-c6x-dev@linux-c6x.org
-> Cc: uclinux-h8-devel@lists.sourceforge.jp
-> Cc: linux-hexagon@vger.kernel.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linux-m68k@lists.linux-m68k.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: nios2-dev@lists.rocketboards.org
-> Cc: openrisc@lists.librecores.org
-> Cc: linux-parisc@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> Cc: linux-um@lists.infradead.org
-> Cc: linux-xtensa@linux-xtensa.org
-> Cc: linux-mm@kvack.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com
-Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
+Convert the binding file atmel,maxtouch.txt to yaml format.
+Also change the file name in the MAINTAINERS file.
 
-Nit:
+This was tested and verified on ARM and ARM64 with:
 
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index b0e53ef13ff1..7a764ae6ab68 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -342,6 +342,21 @@ extern unsigned int kobjsize(const void *objp);
->  /* Bits set in the VMA until the stack is in its final location */
->  #define VM_STACK_INCOMPLETE_SETUP	(VM_RAND_READ | VM_SEQ_READ)
->  
-> +#define TASK_EXEC ((current->personality & READ_IMPLIES_EXEC) ? VM_EXEC : 0)
-> +
-> +/* Common data flag combinations */
-> +#define VM_DATA_FLAGS_TSK_EXEC	(VM_READ | VM_WRITE | TASK_EXEC | \
-> +				 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
-> +#define VM_DATA_FLAGS_NON_EXEC	(VM_READ | VM_WRITE | VM_MAYREAD | \
-> +				 VM_MAYWRITE | VM_MAYEXEC)
-> +#define VM_DATA_FLAGS_EXEC	(VM_READ | VM_WRITE | VM_EXEC | \
-> +				 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
-> +
-> +#ifndef VM_DATA_DEFAULT_FLAGS		/* arch can override this */
-> +#define VM_DATA_DEFAULT_FLAGS	(VM_READ | VM_WRITE | VM_EXEC | \
-> +				 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
+make dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
 
-Should you use VM_DATA_FLAGS_EXEC here? Yeah one more macro to expand, but it's
-right above this.
+Signed-off-by: Dafna Hirschfeld <dafna.hirschfeld@collabora.com>
+---
+ .../bindings/input/atmel,maxtouch.txt         | 41 ------------
+ .../bindings/input/atmel,maxtouch.yaml        | 64 +++++++++++++++++++
+ MAINTAINERS                                   |  2 +-
+ 3 files changed, 65 insertions(+), 42 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+ create mode 100644 Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
 
-> +#endif
-> +
->  #ifndef VM_STACK_DEFAULT_FLAGS		/* arch can override this */
->  #define VM_STACK_DEFAULT_FLAGS VM_DATA_DEFAULT_FLAGS
->  #endif
-> 
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt b/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
+deleted file mode 100644
+index c88919480d37..000000000000
+--- a/Documentation/devicetree/bindings/input/atmel,maxtouch.txt
++++ /dev/null
+@@ -1,41 +0,0 @@
+-Atmel maXTouch touchscreen/touchpad
+-
+-Required properties:
+-- compatible:
+-    atmel,maxtouch
+-
+-    The following compatibles have been used in various products but are
+-    deprecated:
+-	atmel,qt602240_ts
+-	atmel,atmel_mxt_ts
+-	atmel,atmel_mxt_tp
+-	atmel,mXT224
+-
+-- reg: The I2C address of the device
+-
+-- interrupts: The sink for the touchpad's IRQ output
+-    See ../interrupt-controller/interrupts.txt
+-
+-Optional properties for main touchpad device:
+-
+-- linux,gpio-keymap: When enabled, the SPT_GPIOPWN_T19 object sends messages
+-    on GPIO bit changes. An array of up to 8 entries can be provided
+-    indicating the Linux keycode mapped to each bit of the status byte,
+-    starting at the LSB. Linux keycodes are defined in
+-    <dt-bindings/input/input.h>.
+-
+-    Note: the numbering of the GPIOs and the bit they start at varies between
+-    maXTouch devices. You must either refer to the documentation, or
+-    experiment to determine which bit corresponds to which input. Use
+-    KEY_RESERVED for unused padding values.
+-
+-- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
+-
+-Example:
+-
+-	touch@4b {
+-		compatible = "atmel,maxtouch";
+-		reg = <0x4b>;
+-		interrupt-parent = <&gpio>;
+-		interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
+-	};
+diff --git a/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+new file mode 100644
+index 000000000000..024dc4ded4f3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+@@ -0,0 +1,64 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/atmel,maxtouch.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Atmel maXTouch touchscreen/touchpad
++
++maintainers:
++  - Nick Dyer <nick@shmanahar.org>
++
++description: |
++  Atmel maXTouch touchscreen/touchpad
++
++properties:
++  compatible:
++    const: atmel,maxtouch
++
++  reg:
++    description: The I2C address of the device
++    maxItems: 1
++
++  interrupts:
++    description: The sink for the touchpad's IRQ output
++
++  linux,gpio-keymap:
++    description:
++      When enabled, the SPT_GPIOPWN_T19 object sends messages
++      on GPIO bit changes. An array of up to 8 entries can be provided
++      indicating the Linux keycode mapped to each bit of the status byte,
++      starting at the LSB. Linux keycodes are defined in
++      <dt-bindings/input/input.h>.
++      Note, the numbering of the GPIOs and the bit they start at varies between
++      maXTouch devices. You must either refer to the documentation, or
++      experiment to determine which bit corresponds to which input. Use
++      KEY_RESERVED for unused padding values.
++    $ref: /schemas/types.yaml#/definitions/uint32-array
++    maxItems: 8
++
++  reset-gpios:
++    description: GPIO specifier for the touchscreen's reset pin (active low)
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++additionalProperties: true
++
++examples:
++  - |
++    #include <dt-bindings/interrupt-controller/irq.h>
++    #include <dt-bindings/gpio/tegra-gpio.h>
++    i2c {
++          #address-cells = <1>;
++          #size-cells = <0>;
++          touch@4b {
++                compatible = "atmel,maxtouch";
++                reg = <0x4b>;
++                interrupt-parent = <&gpio>;
++                interrupts = <TEGRA_GPIO(W, 3) IRQ_TYPE_LEVEL_LOW>;
++          };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 46fdb834d1fb..d553aa315734 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2877,7 +2877,7 @@ ATMEL MAXTOUCH DRIVER
+ M:	Nick Dyer <nick@shmanahar.org>
+ T:	git git://github.com/ndyer/linux.git
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/input/atmel,maxtouch.txt
++F:	Documentation/devicetree/bindings/input/atmel,maxtouch.yaml
+ F:	drivers/input/touchscreen/atmel_mxt_ts.c
+ 
+ ATMEL WIRELESS DRIVER
+-- 
+2.17.1
 
