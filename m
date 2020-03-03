@@ -2,436 +2,243 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E14BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6A5C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD4F20842
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2E7620728
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:36:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="q6ErthXf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732720AbgCCVfo (ORCPT
+        id S1732735AbgCCVgo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:35:44 -0500
-Received: from mga06.intel.com ([134.134.136.31]:55439 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732572AbgCCVfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:35:44 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 13:35:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="232402038"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Mar 2020 13:35:42 -0800
-Date:   Tue, 3 Mar 2020 13:35:42 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     John Andersen <john.s.andersen@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        pbonzini@redhat.com, hpa@zytor.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, liran.alon@oracle.com,
-        luto@kernel.org, joro@8bytes.org, rick.p.edgecombe@intel.com,
-        kristen@linux.intel.com, arjan@linux.intel.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [RFC v2 2/4] KVM: X86: Add CR pin MSRs
-Message-ID: <20200303213541.GY1439@linux.intel.com>
-References: <20200218215902.5655-1-john.s.andersen@intel.com>
- <20200218215902.5655-3-john.s.andersen@intel.com>
+        Tue, 3 Mar 2020 16:36:44 -0500
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:35434 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731027AbgCCVgo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 16:36:44 -0500
+Received: by mail-vs1-f67.google.com with SMTP id u26so3473129vsg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:36:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ymqoP/ndX/9mJ+CBpiEkMuPr3Hb5TQeTUbKPX3cVHZI=;
+        b=q6ErthXf1GgYGgZ3C2Q/uIXRPwS5His4PldwJJeIf/wXLTyWCCgIn7BgRhyjB6iHoN
+         FGM2AlJc6KMLQp9UNnZFH5vswC1+Tnsey3pt72wZ4Bt8jfGQJAAMZJymQTJfo2HT4Ggn
+         SOc8C+R5+bbxXnCPKUyT/TFWebPQz2TIUnpA+UwSdtibqm4xzt88e+L+hfSau3ebXmNr
+         eo6VQZhZRZlm/veAqrvDhnuCkQ9m07yCdZ8eWaSXIQQDMha4hFSrjWirR3H9qyJjN7mD
+         XmI2EuGoPMQIWacCsHkWRfXE8Z1vN0SqibhnaM4JKsGVenFb9Y5dcAA4Ql2af0nHGm/J
+         qpAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ymqoP/ndX/9mJ+CBpiEkMuPr3Hb5TQeTUbKPX3cVHZI=;
+        b=JuKPOxGiiJXkkOV0piRaBqBanQmROxwc6h3yLfMWx/6lInd9ugXnDfAbsKSJUfvRUA
+         jaoN+XlHpw7+t6lpKztQU2zu3OpNfrJObq4yC1GUVye4xqqe/Pi3v1vTBmIN5uuJlEXE
+         DME099vyPS6tHBe4SL9do+Uqzmz37WOqF0RdmSSWiZC1m50fvEqmTA4+erFOik3D33lR
+         /NA3JUnj8ieRNsc5o91qkxOHZ8qmgkQkW6cNjjrhAwVMqdyms0P5y92Tu0TM8/sX73NA
+         UJ3mLtpkesCTjpj1gaou1/XN8evgPKsCS3j9IBgt8rdifpePXHVJnmuOP6z+ZC9LMRE2
+         g2pA==
+X-Gm-Message-State: ANhLgQ1SnT/0EuSgKbhI0dn3n7Nb+brIOGsg4xRXiDi2MDQ9TFRPJrpw
+        wp5KQWL2OIXrKXDvl81cZGCQZpCiiTnb3uxIE0wewCIBNvA=
+X-Google-Smtp-Source: ADFU+vsDrnq2gFRKvZBn604wbp9RJXOJvMGl1ZyNsmOB1jX8Wf3qPrWNavqjMii5iBLtvcUcs/4XnGQslzLWfDMhSaE=
+X-Received: by 2002:a67:800e:: with SMTP id b14mr2493925vsd.191.1583271388590;
+ Tue, 03 Mar 2020 13:36:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200218215902.5655-3-john.s.andersen@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
+ <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+ <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
+ <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com> <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
+ <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com> <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
+ <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+ <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com> <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
+ <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com> <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
+In-Reply-To: <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 3 Mar 2020 22:35:50 +0100
+Message-ID: <CAPDyKFr-ntyXv8C0FB5oq4wWe-SL_YVjpvJVykK2+7jgqY82-Q@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Faiz Abbas <faiz_abbas@ti.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The subject should be something like
+On Mon, 2 Mar 2020 at 17:50, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Mon, 2 Mar 2020 at 14:11, Faiz Abbas <faiz_abbas@ti.com> wrote:
+> >
+> > Uffe,
+> >
+> > On 26/02/20 8:51 pm, Ulf Hansson wrote:
+> > > + Anders, Kishon
+> > >
+> > > On Tue, 25 Feb 2020 at 17:24, Jon Hunter <jonathanh@nvidia.com> wrote:
+> > >>
+> > >>
+> > >> On 25/02/2020 14:26, Ulf Hansson wrote:
+> > >>
+> > >> ...
+> > >>
+> > >>> However, from the core point of view, the response is still requested,
+> > >>> only that we don't want the driver to wait for the card to stop
+> > >>> signaling busy. Instead we want to deal with that via "polling" from
+> > >>> the core.
+> > >>>
+> > >>> This is a rather worrying behaviour, as it seems like the host driver
+> > >>> doesn't really follow this expectations from the core point of view.
+> > >>> And mmc_flush_cache() is not the only case, as we have erase, bkops,
+> > >>> sanitize, etc. Are all these working or not really well tested?
+> > >>
+> > >> I don't believe that they are well tested. We have a simple test to
+> > >> mount an eMMC partition, create a file, check the contents, remove the
+> > >> file and unmount. The timeouts always occur during unmounting.
+> > >>
+> > >>> Earlier, before my three patches, if the provided timeout_ms parameter
+> > >>> to __mmc_switch() was zero, which was the case for
+> > >>> mmc_mmc_flush_cache() - this lead to that __mmc_switch() simply
+> > >>> ignored validating host->max_busy_timeout, which was wrong. In any
+> > >>> case, this also meant that an R1B response was always used for
+> > >>> mmc_flush_cache(), as you also indicated above. Perhaps this is the
+> > >>> critical part where things can go wrong.
+> > >>>
+> > >>> BTW, have you tried erase commands for sdhci tegra driver? If those
+> > >>> are working fine, do you have any special treatments for these?
+> > >>
+> > >> That I am not sure, but I will check.
+> > >
+> > > Great, thanks. Looking forward to your report.
+> > >
+> > > So, from my side, me and Anders Roxell, have been collaborating on
+> > > testing the behaviour on a TI Beagleboard x15 (remotely with limited
+> > > debug options), which is using the sdhci-omap variant. I am trying to
+> > > get hold of an Nvidia jetson-TX2, but not found one yet. These are the
+> > > conclusions from the observed behaviour on the Beagleboard for the
+> > > CMD6 cache flush command.
+> > >
+> > > First, the reported host->max_busy_timeout is 2581 (ms) for the
+> > > sdhci-omap driver in this configuration.
+> > >
+> > > 1. As we all know by now, the cache flush command (CMD6) fails with
+> > > -110 currently. This is when MMC_CACHE_FLUSH_TIMEOUT_MS is set to 30 *
+> > > 1000 (30s), which means __mmc_switch() drops the MMC_RSP_BUSY flag
+> > > from the command.
+> > >
+> > > 2. Changing the MMC_CACHE_FLUSH_TIMEOUT_MS to 2000 (2s), means that
+> > > the MMC_RSP_BUSY flag becomes set by __mmc_switch, because of the
+> > > timeout_ms parameter is less than max_busy_timeout (2000 <  2581).
+> > > Then everything works fine.
+> > >
+> > > 3. Updating the code to again use 30s as the
+> > > MMC_CACHE_FLUSH_TIMEOUT_MS, but instead forcing the MMC_RSP_BUSY to be
+> > > set, even when the timeout_ms becomes greater than max_busy_timeout.
+> > > This also works fine.
+> > >
+> > > Clearly this indicates a problem that I think needs to be addressed in
+> > > the sdhci driver. However, of course I can revert the three discussed
+> > > patches to fix the problem, but that would only hide the issues and I
+> > > am sure we would then get back to this issue, sooner or later.
+> > >
+> > > To fix the problem in the sdhci driver, I would appreciate if someone
+> > > from TI and Nvidia can step in to help, as I don't have the HW on my
+> > > desk.
+> > >
+> > > Comments or other ideas of how to move forward?
+> > >
+> >
+> > Sorry I missed this earlier.
+> >
+> > I don't have an X15 with me here but I'm trying to set one up in our
+> > remote farm. In the meantime, I tried to reproduce this issue on two
+> > platforms (dra72-evm and am57xx-evm) and wasn't able to see the issue
+> > because those eMMC's don't even have a cache. I will keep you updated
+> > when I do get a board with a eMMC that has a cache.
+> >
+> > Is there a way to reproduce this CMD6 issue with another operation?
+>
+> Yes, most definitely.
+>
+> Let me cook a debug patch for you that should trigger the problem for
+> another CMD6 operation. I will post something later this evening or in
+> the mornings (Swedish timezone).
 
-  KVM: x86: Introduce paravirt feature CR0/CR4 pinning
+A bit later than promised, I am clearly an optimist. In any case
+here's the patch I had in mind to trigger the problem for other CMD6
+operations. Please give at shot and see what happens.
 
-This patch obviously does a lot more than add a few MSRs :-)
+-------
 
-On Tue, Feb 18, 2020 at 01:59:00PM -0800, John Andersen wrote:
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 3 Mar 2020 22:11:05 +0100
+Subject: [PATCH] mmc: core: DEBUG: Force a long timeout for all CMD6
 
-...
+This is to test sdhci-omap, for example, to see what happens when using a
+longer timeout. My guess is that it triggers __mmc_switch() to disable the
+MMC_RSP_BUSY flag for the command. If so, it likely to make the host driver
+to fail, in some way or the other.
 
-> +MSR_KVM_CR0_PIN_ALLOWED: 0x4b564d06
-> +MSR_KVM_CR4_PIN_ALLOWED: 0x4b564d07
-> +	Read only registers informing the guest which bits may be pinned for
-> +	each control register respectively via the CR pinned MSRs.
-> +
-> +	data: Bits which may be pinned.
-> +
-> +	Attempting to pin bits other than these will result in a failure when
-> +	writing to the respective CR pinned MSR.
-> +
-> +	Bits which are allowed to be pinned are WP for CR0 and SMEP, SMAP, and
-> +	UMIP for CR4.
-> +
-> +MSR_KVM_CR0_PINNED: 0x4b564d08
-> +MSR_KVM_CR4_PINNED: 0x4b564d09
-> +	Used to configure pinned bits in control registers
-> +
-> +	data: Bits to be pinned.
-> +
-> +	Fails if data contains bits which are not allowed to be pinned. Bits
-> +	which are allowed to be pinned can be found by reading the CR pin
-> +	allowed MSRs.
-> +
-> +	The MSRs are read/write for host userspace, and write-only for the
-> +	guest.
-> +
-> +	Once set to a non-zero value, the guest cannot clear any of the bits
-> +	that have been pinned to 1. The guest can set more bits to 1, so long
-> +	as those bits appear in the allowed MSR.
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+---
+ drivers/mmc/core/mmc_ops.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Why not allow pinning a bit to 0?  That would make the logic in set_cr0/4
-more intuitive.  This approach also means that WRMSR interception needs to
-inject a #GP if the guest attempts to pin a bit and the bit isn't currently
-set in the MSR, which this patch doesn't do.
+diff --git a/drivers/mmc/core/mmc_ops.c b/drivers/mmc/core/mmc_ops.c
+index da425ee2d9bf..f0d2563961f6 100644
+--- a/drivers/mmc/core/mmc_ops.c
++++ b/drivers/mmc/core/mmc_ops.c
+@@ -532,6 +532,9 @@ int __mmc_switch(struct mmc_card *card, u8 set, u8
+index, u8 value,
 
-The downside to allowing pinning to '0' is that KVM will need to track the
-pinned value, e.g. for RSM and VM-Exit, but that's a fairly small cost and
-might be valuable in the long run, e.g. if TSX retroactively gained CR
-enable bit...
+        mmc_retune_hold(host);
 
-> +
-> +	Host userspace may clear or change pinned bits at any point. Host
-> +	userspace must clear pinned bits on reboot.
-> +
-> +	The MSR enables bit pinning for control registers. Pinning is active
-> +	when the guest is not in SMM. If the guest attempts to write values to
-> +	cr* where bits differ from pinned bits, the write will fail and the
-> +	guest will be sent a general protection fault.
-
-...
-
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index fb5d64ebc35d..2ee0e9886a6e 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -733,6 +733,9 @@ bool pdptrs_changed(struct kvm_vcpu *vcpu)
->  }
->  EXPORT_SYMBOL_GPL(pdptrs_changed);
->  
-> +#define KVM_CR0_PIN_ALLOWED	(X86_CR0_WP)
-> +#define KVM_CR4_PIN_ALLOWED	(X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP)
-> +
->  int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
->  {
->  	unsigned long old_cr0 = kvm_read_cr0(vcpu);
-> @@ -753,6 +756,11 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
->  	if ((cr0 & X86_CR0_PG) && !(cr0 & X86_CR0_PE))
->  		return 1;
->  
-> +	if (!is_smm(vcpu)
-
-Hmm, so there's some work to be done for nested virtualization.  I'm
-guessing the story will be the same as SMM, i.e. L2 is allowed to "unpin"
-bits, and pinned bits are rechecked on VM-Exit to L1.
-
-Assuming you want to go that route, this needs to also check for
-!is_guest_mode(), i.e. allow L2 to change bits that are pinned by L1.  It
-likely works for standard nesting because nested VM-Enter bypasses
-kvm_set_cr0(), e.g. prepare_vmcs02() calls vmx_set_cr0() to avoid fault
-logic, but it'll break if L1 doesn't intercept pinned bits.  
-
-Speaking of the bypass, you'll need to incorporate pinning into the
-VM-Enter consistency checks, otherwise L1 could bypass pinning by loading
-CR0/CR4 via VM-Exit, e.g. load_vmcs12_host_state() bypasses pinning checks.
-
-> +		&& vcpu->arch.cr0_pinned
-
-Operators go on the previous line, newline only when needed, and align
-indentation when continuing a statement, e.g. (whitespace damaged)
-
-        if (!is_smm(vcpu) && vcpu->arch.cr0_pinned &&
-            ((cr0 ^ vcpu->arch.cr0_pinned) & KVM_CR0_PIN_ALLOWED))
-                return 1;
-
-> +             && ((cr0 ^ vcpu->arch.cr0_pinned) & KVM_CR0_PIN_ALLOWED))
-
-If this ends up only allowing "pin-to-one" semantics, then the fields
-should be named vcpu->arch.cr0_pinned_1 or so.  It took a lot of staring
-to figure out what this code was doing.  The logic can also be optimized,
-e.g.:
-
-        if (!is_smm(vcpu) && !is_guest_mode(vcpu) &&
-            (~cr0 & vcpu->arch.cr0_pinned_1))
-                return 1;
-
-If the feature is defined to pin bits to their current value, as opposed to
-pinning bits to '1', then this code becomes:
-
-        if (!is_smm(vcpu) && !is_guest_mode(vcpu) &&
-            ((cr0 ^ old_cr0) & vcpu->arch.cr0_pinned.mask))
-		return 1;
-
-or if you wanted to be more paranoid
-
-        if (!is_smm(vcpu) && !is_guest_mode(vcpu) &&
-            ((cr0 ^ vcpu->arch.cr0_pinned.val) & vcpu->arch.cr0_pinned.mask))
-		return 1;
-
-or
-
-        if (!is_smm(vcpu) && !is_guest_mode(vcpu) &&
-            ((cr0 & vcpu->arch.cr0_pinned.mask) != vcpu->arch.cr0_pinned.val))
-		return 1;
-
-> +		&& ((cr0 ^ vcpu->arch.cr0_pinned) & KVM_CR0_PIN_ALLOWED))
-> +		return 1;
-> +
->  	if (!is_paging(vcpu) && (cr0 & X86_CR0_PG)) {
->  #ifdef CONFIG_X86_64
->  		if ((vcpu->arch.efer & EFER_LME)) {
-> @@ -932,6 +940,11 @@ int kvm_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
->  	if (kvm_valid_cr4(vcpu, cr4))
->  		return 1;
->  
-> +	if (!is_smm(vcpu)
-> +		&& vcpu->arch.cr4_pinned
-> +		&& ((cr4 ^ vcpu->arch.cr4_pinned) & KVM_CR4_PIN_ALLOWED))
-> +		return 1;
-> +
->  	if (is_long_mode(vcpu)) {
->  		if (!(cr4 & X86_CR4_PAE))
->  			return 1;
-> @@ -1255,6 +1268,10 @@ static const u32 emulated_msrs_all[] = {
->  
->  	MSR_K7_HWCR,
->  	MSR_KVM_POLL_CONTROL,
-> +	MSR_KVM_CR0_PIN_ALLOWED,
-> +	MSR_KVM_CR4_PIN_ALLOWED,
-> +	MSR_KVM_CR0_PINNED,
-> +	MSR_KVM_CR4_PINNED,
->  };
->  
->  static u32 emulated_msrs[ARRAY_SIZE(emulated_msrs_all)];
-> @@ -2878,6 +2895,28 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  		vcpu->arch.msr_kvm_poll_control = data;
->  		break;
->  
-> +	case MSR_KVM_CR0_PIN_ALLOWED:
-> +	case MSR_KVM_CR4_PIN_ALLOWED:
-> +		if (report_ignored_msrs)
-> +			vcpu_debug_ratelimited(vcpu, "unhandled wrmsr: 0x%x data 0x%llx\n",
-> +				    msr, data);
-
-report_ignored_msrs is only for MSRs that KVM doesn't know how to handle.
-The *_PIN_ALLOWED MSRs should simply do "return 1", even for host initiated
-writes.  I.e. inject #GP on attempted WRMSR in the guest, return -EINVAL if
-the userspace VMM tries to redefine what's allowed.
-
-> +		break;
-> +	case MSR_KVM_CR0_PINNED:
-> +		if (data & ~KVM_CR0_PIN_ALLOWED)
-> +			return 1;
-> +		if (msr_info->host_initiated)
-> +			vcpu->arch.cr0_pinned = data;
-> +		else
-> +			vcpu->arch.cr0_pinned |= data;
-
-Hmm, I understand what you're doing, but having fundamentally different
-behavior for host vs. guest is probably a bad idea.  I don't think it's
-too onerous to require a RMW operation from the guest, e.g.
-
-		if (data & ~KVM_CR0_PIN_ALLOWED)
-			return 1;
-
-		if (!msr_info->host_initiated &&
-		    (~data & vcpu->arch.cr0_pinned.mask))
-			return 1;
-
-		vcpu->arch.cr0_pinned.mask = data;
-		vcpu->arch.cr0_pinned.val = kvm_read_cr0(vcpu) & data;
-		break;
-
-> +		break;
-> +	case MSR_KVM_CR4_PINNED:
-> +		if (data & ~KVM_CR4_PIN_ALLOWED)
-> +			return 1;
-> +		if (msr_info->host_initiated)
-> +			vcpu->arch.cr4_pinned = data;
-> +		else
-> +			vcpu->arch.cr4_pinned |= data;
-> +		break;
->  	case MSR_IA32_MCG_CTL:
->  	case MSR_IA32_MCG_STATUS:
->  	case MSR_IA32_MC0_CTL ... MSR_IA32_MCx_CTL(KVM_MAX_MCE_BANKS) - 1:
-> @@ -3124,6 +3163,18 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	case MSR_KVM_POLL_CONTROL:
->  		msr_info->data = vcpu->arch.msr_kvm_poll_control;
->  		break;
-> +	case MSR_KVM_CR0_PIN_ALLOWED:
-> +		msr_info->data = KVM_CR0_PIN_ALLOWED;
-> +		break;
-> +	case MSR_KVM_CR4_PIN_ALLOWED:
-> +		msr_info->data = KVM_CR4_PIN_ALLOWED;
-> +		break;
-> +	case MSR_KVM_CR0_PINNED:
-> +		msr_info->data = vcpu->arch.cr0_pinned;
-> +		break;
-> +	case MSR_KVM_CR4_PINNED:
-> +		msr_info->data = vcpu->arch.cr4_pinned;
-> +		break;
->  	case MSR_IA32_P5_MC_ADDR:
->  	case MSR_IA32_P5_MC_TYPE:
->  	case MSR_IA32_MCG_CAP:
-> @@ -6316,10 +6367,84 @@ static void emulator_set_hflags(struct x86_emulate_ctxt *ctxt, unsigned emul_fla
->  	emul_to_vcpu(ctxt)->arch.hflags = emul_flags;
->  }
->  
-> +static inline u64 restore_pinned(u64 val, u64 subset, u64 pinned)
-> +{
-> +	u64 pinned_high = pinned & subset;
-> +	u64 pinned_low = ~pinned & subset;
-> +
-> +	val |= pinned_high;
-> +	val &= ~pinned_low;
-> +
-> +	return val;
-> +}
-> +
-> +static void kvm_pre_leave_smm_32_restore_crX_pinned(struct kvm_vcpu *vcpu,
-> +						    const char *smstate,
-> +						    u16 offset,
-> +						    unsigned long allowed,
-> +						    unsigned long cr_pinned)
-> +{
-> +	u32 cr;
-> +
-> +	cr = GET_SMSTATE(u32, smstate, offset);
-> +	cr = (u32)restore_pinned(cr, allowed, cr_pinned);
-> +	put_smstate(u32, smstate, offset, cr);
-> +}
-> +
-> +static void kvm_pre_leave_smm_32_restore_cr_pinned(struct kvm_vcpu *vcpu,
-> +						   const char *smstate)
-> +{
-> +	if (vcpu->arch.cr0_pinned)
-> +		kvm_pre_leave_smm_32_restore_crX_pinned(vcpu, smstate, 0x7ffc,
-> +							KVM_CR0_PIN_ALLOWED,
-> +							vcpu->arch.cr0_pinned);
-> +
-> +	if (vcpu->arch.cr4_pinned)
-> +		kvm_pre_leave_smm_32_restore_crX_pinned(vcpu, smstate, 0x7f14,
-> +							KVM_CR4_PIN_ALLOWED,
-> +							vcpu->arch.cr4_pinned);
-> +}
-> +
-> +static void kvm_pre_leave_smm_64_restore_crX_pinned(struct kvm_vcpu *vcpu,
-> +						    const char *smstate,
-> +						    u16 offset,
-> +						    unsigned long allowed,
-> +						    unsigned long cr_pinned)
-> +{
-> +	u32 cr;
-> +
-> +	cr = GET_SMSTATE(u64, smstate, offset);
-> +	cr = restore_pinned(cr, allowed, cr_pinned);
-> +	put_smstate(u64, smstate, offset, cr);
-> +}
-> +
-> +static void kvm_pre_leave_smm_64_restore_cr_pinned(struct kvm_vcpu *vcpu,
-> +						   const char *smstate)
-> +{
-> +	if (vcpu->arch.cr0_pinned)
-> +		kvm_pre_leave_smm_64_restore_crX_pinned(vcpu, smstate, 0x7f58,
-> +							KVM_CR0_PIN_ALLOWED,
-> +							vcpu->arch.cr0_pinned);
-> +
-> +	if (vcpu->arch.cr4_pinned)
-> +		kvm_pre_leave_smm_64_restore_crX_pinned(vcpu, smstate, 0x7f48,
-> +							KVM_CR4_PIN_ALLOWED,
-> +							vcpu->arch.cr4_pinned);
-
-Oof, that's a fair bit of ugly just to prevent SMM from poking into SMRAM
-to attack the kernel.
-
-If we do want to enforce pinning on RSM, I think it'd be better to inject
-shutdown (well, return X86EMUL_UNHANDLEABLE) if the SMM handler changed the
-value of a pinned CR bit.  The SDM blurb on RSM states:
-
-  If the processor detects invalid state information during state
-  restoration, it enters the shutdown state.
-
-IMO it's fair to say that attempting to unpin CR bits qualifies as invalid
-state.
-
-The logic is also a lot cleaner, e.g. (plus updating prototypes)
-
-diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-index dd19fb3539e0..b1252de853c1 100644
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -2674,7 +2674,8 @@ static int em_rsm(struct x86_emulate_ctxt *ctxt)
-                return X86EMUL_UNHANDLEABLE;
-        }
-
--       ctxt->ops->post_leave_smm(ctxt);
-+       if (ctxt->ops->post_leave_smm(ctxt))
-+               return X86EMUL_UNHANDLEABLE;
-
-        return X86EMUL_CONTINUE;
- }
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index aa2a085f115c..7c33c22b18fe 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -6263,8 +6263,14 @@ static int emulator_pre_leave_smm(struct x86_emulate_ctxt *ctxt,
-        return kvm_x86_ops->pre_leave_smm(emul_to_vcpu(ctxt), smstate);
- }
-
--static void emulator_post_leave_smm(struct x86_emulate_ctxt *ctxt)
-+static int emulator_post_leave_smm(struct x86_emulate_ctxt *ctxt)
- {
-+       struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
-+       unsigned long cr0 = kvm_read_cr0(vcpu);
++       /* Force a long timeout to likely make use_r1b_resp to become false. */
++       timeout_ms = MMC_CACHE_FLUSH_TIMEOUT_MS;
 +
-+       if ((cr0 ^ vcpu->arch.cr0_pinned.val) & vcpu->arch.cr0_pinned.mask)
-+               return 1;
-+
-        kvm_smm_changed(emul_to_vcpu(ctxt));
- }
+        if (!timeout_ms) {
+                pr_warn("%s: unspecified timeout for CMD6 - use generic\n",
+                        mmc_hostname(host));
+@@ -544,8 +547,11 @@ int __mmc_switch(struct mmc_card *card, u8 set,
+u8 index, u8 value,
+         * the host to avoid HW busy detection, by converting to a R1 response
+         * instead of a R1B.
+         */
+-       if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout))
++       if (host->max_busy_timeout && (timeout_ms > host->max_busy_timeout)) {
++               pr_warn("%s:Disable MMC_RSP_BUSY. timeout_ms(%u) >
+max_busy_timeout(%u)\n",
++                       mmc_hostname(host), timeout_ms, host->max_busy_timeout);
+                use_r1b_resp = false;
++       }
 
+        cmd.opcode = MMC_SWITCH;
+        cmd.arg = (MMC_SWITCH_MODE_WRITE_BYTE << 24) |
+-- 
 
-> +}
-> +
->  static int emulator_pre_leave_smm(struct x86_emulate_ctxt *ctxt,
->  				  const char *smstate)
->  {
-> -	return kvm_x86_ops->pre_leave_smm(emul_to_vcpu(ctxt), smstate);
-> +	struct kvm_vcpu *vcpu = emul_to_vcpu(ctxt);
-> +
-> +#ifdef CONFIG_X86_64
-> +	if (guest_cpuid_has(vcpu, X86_FEATURE_LM))
-> +		kvm_pre_leave_smm_64_restore_cr_pinned(vcpu, smstate);
-> +	else
-> +#endif
-> +		kvm_pre_leave_smm_32_restore_cr_pinned(vcpu, smstate);
-> +
-> +	return kvm_x86_ops->pre_leave_smm(vcpu, smstate);
->  }
->  
->  static void emulator_post_leave_smm(struct x86_emulate_ctxt *ctxt)
-> @@ -9490,6 +9615,9 @@ void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->  
->  	vcpu->arch.ia32_xss = 0;
->  
-> +	vcpu->arch.cr0_pinned = 0;
-> +	vcpu->arch.cr4_pinned = 0;
-> +
->  	kvm_x86_ops->vcpu_reset(vcpu, init_event);
->  }
->  
-> -- 
-> 2.21.0
-> 
+Kind regards
+Uffe
