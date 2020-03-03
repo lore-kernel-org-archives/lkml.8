@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BABA3C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79049C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D1221739
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D45E21739
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 03:02:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583204543;
-	bh=MnCbQzpf+r5tSeJRjSgxcK5ybmbnMHs7rXK6mHvkUdA=;
+	s=default; t=1583204550;
+	bh=8H8u9Jdm4LXU8U5wy3ICUDTpKOuA7hqVpkDvPwmyKTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V57NTP4/xfiaXa3VrdeyTp4bPb9XWBFrXOUmjAUm1D2PMGbnkI0ZQ5je02ypcNlEJ
-	 fa8pyd2LxqJZoANLK01Ogd5QHGHTRD1TFBmnOuyJToc7vWVKDXVnda3x8YlXQPs/zp
-	 qsI1ccj6Ym8UnB7nI62S3WHkpJuiJaxAADX42cOU=
+	b=uCgi3JV5A5SgSB+XaxG2AhKOOpmaVQiVXJPYxf0mar90ObqoVT99h1Ni5LUNjBZt3
+	 Yn/oDCesVQbDBkOJNZd4YGElSx6r+ef7FNhWbIpu8Z/FeQRQm9251u6gE2d1mXeea5
+	 VlE9QbKnS+hSo6Av1Dr4MEtmQhiX9NPOv/V9mJBw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727678AbgCCCqr (ORCPT
+        id S1728255AbgCCDC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 21:46:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41208 "EHLO mail.kernel.org"
+        Mon, 2 Mar 2020 22:02:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727589AbgCCCql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:46:41 -0500
+        id S1727647AbgCCCqq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:46:46 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2ABF246BB;
-        Tue,  3 Mar 2020 02:46:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BD7942465E;
+        Tue,  3 Mar 2020 02:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203600;
-        bh=MnCbQzpf+r5tSeJRjSgxcK5ybmbnMHs7rXK6mHvkUdA=;
+        s=default; t=1583203605;
+        bh=8H8u9Jdm4LXU8U5wy3ICUDTpKOuA7hqVpkDvPwmyKTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PFTMEd9JIZgx7JNrHk9k724bryTJb+XqkrJvQBnPHg5azRWcpLnLtSugBvC2ApWvS
-         MI2MvLNCLQPNQ263CAaIi1Z+A2BnlRRnvyC2Q2yUMTlYv3nQv9x/Jx4s6+Di+GbSTC
-         0Kk3XTjkEGcMDo9v0WgTS3QVLgtY6pWKnC5b0DIA=
+        b=GLc+uamvuRQ9oBSJfdTOF/HUngnuIC3R21JtXtZv0ZICjH8HZwhRHYEtGrE1hRxP2
+         ghe7e41QmJzsOT3VfvAXsSe2udXSKxWBovkeZp3a9bfhhfMS80WjOJVAHAPyg3bY4L
+         xWQscB4T57hyr83XgoWgFxpzpkEwdjOnI6Qlvy3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
+Cc:     Egor Pomozov <epomozov@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Dmitry Bogdanov <dbogdanov@marvell.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 20/66] net: macb: ensure interface is not suspended on at91rm9200
-Date:   Mon,  2 Mar 2020 21:45:29 -0500
-Message-Id: <20200303024615.8889-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 24/66] net: atlantic: ptp gpio adjustments
+Date:   Mon,  2 Mar 2020 21:45:33 -0500
+Message-Id: <20200303024615.8889-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -61,49 +61,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+From: Egor Pomozov <epomozov@marvell.com>
 
-[ Upstream commit e6a41c23df0d5da01540d2abef41591589c0b4be ]
+[ Upstream commit f08a464c27ca0a4050333baa271504b27ce834b7 ]
 
-Because of autosuspend, at91ether_start is called with clocks disabled.
-Ensure that pm_runtime doesn't suspend the interface as soon as it is
-opened as there is no pm_runtime support is the other relevant parts of the
-platform support for at91rm9200.
+Clock adjustment data should be passed to FW as well, otherwise in some
+cases a drift was observed when using GPIO features.
 
-Fixes: d54f89af6cc4 ("net: macb: Add pm runtime support")
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Reviewed-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@microchip.com>
+Signed-off-by: Egor Pomozov <epomozov@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Dmitry Bogdanov <dbogdanov@marvell.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/cadence/macb_main.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/aquantia/atlantic/aq_hw.h       |  2 ++
+ .../ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c    |  4 +++-
+ .../aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c     | 12 ++++++++++++
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 71bb0d56533a6..e916fc223621d 100644
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -3751,6 +3751,10 @@ static int at91ether_open(struct net_device *dev)
- 	u32 ctl;
- 	int ret;
+diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_hw.h b/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
+index cc70c606b6ef2..251767c31f7e5 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
++++ b/drivers/net/ethernet/aquantia/atlantic/aq_hw.h
+@@ -337,6 +337,8 @@ struct aq_fw_ops {
  
-+	ret = pm_runtime_get_sync(&lp->pdev->dev);
-+	if (ret < 0)
-+		return ret;
+ 	void (*enable_ptp)(struct aq_hw_s *self, int enable);
+ 
++	void (*adjust_ptp)(struct aq_hw_s *self, uint64_t adj);
 +
- 	/* Clear internal statistics */
- 	ctl = macb_readl(lp, NCR);
- 	macb_writel(lp, NCR, ctl | MACB_BIT(CLRSTAT));
-@@ -3815,7 +3819,7 @@ static int at91ether_close(struct net_device *dev)
- 			  q->rx_buffers, q->rx_buffers_dma);
- 	q->rx_buffers = NULL;
+ 	int (*set_eee_rate)(struct aq_hw_s *self, u32 speed);
  
--	return 0;
-+	return pm_runtime_put(&lp->pdev->dev);
+ 	int (*get_eee_rate)(struct aq_hw_s *self, u32 *rate,
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+index 5784da26f8683..9acdb3fbb750d 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+@@ -1162,6 +1162,8 @@ static int hw_atl_b0_adj_sys_clock(struct aq_hw_s *self, s64 delta)
+ {
+ 	self->ptp_clk_offset += delta;
+ 
++	self->aq_fw_ops->adjust_ptp(self, self->ptp_clk_offset);
++
+ 	return 0;
  }
  
- /* Transmit packet */
+@@ -1212,7 +1214,7 @@ static int hw_atl_b0_gpio_pulse(struct aq_hw_s *self, u32 index,
+ 	fwreq.ptp_gpio_ctrl.index = index;
+ 	fwreq.ptp_gpio_ctrl.period = period;
+ 	/* Apply time offset */
+-	fwreq.ptp_gpio_ctrl.start = start - self->ptp_clk_offset;
++	fwreq.ptp_gpio_ctrl.start = start;
+ 
+ 	size = sizeof(fwreq.msg_id) + sizeof(fwreq.ptp_gpio_ctrl);
+ 	return self->aq_fw_ops->send_fw_request(self, &fwreq, size);
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
+index 97ebf849695fd..77a4ed64830fd 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_utils_fw2x.c
+@@ -30,6 +30,9 @@
+ #define HW_ATL_FW3X_EXT_CONTROL_ADDR     0x378
+ #define HW_ATL_FW3X_EXT_STATE_ADDR       0x37c
+ 
++#define HW_ATL_FW3X_PTP_ADJ_LSW_ADDR	 0x50a0
++#define HW_ATL_FW3X_PTP_ADJ_MSW_ADDR	 0x50a4
++
+ #define HW_ATL_FW2X_CAP_PAUSE            BIT(CAPS_HI_PAUSE)
+ #define HW_ATL_FW2X_CAP_ASYM_PAUSE       BIT(CAPS_HI_ASYMMETRIC_PAUSE)
+ #define HW_ATL_FW2X_CAP_SLEEP_PROXY      BIT(CAPS_HI_SLEEP_PROXY)
+@@ -475,6 +478,14 @@ static void aq_fw3x_enable_ptp(struct aq_hw_s *self, int enable)
+ 	aq_hw_write_reg(self, HW_ATL_FW3X_EXT_CONTROL_ADDR, ptp_opts);
+ }
+ 
++static void aq_fw3x_adjust_ptp(struct aq_hw_s *self, uint64_t adj)
++{
++	aq_hw_write_reg(self, HW_ATL_FW3X_PTP_ADJ_LSW_ADDR,
++			(adj >>  0) & 0xffffffff);
++	aq_hw_write_reg(self, HW_ATL_FW3X_PTP_ADJ_MSW_ADDR,
++			(adj >> 32) & 0xffffffff);
++}
++
+ static int aq_fw2x_led_control(struct aq_hw_s *self, u32 mode)
+ {
+ 	if (self->fw_ver_actual < HW_ATL_FW_VER_LED)
+@@ -633,4 +644,5 @@ const struct aq_fw_ops aq_fw_2x_ops = {
+ 	.enable_ptp         = aq_fw3x_enable_ptp,
+ 	.led_control        = aq_fw2x_led_control,
+ 	.set_phyloopback    = aq_fw2x_set_phyloopback,
++	.adjust_ptp         = aq_fw3x_adjust_ptp,
+ };
 -- 
 2.20.1
 
