@@ -2,143 +2,194 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C822AC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73083C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F0D220857
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:38:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4118320717
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:39:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n44gaBx7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i2HHyha2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728973AbgCCNio (ORCPT
+        id S1729167AbgCCNjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:38:44 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34154 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbgCCNio (ORCPT
+        Tue, 3 Mar 2020 08:39:00 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42187 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728124AbgCCNi7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:38:44 -0500
-Received: by mail-io1-f68.google.com with SMTP id z190so3600754iof.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 05:38:43 -0800 (PST)
+        Tue, 3 Mar 2020 08:38:59 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z11so4342310wro.9;
+        Tue, 03 Mar 2020 05:38:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JYvtLVzi18cIH6u0PRaiZ+x+kMrKvMGPICXTKLEmlk4=;
-        b=n44gaBx7J09bO0aLDcRtttMXYmMiYYEMy7D8QsoilKQYF/NcqQlhD8Z+kjxuhKBSSu
-         Wl3s5P5ZgXFmSe/6IFfmOEyzCksX0OeaIyOw8gM1eVBr5IS4rFViV4YnJD5f8zguw8d4
-         BY7hLvhyYGG3HpyoSeDYAvNfsAwV/ZWwfDuEpAntd5kBmv0/RY88cAGJrvYbKfoGpRuo
-         OwlgJXgDBOF11BpDmdn3NG0wPH1ocEKxE2n0bY9ewqnA1OR38lSTQSzFTmZezw5I3V+w
-         LFh9aNc+jMuj0lUpJU24gIEul247Ug9i1VZ84vlDzZ9/kHodRXbJE9BCdjiEP2XSBKig
-         4bLw==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZRymEURxG29TkCLI3sdfDoyr9GF4aobVx9HepebY0JQ=;
+        b=i2HHyha2l7WtQStsxE4ZCZMX6GRBeq34abSjXuFniTbuXvl0jzB0M2oNWKpwg3BzRv
+         +oLl4b5c9dAiNbIM5pLuMjCILVVw/PViw/3LtxoxvJbQDPyS/plpr+keGENeMWCAXbLX
+         FGpFirPQG3nECFhfxcXCwDJ9ZRq/viSU7vKsK3q87qnHS9rg0XR84iSqVGS8FQrA1gdx
+         o6mh2vfrC7JhwYM4A0Wpbr+r49kf+1FGDsWV0YSvGHf3E7K03csqQ0zp1mLMi/uAicXM
+         r3CJrSKfbBcCV0LxV5dmuH21ayEOfQR04q6rMWdwSiuX1QYILodb3zos8daFHqAuIDUB
+         uDjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JYvtLVzi18cIH6u0PRaiZ+x+kMrKvMGPICXTKLEmlk4=;
-        b=KAvRYGRC2g1ZfpL7urHmEC1EfgeYwwc3k+e0cv3tsgK5ZbbRAkQpC6PxJNxl6dTc7H
-         05Md4O+c2L2KCrZFN+p82oYDH5Yyg1wrbyrncR2o82WYPeSaD/Z66qTWgdZuciVmwy+b
-         q0GqHAHzxoxGbM2Y74zySBLFANFTmFz/xzH1UMhcveIwKn6qnHuAlinvpyyblJgyRNfF
-         zILbqDpgv6cBSi4l+Abh7MN5mah+hFTkbmBsTiizUIQbKl8bdmIIs0DtEHyXUxy/CRjr
-         4PHam3BCo4SuPMBN282T91MY0UgXuAWIGNsy4G7chduNpeel8XYqji9y+Bdac0Si7euh
-         YwmA==
-X-Gm-Message-State: ANhLgQ2RzPT2xx9ozcTx9HD+5t4MiDMSTdu0cjO/XrLZafkLO/3gLk6C
-        ULXQgxZtD5fh7K3rV5pFzTwv+xiiu194pSr1Vg==
-X-Google-Smtp-Source: ADFU+vt4acEi2rH4gaRHNqkKwa1P0yr+sPIbgUyPKs0Ei5EeGEkmnjhXuMHANnRWBsK11F38ccB5yPzOz9SmGb/O5Vs=
-X-Received: by 2002:a02:3093:: with SMTP id q141mr3343332jaq.121.1583242723230;
- Tue, 03 Mar 2020 05:38:43 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZRymEURxG29TkCLI3sdfDoyr9GF4aobVx9HepebY0JQ=;
+        b=tAcXiG+d523mY1K6hBVcBpT8GHpxmlDDvbTadnrchciPLJQ7dUl6rm/A+CvvqbSad/
+         /l+aaBKzQJRmpVtPolUjj/AbgMHxvGpLqa9IumAcyi8Y7WZbgUpqXDMzHmcZPLT/MVwF
+         pTAZWUqDmQIkIOlPZANX8rgvxZcnHTq1z1jx2rTsHhCloniCKPMZiuNLzOGZSs94UZOg
+         Uf9OOJ4ZCqu9uYBWGvesSPhm6ESHmvSDE/DWoi99LoBJXXBuWYQ5srG3U3w7fylV2ka0
+         WVI39P2PM8fhFnbFGfR0LqrQuhrD6Bl2eX16Qf74TlNehuxM2eNjvQ0q11S3n3nCaNKD
+         HgyA==
+X-Gm-Message-State: ANhLgQ1+7MN6qLxYXInDVoNI1X7M/j01/KX7OiYiwFtZ0S172cix7G86
+        q86e97Mpto9jbq1YjSEPkH4=
+X-Google-Smtp-Source: ADFU+vvtajUmcHxy1nP7CuGiIwApLuN21TbJVtjyuHeuiUnic+JoV9sDwPIAvu65DSjAgKrIuDsb+g==
+X-Received: by 2002:adf:dd47:: with SMTP id u7mr4550046wrm.130.1583242736437;
+        Tue, 03 Mar 2020 05:38:56 -0800 (PST)
+Received: from localhost (pD9E516A9.dip0.t-ipconnect.de. [217.229.22.169])
+        by smtp.gmail.com with ESMTPSA id n11sm211775wrw.11.2020.03.03.05.38.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 05:38:55 -0800 (PST)
+Date:   Tue, 3 Mar 2020 14:38:54 +0100
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        jonathanh@nvidia.com, andrew.murray@arm.com, kishon@ti.com,
+        gustavo.pimentel@synopsys.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V4 5/5] PCI: tegra: Add support for PCIe endpoint mode in
+ Tegra194
+Message-ID: <20200303133854.GA2854899@ulmo>
+References: <20200303105418.2840-1-vidyas@nvidia.com>
+ <20200303105418.2840-6-vidyas@nvidia.com>
 MIME-Version: 1.0
-References: <1582889550-9101-1-git-send-email-kernelfans@gmail.com>
- <1582889550-9101-3-git-send-email-kernelfans@gmail.com> <1433456b-733c-02dc-d4fd-50e5b2be50bc@nvidia.com>
-In-Reply-To: <1433456b-733c-02dc-d4fd-50e5b2be50bc@nvidia.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Tue, 3 Mar 2020 21:38:31 +0800
-Message-ID: <CAFgQCTvob1+cTeVA7Gn=6dGRb-YPxChefJQoAKp8k=YE8Q6vaQ@mail.gmail.com>
-Subject: Re: [PATCHv5 2/3] mm/gup: fix omission of check on FOLL_LONGTERM in
- gup fast path
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Linux-MM <linux-mm@kvack.org>, Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Shuah Khan <shuah@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+In-Reply-To: <20200303105418.2840-6-vidyas@nvidia.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 7:51 AM John Hubbard <jhubbard@nvidia.com> wrote:
->
-> On 2/28/20 3:32 AM, Pingfan Liu wrote:
-> > FOLL_LONGTERM suggests a pin which is going to be given to hardware and
-> > can't move. It would truncate CMA permanently and should be excluded.
-> >
-> > FOLL_LONGTERM has already been checked in the slow path, but not checked in
-> > the fast path, which means a possible leak of CMA page to longterm pinned
-> > requirement through this crack.
-> >
-> > Place a check in try_get_compound_head() in the fast path.
-> >
-> > Some note about the check:
-> > Huge page's subpages have the same migrate type due to either
-> > allocation from a free_list[] or alloc_contig_range() with param
-> > MIGRATE_MOVABLE. So it is enough to check on a single subpage
-> > by is_migrate_cma_page(subpage)
-> >
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Ira Weiny <ira.weiny@intel.com>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Mike Rapoport <rppt@linux.ibm.com>
-> > Cc: Dan Williams <dan.j.williams@intel.com>
-> > Cc: Matthew Wilcox <willy@infradead.org>
-> > Cc: John Hubbard <jhubbard@nvidia.com>
-> > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-> > Cc: Keith Busch <keith.busch@intel.com>
-> > Cc: Christoph Hellwig <hch@infradead.org>
-> > Cc: Shuah Khan <shuah@kernel.org>
-> > To: linux-mm@kvack.org
-> > Cc: linux-kernel@vger.kernel.org
-> > ---
-> >  mm/gup.c | 26 +++++++++++++++++++-------
-> >  1 file changed, 19 insertions(+), 7 deletions(-)
-> >
-> > diff --git a/mm/gup.c b/mm/gup.c
-> > index cd8075e..f0d6804 100644
-> > --- a/mm/gup.c
-> > +++ b/mm/gup.c
-> > @@ -33,9 +33,21 @@ struct follow_page_context {
-> >   * Return the compound head page with ref appropriately incremented,
-> >   * or NULL if that failed.
-> >   */
-> > -static inline struct page *try_get_compound_head(struct page *page, int refs)
-> > +static inline struct page *try_get_compound_head(struct page *page, int refs,
-> > +     unsigned int flags)
->
->
-> ohhh...please please look at the latest gup.c in mmotm, and this one in particular:
->
->     commit 0ea2781c3de4 mm/gup: track FOLL_PIN pages
->
-> ...where you'll see that there is a concept of "try_get*" vs. "try_grab*"). This is going
-> to be a huge mess if we do it as above, from a code structure point of view.
->
-> The "grab" functions take gup flags, the "get" functions do not.
->
-> Anyway, as I said in reply to the cover letter, I'm really uncomfortable with this
-> being applied to linux.git. So maybe if we see a fix to mmotm, it will be clearer how
-> to port that back to linux.git (assuming that you need 5.6 fixed--do you though?)
-Sure, I will read your series and figure out the way to rebase my
-patches on mmotm at first.
 
-Thanks,
-Pingfan
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Mar 03, 2020 at 04:24:18PM +0530, Vidya Sagar wrote:
+> Add support for the endpoint mode of Synopsys DesignWare core based
+> dual mode PCIe controllers present in Tegra194 SoC.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> V4:
+> * Addressed Lorenzo's review comments
+> * Started using threaded irqs instead of kthreads
+>=20
+> V3:
+> * Addressed Thierry's review comments
+>=20
+> V2:
+> * Addressed Bjorn's review comments
+> * Made changes as part of addressing review comments for other patches
+>=20
+>  drivers/pci/controller/dwc/Kconfig         |  30 +-
+>  drivers/pci/controller/dwc/pcie-tegra194.c | 681 ++++++++++++++++++++-
+>  2 files changed, 693 insertions(+), 18 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/=
+dwc/Kconfig
+> index 0830dfcfa43a..169cde58dd92 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -248,14 +248,38 @@ config PCI_MESON
+>  	  implement the driver.
+> =20
+>  config PCIE_TEGRA194
+> -	tristate "NVIDIA Tegra194 (and later) PCIe controller"
+> +	tristate
+> +
+> +config PCIE_TEGRA194_HOST
+> +	tristate "NVIDIA Tegra194 (and later) PCIe controller - Host Mode"
+>  	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+>  	depends on PCI_MSI_IRQ_DOMAIN
+>  	select PCIE_DW_HOST
+>  	select PHY_TEGRA194_P2U
+> +	select PCIE_TEGRA194
+> +	default y
+> +	help
+> +	  Enables support for the PCIe controller in the NVIDIA Tegra194 SoC to
+> +	  work in host mode. There are two instances of PCIe controllers in
+> +	  Tegra194. This controller can work either as EP or RC. In order to
+> +	  enable host-specific features PCIE_TEGRA194_HOST must be selected and
+> +	  in order to enable device-specific features PCIE_TEGRA194_EP must be
+> +	  selected. This uses the DesignWare core.
+> +
+> +config PCIE_TEGRA194_EP
+> +	tristate "NVIDIA Tegra194 (and later) PCIe controller - Endpoint Mode"
+> +	depends on ARCH_TEGRA_194_SOC || COMPILE_TEST
+> +	depends on PCI_ENDPOINT
+> +	select PCIE_DW_EP
+> +	select PHY_TEGRA194_P2U
+> +	select PCIE_TEGRA194
+>  	help
+> -	  Say Y here if you want support for DesignWare core based PCIe host
+> -	  controller found in NVIDIA Tegra194 SoC.
+> +	  Enables support for the PCIe controller in the NVIDIA Tegra194 SoC to
+> +	  work in host mode. There are two instances of PCIe controllers in
+> +	  Tegra194. This controller can work either as EP or RC. In order to
+> +	  enable host-specific features PCIE_TEGRA194_HOST must be selected and
+> +	  in order to enable device-specific features PCIE_TEGRA194_EP must be
+> +	  selected. This uses the DesignWare core.
+> =20
+>  config PCIE_UNIPHIER
+>  	bool "Socionext UniPhier PCIe controllers"
+> diff --git a/drivers/pci/controller/dwc/pcie-tegra194.c b/drivers/pci/con=
+troller/dwc/pcie-tegra194.c
+> index cbe95f0ea0ca..81810e644b23 100644
+> --- a/drivers/pci/controller/dwc/pcie-tegra194.c
+> +++ b/drivers/pci/controller/dwc/pcie-tegra194.c
+> @@ -14,6 +14,8 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/iopoll.h>
+>  #include <linux/kernel.h>
+> +#include <linux/kfifo.h>
+> +#include <linux/kthread.h>
+
+After moving to threaded IRQs, do you still need these includes?
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl5eXd4ACgkQ3SOs138+
+s6EVjA/+MiWicLPXeikoOsrDyo2yGmbfVl1gjhiqLmFIk0cXDwDfBegX6JWoT9CB
+p7Ffs0byZ8Bi8xza+wfpO4LVjANLOxW3DMtt4tFaOu2W+OsvaNbJasvo6X07Sr7k
+I+dmrxkWuPz3mN6LFbR458HY0B7YxLDKwPzyEdYss5ETaZ3asVul3cnbDPViQY8v
+tjcKk2ccScCYqAdjD4AW3ijxHECa5dEaLp13qQF76VVdHd3wyQox+SHvV9NNJo1o
+d5RRTlj3z6hWsqE1Bp7hDqqYWSOg1brcpuzdy+y2sV6mWaRTXL4JQzI+B8fTPUhO
+JvLZbx9JqyVtmqxq+PIekzdCGGRcqpEWL6+VIL4tWKL9OhUBJzHs/BKYW46Lx7Tv
+cAdBMJkkif27Y2iUR3T00cYmKLpaCPtUXZicHglrrWDVwNVbYiiGy8WiVLsQohSj
+SkRsnd7w09t/ZJ7JyzSnDfk2dR8qMBNDf64iiYhpmpXZSleF7ifla4fZrikXXnHG
+HjNaSxR+Euwnnlf1rDhyfDSzJWjFvWM18wnxKydS5TwGt9wA0acTQrWrv1RePl1Y
+ArDnpj1xfbhJhHEFO69Fjg9kr605SSmeXLmX+r6XR/5gkfF6FfRRyN2x3nRU9Fqb
+i/AtQye/0U9iTr6Rc/NVIGD86+/Fq9gik3hhR8a5o81wRdyxpr8=
+=q+we
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
