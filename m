@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59FEDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817CAC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA1C20728
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AFAC20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:51:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257880;
-	bh=emN2YqhmaWQTC1ham4gaISlsVWsP0a+LgTJnYCtT0ks=;
+	s=default; t=1583257885;
+	bh=EF3kf8XXR8oDb2OlrihVSt8o3602BgRzNnb6oWqndFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdBNUP0Kl158ECHEPLFugt7RPpZtGMoPdioLB0LWo9avtaRJDcbvcOJwoHwgxgQpX
-	 zWbzR0U6A95SQWuZdELXX3NmMoWm5Bu324wo17RPbsPX/XduxpSAk3n/UpmTRYs7OE
-	 QlCXgIToBvdWSl2qF5hUYUfbUNGCw4i8R8pzRp8o=
+	b=e/NgJBo5mC6RcfawoXYXg+0u4NBr4ObJ1+yvut1GIg1hzZlw+5PwJcIk1MdA9E9xP
+	 0z7kejkrYOpIfV6OqfYXCeBJPJDGQSiDJfB8RjuqGDmy7BadZptsM9TzviBTkfakrn
+	 fcTN+UvY4Oxo0FW7kpPCC/v+7e2Xf8/EVag0kuGs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731969AbgCCRvS (ORCPT
+        id S1731982AbgCCRvY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:51:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59234 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:51:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729788AbgCCRvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:14 -0500
+        id S1731418AbgCCRvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:51:17 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A791820728;
-        Tue,  3 Mar 2020 17:51:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1F8420870;
+        Tue,  3 Mar 2020 17:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257873;
-        bh=emN2YqhmaWQTC1ham4gaISlsVWsP0a+LgTJnYCtT0ks=;
+        s=default; t=1583257876;
+        bh=EF3kf8XXR8oDb2OlrihVSt8o3602BgRzNnb6oWqndFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aTBl6YTYhU3U9w4RfxcsDOO7IiQa2D2CbVSMl5t3Yc9nk1Tr0lqMY7j+t/ll3qKjR
-         njANXWCk2ub1ca3HlC4/hty8ZsXZ2mAz6BNr+66j5W/SljDIOX582/diphOPde5RAN
-         Hq0+szowHI1jjmGrYIcOjQInpkyohUYwN4BFKcqg=
+        b=r+zlD/8ba5YAXoybkq9E1IgRltWUkTdmcyTsayVvs9Vz7g5r3X6uNyIZK7Gbw7mgw
+         sOraq2l54ezxmEWMWFFlLNg4/QtXPZTl8cU8brrvNnk0Yn2oVqHNCSLjcFHVsn11g9
+         5aQikFMLFWrYCowt91TVRuMI0/sDwF+VzVNENG2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.5 161/176] ubifs: Fix ino_t format warnings in orphan_delete()
-Date:   Tue,  3 Mar 2020 18:43:45 +0100
-Message-Id: <20200303174322.914285494@linuxfoundation.org>
+        stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Saeed Bshara <saeedb@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 135/176] net: ena: make ena rxfh support ETH_RSS_HASH_NO_CHANGE
+Date:   Tue,  3 Mar 2020 18:43:19 +0100
+Message-Id: <20200303174320.386268967@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,54 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geert Uytterhoeven <geert@linux-m68k.org>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-commit 155fc6ba488a8bdfd1d3be3d7ba98c9cec2b2429 upstream.
+commit 470793a78ce344bd53d31e0c2d537f71ba957547 upstream.
 
-On alpha and s390x:
+As the name suggests ETH_RSS_HASH_NO_CHANGE is received upon changing
+the key or indirection table using ethtool while keeping the same hash
+function.
 
-    fs/ubifs/debug.h:158:11: warning: format ‘%lu’ expects argument of type ‘long unsigned int’, but argument 4 has type ‘ino_t {aka unsigned int}’ [-Wformat=]
-    ...
-    fs/ubifs/orphan.c:132:3: note: in expansion of macro ‘dbg_gen’
-       dbg_gen("deleted twice ino %lu", orph->inum);
-    ...
-    fs/ubifs/orphan.c:140:3: note: in expansion of macro ‘dbg_gen’
-       dbg_gen("delete later ino %lu", orph->inum);
+Also add a function for retrieving the current hash function from
+the ena-com layer.
 
-__kernel_ino_t is "unsigned long" on most architectures, but not on
-alpha and s390x, where it is "unsigned int".  Hence when printing an
-ino_t, it should always be cast to "unsigned long" first.
-
-Fix this by re-adding the recently removed casts.
-
-Fixes: 8009ce956c3d2802 ("ubifs: Don't leak orphans on memory during commit")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
+Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Saeed Bshara <saeedb@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/orphan.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c     |    5 +++++
+ drivers/net/ethernet/amazon/ena/ena_com.h     |    8 ++++++++
+ drivers/net/ethernet/amazon/ena/ena_ethtool.c |    3 +++
+ 3 files changed, 16 insertions(+)
 
---- a/fs/ubifs/orphan.c
-+++ b/fs/ubifs/orphan.c
-@@ -129,7 +129,7 @@ static void __orphan_drop(struct ubifs_i
- static void orphan_delete(struct ubifs_info *c, struct ubifs_orphan *orph)
+--- a/drivers/net/ethernet/amazon/ena/ena_com.c
++++ b/drivers/net/ethernet/amazon/ena/ena_com.c
+@@ -1046,6 +1046,11 @@ static int ena_com_get_feature(struct en
+ 				      feature_ver);
+ }
+ 
++int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev)
++{
++	return ena_dev->rss.hash_func;
++}
++
+ static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
  {
- 	if (orph->del) {
--		dbg_gen("deleted twice ino %lu", orph->inum);
-+		dbg_gen("deleted twice ino %lu", (unsigned long)orph->inum);
- 		return;
+ 	struct ena_admin_feature_rss_flow_hash_control *hash_key =
+--- a/drivers/net/ethernet/amazon/ena/ena_com.h
++++ b/drivers/net/ethernet/amazon/ena/ena_com.h
+@@ -656,6 +656,14 @@ int ena_com_rss_init(struct ena_com_dev
+  */
+ void ena_com_rss_destroy(struct ena_com_dev *ena_dev);
+ 
++/* ena_com_get_current_hash_function - Get RSS hash function
++ * @ena_dev: ENA communication layer struct
++ *
++ * Return the current hash function.
++ * @return: 0 or one of the ena_admin_hash_functions values.
++ */
++int ena_com_get_current_hash_function(struct ena_com_dev *ena_dev);
++
+ /* ena_com_fill_hash_function - Fill RSS hash function
+  * @ena_dev: ENA communication layer struct
+  * @func: The hash function (Toeplitz or crc)
+--- a/drivers/net/ethernet/amazon/ena/ena_ethtool.c
++++ b/drivers/net/ethernet/amazon/ena/ena_ethtool.c
+@@ -736,6 +736,9 @@ static int ena_set_rxfh(struct net_devic
  	}
  
-@@ -137,7 +137,7 @@ static void orphan_delete(struct ubifs_i
- 		orph->del = 1;
- 		orph->dnext = c->orph_dnext;
- 		c->orph_dnext = orph;
--		dbg_gen("delete later ino %lu", orph->inum);
-+		dbg_gen("delete later ino %lu", (unsigned long)orph->inum);
- 		return;
- 	}
- 
+ 	switch (hfunc) {
++	case ETH_RSS_HASH_NO_CHANGE:
++		func = ena_com_get_current_hash_function(ena_dev);
++		break;
+ 	case ETH_RSS_HASH_TOP:
+ 		func = ENA_ADMIN_TOEPLITZ;
+ 		break;
 
 
