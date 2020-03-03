@@ -2,108 +2,141 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB996C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 690A7C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9355A2083E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F6FA2083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:31:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="D5JkWfw3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RZb6bQdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbgCCP3p (ORCPT
+        id S1729951AbgCCPbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:29:45 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:64117 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729382AbgCCP3o (ORCPT
+        Tue, 3 Mar 2020 10:31:22 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:31328 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729416AbgCCPbW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:29:44 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583249384; h=Date: Message-Id: Cc: To: References:
- In-Reply-To: From: Subject: Content-Transfer-Encoding: MIME-Version:
- Content-Type: Sender; bh=DGm1tyLTMS++kedpz+qyweZ6Iu5ZVMUBPPMKBo/asTk=;
- b=D5JkWfw3j/hNLmRe9GpLOg3GwTe7QMKsL6M5mELT3gVbn/aP43///P2km52iUBITk9QKWWLF
- MDVlmgdJltRq7as5oH6eH1L/cC8XvNRkMUZA9zJRpUSD2U8WnRr9oInR5BtVINvaxZeLQnmP
- sDx9ku8CU043QR32gXKJ+aUwwBI=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5e77d6.7fae349aa0a0-smtp-out-n01;
- Tue, 03 Mar 2020 15:29:26 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4C552C4479C; Tue,  3 Mar 2020 15:29:25 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A491FC43383;
-        Tue,  3 Mar 2020 15:29:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A491FC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Tue, 3 Mar 2020 10:31:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583249480;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=7UvOLNGx6p9fKROK7cYc0KuMbdmUhd2L++fUFlqw33s=;
+        b=RZb6bQdI1QYC/mdi4qJ//nV11GmHAsnvKCrLdu64p26wYs7x7tLys3yGNYUhsJrzNfI7vP
+        OtGRrOzHIYQD94ciWavGA2CTLlnxxkmn4chNf1L2Wg8J9C9Ip6tMtVYwxO3InJJFnsMvX2
+        dVRppO4kp8+HX5k3Ii1N8W0nE7CJ5fo=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-379-szT6VE6HNnC91s47pDJ2ZQ-1; Tue, 03 Mar 2020 10:31:18 -0500
+X-MC-Unique: szT6VE6HNnC91s47pDJ2ZQ-1
+Received: by mail-wm1-f71.google.com with SMTP id f207so1237556wme.6
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 07:31:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7UvOLNGx6p9fKROK7cYc0KuMbdmUhd2L++fUFlqw33s=;
+        b=nTTtpaF/FxT/5IMol6y8EYZ0HcvK6eZp80/z3Vth4WBfQtxfcFdbf9xyBp7r/WGZSy
+         DtX+LJAkqZFe/5vIBo8YPdsy/RIgPpKplxEqt0ZWxiSLHsgfVi3iDbKhgM093WpQOXJ0
+         FKO9kKphz9iYAjg2XaEVx9spng/7GAgHQyJeydfB3G7jXwax5wnGk4MO6AgG/ONX9Y25
+         HIWOWVP3vj5nPJy+C2jPQoksmCWr4AkvZK3HjJdZsf+i1oBvWK6Hp2DU+MhnYZBn1naF
+         KRTxM4Bxx/CinW0z1v6EGi2RtFDYZvEFVJzg9og660TAH6qUBgSokZU6joeNUN2iaDgV
+         QKxw==
+X-Gm-Message-State: ANhLgQ1r2LaBO3wxKURGP6ezp1wZPesUG08XVQe8CqurZq3HzCtmdwL0
+        pw9v0Ro+9oD8o98p6wKgQHuk0kKVr8vgfHR9s6GFfLksxKoPymjFqWxPtyOO8zGKGSG+guVjkr2
+        8NAZBbEUKpzB7d2VDDEEjF2UO
+X-Received: by 2002:adf:eb51:: with SMTP id u17mr6349419wrn.29.1583249477646;
+        Tue, 03 Mar 2020 07:31:17 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvklsBIwsMGjkjsJ0QvHOXEfxD/tv/m0rv4Qg+50ZvhJI35lH7ejzaGu22XzyvBUHoWl+uXTw==
+X-Received: by 2002:adf:eb51:: with SMTP id u17mr6349404wrn.29.1583249477374;
+        Tue, 03 Mar 2020 07:31:17 -0800 (PST)
+Received: from [192.168.178.40] ([151.20.254.94])
+        by smtp.gmail.com with ESMTPSA id f17sm13659823wrm.3.2020.03.03.07.31.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 07:31:16 -0800 (PST)
+Subject: Re: [PATCH v2 61/66] KVM: x86: Don't propagate MMU lpage support to
+ memslot.disallow_lpage
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
+ <20200302235709.27467-62-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e436d608-41ed-c9ad-6584-360451fb6d65@redhat.com>
+Date:   Tue, 3 Mar 2020 16:31:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200302235709.27467-62-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] iwlwifi: pcie: restore support for Killer Qu C0 NICs
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191224051639.6904-1-jan.steffens@gmail.com>
-References: <20191224051639.6904-1-jan.steffens@gmail.com>
-To:     "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20200303152925.4C552C4479C@smtp.codeaurora.org>
-Date:   Tue,  3 Mar 2020 15:29:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com> wrote:
-
-> Commit 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from
-> trans_pcie_alloc to probe") refactored the cfg mangling. Unfortunately,
-> in this process the lines which picked the right cfg for Killer Qu C0
-> NICs after C0 detection were lost. These lines were added by commit
-> b9500577d361 ("iwlwifi: pcie: handle switching killer Qu B0 NICs to
-> C0").
+On 03/03/20 00:57, Sean Christopherson wrote:
+> Stop propagating MMU large page support into a memslot's disallow_lpage
+> now that the MMU's max_page_level handles the scenario where VMX's EPT is
+> enabled and EPT doesn't support 2M pages.
 > 
-> I suspect this is more of the "merge damage" which commit 7cded5658329
-> ("iwlwifi: pcie: fix merge damage on making QnJ exclusive") talks about.
+> No functional change intended.
 > 
-> Restore the missing lines so the driver loads the right firmware for
-> these NICs.
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 3 ---
+>  arch/x86/kvm/x86.c     | 6 ++----
+>  2 files changed, 2 insertions(+), 7 deletions(-)
 > 
-> Fixes: 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from trans_pcie_alloc to probe")
-> Signed-off-by: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index f8eb081b63fe..1fbe54dc3263 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7698,9 +7698,6 @@ static __init int hardware_setup(void)
+>  	if (!cpu_has_vmx_tpr_shadow())
+>  		kvm_x86_ops->update_cr8_intercept = NULL;
+>  
+> -	if (enable_ept && !cpu_has_vmx_ept_2m_page())
+> -		kvm_disable_largepages();
+> -
+>  #if IS_ENABLED(CONFIG_HYPERV)
+>  	if (ms_hyperv.nested_features & HV_X64_NESTED_GUEST_MAPPING_FLUSH
+>  	    && enable_ept) {
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 4fdf5b04f148..cc9b543d210b 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -9863,11 +9863,9 @@ static int kvm_alloc_memslot_metadata(struct kvm_memory_slot *slot,
+>  		ugfn = slot->userspace_addr >> PAGE_SHIFT;
+>  		/*
+>  		 * If the gfn and userspace address are not aligned wrt each
+> -		 * other, or if explicitly asked to, disable large page
+> -		 * support for this slot
+> +		 * other, disable large page support for this slot.
+>  		 */
+> -		if ((slot->base_gfn ^ ugfn) & (KVM_PAGES_PER_HPAGE(level) - 1) ||
+> -		    !kvm_largepages_enabled()) {
+> +		if ((slot->base_gfn ^ ugfn) & (KVM_PAGES_PER_HPAGE(level) - 1)) {
+>  			unsigned long j;
+>  
+>  			for (j = 0; j < lpages; ++j)
+> 
 
-As Luca said, this fails to apply to wireless-drivers. Please rebase and
-resend as v2.
+This should technically go in the next patch.
 
-Recorded preimage for 'drivers/net/wireless/intel/iwlwifi/pcie/drv.c'
-error: Failed to merge in the changes.
-Applying: iwlwifi: pcie: restore support for Killer Qu C0 NICs
-Using index info to reconstruct a base tree...
-M	drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-Falling back to patching base and 3-way merge...
-Auto-merging drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-CONFLICT (content): Merge conflict in drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-Patch failed at 0001 iwlwifi: pcie: restore support for Killer Qu C0 NICs
-The copy of the patch that failed is found in: .git/rebase-apply/patch
+Paolo
 
-Patch set to Changes Requested.
-
--- 
-https://patchwork.kernel.org/patch/11309095/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
