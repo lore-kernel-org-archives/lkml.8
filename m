@@ -2,125 +2,91 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467E3C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29CAFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:57:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 226D220838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FA12083E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:57:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583233026;
+	bh=vISdA5FQkTvp9GTRWEkxl83LKzCCu26+KpfK0uTIxcs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=sQjtykYZUgn7nA7qoiLkZZftvTvbzrSXNrAHrv7dsBXgtkLhr+WbtjKpMdWPloe4M
+	 AWtbazyYfufxIZr06IjSxcCBiKPZH+9mOLwGAQKmYnjHDrbBMWbB7fQfIwxCr8YbXG
+	 /xsFAg+IlMTYmzukusxOWIYiqRYBnDH0alzNSr1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbgCCK4L (ORCPT
+        id S1727887AbgCCK5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:56:11 -0500
-Received: from mga14.intel.com ([192.55.52.115]:23857 "EHLO mga14.intel.com"
+        Tue, 3 Mar 2020 05:57:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgCCK4K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:56:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 02:56:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="412703479"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by orsmga005.jf.intel.com with ESMTP; 03 Mar 2020 02:56:06 -0800
-Subject: Re: [OT] Pseudo module name in kallsyms (Re: [PATCH V3 03/13]
- kprobes: Add symbols for kprobe insn pages)
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Leo Yan <leo.yan@linaro.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <20200228135125.567-1-adrian.hunter@intel.com>
- <20200228135125.567-4-adrian.hunter@intel.com>
- <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
- <20200228172004.GI5451@krava>
- <20200229134947.839096dbc8321cfdca980edb@kernel.org>
- <20200229184913.4e13e516@oasis.local.home> <20200302144307.GD204976@krava>
- <20200303194700.5810cbaf49bc6eacdffa7fa4@kernel.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <50754470-7675-c0b0-0931-9a6024e8eb90@intel.com>
-Date:   Tue, 3 Mar 2020 12:55:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1727440AbgCCK5E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:57:04 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A344D20838;
+        Tue,  3 Mar 2020 10:57:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583233024;
+        bh=vISdA5FQkTvp9GTRWEkxl83LKzCCu26+KpfK0uTIxcs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KqxHrmzA/FhGYpNHsf1IFUEfCq6cJbLXEpfoWt3ORkg7QVOd1IL73s336KrXZeJIH
+         hdcHbhfgclWClQ0a0lHDowc9eT8KXHdi1m/mnMrrGWzxGGOIOvr/5cjRWLGDtGYyhJ
+         Y7zpYYdY7mNzI3Woqmh5xVXrsIqBxM0GXCcJgbBU=
+Date:   Tue, 3 Mar 2020 11:57:02 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Eugeniu Rosca <erosca@de.adit-jv.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        "Lee, Chiasheng" <chiasheng.lee@intel.com>,
+        Mathieu Malaterre <malat@debian.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hardik Gajjar <hgajjar@de.adit-jv.com>, stable@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        scan-admin@coverity.com, Eugeniu Rosca <roscaeugeniu@gmail.com>
+Subject: Re: [PATCH v3 1/3] usb: core: hub: fix unhandled return by employing
+ a void function
+Message-ID: <20200303105702.GA1699585@kroah.com>
+References: <20200226175036.14946-1-erosca@de.adit-jv.com>
+ <Pine.LNX.4.44L0.2002261313390.1406-100000@iolanthe.rowland.org>
+ <20200303103921.GA13097@lxhi-065.adit-jv.com>
 MIME-Version: 1.0
-In-Reply-To: <20200303194700.5810cbaf49bc6eacdffa7fa4@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303103921.GA13097@lxhi-065.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/03/20 12:47 pm, Masami Hiramatsu wrote:
-> Hi,
+On Tue, Mar 03, 2020 at 11:40:05AM +0100, Eugeniu Rosca wrote:
+> Hi Greg,
 > 
-> On Mon, 2 Mar 2020 15:43:07 +0100
-> Jiri Olsa <jolsa@redhat.com> wrote:
+> On Wed, Feb 26, 2020 at 01:14:24PM -0500, Alan Stern wrote:
+> > On Wed, 26 Feb 2020, Eugeniu Rosca wrote:
+> > > 
+> > > Fixes: 1208f9e1d758c9 ("USB: hub: Fix the broken detection of USB3 device in SMSC hub")
+> > > Cc: Hardik Gajjar <hgajjar@de.adit-jv.com>
+> > > Cc: Alan Stern <stern@rowland.harvard.edu>
+> > > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Cc: stable@vger.kernel.org # v4.14+
+> > > Reported-by: scan-admin@coverity.com
+> > > Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+> > > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+> > 
+> > For all three patches:
+> > 
+> > Acked-by: Alan Stern <stern@rowland.harvard.edu>
 > 
->> On Sat, Feb 29, 2020 at 06:49:13PM -0500, Steven Rostedt wrote:
->>> On Sat, 29 Feb 2020 13:49:47 +0900
->>> Masami Hiramatsu <mhiramat@kernel.org> wrote:
->>>
->>>> On Fri, 28 Feb 2020 18:20:04 +0100
->>>> Jiri Olsa <jolsa@redhat.com> wrote:
->>>>
->>>>>> BTW, it seems to pretend to be a module, but is there no concern of
->>>>>> confusing users? Shouldn't it be [*kprobes] so that it is non-exist
->>>>>> module name?  
->>>>>
->>>>> note we already have bpf symbols as [bpf] module  
->>>>
->>>> Yeah, and this series adds [kprobe(s)] and [ftrace] too.
->>>> I simply concern that the those module names implicitly become
->>>> special word (rule) and embedded in the code. If such module names
->>>> are not exposed to users, it is OK (but I hope to have some comments).
->>>> However, it is under /proc, which means users can notice it.
->>>
->>> I share Masami's concerns. It would be good to have something
->>> differentiate local functions that are not modules. That's one way I
->>> look to see if something is a module or built in, is to see if kallsyms
->>> has it as a [].
->>>
->>> Perhaps prepend with: '&' ?
-> 
-> Yeah, '*' may not good from the filename point of view.
-> 
->>
->> that would break some of the perf code.. IMO Arnaldo's explanation
->> makes sense and we could keep it as it is
-> 
->  From the in-kernel API/coding point of view,
-> 
-> +static int get_ksymbol_kprobe(struct kallsym_iter *iter)
-> +{
-> +	strlcpy(iter->module_name, "kprobe", MODULE_NAME_LEN);
-> +	iter->exported = 0;
-> +	return kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
-> +				  &iter->value, &iter->type,
-> +				  iter->name) < 0 ? 0 : 1;
->  }
-> 
-> This clearly shows that is a iter->module_name.
-> 
-> And also, if someone make a module names "kprobes.ko", it will also
-> have [kprobes] in kallsyms. That is also confusing.
+> Friendly reminder to pick up the patches, if no other comments.
 
-If special characters are a problem, modules also do not start with '-' or
-'_', so would "_kprobes" and "_ftrace" be acceptable to everyone?
+Less than a week, please give me a chance :)
 
+Don't worry, they are in my to-review queue...
 
+greg k-h
