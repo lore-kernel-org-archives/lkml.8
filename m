@@ -2,53 +2,54 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D6CC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5091C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E04342146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A10392146E
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583258404;
-	bh=Mza0Sia5ckBcm/F+8ry5l6Hexh5VcJP+9/hvYktOy60=;
+	s=default; t=1583258406;
+	bh=SkdmC19qowrIJebRR7nK24CA33owoub5aRnE8lsx3no=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uQEXXU8kXm4IxnwCQIxv/ffclF3E5VgkareB0kKzrdkbF5HmtNGOuJFeQ63MmDdY2
-	 8fVwk7QNIDRg+ZmCUwT5LXoMzV45FCrPHUqhsTtrNm9MAf+K03NcvxnVRZUTPIHTrB
-	 g/BpmudHA/7Zavq9sgd5D1iPWFYYhSmp4q30jBM8=
+	b=WQg6b9k+xRsJSERR/nYp1ltdthDzV9WxTln/g4SmhC87zytwgXSAE3XlZaPWxTS0d
+	 jyBQuEi1f/5MCF9J/0f4/nwQd7vXB56dckYnQsVg6SjT1H0QjofKMrvX3mQ1MudJLu
+	 Jb/8OCC06ay4h0EAnUi8C564HSjrOwOgeUEg92eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387715AbgCCSAD (ORCPT
+        id S2387734AbgCCSAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:00:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43478 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 13:00:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733291AbgCCR75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:59:57 -0500
+        id S2387708AbgCCSAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 13:00:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A4FC20870;
-        Tue,  3 Mar 2020 17:59:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29B5220870;
+        Tue,  3 Mar 2020 18:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583258396;
-        bh=Mza0Sia5ckBcm/F+8ry5l6Hexh5VcJP+9/hvYktOy60=;
+        s=default; t=1583258401;
+        bh=SkdmC19qowrIJebRR7nK24CA33owoub5aRnE8lsx3no=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XdEyu7y6QaY3cbcYsjrvPjlUxci4+3pYlRyw1TmJ2JTqYqI/H25UVKL/PN3BpGg3V
-         hwIRYQzwqVhXXJCczUVJJoN01x5FiiVK7kOtvonulqjNuzfNwLgq0Sa7s/aRcBWwgo
-         bvtgIs795kbFaEIpTHQ+Mn30RbTkMlTka3cvwQMI=
+        b=Ol2z0IhpNOvECeQpfFq19J6R8an8VcVeFB8gqh1ENKI7fb9eKGj6pNEjwb/TH2IWO
+         HI5OOSYagtQvcysVC/PHxqg4uV7JKBYvag+K4mbBSh/j5gevJelIzlQb8NeQwWaO1T
+         M9tnVd8yhdihMrIzSBzdsxPlyueIIwN7cBPgOFNY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 26/87] cfg80211: add missing policy for NL80211_ATTR_STATUS_CODE
-Date:   Tue,  3 Mar 2020 18:43:17 +0100
-Message-Id: <20200303174352.840239211@linuxfoundation.org>
+        Benjamin Poirier <bpoirier@cumulusnetworks.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 36/87] ipv6: Fix nlmsg_flags when splitting a multipath route
+Date:   Tue,  3 Mar 2020 18:43:27 +0100
+Message-Id: <20200303174353.791662469@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174349.075101355@linuxfoundation.org>
 References: <20200303174349.075101355@linuxfoundation.org>
@@ -61,36 +62,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
+From: Benjamin Poirier <bpoirier@cumulusnetworks.com>
 
-[ Upstream commit ea75080110a4c1fa011b0a73cb8f42227143ee3e ]
+[ Upstream commit afecdb376bd81d7e16578f0cfe82a1aec7ae18f3 ]
 
-The nl80211_policy is missing for NL80211_ATTR_STATUS_CODE attribute.
-As a result, for strictly validated commands, it's assumed to not be
-supported.
+When splitting an RTA_MULTIPATH request into multiple routes and adding the
+second and later components, we must not simply remove NLM_F_REPLACE but
+instead replace it by NLM_F_CREATE. Otherwise, it may look like the netlink
+message was malformed.
 
-Signed-off-by: Sergey Matyukevich <sergey.matyukevich.os@quantenna.com>
-Link: https://lore.kernel.org/r/20200213131608.10541-2-sergey.matyukevich.os@quantenna.com
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+For example,
+	ip route add 2001:db8::1/128 dev dummy0
+	ip route change 2001:db8::1/128 nexthop via fe80::30:1 dev dummy0 \
+		nexthop via fe80::30:2 dev dummy0
+results in the following warnings:
+[ 1035.057019] IPv6: RTM_NEWROUTE with no NLM_F_CREATE or NLM_F_REPLACE
+[ 1035.057517] IPv6: NLM_F_CREATE should be set when creating new route
+
+This patch makes the nlmsg sequence look equivalent for __ip6_ins_rt() to
+what it would get if the multipath route had been added in multiple netlink
+operations:
+	ip route add 2001:db8::1/128 dev dummy0
+	ip route change 2001:db8::1/128 nexthop via fe80::30:1 dev dummy0
+	ip route append 2001:db8::1/128 nexthop via fe80::30:2 dev dummy0
+
+Fixes: 27596472473a ("ipv6: fix ECMP route replacement")
+Signed-off-by: Benjamin Poirier <bpoirier@cumulusnetworks.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/wireless/nl80211.c | 1 +
+ net/ipv6/route.c |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/net/wireless/nl80211.c b/net/wireless/nl80211.c
-index 823dea187691f..dfde06b8d25d1 100644
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -323,6 +323,7 @@ static const struct nla_policy nl80211_policy[NUM_NL80211_ATTR] = {
- 	[NL80211_ATTR_CONTROL_PORT_NO_ENCRYPT] = { .type = NLA_FLAG },
- 	[NL80211_ATTR_CONTROL_PORT_OVER_NL80211] = { .type = NLA_FLAG },
- 	[NL80211_ATTR_PRIVACY] = { .type = NLA_FLAG },
-+	[NL80211_ATTR_STATUS_CODE] = { .type = NLA_U16 },
- 	[NL80211_ATTR_CIPHER_SUITE_GROUP] = { .type = NLA_U32 },
- 	[NL80211_ATTR_WPA_VERSIONS] = { .type = NLA_U32 },
- 	[NL80211_ATTR_PID] = { .type = NLA_U32 },
--- 
-2.20.1
-
+--- a/net/ipv6/route.c
++++ b/net/ipv6/route.c
+@@ -4514,6 +4514,7 @@ static int ip6_route_multipath_add(struc
+ 		 */
+ 		cfg->fc_nlinfo.nlh->nlmsg_flags &= ~(NLM_F_EXCL |
+ 						     NLM_F_REPLACE);
++		cfg->fc_nlinfo.nlh->nlmsg_flags |= NLM_F_CREATE;
+ 		nhn++;
+ 	}
+ 
 
 
