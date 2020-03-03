@@ -2,270 +2,165 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713ABC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 430A7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:51:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F36A217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:50:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583200256;
-	bh=lY6ZrjhDlN1j85h/TOkiTQ/iHmFeIsO4PApWF1Rmrjs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PTe0LqBWPYXeFxSsMAopsshTixmEW248z5woRKiMj4mO6eVQRceIHP/tM5P9fF1q2
-	 Yy6uCZvGn2ChMyz2ARX8pjvgqhh3OFkbPPCLMNPQz0w0+2iyOkLGR7gjn6M5G639Aj
-	 rg5rqoGJh6g/DIaXq+o7sXtnkSeUWxiiJqzuwfQg=
+	by mail.kernel.org (Postfix) with ESMTP id 1AB70217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 01:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgCCBuz (ORCPT
+        id S1727041AbgCCBvA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 2 Mar 2020 20:50:55 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41037 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgCCBuy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 2 Mar 2020 20:50:54 -0500
-Received: by mail-ot1-f68.google.com with SMTP id v19so1416462ote.8;
-        Mon, 02 Mar 2020 17:50:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KMUxxlPO5Os6mERZg3D76gb3GOfXFpUmopnkrPy85hg=;
-        b=r6/PfZqdPbevh5NcpxTy+nXY+EG2DiKjLc34s9igd5iJHwhoBJadL3eOE5AlJHMiup
-         N69zxJqFuyOQ4LaBP7oK429YrB9jh1H0UpvKusLw3Rqz4vjeJY4iBz/GLesye4pqK1pT
-         et5Hd/+g3fNs8DXeoOwAa0Lpk4Thk1ySxO7ZRFIBMcX82LGvkAIEhW1KxG4ULkzm5Alr
-         X0mbrJFUCqSSKJqb3KB7kZKEMb+L71MsIx504KefhJYPmLrxFtWG3VA3Ri+Dpr2f/OYF
-         UagaCW9HZu8NF/64eVcmjV2jOnhlTsD7h5hOXDhd1JR8pGBvcMXEEhYBc/RzsUAt8vsN
-         8DXw==
-X-Gm-Message-State: ANhLgQ11+dCLx3zA7gZ58tTVb8SATBOWI4vgU4UuQRMbXFd+T4NpD72x
-        t9F53uz4Ey4uO097UBH+sw==
-X-Google-Smtp-Source: ADFU+vsPCc6sWeWA21x9KhNUp3w2MR16z6AzUfhQK9Jzso83vGqrq7mRuHwOEamVpKaqgj2MRg+QTA==
-X-Received: by 2002:a05:6830:1690:: with SMTP id k16mr1718711otr.79.1583200253483;
-        Mon, 02 Mar 2020 17:50:53 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id f1sm7219481otq.4.2020.03.02.17.50.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 02 Mar 2020 17:50:52 -0800 (PST)
-Received: (nullmailer pid 6654 invoked by uid 1000);
-        Tue, 03 Mar 2020 01:50:51 -0000
-Date:   Mon, 2 Mar 2020 19:50:51 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dilip Kota <eswara.kota@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        kishon@ti.com, andriy.shevchenko@intel.com,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
-Subject: Re: [PATCH v4 2/3] dt-bindings: phy: Add YAML schemas for Intel
- Combophy
-Message-ID: <20200303015051.GA780@bogus>
-References: <cover.1583127977.git.eswara.kota@linux.intel.com>
- <9f049a5fccd080bd5d8e9a697b96d4c40a413a0a.1583127977.git.eswara.kota@linux.intel.com>
+        Mon, 2 Mar 2020 20:51:00 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10710 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726816AbgCCBu7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 2 Mar 2020 20:50:59 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id D4F04A19C6B7C1797461;
+        Tue,  3 Mar 2020 09:50:57 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 3 Mar 2020
+ 09:50:53 +0800
+Subject: Re: [PATCH] f2fs: compress: support zstd compress algorithm
+To:     Eric Biggers <ebiggers@kernel.org>
+CC:     <jaegeuk@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200228111456.11311-1-yuchao0@huawei.com>
+ <20200302175014.GA98133@gmail.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <efce624c-1247-4519-576b-fd60c0a03cb0@huawei.com>
+Date:   Tue, 3 Mar 2020 09:50:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9f049a5fccd080bd5d8e9a697b96d4c40a413a0a.1583127977.git.eswara.kota@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200302175014.GA98133@gmail.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 04:43:24PM +0800, Dilip Kota wrote:
-> Combophy subsystem provides PHY support to various
-> controllers, viz. PCIe, SATA and EMAC.
-> Adding YAML schemas for the same.
+On 2020/3/3 1:50, Eric Biggers wrote:
+> On Fri, Feb 28, 2020 at 07:14:56PM +0800, Chao Yu wrote:
+>> Add zstd compress algorithm support, use "compress_algorithm=zstd"
+>> mountoption to enable it.
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  Documentation/filesystems/f2fs.txt |   4 +-
+>>  fs/f2fs/Kconfig                    |   9 ++
+>>  fs/f2fs/compress.c                 | 151 +++++++++++++++++++++++++++++
+>>  fs/f2fs/f2fs.h                     |   2 +
+>>  fs/f2fs/super.c                    |   7 ++
+>>  include/trace/events/f2fs.h        |   3 +-
+>>  6 files changed, 173 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/filesystems/f2fs.txt b/Documentation/filesystems/f2fs.txt
+>> index 4eb3e2ddd00e..b1a66cf0e967 100644
+>> --- a/Documentation/filesystems/f2fs.txt
+>> +++ b/Documentation/filesystems/f2fs.txt
+>> @@ -235,8 +235,8 @@ checkpoint=%s[:%u[%]]     Set to "disable" to turn off checkpointing. Set to "en
+>>                         hide up to all remaining free space. The actual space that
+>>                         would be unusable can be viewed at /sys/fs/f2fs/<disk>/unusable
+>>                         This space is reclaimed once checkpoint=enable.
+>> -compress_algorithm=%s  Control compress algorithm, currently f2fs supports "lzo"
+>> -                       and "lz4" algorithm.
+>> +compress_algorithm=%s  Control compress algorithm, currently f2fs supports "lzo",
+>> +                       "lz4" and "zstd" algorithm.
+>>  compress_log_size=%u   Support configuring compress cluster size, the size will
+>>                         be 4KB * (1 << %u), 16KB is minimum size, also it's
+>>                         default size.
+>> diff --git a/fs/f2fs/Kconfig b/fs/f2fs/Kconfig
+>> index f0faada30f30..bb68d21e1f8c 100644
+>> --- a/fs/f2fs/Kconfig
+>> +++ b/fs/f2fs/Kconfig
+>> @@ -118,3 +118,12 @@ config F2FS_FS_LZ4
+>>  	default y
+>>  	help
+>>  	  Support LZ4 compress algorithm, if unsure, say Y.
+>> +
+>> +config F2FS_FS_ZSTD
+>> +	bool "ZSTD compression support"
+>> +	depends on F2FS_FS_COMPRESSION
+>> +	select ZSTD_COMPRESS
+>> +	select ZSTD_DECOMPRESS
+>> +	default y
+>> +	help
+>> +	  Support ZSTD compress algorithm, if unsure, say Y.
+>> diff --git a/fs/f2fs/compress.c b/fs/f2fs/compress.c
+>> index bd3ea01db448..c8e1175eaf4e 100644
+>> --- a/fs/f2fs/compress.c
+>> +++ b/fs/f2fs/compress.c
+>> @@ -11,6 +11,7 @@
+>>  #include <linux/backing-dev.h>
+>>  #include <linux/lzo.h>
+>>  #include <linux/lz4.h>
+>> +#include <linux/zstd.h>
+>>  
+>>  #include "f2fs.h"
+>>  #include "node.h"
+>> @@ -291,6 +292,151 @@ static const struct f2fs_compress_ops f2fs_lz4_ops = {
+>>  };
+>>  #endif
+>>  
+>> +#ifdef CONFIG_F2FS_FS_ZSTD
+>> +#define F2FS_ZSTD_DEFAULT_CLEVEL	1
+>> +
+>> +static int zstd_init_compress_ctx(struct compress_ctx *cc)
+>> +{
+>> +	return 0;
+>> +}
+>> +
+>> +static void zstd_destroy_compress_ctx(struct compress_ctx *cc)
+>> +{
+>> +}
+>> +
+>> +static int zstd_compress_pages(struct compress_ctx *cc)
+>> +{
+>> +	ZSTD_parameters params;
+>> +	ZSTD_CStream *stream;
+>> +	ZSTD_inBuffer inbuf;
+>> +	ZSTD_outBuffer outbuf;
+>> +	void *workspace;
+>> +	unsigned int workspace_size;
+>> +	int src_size = cc->rlen;
+>> +	int dst_size = src_size - PAGE_SIZE - COMPRESS_HEADER_SIZE;
+>> +	int ret;
+>> +
+>> +	params = ZSTD_getParams(F2FS_ZSTD_DEFAULT_CLEVEL, src_size, 0);
+>> +	workspace_size = ZSTD_CStreamWorkspaceBound(params.cParams);
+>> +
+>> +	workspace = f2fs_kvmalloc(F2FS_I_SB(cc->inode),
+>> +					workspace_size, GFP_NOFS);
+>> +	if (!workspace)
+>> +		return -ENOMEM;
+>> +
+>> +	stream = ZSTD_initCStream(params, 0,
+>> +					workspace, workspace_size);
 > 
-> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
-> ---
-> Changes on v4:
->   No changes.
-> 
-> Changes on v3:
-> 
->  Add include/dt-bindings/phy/phy-intel-combphy.h for phy modes.
->  Add SoC specific compatible "intel,combophy-lgm".
->  Correct the nodename pattern.
->  clocks description removed and add maxItems entry.
->  Remove "simple-bus" as it expects minimum one address
->   cell and size cell in the children node. Call devm_of_platform_populate()
->   in the driver to perform "simple-bus" functionality.
-> 
-> Changes on v2:
-> 
->  Add custom 'select'
->  Pass hardware instance entries with phandles and
->    remove cell-index and bid entries
->  Clock, register address space, are same for the children.
->    So move them to parent node.
->  Two PHY instances cannot run in different modes,
->    so move the phy-mode entry to parent node.
->  Add second child entry in the DT example.
-> 
->  .../devicetree/bindings/phy/intel,combo-phy.yaml   | 123 +++++++++++++++++++++
->  include/dt-bindings/phy/phy-intel-combophy.h       |  10 ++
->  2 files changed, 133 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
->  create mode 100644 include/dt-bindings/phy/phy-intel-combophy.h
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
-> new file mode 100644
-> index 000000000000..f9bae37fab17
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/intel,combo-phy.yaml
-> @@ -0,0 +1,123 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/phy/intel,combo-phy.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel ComboPhy Subsystem
-> +
-> +maintainers:
-> +  - Dilip Kota <eswara.kota@linux.intel.com>
-> +
-> +description: |
-> +  Intel Combophy subsystem supports PHYs for PCIe, EMAC and SATA
-> +  controllers. A single Combophy provides two PHY instances.
-> +
-> +properties:
-> +  $nodename:
-> +    pattern: "combophy(@.*|-[0-9a-f])*$"
-> +
-> +  compatible:
-> +    items:
-> +      - const: intel,combophy-lgm
-> +      - const: intel,combo-phy
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  reg:
-> +    items:
-> +      - description: ComboPhy core registers
-> +      - description: PCIe app core control registers
-> +
-> +  reg-names:
-> +    items:
-> +      - const: core
-> +      - const: app
-> +
-> +  resets:
-> +    maxItems: 2
-> +
-> +  reset-names:
-> +    items:
-> +      - const: phy
-> +      - const: core
-> +
-> +  intel,syscfg:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: Chip configuration registers handle and ComboPhy instance id
-> +
-> +  intel,hsio:
-> +    $ref: /schemas/types.yaml#/definitions/phandle-array
-> +    description: HSIO registers handle and ComboPhy instance id on NOC
-> +
-> +  intel,aggregation:
-> +    type: boolean
-> +    description: |
-> +      Specify the flag to configure ComboPHY in dual lane mode.
-> +
-> +  intel,phy-mode:
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +    description: |
-> +      Mode of the two phys in ComboPhy.
-> +      See dt-bindings/phy/phy-intel-combophy.h for values.
-> +
-> +patternProperties:
-> +  "^phy@[0-9]+$":
-> +    type: object
-> +
-> +    properties:
-> +      compatible:
-> +        const: intel,phydev
-> +
-> +      "#phy-cells":
-> +        const: 0
-> +
-> +      resets:
-> +        description: |
-> +          reset handle according to the PHY mode.
-> +          See ../reset/reset.txt for details.
-> +
-> +    required:
-> +      - compatible
-> +      - "#phy-cells"
-> +
-> +required:
-> +  - compatible
-> +  - clocks
-> +  - reg
-> +  - reg-names
-> +  - intel,syscfg
-> +  - intel,hsio
-> +  - intel,phy-mode
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/phy/phy-intel-combophy.h>
-> +    combophy@d0a00000 {
-> +        compatible = "intel,combophy-lgm", "intel,combo-phy";
-> +        clocks = <&cgu0 1>;
-> +        reg = <0xd0a00000 0x40000>,
-> +              <0xd0a40000 0x1000>;
-> +        reg-names = "core", "app";
-> +        resets = <&rcu0 0x50 6>,
-> +                 <&rcu0 0x50 17>;
-> +        reset-names = "phy", "core";
-> +        intel,syscfg = <&sysconf 0>;
-> +        intel,hsio = <&hsiol 0>;
-> +        intel,phy-mode = <COMBO_PHY_PCIE>;
-> +
-> +        phy@0 {
+> Why is this allocating the memory for every compression operation, instead of
+> ahead of time in ->init_compress_ctx()?
 
-You need a 'reg' property to go with a unit-address.
+Actually, zstd decompression flow needs workspace like its compression flow,
+however I realized that we don't have related callback interfaces in decompress
+path, so I just add all steps of {,de}compression into .{,de}compress_pages()
+functions.
 
-Really, I'd just simplify this to make parent 'resets' be 4 entries and 
-put '#phy-cells = <1>;' in the parent. Then you don't need these child 
-nodes.
+In order to not break callback function fwk of compression, how about adding
+{init,destroy}_decompress_ctx() callback interfaces, and relocating
+initialization and destroy step into correct callback functions?
 
-> +            compatible = "intel,phydev";
-> +            #phy-cells = <0>;
-> +            resets = <&rcu0 0x50 23>;
-> +        };
-> +
-> +        phy@1 {
-> +            compatible = "intel,phydev";
-> +            #phy-cells = <0>;
-> +            resets = <&rcu0 0x50 24>;
-> +        };
-> +    };
-> diff --git a/include/dt-bindings/phy/phy-intel-combophy.h b/include/dt-bindings/phy/phy-intel-combophy.h
-> new file mode 100644
-> index 000000000000..bd7f6377f4ef
-> --- /dev/null
-> +++ b/include/dt-bindings/phy/phy-intel-combophy.h
-> @@ -0,0 +1,10 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef _DT_BINDINGS_INTEL_COMBOPHY
-> +#define _DT_BINDINGS_INTEL_COMBOPHY
-> +
-> +#define COMBO_PHY_PCIE	0
-> +#define COMBO_PHY_XPCS	1
-> +#define COMBO_PHY_SATA	2
+Thanks,
 
-Use the PHY_TYPE_* defines we already have and extend as you need to.
-
-> +
-> +#endif /* _DT_BINDINGS_INTEL_COMBOPHY*/
-> -- 
-> 2.11.0
+> 
+> - Eric
+> .
 > 
