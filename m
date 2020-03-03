@@ -2,114 +2,104 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5740C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BADCCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBD821556
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:04:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SyoM0C84"
+	by mail.kernel.org (Postfix) with ESMTP id 9F5B120863
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 10:07:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728325AbgCCKES (ORCPT
+        id S1728005AbgCCKHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 05:04:18 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:44878 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgCCKES (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 05:04:18 -0500
-Received: by mail-ed1-f65.google.com with SMTP id g19so3520206eds.11;
-        Tue, 03 Mar 2020 02:04:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0AD4bpZ8c1wq7SQSp4vgpTJGHedOrSryx6E4q6XFYFk=;
-        b=SyoM0C84gbHJ5Jluoig5lRyl+cLIp3NOhJximlGPzAUZdfPngJd4IIUHv1YOPdTqXd
-         nhM3ABo8W1AIKxhv9fWas516GZIDJX98ZP5GgG+RTSEKPT86ulM/LnmcwUWoudG926M5
-         JHZXwumAM9oak9e4eI0uh6005tonqOlK7tRtvA1t9+nulplTSS+PtGhsCwltVVld8Jp2
-         MkorfG49ZzzxTs/gmTqwbWB0pJKtLzlqdDIdI/Qi0hhERWGDRXrKrUXf6ZzimJhtsaDI
-         HeHe3y4gIRXmPFzSDWx9/FNHXJt8uyIn67agWXubB4Ee8PcYuSz/f+xfb+k+3SnwOfhw
-         xZXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0AD4bpZ8c1wq7SQSp4vgpTJGHedOrSryx6E4q6XFYFk=;
-        b=s7wfMCGJ46QVY4+kSOKqvQZxigyrNDQXh4WM+FHsdTAoD2o3hdwRQ0FAQwcI5oFrj9
-         F5Nob/S2YI8nsaZje4yJTsXduZpr8MPKQsZKX3DzhDj7NMTftrYyfVF1WpzSHGph9hpl
-         zlXRJQxEvrHkQC6ET/3hKa/gnJAr2jYS4NGYqeawjIrlCUHV206n1BVW+2HWkSN48Lxd
-         YE3Mg9kjeWUn1NXsweLN0oec85HocMXfUFB5UDBFClZME8ngfUu7xq1dW3RjGFJiE5GR
-         kxRzk65GqWpp1+0Uj8OWgUUWJzB3HLuiY24x9MJuIjZI73Hm88TVRr0Z2Q5oKhzrTEac
-         sEcg==
-X-Gm-Message-State: ANhLgQ3ixFHI/5Ybs/VYxJAl6rbaeXWKr6IDgIsocBsKZ0O7HaKsUAbQ
-        0L5Hu23IjvKnuSVweslG+xzT6YylIpgeRwV9oDosjA==
-X-Google-Smtp-Source: ADFU+vsLRLu5CHq+4KDeNc9afsPRrbpSLhURhzK+3Pwhm0HC+0bu+COR0T6jrEwJk36YWXYuiJcHtrPO3fI+aoD3OXU=
-X-Received: by 2002:aa7:d50b:: with SMTP id y11mr3185084edq.139.1583229855409;
- Tue, 03 Mar 2020 02:04:15 -0800 (PST)
+        Tue, 3 Mar 2020 05:07:11 -0500
+Received: from mga03.intel.com ([134.134.136.65]:55125 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgCCKHL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 05:07:11 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 02:07:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,510,1574150400"; 
+   d="scan'208";a="233707070"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga008.fm.intel.com with ESMTP; 03 Mar 2020 02:07:07 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1j94SE-006W95-2d; Tue, 03 Mar 2020 12:07:10 +0200
+Date:   Tue, 3 Mar 2020 12:07:10 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kishon@ti.com, robh@kernel.org, cheol.yong.kim@intel.com,
+        chuanhua.lei@linux.intel.com, qi-ming.wu@intel.com,
+        yixin.zhu@intel.com
+Subject: Re: [PATCH v4 3/3] phy: intel: Add driver support for ComboPhy
+Message-ID: <20200303100710.GK1224808@smile.fi.intel.com>
+References: <cover.1583127977.git.eswara.kota@linux.intel.com>
+ <4e55050985ef0ab567415625f5d14ab1c9b33994.1583127977.git.eswara.kota@linux.intel.com>
+ <20200302111901.GT1224808@smile.fi.intel.com>
+ <b0f7742d-7d61-9743-4047-c5352dd7495d@linux.intel.com>
 MIME-Version: 1.0
-References: <20200303074414.30693-1-o.rempel@pengutronix.de>
-In-Reply-To: <20200303074414.30693-1-o.rempel@pengutronix.de>
-From:   Vladimir Oltean <olteanv@gmail.com>
-Date:   Tue, 3 Mar 2020 12:04:04 +0200
-Message-ID: <CA+h21hrkVr4-Bgop0bor9nkKDUm4dYdyuDWJ_jthjKpy98ZQ1A@mail.gmail.com>
-Subject: Re: [PATCH v1] net: dsa: sja1105: add 100baseT1_Full support
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     mkl@pengutronix.de, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>, kernel@pengutronix.de,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, david@protonic.nl,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b0f7742d-7d61-9743-4047-c5352dd7495d@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 at 09:44, Oleksij Rempel <o.rempel@pengutronix.de> wrote:
->
-> Validate 100baseT1_Full to make this driver work with TJA1102 PHY.
->
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
+On Tue, Mar 03, 2020 at 04:41:17PM +0800, Dilip Kota wrote:
+> On 3/2/2020 7:19 PM, Andy Shevchenko wrote:
+> > On Mon, Mar 02, 2020 at 04:43:25PM +0800, Dilip Kota wrote:
+> > > ComboPhy subsystem provides PHYs for various
+> > > controllers like PCIe, SATA and EMAC.
+> > Thanks for an update, my (few minor) comments below.
 
-I was expecting this patch sooner or later.
+...
 
-Acked-by: Vladimir Oltean <olteanv@gmail.com>
+> > > +enum intel_phy_mode {
+> > > +	PHY_PCIE_MODE = 0,
+> > > +	PHY_XPCS_MODE,
+> > > +	PHY_SATA_MODE
+> >  From here it's not visible that above is the only possible values.
+> > Maybe in the future you will have another mode.
+> > So, I suggest to leave comma here...
+> There won't be no further modes,...
 
-I should take this opportunity and express the fact that it is strange
-for MAC drivers to have to sign off all possible copper and fiber
-media types in their .phylink_validate method. Sooner or later
-somebody is going to want to add 1000Base-T1 too. I don't think it is
-going to scale very well. Russell, with your plan to make MAC drivers
-just populate a bitmap of phy_modes (MII side), is it also going to
-get rid of media side validation?
+Again, this is not obvious from the naming scheme in use.
+And how do you know the future?
 
->  drivers/net/dsa/sja1105/sja1105_main.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
-> index 34544b1c30dc..7b5a80ba12bd 100644
-> --- a/drivers/net/dsa/sja1105/sja1105_main.c
-> +++ b/drivers/net/dsa/sja1105/sja1105_main.c
-> @@ -866,6 +866,7 @@ static void sja1105_phylink_validate(struct dsa_switch *ds, int port,
->         phylink_set(mask, MII);
->         phylink_set(mask, 10baseT_Full);
->         phylink_set(mask, 100baseT_Full);
-> +       phylink_set(mask, 100baseT1_Full);
->         if (mii->xmii_mode[port] == XMII_MODE_RGMII)
->                 phylink_set(mask, 1000baseT_Full);
->
-> --
-> 2.25.0
->
+> i can still add the comma at all the places pointed.
 
-Regards,
--Vladimir
+Just use a common sense.
+
+> > > +};
+> > > +enum intel_combo_mode {
+> > > +	PCIE0_PCIE1_MODE = 0,
+> > > +	PCIE_DL_MODE,
+> > > +	RXAUI_MODE,
+> > > +	XPCS0_XPCS1_MODE,
+> > > +	SATA0_SATA1_MODE
+> > ...and here...
+> > 
+> > > +};
+> > > +
+> > > +enum aggregated_mode {
+> > > +	PHY_SL_MODE,
+> > > +	PHY_DL_MODE
+> > ...and here.
+> > 
+> > > +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
