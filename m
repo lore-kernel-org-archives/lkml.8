@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82469C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CCF4C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DBC22073B
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 635982073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259026;
-	bh=ID/GXQTXuDAQaPABtNm17V4BJtPBQdU0jqhKUuDlYp4=;
+	s=default; t=1583259027;
+	bh=3v3FPTsDVsy/CU2qctd5vstqr4cMjD4cLFEwgWTJDjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wjMW07VoaU0/gMtdBDKmVtaOyUhLgbZzrhRMHyXCTDbQIywNVPFWhVC92Y+ggk89t
-	 QRni1jj5XmHrXAYb5Xg1xFE6MdpndqsoPbmbSNX2bN4zq+V4b6iY/kM1Mw5vc06IaQ
-	 7QhpikeGl2Lb9hwf2y3LTlk8ifE2yFxSqYMCA+Ww=
+	b=I6rhm1kk8n0PwbiNH/xjzgU6rO0pZvni4nrcS517WCUWnwCyyVhFShl6rfckNRmhF
+	 3sVhfUNpV4ZzJaemNkbpSF0d732CM0RRuXO4GNWdmx1NikCEMtBzPid5aVp7knoCie
+	 WZr/QsZgip242jDpH6uolzimHkYTW/U6/LIGhWWM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731935AbgCCRvG (ORCPT
+        id S1731930AbgCCRvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:51:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58954 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:51:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731183AbgCCRvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:51:01 -0500
+        id S1731631AbgCCRu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:50:58 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 296B1206E6;
-        Tue,  3 Mar 2020 17:51:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD7B020728;
+        Tue,  3 Mar 2020 17:50:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257860;
-        bh=ID/GXQTXuDAQaPABtNm17V4BJtPBQdU0jqhKUuDlYp4=;
+        s=default; t=1583257858;
+        bh=3v3FPTsDVsy/CU2qctd5vstqr4cMjD4cLFEwgWTJDjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FHvn8ryF03v+17vSuBuh9DPhoYTUVKtk6FThG+gk/+3fAbP3LuUmX+cmnuzn9MLoc
-         PI9dB7aqgXgO3MGIITrRTQxKBhck3kn1ZJHf8lk1s5ioFVG1orZeh+GkVXZlyRMgbT
-         tBg44dkIDtvP1XdL1lIr3ZC7pJolxb4e/PzljGfg=
+        b=GCEd1hBX6uq05+YglXc9oX7OMUqfTYvGrr3Q2L5RnB6BZAtK7NpvfRRwg0gnKBQ/D
+         Y8fDQ6xNUK0TJmGqxPf2uHSS6L984FW/x142lZwaa0BRqFN40UoUD83CZEdlEvty3h
+         8AQxyxMmHFNJ9mtya9ooGqFTzpqx9vKu3ucI63dQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Xiaochen Shen <xiaochen.shen@intel.com>,
-        Borislav Petkov <bp@suse.de>
-Subject: [PATCH 5.5 156/176] x86/resctrl: Check monitoring static key in the MBM overflow handler
-Date:   Tue,  3 Mar 2020 18:43:40 +0100
-Message-Id: <20200303174322.523561222@linuxfoundation.org>
+        stable@vger.kernel.org, Cengiz Can <cengiz@kernel.wtf>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: [PATCH 5.5 155/176] perf maps: Add missing unlock to maps__insert() error case
+Date:   Tue,  3 Mar 2020 18:43:39 +0100
+Message-Id: <20200303174322.429303788@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -59,69 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaochen Shen <xiaochen.shen@intel.com>
+From: Cengiz Can <cengiz@kernel.wtf>
 
-commit 536a0d8e79fb928f2735db37dda95682b6754f9a upstream.
+commit 85fc95d75970ee7dd8e01904e7fb1197c275ba6b upstream.
 
-Currently, there are three static keys in the resctrl file system:
-rdt_mon_enable_key and rdt_alloc_enable_key indicate if the monitoring
-feature and the allocation feature are enabled, respectively. The
-rdt_enable_key is enabled when either the monitoring feature or the
-allocation feature is enabled.
+`tools/perf/util/map.c` has a function named `maps__insert` that
+acquires a write lock if its in multithread context.
 
-If no monitoring feature is present (either hardware doesn't support a
-monitoring feature or the feature is disabled by the kernel command line
-option "rdt="), rdt_enable_key is still enabled but rdt_mon_enable_key
-is disabled.
+Even though this lock is released when function successfully completes,
+there's a branch that is executed when `maps_by_name == NULL` that
+returns from this function without releasing the write lock.
 
-MBM is a monitoring feature. The MBM overflow handler intends to
-check if the monitoring feature is not enabled for fast return.
+Added an `up_write` to release the lock when this happens.
 
-So check the rdt_mon_enable_key in it instead of the rdt_enable_key as
-former is the more accurate check.
-
- [ bp: Massage commit message. ]
-
-Fixes: e33026831bdb ("x86/intel_rdt/mbm: Handle counter overflow")
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/1576094705-13660-1-git-send-email-xiaochen.shen@intel.com
+Fixes: a7c2b572e217 ("perf map_groups: Auto sort maps by name, if needed")
+Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/20200120141553.23934-1-cengiz@kernel.wtf
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/resctrl/internal.h |    1 +
- arch/x86/kernel/cpu/resctrl/monitor.c  |    4 ++--
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ tools/perf/util/map.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kernel/cpu/resctrl/internal.h
-+++ b/arch/x86/kernel/cpu/resctrl/internal.h
-@@ -57,6 +57,7 @@ static inline struct rdt_fs_context *rdt
- }
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -549,6 +549,7 @@ void maps__insert(struct maps *maps, str
  
- DECLARE_STATIC_KEY_FALSE(rdt_enable_key);
-+DECLARE_STATIC_KEY_FALSE(rdt_mon_enable_key);
+ 			if (maps_by_name == NULL) {
+ 				__maps__free_maps_by_name(maps);
++				up_write(&maps->lock);
+ 				return;
+ 			}
  
- /**
-  * struct mon_evt - Entry in the event list of a resource
---- a/arch/x86/kernel/cpu/resctrl/monitor.c
-+++ b/arch/x86/kernel/cpu/resctrl/monitor.c
-@@ -514,7 +514,7 @@ void mbm_handle_overflow(struct work_str
- 
- 	mutex_lock(&rdtgroup_mutex);
- 
--	if (!static_branch_likely(&rdt_enable_key))
-+	if (!static_branch_likely(&rdt_mon_enable_key))
- 		goto out_unlock;
- 
- 	d = get_domain_from_cpu(cpu, &rdt_resources_all[RDT_RESOURCE_L3]);
-@@ -543,7 +543,7 @@ void mbm_setup_overflow_handler(struct r
- 	unsigned long delay = msecs_to_jiffies(delay_ms);
- 	int cpu;
- 
--	if (!static_branch_likely(&rdt_enable_key))
-+	if (!static_branch_likely(&rdt_mon_enable_key))
- 		return;
- 	cpu = cpumask_any(&dom->cpu_mask);
- 	dom->mbm_work_cpu = cpu;
 
 
