@@ -2,93 +2,141 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6020C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC56FC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 986DC20863
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F25B20866
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:23:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730147AbgCCRW1 (ORCPT
+        id S1730187AbgCCRXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:22:27 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:39327 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729404AbgCCRW1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:22:27 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-105.corp.google.com [104.133.0.105] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 023HM9dR009316
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 3 Mar 2020 12:22:13 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 818CE42045B; Tue,  3 Mar 2020 12:22:09 -0500 (EST)
-Date:   Tue, 3 Mar 2020 12:22:09 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     lampahome <pahome.chen@mirlab.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: why do we need utf8 normalization when compare name?
-Message-ID: <20200303172209.GB61444@mit.edu>
-References: <CAB3eZfv4VSj6_XBBdHK12iX_RakhvXnTCFAmQfwogR34uySo3Q@mail.gmail.com>
- <20200302103754.nsvtne2vvduug77e@yavin>
- <20200302104741.b5lypijqlbpq5lgz@yavin>
- <CAB3eZfuAXaT4YTBSZ4sGe=NP8=71OT8wu7zXMzOjkd4NzjtXag@mail.gmail.com>
- <20200303070928.aawxoyeq77wnc3ts@yavin>
- <CAB3eZfu1=-FwJTnnH=sfg=J2gkeF0bgMs43V5tSkxdqP+m+R9A@mail.gmail.com>
+        Tue, 3 Mar 2020 12:23:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:50200 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727198AbgCCRXV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:23:21 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC5852F;
+        Tue,  3 Mar 2020 09:23:20 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D2C7F3F534;
+        Tue,  3 Mar 2020 09:23:19 -0800 (PST)
+Subject: Re: [PATCH] iommu/dma: Fix MSI reservation allocation
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Joerg Roedel <jroedel@suse.de>, Eric Auger <eric.auger@redhat.com>,
+        Will Deacon <will@kernel.org>, stable@vger.kernel.org
+References: <20200303115154.32263-1-maz@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f0fc18a5-17a9-4c53-052b-00272bbd2691@arm.com>
+Date:   Tue, 3 Mar 2020 17:23:14 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAB3eZfu1=-FwJTnnH=sfg=J2gkeF0bgMs43V5tSkxdqP+m+R9A@mail.gmail.com>
+In-Reply-To: <20200303115154.32263-1-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:13:56PM +0800, lampahome wrote:
+On 03/03/2020 11:51 am, Marc Zyngier wrote:
+> The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
+> structures doesn't match the way iommu_put_dma_cookie() frees them.
 > 
-> > And yes, once the strings are normalised and encoded as UTF-8 you then
-> > do a byte-by-byte comparison (if the comparison is case-insensitive then
-> > fs/unicode/... will case-fold the Unicode symbols during normalisation).
+> The former performs a single allocation of all the required structures,
+> while the latter tries to free them one at a time. It doesn't quite
+> work for the main use case (the GICv3 ITS where the range is 64kB)
+> when the base ganule size is 4kB.
 > 
-> What I'm confused is why encoded as utf-8 after normalize finished?
-> From above, turn "ñ" (U+00F1) and "n◌̃" (U+006E U+0303) into the same
-> Unicode string. Then why should we just compare bytes from normalized.
+> This leads to a nice slab corruption on teardown, which is easily
+> observable by simply creating a VF on a SRIOV-capable device, and
+> tearing it down immediately (no need to even make use of it).
+> 
+> Fix it by allocating iommu_dma_msi_page structures one at a time.
 
-For the same reason why we don't upcase or downcase all of the letters
-in a directory with case-folding.  The term for this is
-"case-preserving, case-insensitive" matching.  So that means that if
-you save a file as "Makefile", ls will return "Makefile", and not
-"MAKEFILE" or "makefile".
+Bleh, you know you're supposed to be using 64K pages on those things, 
+right? :P
 
-Of course, if you delete or truncate "makefile", it will affect the
-file stored in the directory as "Makefile", and the file system will
-not allow a directory with case-folding enabled to contain "makefile"
-and "Makefile" at the same time.
+> Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+>   drivers/iommu/dma-iommu.c | 36 ++++++++++++++++++++++++------------
+>   1 file changed, 24 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index a2e96a5fd9a7..01fa64856c12 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -171,25 +171,37 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
+>   		phys_addr_t start, phys_addr_t end)
+>   {
+>   	struct iova_domain *iovad = &cookie->iovad;
+> -	struct iommu_dma_msi_page *msi_page;
+> -	int i, num_pages;
+> +	struct iommu_dma_msi_page *msi_page, *tmp;
+> +	int i, num_pages, ret = 0;
+> +	phys_addr_t base;
+>   
+> -	start -= iova_offset(iovad, start);
+> +	base = start -= iova_offset(iovad, start);
+>   	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
+>   
+> -	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
+> -	if (!msi_page)
+> -		return -ENOMEM;
+> -
+>   	for (i = 0; i < num_pages; i++) {
+> -		msi_page[i].phys = start;
+> -		msi_page[i].iova = start;
+> -		INIT_LIST_HEAD(&msi_page[i].list);
+> -		list_add(&msi_page[i].list, &cookie->msi_page_list);
+> +		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
+> +		if (!msi_page) {
+> +			ret = -ENOMEM;
 
-Simiarly, with normalization, we preserve the existing utf-8 form
-(both the composed and decomposed forms are valid utf-8), but we
-compare without taking the composition form into account.
+I think we can just return here and skip the cleanup below - by the time 
+we get here the cookie itself has already been allocated and 
+initialised, so even if iommu_dma_init_domain() fails someone else has 
+already accepted the responsibility of calling iommu_put_dma_cookie() at 
+some point later, which will clean up properly.
 
 Cheers,
+Robin.
 
-					- Ted
-
-P.S.  Some people may hate this, but if the goal is interoperability
-with how Windows and MacOS does things, this is basically what they do
-as well.  (Well, mostly; MacOS is a little weird for historical
-reasons.)
-
-P.P.S.  And before you comment on it, as one Internationalization
-expert once said, I18N *is* complicated.  It truly would be easier to
-teach all of the world to speak a single language and use it as the
-"Federation Standard" language, ala Star Trek.  For better or for
-worse, that's not happening, and so we deal with the world as it is,
-not as we would like it to be.  :-)
-
+> +			break;
+> +		}
+> +		msi_page->phys = start;
+> +		msi_page->iova = start;
+> +		INIT_LIST_HEAD(&msi_page->list);
+> +		list_add(&msi_page->list, &cookie->msi_page_list);
+>   		start += iovad->granule;
+>   	}
+>   
+> -	return 0;
+> +	if (ret) {
+> +		list_for_each_entry_safe(msi_page, tmp,
+> +					 &cookie->msi_page_list, list) {
+> +			if (msi_page->phys >= base && msi_page->phys < start) {
+> +				list_del(&msi_page->list);
+> +				kfree(msi_page);
+> +			}
+> +		}
+> +	}
+> +
+> +	return ret;
+>   }
+>   
+>   static int iova_reserve_pci_windows(struct pci_dev *dev,
+> 
