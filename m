@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A41C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FDAC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AD922146E
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9112B214DB
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583257990;
-	bh=6ZdR+j7W/1OYrpvBOqvO9W3YcYR2SMwtDCKXi/fmZFY=;
+	s=default; t=1583257993;
+	bh=fh/0xdOoh175PJRRkgF0SxozxLY14ZyoQVxKq3XrrVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GhtPelHo3f1HTjtm/PjiDc0hVkN3BWJXz9T9jk6oB6zQi+azYqR4h1JEHfl1UBlBw
-	 YFAXJuPHNq7D4Kp4d2rYQbzV6NppCsVi9ADIC9qvaQ0KW5usUShm63v1xMfl+PSuKg
-	 yD/PfhFRUoHLvMb3uPAo5EjHIUmLIiQ3S+KjGOvY=
+	b=CRGtOf8PqbkOg6+6vwD6RSsHGjhL3lWmPiUIKdV7lAqMw85sYv89sYVYs6FTG9w1q
+	 bG2vy+Lw7wG8pS3FRN7gsqEzNJCFYezT3KXm7B3La8l4lJn+1xGxOA5OHDonF+X5fS
+	 dYCQD9FHDfcsFgzjT1rQv+B9mOBpMhUWwTQNgkoA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732290AbgCCRxH (ORCPT
+        id S1732354AbgCCRxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:53:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33430 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:53:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731028AbgCCRxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:53:02 -0500
+        id S1731966AbgCCRxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:53:06 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49D8C20728;
-        Tue,  3 Mar 2020 17:53:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 416C220728;
+        Tue,  3 Mar 2020 17:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257980;
-        bh=6ZdR+j7W/1OYrpvBOqvO9W3YcYR2SMwtDCKXi/fmZFY=;
+        s=default; t=1583257985;
+        bh=fh/0xdOoh175PJRRkgF0SxozxLY14ZyoQVxKq3XrrVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ewzsqmxpz41i7adSUKPSE1S4wPfHhF/er0HnDIs5HZ9iquA3ofaGxL/V+oz8jNt6/
-         5EPkl4LuMKJwNP3+Y3yk1GjiRSo8UNx9AP6Zr47NHh7VKsFyBaLmjIKewiPRJHO5fe
-         j80ktS1xmdN6zQVm1JIUBVdVSt5Q+lRH76E31bK4=
+        b=p9SlwZccehFoPgXhX76ZLTAuO3fNW4V7iI5Wy/C98N17pjOmrPEajuvlT2jEcsFMC
+         ay13sTgAVxsJ7n+jSWRy0cUCxdWOfyIEdgRepxtj3S8QFfj8mWY7yAfHR6Cd9mMQ9V
+         g43BuC+6oM+cKetRTdAOvFhmdnpeaLBJBGUCy5zU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Ben Segall <bsegall@google.com>,
+        stable@vger.kernel.org, Johannes Berg <johannes.berg@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 026/152] sched/fair: Prevent unlimited runtime on throttled group
-Date:   Tue,  3 Mar 2020 18:42:04 +0100
-Message-Id: <20200303174305.422479067@linuxfoundation.org>
+Subject: [PATCH 5.4 028/152] mac80211: consider more elements in parsing CRC
+Date:   Tue,  3 Mar 2020 18:42:06 +0100
+Message-Id: <20200303174305.640729129@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
 References: <20200303174302.523080016@linuxfoundation.org>
@@ -63,63 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Guittot <vincent.guittot@linaro.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-[ Upstream commit 2a4b03ffc69f2dedc6388e9a6438b5f4c133a40d ]
+[ Upstream commit a04564c99bb4a92f805a58e56b2d22cc4978f152 ]
 
-When a running task is moved on a throttled task group and there is no
-other task enqueued on the CPU, the task can keep running using 100% CPU
-whatever the allocated bandwidth for the group and although its cfs rq is
-throttled. Furthermore, the group entity of the cfs_rq and its parents are
-not enqueued but only set as curr on their respective cfs_rqs.
+We only use the parsing CRC for checking if a beacon changed,
+and elements with an ID > 63 cannot be represented in the
+filter. Thus, like we did before with WMM and Cisco vendor
+elements, just statically add these forgotten items to the
+CRC:
+ - WLAN_EID_VHT_OPERATION
+ - WLAN_EID_OPMODE_NOTIF
 
-We have the following sequence:
+I guess that in most cases when VHT/HE operation change, the HT
+operation also changed, and so the change was picked up, but we
+did notice that pure operating mode notification changes were
+ignored.
 
-sched_move_task
-  -dequeue_task: dequeue task and group_entities.
-  -put_prev_task: put task and group entities.
-  -sched_change_group: move task to new group.
-  -enqueue_task: enqueue only task but not group entities because cfs_rq is
-    throttled.
-  -set_next_task : set task and group_entities as current sched_entity of
-    their cfs_rq.
-
-Another impact is that the root cfs_rq runnable_load_avg at root rq stays
-null because the group_entities are not enqueued. This situation will stay
-the same until an "external" event triggers a reschedule. Let trigger it
-immediately instead.
-
-Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Ben Segall <bsegall@google.com>
-Link: https://lkml.kernel.org/r/1579011236-31256-1-git-send-email-vincent.guittot@linaro.org
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Link: https://lore.kernel.org/r/20200131111300.891737-22-luca@coelho.fi
+[restrict to VHT for the mac80211 branch]
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ net/mac80211/util.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8c89c893078af..e921126aec84b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -7058,8 +7058,15 @@ void sched_move_task(struct task_struct *tsk)
- 
- 	if (queued)
- 		enqueue_task(rq, tsk, queue_flags);
--	if (running)
-+	if (running) {
- 		set_next_task(rq, tsk);
-+		/*
-+		 * After changing group, the running task may have joined a
-+		 * throttled one but it's still the running task. Trigger a
-+		 * resched to make sure that task can still run.
-+		 */
-+		resched_curr(rq);
-+	}
- 
- 	task_rq_unlock(rq, tsk, &rf);
- }
+diff --git a/net/mac80211/util.c b/net/mac80211/util.c
+index 32a7a53833c01..739e90555d8b9 100644
+--- a/net/mac80211/util.c
++++ b/net/mac80211/util.c
+@@ -1063,16 +1063,22 @@ _ieee802_11_parse_elems_crc(const u8 *start, size_t len, bool action,
+ 				elem_parse_failed = true;
+ 			break;
+ 		case WLAN_EID_VHT_OPERATION:
+-			if (elen >= sizeof(struct ieee80211_vht_operation))
++			if (elen >= sizeof(struct ieee80211_vht_operation)) {
+ 				elems->vht_operation = (void *)pos;
+-			else
+-				elem_parse_failed = true;
++				if (calc_crc)
++					crc = crc32_be(crc, pos - 2, elen + 2);
++				break;
++			}
++			elem_parse_failed = true;
+ 			break;
+ 		case WLAN_EID_OPMODE_NOTIF:
+-			if (elen > 0)
++			if (elen > 0) {
+ 				elems->opmode_notif = pos;
+-			else
+-				elem_parse_failed = true;
++				if (calc_crc)
++					crc = crc32_be(crc, pos - 2, elen + 2);
++				break;
++			}
++			elem_parse_failed = true;
+ 			break;
+ 		case WLAN_EID_MESH_ID:
+ 			elems->mesh_id = pos;
 -- 
 2.20.1
 
