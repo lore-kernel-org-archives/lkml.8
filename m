@@ -2,163 +2,137 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D83C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EC68C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB9520836
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:01:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7185E2073B
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 17:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730504AbgCCRBu (ORCPT
+        id S1730510AbgCCRCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:01:50 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:49495 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727175AbgCCRBu (ORCPT
+        Tue, 3 Mar 2020 12:02:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58166 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729148AbgCCRCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:01:50 -0500
-Received: from ip5f5bf7ec.dynamic.kabel-deutschland.de ([95.91.247.236] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j9Aus-0005Fy-RG; Tue, 03 Mar 2020 17:01:10 +0000
-Date:   Tue, 3 Mar 2020 18:01:09 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>
-Subject: Re: [PATCHv5] exec: Fix a deadlock in ptrace
-Message-ID: <20200303170109.y6q2acgydyzuh3mp@wittgenstein>
-References: <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfmloir.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nmjulm.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003021531.C77EF10@keescook>
- <20200303085802.eqn6jbhwxtmz4j2x@wittgenstein>
- <AM6PR03MB5170285B336790D3450E2644E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nlii0b.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        Tue, 3 Mar 2020 12:02:30 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 023GoluM029970
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Mar 2020 12:02:29 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhr4gscrf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 12:02:28 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 3 Mar 2020 17:02:26 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Mar 2020 17:02:23 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 023H2M4V37880164
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Mar 2020 17:02:22 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DFC684C052;
+        Tue,  3 Mar 2020 17:02:21 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 823854C04A;
+        Tue,  3 Mar 2020 17:02:21 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.80])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Mar 2020 17:02:21 +0000 (GMT)
+Date:   Tue, 3 Mar 2020 18:02:20 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH 0/2] virtio-blk: improve handling of DMA mapping
+ failures
+In-Reply-To: <20200303094909-mutt-send-email-mst@kernel.org>
+References: <20200213123728.61216-1-pasic@linux.ibm.com>
+        <20200303151252.59d45e86.pasic@linux.ibm.com>
+        <20200303094909-mutt-send-email-mst@kernel.org>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <AM6PR03MB5170609D44967E044FD1BE40E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030317-4275-0000-0000-000003A80899
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030317-4276-0000-0000-000038BD117E
+Message-Id: <20200303180220.7e38f9fd.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_05:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ mlxscore=0 phishscore=0 mlxlogscore=999 suspectscore=0 lowpriorityscore=0
+ impostorscore=0 bulkscore=0 spamscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003030116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 04:48:01PM +0000, Bernd Edlinger wrote:
-> On 3/3/20 4:18 PM, Eric W. Biederman wrote:
-> > Bernd Edlinger <bernd.edlinger@hotmail.de> writes:
-> > 
-> >> This fixes a deadlock in the tracer when tracing a multi-threaded
-> >> application that calls execve while more than one thread are running.
-> >>
-> >> I observed that when running strace on the gcc test suite, it always
-> >> blocks after a while, when expect calls execve, because other threads
-> >> have to be terminated.  They send ptrace events, but the strace is no
-> >> longer able to respond, since it is blocked in vm_access.
-> >>
-> >> The deadlock is always happening when strace needs to access the
-> >> tracees process mmap, while another thread in the tracee starts to
-> >> execve a child process, but that cannot continue until the
-> >> PTRACE_EVENT_EXIT is handled and the WIFEXITED event is received:
-> > 
-> > A couple of things.
-> > 
-> > Why do we think it is safe to change the behavior exposed to userspace?
-> > Not the deadlock but all of the times the current code would not
-> > deadlock?
-> > 
-> > Especially given that this is a small window it might be hard for people
-> > to track down and report so we need a strong argument that this won't
-> > break existing userspace before we just change things.
-> > 
-> 
-> Hmm, I tend to agree.
-> 
-> > Usually surveying all of the users of a system call that we can find
-> > and checking to see if they might be affected by the change in behavior
-> > is difficult enough that we usually opt for not being lazy and
-> > preserving the behavior.
-> > 
-> > This patch is up to two changes in behavior now, that could potentially
-> > affect a whole array of programs.  Adding linux-api so that this change
-> > in behavior can be documented if/when this change goes through.
-> > 
-> 
-> One is PTRACE_ACCESS possibly returning EAGAIN, yes.
-> 
-> We could try to restrict that behavior change to when any
-> thread is ptraced when execve starts, can't be too complicated.
-> 
-> 
-> But the other is only SYS_seccomp returning EAGAIN, when a different
-> thread of the current process is calling execve at the same time.
-> 
-> I would consider it completely impossible to have any user-visual effect,
-> since de_thread is just terminating all threads, including the thread
-> where the -EAGAIN was returned, so we will never know what happened.
+On Tue, 3 Mar 2020 09:49:21 -0500
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-I think if we risk a user-space facing change we should try the simple
-thing first before making the fix more convoluted? But it's a tough
-call...
-
-> 
-> 
-> > If you can split the documentation and test fixes out into separate
-> > patches that would help reviewing this code, or please make it explicit
-> > that the your are changing documentation about behavior that is changing
-> > with this patch.
+> On Tue, Mar 03, 2020 at 03:12:52PM +0100, Halil Pasic wrote:
+> > On Thu, 13 Feb 2020 13:37:26 +0100
+> > Halil Pasic <pasic@linux.ibm.com> wrote:
 > > 
+> > > Two patches are handling new edge cases introduced by doing DMA mappings
+> > > (which can fail) in virtio core.
+> > > 
+> > > I stumbled upon this while stress testing I/O for Protected Virtual
+> > > Machines. I deliberately chose a tiny swiotlb size and have generated
+> > > load with fio. With more than one virtio-blk disk in use I experienced
+> > > hangs.
+> > > 
+> > > The goal of this series is to fix those hangs.
+> > > 
+> > > Halil Pasic (2):
+> > >   virtio-blk: fix hw_queue stopped on arbitrary error
+> > >   virtio-blk: improve virtqueue error to BLK_STS
+> > > 
+> > >  drivers/block/virtio_blk.c | 17 ++++++++++++-----
+> > >  1 file changed, 12 insertions(+), 5 deletions(-)
+> > > 
+> > > 
+> > > base-commit: 39bed42de2e7d74686a2d5a45638d6a5d7e7d473
+> > 
+> > ping
+> > 
+> > Hi Michael, hi Jason,
+> > 
+> > I got some favorable reviews for this, but AFAIK I got nothing form the
+> > maintainers yet.
+> > 
+> > Is some of you going to pick these?
+> > 
+> > Regards,
+> > Halil
 > 
-> I am not sure if I have touched the right user documentation.
+> I've queued this, thanks!
 > 
-> I only saw a document referring to a non-existent "current->cred_replace_mutex"
-> I haven't digged the git history, but that must be pre-historic IMHO.
-> It appears to me that is some developer documentation, but it's nevertheless
-> worth to keep up to date when the code changes.
-> 
-> So where would I add the possibility for PTRACE_ATTACH to return -EAGAIN ?
 
-Since that would be a potentially user-visible change it would make the
-most sense to add it to man ptrace(2) if/when we land this change.
+Thank you!
 
-For developers, placing a comment in kernel/ptrace.c:ptrace_attach()
-would make the most sense? We already have something about exec
-protection in there.
-
-Christian
