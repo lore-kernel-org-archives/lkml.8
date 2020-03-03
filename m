@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CD2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C04C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC8382072D
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC1A20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259195;
-	bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
+	s=default; t=1583259200;
+	bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MmSfLVwPTtyBLTMS7BCt63brxGsGbDoAiPRnn34DUkf8yHsS/oKPQ9iy0F/usUNQG
-	 FdnlwCU5oWUmVMXPLCsG1S7bHiXoAQ4GJJX6Td0ctG9NooJ/GNsTqnRsAjPrnr1mU+
-	 zig2ByvSuZmi6Xyrhi1tkmtczOSw3EKjwoCY7YFE=
+	b=FbcaLpb+7RMe6XPgeizay8OTSBgPwy6IzmKNpkiKrHnTR8dEhpZVj7cTApHga2jIe
+	 csD1y2JtR7LVoc5bRwiLU7W2FjS7s75Kivumr5QRRihUcECnq2vkuia5G1a+8OHf4U
+	 RHz3cvJ4657eHxRbUQpnSkdzXHMfA/APsiIrdnBE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbgCCRqp (ORCPT
+        id S1731197AbgCCRql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 12:46:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53388 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:46:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731204AbgCCRqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:46:43 -0500
+        id S1731181AbgCCRqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:46:37 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B23220870;
-        Tue,  3 Mar 2020 17:46:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0D2A20CC7;
+        Tue,  3 Mar 2020 17:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257601;
-        bh=DrogBba9msTbngHtLmWtxQahOenWiF9iZhri+C8iWa0=;
+        s=default; t=1583257596;
+        bh=e1SKCZPdGa2avM3Ux/3r2Ge8S6FtgQ3cCJFYoRw0Vzs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vOCO7FXRBldF+V2uZfkYC9P/LxxTI/fi9suDMwvXnX5tXCWIJhSJSh9NdO1cMO+L2
-         9rLnfR12YvGhAmeqbSO7+BN4MrLX4cih+SjmJzWwzhi0GVsHbY0r3HjuwINy1d9xfL
-         SCuNdvzYdHKf0p1qRgQbDnx0I79wadq7vJ3UH1Qw=
+        b=qEwOlymUq2pea2DxpXlc11ag2iveM70aHwIhnhBpSh04TyYbW/htVkmdpOv0T5Vvj
+         yxq/PzhEC/WnU89yasig7PdxkLlNews8RUPh8U+BPa8TVGw8DbKWu0zikHQ7ifcoTY
+         8Fd8OIvaSqEWTEr0OdW3PBci52kdABD1W9TY7a6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sameeh Jubran <sameehj@amazon.com>,
+        Arthur Kiyanovski <akiyano@amazon.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 057/176] net: ena: rss: do not allocate key when not supported
-Date:   Tue,  3 Mar 2020 18:42:01 +0100
-Message-Id: <20200303174311.162288906@linuxfoundation.org>
+Subject: [PATCH 5.5 056/176] net: ena: fix incorrect default RSS key
+Date:   Tue,  3 Mar 2020 18:42:00 +0100
+Message-Id: <20200303174311.033256448@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -60,66 +61,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sameeh Jubran <sameehj@amazon.com>
+From: Arthur Kiyanovski <akiyano@amazon.com>
 
-[ Upstream commit 6a4f7dc82d1e3abd3feb0c60b5041056fcd9880c ]
+[ Upstream commit 0d1c3de7b8c78a5e44b74b62ede4a63629f5d811 ]
 
-Currently we allocate the key whether the device supports setting the
-key or not. This commit adds a check to the allocation function and
-handles the error accordingly.
+Bug description:
+When running "ethtool -x <if_name>" the key shows up as all zeros.
+
+When we use "ethtool -X <if_name> hfunc toeplitz hkey <some:random:key>" to
+set the key and then try to retrieve it using "ethtool -x <if_name>" then
+we return the correct key because we return the one we saved.
+
+Bug cause:
+We don't fetch the key from the device but instead return the key
+that we have saved internally which is by default set to zero upon
+allocation.
+
+Fix:
+This commit fixes the issue by initializing the key to a random value
+using netdev_rss_key_fill().
 
 Fixes: 1738cd3ed342 ("net: ena: Add a driver for Amazon Elastic Network Adapters (ENA)")
 Signed-off-by: Sameeh Jubran <sameehj@amazon.com>
+Signed-off-by: Arthur Kiyanovski <akiyano@amazon.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/amazon/ena/ena_com.c | 24 ++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/amazon/ena/ena_com.c | 15 +++++++++++++++
+ drivers/net/ethernet/amazon/ena/ena_com.h |  1 +
+ 2 files changed, 16 insertions(+)
 
 diff --git a/drivers/net/ethernet/amazon/ena/ena_com.c b/drivers/net/ethernet/amazon/ena/ena_com.c
-index d6b894b06fa30..6f758ece86f60 100644
+index e54c44fdcaa73..d6b894b06fa30 100644
 --- a/drivers/net/ethernet/amazon/ena/ena_com.c
 +++ b/drivers/net/ethernet/amazon/ena/ena_com.c
-@@ -1057,6 +1057,20 @@ static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
+@@ -1041,6 +1041,19 @@ static int ena_com_get_feature(struct ena_com_dev *ena_dev,
+ 				      feature_ver);
+ }
+ 
++static void ena_com_hash_key_fill_default_key(struct ena_com_dev *ena_dev)
++{
++	struct ena_admin_feature_rss_flow_hash_control *hash_key =
++		(ena_dev->rss).hash_key;
++
++	netdev_rss_key_fill(&hash_key->key, sizeof(hash_key->key));
++	/* The key is stored in the device in u32 array
++	 * as well as the API requires the key to be passed in this
++	 * format. Thus the size of our array should be divided by 4
++	 */
++	hash_key->keys_num = sizeof(hash_key->key) / sizeof(u32);
++}
++
  static int ena_com_hash_key_allocate(struct ena_com_dev *ena_dev)
  {
  	struct ena_rss *rss = &ena_dev->rss;
-+	struct ena_admin_feature_rss_flow_hash_control *hash_key;
-+	struct ena_admin_get_feat_resp get_resp;
-+	int rc;
-+
-+	hash_key = (ena_dev->rss).hash_key;
-+
-+	rc = ena_com_get_feature_ex(ena_dev, &get_resp,
-+				    ENA_ADMIN_RSS_HASH_FUNCTION,
-+				    ena_dev->rss.hash_key_dma_addr,
-+				    sizeof(ena_dev->rss.hash_key), 0);
-+	if (unlikely(rc)) {
-+		hash_key = NULL;
-+		return -EOPNOTSUPP;
-+	}
- 
- 	rss->hash_key =
- 		dma_alloc_coherent(ena_dev->dmadev, sizeof(*rss->hash_key),
-@@ -2640,11 +2654,15 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
+@@ -2631,6 +2644,8 @@ int ena_com_rss_init(struct ena_com_dev *ena_dev, u16 indr_tbl_log_size)
  	if (unlikely(rc))
- 		goto err_indr_tbl;
- 
-+	/* The following function might return unsupported in case the
-+	 * device doesn't support setting the key / hash function. We can safely
-+	 * ignore this error and have indirection table support only.
-+	 */
- 	rc = ena_com_hash_key_allocate(ena_dev);
--	if (unlikely(rc))
-+	if (unlikely(rc) && rc != -EOPNOTSUPP)
  		goto err_hash_key;
--
--	ena_com_hash_key_fill_default_key(ena_dev);
-+	else if (rc != -EOPNOTSUPP)
-+		ena_com_hash_key_fill_default_key(ena_dev);
  
++	ena_com_hash_key_fill_default_key(ena_dev);
++
  	rc = ena_com_hash_ctrl_init(ena_dev);
  	if (unlikely(rc))
+ 		goto err_hash_ctrl;
+diff --git a/drivers/net/ethernet/amazon/ena/ena_com.h b/drivers/net/ethernet/amazon/ena/ena_com.h
+index 0ce37d54ed108..9b5bd28ed0ac6 100644
+--- a/drivers/net/ethernet/amazon/ena/ena_com.h
++++ b/drivers/net/ethernet/amazon/ena/ena_com.h
+@@ -44,6 +44,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/types.h>
+ #include <linux/wait.h>
++#include <linux/netdevice.h>
+ 
+ #include "ena_common_defs.h"
+ #include "ena_admin_defs.h"
 -- 
 2.20.1
 
