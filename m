@@ -2,68 +2,130 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFF9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:54:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B13FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCAEE208C3
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9CAD20870
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 21:59:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HvFSulAc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbgCCVyf (ORCPT
+        id S1727064AbgCCV7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 16:54:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726766AbgCCVyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 16:54:35 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1520120848;
-        Tue,  3 Mar 2020 21:54:34 +0000 (UTC)
-Date:   Tue, 3 Mar 2020 16:54:32 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Tom Zanussi <zanussi@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Carsten Emde <C.Emde@osadl.org>,
-        John Kacur <jkacur@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Daniel Wagner <wagi@monom.org>
-Subject: Re: [PATCH RT 21/23] sched: migrate_enable: Busy loop until the
- migration request is completed
-Message-ID: <20200303165432.773941e0@gandalf.local.home>
-In-Reply-To: <f783406c0254a3b36ab1123402a7b2f26f6d5699.camel@redhat.com>
-References: <cover.1582814004.git.zanussi@kernel.org>
-        <fd4bda7ad49f46545a03424fd1327dff8a8b8171.1582814004.git.zanussi@kernel.org>
-        <f9e97d7214906f7b34aa587b868071a6f673c69a.camel@redhat.com>
-        <1583267977.12738.53.camel@kernel.org>
-        <f783406c0254a3b36ab1123402a7b2f26f6d5699.camel@redhat.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 3 Mar 2020 16:59:10 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37069 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725932AbgCCV7K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 16:59:10 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p14so2187900pfn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 13:59:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ddapSUJt6ntLiYzzjDAEz3gG4fW9QkFbYIQvX7Nl4Wc=;
+        b=HvFSulAcRQ9FH1nMyqzV2UlBduKJxbKupcWDMN6FDg342qavq7XRv4+kauubRe7OTf
+         tpJHVbvlzT18i/r27rTEYINBnzpXMkhr1uHas5plyxkywdThRYkPbDsuMUaWbmR822aY
+         hSNDw3l5DDYqBaG51Km/QULhrlNGyRDPM/LKMOs1/mNfuTyNM66y+opv9NXbB62zcmAF
+         Ihu7ymArZ2+Jf1c9TA6FaFHstjgRfeCjxNdCKF5DN0IJS0o0Fm/85jn6TmD7BquCdDdk
+         MWPtVQnns4SH1MqLxMGFcngWwdrSDQkOUWeHmcBc2cnJd8Tpp/jqjsVIf6kwSBOUe4HR
+         ihZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ddapSUJt6ntLiYzzjDAEz3gG4fW9QkFbYIQvX7Nl4Wc=;
+        b=eGBq0K+aq2Z80goF6FRzuD2tdQrJ5n8Y8Uu8rJ3/ufX2rYmVhF//peonyQEr4D7voS
+         acIvP5F0RtGRnYM9UVWAaL/gBTL3QtlnZ/GAoUmzMsVeX/EpdBUruBYMhcaGNK8qXbUA
+         tQ/5dvfU+yk4gW2akjhLwiKIJe1qml3OIyqfDsIMcpXC7+RcvFPuLr31U3kkBQyUQCX3
+         QalYoIW/UIQXx0mRHhGr0u+0fVd4sH3HyWnv/ficRTY9HqzxYM2syM3rz9hQ/ThPMhVY
+         sJKysV4E1cQ1ZnpjbmZBBhOTHFTBL9wjv98sOyS55eSkTq/pbPigYKHyZLNLJL0pnreH
+         rnXA==
+X-Gm-Message-State: ANhLgQ3n921Ux6pS2rNQO811avtv9Nv+EY8+fO4YSoR11LWBDQ2Aa7EY
+        1YWC8K2Z44NXmuywURn+bA1zGIue+Bcga/pFfAq5pQ==
+X-Google-Smtp-Source: ADFU+vuSSO5ovOYN0PsHWrzzb/fJClDu5pNQ9UPGolmosCGXWuIMIFmAgxO6x7bG2Tpjw+xFGeX17CX9X2YpTRcLBuc=
+X-Received: by 2002:a63:4e22:: with SMTP id c34mr6056814pgb.263.1583272747246;
+ Tue, 03 Mar 2020 13:59:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200302224217.22590-1-natechancellor@gmail.com>
+In-Reply-To: <20200302224217.22590-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 3 Mar 2020 13:58:56 -0800
+Message-ID: <CAKwvOdkaiU39xmtEheM=754sdGMTB-sP1GRGacpW4DGkdjugfw@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/display: Remove pointless NULL checks in dmub_psr_copy_settings
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 03 Mar 2020 15:19:23 -0600
-Scott Wood <swood@redhat.com> wrote:
+On Mon, Mar 2, 2020 at 2:43 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dmub_psr.c:147:31: warning:
+> address of 'pipe_ctx->plane_res' will always evaluate to 'true'
+> [-Wpointer-bool-conversion]
+>         if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
+>                          ~ ~~~~~~~~~~^~~~~~~~~
+> drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dmub_psr.c:147:56: warning:
+> address of 'pipe_ctx->stream_res' will always evaluate to 'true'
+> [-Wpointer-bool-conversion]
+>         if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
+>                                                   ~ ~~~~~~~~~~^~~~~~~~~~
+> 2 warnings generated.
+>
+> As long as pipe_ctx is not NULL, the address of members in this struct
+> cannot be NULL, which means these checks will always evaluate to false.
+>
+> Fixes: 4c1a1335dfe0 ("drm/amd/display: Driverside changes to support PSR in DMCUB")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/915
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-> > Thanks for making sure it wasn't missed in any case.  
-> 
-> Steven, any plans to merge that patch into 4.19-rt?
-> 
-> In the meantime, I guess it's a question of whether the bug fixed by patch
-> 18/23 is worse than the (probably quite hard to hit) deadlock addressed by
-> 2dcd94b443c5dcbc.
+Indeed, they are not pointers, and no members within `struct
+plane_resource` or `struct stream_resource` seem to indicate that they
+are somehow invalid.  Good job sleuthing out the correct fixes by tag.
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Yes, I plan on doing my backports thursday and friday.
+> ---
+>  drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
+> index 2c932c29f1f9..a9e1c01e9d9b 100644
+> --- a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
+> +++ b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
+> @@ -144,7 +144,7 @@ static bool dmub_psr_copy_settings(struct dmub_psr *dmub,
+>                 }
+>         }
+>
+> -       if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
+> +       if (!pipe_ctx)
+>                 return false;
+>
+>         // First, set the psr version
+> --
+> 2.25.1
+>
 
--- Steve
+
+-- 
+Thanks,
+~Nick Desaulniers
