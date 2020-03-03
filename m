@@ -2,103 +2,99 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE651C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64703C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEA6620828
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:40:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ake5qf4i"
+	by mail.kernel.org (Postfix) with ESMTP id 3932A20848
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 15:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583250057;
+	bh=g+1uGhmXpNeGk4q36N6lI30U5NhLEsvqrrTBmPZe9bc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=w8S1NmjVLYvjqwlURnr9O7h5qAq0Mir9dLRRTA21j/XEQOHo/aBmfzzxb+6HdBsKR
+	 Rc2MDlvkvZHGGH2PIzVGCnsNKarfWudjT9LKbhtDsdtGs7qiSKmkrDKt2yY/aySPQ5
+	 pRvRumJkZU8xQt2g2LB/MA8iZBDTmsg7W+3RPVww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbgCCPki (ORCPT
+        id S1730084AbgCCPk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 10:40:38 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37366 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727079AbgCCPki (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 10:40:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583250037;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SrF8JSKjOdBJZVRt/AXRACdTMcBXv4bNXWLtdukx5fQ=;
-        b=ake5qf4iJ5jxHmd1J7hRGtVEzIDn6XA0+wLFNCyeYBMbU4WYWBmhmSAyzDRV6MJuzDm0Im
-        ExpCDkj0Lo5ecEfYAUmQn5HCNREQz65B6Yl2C8u0z/mcQqwVAe/s/w+AQjvVnxAZG/52OM
-        MaYgzisT1/VVXA4SGeLEJ9YUchoa/W4=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-289-0R4BpxVwN7yklL9ZTu8A_w-1; Tue, 03 Mar 2020 10:40:36 -0500
-X-MC-Unique: 0R4BpxVwN7yklL9ZTu8A_w-1
-Received: by mail-wr1-f71.google.com with SMTP id p5so1369940wrj.17
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 07:40:35 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=SrF8JSKjOdBJZVRt/AXRACdTMcBXv4bNXWLtdukx5fQ=;
-        b=cZZWoa3Xb5mcZXwYecVcBl187p7jMICtayeX7UFlIJpydy5FiOn/Ki2P84R03huvcA
-         j3LK6h2Xv16Cq+oNTMi23lwrgvS3WITz6twXkhkzLykshF21/IXI2UGNPZlAOoy8URPN
-         ajWI2Oeg29M21FKE508TkGN0G+3Wp/kpgw50f6osrc0rFAOi6NQeZ1/nIdUYF2YNr71r
-         XeF2Kw1/2APgX+qMaH+aQknJurHuScBxPjmAxCoteF78bpeRuhMRK5qfcUpiJqOE2+0Q
-         AxjcgDHBeC0zjLpw5QLfUBGpcEhBGLygIicxaLr90JaAQAIEd4MH7Mzim6A6dvO1iV2b
-         Qf8w==
-X-Gm-Message-State: ANhLgQ1fKmFKHAPnJgHnnUrxRRR67qACjF6DiEIieYqKzRTLyfWPbB/4
-        EvIHxFf/8zfD+7bsV/KSCzf5+sRv1NUv++iLik0Dd2PL9A3H15Qpu2ne9klay3KPkjult651lDs
-        3+E54LkJtnGpd3bNvbA0nbQJG
-X-Received: by 2002:a7b:c446:: with SMTP id l6mr4718638wmi.94.1583250034918;
-        Tue, 03 Mar 2020 07:40:34 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsIy7f/SKdW2QFW2LYYoV1RsOjaZ70eCj2/ll6a/OC6f6S6aofvunS899Akpq0Wiy7IoguI/Q==
-X-Received: by 2002:a7b:c446:: with SMTP id l6mr4718619wmi.94.1583250034726;
-        Tue, 03 Mar 2020 07:40:34 -0800 (PST)
-Received: from [192.168.178.40] ([151.20.254.94])
-        by smtp.gmail.com with ESMTPSA id z10sm4378147wmk.31.2020.03.03.07.40.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Mar 2020 07:40:34 -0800 (PST)
-Subject: Re: [PATCH v2 36/66] KVM: x86: Handle GBPAGE CPUID adjustment for EPT
- in VMX code
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Xiaoyao Li <xiaoyao.li@intel.com>
-References: <20200302235709.27467-1-sean.j.christopherson@intel.com>
- <20200302235709.27467-37-sean.j.christopherson@intel.com>
- <90df7276-e586-9082-3d80-6b45e0fb4670@redhat.com>
- <20200303153550.GC1439@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <c789abc9-9687-82ae-d133-bd3a6d838ca5@redhat.com>
-Date:   Tue, 3 Mar 2020 16:40:32 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200303153550.GC1439@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
+        Tue, 3 Mar 2020 10:40:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728002AbgCCPkz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 10:40:55 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F59720842;
+        Tue,  3 Mar 2020 15:40:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583250055;
+        bh=g+1uGhmXpNeGk4q36N6lI30U5NhLEsvqrrTBmPZe9bc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GEpoH3rHZt8C7hFld4jc3qyGJTLrNrEVph4djIXCuFEfqtLj7Okrohn0VSfTveuIl
+         LzCTqn/6n9J4g+vesZe0w6BJATA5m/eWmtWaSV+KGkyMXgQpjTfn2ClBrJSrY5WyUJ
+         9hoPhRLWBfAwfb6bZ97o7gcukIG4U42MvGYbl7xc=
+Date:   Wed, 4 Mar 2020 00:40:49 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [OT] Pseudo module name in kallsyms (Re: [PATCH V3 03/13]
+ kprobes: Add symbols for kprobe insn pages)
+Message-Id: <20200304004049.cadb2294191fc67adea42f62@kernel.org>
+In-Reply-To: <20200303092123.7d398adf@gandalf.local.home>
+References: <20200228135125.567-1-adrian.hunter@intel.com>
+        <20200228135125.567-4-adrian.hunter@intel.com>
+        <20200228233600.5f5c733584eac08b8a4a2b70@kernel.org>
+        <20200228172004.GI5451@krava>
+        <20200229134947.839096dbc8321cfdca980edb@kernel.org>
+        <20200229184913.4e13e516@oasis.local.home>
+        <20200302144307.GD204976@krava>
+        <20200303194700.5810cbaf49bc6eacdffa7fa4@kernel.org>
+        <50754470-7675-c0b0-0931-9a6024e8eb90@intel.com>
+        <20200303092123.7d398adf@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/03/20 16:35, Sean Christopherson wrote:
-> Oof, that took me a long time to process.  You're saying that KVM can
-> allow the guest to use GBPAGES when shadow paging is enabled because KVM
-> can effectively emulate GBPAGES.  And IIUC, you're also saying that
-> cpuid.GBPAGES should never be influenced by EPT restrictions.
+On Tue, 3 Mar 2020 09:21:23 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> On Tue, 3 Mar 2020 12:55:24 +0200
+> Adrian Hunter <adrian.hunter@intel.com> wrote:
 > 
-> That all makes sense.
+> > If special characters are a problem, modules also do not start with '-' or
+> > '_', so would "_kprobes" and "_ftrace" be acceptable to everyone?
+> > 
+> 
+> Or just be blunt about what it is, and append: "__builtin__" to it:
+> 
+>  [__builtin__kprobes]
+>  [__builtin__ftrace]
+>  [__builtin__bpf]
 
-Yes, exactly.
+Good idea! It clearly states what it is.
 
-Paolo
+Thank you,
 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
