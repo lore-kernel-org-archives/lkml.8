@@ -2,131 +2,159 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 831A2C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9ADC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5964720838
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8B6020838
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 13:29:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iOMaPNxc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CV1elQMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728930AbgCCN3j (ORCPT
+        id S1729411AbgCCN3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 08:29:39 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:37754 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727913AbgCCN3i (ORCPT
+        Tue, 3 Mar 2020 08:29:48 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39028 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbgCCN3r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 08:29:38 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023DT1K8045670;
-        Tue, 3 Mar 2020 13:29:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=lywn+pXwQavPqQdE6SkAkcnIUijT/MHwbu+5k7sKG5c=;
- b=iOMaPNxccKV9x+LC9JY55/fzfYHh18XIPa3G7BEf/pGFKBm7jxoR8Ixcl7S49Gpa07Kk
- sN9YF4cVGXAqZBkDoShgb0L614lKbX+w/8QxEtUETvDAdB44VBAJf7PCtYZfd6viyONp
- CQxIuT5AO2+/vT02/6QyfX81UqjQQ2qgVYYMxr7WCSZFYd2I9rceXgnlElWcx9JDlfRa
- 9TLJSsd0sBjsjH02b46fbMGvqaXv//kRQ6Qa0OdU4ARhJML0ChGUHFw1/7vJ4gaRTsli
- udV96Kh62uTDnqibDRzo6McLaQKdmji9K96XCIq3io8xTZ6LCo3azEjfiArMgbyxSndQ fw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2yghn32yg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 13:29:01 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 023DR2RR127560;
-        Tue, 3 Mar 2020 13:29:00 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2yg1gxeuuk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 03 Mar 2020 13:29:00 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 023DSvk6001632;
-        Tue, 3 Mar 2020 13:28:58 GMT
-Received: from [192.168.1.14] (/114.88.246.185)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 03 Mar 2020 05:28:57 -0800
-Subject: Re: [PATCH] blktrace: fix dereference after null check
-To:     Cengiz Can <cengiz@kernel.wtf>, Jens Axboe <axboe@kernel.dk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200303073358.57799-1-cengiz@kernel.wtf>
-From:   Bob Liu <bob.liu@oracle.com>
-Message-ID: <ec24c6d8-617f-1460-0420-bc2ac3f346c6@oracle.com>
-Date:   Tue, 3 Mar 2020 21:29:08 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 3 Mar 2020 08:29:47 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so4340556wrn.6;
+        Tue, 03 Mar 2020 05:29:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hicGAyZ5CpHfmsbw4Kl9cPGuNpt8g32PuytU/UcEDL8=;
+        b=CV1elQMgZLhBpuFfL5DjPopxXqFjooMD4nNFS/3zO/mg/Y0/qPPlbnp33SZup+b6Xn
+         R0cE9JzQP4R+zgJnfJFQeNA7dybshykF3a2Ldu9qefqWJuiMHnZSFlgqQpSJtEsRyXab
+         qAGDJu1tgLL/6+jZDbiLPhijElTtaRK5jMYuE82RT5dC2hH+bHvuAP9EdL3BBOjQkmxT
+         IqqyonwLWKq58HGm6CL1MVGtHWy1+FBRHWDoYPPWKlVhP9gL8EQOMMNbZGEZrl7vM5RD
+         qncE4ethqNSxzsEB357sbW5pZKYYUinUGRcUtKfY65TpSbFeZUURs1wPKt6vMXtGRShc
+         wPsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hicGAyZ5CpHfmsbw4Kl9cPGuNpt8g32PuytU/UcEDL8=;
+        b=B0I+pBRyERpcphZ6LbOgvprf5w8MAWJiv1sPM5AC3awdlw3KTkGkLX7OxpVPIZiURU
+         AM5BuM5zrZmZmjY/PV3Bro0qceBDBGZv56B3QcNkJUCqrMN2f1b3XF3CpEzpvHY39rG8
+         Br79LahWoMWlOyZkAY4Vt48Z81NAtv8aDYVaF0x7cSOH8HZhhAVJDPl/vXIYWa29u9TS
+         7Pmuttt7RDCNvuxH4wkPMRm7NegER+YE52oNKVOYHT2+td5zRKB0Ea2zsQzkx+yTk+iz
+         RHSzw1EnQ2PZfIL4/Vn+Ykb/0JNlm7YF28RzF1Bptgf0ySOgKT46v03wTBe0ZciGa9t5
+         CQJA==
+X-Gm-Message-State: ANhLgQ2MoEKt5w3eVarxLKyNNjjBqnPkjB4XuhYXLzz09j63mg5c3rS4
+        HOAXh4Mpa1DTLKP9Shpbl7u332QjfKYDxPkoZvE=
+X-Google-Smtp-Source: ADFU+vuFtNgxjbewAK+JcEL9uWLOVuASSCsfonI72+FgdQg4t/bXLC/G4KfOc+tj4z3cmF6C36Db39T7GycrQg3xlxQ=
+X-Received: by 2002:adf:9dcc:: with SMTP id q12mr5802969wre.164.1583242185866;
+ Tue, 03 Mar 2020 05:29:45 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200303073358.57799-1-cengiz@kernel.wtf>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=2 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003030103
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9548 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0 spamscore=0
- impostorscore=0 mlxscore=0 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- priorityscore=1501 bulkscore=0 clxscore=1011 suspectscore=2
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003030103
+References: <20200302205700.29746-1-daniel.baluta@oss.nxp.com>
+ <20200302205700.29746-2-daniel.baluta@oss.nxp.com> <CAFQqKeU8YF+aZVTafj3ZiPvNUsx3nK-8cdr8eJUm=_9_2TkRQg@mail.gmail.com>
+In-Reply-To: <CAFQqKeU8YF+aZVTafj3ZiPvNUsx3nK-8cdr8eJUm=_9_2TkRQg@mail.gmail.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Tue, 3 Mar 2020 15:29:34 +0200
+Message-ID: <CAEnQRZBNMRNYOKwqweuZCeOYgMGh9DprRvz2ci3EOQPxqN3fhg@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/2] PM / domains: Introduce multi PM domains helpers
+To:     "Sridharan, Ranjani" <ranjani.sridharan@intel.com>
+Cc:     Daniel Baluta <daniel.baluta@oss.nxp.com>, rjw@rjwysocki.net,
+        "Brown, Len" <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        linux-pm@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>, khilman@kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Paul Olaru <paul.olaru@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        "S.j. Wang" <shengjiu.wang@nxp.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 3:33 PM, Cengiz Can wrote:
-> There was a recent change in blktrace.c that added a RCU protection to
-> `q->blk_trace` in order to fix a use-after-free issue during access.
-> 
-> However the change missed an edge case that can lead to dereferencing of
-> `bt` pointer even when it's NULL:
-> 
-> ```
->         bt->act_mask = value; // bt can still be NULL here
-> ```
-> 
-> Added a reassignment into the NULL check block to fix the issue.
-> 
-> Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
-> 
-> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-> ---
->  Huge thanks goes to Steven Rostedt for his assistance.
-> 
->  kernel/trace/blktrace.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index 4560878f0bac..29ea88f10b87 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -1896,8 +1896,10 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
->  	}
-> 
->  	ret = 0;
-> -	if (bt == NULL)
-> +	if (bt == NULL) {
->  		ret = blk_trace_setup_queue(q, bdev);
-> +		bt = q->blk_trace;
+Hello Ranjani,
 
-The return value 'ret' should be judged, it's wrong to set 'bt' if blk_trace_setup_queue()
-return failure.
+On Mon, Mar 2, 2020 at 11:24 PM Sridharan, Ranjani
+<ranjani.sridharan@intel.com> wrote:
 
-> +	}
-> 
->  	if (ret == 0) {
->  		if (attr == &dev_attr_act_mask)
-> --
-> 2.25.1
-> 
+>> + */
+>> +struct dev_multi_pm_domain_data *dev_multi_pm_attach(struct device *dev)
+>> +{
+>> +       struct dev_multi_pm_domain_data *mpd, *retp;
+>> +       int num_domains;
+>> +       int i;
+>> +
+>> +       num_domains = of_count_phandle_with_args(dev->of_node, "power-domains",
+>> +                                                "#power-domain-cells");
+>> +       if (num_domains < 2)
+>
+> Hi Daniel,
+>
+> Just out of curiosity, should it be an error when num_domains is 1? Is it an error because the expectation is that the caller would use dev_pm_domain_attach() in that case?
 
+NULL here doesn't really mean an error. It means that we don't need to
+handle Power domains because as you said the caller
+already used dev_pm_domain_attach.
+
+Similar with this:
+
+$ drivers/base/power/domain.c +2504
+
+int genpd_dev_pm_attach(struct device *dev)
+
+         / * Devices with multiple PM domains must be attached separately, as we
+           * can only attach one PM domain per device.
+          */
+        if (of_count_phandle_with_args(dev->of_node, "power-domains",
+                                    "#power-domain-cells") != 1)
+               return 0;
+
+Will update the description for when this function returns a NULL.
+
+>
+>> +               return NULL;
+>> +
+>> +       mpd = devm_kzalloc(dev, GFP_KERNEL, sizeof(*mpd));
+>> +       if (!mpd)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       mpd->dev = dev;
+>> +       mpd->num_domains = num_domains;
+>> +
+>> +       mpd->virt_devs = devm_kmalloc_array(dev, mpd->num_domains,
+>> +                                           sizeof(*mpd->virt_devs),
+>> +                                           GFP_KERNEL);
+>> +       if (!mpd->virt_devs)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       mpd->links = devm_kmalloc_array(dev, mpd->num_domains,
+>> +                                       sizeof(*mpd->links), GFP_KERNEL);
+>> +       if (!mpd->links)
+>> +               return ERR_PTR(-ENOMEM);
+>> +
+>> +       for (i = 0; i < mpd->num_domains; i++) {
+>> +               mpd->virt_devs[i] = dev_pm_domain_attach_by_id(dev, i);
+>> +               if (IS_ERR(mpd->virt_devs[i])) {
+>> +                       retp = (struct dev_multi_pm_domain_data *)
+>> +                               mpd->virt_devs[i];
+>
+> Should retp be PTR_ERR(mpd->virt_devs[i]) here?
+
+PTR_ERR returns a long but our function needs to return struct
+dev_multi_pm_domain_data *.
+
+> Thanks,
+> Ranjani
