@@ -2,119 +2,114 @@ Return-Path: <SRS0=fZJt=4U=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D73C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E8AFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C13524658
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180E4214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 09:19:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="emRn13jT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728129AbgCCJTZ (ORCPT
+        id S1728147AbgCCJTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 04:19:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:34328 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725840AbgCCJTY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 04:19:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 9775CB1C7;
-        Tue,  3 Mar 2020 09:18:48 +0000 (UTC)
-Date:   Tue, 3 Mar 2020 10:18:47 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Lech Perczak <l.perczak@camlintechnologies.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Theodore Ts'o <tytso@mit.edu>,
-        John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH] printk: queue wake_up_klogd irq_work only if per-CPU
- areas are ready
-Message-ID: <20200303091847.uyy7gzac52lkl75m@pathway.suse.cz>
-References: <20200303044059.1325-1-sergey.senozhatsky@gmail.com>
+        Tue, 3 Mar 2020 04:19:33 -0500
+Received: from mail-eopbgr60077.outbound.protection.outlook.com ([40.107.6.77]:33863
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725840AbgCCJTc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 04:19:32 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oYydUbvdP7P4Y9vK5BxqWJsNdP9U/NrPDA6CEkoX9yWhfEaOEW9L/i6jey6Q3OOpdC9ASXnACa+ONliBMR+Np+Bzqb9R72SfcR3YiIKZ91ef8RcLF4Lpn+levwoVxlOCORYwbow1aPr+y2XkXDbG7L7ouss17GYss1hjZYr/BeZHiBU8Z3jrXMWGke1W82ryUAZ7cdGgbR5j6tA5Z5DAEiXJyfcqxYySd0VBqlugQR776zB9mkJMQDi+u6eptkq9l5W2fPfXuBi0oZmB3gtBXnXF/UcDzwNQw7gu9tClr4/FjunK3KALvFBCDQQ1P4UJ3eYv/z5GNTD75rxNvPDRmA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3IWWxYBs31FH0KLcntFDl3bBxDAmEtxYZToqgZ+YYVs=;
+ b=jQNFI9EXw99+InpPIC8qqf9hRMRmX1mPcAaYFcfgdz/1Oh3L5DItPX3+4fWaPos745duXr4TirlU/N3K66ZL1JXyz1/mtuPhWG/dKzn4ZFDCxL2QtYku5FK8KH8xwpw8ph+8P0sG12gmRb3n3rZhyMAAmUTD345KOuVF/oO6s7I3NeMsWdMxIFs7qWwCkV3qmIIdIsblgWZAMveIToUOiF+cYG2eqgqeyhtfyE8AQFe52sj5jXl+p77ilwA51NqIgnmcxuQghKEvaWOZct7PNWewX0E8ZP+12z4DkrbGJ8G9Ejys3q0KzMtl6WdyvV4REQQTa7YBYIeGiWI+1h5upQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3IWWxYBs31FH0KLcntFDl3bBxDAmEtxYZToqgZ+YYVs=;
+ b=emRn13jTm0nunDVZc2pURz3/nH1hEAHBoCI7AZVcYcaKerg4vU8mbbj2Do6MGIAJT2h/BbcNi/x67r3llIJ1sAK1yFbxToIZQa7/EnI9IvFpOCfzqLHrb7qp73Lq0KueutuyewM86vizEnDy/2QkLrp6grm4esFtC9P3vdSqqTo=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
+ DB3PR0402MB3932.eurprd04.prod.outlook.com (52.134.72.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.14; Tue, 3 Mar 2020 09:19:28 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::e44d:fa34:a0af:d96%5]) with mapi id 15.20.2772.019; Tue, 3 Mar 2020
+ 09:19:28 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+CC:     Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 2/2] thermal: Remove COMPILE_TEST for IMX_SC_THERMAL
+Thread-Topic: [PATCH 2/2] thermal: Remove COMPILE_TEST for IMX_SC_THERMAL
+Thread-Index: AQHV8TNBiUH3WvjTAUmeBGRiRlmISKg2le0AgAAAk6A=
+Date:   Tue, 3 Mar 2020 09:19:28 +0000
+Message-ID: <DB3PR0402MB39167043F11D385FEC628A97F5E40@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1583222684-10229-1-git-send-email-Anson.Huang@nxp.com>
+ <1583222684-10229-2-git-send-email-Anson.Huang@nxp.com>
+ <CAHLCerNLQ11UR8AW2DcKC+9rh39KPWJG2uRiWGuwbFbyqPH72Q@mail.gmail.com>
+In-Reply-To: <CAHLCerNLQ11UR8AW2DcKC+9rh39KPWJG2uRiWGuwbFbyqPH72Q@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 838999f1-bd1c-4504-2980-08d7bf53f9b2
+x-ms-traffictypediagnostic: DB3PR0402MB3932:|DB3PR0402MB3932:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB3PR0402MB3932A6C8758B09FABA674A6BF5E40@DB3PR0402MB3932.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 03319F6FEF
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(39860400002)(346002)(376002)(136003)(199004)(189003)(2906002)(52536014)(44832011)(316002)(478600001)(5660300002)(71200400001)(86362001)(76116006)(66946007)(66446008)(26005)(9686003)(54906003)(8676002)(81166006)(4744005)(186003)(4326008)(7696005)(64756008)(33656002)(6916009)(6506007)(53546011)(66556008)(81156014)(8936002)(66476007)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3932;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: aQjXGruNA53Aw2uzmiTEiBs/ODbL5J6+0h6wF+IXqiyeS9fyeZmSfHflmBlgBmDPJZN2aO6rWZdrJ7dNZszD6aT+mu8ckUl1Za1oUiCl98L+yP/p6D4yfggCSrsquWD20rriBWhnsWCHqsfectIdYleqlCgnmz+PzbIWyS+8LTBBr5r6YpkjGe+6x/Tldk1GI24vwFcK9x26BCnADyoybR/W89Yi5nkBLfRGRmNMWTz/f3B/2zrYTvX8CMVdoZGMAIvUoIWPAIR2hmxLC5ZHsTvi1T9gtH7ep7Gl/NaHIuUDuJ3+OwQy4IomFkJgN+qaV6+1ejtHJufwcFDe540HIvoJin9/MY6NnZwUBtKq2uIuAJima7Tt31EwFduH+ZpdaPOD0Hf7aJIhfPXOuLASAT9QAxWMiXi/Uk0bh2trpMBs7uJpoT8zQcBQb5P+JHM2
+x-ms-exchange-antispam-messagedata: LvXjn0rcyz0E7EAwncfTJHIcVfm+fwH9ivBsEdF0+V7MT8MS/qOzdG6m3egbDVWZUrG2Fe3U1Bf/jygFZe4wo2eDclEhmIppsZRmcJcOXDr41YMSjbPziiOcVSmDHZQX3OutS+3maMAxCoKNjIV5fw==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303044059.1325-1-sergey.senozhatsky@gmail.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 838999f1-bd1c-4504-2980-08d7bf53f9b2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Mar 2020 09:19:28.7049
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 56+wxjcgTgWyFU1c08n8MvmaKQUIz7Mu+2g0cyIc/2pQFWFGqruPZgkm4e5hzrj8syj7Qj6G894KlHHjJzLfBQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3932
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-03-03 13:40:59, Sergey Senozhatsky wrote:
-> Lech Perczak [0] reports that after commit 1b710b1b10ef
-> ("char/random: silence a lockdep splat with printk()")
-> user-space syslog/kmsg readers are not able to read new
-> kernel messages. The reason is printk_deferred() being
-> called too early (as was pointed out by Petr and John).
-> 
-> Fix printk_deferred() and do not queue per-CPU irq_work
-> before per-CPU areas are initialized.
-> 
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index ad4606234545..d951d35a0786 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -1147,12 +1159,25 @@ static void __init log_buf_add_cpu(void)
->  static inline void log_buf_add_cpu(void) {}
->  #endif /* CONFIG_SMP */
->  
-> +static void __init set_percpu_data_ready(void)
-> +{
-> +	__printk_percpu_data_ready = true;
-> +}
-> +
->  void __init setup_log_buf(int early)
->  {
->  	unsigned long flags;
->  	char *new_log_buf;
->  	unsigned int free;
->  
-> +	/*
-> +	 * Some archs call setup_log_buf() multiple times - first is very
-> +	 * early, e.g. from setup_arch(), and second - when percpu_areas
-> +	 * are initialised.
-> +	 */
-> +	if (!early)
-> +		set_percpu_data_ready();
-> +
->  	if (log_buf != __log_buf)
->  		return;
->  
-> diff --git a/kernel/printk/printk_safe.c b/kernel/printk/printk_safe.c
-> index b4045e782743..d9a659a686f3 100644
-> --- a/kernel/printk/printk_safe.c
-> +++ b/kernel/printk/printk_safe.c
-> @@ -27,7 +27,6 @@
-a>   * There are situations when we want to make sure that all buffers
->   * were handled or when IRQs are blocked.
->   */
-> -static int printk_safe_irq_ready __read_mostly;
->  
->  #define SAFE_LOG_BUF_LEN ((1 << CONFIG_PRINTK_SAFE_LOG_BUF_SHIFT) -	\
->  				sizeof(atomic_t) -			\
-> @@ -51,7 +50,7 @@ static DEFINE_PER_CPU(struct printk_safe_seq_buf, nmi_print_seq);
->  /* Get flushed in a more safe context. */
->  static void queue_flush_work(struct printk_safe_seq_buf *s)
->  {
-> -	if (printk_safe_irq_ready)
-> +	if (printk_percpu_data_ready())
->  		irq_work_queue(&s->work);
-
-This is not safe. printk_percpu_data_ready() returns true even before
-s->work gets initialized by printk_safe_init().
-
-Solution would be to call printk_safe_init() from
-setup_log_buf() before calling set_percpu_data_ready().
-
-Or I would keep printk_safe code as it. I hope that it will get
-removed rather soon anyway.
-
-Otherwise, it looks good to me.
-
-Best Regards,
-Petr
+SGksIEFtaXQNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gdGhlcm1hbDogUmVtb3ZlIENP
+TVBJTEVfVEVTVCBmb3INCj4gSU1YX1NDX1RIRVJNQUwNCj4gDQo+IE9uIFR1ZSwgTWFyIDMsIDIw
+MjAgYXQgMTo0MCBQTSBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gd3JvdGU6
+DQo+ID4NCj4gPiBpLk1YIFNDVSB0aGVybWFsIGRyaXZlciBkZXBlbmRzIG9uIElNWF9TQ1Ugd2hp
+Y2ggZG9lcyBOT1QgaGF2ZQ0KPiA+IENPTVBJTEVfVEVTVCBlbmFibGVkLCBzbyBuZWVkIHRvIHJl
+bW92ZSBDT01QSUxFX1RFU1QgZm9yIGkuTVggU0NVDQo+ID4gdGhlcm1hbCBhcyB3ZWxsLg0KPiAN
+Cj4gV291bGRuJ3QgYSBiZXR0ZXIgc29sdXRpb24gYmUgdG8gYWRkIENPTVBJTEVfVEVTVCB0byBJ
+TVhfU0NVIHRvIGltcHJvdmUNCj4gY29tcGlsZSBjb3ZlcmFnZT8NCg0KSXQgaXMgYSBnb29kIGlk
+ZWEsIGJ1dCBJIHRoaW5rIHNpbmNlIHRoZXJlIGFyZSBtYW55IGkuTVg4IG1vZHVsZXMgZHJpdmVy
+IGFsc28gZGVwZW5kIG9uIElNWF9TQ1UsDQpJdCB3b3VsZCBiZSBiZXR0ZXIgdG8gY3V0IGFub3Ro
+ZXIgcGF0Y2ggc2V0IHRvIGVuYWJsZSBDT01QSUxFX1RFU1QgZm9yIElNWF9TQ1UgYXMgd2VsbA0K
+YXMgYWxsIHRob3NlIG1vZHVsZXMgdGhhdCBkZXBlbmQgb24gaXQsIHRoZW4gdGhlIGNvbXBpbGUg
+Y292ZXJhZ2Ugd2lsbCBjb3ZlciBhbGwgaS5NWDggbW9kdWxlcw0KZGVwZW5kIG9uIElNWF9TQ1Uu
+DQoNClRoYW5rcywNCkFuc29uDQo=
