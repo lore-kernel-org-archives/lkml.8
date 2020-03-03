@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE13C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26ABC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8BE420656
-	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE45F20656
+	for <linux-kernel@archiver.kernel.org>; Tue,  3 Mar 2020 18:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583259156;
-	bh=RoFfNCxuyBJAaBUVqc+Mkp2CuQkPRSxXZ6tfduI7cOw=;
+	s=default; t=1583259159;
+	bh=KiKF8TsnroZnGB6+WEfKkZ89hpEo9HMRTUDu1XfFWu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d0Pz7Mk5UMh4YqzqLCoV+wVebQH0xLHAinlhHXEhEMDeHoqq2kWLRW1CcWipPpOzL
-	 BkJ2WAdCTRGylhovFO9/XR9UXOf0lqg3fMD/QT9sB1ty6r46TOyyp+ZgCQOX7nXZuZ
-	 sizgSc/1wrt0zXPxgO3FST8VV+50QDOQBIInpT8Q=
+	b=KImxT58ubcCcYDpd175an06cXZbnHKQo3nP41+aNxstbOaxl1fA+p7qHF4Vh0J6tk
+	 NWciL43ojeMHnRhXfWdjtb/axAjrZxtdTXXZYl8RORE7I725sF4MeQJfk4RftFk5hS
+	 i9VQTKKYyNfxPZwWijJuH5nqioiey6fBbhi3rycc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732061AbgCCSMf (ORCPT
+        id S1731475AbgCCRsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 13:12:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55396 "EHLO mail.kernel.org"
+        Tue, 3 Mar 2020 12:48:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731616AbgCCRsU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 12:48:20 -0500
+        id S1730564AbgCCRsC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 12:48:02 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0BA4208C3;
-        Tue,  3 Mar 2020 17:48:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D000320CC7;
+        Tue,  3 Mar 2020 17:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583257698;
-        bh=RoFfNCxuyBJAaBUVqc+Mkp2CuQkPRSxXZ6tfduI7cOw=;
+        s=default; t=1583257680;
+        bh=KiKF8TsnroZnGB6+WEfKkZ89hpEo9HMRTUDu1XfFWu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v1L/fDFDy1hiWv7OzrhEDKSIbZLIheI1vnlFzjVBJ8ToJ+YwcdwaLcHtctZ1kbWbO
-         ynozGn0nMgFAJruBqzHlR3P6ZHa8uNezv4IHe0/hqWNARXMjgS2q239eMcmQtrrRb4
-         hm60NW8OEzK+wRxUXfq11OIIJhVYBtPHRAOC1JuQ=
+        b=nxT8/nN2ZTNLMXikibcMDCSI8p0rDUiJMHP/1zxfLPGj4yo2dsrIBzGkd+R6wrwOq
+         m7TYv3uOt2EjO1o6zCJDVjjIetJUsq8vs/3DCu6ZEL9/zIFp3G12PWUdKnzMZGrIUn
+         j2CtQKpG9uBSRgK94FJ2ksfCAG3f2P0mwLkrJ1i4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@intel.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        amd-gfx@lists.freedesktop.org,
-        Emil Velikov <emil.velikov@collabora.com>
-Subject: [PATCH 5.5 094/176] drm/radeon: Inline drm_get_pci_dev
-Date:   Tue,  3 Mar 2020 18:42:38 +0100
-Message-Id: <20200303174315.693227994@linuxfoundation.org>
+        stable@vger.kernel.org, Jean Delvare <jdelvare@suse.de>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.5 088/176] ACPI: watchdog: Fix gas->access_width usage
+Date:   Tue,  3 Mar 2020 18:42:32 +0100
+Message-Id: <20200303174314.939008701@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
 References: <20200303174304.593872177@linuxfoundation.org>
@@ -63,132 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit eb12c957735b582607e5842a06d1f4c62e185c1d upstream.
+commit 2ba33a4e9e22ac4dda928d3e9b5978a3a2ded4e0 upstream.
 
-It's the last user, and more importantly, it's the last non-legacy
-user of anything in drm_pci.c.
+ACPI Generic Address Structure (GAS) access_width field is not in bytes
+as the driver seems to expect in few places so fix this by using the
+newly introduced macro ACPI_ACCESS_BYTE_WIDTH().
 
-The only tricky bit is the agp initialization. But a close look shows
-that radeon does not use the drm_agp midlayer (the main use of that is
-drm_bufs for legacy drivers), and instead could use the agp subsystem
-directly (like nouveau does already). Hence we can just pull this in
-too.
-
-A further step would be to entirely drop the use of drm_device->agp,
-but feels like too much churn just for this patch.
-
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: "Christian König" <christian.koenig@amd.com>
-Cc: "David (ChunMing) Zhou" <David1.Zhou@amd.com>
-Cc: amd-gfx@lists.freedesktop.org
-Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+Fixes: b1abf6fc4982 ("ACPI / watchdog: Fix off-by-one error at resource assignment")
+Fixes: 058dfc767008 ("ACPI / watchdog: Add support for WDAT hardware watchdog")
+Reported-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Cc: 4.16+ <stable@vger.kernel.org> # 4.16+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/radeon/radeon_drv.c |   43 ++++++++++++++++++++++++++++++++++--
- drivers/gpu/drm/radeon/radeon_kms.c |    6 +++++
- 2 files changed, 47 insertions(+), 2 deletions(-)
+ drivers/acpi/acpi_watchdog.c |    3 +--
+ drivers/watchdog/wdat_wdt.c  |    2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
---- a/drivers/gpu/drm/radeon/radeon_drv.c
-+++ b/drivers/gpu/drm/radeon/radeon_drv.c
-@@ -37,6 +37,7 @@
- #include <linux/vga_switcheroo.h>
- #include <linux/mmu_notifier.h>
+--- a/drivers/acpi/acpi_watchdog.c
++++ b/drivers/acpi/acpi_watchdog.c
+@@ -126,12 +126,11 @@ void __init acpi_watchdog_init(void)
+ 		gas = &entries[i].register_region;
  
-+#include <drm/drm_agpsupport.h>
- #include <drm/drm_crtc_helper.h>
- #include <drm/drm_drv.h>
- #include <drm/drm_fb_helper.h>
-@@ -325,6 +326,7 @@ static int radeon_pci_probe(struct pci_d
- 			    const struct pci_device_id *ent)
- {
- 	unsigned long flags = 0;
-+	struct drm_device *dev;
- 	int ret;
+ 		res.start = gas->address;
++		res.end = res.start + ACPI_ACCESS_BYTE_WIDTH(gas->access_width) - 1;
+ 		if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
+ 			res.flags = IORESOURCE_MEM;
+-			res.end = res.start + ALIGN(gas->access_width, 4) - 1;
+ 		} else if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
+ 			res.flags = IORESOURCE_IO;
+-			res.end = res.start + gas->access_width - 1;
+ 		} else {
+ 			pr_warn("Unsupported address space: %u\n",
+ 				gas->space_id);
+--- a/drivers/watchdog/wdat_wdt.c
++++ b/drivers/watchdog/wdat_wdt.c
+@@ -389,7 +389,7 @@ static int wdat_wdt_probe(struct platfor
  
- 	if (!ent)
-@@ -365,7 +367,44 @@ static int radeon_pci_probe(struct pci_d
- 	if (ret)
- 		return ret;
- 
--	return drm_get_pci_dev(pdev, ent, &kms_driver);
-+	dev = drm_dev_alloc(&kms_driver, &pdev->dev);
-+	if (IS_ERR(dev))
-+		return PTR_ERR(dev);
-+
-+	ret = pci_enable_device(pdev);
-+	if (ret)
-+		goto err_free;
-+
-+	dev->pdev = pdev;
-+#ifdef __alpha__
-+	dev->hose = pdev->sysdata;
-+#endif
-+
-+	pci_set_drvdata(pdev, dev);
-+
-+	if (pci_find_capability(dev->pdev, PCI_CAP_ID_AGP))
-+		dev->agp = drm_agp_init(dev);
-+	if (dev->agp) {
-+		dev->agp->agp_mtrr = arch_phys_wc_add(
-+			dev->agp->agp_info.aper_base,
-+			dev->agp->agp_info.aper_size *
-+			1024 * 1024);
-+	}
-+
-+	ret = drm_dev_register(dev, ent->driver_data);
-+	if (ret)
-+		goto err_agp;
-+
-+	return 0;
-+
-+err_agp:
-+	if (dev->agp)
-+		arch_phys_wc_del(dev->agp->agp_mtrr);
-+	kfree(dev->agp);
-+	pci_disable_device(pdev);
-+err_free:
-+	drm_dev_put(dev);
-+	return ret;
- }
- 
- static void
-@@ -575,7 +614,7 @@ radeon_get_crtc_scanout_position(struct
- 
- static struct drm_driver kms_driver = {
- 	.driver_features =
--	    DRIVER_USE_AGP | DRIVER_GEM | DRIVER_RENDER,
-+	    DRIVER_GEM | DRIVER_RENDER,
- 	.load = radeon_driver_load_kms,
- 	.open = radeon_driver_open_kms,
- 	.postclose = radeon_driver_postclose_kms,
---- a/drivers/gpu/drm/radeon/radeon_kms.c
-+++ b/drivers/gpu/drm/radeon/radeon_kms.c
-@@ -31,6 +31,7 @@
- #include <linux/uaccess.h>
- #include <linux/vga_switcheroo.h>
- 
-+#include <drm/drm_agpsupport.h>
- #include <drm/drm_fb_helper.h>
- #include <drm/drm_file.h>
- #include <drm/drm_ioctl.h>
-@@ -77,6 +78,11 @@ void radeon_driver_unload_kms(struct drm
- 	radeon_modeset_fini(rdev);
- 	radeon_device_fini(rdev);
- 
-+	if (dev->agp)
-+		arch_phys_wc_del(dev->agp->agp_mtrr);
-+	kfree(dev->agp);
-+	dev->agp = NULL;
-+
- done_free:
- 	kfree(rdev);
- 	dev->dev_private = NULL;
+ 		memset(&r, 0, sizeof(r));
+ 		r.start = gas->address;
+-		r.end = r.start + gas->access_width - 1;
++		r.end = r.start + ACPI_ACCESS_BYTE_WIDTH(gas->access_width) - 1;
+ 		if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_MEMORY) {
+ 			r.flags = IORESOURCE_MEM;
+ 		} else if (gas->space_id == ACPI_ADR_SPACE_SYSTEM_IO) {
 
 
