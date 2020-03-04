@@ -2,70 +2,69 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86E98C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4935C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 571562465D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8522824658
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:03:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DP8KH6Nx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ki/3C0LU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388214AbgCDSA4 (ORCPT
+        id S1730006AbgCDSDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:00:56 -0500
-Received: from mail-wr1-f50.google.com ([209.85.221.50]:43154 "EHLO
-        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbgCDSAz (ORCPT
+        Wed, 4 Mar 2020 13:03:43 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44894 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728361AbgCDSDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:00:55 -0500
-Received: by mail-wr1-f50.google.com with SMTP id h9so3555112wrr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:00:54 -0800 (PST)
+        Wed, 4 Mar 2020 13:03:43 -0500
+Received: by mail-wr1-f68.google.com with SMTP id n7so3556021wrt.11;
+        Wed, 04 Mar 2020 10:03:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kgLAnNoaTeEkFv4F+WVYw5y3BkrfnRnLRAl57TS75sw=;
-        b=DP8KH6Nx9exY88O/qLy4No//jIiqJRd2WfYRsFV4Ppe+YotNEKWkpBLT828aajGWLG
-         sEJsEyVjowdIAIOPdLvmfC9nIxJcjze0Wx/41PmCsFm9CSrJks1nHl5xdcmH4wm1yH3S
-         HzKPTzQxu4UwdqBAfYLr/khoSQ5o3fBoiuhS4VPV2IIwK9TLOjZKNL/t5zBNeeUS6iDY
-         c+iQKeI2j+u04zVwCHdE+KEtlZvXpj5njbNp4V/d0PY76t/YXzEu7yHjku0c+KjLu6mC
-         Cc6NjlO8eyI3FolO8EUysfa/nHldE2Y8PEtuyii4rAFojBNhMRegd09CfZ2aPf2vHOYF
-         I6dQ==
+        bh=x3oBcuX3T5MDzUdnwPcGQIu+NJZ2SMp2mJNZKGglHnI=;
+        b=ki/3C0LUw3ARIDDWvYfWK2fA4pQYwch91XB8ZkAaJfFQBenNU4lsx1FDcWTptaxsQR
+         dO+yPvE3tW5QtJa/l7/s/8/dLbxmtLyDBUUymCpdK/BgrxmPP4iFvfAz889UpXR/bfm4
+         ljJ8kg7kx4Dp5kesWpskisfiqbWkhGZAnrZu8/w+58W72MBTXMys8dQ5ZkiP9Jojqznb
+         F20UfMUA80lbMdp3/WaYlbExtUiRpZbs+foO7bHjfB/mzKjwSVVDrucIVDbk6z1LeZWM
+         2wcIzLIBXu6Lcrwhh9tbP39oq0U73nmnqFHOEXHU5BcPuSe6/XCGWGxW38PHO7+vVjFb
+         l9iA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=kgLAnNoaTeEkFv4F+WVYw5y3BkrfnRnLRAl57TS75sw=;
-        b=brcOmFed0FCi02QR24MODLDHgqFN7cayfvcHAVsVJexSTnWdtPg4N96zxh1uuQb3yj
-         NbGrK4dJ0TtyxSnl18u+OqGRzcZ+VK8hdMRLreww3KSQBOY8G5AZaIbzsIH2uFJK/egC
-         Qg020jPWjYAFEX0Ef8hkvR07lLUayH0gO79Sv6ULJlEN4FE/uNfQYHxp3Vv57/01ScLb
-         lfnuKdSdhJDvilLQX+OioENPLogzvwCazIIG+C1mbX1cCJQvzVQcqoxKuUNyk4H2NhY4
-         CuM4T11Ny//IsM/wE44B7ezROvTPjIaFxlDfyqjnh+1eozUUeaa6y8KUSUnXz13xSrmx
-         IkaQ==
-X-Gm-Message-State: ANhLgQ26hV3QpASq6Mn/YUPEnYpodSeYzrSGKQCImk443rtxwE+WATMZ
-        ptf4PXm5kyOu+untclqPm0o=
-X-Google-Smtp-Source: ADFU+vtB9nBTJKMt9lQkD3tH71FXuux4DbgRVCXBK5jFuFAuoHACj/9Q/GEBUNGHtWJeEyLloZzAig==
-X-Received: by 2002:a5d:698f:: with SMTP id g15mr5092814wru.3.1583344853511;
-        Wed, 04 Mar 2020 10:00:53 -0800 (PST)
+        bh=x3oBcuX3T5MDzUdnwPcGQIu+NJZ2SMp2mJNZKGglHnI=;
+        b=HOoW5+r5thf/s4TGQE8XWw6CD8BBUYdhSpfPQ4tlx34wd8/WGrDkE14h4KWouwka/Z
+         npBjjUQstreCg5BbvunDfR6Omi6bLA2+V/CbgRIo/21Vmwgs5U/J2q1KgH/tMZvbMc04
+         ibOXStOtrpmmSuhzejzwKGH91QlnwJ/1t9LCMezfaPvq09EUMQ6AJJ0tGVFSgpoYA4uC
+         MMggGzBCWkKA/2ErKZMoTzCBQhGzGsZ1T3VVV0lzCtbq2HgEciXKFVAcTCJv/y3MHAwa
+         b9KdirdwKDAvFFdj0tpYxrhftPKOYIEO+3cYShE+qtD7Jtvefx/be2tt7RP/IPm8g3+x
+         ZH8g==
+X-Gm-Message-State: ANhLgQ2acQHy9851ggDtaAo/NMCcuErl9OZWhpSQbv2+tynHrKkd5PEd
+        rO2N/3wcLLUR+SUWFYmQSeaKfHTu
+X-Google-Smtp-Source: ADFU+vuGdLzQM51k3NCL/kBChbUubkHVNKmCdWNux3Z3XzqaobUq1fGEMGBUlGtz1jP57jBxPTRl+w==
+X-Received: by 2002:adf:ed4c:: with SMTP id u12mr5626518wro.204.1583345020752;
+        Wed, 04 Mar 2020 10:03:40 -0800 (PST)
 Received: from ziggy.stardust (81.172.58.205.dyn.user.ono.com. [81.172.58.205])
-        by smtp.gmail.com with ESMTPSA id r12sm5477953wrw.77.2020.03.04.10.00.52
+        by smtp.gmail.com with ESMTPSA id q3sm38905234wrs.1.2020.03.04.10.03.39
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 10:00:52 -0800 (PST)
-Subject: Re:
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Gene Chen <gene.chen.richtek@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        gene_chen@richtek.com, Wilma.Wu@mediatek.com,
-        shufan_lee@richtek.com, cy_huang@richtek.com
-References: <1583249249-17380-1-git-send-email-gene.chen.richtek@gmail.com>
- <6b920875-8764-73a4-a763-788ce485b0cb@gmail.com> <20200304151512.GD3332@dell>
+        Wed, 04 Mar 2020 10:03:40 -0800 (PST)
+Subject: Re: [v3,2/2] arm: dts: mediatek: add mt7629 pwm support
+To:     Sam Shih <sam.shih@mediatek.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org
+References: <1583319973-20694-1-git-send-email-sam.shih@mediatek.com>
+ <1583319973-20694-3-git-send-email-sam.shih@mediatek.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
@@ -141,12 +140,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
  +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
  y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
-Message-ID: <e718deb4-2fdf-ab8b-e187-8371b35919c9@gmail.com>
-Date:   Wed, 4 Mar 2020 19:00:51 +0100
+Message-ID: <eebadba3-9a8c-fe9d-03ee-3326f6116115@gmail.com>
+Date:   Wed, 4 Mar 2020 19:03:39 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200304151512.GD3332@dell>
+In-Reply-To: <1583319973-20694-3-git-send-email-sam.shih@mediatek.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -157,18 +156,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 04/03/2020 16:15, Lee Jones wrote:
-> On Wed, 04 Mar 2020, Matthias Brugger wrote:
+On 04/03/2020 12:06, Sam Shih wrote:
+> This adds pwm support for MT7629.
 > 
->> Please resend with appropiate commit message.
-> 
-> Please refrain from top-posting and don't forget to snip.
-> 
+> Signed-off-by: Sam Shih <sam.shih@mediatek.com>
 
-It's difficult to write something below a missing subject line without
-top-posting. ;)
+I wrote "arm" in capital letters in the subject and pushed it to v5.6-next/dts32
 
-Sorry for forgetting to snip.
-
-Regards,
+Thanks!
 Matthias
+
+> ---
+> Used:
+> https://patchwork.kernel.org/patch/11160851/
+> 
+> Change since v2:
+> Updated bindings for MT7629 pwm controller.
+> 
+> ---
+>  arch/arm/boot/dts/mt7629.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/mt7629.dtsi b/arch/arm/boot/dts/mt7629.dtsi
+> index 867b88103b9d..a2658fbadeca 100644
+> --- a/arch/arm/boot/dts/mt7629.dtsi
+> +++ b/arch/arm/boot/dts/mt7629.dtsi
+> @@ -241,6 +241,20 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		pwm: pwm@11006000 {
+> +			compatible = "mediatek,mt7629-pwm";
+> +			reg = <0x11006000 0x1000>;
+> +			#pwm-cells = <2>;
+> +			clocks = <&topckgen CLK_TOP_PWM_SEL>,
+> +				 <&pericfg CLK_PERI_PWM_PD>,
+> +				 <&pericfg CLK_PERI_PWM1_PD>;
+> +			clock-names = "top", "main", "pwm1";
+> +			assigned-clocks = <&topckgen CLK_TOP_PWM_SEL>;
+> +			assigned-clock-parents =
+> +					<&topckgen CLK_TOP_UNIVPLL2_D4>;
+> +			status = "disabled";
+> +		};
+> +
+>  		i2c: i2c@11007000 {
+>  			compatible = "mediatek,mt7629-i2c",
+>  				     "mediatek,mt2712-i2c";
+> 
