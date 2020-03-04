@@ -2,112 +2,147 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A7BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8FFC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F8C20661
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1910F20828
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:07:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iPgccfS1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="idcee3dY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387435AbgCDBGX (ORCPT
+        id S2387468AbgCDBG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 20:06:23 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50817 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgCDBGW (ORCPT
+        Tue, 3 Mar 2020 20:06:59 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34275 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387400AbgCDBG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 20:06:22 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a5so89271wmb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:06:19 -0800 (PST)
+        Tue, 3 Mar 2020 20:06:58 -0500
+Received: by mail-pg1-f195.google.com with SMTP id t3so162137pgn.1
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:06:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ctoiEBV7oYQ+Ec8vuMBepnjoi9mkX/M9Ee8Z3sCdCxE=;
-        b=iPgccfS1xG4obi2LdzeZagYxTiUM5+2sjUgn03SpxHQENWRvN8ZboigVQDfXhAuwmZ
-         LG85TxJex+PPxXCRpDkeZyMh0tPHllB+HZjkxzJp/RtbP4d3oS5BpJHKKH96iKC/a0ZG
-         Jo4ERdUQY+Fz6m0HJ9lPq4EbJZRBNXcUGURXo=
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wqvCXfGj808uPbmqG51quPJGXzE0v6hUvwSV24GKnh8=;
+        b=idcee3dYDzfJ0CM6iZp7JlkpSNl01PCMsrR59GXa9oGRh3kMhgsjo3eUALsnKzraqb
+         G9rvT7THOdySxd+am6A1csXQjcAhL9RnC26h0PcC2Cvc4MZDoYqveFHur8Gl2/Rq2NCY
+         UPAvwQeJA1mdMZGUgyS6vepHyX0sAut2v9iWk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ctoiEBV7oYQ+Ec8vuMBepnjoi9mkX/M9Ee8Z3sCdCxE=;
-        b=ivnNgp7NVvwNMkR1zTc3Vtjv08m8I+OYnFpL6ASdKhuoEtOZJsArFN26DsFKswowhL
-         lbFHDxKBesr7Q50Ye1C/tP2ug2Lc/6FT4R00vCbE+IvNOKHZ28bqjVMbV77S57y4MUkZ
-         ZDiW0p8+mALJqdwVUTaSZ8Z5amVqL0WvoGYgWqed+C8+O1gNs8nlSseLGLoCR8wp7QUa
-         PxrLNhkYSLpt6HzvHE91isoqS2bKRStbOXFI8ONddstNZnKVCrylkl8BfZ9mdKwimysd
-         JDpvSn9Q3BjTKAup2kCZPfZ35ZnaPocE+gu/tpeB7263DoKSbbPJZGF5gNp7e36SiMD8
-         HGaQ==
-X-Gm-Message-State: ANhLgQ3mSPh20WeqMm3CJV8zw1pWhPNHC8Z4QZm+yWLPtQlCsAPa9/rl
-        aN8ywANEFxybcX/T7F8n9KcdTw==
-X-Google-Smtp-Source: ADFU+vtUHPgMakUmvktqI1lex+5NQgqVTinEGb8RQekmdzSLGOf/IWuJ0DbbaCOZJ/J1wWXQzu0BYQ==
-X-Received: by 2002:a05:600c:4108:: with SMTP id j8mr367432wmi.188.1583283978996;
-        Tue, 03 Mar 2020 17:06:18 -0800 (PST)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id c14sm21550977wro.36.2020.03.03.17.06.17
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wqvCXfGj808uPbmqG51quPJGXzE0v6hUvwSV24GKnh8=;
+        b=YP6EByrDvl/We+QPHWFw7STipy01aFLmE4NM9w+29mHId7ASrjwssBXzWJCzgY56vP
+         99L+R0ASBWdG0fcgHyZtCkk/fRQ/56482QpOaQ6gAy3SZvrxB4Vus8p5Id/B85Z7Kg6w
+         Kl71E9dd4vauICeJJeR+Pj2+DaM1RGbO5f7eS+00kSQqX0u2clCHfRI8ONV3uyZiL31c
+         NaO511U/IC/UcapbpiaHq8J/UGwZ/LBGcYqiEiKbwt8II3O0kA7L7P0zLCQbRQ70ef20
+         vA1nQ7qZI+UPj8GAaDSbSvQgylQYCpaWASRaLXK4V+fMThYb+Io7RwiPHJge+RqQoEUb
+         OA2g==
+X-Gm-Message-State: ANhLgQ0TMLMJAogBkVOwjbiG6AMu49FNiCUHWkxKjVWjAcr8c9P4+nde
+        nfBr6sOgNSxS7yyiKROBnzUqDA==
+X-Google-Smtp-Source: ADFU+vsGQTSwoJb3y/+ZlTFhvGwFZteRTnNGGWRPGDowZg5D2IRUAQ1n5i+nma6Hky2Hn42qDBInbQ==
+X-Received: by 2002:a63:155c:: with SMTP id 28mr217571pgv.176.1583284017531;
+        Tue, 03 Mar 2020 17:06:57 -0800 (PST)
+Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
+        by smtp.gmail.com with ESMTPSA id w2sm17780889pfb.138.2020.03.03.17.06.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 17:06:18 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 4 Mar 2020 02:06:15 +0100
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next 4/7] bpf: Attachment verification for
- BPF_MODIFY_RETURN
-Message-ID: <20200304010615.GA14634@chromium.org>
-References: <20200303140950.6355-1-kpsingh@chromium.org>
- <20200303140950.6355-5-kpsingh@chromium.org>
- <CAEf4BzaviDB+WGUsg1+aO5GAtkJuQ6aYSiB8VaKL0CoQRPs8Xw@mail.gmail.com>
- <20200303232151.GB17103@chromium.org>
- <20200304000326.nk7jmkgxazl3umbh@ast-mbp>
+        Tue, 03 Mar 2020 17:06:56 -0800 (PST)
+From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+To:     marcel@holtmann.org, luiz.dentz@gmail.com, alainm@chromium.org
+Cc:     linux-bluetooth@vger.kernel.org,
+        chromeos-bluetooth-upstreaming@chromium.org,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [RFC PATCH v4 0/5] Bluetooth: Handle system suspend gracefully
+Date:   Tue,  3 Mar 2020 17:06:45 -0800
+Message-Id: <20200304010650.259961-1-abhishekpandit@chromium.org>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200304000326.nk7jmkgxazl3umbh@ast-mbp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-Mär 16:03, Alexei Starovoitov wrote:
-> On Wed, Mar 04, 2020 at 12:21:51AM +0100, KP Singh wrote:
-> > 
-> > > > +                       t = btf_type_skip_modifiers(btf, t->type, NULL);
-> > > > +                       if (!btf_type_is_int(t)) {
-> > > 
-> > > Should the size of int be verified here? E.g., if some function
-> > > returns u8, is that ok for BPF program to return, say, (1<<30) ?
-> > 
-> > Would this work?
-> > 
-> >        if (size != t->size) {
-> >                bpf_log(log,
-> >                        "size accessed = %d should be %d\n",
-> >                        size, t->size);
-> >                return false;
-> >        }
-> 
-> It will cause spurious failures later when llvm optimizes
-> if (ret & 0xff) into u8 load.
-> I think btf_type_is_int() is enough as-is.
 
-Okay skipping the size check.
+Hi linux-bluetooth,
 
-- KP
+This patch series prepares the Bluetooth controller for system suspend
+by disconnecting all devices and preparing the event filter and LE
+whitelist with devices that can wake the system from suspend.
+
+The main motivation for doing this is so we can enable Bluetooth as
+a wake up source during suspend without it being noisy. Bluetooth should
+wake the system when a HID device receives user input but otherwise not
+send any events to the host.
+
+This patch series was tested on several Chromebooks with both btusb and
+hci_serdev on kernel 4.19. The set of tests was basically the following:
+* Reconnects after suspend succeed
+* HID devices can wake the system from suspend (needs some related bluez
+  changes to call the Set Wake Capable management command)
+* System properly pauses and unpauses discovery + advertising around
+  suspend
+* System does not wake from any events from non wakeable devices
+
+Series 2 has refactored the change into multiple smaller commits as
+requested. I tried to simplify some of the whitelist filtering edge
+cases but unfortunately it remains quite complex.
+
+Series 3 has refactored it further and should have resolved the
+whitelisting complexity in series 2.
+
+Series 4 adds a fix to check for powered down and powering down adapters.
+
+Please review and provide any feedback.
+
+Thanks
+Abhishek
+
+
+Changes in v4:
+* Added check for mgmt_powering_down and hdev_is_powered in notifier
+
+Changes in v3:
+* Added wakeable property to le_conn_param
+* Use wakeable list for BR/EDR and wakeable property for LE
+* Refactored to only handle BR/EDR devices
+* Split LE changes into its own commit
+
+Changes in v2:
+* Moved pm notifier registration into its own patch and moved params out
+  of separate suspend_state
+* Refactored filters and whitelist settings to its own patch
+* Refactored update_white_list to have clearer edge cases
+* Add connected devices to whitelist (previously missing corner case)
+* Refactored pause discovery + advertising into its own patch
+
+Abhishek Pandit-Subedi (5):
+  Bluetooth: Add mgmt op set_wake_capable
+  Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND
+  Bluetooth: Handle BR/EDR devices during suspend
+  Bluetooth: Handle LE devices during suspend
+  Bluetooth: Pause discovery and advertising during suspend
+
+ include/net/bluetooth/hci.h      |  17 +-
+ include/net/bluetooth/hci_core.h |  43 ++++
+ include/net/bluetooth/mgmt.h     |   7 +
+ net/bluetooth/hci_core.c         | 102 ++++++++++
+ net/bluetooth/hci_event.c        |  24 +++
+ net/bluetooth/hci_request.c      | 327 ++++++++++++++++++++++++++-----
+ net/bluetooth/hci_request.h      |   2 +
+ net/bluetooth/mgmt.c             |  92 +++++++++
+ 8 files changed, 554 insertions(+), 60 deletions(-)
+
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
