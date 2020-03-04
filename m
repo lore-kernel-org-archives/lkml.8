@@ -2,390 +2,110 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD04BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 404E9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9749B214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1207020732
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eeG3Wkrj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drTJ2zTM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbgCDKrM (ORCPT
+        id S2387804AbgCDKr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:47:12 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51876 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgCDKrM (ORCPT
+        Wed, 4 Mar 2020 05:47:28 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:38535 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387488AbgCDKr1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:47:12 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a132so1474193wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:47:09 -0800 (PST)
+        Wed, 4 Mar 2020 05:47:27 -0500
+Received: by mail-ed1-f66.google.com with SMTP id e25so1751036edq.5;
+        Wed, 04 Mar 2020 02:47:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=usL+Yedbyam7qNCON9a3/+NPKdnFTu+cqc21gDVgrKs=;
-        b=eeG3WkrjTyzKiiKU2sQtKMYjIdn1KotbnEaeZ7ONQS1JPhWw1IvVd0mlryokCDuPFo
-         PwYkW4adkrNzIaeMSZWUH0YKUpI9qM+J66yWygEf+QDL648AfpfCVdBHQyOiEsrRuZnn
-         JLWEHLS/1tL2SJyjGffT5CjqCIH8cvOzxSt2GkwbjKg6kBdzuu+D1zhGiyTJ3uCs1VJW
-         c2I+R5tibr6z47wmWA3qE7bP0BYCrGFlKnvduY2rawaRFWplEPE6q/4+zJhaxaWARlNR
-         eZXdbDGlPm7HwvRFVm6wP62Gw9IlVVg3O61uP4QcMfwc3+r4uxj4U19iWixVKZncciQx
-         TRHQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=b6DQCUS0+Ug7UlNm5mZo2LZjk1wdwZ8PPHxJgscamZg=;
+        b=drTJ2zTMj0NNTZz8bc6a7Qn9zT9Qkuo5l8l38x7+6y1beHr0FBGlK/Re5BDWKyeD+l
+         kdVh3Jxm2m3t5SCQl24C/QuaCD9kjRZZ9oRTRI2tXAB+3DmjU4lQT6woIGKyDe8Dg1s2
+         cjUAzathkzY7gd5/KxgEgwp8PmO/dHTFtkfE8NxeBhas24s+4DYimHvDe7KCCtfDHxE3
+         6iYEXmG61vBibkXmvkAs8G7MoGCsS81jLRsF8joiK1TsFxb98cCO1H3X/FbnWzyRSx/R
+         kXPKyoNnMfSowRHQBe2CMXfsNsjKSCIlHJ5L+eXmz1gUYIjqNlB3Bi/2uucf22iNzSmF
+         Nbjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=usL+Yedbyam7qNCON9a3/+NPKdnFTu+cqc21gDVgrKs=;
-        b=cKxC6TYleNpZXEc7S8jv3TtMdgzOePcPgCX/pcbP9VUDtuqqoEc4R7rxbF6k/JlneN
-         X6PqKHLd/eZKbmhteSpntlksD348FQLGMMjyMX8WCGqQc43G5qccfIV+X3JjR8fbtIfk
-         rlwGZyNeTgCpG+x6PC1FgpI27MBEnSB/AZOUGGlYETTCiujXakPqQGrPa94fOoPcmGcT
-         BYMEYy5WXZozr2gISEJ6TBHwFc8iuSoS/JYv18cZiaqTnkgb9Ygsv5L+BkSypaebH3vr
-         f51FbePMbqMdt5zOpAE9pkU5YJ5FWSVAHRNCzrVKyYmM3b4nvilAyOA7nkddUEaq2oLB
-         3eZQ==
-X-Gm-Message-State: ANhLgQ0qDA/ruLor3MgCLhEdBsK5lNIBW9Xrw8Eb6v7O0V0NVurQkWAq
-        MtefasN1zV3IP3wi3WIzjpgoMA==
-X-Google-Smtp-Source: ADFU+vvBb/UydPx2ggP7TXTIEHSmDxaUXMPe+vyW3yYQxe0pCq02ROn414SZNbwy5PWNq8yMyS/WDw==
-X-Received: by 2002:a7b:c1cf:: with SMTP id a15mr3234405wmj.152.1583318828563;
-        Wed, 04 Mar 2020 02:47:08 -0800 (PST)
-Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id f23sm3577508wmb.1.2020.03.04.02.47.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 02:47:07 -0800 (PST)
-Subject: Re: [PATCH v6 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-To:     Remi Pommarel <repk@triplefau.lt>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200123232943.10229-7-repk@triplefau.lt>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <91457cca-4ba2-02f5-d8b7-2b926427e2c4@baylibre.com>
-Date:   Wed, 4 Mar 2020 11:47:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200123232943.10229-7-repk@triplefau.lt>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=b6DQCUS0+Ug7UlNm5mZo2LZjk1wdwZ8PPHxJgscamZg=;
+        b=KNkB39CYXDpio5YDiNTIA+yBXmtSCWsD2STl6HT/J1WWFQUaJq44dwoCyGe/0S3gA8
+         PMhmGzALCf+FeqP/nN4hkwYsltrJjaW714CmpPwGNYSPy4fEqef8EImnKrjisA2eXYxl
+         EUvLNelCgg93Hp/kt9chAtz2ZxJC1IMkYRCHHo7wvlUAr7s8sLT6FkfUELa5n8jeJoNK
+         oK+J1LDpreVloWMj3nzLzAvJebs++vCTuXNUfq7vl0TsWJGK0Kc4ebluuI8M4TV5uhNI
+         LbVVyD0rEVvPz9oUUHbR35IgM90pLbtalMdqYks3x/sDY5c21GJR6n9d51PwHAcmByPZ
+         Pygg==
+X-Gm-Message-State: ANhLgQ3j/+njcs0+xgI5YH6BzqffLbCLS38l41fFxh+TTgARqlkxp+CR
+        iNqZZSvcjXXO57VDkT53t3A4BJyC4x4=
+X-Google-Smtp-Source: ADFU+vseIgFS3ZIL+3zyZq5qbs5LEoXF3Ie+FFY6418MPbDsbyXXQiJ4InDXicWMqYfHwlHZx0Rpxw==
+X-Received: by 2002:a50:d0d0:: with SMTP id g16mr2114242edf.187.1583318845457;
+        Wed, 04 Mar 2020 02:47:25 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d16:4100:3093:39f0:d3ca:23c6])
+        by smtp.gmail.com with ESMTPSA id 29sm1122854ejb.4.2020.03.04.02.47.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 02:47:24 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Marcel Holtmann <marcel@holtmann.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     linux-doc@vger.kernel.org,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        linux-bluetooth@vger.kernel.org,
+        Alexander Aring <alex.aring@gmail.com>,
+        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
+        linux-wpan@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust to 6lowpan doc ReST conversion
+Date:   Wed,  4 Mar 2020 11:47:17 +0100
+Message-Id: <20200304104717.5841-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 24/01/2020 00:29, Remi Pommarel wrote:
-> This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
-> This will allow to mutualize code in pci-meson.c between AXG and G12A
-> SoC.
-> 
-> This PHY also uses and chains an analog PHY, which on AXG platform
-> is needed to have reliable PCIe communication.
-> 
-> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> ---
->  drivers/phy/amlogic/Kconfig              |  11 ++
->  drivers/phy/amlogic/Makefile             |   1 +
->  drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
->  3 files changed, 204 insertions(+)
->  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
-> 
-> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> index 8c9cf2403591..71801e30d601 100644
-> --- a/drivers/phy/amlogic/Kconfig
-> +++ b/drivers/phy/amlogic/Kconfig
-> @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
->  	  in Meson G12A SoCs.
->  	  If unsure, say N.
->  
-> +config PHY_MESON_AXG_PCIE
-> +	tristate "Meson AXG PCIE PHY driver"
-> +	default ARCH_MESON
-> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> +	select GENERIC_PHY
-> +	select REGMAP_MMIO
-> +	help
-> +	  Enable this to support the Meson MIPI + PCIE PHY found
-> +	  in Meson AXG SoCs.
-> +	  If unsure, say N.
-> +
->  config PHY_MESON_AXG_MIPI_PCIE_ANALOG
->  	tristate "Meson AXG MIPI + PCIE analog PHY driver"
->  	default ARCH_MESON
-> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> index 0aecf92d796a..e2baa133f7af 100644
-> --- a/drivers/phy/amlogic/Makefile
-> +++ b/drivers/phy/amlogic/Makefile
-> @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
->  obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
->  obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
->  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
-> +obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
->  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
-> diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> new file mode 100644
-> index 000000000000..377ed0dcd0d9
-> --- /dev/null
-> +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> @@ -0,0 +1,192 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Amlogic AXG PCIE PHY driver
-> + *
-> + * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
-> + */
-> +#include <linux/module.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/bitfield.h>
-> +#include <dt-bindings/phy/phy.h>
-> +
-> +#define MESON_PCIE_REG0 0x00
-> +#define		MESON_PCIE_COMMON_CLK	BIT(4)
-> +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
-> +#define		MESON_PCIE_CLK		BIT(1)
-> +#define		MESON_PCIE_POWERDOWN	BIT(0)
-> +
-> +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
-> +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
-> +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
-> +					 MESON_PCIE_COMMON_REF_CLK)
-> +#define MESON_PCIE_RESET_DELAY		500
-> +
-> +struct phy_axg_pcie_priv {
-> +	struct phy *phy;
-> +	struct phy *analog;
-> +	struct regmap *regmap;
-> +	struct reset_control *reset;
-> +};
-> +
-> +static const struct regmap_config phy_axg_pcie_regmap_conf = {
-> +	.reg_bits = 8,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +	.max_register = MESON_PCIE_REG0,
-> +};
-> +
-> +static int phy_axg_pcie_power_on(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = phy_power_on(priv->analog);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
-> +			   MESON_PCIE_POWERDOWN, 0);
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_pcie_power_off(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = phy_power_off(priv->analog);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
-> +			   MESON_PCIE_POWERDOWN, 1);
-> +	return 0;
-> +}
-> +
-> +static int phy_axg_pcie_init(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = phy_init(priv->analog);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
-> +	return reset_control_reset(priv->reset);
-> +}
-> +
-> +static int phy_axg_pcie_exit(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret;
-> +
-> +	ret = phy_exit(priv->analog);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	return reset_control_reset(priv->reset);
-> +}
-> +
-> +static int phy_axg_pcie_reset(struct phy *phy)
-> +{
-> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> +	int ret = 0;
-> +
-> +	ret = phy_reset(priv->analog);
-> +	if (ret != 0)
-> +		goto out;
-> +
-> +	ret = reset_control_assert(priv->reset);
-> +	if (ret != 0)
-> +		goto out;
-> +	udelay(MESON_PCIE_RESET_DELAY);
-> +
-> +	ret = reset_control_deassert(priv->reset);
-> +	if (ret != 0)
-> +		goto out;
-> +	udelay(MESON_PCIE_RESET_DELAY);
-> +
-> +out:
-> +	return ret;
-> +}
-> +
-> +static const struct phy_ops phy_axg_pcie_ops = {
-> +	.init = phy_axg_pcie_init,
-> +	.exit = phy_axg_pcie_exit,
-> +	.power_on = phy_axg_pcie_power_on,
-> +	.power_off = phy_axg_pcie_power_off,
-> +	.reset = phy_axg_pcie_reset,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int phy_axg_pcie_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *pphy;
-> +	struct device *dev = &pdev->dev;
-> +	struct phy_axg_pcie_priv *priv;
-> +	struct device_node *np = dev->of_node;
-> +	struct resource *res;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
-> +	if (IS_ERR(priv->phy)) {
-> +		ret = PTR_ERR(priv->phy);
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to create PHY\n");
-> +		return ret;
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	base = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	priv->regmap = devm_regmap_init_mmio(dev, base,
-> +					     &phy_axg_pcie_regmap_conf);
-> +	if (IS_ERR(priv->regmap))
-> +		return PTR_ERR(priv->regmap);
-> +
-> +	priv->reset = devm_reset_control_array_get(dev, false, false);
-> +	if (IS_ERR(priv->reset))
-> +		return PTR_ERR(priv->reset);
-> +
-> +	priv->analog = devm_phy_get(dev, "analog");
-> +	if (IS_ERR(priv->analog))
-> +		return PTR_ERR(priv->analog);
-> +
-> +	phy_set_drvdata(priv->phy, priv);
-> +	dev_set_drvdata(dev, priv);
-> +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +
-> +	return PTR_ERR_OR_ZERO(pphy);
-> +}
-> +
-> +static const struct of_device_id phy_axg_pcie_of_match[] = {
-> +	{
-> +		.compatible = "amlogic,axg-pcie-phy",
-> +	},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
-> +
-> +static struct platform_driver phy_axg_pcie_driver = {
-> +	.probe = phy_axg_pcie_probe,
-> +	.driver = {
-> +		.name = "phy-axg-pcie",
-> +		.of_match_table = phy_axg_pcie_of_match,
-> +	},
-> +};
-> +module_platform_driver(phy_axg_pcie_driver);
-> +
-> +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
-> +MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
-> +MODULE_LICENSE("GPL v2");
-> 
+Commit 107db7ec7838 ("docs: networking: convert 6lowpan.txt to ReST")
+renamed 6lowpan.txt to 6lowpan.rst for the ReST conversion.
 
-The changes since v5 are done (make analog phy mandatory), ok for me then.
+Since then, ./scripts/get_maintainer.pl --self-test complains:
 
-Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+  warning: no file matches F: Documentation/networking/6lowpan.txt
+
+Adjust 6LOWPAN GENERIC (BTLE/IEEE 802.15.4) entry in MAINTAINERS.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Mauro, please ack.
+Marcel, please pick for bluetooth-next.
+
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e19b275f2ac2..d064049aad1b 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -176,7 +176,7 @@ L:	linux-wpan@vger.kernel.org
+ S:	Maintained
+ F:	net/6lowpan/
+ F:	include/net/6lowpan.h
+-F:	Documentation/networking/6lowpan.txt
++F:	Documentation/networking/6lowpan.rst
+ 
+ 6PACK NETWORK DRIVER FOR AX.25
+ M:	Andreas Koensgen <ajk@comnets.uni-bremen.de>
+-- 
+2.17.1
 
