@@ -7,261 +7,130 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA7F7C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A173BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B36207FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 795F8207FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:25:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Xr+duYjs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="STXEfFko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388650AbgCDXW1 (ORCPT
+        id S2388568AbgCDXZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 18:22:27 -0500
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:42029 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388407AbgCDXW1 (ORCPT
+        Wed, 4 Mar 2020 18:25:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42841 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388412AbgCDXZQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 18:22:27 -0500
-Received: by mail-ua1-f66.google.com with SMTP id p2so1388530uao.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:22:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qzbOBxoGlvw5OWNW1Ah6l3VKMPsLHTnZb9jh0xdhap8=;
-        b=Xr+duYjsrVDjQpHtpWtSC1yYT91JeMgIM1acnVzC2D4m4WcgTMM+UHuRMU8jF6RJ59
-         RaYhze0GcrEMvt8LPmaR6Av3j139t1PD1ShBMBbpNYzfsc0Pw32MzaHTVL0bSxj+oHd2
-         euArYs4SRYFMJZ6vMnk8s2litzY57UNAn3BNM=
+        Wed, 4 Mar 2020 18:25:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583364314;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=p8juafuY9nBxbQdXTOkQQGLh3mRvbcDsJuPyMUd6LN0=;
+        b=STXEfFkooG2xzETDunDOLyL95ZsWSxibSRKSv8xISCbm/VAo/CBCFAJ1fGxsi/Lkq0sIi6
+        bMCYti5nBj/U51JbgpcOebLh7xHEYRKAxmvkny3UCiHFhDSkX55yHOlhVgTOMwpHmtolvI
+        BQ44X6Th6YPEjo6kTY8XrD2nsP7Obio=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-410-bukvfzVQPjKJuX_JPW5kog-1; Wed, 04 Mar 2020 18:25:13 -0500
+X-MC-Unique: bukvfzVQPjKJuX_JPW5kog-1
+Received: by mail-ed1-f70.google.com with SMTP id r30so2836325edi.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:25:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=qzbOBxoGlvw5OWNW1Ah6l3VKMPsLHTnZb9jh0xdhap8=;
-        b=SCkVJ/J7UssB1fdoRajQStA6GXqH8FhNf9128+vK1hg6utz/748+lhJdT8ihN/YZ6g
-         d2i0EOAXCjUb6QFXmSNnMFnAVzKp49AzhPXSILQSc/kkiQ8ILRkxSLfSiNYrMFShlpgJ
-         +hLZLtxc/P0wNdBn0DRMm7OU41ydt+MTQfT0P2i39CvxndjXot1jhSK7p1rgakUx5Yto
-         J/ZCPTIg7JiJLAv5kQ9v7GdrAJ0tOdFax3YZIPDBzewhdpnSfCgX9Ep86wm6hf6NJ3LO
-         qm3PVJNwLhZMm2ctbOv99QUaq82ENCmTkZ6X5h3FboLx4NlST/wxfix01BpaK0DOqyTN
-         /YcA==
-X-Gm-Message-State: ANhLgQ0TNjfVgcflOePFLv9W/fjO6cfXHDJO5Viz8XSwsjq2mpf1qq21
-        Q62J2w8lqtk/nFFkMbXuhvF+kX2FsdI=
-X-Google-Smtp-Source: ADFU+vvUqWOBaNGSj4Ue34LFesHL9GD2Kqa4pRN4pNA/7xfk8NM8BdnXPpvNnFVndrJgzZH/37lGUQ==
-X-Received: by 2002:ab0:266:: with SMTP id 93mr2888889uas.58.1583364144037;
-        Wed, 04 Mar 2020 15:22:24 -0800 (PST)
-Received: from mail-ua1-f49.google.com (mail-ua1-f49.google.com. [209.85.222.49])
-        by smtp.gmail.com with ESMTPSA id s23sm1908381vsa.21.2020.03.04.15.22.22
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 15:22:23 -0800 (PST)
-Received: by mail-ua1-f49.google.com with SMTP id p2so1388512uao.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:22:22 -0800 (PST)
-X-Received: by 2002:ab0:1653:: with SMTP id l19mr3087910uae.8.1583364142386;
- Wed, 04 Mar 2020 15:22:22 -0800 (PST)
+        bh=p8juafuY9nBxbQdXTOkQQGLh3mRvbcDsJuPyMUd6LN0=;
+        b=Ga3se2aFxgu32FAM/4WFAJM3Z7PfuK7LbtzYH1xfzLnSXSOHuyUULOMnzGDTz0vgJ1
+         W5h8CQythv/COskp4j8QlGL1+W8WQQaJ10vDjiwg8Jy97Yq9HPM9bx+SZHwOBHPydCzn
+         bcNUS8yYzQW6obD1tvivuAa2jMRkC4jQgaX69ry3v7w2NZw4YYnoiyQhCippMEMfR1Bv
+         AipP71tYpQyUW8e0t+24H5TSPSixoXKnWf08goOMtuNMfvYHM7S1BM489jrCdaH3Mqez
+         /OHClSfx+pV2zCE4He/sY8Z3B6yMs2mBjgk0fz1n588xi9/wMW49yltRNo3SDccTWQlF
+         rn9A==
+X-Gm-Message-State: ANhLgQ3SlgDNduMsO3fTL/PT7pPaBGYdqGxaDUyukUhZNW1Z9uF/Ynv0
+        BFY0i09m1qM8tq6JCtibpA0CGYF5IKD3fXHtK0Os1g+iM7rzjxvfzWqY3Y9AXtFIpc8YnE4HOA5
+        R4eee5CObd9NT4K1SBsXX1NQ33s6Z2iWJA8xQ/3KN
+X-Received: by 2002:aa7:cac4:: with SMTP id l4mr5308674edt.367.1583364311868;
+        Wed, 04 Mar 2020 15:25:11 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vtRn9VC83shY8XHTDzRhsN1U3qcWCfB7uMojQH5bbSmIYgKzcRcKNB9bk5ZyS5m8JegYhUQLyH/6undXUq6ODg=
+X-Received: by 2002:aa7:cac4:: with SMTP id l4mr5308663edt.367.1583364311594;
+ Wed, 04 Mar 2020 15:25:11 -0800 (PST)
 MIME-Version: 1.0
-References: <1583238415-18686-1-git-send-email-mkshah@codeaurora.org> <1583238415-18686-4-git-send-email-mkshah@codeaurora.org>
-In-Reply-To: <1583238415-18686-4-git-send-email-mkshah@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 4 Mar 2020 15:22:11 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VG2dirykoGB93s3xCW8CKJjrGDS76koTyww_gy-jv7RQ@mail.gmail.com>
-Message-ID: <CAD=FV=VG2dirykoGB93s3xCW8CKJjrGDS76koTyww_gy-jv7RQ@mail.gmail.com>
-Subject: Re: [PATCH v10 3/3] soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
-To:     Maulik Shah <mkshah@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+References: <20200223165724.23816-1-mcroce@redhat.com> <CAPcyv4ijKqVhHixsp42kZL4p7uReJ67p3XoPyw5ojM-ZsOOUOg@mail.gmail.com>
+In-Reply-To: <CAPcyv4ijKqVhHixsp42kZL4p7uReJ67p3XoPyw5ojM-ZsOOUOg@mail.gmail.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Thu, 5 Mar 2020 00:24:35 +0100
+Message-ID: <CAGnkfhxAHctB9MHD0LzSk8uh4tEoF-hw+iwYAEdfeY_=g3NT2A@mail.gmail.com>
+Subject: Re: [PATCH] block: refactor duplicated macros
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-block@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-mmc@vger.kernel.org,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Tue, Mar 3, 2020 at 4:27 AM Maulik Shah <mkshah@codeaurora.org> wrote:
+On Wed, Mar 4, 2020 at 9:57 PM Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> Add changes to invoke rpmh flush() from within cache_lock when the data
-> in cache is dirty.
+> On Sun, Feb 23, 2020 at 9:04 AM Matteo Croce <mcroce@redhat.com> wrote:
+> >
+> > The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
+> > several times in different flavours across the whole tree.
+> > Define them just once in a common header.
+> >
+> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> > ---
+> >  block/blk-lib.c                  |  2 +-
+> >  drivers/block/brd.c              |  3 ---
+> >  drivers/block/null_blk_main.c    |  4 ----
+> >  drivers/block/zram/zram_drv.c    |  8 ++++----
+> >  drivers/block/zram/zram_drv.h    |  2 --
+> >  drivers/dax/super.c              |  2 +-
 >
-> This is done only if OSI is not supported in PSCI. If OSI is supported
-> rpmh_flush can get invoked when the last cpu going to power collapse
-> deepest low power mode.
+> For the dax change:
 >
-> Also remove "depends on COMPILE_TEST" for Kconfig option QCOM_RPMH so the
-> driver is only compiled for arm64 which supports psci_has_osi_support()
-> API.
+> Acked-by: Dan Williams <dan.j.williams@intel.com>
 >
-> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
-> ---
->  drivers/soc/qcom/Kconfig |  2 +-
->  drivers/soc/qcom/rpmh.c  | 37 ++++++++++++++++++++++---------------
->  2 files changed, 23 insertions(+), 16 deletions(-)
+> However...
 >
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index d0a73e7..2e581bc 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -105,7 +105,7 @@ config QCOM_RMTFS_MEM
+> [..]
+> >  include/linux/blkdev.h           |  4 ++++
+> [..]
+> > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> > index 053ea4b51988..b3c9be6906a0 100644
+> > --- a/include/linux/blkdev.h
+> > +++ b/include/linux/blkdev.h
+> > @@ -910,6 +910,10 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
+> >  #define SECTOR_SIZE (1 << SECTOR_SHIFT)
+> >  #endif
+> >
+> > +#define PAGE_SECTORS_SHIFT     (PAGE_SHIFT - SECTOR_SHIFT)
+> > +#define PAGE_SECTORS           (1 << PAGE_SECTORS_SHIFT)
+> > +#define SECTOR_MASK            (PAGE_SECTORS - 1)
+> > +
 >
->  config QCOM_RPMH
->         bool "Qualcomm RPM-Hardened (RPMH) Communication"
-> -       depends on ARCH_QCOM && ARM64 || COMPILE_TEST
-> +       depends on ARCH_QCOM && ARM64
->         help
->           Support for communication with the hardened-RPM blocks in
->           Qualcomm Technologies Inc (QTI) SoCs. RPMH communication uses an
-> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-> index f28afe4..dafb0da 100644
-> --- a/drivers/soc/qcom/rpmh.c
-> +++ b/drivers/soc/qcom/rpmh.c
-> @@ -12,6 +12,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
-> +#include <linux/psci.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
->  #include <linux/types.h>
-> @@ -158,6 +159,13 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->         }
+> ...I think SECTOR_MASK is misnamed given it considers pages, and
+> should probably match the polarity of PAGE_MASK, i.e.
 >
->  unlock:
-> +       if (ctrlr->dirty && !psci_has_osi_support()) {
-> +               if (rpmh_flush(ctrlr)) {
-> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> +                       return ERR_PTR(-EINVAL);
-> +               }
-> +       }
-> +
->         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+> #define PAGE_SECTORS_MASK            (~(PAGE_SECTORS - 1))
 >
->         return req;
-> @@ -285,26 +293,35 @@ int rpmh_write(const struct device *dev, enum rpmh_state state,
->  }
->  EXPORT_SYMBOL(rpmh_write);
->
-> -static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
-> +static int cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
->  {
->         unsigned long flags;
->
->         spin_lock_irqsave(&ctrlr->cache_lock, flags);
-> +
->         list_add_tail(&req->list, &ctrlr->batch_cache);
->         ctrlr->dirty = true;
-> +
-> +       if (!psci_has_osi_support()) {
-> +               if (rpmh_flush(ctrlr)) {
 
-The whole API here is a bit unfortunate.  From what I can tell,
-callers of this code almost always call rpmh_write_batch() in
-triplicate, AKA:
+Makes sense. I just kept the same value as in drivers/block/null_blk_main.c
 
-rpmh_write_batch(active, ...)
-rpmh_write_batch(wake, ...)
-rpmh_write_batch(sleep, ...)
+-- 
+Matteo Croce
+per aspera ad upstream
 
-...that's going to end up writing the whole sleep/wake sets twice
-every single time, right?  I know you talked about trying to keep
-separate dirty bits for sleep/wake and maybe that would help, but it
-might not be so easy due to the comparison of "sleep_val" and
-"wake_val" in is_req_valid().
-
-I guess we can keep the inefficiency for now and see how much it hits
-us, but it feels ugly.
-
-
-> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> +                       return -EINVAL;
-
-nit: why not add "int ret = 0" to the top of the function, then here:
-
-if (rpmh_flush(ctrl))
-  ret = -EINVAL;
-
-...then at the end "return ret".  It avoids the 2nd copy of the unlock?
-
-Also: Why throw away the return value of rpmh_flush and replace it
-with -EINVAL?  Trying to avoid -EBUSY?  ...oh, should you handle
--EBUSY?  AKA:
-
-if (!psci_has_osi_support()) {
-  do {
-    ret = rpmh_flush(ctrl);
-  } while (ret == -EBUSY);
-}
-
-
-> +               }
-> +       }
-> +
->         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
-> +
-> +       return 0;
->  }
->
->  static int flush_batch(struct rpmh_ctrlr *ctrlr)
->  {
->         struct batch_cache_req *req;
->         const struct rpmh_request *rpm_msg;
-> -       unsigned long flags;
->         int ret = 0;
->         int i;
->
->         /* Send Sleep/Wake requests to the controller, expect no response */
-> -       spin_lock_irqsave(&ctrlr->cache_lock, flags);
->         list_for_each_entry(req, &ctrlr->batch_cache, list) {
->                 for (i = 0; i < req->count; i++) {
->                         rpm_msg = req->rpm_msgs + i;
-> @@ -314,7 +331,6 @@ static int flush_batch(struct rpmh_ctrlr *ctrlr)
->                                 break;
->                 }
->         }
-> -       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->
->         return ret;
->  }
-> @@ -386,10 +402,8 @@ int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
->                 cmd += n[i];
->         }
->
-> -       if (state != RPMH_ACTIVE_ONLY_STATE) {
-> -               cache_batch(ctrlr, req);
-> -               return 0;
-> -       }
-> +       if (state != RPMH_ACTIVE_ONLY_STATE)
-> +               return cache_batch(ctrlr, req);
->
->         for (i = 0; i < count; i++) {
->                 struct completion *compl = &compls[i];
-> @@ -455,9 +469,6 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
->   * Return: -EBUSY if the controller is busy, probably waiting on a response
->   * to a RPMH request sent earlier.
->   *
-> - * This function is always called from the sleep code from the last CPU
-> - * that is powering down the entire system. Since no other RPMH API would be
-> - * executing at this time, it is safe to run lockless.
-
-nit: you've now got an extra "blank" (just has a "*" on it) line at
-the end of your comment block.
-
-nit: in v9, Evan suggested "We should probably replace that with a
-comment indicating that we assume ctrlr->cache_lock is already held".
-Maybe you could do that?
-
-Also: presumably you _will_ still be called by the sleep code from the
-last CPU on systems with OSI.  Is that true?  If that's not true then
-you should change your function to static.  If that is true, then your
-comment should be something like "this function will either be called
-from sleep code on the last CPU (thus no spinlock needed) or with the
-spinlock already held".
-
-
--Doug
