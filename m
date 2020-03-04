@@ -2,123 +2,111 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B04C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E78C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4CA2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:37:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b/h5yz5w"
+	by mail.kernel.org (Postfix) with ESMTP id C69E22166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:39:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583339966;
+	bh=SuMPqA4YEWLeVNaCMC8pfhG2ZR/Km0sO+0l7v9BDf2I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UlNNnifxZqAp+Ia2GH2CvAdPY/8OTl20fKbgPTI94h6zSowTJqPs5GjnejyI52Wr0
+	 gOKLBvuHDUdsYVTO4Ai+fijJ4Ynmt7bHfloucOrpEb8nTy/xl5MZEBPmMKTl31bxN4
+	 JaLOb6O1mMOuzlPleOz7BpNCMiJUvSD5nN1JwAiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbgCDQhY (ORCPT
+        id S1729875AbgCDQjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:37:24 -0500
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:34197 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgCDQhY (ORCPT
+        Wed, 4 Mar 2020 11:39:25 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36446 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729689AbgCDQjZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:37:24 -0500
-Received: by mail-vs1-f68.google.com with SMTP id y204so1577872vsy.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:37:23 -0800 (PST)
+        Wed, 4 Mar 2020 11:39:25 -0500
+Received: by mail-qt1-f194.google.com with SMTP id t13so1841572qto.3;
+        Wed, 04 Mar 2020 08:39:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hABaqSyYZLOUCpK2+i1NqdTSDdnUnv1VCEKCW00h9WI=;
-        b=b/h5yz5wlSBuj4Lbv+kbPLguRwtFdV5HC/ap61En5X/K6/4YD+4zRyFLn78H9qD27V
-         7GAA7Uuczidrny2Vt2luLVc9+Ex0aJ/lGNQ8tEBs+DmWPecQpoBQb9F4JV2uw2bgipSd
-         CAvK4wsRbKO/d+Z9hQUQmcLpGcMtuAroXiK2hFYLHgxsa0Ifiu+7sZ7f5dG1zniuK5l+
-         zPvvbaNW6IJT2P4KEmZdKgwZ2kGkOtvy8B3ZjXOvKK+D2Ptk8sh8yVy91lCEUh+rSHVp
-         1UwsYKyiQMqvc89tkSoFnVWGIhC5EDiBTZ9whQR4DYCLTFMHOLW8XrXJrII2HeibgVs6
-         W4NA==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Q41tiblFE54JAr5vC6itpkRF9zh1xfIn6lFKVFQ8hPE=;
+        b=jgpGs27cukeF4u6jimr8YXOzqdUGDnBvlaasW3APkR/3ylULaFPdFft2i7tjdKMoug
+         K6v0nKjw50uodI+joOgqp920D8ANct5b0St90yLhBMiPOSfBrwMO9U+phnqmFMuzglpg
+         884HqvfXDMjsXb50UTyzG34uXIQ9eJS65e+7fP2KA5Irn35utXNDG9ekv2KX/eIEX7gQ
+         a04loJYII0g/hCdWfBKxsGrEygu86tSmz6TSKkuydhhucErZcw0NdksFDxA1hMOXyQ6E
+         deVaNCkiC1C/Oli/G4zom94cs+cxd+ivOZIY2MGkg3jUkAjZQ8LR7OXBXHkOao9nR4y8
+         pTIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hABaqSyYZLOUCpK2+i1NqdTSDdnUnv1VCEKCW00h9WI=;
-        b=JsFTFn8GaHh2eDl0e7YseS1OA/ebMjzqFMS+9ywMvoSyTxn+9TfgJ4LZHpui1agTch
-         vJCqIl9tLdrpOfvFGCvUdhBZQ7c+mtjUdJrpGPSFUwVUXcn0r4BPUw2pP/bzPDMeDB6+
-         c9QO8zr8LhLLF9HoijmUd7iLHHOweZzWejZOfv+Xgw74a2U3QhXzHHAK588wCov6A9Oq
-         c2VgVnV/XaOslIAIMHTJU1T20OPKlwW/m9iZ2hx8col2IdzB6NftBr4X1QEv1o4Bhvur
-         bJXElJIzh34WvUBusSO+fMs4tzPWBuRnmTU6yOBnqudWibueOr7qvMltik9r5h+FF8ro
-         HyoA==
-X-Gm-Message-State: ANhLgQ0HnJ+wSCayvTlIjZGQ9grUZMlB6jvT1sibWV58bXHm24601APd
-        Xom+hvJ4zVAtVGwp6qExJs326q1HTlctftogHf7/6g==
-X-Google-Smtp-Source: ADFU+vsqaKb2RoRKxPcXhxp65L9DlvDybJ++9ZBqVDK57rvpHpGbRYrYO7V96B/Jdy+fc8mQrqBMgQDJ+jef4TTwT+Y=
-X-Received: by 2002:a67:7fd0:: with SMTP id a199mr2328053vsd.200.1583339842981;
- Wed, 04 Mar 2020 08:37:22 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=Q41tiblFE54JAr5vC6itpkRF9zh1xfIn6lFKVFQ8hPE=;
+        b=YVf2OU0VHl4IFnpEn9Zw6W8eTH4JdWYPlkLXKXpAZxTbt4I5wAIjZEYv0Qvhn0aAaP
+         gJ+EqpXZbmC2u/3AtY71PQsb1PbG2w+H/n+g9xRKypCnUSKjJ3dxY0UwWl3OKvVnXBZx
+         wdvVze1wGjY/b5sNQTKPhz/zTO1Vg9uVgav/UZLMueYy0+wEJhtPQeXOglSh6VWCd7hH
+         KcK91Yp6HQSZwx5ihtbdl8cGQ9YHcMyg2gUJi1x2T17PvXrM9R+BTH6mb/mn+ZKZPe6d
+         vg6za9tqhjC6/nC7HTMJ5mpV9NQtNPxQbWdlyKczrRWvAYnCJF3+OVnw7B1VKOyImXw6
+         ckmg==
+X-Gm-Message-State: ANhLgQ3QakZem5zRdZWgIlNe6+tUbrDNxkXcHB+tTFsfdc+EtFFYvUcW
+        on5ZtWQ3Rsdz0vT01XjQQdS1j7mnC/A=
+X-Google-Smtp-Source: ADFU+vv6B6uHErWbe6EYCVm4UjJigrIY9oE2hn3aI/w5O4AOCgONkkVZPGldpOis+jjjZWdPotLDnA==
+X-Received: by 2002:ac8:e45:: with SMTP id j5mr117129qti.215.1583339964277;
+        Wed, 04 Mar 2020 08:39:24 -0800 (PST)
+Received: from localhost ([71.172.127.161])
+        by smtp.gmail.com with ESMTPSA id d1sm1903151qtn.78.2020.03.04.08.39.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 08:39:23 -0800 (PST)
+Date:   Wed, 4 Mar 2020 11:39:22 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Daniel Xu <dxu@dxuuu.xyz>
+Cc:     cgroups@vger.kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
+        linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 1/2] kernfs: Add option to enable user xattrs
+Message-ID: <20200304163922.GG189690@mtj.thefacebook.com>
+References: <C11FYO0Q9WJU.2MLRRFOQ3E878@dlxu-fedora-R90QNFJV>
+ <C11GC2SN5D18.2S00I3KONE9ZE@dlxu-fedora-R90QNFJV>
 MIME-Version: 1.0
-References: <20200224231841.26550-1-digetx@gmail.com> <20200224231841.26550-4-digetx@gmail.com>
- <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org>
-In-Reply-To: <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 4 Mar 2020 17:36:46 +0100
-Message-ID: <CAPDyKFoXnoukjH_2cM=f0DGHBHS6kVUQSYOa_5ffQppC7VOn2A@mail.gmail.com>
-Subject: Re: [PATCH v1 3/3] partitions: Introduce NVIDIA Tegra Partition Table
-To:     Stephen Warren <swarren@wwwdotorg.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Billy Laws <blaws05@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        Andrey Danin <danindrey@mail.ru>,
-        Gilles Grandou <gilles@grandou.net>,
-        Ryan Grachek <ryan@edited.us>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C11GC2SN5D18.2S00I3KONE9ZE@dlxu-fedora-R90QNFJV>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 25 Feb 2020 at 01:20, Stephen Warren <swarren@wwwdotorg.org> wrote:
->
-> On 2/24/20 4:18 PM, Dmitry Osipenko wrote:
-> > All NVIDIA Tegra devices use a special partition table format for the
-> > internal storage partitioning. Most of Tegra devices have GPT partition
-> > in addition to TegraPT, but some older Android consumer-grade devices do
-> > not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
-> > in order to support these devices properly in the upstream kernel. This
-> > patch adds support for NVIDIA Tegra Partition Table format that is used
-> > at least by all NVIDIA Tegra20 and Tegra30 devices.
->
-> > diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
->
-> > +static void __init tegra_boot_config_table_init(void)
-> > +{
-> > +     void __iomem *bct_base;
-> > +     u16 pt_addr, pt_size;
-> > +
-> > +     bct_base = IO_ADDRESS(TEGRA_IRAM_BASE) + TEGRA_IRAM_BCT_OFFSET;
->
-> This shouldn't be hard-coded. IIRC, the boot ROM writes a BIT (Boot
-> Information Table) to a fixed location in IRAM, and there's some value
-> in the BIT that points to where the BCT is in IRAM. In practice, it
-> might work out that the BCT is always at the same place in IRAM, but
-> this certainly isn't guaranteed. I think there's code in U-Boot which
-> extracts the BCT location from the BIT? Yes, see
-> arch/arm/mach-tegra/ap.c:get_odmdata().
+Hello,
 
-So, have you considered using the command line partition option,
-rather than adding yet another partition scheme to the kernel?
+On Tue, Mar 03, 2020 at 11:37:28AM -0800, Daniel Xu wrote:
+> It looks like in fs/xattr.c:setxattr, there is already:
+> 
+>     ...
+>     if (size) {
+>         if (size > XATTR_SIZE_MAX)
+>             return -E2BIG;
+>     ...
+> 
+> where XATTR_SIZE_MAX is defined as 64k. Do you want it even smaller?
 
-In principle, you would let the boot loader scan for the partitions,
-likely from machine specific code in U-boot. Then you append these to
-the kernel command line and let block/partitions/cmdline.c scan for
-it.
+Oh, I missed that. Order 5 allocations can still be on the big side
+tho. Ideally, something like the following?
 
-Kind regards
-Uffe
+* Total number of bytes limit as the primary limit so that we can say
+  that for a given cgroup user xattrs don't consume more than X bytes.
+  We can pick an arbitrary number which is large enough for most use
+  cases but not too big. e.g. 128k or whatever.
+
+* Total number of xattrs limit. Again, some arbitrary not too low, not
+  too high limit.
+
+* Switch to kvmalloc() for attr allocation so that we don't have to
+  worry about high order allocations.
+
+Thanks.
+
+-- 
+tejun
