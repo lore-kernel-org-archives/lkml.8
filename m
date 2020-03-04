@@ -2,113 +2,77 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D7C8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A9AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41D8720866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:39:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583347179;
-	bh=9tGRcQmnCs+8mBc+xsHARFOn6Shor2qdv6a+qSVcbqI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EDFsUpmeI8mpaV9AetEyhMfyIlrjL3ajwITzi7ZSdDYQx0bZriutxyUso92X5fkDu
-	 w6EDUaosRDDNZeMd4EOppSbdKBvsmjtYUSZoYzCzcF3/UYm7VnvCfxi1PLqB5FrBT7
-	 K32yNHOialyuC2acLcukE6npRHWOemgppRTkR3ZQ=
+	by mail.kernel.org (Postfix) with ESMTP id C6EA420866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:40:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbgCDSji (ORCPT
+        id S1730247AbgCDSkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:39:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59884 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730176AbgCDSjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:39:37 -0500
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED41C24654
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 18:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583347177;
-        bh=9tGRcQmnCs+8mBc+xsHARFOn6Shor2qdv6a+qSVcbqI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=vfDJA7Dd3AwkFhExwp4eYq1KDYgYgYvgeUxyYNXoaJ1LDiC039PR0+4wSrkRF4Fjx
-         6MG4vqMW82SCJ5qxc9mivHWIYRQBl2CU0BDyvfXSP5WUdRaWxzb6f8snhNB5r1BuuW
-         ddUaL7O+Nf8DBtQGYXe04o2dcg22IoWVPROPwFQU=
-Received: by mail-wm1-f53.google.com with SMTP id 6so3340744wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:39:36 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0mLUUcWQlUQaXJkEkieA7anW1SZn+qRVoFDhis4+UAs/beJsfG
-        qlhpMCA6t2eLaklqiddE0bDNCUT5zl5c2uwm71A7wA==
-X-Google-Smtp-Source: ADFU+vttxjU/Y73QEBY17H75MYW46EApWec4EeV3gpG4CFPchH5eoJU4xLG4yiIpoTbkLzMnTlREglqTaF0Dh20Bf3o=
-X-Received: by 2002:a05:600c:24b:: with SMTP id 11mr4758988wmj.1.1583347175359;
- Wed, 04 Mar 2020 10:39:35 -0800 (PST)
+        Wed, 4 Mar 2020 13:40:08 -0500
+Received: from www62.your-server.de ([213.133.104.62]:58484 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730004AbgCDSkI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:40:08 -0500
+Received: from sslproxy05.your-server.de ([78.46.172.2])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j9Yw9-0006kb-UP; Wed, 04 Mar 2020 19:40:05 +0100
+Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux.fritz.box)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1j9Yw9-000A66-LO; Wed, 04 Mar 2020 19:40:05 +0100
+Subject: Re: [PATCH bpf-next v2] kbuild: Remove debug info from kallsyms
+ linking
+To:     Kees Cook <keescook@chromium.org>, bpf@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-kbuild@vger.kernel.org, andriin@fb.com
+References: <202003031814.4AEA3351@keescook>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <9dd690e8-868d-d463-6b85-14270fdcc210@iogearbox.net>
+Date:   Wed, 4 Mar 2020 19:40:05 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-References: <20200304183659.257828-1-nivedita@alum.mit.edu>
-In-Reply-To: <20200304183659.257828-1-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 4 Mar 2020 19:39:23 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_Bc5WYG_D7cM_fPi8rV65ouEre8uYUck0FCxN9FSUopw@mail.gmail.com>
-Message-ID: <CAKv+Gu_Bc5WYG_D7cM_fPi8rV65ouEre8uYUck0FCxN9FSUopw@mail.gmail.com>
-Subject: Re: [PATCH] efi/x86: Move mixed-mode thunk to efi/libstub
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202003031814.4AEA3351@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.2/25741/Wed Mar  4 15:15:26 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 19:37, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Commit c2d0b470154c ("efi/libstub/x86: Incorporate eboot.c into
-> libstub") moved all the callers of the mixed-mode thunk into
-> efi/libstub, so move the thunk itself as well for completeness.
->
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+On 3/4/20 3:18 AM, Kees Cook wrote:
+> When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
+> time collecting and writing the dwarf sections to the temporary output
+> files. kallsyms does not need this information, and leaving it off
+> halves their linking time. This is especially noticeable without
+> CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
+> need those details.
+> 
+> Refactor the BTF and kallsyms generation stages slightly for more
+> regularized temporary names. Skip debug during kallsyms links.
+> Additionally move "info BTF" to the correct place since commit
+> 8959e39272d6 ("kbuild: Parameterize kallsyms generation and correct
+> reporting"), which added "info LD ..." to vmlinux_link calls.
+> 
+> For a full debug info build with BTF, my link time goes from 1m06s to
+> 0m54s, saving about 12 seconds, or 18%.
+> 
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Thanks for the patch, but I'd prefer to leave the .S pieces under arch/
-(unless there's some benefit I'm not seeing)
-
-> ---
->  arch/x86/boot/compressed/Makefile                                | 1 -
->  drivers/firmware/efi/libstub/Makefile                            | 1 +
->  .../firmware/efi/libstub/x86_64-thunk.S                          | 0
->  3 files changed, 1 insertion(+), 1 deletion(-)
->  rename arch/x86/boot/compressed/efi_thunk_64.S => drivers/firmware/efi/libstub/x86_64-thunk.S (100%)
->
-> diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-> index e51879bdc51c..047004d39a55 100644
-> --- a/arch/x86/boot/compressed/Makefile
-> +++ b/arch/x86/boot/compressed/Makefile
-> @@ -88,7 +88,6 @@ endif
->  vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
->
->  vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
-> -vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
->
->  # The compressed kernel is built with -fPIC/-fPIE so that a boot loader
->  # can place it anywhere in memory and it will still run. However, since
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index 4d6246c6f651..85b66e5e5d1f 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -55,6 +55,7 @@ lib-$(CONFIG_EFI_ARMSTUB)     += arm-stub.o fdt.o string.o \
->  lib-$(CONFIG_ARM)              += arm32-stub.o
->  lib-$(CONFIG_ARM64)            += arm64-stub.o
->  lib-$(CONFIG_X86)              += x86-stub.o
-> +lib-$(CONFIG_EFI_MIXED)                += x86_64-thunk.o
->  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
->  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
->
-> diff --git a/arch/x86/boot/compressed/efi_thunk_64.S b/drivers/firmware/efi/libstub/x86_64-thunk.S
-> similarity index 100%
-> rename from arch/x86/boot/compressed/efi_thunk_64.S
-> rename to drivers/firmware/efi/libstub/x86_64-thunk.S
-> --
-> 2.24.1
->
+Applied, thanks!
