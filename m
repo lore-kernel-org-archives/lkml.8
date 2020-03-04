@@ -2,346 +2,149 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B7C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09903C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9963D20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5F7820842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:25:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OpZDbhpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387615AbgCDCZC (ORCPT
+        id S2387519AbgCDCZv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:25:02 -0500
-Received: from aclms1.advantech.com.tw ([61.58.41.199]:14714 "EHLO
-        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387398AbgCDCZC (ORCPT
+        Tue, 3 Mar 2020 21:25:51 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:26327 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387397AbgCDCZv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:25:02 -0500
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Tddb17c849aac14014bd38@ACLMS1.advantech.com.tw>;
- Wed, 4 Mar 2020 10:25:00 +0800
-Received: from mail-ot1-f54.google.com (209.85.210.54) by
- taipei08.ADVANTECH.CORP (172.20.0.235) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Mar 2020 10:24:58 +0800
-Received: by mail-ot1-f54.google.com with SMTP id v10so553234otp.2;
-        Tue, 03 Mar 2020 18:24:58 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3ZKRdDso39NwAdDWogTiCyYViHevXLcixvvkPKzTvNu/pIaQMU
-        WuJNwA0aEwGrFkqZleP74Hw1wC4jklMlS5c/a0A=
-X-Google-Smtp-Source: ADFU+vtlctne6blA9aClNHENbOQS87DU627SIWKVMpXL/ES4k0iVY79mTOru/gpzy93PcT4YOBKIO3zR/ZND0igtghE=
-X-Received: by 2002:a9d:282:: with SMTP id 2mr680006otl.178.1583288696558;
- Tue, 03 Mar 2020 18:24:56 -0800 (PST)
-MIME-Version: 1.0
-From:   Andrea Ho <andrea.ho@advantech.com.tw>
-Date:   Wed, 4 Mar 2020 10:24:30 +0800
-X-Gmail-Original-Message-ID: <CAGBRx8PzDmugZALw_rnKKv7ut0XVCgn5-sOD=+t-WM0Um84Vpg@mail.gmail.com>
-Message-ID: <CAGBRx8PzDmugZALw_rnKKv7ut0XVCgn5-sOD=+t-WM0Um84Vpg@mail.gmail.com>
-Subject: [V3,1/1] Input/misc: add support for Advantech software defined button
-To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+        Tue, 3 Mar 2020 21:25:51 -0500
+X-UUID: c295019e3c2c43a5a5bd5b6731a0597a-20200304
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=WRwJNL3/LSu9YAz4lzMmh4KqQ+Mz5WRqM0Z4EacS3BA=;
+        b=OpZDbhpry9lCxT8XBLFuk96dgH/gU7hMsiAKr6zInqpN7CzkwjGPHy3zWDyBWi64oEYyqAbJi7EE3/gTOpHiJuaelpeL2K05QNWxg3NK0tq64zyLBiJvKXWM1KTektECPOkVJRf+qysm9+bv+GggZwdj08lfoo2gyA1iFALswp4=;
+X-UUID: c295019e3c2c43a5a5bd5b6731a0597a-20200304
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1046319018; Wed, 04 Mar 2020 10:25:43 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 4 Mar 2020 10:23:40 +0800
+Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 4 Mar 2020 10:23:04 +0800
+Message-ID: <1583288736.14250.2.camel@mtksdccf07>
+Subject: Re: [RFC PATCH v1] scsi: ufs-mediatek: add inline encryption support
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Eric Biggers <ebiggers@kernel.org>
+CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>, <cang@codeaurora.org>,
+        <satyat@google.com>, <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fscrypt@vger.kernel.org>,
+        <kuohong.wang@mediatek.com>, <peter.wang@mediatek.com>,
+        <chun-hung.wu@mediatek.com>, <andy.teng@mediatek.com>,
+        <light.hsieh@mediatek.com>
+Date:   Wed, 4 Mar 2020 10:25:36 +0800
+In-Reply-To: <20200302180231.GB98133@gmail.com>
+References: <20200302091138.10341-1-stanley.chu@mediatek.com>
+         <20200302180231.GB98133@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Originating-IP: [209.85.210.54]
-X-ClientProxiedBy: taipei08.ADVANTECH.CORP (172.20.0.235) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+X-Mailer: Evolution 3.2.3-0ubuntu6 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
+SGkgRXJpYywNCg0KT24gTW9uLCAyMDIwLTAzLTAyIGF0IDEwOjAyIC0wODAwLCBFcmljIEJpZ2dl
+cnMgd3JvdGU6DQo+IE9uIE1vbiwgTWFyIDAyLCAyMDIwIGF0IDA1OjExOjM4UE0gKzA4MDAsIFN0
+YW5sZXkgQ2h1IHdyb3RlOg0KPiA+IEFkZCBpbmxpbmUgZW5jcnlwdGlvbiBzdXBwb3J0IHRvIHVm
+cy1tZWRpYXRlay4NCj4gPiANCj4gPiBUaGUgc3RhbmRhcmRzLWNvbXBsaWFudCBwYXJ0cywgc3Vj
+aCBhcyBxdWVyeWluZyB0aGUgY3J5cHRvIGNhcGFiaWxpdGllcw0KPiA+IGFuZCBlbmFibGluZyBj
+cnlwdG8gZm9yIGluZGl2aWR1YWwgVUZTIHJlcXVlc3RzLCBhcmUgYWxyZWFkeSBoYW5kbGVkIGJ5
+DQo+ID4gdWZzaGNkLWNyeXB0by5jLCB3aGljaCBpdHNlbGYgaXMgd2lyZWQgaW50byB0aGUgYmxr
+LWNyeXB0byBmcmFtZXdvcmsuDQo+ID4gDQo+ID4gSG93ZXZlciBNZWRpYVRlayBVRlMgaG9zdCBy
+ZXF1aXJlcyBhIHZlbmRvci1zcGVjaWZpYyBoY2VfZW5hYmxlIG9wZXJhdGlvbg0KPiA+IHRvIGFs
+bG93IGNyeXB0by1yZWxhdGVkIHJlZ2lzdGVycyBiZWluZyBhY2Nlc3NlZCBub3JtYWxseSBpbiBr
+ZXJuZWwuDQo+ID4gQWZ0ZXIgdGhpcyBzdGVwLCBNZWRpYVRlayBVRlMgaG9zdCBjYW4gd29yayBh
+cyBzdGFuZGFyZC1jb21wbGlhbnQgaG9zdA0KPiA+IGZvciBpbmxpbmUtZW5jcnlwdGlvbiByZWxh
+dGVkIGZ1bmN0aW9ucy4NCj4gPiANCj4gPiBUaGlzIHBhdGNoIGlzIHJlYmFzZWQgdG8gdGhlIGxh
+dGVzdCB3aXAtaW5saW5lLWVuY3J5cHRpb24gYnJhbmNoIGluDQo+ID4gRXJpYyBCaWdnZXJzJ3Mg
+Z2l0Og0KPiA+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
+L2ViaWdnZXJzL2xpbnV4LmdpdC8NCj4gDQo+IFBsZWFzZSBkb24ndCB1c2UgYSByYW5kb20gd29y
+ay1pbi1wcm9ncmVzcyBicmFuY2ggZnJvbSBteSBnaXQgcmVwb3NpdG9yeSAod2hpY2gNCj4gaGFz
+bid0IGJlZW4gdXBkYXRlZCB0byB0aGUgdjcgcGF0Y2hzZXQgeWV0IGFuZCB3aWxsIGJlIHJlYmFz
+ZWQpOyB1c2UgaW5zdGVhZDoNCj4gDQo+IAlSZXBvOiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1
+Yi9zY20vZnMvZnNjcnlwdC9mc2NyeXB0LmdpdA0KPiAJVGFnOiBpbmxpbmUtZW5jcnlwdGlvbi12
+Nw0KPiANCj4gQWxzbywgdGhpcyBwYXRjaCBkb2Vzbid0IGFwcGx5IHRvIGVpdGhlciBicmFuY2gg
+YW55d2F5Og0KPiANCj4gQXBwbHlpbmc6IHNjc2k6IHVmcy1tZWRpYXRlazogYWRkIGlubGluZSBl
+bmNyeXB0aW9uIHN1cHBvcnQNCj4gVXNpbmcgaW5kZXggaW5mbyB0byByZWNvbnN0cnVjdCBhIGJh
+c2UgdHJlZS4uLg0KPiBlcnJvcjogcGF0Y2ggZmFpbGVkOiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1t
+ZWRpYXRlay5jOjE1DQo+IGVycm9yOiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jOiBw
+YXRjaCBkb2VzIG5vdCBhcHBseQ0KPiBlcnJvcjogcGF0Y2ggZmFpbGVkOiBkcml2ZXJzL3Njc2kv
+dWZzL3Vmcy1tZWRpYXRlay5oOjU4DQo+IGVycm9yOiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRp
+YXRlay5oOiBwYXRjaCBkb2VzIG5vdCBhcHBseQ0KPiBlcnJvcjogRGlkIHlvdSBoYW5kIGVkaXQg
+eW91ciBwYXRjaD8NCg0KU29ycnkgZm9yIHRoaXMuDQpJIHJlYmFzZWQgdGhpcyBwYXRjaCBhcyBS
+RkMgdjIgdG8gYmVsb3cgdGFnLA0KDQoJUmVwbzogaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIv
+c2NtL2ZzL2ZzY3J5cHQvZnNjcnlwdC5naXQNCiAJVGFnOiBpbmxpbmUtZW5jcnlwdGlvbi12Nw0K
+DQoNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYyBiL2Ry
+aXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMNCj4gPiBpbmRleCA1M2VhZTVmZTJhZGUuLjEy
+ZDAxZmQzZDVlMSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRl
+ay5jDQo+ID4gKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KPiA+IEBAIC0x
+NSw2ICsxNSw3IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9zb2MvbWVkaWF0ZWsvbXRrX3NpcF9z
+dmMuaD4NCj4gPiAgDQo+ID4gICNpbmNsdWRlICJ1ZnNoY2QuaCINCj4gPiArI2luY2x1ZGUgInVm
+c2hjZC1jcnlwdG8uaCINCj4gPiAgI2luY2x1ZGUgInVmc2hjZC1wbHRmcm0uaCINCj4gPiAgI2lu
+Y2x1ZGUgInVmc19xdWlya3MuaCINCj4gPiAgI2luY2x1ZGUgInVuaXByby5oIg0KPiA+IEBAIC0y
+NCw2ICsyNSw5IEBADQo+ID4gIAlhcm1fc21jY2Nfc21jKE1US19TSVBfVUZTX0NPTlRST0wsIFwN
+Cj4gPiAgCQkgICAgICBjbWQsIHZhbCwgMCwgMCwgMCwgMCwgMCwgJihyZXMpKQ0KPiA+ICANCj4g
+PiArI2RlZmluZSB1ZnNfbXRrX2NyeXB0b19jdHJsKHJlcywgZW5hYmxlKSBcDQo+ID4gKwl1ZnNf
+bXRrX3NtYyhVRlNfTVRLX1NJUF9DUllQVE9fQ1RSTCwgZW5hYmxlLCByZXMpDQo+ID4gKw0KPiA+
+ICAjZGVmaW5lIHVmc19tdGtfcmVmX2Nsa19ub3RpZnkob24sIHJlcykgXA0KPiA+ICAJdWZzX210
+a19zbWMoVUZTX01US19TSVBfUkVGX0NMS19OT1RJRklDQVRJT04sIG9uLCByZXMpDQo+ID4gIA0K
+PiA+IEBAIC02Niw3ICs3MCwyNyBAQCBzdGF0aWMgdm9pZCB1ZnNfbXRrX2NmZ191bmlwcm9fY2co
+c3RydWN0IHVmc19oYmEgKmhiYSwgYm9vbCBlbmFibGUpDQo+ID4gIAl9DQo+ID4gIH0NCj4gPiAg
+DQo+ID4gLXN0YXRpYyBpbnQgdWZzX210a19iaW5kX21waHkoc3RydWN0IHVmc19oYmEgKmhiYSkN
+Cj4gPiArc3RhdGljIHZvaWQgdWZzX210a19jcnlwdG9fZW5hYmxlKHN0cnVjdCB1ZnNfaGJhICpo
+YmEpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBhcm1fc21jY2NfcmVzIHJlczsNCj4gPiArDQo+ID4g
+Kwl1ZnNfbXRrX2NyeXB0b19jdHJsKHJlcywgMSk7DQo+ID4gKwlpZiAocmVzLmEwKSB7DQo+ID4g
+KwkJZGV2X2luZm8oaGJhLT5kZXYsICIlczogY3J5cHRvIGVuYWJsZSBmYWlsZWQsIGVycjogJWx1
+XG4iLA0KPiA+ICsJCQkgX19mdW5jX18sIHJlcy5hMCk7DQo+ID4gKwl9DQo+ID4gK30NCj4gPiAr
+DQo+ID4gK3N0YXRpYyBpbnQgdWZzX210a19oY2VfZW5hYmxlX25vdGlmeShzdHJ1Y3QgdWZzX2hi
+YSAqaGJhLA0KPiA+ICsJCQkJICAgICBlbnVtIHVmc19ub3RpZnlfY2hhbmdlX3N0YXR1cyBzdGF0
+dXMpDQo+ID4gK3sNCj4gPiArCWlmIChzdGF0dXMgPT0gUFJFX0NIQU5HRSAmJiB1ZnNoY2RfaGJh
+X2lzX2NyeXB0b19zdXBwb3J0ZWQoaGJhKSkNCj4gPiArCQl1ZnNfbXRrX2NyeXB0b19lbmFibGUo
+aGJhKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiAraW50IHVm
+c19tdGtfYmluZF9tcGh5KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQo+ID4gIHsNCj4gPiAgCXN0cnVj
+dCB1ZnNfbXRrX2hvc3QgKmhvc3QgPSB1ZnNoY2RfZ2V0X3ZhcmlhbnQoaGJhKTsNCj4gPiAgCXN0
+cnVjdCBkZXZpY2UgKmRldiA9IGhiYS0+ZGV2Ow0KPiA+IEBAIC00OTQsNiArNTE4LDcgQEAgc3Rh
+dGljIHN0cnVjdCB1ZnNfaGJhX3ZhcmlhbnRfb3BzIHVmc19oYmFfbXRrX3ZvcHMgPSB7DQo+ID4g
+IAkubmFtZSAgICAgICAgICAgICAgICA9ICJtZWRpYXRlay51ZnNoY2kiLA0KPiA+ICAJLmluaXQg
+ICAgICAgICAgICAgICAgPSB1ZnNfbXRrX2luaXQsDQo+ID4gIAkuc2V0dXBfY2xvY2tzICAgICAg
+ICA9IHVmc19tdGtfc2V0dXBfY2xvY2tzLA0KPiA+ICsJLmhjZV9lbmFibGVfbm90aWZ5ICAgPSB1
+ZnNfbXRrX2hjZV9lbmFibGVfbm90aWZ5LA0KPiA+ICAJLmxpbmtfc3RhcnR1cF9ub3RpZnkgPSB1
+ZnNfbXRrX2xpbmtfc3RhcnR1cF9ub3RpZnksDQo+ID4gIAkucHdyX2NoYW5nZV9ub3RpZnkgICA9
+IHVmc19tdGtfcHdyX2NoYW5nZV9ub3RpZnksDQo+ID4gIAkuYXBwbHlfZGV2X3F1aXJrcyAgICA9
+IHVmc19tdGtfYXBwbHlfZGV2X3F1aXJrcywNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3Np
+L3Vmcy91ZnMtbWVkaWF0ZWsuaCBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmgNCj4g
+PiBpbmRleCBmY2NkZDk3OWQ2ZmIuLjVlYmFhNTk4OThiZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
+ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5oDQo+ID4gKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91
+ZnMtbWVkaWF0ZWsuaA0KPiA+IEBAIC01OCw2ICs1OCw3IEBADQo+ID4gICAqLw0KPiA+ICAjZGVm
+aW5lIE1US19TSVBfVUZTX0NPTlRST0wgICAgICAgICAgICAgICBNVEtfU0lQX1NNQ19DTUQoMHgy
+NzYpDQo+ID4gICNkZWZpbmUgVUZTX01US19TSVBfREVWSUNFX1JFU0VUICAgICAgICAgIEJJVCgx
+KQ0KPiA+ICsjZGVmaW5lIFVGU19NVEtfU0lQX0NSWVBUT19DVFJMICAgICAgICAgICBCSVQoMikN
+Cj4gPiAgI2RlZmluZSBVRlNfTVRLX1NJUF9SRUZfQ0xLX05PVElGSUNBVElPTiAgQklUKDMpDQo+
+IA0KPiBCdXQgaWYgdGhpcyBpcyBhbGwgdGhhdCdzIG5lZWRlZCB0byBnZXQgaW5saW5lIGNyeXB0
+byB3b3JraW5nIHdpdGggTWVkaWF0ZWsgVUZTLA0KPiB0aGF0J3MgZ3JlYXQgbmV3cy4NCg0KVGhh
+bmtzIGZvciB5b3VyIHJldmlldyA6KQ0KDQpTdGFubGV5IENodQ0KDQoNCg0KPiANCj4gVGhhbmtz
+IQ0KPiANCj4gLSBFcmljDQoNCg==
 
-Advantech sw_button is a ACPI event trigger button.
-
-With this driver, we can report KEY_EVENT on the
-Advantech Tabletop Network Appliances products and it has been
-tested in FWA1112VC.
-
-Add the software define button support to report EV_REP key_event
-(BTN_TRIGGER_HAPPY) by pressing button that cloud be get on user
-interface and trigger the customized actions.
-
-Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
-
-v2:
-        - remove fix-patch in patch
-        - fix build WARNING on format string.
-        - using linux kernel sort function
-v3:
-        - remove X86 dependency
-        - License only for GPL 2.0 and remove redundancy paragraphs
-        - remove version and prefix
-        - remove printk message
-        - remove double click and long press event check
-        - remove MODULE_PARAM
----
- MAINTAINERS                       |   5 +
- drivers/input/misc/Kconfig        |  11 ++
- drivers/input/misc/Makefile       |   2 +-
- drivers/input/misc/adv_swbutton.c | 207 ++++++++++++++++++++++++++++++
- 4 files changed, 224 insertions(+), 1 deletion(-)
- create mode 100644 drivers/input/misc/adv_swbutton.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8982c6e013b3..821c5cacf553 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -543,6 +543,11 @@ S: Maintained
- F:     Documentation/scsi/advansys.txt
- F:     drivers/scsi/advansys.c
-
-+ADVANTECH SWBTN DRIVER
-+M:     Andrea Ho <Andrea.Ho@advantech.com.tw>
-+S:     Maintained
-+F:     drivers/input/misc/adv_swbutton.c
-+
- ADXL34X THREE-AXIS DIGITAL ACCELEROMETER DRIVER (ADXL345/ADXL346)
- M:     Michael Hennerich <michael.hennerich@analog.com>
- W:     http://wiki.analog.com/ADXL345
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 7e2e658d551c..b49a0fad60b0 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -879,4 +879,15 @@ config INPUT_STPMIC1_ONKEY
-          To compile this driver as a module, choose M here: the
-          module will be called stpmic1_onkey.
-
-+config INPUT_ADV_SWBUTTON
-+        tristate "Advantech ACPI Software button Driver"
-+        depends on ACPI
-+        help
-+          Say Y here to enable support for Advantech software defined
-+          button feature. More information can be fount at
-+          <http://www.advantech.com.tw/products/>
-+
-+          To compile this driver as a module, choose M here. The module will
-+          be called adv_swbutton.
-+
- endif
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 8fd187f314bd..a5ceb98f18f6 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -85,4 +85,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)         += wm831x-on.o
- obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)        += xen-kbdfront.o
- obj-$(CONFIG_INPUT_YEALINK)            += yealink.o
- obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)   += ideapad_slidebar.o
--
-+obj-$(CONFIG_INPUT_ADV_SWBUTTON)    += adv_swbutton.o
-diff --git a/drivers/input/misc/adv_swbutton.c
-b/drivers/input/misc/adv_swbutton.c
-new file mode 100644
-index 000000000000..ef237f9c4f52
---- /dev/null
-+++ b/drivers/input/misc/adv_swbutton.c
-@@ -0,0 +1,207 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  adv_swbutton.c - Software Button Interface Driver.
-+ *
-+ *  (C) Copyright 2020 Advantech Corporation, Inc
-+ *
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/version.h>
-+#include <linux/types.h>
-+#include <linux/proc_fs.h>
-+#include <linux/seq_file.h>
-+#include <linux/input.h>
-+#include <linux/slab.h>
-+#include <linux/acpi.h>
-+#include <linux/ktime.h>
-+#include <linux/moduleparam.h>
-+#include <acpi/button.h>
-+#include <acpi/acpi_bus.h>
-+#include <acpi/acpi_drivers.h>
-+
-+#define ACPI_BUTTON_CLASS                   "button"
-+#define ACPI_BUTTON_FILE_INFO               "info"
-+#define ACPI_BUTTON_FILE_STATE              "state"
-+#define ACPI_BUTTON_TYPE_UNKNOWN            0x00
-+
-+#define ACPI_BUTTON_SUBCLASS_SOFTWARE       "software"
-+#define ACPI_BUTTON_HID_SWBTN               "AHC0310"
-+#define ACPI_BUTTON_DEVICE_NAME_SOFTWARE    "Software Button"
-+#define ACPI_BUTTON_TYPE_SOFTWARE           0x07
-+
-+#define ACPI_BUTTON_NOTIFY_SWBTN_RELEASE    0x86
-+#define ACPI_BUTTON_NOTIFY_SWBTN_PRESSED    0x85
-+
-+#define SOFTWARE_BUTTON                     BTN_TRIGGER_HAPPY
-+
-+#define _COMPONENT                          ACPI_BUTTON_COMPONENT
-+
-+ACPI_MODULE_NAME("swbutton");
-+
-+MODULE_AUTHOR("Andrea Ho");
-+MODULE_DESCRIPTION("Advantech ACPI SW Button Driver");
-+MODULE_LICENSE("GPL");
-+
-+static const struct acpi_device_id button_device_ids[] = {
-+       {ACPI_BUTTON_HID_SWBTN, 0},
-+       {"", 0},
-+};
-+MODULE_DEVICE_TABLE(acpi, button_device_ids);
-+
-+static int acpi_button_add(struct acpi_device *device);
-+static int acpi_button_remove(struct acpi_device *device);
-+static void acpi_button_notify(struct acpi_device *device, u32 event);
-+
-+static struct acpi_driver acpi_button_driver = {
-+       .name = ACPI_BUTTON_DEVICE_NAME_SOFTWARE,
-+       .class = ACPI_BUTTON_CLASS,
-+       .owner = THIS_MODULE,
-+       .ids = button_device_ids,
-+       .ops = {
-+               .add = acpi_button_add,
-+               .remove = acpi_button_remove,
-+               .notify = acpi_button_notify,
-+       },
-+};
-+
-+struct acpi_button {
-+       unsigned int type;
-+       struct input_dev *input;
-+       char phys[32];
-+       bool pressed;
-+};
-+
-+/*-------------------------------------------------------------------------
-+ *                               Driver Interface
-+ *--------------------------------------------------------------------------
-+ */
-+static void acpi_button_notify(struct acpi_device *device, u32 event)
-+{
-+       struct acpi_button *button = acpi_driver_data(device);
-+       struct input_dev *input;
-+
-+       int keycode, BTN_KEYCODE = SOFTWARE_BUTTON;
-+
-+       switch (event) {
-+       case ACPI_BUTTON_NOTIFY_SWBTN_RELEASE:
-+               input = button->input;
-+
-+               if (!button->pressed)
-+                       return;
-+
-+               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
-+                               BTN_KEYCODE : KEY_UNKNOWN;
-+
-+               button->pressed = false;
-+
-+               input_report_key(input, keycode, 0);
-+               input_sync(input);
-+       break;
-+       case ACPI_BUTTON_NOTIFY_SWBTN_PRESSED:
-+               input = button->input;
-+               button->pressed = true;
-+
-+               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
-+                           BTN_KEYCODE : KEY_UNKNOWN;
-+
-+               input_report_key(input, keycode, 1);
-+               input_sync(input);
-+       break;
-+       default:
-+               ACPI_DEBUG_PRINT((ACPI_DB_INFO,
-+                                 "Unsupported event [0x%x]\n", event));
-+       break;
-+       }
-+}
-+
-+static int __init acpi_button_init(void)
-+{
-+       return acpi_bus_register_driver(&acpi_button_driver);
-+}
-+
-+static void __exit acpi_button_exit(void)
-+{
-+       acpi_bus_unregister_driver(&acpi_button_driver);
-+}
-+
-+static int acpi_button_add(struct acpi_device *device)
-+{
-+       struct acpi_button *button;
-+       struct input_dev *input;
-+       const char *hid = acpi_device_hid(device);
-+       char *name, *class;
-+       int error;
-+
-+       button = kzalloc(sizeof(struct acpi_button), GFP_KERNEL);
-+       if (!button)
-+               return -ENOMEM;
-+
-+       device->driver_data = button;
-+
-+       button->input = input_allocate_device();
-+       input = button->input;
-+       if (!input) {
-+               error = -ENOMEM;
-+               goto err_free_button;
-+       }
-+
-+       name = acpi_device_name(device);
-+       class = acpi_device_class(device);
-+
-+       if (!strcmp(hid, ACPI_BUTTON_HID_SWBTN)) {
-+               button->type = ACPI_BUTTON_TYPE_SOFTWARE;
-+               button->pressed = false;
-+               strcpy(name, ACPI_BUTTON_DEVICE_NAME_SOFTWARE);
-+               sprintf(class, "%s/%s", ACPI_BUTTON_CLASS,
-+                       ACPI_BUTTON_SUBCLASS_SOFTWARE);
-+       } else {
-+               error = -ENODEV;
-+               goto err_free_input;
-+       }
-+
-+       snprintf(button->phys, sizeof(button->phys), "%s/button/input0", hid);
-+
-+       input->name = name;
-+       input->phys = button->phys;
-+       input->id.bustype = BUS_HOST;
-+       input->id.product = button->type;
-+       input->dev.parent = &device->dev;
-+
-+       switch (button->type) {
-+       case ACPI_BUTTON_TYPE_SOFTWARE:
-+               set_bit(EV_KEY, input->evbit);
-+               set_bit(EV_REP, input->evbit);
-+
-+               input_set_capability(input, EV_KEY, SOFTWARE_BUTTON);
-+       break;
-+       }
-+
-+       input_set_drvdata(input, device);
-+       error = input_register_device(input);
-+       if (error)
-+               goto err_free_input;
-+
-+       device_init_wakeup(&device->dev, true);
-+
-+       return 0;
-+
-+err_free_input:
-+       input_free_device(input);
-+err_free_button:
-+       kfree(button);
-+       return error;
-+}
-+
-+static int acpi_button_remove(struct acpi_device *device)
-+{
-+       struct acpi_button *button = acpi_driver_data(device);
-+
-+       input_unregister_device(button->input);
-+       kfree(button);
-+       return 0;
-+}
-+
-+module_init(acpi_button_init);
-+module_exit(acpi_button_exit);
---
-2.17.1
