@@ -2,117 +2,103 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2144C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC76CC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:14:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA95B21775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:13:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QYElvh60"
+	by mail.kernel.org (Postfix) with ESMTP id B1F3424654
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:14:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583342083;
+	bh=xT1sEwZjPK8JKf0tY/gJOxvv0KwpERViNrL1nxk5oa8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=H4sfm1zhMVz8iafA2yCAN/mlAdzcDOx1+YeJ1hUbRVQkCq7acMlhF4TjPQdjeSEEX
+	 ddxoNVLBZYZH4FcZRLQQgVtKP3aybsaXi5OCB4cXrsIh+jfr3RbJxu7RbKLGAOdIns
+	 9OnBbdORDDXiFRgkHwvVgL60a5IaxvLVpmH35s44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbgCDRN5 (ORCPT
+        id S1729973AbgCDROm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:13:57 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:32837 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729978AbgCDRN5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:13:57 -0500
-Received: by mail-io1-f67.google.com with SMTP id r15so3271459iog.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:13:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4gG3qMsij+Zo/aEE0RJ5aXLnI0RJBhpPpMw/2lBOTbU=;
-        b=QYElvh60Cyyn7Y11uZwaVwCuwHUF2lUxPZZFVwXIyOoPle1lfUfdIGhc0pVks7+RrN
-         WSlaQacGeMOUoXrTP7pW88wNBfAN9wlCFUj4pvq0RHRtFZf9t9vByx9lZKHPFhA2m9Jj
-         JfjAsKvvf+MfcFnD+IMJbV0C4HJonC5kGkJ5/u9yeuEwNBL506h+MOiJ2ed3579CTVlg
-         PXndErOXThORJ6OOckQpkShznq7uU5mOapRDuLejjvmLWOA7cB81NTnC+YTfLaDMLvXt
-         +CQ67q5o8KfwknVXcRpaHGSuSgXciyyCmzX7FpPl0F0KM9b214VsOIIW8pUV+b4jEjUl
-         de9A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4gG3qMsij+Zo/aEE0RJ5aXLnI0RJBhpPpMw/2lBOTbU=;
-        b=EvfExTlnPvbnVhPNsarWjIbEBQdcA3SOzCCNk/MrhHT213o7a1JjTgVkUN1RiXiZbs
-         v5Ew6i3pNa0VwNuQZ00CcGXYxcVlKLizsx71PWBsdXmeHKUD5JaJGjAKaXMjrdIsXkEz
-         eDs34H1+kCymRGUcDwurJN8ChXn1Bh9PBAABvv1GbKpvTW99NNLw+ejnp5jZ+LH8IIJI
-         DS2X2Vr/0lLk48R8TOHhXPZD3ChXzitske0JpYzKIJEu+0xLBFoHIzpa28aBHhyH8E3F
-         Ey7lOqO6tWWp21u+o4fqKnx3CUf11VSvfDl8JCsgl+pciVDttxxrCwtiLaYD2lBSuMTC
-         1oUQ==
-X-Gm-Message-State: ANhLgQ3jICdhnJ+AkK0d22tl1zb9LyFTxstot0gbOb5HSL7vMr9fXs3z
-        pZxc3djDmNVuuChRkNVKp4VbORv7c9e6xgLcjT1W3A==
-X-Google-Smtp-Source: ADFU+vuOPyKswOKZ61JIBgIoF+EANBFdB2xJk1AnRf0YUvp8KcQ7eG7l91fFfZagGVEMzsrhnPlGrjJNth+JpCUF/ic=
-X-Received: by 2002:a6b:8b8c:: with SMTP id n134mr2899306iod.58.1583342036746;
- Wed, 04 Mar 2020 09:13:56 -0800 (PST)
+        Wed, 4 Mar 2020 12:14:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727709AbgCDROm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 12:14:42 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8071E21775;
+        Wed,  4 Mar 2020 17:14:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583342081;
+        bh=xT1sEwZjPK8JKf0tY/gJOxvv0KwpERViNrL1nxk5oa8=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=FYOjqES9z3Ri/3gvgS805sO+LvHMa/0HSUDyXXfGBNDIbra/4sXJk9BgAWRJM0ODX
+         33Zt7g7aQzc1E7i92GGbB6qwtwHxtvxLO7pttvIQ+XSdQubPwmqShVE3ik6aaF+S0a
+         x5EvHmnJzUEOoQ8IJLT//zw2Ju0OonsYN9FTb4qQ=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 495A03522731; Wed,  4 Mar 2020 09:14:41 -0800 (PST)
+Date:   Wed, 4 Mar 2020 09:14:41 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Marco Elver <elver@google.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH -next] lib: disable KCSAN for XArray
+Message-ID: <20200304171441.GA2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200304031551.1326-1-cai@lca.pw>
+ <20200304033329.GZ29971@bombadil.infradead.org>
+ <20200304040515.GX2935@paulmck-ThinkPad-P72>
+ <20200304043356.GC29971@bombadil.infradead.org>
+ <20200304141021.GY2935@paulmck-ThinkPad-P72>
+ <CANpmjNOotdBa_7EhA75f2Y59HfEVsGsquv1cvQ=OjtA784poRA@mail.gmail.com>
+ <1583341858.7365.155.camel@lca.pw>
 MIME-Version: 1.0
-References: <20200302213402.9650-1-natechancellor@gmail.com>
-In-Reply-To: <20200302213402.9650-1-natechancellor@gmail.com>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Wed, 4 Mar 2020 10:13:45 -0700
-Message-ID: <CANLsYkz_kh2BWoVy-YervDTRWUT+p8M+-_vUrsu--WF3fjDBPQ@mail.gmail.com>
-Subject: Re: [PATCH] coresight: cti: Remove unnecessary NULL check in cti_sig_type_name
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Mike Leach <mike.leach@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1583341858.7365.155.camel@lca.pw>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 14:34, Nathan Chancellor <natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> drivers/hwtracing/coresight/coresight-cti-sysfs.c:948:11: warning:
-> address of array 'grp->sig_types' will always evaluate to 'true'
-> [-Wpointer-bool-conversion]
->         if (grp->sig_types) {
->         ~~  ~~~~~^~~~~~~~~
-> 1 warning generated.
->
-> sig_types is at the end of a struct so it cannot be NULL.
->
-> Fixes: 85b6684eab65 ("coresight: cti: Add connection information to sysfs")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/914
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  drivers/hwtracing/coresight/coresight-cti-sysfs.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-cti-sysfs.c b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> index abb7f492c2cb..214d6552b494 100644
-> --- a/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> +++ b/drivers/hwtracing/coresight/coresight-cti-sysfs.c
-> @@ -945,10 +945,8 @@ cti_sig_type_name(struct cti_trig_con *con, int used_count, bool in)
->         int idx = 0;
->         struct cti_trig_grp *grp = in ? con->con_in : con->con_out;
->
-> -       if (grp->sig_types) {
-> -               if (used_count < grp->nr_sigs)
-> -                       idx = grp->sig_types[used_count];
-> -       }
-> +       if (used_count < grp->nr_sigs)
-> +               idx = grp->sig_types[used_count];
->         return sig_type_names[idx];
->  }
+On Wed, Mar 04, 2020 at 12:10:58PM -0500, Qian Cai wrote:
+> On Wed, 2020-03-04 at 17:40 +0100, Marco Elver wrote:
+> > On Wed, 4 Mar 2020 at 15:10, Paul E. McKenney <paulmck@kernel.org> wrote:
+> > > 
+> > > On Tue, Mar 03, 2020 at 08:33:56PM -0800, Matthew Wilcox wrote:
+> > > > On Tue, Mar 03, 2020 at 08:05:15PM -0800, Paul E. McKenney wrote:
+> > > > > On Tue, Mar 03, 2020 at 07:33:29PM -0800, Matthew Wilcox wrote:
+> > > > > > On Tue, Mar 03, 2020 at 10:15:51PM -0500, Qian Cai wrote:
+> > > > > > > Functions like xas_find_marked(), xas_set_mark(), and xas_clear_mark()
+> > > > > > > could happen concurrently result in data races, but those operate only
+> > > > > > > on a single bit that are pretty much harmless. For example,
+> > 
+> > I currently do not see those as justification to blacklist the whole
+> > file. Wouldn't __no_kcsan be better? That is, in case there is no
+> > other solution that emerges from the remainder of the discussion here.
+> 
+> I suppose it is up to Matthew. Currently, I can see there are several functions
+> may need __no_kcsan,
+> 
+> xa_get_mark(), xas_find_marked(), xas_find_chunk() etc.
+> 
+> My worry was that there could be many of those functions operating on marks
+> (which is a single-bit) in xarray that could end up needing the same treatment.
+> 
+> So far, my testing is thin on filesystem side where xarray is pretty much used
+> for page caches, so the reports I got from KCSAN runs does not necessary tell
+> the whole story. Once I updated my KCSAN runs to include things like xfstests,
+> it could add quite a few churns later if we decided to go with the __no_kcsan
+> route.
 
-Applied - thanks,
-Mathieu
+Agreed, the filesystems developers and maintainers will decide how they
+would like to approach this.
 
->
-> --
-> 2.25.1
->
+							Thanx, Paul
