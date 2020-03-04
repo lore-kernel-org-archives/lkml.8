@@ -2,321 +2,318 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FUZZY_XPILL,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A733C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8EEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65783214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:21:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22EC214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:23:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XNqtsFW7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728457AbgCDHVJ (ORCPT
+        id S1728384AbgCDHX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:21:09 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35792 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726275AbgCDHVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:21:08 -0500
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 290C6D4FC46FAEFD2B52;
-        Wed,  4 Mar 2020 15:20:53 +0800 (CST)
-Received: from [127.0.0.1] (10.74.219.194) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Mar 2020
- 15:20:46 +0800
-Subject: Re: [PATCH 14/23] mtd: spi-nor: Move Macronix bits out of core.c
-To:     <Tudor.Ambarus@microchip.com>, <bbrezillon@kernel.org>,
-        <vigneshr@ti.com>, <linux-mtd@lists.infradead.org>
-References: <20200302180730.1886678-1-tudor.ambarus@microchip.com>
- <20200302180730.1886678-15-tudor.ambarus@microchip.com>
-CC:     <kstewart@linuxfoundation.org>, <alexandre.belloni@bootlin.com>,
-        <linux-aspeed@lists.ozlabs.org>, <thor.thayer@linux.intel.com>,
-        <jethro@fortanix.com>, <rfontana@redhat.com>,
-        <miquel.raynal@bootlin.com>, <opensource@jilayne.com>,
-        <richard@nod.at>, <michal.simek@xilinx.com>,
-        <Ludovic.Desroches@microchip.com>, <joel@jms.id.au>,
-        <nishkadg.linux@gmail.com>, <john.garry@huawei.com>,
-        <vz@mleia.com>, <alexander.sverdlin@nokia.com>,
-        <matthias.bgg@gmail.com>, <tglx@linutronix.de>,
-        <swboyd@chromium.org>, <mika.westerberg@linux.intel.com>,
-        <allison@lohutok.net>, <linux-arm-kernel@lists.infradead.org>,
-        <andrew@aj.id.au>, <Nicolas.Ferre@microchip.com>,
-        <linux-kernel@vger.kernel.org>, <dinguyen@kernel.org>,
-        <michael@walle.cc>, <ludovic.barre@st.com>,
-        <linux-mediatek@lists.infradead.org>, <info@metux.net>
-From:   "chenxiang (M)" <chenxiang66@hisilicon.com>
-Message-ID: <3b947b8a-5e99-f324-951a-3a1c88d59111@hisilicon.com>
-Date:   Wed, 4 Mar 2020 15:20:46 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Wed, 4 Mar 2020 02:23:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23609 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727176AbgCDHX2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 02:23:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583306606;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YF/7RXvsc3v2wcmFzJKJrYQAa423BkAdC7akSOEWUJk=;
+        b=XNqtsFW75I6TS8qJdR+Z0eFENrxA1VFGSLM9fYRK1bHlAkN/GJFHRNc/qDXjRk+bESvjf3
+        +FAQVZJQ1KVkTvcL/OYYldBhqpRhiYxnSivlLoypxY0tKoBsjvaSjoquJdkXlxTqhGcw13
+        VwRsnetv1Vi4bVeY/GeSxMKzNAz8O3Q=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-364-t5KmPQK5O-68PwbE0TAdYA-1; Wed, 04 Mar 2020 02:23:22 -0500
+X-MC-Unique: t5KmPQK5O-68PwbE0TAdYA-1
+Received: by mail-wm1-f71.google.com with SMTP id b67so205001wmb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 23:23:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YF/7RXvsc3v2wcmFzJKJrYQAa423BkAdC7akSOEWUJk=;
+        b=C++D/SYtmassDxkgRYq2zBpCnf013dISeb7y4OU32yCUiwgXg9QRLXmDzhPA1FypDn
+         ROR6TkwRAETWjwMrS4OOhX+aS4vT5URkd2+NU0F7+k2lSqvO/ajVDPMmrgrN9yhMstQ+
+         ysp27DIW8R5o4H1sngB55/pJ24H3+G7kRgMWMLs/RlwFcq1D0rhtqwCNUPn2vStjo4PY
+         YvOtznu6qRyBKcTnSSM+j1kzZ7JM5blXuohqjWIzyJCexes2qsBWcDjhCmGk4C1Y1VKf
+         F8QvUullVC3afhOZ/gVXTFNGA6uBMi0DKKaslGHwlB9oEKOcbjWVqSYNnCuV5wxZ/y6R
+         CyOA==
+X-Gm-Message-State: ANhLgQ2DdoTz8VWLLgj6R/9yecY/q6YfGCAodYFl76+cLQe14D8LEjku
+        OTvJNCNJr/y/sLitUdjqurZBJBhetNpoQThj07dYlmIDRiI8BP3sKY7fK8viw2xi4h7kiOZTKla
+        0UimgRD9CX/KuCWUG+TgezWdi
+X-Received: by 2002:adf:e910:: with SMTP id f16mr2579723wrm.20.1583306601467;
+        Tue, 03 Mar 2020 23:23:21 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvjxOGb9+U6wxwnM5YxR3PVSTFYcoT6C+DKM51yQbOCoaz/dp95huA26j8IVU8sIdOAyy19Ew==
+X-Received: by 2002:adf:e910:: with SMTP id f16mr2579684wrm.20.1583306601089;
+        Tue, 03 Mar 2020 23:23:21 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id g129sm3137600wmg.12.2020.03.03.23.23.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 23:23:20 -0800 (PST)
+Subject: Re: [PATCH 5.5 111/176] KVM: nVMX: Emulate MTF when performing
+ instruction emulation
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, Oliver Upton <oupton@google.com>
+References: <20200303174304.593872177@linuxfoundation.org>
+ <20200303174317.670749078@linuxfoundation.org>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <8780cf08-374b-da06-0047-0fe8eeec0113@redhat.com>
+Date:   Wed, 4 Mar 2020 08:23:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200302180730.1886678-15-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.74.219.194]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20200303174317.670749078@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 03/03/20 18:42, Greg Kroah-Hartman wrote:
+> From: Oliver Upton <oupton@google.com>
+> 
+> commit 5ef8acbdd687c9d72582e2c05c0b9756efb37863 upstream.
+> 
+> Since commit 5f3d45e7f282 ("kvm/x86: add support for
+> MONITOR_TRAP_FLAG"), KVM has allowed an L1 guest to use the monitor trap
+> flag processor-based execution control for its L2 guest. KVM simply
+> forwards any MTF VM-exits to the L1 guest, which works for normal
+> instruction execution.
+> 
+> However, when KVM needs to emulate an instruction on the behalf of an L2
+> guest, the monitor trap flag is not emulated. Add the necessary logic to
+> kvm_skip_emulated_instruction() to synthesize an MTF VM-exit to L1 upon
+> instruction emulation for L2.
+> 
+> Fixes: 5f3d45e7f282 ("kvm/x86: add support for MONITOR_TRAP_FLAG")
+> Signed-off-by: Oliver Upton <oupton@google.com>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-在 2020/3/3 2:07, Tudor.Ambarus@microchip.com 写道:
-> From: Boris Brezillon <bbrezillon@kernel.org>
->
-> Create a SPI NOR manufacturer driver for Macronix chips, and move the
-> Macronix definitions outside of core.c.
+Why is this included in a stable release?  It was part of a series of
+four patches and the prerequisites as far as I can see are not part of 5.5.
 
-I have tested it with erase-wite-read-compare(1MB file) testcase on 
-mx25u12835f flash, it is ok. So add:
-Tested-by: Xiang Chen <chenxiang66@hisilicon.com>
+I have already said half a dozen times that I don't want any of the
+autopick stuff for KVM.  Is a Fixes tag sufficient to get patches into
+stable now?
 
->
-> Signed-off-by: Boris Brezillon <bbrezillon@kernel.org>
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Paolo
+
 > ---
->   drivers/mtd/spi-nor/Makefile   |  1 +
->   drivers/mtd/spi-nor/core.c     | 69 +-----------------------
->   drivers/mtd/spi-nor/core.h     |  1 +
->   drivers/mtd/spi-nor/macronix.c | 98 ++++++++++++++++++++++++++++++++++
->   4 files changed, 101 insertions(+), 68 deletions(-)
->   create mode 100644 drivers/mtd/spi-nor/macronix.c
->
-> diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-> index 5c849f104cc4..c94798987801 100644
-> --- a/drivers/mtd/spi-nor/Makefile
-> +++ b/drivers/mtd/spi-nor/Makefile
-> @@ -9,4 +9,5 @@ spi-nor-objs			+= fujitsu.o
->   spi-nor-objs			+= gigadevice.o
->   spi-nor-objs			+= intel.o
->   spi-nor-objs			+= issi.o
-> +spi-nor-objs			+= macronix.o
->   obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor.o
-> diff --git a/drivers/mtd/spi-nor/core.c b/drivers/mtd/spi-nor/core.c
-> index d781cb9af182..9d0e0fc5af45 100644
-> --- a/drivers/mtd/spi-nor/core.c
-> +++ b/drivers/mtd/spi-nor/core.c
-> @@ -2005,31 +2005,6 @@ int spi_nor_sr2_bit7_quad_enable(struct spi_nor *nor)
->   	return 0;
->   }
->   
-> -static int
-> -mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
-> -			    const struct sfdp_parameter_header *bfpt_header,
-> -			    const struct sfdp_bfpt *bfpt,
-> -			    struct spi_nor_flash_parameter *params)
-> -{
-> -	/*
-> -	 * MX25L25635F supports 4B opcodes but MX25L25635E does not.
-> -	 * Unfortunately, Macronix has re-used the same JEDEC ID for both
-> -	 * variants which prevents us from defining a new entry in the parts
-> -	 * table.
-> -	 * We need a way to differentiate MX25L25635E and MX25L25635F, and it
-> -	 * seems that the F version advertises support for Fast Read 4-4-4 in
-> -	 * its BFPT table.
-> -	 */
-> -	if (bfpt->dwords[BFPT_DWORD(5)] & BFPT_DWORD5_FAST_READ_4_4_4)
-> -		nor->flags |= SNOR_F_4B_OPCODES;
-> -
-> -	return 0;
-> -}
-> -
-> -static struct spi_nor_fixups mx25l25635_fixups = {
-> -	.post_bfpt = mx25l25635_post_bfpt_fixups,
-> -};
-> -
->   /* NOTE: double check command sets and memory organization when you add
->    * more nor chips.  This current list focusses on newer chips, which
->    * have been converging on command sets which including JEDEC ID.
-> @@ -2042,39 +2017,6 @@ static struct spi_nor_fixups mx25l25635_fixups = {
->    * old entries may be missing 4K flag.
->    */
->   static const struct flash_info spi_nor_ids[] = {
-> -	/* Macronix */
-> -	{ "mx25l512e",   INFO(0xc22010, 0, 64 * 1024,   1, SECT_4K) },
-> -	{ "mx25l2005a",  INFO(0xc22012, 0, 64 * 1024,   4, SECT_4K) },
-> -	{ "mx25l4005a",  INFO(0xc22013, 0, 64 * 1024,   8, SECT_4K) },
-> -	{ "mx25l8005",   INFO(0xc22014, 0, 64 * 1024,  16, 0) },
-> -	{ "mx25l1606e",  INFO(0xc22015, 0, 64 * 1024,  32, SECT_4K) },
-> -	{ "mx25l3205d",  INFO(0xc22016, 0, 64 * 1024,  64, SECT_4K) },
-> -	{ "mx25l3255e",  INFO(0xc29e16, 0, 64 * 1024,  64, SECT_4K) },
-> -	{ "mx25l6405d",  INFO(0xc22017, 0, 64 * 1024, 128, SECT_4K) },
-> -	{ "mx25u2033e",  INFO(0xc22532, 0, 64 * 1024,   4, SECT_4K) },
-> -	{ "mx25u3235f",	 INFO(0xc22536, 0, 64 * 1024,  64,
-> -			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> -	{ "mx25u4035",   INFO(0xc22533, 0, 64 * 1024,   8, SECT_4K) },
-> -	{ "mx25u8035",   INFO(0xc22534, 0, 64 * 1024,  16, SECT_4K) },
-> -	{ "mx25u6435f",  INFO(0xc22537, 0, 64 * 1024, 128, SECT_4K) },
-> -	{ "mx25l12805d", INFO(0xc22018, 0, 64 * 1024, 256, 0) },
-> -	{ "mx25l12855e", INFO(0xc22618, 0, 64 * 1024, 256, 0) },
-> -	{ "mx25r3235f",  INFO(0xc22816, 0, 64 * 1024,  64,
-> -			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> -	{ "mx25u12835f", INFO(0xc22538, 0, 64 * 1024, 256,
-> -			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> -	{ "mx25l25635e", INFO(0xc22019, 0, 64 * 1024, 512,
-> -			 SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)
-> -			 .fixups = &mx25l25635_fixups },
-> -	{ "mx25u25635f", INFO(0xc22539, 0, 64 * 1024, 512, SECT_4K | SPI_NOR_4B_OPCODES) },
-> -	{ "mx25v8035f",  INFO(0xc22314, 0, 64 * 1024,  16,
-> -			 SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> -	{ "mx25l25655e", INFO(0xc22619, 0, 64 * 1024, 512, 0) },
-> -	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024, SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
-> -	{ "mx66u51235f", INFO(0xc2253a, 0, 64 * 1024, 1024, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
-> -	{ "mx66l1g45g",  INFO(0xc2201b, 0, 64 * 1024, 2048, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> -	{ "mx66l1g55g",  INFO(0xc2261b, 0, 64 * 1024, 2048, SPI_NOR_QUAD_READ) },
-> -
->   	/* Micron <--> ST Micro */
->   	{ "n25q016a",	 INFO(0x20bb15, 0, 64 * 1024,   32, SECT_4K | SPI_NOR_QUAD_READ) },
->   	{ "n25q032",	 INFO(0x20ba16, 0, 64 * 1024,   64, SPI_NOR_QUAD_READ) },
-> @@ -2311,6 +2253,7 @@ static const struct spi_nor_manufacturer *manufacturers[] = {
->   	&spi_nor_gigadevice,
->   	&spi_nor_intel,
->   	&spi_nor_issi,
-> +	&spi_nor_macronix,
->   };
->   
->   static const struct flash_info *
-> @@ -3090,12 +3033,6 @@ static int spi_nor_setup(struct spi_nor *nor,
->   	return nor->params.setup(nor, hwcaps);
->   }
->   
-> -static void macronix_set_default_init(struct spi_nor *nor)
-> -{
-> -	nor->params.quad_enable = spi_nor_sr1_bit6_quad_enable;
-> -	nor->params.set_4byte = spi_nor_en4_ex4_set_4byte;
-> -}
-> -
->   static void sst_set_default_init(struct spi_nor *nor)
->   {
->   	nor->flags |= SNOR_F_HAS_LOCK;
-> @@ -3123,10 +3060,6 @@ static void spi_nor_manufacturer_init_params(struct spi_nor *nor)
->   {
->   	/* Init flash parameters based on MFR */
->   	switch (JEDEC_MFR(nor->info)) {
-> -	case SNOR_MFR_MACRONIX:
-> -		macronix_set_default_init(nor);
-> -		break;
-> -
->   	case SNOR_MFR_ST:
->   	case SNOR_MFR_MICRON:
->   		st_micron_set_default_init(nor);
-> diff --git a/drivers/mtd/spi-nor/core.h b/drivers/mtd/spi-nor/core.h
-> index b4ed9acbef63..9af3a701de95 100644
-> --- a/drivers/mtd/spi-nor/core.h
-> +++ b/drivers/mtd/spi-nor/core.h
-> @@ -175,6 +175,7 @@ extern const struct spi_nor_manufacturer spi_nor_fujitsu;
->   extern const struct spi_nor_manufacturer spi_nor_gigadevice;
->   extern const struct spi_nor_manufacturer spi_nor_intel;
->   extern const struct spi_nor_manufacturer spi_nor_issi;
-> +extern const struct spi_nor_manufacturer spi_nor_macronix;
->   
->   int spi_nor_write_enable(struct spi_nor *nor);
->   int spi_nor_write_disable(struct spi_nor *nor);
-> diff --git a/drivers/mtd/spi-nor/macronix.c b/drivers/mtd/spi-nor/macronix.c
-> new file mode 100644
-> index 000000000000..1ae609c44676
-> --- /dev/null
-> +++ b/drivers/mtd/spi-nor/macronix.c
-> @@ -0,0 +1,98 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2005, Intec Automation Inc.
-> + * Copyright (C) 2014, Freescale Semiconductor, Inc.
-> + */
-> +
-> +#include <linux/mtd/spi-nor.h>
-> +
-> +#include "core.h"
-> +
-> +static int
-> +mx25l25635_post_bfpt_fixups(struct spi_nor *nor,
-> +			    const struct sfdp_parameter_header *bfpt_header,
-> +			    const struct sfdp_bfpt *bfpt,
-> +			    struct spi_nor_flash_parameter *params)
-> +{
+>  arch/x86/include/asm/kvm_host.h |    1 +
+>  arch/x86/include/uapi/asm/kvm.h |    1 +
+>  arch/x86/kvm/svm.c              |    1 +
+>  arch/x86/kvm/vmx/nested.c       |   35 ++++++++++++++++++++++++++++++++++-
+>  arch/x86/kvm/vmx/nested.h       |    5 +++++
+>  arch/x86/kvm/vmx/vmx.c          |   37 ++++++++++++++++++++++++++++++++++++-
+>  arch/x86/kvm/vmx/vmx.h          |    3 +++
+>  arch/x86/kvm/x86.c              |    2 ++
+>  8 files changed, 83 insertions(+), 2 deletions(-)
+> 
+> --- a/arch/x86/include/asm/kvm_host.h
+> +++ b/arch/x86/include/asm/kvm_host.h
+> @@ -1092,6 +1092,7 @@ struct kvm_x86_ops {
+>  	void (*run)(struct kvm_vcpu *vcpu);
+>  	int (*handle_exit)(struct kvm_vcpu *vcpu);
+>  	int (*skip_emulated_instruction)(struct kvm_vcpu *vcpu);
+> +	void (*update_emulated_instruction)(struct kvm_vcpu *vcpu);
+>  	void (*set_interrupt_shadow)(struct kvm_vcpu *vcpu, int mask);
+>  	u32 (*get_interrupt_shadow)(struct kvm_vcpu *vcpu);
+>  	void (*patch_hypercall)(struct kvm_vcpu *vcpu,
+> --- a/arch/x86/include/uapi/asm/kvm.h
+> +++ b/arch/x86/include/uapi/asm/kvm.h
+> @@ -390,6 +390,7 @@ struct kvm_sync_regs {
+>  #define KVM_STATE_NESTED_GUEST_MODE	0x00000001
+>  #define KVM_STATE_NESTED_RUN_PENDING	0x00000002
+>  #define KVM_STATE_NESTED_EVMCS		0x00000004
+> +#define KVM_STATE_NESTED_MTF_PENDING	0x00000008
+>  
+>  #define KVM_STATE_NESTED_SMM_GUEST_MODE	0x00000001
+>  #define KVM_STATE_NESTED_SMM_VMXON	0x00000002
+> --- a/arch/x86/kvm/svm.c
+> +++ b/arch/x86/kvm/svm.c
+> @@ -7311,6 +7311,7 @@ static struct kvm_x86_ops svm_x86_ops __
+>  	.run = svm_vcpu_run,
+>  	.handle_exit = handle_exit,
+>  	.skip_emulated_instruction = skip_emulated_instruction,
+> +	.update_emulated_instruction = NULL,
+>  	.set_interrupt_shadow = svm_set_interrupt_shadow,
+>  	.get_interrupt_shadow = svm_get_interrupt_shadow,
+>  	.patch_hypercall = svm_patch_hypercall,
+> --- a/arch/x86/kvm/vmx/nested.c
+> +++ b/arch/x86/kvm/vmx/nested.c
+> @@ -3616,8 +3616,15 @@ static int vmx_check_nested_events(struc
+>  	unsigned long exit_qual;
+>  	bool block_nested_events =
+>  	    vmx->nested.nested_run_pending || kvm_event_needs_reinjection(vcpu);
+> +	bool mtf_pending = vmx->nested.mtf_pending;
+>  	struct kvm_lapic *apic = vcpu->arch.apic;
+>  
 > +	/*
-> +	 * MX25L25635F supports 4B opcodes but MX25L25635E does not.
-> +	 * Unfortunately, Macronix has re-used the same JEDEC ID for both
-> +	 * variants which prevents us from defining a new entry in the parts
-> +	 * table.
-> +	 * We need a way to differentiate MX25L25635E and MX25L25635F, and it
-> +	 * seems that the F version advertises support for Fast Read 4-4-4 in
-> +	 * its BFPT table.
+> +	 * Clear the MTF state. If a higher priority VM-exit is delivered first,
+> +	 * this state is discarded.
 > +	 */
-> +	if (bfpt->dwords[BFPT_DWORD(5)] & BFPT_DWORD5_FAST_READ_4_4_4)
-> +		nor->flags |= SNOR_F_4B_OPCODES;
+> +	vmx->nested.mtf_pending = false;
 > +
-> +	return 0;
-> +}
+>  	if (lapic_in_kernel(vcpu) &&
+>  		test_bit(KVM_APIC_INIT, &apic->pending_events)) {
+>  		if (block_nested_events)
+> @@ -3628,8 +3635,28 @@ static int vmx_check_nested_events(struc
+>  		return 0;
+>  	}
+>  
+> +	/*
+> +	 * Process any exceptions that are not debug traps before MTF.
+> +	 */
+> +	if (vcpu->arch.exception.pending &&
+> +	    !vmx_pending_dbg_trap(vcpu) &&
+> +	    nested_vmx_check_exception(vcpu, &exit_qual)) {
+> +		if (block_nested_events)
+> +			return -EBUSY;
+> +		nested_vmx_inject_exception_vmexit(vcpu, exit_qual);
+> +		return 0;
+> +	}
 > +
-> +static struct spi_nor_fixups mx25l25635_fixups = {
-> +	.post_bfpt = mx25l25635_post_bfpt_fixups,
-> +};
+> +	if (mtf_pending) {
+> +		if (block_nested_events)
+> +			return -EBUSY;
+> +		nested_vmx_update_pending_dbg(vcpu);
+> +		nested_vmx_vmexit(vcpu, EXIT_REASON_MONITOR_TRAP_FLAG, 0, 0);
+> +		return 0;
+> +	}
 > +
-> +static const struct flash_info macronix_parts[] = {
-> +	/* Macronix */
-> +	{ "mx25l512e",   INFO(0xc22010, 0, 64 * 1024,   1, SECT_4K) },
-> +	{ "mx25l2005a",  INFO(0xc22012, 0, 64 * 1024,   4, SECT_4K) },
-> +	{ "mx25l4005a",  INFO(0xc22013, 0, 64 * 1024,   8, SECT_4K) },
-> +	{ "mx25l8005",   INFO(0xc22014, 0, 64 * 1024,  16, 0) },
-> +	{ "mx25l1606e",  INFO(0xc22015, 0, 64 * 1024,  32, SECT_4K) },
-> +	{ "mx25l3205d",  INFO(0xc22016, 0, 64 * 1024,  64, SECT_4K) },
-> +	{ "mx25l3255e",  INFO(0xc29e16, 0, 64 * 1024,  64, SECT_4K) },
-> +	{ "mx25l6405d",  INFO(0xc22017, 0, 64 * 1024, 128, SECT_4K) },
-> +	{ "mx25u2033e",  INFO(0xc22532, 0, 64 * 1024,   4, SECT_4K) },
-> +	{ "mx25u3235f",	 INFO(0xc22536, 0, 64 * 1024,  64,
-> +			      SECT_4K | SPI_NOR_DUAL_READ |
-> +			      SPI_NOR_QUAD_READ) },
-> +	{ "mx25u4035",   INFO(0xc22533, 0, 64 * 1024,   8, SECT_4K) },
-> +	{ "mx25u8035",   INFO(0xc22534, 0, 64 * 1024,  16, SECT_4K) },
-> +	{ "mx25u6435f",  INFO(0xc22537, 0, 64 * 1024, 128, SECT_4K) },
-> +	{ "mx25l12805d", INFO(0xc22018, 0, 64 * 1024, 256, 0) },
-> +	{ "mx25l12855e", INFO(0xc22618, 0, 64 * 1024, 256, 0) },
-> +	{ "mx25r3235f",  INFO(0xc22816, 0, 64 * 1024,  64,
-> +			      SECT_4K | SPI_NOR_DUAL_READ |
-> +			      SPI_NOR_QUAD_READ) },
-> +	{ "mx25u12835f", INFO(0xc22538, 0, 64 * 1024, 256,
-> +			      SECT_4K | SPI_NOR_DUAL_READ |
-> +			      SPI_NOR_QUAD_READ) },
-> +	{ "mx25l25635e", INFO(0xc22019, 0, 64 * 1024, 512,
-> +			      SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ)
-> +		.fixups = &mx25l25635_fixups },
-> +	{ "mx25u25635f", INFO(0xc22539, 0, 64 * 1024, 512,
-> +			      SECT_4K | SPI_NOR_4B_OPCODES) },
-> +	{ "mx25v8035f",  INFO(0xc22314, 0, 64 * 1024,  16,
-> +			      SECT_4K | SPI_NOR_DUAL_READ |
-> +			      SPI_NOR_QUAD_READ) },
-> +	{ "mx25l25655e", INFO(0xc22619, 0, 64 * 1024, 512, 0) },
-> +	{ "mx66l51235l", INFO(0xc2201a, 0, 64 * 1024, 1024,
-> +			      SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> +			      SPI_NOR_4B_OPCODES) },
-> +	{ "mx66u51235f", INFO(0xc2253a, 0, 64 * 1024, 1024,
-> +			      SECT_4K | SPI_NOR_DUAL_READ |
-> +			      SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
-> +	{ "mx66l1g45g",  INFO(0xc2201b, 0, 64 * 1024, 2048,
-> +			      SECT_4K | SPI_NOR_DUAL_READ |
-> +			      SPI_NOR_QUAD_READ) },
-> +	{ "mx66l1g55g",  INFO(0xc2261b, 0, 64 * 1024, 2048,
-> +			      SPI_NOR_QUAD_READ) },
-> +};
+>  	if (vcpu->arch.exception.pending &&
+> -		nested_vmx_check_exception(vcpu, &exit_qual)) {
+> +	    nested_vmx_check_exception(vcpu, &exit_qual)) {
+>  		if (block_nested_events)
+>  			return -EBUSY;
+>  		nested_vmx_inject_exception_vmexit(vcpu, exit_qual);
+> @@ -5742,6 +5769,9 @@ static int vmx_get_nested_state(struct k
+>  
+>  			if (vmx->nested.nested_run_pending)
+>  				kvm_state.flags |= KVM_STATE_NESTED_RUN_PENDING;
 > +
-> +static void macronix_default_init(struct spi_nor *nor)
+> +			if (vmx->nested.mtf_pending)
+> +				kvm_state.flags |= KVM_STATE_NESTED_MTF_PENDING;
+>  		}
+>  	}
+>  
+> @@ -5922,6 +5952,9 @@ static int vmx_set_nested_state(struct k
+>  	vmx->nested.nested_run_pending =
+>  		!!(kvm_state->flags & KVM_STATE_NESTED_RUN_PENDING);
+>  
+> +	vmx->nested.mtf_pending =
+> +		!!(kvm_state->flags & KVM_STATE_NESTED_MTF_PENDING);
+> +
+>  	ret = -EINVAL;
+>  	if (nested_cpu_has_shadow_vmcs(vmcs12) &&
+>  	    vmcs12->vmcs_link_pointer != -1ull) {
+> --- a/arch/x86/kvm/vmx/nested.h
+> +++ b/arch/x86/kvm/vmx/nested.h
+> @@ -176,6 +176,11 @@ static inline bool nested_cpu_has_virtua
+>  	return vmcs12->pin_based_vm_exec_control & PIN_BASED_VIRTUAL_NMIS;
+>  }
+>  
+> +static inline int nested_cpu_has_mtf(struct vmcs12 *vmcs12)
 > +{
-> +	nor->params.quad_enable = spi_nor_sr1_bit6_quad_enable;
-> +	nor->params.set_4byte = spi_nor_en4_ex4_set_4byte;
+> +	return nested_cpu_has(vmcs12, CPU_BASED_MONITOR_TRAP_FLAG);
 > +}
 > +
-> +static const struct spi_nor_fixups macronix_fixups = {
-> +	.default_init = macronix_default_init,
-> +};
+>  static inline int nested_cpu_has_ept(struct vmcs12 *vmcs12)
+>  {
+>  	return nested_cpu_has2(vmcs12, SECONDARY_EXEC_ENABLE_EPT);
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1595,6 +1595,40 @@ static int skip_emulated_instruction(str
+>  	return 1;
+>  }
+>  
 > +
-> +const struct spi_nor_manufacturer spi_nor_macronix = {
-> +	.name = "macronix",
-> +	.parts = macronix_parts,
-> +	.nparts = ARRAY_SIZE(macronix_parts),
-> +	.fixups = &macronix_fixups,
-> +};
-
+> +/*
+> + * Recognizes a pending MTF VM-exit and records the nested state for later
+> + * delivery.
+> + */
+> +static void vmx_update_emulated_instruction(struct kvm_vcpu *vcpu)
+> +{
+> +	struct vmcs12 *vmcs12 = get_vmcs12(vcpu);
+> +	struct vcpu_vmx *vmx = to_vmx(vcpu);
+> +
+> +	if (!is_guest_mode(vcpu))
+> +		return;
+> +
+> +	/*
+> +	 * Per the SDM, MTF takes priority over debug-trap exceptions besides
+> +	 * T-bit traps. As instruction emulation is completed (i.e. at the
+> +	 * instruction boundary), any #DB exception pending delivery must be a
+> +	 * debug-trap. Record the pending MTF state to be delivered in
+> +	 * vmx_check_nested_events().
+> +	 */
+> +	if (nested_cpu_has_mtf(vmcs12) &&
+> +	    (!vcpu->arch.exception.pending ||
+> +	     vcpu->arch.exception.nr == DB_VECTOR))
+> +		vmx->nested.mtf_pending = true;
+> +	else
+> +		vmx->nested.mtf_pending = false;
+> +}
+> +
+> +static int vmx_skip_emulated_instruction(struct kvm_vcpu *vcpu)
+> +{
+> +	vmx_update_emulated_instruction(vcpu);
+> +	return skip_emulated_instruction(vcpu);
+> +}
+> +
+>  static void vmx_clear_hlt(struct kvm_vcpu *vcpu)
+>  {
+>  	/*
+> @@ -7886,7 +7920,8 @@ static struct kvm_x86_ops vmx_x86_ops __
+>  
+>  	.run = vmx_vcpu_run,
+>  	.handle_exit = vmx_handle_exit,
+> -	.skip_emulated_instruction = skip_emulated_instruction,
+> +	.skip_emulated_instruction = vmx_skip_emulated_instruction,
+> +	.update_emulated_instruction = vmx_update_emulated_instruction,
+>  	.set_interrupt_shadow = vmx_set_interrupt_shadow,
+>  	.get_interrupt_shadow = vmx_get_interrupt_shadow,
+>  	.patch_hypercall = vmx_patch_hypercall,
+> --- a/arch/x86/kvm/vmx/vmx.h
+> +++ b/arch/x86/kvm/vmx/vmx.h
+> @@ -150,6 +150,9 @@ struct nested_vmx {
+>  	/* L2 must run next, and mustn't decide to exit to L1. */
+>  	bool nested_run_pending;
+>  
+> +	/* Pending MTF VM-exit into L1.  */
+> +	bool mtf_pending;
+> +
+>  	struct loaded_vmcs vmcs02;
+>  
+>  	/*
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -6838,6 +6838,8 @@ restart:
+>  			kvm_rip_write(vcpu, ctxt->eip);
+>  			if (r && ctxt->tf)
+>  				r = kvm_vcpu_do_singlestep(vcpu);
+> +			if (kvm_x86_ops->update_emulated_instruction)
+> +				kvm_x86_ops->update_emulated_instruction(vcpu);
+>  			__kvm_set_rflags(vcpu, ctxt->eflags);
+>  		}
+>  
+> 
+> 
 
