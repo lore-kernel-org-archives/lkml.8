@@ -2,78 +2,68 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6543C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8107CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A5D21D56
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:24:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 551F121775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:26:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388305AbgCDQYY (ORCPT
+        id S1729796AbgCDQ03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:24:24 -0500
-Received: from mx2.suse.de ([195.135.220.15]:42336 "EHLO mx2.suse.de"
+        Wed, 4 Mar 2020 11:26:29 -0500
+Received: from verein.lst.de ([213.95.11.211]:55335 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388254AbgCDQYW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:24:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 51662ADB3;
-        Wed,  4 Mar 2020 16:24:20 +0000 (UTC)
-Received: by unicorn.suse.cz (Postfix, from userid 1000)
-        id 04235E037F; Wed,  4 Mar 2020 17:24:19 +0100 (CET)
-Message-Id: <4c410fbb93c84d801c267be68799101036715ecb.1583337972.git.mkubecek@suse.cz>
-In-Reply-To: <cover.1583337972.git.mkubecek@suse.cz>
-References: <cover.1583337972.git.mkubecek@suse.cz>
-From:   Michal Kubecek <mkubecek@suse.cz>
-Subject: [PATCH net-next 5/5] tun: drop TUN_DEBUG and tun_debug()
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed,  4 Mar 2020 17:24:20 +0100 (CET)
+        id S1726650AbgCDQ03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:26:29 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id CBDF168B20; Wed,  4 Mar 2020 17:26:25 +0100 (CET)
+Date:   Wed, 4 Mar 2020 17:26:25 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jan Kara <jack@suse.cz>
+Cc:     He Zhe <zhe.he@windriver.com>, Christoph Hellwig <hch@lst.de>,
+        Jens Axboe <axboe@kernel.dk>, viro@zeniv.linux.org.uk,
+        bvanassche@acm.org, keith.busch@intel.com, tglx@linutronix.de,
+        mwilck@suse.com, yuyufen@huawei.com, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: disk revalidation updates and OOM
+Message-ID: <20200304162625.GA11616@lst.de>
+References: <93b395e6-5c3f-0157-9572-af0f9094dbd7@windriver.com> <20200304133738.GF21048@quack2.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304133738.GF21048@quack2.suse.cz>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TUN_DEBUG and tun_debug() are no longer used anywhere, drop them.
+On Wed, Mar 04, 2020 at 02:37:38PM +0100, Jan Kara wrote:
+> Hi!
+> 
+> On Mon 02-03-20 11:55:44, He Zhe wrote:
+> > Since the following commit
+> > https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.5/disk-revalidate&id=6917d0689993f46d97d40dd66c601d0fd5b1dbdd
+> > until now(v5.6-rc4),
+> > 
+> > If we start udisksd service of systemd(v244), systemd-udevd will scan
+> > /dev/hdc (the cdrom device created by default in qemu(v4.2.0)).
+> > systemd-udevd will endlessly run and cause OOM.
+> 
+> Thanks for report! The commit you mention has this:
+> 
+> There is a small behavior change in that we now send the kevent change
+> notice also if we were not invalidating but no partitions were found, which
+> seems like the right thing to do.
+> 
+> And apparently this confuses systemd-udevd because it tries to open
+> /dev/hdc in response to KOBJ_CHANGE event on that device and the open calls
+> rescan_partitions() which generates another KOBJ_CHANGE event.  So I'm
+> afraid we'll have to revert to the old behavior of not sending KOBJ_CHANGE
+> event when there are no partitions found. Christoph?
 
-Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
----
- drivers/net/tun.c | 17 -----------------
- 1 file changed, 17 deletions(-)
-
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index 42110aba0014..4689e4c62e21 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -75,23 +75,6 @@
- static void tun_default_link_ksettings(struct net_device *dev,
- 				       struct ethtool_link_ksettings *cmd);
- 
--/* Uncomment to enable debugging */
--/* #define TUN_DEBUG 1 */
--
--#ifdef TUN_DEBUG
--#define tun_debug(level, tun, fmt, args...)			\
--do {								\
--	if (tun->msg_enable)					\
--		netdev_printk(level, tun->dev, fmt, ##args);	\
--} while (0)
--#else
--#define tun_debug(level, tun, fmt, args...)			\
--do {								\
--	if (0)							\
--		netdev_printk(level, tun->dev, fmt, ##args);	\
--} while (0)
--#endif
--
- #define TUN_RX_PAD (NET_IP_ALIGN + NET_SKB_PAD)
- 
- /* TUN device flags */
--- 
-2.25.1
-
+Looks like it.  Let me figure out how to best do that.
