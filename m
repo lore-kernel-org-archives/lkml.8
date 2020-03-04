@@ -2,110 +2,119 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAA0C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076EDC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3CDA20828
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eb3IOFXs"
+	by mail.kernel.org (Postfix) with ESMTP id DA0B620828
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388355AbgCDV0R (ORCPT
+        id S2388406AbgCDV0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:26:17 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33604 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729825AbgCDV0Q (ORCPT
+        Wed, 4 Mar 2020 16:26:25 -0500
+Received: from smtprelay0215.hostedemail.com ([216.40.44.215]:45176 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388364AbgCDV0Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:26:16 -0500
-Received: by mail-ed1-f68.google.com with SMTP id c62so4082595edf.0;
-        Wed, 04 Mar 2020 13:26:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=eMvhBOIg5MRjHF1oFd/XQ7SSnXXeEGxIFK8nINn5g7k=;
-        b=Eb3IOFXsE/5oc8UPJfOC7SVDxP8zUqyH896zGb2lG90S92LZk+QnhPw4pVvGkuUOBc
-         HNNsuwN8g4bIw/+bygigUIyQKJD/dfC8mJ3EKwOiH5mRU9/gG0AvuY3Q3Dg5yAwO7RZ4
-         jtSI3psRzrtJ/pMIT/q2i5jPkznXQcEtRj3jIc9pJ3e9XZBnSXXLXANUpAWvHvr8RgYv
-         UdfrXmvdYQSm1ZjK6rHHxch+eHZcWs5gxG/b0VpLsvwOLoktgmI+ac0Ez0dINeXkQzn7
-         caRHXsHS/MDmtrJwJaPuE/nSk0XsJmSMFdMuNcwzd0BUrrVPgIa+Z6+2oWfWT2arzwej
-         2Jtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=eMvhBOIg5MRjHF1oFd/XQ7SSnXXeEGxIFK8nINn5g7k=;
-        b=Z+qgQAg7m+jrRnD1ftT3V1ZHIJbh7QapYMC3lRPEFHdHNHxrIhRtXLyFLmPkqvRCt3
-         NLQ5d+8uTRn8IGXFWMp3pMMcLZuJIt809vDF3d40SFAZE8rtjr1lEn2sr3dHWQRrkZmU
-         N78Ks7GRMg1zpyjFieMJ0EtrHZP6SkdFLdeDS7Scw3412seooWki5JovjQmb9QTIO0jJ
-         ZSNHMVHu10BSiro2aQlb0jg8xHi2n7u/Zn7UUnlmmQDgyL7prrHSzirLghlCuRZ5FSL7
-         7VRM6ho0nsoD8kDBM4SVrWxfeLpuvdFryqF1MjHgHYH/2TreEyGW8ajpHaNvraZtzaT4
-         GtHg==
-X-Gm-Message-State: ANhLgQ3YC6GBH5N89YXhk60b0KIU/IWuiNZ92MOJYkp9Q7xz0WwY7rs+
-        b0PDgTL5dGeK0XuQS+KtMGp2HsmrimI=
-X-Google-Smtp-Source: ADFU+vsYttFIIZKSMto/Dsvrd8XkxFID6j5epaPlIKW2H/3V/H1ZiJlIaehOf50JN/z7KI79i34OKQ==
-X-Received: by 2002:a50:b043:: with SMTP id i61mr4672103edd.194.1583357174832;
-        Wed, 04 Mar 2020 13:26:14 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d16:4100:5c62:5f:595c:f76d])
-        by smtp.gmail.com with ESMTPSA id ss15sm1332396ejb.10.2020.03.04.13.26.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 13:26:14 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Chen-Yu Tsai <wens@csie.org>, Yangtao Li <tiny.windzz@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh@kernel.org>
-Cc:     linux-pm@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH v2] MAINTAINERS: update ALLWINNER CPUFREQ DRIVER entry
-Date:   Wed,  4 Mar 2020 22:26:00 +0100
-Message-Id: <20200304212600.6172-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 16:26:24 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 0BF45100E7B42;
+        Wed,  4 Mar 2020 21:26:23 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: top47_1a6fca43cfd3c
+X-Filterd-Recvd-Size: 3754
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf18.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  4 Mar 2020 21:26:21 +0000 (UTC)
+Message-ID: <ed040dd417d578e1ab4491d116c6ac1431142385.camel@perches.com>
+Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
+From:   Joe Perches <joe@perches.com>
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 04 Mar 2020 13:24:48 -0800
+In-Reply-To: <20200304212846.0c79c6da@coco.lan>
+References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
+         <20200304131035.731a3947@lwn.net> <20200304212846.0c79c6da@coco.lan>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit b30d8cf5e171 ("dt-bindings: opp: Convert Allwinner H6 OPP to a
-schema") converted in Documentation/devicetree/bindings/opp/ the file
-sun50i-nvmem-cpufreq.txt to allwinner,sun50i-h6-operating-points.yaml.
+On Wed, 2020-03-04 at 21:28 +0100, Mauro Carvalho Chehab wrote:
+> Em Wed, 4 Mar 2020 13:10:35 -0700
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+> 
+> > On Wed,  4 Mar 2020 08:29:50 +0100
+> > Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> > 
+> > > Mauro's patch series <cover.1581955849.git.mchehab+huawei@kernel.org>
+> > > ("[PATCH 00/44] Manually convert filesystem FS documents to ReST")
+> > > converts many Documentation/filesystems/ files to ReST.
+> > > 
+> > > Since then, ./scripts/get_maintainer.pl --self-test complains with 27
+> > > warnings on Documentation/filesystems/ of this kind:
+> > > 
+> > >   warning: no file matches F: Documentation/filesystems/...
+> > > 
+> > > Adjust MAINTAINERS entries to all files converted from .txt to .rst in the
+> > > patch series and address the 27 warnings.
+> > > 
+> > > Link: https://lore.kernel.org/linux-erofs/cover.1581955849.git.mchehab+huawei@kernel.org
+> > > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> > > ---
+> > > Mauro, please ack.
+> > > Jonathan, pick pick this patch for doc-next.  
+> > 
+> > Sigh, I need to work a MAINTAINERS check into my workflow...
+> > 
+> > Thanks for fixing these, but ... what tree did you generate the patch
+> > against?  I doesn't come close to applying to docs-next.
+> 
+> I'm starting to suspect that maybe the best workflow would be to just 
+> apply the patches at docs-next keeping links broken, and then run
+> ./scripts/documentation-file-ref-check --fix by the end of a merge
+> window, addressing such breakages.
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+I'm not sure at all that that script will always do the
+right thing with MAINTAINERS, but it seems to work OK
+except for some renames where a .txt file was directly
+renamed to a .rst file in the same directory where there
+was a similarly named file in a different directory.
 
-  warning: no file matches \
-  F: Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+Likely the direct rename of a filename extension from
+.txt to .rst should always be applied by the script.
 
-Adjust the file pattern in the ALLWINNER CPUFREQ DRIVER entry.
+Anyway, for -next as of today:
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Changes to v1:
-  - do not include new maintainers because it is not needed.
+$ git diff --shortstat
+ 64 files changed, 116 insertions(+), 116 deletions(-)
 
-Maxime, Chen-Yu, Yangtao, please ack.
-Rob, please pick this patch.
+> There are usually lots of churn outside the merge window.
+> 
+> Another alternative would be to split the MAINTAINERS file on a
+> per-subsystem basis. If I remember well, someone proposed this once at
+> LKML. I vaguely remember that there were even a patch (or RFC)
+> adding support for such thing for get_maintainers.pl.
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yeah.  get_maintainer.pl does work if the MAINTAINERS
+file is split up a few different ways.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6158a143a13e..9402b05630f9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -693,7 +693,7 @@ ALLWINNER CPUFREQ DRIVER
- M:	Yangtao Li <tiny.windzz@gmail.com>
- L:	linux-pm@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-+F:	Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
- F:	drivers/cpufreq/sun50i-cpufreq-nvmem.c
- 
- ALLWINNER CRYPTO DRIVERS
--- 
-2.17.1
+There was also a tool to do the MAINTAINERS split.
+https://lore.kernel.org/patchwork/patch/817857/
+
+I doubt that would matter at all given today's tools and
+the general mechanisms of maintainers renaming files and
+not running checkpatch in the first place.
+
 
