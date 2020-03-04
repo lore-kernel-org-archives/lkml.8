@@ -2,90 +2,79 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9931EC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD561C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 710DE215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583338866;
-	bh=dfv6+Dw0JN5nYcS6Td2XUXAVbrgDtjldVynpFllgfV0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CwaBcwLegserqaWsFKUVy5WRcsT1p+XWquX6qPVLqQblBcWCdQH0bx70Z6SvzhDfj
-	 NlkwdxWgemli2Gj84MTnt5nxtc+1H1NcPz0qekmISdzRiyYsopP1J4zhwwYGriIic3
-	 kScz16r1KxRvreJ4o3Ud5yYTUq1O9AKtLChGC3UQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9E4C1215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388201AbgCDQVF (ORCPT
+        id S2388242AbgCDQVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:21:05 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:34945 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgCDQVD (ORCPT
+        Wed, 4 Mar 2020 11:21:14 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:59402 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388215AbgCDQVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:21:03 -0500
-Received: by mail-qt1-f194.google.com with SMTP id v15so1792702qto.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:21:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dA2hYD+OudMyLEYw9vGPZKppB+9NldT/3jWoHjIzdlg=;
-        b=eamRAbG0xhZrCMRXKsXIG0E8aFb8uc1gEQfEi/UAcZdwr3itU9ulHanDYM8rwKFiCj
-         DAvEgoTXE9h3DqPk9xZKKjj390D8KRXaTDxGFsSlAXU8HS2VDwFXz7f+SwvL9OkaURet
-         HGYi0qvzLxg+mzMb5BlVEyZHs/pEccvjB0+nmd+HI2mhqheNOMfS0dSXfF2aTJ5sybHf
-         H3bG6GUp2sQobHfUtd5w926RrDUSX6qHJi7ZIqH1yuUw3qVAFdC7VnCYez/1HeQrxkkQ
-         SWWkz5JoP+6kHZZ0wXqz7C5et0IhHr/vilu3kGITpHEWJi+uVBjjwcm8bR3bXaErRK+a
-         EgPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=dA2hYD+OudMyLEYw9vGPZKppB+9NldT/3jWoHjIzdlg=;
-        b=rXgI+Eff3Jq+YK98sv9B4H2xTcJOzKOPzMX5zRaQiMd9qnGWzf24ZLaKKbfucYrIDr
-         PgsM0TvL0DZDFwTCX937v08X4W8v6E2HrMIVMdo9uokColo9UIF5Jae4ZI9JdQNHSNUQ
-         U3hU8Bulp/RVHNeBU4ruQ5Hbv2SVfWZRVB3wNKbO1MhFTqizxIfiWrvsiiUQDfvo8MBr
-         4c2iCLsItjPMwzHu2U2GeUUlbI2VNbluEJuTJaUKlDnCTiSsI4dMwEi8MEye4bm8Un3E
-         xwvpFdgWEOmISYXaghSzQhOqqE8TCDl2zb9y6l7+b/YVB/p3QGSgmej9of0mgZ7aINgq
-         9j5Q==
-X-Gm-Message-State: ANhLgQ3KO3yl7SpIftcZNekkOUeyYykRS5bRieM6oXv21WHi+kY1Lj3I
-        33Fg4fssx98DuyIyi4sv1gk=
-X-Google-Smtp-Source: ADFU+vvhJ7nC607fUEZnIeQ3XKKD0XsCUc0dD50xdDho/SyOSc8B/zFdXKlt884z9ucWNtqwzUf6lA==
-X-Received: by 2002:ac8:76d7:: with SMTP id q23mr3124541qtr.198.1583338862563;
-        Wed, 04 Mar 2020 08:21:02 -0800 (PST)
-Received: from localhost ([71.172.127.161])
-        by smtp.gmail.com with ESMTPSA id 4sm5798235qkl.79.2020.03.04.08.21.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:21:01 -0800 (PST)
-Date:   Wed, 4 Mar 2020 11:21:00 -0500
-From:   Tejun Heo <tj@kernel.org>
-To:     Yu Chen <chen.yu@easystack.cn>
-Cc:     linux-kernel@vger.kernel.org, 33988979@163.com
-Subject: Re: [PATCH] workqueue: Make workqueue_init*() return void
-Message-ID: <20200304162100.GE189690@mtj.thefacebook.com>
-References: <20200223072852.3954-1-chen.yu@easystack.cn>
+        Wed, 4 Mar 2020 11:21:14 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9WlP-005GmR-La; Wed, 04 Mar 2020 16:20:51 +0000
+Date:   Wed, 4 Mar 2020 16:20:51 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v3)
+Message-ID: <20200304162051.GQ23230@ZenIV.linux.org.uk>
+References: <20200223011154.GY23230@ZenIV.linux.org.uk>
+ <20200301215125.GA873525@ZenIV.linux.org.uk>
+ <CAHk-=wh1Q=H-YstHZRKfEw2McUBX2_TfTc=+5N-iH8DSGz44Qg@mail.gmail.com>
+ <20200302003926.GM23230@ZenIV.linux.org.uk>
+ <87o8tdgfu8.fsf@x220.int.ebiederm.org>
+ <20200304002434.GO23230@ZenIV.linux.org.uk>
+ <87wo80g0bo.fsf@x220.int.ebiederm.org>
+ <20200304065547.GP23230@ZenIV.linux.org.uk>
+ <20200304132812.GE29971@bombadil.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200223072852.3954-1-chen.yu@easystack.cn>
+In-Reply-To: <20200304132812.GE29971@bombadil.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 23, 2020 at 03:28:52PM +0800, Yu Chen wrote:
-> The return values of workqueue_init() and workqueue_early_int() are 
-> always 0, and there is no usage of their return value.  So just make 
-> them return void.
+On Wed, Mar 04, 2020 at 05:28:12AM -0800, Matthew Wilcox wrote:
+> On Wed, Mar 04, 2020 at 06:55:47AM +0000, Al Viro wrote:
+> > On Tue, Mar 03, 2020 at 11:23:39PM -0600, Eric W. Biederman wrote:
+> > > Do the xfs-tests cover that sort of thing?
+> > > The emphasis is stress testing the filesystem not the VFS but there is a
+> > > lot of overlap between the two.
+> > 
+> > I do run xfstests.  But "runs in KVM without visible slowdowns" != "won't
+> > cause them on 48-core bare metal".  And this area (especially when it
+> > comes to RCU mode) can be, er, interesting in that respect.
+> > 
+> > FWIW, I'm putting together some litmus tests for pathwalk semantics -
+> > one of the things I'd like to discuss at LSF; quite a few codepaths
+> > are simply not touched by anything in xfstests.
 > 
-> Signed-off-by: Yu Chen <chen.yu@easystack.cn>
+> Might be more appropriate for LTP than xfstests?  will-it-scale might be
+> the right place for performance benchmarks.
 
-Applied to wq/for-5.7.
+Might be...  I do run LTP as well, but it's still a 4-way KVM on a 6-way
+amd64 host (phenom II X6 1100T) - not well-suited for catching scalability
+issues.
 
-Thanks.
-
--- 
-tejun
+Litmus tests mentioned above are more about verifying the semantics;
+I hadn't moved past the "bunch of home-grown scripts creating setups
+that would exercise the codepaths in question + trivial pieces
+in C, pretty much limited to syscall()" stage with that; moving those
+to LTP framework is something I'll need to look into.  Might very well
+make sense; for now I just want a way to get test coverage of that code
+with minimal headache.
