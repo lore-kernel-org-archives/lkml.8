@@ -2,164 +2,88 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67320C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:05:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0420CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D71020842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:05:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3F6420866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:07:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V4FgB3DI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="otYQd4Bg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbgCDVFW (ORCPT
+        id S2388230AbgCDVHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:05:22 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:48154 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgCDVFV (ORCPT
+        Wed, 4 Mar 2020 16:07:43 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40886 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbgCDVHm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:05:21 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024KwBVI031961;
-        Wed, 4 Mar 2020 21:05:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=durUIH9nl11hlJYfROfWjX3IyST0g9f4WzIcjysdPBw=;
- b=V4FgB3DId1elpFDmnrLyVa9jxp0vFh1BnmIKfLnt3zh0Qc9CQ+1qDf/N5xhzJMgx3e2K
- EthmboMw5VvqSYyiHQl0ljHYBsiPggTMLg674A3z1rOCF8k2+yRQxyK+w9tOX1qLL4Jg
- iNF6jhkkkU/qvkPV99rlPtcSOQx3XE/A0+6SHzTbP6U9oU6GgVWGNDnVCYqTTNiSMfRG
- 94Q4KabFV08+UpwZhiWhazEhTbmC99Li73mtR3Zf+XFCsYxjDKx1BVxZld27fPgIzvwc
- WjyUuAAyBbOVOum+yxVZMj4bU597koQLykFjzeAuKx9BZdkyv3D1Z3bdi1AYW2sC5oVf Og== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2yffwr0yd2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Mar 2020 21:05:12 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024Kv7BJ172542;
-        Wed, 4 Mar 2020 21:05:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2yg1h1prht-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Mar 2020 21:05:11 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 024L55hS019510;
-        Wed, 4 Mar 2020 21:05:08 GMT
-Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 04 Mar 2020 13:05:05 -0800
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH] nfsd: Fix build error
-From:   Chuck Lever <chuck.lever@oracle.com>
-In-Reply-To: <20200304200609.GA26924@fieldses.org>
-Date:   Wed, 4 Mar 2020 16:05:03 -0500
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 7bit
-Message-Id: <9592D8FB-C758-4B52-962B-B04A00627A43@oracle.com>
-References: <20200304131803.46560-1-yuehaibing@huawei.com>
- <BC0E3531-B282-4C04-9540-C39C6F4A1A5D@oracle.com>
- <20200304200609.GA26924@fieldses.org>
-To:     Bruce Fields <bfields@fieldses.org>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040136
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
- phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003040136
+        Wed, 4 Mar 2020 16:07:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=vEBQ9Oh5DEsZStk/47umQFJ1w5UJ/wMmh0eDlyTD1YI=; b=otYQd4BgDFNgb6t3Jl0d+9/2OS
+        EnBbuAI69FvAsUY1jaqowJjwO1/ZeP3uYSXnV7sj5e5vhKtlRphfSd9eDhFcbnkbgGu8z52SMW87H
+        JElVFROP6zTjfouT2MQQlCZJ0CFrZ4gTAfF69R9Cx3a/Dh9URkbpg4myzsb7nAg6JBWIppZpO6fHm
+        Y9ixU92i2paS0QTGd1O0P3UYDcFj3mpZDk4gF94RdaJQqTObxHDad8p2X3RmKZ3lwT7QSf26g0/gR
+        A3iMKNbTWQZWPBd8jjZbtzzfhEOtF8fpIAI9q6NOGNmwsLcdYo84B/8Xl58gXKTnjll7g20mKuBeD
+        rnUm+Kcw==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9bEz-0003Ey-G6; Wed, 04 Mar 2020 21:07:41 +0000
+Subject: Re: [v4] Documentation: bootconfig: Update boot configuration
+ documentation
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-doc@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+References: <158322634266.31847.8245359938993378502.stgit@devnote2>
+ <158322635301.31847.15011454479023637649.stgit@devnote2>
+ <ad1e9855-4c64-53bd-7da5-f7cdafe78571@infradead.org>
+ <20200304203722.8e8699c2a3e0a979aae091b1@kernel.org>
+ <3a3a5f1a-3654-d96d-3b4a-dd649a366c65@web.de>
+ <531371ef-354a-b0fa-f69f-c8cf9ecc9919@infradead.org>
+ <a9f8980e-4325-52c1-d217-d2fca1add37d@web.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <3118d72b-a33c-e6d7-36a1-204d39d2bdbb@infradead.org>
+Date:   Wed, 4 Mar 2020 13:07:40 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <a9f8980e-4325-52c1-d217-d2fca1add37d@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Mar 4, 2020, at 3:06 PM, Bruce Fields <bfields@fieldses.org> wrote:
+On 3/4/20 10:09 AM, Markus Elfring wrote:
+>>>> What about the following?
+>>>>
+>>>> User can group identical parent keys together and use braces to list child keys
+>>
+>>    The user
+> …
+>>>> under them.
+>>>
+>>> Another wording alternative:
+>>>
+>>> The user can group settings together. Curly brackets enclose a configuration then
+>>> according to a parent context.
+>>
+>> I slightly prefer Masami's text.
 > 
-> On Wed, Mar 04, 2020 at 01:00:12PM -0500, Chuck Lever wrote:
->> Hi-
->> 
->>> On Mar 4, 2020, at 8:18 AM, YueHaibing <yuehaibing@huawei.com> wrote:
->>> 
->>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_copy':
->>> nfs4proc.c:(.text+0x23b7): undefined reference to `nfs42_ssc_close'
->>> fs/nfsd/nfs4proc.o: In function `nfsd4_copy':
->>> nfs4proc.c:(.text+0x5d2a): undefined reference to `nfs_sb_deactive'
->>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_async_copy':
->>> nfs4proc.c:(.text+0x61d5): undefined reference to `nfs42_ssc_open'
->>> nfs4proc.c:(.text+0x6389): undefined reference to `nfs_sb_deactive'
->>> 
->>> Add dependency to NFSD_V4_2_INTER_SSC to fix this.
->>> 
->>> Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
->>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
->>> ---
->>> fs/nfsd/Kconfig | 1 +
->>> 1 file changed, 1 insertion(+)
->>> 
->>> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
->>> index f368f32..fc587a5 100644
->>> --- a/fs/nfsd/Kconfig
->>> +++ b/fs/nfsd/Kconfig
->>> @@ -136,6 +136,7 @@ config NFSD_FLEXFILELAYOUT
->>> 
->>> config NFSD_V4_2_INTER_SSC
->>> 	bool "NFSv4.2 inter server to server COPY"
->>> +	depends on !(NFSD=y && NFS_FS=m)
->> 
->> The new dependency is not especially clear to me; more explanation
->> in the patch description about the cause of the build failure
->> would definitely be helpful.
->> 
->> NFSD_V4 can't be set unless NFSD is also set.
->> 
->> NFS_V4_2 can't be set unless NFS_V4_1 is also set, and that cannot
->> be set unless NFS_FS is also set.
->> 
->> So what's really going on here?
-> 
-> I don't understand that "depends" either.
-> 
-> The fundamental problem, though, is that nfsd is calling nfs code
-> directly.
-> 
-> Which I noticed in earlier review and then forgot to follow up on,
-> sorry.
-> 
-> So either we:
-> 
-> 	- let nfsd depend on nfs, fix up Kconfig to reflect the fact, or
-> 	- write some code so nfsd can load nfs and find those symbols at
-> 	  runtime if it needs to do a copy.
+> Would you like to improve the distinction for grouping the involved items?
 
-Another practical option would be to create a copy of these functions in
-the server's SSC code. At least nfs_sb_deactive() is not large.
+I'm hoping to be done with the current changes. :)
 
-Not clear if nfs42_ssc_open/close are even used on the client. Maybe they
-could be moved to the server?
-
-> The latter's certainly doable, but it'd be simplest to do the former.
-> Are there actually a lot of people who want nfsd but not nfs?  Does that
-> cause a real problem for anyone?
-> 
-> --b.
-
---
-Chuck Lever
-
-
+-- 
+~Randy
 
