@@ -2,82 +2,116 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A03EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A894C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:09:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FC5F214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 421C9214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:09:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="my7jb0th"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728367AbgCDHHG (ORCPT
+        id S2387535AbgCDHJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:07:06 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:38063 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726860AbgCDHHG (ORCPT
+        Wed, 4 Mar 2020 02:09:04 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:33390 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727130AbgCDHJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:07:06 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04396;MF=alex.shi@linux.alibaba.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---0TrcsTun_1583305608;
-Received: from IT-FVFX43SYHV2H.local(mailfrom:alex.shi@linux.alibaba.com fp:SMTPD_---0TrcsTun_1583305608)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 04 Mar 2020 15:06:48 +0800
-Subject: Re: [PATCH v9 07/20] mm/lru: introduce TestClearPageLRU
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     cgroups@vger.kernel.org, mgorman@techsingularity.net,
-        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
-        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
-        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Rong Chen <rong.a.chen@intel.com>
-References: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
- <1583146830-169516-8-git-send-email-alex.shi@linux.alibaba.com>
- <20200302141144.b30abe0d89306fd387e13a92@linux-foundation.org>
- <9cacdc21-9c1f-2a17-05cb-e9cf2959cef5@linux.alibaba.com>
- <20200303164659.b3a30ab9d68c9ed82299a29c@linux-foundation.org>
-From:   Alex Shi <alex.shi@linux.alibaba.com>
-Message-ID: <6d155f79-8ba2-b322-4e92-311e7be98f79@linux.alibaba.com>
-Date:   Wed, 4 Mar 2020 15:06:48 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Wed, 4 Mar 2020 02:09:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=xcOQxS31WXqSI2NeANvP6zwq4SdJcjdQbsMqA4Er/KA=; b=my7jb0thoo0WpDZBtjYCAfUwbe
+        c/LD6Qffyj2Z+dhqasDRg/WnjuvilNL5RUxXbz7H25Eg2Vy4TTZ2zc/2XhIdZPim7y5FL2a3tNGAD
+        R2kHFtSyHjFahOHqp1vjzN8zFZpKf3FObsDeouX5Wj0vElooZys8cQ5Ku45Vog3DZFA9HCmSsDnZ6
+        OozdM7Ke63t8JsT3Z6OG+f8M3f67O23CresE90wLxvu5NqVVHHK4UW3EjszaqrykfZiR1CqkKuaAF
+        cIsdxW7+xPTTA8VjqXM5bB9xilz1my9w0VlMurngUa0CZCZ36PICaUvY8qp3PaMdlc9VwkFxrG1uj
+        6/Gic00g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9O9N-0007EG-5P; Wed, 04 Mar 2020 07:09:01 +0000
+Subject: Re: linux-next: Tree for Mar 4 (staging/media/usbvision)
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+References: <20200304155458.64c78dcd@canb.auug.org.au>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <40c0c50a-5db9-89b7-6620-4905fe343f08@infradead.org>
+Date:   Tue, 3 Mar 2020 23:08:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200303164659.b3a30ab9d68c9ed82299a29c@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304155458.64c78dcd@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-在 2020/3/4 上午8:46, Andrew Morton 写道:
+On 3/3/20 8:54 PM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Well, any difference would be small and the numbers did get a bit
-> lower, albeit probably within the margin of error.
-> 
-> But you know, if someone were to send a patch which micro-optimized
-> some code by replacing 'TestClearXXX()' with `if PageXXX()
-> ClearPageXXX()', I would happily merge it!
-> 
-> Is this change essential to the overall patchset?  If not, I'd be
-> inclined to skip it?
+> Changes since 20200303:
 > 
 
-Hi Andrew,
+This ($subject) driver should depend on USB.  Otherwise there can be build errors:
 
-Thanks a lot for comments!
-Yes, this patch is essential for all next.
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_write_reg_irq':
+usbvision-core.c:(.text+0xdf7): undefined reference to `usb_submit_urb'
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_isoc_irq':
+usbvision-core.c:(.text+0x1e9f): undefined reference to `usb_submit_urb'
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_read_reg':
+usbvision-core.c:(.text+0x1fee): undefined reference to `usb_control_msg'
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_write_reg':
+usbvision-core.c:(.text+0x206e): undefined reference to `usb_control_msg'
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_set_output':
+usbvision-core.c:(.text+0x21c0): undefined reference to `usb_control_msg'
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_set_input':
+usbvision-core.c:(.text+0x268c): undefined reference to `usb_control_msg'
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_setup':
+usbvision-core.c:(.text+0x2950): undefined reference to `usb_control_msg'
+ld: drivers/staging/media/usbvision/usbvision-core.o:usbvision-core.c:(.text+0x2a3d): more undefined references to `usb_control_msg' follow
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_set_alternate':
+usbvision-core.c:(.text+0x2cfd): undefined reference to `usb_set_interface'
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_init_isoc':
+usbvision-core.c:(.text+0x2dd9): undefined reference to `usb_alloc_urb'
+ld: usbvision-core.c:(.text+0x2e0a): undefined reference to `usb_alloc_coherent'
+ld: usbvision-core.c:(.text+0x2ec2): undefined reference to `usb_submit_urb'
+ld: usbvision-core.c:(.text+0x2ed2): undefined reference to `usb_submit_urb'
+ld: drivers/staging/media/usbvision/usbvision-core.o: in function `usbvision_stop_isoc':
+usbvision-core.c:(.text+0x2f26): undefined reference to `usb_kill_urb'
+ld: usbvision-core.c:(.text+0x2f4b): undefined reference to `usb_free_coherent'
+ld: usbvision-core.c:(.text+0x2f59): undefined reference to `usb_free_urb'
+ld: usbvision-core.c:(.text+0x2f9d): undefined reference to `usb_set_interface'
+ld: drivers/staging/media/usbvision/usbvision-video.o: in function `usbvision_release':
+usbvision-video.c:(.text+0xcd8): undefined reference to `usb_free_urb'
+ld: drivers/staging/media/usbvision/usbvision-video.o: in function `usbvision_disconnect':
+usbvision-video.c:(.text+0xd42): undefined reference to `usb_put_dev'
+ld: drivers/staging/media/usbvision/usbvision-video.o: in function `usbvision_radio_close':
+usbvision-video.c:(.text+0xdd6): undefined reference to `usb_set_interface'
+ld: drivers/staging/media/usbvision/usbvision-video.o: in function `usbvision_probe':
+usbvision-video.c:(.text+0x1375): undefined reference to `usb_get_dev'
+ld: usbvision-video.c:(.text+0x1488): undefined reference to `usb_alloc_urb'
+ld: usbvision-video.c:(.text+0x1843): undefined reference to `usb_put_dev'
+ld: drivers/staging/media/usbvision/usbvision-video.o: in function `usbvision_exit':
+usbvision-video.c:(.exit.text+0x9): undefined reference to `usb_deregister'
+ld: drivers/staging/media/usbvision/usbvision-video.o: in function `usbvision_init':
+usbvision-video.c:(.init.text+0x2d): undefined reference to `usb_register_driver'
+ld: drivers/staging/media/usbvision/usbvision-i2c.o: in function `usbvision_i2c_write':
+usbvision-i2c.c:(.text+0x20e): undefined reference to `usb_control_msg'
 
-Consider the normal memory testing would focus on user page, that probabably with PageLRU. 
 
-Fengguang's vm-scalibicase-small-allocs which used a lots vm_area_struct slab, which may
-got some impact. 0day/Cheng Rong is working on the test. In my roughly testing, it may drop 5% on my
-96threads/394GB machine.
 
-Thanks
-Alex
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
