@@ -2,167 +2,93 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE341C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFDEC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 917D020848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:29:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583332152;
-	bh=MoVMyRxpuSKRHRt4lMrhqnWM+ARRucdTScPkRq8a2sI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=2apKSI3m6GuV5dbnCN9AMDN9l0nRiOgcBJjapIgWY+7a/zWJhUceDw8GS+WOxBjVE
-	 y0oWLYDyEzV4Y2acp2XCMsGTq+eWkMqZQ1qMTtmz4ZkJEpVfwNz0c9V/7TrtY5TFCW
-	 6WiuIUqG0X9LYsEJ8bORLGfxgp7TI8qCAtjEPwSY=
+	by mail.kernel.org (Postfix) with ESMTP id 1A88220848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:36:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387937AbgCDO3L (ORCPT
+        id S1729484AbgCDOgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:29:11 -0500
-Received: from foss.arm.com ([217.140.110.172]:35018 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729484AbgCDO3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:29:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFC6B31B;
-        Wed,  4 Mar 2020 06:29:10 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51E353F6CF;
-        Wed,  4 Mar 2020 06:29:10 -0800 (PST)
-Date:   Wed, 04 Mar 2020 14:29:08 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Aaro Koskinen <aaro.koskinen@nokia.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi_register_controller(): free bus id on error paths" to the spi tree
-In-Reply-To:  <20200304111740.27915-1-aaro.koskinen@nokia.com>
-Message-Id:  <applied-20200304111740.27915-1-aaro.koskinen@nokia.com>
-X-Patchwork-Hint: ignore
+        Wed, 4 Mar 2020 09:36:12 -0500
+Received: from out02.mta.xmission.com ([166.70.13.232]:45264 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgCDOgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 09:36:12 -0500
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j9V86-0007Lq-7y; Wed, 04 Mar 2020 07:36:10 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1j9V6V-0005fb-RG; Wed, 04 Mar 2020 07:36:08 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Qian Cai <cai@lca.pw>, oleg@redhat.com,
+        linux-kernel@vger.kernel.org
+References: <87wo80lcqi.fsf@nanos.tec.linutronix.de>
+Date:   Wed, 04 Mar 2020 08:32:22 -0600
+In-Reply-To: <87wo80lcqi.fsf@nanos.tec.linutronix.de> (Thomas Gleixner's
+        message of "Wed, 04 Mar 2020 09:56:37 +0100")
+Message-ID: <87lfogfax5.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1j9V6V-0005fb-RG;;;mid=<87lfogfax5.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX18ZxI6RGtjE7slLwFYskhXIghFEN64IuMA=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH timers/core] posix-cpu-timers: Put the task_struct in posix_cpu_timers_create
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+Thomas Gleixner <tglx@linutronix.de> writes:
 
-   spi: spi_register_controller(): free bus id on error paths
+> ebiederm@xmission.com (Eric W. Biederman) writes:
+>
+>> Qian Cai <cai@lca.pw> writes:
+>>> The recent commit removed put_task_struct() in posix_cpu_timer_del()
+>>> results in many memory leaks like this,
+>>>
+>>> unreferenced object 0xc0000016d9b44480 (size 8192):
+>>>   comm "timer_create01", pid 57749, jiffies 4295163733 (age 6159.670s)
+>>>   hex dump (first 32 bytes):
+>>>     02 00 00 00 00 00 00 00 10 00 00 00 00 00 00 00  ................
+>>>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>>   backtrace:
+>>>     [<0000000056aca129>] copy_process+0x26c/0x18e0
+>>>     alloc_task_struct_node at kernel/fork.c:169
+>>>     (inlined by) dup_task_struct at kernel/fork.c:877
+>>>     (inlined by) copy_process at kernel/fork.c:1929
+>>>     [<00000000bdbbf9f8>] _do_fork+0xac/0xb20
+>>>     [<00000000dcb1c445>] __do_sys_clone+0x98/0xe0
+>>>     __do_sys_clone at kernel/fork.c:2591
+>>>     [<000000006c059205>] ppc_clone+0x8/0xc
+>>>     ppc_clone at arch/powerpc/kernel/entry_64.S:479
+>>>
+>>
+>> I forgot that get_task_for_clock called by posix_cpu_timer_create
+>> returns a reference to a task_struct.  Put that reference
+>> to avoid the leak.
+>
+> I took the liberty to fold this back into the affected commit and add a
+> comment why this put_task_struct() is actually required.
 
-has been applied to the spi tree at
+Good enough.
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+We should be able to use rcu and remove the reference entirely.
+But that is a change for another day.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From f9981d4f50b475d7dbb70f3022b87a3c8bba9fd6 Mon Sep 17 00:00:00 2001
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
-Date: Wed, 4 Mar 2020 13:17:40 +0200
-Subject: [PATCH] spi: spi_register_controller(): free bus id on error paths
-
-Some error paths leave the bus id allocated. As a result the IDR
-allocation will fail after a deferred probe. Fix by freeing the bus id
-always on error.
-
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Message-Id: <20200304111740.27915-1-aaro.koskinen@nokia.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi.c | 32 +++++++++++++++-----------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 197c9e0ac2a6..94145b25f446 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2645,7 +2645,7 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		if (ctlr->use_gpio_descriptors) {
- 			status = spi_get_gpio_descs(ctlr);
- 			if (status)
--				return status;
-+				goto free_bus_id;
- 			/*
- 			 * A controller using GPIO descriptors always
- 			 * supports SPI_CS_HIGH if need be.
-@@ -2655,7 +2655,7 @@ int spi_register_controller(struct spi_controller *ctlr)
- 			/* Legacy code path for GPIOs from DT */
- 			status = of_spi_get_gpio_numbers(ctlr);
- 			if (status)
--				return status;
-+				goto free_bus_id;
- 		}
- 	}
- 
-@@ -2663,17 +2663,14 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	 * Even if it's just one always-selected device, there must
- 	 * be at least one chipselect.
- 	 */
--	if (!ctlr->num_chipselect)
--		return -EINVAL;
-+	if (!ctlr->num_chipselect) {
-+		status = -EINVAL;
-+		goto free_bus_id;
-+	}
- 
- 	status = device_add(&ctlr->dev);
--	if (status < 0) {
--		/* free bus id */
--		mutex_lock(&board_lock);
--		idr_remove(&spi_master_idr, ctlr->bus_num);
--		mutex_unlock(&board_lock);
--		goto done;
--	}
-+	if (status < 0)
-+		goto free_bus_id;
- 	dev_dbg(dev, "registered %s %s\n",
- 			spi_controller_is_slave(ctlr) ? "slave" : "master",
- 			dev_name(&ctlr->dev));
-@@ -2689,11 +2686,7 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		status = spi_controller_initialize_queue(ctlr);
- 		if (status) {
- 			device_del(&ctlr->dev);
--			/* free bus id */
--			mutex_lock(&board_lock);
--			idr_remove(&spi_master_idr, ctlr->bus_num);
--			mutex_unlock(&board_lock);
--			goto done;
-+			goto free_bus_id;
- 		}
- 	}
- 	/* add statistics */
-@@ -2708,7 +2701,12 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	/* Register devices from the device tree and ACPI */
- 	of_register_spi_devices(ctlr);
- 	acpi_register_spi_devices(ctlr);
--done:
-+	return status;
-+
-+free_bus_id:
-+	mutex_lock(&board_lock);
-+	idr_remove(&spi_master_idr, ctlr->bus_num);
-+	mutex_unlock(&board_lock);
- 	return status;
- }
- EXPORT_SYMBOL_GPL(spi_register_controller);
--- 
-2.20.1
-
+Eric
