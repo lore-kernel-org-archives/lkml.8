@@ -2,179 +2,92 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 728E5C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FA40C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A11C2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4789D2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DubHYOaB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D1Aislna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388124AbgCDNMk (ORCPT
+        id S2388087AbgCDNPN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:12:40 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50584 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388091AbgCDNMk (ORCPT
+        Wed, 4 Mar 2020 08:15:13 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45366 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387992AbgCDNPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:12:40 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 024DCdEa075120;
-        Wed, 4 Mar 2020 07:12:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583327559;
-        bh=5xGBvCCNbOxlYfM2cTKcfGoxokVXH8qQTRieJmYkdlg=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=DubHYOaBXGOe56OgUD+HfTAcAgbMAcRmFrTqEGeg3Or0Ad+oKwXhnILlkcYiAsUgX
-         EUCPwA9HajZR39olpcWoh+6Md8snf3mG+Mkth8EZkLMrvnv0uWMvNlmaAAfQeeYH9U
-         yZYTLnSe/OiZIGPgy9IjSFSGxMcjUUakemAcwiBk=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 024DCdSZ005491
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 07:12:39 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 07:12:39 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 07:12:39 -0600
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id 024DCdxK092569;
-        Wed, 4 Mar 2020 07:12:39 -0600
-Date:   Wed, 4 Mar 2020 07:17:14 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [Patch 1/1] media: ti-vpe: cal: fix disable_irqs to only the
- intended target
-Message-ID: <20200304131714.rpykdxhgqxmaxyx5@ti.com>
-References: <20200302135652.9365-1-bparrot@ti.com>
- <678cb62a-4fdf-3b57-2fe5-699c6bf02b2f@ti.com>
+        Wed, 4 Mar 2020 08:15:13 -0500
+Received: by mail-wr1-f66.google.com with SMTP id v2so2321370wrp.12;
+        Wed, 04 Mar 2020 05:15:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dRuvXTjD/bPv3Dn/8R1C/YZLNUqFpK4uHKwIIFfjLvE=;
+        b=D1AislnaQYm2mm20PGFzfIW/Hz7YC7gS3iGO/8K5V7ZY7Dii2b/iZX/2UwIXkbMrCj
+         yLCHKIBsHLGUnMmWXqzScHao8dskVH46wtNjOPD7hN+w6rqajScN+4hyfF/DU1fVH1m7
+         kdQxk1+SNjC7D7tlpu9ZJZ5HwFqB3vMY3tqljWkNhohmfT8zhcws+ki2bTzeBNahfDnv
+         gUd8Lh4EVoAExg9co7IYIQmW+0z5JV7IxB8du9evvs1mqwV7GwuFR6JY666sr7+4FBpo
+         tlLyAhjl7WkFQ/succ8ddIs/SRwo0a6CjvcQcDgv72pn4KRdealOw5O/dT70LCE9SR6Q
+         LSRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dRuvXTjD/bPv3Dn/8R1C/YZLNUqFpK4uHKwIIFfjLvE=;
+        b=H3tzicVBBdql3mdeICEkjhgNclGloFEB2ZSRIA07VRiTkyWnwhxUk2qbHpqtiQ8SY7
+         pnAYImZX6LU3VB2G558qQR1Q+ujnPunHgbC7yoqV6lMjt5KJedcK1xCEhWxx3G982lx5
+         EZVRFuRCUpaEWfg2WU+7FjvbCvFXAwOPy8ZyvXTIB3hw2i7RM3ZP/BDYbBQ0FMkFnQXM
+         XsZnpWgqa7Ejcf4GG6FcI5cFIXR/p5TElyn4hNnJCFWzEHXazQVTmuMFNAN8nO+m1aP5
+         yrTglKgum49oP8S+sVIZVspPXfNoLUEUI3MVjFEimFykx5t6cuBDFhQqV8UpOBj4GiAx
+         XW+g==
+X-Gm-Message-State: ANhLgQ37v757jkOzhh6pnW+dk14BJvuyzm1frvgVmfzKRH2ruz4FfuVd
+        sVCww9HhiyLjIaCn3JnqmeA=
+X-Google-Smtp-Source: ADFU+vufuO491PqFldO6XhiGin1UqHD5LSSt9/l2D8Gc6MfsEewAdg/CMfFVQbqHAzQHnpzzDJaK1g==
+X-Received: by 2002:adf:e742:: with SMTP id c2mr4066931wrn.262.1583327711343;
+        Wed, 04 Mar 2020 05:15:11 -0800 (PST)
+Received: from localhost.localdomain ([109.126.130.242])
+        by smtp.gmail.com with ESMTPSA id c14sm24746746wro.36.2020.03.04.05.15.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 05:15:10 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/4] io-wq/io_uring locking optimisation
+Date:   Wed,  4 Mar 2020 16:14:08 +0300
+Message-Id: <cover.1583314087.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <678cb62a-4fdf-3b57-2fe5-699c6bf02b2f@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tomi,
+[1-3] are shedding excessive locking of @wqe's and @worker's spinlocks
+from io_worker_handle_work().
 
-Thanks for the review.
+[4] removes an extra pair of refcount get/put by making former io_put_work()
+to own the submission reference. It also changes io-wq get/put API
+and renames io_put_work() into io_free_work() to reflect it.
 
-Tomi Valkeinen <tomi.valkeinen@ti.com> wrote on Wed [2020-Mar-04 10:49:55 +0200]:
-> On 02/03/2020 15:56, Benoit Parrot wrote:
-> > disable_irqs() was mistakenly disabling all interrupts when called.
-> > This cause all port stream to stop even if only stopping one of them.
-> > 
-> > Cc: stable <stable@vger.kernel.org>
-> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> > ---
-> >   drivers/media/platform/ti-vpe/cal.c | 16 ++++++++--------
-> >   1 file changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> > index 6e009e479be3..6d4cbb8782ed 100644
-> > --- a/drivers/media/platform/ti-vpe/cal.c
-> > +++ b/drivers/media/platform/ti-vpe/cal.c
-> > @@ -722,16 +722,16 @@ static void enable_irqs(struct cal_ctx *ctx)
-> >   
-> >   static void disable_irqs(struct cal_ctx *ctx)
-> >   {
-> > +	u32 val;
-> > +
-> >   	/* Disable IRQ_WDMA_END 0/1 */
-> > -	reg_write_field(ctx->dev,
-> > -			CAL_HL_IRQENABLE_CLR(2),
-> > -			CAL_HL_IRQ_CLEAR,
-> > -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> > +	val = 0;
-> > +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-> > +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), val);
-> >   	/* Disable IRQ_WDMA_START 0/1 */
-> > -	reg_write_field(ctx->dev,
-> > -			CAL_HL_IRQENABLE_CLR(3),
-> > -			CAL_HL_IRQ_CLEAR,
-> > -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> > +	val = 0;
-> > +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-> > +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), val);
-> >   	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
-> >   	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
-> >   }
-> > 
-> 
-> I think the above works. But the enable_irqs is broken too, even if it doesn't cause any issues. Both IRQ_SET and IRQ_CLR are not supposed to be "modified" by a read-mod-write operation, but just written to.
->
+Pavel Begunkov (4):
+  io-wq: shuffle io_worker_handle_work() code
+  io-wq: optimise locking in io_worker_handle_work()
+  io-wq: optimise out *next_work() double lock
+  io_uring/io-wq: forward submission ref to async
 
-Well maybe not consistent now, that disable_irqs has been modified but not
-broken per se.
+ fs/io-wq.c    | 148 ++++++++++++++++++++++++++------------------------
+ fs/io-wq.h    |   6 +-
+ fs/io_uring.c |  31 ++++-------
+ 3 files changed, 90 insertions(+), 95 deletions(-)
 
-> The macros used also make the code very difficult to read. Something like this fixes both irq enable and disable, and makes it readable:
+-- 
+2.24.0
 
-Ah but the mask macro are all consistent with each other, whether that
-create one too many level of abstraction is a different subject. This setup
-was oroginally requested by the maintainer. So I'll "fix" enable_irqs also
-but I'll keep the macro as is.
-
-Benoit
-
-> 
-> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> index c8b1290c9e2b..660653031a0b 100644
-> --- a/drivers/media/platform/ti-vpe/cal.c
-> +++ b/drivers/media/platform/ti-vpe/cal.c
-> @@ -707,15 +707,9 @@ static void cal_quickdump_regs(struct cal_dev *dev)
->  static void enable_irqs(struct cal_ctx *ctx)
->  {
->  	/* Enable IRQ_WDMA_END 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_SET(2),
-> -			CAL_HL_IRQ_ENABLE,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(2), 1 << (ctx->csi2_port - 1));
->  	/* Enable IRQ_WDMA_START 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_SET(3),
-> -			CAL_HL_IRQ_ENABLE,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(3), 1 << (ctx->csi2_port - 1));
->  	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
->  	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0xFF000000);
->  }
-> @@ -723,15 +717,9 @@ static void enable_irqs(struct cal_ctx *ctx)
->  static void disable_irqs(struct cal_ctx *ctx)
->  {
->  	/* Disable IRQ_WDMA_END 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_CLR(2),
-> -			CAL_HL_IRQ_CLEAR,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), 1 << (ctx->csi2_port - 1));
->  	/* Disable IRQ_WDMA_START 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_CLR(3),
-> -			CAL_HL_IRQ_CLEAR,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), 1 << (ctx->csi2_port - 1));
->  	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
->  	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
->  }
-> 
->  Tomi
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
