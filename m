@@ -2,122 +2,141 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5BDAC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5176AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9DB820705
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3428920705
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:16:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728974AbgCDJQ1 (ORCPT
+        id S2387672AbgCDJQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:16:27 -0500
-Received: from mga04.intel.com ([192.55.52.120]:20949 "EHLO mga04.intel.com"
+        Wed, 4 Mar 2020 04:16:52 -0500
+Received: from mga18.intel.com ([134.134.136.126]:21515 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgCDJQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:16:27 -0500
+        id S1725271AbgCDJQv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 04:16:51 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 01:16:26 -0800
-X-ExtLoop1: 1
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 01:16:50 -0800
 X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
-   d="scan'208";a="229258701"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 04 Mar 2020 01:16:26 -0800
-Received: from [10.226.39.43] (unknown [10.226.39.43])
-        by linux.intel.com (Postfix) with ESMTP id 4364158029F;
-        Wed,  4 Mar 2020 01:16:24 -0800 (PST)
-Subject: Re: [PATCH v4 2/3] dt-bindings: phy: Add YAML schemas for Intel
- Combophy
-To:     Rob Herring <robh@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@intel.com
-References: <cover.1583127977.git.eswara.kota@linux.intel.com>
- <9f049a5fccd080bd5d8e9a697b96d4c40a413a0a.1583127977.git.eswara.kota@linux.intel.com>
- <20200303015051.GA780@bogus>
- <5b71670d-91a6-9760-f4da-1b6f014a1ea2@linux.intel.com>
- <CAL_JsqLKFbaiaeNAq_b9xDQRWVG8dXkWt2+cKucRPEzynC20XQ@mail.gmail.com>
-From:   Dilip Kota <eswara.kota@linux.intel.com>
-Message-ID: <068bcf8c-83b0-57ee-3fb8-c0fe1bf6e5d8@linux.intel.com>
-Date:   Wed, 4 Mar 2020 17:16:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+   d="scan'208";a="233965863"
+Received: from ohoehne-mobl2.ger.corp.intel.com (HELO localhost) ([10.249.39.231])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 01:16:47 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: Re: [PATCH][next] drm/i915: Replace zero-length array with flexible-array member
+In-Reply-To: <20200303220503.GA2663@embeddedor>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200303220503.GA2663@embeddedor>
+Date:   Wed, 04 Mar 2020 11:16:47 +0200
+Message-ID: <87k140pji8.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqLKFbaiaeNAq_b9xDQRWVG8dXkWt2+cKucRPEzynC20XQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/4/2020 12:26 AM, Rob Herring wrote:
-> On Tue, Mar 3, 2020 at 3:24 AM Dilip Kota <eswara.kota@linux.intel.com> wrote:
->>
->> On 3/3/2020 9:50 AM, Rob Herring wrote:
->>> On Mon, Mar 02, 2020 at 04:43:24PM +0800, Dilip Kota wrote:
->>>> Combophy subsystem provides PHY support to various
->>>> controllers, viz. PCIe, SATA and EMAC.
->>>> Adding YAML schemas for the same.
->>>>
->>>> Signed-off-by: Dilip Kota <eswara.kota@linux.intel.com>
->>>> ---
->>>> Changes on v4:
->>>>     No changes.
->> ...
->>>> +additionalProperties: false
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    #include <dt-bindings/phy/phy-intel-combophy.h>
->>>> +    combophy@d0a00000 {
->>>> +        compatible = "intel,combophy-lgm", "intel,combo-phy";
->>>> +        clocks = <&cgu0 1>;
->>>> +        reg = <0xd0a00000 0x40000>,
->>>> +              <0xd0a40000 0x1000>;
->>>> +        reg-names = "core", "app";
->>>> +        resets = <&rcu0 0x50 6>,
->>>> +                 <&rcu0 0x50 17>;
->>>> +        reset-names = "phy", "core";
->>>> +        intel,syscfg = <&sysconf 0>;
->>>> +        intel,hsio = <&hsiol 0>;
->>>> +        intel,phy-mode = <COMBO_PHY_PCIE>;
->>>> +
->>>> +        phy@0 {
->>> You need a 'reg' property to go with a unit-address.
->>>
->>> Really, I'd just simplify this to make parent 'resets' be 4 entries and
->>> put '#phy-cells = <1>;' in the parent. Then you don't need these child
->>> nodes.
->> If child nodes are not present, use case like PCIe controller-0 using
->> phy@0 and PCIe controller-1 using phy@1 wont be possible.
-> Yes, it will be.
+On Tue, 03 Mar 2020, "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 >
-> For controller-0:
-> phys = <&phy 0>;
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 >
-> For controller-1:
-> phys = <&phy 1>;
-
-OH got it, arg cell can be utilized for PHY id.
-I started working on your suggestion in simplifying it, but below point 
-is haunting while doing the changes. So felt to check with you whether 
-the better one is going with existing DT node or the one without child 
-nodes!.
-      Existing DT node skeleton, replicates hardware design ComboPhy 
-with 2 PHYs. (ComboPhy as parent node and 2PHYs as child nodes)
-
-Regards,
-Dilip
-
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
 >
-> Rob
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+>
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+>
+> This issue was found with the help of Coccinelle.
+>
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+
+> ---
+>  drivers/gpu/drm/i915/display/intel_vbt_defs.h | 4 ++--
+>  drivers/gpu/drm/i915/gt/intel_lrc.c           | 2 +-
+>  drivers/gpu/drm/i915/i915_gpu_error.h         | 2 +-
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_vbt_defs.h b/drivers/gpu/drm/i915/display/intel_vbt_defs.h
+> index 05c7cbe32eb4..aef7fe932d1a 100644
+> --- a/drivers/gpu/drm/i915/display/intel_vbt_defs.h
+> +++ b/drivers/gpu/drm/i915/display/intel_vbt_defs.h
+> @@ -462,7 +462,7 @@ struct bdb_general_definitions {
+>  	 * number = (block_size - sizeof(bdb_general_definitions))/
+>  	 *	     defs->child_dev_size;
+>  	 */
+> -	u8 devices[0];
+> +	u8 devices[];
+>  } __packed;
+>  
+>  /*
+> @@ -839,7 +839,7 @@ struct bdb_mipi_config {
+>  
+>  struct bdb_mipi_sequence {
+>  	u8 version;
+> -	u8 data[0]; /* up to 6 variable length blocks */
+> +	u8 data[]; /* up to 6 variable length blocks */
+>  } __packed;
+>  
+>  /*
+> diff --git a/drivers/gpu/drm/i915/gt/intel_lrc.c b/drivers/gpu/drm/i915/gt/intel_lrc.c
+> index b9b3f78f1324..a49ddda649b9 100644
+> --- a/drivers/gpu/drm/i915/gt/intel_lrc.c
+> +++ b/drivers/gpu/drm/i915/gt/intel_lrc.c
+> @@ -216,7 +216,7 @@ struct virtual_engine {
+>  
+>  	/* And finally, which physical engines this virtual engine maps onto. */
+>  	unsigned int num_siblings;
+> -	struct intel_engine_cs *siblings[0];
+> +	struct intel_engine_cs *siblings[];
+>  };
+>  
+>  static struct virtual_engine *to_virtual_engine(struct intel_engine_cs *engine)
+> diff --git a/drivers/gpu/drm/i915/i915_gpu_error.h b/drivers/gpu/drm/i915/i915_gpu_error.h
+> index 0d1f6c8ff355..5a6561f7a210 100644
+> --- a/drivers/gpu/drm/i915/i915_gpu_error.h
+> +++ b/drivers/gpu/drm/i915/i915_gpu_error.h
+> @@ -42,7 +42,7 @@ struct i915_vma_coredump {
+>  	int num_pages;
+>  	int page_count;
+>  	int unused;
+> -	u32 *pages[0];
+> +	u32 *pages[];
+>  };
+>  
+>  struct i915_request_coredump {
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
