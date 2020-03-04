@@ -2,132 +2,112 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9F8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 887FFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3879C2072D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:10:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60C1C2072D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:14:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583313248;
+	bh=aYWTuYPbbEBkZskmvEU9FbjcMOeg17ouLoavelFG8wI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FJGg4nadZYALVEuIrDKz3qz/wcxvWthOXxoq5QGwegLNdgGj1/dQgPX0yFNyiwXHq
+	 BS7zT2ZOOtQFGYpg1n/8Qrpba/MSbwfiLeNBRebe9iicAU86MmjYuK8yG1GYLS0AHF
+	 tD8OE5F8aUFdjTni6xOd1B4ZJKGgRtMQc3X5c+1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbgCDJKn convert rfc822-to-8bit (ORCPT
+        id S1728878AbgCDJOH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:10:43 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:41335 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgCDJKn (ORCPT
+        Wed, 4 Mar 2020 04:14:07 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34363 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgCDJOH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:10:43 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1j9Q37-0002Lp-6P; Wed, 04 Mar 2020 10:10:41 +0100
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1j9Q36-0004Hh-AQ; Wed, 04 Mar 2020 10:10:40 +0100
-Message-ID: <b5b9cdaa87efd4f5f8a93f21581b53c409524156.camel@pengutronix.de>
-Subject: Re: [PATCH v2] reset: hi6220: Add support for AO reset controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Cc:     Peter Griffin <peter.griffin@linaro.org>,
-        Enrico Weigelt <info@metux.net>
-Date:   Wed, 04 Mar 2020 10:10:40 +0100
-In-Reply-To: <20200302174015.52363-1-john.stultz@linaro.org>
-References: <20200302174015.52363-1-john.stultz@linaro.org>
+        Wed, 4 Mar 2020 04:14:07 -0500
+Received: by mail-ot1-f68.google.com with SMTP id j16so1339193otl.1;
+        Wed, 04 Mar 2020 01:14:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2yqcmNpEhEyaoox7sgCu8vgkk/Ww/B7auVe1x64oSBk=;
+        b=j2diKycW4GOtU6AnzvAzCml2SGfkMYP0g4a1XcRmhSAJxaocdO7v5mJ9DAWQKUs5IK
+         okoUG3OExWv7IQ4/KhM5a6t+PADRtpMSwfE13UMZc2n9hQyV0KWZhNNm86CsP81mlAMX
+         AZeP0+Y2iAgCIkJzKut8Ikt+izg55VWjyVLF6Tp3kykU+nYKI39vyCxLLSPKajAW8Ns1
+         LLqLs/oJNl2fedu5I5J81bo5h1Fs9SHOyV0+VLUjZvqGuUJnfNYy3/HVpFviOtpM1m8r
+         O5o5oYjbgTa18iq8ny0OYCgP2IZIWVS4OrNOQAjTP1awtUOT6yy5aXv6RkAPee4gDhuQ
+         /TNQ==
+X-Gm-Message-State: ANhLgQ2uAK/xYxY9X6hSTT2aUS4FxJ0Q0mm9/Jtsn49gXvuhaj2TrqnY
+        z+6pN2f+zvPXfE4BT4qokVSI1oWbEyxR0fUG/qA=
+X-Google-Smtp-Source: ADFU+vvJVrT5XzB+LN4pvHpPN9koJloy6ZWiadNJKU6hGzyCilF4pGMcGTQth78LVdONiuIhebTgdghVxAbgAmk19GE=
+X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr1612658otd.266.1583313246413;
+ Wed, 04 Mar 2020 01:14:06 -0800 (PST)
+MIME-Version: 1.0
+References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
+ <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
+ <CAJZ5v0gB9yuVmPjJ_MvfT8aFpvP-X5JRsNfZn8+Mv5RwTednGg@mail.gmail.com>
+ <CAJZ5v0imqwdmXzKayqs1kgHOb-mXrkr61uNxVka8J9bKca989Q@mail.gmail.com>
+ <CAPpJ_efvF0XzjevA1eL3BUJqBwxRTOPLcqWKN40Azj-n1AtjcA@mail.gmail.com>
+ <CAJZ5v0hie79+jG+3h4t5Q8r0M7E37HY-7i8ijg8DpvS0RXZSiQ@mail.gmail.com>
+ <CAJZ5v0hwrZX4+4m-g0c2bUTHxJO=1+kenXBjLz1ChWdcxSLJbA@mail.gmail.com> <CAPpJ_ed5KPPu47ri3phnjKrToqJ8vSNV32zaRmBPLr3pq4M_4A@mail.gmail.com>
+In-Reply-To: <CAPpJ_ed5KPPu47ri3phnjKrToqJ8vSNV32zaRmBPLr3pq4M_4A@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 4 Mar 2020 10:13:54 +0100
+Message-ID: <CAJZ5v0jVNXGxko+LUJ5K91UmM_Fz4Q=JN2eK1sSxO7AsDj=Gyw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
+To:     Jian-Hong Pan <jian-hong@endlessm.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Drake <drake@endlessm.com>,
+        Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
-MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John, Peter,
+On Wed, Mar 4, 2020 at 3:54 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+>
+> Rafael J. Wysocki <rafael@kernel.org> 於 2020年3月4日 週三 上午6:23寫道：
+> >
+> > On Tue, Mar 3, 2020 at 10:09 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > >
+> > > On Tue, Mar 3, 2020 at 8:29 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
+> > > >
+> > > > Rafael J. Wysocki <rafael@kernel.org> 於 2020年3月2日 週一 下午7:45寫道：
+> > > > >
+> >
+> > [cut]
+> >
+> > > >
+> > > > Originally, ec_install_handlers() will return the returned value from
+> > > > install_gpio_irq_event_handler() from acpi_dev_gpio_irq_get(), which
+> > > > is -EPROBE_DEFER, instead of -ENXIO.  However, ec_install_handlers()
+> > > > returns -ENXIO directly if install_gpio_irq_event_handler() returns
+> > > > false in patch ("ACPI: EC: Consolidate event handler installation
+> > > > code").  Here needs some modification.
+> > >
+> > > Thanks, I forgot about the -EPROBE_DEFER case.
+> >
+> > The top-most commit in the git branch at
+> >
+> >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+> >  acpi-ec-work
+> >
+> > has been updated to take that case into account (I think that it
+> > should be spelled out explicitly or it will be very easy to overlook
+> > in the future).
+> >
+> > Please test this one if possible.
+>
+> Tested the commits on some laptops including ASUS UX434DA.  The
+> brightness hotkeys are working now.
 
-thank you for the patch. Just one issue remaining, see below:
-
-On Mon, 2020-03-02 at 17:40 +0000, John Stultz wrote:
-> From: Peter Griffin <peter.griffin@linaro.org>
-> 
-> This is required to bring Mali450 gpu out of reset.
-> 
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Cc: Peter Griffin <peter.griffin@linaro.org>
-> Cc: Enrico Weigelt <info@metux.net>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
-> v2:
-> * Updated to v2 of Peter's patch from here:
->     https://lkml.org/lkml/2019/4/19/253
-> * Added a comment to explain ordering question brought
->   up on the list.
-> ---
->  drivers/reset/hisilicon/hi6220_reset.c | 71 +++++++++++++++++++++++++-
->  1 file changed, 70 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/reset/hisilicon/hi6220_reset.c b/drivers/reset/hisilicon/hi6220_reset.c
-> index 24e6d420b26b..a85ed276ab83 100644
-> --- a/drivers/reset/hisilicon/hi6220_reset.c
-> +++ b/drivers/reset/hisilicon/hi6220_reset.c
-> @@ -33,6 +33,7 @@
->  enum hi6220_reset_ctrl_type {
->  	PERIPHERAL,
->  	MEDIA,
-> +	AO,
->  };
->  
->  struct hi6220_reset_data {
-> @@ -92,6 +93,67 @@ static const struct reset_control_ops hi6220_media_reset_ops = {
->  	.deassert = hi6220_media_deassert,
->  };
->  
-> +#define AO_SCTRL_SC_PW_CLKEN0     0x800
-> +#define AO_SCTRL_SC_PW_CLKDIS0    0x804
-> +
-> +#define AO_SCTRL_SC_PW_RSTEN0     0x810
-> +#define AO_SCTRL_SC_PW_RSTDIS0    0x814
-> +
-> +#define AO_SCTRL_SC_PW_ISOEN0     0x820
-> +#define AO_SCTRL_SC_PW_ISODIS0    0x824
-> +#define AO_MAX_INDEX              12
-> +
-> +static int hi6220_ao_assert(struct reset_controller_dev *rc_dev,
-> +			       unsigned long idx)
-> +{
-> +	struct hi6220_reset_data *data = to_reset_data(rc_dev);
-> +	struct regmap *regmap = data->regmap;
-> +	int ret;
-> +
-> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_RSTEN0, BIT(idx));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_ISOEN0, BIT(idx));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = regmap_write(regmap, AO_SCTRL_SC_PW_CLKDIS0, BIT(idx));
-> +	if (ret)
-> +		return ret;
-
-
-drivers/reset/hisilicon/hi6220_reset.c: In function ‘hi6220_ao_assert’:
-drivers/reset/hisilicon/hi6220_reset.c:124:1: warning: control reaches end of non-void function [-Wreturn-type]
- }
- ^
-
-Just "return regmap_write(...)" for the last one, same in
-hi6220_ao_deassert().
-
-regards
-Philipp
+Thank you!
