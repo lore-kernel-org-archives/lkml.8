@@ -2,143 +2,179 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBEFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E04C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A747620838
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pChR2iAc"
+	by mail.kernel.org (Postfix) with ESMTP id A07C420838
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388133AbgCDNPR (ORCPT
+        id S2388194AbgCDNQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:15:17 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:42254 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388097AbgCDNPQ (ORCPT
+        Wed, 4 Mar 2020 08:16:09 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55680 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387992AbgCDNQI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:15:16 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v11so389750wrm.9;
-        Wed, 04 Mar 2020 05:15:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:in-reply-to:references:mime-version
-         :content-transfer-encoding;
-        bh=yvd1qcy7+dlyPpqW9WsWcvGKMgkr1aBgo5o930iSsj4=;
-        b=pChR2iAc4G7nRIHIohmqYlndTcLbWMTRoae8Xpjq1DOB/xrztyT/PW26Oquu6JrIoP
-         nXf+26eUyI5stfcgIf5X7L+AcjEvNbk9H8sB/d7ednt7nwyn2ZUZeLiRyw9E2fQ8SlUb
-         zT9anY8VIzgOXxSFNfmPj/0KKLCf0F1yEzVL35uzQNlz8UfEVfZq+ltyjnLnXEOl6W3L
-         XzwKZ0CTiVUp9TDYUIEaMcaqFxrkIiIVjjDD+uf6WbxWIw6sCPTN4U3A6HWXcTB03Ujm
-         NZIRh7UAlTblqQdCeG8TL5t3H6ubt5zIx+aJMQ4AqfMPXuasNrT8M/ZQftFwRojh0sm2
-         q3sQ==
+        Wed, 4 Mar 2020 08:16:08 -0500
+Received: from mail-pl1-f200.google.com ([209.85.214.200])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <po-hsu.lin@canonical.com>)
+        id 1j9Tsb-0007MZ-AG
+        for linux-kernel@vger.kernel.org; Wed, 04 Mar 2020 13:16:05 +0000
+Received: by mail-pl1-f200.google.com with SMTP id k16so954502pls.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:16:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yvd1qcy7+dlyPpqW9WsWcvGKMgkr1aBgo5o930iSsj4=;
-        b=cXpz5WiwmgnNPm/E4Lz7jL5iuCq1SybdCa3gvfsgEo2oVMf6mgqw4tfjUzoEHYf0mr
-         +a7iEFIJDUXdzgwJVKCA41P6lBMQFsEUpSjQMNlY7oLqwJjceZLV+btvYs6gsyPAIbUD
-         YFXu+Q6gsT2uHJLVMQeBIiJ92ANXGHyvmWmWjyTd/XZFVwT4Kr/WXgpKD0S94DWuLhDi
-         9Z5/QBWPeQNNaxSDDNVepUMqIOJ5G3VDrCS7UPTQtrjtUSUsT4leIXn6Os2z8yX+j31B
-         X90UvNW+S4knd3E5alCZEFjwrz8gjMM4m0b/Zmxdy3325vWAGyTpTo4k+zIiT/HTl1ie
-         nlyQ==
-X-Gm-Message-State: ANhLgQ3vNvJK8U3jW65fWtFpPEkt68cgthESz53iW/fLRkzyvrrc3+LS
-        U/yKfgVtY733e7DMzb+UyR6l9Bnv
-X-Google-Smtp-Source: ADFU+vva4m9ywSSoYa2bHkt7fHmq0gxjLf7vaGuvLp55T396dvKJPg9edTGVjrr9Yed4H4BPEqwsHw==
-X-Received: by 2002:adf:e74e:: with SMTP id c14mr4283728wrn.128.1583327715105;
-        Wed, 04 Mar 2020 05:15:15 -0800 (PST)
-Received: from localhost.localdomain ([109.126.130.242])
-        by smtp.gmail.com with ESMTPSA id c14sm24746746wro.36.2020.03.04.05.15.13
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FoiB6hzDhu7zhsE/qqdlngAwyG5TADZ8ljLTza6EBz0=;
+        b=teGkXxAmiazOyojhjVjwLENQCaZ9t2XP0F2unVXF9vQzTXkcSK1ZGxdJm/jG9h3VHj
+         euXnRswOZ+4eCzacaUpn6kYYObgX19pyh6ZtpTMILDfBOOQvhW/lxEFr5zVzESJg6Tdy
+         3IzoGX6zteo5onqOHDjxJgbcbBTt5+b4BRc8Lrk4tphJLyEs10ivNcbx6ThQabqY/j81
+         iOkjLJwXdFCVMJ7F5FeJd23K6MDxIv7KigU0cB8N0p8EhXQOvk/+8HGV6/oT3OJH7XNG
+         uiF+Z4+8vJlwPmw6v/MTutMMNEJOieva+ZfSkqymA3VUgjQoCrv8VFcwKmotlTqiEtzz
+         jDQw==
+X-Gm-Message-State: ANhLgQ21R4m8XDcFpr4B1bZExG0D52DFlS00s0pguh+BgJNegngRR+jG
+        G4NHjOkueHayuJIEtBY5Jf1uNep0r3GKrkQ6P/k7LShU7ThzmYQMKxvcjs+9uCD5ctUcJiSoQMb
+        4pk+j1u6aCnAhQglnLGyP5zmhk855jRQjiPNloiL5
+X-Received: by 2002:a17:902:d90f:: with SMTP id c15mr3056603plz.190.1583327763907;
+        Wed, 04 Mar 2020 05:16:03 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvK4uTGiKzjtuDXnV1Gfy92QDaS45ZMs1S30Dw1XFtBScjRpPMHg0ViyThdR/UnPOLJjZ/fzQ==
+X-Received: by 2002:a17:902:d90f:: with SMTP id c15mr3056579plz.190.1583327763544;
+        Wed, 04 Mar 2020 05:16:03 -0800 (PST)
+Received: from Leggiero.taipei.internal (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
+        by smtp.gmail.com with ESMTPSA id a143sm3394286pfd.108.2020.03.04.05.16.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 05:15:14 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] io-wq: optimise locking in io_worker_handle_work()
-Date:   Wed,  4 Mar 2020 16:14:10 +0300
-Message-Id: <ca39ae1c7b5cb8c86666e3aa9b80bf191949d4c6.1583314087.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <cover.1583314087.git.asml.silence@gmail.com>
-References: <cover.1583314087.git.asml.silence@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 04 Mar 2020 05:16:02 -0800 (PST)
+From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
+To:     linux-kselftest@vger.kernel.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        shuah@kernel.org
+Subject: [PATCH] selftests/powerpc: Turn off timeout setting for benchmarks, dscr, signal, tm
+Date:   Wed,  4 Mar 2020 21:15:53 +0800
+Message-Id: <20200304131553.27582-1-po-hsu.lin@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are 2 optimisations:
-- Now, io_worker_handler_work() do io_assign_current_work() twice per
-request, and each one adds lock/unlock(worker->lock) pair. The first is
-to reset worker->cur_work to NULL, and the second to set a real work
-shortly after. If there is a dependant work, set it immediately, that
-effectively removes the extra NULL'ing.
+Some specific tests in powerpc can take longer than the default 45
+seconds that added in commit 852c8cbf (selftests/kselftest/runner.sh:
+Add 45 second timeout per test) to run, the following test result was
+collected across 2 Power8 nodes and 1 Power9 node in our pool:
+  powerpc/benchmarks/futex_bench - 52s
+  powerpc/dscr/dscr_sysfs_test - 116s
+  powerpc/signal/signal_fuzzer - 88s
+  powerpc/tm/tm_unavailable_test - 168s
+  powerpc/tm/tm-poison - 240s
 
-- And there is no use in taking wqe->lock for linked works, as they are
-not hashed now. Optimise it out.
+Thus they will fail with TIMEOUT error. Disable the timeout setting
+for these sub-tests to allow them finish properly.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+https://bugs.launchpad.net/bugs/1864642
+Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
 ---
- fs/io-wq.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ tools/testing/selftests/powerpc/benchmarks/Makefile | 2 ++
+ tools/testing/selftests/powerpc/benchmarks/settings | 1 +
+ tools/testing/selftests/powerpc/dscr/Makefile       | 2 ++
+ tools/testing/selftests/powerpc/dscr/settings       | 1 +
+ tools/testing/selftests/powerpc/signal/Makefile     | 2 ++
+ tools/testing/selftests/powerpc/signal/settings     | 1 +
+ tools/testing/selftests/powerpc/tm/Makefile         | 2 ++
+ tools/testing/selftests/powerpc/tm/settings         | 1 +
+ 8 files changed, 12 insertions(+)
+ create mode 100644 tools/testing/selftests/powerpc/benchmarks/settings
+ create mode 100644 tools/testing/selftests/powerpc/dscr/settings
+ create mode 100644 tools/testing/selftests/powerpc/signal/settings
+ create mode 100644 tools/testing/selftests/powerpc/tm/settings
 
-diff --git a/fs/io-wq.c b/fs/io-wq.c
-index e438dc4d7cb3..473af080470a 100644
---- a/fs/io-wq.c
-+++ b/fs/io-wq.c
-@@ -476,7 +476,7 @@ static void io_worker_handle_work(struct io_worker *worker)
- 	struct io_wq *wq = wqe->wq;
+diff --git a/tools/testing/selftests/powerpc/benchmarks/Makefile b/tools/testing/selftests/powerpc/benchmarks/Makefile
+index d40300a..a32a6ab 100644
+--- a/tools/testing/selftests/powerpc/benchmarks/Makefile
++++ b/tools/testing/selftests/powerpc/benchmarks/Makefile
+@@ -2,6 +2,8 @@
+ TEST_GEN_PROGS := gettimeofday context_switch fork mmap_bench futex_bench null_syscall
+ TEST_GEN_FILES := exec_target
  
- 	do {
--		struct io_wq_work *work, *old_work;
-+		struct io_wq_work *work;
- 		unsigned hash = -1U;
++TEST_FILES := settings
++
+ CFLAGS += -O2
  
- 		/*
-@@ -495,12 +495,13 @@ static void io_worker_handle_work(struct io_worker *worker)
- 		spin_unlock_irq(&wqe->lock);
- 		if (!work)
- 			break;
-+		io_assign_current_work(worker, work);
+ top_srcdir = ../../../../..
+diff --git a/tools/testing/selftests/powerpc/benchmarks/settings b/tools/testing/selftests/powerpc/benchmarks/settings
+new file mode 100644
+index 0000000..e7b9417
+--- /dev/null
++++ b/tools/testing/selftests/powerpc/benchmarks/settings
+@@ -0,0 +1 @@
++timeout=0
+diff --git a/tools/testing/selftests/powerpc/dscr/Makefile b/tools/testing/selftests/powerpc/dscr/Makefile
+index 5df4763..cfa6eed 100644
+--- a/tools/testing/selftests/powerpc/dscr/Makefile
++++ b/tools/testing/selftests/powerpc/dscr/Makefile
+@@ -3,6 +3,8 @@ TEST_GEN_PROGS := dscr_default_test dscr_explicit_test dscr_user_test	\
+ 	      dscr_inherit_test dscr_inherit_exec_test dscr_sysfs_test	\
+ 	      dscr_sysfs_thread_test
  
- 		/* handle a whole dependent link */
- 		do {
--			io_assign_current_work(worker, work);
--			io_impersonate_work(worker, work);
-+			struct io_wq_work *old_work;
++TEST_FILES := settings
++
+ top_srcdir = ../../../../..
+ include ../../lib.mk
  
-+			io_impersonate_work(worker, work);
- 			/*
- 			 * OK to set IO_WQ_WORK_CANCEL even for uncancellable
- 			 * work, the worker function will do the right thing.
-@@ -513,10 +514,8 @@ static void io_worker_handle_work(struct io_worker *worker)
+diff --git a/tools/testing/selftests/powerpc/dscr/settings b/tools/testing/selftests/powerpc/dscr/settings
+new file mode 100644
+index 0000000..e7b9417
+--- /dev/null
++++ b/tools/testing/selftests/powerpc/dscr/settings
+@@ -0,0 +1 @@
++timeout=0
+diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
+index 113838f..153fafc 100644
+--- a/tools/testing/selftests/powerpc/signal/Makefile
++++ b/tools/testing/selftests/powerpc/signal/Makefile
+@@ -5,6 +5,8 @@ CFLAGS += -maltivec
+ $(OUTPUT)/signal_tm: CFLAGS += -mhtm
+ $(OUTPUT)/sigfuz: CFLAGS += -pthread -m64
  
- 			old_work = work;
- 			work->func(&work);
--
--			spin_lock_irq(&worker->lock);
--			worker->cur_work = NULL;
--			spin_unlock_irq(&worker->lock);
-+			work = (old_work == work) ? NULL : work;
-+			io_assign_current_work(worker, work);
++TEST_FILES := settings
++
+ top_srcdir = ../../../../..
+ include ../../lib.mk
  
- 			if (wq->put_work)
- 				wq->put_work(old_work);
-@@ -529,7 +528,7 @@ static void io_worker_handle_work(struct io_worker *worker)
- 				/* dependent work is not hashed */
- 				hash = -1U;
- 			}
--		} while (work && work != old_work);
-+		} while (work);
+diff --git a/tools/testing/selftests/powerpc/signal/settings b/tools/testing/selftests/powerpc/signal/settings
+new file mode 100644
+index 0000000..e7b9417
+--- /dev/null
++++ b/tools/testing/selftests/powerpc/signal/settings
+@@ -0,0 +1 @@
++timeout=0
+diff --git a/tools/testing/selftests/powerpc/tm/Makefile b/tools/testing/selftests/powerpc/tm/Makefile
+index b15a1a3..7b99d09 100644
+--- a/tools/testing/selftests/powerpc/tm/Makefile
++++ b/tools/testing/selftests/powerpc/tm/Makefile
+@@ -7,6 +7,8 @@ TEST_GEN_PROGS := tm-resched-dscr tm-syscall tm-signal-msr-resv tm-signal-stack
+ 	$(SIGNAL_CONTEXT_CHK_TESTS) tm-sigreturn tm-signal-sigreturn-nt \
+ 	tm-signal-context-force-tm tm-poison
  
- 		spin_lock_irq(&wqe->lock);
- 	} while (1);
++TEST_FILES := settings
++
+ top_srcdir = ../../../../..
+ include ../../lib.mk
+ 
+diff --git a/tools/testing/selftests/powerpc/tm/settings b/tools/testing/selftests/powerpc/tm/settings
+new file mode 100644
+index 0000000..e7b9417
+--- /dev/null
++++ b/tools/testing/selftests/powerpc/tm/settings
+@@ -0,0 +1 @@
++timeout=0
 -- 
-2.24.0
+2.7.4
 
