@@ -2,182 +2,113 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFF0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94BEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D7720870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E1D720870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:18:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="BlKPKuyO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOoAKofW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387818AbgCDLSC (ORCPT
+        id S2387901AbgCDLSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:18:02 -0500
-Received: from mail-db8eur05on2117.outbound.protection.outlook.com ([40.107.20.117]:17953
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387488AbgCDLSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:18:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=nNkLO6okuSlfBblzjKHWxnSo4VrpIyYpfIKh8vgwQYsBG/t/HaLiwAINrZgoGfeoSe1hKdzcKzuZJTMdk8oNS0GXC/ciJrZJKfqjrOkP5YLuvRbVJuMhuwHrI78TSm+cvWpCju2uCN0Ha3oYWcO8TiOiO0OYfcdm+T7hzgUjEWTszbZej40ltEIl7gGXWHJSp8AcqXeok5rPTaKMwaaRREJtYzfvEHqZ+ERX5JLudeFTKZRFZIZKM0Tbi0/YBshR36enE8YBSKUsZgF3AEDIaz7b/my9pqxgkjDIUWdQWKe4Me5x5mhznVP0934bS9VnXUZcvGpFa5+2RmlZgHo+Tw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nRjKmxvKahZusgK/nxLKQ03jFcuBZyHmlBuOM4g34+8=;
- b=GFby5gV04QEIH6aQTzTuHFMcOAcWUeuQya/xL332VH8ooaF2YvwDEMZOb+gck+eBliPqVWieBei1uHD1i0LoiX6XIP8A7sF6zJ6JwsYHd9pOgZPtP4cjxaNMkO/IzJeknAzSa5FQMURWglDc395FMfWEP04oAJxZoJZFYkW1idw6QJNcpbJKXTET9oVZQcBzQjNhXrZZHF+sJI1HVcK/AZfRX5I4fm7b8QQHD9EKz4jgQZgjswAFlB/VnV6KvdEziS1r59pmxysDHlXFqX1SdxiFZGN3//VkqFoTG1MCgw97TWFFuCnACzNSuF28mQJ5JBx5sQt1KsMBoOcr4vSUwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
- dkim=pass header.d=nokia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nRjKmxvKahZusgK/nxLKQ03jFcuBZyHmlBuOM4g34+8=;
- b=BlKPKuyOOzaqKsHcnRgdaqWzYLBOVWWAk2lix+l+gaIUHpdW3qeizvy2O39HckM7W3ZkLRN6oWLv8gw9ZXQPReGR6bGlvbMeCtcITWooLlkqY4gLUeGPRHqZDTPcmy42KGfKc8IxGS/aiEt4VlvC894uHI0ZguemNK2tdCGgRQk=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=aaro.koskinen@nokia.com; 
-Received: from VI1PR07MB6174.eurprd07.prod.outlook.com (20.178.9.83) by
- VI1PR07MB4000.eurprd07.prod.outlook.com (52.134.25.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2793.9; Wed, 4 Mar 2020 11:17:47 +0000
-Received: from VI1PR07MB6174.eurprd07.prod.outlook.com
- ([fe80::7514:700c:669b:3c8f]) by VI1PR07MB6174.eurprd07.prod.outlook.com
- ([fe80::7514:700c:669b:3c8f%7]) with mapi id 15.20.2793.011; Wed, 4 Mar 2020
- 11:17:47 +0000
-From:   aaro.koskinen@nokia.com
-To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Aaro Koskinen <aaro.koskinen@nokia.com>
-Subject: [PATCH] spi: spi_register_controller(): free bus id on error paths
-Date:   Wed,  4 Mar 2020 13:17:40 +0200
-Message-Id: <20200304111740.27915-1-aaro.koskinen@nokia.com>
-X-Mailer: git-send-email 2.11.0
-Content-Type: text/plain
-X-ClientProxiedBy: HE1PR0802CA0003.eurprd08.prod.outlook.com
- (2603:10a6:3:bd::13) To VI1PR07MB6174.eurprd07.prod.outlook.com
- (2603:10a6:803:a5::19)
+        Wed, 4 Mar 2020 06:18:20 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30091 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387488AbgCDLSU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 06:18:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583320698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tnbYBEfHFy2uHBhpK72x5hzqEk/RbkzKjku1Fg6oRoM=;
+        b=SOoAKofWTfS9JkRqHDKMMkmWhaT4vyESh80eMQh7Hkcucbl64gIWCz4jIFbRcJNQqzVm4B
+        E4W6qd+fLQumBPK6sOKufMgDpaWuq4YA6F3Sj8jCBOxwp5OSfppDZkz0aO22q3wf/zrPj6
+        +HkRK2Vtj99UePA5BklZM/bT2mbGMqQ=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-439-3-AYlm_9MVmi5AWil1_3RQ-1; Wed, 04 Mar 2020 06:18:17 -0500
+X-MC-Unique: 3-AYlm_9MVmi5AWil1_3RQ-1
+Received: by mail-wr1-f72.google.com with SMTP id w18so722011wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 03:18:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tnbYBEfHFy2uHBhpK72x5hzqEk/RbkzKjku1Fg6oRoM=;
+        b=Ex27L6FD9x0/Yl9j0jv7yLD4pwv5jZMm/VxMqu3tV+a2HwPTsUlYQ+PCXvYBNEZASp
+         Eep31G9oyGAWYZK8pW0pIpmTFlYjqK9fYBM8MFBOhppzuVA0aJaT61dopkuzy+msxQYn
+         PPHU9CFtEAQNHG63na7GXnybF4vOVtN/8YWxt3ojsOLelwGJz576fRGKch70q1DYfugS
+         YqTq9cEv0eRkMGzsuvcIUneHPiCToO5ld1C4Z/steBxDyFO5cPyca1Cwdl2PTgCny8z5
+         Z4vC1A1C+U25yKdGbDFIHpsnICxA/YkCs+a4Pxz8DNGiou89QOEwfbv33lXlpVaHuDVk
+         a/Ug==
+X-Gm-Message-State: ANhLgQ1HZJ1IgZ9UsDkJn5VQC9CtoUDxr7b8BTQkRqyYSqaYYVrUHgK1
+        s3RoDyoksP8v2cUqBNpL+YtIEHx/Bxk/Vt520zmnOG9gbb5XsDZ4kjX+PN+t5KNe9SIesvmNZXN
+        MkZQj0i/GgSwi4n1LvbFM0eBr
+X-Received: by 2002:a1c:f214:: with SMTP id s20mr3089672wmc.57.1583320695926;
+        Wed, 04 Mar 2020 03:18:15 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vuzwSpBrWFCEylCbjzVGJupWHaIFw5613/wH2N8f6ImpbqVP4zei3xmBS7rl8UDQcyeH0dqWA==
+X-Received: by 2002:a1c:f214:: with SMTP id s20mr3089656wmc.57.1583320695676;
+        Wed, 04 Mar 2020 03:18:15 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id o26sm3527451wmc.33.2020.03.04.03.18.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 03:18:14 -0800 (PST)
+Subject: Re: [PATCH 2/6] KVM: x86: Fix CPUID range check for Centaur and
+ Hypervisor ranges
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+References: <20200302195736.24777-1-sean.j.christopherson@intel.com>
+ <20200302195736.24777-3-sean.j.christopherson@intel.com>
+ <CALMp9eThBnN3ktAfwhNs7L-O031JDFqjb67OMPooGvmkcdhK4A@mail.gmail.com>
+ <CALMp9eR0Mw8iPv_Z43gfCEbErHQ6EXX8oghJJb5Xge+47ZU9yQ@mail.gmail.com>
+ <20200303045838.GF27842@linux.intel.com>
+ <CALMp9eSYZKUBko4ZViNbasRGJs2bAO2fREHX9maDbLrYj8yDhQ@mail.gmail.com>
+ <20200303180122.GO1439@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <41235370-c095-6d8a-2546-be88b3974bfe@redhat.com>
+Date:   Wed, 4 Mar 2020 12:18:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from ak-desktop.emea.nsn-net.net (131.228.2.28) by HE1PR0802CA0003.eurprd08.prod.outlook.com (2603:10a6:3:bd::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Wed, 4 Mar 2020 11:17:46 +0000
-X-Mailer: git-send-email 2.11.0
-X-Originating-IP: [131.228.2.28]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6babef46-ed13-4e9a-4dac-08d7c02daac1
-X-MS-TrafficTypeDiagnostic: VI1PR07MB4000:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR07MB4000335C7583E449E715A81EF4E50@VI1PR07MB4000.eurprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
-X-Forefront-PRVS: 0332AACBC3
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(136003)(396003)(346002)(376002)(199004)(189003)(316002)(81156014)(6506007)(5660300002)(1076003)(478600001)(107886003)(81166006)(66946007)(2616005)(956004)(2906002)(52116002)(8936002)(6486002)(8676002)(66556008)(86362001)(6512007)(26005)(36756003)(16526019)(186003)(66476007)(9686003)(6666004)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB4000;H:VI1PR07MB6174.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: PF+x1/4cHJcTkkkhq1QpuLUJwNDhquuo76Sat9SJ+KzULwCZxkL2h9rB7+IkqsamNfqJhPoNZ4/z8Elp7XkH7SlvQMFj2KmjLD9xkM1MUIMDAiQ2oiE6a9A8xrvTbhROGyJd1moLA+oD8zvNfu/SHR3MR+6SFBdOrgRBwpTk/BVMU9PtSV2QofWhu01io8T5nNn2nAkGfiSTlZBVAj6mYNQbMdu0ARHiFS1Gu4/Y0naqxq+ple/J/pL0P0BRvIOw5TFZ/tTwUDZineztDnYdpfSySI6pJ71FFw1fdJcigOikcdptky+y4q4TaD8PhLIe0LGrvoj7QpBSBo6kNNg6JprTUnQaqg1QbV1YFqQkzxHnUGjgBZ7ma8ciDF4c5FxJKpS6Z+4qnGftHZasUFHPIQD4QSOFDASNVIh+mP81C1lD+qkEru2pdyIiTgDlBuCi
-X-MS-Exchange-AntiSpam-MessageData: dnllcsd9VJCrQAH4kDNH7cHsteKJ0jUpFJeaiM59i7sjp0vng4vHNNnyzIlmO6FIbBtPzuG4cvFR/VDCcPEOmMIqTtVswSJRsTmkY7CBACbCEHjYJyoEk9gXzOhs8wYayy8ZwyIu9AewQdXFWyChtQ==
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6babef46-ed13-4e9a-4dac-08d7c02daac1
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2020 11:17:46.9349
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: SAoFH3NlF6PdlLL7ZHyS+svO4c1cZdZmq8PTC5Kt7Y94mo0T47XcGmSdhLoNCI3PerEJnINFU777OAqKpFvwPw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB4000
+In-Reply-To: <20200303180122.GO1439@linux.intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+On 03/03/20 19:01, Sean Christopherson wrote:
+> static bool cpuid_function_in_range(struct kvm_vcpu *vcpu, u32 function)
+> {
+> 	struct kvm_cpuid_entry2 *max;
+> 
+> 	if (function >= 0x40000000 && function <= 0x4fffffff)
+> 		max = kvm_find_cpuid_entry(vcpu, function & 0xffffff00, 0);
+> 	else
+> 		max = kvm_find_cpuid_entry(vcpu, function & 0x80000000, 0);
+> 	return max && function <= max->eax;
+> }
 
-Some error paths leave the bus id allocated. As a result the IDR
-allocation will fail after a deferred probe. Fix by freeing the bus id
-always on error.
+Yes, this is a good idea (except it should be & 0xc0000000 to cover
+Centaur).
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
----
- drivers/spi/spi.c | 32 +++++++++++++++-----------------
- 1 file changed, 15 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 38b4c78df506..755221bc3745 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2639,7 +2639,7 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		if (ctlr->use_gpio_descriptors) {
- 			status = spi_get_gpio_descs(ctlr);
- 			if (status)
--				return status;
-+				goto free_bus_id;
- 			/*
- 			 * A controller using GPIO descriptors always
- 			 * supports SPI_CS_HIGH if need be.
-@@ -2649,7 +2649,7 @@ int spi_register_controller(struct spi_controller *ctlr)
- 			/* Legacy code path for GPIOs from DT */
- 			status = of_spi_get_gpio_numbers(ctlr);
- 			if (status)
--				return status;
-+				goto free_bus_id;
- 		}
- 	}
- 
-@@ -2657,17 +2657,14 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	 * Even if it's just one always-selected device, there must
- 	 * be at least one chipselect.
- 	 */
--	if (!ctlr->num_chipselect)
--		return -EINVAL;
-+	if (!ctlr->num_chipselect) {
-+		status = -EINVAL;
-+		goto free_bus_id;
-+	}
- 
- 	status = device_add(&ctlr->dev);
--	if (status < 0) {
--		/* free bus id */
--		mutex_lock(&board_lock);
--		idr_remove(&spi_master_idr, ctlr->bus_num);
--		mutex_unlock(&board_lock);
--		goto done;
--	}
-+	if (status < 0)
-+		goto free_bus_id;
- 	dev_dbg(dev, "registered %s %s\n",
- 			spi_controller_is_slave(ctlr) ? "slave" : "master",
- 			dev_name(&ctlr->dev));
-@@ -2683,11 +2680,7 @@ int spi_register_controller(struct spi_controller *ctlr)
- 		status = spi_controller_initialize_queue(ctlr);
- 		if (status) {
- 			device_del(&ctlr->dev);
--			/* free bus id */
--			mutex_lock(&board_lock);
--			idr_remove(&spi_master_idr, ctlr->bus_num);
--			mutex_unlock(&board_lock);
--			goto done;
-+			goto free_bus_id;
- 		}
- 	}
- 	/* add statistics */
-@@ -2702,7 +2695,12 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	/* Register devices from the device tree and ACPI */
- 	of_register_spi_devices(ctlr);
- 	acpi_register_spi_devices(ctlr);
--done:
-+	return status;
-+
-+free_bus_id:
-+	mutex_lock(&board_lock);
-+	idr_remove(&spi_master_idr, ctlr->bus_num);
-+	mutex_unlock(&board_lock);
- 	return status;
- }
- EXPORT_SYMBOL_GPL(spi_register_controller);
--- 
-2.11.0
+Paolo
 
