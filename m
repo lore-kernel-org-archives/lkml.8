@@ -2,128 +2,125 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372E9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B5B5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AA4A20665
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B70214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:23:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pnUUEvB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbgCDGUy (ORCPT
+        id S1726524AbgCDGXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 01:20:54 -0500
-Received: from smtp2.goneo.de ([85.220.129.33]:51520 "EHLO smtp2.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgCDGUx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 01:20:53 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by smtp2.goneo.de (Postfix) with ESMTP id 4672B23F498;
-        Wed,  4 Mar 2020 07:20:50 +0100 (CET)
-X-Virus-Scanned: by goneo
-Received: from smtp2.goneo.de ([127.0.0.1])
-        by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zEuSR6mKl8G7; Wed,  4 Mar 2020 07:20:49 +0100 (CET)
-Received: from [192.168.1.127] (dyndsl-091-096-162-220.ewe-ip-backbone.de [91.96.162.220])
-        by smtp2.goneo.de (Postfix) with ESMTPSA id 0F9C623F488;
-        Wed,  4 Mar 2020 07:20:49 +0100 (CET)
-Subject: Re: [PATCH] scripts/sphinx-pre-install: add '-p python3' to
- virtualenv
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "tbird20d@gmail.com" <tbird20d@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1582594481-23221-1-git-send-email-tim.bird@sony.com>
- <20200302130911.05a7e465@lwn.net>
- <MWHPR13MB0895EFDA9EBF7740875E661CFDE40@MWHPR13MB0895.namprd13.prod.outlook.com>
- <20200304064214.64341a49@onda.lan>
-From:   Markus Heiser <markus.heiser@darmarit.de>
-Message-ID: <31a69fe7-c08d-9381-a111-5f522a4c9ffd@darmarit.de>
-Date:   Wed, 4 Mar 2020 07:20:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 4 Mar 2020 01:23:30 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:39803 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgCDGX3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 01:23:29 -0500
+Received: by mail-yw1-f67.google.com with SMTP id x184so980944ywd.6;
+        Tue, 03 Mar 2020 22:23:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tbcuDfYaDl0s2pOUxHvvOkfOWHYsJpebfP0ObmyJLhA=;
+        b=pnUUEvB3emIIYIR+4DE+c2kjKv/n3JDAttQZl/Z8rY5peVO84IFZ7XMRFn9sGz13ki
+         7xYAbcCnds8+jE3Az1o6tS6Vm0utLaCW75ICVgGZ36fvpIW5pNm4AhSJONxVtqsMlhQ8
+         tJNldWnRN0W9DXGj6W9iGcdmxomrCXhDZGwPgyezJSieiMeBjiVcstmnvKXulRAZssbP
+         g6lqxXdV6UB42snjshIGMEvZF/8PUKHp1iQi71wp2TNfyJxRXDZSlyyOZFv8kvSe+hSV
+         fORT4Wbocws1DsnD1VTADO3nTJX4Rrpndhhm5qtsli8VqT35VW9LbRPAC6+kFYnx+51p
+         E96A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tbcuDfYaDl0s2pOUxHvvOkfOWHYsJpebfP0ObmyJLhA=;
+        b=LUKkBSuI/Oz50G51Wn12C3voyJ0nuR4xOVljiuoI/YJsTbH4G3eDUDb/p3kw5ahpW7
+         u8WOE9EyufaKeTN4w6HMiCQ94vKfAgPevo5JBWuWi+KpEgGB0NouSxLv+H6HIbq5GCa4
+         uX6pYBLgdd4UtfdpHY2l2v+e6aUqwp/SsHM2EVruUs0p6yXjDFPuo89JKsBhbYt9wAyj
+         aY0wKCuXqXLmvevJoLZQDk5hh0iGdlFCT5/Ky0kSXLQ+aDt5A7/jF5v+fo8f+uqac7Oz
+         QXUlgRGetuG2Yfy8UROPr4SCX476mpwuEMYvTxlPdiiq/zD7MMw9SNnOgzfiBAa0knUr
+         rJVA==
+X-Gm-Message-State: ANhLgQ2d+aGvLlmdxPENeT01HWObMhHuo10YXEOAPb2KihbT/nN4/GZc
+        NM+tLrSgaCzbUksFgxkbmI2idHc+EWIfXJ42PIXDGQ==
+X-Google-Smtp-Source: ADFU+vtJJiFniW/eKxBD4MR+qeAqmZ5k8NJak28YOj5w+Lndf/ByC4XUp8y8n7q9Pqhtb5af3SjTW245SjErulbzu/Q=
+X-Received: by 2002:a81:4cc2:: with SMTP id z185mr1475074ywa.357.1583303007222;
+ Tue, 03 Mar 2020 22:23:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200304064214.64341a49@onda.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+References: <1583278783-11584-1-git-send-email-hqjagain@gmail.com>
+In-Reply-To: <1583278783-11584-1-git-send-email-hqjagain@gmail.com>
+From:   Steve French <smfrench@gmail.com>
+Date:   Wed, 4 Mar 2020 00:23:16 -0600
+Message-ID: <CAH2r5mv9N_vo+vX7TaaPc2MBNFgsOAO6nGZcfaiaz8JqjM0BnQ@mail.gmail.com>
+Subject: Re: [PATCH] fs/cifs/cifsacl: remove set but not used variable 'rc'
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     Steve French <sfrench@samba.org>,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 04.03.20 um 06:42 schrieb Mauro Carvalho Chehab:
-> Em Tue, 3 Mar 2020 17:07:48 +0000
-> "Bird, Tim" <Tim.Bird@sony.com> escreveu:
-> 
->>> -----Original Message-----
->>> From: Jonathan Corbet <corbet@lwn.net>
->>>
->>> On Mon, 24 Feb 2020 18:34:41 -0700
->>> tbird20d@gmail.com wrote:
->>>    
->>>> With Ubuntu 16.04 (and presumably Debian distros of the same age),
->>>> the instructions for setting up a python virtual environment should
->>>> do so with the python 3 interpreter.  On these older distros, the
->>>> default python (and virtualenv command) might be python2 based.
->>>>
->>>> Some of the packages that sphinx relies on are now only available
->>>> for python3.  If you don't specify the python3 interpreter for
->>>> the virtualenv, you get errors when doing the pip installs for
->>>> various packages
->>>>
->>>> Fix this by adding '-p python3' to the virtualenv recommendation
->>>> line.
->>>>
->>>> Signed-off-by: Tim Bird <tim.bird@sony.com>
->>>
->>> I've applied this, even though it feels a bit fragile to me.  But Python
->>> stuff can be a bit that way, sometimes, I guess.
->>
->> I agree it seems a bit wonky.
-> 
-> Well, we could, instead, add some code that would be checking python and pip
-> versions, but still distros could be doing some backports with could
-> cause side-effects. So, checking for distro versions as done in this patch
-> seems a lot safer.
-> 
->> The less fragile approach would have been to just
->> always add the '-p python3' option to the virtualenv setup hint,
->> but Mauro seemed to want something more fine-tuned.
-> 
-> Yeah, I asked for a more fine-tuned version.
-> 
-> Depending on python/pip version, adding a -p python3 seems to cause
-> troubles (at least I found some bug reports about that). I may be
-> wrong (it was a long time ago), but, before adding the logic that checks
-> for "python3" I guess I tried first add -p python3, but, back then,
-> I found some troubles (probably with some old Fedora version).
-> 
-> So, better to use this syntax only on distros we know it will
-> work as expected.
-> 
->> As far as the string parsing goes, I think that the format of strings
->> returned by lsb-release (and the predecesors that sphinx_pre_install
->> checks) is unlikely to change.
-> 
-> Since when we added this script, we didn't have any troubles yet with
-> the part of the code with checks the distribution version. So, I guess
-> that the lsb-release related checks are pretty much reliable.
-> 
+Isn't it not used because of a potential bug - missing returning an
+error in two cases.
 
-With py3 the recommended way to install virtual environments is::
+If we leave the two lines you removed in - and set rc=0 in its
+declaration (and return rc at the end as you originally had suggested)
+- doesn't that solve the problem?  A minor modification to your first
+proposed patch?
 
-   python3 -m venv sphinx-env
-
-This (python3) is what worked for me on RHEL/CentOS (dnf),
-archlinux and debian/ubuntu (tested from 16.04 up to 20.04).
-
-I am not familiar with the sphinx-pre-install script but may be
-one of you is able to apply such a patch?
+On Tue, Mar 3, 2020 at 5:39 PM Qiujun Huang <hqjagain@gmail.com> wrote:
+>
+>  It is set but not used, So can be removed.
+>
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> ---
+>  fs/cifs/cifsacl.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>
+> diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
+> index 716574a..1cf3916 100644
+> --- a/fs/cifs/cifsacl.c
+> +++ b/fs/cifs/cifsacl.c
+> @@ -342,7 +342,6 @@
+>  sid_to_id(struct cifs_sb_info *cifs_sb, struct cifs_sid *psid,
+>                 struct cifs_fattr *fattr, uint sidtype)
+>  {
+> -       int rc;
+>         struct key *sidkey;
+>         char *sidstr;
+>         const struct cred *saved_cred;
+> @@ -403,7 +402,6 @@
+>         saved_cred = override_creds(root_cred);
+>         sidkey = request_key(&cifs_idmap_key_type, sidstr, "");
+>         if (IS_ERR(sidkey)) {
+> -               rc = -EINVAL;
+>                 cifs_dbg(FYI, "%s: Can't map SID %s to a %cid\n",
+>                          __func__, sidstr, sidtype == SIDOWNER ? 'u' : 'g');
+>                 goto out_revert_creds;
+> @@ -416,7 +414,6 @@
+>          */
+>         BUILD_BUG_ON(sizeof(uid_t) != sizeof(gid_t));
+>         if (sidkey->datalen != sizeof(uid_t)) {
+> -               rc = -EIO;
+>                 cifs_dbg(FYI, "%s: Downcall contained malformed key (datalen=%hu)\n",
+>                          __func__, sidkey->datalen);
+>                 key_invalidate(sidkey);
+> --
+> 1.8.3.1
+>
 
 
-  -- Markus --
+-- 
+Thanks,
+
+Steve
