@@ -2,47 +2,46 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D38BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6CF4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE8720870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9DD21739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:09:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G9pkHkvw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Q9wpviqd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728946AbgCDUJx (ORCPT
+        id S2387774AbgCDUJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:09:53 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:28640 "EHLO
+        Wed, 4 Mar 2020 15:09:58 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:31558 "EHLO
         mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727528AbgCDUJx (ORCPT
+        by vger.kernel.org with ESMTP id S1729144AbgCDUJ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:09:53 -0500
+        Wed, 4 Mar 2020 15:09:58 -0500
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583352592; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=/RCgoyhHvf5S+/RouyAbpWlCuHMv+v5tq6A3J7daPyw=; b=G9pkHkvwyTxuoL0uxB5FtO+bZv7ja/+TIev/0rOlrtufEi1n8AVmYq2O9fffovisEjxyKoX2
- N9QM9Gd6XyVSe0+PuuhL/A67BX3FQlJdTqZivwMOL35HSIF/5MqYGnv6McVlbRClOms3TfhC
- MMXY9avrq83rPKUGJ8nQg59W0s0=
+ s=smtp; t=1583352597; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=sZmIFlGZBeat1Ll+2F6AmavEXhbPfB5wINYjsBaLDaI=; b=Q9wpviqd6Yei2lpgyO3VXOmgD9oRjcdHOK4ZPXyXWqlNp8VaFYjmRDHsfTmtjbr6353xXaQ3
+ VsgqwWTfC1fuIkzWIpKlue/cZu/LGiN58RPCdXihHSwhg1DeEz+IZ0wApMwiH15jtNs8bf1C
+ 8Rc9XNvY3gAFe9nzoH+9u16s7jw=
 X-Mailgun-Sending-Ip: 104.130.122.26
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e600b07.7ffa0b0d23e8-smtp-out-n02;
- Wed, 04 Mar 2020 20:09:43 -0000 (UTC)
+ by mxa.mailgun.org with ESMTP id 5e600afa.7f4b774d47d8-smtp-out-n05;
+ Wed, 04 Mar 2020 20:09:30 -0000 (UTC)
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 59104C447A0; Wed,  4 Mar 2020 20:09:42 +0000 (UTC)
+        id 8C564C447A3; Wed,  4 Mar 2020 20:09:29 +0000 (UTC)
 Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07CE1C4479D;
-        Wed,  4 Mar 2020 20:09:37 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07CE1C4479D
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48978C43383;
+        Wed,  4 Mar 2020 20:09:25 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 48978C43383
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
 From:   Sibi Sankar <sibis@codeaurora.org>
@@ -52,12 +51,10 @@ Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
         linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
         tsoni@codeaurora.org, vnkgutta@codeaurora.org,
         Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v6 3/3] soc: qcom: apr: Add avs/audio tracking functionality
-Date:   Thu,  5 Mar 2020 01:39:11 +0530
-Message-Id: <20200304200911.15415-4-sibis@codeaurora.org>
+Subject: [PATCH v6 0/3] Introduce Protection Domain Restart (PDR) Helpers
+Date:   Thu,  5 Mar 2020 01:39:08 +0530
+Message-Id: <20200304200911.15415-1-sibis@codeaurora.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200304200911.15415-1-sibis@codeaurora.org>
-References: <20200304200911.15415-1-sibis@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,239 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use PDR helper functions to track the protection domains that the apr
-services are dependent upon on SDM845 SoC, specifically the "avs/audio"
-service running on ADSP Q6.
-
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+Qualcomm SoCs (starting with MSM8998) allow for multiple protection
+domains (PDs) to run on the same Q6 sub-system. This allows for
+services like AVS AUDIO to have their own separate address space and
+crash/recover without disrupting the other PDs running on the same Q6
+ADSP. This patch series introduces pdr helper library and adds PD
+tracking functionality for "avs/audio" allowing apr services to register
+themselves asynchronously once the dependent PDs are up.
 
 V6:
- * No change
+ * Fix minor compilation error introduced in V5
+ * Pick up Rob's R-b
 
 V5:
- * Picked up Bjorn's R-b
+ * Pick up Bjorn's R-b
+ * Service all pending lookup, notifier_register and
+   notifier_remove requests.
+ * Propagate error from pdr_register_listener
+ * Remove notifier_init_complete flag workaround with
+   the introduction of in-kernel ns.
+ * Remove depends-on in Kconfig and add module license.
 
- drivers/soc/qcom/Kconfig     |   1 +
- drivers/soc/qcom/apr.c       | 123 ++++++++++++++++++++++++++++++++---
- include/linux/soc/qcom/apr.h |   1 +
- 3 files changed, 116 insertions(+), 9 deletions(-)
+V4:
+ * Drop handling db_rev_count error handling since it remains
+   unused in upstream/downstream pd-mapper
+ * Fixup dt bindings and examples. [Rob]
+ * Dropping r-b from Bjorn/Srini for the dt bindings.
+ * Privatize pdr_service/pdr_handle. [Srini/Bjorn]
+ * Introduce notifier_init_complete to deal with cases where
+   qmi_handle_net_reset is not enough to reset the port. This
+   is to deal with cases where qrtr-ns starts after the adsp.
+ * Introduce per addr per pds to deal with multiple service_paths
+   per pdr_handle.
+ * Uniformly rename servreg -> notifier, servloc -> locator. [Narendra]
+ * Drop pdr_servreg_link_create tracking the service_path tracks
+   all pds associated with it. [Bjorn]
+ * Remove safe traversal for all cases where list is left
+   unmodified. [Bjorn]
+ * Address review comments in the apr driver and add comments. [Bjorn]
+ * Other misc fixes. [Narendra/Bjorn]
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index 945609005cedd..e2c364d86a838 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -201,6 +201,7 @@ config QCOM_APR
- 	tristate "Qualcomm APR Bus (Asynchronous Packet Router)"
- 	depends on ARCH_QCOM || COMPILE_TEST
- 	depends on RPMSG
-+	select QCOM_PDR_HELPERS
- 	help
- 	  Enable APR IPC protocol support between
- 	  application processor and QDSP6. APR is
-diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
-index 4fcc32420c474..1f35b097c6356 100644
---- a/drivers/soc/qcom/apr.c
-+++ b/drivers/soc/qcom/apr.c
-@@ -11,6 +11,7 @@
- #include <linux/workqueue.h>
- #include <linux/of_device.h>
- #include <linux/soc/qcom/apr.h>
-+#include <linux/soc/qcom/pdr.h>
- #include <linux/rpmsg.h>
- #include <linux/of.h>
- 
-@@ -21,6 +22,7 @@ struct apr {
- 	spinlock_t rx_lock;
- 	struct idr svcs_idr;
- 	int dest_domain_id;
-+	struct pdr_handle *pdr;
- 	struct workqueue_struct *rxwq;
- 	struct work_struct rx_work;
- 	struct list_head rx_list;
-@@ -289,6 +291,9 @@ static int apr_add_device(struct device *dev, struct device_node *np,
- 		  id->svc_id + 1, GFP_ATOMIC);
- 	spin_unlock(&apr->svcs_lock);
- 
-+	of_property_read_string_index(np, "qcom,protection-domain",
-+				      1, &adev->service_path);
-+
- 	dev_info(dev, "Adding APR dev: %s\n", dev_name(&adev->dev));
- 
- 	ret = device_register(&adev->dev);
-@@ -300,14 +305,75 @@ static int apr_add_device(struct device *dev, struct device_node *np,
- 	return ret;
- }
- 
--static void of_register_apr_devices(struct device *dev)
-+static int of_apr_add_pd_lookups(struct device *dev)
-+{
-+	const char *service_name, *service_path;
-+	struct apr *apr = dev_get_drvdata(dev);
-+	struct device_node *node;
-+	struct pdr_service *pds;
-+	int ret;
-+
-+	for_each_child_of_node(dev->of_node, node) {
-+		ret = of_property_read_string_index(node, "qcom,protection-domain",
-+						    0, &service_name);
-+		if (ret < 0)
-+			continue;
-+
-+		ret = of_property_read_string_index(node, "qcom,protection-domain",
-+						    1, &service_path);
-+		if (ret < 0) {
-+			dev_err(dev, "pdr service path missing: %d\n", ret);
-+			return ret;
-+		}
-+
-+		pds = pdr_add_lookup(apr->pdr, service_name, service_path);
-+		if (IS_ERR(pds) && PTR_ERR(pds) != -EALREADY) {
-+			dev_err(dev, "pdr add lookup failed: %d\n", ret);
-+			return PTR_ERR(pds);
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void of_register_apr_devices(struct device *dev, const char *svc_path)
- {
- 	struct apr *apr = dev_get_drvdata(dev);
- 	struct device_node *node;
-+	const char *service_path;
-+	int ret;
- 
- 	for_each_child_of_node(dev->of_node, node) {
- 		struct apr_device_id id = { {0} };
- 
-+		/*
-+		 * This function is called with svc_path NULL during
-+		 * apr_probe(), in which case we register any apr devices
-+		 * without a qcom,protection-domain specified.
-+		 *
-+		 * Then as the protection domains becomes available
-+		 * (if applicable) this function is again called, but with
-+		 * svc_path representing the service becoming available. In
-+		 * this case we register any apr devices with a matching
-+		 * qcom,protection-domain.
-+		 */
-+
-+		ret = of_property_read_string_index(node, "qcom,protection-domain",
-+						    1, &service_path);
-+		if (svc_path) {
-+			/* skip APR services that are PD independent */
-+			if (ret)
-+				continue;
-+
-+			/* skip APR services whose PD paths don't match */
-+			if (strcmp(service_path, svc_path))
-+				continue;
-+		} else {
-+			/* skip APR services whose PD lookups are registered */
-+			if (ret == 0)
-+				continue;
-+		}
-+
- 		if (of_property_read_u32(node, "reg", &id.svc_id))
- 			continue;
- 
-@@ -318,6 +384,34 @@ static void of_register_apr_devices(struct device *dev)
- 	}
- }
- 
-+static int apr_remove_device(struct device *dev, void *svc_path)
-+{
-+	struct apr_device *adev = to_apr_device(dev);
-+
-+	if (svc_path && adev->service_path) {
-+		if (!strcmp(adev->service_path, (char *)svc_path))
-+			device_unregister(&adev->dev);
-+	} else {
-+		device_unregister(&adev->dev);
-+	}
-+
-+	return 0;
-+}
-+
-+static void apr_pd_status(int state, char *svc_path, void *priv)
-+{
-+	struct apr *apr = (struct apr *)priv;
-+
-+	switch (state) {
-+	case SERVREG_SERVICE_STATE_UP:
-+		of_register_apr_devices(apr->dev, svc_path);
-+		break;
-+	case SERVREG_SERVICE_STATE_DOWN:
-+		device_for_each_child(apr->dev, svc_path, apr_remove_device);
-+		break;
-+	}
-+}
-+
- static int apr_probe(struct rpmsg_device *rpdev)
- {
- 	struct device *dev = &rpdev->dev;
-@@ -343,28 +437,39 @@ static int apr_probe(struct rpmsg_device *rpdev)
- 		return -ENOMEM;
- 	}
- 	INIT_WORK(&apr->rx_work, apr_rxwq);
-+
-+	apr->pdr = pdr_handle_alloc(apr_pd_status, apr);
-+	if (IS_ERR(apr->pdr)) {
-+		dev_err(dev, "Failed to init PDR handle\n");
-+		ret = PTR_ERR(apr->pdr);
-+		goto destroy_wq;
-+	}
-+
- 	INIT_LIST_HEAD(&apr->rx_list);
- 	spin_lock_init(&apr->rx_lock);
- 	spin_lock_init(&apr->svcs_lock);
- 	idr_init(&apr->svcs_idr);
--	of_register_apr_devices(dev);
--
--	return 0;
--}
- 
--static int apr_remove_device(struct device *dev, void *null)
--{
--	struct apr_device *adev = to_apr_device(dev);
-+	ret = of_apr_add_pd_lookups(dev);
-+	if (ret)
-+		goto handle_release;
- 
--	device_unregister(&adev->dev);
-+	of_register_apr_devices(dev, NULL);
- 
- 	return 0;
-+
-+handle_release:
-+	pdr_handle_release(apr->pdr);
-+destroy_wq:
-+	destroy_workqueue(apr->rxwq);
-+	return ret;
- }
- 
- static void apr_remove(struct rpmsg_device *rpdev)
- {
- 	struct apr *apr = dev_get_drvdata(&rpdev->dev);
- 
-+	pdr_handle_release(apr->pdr);
- 	device_for_each_child(&rpdev->dev, NULL, apr_remove_device);
- 	flush_workqueue(apr->rxwq);
- 	destroy_workqueue(apr->rxwq);
-diff --git a/include/linux/soc/qcom/apr.h b/include/linux/soc/qcom/apr.h
-index c5d52e2cb275f..7f0bc3cf4d610 100644
---- a/include/linux/soc/qcom/apr.h
-+++ b/include/linux/soc/qcom/apr.h
-@@ -85,6 +85,7 @@ struct apr_device {
- 	uint16_t	domain_id;
- 	uint32_t	version;
- 	char name[APR_NAME_SIZE];
-+	const char *service_path;
- 	spinlock_t	lock;
- 	struct list_head node;
- };
+V3:
+ * patches 2 and 3 remain unchanged.
+ * reset servloc_addr/servreg_addr.
+ * fixup the helpers to handle servloc_work/servreg_work asynchronously.
+ * fixup useage of list_lock across traversals, insertions and deletions.
+ * fixup the helpers to use a single lookup list.
+ * skip waiting for response on ind_ack send.
+ * introduce pdr_servreg_link_create to re-use existing qmi connection to
+   servreg instances. This helps tracking PDs running on the same remote
+   processor.
+ * have a per node curr_state in pdr_list_node to preserve all state
+   updates during indack_cb.
+ * introduce additional servreg_service_state values to help the client
+   distinguish between a fatal and non-fatal pdr_lookup errors.
+ * re-order pdr_handle_release sequence.
+ * fixup "!ind_msg->service_path returns true always" warning.
+ * fixup comments.
+
+V2:
+ * fixup pd_status callback to return void.
+ * return 0 from pdr_get_domain_list on success.
+ * introduce status_lock to linearize the pd_status reported back
+   to the clients.
+ * use the correct service name length across various string operations
+   performed.
+ * service locator will now schedule the pending lookups registered
+   when it comes up.
+ * other minor cleanups that Bjorn suggested.
+ * use pr_warn to indicate that the wait for service locator timed
+   out.
+ * add Bjorn/Srini's "Reviewed-by" for the dt-bindings.
+
+Depends on in-kernel ns fixes:
+https://patchwork.kernel.org/cover/11414841/
+
+Sibi Sankar (3):
+  soc: qcom: Introduce Protection Domain Restart helpers
+  dt-bindings: soc: qcom: apr: Add protection domain bindings
+  soc: qcom: apr: Add avs/audio tracking functionality
+
+ .../devicetree/bindings/soc/qcom/qcom,apr.txt |  50 ++
+ drivers/soc/qcom/Kconfig                      |   5 +
+ drivers/soc/qcom/Makefile                     |   1 +
+ drivers/soc/qcom/apr.c                        | 123 ++-
+ drivers/soc/qcom/pdr_interface.c              | 754 ++++++++++++++++++
+ drivers/soc/qcom/pdr_internal.h               | 379 +++++++++
+ include/linux/soc/qcom/apr.h                  |   1 +
+ include/linux/soc/qcom/pdr.h                  |  30 +
+ include/linux/soc/qcom/qmi.h                  |   1 +
+ 9 files changed, 1335 insertions(+), 9 deletions(-)
+ create mode 100644 drivers/soc/qcom/pdr_interface.c
+ create mode 100644 drivers/soc/qcom/pdr_internal.h
+ create mode 100644 include/linux/soc/qcom/pdr.h
+
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
