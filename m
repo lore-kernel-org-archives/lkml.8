@@ -2,216 +2,1238 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44FEEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53100C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D77D20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0236C217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="ZHFbqW/8"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wo5SLwzU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729169AbgCDT1v (ORCPT
+        id S1729262AbgCDT2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:27:51 -0500
-Received: from gateway31.websitewelcome.com ([192.185.144.94]:44440 "EHLO
-        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726440AbgCDT1u (ORCPT
+        Wed, 4 Mar 2020 14:28:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57180 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727137AbgCDT2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:27:50 -0500
-Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
-        by gateway31.websitewelcome.com (Postfix) with ESMTP id B0250312148
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 13:27:49 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id 9ZgLjAPehSl8q9ZgLjn2sw; Wed, 04 Mar 2020 13:27:49 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=yV3RHTJGEJ6X5MtVLixPDzRdxD9I2sP1TZY5RWDJRi4=; b=ZHFbqW/8vWTeVjXhQrEzeourHs
-        R1Vt5jRPS076UUyTOM5125y6VgEjm97vvSsu6ET/V5HWsjrDiPpHJoOlUx4daZ20aOsU7hBHLcS5w
-        Mz4CYkQGB/SRzkHpBJ5uQ1vbk9xAtfmcB+uZJQotKNAi96vJN1HRu8ZRtkhAhjabeRIQTa+JhE8gD
-        w2paeJ4AVcUvsS2ElKVRMy6GSytV4GFQQ0MuBdGvb3ccQdlFYgdXzZAl3mEFsMwdwWXlGEetr0QzN
-        8zFKU0DmhlXMJE2EwTDTfjqeH0Kz2hXlaZKlWWipdvp1PKa+o1aWPwPDD5swZ/3lFOrWgbV8uD7//
-        RBC4VMwg==;
-Received: from [200.39.25.77] (port=10307 helo=[192.168.43.132])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1j9ZgL-004JcY-4q; Wed, 04 Mar 2020 13:27:49 -0600
-Subject: Re: [PATCH] docs: deprecated.rst: Clean up fall-through details
-To:     Kees Cook <keescook@chromium.org>, Jonathan Corbet <corbet@lwn.net>
-Cc:     Joe Perches <joe@perches.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <202003041102.47A4E4B62@keescook>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <a8aa5d75-9a4e-1a84-b3ed-f868206ddee7@embeddedor.com>
-Date:   Wed, 4 Mar 2020 13:30:53 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 4 Mar 2020 14:28:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583350094;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ddCmJnchG7ddEu+kg1f4rZXhrNk22lXtAjVoUaUZxJM=;
+        b=Wo5SLwzUYM/FEr3a5sz1aWDDvmP07/M0j+SjG0aWa7VRQSg70TN5BcsyNONUtiRSCt34aW
+        y5HJQRI0ukLjVywcKOkTkvkFl/5UCFJwIp0CrNTqla+Opz71ta0WKhLJMwQXNv+Udx3Btp
+        8E8aU/WwSqLjOQQJLSoPnFlh2VvocPU=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-86-hFBmL7FONcqWMBW4tPzevQ-1; Wed, 04 Mar 2020 14:28:10 -0500
+X-MC-Unique: hFBmL7FONcqWMBW4tPzevQ-1
+Received: by mail-io1-f69.google.com with SMTP id i62so2234134ioa.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:28:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ddCmJnchG7ddEu+kg1f4rZXhrNk22lXtAjVoUaUZxJM=;
+        b=gxl2ToYkp4Lx+/F0PXPhcT532UMZYORn8XThNYVg5QHQRAoGv1AxfXr6cY5axgIcaI
+         grPOeanBSFYwDudCrf9EXlp1Brvki9Z7PR7hzq4YsWMYXWsHu4u4GP/JF2D+RF4Hq3E/
+         lOg+BAO92LdToHz2RXUgNOIslFJJyppvNRhOQ65Oltat2bh8nNxHL/vaZtCIeNw3ZRAN
+         cIAFeMD6hSYheri+/pTyeQyEU1z/FDREEbaJegfaYAd8Nz94c/qdy4po0LCbImawnZdE
+         ayumICnUxY+6CRyBK6mNgIeri6lx9iLtO6YXxT5trZnDlIGexdMHWTuUWop4hoYozX5U
+         dc9g==
+X-Gm-Message-State: ANhLgQ2p1ta2ByKt5lVp+TtwoUTaCdlq3V5BfrIIa6euew42jgKgigPM
+        /1ZFkhkCpgoaP0l6RD/AdhvfM6H7b6cxjx24izYEwyMYW+ZpcKbcsCN2pNyjah5T8s9Vy2/PQXK
+        ztwwLRqJZ7irIIKNE1MQ7UxsPt03pzYE6nQ7TIm4X
+X-Received: by 2002:a92:9a02:: with SMTP id t2mr4062369ili.11.1583350088788;
+        Wed, 04 Mar 2020 11:28:08 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvkBd2AQEGLOta97fREI3HNu/Ot1f5Mj5+fXn+LAYpK+QRvnex7gK0Udv1sgqXz7eadDuG8IsnOnfpmiQvTX+M=
+X-Received: by 2002:a92:9a02:: with SMTP id t2mr4062321ili.11.1583350088213;
+ Wed, 04 Mar 2020 11:28:08 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <202003041102.47A4E4B62@keescook>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 200.39.25.77
-X-Source-L: No
-X-Exim-ID: 1j9ZgL-004JcY-4q
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.132]) [200.39.25.77]:10307
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 8
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Wed, 4 Mar 2020 14:27:57 -0500
+Message-ID: <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com>
+Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 3/4/20 13:03, Kees Cook wrote:
-> Add example of fall-through, list-ify the case ending statements, and
-> adjust the markup for links and readability. While here, adjust
-> strscpy() details to mention strscpy_pad().
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-
-Acked-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-
+On Tue, Mar 3, 2020 at 6:39 PM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+>
+> Add a selftest for SGX. It is a trivial test where a simple enclave
+> copies one 64-bit word of memory between two memory locations given to
+> the enclave as arguments. Use ENCLS[EENTER] to invoke the enclave.
+>
+> Cc: linux-sgx@vger.kernel.org
+> Cc: linux-kselftest@vger.kernel.org
+> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 > ---
->  Documentation/process/deprecated.rst | 48 +++++++++++++++++-----------
->  1 file changed, 29 insertions(+), 19 deletions(-)
-> 
-> diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
-> index 179f2a5625a0..f9f196d3a69b 100644
-> --- a/Documentation/process/deprecated.rst
-> +++ b/Documentation/process/deprecated.rst
-> @@ -94,8 +94,8 @@ and other misbehavior due to the missing termination. It also NUL-pads the
->  destination buffer if the source contents are shorter than the destination
->  buffer size, which may be a needless performance penalty for callers using
->  only NUL-terminated strings. The safe replacement is :c:func:`strscpy`.
-> -(Users of :c:func:`strscpy` still needing NUL-padding will need an
-> -explicit :c:func:`memset` added.)
-> +(Users of :c:func:`strscpy` still needing NUL-padding should instead
-> +use strscpy_pad().)
->  
->  If a caller is using non-NUL-terminated strings, :c:func:`strncpy()` can
->  still be used, but destinations should be marked with the `__nonstring
-> @@ -122,27 +122,37 @@ memory adjacent to the stack (when built without `CONFIG_VMAP_STACK=y`)
->  
->  Implicit switch case fall-through
->  ---------------------------------
-> -The C language allows switch cases to "fall-through" when a "break" statement
-> -is missing at the end of a case. This, however, introduces ambiguity in the
-> -code, as it's not always clear if the missing break is intentional or a bug.
-> +The C language allows switch cases to fall through to the next case
-> +when a "break" statement is missing at the end of a case. This, however,
-> +introduces ambiguity in the code, as it's not always clear if the missing
-> +break is intentional or a bug. For example, it's not obvious just from
-> +looking at the code if `STATE_ONE` is intentionally designed to fall
-> +through into `STATE_TWO`::
+>  tools/testing/selftests/x86/sgx/.gitignore    |   3 +
+>  tools/testing/selftests/x86/sgx/Makefile      |  48 ++
+>  tools/testing/selftests/x86/sgx/defines.h     |  17 +
+>  tools/testing/selftests/x86/sgx/encl.c        |  20 +
+>  tools/testing/selftests/x86/sgx/encl.lds      |  34 ++
+>  .../selftests/x86/sgx/encl_bootstrap.S        |  94 ++++
+>  tools/testing/selftests/x86/sgx/main.c        | 247 +++++++++
+>  tools/testing/selftests/x86/sgx/sgx_call.S    |  23 +
+>  tools/testing/selftests/x86/sgx/sgx_call.h    |  11 +
+>  tools/testing/selftests/x86/sgx/sgxsign.c     | 493 ++++++++++++++++++
+>  .../testing/selftests/x86/sgx/signing_key.pem |  39 ++
+>  11 files changed, 1029 insertions(+)
+>  create mode 100644 tools/testing/selftests/x86/sgx/.gitignore
+>  create mode 100644 tools/testing/selftests/x86/sgx/Makefile
+>  create mode 100644 tools/testing/selftests/x86/sgx/defines.h
+>  create mode 100644 tools/testing/selftests/x86/sgx/encl.c
+>  create mode 100644 tools/testing/selftests/x86/sgx/encl.lds
+>  create mode 100644 tools/testing/selftests/x86/sgx/encl_bootstrap.S
+>  create mode 100644 tools/testing/selftests/x86/sgx/main.c
+>  create mode 100644 tools/testing/selftests/x86/sgx/sgx_call.S
+>  create mode 100644 tools/testing/selftests/x86/sgx/sgx_call.h
+>  create mode 100644 tools/testing/selftests/x86/sgx/sgxsign.c
+>  create mode 100644 tools/testing/selftests/x86/sgx/signing_key.pem
+>
+> diff --git a/tools/testing/selftests/x86/sgx/.gitignore b/tools/testing/selftests/x86/sgx/.gitignore
+> new file mode 100644
+> index 000000000000..98eb2d439606
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/.gitignore
+> @@ -0,0 +1,3 @@
+> +encl.ss
+> +sgxsign
+> +test_sgx
+> diff --git a/tools/testing/selftests/x86/sgx/Makefile b/tools/testing/selftests/x86/sgx/Makefile
+> new file mode 100644
+> index 000000000000..f838700029e2
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/Makefile
+> @@ -0,0 +1,48 @@
+> +top_srcdir = ../../../../..
 > +
-> +	switch (value) {
-> +	case STATE_ONE:
-> +		do_something();
-> +	case STATE_TWO:
-> +		do_other();
-> +		break;
-> +	default:
-> +		WARN("unknown state");
-> +	}
->  
->  As there have been a long list of flaws `due to missing "break" statements
->  <https://cwe.mitre.org/data/definitions/484.html>`_, we no longer allow
-> -"implicit fall-through".
-> -
-> -In order to identify intentional fall-through cases, we have adopted a
-> -pseudo-keyword macro 'fallthrough' which expands to gcc's extension
-> -__attribute__((__fallthrough__)).  `Statement Attributes
-> -<https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html>`_
-> -
-> -When the C17/C18  [[fallthrough]] syntax is more commonly supported by
-> +implicit fall-through. In order to identify intentional fall-through
-> +cases, we have adopted a pseudo-keyword macro "fallthrough" which
-> +expands to gcc's extension `__attribute__((__fallthrough__))
-> +<https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html>`_.
-> +(When the C17/C18  `[[fallthrough]]` syntax is more commonly supported by
->  C compilers, static analyzers, and IDEs, we can switch to using that syntax
-> -for the macro pseudo-keyword.
-> +for the macro pseudo-keyword.)
->  
->  All switch/case blocks must end in one of:
->  
-> -	break;
-> -	fallthrough;
-> -	continue;
-> -	goto <label>;
-> -	return [expression];
-> +* break;
-> +* fallthrough;
-> +* continue;
-> +* goto <label>;
-> +* return [expression];
-> 
+> +include ../../lib.mk
+> +
+> +ifndef OBJCOPY
+> +OBJCOPY := $(CROSS_COMPILE)objcopy
+> +endif
+> +
+> +INCLUDES := -I$(top_srcdir)/tools/include
+> +HOST_CFLAGS := -Wall -Werror -g $(INCLUDES) -fPIC -z noexecstack
+> +ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIC \
+> +              -fno-stack-protector -mrdrnd $(INCLUDES)
+> +
+> +TEST_CUSTOM_PROGS := $(OUTPUT)/test_sgx $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
+> +
+> +all: $(TEST_CUSTOM_PROGS)
+> +
+> +$(OUTPUT)/test_sgx: $(OUTPUT)/main.o $(OUTPUT)/sgx_call.o
+> +       $(CC) $(HOST_CFLAGS) -o $@ $^
+> +
+> +$(OUTPUT)/main.o: main.c
+> +       $(CC) $(HOST_CFLAGS) -c $< -o $@
+> +
+> +$(OUTPUT)/sgx_call.o: sgx_call.S
+> +       $(CC) $(HOST_CFLAGS) -c $< -o $@
+> +
+> +$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
+> +       $(OBJCOPY) -O binary $< $@
+> +
+> +$(OUTPUT)/encl.elf: encl.lds encl.c encl_bootstrap.S
+> +       $(CC) $(ENCL_CFLAGS) -T $^ -o $@
+> +
+> +$(OUTPUT)/encl.ss: $(OUTPUT)/encl.bin
+> +       $(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
+> +
+> +$(OUTPUT)/sgxsign: sgxsign.c
+> +       $(CC) $(INCLUDES) -o $@ $< -lcrypto
+> +
+> +EXTRA_CLEAN := \
+> +       $(OUTPUT)/encl.bin \
+> +       $(OUTPUT)/encl.elf \
+> +       $(OUTPUT)/encl.ss \
+> +       $(OUTPUT)/sgx_call.o \
+> +       $(OUTPUT)/sgxsign \
+> +       $(OUTPUT)/test_sgx \
+> +       $(OUTPUT)/test_sgx.o \
+> +
+> +.PHONY: clean
+> diff --git a/tools/testing/selftests/x86/sgx/defines.h b/tools/testing/selftests/x86/sgx/defines.h
+> new file mode 100644
+> index 000000000000..87264f85cb9f
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/defines.h
+> @@ -0,0 +1,17 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright(c) 2016-19 Intel Corporation.
+> + */
+> +
+> +#ifndef DEFINES_H
+> +#define DEFINES_H
+> +
+> +#include <stdint.h>
+> +
+> +#define __aligned(x) __attribute__((__aligned__(x)))
+> +#define __packed __attribute__((packed))
+> +
+> +#include "../../../../../arch/x86/kernel/cpu/sgx/arch.h"
+> +#include "../../../../../arch/x86/include/uapi/asm/sgx.h"
+> +
+> +#endif /* DEFINES_H */
+> diff --git a/tools/testing/selftests/x86/sgx/encl.c b/tools/testing/selftests/x86/sgx/encl.c
+> new file mode 100644
+> index 000000000000..ede915399742
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/encl.c
+> @@ -0,0 +1,20 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +// Copyright(c) 2016-18 Intel Corporation.
+> +
+> +#include <stddef.h>
+> +#include "defines.h"
+> +
+> +static void *memcpy(void *dest, const void *src, size_t n)
+> +{
+> +       size_t i;
+> +
+> +       for (i = 0; i < n; i++)
+> +               ((char *)dest)[i] = ((char *)src)[i];
+> +
+> +       return dest;
+> +}
+> +
+> +void encl_body(void *rdi, void *rsi)
+> +{
+> +       memcpy(rsi, rdi, 8);
+> +}
+> diff --git a/tools/testing/selftests/x86/sgx/encl.lds b/tools/testing/selftests/x86/sgx/encl.lds
+> new file mode 100644
+> index 000000000000..9a56d3064104
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/encl.lds
+> @@ -0,0 +1,34 @@
+> +OUTPUT_FORMAT(elf64-x86-64)
+> +
+> +SECTIONS
+> +{
+> +       . = 0;
+> +       .tcs : {
+> +               *(.tcs*)
+> +       }
+> +
+> +       . = ALIGN(4096);
+> +       .text : {
+> +               *(.text*)
+> +               *(.rodata*)
+> +       }
+> +
+> +       . = ALIGN(4096);
+> +       .data : {
+> +               *(.data*)
+> +       }
+> +
+> +       /DISCARD/ : {
+> +               *(.data*)
+> +               *(.comment*)
+> +               *(.note*)
+> +               *(.debug*)
+> +               *(.eh_frame*)
+> +       }
+> +}
+> +
+> +ASSERT(!DEFINED(.altinstructions), "ALTERNATIVES are not supported in enclaves")
+> +ASSERT(!DEFINED(.altinstr_replacement), "ALTERNATIVES are not supported in enclaves")
+> +ASSERT(!DEFINED(.discard.retpoline_safe), "RETPOLINE ALTERNATIVES are not supported in enclaves")
+> +ASSERT(!DEFINED(.discard.nospec), "RETPOLINE ALTERNATIVES are not supported in enclaves")
+> +ASSERT(!DEFINED(.got.plt), "Libcalls are not supported in enclaves")
+> diff --git a/tools/testing/selftests/x86/sgx/encl_bootstrap.S b/tools/testing/selftests/x86/sgx/encl_bootstrap.S
+> new file mode 100644
+> index 000000000000..d07f970ccdf9
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/encl_bootstrap.S
+> @@ -0,0 +1,94 @@
+> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+> +/*
+> + * Copyright(c) 2016-18 Intel Corporation.
+> + */
+> +
+> +       .macro ENCLU
+> +       .byte 0x0f, 0x01, 0xd7
+> +       .endm
+> +
+> +       .section ".tcs", "a"
+> +       .balign 4096
+> +
+> +       .fill   1, 8, 0                 # STATE (set by CPU)
+> +       .fill   1, 8, 0                 # FLAGS
+> +       .quad   encl_ssa                # OSSA
+> +       .fill   1, 4, 0                 # CSSA (set by CPU)
+> +       .fill   1, 4, 1                 # NSSA
+> +       .quad   encl_entry              # OENTRY
+> +       .fill   1, 8, 0                 # AEP (set by EENTER and ERESUME)
+> +       .fill   1, 8, 0                 # OFSBASE
+> +       .fill   1, 8, 0                 # OGSBASE
+> +       .fill   1, 4, 0xFFFFFFFF        # FSLIMIT
+> +       .fill   1, 4, 0xFFFFFFFF        # GSLIMIT
+> +       .fill   4024, 1, 0              # Reserved
+> +
+> +       .text
+> +
+> +encl_entry:
+> +       # RBX contains the base address for TCS, which is also the first address
+> +       # inside the enclave. By adding the value of le_stack_end to it, we get
+> +       # the absolute address for the stack.
+> +       lea     (encl_stack)(%rbx), %rax
+> +       xchg    %rsp, %rax
+> +       push    %rax
+> +
+> +       push    %rcx # push the address after EENTER
+> +       push    %rbx # push the enclave base address
+> +
+> +       call    encl_body
+> +
+> +       pop     %rbx # pop the enclave base address
+> +
+> +       # Restore XSAVE registers to a synthetic state.
+> +       mov     $0xFFFFFFFF, %rax
+> +       mov     $0xFFFFFFFF, %rdx
+> +       lea     (xsave_area)(%rbx), %rdi
+> +       fxrstor (%rdi)
+> +
+> +       # Clear GPRs.
+> +       xor     %rcx, %rcx
+> +       xor     %rdx, %rdx
+> +       xor     %rdi, %rdi
+> +       xor     %rsi, %rsi
+> +       xor     %r8, %r8
+> +       xor     %r9, %r9
+> +       xor     %r10, %r10
+> +       xor     %r11, %r11
+> +       xor     %r12, %r12
+> +       xor     %r13, %r13
+> +       xor     %r14, %r14
+> +       xor     %r15, %r15
+> +
+> +       # Reset status flags.
+> +       add     %rdx, %rdx # OF = SF = AF = CF = 0; ZF = PF = 1
+> +
+> +       # Prepare EEXIT target by popping the address of the instruction after
+> +       # EENTER to RBX.
+> +       pop     %rbx
+> +
+> +       # Restore the caller stack.
+> +       pop     %rax
+> +       mov     %rax, %rsp
+> +
+> +       # EEXIT
+> +       mov     $4, %rax
+> +       enclu
+> +
+> +       .section ".data", "aw"
+> +
+> +encl_ssa:
+> +       .space 4096
+> +
+> +xsave_area:
+> +       .fill   1, 4, 0x037F            # FCW
+> +       .fill   5, 4, 0
+> +       .fill   1, 4, 0x1F80            # MXCSR
+> +       .fill   1, 4, 0xFFFF            # MXCSR_MASK
+> +       .fill   123, 4, 0
+> +       .fill   1, 4, 0x80000000        # XCOMP_BV[63] = 1, compaction mode
+> +       .fill   12, 4, 0
+
+I find this much more readable:
+
+xsave_area:
+        # Legacy
+        .fill   1, 4, 0x037F            # FCW
+        .fill   5, 4, 0
+        .fill   1, 4, 0x1F80            # MXCSR
+        .fill   1, 4, 0xFFFF            # MXCSR_MASK
+        .fill   60, 8, 0
+
+        # Header
+        .fill   1, 8, 0                 # XSTATE_BV
+        .fill   1, 8, 1 << 63           # XCOMP_BV (compaction mode)
+        .fill   6, 8, 0
+
+Also, since people are likely to copy this code for their own
+enclaves, it would be helpful to document which flags are set in FCW
+and MXCSR.
+
+> +
+> +       .balign 4096
+> +       .space 8192
+> +encl_stack:
+> diff --git a/tools/testing/selftests/x86/sgx/main.c b/tools/testing/selftests/x86/sgx/main.c
+> new file mode 100644
+> index 000000000000..48ed5fdfb3cb
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/main.c
+> @@ -0,0 +1,247 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +// Copyright(c) 2016-18 Intel Corporation.
+> +
+> +#include <elf.h>
+> +#include <errno.h>
+> +#include <fcntl.h>
+> +#include <stdbool.h>
+> +#include <stdio.h>
+> +#include <stdint.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <unistd.h>
+> +#include <sys/ioctl.h>
+> +#include <sys/mman.h>
+> +#include <sys/stat.h>
+> +#include <sys/time.h>
+> +#include <sys/types.h>
+> +#include "defines.h"
+> +#include "sgx_call.h"
+> +
+> +#define PAGE_SIZE  4096
+> +
+> +static const uint64_t MAGIC = 0x1122334455667788ULL;
+> +
+> +static bool encl_create(int dev_fd, unsigned long bin_size,
+> +                       struct sgx_secs *secs)
+> +{
+> +       struct sgx_enclave_create ioc;
+> +       void *area;
+> +       int rc;
+> +
+> +       memset(secs, 0, sizeof(*secs));
+> +       secs->ssa_frame_size = 1;
+> +       secs->attributes = SGX_ATTR_MODE64BIT;
+> +       secs->xfrm = 3;
+> +
+> +       for (secs->size = 4096; secs->size < bin_size; )
+> +               secs->size <<= 1;
+> +
+> +       area = mmap(NULL, secs->size * 2, PROT_NONE, MAP_SHARED, dev_fd, 0);
+> +       if (area == MAP_FAILED) {
+> +               perror("mmap");
+> +               return false;
+> +       }
+> +
+> +       secs->base = ((uint64_t)area + secs->size - 1) & ~(secs->size - 1);
+> +
+> +       munmap(area, secs->base - (uint64_t)area);
+> +       munmap((void *)(secs->base + secs->size),
+> +              (uint64_t)area + secs->size - secs->base);
+> +
+> +       ioc.src = (unsigned long)secs;
+> +       rc = ioctl(dev_fd, SGX_IOC_ENCLAVE_CREATE, &ioc);
+> +       if (rc) {
+> +               fprintf(stderr, "ECREATE failed rc=%d, err=%d.\n", rc, errno);
+> +               munmap((void *)secs->base, secs->size);
+> +               return false;
+> +       }
+> +
+> +       return true;
+> +}
+> +
+> +static bool encl_add_pages(int dev_fd, unsigned long offset, void *data,
+> +                          unsigned long length, uint64_t flags)
+> +{
+> +       struct sgx_enclave_add_pages ioc;
+> +       struct sgx_secinfo secinfo;
+> +       int rc;
+> +
+> +       memset(&secinfo, 0, sizeof(secinfo));
+> +       secinfo.flags = flags;
+> +
+> +       ioc.src = (uint64_t)data;
+> +       ioc.offset = offset;
+> +       ioc.length = length;
+> +       ioc.secinfo = (unsigned long)&secinfo;
+> +       ioc.flags = SGX_PAGE_MEASURE;
+> +
+> +       rc = ioctl(dev_fd, SGX_IOC_ENCLAVE_ADD_PAGES, &ioc);
+> +       if (rc) {
+> +               fprintf(stderr, "EADD failed rc=%d.\n", rc);
+> +               return false;
+> +       }
+> +
+> +       if (ioc.count != ioc.length) {
+> +               fprintf(stderr, "Partially processed, update the test.\n");
+> +               return false;
+> +       }
+> +
+> +       return true;
+> +}
+> +
+> +#define SGX_REG_PAGE_FLAGS \
+> +       (SGX_SECINFO_REG | SGX_SECINFO_R | SGX_SECINFO_W | SGX_SECINFO_X)
+> +
+> +static bool encl_build(struct sgx_secs *secs, void *bin,
+> +                      unsigned long bin_size, struct sgx_sigstruct *sigstruct)
+> +{
+> +       struct sgx_enclave_init ioc;
+> +       void *addr;
+> +       int dev_fd;
+> +       int rc;
+> +
+> +       dev_fd = open("/dev/sgx/enclave", O_RDWR);
+> +       if (dev_fd < 0) {
+> +               fprintf(stderr, "Unable to open /dev/sgx\n");
+> +               return false;
+> +       }
+> +
+> +       if (!encl_create(dev_fd, bin_size, secs))
+> +               goto out_dev_fd;
+> +
+> +       if (!encl_add_pages(dev_fd, 0, bin, PAGE_SIZE, SGX_SECINFO_TCS))
+> +               goto out_dev_fd;
+> +
+> +       if (!encl_add_pages(dev_fd, PAGE_SIZE, bin + PAGE_SIZE,
+> +                           bin_size - PAGE_SIZE, SGX_REG_PAGE_FLAGS))
+> +               goto out_dev_fd;
+> +
+> +       ioc.sigstruct = (uint64_t)sigstruct;
+> +       rc = ioctl(dev_fd, SGX_IOC_ENCLAVE_INIT, &ioc);
+> +       if (rc) {
+> +               printf("EINIT failed rc=%d\n", rc);
+> +               goto out_map;
+> +       }
+> +
+> +       addr = mmap((void *)secs->base, PAGE_SIZE, PROT_READ | PROT_WRITE,
+> +                   MAP_SHARED | MAP_FIXED, dev_fd, 0);
+> +       if (addr == MAP_FAILED) {
+> +               fprintf(stderr, "mmap() failed on TCS, errno=%d.\n", errno);
+> +               return false;
+> +       }
+> +
+> +       addr = mmap((void *)(secs->base + PAGE_SIZE), bin_size - PAGE_SIZE,
+> +                   PROT_READ | PROT_WRITE | PROT_EXEC,
+> +                   MAP_SHARED | MAP_FIXED, dev_fd, 0);
+> +       if (addr == MAP_FAILED) {
+> +               fprintf(stderr, "mmap() failed, errno=%d.\n", errno);
+> +               return false;
+> +       }
+> +
+> +       close(dev_fd);
+> +       return true;
+> +out_map:
+> +       munmap((void *)secs->base, secs->size);
+> +out_dev_fd:
+> +       close(dev_fd);
+> +       return false;
+> +}
+> +
+> +bool get_file_size(const char *path, off_t *bin_size)
+> +{
+> +       struct stat sb;
+> +       int ret;
+> +
+> +       ret = stat(path, &sb);
+> +       if (ret) {
+> +               perror("stat");
+> +               return false;
+> +       }
+> +
+> +       if (!sb.st_size || sb.st_size & 0xfff) {
+> +               fprintf(stderr, "Invalid blob size %lu\n", sb.st_size);
+> +               return false;
+> +       }
+> +
+> +       *bin_size = sb.st_size;
+> +       return true;
+> +}
+> +
+> +bool encl_data_map(const char *path, void **bin, off_t *bin_size)
+> +{
+> +       int fd;
+> +
+> +       fd = open(path, O_RDONLY);
+> +       if (fd == -1)  {
+> +               fprintf(stderr, "open() %s failed, errno=%d.\n", path, errno);
+> +               return false;
+> +       }
+> +
+> +       if (!get_file_size(path, bin_size))
+> +               goto err_out;
+> +
+> +       *bin = mmap(NULL, *bin_size, PROT_READ, MAP_PRIVATE, fd, 0);
+> +       if (*bin == MAP_FAILED) {
+> +               fprintf(stderr, "mmap() %s failed, errno=%d.\n", path, errno);
+> +               goto err_out;
+> +       }
+> +
+> +       close(fd);
+> +       return true;
+> +
+> +err_out:
+> +       close(fd);
+> +       return false;
+> +}
+> +
+> +bool load_sigstruct(const char *path, void *sigstruct)
+> +{
+> +       int fd;
+> +
+> +       fd = open(path, O_RDONLY);
+> +       if (fd == -1)  {
+> +               fprintf(stderr, "open() %s failed, errno=%d.\n", path, errno);
+> +               return false;
+> +       }
+> +
+> +       if (read(fd, sigstruct, sizeof(struct sgx_sigstruct)) !=
+> +           sizeof(struct sgx_sigstruct)) {
+> +               fprintf(stderr, "read() %s failed, errno=%d.\n", path, errno);
+> +               close(fd);
+> +               return false;
+> +       }
+> +
+> +       close(fd);
+> +       return true;
+> +}
+> +
+> +int main(int argc, char *argv[], char *envp[])
+> +{
+> +       struct sgx_sigstruct sigstruct;
+> +       struct sgx_secs secs;
+> +       uint64_t result = 0;
+> +       off_t bin_size;
+> +       void *bin;
+> +
+> +       if (!encl_data_map("encl.bin", &bin, &bin_size))
+> +               exit(1);
+> +
+> +       if (!load_sigstruct("encl.ss", &sigstruct))
+> +               exit(1);
+> +
+> +       if (!encl_build(&secs, bin, bin_size, &sigstruct))
+> +               exit(1);
+> +
+> +       printf("Input: 0x%lx\n", MAGIC);
+> +
+> +       sgx_call_eenter((void *)&MAGIC, &result, (void *)secs.base);
+> +       if (result != MAGIC) {
+> +               fprintf(stderr, "0x%lx != 0x%lx\n", result, MAGIC);
+> +               exit(1);
+> +       }
+> +
+> +       printf("Output: 0x%lx\n", result);
+> +
+> +       exit(0);
+> +}
+> diff --git a/tools/testing/selftests/x86/sgx/sgx_call.S b/tools/testing/selftests/x86/sgx/sgx_call.S
+> new file mode 100644
+> index 000000000000..ca4c7893f9d9
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/sgx_call.S
+> @@ -0,0 +1,23 @@
+> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+> +/**
+> +* Copyright(c) 2016-18 Intel Corporation.
+> +*/
+> +
+> +       .text
+> +
+> +       .macro ENCLU
+> +       .byte 0x0f, 0x01, 0xd7
+> +       .endm
+> +
+> +       .text
+> +
+> +       .global sgx_call_eenter
+> +sgx_call_eenter:
+> +       push    %rbx
+> +       mov     $0x02, %rax
+> +       mov     %rdx, %rbx
+> +       lea     sgx_async_exit(%rip), %rcx
+> +sgx_async_exit:
+> +       ENCLU
+> +       pop     %rbx
+> +       ret
+> diff --git a/tools/testing/selftests/x86/sgx/sgx_call.h b/tools/testing/selftests/x86/sgx/sgx_call.h
+> new file mode 100644
+> index 000000000000..bf72068ada23
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/sgx_call.h
+> @@ -0,0 +1,11 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright(c) 2016-19 Intel Corporation.
+> + */
+> +
+> +#ifndef SGX_CALL_H
+> +#define SGX_CALL_H
+> +
+> +void sgx_call_eenter(void *rdi, void *rsi, void *entry);
+> +
+> +#endif /* SGX_CALL_H */
+> diff --git a/tools/testing/selftests/x86/sgx/sgxsign.c b/tools/testing/selftests/x86/sgx/sgxsign.c
+> new file mode 100644
+> index 000000000000..3d9007af40c9
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/sgxsign.c
+> @@ -0,0 +1,493 @@
+> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
+> +// Copyright(c) 2016-18 Intel Corporation.
+> +
+> +#define _GNU_SOURCE
+> +#include <getopt.h>
+> +#include <stdbool.h>
+> +#include <stdint.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <sys/stat.h>
+> +#include <sys/types.h>
+> +#include <unistd.h>
+> +#include <openssl/err.h>
+> +#include <openssl/pem.h>
+> +#include "defines.h"
+> +
+> +struct sgx_sigstruct_payload {
+> +       struct sgx_sigstruct_header header;
+> +       struct sgx_sigstruct_body body;
+> +};
+> +
+> +static bool check_crypto_errors(void)
+> +{
+> +       int err;
+> +       bool had_errors = false;
+> +       const char *filename;
+> +       int line;
+> +       char str[256];
+> +
+> +       for ( ; ; ) {
+> +               if (ERR_peek_error() == 0)
+> +                       break;
+> +
+> +               had_errors = true;
+> +               err = ERR_get_error_line(&filename, &line);
+> +               ERR_error_string_n(err, str, sizeof(str));
+> +               fprintf(stderr, "crypto: %s: %s:%d\n", str, filename, line);
+> +       }
+> +
+> +       return had_errors;
+> +}
+> +
+> +static void exit_usage(const char *program)
+> +{
+> +       fprintf(stderr,
+> +               "Usage: %s/sign-le <key> <enclave> <sigstruct>\n", program);
+> +       exit(1);
+> +}
+> +
+> +static inline const BIGNUM *get_modulus(RSA *key)
+> +{
+> +#if OPENSSL_VERSION_NUMBER < 0x10100000L
+> +       return key->n;
+> +#else
+> +       const BIGNUM *n;
+> +
+> +       RSA_get0_key(key, &n, NULL, NULL);
+> +       return n;
+> +#endif
+> +}
+> +
+> +static RSA *load_sign_key(const char *path)
+> +{
+> +       FILE *f;
+> +       RSA *key;
+> +
+> +       f = fopen(path, "rb");
+> +       if (!f) {
+> +               fprintf(stderr, "Unable to open %s\n", path);
+> +               return NULL;
+> +       }
+> +       key = RSA_new();
+> +       if (!PEM_read_RSAPrivateKey(f, &key, NULL, NULL))
+> +               return NULL;
+> +       fclose(f);
+> +
+> +       if (BN_num_bytes(get_modulus(key)) != SGX_MODULUS_SIZE) {
+> +               fprintf(stderr, "Invalid key size %d\n",
+> +                       BN_num_bytes(get_modulus(key)));
+> +               RSA_free(key);
+> +               return NULL;
+> +       }
+> +
+> +       return key;
+> +}
+> +
+> +static void reverse_bytes(void *data, int length)
+> +{
+> +       int i = 0;
+> +       int j = length - 1;
+> +       uint8_t temp;
+> +       uint8_t *ptr = data;
+> +
+> +       while (i < j) {
+> +               temp = ptr[i];
+> +               ptr[i] = ptr[j];
+> +               ptr[j] = temp;
+> +               i++;
+> +               j--;
+> +       }
+> +}
+> +
+> +enum mrtags {
+> +       MRECREATE = 0x0045544145524345,
+> +       MREADD = 0x0000000044444145,
+> +       MREEXTEND = 0x00444E4554584545,
+> +};
+> +
+> +static bool mrenclave_update(EVP_MD_CTX *ctx, const void *data)
+> +{
+> +       if (!EVP_DigestUpdate(ctx, data, 64)) {
+> +               fprintf(stderr, "digest update failed\n");
+> +               return false;
+> +       }
+> +
+> +       return true;
+> +}
+> +
+> +static bool mrenclave_commit(EVP_MD_CTX *ctx, uint8_t *mrenclave)
+> +{
+> +       unsigned int size;
+> +
+> +       if (!EVP_DigestFinal_ex(ctx, (unsigned char *)mrenclave, &size)) {
+> +               fprintf(stderr, "digest commit failed\n");
+> +               return false;
+> +       }
+> +
+> +       if (size != 32) {
+> +               fprintf(stderr, "invalid digest size = %u\n", size);
+> +               return false;
+> +       }
+> +
+> +       return true;
+> +}
+> +
+> +struct mrecreate {
+> +       uint64_t tag;
+> +       uint32_t ssaframesize;
+> +       uint64_t size;
+> +       uint8_t reserved[44];
+> +} __attribute__((__packed__));
+> +
+> +
+> +static bool mrenclave_ecreate(EVP_MD_CTX *ctx, uint64_t blob_size)
+> +{
+> +       struct mrecreate mrecreate;
+> +       uint64_t encl_size;
+> +
+> +       for (encl_size = 0x1000; encl_size < blob_size; )
+> +               encl_size <<= 1;
+> +
+> +       memset(&mrecreate, 0, sizeof(mrecreate));
+> +       mrecreate.tag = MRECREATE;
+> +       mrecreate.ssaframesize = 1;
+> +       mrecreate.size = encl_size;
+> +
+> +       if (!EVP_DigestInit_ex(ctx, EVP_sha256(), NULL))
+> +               return false;
+> +
+> +       return mrenclave_update(ctx, &mrecreate);
+> +}
+> +
+> +struct mreadd {
+> +       uint64_t tag;
+> +       uint64_t offset;
+> +       uint64_t flags; /* SECINFO flags */
+> +       uint8_t reserved[40];
+> +} __attribute__((__packed__));
+> +
+> +static bool mrenclave_eadd(EVP_MD_CTX *ctx, uint64_t offset, uint64_t flags)
+> +{
+> +       struct mreadd mreadd;
+> +
+> +       memset(&mreadd, 0, sizeof(mreadd));
+> +       mreadd.tag = MREADD;
+> +       mreadd.offset = offset;
+> +       mreadd.flags = flags;
+> +
+> +       return mrenclave_update(ctx, &mreadd);
+> +}
+> +
+> +struct mreextend {
+> +       uint64_t tag;
+> +       uint64_t offset;
+> +       uint8_t reserved[48];
+> +} __attribute__((__packed__));
+> +
+> +static bool mrenclave_eextend(EVP_MD_CTX *ctx, uint64_t offset, uint8_t *data)
+> +{
+> +       struct mreextend mreextend;
+> +       int i;
+> +
+> +       for (i = 0; i < 0x1000; i += 0x100) {
+> +               memset(&mreextend, 0, sizeof(mreextend));
+> +               mreextend.tag = MREEXTEND;
+> +               mreextend.offset = offset + i;
+> +
+> +               if (!mrenclave_update(ctx, &mreextend))
+> +                       return false;
+> +
+> +               if (!mrenclave_update(ctx, &data[i + 0x00]))
+> +                       return false;
+> +
+> +               if (!mrenclave_update(ctx, &data[i + 0x40]))
+> +                       return false;
+> +
+> +               if (!mrenclave_update(ctx, &data[i + 0x80]))
+> +                       return false;
+> +
+> +               if (!mrenclave_update(ctx, &data[i + 0xC0]))
+> +                       return false;
+> +       }
+> +
+> +       return true;
+> +}
+> +
+> +/**
+> + * measure_encl - measure enclave
+> + * @path: path to the enclave
+> + * @mrenclave: measurement
+> + *
+> + * Calculates MRENCLAVE. Assumes that the very first page is a TCS page and
+> + * following pages are regular pages. Does not measure the contents of the
+> + * enclave as the signing tool is used at the moment only for the launch
+> + * enclave, which is pass-through (everything gets a token).
+> + */
+> +static bool measure_encl(const char *path, uint8_t *mrenclave)
+> +{
+> +       FILE *file;
+> +       struct stat sb;
+> +       EVP_MD_CTX *ctx;
+> +       uint64_t flags;
+> +       uint64_t offset;
+> +       uint8_t data[0x1000];
+> +       int rc;
+> +
+> +       ctx = EVP_MD_CTX_create();
+> +       if (!ctx)
+> +               return false;
+> +
+> +       file = fopen(path, "rb");
+> +       if (!file) {
+> +               perror("fopen");
+> +               EVP_MD_CTX_destroy(ctx);
+> +               return false;
+> +       }
+> +
+> +       rc = stat(path, &sb);
+> +       if (rc) {
+> +               perror("stat");
+> +               goto out;
+> +       }
+> +
+> +       if (!sb.st_size || sb.st_size & 0xfff) {
+> +               fprintf(stderr, "Invalid blob size %lu\n", sb.st_size);
+> +               goto out;
+> +       }
+> +
+> +       if (!mrenclave_ecreate(ctx, sb.st_size))
+> +               goto out;
+> +
+> +       for (offset = 0; offset < sb.st_size; offset += 0x1000) {
+> +               if (!offset)
+> +                       flags = SGX_SECINFO_TCS;
+> +               else
+> +                       flags = SGX_SECINFO_REG | SGX_SECINFO_R |
+> +                               SGX_SECINFO_W | SGX_SECINFO_X;
+> +
+> +               if (!mrenclave_eadd(ctx, offset, flags))
+> +                       goto out;
+> +
+> +               rc = fread(data, 1, 0x1000, file);
+> +               if (!rc)
+> +                       break;
+> +               if (rc < 0x1000)
+> +                       goto out;
+> +
+> +               if (!mrenclave_eextend(ctx, offset, data))
+> +                       goto out;
+> +       }
+> +
+> +       if (!mrenclave_commit(ctx, mrenclave))
+> +               goto out;
+> +
+> +       fclose(file);
+> +       EVP_MD_CTX_destroy(ctx);
+> +       return true;
+> +out:
+> +       fclose(file);
+> +       EVP_MD_CTX_destroy(ctx);
+> +       return false;
+> +}
+> +
+> +/**
+> + * sign_encl - sign enclave
+> + * @sigstruct: pointer to SIGSTRUCT
+> + * @key: 3072-bit RSA key
+> + * @signature: byte array for the signature
+> + *
+> + * Calculates EMSA-PKCSv1.5 signature for the given SIGSTRUCT. The result is
+> + * stored in big-endian format so that it can be further passed to OpenSSL
+> + * libcrypto functions.
+> + */
+> +static bool sign_encl(const struct sgx_sigstruct *sigstruct, RSA *key,
+> +                     uint8_t *signature)
+> +{
+> +       struct sgx_sigstruct_payload payload;
+> +       unsigned int siglen;
+> +       uint8_t digest[SHA256_DIGEST_LENGTH];
+> +       bool ret;
+> +
+> +       memcpy(&payload.header, &sigstruct->header, sizeof(sigstruct->header));
+> +       memcpy(&payload.body, &sigstruct->body, sizeof(sigstruct->body));
+> +
+> +       SHA256((unsigned char *)&payload, sizeof(payload), digest);
+> +
+> +       ret = RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH, signature,
+> +                      &siglen, key);
+> +
+> +       return ret;
+> +}
+> +
+> +struct q1q2_ctx {
+> +       BN_CTX *bn_ctx;
+> +       BIGNUM *m;
+> +       BIGNUM *s;
+> +       BIGNUM *q1;
+> +       BIGNUM *qr;
+> +       BIGNUM *q2;
+> +};
+> +
+> +static void free_q1q2_ctx(struct q1q2_ctx *ctx)
+> +{
+> +       BN_CTX_free(ctx->bn_ctx);
+> +       BN_free(ctx->m);
+> +       BN_free(ctx->s);
+> +       BN_free(ctx->q1);
+> +       BN_free(ctx->qr);
+> +       BN_free(ctx->q2);
+> +}
+> +
+> +static bool alloc_q1q2_ctx(const uint8_t *s, const uint8_t *m,
+> +                          struct q1q2_ctx *ctx)
+> +{
+> +       ctx->bn_ctx = BN_CTX_new();
+> +       ctx->s = BN_bin2bn(s, SGX_MODULUS_SIZE, NULL);
+> +       ctx->m = BN_bin2bn(m, SGX_MODULUS_SIZE, NULL);
+> +       ctx->q1 = BN_new();
+> +       ctx->qr = BN_new();
+> +       ctx->q2 = BN_new();
+> +
+> +       if (!ctx->bn_ctx || !ctx->s || !ctx->m || !ctx->q1 || !ctx->qr ||
+> +           !ctx->q2) {
+> +               free_q1q2_ctx(ctx);
+> +               return false;
+> +       }
+> +
+> +       return true;
+> +}
+> +
+> +static bool calc_q1q2(const uint8_t *s, const uint8_t *m, uint8_t *q1,
+> +                     uint8_t *q2)
+> +{
+> +       struct q1q2_ctx ctx;
+> +
+> +       if (!alloc_q1q2_ctx(s, m, &ctx)) {
+> +               fprintf(stderr, "Not enough memory for Q1Q2 calculation\n");
+> +               return false;
+> +       }
+> +
+> +       if (!BN_mul(ctx.q1, ctx.s, ctx.s, ctx.bn_ctx))
+> +               goto out;
+> +
+> +       if (!BN_div(ctx.q1, ctx.qr, ctx.q1, ctx.m, ctx.bn_ctx))
+> +               goto out;
+> +
+> +       if (BN_num_bytes(ctx.q1) > SGX_MODULUS_SIZE) {
+> +               fprintf(stderr, "Too large Q1 %d bytes\n",
+> +                       BN_num_bytes(ctx.q1));
+> +               goto out;
+> +       }
+> +
+> +       if (!BN_mul(ctx.q2, ctx.s, ctx.qr, ctx.bn_ctx))
+> +               goto out;
+> +
+> +       if (!BN_div(ctx.q2, NULL, ctx.q2, ctx.m, ctx.bn_ctx))
+> +               goto out;
+> +
+> +       if (BN_num_bytes(ctx.q2) > SGX_MODULUS_SIZE) {
+> +               fprintf(stderr, "Too large Q2 %d bytes\n",
+> +                       BN_num_bytes(ctx.q2));
+> +               goto out;
+> +       }
+> +
+> +       BN_bn2bin(ctx.q1, q1);
+> +       BN_bn2bin(ctx.q2, q2);
+> +
+> +       free_q1q2_ctx(&ctx);
+> +       return true;
+> +out:
+> +       free_q1q2_ctx(&ctx);
+> +       return false;
+> +}
+> +
+> +static bool save_sigstruct(const struct sgx_sigstruct *sigstruct,
+> +                          const char *path)
+> +{
+> +       FILE *f = fopen(path, "wb");
+> +
+> +       if (!f) {
+> +               fprintf(stderr, "Unable to open %s\n", path);
+> +               return false;
+> +       }
+> +
+> +       fwrite(sigstruct, sizeof(*sigstruct), 1, f);
+> +       fclose(f);
+> +       return true;
+> +}
+> +
+> +int main(int argc, char **argv)
+> +{
+> +       uint64_t header1[2] = {0x000000E100000006, 0x0000000000010000};
+> +       uint64_t header2[2] = {0x0000006000000101, 0x0000000100000060};
+> +       struct sgx_sigstruct ss;
+> +       const char *program;
+> +       int opt;
+> +       RSA *sign_key;
+> +
+> +       memset(&ss, 0, sizeof(ss));
+> +       ss.header.header1[0] = header1[0];
+> +       ss.header.header1[1] = header1[1];
+> +       ss.header.header2[0] = header2[0];
+> +       ss.header.header2[1] = header2[1];
+> +       ss.exponent = 3;
+> +
+> +#ifndef CONFIG_EINITTOKENKEY
+> +       ss.body.attributes = SGX_ATTR_MODE64BIT;
+> +#else
+> +       ss.body.attributes = SGX_ATTR_MODE64BIT | SGX_ATTR_EINITTOKENKEY;
+> +#endif
+> +       ss.body.xfrm = 3,
+> +
+> +       program = argv[0];
+> +
+> +       do {
+> +               opt = getopt(argc, argv, "");
+> +               switch (opt) {
+> +               case -1:
+> +                       break;
+> +               default:
+> +                       exit_usage(program);
+> +               }
+> +       } while (opt != -1);
+> +
+> +       argc -= optind;
+> +       argv += optind;
+> +
+> +       if (argc < 3)
+> +               exit_usage(program);
+> +
+> +       /* sanity check only */
+> +       if (check_crypto_errors())
+> +               exit(1);
+> +
+> +       sign_key = load_sign_key(argv[0]);
+> +       if (!sign_key)
+> +               goto out;
+> +
+> +       BN_bn2bin(get_modulus(sign_key), ss.modulus);
+> +
+> +       if (!measure_encl(argv[1], ss.body.mrenclave))
+> +               goto out;
+> +
+> +       if (!sign_encl(&ss, sign_key, ss.signature))
+> +               goto out;
+> +
+> +       if (!calc_q1q2(ss.signature, ss.modulus, ss.q1, ss.q2))
+> +               goto out;
+> +
+> +       /* convert to little endian */
+> +       reverse_bytes(ss.signature, SGX_MODULUS_SIZE);
+> +       reverse_bytes(ss.modulus, SGX_MODULUS_SIZE);
+> +       reverse_bytes(ss.q1, SGX_MODULUS_SIZE);
+> +       reverse_bytes(ss.q2, SGX_MODULUS_SIZE);
+> +
+> +       if (!save_sigstruct(&ss, argv[2]))
+> +               goto out;
+> +       exit(0);
+> +out:
+> +       check_crypto_errors();
+> +       exit(1);
+> +}
+> diff --git a/tools/testing/selftests/x86/sgx/signing_key.pem b/tools/testing/selftests/x86/sgx/signing_key.pem
+> new file mode 100644
+> index 000000000000..d76f21f19187
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/signing_key.pem
+> @@ -0,0 +1,39 @@
+> +-----BEGIN RSA PRIVATE KEY-----
+> +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
+> +-----END RSA PRIVATE KEY-----
+> --
+> 2.25.0
+>
+
