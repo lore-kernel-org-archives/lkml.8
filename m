@@ -2,117 +2,90 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F118CC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9931EC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC914215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 710DE215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:21:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583338866;
+	bh=dfv6+Dw0JN5nYcS6Td2XUXAVbrgDtjldVynpFllgfV0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=CwaBcwLegserqaWsFKUVy5WRcsT1p+XWquX6qPVLqQblBcWCdQH0bx70Z6SvzhDfj
+	 NlkwdxWgemli2Gj84MTnt5nxtc+1H1NcPz0qekmISdzRiyYsopP1J4zhwwYGriIic3
+	 kScz16r1KxRvreJ4o3Ud5yYTUq1O9AKtLChGC3UQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388137AbgCDQVC (ORCPT
+        id S2388201AbgCDQVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:21:02 -0500
-Received: from muru.com ([72.249.23.125]:58760 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgCDQVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:21:02 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 2870080F5;
-        Wed,  4 Mar 2020 16:21:46 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 08:20:57 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Roger Quadros <rogerq@ti.com>
-Cc:     yan-liu@ti.com, linux-omap@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
-Message-ID: <20200304162057.GV37466@atomide.com>
-References: <20200304090031.30360-1-rogerq@ti.com>
+        Wed, 4 Mar 2020 11:21:05 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:34945 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgCDQVD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:21:03 -0500
+Received: by mail-qt1-f194.google.com with SMTP id v15so1792702qto.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:21:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dA2hYD+OudMyLEYw9vGPZKppB+9NldT/3jWoHjIzdlg=;
+        b=eamRAbG0xhZrCMRXKsXIG0E8aFb8uc1gEQfEi/UAcZdwr3itU9ulHanDYM8rwKFiCj
+         DAvEgoTXE9h3DqPk9xZKKjj390D8KRXaTDxGFsSlAXU8HS2VDwFXz7f+SwvL9OkaURet
+         HGYi0qvzLxg+mzMb5BlVEyZHs/pEccvjB0+nmd+HI2mhqheNOMfS0dSXfF2aTJ5sybHf
+         H3bG6GUp2sQobHfUtd5w926RrDUSX6qHJi7ZIqH1yuUw3qVAFdC7VnCYez/1HeQrxkkQ
+         SWWkz5JoP+6kHZZ0wXqz7C5et0IhHr/vilu3kGITpHEWJi+uVBjjwcm8bR3bXaErRK+a
+         EgPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=dA2hYD+OudMyLEYw9vGPZKppB+9NldT/3jWoHjIzdlg=;
+        b=rXgI+Eff3Jq+YK98sv9B4H2xTcJOzKOPzMX5zRaQiMd9qnGWzf24ZLaKKbfucYrIDr
+         PgsM0TvL0DZDFwTCX937v08X4W8v6E2HrMIVMdo9uokColo9UIF5Jae4ZI9JdQNHSNUQ
+         U3hU8Bulp/RVHNeBU4ruQ5Hbv2SVfWZRVB3wNKbO1MhFTqizxIfiWrvsiiUQDfvo8MBr
+         4c2iCLsItjPMwzHu2U2GeUUlbI2VNbluEJuTJaUKlDnCTiSsI4dMwEi8MEye4bm8Un3E
+         xwvpFdgWEOmISYXaghSzQhOqqE8TCDl2zb9y6l7+b/YVB/p3QGSgmej9of0mgZ7aINgq
+         9j5Q==
+X-Gm-Message-State: ANhLgQ3KO3yl7SpIftcZNekkOUeyYykRS5bRieM6oXv21WHi+kY1Lj3I
+        33Fg4fssx98DuyIyi4sv1gk=
+X-Google-Smtp-Source: ADFU+vvhJ7nC607fUEZnIeQ3XKKD0XsCUc0dD50xdDho/SyOSc8B/zFdXKlt884z9ucWNtqwzUf6lA==
+X-Received: by 2002:ac8:76d7:: with SMTP id q23mr3124541qtr.198.1583338862563;
+        Wed, 04 Mar 2020 08:21:02 -0800 (PST)
+Received: from localhost ([71.172.127.161])
+        by smtp.gmail.com with ESMTPSA id 4sm5798235qkl.79.2020.03.04.08.21.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 08:21:01 -0800 (PST)
+Date:   Wed, 4 Mar 2020 11:21:00 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Yu Chen <chen.yu@easystack.cn>
+Cc:     linux-kernel@vger.kernel.org, 33988979@163.com
+Subject: Re: [PATCH] workqueue: Make workqueue_init*() return void
+Message-ID: <20200304162100.GE189690@mtj.thefacebook.com>
+References: <20200223072852.3954-1-chen.yu@easystack.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200304090031.30360-1-rogerq@ti.com>
+In-Reply-To: <20200223072852.3954-1-chen.yu@easystack.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [200304 09:01]:
-> Even though the TRM says that SATA IP has 36 address bits
-> wired in the SoC, we see bus errors whenever any address
-> greater than 32-bit is given to the controller.
+On Sun, Feb 23, 2020 at 03:28:52PM +0800, Yu Chen wrote:
+> The return values of workqueue_init() and workqueue_early_int() are 
+> always 0, and there is no usage of their return value.  So just make 
+> them return void.
 > 
-> This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
-> 
-> As a workaround we limit the DMA address range to 32-bits
-> for SATA.
-> 
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Reported-by: Yan Liu <yan-liu@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
-> 
-> NOTE: Currently ARM dma-mapping code doesn't account for devices
-> bus_dma_limit. This is fixed in [1].
-> 
-> [1] https://lkml.org/lkml/2020/2/18/712
+> Signed-off-by: Yu Chen <chen.yu@easystack.cn>
 
-So is this dts patch safe to apply without the series above?
+Applied to wq/for-5.7.
 
-And should this dts patch be applied as a fix or can it wait
-until the merge window?
+Thanks.
 
-Regards,
-
-Tony
-
->  arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
->  1 file changed, 16 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-> index d78b684e7fca..895462c22d1c 100644
-> --- a/arch/arm/boot/dts/dra7.dtsi
-> +++ b/arch/arm/boot/dts/dra7.dtsi
-> @@ -642,15 +642,22 @@
->  		};
->  
->  		/* OCP2SCP3 */
-> -		sata: sata@4a141100 {
-> -			compatible = "snps,dwc-ahci";
-> -			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
-> -			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> -			phys = <&sata_phy>;
-> -			phy-names = "sata-phy";
-> -			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
-> -			ti,hwmods = "sata";
-> -			ports-implemented = <0x1>;
-> +		sata_aux_bus {
-> +			#address-cells = <1>;
-> +			#size-cells = <2>;
-> +			compatible = "simple-bus";
-> +			ranges = <0x0 0x4a140000 0x0 0x1200>;
-> +			dma-ranges = <0x0 0x0 0x1 0x00000000>;
-> +			sata: sata@4a141100 {
-> +				compatible = "snps,dwc-ahci";
-> +				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
-> +				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-> +				phys = <&sata_phy>;
-> +				phy-names = "sata-phy";
-> +				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
-> +				ti,hwmods = "sata";
-> +				ports-implemented = <0x1>;
-> +			};
->  		};
->  
->  		/* OCP2SCP1 */
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-> 
+-- 
+tejun
