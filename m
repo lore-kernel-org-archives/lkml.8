@@ -2,122 +2,148 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D722C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA3CC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C542166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:18:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583306310;
-	bh=0rCt2r9mfFhBAcVs16psgL7w47RyVgyV5F8qh9nI3BY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=VMeivvDMUnHlY8EYkkpIgJTx54EQ7nh/7/D2haYg2gWOq61w+x4s2UNINglMjNNdt
-	 oDj7a9zc+jtgji1pkRvQjlYMlHEphxDhKipsgyalGsG9RJX2+wMVj5K3zFjd2ddzMF
-	 +4FLi3AakEkno7vBetJwDB8WYRJqkAn0aksx9WJk=
+	by mail.kernel.org (Postfix) with ESMTP id C98F7215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:19:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728273AbgCDHS2 (ORCPT
+        id S1728433AbgCDHTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:18:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbgCDHS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:18:28 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D26B9214D8;
-        Wed,  4 Mar 2020 07:18:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583306308;
-        bh=0rCt2r9mfFhBAcVs16psgL7w47RyVgyV5F8qh9nI3BY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=khXHERl7dtPVEfszlXXkRxwv3T3rq01nfX8KdtTPSu/MLWVTVLcq3jrlxBZc1zWcE
-         YSCLJCEt42KVGCItM6CQBuJvzz6VwKEYWYJkz2j6owxEMTFyVxFTPqkT/Z5+oCiHXY
-         s7w4mthSOFdYtasvVa1CPRwNKdXt9KNZYv0zoOWQ=
-Date:   Wed, 4 Mar 2020 16:18:23 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
-        joel@joelfernandes.org,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH -tip V4 3/4] kprobes: Fix to protect
- kick_kprobe_optimizer() by kprobe_mutex
-Message-Id: <20200304161823.afe5ed2b47029e55531329ea@kernel.org>
-In-Reply-To: <20200303185236.23db2ebc@gandalf.local.home>
-References: <158270755997.18966.3544449431956918068.stgit@devnote2>
-        <158270759113.18966.8938334321921933993.stgit@devnote2>
-        <20200303185236.23db2ebc@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Mar 2020 02:19:03 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39196 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725971AbgCDHTD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 02:19:03 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02479nn2143874;
+        Wed, 4 Mar 2020 02:18:46 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yj3erqu80-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 02:18:45 -0500
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0247Ah4i002626;
+        Wed, 4 Mar 2020 02:18:45 -0500
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yj3erqu7j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 02:18:45 -0500
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0247G3wu030502;
+        Wed, 4 Mar 2020 07:18:44 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma03wdc.us.ibm.com with ESMTP id 2yffk711fg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 07:18:44 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0247Ih6456230288
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 07:18:43 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EDF6FBE051;
+        Wed,  4 Mar 2020 07:18:42 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 33460BE056;
+        Wed,  4 Mar 2020 07:18:39 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.177.129])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 07:18:38 +0000 (GMT)
+Message-ID: <621dd76a8e0b449db66ba2c3ad20fb2c743a1f1b.camel@linux.ibm.com>
+Subject: Re: [PATCH 1/1] powerpc/kernel: Enables memory hot-remove after
+ reboot on pseries guests
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Bharata B Rao <bharata.rao@gmail.com>
+Cc:     ndfont@gmail.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        arbab@linux.ibm.com, Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Michael Roth <mdroth@linux.vnet.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Hari Bathini <hbathini@linux.ibm.com>
+Date:   Wed, 04 Mar 2020 04:18:32 -0300
+In-Reply-To: <CAGZKiBr=8i11YPDn+1y5j6YfGj+tVbbTKakoGje9QQ8TEw9g5g@mail.gmail.com>
+References: <20200228060439.52749-1-leonardo@linux.ibm.com>
+         <CAGZKiBr=8i11YPDn+1y5j6YfGj+tVbbTKakoGje9QQ8TEw9g5g@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-sL1rgkZbhhqGAClQPGna"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
+MIME-Version: 1.0
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_08:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 mlxscore=0 phishscore=0 spamscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040055
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 18:52:36 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Wed, 26 Feb 2020 17:59:51 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > In kprobe_optimizer() kick_kprobe_optimizer() is called
-> > without kprobe_mutex, but this can race with other caller
-> > which is protected by kprobe_mutex.
-> > 
-> > To fix that, expand kprobe_mutex protected area to protect
-> > kick_kprobe_optimizer() call.
-> > 
-> 
-> Should we add
-> 
->  Cc: stable@vger.kernel.org
->  Fixes: cd7ebe2298ff ("kprobes: Use text_poke_smp_batch for optimizing")
-> 
-> tags?
+--=-sL1rgkZbhhqGAClQPGna
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Good catch! Yes, it is correct commit to be fixed.
+Hello Bharata, thanks for this feedback!
 
-Thank you!
+On Wed, 2020-03-04 at 10:13 +0530, Bharata B Rao wrote:
+> Hi,
+>=20
+> I tried this a few years back
+> (https://patchwork.ozlabs.org/patch/800142/) and didn't pursue it
+> further because at that time, it was felt that the approach might not
+> work for PowerVM guests, because all the present memory except RMA
+> gets marked as hot-pluggable by PowerVM. This discussion is not
+> present in the above thread, but during my private discussions with
+> Reza and Nathan, it was noted that making all that memory as MOVABLE
+> is not preferable for PowerVM guests as we might run out of memory for
+> kernel allocations.
 
-> 
-> -- Steve
-> 
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  kernel/kprobes.c |    3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> > index 38d9a5d7c8a4..6d76a6e3e1a5 100644
-> > --- a/kernel/kprobes.c
-> > +++ b/kernel/kprobes.c
-> > @@ -592,11 +592,12 @@ static void kprobe_optimizer(struct work_struct *work)
-> >  	mutex_unlock(&module_mutex);
-> >  	mutex_unlock(&text_mutex);
-> >  	cpus_read_unlock();
-> > -	mutex_unlock(&kprobe_mutex);
-> >  
-> >  	/* Step 5: Kick optimizer again if needed */
-> >  	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
-> >  		kick_kprobe_optimizer();
-> > +
-> > +	mutex_unlock(&kprobe_mutex);
-> >  }
-> >  
-> >  /* Wait for completing optimization and unoptimization */
-> 
+Humm, this makes sense.
+But with mu change, these pieces of memory only get into ZONE_MOVABLE
+if the boot parameter 'movable_node' gets passed to guest kernel.=20
 
+So, even if we are unable to sort out some flag combination that work
+fine for both use-cases, if PowerVM don't pass 'movable_node' as boot
+parameter to kernel, it will behave just as today.
 
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+What are your thoughts on that?
+
+Best regards,
+
+Leonardo Bras
+
+--=-sL1rgkZbhhqGAClQPGna
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl5fVkgACgkQlQYWtz9S
+ttTcqw/+KygdoD/4CjbE1qeM/UgE8K0p7R0VEctB20M41BvMj0yC4c+sHA+CPbkW
+o273+a2KeG6le9K5sp7Gy7ElrSqczN2AuInkYHJ2AezPBw4pDRGTBTp2a91ivGdf
+DidQrsx856IW6qouXsqo1NOIwDicuuy12/HCGzqvkFGaY6/89FdihM5FbBTtQ8Ps
+DRKJnOwhz5gr0vcYLHtJdfyzuzPM4VzFDIYmTH3+vLgfYvfQFt0S4RqmoEsI0AXR
++u33lx995GzsafkladGDNKbX/v/xt9MRImGdhuHKmH5+ccnR/GankA5W4mOR+hw/
+1caHR2Sn5bXlHwtJjL9OslJmPfWIho8D/v9SmRfJIgfE0Br9hNMrl9ttB4V9LmUV
+Oe9e3hyyR3F0fVpKLrYvA9KQJ7ocm3I1e2hEwxYphtDiasCVCCFHD/Ue2sHpaNc2
+0TcoIsWifC1TBMq2pMWIRVlkdee0B1V6Sj1pmyoRpuH7ZweP41ge2aG4Yw7CDStd
+TM7jngOQymRfgLrG1jjSnEjtCEG/ZPSXQVw39Ux7NXXUbEyuA07jYhVXON1J/qgl
+kL2RklPet9fjO0UTBE1TKxDepUdGECZHENUZ4q4Bo7uafSDxWY/V6b7AJm7zFZcA
+tTL7fYUiZbh9m7DzZZNLyVZXRt6BfMzPlgLjK8nEZXLbvF/n0zQ=
+=A/1r
+-----END PGP SIGNATURE-----
+
+--=-sL1rgkZbhhqGAClQPGna--
+
