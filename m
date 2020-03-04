@@ -2,205 +2,186 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7461CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A7EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49F922073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:18:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T8AlxQB0"
+	by mail.kernel.org (Postfix) with ESMTP id 4A0402073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387521AbgCDCSi (ORCPT
+        id S2387482AbgCDCU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:18:38 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44459 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387459AbgCDCSh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:18:37 -0500
-Received: by mail-pf1-f194.google.com with SMTP id y26so132980pfn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 18:18:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
-        bh=QV949Rj3SIT5hQv6NYpR6RXzDT9qy+AIzP4ZAVBgOIY=;
-        b=T8AlxQB0grraQTN3SYX821Hs2NAC4rtmjN4f+u6itDMX3gg4QoWZHItd6ExweAu7e8
-         Oh2aO0XTOZQjg2yHjm12YMHdUq9oTJHwnhvNdxXnyfu6V+Q5ajjNosTYsdMa7QyrHpFx
-         j09Q0Md55ADFcq4cfHMj3QjhK6Kws6tlgIeHY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=QV949Rj3SIT5hQv6NYpR6RXzDT9qy+AIzP4ZAVBgOIY=;
-        b=UaWIAyqoM+qpkXxEUbtfUqtZCSk4dgEGuKF3Pe9RRtvwDVdMMqU8tqMt+ZCB6PFZTf
-         q6/8pERsJiqUuTT9b1Ckx9qahunksqFQnNWgTeWM+KsGVfngzbW9i2OyFyLODvrKCgRV
-         jSUcVGn9H5C5KIuqqrnh29k0fVoFgSsqI33MNHUgKvFXzZ4l4IKxbx5/FO1T1pzyMZ8l
-         4QuL6tSDvJ61t5raKmO2bxTbS+54D/TjQOJjqEeW6yfvCb12rBueNDGw7UKUcGVeM2WW
-         tJvZVQYnmfSRVdgOYtsDr3DIF/GaQu32iXbsiPTjOwAZpQuqc+Ak6CarUB3vEnCPoass
-         k+vQ==
-X-Gm-Message-State: ANhLgQ2tPokbGZHK5iFpd5CSlyBLzvnLbQ8SsA5ckk45fQtUHb+D2Vir
-        1goE+2bs7Kjc1rdnKMSZxk7bL8bTDtQ=
-X-Google-Smtp-Source: ADFU+vuECxjtA8O7vuZBduDwuodZBCiamgB2PThSyYeI44skV+ytDpW6OfrCvkGtgqWWycYS9PBowg==
-X-Received: by 2002:a63:af53:: with SMTP id s19mr408689pgo.175.1583288316825;
-        Tue, 03 Mar 2020 18:18:36 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k1sm23809343pgt.70.2020.03.03.18.18.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 18:18:35 -0800 (PST)
-Date:   Tue, 3 Mar 2020 18:18:34 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     bpf@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        linux-kbuild@vger.kernel.org
-Subject: [PATCH bpf-next v2] kbuild: Remove debug info from kallsyms linking
-Message-ID: <202003031814.4AEA3351@keescook>
+        Tue, 3 Mar 2020 21:20:27 -0500
+Received: from mga03.intel.com ([134.134.136.65]:54022 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387397AbgCDCU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 21:20:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 18:20:26 -0800
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="233863143"
+Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.22]) ([10.255.31.22])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 03 Mar 2020 18:20:22 -0800
+Subject: Re: [PATCH v3 2/8] x86/split_lock: Ensure
+ X86_FEATURE_SPLIT_LOCK_DETECT means the existence of feature
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200206070412.17400-1-xiaoyao.li@intel.com>
+ <20200206070412.17400-3-xiaoyao.li@intel.com>
+ <20200303185524.GQ1439@linux.intel.com>
+From:   Xiaoyao Li <xiaoyao.li@intel.com>
+Message-ID: <439db928-6e92-8492-31d3-cdbe2bc6b9d4@intel.com>
+Date:   Wed, 4 Mar 2020 10:20:20 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In-Reply-To: <20200303185524.GQ1439@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
-time collecting and writing the dwarf sections to the temporary output
-files. kallsyms does not need this information, and leaving it off
-halves their linking time. This is especially noticeable without
-CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
-need those details.
+On 3/4/2020 2:55 AM, Sean Christopherson wrote:
+> On Thu, Feb 06, 2020 at 03:04:06PM +0800, Xiaoyao Li wrote:
+>> When flag X86_FEATURE_SPLIT_LOCK_DETECT is set, it should ensure the
+>> existence of MSR_TEST_CTRL and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit.
+> 
+> The changelog confused me a bit.  "When flag X86_FEATURE_SPLIT_LOCK_DETECT
+> is set" makes it sound like the logic is being applied after the feature
+> bit is set.  Maybe something like:
+> 
+> ```
+> Verify MSR_TEST_CTRL.SPLIT_LOCK_DETECT can be toggled via WRMSR prior to
+> setting the SPLIT_LOCK_DETECT feature bit so that runtime consumers,
+> e.g. KVM, don't need to worry about WRMSR failure.
+> ```
+> 
+>> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>> ---
+>>   arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++----------------
+>>   1 file changed, 23 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+>> index 2b3874a96bd4..49535ed81c22 100644
+>> --- a/arch/x86/kernel/cpu/intel.c
+>> +++ b/arch/x86/kernel/cpu/intel.c
+>> @@ -702,7 +702,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+>>   	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
+>>   		tsx_disable();
+>>   
+>> -	split_lock_init();
+>> +	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
+>> +		split_lock_init();
+>>   }
+>>   
+>>   #ifdef CONFIG_X86_32
+>> @@ -986,9 +987,26 @@ static inline bool match_option(const char *arg, int arglen, const char *opt)
+>>   
+>>   static void __init split_lock_setup(void)
+>>   {
+>> +	u64 test_ctrl_val;
+>>   	char arg[20];
+>>   	int i, ret;
+>> +	/*
+>> +	 * Use the "safe" versions of rdmsr/wrmsr here to ensure MSR_TEST_CTRL
+>> +	 * and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit do exist. Because there may
+>> +	 * be glitches in virtualization that leave a guest with an incorrect
+>> +	 * view of real h/w capabilities.
+>> +	 */
+>> +	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+>> +		return;
+>> +
+>> +	if (wrmsrl_safe(MSR_TEST_CTRL,
+>> +			test_ctrl_val | MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
+>> +		return;
+>> +
+>> +	if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val))
+>> +		return;a
+> 
+> Probing the MSR should be skipped if SLD is disabled in sld_options, i.e.
+> move this code (and setup_force_cpu_cap() etc...) down below the
+> match_option() logic.  The above would temporarily enable SLD even if the
+> admin has explicitly disabled it, e.g. makes the kernel param useless for
+> turning off the feature due to bugs.
+> 
+> And with that, IMO failing any of RDMSR/WRSMR here warrants a pr_err().
+> The CPU says it supports split lock and the admin hasn't explicitly turned
+> it off, so failure to enable should be logged.
 
-Refactor the BTF and kallsyms generation stages slightly for more
-regularized temporary names. Skip debug during kallsyms links.
-Additionally move "info BTF" to the correct place since commit
-8959e39272d6 ("kbuild: Parameterize kallsyms generation and correct
-reporting"), which added "info LD ..." to vmlinux_link calls.
+It is not about to enable split lock detection here, but to parse the 
+kernel booting parameter "split_lock_detect".
 
-For a full debug info build with BTF, my link time goes from 1m06s to
-0m54s, saving about 12 seconds, or 18%.
+If probing MSR or MSR bit fails, it indicates the CPU doesn't has 
+feature X86_FEATURE_SPLIT_LOCK_DETECT. So don't set feature flag and 
+there is no need to parse "split_lock_detect", just return.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
----
-v2: add Ack, clarify "info BTF" relocation
----
- scripts/link-vmlinux.sh | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+Then, as the change at the beginning of this patch, we should call 
+split_lock_init() based on X86_FEATURE_SPLIT_LOCK_DETECT bit.
 
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index dd484e92752e..ac569e197bfa 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -63,12 +63,18 @@ vmlinux_link()
- 	local lds="${objtree}/${KBUILD_LDS}"
- 	local output=${1}
- 	local objects
-+	local strip_debug
- 
- 	info LD ${output}
- 
- 	# skip output file argument
- 	shift
- 
-+	# The kallsyms linking does not need debug symbols included.
-+	if [ "$output" != "${output#.tmp_vmlinux.kallsyms}" ] ; then
-+		strip_debug=-Wl,--strip-debug
-+	fi
-+
- 	if [ "${SRCARCH}" != "um" ]; then
- 		objects="--whole-archive			\
- 			${KBUILD_VMLINUX_OBJS}			\
-@@ -79,6 +85,7 @@ vmlinux_link()
- 			${@}"
- 
- 		${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}	\
-+			${strip_debug#-Wl,}			\
- 			-o ${output}				\
- 			-T ${lds} ${objects}
- 	else
-@@ -91,6 +98,7 @@ vmlinux_link()
- 			${@}"
- 
- 		${CC} ${CFLAGS_vmlinux}				\
-+			${strip_debug}				\
- 			-o ${output}				\
- 			-Wl,-T,${lds}				\
- 			${objects}				\
-@@ -106,6 +114,8 @@ gen_btf()
- {
- 	local pahole_ver
- 	local bin_arch
-+	local bin_format
-+	local bin_file
- 
- 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
- 		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
-@@ -118,8 +128,9 @@ gen_btf()
- 		return 1
- 	fi
- 
--	info "BTF" ${2}
- 	vmlinux_link ${1}
-+
-+	info "BTF" ${2}
- 	LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
- 
- 	# dump .BTF section into raw binary file to link with final vmlinux
-@@ -127,11 +138,12 @@ gen_btf()
- 		cut -d, -f1 | cut -d' ' -f2)
- 	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
- 		awk '{print $4}')
-+	bin_file=.btf.vmlinux.bin
- 	${OBJCOPY} --change-section-address .BTF=0 \
- 		--set-section-flags .BTF=alloc -O binary \
--		--only-section=.BTF ${1} .btf.vmlinux.bin
-+		--only-section=.BTF ${1} $bin_file
- 	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
--		--rename-section .data=.BTF .btf.vmlinux.bin ${2}
-+		--rename-section .data=.BTF $bin_file ${2}
- }
- 
- # Create ${2} .o file with all symbols from the ${1} object file
-@@ -166,8 +178,8 @@ kallsyms()
- kallsyms_step()
- {
- 	kallsymso_prev=${kallsymso}
--	kallsymso=.tmp_kallsyms${1}.o
--	kallsyms_vmlinux=.tmp_vmlinux${1}
-+	kallsyms_vmlinux=.tmp_vmlinux.kallsyms${1}
-+	kallsymso=${kallsyms_vmlinux}.o
- 
- 	vmlinux_link ${kallsyms_vmlinux} "${kallsymso_prev}" ${btf_vmlinux_bin_o}
- 	kallsyms ${kallsyms_vmlinux} ${kallsymso}
-@@ -190,7 +202,6 @@ cleanup()
- {
- 	rm -f .btf.*
- 	rm -f .tmp_System.map
--	rm -f .tmp_kallsyms*
- 	rm -f .tmp_vmlinux*
- 	rm -f System.map
- 	rm -f vmlinux
-@@ -257,9 +268,8 @@ tr '\0' '\n' < modules.builtin.modinfo | sed -n 's/^[[:alnum:]:_]*\.file=//p' |
- 
- btf_vmlinux_bin_o=""
- if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
--	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
--		btf_vmlinux_bin_o=.btf.vmlinux.bin.o
--	else
-+	btf_vmlinux_bin_o=.btf.vmlinux.bin.o
-+	if ! gen_btf .tmp_vmlinux.btf $btf_vmlinux_bin_o ; then
- 		echo >&2 "Failed to generate BTF for vmlinux"
- 		echo >&2 "Try to disable CONFIG_DEBUG_INFO_BTF"
- 		exit 1
--- 
-2.20.1
+>> +
+>>   	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
+>>   	sld_state = sld_warn;
+>>   
+>> @@ -1022,24 +1040,19 @@ static void __init split_lock_setup(void)
+>>    * Locking is not required at the moment because only bit 29 of this
+>>    * MSR is implemented and locking would not prevent that the operation
+>>    * of one thread is immediately undone by the sibling thread.
+>> - * Use the "safe" versions of rdmsr/wrmsr here because although code
+>> - * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
+>> - * exist, there may be glitches in virtualization that leave a guest
+>> - * with an incorrect view of real h/w capabilities.
+>>    */
+>> -static bool __sld_msr_set(bool on)
+>> +static void __sld_msr_set(bool on)
+>>   {
+>>   	u64 test_ctrl_val;
+>>   
+>> -	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+>> -		return false;
+>> +	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>>   
+>>   	if (on)
+>>   		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>>   	else
+>>   		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
+>>   
+>> -	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
+>> +	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
+>>   }
+>>   
+>>   static void split_lock_init(void)
+>> @@ -1047,15 +1060,7 @@ static void split_lock_init(void)
+>>   	if (sld_state == sld_off)
+>>   		return;
+>>   
+>> -	if (__sld_msr_set(true))
+>> -		return;
+>> -
+>> -	/*
+>> -	 * If this is anything other than the boot-cpu, you've done
+>> -	 * funny things and you get to keep whatever pieces.
+>> -	 */
+>> -	pr_warn("MSR fail -- disabled\n");
+>> -	sld_state = sld_off;
+>> +	__sld_msr_set(true);
+>>   }
+>>   
+>>   bool handle_user_split_lock(unsigned long ip)
+>> -- 
+>> 2.23.0
+>>
 
-
--- 
-Kees Cook
