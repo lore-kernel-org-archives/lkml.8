@@ -2,90 +2,167 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF27C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAD6C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:05:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ACB12146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:05:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583294720;
-	bh=p68B3/NdMMEqbeyhZmAihrJUVvRMPdRtxZQobAvEOyM=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=uf1JLIt8sjB2GCWHxBQ/qyVaDuMx+UIram653MWszBbuXLtm05w63YQ2X2AtL7sxF
-	 M3sLpe6mm73nAJWpdu7O0dA71u10rskRX+3EuxgIJj4pK73cRvUJJeZ/L+0bBLs/bD
-	 be/zIjndKYKHsyPvxrx46BMtRLAffLpXpBULIv0c=
+	by mail.kernel.org (Postfix) with ESMTP id E079320842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:05:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OEq2r8fA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbgCDEFQ (ORCPT
+        id S1727060AbgCDEF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 23:05:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725796AbgCDEFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 23:05:16 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2552D20842;
-        Wed,  4 Mar 2020 04:05:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583294716;
-        bh=p68B3/NdMMEqbeyhZmAihrJUVvRMPdRtxZQobAvEOyM=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=j3Kw6Ptf84PP0JOZulhFtKrdFN3Dvd+4jR6BYn8Ca/sFmyWJN1NMIXcCFceMBbJVp
-         7q1/XrSmLvybJXlJ9Ji3OuS7Cj8OxCPUYUnBp2lPkydnFToZydwHD/X8HiJlV+OS1g
-         t+eJhXsmGAMGSmjwtH2aoU2r0wVFkyD+i7C2CUcY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id E291835226C4; Tue,  3 Mar 2020 20:05:15 -0800 (PST)
-Date:   Tue, 3 Mar 2020 20:05:15 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Qian Cai <cai@lca.pw>, elver@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] lib: disable KCSAN for XArray
-Message-ID: <20200304040515.GX2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200304031551.1326-1-cai@lca.pw>
- <20200304033329.GZ29971@bombadil.infradead.org>
+        Tue, 3 Mar 2020 23:05:57 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48934 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbgCDEF5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 23:05:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
+        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
+        bh=N7489+DvZFXDsAxs/5zrBWYAyH6nC/7dSqSyIv694O4=; b=OEq2r8fAS6nfUOSCQYPvW8y4Iv
+        SBZow0oDBWUVJemZMZ4g6N+8W5S1cMqrqOtxvAJddejKRbmMxGyO19K0B9J4f6sgUJTE0KzmPe28P
+        j9c14DCsQGjj8gXbrBB+Khe9N+7mevFKSuh8M/Gd7VoFC0DFpGEYfHjtYpmHeXd2XtIuk3251TnhK
+        fEM6ubKxb0t5ovqdjalLIR3f5C2yReGxa0+SUmONQc2bvxOe5qsIyoZ35W8zliEXnWOA867BBg7v5
+        s4oAd8TDOxbptiCGk2W59XdhbQH8eZKJJ/L1lOWaeOz1IuSek8Q4NQHZ//CJYmhBpdSMKa9sFSneR
+        3UQuTA2g==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9LIA-0006sA-RF; Wed, 04 Mar 2020 04:05:54 +0000
+Subject: Re: v5.5-rc1 and beyond insta-kills some Comcast wifi routers
+To:     "Mancini, Jason" <Jason.Mancini@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Yan-Hsuan Chuang <yhchuang@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+References: <DM6PR12MB4331FD3C4EF86E6AF2B3EBC7E5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <4e2a1fc1-4c14-733d-74e2-750ef1f81bf6@infradead.org>
+Date:   Tue, 3 Mar 2020 20:05:53 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304033329.GZ29971@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <DM6PR12MB4331FD3C4EF86E6AF2B3EBC7E5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 07:33:29PM -0800, Matthew Wilcox wrote:
-> On Tue, Mar 03, 2020 at 10:15:51PM -0500, Qian Cai wrote:
-> > Functions like xas_find_marked(), xas_set_mark(), and xas_clear_mark()
-> > could happen concurrently result in data races, but those operate only
-> > on a single bit that are pretty much harmless. For example,
+[add netdev mailing list + 2 patch signers]
+
+On 3/3/20 7:34 PM, Mancini, Jason wrote:
+> [I can't seem to access the linux-net ml per kernel.org faq, apology
+> in advance.]
 > 
-> Those aren't data races.  The writes are protected by a spinlock and the
-> reads by the RCU read lock.  If the tool can't handle RCU protection,
-> it's not going to be much use.
+> This change, which I think first appeared for v5.5-rc1, basically
+> within seconds, knocks out our [apparently buggy] Comcast wifi for
+> about 2-3 minutes.  Is there a boot option (or similar) where I can
+> achieve prior kernel behavior?  Otherwise I am stuck on kernel 5.4
+> (or Win10) it seems, or forever compiling custom kernels for my
+> choice of distribution [as I don't have physical access to the router
+> in question.]
+> Thanks!
+> Jason
+> 
+> ================
+> 
+> 127eef1d46f80056fe9f18406c6eab38778d8a06 is the first bad commit
+> commit 127eef1d46f80056fe9f18406c6eab38778d8a06
+> Author: Yan-Hsuan Chuang <yhchuang@realtek.com>
+> Date:   Wed Oct 2 14:35:23 2019 +0800
+> 
+>     rtw88: add TX-AMSDU support
+> 
+>     Based on the mac80211's TXQ implementation, TX-AMSDU can
+>     be used to get higher MAC efficiency. To make mac80211
+>     aggregate MSDUs, low level driver just need to leave skbs
+>     in the TXQ, and mac80211 will try to aggregate them if
+>     possible. As driver will schedule a tasklet when the TX
+>     queue is woke, until the tasklet being served, there will
+>     have some skbs in the queue if traffic is heavy.
+> 
+>     Driver can control the max AMSDU size depending on the
+>     current bit rate used by hardware/firmware. The higher
+>     rates are used, the larger AMSDU size can be.
+> 
+>     It is tested that can achieve higher T-Put at higher rates.
+>     If the environment is relatively clean, and the bit_rate
+>     is high enough, we can get about 80Mbps improvement.
+> 
+>     For lower bit rates, not much gain can we get, so leave
+>     the max_amsdu length low to prevent aggregation.
+> 
+>     Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
+>     Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+> 
+>  drivers/net/wireless/realtek/rtw88/fw.c   | 24 ++++++++++++++++++++++++
+>  drivers/net/wireless/realtek/rtw88/main.c |  1 +
+>  2 files changed, 25 insertions(+)
+> 
+> ------------------- drivers/net/wireless/realtek/rtw88/fw.c -------------------
+> index 4b41bf531998..51649df7cc98 100644
+> @@ -29,6 +29,28 @@ static void rtw_fw_c2h_cmd_handle_ext(struct rtw_dev *rtwdev,
+>         }
+>  }
+>  
+> +static u16 get_max_amsdu_len(u32 bit_rate)
+> +{
+> +       /* lower than ofdm, do not aggregate */
+> +       if (bit_rate < 550)
+> +               return 1;
+> +
+> +       /* lower than 20M 2ss mcs8, make it small */
+> +       if (bit_rate < 1800)
+> +               return 1200;
+> +
+> +       /* lower than 40M 2ss mcs9, make it medium */
+> +       if (bit_rate < 4000)
+> +               return 2600;
+> +
+> +       /* not yet 80M 2ss mcs8/9, make it twice regular packet size */
+> +       if (bit_rate < 7000)
+> +               return 3500;
+> +
+> +       /* unlimited */
+> +       return 0;
+> +}
+> +
+>  struct rtw_fw_iter_ra_data {
+>         struct rtw_dev *rtwdev;
+>         u8 *payload;
+> @@ -83,6 +105,8 @@ static void rtw_fw_ra_report_iter(void *data, struct ieee80211_sta *sta)
+>  
+>         si->ra_report.desc_rate = rate;
+>         si->ra_report.bit_rate = bit_rate;
+> +
+> +       sta->max_rc_amsdu_len = get_max_amsdu_len(bit_rate);
+>  }
+>  
+>  static void rtw_fw_ra_report_handle(struct rtw_dev *rtwdev, u8 *payload,
+> 
+> ------------------ drivers/net/wireless/realtek/rtw88/main.c ------------------
+> index 690a5c4d64e7..f7044e8bcb5b 100644
+> @@ -1310,6 +1310,7 @@ int rtw_register_hw(struct rtw_dev *rtwdev, struct ieee80211_hw *hw)
+>         ieee80211_hw_set(hw, SUPPORT_FAST_XMIT);
+>         ieee80211_hw_set(hw, SUPPORTS_AMSDU_IN_AMPDU);
+>         ieee80211_hw_set(hw, HAS_RATE_CONTROL);
+> +       ieee80211_hw_set(hw, TX_AMSDU);
+>  
+>         hw->wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
+>                                      BIT(NL80211_IFTYPE_AP) |
+> 
 
-Would KCSAN's ASSERT_EXCLUSIVE_BITS() help here?
 
-If not, you lost me on this one.  RCU readers don't exclude lock-based
-writers.
-
-RCU readers -do- exclude pre-insertion initialization on the one hand,
-and those post-removal accesses that follow a grace period, but only
-if that grace period starts after the removal.  In addition, the
-accesses due to rcu_dereference(), rcu_assign_pointer(), and similar
-are guaranteed to work even if they are concurrent.
-
-Or am I missing something subtle here?
-
-That said, you are permitted to define "data race" for your subsystem
-by choosing KCSAN settings, up to and including keeping KCSAN out
-entirely.
-
-							Thanx, Paul
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
