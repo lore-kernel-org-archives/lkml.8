@@ -2,85 +2,111 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	PDS_TONAME_EQ_TOLOCAL_SHORT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47890C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A12EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 006BC206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:46:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lu7UARfS"
+	by mail.kernel.org (Postfix) with ESMTP id 1D312214DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:47:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583282823;
+	bh=0+z7LmhvpR+/tgnsx78xZlf6Xtp1MPhvcA49EP7cCI8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oD25ShqptEwHOoC92F1ycTpe9O//9jVcySWxpR+FLyrBxVv5ca11Eaw4uS/Uw++DO
+	 VDkIOxDhwfnvVqp0QvSUDCdsOfb59yFVGOnmufrYJF+twxaztpiceCgNWr5QV4hAOJ
+	 x8T5wI1suBUKLMF5e14QyZofipzQfUtIdsdhH/Tw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728107AbgCDAqx (ORCPT
+        id S2387404AbgCDArC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:46:53 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:41938 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbgCDAqw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:46:52 -0500
-Received: by mail-io1-f68.google.com with SMTP id m25so451630ioo.8
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:46:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gWULqsWkFFc3S8vtpoLm3M2Oc/ykoEB/9KBF47U9Qiw=;
-        b=Lu7UARfSrsUvVpcCI6N1LYkVZzMNa0W7Xkuov69vKTfGM0AlqITcsTa5u4o91/42Rt
-         1k7V8IBF62+wrmO//AAGkdYnmDBfvhhnHw3HPzCaiF3DBlaEGneyW6IZQd0GXsl3363z
-         BuphrgYY0rC1i++Q6TNr3oRqOWxK2c82kzjMVECLt9O6E32N9fPkLHDRqFBmcVQmRvf8
-         5p3XG6d+62Rkh1aArtDRhzuIWISBZf6hTODJmhMmDQCXsOAbG9aedZCWBlZqyVRhYJLi
-         ebDp94saYd+CuIuvLBO34pUrn9T/PvtN8GwEPxYVEtkjmywFeCJhXMf2fZcZQVvy1Gas
-         RasQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gWULqsWkFFc3S8vtpoLm3M2Oc/ykoEB/9KBF47U9Qiw=;
-        b=paD8uTytlEkUBrKRfHRyW9u79PFxJ8mGlu05aFsslfFM47RBa7a/Xvj1QOmH2kJUNK
-         cEO1TKxSTDUPBIB85fQeW0XKhilPiAvD3zJtYAQDxJo9yk4FzrY19LDsTM2ZUPc+jvfu
-         0RZMagRm8csEQWDNIro8g+FKvCYJ9pFAwAmu5ZTA2QGdcBUbBvXBw9KYAzCqUu0gkASz
-         c20p7K+5MX7o1GrmJ6p/H2cHF0geV/jrKnuPa4ocdV+lVUb0JKy8RXfPeSrmnJxUSABS
-         ImF+/sSJ9i3xfbHoymbqgsTrSsaIptgoW53RM4tcEcMHI4NTmsmX1c92dzgboaAVz4zB
-         fJPg==
-X-Gm-Message-State: ANhLgQ3gkMv09BItc+j9L39sB526XZK+jsK8uCav4T8lTw/AGa7c8etp
-        MJY9/9yEdp+3LzdHUpP1OHngSEA0nU4vq+i1mV4ZNhRGIts=
-X-Google-Smtp-Source: ADFU+vuHhu4NtaKzrAJMH0Y+xQoDpQZob8gI+PIvVcHltWP+r3WgXejOJD7aHpKlO0ahyaflJrOjmiZ+NzCPYzlxPD0=
-X-Received: by 2002:a02:240c:: with SMTP id f12mr476874jaa.65.1583282811961;
- Tue, 03 Mar 2020 16:46:51 -0800 (PST)
-MIME-Version: 1.0
-References: <20200303031725.14560-1-tangbin@cmss.chinamobile.com>
-In-Reply-To: <20200303031725.14560-1-tangbin@cmss.chinamobile.com>
-From:   Jun Nie <jun.nie@linaro.org>
-Date:   Wed, 4 Mar 2020 08:46:41 +0800
-Message-ID: <CABymUCMupAzJ00McXkBoApTT4NV_ZT1=hTyZA+YFdQfRoVSbyQ@mail.gmail.com>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_ARM=3Amach=2Dzx=EF=BC=9Aremove_duplicate_debug_mes?=
-        =?UTF-8?Q?sage?=
-To:     tangbin <tangbin@cmss.chinamobile.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, linux@armlinux.org.uk,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 3 Mar 2020 19:47:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727725AbgCDArB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 19:47:01 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B8A8206D5;
+        Wed,  4 Mar 2020 00:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583282820;
+        bh=0+z7LmhvpR+/tgnsx78xZlf6Xtp1MPhvcA49EP7cCI8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gZdLAc3WmWRNXUh+LZD6fQ5PyaHfnkDYaLIo61uBfxx0u8qzP2R4ycU1QbdfHqXGt
+         J+vL7N6dGXfyeVQAmdm1/Q/isaW3dosacn6BLaG1+8JZhMSJt2zoPP+NvcFbOtPJVU
+         ReV40WQ5Vda3VQTcXJHT1TrT5dMjuCAkxdt0+EEg=
+Date:   Tue, 3 Mar 2020 16:46:59 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, mgorman@techsingularity.net,
+        tj@kernel.org, hughd@google.com, khlebnikov@yandex-team.ru,
+        daniel.m.jordan@oracle.com, yang.shi@linux.alibaba.com,
+        willy@infradead.org, hannes@cmpxchg.org, lkp@intel.com,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v9 07/20] mm/lru: introduce TestClearPageLRU
+Message-Id: <20200303164659.b3a30ab9d68c9ed82299a29c@linux-foundation.org>
+In-Reply-To: <9cacdc21-9c1f-2a17-05cb-e9cf2959cef5@linux.alibaba.com>
+References: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
+        <1583146830-169516-8-git-send-email-alex.shi@linux.alibaba.com>
+        <20200302141144.b30abe0d89306fd387e13a92@linux-foundation.org>
+        <9cacdc21-9c1f-2a17-05cb-e9cf2959cef5@linux.alibaba.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tangbin <tangbin@cmss.chinamobile.com> =E4=BA=8E2020=E5=B9=B43=E6=9C=883=E6=
-=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=8811:18=E5=86=99=E9=81=93=EF=BC=9A
->
-> remove duplicate dev_err message, because of
-> devm_ioremap_resource, which has already contains.
->
-> Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
-> ---
->  arch/arm/mach-zx/zx296702-pm-domain.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->
+On Tue, 3 Mar 2020 12:11:34 +0800 Alex Shi <alex.shi@linux.alibaba.com> wrote:
 
-Reviewed-by: Jun Nie <jun.nie@linaro.org>
+> 
+> 
+> 在 2020/3/3 上午6:11, Andrew Morton 写道:
+> >> -		if (PageLRU(page)) {
+> >> +		if (TestClearPageLRU(page)) {
+> >>  			lruvec = mem_cgroup_page_lruvec(page, pgdat);
+> >> -			ClearPageLRU(page);
+> >>  			del_page_from_lru_list(page, lruvec, page_lru(page));
+> >>  		} else
+> > 
+> > The code will now get exclusive access of the page->flags cacheline and
+> > will dirty that cacheline, even for !PageLRU() pages.  What is the
+> > performance impact of this?
+> > 
+> 
+> Hi Andrew,
+> 
+> Thanks a lot for comments!
+> 
+> I was tested the whole patchset with fengguang's case-lru-file-readtwice
+> https://git.kernel.org/pub/scm/linux/kernel/git/wfg/vm-scalability.git/
+> which is most sensitive case on PageLRU I found. There are no clear performance
+> drop.
+> 
+> On this single patch, I just test the same case again, there is still no perf
+> drop. some data is here on my 96 threads machine:
+> 
+> 		no lock_dep	w lock_dep and few other debug option
+> w this patch, 	50.96MB/s		32.93MB/s
+> w/o this patch, 50.50MB/s		33.53MB/s
+> 
+> 
+
+Well, any difference would be small and the numbers did get a bit
+lower, albeit probably within the margin of error.
+
+But you know, if someone were to send a patch which micro-optimized
+some code by replacing 'TestClearXXX()' with `if PageXXX()
+ClearPageXXX()', I would happily merge it!
+
+Is this change essential to the overall patchset?  If not, I'd be
+inclined to skip it?
+
