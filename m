@@ -2,335 +2,321 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 422F4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2780C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:45:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 148B82072D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B272072D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:45:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hSL6ulHc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387785AbgCDKon (ORCPT
+        id S2387813AbgCDKpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:44:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:60734 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728387AbgCDKom (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:44:42 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D780130E;
-        Wed,  4 Mar 2020 02:44:41 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 084C93F534;
-        Wed,  4 Mar 2020 02:44:39 -0800 (PST)
-Date:   Wed, 4 Mar 2020 10:44:34 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     Remi Pommarel <repk@triplefau.lt>, kishon@ti.com,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 5/7] phy: amlogic: Add Amlogic AXG MIPI/PCIE analog
- PHY Driver
-Message-ID: <20200304104434.GA6613@e121166-lin.cambridge.arm.com>
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200123232943.10229-6-repk@triplefau.lt>
- <20200303171921.GB9641@e121166-lin.cambridge.arm.com>
- <af715acf-9ea4-8a82-92d3-578d09aec760@baylibre.com>
+        Wed, 4 Mar 2020 05:45:17 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:40834 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728301AbgCDKpR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 05:45:17 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 024AivCh110189;
+        Wed, 4 Mar 2020 04:44:57 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583318697;
+        bh=PH7HvQeHDbkYCFoAUGWiOJUzCv6rXpbiFUQSjdTYLiU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=hSL6ulHcSJin0mcMKCvknOHhoUq5/ID9jvPKy/JX148CGO8NidLm/omzQNoBoL3Et
+         aJeOXmPg9cxdddoA8yvFKa2t+KUrPTLeRxpiuTJkS9nOiuACU1VClO0IrDiNuSWQcE
+         mhRK+swpqE07VwLE0x+Zmdap7nyMZpK+4h7HMdfU=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 024Aiv3l007198
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Mar 2020 04:44:57 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
+ 2020 04:44:57 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Mar 2020 04:44:57 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 024AitPB109474;
+        Wed, 4 Mar 2020 04:44:56 -0600
+Subject: Re: [PATCHv2 3/4] watchdog: Add K3 RTI watchdog support
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     <wim@linux-watchdog.org>, <linux-watchdog@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20200302200426.6492-1-t-kristo@ti.com>
+ <20200302200426.6492-4-t-kristo@ti.com> <20200303211822.GB28733@roeck-us.net>
+ <f167de86-6c76-0e4e-6c61-6e7ca989101d@ti.com>
+ <aed89814-a78b-4a59-7673-bce5de34022d@roeck-us.net>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <0af4aadc-a751-1179-61cc-b0253c71cf71@ti.com>
+Date:   Wed, 4 Mar 2020 12:44:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af715acf-9ea4-8a82-92d3-578d09aec760@baylibre.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <aed89814-a78b-4a59-7673-bce5de34022d@roeck-us.net>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 10:08:55AM +0100, Neil Armstrong wrote:
-> Hi Lorenzo,
+On 04/03/2020 11:23, Guenter Roeck wrote:
+> On 3/3/20 10:57 PM, Tero Kristo wrote:
+>> On 03/03/2020 23:18, Guenter Roeck wrote:
+>>> On Mon, Mar 02, 2020 at 10:04:25PM +0200, Tero Kristo wrote:
+>>>> Texas Instruments K3 SoCs contain an RTI (Real Time Interrupt) module
+>>>> which can be used as a watchdog. This IP provides a support for
+>>>> windowed watchdog mode, in which the watchdog must be petted within
+>>>> a certain time window. If it is petted either too soon, or too late,
+>>>> a watchdog error will be triggered.
+>>>>
+>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>> ---
+>>>> v2:
+>>>>     * Added better documentation within the driver code
+>>>>     * Dropped fck handle, instead get the fck rate during probe only
+>>>>     * Modified the max_hw_heartbeat calculation logic a bit
+>>>>
+>>>>    drivers/watchdog/Kconfig   |   8 ++
+>>>>    drivers/watchdog/Makefile  |   1 +
+>>>>    drivers/watchdog/rti_wdt.c | 254 +++++++++++++++++++++++++++++++++++++
+>>>>    3 files changed, 261 insertions(+)
+>>>>    create mode 100644 drivers/watchdog/rti_wdt.c
+>>>>
+>>>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+>>>> index cec868f8db3f..81faf47d44a6 100644
+>>>> --- a/drivers/watchdog/Kconfig
+>>>> +++ b/drivers/watchdog/Kconfig
+>>>> @@ -583,6 +583,14 @@ config DAVINCI_WATCHDOG
+>>>>          NOTE: once enabled, this timer cannot be disabled.
+>>>>          Say N if you are unsure.
+>>>>    +config K3_RTI_WATCHDOG
+>>>> +    tristate "Texas Instruments K3 RTI watchdog"
+>>>> +    depends on ARCH_K3 || COMPILE_TEST
+>>>> +    select WATCHDOG_CORE
+>>>> +    help
+>>>> +      Say Y here if you want to include support for the K3 watchdog
+>>>> +      timer (RTI module) available in the K3 generation of processors.
+>>>> +
+>>>>    config ORION_WATCHDOG
+>>>>        tristate "Orion watchdog"
+>>>>        depends on ARCH_ORION5X || ARCH_DOVE || MACH_DOVE || ARCH_MVEBU || (COMPILE_TEST && !ARCH_EBSA110)
+>>>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+>>>> index 2ee352bf3372..6de2e4ceef19 100644
+>>>> --- a/drivers/watchdog/Makefile
+>>>> +++ b/drivers/watchdog/Makefile
+>>>> @@ -57,6 +57,7 @@ obj-$(CONFIG_EP93XX_WATCHDOG) += ep93xx_wdt.o
+>>>>    obj-$(CONFIG_PNX4008_WATCHDOG) += pnx4008_wdt.o
+>>>>    obj-$(CONFIG_IOP_WATCHDOG) += iop_wdt.o
+>>>>    obj-$(CONFIG_DAVINCI_WATCHDOG) += davinci_wdt.o
+>>>> +obj-$(CONFIG_K3_RTI_WATCHDOG) += rti_wdt.o
+>>>>    obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
+>>>>    obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
+>>>>    obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
+>>>> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
+>>>> new file mode 100644
+>>>> index 000000000000..7a46c40891e2
+>>>> --- /dev/null
+>>>> +++ b/drivers/watchdog/rti_wdt.c
+>>>> @@ -0,0 +1,254 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Watchdog driver for the K3 RTI module
+>>>> + *
+>>>> + * (c) Copyright 2019-2020 Texas Instruments Inc.
+>>>> + * All rights reserved.
+>>>> + */
+>>>> +
+>>>> +#include <linux/clk.h>
+>>>> +#include <linux/device.h>
+>>>> +#include <linux/err.h>
+>>>> +#include <linux/io.h>
+>>>> +#include <linux/kernel.h>
+>>>> +#include <linux/mod_devicetable.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/moduleparam.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/pm_runtime.h>
+>>>> +#include <linux/types.h>
+>>>> +#include <linux/watchdog.h>
+>>>> +
+>>>> +#define DEFAULT_HEARTBEAT 60
+>>>> +
+>>>> +/* Max heartbeat is calculated at 32kHz source clock */
+>>>> +#define MAX_HEARTBEAT    1000
+>>>> +
+>>>> +/* Timer register set definition */
+>>>> +#define RTIDWDCTRL    0x90
+>>>> +#define RTIDWDPRLD    0x94
+>>>> +#define RTIWDSTATUS    0x98
+>>>> +#define RTIWDKEY    0x9c
+>>>> +#define RTIDWDCNTR    0xa0
+>>>> +#define RTIWWDRXCTRL    0xa4
+>>>> +#define RTIWWDSIZECTRL    0xa8
+>>>> +
+>>>> +#define RTIWWDRX_NMI    0xa
+>>>> +
+>>>> +#define RTIWWDSIZE_50P    0x50
+>>>> +
+>>>> +#define WDENABLE_KEY    0xa98559da
+>>>> +
+>>>> +#define WDKEY_SEQ0        0xe51a
+>>>> +#define WDKEY_SEQ1        0xa35c
+>>>> +
+>>>> +#define WDT_PRELOAD_SHIFT    13
+>>>> +
+>>>> +#define WDT_PRELOAD_MAX        0xfff
+>>>> +
+>>>> +#define DWDST            BIT(1)
+>>>> +
+>>>> +static int heartbeat;
+>>>> +
+>>>> +/*
+>>>> + * struct to hold data for each WDT device
+>>>> + * @base - base io address of WD device
+>>>> + * @freq - source clock frequency of WDT
+>>>> + * @wdd  - hold watchdog device as is in WDT core
+>>>> + */
+>>>> +struct rti_wdt_device {
+>>>> +    void __iomem        *base;
+>>>> +    unsigned long        freq;
+>>>> +    struct watchdog_device    wdd;
+>>>> +};
+>>>> +
+>>>> +static int rti_wdt_start(struct watchdog_device *wdd)
+>>>> +{
+>>>> +    u32 timer_margin;
+>>>> +    struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
+>>>> +
+>>>> +    /* set timeout period */
+>>>> +    timer_margin = (u64)wdd->timeout * wdt->freq;
+>>>> +    timer_margin >>= WDT_PRELOAD_SHIFT;
+>>>> +    if (timer_margin > WDT_PRELOAD_MAX)
+>>>> +        timer_margin = WDT_PRELOAD_MAX;
+>>>> +    writel_relaxed(timer_margin, wdt->base + RTIDWDPRLD);
+>>>> +
+>>>> +    /*
+>>>> +     * RTI only supports a windowed mode, where the watchdog can only
+>>>> +     * be petted during the open window; not too early or not too late.
+>>>> +     * The HW configuration options only allow for the open window size
+>>>> +     * to be 50% or less than that; we obviouly want to configure the open
+>>>> +     * window as large as possible so we select the 50% option. To avoid
+>>>> +     * any glitches, we accommodate 5% safety margin also, so we setup
+>>>> +     * the min_hw_hearbeat at 55% of the timeout period.
+>>>> +     */
+>>>> +    wdd->min_hw_heartbeat_ms = 11 * wdd->timeout * 1000 / 20;
+>>>> +
+>>>> +    /* Generate NMI when wdt expires */
+>>>> +    writel_relaxed(RTIWWDRX_NMI, wdt->base + RTIWWDRXCTRL);
+>>>> +
+>>>> +    /* Open window size 50%; this is the largest window size available */
+>>>> +    writel_relaxed(RTIWWDSIZE_50P, wdt->base + RTIWWDSIZECTRL);
+>>>> +
+>>>> +    readl_relaxed(wdt->base + RTIWWDSIZECTRL);
+>>>> +
+>>>> +    /* enable watchdog */
+>>>> +    writel_relaxed(WDENABLE_KEY, wdt->base + RTIDWDCTRL);
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static int rti_wdt_ping(struct watchdog_device *wdd)
+>>>> +{
+>>>> +    struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
+>>>> +
+>>>> +    /* put watchdog in service state */
+>>>> +    writel_relaxed(WDKEY_SEQ0, wdt->base + RTIWDKEY);
+>>>> +    /* put watchdog in active state */
+>>>> +    writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
+>>>> +
+>>>> +    return 0;
+>>>> +}
+>>>> +
+>>>> +static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
+>>>> +{
+>>>> +    u64 timer_counter;
+>>>> +    u32 val;
+>>>> +    struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
+>>>> +
+>>>> +    /* if timeout has occurred then return 0 */
+>>>> +    val = readl_relaxed(wdt->base + RTIWDSTATUS);
+>>>> +    if (val & DWDST)
+>>>> +        return 0;
+>>>> +
+>>>> +    timer_counter = readl_relaxed(wdt->base + RTIDWDCNTR);
+>>>> +
+>>>> +    do_div(timer_counter, wdt->freq);
+>>>> +
+>>>> +    return timer_counter;
+>>>> +}
+>>>> +
+>>>> +static const struct watchdog_info rti_wdt_info = {
+>>>> +    .options = WDIOF_KEEPALIVEPING,
+>>>> +    .identity = "K3 RTI Watchdog",
+>>>> +};
+>>>> +
+>>>> +static const struct watchdog_ops rti_wdt_ops = {
+>>>> +    .owner        = THIS_MODULE,
+>>>> +    .start        = rti_wdt_start,
+>>>> +    .ping        = rti_wdt_ping,
+>>>> +    .get_timeleft    = rti_wdt_get_timeleft,
+>>>> +};
+>>>> +
+>>>> +static int rti_wdt_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +    int ret = 0;
+>>>> +    struct device *dev = &pdev->dev;
+>>>> +    struct resource *wdt_mem;
+>>>> +    struct watchdog_device *wdd;
+>>>> +    struct rti_wdt_device *wdt;
+>>>> +    struct clk *clk;
+>>>> +
+>>>> +    wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
+>>>> +    if (!wdt)
+>>>> +        return -ENOMEM;
+>>>> +
+>>>> +    clk = devm_clk_get(dev, NULL);
+>>>> +    if (IS_ERR(clk)) {
+>>>> +        if (PTR_ERR(clk) != -EPROBE_DEFER)
+>>>> +            dev_err(dev, "failed to get clock\n");
+>>>> +        return PTR_ERR(clk);
+>>>> +    }
+>>>> +
+>>>> +    wdt->freq = clk_get_rate(clk);
+>>>> +    if (!wdt->freq) {
+>>>> +        dev_err(dev, "Failed to get fck rate.\n");
+>>>> +        return -EINVAL;
+>>>> +    }
+>>>> +
+>>>> +    devm_clk_put(dev, clk);
+>>>> +
+>>> Are you sure about this ? Doesn't this mean that the clock may be stopped ?
+>>> Normally the reason for using devm_ functions during probe is that release
+>>> functions are called automatically when the device is removed. Calling
+>>> the release function dorectly is unusual and most of the time wrong.
+>>
+>> clk_get / clk_put does not enable / disable a clock by itself, this is just used to fetch a clock handle. But you are right, we are never calling clk_enable on it either, because at least the 32kHz clock we are interested in is of type always-on and can never be disabled.
+>>
+>> I can keep the clock handle and call enable/disable on it in the probe/remove if you think that would be neater.
+>>
 > 
-> 
-> On 03/03/2020 18:19, Lorenzo Pieralisi wrote:
-> > On Fri, Jan 24, 2020 at 12:29:41AM +0100, Remi Pommarel wrote:
-> >> This adds support for the MIPI analog PHY which is also used for PCIE
-> >> found in the Amlogic AXG SoC Family.
-> >>
-> >> MIPI or PCIE selection is done by the #phy-cells, making the mode
-> >> static and exclusive.
-> >>
-> >> For now only PCIE fonctionality is supported.
-> >>
-> >> This PHY will be used to replace the mipi_enable clock gating logic
-> >> which was mistakenly added in the clock subsystem. This also activate
-> >> a non documented band gap bit in those registers that allows reliable
-> >> PCIE clock signal generation on AXG platforms.
-> >>
-> >> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> >> ---
-> >>  drivers/phy/amlogic/Kconfig                   |  11 +
-> >>  drivers/phy/amlogic/Makefile                  |  11 +-
-> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 ++++++++++++++++++
-> >>  3 files changed, 205 insertions(+), 5 deletions(-)
-> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> > 
-> > Kishon, Neil,
-> > 
-> > can you please review/ack this patch and patch 6 ?
-> 
-> Sure, it was already acked by jerome, but it's also ok for me:
-> 
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> If it isn't needed to be held, you should use clk_get / clk_put,
+> and not the devm_ functions.
 
-Thanks. Sorry for the pedantry but on patch (6) too.
+Ok, changed this and posted v3 of patch #3 only.
 
-Lorenzo
+-Tero
 
-> Neil
-> > 
-> > I would like to queue the series shortly, thanks.
-> > 
-> > Lorenzo
-> > 
-> >> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> >> index af774ac2b934..8c9cf2403591 100644
-> >> --- a/drivers/phy/amlogic/Kconfig
-> >> +++ b/drivers/phy/amlogic/Kconfig
-> >> @@ -59,3 +59,14 @@ config PHY_MESON_G12A_USB3_PCIE
-> >>  	  Enable this to support the Meson USB3 + PCIE Combo PHY found
-> >>  	  in Meson G12A SoCs.
-> >>  	  If unsure, say N.
-> >> +
-> >> +config PHY_MESON_AXG_MIPI_PCIE_ANALOG
-> >> +	tristate "Meson AXG MIPI + PCIE analog PHY driver"
-> >> +	default ARCH_MESON
-> >> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> >> +	select GENERIC_PHY
-> >> +	select REGMAP_MMIO
-> >> +	help
-> >> +	  Enable this to support the Meson MIPI + PCIE analog PHY
-> >> +	  found in Meson AXG SoCs.
-> >> +	  If unsure, say N.
-> >> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> >> index 11d1c42ac2be..0aecf92d796a 100644
-> >> --- a/drivers/phy/amlogic/Makefile
-> >> +++ b/drivers/phy/amlogic/Makefile
-> >> @@ -1,6 +1,7 @@
-> >>  # SPDX-License-Identifier: GPL-2.0-only
-> >> -obj-$(CONFIG_PHY_MESON8B_USB2)		+= phy-meson8b-usb2.o
-> >> -obj-$(CONFIG_PHY_MESON_GXL_USB2)	+= phy-meson-gxl-usb2.o
-> >> -obj-$(CONFIG_PHY_MESON_G12A_USB2)	+= phy-meson-g12a-usb2.o
-> >> -obj-$(CONFIG_PHY_MESON_GXL_USB3)	+= phy-meson-gxl-usb3.o
-> >> -obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)	+= phy-meson-g12a-usb3-pcie.o
-> >> +obj-$(CONFIG_PHY_MESON8B_USB2)			+= phy-meson8b-usb2.o
-> >> +obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
-> >> +obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
-> >> +obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
-> >> +obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
-> >> +obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
-> >> diff --git a/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> >> new file mode 100644
-> >> index 000000000000..1431cbf885e1
-> >> --- /dev/null
-> >> +++ b/drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> >> @@ -0,0 +1,188 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Amlogic AXG MIPI + PCIE analog PHY driver
-> >> + *
-> >> + * Copyright (C) 2019 Remi Pommarel <repk@triplefau.lt>
-> >> + */
-> >> +#include <linux/module.h>
-> >> +#include <linux/phy/phy.h>
-> >> +#include <linux/regmap.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <dt-bindings/phy/phy.h>
-> >> +
-> >> +#define HHI_MIPI_CNTL0 0x00
-> >> +#define		HHI_MIPI_CNTL0_COMMON_BLOCK	GENMASK(31, 28)
-> >> +#define		HHI_MIPI_CNTL0_ENABLE		BIT(29)
-> >> +#define		HHI_MIPI_CNTL0_BANDGAP		BIT(26)
-> >> +#define		HHI_MIPI_CNTL0_DECODE_TO_RTERM	GENMASK(15, 12)
-> >> +#define		HHI_MIPI_CNTL0_OUTPUT_EN	BIT(3)
-> >> +
-> >> +#define HHI_MIPI_CNTL1 0x01
-> >> +#define		HHI_MIPI_CNTL1_CH0_CML_PDR_EN	BIT(12)
-> >> +#define		HHI_MIPI_CNTL1_LP_ABILITY	GENMASK(5, 4)
-> >> +#define		HHI_MIPI_CNTL1_LP_RESISTER	BIT(3)
-> >> +#define		HHI_MIPI_CNTL1_INPUT_SETTING	BIT(2)
-> >> +#define		HHI_MIPI_CNTL1_INPUT_SEL	BIT(1)
-> >> +#define		HHI_MIPI_CNTL1_PRBS7_EN		BIT(0)
-> >> +
-> >> +#define HHI_MIPI_CNTL2 0x02
-> >> +#define		HHI_MIPI_CNTL2_CH_PU		GENMASK(31, 25)
-> >> +#define		HHI_MIPI_CNTL2_CH_CTL		GENMASK(24, 19)
-> >> +#define		HHI_MIPI_CNTL2_CH0_DIGDR_EN	BIT(18)
-> >> +#define		HHI_MIPI_CNTL2_CH_DIGDR_EN	BIT(17)
-> >> +#define		HHI_MIPI_CNTL2_LPULPS_EN	BIT(16)
-> >> +#define		HHI_MIPI_CNTL2_CH_EN(n)		BIT(15 - (n))
-> >> +#define		HHI_MIPI_CNTL2_CH0_LP_CTL	GENMASK(10, 1)
-> >> +
-> >> +struct phy_axg_mipi_pcie_analog_priv {
-> >> +	struct phy *phy;
-> >> +	unsigned int mode;
-> >> +	struct regmap *regmap;
-> >> +};
-> >> +
-> >> +static const struct regmap_config phy_axg_mipi_pcie_analog_regmap_conf = {
-> >> +	.reg_bits = 8,
-> >> +	.val_bits = 32,
-> >> +	.reg_stride = 4,
-> >> +	.max_register = HHI_MIPI_CNTL2,
-> >> +};
-> >> +
-> >> +static int phy_axg_mipi_pcie_analog_power_on(struct phy *phy)
-> >> +{
-> >> +	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
-> >> +
-> >> +	/* MIPI not supported yet */
-> >> +	if (priv->mode != PHY_TYPE_PCIE)
-> >> +		return -EINVAL;
-> >> +
-> >> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> >> +			   HHI_MIPI_CNTL0_BANDGAP, HHI_MIPI_CNTL0_BANDGAP);
-> >> +
-> >> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> >> +			   HHI_MIPI_CNTL0_ENABLE, HHI_MIPI_CNTL0_ENABLE);
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int phy_axg_mipi_pcie_analog_power_off(struct phy *phy)
-> >> +{
-> >> +	struct phy_axg_mipi_pcie_analog_priv *priv = phy_get_drvdata(phy);
-> >> +
-> >> +	/* MIPI not supported yet */
-> >> +	if (priv->mode != PHY_TYPE_PCIE)
-> >> +		return -EINVAL;
-> >> +
-> >> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> >> +			   HHI_MIPI_CNTL0_BANDGAP, 0);
-> >> +	regmap_update_bits(priv->regmap, HHI_MIPI_CNTL0,
-> >> +			   HHI_MIPI_CNTL0_ENABLE, 0);
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int phy_axg_mipi_pcie_analog_init(struct phy *phy)
-> >> +{
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static int phy_axg_mipi_pcie_analog_exit(struct phy *phy)
-> >> +{
-> >> +	return 0;
-> >> +}
-> >> +
-> >> +static const struct phy_ops phy_axg_mipi_pcie_analog_ops = {
-> >> +	.init = phy_axg_mipi_pcie_analog_init,
-> >> +	.exit = phy_axg_mipi_pcie_analog_exit,
-> >> +	.power_on = phy_axg_mipi_pcie_analog_power_on,
-> >> +	.power_off = phy_axg_mipi_pcie_analog_power_off,
-> >> +	.owner = THIS_MODULE,
-> >> +};
-> >> +
-> >> +static struct phy *phy_axg_mipi_pcie_analog_xlate(struct device *dev,
-> >> +						  struct of_phandle_args *args)
-> >> +{
-> >> +	struct phy_axg_mipi_pcie_analog_priv *priv = dev_get_drvdata(dev);
-> >> +	unsigned int mode;
-> >> +
-> >> +	if (args->args_count != 1) {
-> >> +		dev_err(dev, "invalid number of arguments\n");
-> >> +		return ERR_PTR(-EINVAL);
-> >> +	}
-> >> +
-> >> +	mode = args->args[0];
-> >> +
-> >> +	/* MIPI mode is not supported yet */
-> >> +	if (mode != PHY_TYPE_PCIE) {
-> >> +		dev_err(dev, "invalid phy mode select argument\n");
-> >> +		return ERR_PTR(-EINVAL);
-> >> +	}
-> >> +
-> >> +	priv->mode = mode;
-> >> +	return priv->phy;
-> >> +}
-> >> +
-> >> +static int phy_axg_mipi_pcie_analog_probe(struct platform_device *pdev)
-> >> +{
-> >> +	struct phy_provider *phy;
-> >> +	struct device *dev = &pdev->dev;
-> >> +	struct phy_axg_mipi_pcie_analog_priv *priv;
-> >> +	struct device_node *np = dev->of_node;
-> >> +	struct regmap *map;
-> >> +	struct resource *res;
-> >> +	void __iomem *base;
-> >> +	int ret;
-> >> +
-> >> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> >> +	if (!priv)
-> >> +		return -ENOMEM;
-> >> +
-> >> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >> +	base = devm_ioremap_resource(dev, res);
-> >> +	if (IS_ERR(base)) {
-> >> +		dev_err(dev, "failed to get regmap base\n");
-> >> +		return PTR_ERR(base);
-> >> +	}
-> >> +
-> >> +	map = devm_regmap_init_mmio(dev, base,
-> >> +				    &phy_axg_mipi_pcie_analog_regmap_conf);
-> >> +	if (IS_ERR(map)) {
-> >> +		dev_err(dev, "failed to get HHI regmap\n");
-> >> +		return PTR_ERR(map);
-> >> +	}
-> >> +	priv->regmap = map;
-> >> +
-> >> +	priv->phy = devm_phy_create(dev, np, &phy_axg_mipi_pcie_analog_ops);
-> >> +	if (IS_ERR(priv->phy)) {
-> >> +		ret = PTR_ERR(priv->phy);
-> >> +		if (ret != -EPROBE_DEFER)
-> >> +			dev_err(dev, "failed to create PHY\n");
-> >> +		return ret;
-> >> +	}
-> >> +
-> >> +	phy_set_drvdata(priv->phy, priv);
-> >> +	dev_set_drvdata(dev, priv);
-> >> +
-> >> +	phy = devm_of_phy_provider_register(dev,
-> >> +					    phy_axg_mipi_pcie_analog_xlate);
-> >> +
-> >> +	return PTR_ERR_OR_ZERO(phy);
-> >> +}
-> >> +
-> >> +static const struct of_device_id phy_axg_mipi_pcie_analog_of_match[] = {
-> >> +	{
-> >> +		.compatible = "amlogic,axg-mipi-pcie-analog-phy",
-> >> +	},
-> >> +	{ },
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, phy_axg_mipi_pcie_analog_of_match);
-> >> +
-> >> +static struct platform_driver phy_axg_mipi_pcie_analog_driver = {
-> >> +	.probe = phy_axg_mipi_pcie_analog_probe,
-> >> +	.driver = {
-> >> +		.name = "phy-axg-mipi-pcie-analog",
-> >> +		.of_match_table = phy_axg_mipi_pcie_analog_of_match,
-> >> +	},
-> >> +};
-> >> +module_platform_driver(phy_axg_mipi_pcie_analog_driver);
-> >> +
-> >> +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
-> >> +MODULE_DESCRIPTION("Amlogic AXG MIPI + PCIE analog PHY driver");
-> >> +MODULE_LICENSE("GPL v2");
-> >> -- 
-> >> 2.24.1
-> >>
-> 
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
