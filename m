@@ -2,102 +2,104 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8837EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E3AFC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D7C2146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 280F320866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="Zfx3aZDH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3Jl42qJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388530AbgCDXQd (ORCPT
+        id S2388500AbgCDXUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 18:16:33 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36321 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388425AbgCDXQc (ORCPT
+        Wed, 4 Mar 2020 18:20:12 -0500
+Received: from mail-ot1-f53.google.com ([209.85.210.53]:34851 "EHLO
+        mail-ot1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387931AbgCDXUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 18:16:32 -0500
-Received: by mail-pj1-f66.google.com with SMTP id d7so1634426pjw.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:16:32 -0800 (PST)
+        Wed, 4 Mar 2020 18:20:11 -0500
+Received: by mail-ot1-f53.google.com with SMTP id v10so3857667otp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:20:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=fLuBSubRkGwc0et1lSwg/yOrJz68JCULXi64QxtD9L4=;
-        b=Zfx3aZDHOKJv/xTct7dFMPFiJ5RG5nooZwf3B1Md2rdmwylu/vxshgKBxR/JXzh0tD
-         ILxZPjvmXfQO/SuH/N0qK07KCfDtfALyxDCCZFxc2B5oaT8B5uCN1n5MIE8fM8Pw8OYT
-         fyBlEUvLtcv7XvQQPzrsehVW9nxkUUlJnBnnBg4nPiFsqZpRmv0BIeAtS5xWy3bAUkK7
-         EKOTDIA9tusMsoUyU23lmsiRUAutFyFaC9sPkiymBzoqkhA8m2XNEP5ACMQ87Dr1K9L7
-         UhONoltdyIcJ0bCTJjQ6f3GbWTkvgcWNwd2jDPQLNNTAck6BZB9ffrWTJncrYXc7y5EN
-         rk3g==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jy/pvy0/S47J0HPg+ESI5MKYVQkhuwYIBoiO31Jly64=;
+        b=C3Jl42qJxkF0mvLmXgZAEVkWsYX+hYzBcbeXDJHqyhFhbfElcWW2jM8E7IsKljeOfF
+         nwqLIsR+gxyWJ8TugC9KpbOLPLwI4DQMHgoaKGh5kmKkRoAXHSgW6iwxkQUL+be/zUOn
+         HauQhcRHlfs8hcKO1OpF4NlnjcYnpIamEru59hXWdqcBhx6BKA2dHAaU8hpzBvH+w4Oh
+         d5/rdyfJAsodY7wfaEH7oTTc41XlVlcrjFlyBxeKeZUcWLhbUuN8PY8satnpUawPW4j7
+         9EZU8zWTbVszk2X35Knql56H9ivsPUVYsu6bnRTvAtwJUzK9N74W5e88xKBesLxXFKVD
+         K/wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=fLuBSubRkGwc0et1lSwg/yOrJz68JCULXi64QxtD9L4=;
-        b=jLFH7vA1Gcr8APN6mtPSdqqkZmNWXAWDMENN9633jt2KP1jBhTKeXO05/PrPUy1uUZ
-         J8GEKlv/dJLsLckQlU3JivAbltBg6EbIzBELDVp4/5q+2s4j6TaL3zNPkG5Fvs2r2I1Y
-         aQsTI/SpXnf17rOFgF27LHqdYMSiZp0agbild21xJIOnL2sBQi14n8GeaJYFa36BR3Q4
-         h2km6i+NUaucsoMqRd3+D8I1OBFZnd5BecsI5b93gAs6oj+AM5FQfPFhTxYSnF5+EuWa
-         /6kPaVUoyzl7UCBGXaS5/bd2cHtiGslL6OaXfaO7dU/7yHI7OFgb6GJlUnMNyGcCJPYt
-         tWEQ==
-X-Gm-Message-State: ANhLgQ0aWn2aAS4PY9x7gcFhXdb6CwbHnTGE1LD0jaZD5OapmHYuIaQa
-        qjLnyRDJzSbMyObTsUMcWC9+Wg==
-X-Google-Smtp-Source: ADFU+vs16bwXQpjbdGTb2gdRF0APKsg86dgJcOqt7o9kJ87t5Lecc5fFkxXvGGtSwPqdwC/b2hv4bg==
-X-Received: by 2002:a17:90a:1f45:: with SMTP id y5mr5271710pjy.170.1583363791341;
-        Wed, 04 Mar 2020 15:16:31 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
-        by smtp.gmail.com with ESMTPSA id c5sm29203530pfi.10.2020.03.04.15.16.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 15:16:30 -0800 (PST)
-Date:   Wed, 04 Mar 2020 15:16:30 -0800 (PST)
-X-Google-Original-Date: Wed, 04 Mar 2020 15:10:33 PST (-0800)
-Subject:     Re: [PATCH] riscv: Fix range looking for kernel image memblock
-In-Reply-To: <20200217052847.3174-1-alex@ghiti.fr>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
-        jan.kiszka@web.de, stable@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        alex@ghiti.fr
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     alex@ghiti.fr
-Message-ID: <mhng-2ab0d9dd-182f-4c81-8432-5d510cd3dd51@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jy/pvy0/S47J0HPg+ESI5MKYVQkhuwYIBoiO31Jly64=;
+        b=TzSJTADlpkQXc9+UwvtMbDw1/mApX/CnFP4ClIpjj0czKLFjdNOYo8W69RpPSDuVFU
+         blUUE9DVN6aokNH/2ZC+0lUIPZLBusJAmp5iXAeJcmEdK0WDnXaoPCIu/FbEQEoUQd+6
+         D32ajqq3GEgFCRPfPOfPV8MyvvXorjt1BFf81EI+W8sBqhCLnqZys4FANPzxzKzcpaju
+         HIdNBIrDeJqth1K8FMMWnWfCEZ+3WOEw2JXY40ZV6ppoGUALmM8JaV7tqU/l3hMyRDl1
+         7CZ8JI0mpHL6l8IndPf0H3pIZDwbi9VVHqgdAK8S0H6qvSyAJ0NcoEOsgiC6hBuIelMi
+         jbxw==
+X-Gm-Message-State: ANhLgQ2FFhOdLCQAdZx/NL17RpzncW7NEWj80CKng148Gb0yDcGbsMNq
+        a8RyQtsDWt/7k8+LDXylRFk6aMRIFeRoGzKt8xA=
+X-Google-Smtp-Source: ADFU+vszVvXygtAKW3mFBMvquBApv8Z8J0GuhCe3QjMiElyHEuV5ObCIGswswSfxwmzd7xZUh97S9G2dTHTxCTAPHgo=
+X-Received: by 2002:a05:6830:1ca:: with SMTP id r10mr4159254ota.319.1583364010873;
+ Wed, 04 Mar 2020 15:20:10 -0800 (PST)
+MIME-Version: 1.0
+References: <0000000000007523a60576e80a47@google.com> <CACT4Y+b3AmVQMjPNsPHOXRZS4tNYb6Z9h5-c=1ZwZk0VR-5J5Q@mail.gmail.com>
+ <20180928070042.GF3439@hirez.programming.kicks-ass.net> <CACT4Y+YFmSmXjs5EMNRPvsR-mLYeAYKypBppYq_M_boTi8a9uQ@mail.gmail.com>
+ <CACT4Y+ZBYYUiJejNbPcZWS+aHehvkgKkTKm0gvuviXGGcirJ5g@mail.gmail.com>
+ <CACT4Y+bTGp1J9Wn=93LUObdTcWPo2JrChYKF-1v6aXmtvoQgPQ@mail.gmail.com>
+ <CAM_iQpVtcNFeEtW15z_nZoyC1Q-_pCq+UfZ4vYBB3Lb2CMm4Mg@mail.gmail.com>
+ <CAMArcTUJ=Nemq=hsEeOzc-hOU4bPOKq_Xa1ECGDk4ceZHzhGVw@mail.gmail.com>
+ <CAM_iQpU+d4bbtN_oE+G0CaWmeSbBEyS1Wuc7s1vK36gGrcYzjQ@mail.gmail.com> <CACT4Y+Y-602aWheEZT8ha7qJ=P7uhu3LG5PqFebB7guNg8z=_w@mail.gmail.com>
+In-Reply-To: <CACT4Y+Y-602aWheEZT8ha7qJ=P7uhu3LG5PqFebB7guNg8z=_w@mail.gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Wed, 4 Mar 2020 15:19:59 -0800
+Message-ID: <CAM_iQpVkyt5C2RG==jJSHumpY1o+M2H0nHRtMs6xp6_fpW3WMA@mail.gmail.com>
+Subject: Re: BUG: MAX_LOCKDEP_CHAINS too low!
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzbot <syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 16 Feb 2020 21:28:47 PST (-0800), alex@ghiti.fr wrote:
-> When looking for the memblock where the kernel lives, we should check
-> that the memory range associated to the memblock entirely comprises the
-> kernel image and not only intersects with it.
+On Wed, Mar 4, 2020 at 12:03 AM Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
-> ---
->  arch/riscv/mm/init.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Sat, Jan 18, 2020 at 9:41 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+> >
+> > On Thu, Jan 16, 2020 at 7:09 AM Taehee Yoo <ap420073@gmail.com> wrote:
+> > > Yes, I fully agree with this.
+> > > If we calculate the subclass for lock_nested() very well, I think we
+> > > might use static lockdep key for addr_list_lock_key too. I think
+> > > "dev->upper_level" and "dev->lower_level" might be used as subclass.
+> > > These values are updated recursively in master/nomaster operation.
+> >
+> > Great! I will think about this too. At least I will remove the other keys
+> > for net-next.
 >
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index 965a8cf4829c..fab855963c73 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -131,7 +131,7 @@ void __init setup_bootmem(void)
->  	for_each_memblock(memory, reg) {
->  		phys_addr_t end = reg->base + reg->size;
+> Hi Cong,
 >
-> -		if (reg->base <= vmlinux_end && vmlinux_end <= end) {
-> +		if (reg->base <= vmlinux_start && vmlinux_end <= end) {
->  			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
->
->  			/*
+> Was this done? This still harms testing of the whole kernel. Disabling
+> LOCKDEP does not look good either...
 
-Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Not yet, I have a half-done patch locally, will work on it to make it
+complete for net-next.
 
-Thanks.  I'm going to target this for the next RC.
+Thanks for reminding me!
