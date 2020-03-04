@@ -2,200 +2,126 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07259C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:57:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD92C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFBE021556
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:57:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GFqTqR9e"
+	by mail.kernel.org (Postfix) with ESMTP id 15A7021739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:58:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583351938;
+	bh=KpWyyTa4QUWn4Sv9w00wWJszehOXETZlcXXiDJFXdEw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hxy40QrhSc2PMHHme6i7O2z+/ApGv7rmQCJ96hJBulo+fqp1idCT9zr95yBp0g2pK
+	 aifGVAPscFy0vYVxlf8hcDSDwwDTEeOUGC/VABqu8G6tLtgaK3Im7p/wRMA06AKG8N
+	 BBTYmnqXqMdTFPT8rAmEU4ZdYG7+rioOL0GK/V/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729557AbgCDT5B (ORCPT
+        id S1729536AbgCDT65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:57:01 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54293 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728955AbgCDT5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:57:00 -0500
-Received: by mail-wm1-f65.google.com with SMTP id i9so3587180wml.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:56:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=tNtlWS8kwVg67m+x+oB4w/yTZ5zeRm/MtWMbNvLsueA=;
-        b=GFqTqR9ebB36YpKvw79ZlEDujCxufURaEz33heKN3rUwgF5K0/1kphs5OoZJakXq3v
-         rfAFhyw2bOl6ElqbHdsG0aatiauZMwu4Fi3N7X6gvkfHVwkk5PDS/+YDMLrJtxdVwz4e
-         DmtyBqsTgvIhwDRsjueatT7vmoP9sMnkbUiMyPXOl6mqmWDkvdbq0ge6h8W3Ca3/MLHH
-         yF1jIEu2T+I8Jqm0txuuICfyvQb8PPIV2xCvdcUpiK3IHjH9mjcEPPlOb2UcmbFDVa/G
-         LGviqc/wpdLmGOaEn9W8WJu71YntEJfHkgPT1S2b465qRxa+bdHeCZgPVtTF+jAC0OS0
-         uZLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tNtlWS8kwVg67m+x+oB4w/yTZ5zeRm/MtWMbNvLsueA=;
-        b=gl7aCBoljiRboR/wiiNHRUaBhxQDrwtq6/d9oUVbEuexYQigviFrqd1cPFmW+MqlWk
-         c8BPGk1322Niqa4herM5OmZDcG1Tgy6optNrQzIK30i3E+PRI5c80Zjj0KQVLLZBdSBH
-         gi1mDGVxJ+ArpHoVbWON9Elg+OkX3fljHm4z27sQWI3IVl8nBLKscv8ghoDmAevoPOJH
-         fwqNDJZrFqKoXM/c5PcS6PDUYI273/nkQPzWEWD71ZYQ6A6mSMk+p0sa8eLGTDaTcVFE
-         gz2GetwMVueqd3CdZCvEI/HxmxPpeob61zENSO4auMxSy55vIRjlQswdJUj4fF73S3MS
-         /C9g==
-X-Gm-Message-State: ANhLgQ2r0E74unYjnU2UJMUfak4+HLvjnvnbjJIoko0G6765EvYs87lZ
-        yxOTySBDuKXD1S5F6mH3SPYpVk+ZoXk=
-X-Google-Smtp-Source: ADFU+vs/+jn1aIAnj75KYFeE/8naTXfVQRz7ZZ18DTAjfkAR/2yH99QCF4627fUO3xeyamOyRWJ38g==
-X-Received: by 2002:a1c:660a:: with SMTP id a10mr4958726wmc.142.1583351816751;
-        Wed, 04 Mar 2020 11:56:56 -0800 (PST)
-Received: from ?IPv6:2a01:e34:ed2f:f020:10d8:56c2:f55d:11e3? ([2a01:e34:ed2f:f020:10d8:56c2:f55d:11e3])
-        by smtp.googlemail.com with ESMTPSA id v7sm34148032wrm.49.2020.03.04.11.56.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 11:56:56 -0800 (PST)
-Subject: Re: [PATCH v1] clocksource: Avoid creating dead devices
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20200111052125.238212-1-saravanak@google.com>
- <f9f3afa0-f0a7-6cff-2e57-e4e448a81a90@linaro.org>
- <CAGETcx_VV+NUALO=9PS5id7Jz0yLjG=T4FsC=J4PjuQ-rGcd9A@mail.gmail.com>
- <CAGETcx_Y7TroxBGsD0ssG8X+iZawoMVnqVPbEOJwR2Wmv=0Kxw@mail.gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <814e5b06-dde9-f59a-735a-39d7e41efc67@linaro.org>
-Date:   Wed, 4 Mar 2020 20:56:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 4 Mar 2020 14:58:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728665AbgCDT64 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 14:58:56 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8DB7B21556;
+        Wed,  4 Mar 2020 19:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583351935;
+        bh=KpWyyTa4QUWn4Sv9w00wWJszehOXETZlcXXiDJFXdEw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b/hUefZv6HPded/GJr4NJQF470NkRyMxIfwu9wKwQRVkgb/kNj67tMlpBpQVJ4EM7
+         tjwbUSJkJWIMRMxtXFoJlSDMqlWMb6MKb35+V9UwrKBSFiOf0empjE9I9xQGEmFCjQ
+         Lrfak6gCVQ1v3s9p+Rzrxk8nyx/036tPVhnqaK68=
+Date:   Wed, 4 Mar 2020 11:58:53 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ofir Drang <ofir.drang@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        Linux kernel mailing list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] crypto: testmgr - sync both RFC4106 IV copies
+Message-ID: <20200304195853.GA1005@sol.localdomain>
+References: <20200303120925.12067-1-gilad@benyossef.com>
+ <20200304000606.GB89804@sol.localdomain>
+ <CAOtvUMd6Ak3n-ABO1h440BoDASJUvh+-9PwEGFi-WzA=g84kLg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAGETcx_Y7TroxBGsD0ssG8X+iZawoMVnqVPbEOJwR2Wmv=0Kxw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOtvUMd6Ak3n-ABO1h440BoDASJUvh+-9PwEGFi-WzA=g84kLg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/2020 20:30, Saravana Kannan wrote:
-> On Thu, Feb 27, 2020 at 1:22 PM Saravana Kannan <saravanak@google.com> wrote:
->>
->> On Thu, Feb 27, 2020 at 1:06 AM Daniel Lezcano
->> <daniel.lezcano@linaro.org> wrote:
->>>
->>> On 11/01/2020 06:21, Saravana Kannan wrote:
->>>> Timer initialization is done during early boot way before the driver
->>>> core starts processing devices and drivers. Timers initialized during
->>>> this early boot period don't really need or use a struct device.
->>>>
->>>> However, for timers represented as device tree nodes, the struct devices
->>>> are still created and sit around unused and wasting memory. This change
->>>> avoid this by marking the device tree nodes as "populated" if the
->>>> corresponding timer is successfully initialized.
-
-TBH, I'm missing the rational with the explanation and the code. Can you
-elaborate or rephrase it?
-
-
->>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
->>>> ---
->>>>  drivers/clocksource/timer-probe.c | 2 ++
->>>>  1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
->>>> index ee9574da53c0..a10f28d750a9 100644
->>>> --- a/drivers/clocksource/timer-probe.c
->>>> +++ b/drivers/clocksource/timer-probe.c
->>>> @@ -27,8 +27,10 @@ void __init timer_probe(void)
->>>>
->>>>               init_func_ret = match->data;
->>>>
->>>> +             of_node_set_flag(np, OF_POPULATED);
->>>>               ret = init_func_ret(np);
->>>>               if (ret) {
->>>> +                     of_node_clear_flag(np, OF_POPULATED);
->>>
->>> Isn't it in conflict with:
->>>
->>> drivers/clocksource/ingenic-timer.c
->>>
->>> ?
->>
->> No, it won't interfere with that driver because:
->> 1. This flag is getting set only if the driver already registered a
->> timer init function using TIMER_OF_DECLARE.
->> 2. And if the function fails, we clear the flag.
->>
->> So in the case of ingenic-timer, the device will still be there and be
->> probed by the driver.
+On Wed, Mar 04, 2020 at 03:48:47PM +0200, Gilad Ben-Yossef wrote:
 > 
-> Daniel, friendly reminder. Or do you have a patchworks link too that I
-> can keep an eye on?
+> >
+> > > +     const unsigned int aad_tail_size = suite->skip_aad_iv ? aad_ivsize : 0;
+> > >       const unsigned int authsize = vec->clen - vec->plen;
+> > >
+> > >       if (prandom_u32() % 2 == 0 && vec->alen > aad_tail_size) {
+> > >                /* Mutate the AAD */
+> > >               flip_random_bit((u8 *)vec->assoc, vec->alen - aad_tail_size);
+> > > +             if (suite->auth_aad_iv)
+> > > +                     memcpy((u8 *)vec->iv,
+> > > +                            (vec->assoc + vec->alen - aad_ivsize),
+> > > +                            aad_ivsize);
+> >
+> > Why sync the IV copies here?  When 'auth_aad_iv', we assume the copy of the IV
+> > in the AAD (which was just corrupted) is authenticated.  So we already know that
+> > decryption should fail, regardless of the other IV copy.
+> 
+> Nope. We know there needs to be a copy of the IV in the AAD and we know the IV
+> should be included in calculating in the authentication tag. We don't know which
+> copy of the IV will be used by the implementation.
+> 
+> Case in point - the ccree driver actually currently uses the copy of
+> the IV passed via
+> req->iv for calculating the IV contribution to the authentication tag,
+> not the one in the AAD.
+> 
+> And what happens then if you don't do this copy than is that you get
+> an unexpected
+> decryption success where the test expects failure, because the driver
+> fed the HW the
+> none mutated copy of the IV from req->iv and not the mutated copy
+> found in the AAD.
 
+Okay, well in that case I don't see any difference between the two flags.  This
+is because changing the IV *must* affect the authentication tag for *any* AEAD
+algorithm, otherwise it's not actually authenticated encryption.
 
+So why don't we just use a single flag 'aad_iv' that's set on rfc4106, rfc4309,
+rfc4543, and rfc7539esp?  This flag would mean that the last bytes of the AAD
+buffer must contain another copy of the IV for the behavior to be well-defined.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+> > > @@ -2208,6 +2220,10 @@ static void generate_aead_message(struct aead_request *req,
+> > >       /* Generate the AAD. */
+> > >       generate_random_bytes((u8 *)vec->assoc, vec->alen);
+> > >
+> > > +     if (suite->auth_aad_iv && (vec->alen > ivsize))
+> > > +             memcpy(((u8 *)vec->assoc + vec->alen - ivsize), vec->iv,
+> > > +                    ivsize);
+> >
+> > Shouldn't this be >= ivsize, not > ivsize?
+> Indeed.
+> 
+> > And doesn't the IV need to be synced
+> > in both the skip_aad_iv and auth_aad_iv cases?
+> 
+> Nope, because in the skip_aad_iv case we never mutate the IV, so no
+> point in copying.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+But even if the IV isn't mutated, both copies still need to be the same, right?
+We seem to have concluded that the behavior should be implementation-defined
+when they're different, so that's the logical consequence...
 
+- Eric
