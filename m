@@ -2,125 +2,163 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93594C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B24BBC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D27C215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:42:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583300540;
-	bh=XnZr+3j6ZAuKpc/58P3pJj3X9aigMNVKC6LrvVhvag0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=E4oVowIytyaix89eAA4Ujz+niFbpte4sKewRm6Ng/n7NEW24tzUcSuLyAsxrtlNZE
-	 wZ65y3CZKSk+fJwkZQJJfsJZWabMrAyjfPI3xHhW2EIFVw0tDG0m9Lg0TaWsU3m2gv
-	 HtbMKdr5TzFSwRM3HGBLh5YcqVNvKyJHMl+9o7y8=
+	by mail.kernel.org (Postfix) with ESMTP id 84225214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:44:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BMACOv8P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbgCDFmT (ORCPT
+        id S1726751AbgCDFoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 00:42:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbgCDFmT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 00:42:19 -0500
-Received: from onda.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 385DA214D8;
-        Wed,  4 Mar 2020 05:42:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583300538;
-        bh=XnZr+3j6ZAuKpc/58P3pJj3X9aigMNVKC6LrvVhvag0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YJkd6I7+vjjhVlFWBda9F/DrWXkuGESju6H5wgK9p1dE3HnNWqsHcT7WICHT7zVsL
-         pc3ZxDclxFaVRt4SG+YPIJYh5sitWAcLRVw/+H589KqITLt4wL9uIlORy23MdNGZ7f
-         //qeV01LAYVbiXPLYDKIvCTqaSQ2zzw8aW3fKuWM=
-Date:   Wed, 4 Mar 2020 06:42:14 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     "Bird, Tim" <Tim.Bird@sony.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "tbird20d@gmail.com" <tbird20d@gmail.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scripts/sphinx-pre-install: add '-p python3' to
- virtualenv
-Message-ID: <20200304064214.64341a49@onda.lan>
-In-Reply-To: <MWHPR13MB0895EFDA9EBF7740875E661CFDE40@MWHPR13MB0895.namprd13.prod.outlook.com>
-References: <1582594481-23221-1-git-send-email-tim.bird@sony.com>
-        <20200302130911.05a7e465@lwn.net>
-        <MWHPR13MB0895EFDA9EBF7740875E661CFDE40@MWHPR13MB0895.namprd13.prod.outlook.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 4 Mar 2020 00:44:37 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44960 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgCDFoh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 00:44:37 -0500
+Received: by mail-qt1-f193.google.com with SMTP id h16so497821qtr.11;
+        Tue, 03 Mar 2020 21:44:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=xxd5vo5QurLpt9L4qMgvVJGSW6Osjywwb4CYHY+R/FQ=;
+        b=BMACOv8P0xReQkbncNGFSPzZ3rQdGF2v1ChmfuqjrARLtnn8UOV7/lwxSr51C0/AmE
+         sRQUcJCtLZWFNIEEIDlZYM+qp0LD+vQYHon7Ctcl30PZGHjpEiEWbTsEXKqbEpjFWLkS
+         L7EKmlS9Kh+Kgjzt2nJ4MS+h6dc2FNAnAawxrG58L6F+DELKIxz5r7beLE3cyhLmdsMW
+         ApKWVieoR7chO1lSQu/mfH6ZciWQmaLqqWmh+KTYYw7xUy8+GcI2m1jPwh8jaURIKISp
+         bKpBO6ex9JVX6yxUvfbUtPgaWzD7wbKoQSzot9J9ytGJ0S7VBX1cYohBKpvPZrYCJeS4
+         Nvaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=xxd5vo5QurLpt9L4qMgvVJGSW6Osjywwb4CYHY+R/FQ=;
+        b=JIStuwm3r++Tb7RbNDAm4XO0rTxRM645HCAGsoscbWEJ7PWuyy82qpqgQ73q/gZvqi
+         0G6hJ9LAsfhaXMSaw0WINoPiR/JbQVrXypMj7n8ZCfXwlBTsfenSBGORe12ocC6kSBOI
+         19cJQx3Ac/7gRGOR7kwbhFjYxXQFL8Pgwgp06Gmh57sGbMvzLrJSmbErfF0A/BlgHdrD
+         2+b6wi3FlLFUXkbgQCJNN1AvCijU9+fSsu95gQ1T2zlUnBCboJzSmQ5BcgIqZJXofpvn
+         tZeFqfxucgVhab1UFZfh4xLCTH7uuf+i3CHzWiNvp30na/8LG7sHtbtyrfLegaKWXiE2
+         nZOg==
+X-Gm-Message-State: ANhLgQ09X40+lUViWWv0KaQS7R7IaVUYwKVbFRoD/A5khaSxejmiPxxn
+        X7yhtx2F/nV0BovFRASp5wV2IbiQ+i18SG3iVnA=
+X-Google-Smtp-Source: ADFU+vuuhdqZ2hCGsDWcuSl7ClmlWIERn+UP536E/3crNluJT8VOzWB/pNm3rv2JaT9L3trW6Z0lljEuI1NFAvscL9Q=
+X-Received: by 2002:aed:39c9:: with SMTP id m67mr1008871qte.107.1583300675522;
+ Tue, 03 Mar 2020 21:44:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200303005035.13814-1-luke.r.nels@gmail.com> <20200303005035.13814-2-luke.r.nels@gmail.com>
+ <CAJ+HfNhSj9ycgh8Y44b_ZruW1A=+W_53fXnCDc488WXSESJ3dw@mail.gmail.com> <CADasFoC5EEXdq43waj9pQDb9HtpG2bWE2yMVySBZ4rpopYbROQ@mail.gmail.com>
+In-Reply-To: <CADasFoC5EEXdq43waj9pQDb9HtpG2bWE2yMVySBZ4rpopYbROQ@mail.gmail.com>
+From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Date:   Wed, 4 Mar 2020 06:44:24 +0100
+Message-ID: <CAJ+HfNgHyX_zMh7Wm00twwY75YLftZ8GFMw3rx5k+yiLH8p0eg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 1/4] riscv, bpf: move common riscv JIT code to header
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 3 Mar 2020 17:07:48 +0000
-"Bird, Tim" <Tim.Bird@sony.com> escreveu:
+On Wed, 4 Mar 2020 at 03:31, Luke Nelson <lukenels@cs.washington.edu> wrote=
+:
+>
+> Hi Bj=C3=B6rn,
+>
+> Thanks for the comments! Inlined responses below:
+>
+> On Mon, Mar 2, 2020 at 11:50 PM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.=
+com> wrote:
+> >
+> > > +/* SPDX-License-Identifier: GPL-2.0 */
+> > > +/*
+> > > + * Common functionality for RV32 and RV64 BPF JIT compilers
+> > > + *
+> > > + * Copyright (c) 2019 Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+> > > + * Copyright (c) 2020 Luke Nelson <luke.r.nels@gmail.com>
+> > > + * Copyright (c) 2020 Xi Wang <xi.wang@gmail.com>
+> >
+> > I'm no lawyer, so this is more of a question; You've pulled out code
+> > into a header, and renamed two functions. Does that warrant copyright
+> > line additions? Should my line be removed?
+>
+> This header also includes new code for emitting instructions required
+> for the RV32 JIT (e.g., sltu) and some additional pseudoinstructions
+> (e.g., bgtu and similar). I'm also no lawyer, so I don't know either
+> if this rises to the level of adding copyright lines. I'm happy to
+> do the following in v5 if it looks better:
+>
+> + * Copyright (c) 2019 Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+> + *
+> + * Modified by ...
+>
 
-> > -----Original Message-----
-> > From: Jonathan Corbet <corbet@lwn.net>
-> > 
-> > On Mon, 24 Feb 2020 18:34:41 -0700
-> > tbird20d@gmail.com wrote:
-> >   
-> > > With Ubuntu 16.04 (and presumably Debian distros of the same age),
-> > > the instructions for setting up a python virtual environment should
-> > > do so with the python 3 interpreter.  On these older distros, the
-> > > default python (and virtualenv command) might be python2 based.
-> > >
-> > > Some of the packages that sphinx relies on are now only available
-> > > for python3.  If you don't specify the python3 interpreter for
-> > > the virtualenv, you get errors when doing the pip installs for
-> > > various packages
-> > >
-> > > Fix this by adding '-p python3' to the virtualenv recommendation
-> > > line.
-> > >
-> > > Signed-off-by: Tim Bird <tim.bird@sony.com>  
-> > 
-> > I've applied this, even though it feels a bit fragile to me.  But Python
-> > stuff can be a bit that way, sometimes, I guess.  
-> 
-> I agree it seems a bit wonky.
+Ah, my mistake! Feel free to keep the Copyright. I was honestly just
+curious what the correct way (if any) was. So; Keep your copyright!
+Sorry for the noise!
 
-Well, we could, instead, add some code that would be checking python and pip
-versions, but still distros could be doing some backports with could
-cause side-effects. So, checking for distro versions as done in this patch
-seems a lot safer.
+> > > +#if __riscv_xlen =3D=3D 64
+> >
+> > Please remove this. If the inlined functions are not used, they're not
+> > part of the binary. This adds complexity to the code, and without it
+> > we can catch build errors early on!
+>
+> I agree in general we should avoid #if. The reason for using it
+> here is to cause build errors if the RV32 JIT ever tries to emit
+> an RV64-only instruction by mistake. Otherwise, what is now a build
+> error would be delayed to an illegal instruction trap when the JITed
+> code is executed, which is much harder to find and diagnose.
+>
+> We could use separate files, bpf_jit_32.h and bpf_jit_64.h (the
+> latter will include the former), if we want to avoid #if. Though
+> this adds another form of complexity.
+>
+> So the options here are 1) using no #if, with the risk of hiding
+> subtle bugs in the RV32 JIT; 2) using #if as is; and 3) using
+> separate headers. What do you think?
+>
 
-> The less fragile approach would have been to just
-> always add the '-p python3' option to the virtualenv setup hint,
-> but Mauro seemed to want something more fine-tuned.
+Ok, that is a valid concern. We could go the route of compile-time checking=
+:
 
-Yeah, I asked for a more fine-tuned version.
+if (__riscv_xlen !=3D 64)
+    bad_usage();
 
-Depending on python/pip version, adding a -p python3 seems to cause
-troubles (at least I found some bug reports about that). I may be
-wrong (it was a long time ago), but, before adding the logic that checks
-for "python3" I guess I tried first add -p python3, but, back then,
-I found some troubles (probably with some old Fedora version).
+That's overkill in this case. Keep the #if.
 
-So, better to use this syntax only on distros we know it will
-work as expected.
 
-> As far as the string parsing goes, I think that the format of strings
-> returned by lsb-release (and the predecesors that sphinx_pre_install
-> checks) is unlikely to change.
+Cheers,
+Bj=C3=B6rn
 
-Since when we added this script, we didn't have any troubles yet with
-the part of the code with checks the distribution version. So, I guess
-that the lsb-release related checks are pretty much reliable.
 
-> 
-> Thanks for applying it.
->  -- Tim
-> 
-> 
+> Thanks!
+>
+> Luke
