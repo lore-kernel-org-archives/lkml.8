@@ -2,139 +2,123 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F6EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFC1C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7993624658
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QRNx0e+9"
+	by mail.kernel.org (Postfix) with ESMTP id 5509B24658
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583336104;
+	bh=mGvRr//+DglMPcp75TxeFCBhxIqq00jQR1JrOSa+h4Q=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=op1IIE3TMhKkbiZhahjIsevfuEF8llZ9Zi9Fo96cYjT1xScf+NTSWal3yA+ihNMrg
+	 lxGfwv74PAIRT9+1jUF9boQQ3VYFQ3EEphbYb0j2THL9E2qJipdiSzHyDWrYpFbzo+
+	 msmmnVl2uFgj/UdNMAecLuNJ3JtFr+LSsy+FwLlk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387642AbgCDPe7 (ORCPT
+        id S2388022AbgCDPfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:34:59 -0500
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44934 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbgCDPe6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:34:58 -0500
-Received: by mail-vs1-f65.google.com with SMTP id u24so1396860vso.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:34:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RGyEJuI0kAg2tW9pvbpX/sZCZp/ZoM/v+2tyXfY92H0=;
-        b=QRNx0e+96HXnLEsiEzLvRaxIhEp8noyfUSKTqykgBn4K80pcOPttmsH1jwCIujaUDY
-         a/51nZiu/41ENr9DIlhcbzxHxtD9as5ilUaUl47nhn/4Nt9JuZUfZ8aQwuZLek8ugSa6
-         +7Fz2L6YYgOqLI9IiRijovjoVgJkyIc/FHHHl+p/v8jjFTSdq3fO7rmsc1hseLYYiO62
-         b117TL6aTtnXoxhBk5c6ZprMPRyBuD85M45tLny7zNshwWAXokRAeMsLCoi8Tyg5A45g
-         eedaNpwMqRxoYgw7gqyss9Lo76pKi7tlDbFl/GYFaEiBKE83NiULD8PalVTKbZTEiyXR
-         Q/qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RGyEJuI0kAg2tW9pvbpX/sZCZp/ZoM/v+2tyXfY92H0=;
-        b=Ss0fjHPmdNls4eDusk6GnPV4fALlWYiwOPvy2vIYvymSnhMiR/ivHgawgEGraAaqUT
-         s4peaWQxQC4KbRNYH9VLGeDufCwkx2F5QsnMM5LMZouOGbd8dUWX2mgKfyP9bOZFWPYo
-         0O6XjKT+OXcsVtDQs+E9UnwhohculodPzGfG6qHiGx9RHPI0mseEGtTwQMvNFEH0YI/x
-         ImYZert3LIz0y4dHvioLb6cWUuU6r1EBs+66bnq/ZGMpDub947+r0QlsuSV9Xyn4UWVG
-         qf/Z+iCgDfhxWSC1aXR0Imn23Ie6XR7q9FK6Ucr9Bqim+iAxP424zmjHgh9Hx6O+5u86
-         XVLw==
-X-Gm-Message-State: ANhLgQ2p1OTey/5KufaJDdQ/f4kYzDyXZyjmDecgcIzTngSHeD+gpfPh
-        NZ6BcFQxc0X4OSe0/7ZUvx4PBW33BuUc5iEujeOs3A==
-X-Google-Smtp-Source: ADFU+vtgD8Ah3ULIa6lk8zSoXhcy9aZEC76YLCTNtCNToOoQ/rRhMcBdkTgh2e5jFW/WRn0jRrZOc/Q7JXL1YcouSwk=
-X-Received: by 2002:a67:7fd0:: with SMTP id a199mr2128947vsd.200.1583336097623;
- Wed, 04 Mar 2020 07:34:57 -0800 (PST)
+        Wed, 4 Mar 2020 10:35:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726752AbgCDPfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:35:02 -0500
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D0FC24658;
+        Wed,  4 Mar 2020 15:35:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583336101;
+        bh=mGvRr//+DglMPcp75TxeFCBhxIqq00jQR1JrOSa+h4Q=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=zya9ztGN4pWxB5+fYDdBdITZt8ZGTMnZo+22Td1X1Qkl1YcPxTJtwgEW7yB24Haq+
+         wOH9dOkcSiPsrw87U0Tk8Wk2Tq3s+Wr3sYw90Yz9lQphYvnfFAvOkzS7qqj5f5ZT+m
+         FgPMwPgBQq+rB5PPkPD5iSOjBJvxIg2zoi+0ijLg=
+Received: by mail-qv1-f53.google.com with SMTP id r8so947916qvs.12;
+        Wed, 04 Mar 2020 07:35:01 -0800 (PST)
+X-Gm-Message-State: ANhLgQ0BAIu9rA2czjgJrViQMEE1HUlxKfarrGVvmgn4EUsQIYtCnhVA
+        SUQikMt8hx06fUi2mSq29uMoHB+7SI7pVtdf6w==
+X-Google-Smtp-Source: ADFU+vteyB29cYQ7Q1UB74Gv0vdvXOHZ+jzrw1aE7WliF9I8s/sqI/IDAw2TT3/P6koVZqmBoPO96WROOJctXEQuW7o=
+X-Received: by 2002:a0c:fecb:: with SMTP id z11mr2571272qvs.85.1583336100783;
+ Wed, 04 Mar 2020 07:35:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20200219092900.9151-1-benchuanggli@gmail.com>
-In-Reply-To: <20200219092900.9151-1-benchuanggli@gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 4 Mar 2020 16:34:21 +0100
-Message-ID: <CAPDyKFp1GZDPVLX7i7M7RWaeSYMR07Gaa6r-_sNL6PgxZu-k6w@mail.gmail.com>
-Subject: Re: [PATCH] mmc: sdhci-pci-gli: Enable MSI interrupt for GL975x
-To:     Ben Chuang <benchuanggli@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ben Chuang <ben.chuang@genesyslogic.com.tw>
+References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-2-masahiroy@kernel.org>
+In-Reply-To: <20200304032038.14424-2-masahiroy@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 4 Mar 2020 09:34:49 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ3q4txoV6wE-Vk5X9oo0roVbBYpwMuPEngDiEv1XXinQ@mail.gmail.com>
+Message-ID: <CAL_JsqJ3q4txoV6wE-Vk5X9oo0roVbBYpwMuPEngDiEv1XXinQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] kbuild: avoid concurrency issue in parallel building
+ dtbs and dtbs_check
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Feb 2020 at 10:29, Ben Chuang <benchuanggli@gmail.com> wrote:
+On Tue, Mar 3, 2020 at 9:20 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> From: Ben Chuang <ben.chuang@genesyslogic.com.tw>
+> 'make dtbs_check' checks the shecma in addition to building *.dtb files,
+
+typo
+
+> in other words, 'make dtbs_check' is a super-set of 'make dtbs'.
+> So, you do not have to do 'make dtbs dtbs_check', but I want to keep
+> the build system robust in any use.
 >
-> Enable MSI interrupt for GL9750/GL9755. Some platforms
-> do not support PCI INTx and devices can not work without
-> interrupt. Like messages below:
+> Currently, 'dtbs' and 'dtbs_check' are independent of each other.
+> In parallel building, two threads descend into arch/*/boot/dts/,
+> one for dtbs and the other for dtbs_check, then end up with building
+> the same DTB simultaneously.
 >
-> [    4.487132] sdhci-pci 0000:01:00.0: SDHCI controller found [17a0:9755] (rev 0)
-> [    4.487198] ACPI BIOS Error (bug): Could not resolve symbol [\_SB.PCI0.PBR2._PRT.APS2], AE_NOT_FOUND (20190816/psargs-330)
-> [    4.487397] ACPI Error: Aborting method \_SB.PCI0.PBR2._PRT due to previous error (AE_NOT_FOUND) (20190816/psparse-529)
-> [    4.487707] pcieport 0000:00:01.3: can't derive routing for PCI INT A
-> [    4.487709] sdhci-pci 0000:01:00.0: PCI INT A: no GSI
+> This commit fixes the concurrency issue. Otherwise, I see build errors
+> like follows:
 >
-> Signed-off-by: Ben Chuang <ben.chuang@genesyslogic.com.tw>
-
-Applied for fixes and by adding a stable tag, thanks!
-
-Kind regards
-Uffe
-
-
+> $ make ARCH=arm64 defconfig
+> $ make -j16 ARCH=arm64 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dtbs dtbs_check
+>   <snip>
+>   DTC     arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb
+>   DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
+>   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+>   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
+>   DTC     arch/arm64/boot/dts/freescale/imx8mn-evk.dtb
+>   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+>   DTC     arch/arm64/boot/dts/zte/zx296718-pcbox.dtb
+>   DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+>   DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
+>   DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
+>   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dtb
+>   DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb
+>   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
+>   CHECK   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
+> fixdep: error opening file: arch/arm64/boot/dts/allwinner/.sun50i-h6-orangepi-lite2.dtb.d: No such file or directory
+> make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb] Error 2
+> make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb'
+> make[2]: *** Waiting for unfinished jobs....
+>   DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb
+>   DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
+>   DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
+>   DTC     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dtb
+> fixdep: parse error; no targets found
+> make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb] Error 1
+> make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb'
+> make[1]: *** [scripts/Makefile.build:505: arch/arm64/boot/dts/allwinner] Error 2
+> make[1]: *** Waiting for unfinished jobs....
+>   DTC     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 > ---
->  drivers/mmc/host/sdhci-pci-gli.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
 >
-> diff --git a/drivers/mmc/host/sdhci-pci-gli.c b/drivers/mmc/host/sdhci-pci-gli.c
-> index 5eea8d70a85d..ce15a05f23d4 100644
-> --- a/drivers/mmc/host/sdhci-pci-gli.c
-> +++ b/drivers/mmc/host/sdhci-pci-gli.c
-> @@ -262,10 +262,26 @@ static int gl9750_execute_tuning(struct sdhci_host *host, u32 opcode)
->         return 0;
->  }
->
-> +static void gli_pcie_enable_msi(struct sdhci_pci_slot *slot)
-> +{
-> +       int ret;
-> +
-> +       ret = pci_alloc_irq_vectors(slot->chip->pdev, 1, 1,
-> +                                   PCI_IRQ_MSI | PCI_IRQ_MSIX);
-> +       if (ret < 0) {
-> +               pr_warn("%s: enable PCI MSI failed, error=%d\n",
-> +                      mmc_hostname(slot->host->mmc), ret);
-> +               return;
-> +       }
-> +
-> +       slot->host->irq = pci_irq_vector(slot->chip->pdev, 0);
-> +}
-> +
->  static int gli_probe_slot_gl9750(struct sdhci_pci_slot *slot)
->  {
->         struct sdhci_host *host = slot->host;
->
-> +       gli_pcie_enable_msi(slot);
->         slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
->         sdhci_enable_v4_mode(host);
->
-> @@ -276,6 +292,7 @@ static int gli_probe_slot_gl9755(struct sdhci_pci_slot *slot)
->  {
->         struct sdhci_host *host = slot->host;
->
-> +       gli_pcie_enable_msi(slot);
->         slot->host->mmc->caps2 |= MMC_CAP2_NO_SDIO;
->         sdhci_enable_v4_mode(host);
->
-> --
-> 2.25.0
->
+>  Makefile | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+
+Reviewed-by: Rob Herring <robh@kernel.org>
