@@ -4,38 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E35C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5196BC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D3B120866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3544B2073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387683AbgCDCjP (ORCPT
+        id S2387671AbgCDCjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:39:15 -0500
-Received: from mga12.intel.com ([192.55.52.136]:44650 "EHLO mga12.intel.com"
+        Tue, 3 Mar 2020 21:39:13 -0500
+Received: from mga07.intel.com ([134.134.136.100]:56583 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387624AbgCDCjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387608AbgCDCjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 3 Mar 2020 21:39:08 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 18:39:07 -0800
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 18:39:07 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="233866898"
+   d="scan'208";a="233866905"
 Received: from skuppusw-desk.jf.intel.com ([10.7.201.16])
   by orsmga008.jf.intel.com with ESMTP; 03 Mar 2020 18:39:06 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v17 04/12] PCI: portdrv: remove unnecessary pcie_port_find_service()
-Date:   Tue,  3 Mar 2020 18:36:27 -0800
-Message-Id: <2d2e15ac7079baa5883e2a1c06e11985e375cdff.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v17 06/12] Documentation: PCI: Remove reset_link references
+Date:   Tue,  3 Mar 2020 18:36:29 -0800
+Message-Id: <a46938d227f6a11c010943800450a10aac39b7d3.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -48,60 +47,74 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-Since pcie_do_recovery() has been refactored to not to depend
-on PCIe service driver, we no longer have any users for
-pcie_port_find_service() function. So just remove it.
+After pcie_do_recovery() refactor, instead of reset_link
+member in struct pcie_port_service_driver, we use reset_cb
+callback parameter in pcie_do_recovery() function to pass
+the service driver specific reset_link function. So modify
+the Documentation to reflect the latest changes.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/pcie/portdrv.h      |  2 --
- drivers/pci/pcie/portdrv_core.c | 21 ---------------------
- 2 files changed, 23 deletions(-)
+ Documentation/PCI/pcieaer-howto.rst | 25 +++++++++++--------------
+ 1 file changed, 11 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
-index 1e673619b101..c5da165ce016 100644
---- a/drivers/pci/pcie/portdrv.h
-+++ b/drivers/pci/pcie/portdrv.h
-@@ -161,7 +161,5 @@ static inline int pcie_aer_get_firmware_first(struct pci_dev *pci_dev)
- }
- #endif
+diff --git a/Documentation/PCI/pcieaer-howto.rst b/Documentation/PCI/pcieaer-howto.rst
+index 18bdefaafd1a..0f3e5880efb8 100644
+--- a/Documentation/PCI/pcieaer-howto.rst
++++ b/Documentation/PCI/pcieaer-howto.rst
+@@ -147,7 +147,7 @@ section 3.3.
+ Provide callbacks
+ -----------------
  
--struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
--							u32 service);
- struct device *pcie_port_find_device(struct pci_dev *dev, u32 service);
- #endif /* _PORTDRV_H_ */
-diff --git a/drivers/pci/pcie/portdrv_core.c b/drivers/pci/pcie/portdrv_core.c
-index 5075cb9e850c..50a9522ab07d 100644
---- a/drivers/pci/pcie/portdrv_core.c
-+++ b/drivers/pci/pcie/portdrv_core.c
-@@ -458,27 +458,6 @@ static int find_service_iter(struct device *device, void *data)
- 	return 0;
- }
+-callback reset_link to reset pci express link
++callback reset_cb to reset pci express link
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
--/**
-- * pcie_port_find_service - find the service driver
-- * @dev: PCI Express port the service is associated with
-- * @service: Service to find
-- *
-- * Find PCI Express port service driver associated with given service
-- */
--struct pcie_port_service_driver *pcie_port_find_service(struct pci_dev *dev,
--							u32 service)
--{
--	struct pcie_port_service_driver *drv;
--	struct portdrv_service_data pdrvs;
+ This callback is used to reset the pci express physical link when a
+@@ -156,11 +156,8 @@ default reset_link function, but different upstream ports might
+ have different specifications to reset pci express link, so all
+ upstream ports should provide their own reset_link functions.
+ 
+-In struct pcie_port_service_driver, a new pointer, reset_link, is
+-added.
+-::
 -
--	pdrvs.drv = NULL;
--	pdrvs.service = service;
--	device_for_each_child(&dev->dev, &pdrvs, find_service_iter);
--
--	drv = pdrvs.drv;
--	return drv;
--}
--
- /**
-  * pcie_port_find_device - find the struct device
-  * @dev: PCI Express port the service is associated with
+-	pci_ers_result_t (*reset_link) (struct pci_dev *dev);
++In pcie_do_recovery function, reset_cb function pointer can be used
++to pass the port specific reset_link callback.
+ 
+ Section 3.2.2.2 provides more detailed info on when to call
+ reset_link.
+@@ -212,13 +209,13 @@ error_detected(dev, pci_channel_io_frozen) to all drivers within
+ a hierarchy in question. Then, performing link reset at upstream is
+ necessary. As different kinds of devices might use different approaches
+ to reset link, AER port service driver is required to provide the
+-function to reset link. Firstly, kernel looks for if the upstream
+-component has an aer driver. If it has, kernel uses the reset_link
+-callback of the aer driver. If the upstream component has no aer driver
+-and the port is downstream port, we will perform a hot reset as the
+-default by setting the Secondary Bus Reset bit of the Bridge Control
+-register associated with the downstream port. As for upstream ports,
+-they should provide their own aer service drivers with reset_link
++function to reset link via reset_cb parameter of pcie_do_recovery()
++function call. If reset_cb is not NULL, recovery function will use it
++to reset the link. If there is no reset_cb callback provided and
++the port is downstream port, we will perform a hot reset as the default
++by setting the Secondary Bus Reset bit of the Bridge Control register
++associated with the downstream port. As for upstream ports,
++they should provide their own reset_link function via reset_cb callback
+ function. If error_detected returns PCI_ERS_RESULT_CAN_RECOVER and
+ reset_link returns PCI_ERS_RESULT_RECOVERED, the error handling goes
+ to mmio_enabled.
+@@ -262,7 +259,7 @@ A:
+ 
+ Q:
+   What happens if an upstream port service driver does not provide
+-  callback reset_link?
++  callback reset_cb?
+ 
+ A:
+   Fatal error recovery will fail if the errors are reported by the
 -- 
 2.25.1
 
