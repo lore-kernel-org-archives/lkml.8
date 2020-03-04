@@ -2,135 +2,136 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9015CC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E430C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669F72073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703EB2073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:26:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDossmiP"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LVALL7Wa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387478AbgCDB0U (ORCPT
+        id S2387484AbgCDB0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 20:26:20 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:42034 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727985AbgCDB0R (ORCPT
+        Tue, 3 Mar 2020 20:26:51 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:50202 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727985AbgCDB0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 20:26:17 -0500
-Received: by mail-vs1-f67.google.com with SMTP id w142so103300vsw.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:26:15 -0800 (PST)
+        Tue, 3 Mar 2020 20:26:51 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a5so117116wmb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:26:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=O9pD7eTKayKhsYYKw3enP3Cpnqb80umNsGJzDDGsAM4=;
-        b=hDossmiPT5ZsYw2/No/UnWGjFk7tvNCv2mxERrWzKJ2udcQ1LHSUgCZqbpDPpatSe9
-         CsS5IBrOxI5WqEGk50OMnXk1qi7Cx2xaGwn8Y4MCD7gDL88s5hhhs0bmJEcU8zvNhcp0
-         N26ZpQs0UrOayJeWh70iaWxvSBb0pAwI9eYzx4CmScF4n2uJqX0vbIzcCyLA2eQ/JPH7
-         f3F0f/pr3vlw+oZU9kDCRH5y3Xe9HE6a5Cce2mMuDa5Wj0KbxrLs3aLSgXR2ju2HpGJa
-         +duer7EVx2x02EhR1KTZpXzldgOj/IJzlYFsZ/83uEtuv68D4/4xX99ZyNwvmDf+U9zb
-         Q76Q==
+        bh=PQY8RMiDBALTBZD5pO37W3Q+lyu+FQ6v+Yh5nlQGZ5o=;
+        b=LVALL7WayJJj9fVXFeWZhiLO1k562kNn8PPwUQ62FCeQ/h660Mp5uxJYRWP5Yp5jGN
+         bH6s3ps5s/3l+hYqMteRYL5QBUDc4se6YnM4kvGAJwCp8ua3Bm9X1F8vEElfpf/SSlf+
+         tdXuDuuPbOkLQxHSMalWwKm1TlapPsLupawQxdH0WZdiGv8kqmic+eVe6J5za/09pIg+
+         4Kq8YWcrOFUguGtsD4Pn5XobpUsB72g60Nvz5gMUYShixkCfRDpZHZ1NGt3Tt8wRMmEZ
+         Ts/bHKl6PD17qhyK/S6VwNfHPrnxGJeWNkHbX1tnzNMiBUPSw3fZE9ovauApTrfiq0s+
+         Uxlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=O9pD7eTKayKhsYYKw3enP3Cpnqb80umNsGJzDDGsAM4=;
-        b=R5yGl6dlPm2rSml0Lyu7AIdpyP4NSuIbH/ktuc6wHBjUb3gd3s8FxvDMPL5hfQG/Dp
-         toQXxxcHpOvburrV7QEU/NMcsNX/uOKaBWrwNJ1N+Fr8r0rkYvZTKcswISfOByyFcVG4
-         RjypcSbE5fCXdhpbAq7pyJJbsphJW8uai73RHirkrwWRUOhjIqtFnICB2zG6fA9UPGNA
-         JPSyfU/+gZURKMOe/9hl7pX7JOMjMQS6n97R2X3amv7qfD0R4VD1Xkwx/gYegSWgt2wX
-         tkQdhaj8vUDIN6TaoaeJeO3etYOsZaXTtue43cSvHuj/LkLb9GtE3HeF2JghBvy7kXFd
-         wiXA==
-X-Gm-Message-State: ANhLgQ2JVPHykW2QSi34+l9LiopiDFycAlt6Hm4vmgCf1Ej0mh0iY9PK
-        OJtEQ+jA23v0oWCB/CipGS3QaIt8oI72CLUsxvt5ejgq
-X-Google-Smtp-Source: ADFU+vvZ3G3hJoK+Tptnc6CvVgnHyEoMJ1j7yGPugaq8jQK47/UHTWvcE0MhTcvOFbyI14sWscWpUpwzm4wI4D7mpZQ=
-X-Received: by 2002:a67:f1ca:: with SMTP id v10mr471335vsm.180.1583285175252;
- Tue, 03 Mar 2020 17:26:15 -0800 (PST)
+        bh=PQY8RMiDBALTBZD5pO37W3Q+lyu+FQ6v+Yh5nlQGZ5o=;
+        b=AkbnZb5pWvJbEkismPZVrB5/NaZXkyX35YDnq/zThvl3afc+DEF6ce+qnCjUYPvT2e
+         FgmPnYWS1fXjEVeZfMidTxZOqg+arjIYbcEPQuUIr9BCyVnFR+NiIhTH/trZMKU11cCd
+         WVcJeoYOoUgb4FhM90o93toZy1jWndg4+RoFurx1QmXS9+0AX0gXUH8L96XojgLo6QIH
+         HCxYcc8PoqtOwZYv4ypVZBudfNeqQFNbcCw87I8zJeDy3zU1mVeLd3ExmwEjxvXs53Kr
+         +63u0atocTwdhG8E6stgNJdTdrlZN5qZ4jQzi60sbDxGehxmJ081PfCt8/ZsvwMnLK1i
+         nn7w==
+X-Gm-Message-State: ANhLgQ1TPIXdV4NaiBfpucGgXznz12tyhrob6Z4JEcxxQRl42DdfMkuB
+        GamX/QM0vF/E4pH6yJxukUJRG/8J8Vn3NtX/axwUGg==
+X-Google-Smtp-Source: ADFU+vvnH+1bL4NV0ljd5KhdHNpkJzxZzpxkaLTusd/ifrF4jImBz8rBRub4jyXjhEu8R/LjgjUvJAP5IIf8IZ5vPOs=
+X-Received: by 2002:a1c:1d8d:: with SMTP id d135mr445823wmd.107.1583285208997;
+ Tue, 03 Mar 2020 17:26:48 -0800 (PST)
 MIME-Version: 1.0
-References: <20200227210454.18217-1-alistair.francis@wdc.com>
- <20200228095748.uu4sqkz6y477eabc@sirius.home.kraxel.org> <CAKmqyKOTjyRL9vxZrZW8Q+yBM0n-Nw-o-Cn3dUDDfAAa7Nswrg@mail.gmail.com>
- <20200303062437.tjoje5huts6oldrv@sirius.home.kraxel.org>
-In-Reply-To: <20200303062437.tjoje5huts6oldrv@sirius.home.kraxel.org>
-From:   Alistair Francis <alistair23@gmail.com>
-Date:   Tue, 3 Mar 2020 17:18:34 -0800
-Message-ID: <CAKmqyKPEtbDr1kmnyz6FtfU567xxgmxn+F=zH_h8k_m1EN9b5A@mail.gmail.com>
-Subject: Re: [PATCH] drm/bochs: Remove vga write
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Alistair Francis <alistair.francis@wdc.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        Daniel Vetter <daniel@ffwll.ch>, airlied@linux.ie,
-        Khem Raj <raj.khem@gmail.com>
+References: <20200227024301.217042-1-trishalfonso@google.com>
+ <20200227024301.217042-2-trishalfonso@google.com> <CACT4Y+YFewcbRnY62wLHueVNwyXCSZwO8K7SUR2cg=pxZv8uZA@mail.gmail.com>
+ <CAKFsvUJFovti=enpOefqMbtQpeorihQhugH3-1nv0BBwevCwQg@mail.gmail.com> <CACT4Y+Y-zoiRfDWw6KJr1BJO_=yTpFsVaHMng5iaRn9HeJMNaw@mail.gmail.com>
+In-Reply-To: <CACT4Y+Y-zoiRfDWw6KJr1BJO_=yTpFsVaHMng5iaRn9HeJMNaw@mail.gmail.com>
+From:   Patricia Alfonso <trishalfonso@google.com>
+Date:   Tue, 3 Mar 2020 17:26:37 -0800
+Message-ID: <CAKFsvU+ruKWt-BdVz+OX-T9wNEBetqVFACsG1B9ucMS4zHrMBQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 10:24 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
+On Sat, Feb 29, 2020 at 10:29 PM Dmitry Vyukov <dvyukov@google.com> wrote:
 >
-> On Mon, Mar 02, 2020 at 02:14:02PM -0800, Alistair Francis wrote:
-> > On Fri, Feb 28, 2020 at 1:57 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
+> On Sat, Feb 29, 2020 at 2:23 AM Patricia Alfonso
+> <trishalfonso@google.com> wrote:
 > > >
-> > > On Thu, Feb 27, 2020 at 01:04:54PM -0800, Alistair Francis wrote:
-> > > > The QEMU model for the Bochs display has no VGA memory section at offset
-> > > > 0x400 [1]. By writing to this register Linux can create a write to
-> > > > unassigned memory which depending on machine and architecture can result
-> > > > in a store fault.
+> > > On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
+> > > <kasan-dev@googlegroups.com> wrote:
 > > > >
-> > > > I don't see any reference to this address at OSDev [2] or in the Bochs
-> > > > source code.
+> > > > --- a/tools/testing/kunit/kunit_kernel.py
+> > > > +++ b/tools/testing/kunit/kunit_kernel.py
+> > > > @@ -141,7 +141,7 @@ class LinuxSourceTree(object):
+> > > >                 return True
 > > > >
-> > > > Removing this write still allows graphics to work inside QEMU with
-> > > > the bochs-display.
+> > > >         def run_kernel(self, args=[], timeout=None, build_dir=''):
+> > > > -               args.extend(['mem=256M'])
+> > > > +               args.extend(['mem=256M', 'kasan_multi_shot'])
 > > >
-> > > It's not that simple.  The driver also handles the qemu stdvga (-device
-> > > VGA, -device secondary-vga) which *does* need the vga port write.
-> > > There is no way for the guest to figure whenever the device is
-> > > secondary-vga or bochs-display.
+> > > This is better done somewhere else (different default value if
+> > > KASAN_TEST is enabled or something). Or overridden in the KASAN tests.
+> > > Not everybody uses tools/testing/kunit/kunit_kernel.py and this seems
+> > > to be a mandatory part now. This means people will always hit this, be
+> > > confused, figure out they need to flip the value, and only then be
+> > > able to run kunit+kasan.
 > > >
-> > > So how about fixing things on the host side?  Does qemu patch below
-> > > help?
-> >
-> > That patch looks like it will fix the problem, but it doesn't seem
-> > like the correct fix. I would rather avoid adding a large chunk of
-> > dummy I/O to handle the two devices.
+> > I agree. Is the best way to do this with "bool multishot =
+> > kasan_save_enable_multi_shot();"  and
+> > "kasan_restore_multi_shot(multishot);" inside test_kasan.c like what
+> > was done in the tests before?
 >
-> It's just a single handler for the parent mmio region, so we have a
-> defined default action instead of undefined behavior.
->
-> Patch just posted to qemu-devel, lets see what others think ...
+> This will fix KASAN tests, but not non-KASAN tests running under KUNIT
+> and triggering KASAN reports.
+> You set kasan_multi_shot for all KUNIT tests. I am reading this as
+> that we don't want to abort on the first test that triggered a KASAN
+> report. Or not?
 
-Thanks, let's wait and see what happens.
+I don't think I understand the question, but let me try to explain my
+thinking and see if that resonates with you. We know that the KASAN
+tests will require more than one report, and we want that. For most
+users, since a KASAN error can cause unexpected kernel behavior for
+anything after a KASAN error, it is best for just one unexpected KASAN
+error to be the only error printed to the user, unless they specify
+kasan-multi-shot. The way I understand it, the way to implement this
+is to use  "bool multishot = kasan_save_enable_multi_shot();"  and
+"kasan_restore_multi_shot(multishot);" around the KASAN tests so that
+kasan-multi-shot is temporarily enabled for the tests we expect
+multiple reports. I assume "kasan_restore_multi_shot(multishot);"
+restores the value to what the user input was so after the KASAN tests
+are finished, if the user did not specify kasan-multi-shot and an
+unexpected kasan error is reported, it will print the full report and
+only that first one. Is this understanding correct? If you have a
+better way of implementing this or a better expected behavior, I
+appreciate your thoughts.
 
->
-> > > Maybe another possible approach is to enable/disable vga access per
-> > > arch.  On x86 this doesn't cause any problems.  I guess you are on
-> > > risc-v?
-> >
-> > I would prefer this option. I do see this on RISC-V, but I suspect the
-> > issue will appear on other architectures (although how they handle I/O
-> > failures in QEMU is a different story).
-> >
-> > Can I just do the VGA write if x86?
->
-> I know ppc needs it too.  Not sure about other architectures.  I'd
-> suggest to do it the other way around: blacklist known-problematic
-> archs.
-
-Argh, that is a little uglier. Let's circle back after receiving
-feedback on the QEMU patch.
-
-Alistair
-
->
-> cheers,
->   Gerd
->
+-- 
+Thanks,
+Patricia Alfonso
