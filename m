@@ -2,88 +2,105 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1F6C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:02:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE77AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EBBC21739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:02:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="EVmKUfL+"
+	by mail.kernel.org (Postfix) with ESMTP id C091B2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583323405;
+	bh=ngZGyk6qLBiIKqhNyOYfQtSNN1Zuio5UyG02XlxIspc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZkSkzdozhBGqbsUTfIOSHUBFkZmIHXIBbXBgCdqWUnJRyOF3FsLjfk48zap65hVRo
+	 urJSYYAYDqjE84Q8NrlWzC0PwaNc5ztIrvUJB37hmomihXB4H3KG0MCsolMo20xAIR
+	 6rFnj5dHbbEZxefsuJl5ff3s5sTDXYK+hSaD8eRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387939AbgCDMC2 (ORCPT
+        id S2387950AbgCDMDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:02:28 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:33342 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729118AbgCDMC2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:02:28 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583323347; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=QQMqqVpMxz0yPIDUvYKvdpvB8rCWfWZiR2iKnS4Bka8=; b=EVmKUfL+IYPax86vrnZ3JmDdznRnwZWb6XaX88yGtduTNotvmaAdvZPza2k5lmCKI9w4y47V
- qAHhjbDiMEqp//vaCYawpi+J4n6xVC36wGr7OH0TljDrucY8fBU8UTCPuZZsjGI45gVqr5IO
- 2uaLXGNsqYY4he48CXcRRu/Xpp0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5f9895.7fb806279500-smtp-out-n03;
- Wed, 04 Mar 2020 12:01:25 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id DCCE2C447A3; Wed,  4 Mar 2020 12:01:25 +0000 (UTC)
-Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 06D27C43383;
-        Wed,  4 Mar 2020 12:01:21 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 06D27C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dianders@google.com,
-        mka@chromium.org,
-        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>
-Subject: [PATCH] mmc: cqhci: Update cqhci memory ioresource name
-Date:   Wed,  4 Mar 2020 17:30:49 +0530
-Message-Id: <1583323250-23596-1-git-send-email-vbadigan@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
+        Wed, 4 Mar 2020 07:03:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:33380 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728953AbgCDMDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:03:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95AE831B;
+        Wed,  4 Mar 2020 04:03:23 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1947D3F534;
+        Wed,  4 Mar 2020 04:03:22 -0800 (PST)
+Date:   Wed, 4 Mar 2020 12:03:21 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Lars =?iso-8859-1?Q?M=F6llendorf?= <lars.moellendorf@plating.de>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Question about regmap_range_cfg and regmap_mmio
+Message-ID: <20200304120321.GA5646@sirena.org.uk>
+References: <d2eb2248-0120-7b0f-9bcf-4f9c71954117@plating.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Content-Disposition: inline
+In-Reply-To: <d2eb2248-0120-7b0f-9bcf-4f9c71954117@plating.de>
+X-Cookie: Tomorrow, you can be anywhere.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update cqhci memory ioresource name from cqhci_mem to cqhci since
-suffix _mem is redundant.
 
-Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
----
-Corresponding binding change:
-https://lore.kernel.org/linux-arm-msm/1582545470-11530-1-git-send-email-vbadigan@codeaurora.org/
----
- drivers/mmc/host/cqhci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
-index e2ea2c4..e24b8ff 100644
---- a/drivers/mmc/host/cqhci.c
-+++ b/drivers/mmc/host/cqhci.c
-@@ -1077,7 +1077,7 @@ struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev)
- 
- 	/* check and setup CMDQ interface */
- 	cqhci_memres = platform_get_resource_byname(pdev, IORESOURCE_MEM,
--						   "cqhci_mem");
-+						   "cqhci");
- 	if (!cqhci_memres) {
- 		dev_dbg(&pdev->dev, "CMDQ not supported\n");
- 		return ERR_PTR(-EINVAL);
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
+On Wed, Mar 04, 2020 at 12:25:09PM +0100, Lars M=F6llendorf wrote:
+
+> this mail is copied from internal issue written in markdown - I hope
+> this is still readable as mail.
+
+Not really frankly.  I *think* you are saying that paging doesn't work
+due to relying on having register read and write operations?
+
+> My assumption is that paging is not a common use case for Memory-mapped
+> I/O and thus has not been implemented for this case.
+
+> - Are my assumptions correct?
+> - If so, what would you recommend me to do:
+>   - Continue using `regmap-mmio` and implement my custom paging
+> functions on top of that?
+
+This will obviously work.
+
+>   - Enhance the current `regmap-mmio` implementation so it does paging
+> and submit a patch?
+
+That's not really possible since MMIO never writes the register address
+to the bus.
+
+>   - Write my own `better-regmap-mmio` implementation?
+
+It's not clear what that would mean.
+
+You could also look into making the paging code not rely on explicit
+register read and write operations.
+
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5fmQYACgkQJNaLcl1U
+h9D3yQf/UKX+tbsv4ndgOEtwq4K+LBy2wvNpprCJ4eStbWILTnSqxHW4Va0aJG/6
+z4w2M11jzUjyrqXa3dDKTTFjeRo/n27XmGhu2x1IQJq+kMHKMRywIrhEPMcfljeX
+cZX/J0GmELaRISFqzAKuSZ7v7ct2wdpdjRTJQQb1D9pvxUlE+SlCQTyHRY64T8JC
+BQW12Dg7YasFxRcpp3+Le0Er6ez7GYslXKGNdR9JEMQnI+e6KBXpI2s9pql+p7eA
+EnAejaDidYxptqlsw94VOAa50VtXd0/oGxkOcXuZLQu5fbWb3qwHQgNOVy+D3vYZ
+zBjvE6GPIxSUwNZ577VOAdHu3ni7GA==
+=91IF
+-----END PGP SIGNATURE-----
+
+--XsQoSWH+UP9D9v3l--
