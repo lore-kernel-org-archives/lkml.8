@@ -8,60 +8,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85139C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:50:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 777C0C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:50:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCFC20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:50:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46A6B206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:50:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uM6cMGzr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zgrfj9HW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387430AbgCDAuH (ORCPT
+        id S2387444AbgCDAuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:50:07 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37833 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728183AbgCDAuG (ORCPT
+        Tue, 3 Mar 2020 19:50:32 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41043 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727958AbgCDAub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:50:06 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b8so209001plx.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:50:05 -0800 (PST)
+        Tue, 3 Mar 2020 19:50:31 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b1so128414pgm.8;
+        Tue, 03 Mar 2020 16:50:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=swFmjqT0Y56MB/TOvfNBHX4apZk62pGEUutP8ASnJ/M=;
-        b=uM6cMGzrfOwQsHIcvLUkxA8pQDog4rx8wGssXKC0F/0lgoTQLBAstM+Ts6JYs1Cxlo
-         gWQeVAnxrJkWPseuB94YJBkJ/sgl4UbfiwRSjIjKrITHRezRrXgP7MhiNCbEtU3IEYbw
-         K/T1txQeNidnJ2DgLjOsPSz/eXZZMQhvYzNZHz9TImTRdGs0dgvF2V2twV9CMA7TtUbC
-         bc5sxck8d5I7ijiw6F9bTNbNf919RP1duE5IFoLP5nMrH0Q5m/CcfyiXNLJFLKqmmSbi
-         BStL8bwR43ypHCVqHcPKtBS0aK3EW8isTIsOLcygsqKDaJdrHsNevYNkaWyafyDZF79f
-         cXAA==
+        bh=4i5Gs/Sv4Lt/cK2/XelvZbksB2WGpOmI+ebmeTuAw3k=;
+        b=Zgrfj9HWQDfYBP/g4bKX+LsQ/AYbxX7PBhz1sV1WAm+fX9wrOTRaClFlFuHNpRQE9M
+         RHgEz3DVUW05rnuAbH/88rV/PCAxRA+fbytqMHG2cOTX3kqCb5i0KhP4cQxAEHBC2TA1
+         ZZoGCbwi5G2dVeLji7lSQdjUkgpHw59IyHWWShK9xkIW3xyk7fXRu9b/Aq230l4+Klb2
+         YJ0RJ8QNevuwjQLfwHOiGm52WcJSaVqUOEZuxFjC5o89D7SVibB64t1dYH/FktVanrNE
+         pZduxRXVKD+y/rxHsPdEJ3fHazausM0elvIlmwiUN7xkgUkEPuYlL2fqU/Io9itENrXA
+         J4Tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=swFmjqT0Y56MB/TOvfNBHX4apZk62pGEUutP8ASnJ/M=;
-        b=pnfONvG5prrtcA+nrP69bV+4SfsulcGTXqVjQDwjYdgp43ZbSlBecoMc2nBA1OMmgq
-         efArpTDG+wEtw/CZLvOAOLRtCBAFN6eiZm4dDWTCbt4/K5sxQbRNPzUAKAbNk2i1HcHa
-         bCRm6Q50fzNwH3xwGC+93reqcUV5qDMOPWH3PaVy9PMmLbquD6VMrOouxkfaPjXsTz2X
-         DvHt64uzC0TZ47piWm22r8Me+Is0HhFDyjdU8jlOD1jSGDYSuI0xerDLI0wcxEUbBFBj
-         TtORlRaj+5J8HrAfCNjIVFPvd8xz0vtA7uhcnZlv1KqWopukoQfmcedVixppyvMwCwDE
-         rLYQ==
-X-Gm-Message-State: ANhLgQ26A1R4F2XOrOn3BQbTQIPrvVAgmu3h/qhS8V40Sgj3+D0xb3Fl
-        ailnCAKbyMTTnKhE9mGifF9BfaAc
-X-Google-Smtp-Source: ADFU+vsdgQ49d62NMFlFkwvqhLXSb+Da+GFUYBlf9OhKflUb54ou/xhiWVxlgjbIBluXQDp+LEnPDA==
-X-Received: by 2002:a17:902:b904:: with SMTP id bf4mr549216plb.151.1583283004702;
-        Tue, 03 Mar 2020 16:50:04 -0800 (PST)
+        bh=4i5Gs/Sv4Lt/cK2/XelvZbksB2WGpOmI+ebmeTuAw3k=;
+        b=iVL2bLLw04H/rl52Ci51GNQ04MZR3Et6W/TqzZHCsYgG8hbACR6aQTR8nSWK3EPVrx
+         fEHtNaJcespl7PoHXLW75HCpQW3szfaKZ4hGXL5c8/m19+9krT4XD1czrFJGZdoHJ1y/
+         cJ37Ugwrbw+VW86PzCPqqnMYHzaQgy6p2CRyrN/Nmz0EDwLDEX2xaQVNB9nddIE3E78g
+         53aHCuM6rYRpSHZgWw6dwomS5AU2sxqLTSeoSrdoQZC+m93+xincEYC+5GCxJIFxiAFo
+         ZRR0xyr9jzhQZuvLq52NufPCGGNoWfuMS6w9d5wa3M4XlRpgWT0Myl7AUy661T3EBg67
+         GX0g==
+X-Gm-Message-State: ANhLgQ2FKFhy+wucFg0IM1CSfdbk37bjjf5kdYRQSb2lHo6hZi2EZVb9
+        SwhuFL8GSr9ggIBUUfpuQH+I3q9v
+X-Google-Smtp-Source: ADFU+vto7qeGWxTXYn+Nw8Dl/kD7gogfFj7/Si3GbeJXMDT8c5Kn0G0k6Yd1nqEBHaUMWyVCAjOkYA==
+X-Received: by 2002:a63:cf14:: with SMTP id j20mr130606pgg.67.1583283030448;
+        Tue, 03 Mar 2020 16:50:30 -0800 (PST)
 Received: from localhost.localdomain ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id p7sm13972637pfb.135.2020.03.03.16.50.03
+        by smtp.gmail.com with ESMTPSA id d186sm7555662pfc.8.2020.03.03.16.50.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 16:50:04 -0800 (PST)
+        Tue, 03 Mar 2020 16:50:29 -0800 (PST)
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-kernel@vger.kernel.org
+To:     linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Michal Simek <monstr@monstr.eu>
-Subject: [PATCH v3] microblaze: Replace setup_irq() by request_irq()
-Date:   Wed,  4 Mar 2020 06:19:59 +0530
-Message-Id: <20200304005000.5067-1-afzal.mohd.ma@gmail.com>
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>
+Subject: [PATCH v3] parisc: Replace setup_irq() by request_irq()
+Date:   Wed,  4 Mar 2020 06:20:24 +0530
+Message-Id: <20200304005025.5179-1-afzal.mohd.ma@gmail.com>
 X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,7 +81,7 @@ Hence replace setup_irq() by request_irq().
 
 Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 ---
-Hi microblaze maintainers,
+Hi parisc maintainers,
 
 if okay w/ this change, please consider taking it thr' your tree, else please
 let me know.
@@ -104,37 +105,80 @@ v2:
            pr_err("%s: request_irq() failed"
  * Commit message massage
 
- arch/microblaze/kernel/timer.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ arch/parisc/kernel/irq.c | 22 ++++++----------------
+ drivers/parisc/eisa.c    |  8 ++------
+ 2 files changed, 8 insertions(+), 22 deletions(-)
 
-diff --git a/arch/microblaze/kernel/timer.c b/arch/microblaze/kernel/timer.c
-index a6683484b3a1..f8832cf49384 100644
---- a/arch/microblaze/kernel/timer.c
-+++ b/arch/microblaze/kernel/timer.c
-@@ -161,13 +161,6 @@ static irqreturn_t timer_interrupt(int irq, void *dev_id)
+diff --git a/arch/parisc/kernel/irq.c b/arch/parisc/kernel/irq.c
+index e5fcfb70cc7c..e76c86619949 100644
+--- a/arch/parisc/kernel/irq.c
++++ b/arch/parisc/kernel/irq.c
+@@ -560,33 +560,23 @@ void do_cpu_irq_mask(struct pt_regs *regs)
+ 	goto out;
+ }
+ 
+-static struct irqaction timer_action = {
+-	.handler = timer_interrupt,
+-	.name = "timer",
+-	.flags = IRQF_TIMER | IRQF_PERCPU | IRQF_IRQPOLL,
+-};
+-
+-#ifdef CONFIG_SMP
+-static struct irqaction ipi_action = {
+-	.handler = ipi_interrupt,
+-	.name = "IPI",
+-	.flags = IRQF_PERCPU,
+-};
+-#endif
+-
+ static void claim_cpu_irqs(void)
+ {
++	unsigned long flags = IRQF_TIMER | IRQF_PERCPU | IRQF_IRQPOLL;
+ 	int i;
++
+ 	for (i = CPU_IRQ_BASE; i <= CPU_IRQ_MAX; i++) {
+ 		irq_set_chip_and_handler(i, &cpu_interrupt_type,
+ 					 handle_percpu_irq);
+ 	}
+ 
+ 	irq_set_handler(TIMER_IRQ, handle_percpu_irq);
+-	setup_irq(TIMER_IRQ, &timer_action);
++	if (request_irq(TIMER_IRQ, timer_interrupt, flags, "timer", NULL))
++		pr_err("Failed to register timer interrupt\n");
+ #ifdef CONFIG_SMP
+ 	irq_set_handler(IPI_IRQ, handle_percpu_irq);
+-	setup_irq(IPI_IRQ, &ipi_action);
++	if (request_irq(IPI_IRQ, ipi_interrupt, IRQF_PERCPU, "IPI", NULL))
++		pr_err("Failed to register IPI interrupt\n");
+ #endif
+ }
+ 
+diff --git a/drivers/parisc/eisa.c b/drivers/parisc/eisa.c
+index 9d00a24277aa..f96e5eaee87e 100644
+--- a/drivers/parisc/eisa.c
++++ b/drivers/parisc/eisa.c
+@@ -243,11 +243,6 @@ static irqreturn_t dummy_irq2_handler(int _, void *dev)
  	return IRQ_HANDLED;
  }
  
--static struct irqaction timer_irqaction = {
--	.handler = timer_interrupt,
--	.flags = IRQF_TIMER,
--	.name = "timer",
--	.dev_id = &clockevent_xilinx_timer,
+-static struct irqaction irq2_action = {
+-	.handler = dummy_irq2_handler,
+-	.name = "cascade",
 -};
 -
- static __init int xilinx_clockevent_init(void)
+ static void init_eisa_pic(void)
  {
- 	clockevent_xilinx_timer.mult =
-@@ -309,7 +302,8 @@ static int __init xilinx_timer_init(struct device_node *timer)
+ 	unsigned long flags;
+@@ -335,7 +330,8 @@ static int __init eisa_probe(struct parisc_device *dev)
+ 	}
  
- 	freq_div_hz = timer_clock_freq / HZ;
- 
--	ret = setup_irq(irq, &timer_irqaction);
-+	ret = request_irq(irq, timer_interrupt, IRQF_TIMER, "timer",
-+			  &clockevent_xilinx_timer);
- 	if (ret) {
- 		pr_err("Failed to setup IRQ");
- 		return ret;
+ 	/* Reserve IRQ2 */
+-	setup_irq(2, &irq2_action);
++	if (request_irq(2, dummy_irq2_handler, 0, "cascade", NULL))
++		pr_err("Failed to request irq 2 (cascade)\n");
+ 	for (i = 0; i < 16; i++) {
+ 		irq_set_chip_and_handler(i, &eisa_interrupt_type,
+ 					 handle_simple_irq);
 -- 
 2.25.1
 
