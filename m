@@ -2,123 +2,157 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F2FC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492B3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BECB02166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21B8A2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:50:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="clD1xlCu"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="OD+9dxjA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730022AbgCDTsI (ORCPT
+        id S2387869AbgCDTuN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:48:08 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:25473 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729093AbgCDTsH (ORCPT
+        Wed, 4 Mar 2020 14:50:13 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:27738 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728946AbgCDTuM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:48:07 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583351286; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=fq51DeGJ3Z3tN3afJtV3Ja5oRakP0D/eaYT2hqFUj/k=; b=clD1xlCumUIDvaV4RIgG+4/Kbyq3tYXa1BZKb1kTBLRm7K9eEhwT8pyDlXYMucYms8P2o0nf
- qoWH8H3UETeej39V1OXfCKBUIVZOoL6IYcjd5rmTMCltHQburF+UWJVokzrQtqRo72DzILVq
- HZlmUFDGX17YJCNXcDkgO/T3470=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6005eb.7f08f190b148-smtp-out-n01;
- Wed, 04 Mar 2020 19:47:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D36EFC447A2; Wed,  4 Mar 2020 19:47:55 +0000 (UTC)
-Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E622FC4479D;
-        Wed,  4 Mar 2020 19:47:51 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E622FC4479D
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     bjorn.andersson@linaro.org, mathieu.poirier@linaro.org,
-        jeffrey.l.hugo@gmail.com, luca@z3ntu.xyz
-Cc:     agross@kernel.org, ohad@wizery.com, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>, stable@vger.kernel.org
-Subject: [PATCH v4 3/3] remoteproc: qcom_q6v5_mss: Reload the mba region on coredump
-Date:   Thu,  5 Mar 2020 01:17:29 +0530
-Message-Id: <20200304194729.27979-4-sibis@codeaurora.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200304194729.27979-1-sibis@codeaurora.org>
-References: <20200304194729.27979-1-sibis@codeaurora.org>
+        Wed, 4 Mar 2020 14:50:12 -0500
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024Jk8K9024747
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 11:50:11 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=zBd+5qaL3qCpMGDjmFLdwfve7IIb8GrWrTDOOZQAm1o=;
+ b=OD+9dxjAszOVJAKEAHqFl5ws+jBOYe2g195UCbw2bPSpTkzs6EmmQISeR1R92rT5YRyl
+ LRU03bd53091itcJ1s3NTjuQSG/NaPN4CTZw4jlxmzmE5U3id0y5CDdLuBo+KCCpYWvM
+ IfvBE0k8ksQXOUa4dQibIPrH1PuDyABTm/o= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2yjggj0u82-9
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:50:11 -0800
+Received: from intmgw001.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 4 Mar 2020 11:50:07 -0800
+Received: by devvm4439.prn2.facebook.com (Postfix, from userid 111017)
+        id 1C713FEBAC0A; Wed,  4 Mar 2020 11:50:03 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm4439.prn2.facebook.com
+To:     Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>
+CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel-team@fb.com>, Rik van Riel <riel@surriel.com>,
+        Roman Gushchin <guro@fb.com>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH] btrfs: implement migratepage callback
+Date:   Wed, 4 Mar 2020 11:50:02 -0800
+Message-ID: <20200304195002.3854765-1-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_08:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 phishscore=0
+ impostorscore=0 adultscore=0 spamscore=0 suspectscore=0 clxscore=1015
+ bulkscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=756
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040129
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On secure devices after a wdog/fatal interrupt, the mba region has to be
-refreshed in order to prevent the following errors during mba load.
+Currently btrfs doesn't provide a migratepage callback. It means that
+fallback_migrate_page()	is used to migrate btrfs pages.
 
-Err Logs:
-remoteproc remoteproc2: stopped remote processor 4080000.remoteproc
-qcom-q6v5-mss 4080000.remoteproc: PBL returned unexpected status -284031232
-qcom-q6v5-mss 4080000.remoteproc: PBL returned unexpected status -284031232
-....
-qcom-q6v5-mss 4080000.remoteproc: PBL returned unexpected status -284031232
-qcom-q6v5-mss 4080000.remoteproc: MBA booted, loading mpss
+fallback_migrate_page() cannot move dirty pages, instead it tries to
+flush them (in sync mode) or just fails (in async mode).
 
-Fixes: 7dd8ade24dc2a ("remoteproc: qcom: q6v5-mss: Add custom dump function for modem")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+In the sync mode pages which are scheduled to be processed by
+btrfs_writepage_fixup_worker() can't be effectively flushed by the
+migration code, because there is no established way to wait for the
+completion of the delayed work.
+
+It all leads to page migration failures.
+
+To fix it the patch implements a btrs-specific migratepage callback,
+which is similar to iomap_migrate_page() used by some other fs, except
+it does take care of the PagePrivate2 flag which is used for data
+ordering purposes.
+
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Reviewed-by: Chris Mason <clm@fb.com>
 ---
- drivers/remoteproc/qcom_q6v5_mss.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ fs/btrfs/inode.c | 33 +++++++++++++++++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index b8a922181de8a..d7667418a62f4 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -1042,6 +1042,23 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
- 	}
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 7735ce6127c3..f23230b3cbda 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -28,6 +28,7 @@
+ #include <linux/magic.h>
+ #include <linux/iversion.h>
+ #include <linux/swap.h>
++#include <linux/migrate.h>
+ #include <linux/sched/mm.h>
+ #include <asm/unaligned.h>
+ #include "misc.h"
+@@ -8323,6 +8324,37 @@ static int btrfs_releasepage(struct page *page, gfp_t gfp_flags)
+ 	return __btrfs_releasepage(page, gfp_flags);
  }
  
-+static int q6v5_reload_mba(struct rproc *rproc)
++static int btrfs_migratepage(struct address_space *mapping,
++			     struct page *newpage, struct page *page,
++			     enum migrate_mode mode)
 +{
-+	struct q6v5 *qproc = rproc->priv;
-+	const struct firmware *fw;
 +	int ret;
 +
-+	ret = request_firmware(&fw, rproc->firmware, qproc->dev);
-+	if (ret < 0)
++	ret = migrate_page_move_mapping(mapping, newpage, page, 0);
++	if (ret != MIGRATEPAGE_SUCCESS)
 +		return ret;
 +
-+	q6v5_load(rproc, fw);
-+	ret = q6v5_mba_load(qproc);
-+	release_firmware(fw);
++	if (page_has_private(page)) {
++		ClearPagePrivate(page);
++		get_page(newpage);
++		set_page_private(newpage, page_private(page));
++		set_page_private(page, 0);
++		put_page(page);
++		SetPagePrivate(newpage);
++	}
 +
-+	return ret;
++	if (PagePrivate2(page)) {
++		ClearPagePrivate2(page);
++		SetPagePrivate2(newpage);
++	}
++
++	if (mode != MIGRATE_SYNC_NO_COPY)
++		migrate_page_copy(newpage, page);
++	else
++		migrate_page_states(newpage, page);
++	return MIGRATEPAGE_SUCCESS;
 +}
 +
- static int q6v5_mpss_load(struct q6v5 *qproc)
+ static void btrfs_invalidatepage(struct page *page, unsigned int offset,
+ 				 unsigned int length)
  {
- 	const struct elf32_phdr *phdrs;
-@@ -1221,7 +1238,7 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
- 
- 	/* Unlock mba before copying segments */
- 	if (!qproc->dump_mba_loaded) {
--		ret = q6v5_mba_load(qproc);
-+		ret = q6v5_reload_mba(rproc);
- 		if (!ret) {
- 			/* Reset ownership back to Linux to copy segments */
- 			ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+@@ -10525,6 +10557,7 @@ static const struct address_space_operations btrfs_aops = {
+ 	.direct_IO	= btrfs_direct_IO,
+ 	.invalidatepage = btrfs_invalidatepage,
+ 	.releasepage	= btrfs_releasepage,
++	.migratepage	= btrfs_migratepage,
+ 	.set_page_dirty	= btrfs_set_page_dirty,
+ 	.error_remove_page = generic_error_remove_page,
+ 	.swap_activate	= btrfs_swap_activate,
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.24.1
+
