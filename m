@@ -2,37 +2,36 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA9DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B02A9C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4300C21739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 896A92166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:06:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388028AbgCDLCm (ORCPT
+        id S2387838AbgCDLGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:02:42 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44526 "EHLO
+        Wed, 4 Mar 2020 06:06:09 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:51309 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbgCDLCm (ORCPT
+        with ESMTP id S1729232AbgCDLGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:02:42 -0500
+        Wed, 4 Mar 2020 06:06:09 -0500
 Received: from 79.184.237.41.ipv4.supernova.orange.pl (79.184.237.41) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 9e78e012dbbd93a1; Wed, 4 Mar 2020 12:02:39 +0100
+ id 23ba990a84e430d4; Wed, 4 Mar 2020 12:06:06 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Zhang Rui <rui.zhang@intel.com>, Len Brown <lenb@kernel.org>,
-        linux-acpi@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ACPI: video: remove redundant assignments to variable result
-Date:   Wed, 04 Mar 2020 12:02:39 +0100
-Message-ID: <1811882.qudN6vFfLL@kreacher>
-In-Reply-To: <20200229001243.113176-1-colin.king@canonical.com>
-References: <20200229001243.113176-1-colin.king@canonical.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powercap: idle_inject: Replace zero-length array with flexible-array member
+Date:   Wed, 04 Mar 2020 12:06:06 +0100
+Message-ID: <2823796.V19jU70VZq@kreacher>
+In-Reply-To: <20200227190721.GA19083@embeddedor>
+References: <20200227190721.GA19083@embeddedor>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -41,32 +40,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Saturday, February 29, 2020 1:12:43 AM CET Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Thursday, February 27, 2020 8:07:21 PM CET Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> The variable result is being initialized with a value that is never
-> read and it is being updated later with a new value. The initialization
-> is redundant and can be removed.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> Lastly, fix the following checkpatch warning:
+> WARNING: Prefer 'unsigned long' over 'unsigned long int' as the int is unnecessary
+> +	unsigned long int cpumask[];
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  drivers/acpi/acpi_video.c | 2 +-
+>  drivers/powercap/idle_inject.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/acpi/acpi_video.c b/drivers/acpi/acpi_video.c
-> index 15c5b272e698..bc96457c9e25 100644
-> --- a/drivers/acpi/acpi_video.c
-> +++ b/drivers/acpi/acpi_video.c
-> @@ -943,7 +943,7 @@ acpi_video_init_brightness(struct acpi_video_device *device)
->  	int i, max_level = 0;
->  	unsigned long long level, level_old;
->  	struct acpi_video_device_brightness *br = NULL;
-> -	int result = -EINVAL;
-> +	int result;
+> diff --git a/drivers/powercap/idle_inject.c b/drivers/powercap/idle_inject.c
+> index cd1270614cc6..e9bbd3c42eef 100644
+> --- a/drivers/powercap/idle_inject.c
+> +++ b/drivers/powercap/idle_inject.c
+> @@ -67,7 +67,7 @@ struct idle_inject_device {
+>  	struct hrtimer timer;
+>  	unsigned int idle_duration_us;
+>  	unsigned int run_duration_us;
+> -	unsigned long int cpumask[0];
+> +	unsigned long cpumask[];
+>  };
 >  
->  	result = acpi_video_get_levels(device->dev, &br, &max_level);
->  	if (result)
+>  static DEFINE_PER_CPU(struct idle_inject_thread, idle_inject_thread);
 > 
 
 Applied as 5.7 material, thanks!
