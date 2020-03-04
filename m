@@ -2,118 +2,77 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B18C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4392AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9110421775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:16:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YZD6jmP1"
+	by mail.kernel.org (Postfix) with ESMTP id 1318222B48
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583342239;
+	bh=9SOwh6tiXke4ADGABVHNeMcWR2SB1NZku+zHX5kktoY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nJXSYSk9+q5DQg9C9dfAS9awD2fyAbq+uKw2qnjLL2NkE2xjW2g8WaCHoLMECbZFL
+	 x88pgOj0W5B+GA/GeKPIqcH+a8OHoHt6f26PSzT1BYJLn5JaFpJOp/hSSYZh24XrFM
+	 A+NmTimhZPcYp0r5Ke1RpHiPnlNLgBNFj0XeeT9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729717AbgCDRQi (ORCPT
+        id S1729811AbgCDRRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:16:38 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:34091 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgCDRQi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:16:38 -0500
-Received: by mail-yw1-f67.google.com with SMTP id o186so2737424ywc.1;
-        Wed, 04 Mar 2020 09:16:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=W/o003p8WXvnjiWGobVFEZFkKelwiiKhzUSVE4Qihp8=;
-        b=YZD6jmP1mcXevlhVHAZGcZeMk47KHCDFNnzSmV0HKAPXBxo95ooTwwHUbUqtdNMn84
-         uUN3AdohPaqDZ50XTvQG1xwH33nbFl41OIhukRBvb2vtj/g7taNuuJJ06n4IPVOjVPSA
-         ivwPiji783YHt43uzNxHGQcK63tB+yH0r+RTWnSFRLgD3+WQUqQ04t4Zkp+9pwGiF0Uo
-         Cz0ZOQey2vGJKm/Ps0MyJI62QXSVtmrsXRAVtxj25DqWxP/aBBL3xYa5B0wVyrZZmfHX
-         U1HZYgh3pV6rhj5wbILN81H+UOdHLRwWMDaqxBWbaGzOAANy8j7DelhuC9XKAqw531JV
-         nLYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=W/o003p8WXvnjiWGobVFEZFkKelwiiKhzUSVE4Qihp8=;
-        b=lqXI9kcrHrix+Yi6K38qG7kq62PbqJIDmQXWStcjOlqBjmJ4bAmQagQ47THO9JyyE8
-         ql9Ofo9nB6Nf/k/9q73GRzCVRZCYtlx5VvGLz5gUWY1ZhyteoBfRGqmnHibuu9Crf8bC
-         7FXyEAo3dQbRinFRdYRhwejhCwfq7Zdfozn8vhnHdjkoOB0EUYWAutUYkKvuRp6hiKtO
-         8PCB8ub6nu1Nfqej0ziBk7ICEunZyCC5qfBWyMY1oMWD8ZptmSvU6TS0HVw+oTiIypWL
-         J+WvXBd3hjBfk9zFQjn/mPgAw8wNclYrvnWQb6+d78wInrHB0Z2ptndpRN51cGC0nJY7
-         PS0Q==
-X-Gm-Message-State: ANhLgQ0cPV2YBzs2kRlNiE7NbL44Ie5agSMoJ5ny+WfQGVjRkimlqjPQ
-        90G72wBNiJu2M6tcoODOx84jgcaS3y9ncyrdBlmOf38V
-X-Google-Smtp-Source: ADFU+vsDVFGBAkDsN5BwUeeh+RI+ZTpKyLpaIgm7R6QskwE95WhLHvyLnvFXBpeTefSdusSZePHUGQPcSjNa1P/X16k=
-X-Received: by 2002:a81:f10a:: with SMTP id h10mr3734463ywm.109.1583342196085;
- Wed, 04 Mar 2020 09:16:36 -0800 (PST)
+        Wed, 4 Mar 2020 12:17:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbgCDRRS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 12:17:18 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34E9121775;
+        Wed,  4 Mar 2020 17:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583342237;
+        bh=9SOwh6tiXke4ADGABVHNeMcWR2SB1NZku+zHX5kktoY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sINCAxI9TCk0yNSFmOWYAZrCSU61w759KFN+oLnuvWTIDLSx6s36vY1zMl2luMWHU
+         n8JTP+7Dzu+ufOIbWj8k7r5dhAd5HcQk/vsGAKfWoj5AOZ19BRq0tnl/Gx560HLvd+
+         jvql+5Bc+3ZIckpEKSZBqBaAIXkpgdt3f8gS7oog=
+Date:   Wed, 4 Mar 2020 18:17:15 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Scott Wood <swood@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 05/87] sched/core: Dont skip remote tick for idle
+ CPUs
+Message-ID: <20200304171715.GB1852712@kroah.com>
+References: <20200303174349.075101355@linuxfoundation.org>
+ <20200303174349.478213998@linuxfoundation.org>
+ <20200304151559.GB2367@duo.ucw.cz>
 MIME-Version: 1.0
-References: <1583307771-16365-1-git-send-email-hqjagain@gmail.com>
-In-Reply-To: <1583307771-16365-1-git-send-email-hqjagain@gmail.com>
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 4 Mar 2020 11:16:25 -0600
-Message-ID: <CAH2r5mshu2YmrUFcO2Swb2512fRV0V7wU=y27TJr2PEQBU5puw@mail.gmail.com>
-Subject: Re: [PATCH] fs/cifs: fix gcc warning in sid_to_id
-To:     Qiujun Huang <hqjagain@gmail.com>
-Cc:     Steve French <sfrench@samba.org>,
-        CIFS <linux-cifs@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304151559.GB2367@duo.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-merged into cifs-2.6.git for-next
+On Wed, Mar 04, 2020 at 04:15:59PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > [ Upstream commit 488603b815a7514c7009e6fc339d74ed4a30f343 ]
+> > 
+> > This will be used in the next patch to get a loadavg update from
+> > nohz cpus.  The delta check is skipped because idle_sched_class
+> > doesn't update se.exec_start.
+> 
+> I don't see the next patch queued for 4.19-stable. AFAICT this does
+> not fix anything without the subsequent patch?
 
-On Wed, Mar 4, 2020 at 1:42 AM Qiujun Huang <hqjagain@gmail.com> wrote:
->
-> fix warning [-Wunused-but-set-variable] at variable 'rc',
-> keeping the code readable.
->
-> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
-> ---
->  fs/cifs/cifsacl.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/cifs/cifsacl.c b/fs/cifs/cifsacl.c
-> index 716574a..ae42163 100644
-> --- a/fs/cifs/cifsacl.c
-> +++ b/fs/cifs/cifsacl.c
-> @@ -342,7 +342,7 @@
->  sid_to_id(struct cifs_sb_info *cifs_sb, struct cifs_sid *psid,
->                 struct cifs_fattr *fattr, uint sidtype)
->  {
-> -       int rc;
-> +       int rc = 0;
->         struct key *sidkey;
->         char *sidstr;
->         const struct cred *saved_cred;
-> @@ -450,11 +450,12 @@
->          * fails then we just fall back to using the mnt_uid/mnt_gid.
->          */
->  got_valid_id:
-> +       rc = 0;
->         if (sidtype == SIDOWNER)
->                 fattr->cf_uid = fuid;
->         else
->                 fattr->cf_gid = fgid;
-> -       return 0;
-> +       return rc;
->  }
->
->  int
-> --
-> 1.8.3.1
->
+Ah, good catch, that patch only made it into 5.4.y and 5.5.y, I'll drop
+this from the 4.19 queue, thanks.
 
-
--- 
-Thanks,
-
-Steve
+greg k-h
