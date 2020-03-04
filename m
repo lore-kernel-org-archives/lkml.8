@@ -2,67 +2,71 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 100BCC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2EDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45E02146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:01:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EEE20716
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WjHT4Fir"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4SVbPYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbgCDWB5 (ORCPT
+        id S2388512AbgCDWCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:01:57 -0500
-Received: from mail-wr1-f52.google.com ([209.85.221.52]:45374 "EHLO
-        mail-wr1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCDWB5 (ORCPT
+        Wed, 4 Mar 2020 17:02:03 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55887 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388483AbgCDWCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:01:57 -0500
-Received: by mail-wr1-f52.google.com with SMTP id v2so4422266wrp.12;
-        Wed, 04 Mar 2020 14:01:55 -0800 (PST)
+        Wed, 4 Mar 2020 17:02:01 -0500
+Received: by mail-wm1-f66.google.com with SMTP id 6so3981242wmi.5;
+        Wed, 04 Mar 2020 14:02:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=XQ99deIahy3PZQjVM3HXuQCtzcwKDNaywaomNehfdvk=;
-        b=WjHT4FirpV1djTsAAwtCP5mAtEBw6pqd+VN86m82Fd49t/GEFqw5843aRDKjB3gFhS
-         MzZ6qdl7rkvm+09NjzUa7PkRkVqm7P9VUPkwpVC6VvmtknGUFnOxLF3dLX2GLmMTyIUl
-         SkbCXBA+l4TK1DpqWI1pqG/BRlD8N9gq4xt/XXZ4ichScMpoiq91OLYh3cZXMQPrDtee
-         0E+Fd8XGiXgCVIl3OR9Z/hVXt6slLBskjgKBhlNm5nIG/RIAVa0EDKSZTmkxhMO5DwrV
-         p5TbOe2g27poeG9tTe4bm8pr3ooxAjCRdFcANNpkT4mpp0c3thSmQZlmsm1P9IG9uy7X
-         xapg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=7usjeEtnLelRZFqfBWE5WZWkvf+bS5tSXzwRcAo6Mj8=;
+        b=J4SVbPYSzmVam37DjyguQpOymuECa5BijnCH9xLTjm92LsrT3Bqp9T59mK4qpqEmpv
+         NFipA1l0LfQhwwWZO8TNynkv4OeU18HB4lAi5DtMesOGeTxc9anMMw2+4TqyaV19XCv+
+         lRAKsQDzrkSZUJQPTbn25mll9LiIU9vKUySc0T7UcBuIDeQ1BrJ6hlLNumuXbFyDSpfO
+         zlPKrAKhlVrZV4EuQIOvxvO+XiBU/wVv7kst3v6wO4tXsEGUYzC0SZPCQIgwWVpPQZon
+         Rz5IFpVnSlbWMpoRFrINm/AmQvLUzagy395sQvEQjMy3a9XJjPAysaIDbQhfg1lEaq3o
+         nz/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XQ99deIahy3PZQjVM3HXuQCtzcwKDNaywaomNehfdvk=;
-        b=dlOu9kpo60dtOGuZHuPaHvOscYh3GjD35n+KvLVQfxAYvCJwK3pP5IUVLUvt2hWDao
-         jfsUyfhaOAk0aWnkp7zxS/S8qQ4P4jVVdLD4Aq2luUPLvxXpM0JQaJU8TV+BzyzXdZum
-         tQPj1W/OrzwPTVEMyrx676goULYvke67ZU9Grhvq9cgO50cwZ2fxYpv8C4QV/arBmveh
-         cxqi8KZiASrBfcWlG2AT9wjpabdlWHCqeRnnDhMtwctWzzO/trhPI8VEvKIi1aDm0iB3
-         z9z7OM6LMJPioBE6kuOF5++EkwAhIXfGCKnRgoimGIxAFW7M5LPGtEAx+ZbnDjT7brby
-         ebrw==
-X-Gm-Message-State: ANhLgQ2KnXdJd5iIpO1TeS2mkyE9ZBzBp6VpITPyiVglPzNJLeaSWqw8
-        cVg/ruI9MTbExOGRYb2thXE=
-X-Google-Smtp-Source: ADFU+vtcKt4tc8nujavxcSjtd08cxMiRrXKihg4E1AZz8RytVfpxGUQ9z3VAvsDtvPWJQKpfOMnANw==
-X-Received: by 2002:a5d:6146:: with SMTP id y6mr6068304wrt.107.1583359314958;
-        Wed, 04 Mar 2020 14:01:54 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=7usjeEtnLelRZFqfBWE5WZWkvf+bS5tSXzwRcAo6Mj8=;
+        b=KRgkzD45FSBnOymw91q5C7n+/Y6RdX2Ii5HH4VrmKX+JCN/zMXDzt4Rj+dAbkcdAJb
+         ctliom3/pZ+iXHTpIjBrNrcDzCptAYYJNNoXJpT5+4b+6lCkyXxtgW+MK75uyK7Wt2yq
+         n0/UVB1xoAp9SOAEGHkHSCpFoeqlJq9y0p0ui5dL4d5X/WZpveK3A5l6oQctc4Cwm25Y
+         6vwe8w5vPvtTMM4Tnc9XqZCYhS6RYuQvQLnfsIetJNIypKpfJbQcRmbixl713EyOKspx
+         AQ3yuoBBSbvM7VLU8Z4uZTEDDWiUwiOVybz2UL9p7ZwrEycW//cQGkkMqE/OA5lp1pZH
+         IG5A==
+X-Gm-Message-State: ANhLgQ113RLmoCU3UviFpf9btiOa6RGZRuzi9Yg27CTA9b7qVjOyYu5A
+        cxTT5XAuytrBHxkz6nMWfAw=
+X-Google-Smtp-Source: ADFU+vs6REbQIkGOj+OTlmaB4siXuM1v/v23pW3AjDLVW6ldBzqWTtmjYTqUJXJ912bqGN/BwDSPng==
+X-Received: by 2002:a1c:4805:: with SMTP id v5mr5575917wma.80.1583359320233;
+        Wed, 04 Mar 2020 14:02:00 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id z2sm36776402wrq.95.2020.03.04.14.01.53
+        by smtp.gmail.com with ESMTPSA id z2sm36776402wrq.95.2020.03.04.14.01.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 14:01:54 -0800 (PST)
+        Wed, 04 Mar 2020 14:01:59 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         eha@deif.com, angelo@sysam.it, andrew.smirnov@gmail.com,
         gustavo@embeddedor.com, weic@nvidia.com, mhosny@nvidia.com
-Subject: [PATCH 00/12] TCFQ to XSPI migration for NXP DSPI driver
-Date:   Thu,  5 Mar 2020 00:00:32 +0200
-Message-Id: <20200304220044.11193-1-olteanv@gmail.com>
+Subject: [PATCH 05/12] spi: spi-fsl-dspi: Rename fifo_{read,write} and {tx,cmd}_fifo_write
+Date:   Thu,  5 Mar 2020 00:00:37 +0200
+Message-Id: <20200304220044.11193-6-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200304220044.11193-1-olteanv@gmail.com>
+References: <20200304220044.11193-1-olteanv@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -70,81 +74,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-This series aims to remove the most inefficient transfer method from the
-NXP DSPI driver.
+These function names are very generic and it is easy to get confused.
+Rename them after the hardware register that they are accessing.
 
-TCFQ (Transfer Complete Flag) mode works by transferring one word,
-waiting for its TX confirmation interrupt (or polling on the equivalent
-status bit), sending the next word, etc, until the buffer is complete.
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+ drivers/spi/spi-fsl-dspi.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-The issue with this mode is that it's fundamentally incompatible with
-any sort of batching such as writing to a FIFO. But actually, due to
-previous patchset ("Compatible string consolidation for NXP DSPI driver"):
-
-https://patchwork.kernel.org/cover/11414593/
-
-all existing users of TCFQ mode today already support a more advanced
-feature set, in the form of XSPI (extended SPI). XSPI brings 2 extra
-features:
-
-- Word sizes up to 32 bits. This is sub-utilized today, and acceleration
-  of smaller-than-32 bpw values is provided.
-- "Command cycling", basically the ability to write multiple words in a
-  row and receiving an interrupt only after the completion of the last
-  one. This is what enables us to make use of the full FIFO depth of
-  this controller.
-
-Series was tested on the NXP LS1021A-TSN and LS1043A-RDB boards, both
-functionally as well as from a performance standpoint.
-
-The command used to benchmark the increased throughput was:
-
-spidev_test --device /dev/spidev1.0 --bpw 8 --size 256 --cpha --iter 10000000 --speed 20000000
-
-where spidev1.0 is a dummy spidev node, using a chip select that no
-peripheral responds to.
-
-On LS1021A, which has a 4-entry-deep FIFO and a less powerful CPU, the
-performance increase brought by this patchset is from 2700 kbps to 5800
-kbps.
-
-On LS1043A, which has a 16-entry-deep FIFO and a more powerful CPU, the
-performance increases from 4100 kbps to 13700 kbps.
-
-On average, SPI software timestamping is not adversely affected by the
-extra batching, due to the extra patches.
-
-There is one extra patch which clarifies why the TCFQ users were not
-converted to the "other" mode in this driver that makes use of the FIFO,
-which would be EOQ mode.
-
-My request to the many people on CC (known users and/or contributors) is
-to give this series a test to ensure there are no regressions, and for
-the Coldfire maintainers to clarify whether the EOQ limitation is
-acceptable for them in the long run.
-
-Vladimir Oltean (12):
-  spi: spi-fsl-dspi: Simplify bytes_per_word gymnastics
-  spi: spi-fsl-dspi: Remove unused chip->void_write_data
-  spi: spi-fsl-dspi: Don't mask off undefined bits
-  spi: spi-fsl-dspi: Add comments around dspi_pop_tx and dspi_push_rx
-    functions
-  spi: spi-fsl-dspi: Rename fifo_{read,write} and {tx,cmd}_fifo_write
-  spi: spi-fsl-dspi: Implement .max_message_size method for EOQ mode
-  spi: Do spi_take_timestamp_pre for as many times as necessary
-  spi: spi-fsl-dspi: Convert TCFQ users to XSPI FIFO mode
-  spi: spi-fsl-dspi: Accelerate transfers using larger word size if
-    possible
-  spi: spi-fsl-dspi: Optimize dspi_setup_accel for lowest interrupt
-    count
-  spi: spi-fsl-dspi: Use EOQ for last word in buffer even for XSPI mode
-  spi: spi-fsl-dspi: Take software timestamp in dspi_fifo_write
-
- drivers/spi/spi-fsl-dspi.c | 421 ++++++++++++++++++++++++-------------
- drivers/spi/spi.c          |  19 +-
- include/linux/spi/spi.h    |   3 +-
- 3 files changed, 288 insertions(+), 155 deletions(-)
-
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index a8077d4903c7..f37090ad7ad1 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -601,12 +601,12 @@ static void ns_delay_scale(char *psc, char *sc, int delay_ns,
+ 	}
+ }
+ 
+-static void fifo_write(struct fsl_dspi *dspi)
++static void dspi_pushr_write(struct fsl_dspi *dspi)
+ {
+ 	regmap_write(dspi->regmap, SPI_PUSHR, dspi_pop_tx_pushr(dspi));
+ }
+ 
+-static void cmd_fifo_write(struct fsl_dspi *dspi)
++static void dspi_pushr_cmd_write(struct fsl_dspi *dspi)
+ {
+ 	u16 cmd = dspi->tx_cmd;
+ 
+@@ -615,7 +615,7 @@ static void cmd_fifo_write(struct fsl_dspi *dspi)
+ 	regmap_write(dspi->regmap_pushr, PUSHR_CMD, cmd);
+ }
+ 
+-static void tx_fifo_write(struct fsl_dspi *dspi, u16 txdata)
++static void dspi_pushr_txdata_write(struct fsl_dspi *dspi, u16 txdata)
+ {
+ 	regmap_write(dspi->regmap_pushr, PUSHR_TX, txdata);
+ }
+@@ -631,18 +631,18 @@ static void dspi_tcfq_write(struct fsl_dspi *dspi)
+ 		 */
+ 		u32 data = dspi_pop_tx(dspi);
+ 
+-		cmd_fifo_write(dspi);
+-		tx_fifo_write(dspi, data & 0xFFFF);
+-		tx_fifo_write(dspi, data >> 16);
++		dspi_pushr_cmd_write(dspi);
++		dspi_pushr_txdata_write(dspi, data & 0xFFFF);
++		dspi_pushr_txdata_write(dspi, data >> 16);
+ 	} else {
+ 		/* Write one entry to both TX FIFO and CMD FIFO
+ 		 * simultaneously.
+ 		 */
+-		fifo_write(dspi);
++		dspi_pushr_write(dspi);
+ 	}
+ }
+ 
+-static u32 fifo_read(struct fsl_dspi *dspi)
++static u32 dspi_popr_read(struct fsl_dspi *dspi)
+ {
+ 	u32 rxdata = 0;
+ 
+@@ -652,7 +652,7 @@ static u32 fifo_read(struct fsl_dspi *dspi)
+ 
+ static void dspi_tcfq_read(struct fsl_dspi *dspi)
+ {
+-	dspi_push_rx(dspi, fifo_read(dspi));
++	dspi_push_rx(dspi, dspi_popr_read(dspi));
+ }
+ 
+ static void dspi_eoq_write(struct fsl_dspi *dspi)
+@@ -670,7 +670,7 @@ static void dspi_eoq_write(struct fsl_dspi *dspi)
+ 		if (fifo_size == (dspi->devtype_data->fifo_size - 1))
+ 			dspi->tx_cmd |= SPI_PUSHR_CMD_CTCNT;
+ 		/* Write combined TX FIFO and CMD FIFO entry */
+-		fifo_write(dspi);
++		dspi_pushr_write(dspi);
+ 	}
+ }
+ 
+@@ -680,7 +680,7 @@ static void dspi_eoq_read(struct fsl_dspi *dspi)
+ 
+ 	/* Read one FIFO entry and push to rx buffer */
+ 	while ((dspi->rx < dspi->rx_end) && fifo_size--)
+-		dspi_push_rx(dspi, fifo_read(dspi));
++		dspi_push_rx(dspi, dspi_popr_read(dspi));
+ }
+ 
+ static int dspi_rxtx(struct fsl_dspi *dspi)
 -- 
 2.17.1
 
