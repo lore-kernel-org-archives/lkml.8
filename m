@@ -2,103 +2,101 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EB4C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BD0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:16:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5499720842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:15:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rpIeztq7"
+	by mail.kernel.org (Postfix) with ESMTP id 3FC5620842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:16:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388335AbgCDVP5 (ORCPT
+        id S2388358AbgCDVQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:15:57 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40522 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCDVP4 (ORCPT
+        Wed, 4 Mar 2020 16:16:09 -0500
+Received: from baldur.buserror.net ([165.227.176.147]:34298 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387762AbgCDVQI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:15:56 -0500
-Received: by mail-ed1-f67.google.com with SMTP id a13so4024447edu.7;
-        Wed, 04 Mar 2020 13:15:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Em+PlQiOtj4b65IT/F3S+R3l1hsqSkR2d5+J1YRJyRk=;
-        b=rpIeztq7F3sX6zjxbhir4885stPfdoyMPD7XM/MG+0p0rleBmGcxRh6hHqQHHWaGtK
-         +vy/wGjzwyzIopeZohV5yY6ak/lABt6v/tPrtnSUsJEKn4gqlRMQC1EJgoGv9p6dzIK3
-         rSe3QedbCh51qJ58HdVOjpWaDEtW20IDvW0Nok67XnkHTlbjJy+Bu89GRlWVGBcGolWS
-         l8oC/kj/6rBdc6f/KjxgtJCxojakt7mNhQIdiEsY9mVf0xA+BSYc4HP/3rkZut4QbjpX
-         jhCPCMkKNUiTHFZl7jn8GJuEbt04o02iJ3t9o7hofKRomGvtN/uL6aK/3MRPCHiAYlD9
-         z5YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Em+PlQiOtj4b65IT/F3S+R3l1hsqSkR2d5+J1YRJyRk=;
-        b=oI7S5BAd5QV+OboxbAwZEgK7eZgWYQi3goHqzaQmmEEaMpY2FlAluxcu2x7MTwDDMs
-         aZHs1ultT5T1BagkFvA5HRA5Q2/qBm6STAuSM8FACpxVwe922QBZHzEOfzZdQunKQrRW
-         JmP5TsrT4mUfk9dyb0Cgfxw5sn2/0CpD+oFfJUoCMhXHnT28/OYV9iDxsMUuJnRQZ0t6
-         BuEQVvA/kLAAV0h7rEcE4qWxou0eASvVEPe1JThS437ik/2UJE+iu7SsKNVYJHZdGH8s
-         jb3NKZdIzqQoLazZFmpq9wZvgv9kg3im280Oj12uwnHSZAsPR8cv0uIdri30ygWPfFko
-         h0/A==
-X-Gm-Message-State: ANhLgQ3mYNIfFz1D9QrruEIS88slvx7PU5GTphZ3fnzlkoHD7RdFPwJu
-        StgmHRVdFTILSudYqgfJwdU=
-X-Google-Smtp-Source: ADFU+vsskwQ2kRTF4Kq4c201RyQOGF1Y34XBafQH0inJlyarAtMkOuxBj2qs8K+F/666Z9EL7+gVUw==
-X-Received: by 2002:a05:6402:22e9:: with SMTP id dn9mr4702173edb.165.1583356554894;
-        Wed, 04 Mar 2020 13:15:54 -0800 (PST)
-Received: from felia ([2001:16b8:2d16:4100:5c62:5f:595c:f76d])
-        by smtp.gmail.com with ESMTPSA id r25sm610123edo.19.2020.03.04.13.15.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 13:15:54 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Wed, 4 Mar 2020 22:15:53 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     James Bottomley <jejb@linux.ibm.com>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust to trusted keys subsystem creation
-In-Reply-To: <1583338378.3284.7.camel@linux.ibm.com>
-Message-ID: <alpine.DEB.2.21.2003042214170.2698@felia>
-References: <20200304160359.16809-1-lukas.bulwahn@gmail.com> <1583338378.3284.7.camel@linux.ibm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 4 Mar 2020 16:16:08 -0500
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1j9bIq-0000R4-KO; Wed, 04 Mar 2020 15:11:40 -0600
+Message-ID: <b5854fd867982527c107138d52a61010079d2321.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Kees Cook <keescook@chromium.org>, Jason Yan <yanaijie@huawei.com>
+Cc:     pmladek@suse.com, rostedt@goodmis.org,
+        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Axtens <dja@axtens.net>
+Date:   Wed, 04 Mar 2020 15:11:39 -0600
+In-Reply-To: <202003041022.26AF0178@keescook>
+References: <20200304124707.22650-1-yanaijie@huawei.com>
+         <202003041022.26AF0178@keescook>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: keescook@chromium.org, yanaijie@huawei.com, pmladek@suse.com, rostedt@goodmis.org, sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org, tobin@kernel.org, torvalds@linux-foundation.org, dja@axtens.net
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On Wed, 4 Mar 2020, James Bottomley wrote:
-
-> On Wed, 2020-03-04 at 17:03 +0100, Lukas Bulwahn wrote:
-> > +F:	include/keys/trusted_tpm.h
-> > +F:	security/keys/trusted-keys/trusted_tpm1.c
+On Wed, 2020-03-04 at 10:34 -0800, Kees Cook wrote:
+> On Wed, Mar 04, 2020 at 08:47:07PM +0800, Jason Yan wrote:
+> > When I am implementing KASLR for powerpc, Scott Wood argued that format
+> > specifier "%p" always hashes the addresses that people do not have a
+> > choice to shut it down: https://patchwork.kernel.org/cover/11367547/
+> > 
+> > It's true that if in a debug environment or security is not concerned,
+> > such as KASLR is absent or kptr_restrict = 0,  there is no way to shut
+> > the hashing down except changing the code and build the kernel again
+> > to use a different format specifier like "%px". And when we want to
+> > turn to security environment, the format specifier has to be changed
+> > back and rebuild the kernel.
+> > 
+> > As KASLR is available on most popular platforms and enabled by default,
+> > print the raw value of address while KASLR is absent and kptr_restrict
+> > is zero. Those who concerns about security must have KASLR enabled or
+> > kptr_restrict set properly.
 > 
-> Everything under trusted-keys is part of the subsystem, so this should
-> be a glob not a single file.
+> Sorry, but no: %p censoring is there to stem the flood of endless pointer
+> leaks into logs, sysfs, proc, etc. These are used for attacks to build
+> reliable kernel memory targets, regardless of KASLR. (KASLR can be
+> bypassed with all kinds of sampling methods, side-channels, etc.)
 > 
+> Linus has rejected past suggestions to provide a flag for it[1],
+> wanting %p to stay unconditionally censored.
 
-Agree. I sent out a PATCH v2 for that:
+The frustration is with the inability to set a flag to say, "I'm debugging and
+don't care about leaks... in fact I'd like as much information as possible to
+leak to me."  Hashed addresses only allow comparison to other hashes which
+doesn't help when looking at (or trying to find) data structures in kernel
+memory, etc.  I get what Linus is saying about "you can't have nice things
+because people won't test the normal config" but it's still annoying. :-P
 
-https://lore.kernel.org/linux-integrity/20200304211254.5127-1-lukas.bulwahn@gmail.com/T/#u
+In any case, this came up now due to a question about what to use when
+printing crash dumps.  PowerPC currently prints stack and return addresses
+with %lx (in addition to %pS in the latter case) and someone proposed
+converting them to %p and/or removing them altogether.  Is there a consensus
+on whether crash dumps need to be sanitized of this stuff as well?  It seems
+like you'd have the addresses in the register dump as well (please don't take
+that away too...).  Maybe crash dumps would be a less problematic place to
+make the hashing conditional (i.e. less likely to break something in userspace
+that wasn't expecting a hash)?
 
-Please ignore this v1 here and pick v2.
+-Scott
 
-Thanks,
 
-Lukas
