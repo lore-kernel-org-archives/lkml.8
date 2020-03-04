@@ -2,114 +2,130 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB790C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B24C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 922792166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:04:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E1JN1GbG"
+	by mail.kernel.org (Postfix) with ESMTP id 4AF9921775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729852AbgCDQEP (ORCPT
+        id S1729871AbgCDQEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:04:15 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38096 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726275AbgCDQEO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:04:14 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t11so3062827wrw.5;
-        Wed, 04 Mar 2020 08:04:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=U/EkvVl7FAi6+YEFd5JxFzG6+4DfZZOGAx7Rl8CToMk=;
-        b=E1JN1GbGM8dgvnEHDscwegwpfaMaQ7uNI35EyIvMcMf2sw+8icQudqTE5OJkyH//m4
-         sxWXzYGXuxf17vSkNtS6vwLBXIQN1WthG6PDuKUeppzQI0CbXr+99sBifnfdr0DVC4Q3
-         8bE9hDL/ExIVkl9SoyKHBUo6CqfBn1IS0o5oFHlidXR2mK4ZKIEIz++HhIJhkna/UIl5
-         DllgjA+teBq5a1OTvkme+RyeCZYdxgzYOG1sQhCRvEyEsa7KcgBiJCTz1VksSuA5zDxf
-         cUOwDWP2NiFZOJdu+ynWXIQaT2sOkz1YxEo3zJlhg9h+2kDeAC6hwj0992FeW9pGF4hf
-         sp7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=U/EkvVl7FAi6+YEFd5JxFzG6+4DfZZOGAx7Rl8CToMk=;
-        b=QXAWdMWEjunXo0OTwno+wW0dkJLOuonfEvdyC3R6YTyBbZrlyS3Mk1rpKMP+UUJGcR
-         cb9URABGVluJ7ntxmbseWfXrZHZiM+UEKvKKgpy46e1rXTTu6ifVUuXX0GYb8FBSJevd
-         wYHhLgIOEX6Xf5pNSr2t/gZspCjZlasaRRGYfMG3Lh6daTK4t7j2a83bG9q5nWv0Khc0
-         WWyfMnibqMi/xIlqwW/hDKk1r8Ry0pF91bCNBglsriXvoq/y9OGlSO29FEXkTpDS8fhr
-         znnqEhsb9jNNirhR+nnZw5Kk12nXd+0uSA4GUEYjQWC/goUDnhF0ObLdDtZkmZCTFZxL
-         rxyA==
-X-Gm-Message-State: ANhLgQ3malTn5gsTac5/EsWKGOSC/ttE5KiXstuD6oqLQp33e5ii3/K3
-        KMb+iHRJvJZ0RvnZYYuHD7k=
-X-Google-Smtp-Source: ADFU+vu6NnUvsLhagcO8Q4poilEAI652nzvJveCmlcKlhnSPTvayuVO6DjHuiAqzqYSqFm2261DWgw==
-X-Received: by 2002:a5d:4b51:: with SMTP id w17mr4544176wrs.231.1583337852868;
-        Wed, 04 Mar 2020 08:04:12 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d16:4100:3093:39f0:d3ca:23c6])
-        by smtp.gmail.com with ESMTPSA id y1sm3699219wrh.65.2020.03.04.08.04.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:04:12 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Sumit Garg <sumit.garg@linaro.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: adjust to trusted keys subsystem creation
-Date:   Wed,  4 Mar 2020 17:03:59 +0100
-Message-Id: <20200304160359.16809-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 11:04:35 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:60254 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726579AbgCDQEe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:04:34 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BC7AA20020D;
+        Wed,  4 Mar 2020 17:04:31 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id AEEB9200224;
+        Wed,  4 Mar 2020 17:04:31 +0100 (CET)
+Received: from fsr-fed2164-101.ea.freescale.net (fsr-fed2164-101.ea.freescale.net [10.171.82.91])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 1CC94202D2;
+        Wed,  4 Mar 2020 17:04:31 +0100 (CET)
+From:   Madalin Bucur <madalin.bucur@oss.nxp.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        shawnguo@kernel.org, leoyang.li@nxp.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>
+Subject: [PATCH net v2 0/4] QorIQ DPAA FMan erratum A050385 workaround
+Date:   Wed,  4 Mar 2020 18:04:24 +0200
+Message-Id: <1583337868-3320-1-git-send-email-madalin.bucur@oss.nxp.com>
+X-Mailer: git-send-email 2.1.0
+Content-Type: text/plain; charset="us-ascii"
+Reply-to: madalin.bucur@oss.nxp.com
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
-renamed trusted.h to trusted_tpm.h in include/keys/, and moved trusted.c
-to trusted-keys/trusted_tpm1.c in security/keys/.
+Changes in v2:
+ - added CONFIG_DPAA_ERRATUM_A050385
+ - removed unnecessary parenthesis
+ - changed alignment defines to use only decimal values
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+The patch set implements the workaround for FMan erratum A050385:
 
-  warning: no file matches F: security/keys/trusted.c
-  warning: no file matches F: include/keys/trusted.h
+FMAN DMA read or writes under heavy traffic load may cause FMAN
+internal resource leak; thus stopping further packet processing.
+To reproduce this issue when the workaround is not applied, one
+needs to ensure the FMan DMA transaction queue is already full
+when a transaction split occurs so the system must be under high
+traffic load (i.e. multiple ports at line rate). After the errata
+occurs, the traffic stops. The only SoC impacted by this is the
+LS1043A, the other ARM DPAA 1 SoC or the PPC DPAA 1 SoCs do not
+have this erratum.
 
-Rectify the KEYS-TRUSTED entry in MAINTAINERS now.
+The FMAN internal queue can overflow when FMAN splits single
+read or write transactions into multiple smaller transactions
+such that more than 17 AXI transactions are in flight from FMAN
+to interconnect. When the FMAN internal queue overflows, it can
+stall further packet processing. The issue can occur with any one
+of the following three conditions:
 
-Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Sumit, please ack.
-Jarkko, please pick this patch.
+  1. FMAN AXI transaction crosses 4K address boundary (Errata
+         A010022)
+  2. FMAN DMA address for an AXI transaction is not 16 byte
+         aligned, i.e. the last 4 bits of an address are non-zero
+  3. Scatter Gather (SG) frames have more than one SG buffer in
+         the SG list and any one of the buffers, except the last
+         buffer in the SG list has data size that is not a multiple
+         of 16 bytes, i.e., other than 16, 32, 48, 64, etc.
 
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+With any one of the above three conditions present, there is
+likelihood of stalled FMAN packet processing, especially under
+stress with multiple ports injecting line-rate traffic.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5c755e03ddee..cf389058ca76 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9276,8 +9276,8 @@ L:	keyrings@vger.kernel.org
- S:	Supported
- F:	Documentation/security/keys/trusted-encrypted.rst
- F:	include/keys/trusted-type.h
--F:	security/keys/trusted.c
--F:	include/keys/trusted.h
-+F:	include/keys/trusted_tpm.h
-+F:	security/keys/trusted-keys/trusted_tpm1.c
- 
- KEYS/KEYRINGS
- M:	David Howells <dhowells@redhat.com>
+To avoid situations that stall FMAN packet processing, all of the
+above three conditions must be avoided; therefore, configure the
+system with the following rules:
+
+  1. Frame buffers must not span a 4KB address boundary, unless
+         the frame start address is 256 byte aligned
+  2. All FMAN DMA start addresses (for example, BMAN buffer
+         address, FD[address] + FD[offset]) are 16B aligned
+  3. SG table and buffer addresses are 16B aligned and the size
+         of SG buffers are multiple of 16 bytes, except for the last
+         SG buffer that can be of any size.
+
+Additional workaround notes:
+- Address alignment of 64 bytes is recommended for maximally
+efficient system bus transactions (although 16 byte alignment is
+sufficient to avoid the stall condition)
+- To support frame sizes that are larger than 4K bytes, there are
+two options:
+  1. Large single buffer frames that span a 4KB page boundary can
+         be converted into SG frames to avoid transaction splits at
+         the 4KB boundary,
+  2. Align the large single buffer to 256B address boundaries,
+         ensure that the frame address plus offset is 256B aligned.
+- If software generated SG frames have buffers that are unaligned
+and with random non-multiple of 16 byte lengths, before
+transmitting such frames via FMAN, frames will need to be copied
+into a new single buffer or multiple buffer SG frame that is
+compliant with the three rules listed above.
+
+Madalin Bucur (4):
+  dt-bindings: net: FMan erratum A050385
+  arm64: dts: ls1043a: FMan erratum A050385
+  fsl/fman: detect FMan erratum A050385
+  dpaa_eth: FMan erratum A050385 workaround
+
+ Documentation/devicetree/bindings/net/fsl-fman.txt |   7 ++
+ arch/arm64/boot/dts/freescale/fsl-ls1043-post.dtsi |   2 +
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c     | 110 ++++++++++++++++++++-
+ drivers/net/ethernet/freescale/fman/Kconfig        |  28 ++++++
+ drivers/net/ethernet/freescale/fman/fman.c         |  18 ++++
+ drivers/net/ethernet/freescale/fman/fman.h         |   5 +
+ 6 files changed, 167 insertions(+), 3 deletions(-)
+
 -- 
-2.17.1
+2.1.0
 
