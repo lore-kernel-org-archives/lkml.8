@@ -2,151 +2,218 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F5F3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A38C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:07:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D6620870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yJiakj4S"
+	by mail.kernel.org (Postfix) with ESMTP id 3D15120838
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388114AbgCDNGU (ORCPT
+        id S2388129AbgCDNHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:06:20 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53820 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388048AbgCDNGT (ORCPT
+        Wed, 4 Mar 2020 08:07:09 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65056 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729428AbgCDNHI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:06:19 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 024D6IhF011908;
-        Wed, 4 Mar 2020 07:06:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583327178;
-        bh=YXzQppbglr+xPKbiEaDdJH1kY4n3UhI0W2ajY77vJNE=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=yJiakj4S7Opplp7tEymkkymcUSmZfZgIn20p0umYvd2cAWhubn2acqBd/7yfIh5sv
-         dfer8+oCOgvgRkJsXOrGGk2VUQHwvskVj+ZVM3cBn5csRRpUV7exL/AXez2Qf+DW3h
-         4e5u4m5SAtUN1H/dGJE8CBVJbgJ7CIHoZ48Itx/4=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 024D6IWQ070658
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 07:06:18 -0600
-Received: from DFLE104.ent.ti.com (10.64.6.25) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 07:06:18 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 07:06:18 -0600
-Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id 024D6Icj099558;
-        Wed, 4 Mar 2020 07:06:18 -0600
-Date:   Wed, 4 Mar 2020 07:10:53 -0600
-From:   Benoit Parrot <bparrot@ti.com>
-To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
-CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <stable@vger.kernel.org>
-Subject: Re: [Patch] media: ti-vpe: cal: fix a kernel oops when unloading
- module
-Message-ID: <20200304131053.k76vivpwv3tvr52d@ti.com>
-References: <20200303172629.21339-1-bparrot@ti.com>
- <4010c13f-6a32-f3c3-5b6d-62a4e3782c64@ti.com>
- <f7f6dd87-147f-b9e9-aaa7-c063a8f3c11e@ti.com>
- <a2e6510f-ffd9-060e-ab03-cdc261ecc778@ti.com>
+        Wed, 4 Mar 2020 08:07:08 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024D5sUu085574
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 08:07:07 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yj6nj61cq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:07:07 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Wed, 4 Mar 2020 13:07:04 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 13:07:01 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024D70qP2032122
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 13:07:00 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C2EA42042;
+        Wed,  4 Mar 2020 13:07:00 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 62D104204D;
+        Wed,  4 Mar 2020 13:06:59 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.0.1])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 13:06:59 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
+        jack@suse.cz, kirill@shutemov.name
+Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>
+Subject: [PATCH v3 2/2] mm/gup/writeback: add callbacks for inaccessible pages
+Date:   Wed,  4 Mar 2020 14:06:55 +0100
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200304130655.462517-1-imbrenda@linux.ibm.com>
+References: <20200304130655.462517-1-imbrenda@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <a2e6510f-ffd9-060e-ab03-cdc261ecc778@ti.com>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030413-0028-0000-0000-000003E0CFDE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030413-0029-0000-0000-000024A60068
+Message-Id: <20200304130655.462517-3-imbrenda@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxlogscore=671 suspectscore=2
+ impostorscore=0 priorityscore=1501 bulkscore=0 phishscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tomi,
+With the introduction of protected KVM guests on s390 there is now a
+concept of inaccessible pages. These pages need to be made accessible
+before the host can access them.
 
-Thanks for the review, and fix!
+While cpu accesses will trigger a fault that can be resolved, I/O
+accesses will just fail.  We need to add a callback into architecture
+code for places that will do I/O, namely when writeback is started or
+when a page reference is taken.
 
-Tomi Valkeinen <tomi.valkeinen@ti.com> wrote on Wed [2020-Mar-04 11:22:26 +0200]:
-> On 04/03/2020 10:41, Tomi Valkeinen wrote:
-> 
-> >> Thanks, this fixes the crash for me.
-> >>
-> >> It does look a bit odd that something is allocated with kzalloc, and then it's freed somewhere 
-> >> inside v4l2_async_notifier_cleanup, though. But if that's how it supposed to be used, looks fine 
-> >> to me.
-> > 
-> > Well, sent that a few seconds too early... With this patch, I see kmemleaks.
-> 
-> This is caused by allocating asd for all ports, even if the port is not used, causing the allocated asd to be forgotten. Also, any error there would cause leak too.
-> 
-> I think something like this fixes both the unused port case and error paths:
-> 
+This is not only to enable paging, file backing etc, it is also
+necessary to protect the host against a malicious user space.  For
+example a bad QEMU could simply start direct I/O on such protected
+memory.  We do not want userspace to be able to trigger I/O errors and
+thus the logic is "whenever somebody accesses that page (gup) or does
+I/O, make sure that this page can be accessed".  When the guest tries
+to access that page we will wait in the page fault handler for
+writeback to have finished and for the page_ref to be the expected
+value.
 
-Yes I see that now. Good catch.
-I'll fix it in v2.
+On s390x the function is not supposed to fail, so it is ok to use a
+WARN_ON on failure. If we ever need some more finegrained handling
+we can tackle this when we know the details.
 
-Benoit
+Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Acked-by: Will Deacon <will@kernel.org>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+---
+ include/linux/gfp.h |  6 ++++++
+ mm/gup.c            | 30 +++++++++++++++++++++++++++---
+ mm/page-writeback.c |  5 +++++
+ 3 files changed, 38 insertions(+), 3 deletions(-)
 
-> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> index a928c9d66d5d..4b89dd53d2b4 100644
-> --- a/drivers/media/platform/ti-vpe/cal.c
-> +++ b/drivers/media/platform/ti-vpe/cal.c
-> @@ -372,8 +372,6 @@ struct cal_ctx {
->  	struct v4l2_subdev	*sensor;
->  	struct v4l2_fwnode_endpoint	endpoint;
->  
-> -	struct v4l2_async_subdev asd;
-> -
->  	struct v4l2_fh		fh;
->  	struct cal_dev		*dev;
->  	struct cc_data		*cc;
-> @@ -2020,7 +2018,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
->  
->  	parent = pdev->dev.of_node;
->  
-> -	asd = &ctx->asd;
->  	endpoint = &ctx->endpoint;
->  
->  	ep_node = NULL;
-> @@ -2067,8 +2064,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
->  		ctx_dbg(3, ctx, "can't get remote parent\n");
->  		goto cleanup_exit;
->  	}
-> -	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> -	asd->match.fwnode = of_fwnode_handle(sensor_node);
->  
->  	v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), endpoint);
->  
-> @@ -2098,9 +2093,17 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
->  
->  	v4l2_async_notifier_init(&ctx->notifier);
->  
-> +	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
-> +	if (!asd)
-> +		goto cleanup_exit;
-> +
-> +	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
-> +	asd->match.fwnode = of_fwnode_handle(sensor_node);
-> +
->  	ret = v4l2_async_notifier_add_subdev(&ctx->notifier, asd);
->  	if (ret) {
->  		ctx_err(ctx, "Error adding asd\n");
-> +		kfree(asd);
->  		goto cleanup_exit;
->  	}
->  
->  Tomi
-> 
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+index e5b817cb86e7..be2754841369 100644
+--- a/include/linux/gfp.h
++++ b/include/linux/gfp.h
+@@ -485,6 +485,12 @@ static inline void arch_free_page(struct page *page, int order) { }
+ #ifndef HAVE_ARCH_ALLOC_PAGE
+ static inline void arch_alloc_page(struct page *page, int order) { }
+ #endif
++#ifndef HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
++static inline int arch_make_page_accessible(struct page *page)
++{
++	return 0;
++}
++#endif
+ 
+ struct page *
+ __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
+diff --git a/mm/gup.c b/mm/gup.c
+index 81a95fbe9901..d0c4c6f336bb 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -413,6 +413,7 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 	struct page *page;
+ 	spinlock_t *ptl;
+ 	pte_t *ptep, pte;
++	int ret;
+ 
+ 	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
+ 	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
+@@ -471,8 +472,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 		if (is_zero_pfn(pte_pfn(pte))) {
+ 			page = pte_page(pte);
+ 		} else {
+-			int ret;
+-
+ 			ret = follow_pfn_pte(vma, address, ptep, flags);
+ 			page = ERR_PTR(ret);
+ 			goto out;
+@@ -480,7 +479,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 	}
+ 
+ 	if (flags & FOLL_SPLIT && PageTransCompound(page)) {
+-		int ret;
+ 		get_page(page);
+ 		pte_unmap_unlock(ptep, ptl);
+ 		lock_page(page);
+@@ -497,6 +495,19 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
+ 		page = ERR_PTR(-ENOMEM);
+ 		goto out;
+ 	}
++	/*
++	 * We need to make the page accessible if and only if we are going
++	 * to access its content (the FOLL_PIN case).  Please see
++	 * Documentation/core-api/pin_user_pages.rst for details.
++	 */
++	if (flags & FOLL_PIN) {
++		ret = arch_make_page_accessible(page);
++		if (ret) {
++			unpin_user_page(page);
++			page = ERR_PTR(ret);
++			goto out;
++		}
++	}
+ 	if (flags & FOLL_TOUCH) {
+ 		if ((flags & FOLL_WRITE) &&
+ 		    !pte_dirty(pte) && !PageDirty(page))
+@@ -2162,6 +2173,19 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+ 
+ 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+ 
++		/*
++		 * We need to make the page accessible if and only if we are
++		 * going to access its content (the FOLL_PIN case).  Please
++		 * see Documentation/core-api/pin_user_pages.rst for
++		 * details.
++		 */
++		if (flags & FOLL_PIN) {
++			ret = arch_make_page_accessible(page);
++			if (ret) {
++				unpin_user_page(page);
++				goto pte_unmap;
++			}
++		}
+ 		SetPageReferenced(page);
+ 		pages[*nr] = page;
+ 		(*nr)++;
+diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+index ab5a3cee8ad3..8384be5a2758 100644
+--- a/mm/page-writeback.c
++++ b/mm/page-writeback.c
+@@ -2807,6 +2807,11 @@ int __test_set_page_writeback(struct page *page, bool keep_write)
+ 		inc_zone_page_state(page, NR_ZONE_WRITE_PENDING);
+ 	}
+ 	unlock_page_memcg(page);
++	/*
++	 * If writeback has been triggered on a page that cannot be made
++	 * accessible, it is too late.
++	 */
++	WARN_ON(arch_make_page_accessible(page));
+ 	return ret;
+ 
+ }
+-- 
+2.24.1
+
