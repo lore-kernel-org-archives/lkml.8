@@ -2,287 +2,206 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD55C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236FAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:27:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0429A22522
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:27:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g8pGpYPs"
+	by mail.kernel.org (Postfix) with ESMTP id 0223622522
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:27:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388354AbgCDQ1C (ORCPT
+        id S2388363AbgCDQ1H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:27:02 -0500
-Received: from mail-wm1-f74.google.com ([209.85.128.74]:56257 "EHLO
-        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388315AbgCDQ07 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:26:59 -0500
-Received: by mail-wm1-f74.google.com with SMTP id v21so746804wml.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:26:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=0XgZjHOQdGAxXnAanWU5HksJ52ua72n/XN1fQpNKAB0=;
-        b=g8pGpYPsvsDBrxlO6M3Y4hyIMgiyMcfYpKkTsZMXMp2XdZRs26B29lIDZ0AuNxaw7b
-         YspHylRaXDB0l6aDBl5gPboatWoZhU7g8xQgKFsnUrXEw1hWc+H783wR6tYEQZOi7w0E
-         ylp9ygDFP4GfK1NbxWuFz3Bnd5tP7Qu+rLH2qWCeQw0LpDEHS+aqvs7iw3TL0t6G1C8O
-         hNCOVQlhQu6i37LnBhERzPCqOl1T3LYex0b12Dk7crnY1Xdtx3DJPRiTsENMl7Dtz84v
-         MTtOuTCjdcMx7mSrkm/Wvqp2lfwmgbia7n+BfS/krcy2ARjEsQGizs8LqzS+TM9OtVQ7
-         c1uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=0XgZjHOQdGAxXnAanWU5HksJ52ua72n/XN1fQpNKAB0=;
-        b=EajIvmP6hBzw8xMPViPagwqKGdGxpPlqfawnxD6HtnlYX5t7nVKFuFJwGn+cKdcLRs
-         hi5k9tuWaQn2ig9Qbacg0bCVeHbIyPUFI6FUGPCV9jhII7/b1jZn7bKnQYf3HOoCB7Mk
-         2Zo/iz5YxLfC5YvtCADiuzsknbTfYAjWNCRB5mbPTblyslJtIgk42VDis9EEDIC+KnLM
-         qXJc2u+6ScKmaOMYLYl8P0kUJ0m0UT9lHkXy4n690JrZ4sWApJuwf00F1WIFZHBy3ayu
-         hIZrcLmqbVfvfnor0tv8Fv1DD+bVRoRC/59sfURvTnuk9OF31BvnTzdXDuyE4JtDVNDM
-         ZtPw==
-X-Gm-Message-State: ANhLgQ23x1QJ/MCCfBrzTEKzBxvCJFN5FIfw3fKpAn3JmUmWMQIGjlEk
-        phiQvxMga24iKiknOJjQRq2CgD8Ikw==
-X-Google-Smtp-Source: ADFU+vvVIPCteKgA+00HpC3ytUL63neH+qU97ZPI77Ml/MbI7PklsrGOuRokKKmXb9F3ma2Vj0LWMHKzqQ==
-X-Received: by 2002:adf:db84:: with SMTP id u4mr4877175wri.317.1583339215472;
- Wed, 04 Mar 2020 08:26:55 -0800 (PST)
-Date:   Wed,  4 Mar 2020 17:25:41 +0100
-In-Reply-To: <20200304162541.46663-1-elver@google.com>
-Message-Id: <20200304162541.46663-3-elver@google.com>
-Mime-Version: 1.0
-References: <20200304162541.46663-1-elver@google.com>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH 3/3] kcsan: Update API documentation in kcsan-checks.h
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Mar 2020 11:27:07 -0500
+Received: from foss.arm.com ([217.140.110.172]:36636 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388300AbgCDQ0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:26:51 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B7A913A1;
+        Wed,  4 Mar 2020 08:26:51 -0800 (PST)
+Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 380213F6CF;
+        Wed,  4 Mar 2020 08:26:50 -0800 (PST)
+From:   Cristian Marussi <cristian.marussi@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
+        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
+        cristian.marussi@arm.com
+Subject: [PATCH v4 12/13] firmware: arm_scmi: Add Reset notifications support
+Date:   Wed,  4 Mar 2020 16:25:57 +0000
+Message-Id: <20200304162558.48836-13-cristian.marussi@arm.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200304162558.48836-1-cristian.marussi@arm.com>
+References: <20200304162558.48836-1-cristian.marussi@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the API documentation for ASSERT_EXCLUSIVE_* macros and make them
-generate readable documentation for the code examples.
+Make SCMI Reset protocol register with the notification core.
 
-All @variable short summaries were missing ':', which was updated for
-the whole file.
-
-Tested with 'make htmldocs'.
-
-Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
 ---
- include/linux/kcsan-checks.h | 98 ++++++++++++++++++++++--------------
- 1 file changed, 61 insertions(+), 37 deletions(-)
+V3 --> V4
+- scmi_event field renamed
+V2 --> V3
+- added handle awareness
+V1 --> V2
+- simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
+  logic out of protocol. ALL_SRCIDs logic is now in charge of the
+  notification core, together with proper reference counting of enables
+- switched to devres protocol-registration
+---
+ drivers/firmware/arm_scmi/reset.c | 96 +++++++++++++++++++++++++++++++
+ include/linux/scmi_protocol.h     |  6 ++
+ 2 files changed, 102 insertions(+)
 
-diff --git a/include/linux/kcsan-checks.h b/include/linux/kcsan-checks.h
-index 1b8aac5d6a0b5..14fd10e5a9177 100644
---- a/include/linux/kcsan-checks.h
-+++ b/include/linux/kcsan-checks.h
-@@ -26,9 +26,9 @@
- /**
-  * __kcsan_check_access - check generic access for races
-  *
-- * @ptr address of access
-- * @size size of access
-- * @type access type modifier
-+ * @ptr: address of access
-+ * @size: size of access
-+ * @type: access type modifier
+diff --git a/drivers/firmware/arm_scmi/reset.c b/drivers/firmware/arm_scmi/reset.c
+index de73054554f3..4d6987920617 100644
+--- a/drivers/firmware/arm_scmi/reset.c
++++ b/drivers/firmware/arm_scmi/reset.c
+@@ -6,6 +6,7 @@
   */
- void __kcsan_check_access(const volatile void *ptr, size_t size, int type);
  
-@@ -64,7 +64,7 @@ void kcsan_flat_atomic_end(void);
-  * Force treating the next n memory accesses for the current context as atomic
-  * operations.
-  *
-- * @n number of following memory accesses to treat as atomic.
-+ * @n: number of following memory accesses to treat as atomic.
-  */
- void kcsan_atomic_next(int n);
+ #include "common.h"
++#include "notify.h"
  
-@@ -74,7 +74,7 @@ void kcsan_atomic_next(int n);
-  * Set the access mask for all accesses for the current context if non-zero.
-  * Only value changes to bits set in the mask will be reported.
-  *
-- * @mask bitmask
-+ * @mask: bitmask
-  */
- void kcsan_set_access_mask(unsigned long mask);
+ enum scmi_reset_protocol_cmd {
+ 	RESET_DOMAIN_ATTRIBUTES = 0x3,
+@@ -40,6 +41,17 @@ struct scmi_msg_reset_domain_reset {
+ #define ARCH_COLD_RESET		(ARCH_RESET_TYPE | COLD_RESET_STATE)
+ };
  
-@@ -106,16 +106,16 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
- /**
-  * __kcsan_check_read - check regular read access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define __kcsan_check_read(ptr, size) __kcsan_check_access(ptr, size, 0)
++struct scmi_msg_reset_notify {
++	__le32 id;
++	__le32 event_control;
++#define RESET_TP_NOTIFY_ALL	BIT(0)
++};
++
++struct scmi_reset_issued_notify_payld {
++	__le32 domain_id;
++	__le32 reset_state;
++};
++
+ struct reset_dom_info {
+ 	bool async_reset;
+ 	bool reset_notify;
+@@ -190,6 +202,84 @@ static struct scmi_reset_ops reset_ops = {
+ 	.deassert = scmi_reset_domain_deassert,
+ };
  
- /**
-  * __kcsan_check_write - check regular write access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define __kcsan_check_write(ptr, size)                                         \
- 	__kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
-@@ -123,16 +123,16 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
- /**
-  * kcsan_check_read - check regular read access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define kcsan_check_read(ptr, size) kcsan_check_access(ptr, size, 0)
++static int scmi_reset_notify(const struct scmi_handle *handle, u32 domain_id,
++			     bool enable)
++{
++	int ret;
++	u32 evt_cntl = enable ? RESET_TP_NOTIFY_ALL : 0;
++	struct scmi_xfer *t;
++	struct scmi_msg_reset_notify *cfg;
++
++	ret = scmi_xfer_get_init(handle, RESET_NOTIFY,
++				 SCMI_PROTOCOL_RESET, sizeof(*cfg), 0, &t);
++	if (ret)
++		return ret;
++
++	cfg = t->tx.buf;
++	cfg->id = cpu_to_le32(domain_id);
++	cfg->event_control = cpu_to_le32(evt_cntl);
++
++	ret = scmi_do_xfer(handle, t);
++
++	scmi_xfer_put(handle, t);
++	return ret;
++}
++
++static bool scmi_reset_set_notify_enabled(const struct scmi_handle *handle,
++					  u8 evt_id, u32 src_id, bool enable)
++{
++	int ret;
++
++	ret = scmi_reset_notify(handle, src_id, enable);
++	if (ret)
++		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLED - evt[%X] dom[%d] - ret:%d\n",
++			SCMI_PROTOCOL_RESET, evt_id, src_id, ret);
++
++	return !ret ? true : false;
++}
++
++static void *scmi_reset_fill_custom_report(u8 evt_id, u64 timestamp,
++					   const void *payld, size_t payld_sz,
++					   void *report, u32 *src_id)
++{
++	void *rep = NULL;
++
++	switch (evt_id) {
++	case RESET_ISSUED:
++	{
++		const struct scmi_reset_issued_notify_payld *p = payld;
++		struct scmi_reset_issued_report *r = report;
++
++		if (sizeof(*p) != payld_sz)
++			break;
++
++		r->timestamp = timestamp;
++		r->domain_id = le32_to_cpu(p->domain_id);
++		r->reset_state = le32_to_cpu(p->reset_state);
++		*src_id = r->domain_id;
++		rep = r;
++		break;
++	}
++	default:
++		break;
++	}
++
++	return rep;
++}
++
++static const struct scmi_event reset_events[] = {
++	{
++		.id = RESET_NOTIFY,
++		.max_payld_sz = 8,
++		.max_report_sz = sizeof(struct scmi_reset_issued_report),
++	},
++};
++
++static const struct scmi_protocol_event_ops reset_event_ops = {
++	.set_notify_enabled = scmi_reset_set_notify_enabled,
++	.fill_custom_report = scmi_reset_fill_custom_report,
++};
++
+ static int scmi_reset_protocol_init(struct scmi_handle *handle)
+ {
+ 	int domain;
+@@ -218,6 +308,12 @@ static int scmi_reset_protocol_init(struct scmi_handle *handle)
+ 		scmi_reset_domain_attributes_get(handle, domain, dom);
+ 	}
  
- /**
-  * kcsan_check_write - check regular write access for races
-  *
-- * @ptr address of access
-- * @size size of access
-+ * @ptr: address of access
-+ * @size: size of access
-  */
- #define kcsan_check_write(ptr, size)                                           \
- 	kcsan_check_access(ptr, size, KCSAN_ACCESS_WRITE)
-@@ -158,14 +158,26 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * allowed. This assertion can be used to specify properties of concurrent code,
-  * where violation cannot be detected as a normal data race.
-  *
-- * For example, if a per-CPU variable is only meant to be written by a single
-- * CPU, but may be read from other CPUs; in this case, reads and writes must be
-- * marked properly, however, if an off-CPU WRITE_ONCE() races with the owning
-- * CPU's WRITE_ONCE(), would not constitute a data race but could be a harmful
-- * race condition. Using this macro allows specifying this property in the code
-- * and catch such bugs.
-+ * For example, if we only have a single writer, but multiple concurrent
-+ * readers, to avoid data races, all these accesses must be marked; even
-+ * concurrent marked writes racing with the single writer are bugs.
-+ * Unfortunately, due to being marked, they are no longer data races. For cases
-+ * like these, we can use the macro as follows:
-  *
-- * @var variable to assert on
-+ * .. code-block:: c
-+ *
-+ *	void writer(void) {
-+ *		spin_lock(&update_foo_lock);
-+ *		ASSERT_EXCLUSIVE_WRITER(shared_foo);
-+ *		WRITE_ONCE(shared_foo, ...);
-+ *		spin_unlock(&update_foo_lock);
-+ *	}
-+ *	void reader(void) {
-+ *		// update_foo_lock does not need to be held!
-+ *		... = READ_ONCE(shared_foo);
-+ *	}
-+ *
-+ * @var: variable to assert on
-  */
- #define ASSERT_EXCLUSIVE_WRITER(var)                                           \
- 	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_ASSERT)
-@@ -177,16 +189,22 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * writers). This assertion can be used to specify properties of concurrent
-  * code, where violation cannot be detected as a normal data race.
-  *
-- * For example, in a reference-counting algorithm where exclusive access is
-- * expected after the refcount reaches 0. We can check that this property
-- * actually holds as follows:
-+ * For example, where exclusive access is expected after determining no other
-+ * users of an object are left, but the object is not actually freed. We can
-+ * check that this property actually holds as follows:
-+ *
-+ * .. code-block:: c
-  *
-  *	if (refcount_dec_and_test(&obj->refcnt)) {
-  *		ASSERT_EXCLUSIVE_ACCESS(*obj);
-- *		safely_dispose_of(obj);
-+ *		do_some_cleanup(obj);
-+ *		release_for_reuse(obj);
-  *	}
-  *
-- * @var variable to assert on
-+ * Note: For cases where the object is freed, `KASAN <kasan.html>`_ is a better
-+ * fit to detect use-after-free bugs.
-+ *
-+ * @var: variable to assert on
-  */
- #define ASSERT_EXCLUSIVE_ACCESS(var)                                           \
- 	__kcsan_check_access(&(var), sizeof(var), KCSAN_ACCESS_WRITE | KCSAN_ACCESS_ASSERT)
-@@ -200,7 +218,7 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * concurrent readers are permitted. This assertion captures more detailed
-  * bit-level properties, compared to the other (word granularity) assertions.
-  * Only the bits set in @mask are checked for concurrent modifications, while
-- * ignoring the remaining bits, i.e. concurrent writes (or reads) to ~@mask bits
-+ * ignoring the remaining bits, i.e. concurrent writes (or reads) to ~mask bits
-  * are ignored.
-  *
-  * Use this for variables, where some bits must not be modified concurrently,
-@@ -210,17 +228,21 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * but other bits may still be modified concurrently. A reader may wish to
-  * assert that this is true as follows:
-  *
-+ * .. code-block:: c
-+ *
-  *	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
-  *	foo = (READ_ONCE(flags) & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
-  *
-- *   Note: The access that immediately follows ASSERT_EXCLUSIVE_BITS() is
-- *   assumed to access the masked bits only, and KCSAN optimistically assumes it
-- *   is therefore safe, even in the presence of data races, and marking it with
-- *   READ_ONCE() is optional from KCSAN's point-of-view. We caution, however,
-- *   that it may still be advisable to do so, since we cannot reason about all
-- *   compiler optimizations when it comes to bit manipulations (on the reader
-- *   and writer side). If you are sure nothing can go wrong, we can write the
-- *   above simply as:
-+ * Note: The access that immediately follows ASSERT_EXCLUSIVE_BITS() is assumed
-+ * to access the masked bits only, and KCSAN optimistically assumes it is
-+ * therefore safe, even in the presence of data races, and marking it with
-+ * READ_ONCE() is optional from KCSAN's point-of-view. We caution, however, that
-+ * it may still be advisable to do so, since we cannot reason about all compiler
-+ * optimizations when it comes to bit manipulations (on the reader and writer
-+ * side). If you are sure nothing can go wrong, we can write the above simply
-+ * as:
-+ *
-+ * .. code-block:: c
-  *
-  * 	ASSERT_EXCLUSIVE_BITS(flags, READ_ONLY_MASK);
-  *	foo = (flags & READ_ONLY_MASK) >> READ_ONLY_SHIFT;
-@@ -230,15 +252,17 @@ static inline void kcsan_check_access(const volatile void *ptr, size_t size,
-  * be modified concurrently. Writers, where other bits may change concurrently,
-  * could use the assertion as follows:
-  *
-+ * .. code-block:: c
-+ *
-  *	spin_lock(&foo_lock);
-  *	ASSERT_EXCLUSIVE_BITS(flags, FOO_MASK);
-- *	old_flags = READ_ONCE(flags);
-+ *	old_flags = flags;
-  *	new_flags = (old_flags & ~FOO_MASK) | (new_foo << FOO_SHIFT);
-  *	if (cmpxchg(&flags, old_flags, new_flags) != old_flags) { ... }
-  *	spin_unlock(&foo_lock);
-  *
-- * @var variable to assert on
-- * @mask only check for modifications to bits set in @mask
-+ * @var: variable to assert on
-+ * @mask: only check for modifications to bits set in @mask
-  */
- #define ASSERT_EXCLUSIVE_BITS(var, mask)                                       \
- 	do {                                                                   \
++	scmi_register_protocol_events(handle,
++				      SCMI_PROTOCOL_RESET, PAGE_SIZE,
++				      &reset_event_ops, reset_events,
++				      ARRAY_SIZE(reset_events),
++				      pinfo->num_domains);
++
+ 	pinfo->version = version;
+ 	handle->reset_ops = &reset_ops;
+ 	handle->reset_priv = pinfo;
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index 23408dacc69d..91c5fdf567d5 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -414,4 +414,10 @@ struct scmi_sensor_trip_point_report {
+ 	u32	trip_point_desc;
+ };
+ 
++struct scmi_reset_issued_report {
++	ktime_t	timestamp;
++	u32	domain_id;
++	u32	reset_state;
++};
++
+ #endif /* _LINUX_SCMI_PROTOCOL_H */
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.17.1
 
