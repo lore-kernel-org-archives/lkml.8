@@ -2,67 +2,114 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B6BC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A98AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7903420838
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:23:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD9220866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388154AbgCDVXC (ORCPT
+        id S1729600AbgCDV0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:23:02 -0500
-Received: from ms.lwn.net ([45.79.88.28]:47366 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388337AbgCDVXB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:23:01 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 510F8537;
-        Wed,  4 Mar 2020 21:23:00 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 14:22:59 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-doc@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v4] Documentation: bootconfig: Update boot configuration
- documentation
-Message-ID: <20200304142259.7eaa3633@lwn.net>
-In-Reply-To: <a6680eb7-5a1d-ea58-0eec-14f2b5bcd99a@web.de>
-References: <158322634266.31847.8245359938993378502.stgit@devnote2>
-        <158322635301.31847.15011454479023637649.stgit@devnote2>
-        <ad1e9855-4c64-53bd-7da5-f7cdafe78571@infradead.org>
-        <20200304203722.8e8699c2a3e0a979aae091b1@kernel.org>
-        <3a3a5f1a-3654-d96d-3b4a-dd649a366c65@web.de>
-        <531371ef-354a-b0fa-f69f-c8cf9ecc9919@infradead.org>
-        <a9f8980e-4325-52c1-d217-d2fca1add37d@web.de>
-        <3118d72b-a33c-e6d7-36a1-204d39d2bdbb@infradead.org>
-        <a6680eb7-5a1d-ea58-0eec-14f2b5bcd99a@web.de>
-Organization: LWN.net
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Wed, 4 Mar 2020 16:26:08 -0500
+Received: from baldur.buserror.net ([165.227.176.147]:34358 "EHLO
+        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgCDV0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 16:26:07 -0500
+Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
+        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <oss@buserror.net>)
+        id 1j9bSE-0000Sw-JS; Wed, 04 Mar 2020 15:21:23 -0600
+Message-ID: <d673649d6f371e82d4a94ba62bfd0d44efeca7b4.camel@buserror.net>
+From:   Scott Wood <oss@buserror.net>
+To:     Daniel Axtens <dja@axtens.net>, Jason Yan <yanaijie@huawei.com>,
+        mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
+        diana.craciun@nxp.com, christophe.leroy@c-s.fr,
+        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
+        keescook@chromium.org, kernel-hardening@lists.openwall.com
+Cc:     linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com
+Date:   Wed, 04 Mar 2020 15:21:21 -0600
+In-Reply-To: <87tv3drf79.fsf@dja-thinkpad.axtens.net>
+References: <20200206025825.22934-1-yanaijie@huawei.com>
+         <87tv3drf79.fsf@dja-thinkpad.axtens.net>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
+X-SA-Exim-Rcpt-To: dja@axtens.net, yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com
+X-SA-Exim-Mail-From: oss@buserror.net
+Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 22:20:07 +0100
-Markus Elfring <Markus.Elfring@web.de> wrote:
-
-> > I'm hoping to be done with the current changes. :)  
+On Wed, 2020-02-26 at 18:16 +1100, Daniel Axtens wrote:
+> Hi Jason,
 > 
-> Will a term like “grouping of parent keys” need any additional explanation?
+> > This is a try to implement KASLR for Freescale BookE64 which is based on
+> > my earlier implementation for Freescale BookE32:
+> > https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718
+> > 
+> > The implementation for Freescale BookE64 is similar as BookE32. One
+> > difference is that Freescale BookE64 set up a TLB mapping of 1G during
+> > booting. Another difference is that ppc64 needs the kernel to be
+> > 64K-aligned. So we can randomize the kernel in this 1G mapping and make
+> > it 64K-aligned. This can save some code to creat another TLB map at
+> > early boot. The disadvantage is that we only have about 1G/64K = 16384
+> > slots to put the kernel in.
+> > 
+> >     KERNELBASE
+> > 
+> >           64K                     |--> kernel <--|
+> >            |                      |              |
+> >         +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+> >         |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
+> >         +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
+> >         |                         |                        1G
+> >         |----->   offset    <-----|
+> > 
+> >                               kernstart_virt_addr
+> > 
+> > I'm not sure if the slot numbers is enough or the design has any
+> > defects. If you have some better ideas, I would be happy to hear that.
+> > 
+> > Thank you all.
+> > 
+> 
+> Are you making any attempt to hide kernel address leaks in this series?
+> I've just been looking at the stackdump code just now, and it directly
+> prints link registers and stack pointers, which is probably enough to
+> determine the kernel base address:
+> 
+>                   SPs:               LRs:             %pS pointer
+> [    0.424506] [c0000000de403970] [c000000001fc0458] dump_stack+0xfc/0x154
+> (unreliable)
+> [    0.424593] [c0000000de4039c0] [c000000000267eec] panic+0x258/0x5ac
+> [    0.424659] [c0000000de403a60] [c0000000024d7a00]
+> mount_block_root+0x634/0x7c0
+> [    0.424734] [c0000000de403be0] [c0000000024d8100]
+> prepare_namespace+0x1ec/0x23c
+> [    0.424811] [c0000000de403c60] [c0000000024d7010]
+> kernel_init_freeable+0x804/0x880
+> 
+> git grep \\\"REG\\\" arch/powerpc shows a few other uses like this, all
+> in process.c or in xmon.
+> 
+> Maybe replacing the REG format string in KASLR mode would be sufficient?
 
-Honestly, Markus, I think that the patch is good enough for now; time to
-merge it and move on to something else.
+Whatever we decide to do here, it's not book3e-specific so it should be
+considered separately from these patches.
 
-Thanks,
+-Scott
 
-jon
+
