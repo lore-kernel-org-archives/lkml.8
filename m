@@ -2,148 +2,109 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C140EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22AC9C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99E352166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:53:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583312030;
-	bh=Ru4Pzde+8HgzouRWC8l/xExemayC50GC9qCPd1jTeVc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jH+GqrU5/pxMF1OXtzdayIkb1TVSgYGrSg2gVNo4pn1pyx/XRXwVzpS99JLs3S7zq
-	 nXBEzdL3x85HCokUPJpu/7ig61vcc1uFOrtKoWdmnR+WlGtg1CRhha6Og2M+Ubv+CA
-	 T7gp4aU/oc/+Q2RTcdr9OiCnFv+pq7NQhAqWG2ZY=
+	by mail.kernel.org (Postfix) with ESMTP id EFD2A20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:56:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hz0b0Qz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387716AbgCDIxt (ORCPT
+        id S2387726AbgCDI4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:53:49 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:45556 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728744AbgCDIxt (ORCPT
+        Wed, 4 Mar 2020 03:56:00 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51062 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727734AbgCDIz7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:53:49 -0500
-Received: by mail-lf1-f67.google.com with SMTP id b13so804683lfb.12;
-        Wed, 04 Mar 2020 00:53:47 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=I9+aL780TGa2bAdTy5D8onwjF2cwdZt5A8dBDQnrtx4=;
-        b=mSgSnSYsc7j1ch2rUpzF9UFNMOmmVqKtde4IPZ/1oNLhqWVVnU2B4qEULNO17WtRPu
-         U1Bh5gwC8LqGoXDuI+sIgF44+ul/xxEzvXVazuL/CFh86shGevWKB7gqn9lg02WbdoIp
-         uNhx6wK0yd6ERqaYg06NMBZnDoUU3thC77w7on35KbWjpJkX32thRvVuY517SYk8V7oU
-         k8oXaO21xuam/GJ6lZO0uhIiTSxktCNAJl0WhQsbq1EtBJPthcKLiJPB/rwsqSv5VZCT
-         B/MlMuDBBYjWzfy2GN6AFm7lPMkG52k+UdqQfSl9MDs5X9ot267QS5odFjh6KkhUvxn8
-         fKFQ==
-X-Gm-Message-State: ANhLgQ03iCNl9jSQJahGLotAzfoiBGf8yDHJfVDY84b7FwaWGQwsRo8X
-        YU/oPBdMVIdMky5zQco42nATdNyw
-X-Google-Smtp-Source: ADFU+vuc36aEPaMkEB93k8MtGuOq9qmShZI1iyvTJWtxbGwjDSf14rSMM1iYeTB2d/6kBLQKyhCdVg==
-X-Received: by 2002:a19:c20b:: with SMTP id l11mr1363543lfc.135.1583312026813;
-        Wed, 04 Mar 2020 00:53:46 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id b20sm13664470ljp.20.2020.03.04.00.53.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 00:53:45 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@kernel.org>)
-        id 1j9Pmf-0003KL-Ol; Wed, 04 Mar 2020 09:53:41 +0100
-Date:   Wed, 4 Mar 2020 09:53:41 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Rocky Liao <rjliao@codeaurora.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Make bt_en and susclk not
- mandatory for QCA Rome
-Message-ID: <20200304085341.GF32540@localhost>
-References: <20200304015429.20615-1-rjliao@codeaurora.org>
+        Wed, 4 Mar 2020 03:55:59 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0248s6Gp016466;
+        Wed, 4 Mar 2020 09:55:50 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=/qiD8X3t4cPtlJawNy1q2Zqg0xWhtfmpQr6wgwRGjrM=;
+ b=hz0b0Qz0JNlgGjP1cioYkf5IGoiRBgECEFc+UFw+3ZkktXnOidYT/kqNYTPSdyFu/W15
+ 3c9Jvudx4NKmVAZscAkPTlEwDvgepIDzIiFBlC2psgIASwfVNIHwdjNLkaLXfwliyFbe
+ 7kwLBhNJppeTrzb1BEfQgHaPOrD7Q6FizAX6dPzA0nfgc06HigMHv9Ut8j3lrHFabXPR
+ qi42hY5070HPMsEP5vHDu3h5tUCSABYXYU9pWaGGfcEf8rTxksL/5AGKVDUwOE/il2N5
+ pYoZ6M6+nHxvenxN0qnW9GiXui7k3XrpkDoCjaYX5QxhPa5lWSY6gtw3CsQAL+mIh5Ex 8g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yfea6yqap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 09:55:50 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 01A0310003B;
+        Wed,  4 Mar 2020 09:55:45 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3DD1920F831;
+        Wed,  4 Mar 2020 09:55:45 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Mar 2020 09:55:44
+ +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <broonie@kernel.org>, <lgirdwood@gmail.com>
+CC:     <alexandre.torgue@st.com>, <mcoquelin.stm32@gmail.com>,
+        <fabrice.gasnier@st.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] regulator: stm32-vrefbuf: fix a possible overshoot when re-enabling
+Date:   Wed, 4 Mar 2020 09:55:32 +0100
+Message-ID: <1583312132-20932-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304015429.20615-1-rjliao@codeaurora.org>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_01:2020-03-03,2020-03-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 09:54:29AM +0800, Rocky Liao wrote:
-> On some platforms the bt_en pin and susclk are default on and there
-> is no exposed resource to control them. This patch makes the bt_en
-> and susclk not mandatory to have BT work. It also will not set the
-> HCI_QUIRK_NON_PERSISTENT_SETUP and shutdown() callback if bt_en is
-> not available.
-> 
-> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
-> ---
->  drivers/bluetooth/hci_qca.c | 47 ++++++++++++++++++++-----------------
->  1 file changed, 26 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> index bf436d6e638e..325baa046c3a 100644
-> --- a/drivers/bluetooth/hci_qca.c
-> +++ b/drivers/bluetooth/hci_qca.c
-> @@ -1562,9 +1562,11 @@ static int qca_power_on(struct hci_dev *hdev)
->  		ret = qca_wcn3990_init(hu);
->  	} else {
->  		qcadev = serdev_device_get_drvdata(hu->serdev);
-> -		gpiod_set_value_cansleep(qcadev->bt_en, 1);
-> -		/* Controller needs time to bootup. */
-> -		msleep(150);
-> +		if (!IS_ERR(qcadev->bt_en)) {
-> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
-> +			/* Controller needs time to bootup. */
-> +			msleep(150);
-> +		}
->  	}
->  
->  	return ret;
-> @@ -1750,7 +1752,7 @@ static void qca_power_shutdown(struct hci_uart *hu)
->  		host_set_baudrate(hu, 2400);
->  		qca_send_power_pulse(hu, false);
->  		qca_regulator_disable(qcadev);
-> -	} else {
-> +	} else if (!IS_ERR(qcadev->bt_en)) {
->  		gpiod_set_value_cansleep(qcadev->bt_en, 0);
->  	}
->  }
-> @@ -1852,6 +1854,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
->  	struct hci_dev *hdev;
->  	const struct qca_vreg_data *data;
->  	int err;
-> +	bool power_ctrl_enabled = true;
->  
->  	qcadev = devm_kzalloc(&serdev->dev, sizeof(*qcadev), GFP_KERNEL);
->  	if (!qcadev)
-> @@ -1901,35 +1904,37 @@ static int qca_serdev_probe(struct serdev_device *serdev)
->  		qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
->  					       GPIOD_OUT_LOW);
+There maybe an overshoot, when disabling, then re-enabling vrefbuf
+too quickly. VREFBUF is used by ADC/DAC on some boards. When re-enabling
+too quickly, an overshoot on the reference voltage make the conversions
+inaccurate for a short period of time.
+- Don't put the VREFBUF in HiZ when disabling, to force an active
+discharge.
+- Enforce a 1ms OFF/ON delay
 
-Shouldn't you use devm_gpiod_get_optional()?
+Fixes: 0cdbf481e927 ("regulator: Add support for stm32-vrefbuf")
 
->  		if (IS_ERR(qcadev->bt_en)) {
-> -			dev_err(&serdev->dev, "failed to acquire enable gpio\n");
-> -			return PTR_ERR(qcadev->bt_en);
-> +			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
-> +			power_ctrl_enabled = false;
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ drivers/regulator/stm32-vrefbuf.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-And bail out on errors, but treat NULL as !port_ctrl_enabled?
+diff --git a/drivers/regulator/stm32-vrefbuf.c b/drivers/regulator/stm32-vrefbuf.c
+index bdfaf7e..992bc18 100644
+--- a/drivers/regulator/stm32-vrefbuf.c
++++ b/drivers/regulator/stm32-vrefbuf.c
+@@ -88,7 +88,7 @@ static int stm32_vrefbuf_disable(struct regulator_dev *rdev)
+ 	}
+ 
+ 	val = readl_relaxed(priv->base + STM32_VREFBUF_CSR);
+-	val = (val & ~STM32_ENVR) | STM32_HIZ;
++	val &= ~STM32_ENVR;
+ 	writel_relaxed(val, priv->base + STM32_VREFBUF_CSR);
+ 
+ 	pm_runtime_mark_last_busy(priv->dev);
+@@ -175,6 +175,7 @@ static const struct regulator_desc stm32_vrefbuf_regu = {
+ 	.volt_table = stm32_vrefbuf_voltages,
+ 	.n_voltages = ARRAY_SIZE(stm32_vrefbuf_voltages),
+ 	.ops = &stm32_vrefbuf_volt_ops,
++	.off_on_delay = 1000,
+ 	.type = REGULATOR_VOLTAGE,
+ 	.owner = THIS_MODULE,
+ };
+-- 
+2.7.4
 
->  		}
->  
->  		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
-
-And devm_clk_get_optional() here.
-
-Etc.
-
-Also does the devicetree binding need to be updated to reflect this
-change?
-
-Johan
