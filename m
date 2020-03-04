@@ -2,125 +2,104 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB8DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 709BFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:26:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7420E2072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lGZ2xtuN"
+	by mail.kernel.org (Postfix) with ESMTP id 501212072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:26:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbgCDPZv (ORCPT
+        id S1729765AbgCDP0F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:25:51 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:42984 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729568AbgCDPZv (ORCPT
+        Wed, 4 Mar 2020 10:26:05 -0500
+Received: from mx-relay77-hz1.antispameurope.com ([94.100.132.239]:56792 "EHLO
+        mx-relay77-hz1.antispameurope.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729568AbgCDP0E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:25:51 -0500
-Received: by mail-yw1-f68.google.com with SMTP id n127so2282116ywd.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:25:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=8sse2ZoFpDstytju+TH7ofYW6pSMF+pSogTbI3fs9ho=;
-        b=lGZ2xtuNzMfE7wAmiXHHzCnmr8MzzHfxItp2rd8giQGw/HSGKfml5i954ukKVs7g4R
-         SV/CWrY+mfr1KM0nSpZ/L5/mBUZ0i2vp5pDWQevXUAn+rX4AN1qiCh6qk+K3FozYTkXc
-         TgWgGofoMCm7TAPmWZQwVUuEA/9WUNcyr0rAo4tP0ChGoxZvyJpkBckjWehF+bIqa/LF
-         lJfUprE1MYE3m2b7xdOIzKAeVUiDp6ow2zmAMYDqDsB9+iOrMXQXcV7Fn9FdSvGP/aqu
-         NDRCFhJ/3FirfpACd6ZR17ng53eJFfPVArAk9t+mzEemvLMODRIYWMXgcyhKBBzY+5P3
-         wZzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=8sse2ZoFpDstytju+TH7ofYW6pSMF+pSogTbI3fs9ho=;
-        b=BD+PhjcfGrgFc+p2GV7QeHNMfptFDmmdgO+yFaxyVnfDdhiQ0B1lj3v9v7z6GQPs/r
-         1XMvUov70glR0CCjomqOEEeRXTT8g9S9zBRjXXhDGLoKLO/ClbUKSsxqy3m5Rj5cslTG
-         UAWh9zKja5B9NocWtP6XIsxEdPp4GPjksC9dLVZ2KqYQrs413YSIboxRYuBWeJIUQZSu
-         jeWO/9H769XE3smnLM5MWz2gLjb3anthx+zhJkoeQ3pY+6DCNEj6BedSA+3KRsFE4mm4
-         7MjemN8ZwfkYTs5hLJ+/gh93/kGXwxCOIvguLtvgSH1BpscwZ6BlONt0QSPWIbG2FmSH
-         EZAQ==
-X-Gm-Message-State: ANhLgQ2KfIt6kZrBK+O1TZ5VLe5t39DMV4QxIZUPfksp5mbWeN7jKET6
-        ao6QHvFrU358U0Y8fiYiZPimXg==
-X-Google-Smtp-Source: ADFU+vuFcgaPWUOAEJEwQ9M7JAHuHmY8ShKNroK4R3mkMu9rX782nf/hMKBtrfQJZO+16Isd7BkRlQ==
-X-Received: by 2002:a81:3695:: with SMTP id d143mr3175382ywa.362.1583335548150;
-        Wed, 04 Mar 2020 07:25:48 -0800 (PST)
-Received: from localhost (c-75-72-120-152.hsd1.mn.comcast.net. [75.72.120.152])
-        by smtp.gmail.com with ESMTPSA id k5sm3578652ywh.108.2020.03.04.07.25.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 07:25:47 -0800 (PST)
-Date:   Wed, 4 Mar 2020 09:25:46 -0600
-From:   Dan Rue <dan.rue@linaro.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.5 000/176] 5.5.8-stable review
-Message-ID: <20200304152546.qhfop74fuwmr6iop@xps.therub.org>
-Mail-Followup-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-References: <20200303174304.593872177@linuxfoundation.org>
- <CA+G9fYtNKXBOQKE_AD6qLoRo4TeaBYOc9Ce3kBxdLap1av4v=Q@mail.gmail.com>
- <20200304081128.GC1401372@kroah.com>
- <20200304084702.GA1416015@kroah.com>
- <20200304084946.GB1416015@kroah.com>
- <CA+G9fYuTXB03s5YSn=NL0dtF-Kzj0YHUu6NwqSh6m9Hco59DPw@mail.gmail.com>
- <20200304115232.GC1581141@kroah.com>
+        Wed, 4 Mar 2020 10:26:04 -0500
+X-Greylist: delayed 361 seconds by postgrey-1.27 at vger.kernel.org; Wed, 04 Mar 2020 10:26:04 EST
+Received: from mailgw1.iis.fraunhofer.de ([153.96.172.4]) by mx-relay77-hz1.antispameurope.com;
+ Wed, 04 Mar 2020 16:20:00 +0100
+Received: from mail.iis.fraunhofer.de (mail01.iis.fhg.de [153.96.171.211])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailgw1.iis.fraunhofer.de (Postfix) with ESMTPS id 9E2F82400083;
+        Wed,  4 Mar 2020 16:19:56 +0100 (CET)
+Received: from mail01.iis.fhg.de (2001:638:a0a:1111:fd91:8c2a:e4a5:e74e) by
+ mail01.iis.fhg.de (2001:638:a0a:1111:fd91:8c2a:e4a5:e74e) with Microsoft SMTP
+ Server (TLS) id 15.0.1395.4; Wed, 4 Mar 2020 16:19:56 +0100
+Received: from mail01.iis.fhg.de ([fe80::fd91:8c2a:e4a5:e74e]) by
+ mail01.iis.fhg.de ([fe80::fd91:8c2a:e4a5:e74e%12]) with mapi id
+ 15.00.1395.000; Wed, 4 Mar 2020 16:19:56 +0100
+From:   "Stahl, Manuel" <manuel.stahl@iis-extern.fraunhofer.de>
+To:     "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+CC:     "hjk@linutronix.de" <hjk@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "sojkam1@fel.cvut.cz" <sojkam1@fel.cvut.cz>
+Subject: Re: [PATCH 2/2] uio: Prefer MSI(X) interrupts in PCI drivers
+Thread-Topic: [PATCH 2/2] uio: Prefer MSI(X) interrupts in PCI drivers
+Thread-Index: AQHTPqe0AewtzyOB0kiu6siMSnXwqaLWtAAAgAABSQCAABKaAIAV3VwAgAACLgCFUTs3gA==
+Date:   Wed, 4 Mar 2020 15:19:55 +0000
+Message-ID: <9ba3cdd6d330486a91cb5c376f012b5b963c4eae.camel@iis-extern.fraunhofer.de>
+References: <1507296707.2915.14.camel@iis-extern.fraunhofer.de>
+         <1507296804.2915.16.camel@iis-extern.fraunhofer.de>
+         <20171006134550.GA1626@kroah.com>
+         <1507297826.2915.18.camel@iis-extern.fraunhofer.de>
+         <20171006075700.587a5e22@xeon-e3> <20171020125044.GA8634@kroah.com>
+         <1508504312.3128.23.camel@iis-extern.fraunhofer.de>
+In-Reply-To: <1508504312.3128.23.camel@iis-extern.fraunhofer.de>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [153.96.171.210]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D7AB6DFC20E36C47BA570DC2F3116EC5@iis.fhg.de>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304115232.GC1581141@kroah.com>
+X-cloud-security-sender: manuel.stahl@iis-extern.fraunhofer.de
+X-cloud-security-recipient: linux-kernel@vger.kernel.org
+X-cloud-security-crypt: load encryption module
+X-cloud-security-Virusscan: CLEAN
+X-cloud-security-disclaimer: This E-Mail was scanned by E-Mailservice on mx-relay77-hz1.antispameurope.com with C3591600930
+X-cloud-security-connect: mailgw1.iis.fraunhofer.de[153.96.172.4], TLS=1, IP=153.96.172.4
+X-cloud-security: scantime:.3309
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 12:52:32PM +0100, Greg Kroah-Hartman wrote:
-> On Wed, Mar 04, 2020 at 04:22:30PM +0530, Naresh Kamboju wrote:
-> > > > So why is this "Vulnerable"?  Because it didn't think it could find my
-> > > > kernel image for some odd reason, despite it really being in /boot/ (I
-> > > > don't use netboot)
-> > 
-> > Now I know the real reason why this test failed.
-> > With this note we can conclude this is not a regression.
-> > 
-> > No regressions on arm64, arm, x86_64, and i386 for 4.19, 5.4 and 5.5 branches.
-> 
-> Great, thanks for confirming and for testing all of these.
-
-We originally added spectre-meltdown-checker to lkft for informational
-purposes, so that we could compare its report to any actual tests that
-produce spectre/meltdown related failures (and help determine if the
-problem is hardware/firmware or kernel). In practice, it's never been
-helpful (because it's not an actual test) and so we'll be removing it
-from LKFT.
-
-Dan
-
-> 
-> greg k-h
-
--- 
-Linaro LKFT
-https://lkft.linaro.org
+SGkgR3JlZywNCg0Kc28gc29tZWhvdyB0aGlzIGRpc2N1c3Npb24gc3RvcHBlZCB3aXRob3V0IGFu
+eSBpbnN0cnVjdGlvbnMgaG93IHRvIHByb2NlZWQuDQpJIHRoaW5rIHRoaXMga2luZCBvZiBkcml2
+ZXIgaGVscHMgZXZlcnkgRlBHQSBkZXZlbG9wZXIgdG8gaW50ZXJmYWNlIGhpcyBkZXNpZ24gdmlh
+IFBDSWUgdG8gYSBMaW51eCBQQy4NClNvIGlmIHRoZXJlIGlzIGFueSBjaGFuY2UgdG8gZ2V0IHRo
+aXMgY29kZSBtZXJnZWQsIEknbSBnbGFkIHRvIHJlYmFzZSB0aGlzIG9udG8gdGhlIGxhdGVzdCBr
+ZXJuZWwgcmVsZWFzZS4NCg0KQmVzdCByZWdhcmRzLA0KTWFudWVsIFN0YWhsDQoNCk9uIEZyLCAy
+MDE3LTEwLTIwIGF0IDE0OjU4ICswMjAwLCBNYW51ZWwgU3RhaGwgd3JvdGU6DQo+IEhpIEdyZWcs
+DQo+IA0KPiBpdCBqdXN0IHVzZXMgTVNJLVggb3IgTVNJIHdoZW4gYXZhaWxhYmxlIGFuZCBmYWxs
+cyBiYWNrIHRvIGxlZ2FjeSBJUlEgb3RoZXJ3aXNlLg0KPiANCj4gUmVnYXJkcywNCj4gTWFudWVs
+DQo+IA0KPiBPbiBGciwgMjAxNy0xMC0yMCBhdCAxNDo1MCArMDIwMCwgZ3JlZ2toQGxpbnV4Zm91
+bmRhdGlvbi5vcmcgd3JvdGU6DQo+ID4gT24gRnJpLCBPY3QgMDYsIDIwMTcgYXQgMDc6NTc6MDBB
+TSAtMDcwMCwgU3RlcGhlbiBIZW1taW5nZXIgd3JvdGU6DQo+ID4gPiBPbiBGcmksIDYgT2N0IDIw
+MTcgMTM6NTA6NDQgKzAwMDANCj4gPiA+ICJTdGFobCwgTWFudWVsIiA8bWFudWVsLnN0YWhsQGlp
+cy1leHRlcm4uZnJhdW5ob2Zlci5kZT4gd3JvdGU6DQo+ID4gPiANCj4gPiA+ID4gTVNJKFgpIGlu
+dGVycnVwdHMgYXJlIG5vdCBzaGFyZWQgYmV0d2VlbiBkZXZpY2VzLiBTbyB3aGVuIGF2YWlsYWJs
+ZQ0KPiA+ID4gPiB0aG9zZSBzaG91bGQgYmUgcHJlZmVycmVkIG92ZXIgbGVnYWN5IGludGVycnVw
+dHMuDQo+ID4gPiA+IA0KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBNYW51ZWwgU3RhaGwgPG1hbnVl
+bC5zdGFobEBpaXMuZnJhdW5ob2Zlci5kZT4NCj4gPiA+ID4gLS0tDQo+ID4gPiA+ICBkcml2ZXJz
+L3Vpby91aW9fcGNpX2RtZW1fZ2VuaXJxLmMgfCAyNyArKysrKysrKysrKysrKysrKysrKy0tLS0t
+LS0NCj4gPiA+ID4gIGRyaXZlcnMvdWlvL3Vpb19wY2lfZ2VuZXJpYy5jICAgICB8IDI0ICsrKysr
+KysrKysrKysrKysrKy0tLS0tLQ0KPiA+ID4gPiAgMiBmaWxlcyBjaGFuZ2VkLCAzOCBpbnNlcnRp
+b25zKCspLCAxMyBkZWxldGlvbnMoLSkNCj4gPiA+IA0KPiA+ID4gVGhlIGxhc3QgdGltZSBJIHRy
+aWVkIHRvIGRvIE1TSS1YIHdpdGggcGNpLWdlbmVyaWMgaXQgZ290IHJlamVjdGVkDQo+ID4gPiBi
+eSB0aGUgbWFpbnRhaW5lci4NCj4gPiANCj4gPiBIbSwgeWVhaCwgdGhpcyB3b3VsZCBicmVhayB1
+c2VycyB0b2RheSB0aGF0IGRvIG5vdCBoYXZlIG1zaS14LCByaWdodD8NCj4gPiANCj4gPiBOb3Qg
+Z29vZCwgTWFudWVsLCBob3cgd2VsbCBkaWQgeW91IHRlc3QgdGhpcz8NCj4gPiANCj4gPiB0aGFu
+a3MsDQo+ID4gDQo+ID4gZ3JlZyBrLWgNCg==
