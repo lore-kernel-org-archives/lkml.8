@@ -2,112 +2,72 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA64C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:35:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E108C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85BAA214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:35:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XdUQLmI/"
+	by mail.kernel.org (Postfix) with ESMTP id 7E882214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387944AbgCDLfH (ORCPT
+        id S2387971AbgCDLfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:35:07 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:39221 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgCDLfH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:35:07 -0500
-Received: by mail-ed1-f65.google.com with SMTP id m13so1908007edb.6;
-        Wed, 04 Mar 2020 03:35:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DPVszP3963wNdExcgJRPDsGAe8NIh4E9G99F11CZ+qc=;
-        b=XdUQLmI/IVWiEXuPBYH7fvfVsR01GI/hoVyjziqRLy5X3xiB77BReI0dcgMcRrUu5D
-         dOVMapahG8pFdUqHjOYIYWHLGaR60G1q/+fDuNWoHAafyJ8J5+Mbvh6EZcNWIvSlFrIq
-         KOJwQd+cNNk8u48jEySS4ZYTJz7NkcBEPhjjpkB0uK0yt1Un2FVzC0KR4RZCfEJ70Ll2
-         iyMov+IBO0AMKwuw/CVkwO7xE836se0c7Mn98M+SJ9Gq5bOZHvNhKXN/OUADOtVExvNX
-         pMlgPNsRtA03fwhCK9s42j3CfcfIg+QZS0TJJ19KILHjmKrHsTjVWxLSy1acw4rHkrgT
-         8Ufg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DPVszP3963wNdExcgJRPDsGAe8NIh4E9G99F11CZ+qc=;
-        b=YMM8blcEs685TRS4mV1tG8CnXrl/szBJvXuyyKY6PJ/q53O5gsYUWwctEUq+mct5Cj
-         bBLV1B2ey4ObHW7jIHWnTWE4uMVMxRRWA8e/4DSCUeNMZpY8nd+hQq6cTS7echCta3b6
-         MKx5pDu7tDP1I5B0yhfk6cqeoeXoDMCldqyTeXn5un79/6dw+tIhavNVMoabP2bOQtjb
-         KiIm6HWgTABEtgT9TSkYb26w/uiWXBJFZgfzn0zh29AogSrhnJFJy1rDuHv+So23m242
-         g3arxH2HnqDWT/WcXyQcWUZSV+rnFl3QmwxJOUZz053TBLnLA5vS01LCoXNo/4JXFvO5
-         YuQg==
-X-Gm-Message-State: ANhLgQ2CECE1fj1vCpohDPZXR0EzTsJXK6+B15JD6zHc5lggB3fZZqbU
-        zl14gK05jc03b/dV1XVRplQ=
-X-Google-Smtp-Source: ADFU+vvrwiVGnfIJe5IcbqtO7UovqUrHErJ78bJvdOvfQb4axpxC72rr8v7LZuQXP9axGJeBad+iuA==
-X-Received: by 2002:a17:906:1be2:: with SMTP id t2mr2128366ejg.357.1583321703821;
-        Wed, 04 Mar 2020 03:35:03 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d16:4100:3093:39f0:d3ca:23c6])
-        by smtp.gmail.com with ESMTPSA id n4sm273434edv.26.2020.03.04.03.35.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 03:35:03 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Chen-Yu Tsai <wens@csie.org>, Yangtao Li <tiny.windzz@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh@kernel.org>
-Cc:     linux-pm@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: update ALLWINNER CPUFREQ DRIVER entry
-Date:   Wed,  4 Mar 2020 12:34:52 +0100
-Message-Id: <20200304113452.10201-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 06:35:13 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10722 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726440AbgCDLfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 06:35:13 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A00CA218892F29E61954;
+        Wed,  4 Mar 2020 19:35:05 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Mar 2020
+ 19:34:55 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <ak@it-klinger.de>, <jic23@kernel.org>, <knaack.h@gmx.de>,
+        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <Jonathan.Cameron@huawei.com>
+CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] iio: ping: set pa_laser_ping_cfg in of_ping_match
+Date:   Wed, 4 Mar 2020 19:34:23 +0800
+Message-ID: <20200304113423.26920-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit b30d8cf5e171 ("dt-bindings: opp: Convert Allwinner H6 OPP to a
-schema") converted in Documentation/devicetree/bindings/opp/ the file
-sun50i-nvmem-cpufreq.txt to allwinner,sun50i-h6-operating-points.yaml.
+pa_laser_ping_cfg should be set in of_ping_match
+instead of pa_ping_cfg.
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
-
-  warning: no file matches \
-  F: Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-
-Adjust the file pattern and while at it, add the two maintainers mentioned
-in the yaml file to the ALLWINNER CPUFREQ DRIVER entry.
-
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Fixes: 7bb501f49ddb ("iio: ping: add parallax ping sensors")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
-Maxime, Chen-Yu, Yangtao, please ack.
-Rob, please pick this patch.
+ drivers/iio/proximity/ping.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- MAINTAINERS | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6158a143a13e..8e5ed8737966 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -691,9 +691,11 @@ F:	drivers/staging/media/allegro-dvt/
+diff --git a/drivers/iio/proximity/ping.c b/drivers/iio/proximity/ping.c
+index 34aff10..12b893c 100644
+--- a/drivers/iio/proximity/ping.c
++++ b/drivers/iio/proximity/ping.c
+@@ -269,7 +269,7 @@ static const struct iio_chan_spec ping_chan_spec[] = {
  
- ALLWINNER CPUFREQ DRIVER
- M:	Yangtao Li <tiny.windzz@gmail.com>
-+M:	Chen-Yu Tsai <wens@csie.org>
-+M:	Maxime Ripard <mripard@kernel.org>
- L:	linux-pm@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-+F:	Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
- F:	drivers/cpufreq/sun50i-cpufreq-nvmem.c
+ static const struct of_device_id of_ping_match[] = {
+ 	{ .compatible = "parallax,ping", .data = &pa_ping_cfg},
+-	{ .compatible = "parallax,laserping", .data = &pa_ping_cfg},
++	{ .compatible = "parallax,laserping", .data = &pa_laser_ping_cfg},
+ 	{},
+ };
  
- ALLWINNER CRYPTO DRIVERS
 -- 
-2.17.1
+2.7.4
+
 
