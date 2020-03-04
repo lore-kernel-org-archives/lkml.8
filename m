@@ -2,263 +2,122 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD5AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF4DC3F2DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1C621741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 101E52072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:11:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbgCDOLB (ORCPT
+        id S1729666AbgCDOLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:11:01 -0500
-Received: from foss.arm.com ([217.140.110.172]:34716 "EHLO foss.arm.com"
+        Wed, 4 Mar 2020 09:11:04 -0500
+Received: from mga04.intel.com ([192.55.52.120]:42252 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729389AbgCDOLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:11:00 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E20484B2;
-        Wed,  4 Mar 2020 06:10:59 -0800 (PST)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.1.88])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7AC9E3F6CF;
-        Wed,  4 Mar 2020 06:10:52 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2 1/2] mm/sparsemem: Enable vmem_altmap support in vmemmap_populate_basepages()
-Date:   Wed,  4 Mar 2020 19:40:29 +0530
-Message-Id: <1583331030-7335-2-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583331030-7335-1-git-send-email-anshuman.khandual@arm.com>
-References: <1583331030-7335-1-git-send-email-anshuman.khandual@arm.com>
+        id S1729389AbgCDOLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 09:11:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 06:11:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
+   d="scan'208";a="274680254"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2020 06:11:01 -0800
+Subject: Re: [PATCH V2] mmc: sdhci-msm: Disable CQE during SDHC reset
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
+ <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
+ <da449444-1878-e387-6ebf-4ddb282a9b71@intel.com>
+ <1430237a-9dc5-f046-1dfe-1d5c09c16ead@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <3a1783c2-e8bb-f5af-4d3e-f4a45b487f0e@intel.com>
+Date:   Wed, 4 Mar 2020 16:10:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <1430237a-9dc5-f046-1dfe-1d5c09c16ead@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vmemmap_populate_basepages() is used across platforms to allocate backing
-memory for vmemmap mapping. This is used as a standard default choice or
-as a fallback when intended huge pages allocation fails. This just creates
-entire vmemmap mapping with base pages (PAGE_SIZE).
+On 4/03/20 3:10 pm, Veerabhadrarao Badiganti wrote:
+> Hi Adrian
+> 
+> On 3/4/2020 5:58 PM, Adrian Hunter wrote:
+>> On 4/03/20 1:54 pm, Veerabhadrarao Badiganti wrote:
+>>> When SDHC gets reset (E.g. in suspend path), CQE also gets reset
+>>> and goes to disable state. But s/w state still points it as CQE
+>>> is in enabled state. Since s/w and h/w states goes out of sync,
+>>> it results in s/w request timeout for subsequent CQE requests.
+>>>
+>>> To synchronize CQE s/w and h/w state during SDHC reset,
+>>> explicitly disable CQE after reset.
+>> Shouldn't you be calling cqhci_suspend() / cqhci_resume() in the suspend and
+>> resume paths?
+> 
+> This issue is seen during mmc runtime suspend.  I can add it
+> sdhci_msm_runtime_suspend
+> 
+> but sdhci_msm runtime delay is aggressive, its 50ms. It may get invoked very
+> frequently.
+> 
+> So Im of the opinion that disabling CQE very often from platform runtime
+> suspend is overkill.
 
-On arm64 platforms, vmemmap_populate_basepages() is called instead of the
-platform specific vmemmap_populate() when ARM64_SWAPPER_USES_SECTION_MAPS
-is not enabled as in case for ARM64_16K_PAGES and ARM64_64K_PAGES configs.
+It doesn't look like sdhci-msm calls any sdhci.c pm ops, so how does SDHC
+get reset?
 
-At present vmemmap_populate_basepages() does not support allocating from
-driver defined struct vmem_altmap while trying to create vmemmap mapping
-for a device memory range. It prevents ARM64_16K_PAGES and ARM64_64K_PAGES
-configs on arm64 from supporting device memory with vmemap_altmap request.
-
-This enables vmem_altmap support in vmemmap_populate_basepages() unlocking
-device memory allocation for vmemap mapping on arm64 platforms with 16K or
-64K base page configs.
-
-Each architecture should evaluate and decide on subscribing device memory
-based base page allocation through vmemmap_populate_basepages(). Hence lets
-keep it disabled on all archs in order to preserve the existing semantics.
-A subsequent patch enables it on arm64.
-
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-ia64@vger.kernel.org
-Cc: linux-riscv@lists.infradead.org
-Cc: x86@kernel.org
-Cc: linux-kernel@vger.kernel.org
-
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm64/mm/mmu.c      |  2 +-
- arch/ia64/mm/discontig.c |  2 +-
- arch/riscv/mm/init.c     |  2 +-
- arch/x86/mm/init_64.c    |  6 +++---
- include/linux/mm.h       |  5 +++--
- mm/sparse-vmemmap.c      | 16 +++++++++++-----
- 6 files changed, 20 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 9b08f7c7e6f0..27cb95c471eb 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -1036,7 +1036,7 @@ static void free_empty_tables(unsigned long addr, unsigned long end,
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 		struct vmem_altmap *altmap)
- {
--	return vmemmap_populate_basepages(start, end, node);
-+	return vmemmap_populate_basepages(start, end, node, NULL);
- }
- #else	/* !ARM64_SWAPPER_USES_SECTION_MAPS */
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
-diff --git a/arch/ia64/mm/discontig.c b/arch/ia64/mm/discontig.c
-index 4f33f6e7e206..20409f3afea8 100644
---- a/arch/ia64/mm/discontig.c
-+++ b/arch/ia64/mm/discontig.c
-@@ -656,7 +656,7 @@ void arch_refresh_nodedata(int update_node, pg_data_t *update_pgdat)
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 		struct vmem_altmap *altmap)
- {
--	return vmemmap_populate_basepages(start, end, node);
-+	return vmemmap_populate_basepages(start, end, node, NULL);
- }
- 
- void vmemmap_free(unsigned long start, unsigned long end,
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 965a8cf4829c..1d7451c91982 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -501,6 +501,6 @@ void __init paging_init(void)
- int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 			       struct vmem_altmap *altmap)
- {
--	return vmemmap_populate_basepages(start, end, node);
-+	return vmemmap_populate_basepages(start, end, node, NULL);
- }
- #endif
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index abbdecb75fad..3272fe0d844a 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1471,7 +1471,7 @@ static int __meminit vmemmap_populate_hugepages(unsigned long start,
- 			vmemmap_verify((pte_t *)pmd, node, addr, next);
- 			continue;
- 		}
--		if (vmemmap_populate_basepages(addr, next, node))
-+		if (vmemmap_populate_basepages(addr, next, node, NULL))
- 			return -ENOMEM;
- 	}
- 	return 0;
-@@ -1483,7 +1483,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 	int err;
- 
- 	if (end - start < PAGES_PER_SECTION * sizeof(struct page))
--		err = vmemmap_populate_basepages(start, end, node);
-+		err = vmemmap_populate_basepages(start, end, node, NULL);
- 	else if (boot_cpu_has(X86_FEATURE_PSE))
- 		err = vmemmap_populate_hugepages(start, end, node, altmap);
- 	else if (altmap) {
-@@ -1491,7 +1491,7 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- 				__func__);
- 		err = -ENOMEM;
- 	} else
--		err = vmemmap_populate_basepages(start, end, node);
-+		err = vmemmap_populate_basepages(start, end, node, NULL);
- 	if (!err)
- 		sync_global_pgds(start, end - 1);
- 	return err;
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 52269e56c514..42f99c8d63c0 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2780,14 +2780,15 @@ pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
- p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
- pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
- pmd_t *vmemmap_pmd_populate(pud_t *pud, unsigned long addr, int node);
--pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node);
-+pte_t *vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
-+			    struct vmem_altmap *altmap);
- void *vmemmap_alloc_block(unsigned long size, int node);
- struct vmem_altmap;
- void *vmemmap_alloc_block_buf(unsigned long size, int node);
- void *altmap_alloc_block_buf(unsigned long size, struct vmem_altmap *altmap);
- void vmemmap_verify(pte_t *, int, unsigned long, unsigned long);
- int vmemmap_populate_basepages(unsigned long start, unsigned long end,
--			       int node);
-+			       int node, struct vmem_altmap *altmap);
- int vmemmap_populate(unsigned long start, unsigned long end, int node,
- 		struct vmem_altmap *altmap);
- void vmemmap_populate_print_last(void);
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index 200aef686722..a407abc9b46c 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -140,12 +140,18 @@ void __meminit vmemmap_verify(pte_t *pte, int node,
- 			start, end - 1);
- }
- 
--pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node)
-+pte_t * __meminit vmemmap_pte_populate(pmd_t *pmd, unsigned long addr, int node,
-+				       struct vmem_altmap *altmap)
- {
- 	pte_t *pte = pte_offset_kernel(pmd, addr);
- 	if (pte_none(*pte)) {
- 		pte_t entry;
--		void *p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
-+		void *p;
-+
-+		if (altmap)
-+			p = altmap_alloc_block_buf(PAGE_SIZE, altmap);
-+		else
-+			p = vmemmap_alloc_block_buf(PAGE_SIZE, node);
- 		if (!p)
- 			return NULL;
- 		entry = pfn_pte(__pa(p) >> PAGE_SHIFT, PAGE_KERNEL);
-@@ -213,8 +219,8 @@ pgd_t * __meminit vmemmap_pgd_populate(unsigned long addr, int node)
- 	return pgd;
- }
- 
--int __meminit vmemmap_populate_basepages(unsigned long start,
--					 unsigned long end, int node)
-+int __meminit vmemmap_populate_basepages(unsigned long start, unsigned long end,
-+					 int node, struct vmem_altmap *altmap)
- {
- 	unsigned long addr = start;
- 	pgd_t *pgd;
-@@ -236,7 +242,7 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
- 		pmd = vmemmap_pmd_populate(pud, addr, node);
- 		if (!pmd)
- 			return -ENOMEM;
--		pte = vmemmap_pte_populate(pmd, addr, node);
-+		pte = vmemmap_pte_populate(pmd, addr, node, altmap);
- 		if (!pte)
- 			return -ENOMEM;
- 		vmemmap_verify(pte, node, addr, addr + PAGE_SIZE);
--- 
-2.20.1
+> 
+>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>>> ---
+>>> Changes since V1:
+>>>     - Disable CQE only when SDHC undergoes s/w reset for all.
+>>> ---
+>>>   drivers/mmc/host/sdhci-msm.c | 9 ++++++++-
+>>>   1 file changed, 8 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>>> index 53b79ee..75929d3 100644
+>>> --- a/drivers/mmc/host/sdhci-msm.c
+>>> +++ b/drivers/mmc/host/sdhci-msm.c
+>>> @@ -1823,6 +1823,13 @@ static void sdhci_msm_set_regulator_caps(struct
+>>> sdhci_msm_host *msm_host)
+>>>       pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>>>   }
+>>>   +static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
+>>> +{
+>>> +    sdhci_reset(host, mask);
+>>> +    if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
+>>> +        cqhci_suspend(host->mmc);
+>>> +}
+>>> +
+>>>   static const struct sdhci_msm_variant_ops mci_var_ops = {
+>>>       .msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>>>       .msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+>>> @@ -1861,7 +1868,7 @@ static void sdhci_msm_set_regulator_caps(struct
+>>> sdhci_msm_host *msm_host)
+>>>   MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
+>>>     static const struct sdhci_ops sdhci_msm_ops = {
+>>> -    .reset = sdhci_reset,
+>>> +    .reset = sdhci_msm_reset,
+>>>       .set_clock = sdhci_msm_set_clock,
+>>>       .get_min_clock = sdhci_msm_get_min_clock,
+>>>       .get_max_clock = sdhci_msm_get_max_clock,
+>>>
 
