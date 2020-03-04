@@ -2,111 +2,138 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA970C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:48:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD51AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:49:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B315E20637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:48:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g2VeURZW"
+	by mail.kernel.org (Postfix) with ESMTP id 91C8A24654
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:49:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583340562;
+	bh=htZq3MKYG3/FJ8bILu0qqA54TuTZg4n2O0B4bA60sUA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Xe6asqw571mMjzRfEYDlUMIAyBdLSFzRYCi04vb0so5g9QqbjLxzvBEuoJmgH7Tm5
+	 i04w7Vw7KK5ex6kwAuIBBp2QwNpO3I/DKGggI03lDMa9tZsgehXv3xdaLrXerXMVIV
+	 HXxzOLyplSXiGPR8s2ZvrXBWUAFmv0DKHOzRRv5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388223AbgCDQsR (ORCPT
+        id S2388282AbgCDQtV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:48:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59797 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729573AbgCDQsQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:48:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583340495;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Iwh6ArBhNlC/QzZYMfW6WQM30EkgNyAS0AeU4Ro9sDY=;
-        b=g2VeURZW/M7CI/argwAv1Gf7LbMF+2h7wGRLMVsIppHFNlfIN3Cc1GHiMzGmdTdHJ3CRd8
-        00R7E1Cn3THrbyx7ntozKOkhNm9irzpFl9DYTqbvQ01MIr1/0SBcliSg1SeNHzHNvqES+/
-        eTAJBw3cxDeC0EYM+Nir6Dyv0l7yyfU=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-t2owdTvEM_eMOjjjGl684g-1; Wed, 04 Mar 2020 11:48:11 -0500
-X-MC-Unique: t2owdTvEM_eMOjjjGl684g-1
-Received: by mail-wm1-f69.google.com with SMTP id w12so770559wmc.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:48:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Iwh6ArBhNlC/QzZYMfW6WQM30EkgNyAS0AeU4Ro9sDY=;
-        b=Y96sej24UV7hrr+9ESHaHTzCutoW5+NtrOnZz6gwk/J+GGEcdcXoNlvTMSxnf+C2Bn
-         UIA8g4ZZvUvqjSlYISLBQ/qxkRZqB7bxj54Co82WJT4+jiDV9YDV/3pczg1EKmBPtach
-         TsbB2EWGDEve5FjQM0UupZDdnr5IC5Ehf0m/am1//p0todaPSlfBP5WxFJVg4Jd5GBpj
-         T7puYseLb3CE088InUmH6tLUmEz2YMNjhDPWk8YVS3BC/clTWOAGeMdvcwkQ8imY0ism
-         uDG5L1K39dLl3d8BSiHFa1V6JCIkXpdpXGYIyqw5BT+LXgEjjQVmpGuJrfzR5TqYm4Tn
-         cOyw==
-X-Gm-Message-State: ANhLgQ1aRvoahZRCRoE51svLkCwAAzbXQwBbBHP8m0h1Pi0sYw2qfq8Z
-        yN8nJF8Elmic3WoXT1YIAHPGNN+Ew2F0bHjOJGfYaBCs7myiVS/rUw36F52QVdDQZc9s6yytCHu
-        ONu8kS3B64cYm2aiq5JIAu+T+
-X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr4326638wmi.108.1583340489629;
-        Wed, 04 Mar 2020 08:48:09 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vsNyLWu0uFAuo01q9LkN1pw0Tdrpz/UjV74a4G/Kr0JlmOeAm6griIqJdEVFCpIlrxATT+Wuw==
-X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr4326621wmi.108.1583340489391;
-        Wed, 04 Mar 2020 08:48:09 -0800 (PST)
-Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id n11sm6627994wrw.11.2020.03.04.08.48.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:48:08 -0800 (PST)
-Date:   Wed, 4 Mar 2020 17:48:06 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, io-uring@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] io_uring: Fix unused function warnings
-Message-ID: <20200304164806.3bsr2v7cvpq7sw5e@steredhat>
-References: <20200304075352.31132-1-yuehaibing@huawei.com>
+        Wed, 4 Mar 2020 11:49:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388063AbgCDQtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:49:21 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2C2922B48;
+        Wed,  4 Mar 2020 16:49:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583340556;
+        bh=htZq3MKYG3/FJ8bILu0qqA54TuTZg4n2O0B4bA60sUA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QFw/Q1NY4B+y7WTrekje+ZpgNyFzrIcZ7UTABnDsnjgXf0am4nQsbW5ZVxTNNjWld
+         6g3+cMHNGJFGxmjYQ7wuvpNbSuU4C8wJW0QIQn6siOMOjhXevPQyX+4tWUsOTV/oDy
+         NWsKv9WocDxBZSqHQrN8bsD7sTiXcsBN4pte4wXQ=
+Date:   Wed, 4 Mar 2020 17:49:13 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Karel Zak <kzak@redhat.com>
+Cc:     Ian Kent <raven@themaw.net>, Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200304164913.GB1763256@kroah.com>
+References: <107666.1582907766@warthog.procyon.org.uk>
+ <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+ <20200303130347.GA2302029@kroah.com>
+ <33d900c8061c40f70ba2b9d1855fd6bd1c2b68bb.camel@themaw.net>
+ <20200304152241.iaiulvl5xisnuxp6@ws.net.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200304075352.31132-1-yuehaibing@huawei.com>
+In-Reply-To: <20200304152241.iaiulvl5xisnuxp6@ws.net.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 03:53:52PM +0800, YueHaibing wrote:
-> If CONFIG_NET is not set, gcc warns:
+On Wed, Mar 04, 2020 at 04:22:41PM +0100, Karel Zak wrote:
+> On Wed, Mar 04, 2020 at 10:01:33AM +0800, Ian Kent wrote:
+> > On Tue, 2020-03-03 at 14:03 +0100, Greg Kroah-Hartman wrote:
+> > > Actually, I like this idea (the syscall, not just the unlimited
+> > > beers).
+> > > Maybe this could make a lot of sense, I'll write some actual tests
+> > > for
+> > > it now that syscalls are getting "heavy" again due to CPU vendors
+> > > finally paying the price for their madness...
+> > 
+> > The problem isn't with open->read->close but with the mount info.
+> > changing between reads (ie. seq file read takes and drops the
+> > needed lock between reads at least once).
 > 
-> fs/io_uring.c:3110:12: warning: io_setup_async_msg defined but not used [-Wunused-function]
->  static int io_setup_async_msg(struct io_kiocb *req,
->             ^~~~~~~~~~~~~~~~~~
+> readfile() is not reaction to mountinfo. 
 > 
-> There are many funcions wraped by CONFIG_NET, move them
-> together to simplify code, also fix this warning.
+> The motivation is that we have many places with trivial
+> open->read->close for very small text files due to /sys and /proc. The
+> current way how kernel delivers these small strings to userspace seems
+> pretty inefficient if we can do the same by one syscall.
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  fs/io_uring.c | 98 ++++++++++++++++++++++++++++++++++-------------------------
->  1 file changed, 57 insertions(+), 41 deletions(-)
+>     Karel
 > 
+> $ strace -e openat,read,close -c ps aux
+> ...
+> % time     seconds  usecs/call     calls    errors syscall
+> ------ ----------- ----------- --------- --------- ----------------
+>  43.32    0.004190           4       987           read
+>  31.42    0.003039           3       844         4 openat
+>  25.26    0.002443           2       842           close
+> ------ ----------- ----------- --------- --------- ----------------
+> 100.00    0.009672                  2673         4 total
+> 
+> $ strace -e openat,read,close -c lsns
+> ...
+> % time     seconds  usecs/call     calls    errors syscall
+> ------ ----------- ----------- --------- --------- ----------------
+>  39.95    0.001567           2       593           openat
+>  30.93    0.001213           2       597           close
+>  29.12    0.001142           3       365           read
+> ------ ----------- ----------- --------- --------- ----------------
+> 100.00    0.003922                  1555           total
+> 
+> 
+> $ strace -e openat,read,close -c lscpu
+> ...
+> % time     seconds  usecs/call     calls    errors syscall
+> ------ ----------- ----------- --------- --------- ----------------
+>  44.67    0.001480           7       189        52 openat
+>  34.77    0.001152           6       180           read
+>  20.56    0.000681           4       140           close
+> ------ ----------- ----------- --------- --------- ----------------
+> 100.00    0.003313                   509        52 total
 
-Since the code under the ifdef/else/endif blocks now are huge, would it make
-sense to add some comments for better readability?
+As a "real-world" test, would you recommend me converting one of the
+above tools to my implementation of readfile to see how/if it actually
+makes sense, or do you have some other tool you would rather see me try?
 
-I mean something like this:
+thanks,
 
-#if defined(CONFIG_NET)
-...
-#else /* !CONFIG_NET */
-...
-#endif /* CONFIG_NET */
-
-
-Thanks,
-Stefano
-
+greg k-h
