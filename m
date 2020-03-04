@@ -2,429 +2,198 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D4EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33A11C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD9121739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:19:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YuW+r0Rb"
+	by mail.kernel.org (Postfix) with ESMTP id 096732146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387881AbgCDTTY (ORCPT
+        id S2388007AbgCDTTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:19:24 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43539 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728726AbgCDTTE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:19:04 -0500
-Received: by mail-wr1-f65.google.com with SMTP id h9so3855471wrr.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:19:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=rwJ/lEQbGlXVsZnbKvzZuJddWa90yHQNeHuRAfmMm6M=;
-        b=YuW+r0RbYRXdAkIUknNFTEZBRZv7OC6YDbAI60Wq2zRM0dPwoWy5dQKy6DGbtUIOpn
-         puJLaUyBrJ+4Ivs50kITQXHVrH/Yd4/s96h4/hvRSRbYdJValZN2Jizp70/Io9ktQYT+
-         rO8SSdbboVJTJtGY/ZaeV3fI1olfAAXFYvaqc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=rwJ/lEQbGlXVsZnbKvzZuJddWa90yHQNeHuRAfmMm6M=;
-        b=trMCgUiCe/JHG7u7TzF6YwwhKtXWq2GxlxKoSI0BxvzhecXp8FopHivsXWuCmFA4pz
-         MtwpWmZLllfVFJF0NEyKBhWR9ArU6DYy1HPEza/N79UuAYKRX180mof56qhH475ExHuW
-         4AKE43hQFCByTvYbpIErNAq2qMSr4IjtxdimRk/OdFQqJipsTFz7d/b++GihVLBR+KA7
-         k+Xs7JNZtEFwoLNDBukXnD9Og7Gbjz2y3mkzuDKeUkwz1xfCi99Hpl8Q5c4LR/iW3Oa+
-         odPoFQ7JpcD3LwM2ZIav/YXbwoqKxdkIZJFLQ8lFRkSWo5ESfZGxkRDJFXjyGor6Qkkh
-         cJ0w==
-X-Gm-Message-State: ANhLgQ0GXH3GsgULhujPA7hWCncHFmQb6C5RcwVFzEZLga4NhAGXTTAY
-        P5+V1DszKwdZma7GVOaO4TT53A==
-X-Google-Smtp-Source: ADFU+vtv3MhCAV7jzqkIyXGSneU1Spf0xXDb/bKfvj5B9IBmup6Pm4xF9QFcW2d4JNzwLoMP53rtEw==
-X-Received: by 2002:a05:6000:1207:: with SMTP id e7mr3785748wrx.229.1583349541734;
-        Wed, 04 Mar 2020 11:19:01 -0800 (PST)
-Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id w9sm2018556wrn.35.2020.03.04.11.19.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 11:19:01 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
-Date:   Wed,  4 Mar 2020 20:18:49 +0100
-Message-Id: <20200304191853.1529-4-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200304191853.1529-1-kpsingh@chromium.org>
-References: <20200304191853.1529-1-kpsingh@chromium.org>
+        Wed, 4 Mar 2020 14:19:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:38686 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbgCDTTl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 14:19:41 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 551651FB;
+        Wed,  4 Mar 2020 11:19:40 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B33803F6C4;
+        Wed,  4 Mar 2020 11:19:34 -0800 (PST)
+Subject: Re: 5.6-rc3: WARNING: CPU: 48 PID: 17435 at kernel/sched/fair.c:380
+ enqueue_task_fair+0x328/0x440
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <ace7327f-0fd6-4f36-39ae-a8d7d1c7f06b@de.ibm.com>
+ <afacbbd1-3d6b-c537-34e2-5b455e1c2267@de.ibm.com>
+ <CAKfTPtBikHzpHY-NdRJFfOFxx+S3=4Y0aPM5s0jpHs40+9BaGA@mail.gmail.com>
+ <b073a50e-4b86-56db-3fbd-6869b2716b34@de.ibm.com>
+ <1a607a98-f12a-77bd-2062-c3e599614331@de.ibm.com>
+ <CAKfTPtBZ2X8i6zMgrA1gNJmwoSnyRc76yXmLZEwboJmF-R9QVg@mail.gmail.com>
+ <b664f050-72d6-a483-be0a-8504f687f225@de.ibm.com>
+ <20200228163545.GA18662@vingu-book>
+ <be45b190-d96c-1893-3ef0-f574eb595256@de.ibm.com>
+ <49a2ebb7-c80b-9e2b-4482-7f9ff938417d@de.ibm.com>
+ <ad0f263a-6837-e793-5761-fda3264fd8ad@de.ibm.com>
+ <CAKfTPtCX4padfJm8aLrP9+b5KVgp-ff76=teu7MzMZJBYrc-7w@mail.gmail.com>
+ <CAKfTPtD9b6o=B6jkbWNjfAw9e1UjT9Z07vxdsVfikEQdeCtfPw@mail.gmail.com>
+ <2108173c-beaa-6b84-1bc3-8f575fb95954@de.ibm.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <7be92e79-731b-220d-b187-d38bde80ad16@arm.com>
+Date:   Wed, 4 Mar 2020 20:19:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <2108173c-beaa-6b84-1bc3-8f575fb95954@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+Hi Christian,
 
-When multiple programs are attached, each program receives the return
-value from the previous program on the stack and the last program
-provides the return value to the attached function.
+On 04/03/2020 18:42, Christian Borntraeger wrote:
+> 
+> 
+> On 04.03.20 16:26, Vincent Guittot wrote:
+>> On Tue, 3 Mar 2020 at 08:55, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+>>>
+>>> On Tue, 3 Mar 2020 at 08:37, Christian Borntraeger
+>>> <borntraeger@de.ibm.com> wrote:
+>>>>
+>>>>
+>>>>
+>> [...]
+>>>>>>> ---
+>>>>>>>  kernel/sched/fair.c | 2 +-
+>>>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>>
+>>>>>>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>>>>>>> index 3c8a379c357e..beb773c23e7d 100644
+>>>>>>> --- a/kernel/sched/fair.c
+>>>>>>> +++ b/kernel/sched/fair.c
+>>>>>>> @@ -4035,8 +4035,8 @@ enqueue_entity(struct cfs_rq *cfs_rq, struct sched_entity *se, int flags)
+>>>>>>>             __enqueue_entity(cfs_rq, se);
+>>>>>>>     se->on_rq = 1;
+>>>>>>>
+>>>>>>> +   list_add_leaf_cfs_rq(cfs_rq);
+>>>>>>>     if (cfs_rq->nr_running == 1) {
+>>>>>>> -           list_add_leaf_cfs_rq(cfs_rq);
+>>>>>>>             check_enqueue_throttle(cfs_rq);
+>>>>>>>     }
+>>>>>>>  }
+>>>>>>
+>>>>>> Now running for 3 hours. I have not seen the issue yet. I can tell tomorrow if this fixes
+>>>>>> the issue.
+>>>>>
+>>>>>
+>>>>> Still running fine. I can tell for sure tomorrow, but I have the impression that this makes the
+>>>>> WARN_ON go away.
+>>>>
+>>>> So I guess this change "fixed" the issue. If you want me to test additional patches, let me know.
+>>>
+>>> Thanks for the test. For now, I don't have any other patch to test. I
+>>> have to look more deeply how the situation happens.
+>>> I will let you know if I have other patch to test
+>>
+>> So I haven't been able to figure out how we reach this situation yet.
+>> In the meantime I'm going to make a clean patch with the fix above.
+>>
+>> Is it ok if I add a reported -by and a tested-by you ?
+> 
+> Sure-
+> I just realized that this system has something special. Some month ago I created 2 slices
+> $ head /etc/systemd/system/*.slice
+> ==> /etc/systemd/system/machine-production.slice <==
+> [Unit]
+> Description=VM production
+> Before=slices.target
+> Wants=machine.slice
+> [Slice]
+> CPUQuota=2000%
+> CPUWeight=1000
+> 
+> ==> /etc/systemd/system/machine-test.slice <==
+> [Unit]
+> Description=VM production
+> Before=slices.target
+> Wants=machine.slice
+> [Slice]
+> CPUQuota=300%
+> CPUWeight=100
+> 
+> 
+> And the guests are then put into these slices. that also means that this test will never use more than the 2300%.
+> No matter how much CPUs the system has.
 
-The fmod_ret bpf programs are run after the fentry programs and before
-the fexit programs. The original function is only called if all the
-fmod_ret programs return 0 to avoid any unintended side-effects. The
-success value, i.e. 0 is not currently configurable but can be made so
-where user-space can specify it at load time.
+If you could run this debug patch on top of your un-patched kernel, it would tell us which task (in the enqueue case)
+and which taskgroup is causing that.
 
-For example:
+You could then further dump the appropriate taskgroup directory under the cpu cgroup mountpoint
+(to see e.g. the CFS bandwidth data). 
 
-int func_to_be_attached(int a, int b)
-{  <--- do_fentry
+I expect more than one hit since assert_list_leaf_cfs_rq() uses SCHED_WARN_ON, hence WARN_ONCE.
 
-do_fmod_ret:
-   <update ret by calling fmod_ret>
-   if (ret != 0)
-        goto do_fexit;
+--8<--
+From b709758f476ee4cfc260eceedc45ebcc50d93074 Mon Sep 17 00:00:00 2001
+From: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Date: Sat, 29 Feb 2020 11:07:05 +0000
+Subject: [PATCH] test: rq->tmp_alone_branch != &rq->leaf_cfs_rq_list
 
-original_function:
-
-    <side_effects_happen_here>
-
-}  <--- do_fexit
-
-The fmod_ret program attached to this function can be defined as:
-
-SEC("fmod_ret/func_to_be_attached")
-int BPF_PROG(func_name, int a, int b, int ret)
-{
-        // This will skip the original function logic.
-        return 1;
-}
-
-The first fmod_ret program is passed 0 in its return argument.
-
-Signed-off-by: KP Singh <kpsingh@google.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
 ---
- arch/x86/net/bpf_jit_comp.c    | 130 ++++++++++++++++++++++++++++++---
- include/linux/bpf.h            |   1 +
- include/uapi/linux/bpf.h       |   1 +
- kernel/bpf/btf.c               |   3 +-
- kernel/bpf/syscall.c           |   1 +
- kernel/bpf/trampoline.c        |   5 +-
- kernel/bpf/verifier.c          |   1 +
- tools/include/uapi/linux/bpf.h |   1 +
- 8 files changed, 130 insertions(+), 13 deletions(-)
+ kernel/sched/fair.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index d6349e930b06..b1fd000feb89 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -1362,7 +1362,7 @@ static void restore_regs(const struct btf_func_model *m, u8 **prog, int nr_args,
- }
- 
- static int invoke_bpf_prog(const struct btf_func_model *m, u8 **pprog,
--			   struct bpf_prog *p, int stack_size)
-+			   struct bpf_prog *p, int stack_size, bool mod_ret)
- {
- 	u8 *prog = *pprog;
- 	int cnt = 0;
-@@ -1383,6 +1383,13 @@ static int invoke_bpf_prog(const struct btf_func_model *m, u8 **pprog,
- 	if (emit_call(&prog, p->bpf_func, prog))
- 		return -EINVAL;
- 
-+	/* BPF_TRAMP_MODIFY_RETURN trampolines can modify the return
-+	 * of the previous call which is then passed on the stack to
-+	 * the next BPF program.
-+	 */
-+	if (mod_ret)
-+		emit_stx(&prog, BPF_DW, BPF_REG_FP, BPF_REG_0, -8);
-+
- 	/* arg1: mov rdi, progs[i] */
- 	emit_mov_imm64(&prog, BPF_REG_1, (long) p >> 32,
- 		       (u32) (long) p);
-@@ -1442,6 +1449,23 @@ static int emit_cond_near_jump(u8 **pprog, void *func, void *ip, u8 jmp_cond)
- 	return 0;
- }
- 
-+static int emit_mod_ret_check_imm8(u8 **pprog, int value)
-+{
-+	u8 *prog = *pprog;
-+	int cnt = 0;
-+
-+	if (!is_imm8(value))
-+		return -EINVAL;
-+
-+	if (value == 0)
-+		EMIT2(0x85, add_2reg(0xC0, BPF_REG_0, BPF_REG_0));
-+	else
-+		EMIT3(0x83, add_1reg(0xF8, BPF_REG_0), value);
-+
-+	*pprog = prog;
-+	return 0;
-+}
-+
- static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
- 		      struct bpf_tramp_progs *tp, int stack_size)
- {
-@@ -1449,9 +1473,49 @@ static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
- 	u8 *prog = *pprog;
- 
- 	for (i = 0; i < tp->nr_progs; i++) {
--		if (invoke_bpf_prog(m, &prog, tp->progs[i], stack_size))
-+		if (invoke_bpf_prog(m, &prog, tp->progs[i], stack_size, false))
-+			return -EINVAL;
-+	}
-+	*pprog = prog;
-+	return 0;
-+}
-+
-+static int invoke_bpf_mod_ret(const struct btf_func_model *m, u8 **pprog,
-+			      struct bpf_tramp_progs *tp, int stack_size,
-+			      u8 **branches)
-+{
-+	u8 *prog = *pprog;
-+	int i;
-+
-+	/* The first fmod_ret program will receive a garbage return value.
-+	 * Set this to 0 to avoid confusing the program.
-+	 */
-+	emit_mov_imm32(&prog, false, BPF_REG_0, 0);
-+	emit_stx(&prog, BPF_DW, BPF_REG_FP, BPF_REG_0, -8);
-+	for (i = 0; i < tp->nr_progs; i++) {
-+		if (invoke_bpf_prog(m, &prog, tp->progs[i], stack_size, true))
- 			return -EINVAL;
-+
-+		/* Generate a branch:
-+		 *
-+		 * if (ret !=  0)
-+		 *	goto do_fexit;
-+		 *
-+		 * If needed this can be extended to any integer value which can
-+		 * be passed by user-space when the program is loaded.
-+		 */
-+		if (emit_mod_ret_check_imm8(&prog, 0))
-+			return -EINVAL;
-+
-+		/* Save the location of the branch and Generate 6 nops
-+		 * (4 bytes for an offset and 2 bytes for the jump) These nops
-+		 * are replaced with a conditional jump once do_fexit (i.e. the
-+		 * start of the fexit invocation) is finalized.
-+		 */
-+		branches[i] = prog;
-+		emit_nops(&prog, 4 + 2);
- 	}
-+
- 	*pprog = prog;
- 	return 0;
- }
-@@ -1521,10 +1585,12 @@ int arch_prepare_bpf_trampoline(void *image, void *image_end,
- 				struct bpf_tramp_progs *tprogs,
- 				void *orig_call)
- {
--	int cnt = 0, nr_args = m->nr_args;
-+	int ret, i, cnt = 0, nr_args = m->nr_args;
- 	int stack_size = nr_args * 8;
- 	struct bpf_tramp_progs *fentry = &tprogs[BPF_TRAMP_FENTRY];
- 	struct bpf_tramp_progs *fexit = &tprogs[BPF_TRAMP_FEXIT];
-+	struct bpf_tramp_progs *fmod_ret = &tprogs[BPF_TRAMP_MODIFY_RETURN];
-+	u8 **branches = NULL;
- 	u8 *prog;
- 
- 	/* x86-64 supports up to 6 arguments. 7+ can be added in the future */
-@@ -1557,24 +1623,60 @@ int arch_prepare_bpf_trampoline(void *image, void *image_end,
- 		if (invoke_bpf(m, &prog, fentry, stack_size))
- 			return -EINVAL;
- 
-+	if (fmod_ret->nr_progs) {
-+		branches = kcalloc(fmod_ret->nr_progs, sizeof(u8 *),
-+				   GFP_KERNEL);
-+		if (!branches)
-+			return -ENOMEM;
-+
-+		if (invoke_bpf_mod_ret(m, &prog, fmod_ret, stack_size,
-+				       branches)) {
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
-+	}
-+
- 	if (flags & BPF_TRAMP_F_CALL_ORIG) {
--		if (fentry->nr_progs)
-+		if (fentry->nr_progs || fmod_ret->nr_progs)
- 			restore_regs(m, &prog, nr_args, stack_size);
- 
- 		/* call original function */
--		if (emit_call(&prog, orig_call, prog))
--			return -EINVAL;
-+		if (emit_call(&prog, orig_call, prog)) {
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
- 		/* remember return value in a stack for bpf prog to access */
- 		emit_stx(&prog, BPF_DW, BPF_REG_FP, BPF_REG_0, -8);
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 3c8a379c357e..69fc30db7440 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4619,6 +4619,15 @@ void unthrottle_cfs_rq(struct cfs_rq *cfs_rq)
+ 			break;
  	}
  
-+	if (fmod_ret->nr_progs) {
-+		/* From Intel 64 and IA-32 Architectures Optimization
-+		 * Reference Manual, 3.4.1.4 Code Alignment, Assembly/Compiler
-+		 * Coding Rule 11: All branch targets should be 16-byte
-+		 * aligned.
-+		 */
-+		emit_align(&prog, 16);
-+		/* Update the branches saved in invoke_bpf_mod_ret with the
-+		 * aligned address of do_fexit.
-+		 */
-+		for (i = 0; i < fmod_ret->nr_progs; i++)
-+			emit_cond_near_jump(&branches[i], prog, branches[i],
-+					    X86_JNE);
++	if (rq->tmp_alone_branch != &rq->leaf_cfs_rq_list) {
++		char path[64];
++
++		sched_trace_cfs_rq_path(cfs_rq, path, 64);
++
++		printk("CPU%d path=%s on_list=%d nr_running=%d\n",
++		       cpu_of(rq), path, cfs_rq->on_list, cfs_rq->nr_running);
 +	}
 +
- 	if (fexit->nr_progs)
--		if (invoke_bpf(m, &prog, fexit, stack_size))
--			return -EINVAL;
-+		if (invoke_bpf(m, &prog, fexit, stack_size)) {
-+			ret = -EINVAL;
-+			goto cleanup;
-+		}
+ 	assert_list_leaf_cfs_rq(rq);
  
- 	if (flags & BPF_TRAMP_F_RESTORE_REGS)
- 		restore_regs(m, &prog, nr_args, stack_size);
+ 	if (!se)
+@@ -5320,6 +5329,18 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+ 		}
+ 	}
  
-+	/* This needs to be done regardless. If there were fmod_ret programs,
-+	 * the return value is only updated on the stack and still needs to be
-+	 * restored to R0.
-+	 */
- 	if (flags & BPF_TRAMP_F_CALL_ORIG)
- 		/* restore original return value back into RAX */
- 		emit_ldx(&prog, BPF_DW, BPF_REG_0, BPF_REG_FP, -8);
-@@ -1586,9 +1688,15 @@ int arch_prepare_bpf_trampoline(void *image, void *image_end,
- 		EMIT4(0x48, 0x83, 0xC4, 8); /* add rsp, 8 */
- 	EMIT1(0xC3); /* ret */
- 	/* Make sure the trampoline generation logic doesn't overflow */
--	if (WARN_ON_ONCE(prog > (u8 *)image_end - BPF_INSN_SAFETY))
--		return -EFAULT;
--	return prog - (u8 *)image;
-+	if (WARN_ON_ONCE(prog > (u8 *)image_end - BPF_INSN_SAFETY)) {
-+		ret = -EFAULT;
-+		goto cleanup;
-+	}
-+	ret = prog - (u8 *)image;
++	if (rq->tmp_alone_branch != &rq->leaf_cfs_rq_list) {
++		char path[64];
 +
-+cleanup:
-+	kfree(branches);
-+	return ret;
- }
++		cfs_rq = cfs_rq_of(&p->se);
++
++		sched_trace_cfs_rq_path(cfs_rq, path, 64);
++
++		printk("CPU%d path=%s on_list=%d nr_running=%d p=[%s %d]\n",
++		       cpu_of(rq), path, cfs_rq->on_list, cfs_rq->nr_running,
++		       p->comm, p->pid);
++	}
++
+ 	assert_list_leaf_cfs_rq(rq);
  
- static int emit_fallback_jump(u8 **pprog)
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 98ec10b23dbb..f748b31e5888 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -474,6 +474,7 @@ void notrace __bpf_prog_exit(struct bpf_prog *prog, u64 start);
- enum bpf_tramp_prog_type {
- 	BPF_TRAMP_FENTRY,
- 	BPF_TRAMP_FEXIT,
-+	BPF_TRAMP_MODIFY_RETURN,
- 	BPF_TRAMP_MAX,
- 	BPF_TRAMP_REPLACE, /* more than MAX */
- };
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index d6b33ea27bcc..40b2d9476268 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -210,6 +210,7 @@ enum bpf_attach_type {
- 	BPF_TRACE_RAW_TP,
- 	BPF_TRACE_FENTRY,
- 	BPF_TRACE_FEXIT,
-+	BPF_MODIFY_RETURN,
- 	__MAX_BPF_ATTACH_TYPE
- };
- 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 787140095e58..30841fb8b3c0 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -3710,7 +3710,8 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
- 		nr_args--;
- 	}
- 
--	if (prog->expected_attach_type == BPF_TRACE_FEXIT &&
-+	if ((prog->expected_attach_type == BPF_TRACE_FEXIT ||
-+	     prog->expected_attach_type == BPF_MODIFY_RETURN) &&
- 	    arg == nr_args) {
- 		if (!t)
- 			/* Default prog with 5 args. 6th arg is retval. */
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 13de65363ba2..7ce0815793dd 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -2324,6 +2324,7 @@ static int bpf_tracing_prog_attach(struct bpf_prog *prog)
- 
- 	if (prog->expected_attach_type != BPF_TRACE_FENTRY &&
- 	    prog->expected_attach_type != BPF_TRACE_FEXIT &&
-+	    prog->expected_attach_type != BPF_MODIFY_RETURN &&
- 	    prog->type != BPF_PROG_TYPE_EXT) {
- 		err = -EINVAL;
- 		goto out_put_prog;
-diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-index 546198f6f307..221a17af1f81 100644
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -232,7 +232,8 @@ static int bpf_trampoline_update(struct bpf_trampoline *tr)
- 		goto out;
- 	}
- 
--	if (tprogs[BPF_TRAMP_FEXIT].nr_progs)
-+	if (tprogs[BPF_TRAMP_FEXIT].nr_progs ||
-+	    tprogs[BPF_TRAMP_MODIFY_RETURN].nr_progs)
- 		flags = BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_SKIP_FRAME;
- 
- 	/* Though the second half of trampoline page is unused a task could be
-@@ -269,6 +270,8 @@ static enum bpf_tramp_prog_type bpf_attach_type_to_tramp(enum bpf_attach_type t)
- 	switch (t) {
- 	case BPF_TRACE_FENTRY:
- 		return BPF_TRAMP_FENTRY;
-+	case BPF_MODIFY_RETURN:
-+		return BPF_TRAMP_MODIFY_RETURN;
- 	case BPF_TRACE_FEXIT:
- 		return BPF_TRAMP_FEXIT;
- 	default:
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 289383edfc8c..2460c8e6b5be 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -9950,6 +9950,7 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
- 		if (!prog_extension)
- 			return -EINVAL;
- 		/* fallthrough */
-+	case BPF_MODIFY_RETURN:
- 	case BPF_TRACE_FENTRY:
- 	case BPF_TRACE_FEXIT:
- 		if (!btf_type_is_func(t)) {
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index d6b33ea27bcc..40b2d9476268 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -210,6 +210,7 @@ enum bpf_attach_type {
- 	BPF_TRACE_RAW_TP,
- 	BPF_TRACE_FENTRY,
- 	BPF_TRACE_FEXIT,
-+	BPF_MODIFY_RETURN,
- 	__MAX_BPF_ATTACH_TYPE
- };
- 
+ 	hrtick_update(rq);
 -- 
-2.20.1
-
+2.17.1
