@@ -2,186 +2,117 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81A7EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56446C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0402073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F87B20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:20:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ldXQ0oXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387482AbgCDCU1 (ORCPT
+        id S2387524AbgCDCU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:20:27 -0500
-Received: from mga03.intel.com ([134.134.136.65]:54022 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387397AbgCDCU0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:20:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 18:20:26 -0800
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="233863143"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.255.31.22]) ([10.255.31.22])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 03 Mar 2020 18:20:22 -0800
-Subject: Re: [PATCH v3 2/8] x86/split_lock: Ensure
- X86_FEATURE_SPLIT_LOCK_DETECT means the existence of feature
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
-        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200206070412.17400-1-xiaoyao.li@intel.com>
- <20200206070412.17400-3-xiaoyao.li@intel.com>
- <20200303185524.GQ1439@linux.intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <439db928-6e92-8492-31d3-cdbe2bc6b9d4@intel.com>
-Date:   Wed, 4 Mar 2020 10:20:20 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Tue, 3 Mar 2020 21:20:56 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:45970 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387488AbgCDCUz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 21:20:55 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0242EQs6115587;
+        Wed, 4 Mar 2020 02:20:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=eFV22HHbaKS3x4oCXdEGLU9J7x32IJMaz4nLH/50CKY=;
+ b=ldXQ0oXseOkrVwoFUqOm38qMWTBNGcWWvh1F5sNpQ/9VXKfzyuaKPuEnE6NpzPNL5MUt
+ gCRnGpdiFuXh19j6Wrlpf9lLf8wkUgl7iqfwPa3r7gUU+npDIe5pMpxZ7JOLJw8xR/pF
+ efoBZrVcwrWXL0F4r14ztKzPihyzNs73fy1d+15QYs1ccat7AiP54zZdbgigGizJEKv9
+ RL035gIDa3TtdTKXsj7JZIUQW5CSYlp/3oOutDAG4NZwh7Q7MrSg0Fp/n8MpitKiUg/u
+ UKT0OdL3gRymmdFGd70dm7t56dTDgrpVRCmmxFASBkiA81XexJ1s7XnjqEs0JhdUunoK lg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2yffwqu8w6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Mar 2020 02:20:50 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 0242IUDI155317;
+        Wed, 4 Mar 2020 02:20:50 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2yg1p624wd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Mar 2020 02:20:49 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0242Kn0h000787;
+        Wed, 4 Mar 2020 02:20:49 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 03 Mar 2020 18:20:48 -0800
+Subject: Re: [PATCH] mm/hugetlb.c: Clean code by removing unnecessary
+ initialization
+To:     mateusznosek0@gmail.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     akpm@linux-foundation.org
+References: <20200303212354.25226-1-mateusznosek0@gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <87d405de-d73b-9ba9-1644-c2222881ed98@oracle.com>
+Date:   Tue, 3 Mar 2020 18:20:47 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200303185524.GQ1439@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200303212354.25226-1-mateusznosek0@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 malwarescore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 adultscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040015
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ phishscore=0 clxscore=1011 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003040015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/2020 2:55 AM, Sean Christopherson wrote:
-> On Thu, Feb 06, 2020 at 03:04:06PM +0800, Xiaoyao Li wrote:
->> When flag X86_FEATURE_SPLIT_LOCK_DETECT is set, it should ensure the
->> existence of MSR_TEST_CTRL and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit.
+On 3/3/20 1:23 PM, mateusznosek0@gmail.com wrote:
+> From: Mateusz Nosek <mateusznosek0@gmail.com>
 > 
-> The changelog confused me a bit.  "When flag X86_FEATURE_SPLIT_LOCK_DETECT
-> is set" makes it sound like the logic is being applied after the feature
-> bit is set.  Maybe something like:
+> Previously variable 'check_addr' was initialized,
+> but was not read later before reassigning.
+> So the initialization can be removed.
 > 
-> ```
-> Verify MSR_TEST_CTRL.SPLIT_LOCK_DETECT can be toggled via WRMSR prior to
-> setting the SPLIT_LOCK_DETECT feature bit so that runtime consumers,
-> e.g. KVM, don't need to worry about WRMSR failure.
-> ```
+> Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+
+Thanks, that is indeed not needed.
+Reviewed-by: Mike Kravetz <mike.kravetz@oracle.com>
+-- 
+Mike Kravetz
+
+> ---
+>  mm/hugetlb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
->> ---
->>   arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++----------------
->>   1 file changed, 23 insertions(+), 18 deletions(-)
->>
->> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
->> index 2b3874a96bd4..49535ed81c22 100644
->> --- a/arch/x86/kernel/cpu/intel.c
->> +++ b/arch/x86/kernel/cpu/intel.c
->> @@ -702,7 +702,8 @@ static void init_intel(struct cpuinfo_x86 *c)
->>   	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
->>   		tsx_disable();
->>   
->> -	split_lock_init();
->> +	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
->> +		split_lock_init();
->>   }
->>   
->>   #ifdef CONFIG_X86_32
->> @@ -986,9 +987,26 @@ static inline bool match_option(const char *arg, int arglen, const char *opt)
->>   
->>   static void __init split_lock_setup(void)
->>   {
->> +	u64 test_ctrl_val;
->>   	char arg[20];
->>   	int i, ret;
->> +	/*
->> +	 * Use the "safe" versions of rdmsr/wrmsr here to ensure MSR_TEST_CTRL
->> +	 * and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit do exist. Because there may
->> +	 * be glitches in virtualization that leave a guest with an incorrect
->> +	 * view of real h/w capabilities.
->> +	 */
->> +	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
->> +		return;
->> +
->> +	if (wrmsrl_safe(MSR_TEST_CTRL,
->> +			test_ctrl_val | MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
->> +		return;
->> +
->> +	if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val))
->> +		return;a
+> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> index e4116385a4e1..7fb31750e670 100644
+> --- a/mm/hugetlb.c
+> +++ b/mm/hugetlb.c
+> @@ -5021,7 +5021,7 @@ static bool vma_shareable(struct vm_area_struct *vma, unsigned long addr)
+>  void adjust_range_if_pmd_sharing_possible(struct vm_area_struct *vma,
+>  				unsigned long *start, unsigned long *end)
+>  {
+> -	unsigned long check_addr = *start;
+> +	unsigned long check_addr;
+>  
+>  	if (!(vma->vm_flags & VM_MAYSHARE))
+>  		return;
 > 
-> Probing the MSR should be skipped if SLD is disabled in sld_options, i.e.
-> move this code (and setup_force_cpu_cap() etc...) down below the
-> match_option() logic.  The above would temporarily enable SLD even if the
-> admin has explicitly disabled it, e.g. makes the kernel param useless for
-> turning off the feature due to bugs.
-> 
-> And with that, IMO failing any of RDMSR/WRSMR here warrants a pr_err().
-> The CPU says it supports split lock and the admin hasn't explicitly turned
-> it off, so failure to enable should be logged.
-
-It is not about to enable split lock detection here, but to parse the 
-kernel booting parameter "split_lock_detect".
-
-If probing MSR or MSR bit fails, it indicates the CPU doesn't has 
-feature X86_FEATURE_SPLIT_LOCK_DETECT. So don't set feature flag and 
-there is no need to parse "split_lock_detect", just return.
-
-Then, as the change at the beginning of this patch, we should call 
-split_lock_init() based on X86_FEATURE_SPLIT_LOCK_DETECT bit.
-
->> +
->>   	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
->>   	sld_state = sld_warn;
->>   
->> @@ -1022,24 +1040,19 @@ static void __init split_lock_setup(void)
->>    * Locking is not required at the moment because only bit 29 of this
->>    * MSR is implemented and locking would not prevent that the operation
->>    * of one thread is immediately undone by the sibling thread.
->> - * Use the "safe" versions of rdmsr/wrmsr here because although code
->> - * checks CPUID and MSR bits to make sure the TEST_CTRL MSR should
->> - * exist, there may be glitches in virtualization that leave a guest
->> - * with an incorrect view of real h/w capabilities.
->>    */
->> -static bool __sld_msr_set(bool on)
->> +static void __sld_msr_set(bool on)
->>   {
->>   	u64 test_ctrl_val;
->>   
->> -	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
->> -		return false;
->> +	rdmsrl(MSR_TEST_CTRL, test_ctrl_val);
->>   
->>   	if (on)
->>   		test_ctrl_val |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
->>   	else
->>   		test_ctrl_val &= ~MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
->>   
->> -	return !wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val);
->> +	wrmsrl(MSR_TEST_CTRL, test_ctrl_val);
->>   }
->>   
->>   static void split_lock_init(void)
->> @@ -1047,15 +1060,7 @@ static void split_lock_init(void)
->>   	if (sld_state == sld_off)
->>   		return;
->>   
->> -	if (__sld_msr_set(true))
->> -		return;
->> -
->> -	/*
->> -	 * If this is anything other than the boot-cpu, you've done
->> -	 * funny things and you get to keep whatever pieces.
->> -	 */
->> -	pr_warn("MSR fail -- disabled\n");
->> -	sld_state = sld_off;
->> +	__sld_msr_set(true);
->>   }
->>   
->>   bool handle_user_split_lock(unsigned long ip)
->> -- 
->> 2.23.0
->>
-
