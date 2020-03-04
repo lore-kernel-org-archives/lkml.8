@@ -2,423 +2,307 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7519DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC629C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392E920842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A277E20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:35:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bUC9Nhxq"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="JMn8DcN9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388456AbgCDWdE (ORCPT
+        id S2388477AbgCDWfJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:33:04 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45961 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388369AbgCDWdE (ORCPT
+        Wed, 4 Mar 2020 17:35:09 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10120 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388400AbgCDWfJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:33:04 -0500
-Received: by mail-pg1-f196.google.com with SMTP id m15so1681003pgv.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 14:33:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=QTVY2PxB+QGjjFSvZUdTuRF2OkQB7vIlqQijuIquHBo=;
-        b=bUC9NhxqTDAjUy2ox2zYGyLYjAaeDNIJ7Iiioc8/P4kn8MdZW8oR2skmQBWdvMIqBM
-         AMLjBugMlUKfqdaieMoD8fRgEm2ZvUafuiHr8bdMV6Kc6bsP4/4XGNUfKLDR/qzR3w92
-         /KnIajMvuXDWiaAYXa37mVMzoklB77S+LGSKdLnUI8EBCNXN+mg/BJfruCuKPWtOaihw
-         xXPdNBw5wW6obfAEw36Ji5O8F8O9vK9Orzzdk0k7x/ksnmcoGf+jjOrIR674XXHgkt67
-         qAlZC6W0k6rml/VW3ON1NGER1s5I8+ZxJ1rMGQTrr367DGEyY+UuLFLcfjQIiqpOrAFa
-         2zag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QTVY2PxB+QGjjFSvZUdTuRF2OkQB7vIlqQijuIquHBo=;
-        b=r8RJrI/NmwwkXztg7MHqoWydDtfH7pLsG2ABEHf8xPvCXC2JffyPIkwXMSeco3Qwj4
-         Mp5kNVb9Oqn7ccit09EhYDqhaK80fXTu8GFwi4y4EEt2PL1aviYICt/4Rcse/PdR/5N1
-         Qpt1vWIxmF1PnoXoc1zpbDyc/NIJyyp2jiTiZDXRbjL8Ej1w2YXJb8YrLL2KKqcpPrIN
-         Y445iVUEreiUu7lL3UwYDGRl5GyRZQuytpYk0XaCMxsBpWm+SLIq9aKwfDWlfvKaMdOQ
-         Ed2o+QCh61T44DAMSfa0UV5Pz0PlLHyF5JI5Pbahx8ZRx2bvfzsxwWoyyF0ZmNzRgG0g
-         s/Zw==
-X-Gm-Message-State: ANhLgQ1K9ZutE6TVI4S9a0gXsh1TrpnsNdUoD8euRFjh/FXp444L9NVE
-        KPlCo+hVbJ+7YhbxKaF8vi4PSw==
-X-Google-Smtp-Source: ADFU+vtKd9ENApFp7KD0NDm3BBBDpo1miSmpeF9w8Rvx5BCRyo117gHCG9Gs+Q5eHQ4SzgiF7MUZOg==
-X-Received: by 2002:a65:5383:: with SMTP id x3mr4419402pgq.279.1583361182682;
-        Wed, 04 Mar 2020 14:33:02 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u1sm29461190pfn.133.2020.03.04.14.33.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 14:33:02 -0800 (PST)
-Date:   Wed, 4 Mar 2020 15:33:00 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, afd@ti.com, s-anna@ti.com,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv7 14/15] remoteproc/omap: Add watchdog functionality for
- remote processors
-Message-ID: <20200304223300.GB2799@xps15>
-References: <20200221101936.16833-1-t-kristo@ti.com>
- <20200221101936.16833-15-t-kristo@ti.com>
+        Wed, 4 Mar 2020 17:35:09 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e602cc60001>; Wed, 04 Mar 2020 14:33:43 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 04 Mar 2020 14:35:07 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 04 Mar 2020 14:35:07 -0800
+Received: from [10.2.174.88] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Mar
+ 2020 22:35:07 +0000
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+CC:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        <lkft-triage@lists.linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
+ <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com>
+ <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
+ <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com>
+ <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
+ <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+ <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com>
+ <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
+ <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com>
+ <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
+ <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com>
+ <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
+ <757853cf-987e-f6b6-9259-b4560a031692@nvidia.com>
+ <d12fe142-7e72-ab58-33ab-17817e35096f@nvidia.com>
+ <c216f131-6f83-c9c9-9d17-8d44ec06972d@nvidia.com>
+ <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
+Message-ID: <a0962e0b-0f1d-9f32-f6e9-92f69f93167f@nvidia.com>
+Date:   Wed, 4 Mar 2020 14:35:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221101936.16833-15-t-kristo@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87ad7586-9569-4276-044a-adb64e84ca15@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1583361223; bh=uHi60FBdqO9BEf6T8cdHz4om2Yno80xpuJ85bg+wbOg=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=JMn8DcN94cXpJvmohCxGNdLQRljm6AUKlIf80odd4mT5iqOpTAK4Y9H+ftjDDBQOt
+         JeZPwvM5bx+aqt1qsNR5sT7A70c2UlLiPCG4Wo6cdX4EVFNEDSSDZ2zPTxBq5V+VXw
+         wOKL//oHw5A6j38Jbs2bQ7gtlusxc/W9pXg3zzu7hoxEnhAhhjWjQsHiZtdcUw2lr0
+         cyAL6VR0LAWzqva88DOujNq14CW6mQ1nk+H85kuXbEuBvpxaeXRHduz6OUfOLYBBxl
+         q8zwD2W4DGB+Kk/JlcdHoQvHh9OLypivgx4b6AVKUCo4qaYe68H8mFRgb2vMiscvB6
+         6j+xiva9a8cIA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 12:19:35PM +0200, Tero Kristo wrote:
-> From: Suman Anna <s-anna@ti.com>
-> 
-> Remote processors can be stuck in a loop, and may not be recoverable
-> if they do not have a built-in watchdog. The watchdog implementation
-> for OMAP remote processors uses external gptimers that can be used
-> to interrupt both the Linux host as well as the remote processor.
-> 
-> Each remote processor is responsible for refreshing the timer during
-> normal behavior - during OS task scheduling or entering the idle loop
-> properly. During a watchdog condition (executing a tight loop causing
-> no scheduling), the host processor gets interrupts and schedules a
-> recovery for the corresponding remote processor. The remote processor
-> may also get interrupted to be able to print a back trace.
-> 
-> A menuconfig option has also been added to enable/disable the Watchdog
-> functionality, with the default as disabled.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
-> v7:
->   - minor kerneldoc updates
-> 
->  drivers/remoteproc/Kconfig           |  12 +++
->  drivers/remoteproc/omap_remoteproc.c | 153 ++++++++++++++++++++++++---
->  2 files changed, 153 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index b52abc2268cc..5f33358eb2f1 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -52,6 +52,18 @@ config OMAP_REMOTEPROC
->  	  It's safe to say N here if you're not interested in multimedia
->  	  offloading or just want a bare minimum kernel.
->  
-> +config OMAP_REMOTEPROC_WATCHDOG
-> +	bool "OMAP remoteproc watchdog timer"
-> +	depends on OMAP_REMOTEPROC
-> +	default n
-> +	help
-> +	  Say Y here to enable watchdog timer for remote processors.
-> +
-> +	  This option controls the watchdog functionality for the remote
-> +	  processors in OMAP. Dedicated OMAP DMTimers are used by the remote
-> +	  processors and triggers the timer interrupt upon a watchdog
-> +	  detection.
-> +
->  config WKUP_M3_RPROC
->  	tristate "AMx3xx Wakeup M3 remoteproc support"
->  	depends on SOC_AM33XX || SOC_AM43XX
-> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> index 7dcb5da0d940..bae01a9f8afc 100644
-> --- a/drivers/remoteproc/omap_remoteproc.c
-> +++ b/drivers/remoteproc/omap_remoteproc.c
-> @@ -24,6 +24,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/interrupt.h>
->  #include <linux/remoteproc.h>
->  #include <linux/mailbox_client.h>
->  #include <linux/omap-iommu.h>
-> @@ -72,10 +73,12 @@ struct omap_rproc_mem {
->   * struct omap_rproc_timer - data structure for a timer used by a omap rproc
->   * @odt: timer pointer
->   * @timer_ops: OMAP dmtimer ops for @odt timer
-> + * @irq: timer irq
->   */
->  struct omap_rproc_timer {
->  	struct omap_dm_timer *odt;
->  	const struct omap_dm_timer_ops *timer_ops;
-> +	int irq;
->  };
->  
->  /**
-> @@ -86,6 +89,7 @@ struct omap_rproc_timer {
->   * @mem: internal memory regions data
->   * @num_mems: number of internal memory regions
->   * @num_timers: number of rproc timer(s)
-> + * @num_wd_timers: number of rproc watchdog timers
->   * @timers: timer(s) info used by rproc
->   * @autosuspend_delay: auto-suspend delay value to be used for runtime pm
->   * @need_resume: if true a resume is needed in the system resume callback
-> @@ -102,6 +106,7 @@ struct omap_rproc {
->  	struct omap_rproc_mem *mem;
->  	int num_mems;
->  	int num_timers;
-> +	int num_wd_timers;
->  	struct omap_rproc_timer *timers;
->  	int autosuspend_delay;
->  	bool need_resume;
-> @@ -219,6 +224,79 @@ static inline int omap_rproc_release_timer(struct omap_rproc_timer *timer)
->  	return timer->timer_ops->free(timer->odt);
->  }
->  
-> +/**
-> + * omap_rproc_get_timer_irq() - get the irq for a timer
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This function is used to get the irq associated with a watchdog timer. The
-> + * function is called by the OMAP remoteproc driver to register a interrupt
-> + * handler to handle watchdog events on the remote processor.
-> + *
-> + * Return: irq id on success, otherwise a failure as returned by DMTimer ops
-> + */
-> +static inline int omap_rproc_get_timer_irq(struct omap_rproc_timer *timer)
-> +{
-> +	return timer->timer_ops->get_irq(timer->odt);
-> +}
-> +
-> +/**
-> + * omap_rproc_ack_timer_irq() - acknowledge a timer irq
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This function is used to clear the irq associated with a watchdog timer. The
-> + * The function is called by the OMAP remoteproc upon a watchdog event on the
-> + * remote processor to clear the interrupt status of the watchdog timer.
-> + */
-> +static inline void omap_rproc_ack_timer_irq(struct omap_rproc_timer *timer)
-> +{
-> +	timer->timer_ops->write_status(timer->odt, OMAP_TIMER_INT_OVERFLOW);
-> +}
-> +
-> +/**
-> + * omap_rproc_watchdog_isr() - Watchdog ISR handler for remoteproc device
-> + * @irq: IRQ number associated with a watchdog timer
-> + * @data: IRQ handler data
-> + *
-> + * This ISR routine executes the required necessary low-level code to
-> + * acknowledge a watchdog timer interrupt. There can be multiple watchdog
-> + * timers associated with a rproc (like IPUs which have 2 watchdog timers,
-> + * one per Cortex M3/M4 core), so a lookup has to be performed to identify
-> + * the timer to acknowledge its interrupt.
-> + *
-> + * The function also invokes rproc_report_crash to report the watchdog event
-> + * to the remoteproc driver core, to trigger a recovery.
-> + *
-> + * Return: IRQ_HANDLED on success, otherwise IRQ_NONE
-> + */
-> +static irqreturn_t omap_rproc_watchdog_isr(int irq, void *data)
-> +{
-> +	struct rproc *rproc = data;
-> +	struct omap_rproc *oproc = rproc->priv;
-> +	struct device *dev = rproc->dev.parent;
-> +	struct omap_rproc_timer *timers = oproc->timers;
-> +	struct omap_rproc_timer *wd_timer = NULL;
-> +	int num_timers = oproc->num_timers + oproc->num_wd_timers;
-> +	int i;
-> +
-> +	for (i = oproc->num_timers; i < num_timers; i++) {
-> +		if (timers[i].irq > 0 && irq == timers[i].irq) {
-> +			wd_timer = &timers[i];
-> +			break;
-> +		}
-> +	}
-> +
-> +	if (!wd_timer) {
-> +		dev_err(dev, "invalid timer\n");
-> +		return IRQ_NONE;
-> +	}
-> +
-> +	omap_rproc_ack_timer_irq(wd_timer);
-> +
-> +	rproc_report_crash(rproc, RPROC_WATCHDOG);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
->  /**
->   * omap_rproc_enable_timers() - enable the timers for a remoteproc
->   * @rproc: handle of a remote processor
-> @@ -242,19 +320,26 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
->  	struct omap_rproc_timer *timers = oproc->timers;
->  	struct device *dev = rproc->dev.parent;
->  	struct device_node *np = NULL;
-> +	int num_timers = oproc->num_timers + oproc->num_wd_timers;
->  
-> -	if (!oproc->num_timers)
-> +	if (!num_timers)
->  		return 0;
->  
->  	if (!configure)
->  		goto start_timers;
->  
-> -	for (i = 0; i < oproc->num_timers; i++) {
-> -		np = of_parse_phandle(dev->of_node, "ti,timers", i);
-> +	for (i = 0; i < num_timers; i++) {
-> +		if (i < oproc->num_timers)
-> +			np = of_parse_phandle(dev->of_node, "ti,timers", i);
-> +		else
-> +			np = of_parse_phandle(dev->of_node,
-> +					      "ti,watchdog-timers",
-> +					      (i - oproc->num_timers));
->  		if (!np) {
->  			ret = -ENXIO;
->  			dev_err(dev, "device node lookup for timer at index %d failed: %d\n",
-> -				i, ret);
-> +				i < oproc->num_timers ? i :
-> +				i - oproc->num_timers, ret);
->  			goto free_timers;
->  		}
->  
-> @@ -277,12 +362,14 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
->  		if (!timer_ops || !timer_ops->request_by_node ||
->  		    !timer_ops->set_source || !timer_ops->set_load ||
->  		    !timer_ops->free || !timer_ops->start ||
-> -		    !timer_ops->stop) {
-> +		    !timer_ops->stop || !timer_ops->get_irq ||
-> +		    !timer_ops->write_status) {
->  			ret = -EINVAL;
->  			dev_err(dev, "device does not have required timer ops\n");
->  			goto put_node;
->  		}
->  
-> +		timers[i].irq = -1;
->  		timers[i].timer_ops = timer_ops;
->  		ret = omap_rproc_request_timer(dev, np, &timers[i]);
->  		if (ret) {
-> @@ -291,10 +378,33 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
->  			goto put_node;
->  		}
->  		of_node_put(np);
-> +
-> +		if (i >= oproc->num_timers) {
 
-We already have num_wd_timers and oproc->timers is allocated via
-devm_kcalloc()...  I think the code would be much easier to ready and maintain
-if watchdog timers where held in their own array.
+On 3/4/20 9:51 AM, Sowjanya Komatineni wrote:
+>
+> On 3/4/20 9:26 AM, Sowjanya Komatineni wrote:
+>>
+>> On 3/4/20 9:21 AM, Sowjanya Komatineni wrote:
+>>>
+>>> On 3/4/20 8:56 AM, Sowjanya Komatineni wrote:
+>>>>
+>>>> On 3/4/20 2:18 AM, Ulf Hansson wrote:
+>>>>> External email: Use caution opening links or attachments
+>>>>>
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>> So, from my side, me and Anders Roxell, have been collaborating on
+>>>>>> testing the behaviour on a TI Beagleboard x15 (remotely with limited
+>>>>>> debug options), which is using the sdhci-omap variant. I am=20
+>>>>>> trying to
+>>>>>> get hold of an Nvidia jetson-TX2, but not found one yet. These=20
+>>>>>> are the
+>>>>>> conclusions from the observed behaviour on the Beagleboard for the
+>>>>>> CMD6 cache flush command.
+>>>>>>
+>>>>>> First, the reported host->max_busy_timeout is 2581 (ms) for the
+>>>>>> sdhci-omap driver in this configuration.
+>>>>>>
+>>>>>> 1. As we all know by now, the cache flush command (CMD6) fails with
+>>>>>> -110 currently. This is when MMC_CACHE_FLUSH_TIMEOUT_MS is set to=20
+>>>>>> 30 *
+>>>>>> 1000 (30s), which means __mmc_switch() drops the MMC_RSP_BUSY flag
+>>>>>> from the command.
+>>>>>>
+>>>>>> 2. Changing the MMC_CACHE_FLUSH_TIMEOUT_MS to 2000 (2s), means that
+>>>>>> the MMC_RSP_BUSY flag becomes set by __mmc_switch, because of the
+>>>>>> timeout_ms parameter is less than max_busy_timeout (2000 < 2581).
+>>>>>> Then everything works fine.
+>>>>>>
+>>>>>> 3. Updating the code to again use 30s as the
+>>>>>> MMC_CACHE_FLUSH_TIMEOUT_MS, but instead forcing the MMC_RSP_BUSY=20
+>>>>>> to be
+>>>>>> set, even when the timeout_ms becomes greater than max_busy_timeout.
+>>>>>> This also works fine.
+>>>>>>
+>>>>>> Clearly this indicates a problem that I think needs to be=20
+>>>>>> addressed in
+>>>>>> the sdhci driver. However, of course I can revert the three=20
+>>>>>> discussed
+>>>>>> patches to fix the problem, but that would only hide the issues=20
+>>>>>> and I
+>>>>>> am sure we would then get back to this issue, sooner or later.
+>>>>>>
+>>>>>> To fix the problem in the sdhci driver, I would appreciate if=20
+>>>>>> someone
+>>>>>> from TI and Nvidia can step in to help, as I don't have the HW on my
+>>>>>> desk.
+>>>>>>
+>>>>>> Comments or other ideas of how to move forward?
+>>>>> [...]
+>>>>>
+>>>>>> Hi Ulf,
+>>>>>>
+>>>>>> I could repro during suspend on Jetson TX1/TX2 as when it does=20
+>>>>>> mmc flush cache.
+>>>>> Okay, great.
+>>>>>
+>>>>>>
+>>>>>> Timeout I see is for switch status CMD13 after sending CMD6 as=20
+>>>>>> device side CMD6 is still inflight while host sends CMD13 as we=20
+>>>>>> are using R1 response type with timeout_ms changes to 30s.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Earlier we used timeout_ms of 0 for CMD6 flush cache, and with it=20
+>>>>>> uses R1B response type and host will wait for busy state followed=20
+>>>>>> by response from device for CMD6 and then data lines go High.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Now with timeout_ms changed to 30s, we use R1 response and SW=20
+>>>>>> waits for busy by checking for DAT0 line to go High.
+>>>>> If I understand correctly, because of the timeout now set to 30s,
+>>>>> MMC_RSP_BUSY becomes disabled in __mmc_switch() for your case in
+>>>>> sdhci-tegra as well?
+>>>> Yes
+>>>>>
+>>>>> In other words, mmc_poll_for_busy() is being called, which in your
+>>>>> case means the ->card_busy() host ops (set to sdhci_card_busy() in
+>>>>> your case) will be invoked to wait for the card to stop signal=20
+>>>>> busy on
+>>>>> DAT0.
+>>>>>
+>>>>> This indicates to me, that the ->card_busy() ops returns zero to
+>>>>> inform that the card is *not* busy, even if the card actually signals
+>>>>> busy? Is that correct?
+>>>> Yes
+>>>>>
+>>>>>>
+>>>>>>
+>>>>>> With R1B type, host design after sending command at end of=20
+>>>>>> completion after end bit waits for 2 cycles for data line to go=20
+>>>>>> low (busy state from device) and waits for response cycles after=20
+>>>>>> which data lines will go back high and then we issue switch=20
+>>>>>> status CMD13.
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> With R1 type, host after sending command and at end of completion=20
+>>>>>> after end bit, DATA lines will go high immediately as its R1 type=20
+>>>>>> and switch status CMD13 gets issued but by this time it looks=20
+>>>>>> like CMD6 on device side is still in flight for sending status=20
+>>>>>> and data.
+>>>>> So, yes, using R1 instead of R1B triggers a different behaviour, but
+>>>>> according to the eMMC spec it's perfectly allowed to issue a CMD13
+>>>>> even if the card signals busy on DAT0. The CMD13 is not using the=20
+>>>>> DATA
+>>>>> lines, so this should work.
+>>>>>
+>>>>> If I understand correctly, your driver (and controller?) has issues
+>>>>> with coping with this scenario. Is it something that can be fixed?
+>>>>>
+>>>>>>
+>>>>>> 30s timeout is the wait time for data0 line to go high and=20
+>>>>>> mmc_busy_status will return success right away with R1 response=20
+>>>>>> type and SW sends switch status CMD13 but during that time on=20
+>>>>>> device side looks like still processing CMD6 as we are not=20
+>>>>>> waiting for enough time when we use R1 response type.
+>>>>> Right, as stated above, isn't sdhci_card_busy() working for your=20
+>>>>> case?
+>>>>> Can we fix it?
+>>>>
+>>>> sdhci_card_busy() returned 0 indicating its not busy.
+>>>>
+>>>> Based on our host design, When CMD6 is issued with R1 type, we=20
+>>>> program it as NO_RESPONSE and with this command complete interrupt=20
+>>>> happens right at end bit of command and there will be no transfer=20
+>>>> complete interrupt.
+>>> *[Correction] Based on our host design, When CMD6 is issued with R1=20
+>>> type as we program it as NO_RESPONSE and with this command complete=20
+>>> interrupt happens right at end bit of command and there will be no=20
+>>> transfer complete interrupt.
+>>
+>> Sorry to correct wordings, I meant sdhci driver programs response=20
+>> type as NO_RESPONSE for CMD6.
+>>
+>> When CMD6 is issued with R1 type and as NO_RESPONSE, Based on our=20
+>> host design=C2=A0 command complete interrupt happens right at end bit of=
+=20
+>> command and there will be no transfer complete interrupt.
+>>
+>>
+> Sorry for confusion. Please ignore above on response. it is using=20
+> SHORT response for R1. So SW poll should be working.
+>
+> Will get back on checking on host design side internally.
+>
+Hi Ulf,
 
-> +			timers[i].irq = omap_rproc_get_timer_irq(&timers[i]);
-> +			if (timers[i].irq < 0) {
-> +				dev_err(dev, "get_irq for timer %p failed: %d\n",
-> +					np, timers[i].irq);
-> +				ret = -EBUSY;
-> +				goto free_timers;
-> +			}
-> +
-> +			ret = request_irq(timers[i].irq,
-> +					  omap_rproc_watchdog_isr, IRQF_SHARED,
-> +					  "rproc-wdt", rproc);
-> +			if (ret) {
-> +				dev_err(dev, "error requesting irq for timer %p\n",
-> +					np);
-> +				omap_rproc_release_timer(&timers[i]);
-> +				timers[i].odt = NULL;
-> +				timers[i].timer_ops = NULL;
-> +				timers[i].irq = -1;
-> +				goto free_timers;
-> +			}
-> +		}
->  	}
->  
->  start_timers:
-> -	for (i = 0; i < oproc->num_timers; i++) {
-> +	for (i = 0; i < num_timers; i++) {
->  		ret = omap_rproc_start_timer(&timers[i]);
->  		if (ret) {
->  			dev_err(dev, "start timer %p failed failed: %d\n", np,
-> @@ -316,9 +426,12 @@ static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
->  		of_node_put(np);
->  free_timers:
->  	while (i--) {
-> +		if (i >= oproc->num_timers)
-> +			free_irq(timers[i].irq, rproc);
->  		omap_rproc_release_timer(&timers[i]);
->  		timers[i].odt = NULL;
->  		timers[i].timer_ops = NULL;
-> +		timers[i].irq = -1;
->  	}
->  
->  	return ret;
-> @@ -341,16 +454,20 @@ static int omap_rproc_disable_timers(struct rproc *rproc, bool configure)
->  	int i;
->  	struct omap_rproc *oproc = rproc->priv;
->  	struct omap_rproc_timer *timers = oproc->timers;
-> +	int num_timers = oproc->num_timers + oproc->num_wd_timers;
->  
-> -	if (!oproc->num_timers)
-> +	if (!num_timers)
->  		return 0;
->  
-> -	for (i = 0; i < oproc->num_timers; i++) {
-> +	for (i = 0; i < num_timers; i++) {
->  		omap_rproc_stop_timer(&timers[i]);
->  		if (configure) {
-> +			if (i >= oproc->num_timers)
-> +				free_irq(timers[i].irq, rproc);
->  			omap_rproc_release_timer(&timers[i]);
->  			timers[i].odt = NULL;
->  			timers[i].timer_ops = NULL;
-> +			timers[i].irq = -1;
->  		}
->  	}
->  
-> @@ -1097,6 +1214,7 @@ static int omap_rproc_probe(struct platform_device *pdev)
->  	struct omap_rproc *oproc;
->  	struct rproc *rproc;
->  	const char *firmware;
-> +	int num_timers;
->  	int ret;
->  	struct reset_control *reset;
->  
-> @@ -1149,8 +1267,19 @@ static int omap_rproc_probe(struct platform_device *pdev)
->  		oproc->num_timers = 0;
->  	}
->  
-> -	if (oproc->num_timers) {
-> -		oproc->timers = devm_kcalloc(&pdev->dev, oproc->num_timers,
-> +#ifdef CONFIG_OMAP_REMOTEPROC_WATCHDOG
-> +	oproc->num_wd_timers =
-> +		of_count_phandle_with_args(np, "ti,watchdog-timers", NULL);
-> +	if (oproc->num_wd_timers <= 0) {
-> +		dev_dbg(&pdev->dev, "device does not have watchdog timers, status = %d\n",
-> +			oproc->num_wd_timers);
-> +		oproc->num_wd_timers = 0;
-> +	}
-> +#endif
+Verified internally regarding the busy state over DATA0 Our host design=20
+has known minor bug where command complete interrupt is asserted after=20
+waiting for busy cycles from device.So because of this polling for=20
+card_busy() returns 0 (DAT0 line High) immediately as waiting for busy=20
+is taken care during command complete interrupt in host design. This=20
+behavior is same for R1 and R1B.
 
-Please turn this into a function with the implementation conditional on the
-#ifdef.
 
-> +
-> +	if (oproc->num_timers || oproc->num_wd_timers) {
-> +		num_timers = oproc->num_timers + oproc->num_wd_timers;
-> +		oproc->timers = devm_kcalloc(&pdev->dev, num_timers,
->  					     sizeof(*oproc->timers),
->  					     GFP_KERNEL);
->  		if (!oproc->timers) {
-> @@ -1158,8 +1287,8 @@ static int omap_rproc_probe(struct platform_device *pdev)
->  			goto free_rproc;
->  		}
->  
-> -		dev_dbg(&pdev->dev, "device has %d tick timers\n",
-> -			oproc->num_timers);
-> +		dev_dbg(&pdev->dev, "device has %d tick timers and %d watchdog timers\n",
-> +			oproc->num_timers, oproc->num_wd_timers);
->  	}
->  
->  	init_completion(&oproc->pm_comp);
-> -- 
-> 2.17.1
-> 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>>>>
+>>>> When CMD6 is issued with R1B type, we program is as R1B RESP_SHORT=20
+>>>> and with this command complete is end bit of device resp and=20
+>>>> transfer complete interrupt will be when DAT0 LOW -> HIGH.
+>>>>
+>>>> Regardless of R1/R1B, device side CMD6 will always have busy state=20
+>>>> on D0 and response on CMD lines.
+>>>>
+>>>> There will be 2 clock cycles period after sending CMD6 for device=20
+>>>> to send busy state on data0.
+>>>>
+>>>> In case of R1 type, after sending command DAT will stay high and=20
+>>>> looks like we are polling for busy early before busy state has=20
+>>>> started and sending CMD13 while device is busy and sending response=20
+>>>> on CMD line is causing timeout.
+>>>>
+>>>> Probably with this specific case of CMD6 with R1 type, to wait for=20
+>>>> card busy we should poll for DAT0 to go Low first and then to go=20
+>>>> High??
+>>>>
+>>>>>
+>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Actually we always use R1B with CMD6 as per spec.
+>>>>> I fully agree that R1B is preferable, but it's not against the=20
+>>>>> spec to
+>>>>> send CMD13 to poll for busy.
+>>>>>
+>>>>> Moreover, we need to cope with the scenario when the host has
+>>>>> specified a maximum timeout that isn't sufficiently long enough for
+>>>>> the requested operation. Do you have another proposal for how to
+>>>>> manage this, but disabling MMC_RSP_BUSY?
+>>>>>
+>>>>> Let's assume you driver would get a R1B for the CMD6 (we force it),
+>>>>> then what timeout would the driver be using if we would set
+>>>>> cmd.busy_timeout to 30ms?
+>>>>>
+
+>>>>> Kind regards
+>>>>> Uffe
