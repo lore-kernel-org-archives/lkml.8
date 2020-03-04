@@ -2,90 +2,67 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0AEC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A4FC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 864C421556
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:20:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583360449;
-	bh=35qO3hdBPY9XEjY8+pJst4gIXbSd1Nc+th/XaxS/Oa4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=vq2Zwrourta+6wHUZx2I2D1o2CtW94k7a8g+FrMSKX/bK8EOGxw2shOTsYkYrHPzI
-	 R34Fmcp+1udaS/OEw/oZGtrlbL0dt6NkB9XW7WF8SZFi3LMQDncUjREsQqjcmfHDFy
-	 Wp0tcwSViKv9QGhMnipH1PGCC9Ea427jv49MQLL4=
+	by mail.kernel.org (Postfix) with ESMTP id B7E2F2073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:21:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388483AbgCDWUs (ORCPT
+        id S2388495AbgCDWVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:20:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41504 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388026AbgCDWUs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:20:48 -0500
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61945214D8;
-        Wed,  4 Mar 2020 22:20:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583360447;
-        bh=35qO3hdBPY9XEjY8+pJst4gIXbSd1Nc+th/XaxS/Oa4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WSA0tBMIOTRH8hEsIX+MJ/yoUaOno2LswbdSzPiPUjbnb3vGFwfHvM0OXOYKD+K5Q
-         /ukqU/vslEKim/Gj6dkjpQpE7zhJ8ZNfUXqfSKdmxMj6QtB0VoaRlUBFdn/lOGSFP3
-         N4u8K76HycFJRpPNivBb0Jzz/wuAWFe78eJPa6rc=
-Received: by mail-qk1-f176.google.com with SMTP id m9so3356189qke.4;
-        Wed, 04 Mar 2020 14:20:47 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1NKnh+4N+8wb4vc3X1CzvX9lEG2/CA+n04HeU/8dTuF/gsD+UE
-        mkcNhlU3R2kDRDpNkUi+WTH0S7nz2Dv0X/5a0g==
-X-Google-Smtp-Source: ADFU+vvr04r+5wCdzyL6uorYqvlzIlyYxQ3F6iY/L1Osbi5Ca+523kWnCA03Oki4mxIGr2E8cLcEd0RstjX7DQE2aa4=
-X-Received: by 2002:a37:2cc6:: with SMTP id s189mr3610073qkh.223.1583360446462;
- Wed, 04 Mar 2020 14:20:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20200304212600.6172-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20200304212600.6172-1-lukas.bulwahn@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 4 Mar 2020 16:20:35 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKGhpdvrNGbq+yYeM=goOwNUewHYStT8b2PNiBVz+4JPw@mail.gmail.com>
-Message-ID: <CAL_JsqKGhpdvrNGbq+yYeM=goOwNUewHYStT8b2PNiBVz+4JPw@mail.gmail.com>
-Subject: Re: [PATCH v2] MAINTAINERS: update ALLWINNER CPUFREQ DRIVER entry
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Yangtao Li <tiny.windzz@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Mar 2020 17:21:35 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:46816 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388026AbgCDWVf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 17:21:35 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1C34C15AD790A;
+        Wed,  4 Mar 2020 14:21:34 -0800 (PST)
+Date:   Wed, 04 Mar 2020 14:21:33 -0800 (PST)
+Message-Id: <20200304.142133.2297314858740854355.davem@davemloft.net>
+To:     helgaas@kernel.org
+Cc:     hkallweit1@gmail.com, nic_swsd@realtek.com, mlindner@marvell.com,
+        stephen@networkplumber.org, clemens@ladisch.de, perex@perex.cz,
+        tiwai@suse.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        alsa-devel@alsa-project.org
+Subject: Re: [PATCH v4 00/10] PCI: Add and use constant
+ PCI_STATUS_ERROR_BITS and helper pci_status_get_and_clear_errors
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200304165904.GA231103@google.com>
+References: <20200303.185937.1365050844508788930.davem@davemloft.net>
+        <20200304165904.GA231103@google.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 04 Mar 2020 14:21:34 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 3:26 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
->
-> Commit b30d8cf5e171 ("dt-bindings: opp: Convert Allwinner H6 OPP to a
-> schema") converted in Documentation/devicetree/bindings/opp/ the file
-> sun50i-nvmem-cpufreq.txt to allwinner,sun50i-h6-operating-points.yaml.
->
-> Since then, ./scripts/get_maintainer.pl --self-test complains:
->
->   warning: no file matches \
->   F: Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
->
-> Adjust the file pattern in the ALLWINNER CPUFREQ DRIVER entry.
->
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Changes to v1:
->   - do not include new maintainers because it is not needed.
->
-> Maxime, Chen-Yu, Yangtao, please ack.
-> Rob, please pick this patch.
+From: Bjorn Helgaas <helgaas@kernel.org>
+Date: Wed, 4 Mar 2020 10:59:04 -0600
 
-Applied.
+> On Tue, Mar 03, 2020 at 06:59:37PM -0800, David Miller wrote:
+>> 
+>> Bjorn, please review and let me know if it is OK to merge this via the
+>> networking tree.
+> 
+> I acked the relevant patches and you're welcome to merge it via
+> networking.  Thanks!
 
-Rob
+Ok, thanks.
+
+Series applied to net-next.
+
+Thanks again everyone.
