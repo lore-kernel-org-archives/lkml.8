@@ -2,153 +2,109 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F437C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF1AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EF421739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:52:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583322757;
-	bh=q23mTk/ZAOBsw/eSwIFmK8jNOKlKiuyyRBvn/yfvHmY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jWjWDFo4N1kz8DoSbV9phxTlmkKW9LZ72uJxVJXCLsgKtPsdHwlC67O+z/OIQOEs0
-	 pBStV6Z6OrV7go1zIcPDHCJszXiM859/uuWZwTq8zCjG+HHo9+UsX8mFzMkfZAC3Sk
-	 e1EABC0x0BXE+3vzOeSBjqokTEYy+5LmIjSCo/IE=
+	by mail.kernel.org (Postfix) with ESMTP id 13F0F20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:54:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qWqlTE9y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387973AbgCDLwg (ORCPT
+        id S1729372AbgCDLy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:52:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726502AbgCDLwf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:52:35 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 4 Mar 2020 06:54:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:22269 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729256AbgCDLy4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 06:54:56 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583322896; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=W5rRdfNWJ5nVdqFZkJkJMeomkC+t/R8ZjVOc6SDbNwA=; b=qWqlTE9ykvm/Ejg2ueIdKyzfO/x7UI1gsXRNbOjCZ36Z/UXDv6OodVtxqkDOFLulmUWaB8us
+ kkVNwFY0uBiZyP+7fLn0olMsdmmwOAoiP+DH4XGnTN77AyQpwwaQEWCwU7NfctqE8kcgUE2O
+ 1aIG/gLvfWgjvrMAIsesh4+vnng=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5f9705.7fe789fed7a0-smtp-out-n03;
+ Wed, 04 Mar 2020 11:54:45 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C1B0EC4479F; Wed,  4 Mar 2020 11:54:45 +0000 (UTC)
+Received: from vbadigan-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39C1A20842;
-        Wed,  4 Mar 2020 11:52:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583322754;
-        bh=q23mTk/ZAOBsw/eSwIFmK8jNOKlKiuyyRBvn/yfvHmY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1RmV4Aysd40GTtxVKsyXYyvR3qXIMSU+kUXkTUqA5orBs+kH9kY0t0rdLaC5SD0PW
-         2dOyldWSD36ZWtSHOJGNvoD3b/RPXt8rmCZdoML0cLngF9OOnbLFJMJ0Bt00zhjpYR
-         AsAO6kFwgNCzwKFgkNx/qLDxZ4iBT3wwOoslOOt4=
-Date:   Wed, 4 Mar 2020 12:52:32 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.5 000/176] 5.5.8-stable review
-Message-ID: <20200304115232.GC1581141@kroah.com>
-References: <20200303174304.593872177@linuxfoundation.org>
- <CA+G9fYtNKXBOQKE_AD6qLoRo4TeaBYOc9Ce3kBxdLap1av4v=Q@mail.gmail.com>
- <20200304081128.GC1401372@kroah.com>
- <20200304084702.GA1416015@kroah.com>
- <20200304084946.GB1416015@kroah.com>
- <CA+G9fYuTXB03s5YSn=NL0dtF-Kzj0YHUu6NwqSh6m9Hco59DPw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYuTXB03s5YSn=NL0dtF-Kzj0YHUu6NwqSh6m9Hco59DPw@mail.gmail.com>
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 87536C43383;
+        Wed,  4 Mar 2020 11:54:42 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 87536C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH V2] mmc: sdhci-msm: Disable CQE during SDHC reset
+Date:   Wed,  4 Mar 2020 17:24:16 +0530
+Message-Id: <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
+References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:22:30PM +0530, Naresh Kamboju wrote:
-> On Wed, 4 Mar 2020 at 14:19, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Mar 04, 2020 at 09:47:02AM +0100, Greg Kroah-Hartman wrote:
-> > > On Wed, Mar 04, 2020 at 09:11:28AM +0100, Greg Kroah-Hartman wrote:
-> > > > On Wed, Mar 04, 2020 at 12:43:42PM +0530, Naresh Kamboju wrote:
-> > > > > On Tue, 3 Mar 2020 at 23:16, Greg Kroah-Hartman
-> > > > > <gregkh@linuxfoundation.org> wrote:
-> > > > > >
-> > > > > > This is the start of the stable review cycle for the 5.5.8 release.
-> > > > > > There are 176 patches in this series, all will be posted as a response
-> > > > > > to this one.  If anyone has any issues with these being applied, please
-> > > > > > let me know.
-> > > > > >
-> > > > > > Responses should be made by Thu, 05 Mar 2020 17:42:06 +0000.
-> > > > > > Anything received after that time might be too late.
-> > > > > >
-> > > > > > The whole patch series can be found in one patch at:
-> > > > > >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.8-rc1.gz
-> > > > > > or in the git tree and branch at:
-> > > > > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > > > > > and the diffstat can be found below.
-> > > > > >
-> > > > > > thanks,
-> > > > > >
-> > > > > > greg k-h
-> > > > > >
-> > > > >
-> > > > > Results from Linaro’s test farm.
-> > > > > Regressions detected on x86_64 and i386.
-> > > > >
-> > > > > Test failure output:
-> > > > > CVE-2017-5715: VULN (IBRS+IBPB or retpoline+IBPB+RSB filling, is
-> > > > > needed to mitigate the vulnerability)
-> > > > >
-> > > > > Test description:
-> > > > > CVE-2017-5715 branch target injection (Spectre Variant 2)
-> > > > >
-> > > > > Impact: Kernel
-> > > > > Mitigation 1: new opcode via microcode update that should be used by
-> > > > > up to date compilers to protect the BTB (by flushing indirect branch
-> > > > > predictors)
-> > > > > Mitigation 2: introducing "retpoline" into compilers, and recompile
-> > > > > software/OS with it
-> > > > > Performance impact of the mitigation: high for mitigation 1, medium
-> > > > > for mitigation 2, depending on your CPU
-> > > >
-> > > > So these are regressions or just new tests?
-> > > >
-> > > > If regressions, can you do 'git bisect' to find the offending commit?
-> > > >
-> > > > Also, are you sure you have an updated microcode on these machines and a
-> > > > proper compiler for retpoline?
-> > >
-> > > As an example of just how crazy that script is, here's the output of my
-> > > machine for that first CVE issue:
-> > >
-> > > CVE-2017-5715 aka 'Spectre Variant 2, branch target injection'
-> > > * Mitigated according to the /sys interface:  YES  (Mitigation: Full generic retpoline, IBPB: conditional, IBRS_FW, STIBP: conditional, RSB filling)
-> > > * Mitigation 1
-> > >   * Kernel is compiled with IBRS support:  YES
-> > >     * IBRS enabled and active:  YES  (for firmware code only)
-> > >   * Kernel is compiled with IBPB support:  YES
-> > >     * IBPB enabled and active:  YES
-> > > * Mitigation 2
-> > >   * Kernel has branch predictor hardening (arm):  NO
-> > >   * Kernel compiled with retpoline option:  YES
-> > >     * Kernel compiled with a retpoline-aware compiler:  YES  (kernel reports full retpoline compilation)
-> > >   * Kernel supports RSB filling:  UNKNOWN  (couldn't check (couldn't find your kernel image in /boot, if you used netboot, this is normal))
-> > > > STATUS:  VULNERABLE  (IBRS+IBPB or retpoline+IBPB+RSB filling, is needed to mitigate
-> > >
-> > > So why is this "Vulnerable"?  Because it didn't think it could find my
-> > > kernel image for some odd reason, despite it really being in /boot/ (I
-> > > don't use netboot)
-> 
-> Now I know the real reason why this test failed.
-> With this note we can conclude this is not a regression.
-> 
-> No regressions on arm64, arm, x86_64, and i386 for 4.19, 5.4 and 5.5 branches.
+When SDHC gets reset (E.g. in suspend path), CQE also gets reset
+and goes to disable state. But s/w state still points it as CQE
+is in enabled state. Since s/w and h/w states goes out of sync,
+it results in s/w request timeout for subsequent CQE requests.
 
-Great, thanks for confirming and for testing all of these.
+To synchronize CQE s/w and h/w state during SDHC reset,
+explicitly disable CQE after reset.
 
-greg k-h
+Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+---
+Changes since V1:
+	- Disable CQE only when SDHC undergoes s/w reset for all.
+---
+ drivers/mmc/host/sdhci-msm.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index 53b79ee..75929d3 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -1823,6 +1823,13 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+ 	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+ }
+ 
++static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
++{
++	sdhci_reset(host, mask);
++	if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
++		cqhci_suspend(host->mmc);
++}
++
+ static const struct sdhci_msm_variant_ops mci_var_ops = {
+ 	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+ 	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+@@ -1861,7 +1868,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+ MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
+ 
+ static const struct sdhci_ops sdhci_msm_ops = {
+-	.reset = sdhci_reset,
++	.reset = sdhci_msm_reset,
+ 	.set_clock = sdhci_msm_set_clock,
+ 	.get_min_clock = sdhci_msm_get_min_clock,
+ 	.get_max_clock = sdhci_msm_get_max_clock,
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc., is a member of Code Aurora Forum, a Linux Foundation Collaborative Project
