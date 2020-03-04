@@ -2,193 +2,126 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40042C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:06:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259F0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D66821739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:06:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TlS//aLM"
+	by mail.kernel.org (Postfix) with ESMTP id 0837321741
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387692AbgCDKG3 (ORCPT
+        id S2387766AbgCDKHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:06:29 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:45101 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgCDKG2 (ORCPT
+        Wed, 4 Mar 2020 05:07:05 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33283 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728767AbgCDKHE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:06:28 -0500
-Received: by mail-ed1-f66.google.com with SMTP id h62so1573518edd.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:06:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qvjAotCReIalwn7hfhRA/t4b2Gvv6W6FE/RxEgqf7t8=;
-        b=TlS//aLMBwYMpsokQs4f+uhkB8/BG6XV1ID6SLScsSnRde6IV1KEaVzUesz7X0HS48
-         sIqEqXZkY/mPsymtHOURw4GXi3q66hWqhz2+X9RmD1Tt6GIOl5oQyAoTRaDV+5sRRvhv
-         IvnergFq3KB0EY3wYxA/Gb3RTzWpD64yfgeDV3JxMSWKZo+ch1ImmDmVc8jJLAtePuTN
-         5+J8TBDTgjG5wlwCK7CmVA+ykJI20Yp+CqZVyJsr1sUMeh2NpynuAmioA6YLOSuZCp3t
-         ktALDGuW+aAoYRgsy3D1e9JSlCS0FPG0GzdP12OhnzaiM45ZI2LYw36sH6Z1KBVgRgP7
-         DORg==
+        Wed, 4 Mar 2020 05:07:04 -0500
+Received: by mail-wr1-f66.google.com with SMTP id x7so1648474wrr.0;
+        Wed, 04 Mar 2020 02:07:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qvjAotCReIalwn7hfhRA/t4b2Gvv6W6FE/RxEgqf7t8=;
-        b=OhEqwDI21YIWyRyIfksL4AJKjQX136yy+vNKkYNe6C/HUXjLZsf+VvC0MnrI/rkCzO
-         UscCrtZQneDk7hlsxAKsNjmDM9/awljxIOrBJzeKzH70bDT4Kg4d/JQpKUK1YkjY4Mnf
-         Cfn1F0kzLJF6iQ8dmUJxef9xBUPjdDKUNPSjx/mmYUlLlJX6nxD5+P4ohN9BfIKlux1g
-         qEtjtN0cYwlRk1S00QzjAdatGec9cUHASG6g+qMyTOJnt6ljPCS03g2y+Xy4McxBJGtX
-         jA5F+mE5yrmNSCit6aFPMfaPxiBCXG3dokgEocP/eCBw9h1lebxSH9v7Y5a+VYYIkI+N
-         AG+Q==
-X-Gm-Message-State: ANhLgQ0YPsDaN8rPZm6SqTeYfMus23aeIZ4UTXwBLdSS96fXXsEbjOd8
-        hrTGEHXh0LCjcpyQ94fmYXA1XWA/Cbypjh7aOkzdQA==
-X-Google-Smtp-Source: ADFU+vsOS1A0XyioMVvDKG5rYZHg689H6J6a0RrbmZGMdwpvoTGbmXSr6HznowYHxLngFqxStbYPiqT+Uq3K7hbs3qQ=
-X-Received: by 2002:a17:906:15c2:: with SMTP id l2mr1771475ejd.302.1583316386498;
- Wed, 04 Mar 2020 02:06:26 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=UxUkmXbvYuysHsDAStcNKMmgmuda45SM3LqB5n1N6fw=;
+        b=dkrdcrU6xXx1cuMH54x3HdkFridP7/0vR5kNXV/MB0eBZqmQhNNvTG5vWP9kcY2Ptt
+         AN8ekfsbDpjst7W6+kFZVyv0Ih7GTbKJ9DTNELj7LFV0fR/G8q0ebSwECnquZIPjE6vY
+         TRgr6HpkrH2V7ZjjJ8Om8JdaYtFPoStbMbo02fxUwGoNnPJBwbHOs66gBCFaF1LVXK97
+         NVbkr3e60PVq//42afvYy6emO+UVMIe/qjzt1ctbqQFpISeI6NxWp6Uz+rFf0NAqyTOc
+         USKwCElQyAb77exCm6F/c+EA8c6TAxsP00r6Hv3PV8uUn3r4pJti99mc6W/CAzpsRP1M
+         9mLQ==
+X-Gm-Message-State: ANhLgQ1SuiY9PEBpeXYJmfajoHYT+pIZkEPejjCCMCcTGCkS59emSmON
+        gmaEnnOmsdz1H9TaRVhSNyE/m9vpc8A=
+X-Google-Smtp-Source: ADFU+vtvruarbAllQqWEzSn0ZrxOHVIcqYlbI9bNdlVX30oqTkL6mhFtgXIYxuvlgCOv4EZdbGlGdw==
+X-Received: by 2002:a5d:4f0e:: with SMTP id c14mr3382513wru.100.1583316422958;
+        Wed, 04 Mar 2020 02:07:02 -0800 (PST)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id i6sm4928214wra.42.2020.03.04.02.07.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 02:07:02 -0800 (PST)
+Subject: Re: [PATCH 2/2] tty:serial:mvebu-uart:fix a wrong return
+To:     =?UTF-8?B?5ZSQ5b2s?= <tangbin@cmss.chinamobile.com>,
+        gregkh <gregkh@linuxfoundation.org>
+Cc:     linux-serial <linux-serial@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <20200303071309.17172-1-tangbin@cmss.chinamobile.com>
+ <22c8d64b-5360-6495-8f83-75b52e86ca08@suse.cz>
+ <202003041737399757401@cmss.chinamobile.com>
+From:   Jiri Slaby <jslaby@suse.cz>
+Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <c179b76e-a597-3e5f-8e79-20deb62a9423@suse.cz>
+Date:   Wed, 4 Mar 2020 11:07:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200228105435.75298-1-lrizzo@google.com> <20200228110043.2771fddb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <CA+FuTSfd80pZroxtqZDsTeEz4FaronC=pdgjeaBBfYqqi5HiyQ@mail.gmail.com> <3c27d9c0-eb17-b20f-2d10-01f3bdf8c0d6@iogearbox.net>
-In-Reply-To: <3c27d9c0-eb17-b20f-2d10-01f3bdf8c0d6@iogearbox.net>
-From:   Luigi Rizzo <lrizzo@google.com>
-Date:   Wed, 4 Mar 2020 02:06:15 -0800
-Message-ID: <CAMOZA0+T3k25ndRKpSwDZ9vHkMaJUz4XhtfGFGNn=sPrGoSQ4Q@mail.gmail.com>
-Subject: Re: [PATCH v4] netdev attribute to control xdpgeneric skb linearization
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        Jesper Dangaard Brouer <hawk@kernel.org>,
-        "Jubran, Samih" <sameehj@amazon.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, ast@kernel.org,
-        bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <202003041737399757401@cmss.chinamobile.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[taking one message in the thread to answer multiple issues]
+On 04. 03. 20, 10:37, 唐彬 wrote:
+>      I'm very happy for your replay. But I don't understand, in this
+> place ,it's function is to judge.You say 'the probe function is expected
+> to return a negative value in case of error'？But at the top or bottom
+> of the code here in mvebu_uart_probe()，there are a lot of judgments
+> that return negative numbers. How do you explain that?
 
-On Tue, Mar 3, 2020 at 11:47 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
->
-> On 2/29/20 12:53 AM, Willem de Bruijn wrote:
-> > On Fri, Feb 28, 2020 at 2:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
-> >> On Fri, 28 Feb 2020 02:54:35 -0800 Luigi Rizzo wrote:
-> >>> Add a netdevice flag to control skb linearization in generic xdp mode.
-> >>>
-> >>> The attribute can be modified through
-> >>>        /sys/class/net/<DEVICE>/xdpgeneric_linearize
-> >>> The default is 1 (on)
-...
-> >>> ns/pkt                   RECEIVER                 SENDER
-> >>>
-> >>>                      p50     p90     p99       p50   p90    p99
-> >>>
-> >>> LINEARIZATION:    600ns  1090ns  4900ns     149ns 249ns  460ns
-> >>> NO LINEARIZATION:  40ns    59ns    90ns      40ns  50ns  100ns
-...
-> >> Just load your program in cls_bpf. No extensions or knobs needed.
+That's exactly the point. The function should return a negative value
+and PTR_ERR already returns a negative.
 
-Yes this is indeed an option, perhaps the only downside is that
-it acts after packet taps, so if, say, the program is there to filter unwanted
-traffic we would miss that protection.
+That is, your patch is correct, but your commit message missed an
+explanation.
 
-...
-> >> Making xdpgeneric-only extensions without touching native XDP makes
-> >> no sense to me. Is this part of some greater vision?
-> >
-> > Yes, native xdp has the same issue when handling packets that exceed a
-> > page (4K+ MTU) or otherwise consist of multiple segments. The issue is
-> > just more acute in generic xdp. But agreed that both need to be solved
-> > together.
-> >
-> > Many programs need only access to the header. There currently is not a
-> > way to express this, or for xdp to convey that the buffer covers only
-> > part of the packet.
->
-> Right, my only question I had earlier was that when users ship their
-> application with /sys/class/net/<DEVICE>/xdpgeneric_linearize turned off,
-> how would they know how much of the data is actually pulled in? Afaik,
-
-The short answer is that before turning linearization off, the sysadmin should
-make sure that the linear section contains enough data for the program
-to operate.
-In doubt, leave linearization on and live with the cost.
-
-The long answer (which probably repeats things I already discussed
-with some of you):
-clearly this patch is not perfect, as it lacks ways for the kernel and
-bpf program to
-communicate
-a) whether there is a non-linear section, and
-b) whether the bpf program understands non-linear/partial packets and how much
-linear data (and headroom) it expects.
-
-Adding these two features needs some agreement on the details.
-We had a thread a few weeks ago about multi-segment xdp support, I am not sure
-we reached a conclusion, and I am concerned that we may end up reimplementing
-sg lists or simplified-skbs for use in bpf programs where perhaps we
-could just live
-with pull_up/accessor for occasional access to the non-linear part,
-and some hints
-that the program can pass to the driver/xdpgeneric to specify
-requirements. for #b
-
-Specifically:
-#a is trivial -- add a field to the xdp_buff, and a helper to read it
-from the bpf program;
-#b is a bit less clear -- it involves a helper to either pull_up or
-access the non linear data
-(which one is preferable probably depends on the use case and we may want both),
-and some attribute that the program passes to the kernel at load time,
-to control
-when linearization should be applied. I have hacked the 'license'
-section to pass this
-information on a per-program basis, but we need a cleaner way.
-
-My reasoning for suggesting this patch, as an interim solution, is that
-being completely opt-in, one can carefully evaluate when it is safe to use
-even without having #b implemented.
-For #a, the program might infer (but not reliably) that some data are
-missing by looking
-at the payload length which may be present in some of the headers. We
-could mitigate
-abuse by e.g. forcing XDP_REDIRECT and XDP_TX in xdpgeneric only
-accept linear packets.
-
-cheers
-luigi
-
-> some drivers might only have a linear section that covers the eth header
-> and that is it. What should the BPF prog do in such case? Drop the skb
-> since it does not have the rest of the data to e.g. make a XDP_PASS
-> decision or fallback to tc/BPF altogether? I hinted earlier, one way to
-> make this more graceful is to add a skb pointer inside e.g. struct
-> xdp_rxq_info and then enable an bpf_skb_pull_data()-like helper e.g. as:
->
-> BPF_CALL_2(bpf_xdp_pull_data, struct xdp_buff *, xdp, u32, len)
-> {
->          struct sk_buff *skb = xdp->rxq->skb;
->
->          return skb ? bpf_try_make_writable(skb, len ? :
->                                             skb_headlen(skb)) : -ENOTSUPP;
-> }
->
-> Thus, when the data/data_end test fails in generic XDP, the user can
-> call e.g. bpf_xdp_pull_data(xdp, 64) to make sure we pull in as much as
-> is needed w/o full linearization and once done the data/data_end can be
-> repeated to proceed. Native XDP will leave xdp->rxq->skb as NULL, but
-> later we could perhaps reuse the same bpf_xdp_pull_data() helper for
-> native with skb-less backing. Thoughts?
->
-> Thanks,
-> Daniel
+thanks,
+-- 
+js
+suse labs
