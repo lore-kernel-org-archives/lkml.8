@@ -2,116 +2,85 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	PDS_TONAME_EQ_TOLOCAL_SHORT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF8AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47890C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCEC206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 006BC206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:46:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="J5dJtf5o"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lu7UARfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387426AbgCDAnr (ORCPT
+        id S1728107AbgCDAqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:43:47 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36952 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387396AbgCDAnq (ORCPT
+        Tue, 3 Mar 2020 19:46:53 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:41938 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgCDAqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:43:46 -0500
-Received: by mail-qk1-f196.google.com with SMTP id m9so5454333qke.4
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:43:45 -0800 (PST)
+        Tue, 3 Mar 2020 19:46:52 -0500
+Received: by mail-io1-f68.google.com with SMTP id m25so451630ioo.8
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:46:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DRZPjOU86C+QBTaOB6DsJlZhFthqBDzzJfXy4mDxK2E=;
-        b=J5dJtf5oYmzUXexSyHe+zHPOgeJmiMlpBKHCOi4i4YYu4dpJRn+Pbu450LBkIBtNDJ
-         uyNQlkVBnAyZQ6CvoXptBQSCXSwVGZq1GSk1YYKrIkaBLFe/fV5jlamq7cMbwKQlJojW
-         S/lAP4inVw4lAR88C4BzNgptPwd3Kq53+D/WrM3nPrKh5cEoc2BSIIpNIs1tnRQnYUD6
-         aqSv/l34Gtn3NsWHJapV8yGVO5MDmf5rGMtsD5LevkFpQP14UdWwJrrWKKEJZzFq8nFp
-         XfZCrFT1+/5SJvnYSr0cMI9opufqhxEUqeX9yzoP9BSyqRmRTHRraCHGzWCfPMwMlOq4
-         g0vA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gWULqsWkFFc3S8vtpoLm3M2Oc/ykoEB/9KBF47U9Qiw=;
+        b=Lu7UARfSrsUvVpcCI6N1LYkVZzMNa0W7Xkuov69vKTfGM0AlqITcsTa5u4o91/42Rt
+         1k7V8IBF62+wrmO//AAGkdYnmDBfvhhnHw3HPzCaiF3DBlaEGneyW6IZQd0GXsl3363z
+         BuphrgYY0rC1i++Q6TNr3oRqOWxK2c82kzjMVECLt9O6E32N9fPkLHDRqFBmcVQmRvf8
+         5p3XG6d+62Rkh1aArtDRhzuIWISBZf6hTODJmhMmDQCXsOAbG9aedZCWBlZqyVRhYJLi
+         ebDp94saYd+CuIuvLBO34pUrn9T/PvtN8GwEPxYVEtkjmywFeCJhXMf2fZcZQVvy1Gas
+         RasQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=DRZPjOU86C+QBTaOB6DsJlZhFthqBDzzJfXy4mDxK2E=;
-        b=sgiyFDwebqHAcVzBgzCbA6m84Ui6unzpEl71J6WBFVaYGVuw5gaRRu8hftO8hdk37Y
-         f+kKfXWQ49i0On1FJ98zpbMfgRs9BKGrOnRVXjbOc2qNzAnQuzoWOtJf1YIfAK57MdRB
-         3s2nhFKtvFpmWW7glohFgyVTwr5Qw5fd77Ba+T+s2m2RfzRX9VQdSiSAkBELqRH1rfr9
-         6fzdAOFifhiC2oOcO1ydLRg5n7UVRt8l3mZZu/H8sXA3WgB6ajUx6S5gYc8JgiDbGTmO
-         QDl8drv7v3EKGqNeB2ucX2quIlypSVMRX0MH0P1NJ/23A79o1Dl7BrTC2813+OXocMZN
-         FDCw==
-X-Gm-Message-State: ANhLgQ0GMXMSg5vLGIcLVSc6001wxiFe69KvqoxieXVMjaVr5cF8+ytq
-        BtNHo4kQONmL/53xKa1KRnsfOyvzJd07OQ==
-X-Google-Smtp-Source: ADFU+vsgG146lXuiifbBZ94JzvpBcPtzlNUuXJJh3mMTUvsDDiTgL3moviBSD4srwd5s+UiV0qppcw==
-X-Received: by 2002:a05:620a:806:: with SMTP id s6mr664391qks.235.1583282625401;
-        Tue, 03 Mar 2020 16:43:45 -0800 (PST)
-Received: from ovpn-121-139.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id w48sm14038759qtc.40.2020.03.03.16.43.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Mar 2020 16:43:44 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     tglx@linutronix.de
-Cc:     ebiederm@xmission.com, oleg@redhat.com,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] posix-cpu-timers: fix memory leaks for task_struct
-Date:   Tue,  3 Mar 2020 19:43:36 -0500
-Message-Id: <20200304004336.960-1-cai@lca.pw>
-X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gWULqsWkFFc3S8vtpoLm3M2Oc/ykoEB/9KBF47U9Qiw=;
+        b=paD8uTytlEkUBrKRfHRyW9u79PFxJ8mGlu05aFsslfFM47RBa7a/Xvj1QOmH2kJUNK
+         cEO1TKxSTDUPBIB85fQeW0XKhilPiAvD3zJtYAQDxJo9yk4FzrY19LDsTM2ZUPc+jvfu
+         0RZMagRm8csEQWDNIro8g+FKvCYJ9pFAwAmu5ZTA2QGdcBUbBvXBw9KYAzCqUu0gkASz
+         c20p7K+5MX7o1GrmJ6p/H2cHF0geV/jrKnuPa4ocdV+lVUb0JKy8RXfPeSrmnJxUSABS
+         ImF+/sSJ9i3xfbHoymbqgsTrSsaIptgoW53RM4tcEcMHI4NTmsmX1c92dzgboaAVz4zB
+         fJPg==
+X-Gm-Message-State: ANhLgQ3gkMv09BItc+j9L39sB526XZK+jsK8uCav4T8lTw/AGa7c8etp
+        MJY9/9yEdp+3LzdHUpP1OHngSEA0nU4vq+i1mV4ZNhRGIts=
+X-Google-Smtp-Source: ADFU+vuHhu4NtaKzrAJMH0Y+xQoDpQZob8gI+PIvVcHltWP+r3WgXejOJD7aHpKlO0ahyaflJrOjmiZ+NzCPYzlxPD0=
+X-Received: by 2002:a02:240c:: with SMTP id f12mr476874jaa.65.1583282811961;
+ Tue, 03 Mar 2020 16:46:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200303031725.14560-1-tangbin@cmss.chinamobile.com>
+In-Reply-To: <20200303031725.14560-1-tangbin@cmss.chinamobile.com>
+From:   Jun Nie <jun.nie@linaro.org>
+Date:   Wed, 4 Mar 2020 08:46:41 +0800
+Message-ID: <CABymUCMupAzJ00McXkBoApTT4NV_ZT1=hTyZA+YFdQfRoVSbyQ@mail.gmail.com>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH=5D_ARM=3Amach=2Dzx=EF=BC=9Aremove_duplicate_debug_mes?=
+        =?UTF-8?Q?sage?=
+To:     tangbin <tangbin@cmss.chinamobile.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, linux@armlinux.org.uk,
+        linux-arm-kernel@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The recent commit removed put_task_struct() in posix_cpu_timer_del()
-results in many memory leaks like this,
+tangbin <tangbin@cmss.chinamobile.com> =E4=BA=8E2020=E5=B9=B43=E6=9C=883=E6=
+=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8A=E5=8D=8811:18=E5=86=99=E9=81=93=EF=BC=9A
+>
+> remove duplicate dev_err message, because of
+> devm_ioremap_resource, which has already contains.
+>
+> Signed-off-by: tangbin <tangbin@cmss.chinamobile.com>
+> ---
+>  arch/arm/mach-zx/zx296702-pm-domain.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
 
-unreferenced object 0xc0000016d9b44480 (size 8192):
-  comm "timer_create01", pid 57749, jiffies 4295163733 (age 6159.670s)
-  hex dump (first 32 bytes):
-    02 00 00 00 00 00 00 00 10 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<0000000056aca129>] copy_process+0x26c/0x18e0
-    alloc_task_struct_node at kernel/fork.c:169
-    (inlined by) dup_task_struct at kernel/fork.c:877
-    (inlined by) copy_process at kernel/fork.c:1929
-    [<00000000bdbbf9f8>] _do_fork+0xac/0xb20
-    [<00000000dcb1c445>] __do_sys_clone+0x98/0xe0
-    __do_sys_clone at kernel/fork.c:2591
-    [<000000006c059205>] ppc_clone+0x8/0xc
-    ppc_clone at arch/powerpc/kernel/entry_64.S:479
-
-Fixes: 672ebe8eb017a5 ("posix-cpu-timers: Store a reference to a pid not a task")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- kernel/time/posix-cpu-timers.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index afd1e959a282..e0b580deb61a 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -446,8 +446,10 @@ static int posix_cpu_timer_del(struct k_itimer *timer)
- 
- out:
- 	rcu_read_unlock();
--	if (!ret)
-+	if (!ret) {
- 		put_pid(ctmr->pid);
-+		put_task_struct(p);
-+	}
- 
- 	return ret;
- }
--- 
-2.21.0 (Apple Git-122.2)
-
+Reviewed-by: Jun Nie <jun.nie@linaro.org>
