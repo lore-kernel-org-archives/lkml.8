@@ -2,140 +2,115 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA0DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA19C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C2E20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583309880;
-	bh=VvP9M7K7X5tlAWb9QFz2KtHF0kHJfukxQs5jv7ivTU8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PzA/N8ZJG+yjuNjDERUjkDAuV6U0Pdw6MpDQnk8O5UIYZ5/n3rdKtkqzyintGvHNw
-	 uRhJ1eEGFIZsM0TUPZ9x5Yrw5CutOtVrwVabvbEjXhXQstrLMhaTSlLP29QPgWL4QW
-	 KrI88hr9e2Sy+VALm3edZUYe8f9M2ieXSTTdweDU=
+	by mail.kernel.org (Postfix) with ESMTP id 9436820866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:19:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J9NQAFw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbgCDIR6 (ORCPT
+        id S1728742AbgCDITP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:17:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgCDIR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:17:58 -0500
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A36721D56
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 08:17:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583309877;
-        bh=VvP9M7K7X5tlAWb9QFz2KtHF0kHJfukxQs5jv7ivTU8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=eW4zwJEdSJY5I0QoJh7Odniwh1Sg0fHbL4TFjN6HFW9JJjGksk7sGD5guX6KFkFnf
-         LTQDCRccwxj2cXUqN3Ti00co9S1ukRyEB5Vhbp3HNYd8fRq0sFi6t9LR4wUePIjQCl
-         X51cq/z0Xud+9r5EBzGIA/P9Oi4d2GtFSCuxqR7s=
-Received: by mail-wm1-f41.google.com with SMTP id a5so874678wmb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:17:57 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3EWa03/hfCV74B+kmal0CpSKacyymAoWxaU0mNds3zZIxAN1yr
-        uZTKvhycIR2x0WipfD0VYMZyEOLBCLFeLO2Zs8GwUw==
-X-Google-Smtp-Source: ADFU+vvkIynVQGoDgk8Ik887VFnxoULfRgVGoR02xmEIWUYBpdzt+my/y+YM0vPHVmy3OcyPNE5HGabbGtrtwarQek8=
-X-Received: by 2002:a7b:cb93:: with SMTP id m19mr2449069wmi.133.1583309875696;
- Wed, 04 Mar 2020 00:17:55 -0800 (PST)
+        Wed, 4 Mar 2020 03:19:15 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:27229 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726957AbgCDITO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 03:19:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583309953;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=dgO+g7kPKWUvsxGYHTS6aWvz7ghd8eWFm2MFdikGWgo=;
+        b=J9NQAFw0Y/JbzXX8gkwAkhf25gWvmXsz1a2VCqkJHgz3Yj0Y/K3zCMA3Ag5/KY+pd8XA/8
+        fUczp7SxHBLvFtnfvTGCayOrYhrs5T/AQey8BEOgXkZGR9uwfW+icM3dcZc3bHRzQ10s3A
+        WEltM7SMQLhpjqDGW+jrjPLQ6W0W/bw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-413-thnUz6SSODe2F8rZbyN_Sw-1; Wed, 04 Mar 2020 03:19:11 -0500
+X-MC-Unique: thnUz6SSODe2F8rZbyN_Sw-1
+Received: by mail-wr1-f70.google.com with SMTP id q18so537012wrw.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:19:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=dgO+g7kPKWUvsxGYHTS6aWvz7ghd8eWFm2MFdikGWgo=;
+        b=AkxyW6uwjOz1nf2apjiEgFewUes2c0lY2Kef+AgTlN/VLXJq/eFNiQTOyzVkfd7APM
+         lBBtquP9Z8ZV61ow83skN0mwvoXlwNdJ5T2MWKsw79miT9a8XEZHka89lIrw4pY5qP9V
+         H1bRJD4U53kEY4M9ex+VUFsoFR/mo77NQWF1rIS4jiHWPvnlm4OC/cLnc0epjhrJct4E
+         K8owSMevss0f0rw8WfGkBYCzEqEGmhjcCbdDje6nGeYTHe6mHuAcNwZ9zzW3Yw0HLeMs
+         hzrPK4VveybS/gDzGqlhxeTS/rtnNeOtQFcMZjIYtz1wdCxkKcQDPqCeLplc9/n/4bjv
+         6wnA==
+X-Gm-Message-State: ANhLgQ0qgO8IESVWZMXFF9nUDTjehN68/VcNfiooC+nehxJKjc2agLlc
+        EhPvLl5qve+bKkiPVWp2PGVRM5kV+NOLlUs5Hm9NRX5fCGuFa/WN3V4ilL3m22LyPmjqF4HoUMj
+        P4AcW66OXvcsStFnzgQFpdLYO
+X-Received: by 2002:a5d:6a04:: with SMTP id m4mr2784411wru.127.1583309950567;
+        Wed, 04 Mar 2020 00:19:10 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvWM0YMttMCvWUxAmUh8oJK0y5y58OOD1R2KEZ5cnRGfBWoZG4nfaGGBkT9opRHGblJnTvo8g==
+X-Received: by 2002:a5d:6a04:: with SMTP id m4mr2784382wru.127.1583309950325;
+        Wed, 04 Mar 2020 00:19:10 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id o5sm3051643wmb.8.2020.03.04.00.19.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 00:19:09 -0800 (PST)
+Subject: Re: [PATCH 5.5 111/176] KVM: nVMX: Emulate MTF when performing
+ instruction emulation
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Oliver Upton <oupton@google.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+References: <20200303174304.593872177@linuxfoundation.org>
+ <20200303174317.670749078@linuxfoundation.org>
+ <8780cf08-374b-da06-0047-0fe8eeec0113@redhat.com>
+ <CAOQ_QsjG32KrG6hVMaMenUYk1+Z+jhcCsGOk=t9i+-9oZRGWeA@mail.gmail.com>
+ <20200304081001.GB1401372@kroah.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <04e51276-1759-2793-3b45-168284cbaf67@redhat.com>
+Date:   Wed, 4 Mar 2020 09:19:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200303205445.3965393-1-nivedita@alum.mit.edu> <20200303205445.3965393-2-nivedita@alum.mit.edu>
-In-Reply-To: <20200303205445.3965393-2-nivedita@alum.mit.edu>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 4 Mar 2020 09:17:44 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
-Message-ID: <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in populate_pud
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200304081001.GB1401372@kroah.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 at 21:54, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> Commit d367cef0a7f0 ("x86/mm/pat: Fix boot crash when 1GB pages are not
-> supported by the CPU") added checking for CPU support for 1G pages
-> before using them.
->
-> However, when support is not present, nothing is done to map the
-> intermediate 1G regions and we go directly to the code that normally
-> maps the remainder after 1G mappings have been done. This code can only
-> handle mappings that fit inside a single PUD entry, but there is no
-> check, and it instead silently produces a corrupted mapping to the end
-> of the PUD entry, and no mapping beyond it, but still returns success.
->
-> This bug is encountered on EFI machines in mixed mode (32-bit firmware
-> with 64-bit kernel), with RAM beyond 2G. The EFI support code
-> direct-maps all the RAM, so a memory range from below 1G to above 2G
-> triggers the bug and results in no mapping above 2G, and an incorrect
-> mapping in the 1G-2G range. If the kernel resides in the 1G-2G range, a
-> firmware call does not return correctly, and if it resides above 2G, we
-> end up passing addresses that are not mapped in the EFI pagetable.
->
-> Fix this by mapping the 1G regions using 2M pages when 1G page support
-> is not available.
->
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+On 04/03/20 09:10, Greg Kroah-Hartman wrote:
+> I'll be glad to just put KVM into the "never apply any patches to
+> stable unless you explicitly mark it as such", but the sad fact is that
+> many recent KVM fixes for reported CVEs never had any "Cc: stable@vger"
+> markings.
 
-I was trying to test these patches, and while they seem fine from a
-regression point of view, I can't seem to reproduce this issue and
-make it go away again by applying this patch.
+Hmm, I did miss it in 433f4ba1904100da65a311033f17a9bf586b287e and
+acff78477b9b4f26ecdf65733a4ed77fe837e9dc, but that's going back to
+August 2018, so I can do better but it's not too shabby a record. :)
 
-Do you have any detailed instructions how to reproduce this?
+> They only had "Fixes:" tags and so I have had to dig them out
+> of the tree and backport them myself in order to resolve those very
+> public issues.
+> 
+> So can I ask that you always properly tag things for stable?  If so, I
+> will be glad to ignore Fixes: tags for KVM patches in the future.
+> 
+> I'll go drop this patch as well.  Note, there are other KVM patches in
+> this release cycle also, can someone verify that I did not overreach for
+> them as well?
 
-> ---
->  arch/x86/mm/pat/set_memory.c | 18 ++++++++++++++----
->  1 file changed, 14 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-> index c4aedd00c1ba..d0b7b06253a5 100644
-> --- a/arch/x86/mm/pat/set_memory.c
-> +++ b/arch/x86/mm/pat/set_memory.c
-> @@ -1370,12 +1370,22 @@ static int populate_pud(struct cpa_data *cpa, unsigned long start, p4d_t *p4d,
->         /*
->          * Map everything starting from the Gb boundary, possibly with 1G pages
->          */
-> -       while (boot_cpu_has(X86_FEATURE_GBPAGES) && end - start >= PUD_SIZE) {
-> -               set_pud(pud, pud_mkhuge(pfn_pud(cpa->pfn,
-> -                                  canon_pgprot(pud_pgprot))));
-> +       while (end - start >= PUD_SIZE) {
-> +               if (boot_cpu_has(X86_FEATURE_GBPAGES)) {
-> +                       set_pud(pud, pud_mkhuge(pfn_pud(cpa->pfn,
-> +                                          canon_pgprot(pud_pgprot))));
-> +                       cpa->pfn += PUD_SIZE >> PAGE_SHIFT;
-> +               } else {
-> +                       if (pud_none(*pud))
-> +                               if (alloc_pmd_page(pud))
-> +                                       return -1;
-> +                       if (populate_pmd(cpa, start, start + PUD_SIZE,
-> +                                        PUD_SIZE >> PAGE_SHIFT,
-> +                                        pud, pgprot) < 0)
-> +                               return cur_pages;
-> +               }
->
->                 start     += PUD_SIZE;
-> -               cpa->pfn  += PUD_SIZE >> PAGE_SHIFT;
->                 cur_pages += PUD_SIZE >> PAGE_SHIFT;
->                 pud++;
->         }
-> --
-> 2.24.1
->
+I checked them and they are fine.
+
+Paolo
+
