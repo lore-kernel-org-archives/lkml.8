@@ -4,117 +4,116 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE0AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:24:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3133FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 449BC20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:24:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11FD52166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:24:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388048AbgCDNYo (ORCPT
+        id S2388099AbgCDNY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:24:44 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51328 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgCDNYo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:24:44 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 28610AAC7;
-        Wed,  4 Mar 2020 13:24:42 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     phil@raspberrypi.org, f.fainelli@gmail.com,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ARM: dts: bcm2711: Move emmc2 into its own bus
-Date:   Wed,  4 Mar 2020 14:24:37 +0100
-Message-Id: <20200304132437.20164-1-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.25.1
+        Wed, 4 Mar 2020 08:24:58 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28958 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388029AbgCDNY5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 08:24:57 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024DLM9w132523;
+        Wed, 4 Mar 2020 08:22:52 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yhpwn0kjr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 08:22:51 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 024DLFwB003952;
+        Wed, 4 Mar 2020 13:22:51 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma02wdc.us.ibm.com with ESMTP id 2yffk6tyrg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 13:22:51 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024DMn2a11862626
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 13:22:49 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6E08C6055;
+        Wed,  4 Mar 2020 13:22:49 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0546DC605A;
+        Wed,  4 Mar 2020 13:22:48 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 13:22:48 +0000 (GMT)
+From:   Stefan Berger <stefanb@linux.vnet.ibm.com>
+To:     jarkko.sakkinen@linux.intel.com, linux-integrity@vger.kernel.org
+Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
+        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
+        gcwilson@linux.ibm.com, jgg@ziepe.ca,
+        Stefan Berger <stefanb@linux.ibm.com>
+Subject: [PATCH v6 1/3] tpm: of: Handle IBM,vtpm20 case when getting log parameters
+Date:   Wed,  4 Mar 2020 08:22:41 -0500
+Message-Id: <20200304132243.179402-2-stefanb@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200304132243.179402-1-stefanb@linux.vnet.ibm.com>
+References: <20200304132243.179402-1-stefanb@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
+ adultscore=0 spamscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
+ mlxlogscore=999 phishscore=0 malwarescore=0 impostorscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040102
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Depending on bcm2711's revision its emmc2 controller might have
-different DMA constraints. Raspberry Pi 4's firmware will take care of
-updating those, but only if a certain alias is found in the device tree.
-So, move emmc2 into its own bus, so as not to pollute other devices with
-dma-ranges changes and create the emmc2bus alias.
+From: Stefan Berger <stefanb@linux.ibm.com>
 
-Based in Phil ELwell's downstream implementation.
+A vTPM 2.0 is identified by 'IBM,vtpm20' in the 'compatible' node in
+the device tree. Handle it in the same way as 'IBM,vtpm'.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+The vTPM 2.0's log is written in little endian format so that for this
+aspect we can rely on existing code.
+
+Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+Acked-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 ---
+ drivers/char/tpm/eventlog/of.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Changes since v1:
- - Add comment in dt
- - Fix commit title
-
- arch/arm/boot/dts/bcm2711-rpi-4-b.dts |  1 +
- arch/arm/boot/dts/bcm2711.dtsi        | 25 ++++++++++++++++++++-----
- 2 files changed, 21 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-index 1d4b589fe233..e26ea9006378 100644
---- a/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-+++ b/arch/arm/boot/dts/bcm2711-rpi-4-b.dts
-@@ -20,6 +20,7 @@ memory@0 {
- 	};
+diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
+index af347c190819..a31a625ad44e 100644
+--- a/drivers/char/tpm/eventlog/of.c
++++ b/drivers/char/tpm/eventlog/of.c
+@@ -17,6 +17,12 @@
+ #include "../tpm.h"
+ #include "common.h"
  
- 	aliases {
-+		emmc2bus = &emmc2bus;
- 		ethernet0 = &genet;
- 		pcie0 = &pcie0;
- 	};
-diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.dtsi
-index d1e684d0acfd..a91cf68e3c4c 100644
---- a/arch/arm/boot/dts/bcm2711.dtsi
-+++ b/arch/arm/boot/dts/bcm2711.dtsi
-@@ -241,17 +241,32 @@ pwm1: pwm@7e20c800 {
- 			status = "disabled";
- 		};
- 
-+		hvs@7e400000 {
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+		};
-+	};
++static const char * const compatibles[] = {
++	"IBM,vtpm",
++	"IBM,vtpm20",
++	NULL
++};
 +
-+	/*
-+	 * emmc2 has different DMA constraints based on SoC revisions. It was
-+	 * moved into its own bus, so as for RPi4's firmware to update them.
-+	 * The firmware will find whether the emmc2bus alias is defined, and if
-+	 * so, it'll edit the dma-ranges property below accordingly.
-+	 */
-+	emmc2bus: emmc2bus {
-+		compatible = "simple-bus";
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+
-+		ranges = <0x0 0x7e000000  0x0 0xfe000000  0x01800000>;
-+		dma-ranges = <0x0 0xc0000000  0x0 0x00000000  0x40000000>;
-+
- 		emmc2: emmc2@7e340000 {
- 			compatible = "brcm,bcm2711-emmc2";
--			reg = <0x7e340000 0x100>;
-+			reg = <0x0 0x7e340000 0x100>;
- 			interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&clocks BCM2711_CLOCK_EMMC2>;
- 			status = "disabled";
- 		};
--
--		hvs@7e400000 {
--			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
--		};
- 	};
- 
- 	arm-pmu {
+ int tpm_read_log_of(struct tpm_chip *chip)
+ {
+ 	struct device_node *np;
+@@ -51,7 +57,7 @@ int tpm_read_log_of(struct tpm_chip *chip)
+ 	 * endian format. For this reason, vtpm doesn't need conversion
+ 	 * but physical tpm needs the conversion.
+ 	 */
+-	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0) {
++	if (!of_device_compatible_match(np, compatibles)) {
+ 		size = be32_to_cpup((__force __be32 *)sizep);
+ 		base = be64_to_cpup((__force __be64 *)basep);
+ 	} else {
 -- 
-2.25.1
+2.23.0
 
