@@ -2,246 +2,106 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAB6C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:57:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 671F9C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D85182166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:57:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583337452;
-	bh=ILnFl8RmIMsml+ikE7ngdhxT/GrRssw7KpYC8Sdzi8A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=WXwnKsYsPmmiJHw4rmWnbwGp7hLrbTMMYWJzTBLQQv9qvi5gmE9XvjtbcQ4CnReCL
-	 RCWJJsqYqXghOFfXvc5NPjuQgA8Hv6qFssfSu7EELmuLg2DQ0LiaTfBfLD/CaQ84OJ
-	 j8+cCRqdxgStgZmthyaT1+4Xwsghtac5u7VsBIp4=
+	by mail.kernel.org (Postfix) with ESMTP id 3FF8F2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:58:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qzK0hDhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387801AbgCDP5b (ORCPT
+        id S1729772AbgCDP6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:57:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49368 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727709AbgCDP5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:57:31 -0500
-Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53EAE2166E
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 15:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583337450;
-        bh=ILnFl8RmIMsml+ikE7ngdhxT/GrRssw7KpYC8Sdzi8A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=LHgNltKLgLHu9Ig8V+Tymy7PM5UmFZLeJFrCSpeBxRS8h2S5WWK8NrOToq7JPIh1v
-         DRJQq6l36pq5/fnzzAgbXvIS/wD+wQXt0iNff51CA4syuSvvN/2QTmKEaZr6fUlP7r
-         ZsYiljIwdyxcrWvuvk7EmasRmOEXeg+XZV2CozOA=
-Received: by mail-wm1-f50.google.com with SMTP id a132so2688737wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:57:30 -0800 (PST)
-X-Gm-Message-State: ANhLgQ2T2vqXstKbp452if79bvoQMgRNt1YCdVCEr+TV3Pv0pe19CNoL
-        LG8dSi4zabc8kHrH7bXFWmsW2yP+6fDVoz+jNWQC2w==
-X-Google-Smtp-Source: ADFU+vunZfY6ZlJCw/RmmWZMdrFRr6f0dI+h9rJagUF2Ca4ke1LTHNYGhV0DKsbWvr8aqreTP2SjzUMyvHX7MYZUv3s=
-X-Received: by 2002:a1c:2d88:: with SMTP id t130mr4576821wmt.68.1583337448738;
- Wed, 04 Mar 2020 07:57:28 -0800 (PST)
-MIME-Version: 1.0
-References: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
- <20200304154936.24206-1-vdronov@redhat.com>
-In-Reply-To: <20200304154936.24206-1-vdronov@redhat.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 4 Mar 2020 16:57:16 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_WFL24dGPakcPgGW3MayYx1qND9HxL87vods7h4LyZJw@mail.gmail.com>
-Message-ID: <CAKv+Gu_WFL24dGPakcPgGW3MayYx1qND9HxL87vods7h4LyZJw@mail.gmail.com>
-Subject: Re: [PATCH v2] efi: fix a race and a buffer overflow while reading
- efivars via sysfs
-To:     Vladis Dronov <vdronov@redhat.com>
-Cc:     linux-efi <linux-efi@vger.kernel.org>, joeyli <jlee@suse.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Mar 2020 10:58:25 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:34550 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388019AbgCDP6Y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:58:24 -0500
+Received: by mail-lj1-f195.google.com with SMTP id j19so322958lji.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:58:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=U2afUUo7gcqKGsZXm1132Z2DinxFoznPEB9ahOfUs5k=;
+        b=qzK0hDhWmDi+wb9g1tsq8Vo5sOBJTKo4poMC642is7FDaHHY4CS4jN9R0281x/wl09
+         +fj8oA2vifprD7EudIOKS9bTNeGAUeZp4pIN1hkCunkV7mCBMdlg/TNgSWY6pqCzY39D
+         CJJ+ocA4d6uPBooiF1JT6sz/DrFIUXLdp3WheLBY5l1eS5BMyxKyjJgn+Di9PyQ+Hwku
+         6w4h7gei5ClbyOut1K4C1Ngo9l2UL//7RE3FUveNqXPM6UnOS/PdWjGQXp+30ToOWM2a
+         Po2HUBnz+l9fDhn9/KvP+KwUTwZj/o/Lhw4Sq6DWcsCteEVceLZh4fIZuILnhaPyRZ+g
+         j1IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=U2afUUo7gcqKGsZXm1132Z2DinxFoznPEB9ahOfUs5k=;
+        b=NHmAFtIKyUGW/b6SfDSxFrm8UreXR96n5nzc2JHk17sUtm6aPto+b9FyflTW1AHhgG
+         /w0O1ISWucMIWLNJuh4qeqfWV6ovVRe16IG0sLxUzvA856R0arnxWKJv6AYnkKgXDvAo
+         DV+lNQnu0Ji9ZCvsVrRSvwwHmpuP1PGSxUuI2dQ1SbwwOEl3WX9TfFi/SCoF9OQHTxOn
+         bJezYCAWAG7qxXIvE/KZh9NeQ8rTnX6Lqvs98tEnXsRhXjhTIHyGgh4OE0/7T1MZs8Fe
+         w4d3/lm3yKOVihYFgXi622ZXTzLklYnMxhCkeLq4t/GGThT2rgtXCUxzEgMH0nN/oLJ9
+         z8ew==
+X-Gm-Message-State: ANhLgQ14goomKkua+MmCt6x/b1wnVGwxbiRBs+v9U/AGApbV14OfOg9M
+        LbxuQYRYlIB0PfiAUcUeEcZbjvVPXGE=
+X-Google-Smtp-Source: ADFU+vsVg5RJIaMPwnWAYk62YemrpgFiO40xq3WzGuOXCGINg04alWqT3DGb5/ui1ePPvjmIW5XPjg==
+X-Received: by 2002:a2e:a486:: with SMTP id h6mr2300591lji.202.1583337501273;
+        Wed, 04 Mar 2020 07:58:21 -0800 (PST)
+Received: from localhost.localdomain ([94.155.124.210])
+        by smtp.gmail.com with ESMTPSA id 67sm10531217ljj.31.2020.03.04.07.58.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 07:58:20 -0800 (PST)
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-media@vger.kernel.org
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Elliot Berman <eberman@codeaurora.org>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: [PATCH] venus: firmware: Ignore secure call error on first resume
+Date:   Wed,  4 Mar 2020 17:58:09 +0200
+Message-Id: <20200304155809.19637-1-stanimir.varbanov@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 16:50, Vladis Dronov <vdronov@redhat.com> wrote:
->
-> There is a race and a buffer overflow corrupting a kernel memory while
-> reading an efi variable with a size more than 1024 bytes via the older
-> sysfs method. This happens because accessing struct efi_variable in
-> efivar_{attr,size,data}_read() and friends is not protected from
-> a concurrent access leading to a kernel memory corruption and, at best,
-> to a crash. The race scenario is the following:
->
-> CPU0:                                CPU1:
-> efivar_attr_read()
->   var->DataSize = 1024;
->   efivar_entry_get(... &var->DataSize)
->     down_interruptible(&efivars_lock)
->                                      efivar_attr_read() // same efi var
->                                        var->DataSize = 1024;
->                                        efivar_entry_get(... &var->DataSize)
->                                          down_interruptible(&efivars_lock)
->     virt_efi_get_variable()
->     // returns EFI_BUFFER_TOO_SMALL but
->     // var->DataSize is set to a real
->     // var size more than 1024 bytes
->     up(&efivars_lock)
->                                          virt_efi_get_variable()
->                                          // called with var->DataSize set
->                                          // to a real var size, returns
->                                          // successfully and overwrites
->                                          // a 1024-bytes kernel buffer
->                                          up(&efivars_lock)
->
-> This can be reproduced by concurrent reading of an efi variable which size
-> is more than 1024 bytes:
->
-> ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
-> cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
->
-> Fix this by using a local variable for a var's data buffer size so it
-> does not get overwritten. Also add a sanity check to efivar_store_raw().
->
-> Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
-> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
-> ---
->  drivers/firmware/efi/efi-pstore.c |  2 +-
->  drivers/firmware/efi/efivars.c    | 32 ++++++++++++++++++++++---------
->  drivers/firmware/efi/vars.c       |  2 +-
->  3 files changed, 25 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
-> index 9ea13e8d12ec..e4767a7ce973 100644
-> --- a/drivers/firmware/efi/efi-pstore.c
-> +++ b/drivers/firmware/efi/efi-pstore.c
-> @@ -161,7 +161,7 @@ static int efi_pstore_scan_sysfs_exit(struct efivar_entry *pos,
->   *
->   * @record: pstore record to pass to callback
->   *
-> - * You MUST call efivar_enter_iter_begin() before this function, and
-> + * You MUST call efivar_entry_iter_begin() before this function, and
->   * efivar_entry_iter_end() afterwards.
->   *
->   */
+With the latest cleanup in qcom scm driver the secure monitor
+call for setting the remote processor state returns EINVAL when
+it is called for the first time and after another scm call
+auth_and_reset. The error returned from scm call could be ignored
+because the state transition is already done in auth_and_reset.
 
-This hunk can be dropped now, I guess
+Signed-off-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+---
+ drivers/media/platform/qcom/venus/firmware.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-> diff --git a/drivers/firmware/efi/efivars.c b/drivers/firmware/efi/efivars.c
-> index 7576450c8254..16a617f9c5cf 100644
-> --- a/drivers/firmware/efi/efivars.c
-> +++ b/drivers/firmware/efi/efivars.c
-> @@ -83,13 +83,16 @@ static ssize_t
->  efivar_attr_read(struct efivar_entry *entry, char *buf)
->  {
->         struct efi_variable *var = &entry->var;
-> +       unsigned long size = sizeof(var->Data);
->         char *str = buf;
-> +       int ret;
->
->         if (!entry || !buf)
->                 return -EINVAL;
->
-> -       var->DataSize = 1024;
-> -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-> +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-> +       var->DataSize = size;
+diff --git a/drivers/media/platform/qcom/venus/firmware.c b/drivers/media/platform/qcom/venus/firmware.c
+index de6812fb55f4..8801a6a7543d 100644
+--- a/drivers/media/platform/qcom/venus/firmware.c
++++ b/drivers/media/platform/qcom/venus/firmware.c
+@@ -44,8 +44,14 @@ static void venus_reset_cpu(struct venus_core *core)
+ 
+ int venus_set_hw_state(struct venus_core *core, bool resume)
+ {
+-	if (core->use_tz)
+-		return qcom_scm_set_remote_state(resume, 0);
++	int ret;
++
++	if (core->use_tz) {
++		ret = qcom_scm_set_remote_state(resume, 0);
++		if (resume && ret == -EINVAL)
++			ret = 0;
++		return ret;
++	}
+ 
+ 	if (resume)
+ 		venus_reset_cpu(core);
+-- 
+2.17.1
 
-For my understanding, could you explain why we do the assignment here?
-Does var->DataSize matter in this case? Can it deviate from 1024?
-
-> +       if (ret)
->                 return -EIO;
->
->         if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
-> @@ -116,13 +119,16 @@ static ssize_t
->  efivar_size_read(struct efivar_entry *entry, char *buf)
->  {
->         struct efi_variable *var = &entry->var;
-> +       unsigned long size = sizeof(var->Data);
->         char *str = buf;
-> +       int ret;
->
->         if (!entry || !buf)
->                 return -EINVAL;
->
-> -       var->DataSize = 1024;
-> -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-> +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-> +       var->DataSize = size;
-> +       if (ret)
->                 return -EIO;
->
->         str += sprintf(str, "0x%lx\n", var->DataSize);
-> @@ -133,12 +139,15 @@ static ssize_t
->  efivar_data_read(struct efivar_entry *entry, char *buf)
->  {
->         struct efi_variable *var = &entry->var;
-> +       unsigned long size = sizeof(var->Data);
-> +       int ret;
->
->         if (!entry || !buf)
->                 return -EINVAL;
->
-> -       var->DataSize = 1024;
-> -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
-> +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-> +       var->DataSize = size;
-> +       if (ret)
->                 return -EIO;
->
->         memcpy(buf, var->Data, var->DataSize);
-> @@ -199,6 +208,9 @@ efivar_store_raw(struct efivar_entry *entry, const char *buf, size_t count)
->         u8 *data;
->         int err;
->
-> +       if (!entry || !buf)
-> +               return -EINVAL;
-> +
-
-So what are we sanity checking here? When might this occur? Does it
-need to be in the same patch?
-
->         if (in_compat_syscall()) {
->                 struct compat_efi_variable *compat;
->
-> @@ -250,14 +262,16 @@ efivar_show_raw(struct efivar_entry *entry, char *buf)
->  {
->         struct efi_variable *var = &entry->var;
->         struct compat_efi_variable *compat;
-> +       unsigned long datasize = sizeof(var->Data);
->         size_t size;
-> +       int ret;
->
->         if (!entry || !buf)
->                 return 0;
->
-> -       var->DataSize = 1024;
-> -       if (efivar_entry_get(entry, &entry->var.Attributes,
-> -                            &entry->var.DataSize, entry->var.Data))
-> +       ret = efivar_entry_get(entry, &var->Attributes, &datasize, var->Data);
-> +       var->DataSize = size;
-> +       if (ret)
->                 return -EIO;
->
->         if (in_compat_syscall()) {
-> diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
-> index 436d1776bc7b..5f2a4d162795 100644
-> --- a/drivers/firmware/efi/vars.c
-> +++ b/drivers/firmware/efi/vars.c
-> @@ -1071,7 +1071,7 @@ EXPORT_SYMBOL_GPL(efivar_entry_iter_end);
->   * entry on the list. It is safe for @func to remove entries in the
->   * list via efivar_entry_delete().
->   *
-> - * You MUST call efivar_enter_iter_begin() before this function, and
-> + * You MUST call efivar_entry_iter_begin() before this function, and
->   * efivar_entry_iter_end() afterwards.
->   *
->   * It is possible to begin iteration from an arbitrary entry within
-
-We can drop this.
-
-> --
-> 2.20.1
->
