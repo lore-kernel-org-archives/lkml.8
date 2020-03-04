@@ -2,102 +2,122 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBBFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFBFCC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E324821741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A27F121775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SUIT7ybv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729617AbgCDPNT (ORCPT
+        id S2387600AbgCDPNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:13:19 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:57444 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728278AbgCDPNS (ORCPT
+        Wed, 4 Mar 2020 10:13:41 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35697 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbgCDPNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:13:18 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 143A51C031D; Wed,  4 Mar 2020 16:13:17 +0100 (CET)
-Date:   Wed, 4 Mar 2020 16:13:16 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 04/87] drm/msm: Set dma maximum segment size for mdss
-Message-ID: <20200304151316.GA2367@duo.ucw.cz>
-References: <20200303174349.075101355@linuxfoundation.org>
- <20200303174349.401386271@linuxfoundation.org>
+        Wed, 4 Mar 2020 10:13:40 -0500
+Received: by mail-wr1-f65.google.com with SMTP id r7so2863053wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:13:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=fsgJGQMpQ1G9tftbB0Mps00ljMhlrkE3dAL7nSnd3vo=;
+        b=SUIT7ybvralMQlOhJIjHu6ly0ZrFuMBji/zcuoM0lUme2+qnQIfCnvpMGvJy4bjzqE
+         jjLsZAJziFoMM3AKjRXlddNWJPUuwwfWaOPOVzfgJtf0tPyS9kXqW/KaApFrz19w6HHu
+         nskZiLoYB7+X9+SdAd9lrYl3Rtsa3eW2hwYXI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=fsgJGQMpQ1G9tftbB0Mps00ljMhlrkE3dAL7nSnd3vo=;
+        b=NpdeXgdKgtCWQRRxHz9bIDle0gS7BgIHXR9mgaUKvxTvcrE4u3Jj97Wxyh6Is306h9
+         /bLVnfYD1bslYMQv48e/tgJnXHCRiGDlv93lF68WYEBqmCqLm7RdLV6zu0VCLdNcIIy+
+         4X8Ithy2hctQEjLPDd2pKv+SBkumtFvTlqjWy3j1AN2IGrAa7BF+0OZQYI5BwVi3xx3i
+         ttI6d7RvstZKUbFmsxvPHAhvPcAQ2knCysuXH64Bz2PyR0MeJOA6mVKdFrqk81hho8qW
+         FIYF5rs3pjwXukCJwLNWHs98G7Jsuya276Nszw4fiYPhojw5z9w5aErF6rMpb/RuwIfU
+         rGpQ==
+X-Gm-Message-State: ANhLgQ1aD+gT8MNZ2mI/h5jyaNcaSoeexnjdUxdJ9/uAZpEtpWbC9thP
+        sM88Apf7hIOLscH31Ez2a7UtLA==
+X-Google-Smtp-Source: ADFU+vuLe5ALaEm7h3gtz45GbwJ5nu0Ea3aTrgxaP+bm5Zu/T7rBxy4ewEXTQPFiSC0nAd34IQszeA==
+X-Received: by 2002:a5d:6086:: with SMTP id w6mr4494482wrt.224.1583334819160;
+        Wed, 04 Mar 2020 07:13:39 -0800 (PST)
+Received: from chromium.org ([2a00:79e1:abc:308:8ca0:6f80:af01:b24])
+        by smtp.gmail.com with ESMTPSA id x13sm69264wmi.35.2020.03.04.07.13.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 07:13:38 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Wed, 4 Mar 2020 16:13:37 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     linux-security-module@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: Re: [PATCH bpf-next v2 4/7] bpf: Attachment verification for
+ BPF_MODIFY_RETURN
+Message-ID: <20200304151337.GD9984@chromium.org>
+References: <20200304015528.29661-1-kpsingh@chromium.org>
+ <20200304015528.29661-5-kpsingh@chromium.org>
+ <CAEf4BzZdR-PTFZT5VJ7kMw=FNhsCUpbQvdypEWSF1JNuaye6Kw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200303174349.401386271@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzZdR-PTFZT5VJ7kMw=FNhsCUpbQvdypEWSF1JNuaye6Kw@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 03-Mär 21:12, Andrii Nakryiko wrote:
+> On Tue, Mar 3, 2020 at 5:56 PM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > - Allow BPF_MODIFY_RETURN attachment only to functions that are:
+> >
+> >     * Whitelisted by for error injection i.e. by checking
+> >       within_error_injection_list. Similar disucssions happened for the
+> >       bpf_overrie_return helper.
+> 
+> 2 typos: discussions and bpf_override_return ;)
 
---pWyiEgJYm5f9v55/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+/me bows his head in shame ;) Fixed.
 
-Hi!
+ -KP
 
-> Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
->=20
-> [   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than =
-device claims to support [len=3D3526656] [max=3D65536]
-> [   12.089870] WARNING: CPU: 6 PID: 334 at
-> /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301
-> debug_dma_map_sg+0x1dc/0x318
-
-This one leaks resources in the (very improbable) case of error; it
-needs to goto cleanup instead of simply returning.
-
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -492,6 +492,14 @@ static int msm_drm_init(struct device *dev, struct d=
-rm_driver *drv)
->  	if (ret)
->  		goto err_msm_uninit;
-> =20
-> +	if (!dev->dma_parms) {
-> +		dev->dma_parms =3D devm_kzalloc(dev, sizeof(*dev->dma_parms),
-> +					      GFP_KERNEL);
-> +		if (!dev->dma_parms)
-> +			return -ENOMEM;
-> +	}
-> +	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
-> +
->  	msm_gem_shrinker_init(ddev);
-> =20
-
-Best regards,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---pWyiEgJYm5f9v55/
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXl/FjAAKCRAw5/Bqldv6
-8rTIAJ4/hePVrpzv/17tNe4THoUwLxsNIQCgmmOuDfrbfxZjctYeTlR8ZcTce2s=
-=f9d2
------END PGP SIGNATURE-----
-
---pWyiEgJYm5f9v55/--
+> 
+> >
+> >     * security hooks, this is expected to be cleaned up with the LSM
+> >       changes after the KRSI patches introduce the LSM_HOOK macro:
+> >
+> >         https://lore.kernel.org/bpf/20200220175250.10795-1-kpsingh@chromium.org/
+> >
+> > - The attachment is currently limited to functions that return an int.
+> >   This can be extended later other types (e.g. PTR).
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+> 
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> 
+> >  kernel/bpf/btf.c      | 28 ++++++++++++++++++++--------
+> >  kernel/bpf/verifier.c | 31 +++++++++++++++++++++++++++++++
+> >  2 files changed, 51 insertions(+), 8 deletions(-)
+> >
+> 
+> [...]
