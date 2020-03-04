@@ -2,143 +2,195 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF110C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54333C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A235120838
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DXgwLsqD"
+	by mail.kernel.org (Postfix) with ESMTP id 30FD120838
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:32:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727854AbgCDE3w (ORCPT
+        id S1727367AbgCDEcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 23:29:52 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:46759 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725877AbgCDE3w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 23:29:52 -0500
-Received: by mail-qk1-f195.google.com with SMTP id u124so344048qkh.13;
-        Tue, 03 Mar 2020 20:29:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t1NqEPmPFW/DQNPAWKwqQ6I4sp3jdBpQkWn1PXctu8E=;
-        b=DXgwLsqDtpKJ4F4VO/7EJnfi3ZX4uTj2MWLSzNtUxeZvEW+nIYtmQaoVbZ6HYvy9UH
-         hf6mjQCLaWx+PqnNLgCe3TU6Pb77Z+9iIjncAVa32xBFhTlbXsdYDJHr42HHRvjDoRm3
-         zi8TsBUyVwHZdsCdQ77HIW/TwpxpP3m4PHxJxVVaAdLlrpheevBptJijdw6BdofsCE9h
-         XjzcVUgrQP04zgYKTtYT9MGIdp7rsfiyqJ8Y5YV4Ed/3V9qMv0B/fPnWr9trCtAoEFnQ
-         D5RGBnKHj+SRVpJDCCUsBo7WD5zQG8z/nBhMlQwywXU0dBM5gCPU6NaFoa8BNUlAR8An
-         0WBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t1NqEPmPFW/DQNPAWKwqQ6I4sp3jdBpQkWn1PXctu8E=;
-        b=mgvB/lhXN7UnXBqzwIWpjzMWfVLeIEdO9mSlTsAVY3w0rZKuUSMq9otw9f90YEjSPL
-         iaVfh7833k4S2Sw0DzklK0ZtU6vp1CtTHiI1Mg8oiRnqSsJQgIpX923lYhPtAycu9ldj
-         1y8wiUrYgG1ix18qSg40FduZQ8i9uAH/2v0Zabb/AnAE2nCOtc4smhxdfWT+jh7X/2uT
-         CG6BfMZSxRGJZSehYarvusZrj5a0zQD23bmnMZZASKcDyo3JPtVGUL2PpYBIvJtYxalV
-         IWXpxDTPVzNcLrZD0sre89XjGx1HD5Az5hzZaneElWQJ1Vy0+GwykbGxky8VwFxZEff6
-         5w1Q==
-X-Gm-Message-State: ANhLgQ05ixYNdcbH2ILoDRqG0BHpaneexPNm3AsD5k60Tj2zJHw84KwA
-        krasnjx4YdA1dIa82yapCMaplYUNuxaZozfm87KeOlU0CCo=
-X-Google-Smtp-Source: ADFU+vuZFxFnIIMAjlmtqfuIcb7FLGdjsdyyJ54YCoOI+LDTc/E2ZLGK6WHe7Skm6Ar1AL6PvzXr2IZGnIOVMxMYcrk=
-X-Received: by 2002:a05:620a:99d:: with SMTP id x29mr1243671qkx.39.1583296190999;
- Tue, 03 Mar 2020 20:29:50 -0800 (PST)
+        Tue, 3 Mar 2020 23:32:47 -0500
+Received: from foss.arm.com ([217.140.110.172]:55676 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbgCDEcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 23:32:47 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B32B531B;
+        Tue,  3 Mar 2020 20:32:46 -0800 (PST)
+Received: from [10.163.1.88] (unknown [10.163.1.88])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7781F3F534;
+        Tue,  3 Mar 2020 20:32:43 -0800 (PST)
+Subject: Re: Linux-next-20200302: arm64 build failed
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
+ <20200302104726.GA7995@willie-the-truck>
+ <20200302135443.GA24831@linux.ibm.com>
+ <20200302174553.GC4166275@arrakis.emea.arm.com>
+ <c4c6b363-62a8-db27-6ab3-ca2f2d4d082c@arm.com>
+ <20200303162846.GE823373@arrakis.emea.arm.com>
+ <e6c907ba-7be4-37a0-7853-3097918baf7b@arm.com>
+Message-ID: <d9087f66-3a7a-2d14-8849-66a4a9b39b5d@arm.com>
+Date:   Wed, 4 Mar 2020 10:02:38 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <202002242114.CBED7F1@keescook> <CAEf4BzYrBoQJ1tPMRMQ_-G6e76=zj4zyC=HrY-mxH_9QK65oqg@mail.gmail.com>
- <202003031301.083CF048C2@keescook> <CAEf4BzbX-Eo3+DCG4zBMhJtLSZrtp48Z-8SvA8qy-WXA5kjR6A@mail.gmail.com>
- <202003031758.AE8FEB7@keescook>
-In-Reply-To: <202003031758.AE8FEB7@keescook>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 3 Mar 2020 20:29:39 -0800
-Message-ID: <CAEf4Bza31J_3Puwf7gnq0jDYRH2_JkRM9L+PO8dFrCzp+==8Lg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Remove debug info from kallsyms linking
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e6c907ba-7be4-37a0-7853-3097918baf7b@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 6:11 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Tue, Mar 03, 2020 at 01:50:52PM -0800, Andrii Nakryiko wrote:
-> > On Tue, Mar 3, 2020 at 1:06 PM Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > On Mon, Mar 02, 2020 at 10:55:04PM -0800, Andrii Nakryiko wrote:
-> > > > On Mon, Feb 24, 2020 at 9:17 PM Kees Cook <keescook@chromium.org> wrote:
-> > > > > [...]
-> > > > > @@ -118,8 +128,9 @@ gen_btf()
-> > > > >                 return 1
-> > > > >         fi
-> > > > >
-> > > > > -       info "BTF" ${2}
-> > > > >         vmlinux_link ${1}
-> > > > > +
-> > > > > +       info "BTF" ${2}
-> > > >
-> > > > Any reason to exclude linking from "BTF" step? It's still a part of
-> > > > BTF generation, so seems fair to have BTF encompass both vmlinux
-> > > > linking and BTF generation/deduplication?
-> > >
-> > > I'm not sure I'm following what you're saying here. If you're asking why
-> > > BTF linking is separate from the final vmlinux link, it's because of how
-> > > kallsyms is generated. Currently it's using a rather brute-force
-> >
-> > No, I meant that you moved `info "BTF"` to after `vmlinux_link` call,
-> > which will make it appear (from make output) as if BTF generation
-> > phase is shorter than it is. No big deal, was just wondering if it was
-> > done on purpose.
->
-> Oh! Yes. I changed the reporting in commit 8959e39272d6 ("kbuild:
-> Parameterize kallsyms generation and correct reporting") so that
-> vmlinux_link reports the "info LD ..." line instead of each of the callers.
->
-> This current patch adjusts it so "info BTF ..." is reported for the BTF
-> generation stage (right now there's no delay between "info BTF ..." and
-> "info LD ...", and it looks like the "info LD" stages takes way too
-> long. ;)
 
-Ah, I see, got it!
 
->
-> > > approach to figure out exactly where everything is going to be in the
-> > > final link, and for that it need to have both the BTF symbols present
-> > > and the kallysms symbols present. So, unfortunately, each needs to be a
-> > > separate step. I spent some time trying to merge BTF and kallsyms phase
-> > > 1, but I didn't find a viable solution. I'm *sure* there is a better way
-> > > to handle kallsyms, but I haven't had the time to really investigate it.
-> > > I think it would require some close coordination with linker behavior
-> > > changes...
-> > >
-> > > >
-> > > > >         LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
-> > > > >
-> > > > >         # dump .BTF section into raw binary file to link with final vmlinux
-> > >
-> > > BTW, in looking at BTF generation, why is this cut up into three steps:
-> > > pahole, objcopy, objcopy... shouldn't pahole just gross an output method
-> > > to dump the final .o file? That would be MUCH nicer. Especially since
-> > > the first step ends up rewriting (?!) the original ELF. This is a lot of
-> > > needless IO...
-> >
-> > Just mostly historical reasons, that was the interface pahole already
-> > supported. I agree that it's a good idea to teach pahole to just emit
-> > a binary BTF section dump.
->
-> /me adds it to giant TODO list ;)
->
-> --
-> Kees Cook
+On 03/04/2020 07:56 AM, Anshuman Khandual wrote:
+> 
+> 
+> On 03/03/2020 09:58 PM, Catalin Marinas wrote:
+>> On Tue, Mar 03, 2020 at 09:34:45AM +0530, Anshuman Khandual wrote:
+>>> On 03/02/2020 11:15 PM, Catalin Marinas wrote:
+>>>> On Mon, Mar 02, 2020 at 03:54:43PM +0200, Mike Rapoport wrote:
+>>>>> On Mon, Mar 02, 2020 at 10:47:27AM +0000, Will Deacon wrote:
+>>>>>> [+Anshuman and Catalin]
+>>>>>>
+>>>>>> On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
+>>>>>>> Linux-Next 20200302 arm64 build failed due to below errors,
+>>>>>>> Suspecting patch causing this build break.
+>>>>>>>
+>>>>>>> 87d900aef3e2  arm/arm64: add support for folded p4d page tables
+>>>>>>>
+>>>>>>> Error log,
+>>>>>>> -------------
+>>>>>>> arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
+>>>>>>> include/linux/compiler.h:284:1: error: incompatible type for argument
+>>>>>>> 1 of 'p4d_page_paddr'
+>>>>>>>  ({         \
+>>>>>>>  ^
+>>>>>>> arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
+>>>>>>> '__phys_to_virt'
+>>>>>>>  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
+>>>>>>>                                              ^
+>>>>>>> arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
+>>>>>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>>>>>>>                                           ^~~~
+>>>>>>> include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
+>>>>>>>  #define READ_ONCE(x) __READ_ONCE(x, 1)
+>>>>>>>                       ^~~~~~~~~~~
+>>>>>>> arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
+>>>>>>>  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
+>>>>>>> + pud_index(addr) * sizeof(pud_t))
+>>>>>>>                                                     ^~~~~~~~~
+>>>>>>> arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
+>>>>>>> 'pud_offset_phys'
+>>>>>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>>>>>>>                                                ^~~~~~~~~~~~~~~
+>>>>>>> arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
+>>>>>>>    pudp = pud_offset(pgdp, addr);
+>>>>>>>           ^~~~~~~~~~
+>>>>>>
+>>>>>> Looks like we need an implementation of unmap_hotplug_p4d_range() to
+>>>>>> walk the dummy p4d level. Unfortunately, we don't have the folded p4d
+>>>>>> patches in the arm64 tree so we'll either need a common branch or the
+>>>>>> hotplug patches will need to be dropped for the moment.
+>>>>>
+>>>>> unmap_hotplug_p4d_range() is easy :)
+>>>>>
+>>>>> From c7a5d08ff51ca2057b6b0289c4423bdfd7643518 Mon Sep 17 00:00:00 2001
+>>>>> From: Mike Rapoport <rppt@linux.ibm.com>
+>>>>> Date: Mon, 2 Mar 2020 15:53:17 +0200
+>>>>> Subject: [PATCH] arm64/mm: implement unmap_hotplug_p4d_range
+>>>>>
+>>>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>>>>> ---
+>>>>>  arch/arm64/mm/mmu.c | 20 +++++++++++++++++++-
+>>>>>  1 file changed, 19 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>>>> index 05ec8e5f1436..c76b11577558 100644
+>>>>> --- a/arch/arm64/mm/mmu.c
+>>>>> +++ b/arch/arm64/mm/mmu.c
+>>>>> @@ -840,6 +840,24 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+>>>>>  	} while (addr = next, addr < end);
+>>>>>  }
+>>>>>  
+>>>>> +static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
+>>>>> +				unsigned long end, bool free_mapped)
+>>>>> +{
+>>>>> +	unsigned long next;
+>>>>> +	pgd_t *p4dp, p4d;
+>>>>> +
+>>>>> +	do {
+>>>>> +		next = p4d_addr_end(addr, end);
+>>>>> +		p4dp = p4d_offset(pgd, addr);
+>>>>> +		p4d = READ_ONCE(*p4dp);
+>>>>> +		if (p4d_none(p4d))
+>>>>> +			continue;
+>>>>> +
+>>>>> +		WARN_ON(!p4d_present(p4d));
+>>>>> +		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
+>>>>> +	} while (addr = next, addr < end);
+>>>>> +}
+>>>>> +
+>>>>>  static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>>>>>  				bool free_mapped)
+>>>>>  {
+>>>>> @@ -854,7 +872,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>>>>>  			continue;
+>>>>>  
+>>>>>  		WARN_ON(!pgd_present(pgd));
+>>>>> -		unmap_hotplug_pud_range(pgdp, addr, next, free_mapped);
+>>>>> +		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
+>>>>>  	} while (addr = next, addr < end);
+>>>>>  }
+>>>>
+>>>> Thanks Mike. With the additional diff below, I can get it to build with
+>>>> and without the p4d clean-up patches in -next. If Anshuman confirms that
+>>>> they work, I can add them on top of the arm64 for-next/memory-hotremove
+>>>> branch.
+>>>
+>>> These two patches applied on next-20200302 works fine for hot-remove.
+>>
+>> Do they also work on top of the vanilla kernel + your hotremove patches
+>> (i.e. not on top of -next)?
+> 
+> Yes, they do work on current vanilla kernel (8b614cb8f1dcac8ca77cf4dd85f46)
+> and v13 hotremove series.
+> 
+>>
+>>> As the second patch also fixes the first one, IMHO both should be
+>>> folded into a single one instead. Just wondering if this combined
+>>> patch which enables P4D page table should be posted on the list or do
+>>> I need to respin original hot remove patches again.
+>>
+>> If your unmap patches plus the fixes from Mike and me work fine on top
+>> of 5.6-rc3 (as well as when combined with linux-next), I'd prefer you
+> Yes, they do work on both.
+> 
+>> respin your patches to include the p4d support from start. Otherwise, we
+> 
+> Okay. I will be sending V14 on v5.6-rc3 (OR v.5.6-rc4 is preferred ?) with
+> p4d support. I will add yours and Mike's Signed-off-by as well.
+
+Posted V14 (https://patchwork.kernel.org/project/linux-mm/list/?series=250939)
+for the arm64 hot remove series on v5.6-rc3, though it also applies and works
+on 5.6-rc4 as well.
+
+> 
+>> create a single patch that Andrew can merge on top of the -mm tree.
+>>
