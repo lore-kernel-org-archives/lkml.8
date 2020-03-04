@@ -2,251 +2,539 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0145BC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:56:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAACC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B89DB2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:56:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="hJzt7tGl"
+	by mail.kernel.org (Postfix) with ESMTP id 7536221D56
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:58:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbgCDF4S (ORCPT
+        id S1725948AbgCDF6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 00:56:18 -0500
-Received: from mail-eopbgr10070.outbound.protection.outlook.com ([40.107.1.70]:5792
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725271AbgCDF4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 00:56:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=P/Qq6Lnqvbx87dPWQJb860VVZJdym8Evd+Tv8l6CNMOVmuj8mXQjVAqaMUcmBK0AbsmljAMwsFCwZmpxDZzgf4hXEZfKODUl4+/D4/W0S3e5Ot2U797DYqlkR89cPwBGGJvkMkXtZ7aKm3eW5fmh2TE5IeZzK68fSaLx72e+mii+nfRDlwNMFlOemF2HLuxxQVfwM+FWqoWBvkSm4fhoxy5aUgUG3EVoWsAEvfDc2Yrz390C9J67DvCgb+DMtntha/F51c/8FdOKJT0/JtCgVAs/PzHaW1x+GFPUGP52DjDEBWkV9Z8gtBnQ9srJ+OXtdcy7uDyIE5zR3Vni9N7Qug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8r4S9Oxc0CwVaJwTeOGVH9gByqHlRlRg1FfulDUxjuc=;
- b=N7O42db1cf/khGtX1bgQN7HtIj208mTByYUCDDcQQeKbobj+7PbWfSoTXT8C3WI5F6xYjhI1mrEztvlJOrcS71cByol2V9/sC/MbnuZ2/ehCf8EAJKG77smbM+g3JmPgS/Jfncm7vFF5ZSDr/4a7dzc/Y1V6WZQTZDgFDLbudgjR54+AlbyBr+Z/Q1g53zIRV0vr0Ec7659xVey1ZNU+TbAGLzINZmE7zLMD9JiBh1FJdUuEN8qicQEr9CVTuK1v9Uo41gTFtySIrIbw5MoJcKH9NZ/GkKwmNMksA6BfbEY+SSIjkpohmtiVdZ+AhKrCh9VtDqq4t2MT8C2yMRF0DA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8r4S9Oxc0CwVaJwTeOGVH9gByqHlRlRg1FfulDUxjuc=;
- b=hJzt7tGlpCt3iVcagbGVwHGO40PsFsS+OMLioZoiGplCNsxSm9rDuyYw5rcoHIuUHGitW4/O+BXgJ4MLde8zsZ1rDgBX3d708u/3SEjDkhMrcm9wnjClXPAd95sZBNkvj/9rZhWNUURLbYhUMohpnsmKiNi8w3/C2zmSZXwUbqo=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB4947.eurprd04.prod.outlook.com (20.177.40.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15; Wed, 4 Mar 2020 05:56:11 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2772.019; Wed, 4 Mar 2020
- 05:56:11 +0000
-From:   peng.fan@nxp.com
-To:     shawnguo@kernel.org, s.hauer@pengutronix.de,
-        jassisinghbrar@gmail.com, o.rempel@pengutronix.de
-Cc:     kernel@pengutronix.de, festevam@gmail.com, linux-imx@nxp.com,
-        Anson.Huang@nxp.com, leonard.crestez@nxp.com, aisheng.dong@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V6 4/4] firmware: imx-scu: Support one TX and one RX
-Date:   Wed,  4 Mar 2020 13:49:37 +0800
-Message-Id: <1583300977-2327-5-git-send-email-peng.fan@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583300977-2327-1-git-send-email-peng.fan@nxp.com>
-References: <1583300977-2327-1-git-send-email-peng.fan@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR0401CA0010.apcprd04.prod.outlook.com
- (2603:1096:3:1::20) To AM0PR04MB4481.eurprd04.prod.outlook.com
- (2603:10a6:208:70::15)
+        Wed, 4 Mar 2020 00:58:42 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48908 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725283AbgCDF6l (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 00:58:41 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0245rcO5092686
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 00:58:40 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhw6ngy0p-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:58:39 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Wed, 4 Mar 2020 05:58:36 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 05:58:29 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0245vTHE40763858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 05:57:29 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB05011C06C;
+        Wed,  4 Mar 2020 05:58:27 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 45E4611C054;
+        Wed,  4 Mar 2020 05:58:27 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 05:58:27 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 50AE7A023A;
+        Wed,  4 Mar 2020 16:58:22 +1100 (AEDT)
+Subject: Re: [PATCH v3 17/27] powerpc/powernv/pmem: Implement the Read Error
+ Log command
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-18-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Wed, 4 Mar 2020 16:58:25 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost.localdomain (119.31.174.66) by SG2PR0401CA0010.apcprd04.prod.outlook.com (2603:1096:3:1::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2772.15 via Frontend Transport; Wed, 4 Mar 2020 05:56:07 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.66]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 69c1ead0-7c0b-4c15-76a2-08d7c000bdb8
-X-MS-TrafficTypeDiagnostic: AM0PR04MB4947:|AM0PR04MB4947:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM0PR04MB49478D736B03EC0C5C7B674D88E50@AM0PR04MB4947.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4303;
-X-Forefront-PRVS: 0332AACBC3
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(376002)(396003)(346002)(39860400002)(189003)(199004)(52116002)(66556008)(66476007)(316002)(478600001)(66946007)(2906002)(81166006)(8676002)(6506007)(956004)(2616005)(81156014)(4326008)(69590400007)(6512007)(9686003)(6486002)(5660300002)(26005)(36756003)(16526019)(6666004)(8936002)(186003)(86362001)(83323001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4947;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: LtOe7eNU0kqIuWZlSBUZrkxOoL3ss6TT2MSj2IZmjCjhwyLrDAdH95s8gCvY94vslg6WgLX8DaMm0fy9A2PQdSrMOrZfMWY1rCj+NcR7aqSgQW7Moe8DfXn+RABIRj9u2AsIPZ8EGMXpGocmklOsEl6pvSLA32sNRyPxlQ/GJl4VPABymo4cCneXMd6CUtag3EqN0ZU7dbxBbU7/1i2ymcGRB3quzjXN/RxV57hTBfTedUQQ+MhZ7zD3P6GH8NSf0uNiBd6+JYWL0l6yIGci+/0kRpuTlL6ttL+7ASnbnhy8UJIr+9CrF2W86u/C2Pd6ZrN+xgImqgOFws3mdnhrYQA76X2fje87jkJstKYIuffX71C3ebMG0EHe8r6c1gR9QjLG6q1MWLNHF/VYLWYgSS24ICT3A7WYqG5UvZAiHkIh536LR3wS2IKD+Yta0waWULNXW5FoUU0gNfjQUYJ/+sIEcBqax0Gin6PYa1AzbhGmho2E5etDuUw5HKoCFY3rv6ETB+FcbO0ICcLXNK37iA==
-X-MS-Exchange-AntiSpam-MessageData: B3W5VqR9g+wIt+7cR9YRsgPNEgYTzVfvb34A+t9e0+vRFbZBp4VVd0U1iVDAid6zVgureITc+noiJEk+W/BZhOu8Nvcl8KNgyRGgkdD2gbvYyGIU7GjL5QGoIhv0GvxSHPZtW3HCPWLpPrcNO9s09w==
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 69c1ead0-7c0b-4c15-76a2-08d7c000bdb8
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2020 05:56:11.3499
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: t09Vgjg6clWfAsh/+u7XmKiN0mXeU6fxR8WFV/oN5KbH5Vkg+fX7hQPGxv3A+apI8P4I2Yl7uLtnlOAPvJLyxQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4947
+In-Reply-To: <20200221032720.33893-18-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030405-0028-0000-0000-000003E0B029
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030405-0029-0000-0000-000024A5DEF2
+Message-Id: <82ef4aa2-a364-1a85-68dc-699fd38407a7@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_08:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> The read error log command extracts information from the controller's
+> internal error log.
+> 
+> This patch exposes this information in 2 ways:
+> - During probe, if an error occurs & a log is available, print it to the
+>    console
+> - After probe, make the error log available to userspace via an IOCTL.
+>    Userspace is notified of pending error logs in a later patch
+>    ("powerpc/powernv/pmem: Forward events to userspace")
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-Current imx-scu requires four TX and four RX to communicate with
-SCU. This is low efficient and causes lots of mailbox interrupts.
+A few minor style checks at 
+https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/11787//artifact/linux/checkpatch.log
 
-With imx-mailbox driver could support one TX to use all four transmit
-registers and one RX to use all four receive registers, imx-scu
-could use one TX and one RX.
+We should also add some documentation for the user interfaces we're 
+adding (same applies for all the remaining patches in this series that 
+add more interfaces).
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+> ---
+>   arch/powerpc/platforms/powernv/pmem/ocxl.c    | 269 ++++++++++++++++++
+>   .../platforms/powernv/pmem/ocxl_internal.h    |   1 +
+>   include/uapi/nvdimm/ocxl-pmem.h               |  46 +++
+>   3 files changed, 316 insertions(+)
+>   create mode 100644 include/uapi/nvdimm/ocxl-pmem.h
+> 
+> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> index 63109a870d2c..2b64504f9129 100644
+> --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> @@ -447,10 +447,219 @@ static int file_release(struct inode *inode, struct file *file)
+>   	return 0;
+>   }
+>   
+> +/**
+> + * error_log_header_parse() - Parse the first 64 bits of the error log command response
+> + * @ocxlpmem: the device metadata
+> + * @length: out, returns the number of bytes in the response (excluding the 64 bit header)
+> + */
+> +static int error_log_header_parse(struct ocxlpmem *ocxlpmem, u16 *length)
+> +{
+> +	int rc;
+> +	u64 val;
+> +
+> +	u16 data_identifier;
+> +	u32 data_length;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset,
+> +				     OCXL_LITTLE_ENDIAN, &val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	data_identifier = val >> 48;
+> +	data_length = val & 0xFFFF;
+> +
+> +	if (data_identifier != 0x454C) { // 'EL'
+> +		dev_err(&ocxlpmem->dev,
+> +			"Bad data identifier for error log data, expected 'EL', got '%2s' (%#x), data_length=%u\n",
+> +			(char *)&data_identifier,
+> +			(unsigned int)data_identifier, data_length);
+> +		return -EINVAL;
 
-V6:
- None
-V5:
- None
-V4:
- None
-V3:
- Check mbox fsl,imx8-mu-scu for fast_ipc
+This should be something other than EINVAL I think
 
- drivers/firmware/imx/imx-scu.c | 54 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 43 insertions(+), 11 deletions(-)
+> +	}
+> +
+> +	*length = data_length;
+> +	return 0;
+> +}
+> +
+> +static int error_log_offset_0x08(struct ocxlpmem *ocxlpmem,
+> +				 u32 *log_identifier, u32 *program_ref_code)
+> +{
+> +	int rc;
+> +	u64 val;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08,
+> +				     OCXL_LITTLE_ENDIAN, &val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	*log_identifier = val >> 32;
+> +	*program_ref_code = val & 0xFFFFFFFF;
+> +
+> +	return 0;
+> +}
+> +
+> +static int read_error_log(struct ocxlpmem *ocxlpmem,
+> +			  struct ioctl_ocxl_pmem_error_log *log, bool buf_is_user)
+> +{
+> +	u64 val;
+> +	u16 user_buf_length;
+> +	u16 buf_length;
+> +	u16 i;
+> +	int rc;
+> +
+> +	if (log->buf_size % 8)
+> +		return -EINVAL;
+> +
+> +	rc = ocxlpmem_chi(ocxlpmem, &val);
+> +	if (rc)
+> +		goto out;
+> +
+> +	if (!(val & GLOBAL_MMIO_CHI_ELA))
+> +		return -EAGAIN;
+> +
+> +	user_buf_length = log->buf_size;
+> +
+> +	mutex_lock(&ocxlpmem->admin_command.lock);
+> +
+> +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_ERRLOG);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = admin_command_execute(ocxlpmem);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = admin_command_complete_timeout(ocxlpmem, ADMIN_COMMAND_ERRLOG);
+> +	if (rc < 0) {
+> +		dev_warn(&ocxlpmem->dev, "Read error log timed out\n");
+> +		goto out;
+> +	}
+> +
+> +	rc = admin_response(ocxlpmem);
+> +	if (rc < 0)
+> +		goto out;
+> +	if (rc != STATUS_SUCCESS) {
+> +		warn_status(ocxlpmem, "Unexpected status from retrieve error log", rc);
+> +		goto out;
+> +	}
+> +
+> +
+> +	rc = error_log_header_parse(ocxlpmem, &log->buf_size);
+> +	if (rc)
+> +		goto out;
+> +	// log->buf_size now contains the returned buffer size, not the user size
 
-diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.c
-index f71eaa5bf52d..e94a5585b698 100644
---- a/drivers/firmware/imx/imx-scu.c
-+++ b/drivers/firmware/imx/imx-scu.c
-@@ -38,6 +38,7 @@ struct imx_sc_ipc {
- 	struct device *dev;
- 	struct mutex lock;
- 	struct completion done;
-+	bool fast_ipc;
- 
- 	/* temporarily store the SCU msg */
- 	u32 *msg;
-@@ -115,6 +116,7 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
- 	struct imx_sc_ipc *sc_ipc = sc_chan->sc_ipc;
- 	struct imx_sc_rpc_msg *hdr;
- 	u32 *data = msg;
-+	int i;
- 
- 	if (!sc_ipc->msg) {
- 		dev_warn(sc_ipc->dev, "unexpected rx idx %d 0x%08x, ignore!\n",
-@@ -122,6 +124,19 @@ static void imx_scu_rx_callback(struct mbox_client *c, void *msg)
- 		return;
- 	}
- 
-+	if (sc_ipc->fast_ipc) {
-+		hdr = msg;
-+		sc_ipc->rx_size = hdr->size;
-+		sc_ipc->msg[0] = *data++;
-+
-+		for (i = 1; i < sc_ipc->rx_size; i++)
-+			sc_ipc->msg[i] = *data++;
-+
-+		complete(&sc_ipc->done);
-+
-+		return;
-+	}
-+
- 	if (sc_chan->idx == 0) {
- 		hdr = msg;
- 		sc_ipc->rx_size = hdr->size;
-@@ -147,6 +162,7 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
- 	struct imx_sc_chan *sc_chan;
- 	u32 *data = msg;
- 	int ret;
-+	int size;
- 	int i;
- 
- 	/* Check size */
-@@ -156,7 +172,8 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
- 	dev_dbg(sc_ipc->dev, "RPC SVC %u FUNC %u SIZE %u\n", hdr->svc,
- 		hdr->func, hdr->size);
- 
--	for (i = 0; i < hdr->size; i++) {
-+	size = sc_ipc->fast_ipc ? 1 : hdr->size;
-+	for (i = 0; i < size; i++) {
- 		sc_chan = &sc_ipc->chans[i % 4];
- 
- 		/*
-@@ -168,8 +185,10 @@ static int imx_scu_ipc_write(struct imx_sc_ipc *sc_ipc, void *msg)
- 		 * Wait for tx_done before every send to ensure that no
- 		 * queueing happens at the mailbox channel level.
- 		 */
--		wait_for_completion(&sc_chan->tx_done);
--		reinit_completion(&sc_chan->tx_done);
-+		if (!sc_ipc->fast_ipc) {
-+			wait_for_completion(&sc_chan->tx_done);
-+			reinit_completion(&sc_chan->tx_done);
-+		}
- 
- 		ret = mbox_send_message(sc_chan->ch, &data[i]);
- 		if (ret < 0)
-@@ -246,6 +265,8 @@ static int imx_scu_probe(struct platform_device *pdev)
- 	struct imx_sc_chan *sc_chan;
- 	struct mbox_client *cl;
- 	char *chan_name;
-+	struct of_phandle_args args;
-+	int num_channel;
- 	int ret;
- 	int i;
- 
-@@ -253,11 +274,20 @@ static int imx_scu_probe(struct platform_device *pdev)
- 	if (!sc_ipc)
- 		return -ENOMEM;
- 
--	for (i = 0; i < SCU_MU_CHAN_NUM; i++) {
--		if (i < 4)
-+	ret = of_parse_phandle_with_args(pdev->dev.of_node, "mboxes",
-+					 "#mbox-cells", 0, &args);
-+	if (ret)
-+		return ret;
-+
-+	sc_ipc->fast_ipc = of_device_is_compatible(args.np, "fsl,imx8-mu-scu");
-+
-+	num_channel = sc_ipc->fast_ipc ? 2 : SCU_MU_CHAN_NUM;
-+	for (i = 0; i < num_channel; i++) {
-+		if (i < num_channel / 2)
- 			chan_name = kasprintf(GFP_KERNEL, "tx%d", i);
- 		else
--			chan_name = kasprintf(GFP_KERNEL, "rx%d", i - 4);
-+			chan_name = kasprintf(GFP_KERNEL, "rx%d",
-+					      i - num_channel / 2);
- 
- 		if (!chan_name)
- 			return -ENOMEM;
-@@ -269,13 +299,15 @@ static int imx_scu_probe(struct platform_device *pdev)
- 		cl->knows_txdone = true;
- 		cl->rx_callback = imx_scu_rx_callback;
- 
--		/* Initial tx_done completion as "done" */
--		cl->tx_done = imx_scu_tx_done;
--		init_completion(&sc_chan->tx_done);
--		complete(&sc_chan->tx_done);
-+		if (!sc_ipc->fast_ipc) {
-+			/* Initial tx_done completion as "done" */
-+			cl->tx_done = imx_scu_tx_done;
-+			init_completion(&sc_chan->tx_done);
-+			complete(&sc_chan->tx_done);
-+		}
- 
- 		sc_chan->sc_ipc = sc_ipc;
--		sc_chan->idx = i % 4;
-+		sc_chan->idx = i % (num_channel / 2);
- 		sc_chan->ch = mbox_request_channel_byname(cl, chan_name);
- 		if (IS_ERR(sc_chan->ch)) {
- 			ret = PTR_ERR(sc_chan->ch);
+In the event that the log is truncated to fit the user buffer, we return 
+the full log size, I assume this is intentional to signal it's truncated 
+as per the nd stuff?
+
+> +
+> +	rc = error_log_offset_0x08(ocxlpmem, &log->log_identifier,
+> +				       &log->program_reference_code);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x10,
+> +				     OCXL_LITTLE_ENDIAN, &val);
+> +	if (rc)
+> +		goto out;
+> +
+> +	log->error_log_type = val >> 56;
+> +	log->action_flags = (log->error_log_type == OCXL_PMEM_ERROR_LOG_TYPE_GENERAL) ?
+> +			    (val >> 32) & 0xFFFFFF : 0;
+> +	log->power_on_seconds = val & 0xFFFFFFFF;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x18,
+> +				     OCXL_LITTLE_ENDIAN, &log->timestamp);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x20,
+> +				     OCXL_HOST_ENDIAN, &log->wwid[0]);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x28,
+> +				     OCXL_HOST_ENDIAN, &log->wwid[1]);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x30,
+> +				     OCXL_HOST_ENDIAN, (u64 *)log->fw_revision);
+
+Why the difference between HOST and LITTLE_ENDIAN between these fields?
+
+> +	if (rc)
+> +		goto out;
+> +	log->fw_revision[8] = '\0';
+> +
+> +	buf_length = (user_buf_length < log->buf_size) ?
+> +		     user_buf_length : log->buf_size;
+> +	for (i = 0; i < buf_length + 0x48; i += 8) {
+
++ 0x48 here doesn't look right...
+
+> +		u64 val;
+> +
+> +		rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +					     ocxlpmem->admin_command.data_offset + i,
+
+...did you mean to add 0x48 here?
+
+> +					     OCXL_HOST_ENDIAN, &val);
+> +		if (rc)
+> +			goto out;
+> +
+> +		if (buf_is_user) {
+> +			if (copy_to_user(&log->buf[i], &val, sizeof(u64))) {
+> +				rc = -EFAULT;
+> +				goto out;
+> +			}
+> +		} else
+> +			log->buf[i] = val;
+
+Please use braces consistently on both sides of if/else.
+
+> +	}
+> +
+> +	rc = admin_response_handled(ocxlpmem);
+> +	if (rc)
+> +		goto out;
+> +
+> +out:
+> +	mutex_unlock(&ocxlpmem->admin_command.lock);
+> +	return rc;
+> +
+> +}
+> +
+> +static int ioctl_error_log(struct ocxlpmem *ocxlpmem,
+> +		struct ioctl_ocxl_pmem_error_log __user *uarg)
+> +{
+> +	struct ioctl_ocxl_pmem_error_log args;
+> +	int rc;
+> +
+> +	if (copy_from_user(&args, uarg, sizeof(args)))
+> +		return -EFAULT;
+> +
+> +	rc = read_error_log(ocxlpmem, &args, true);
+> +	if (rc)
+> +		return rc;
+> +
+> +	if (copy_to_user(uarg, &args, sizeof(args)))
+> +		return -EFAULT;
+> +
+> +	return 0;
+> +}
+> +
+> +static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+> +{
+> +	struct ocxlpmem *ocxlpmem = file->private_data;
+> +	int rc = -EINVAL;
+> +
+> +	switch (cmd) {
+> +	case IOCTL_OCXL_PMEM_ERROR_LOG:
+> +		rc = ioctl_error_log(ocxlpmem,
+> +				     (struct ioctl_ocxl_pmem_error_log __user *)args);
+> +		break;
+> +	}
+> +	return rc;
+> +}
+> +
+>   static const struct file_operations fops = {
+>   	.owner		= THIS_MODULE,
+>   	.open		= file_open,
+>   	.release	= file_release,
+> +	.unlocked_ioctl = file_ioctl,
+> +	.compat_ioctl   = file_ioctl,
+>   };
+>   
+>   /**
+> @@ -527,6 +736,60 @@ static int read_device_metadata(struct ocxlpmem *ocxlpmem)
+>   	return 0;
+>   }
+>   
+> +static const char *decode_error_log_type(u8 error_log_type)
+> +{
+> +	switch (error_log_type) {
+> +	case 0x00:
+> +		return "general";
+> +	case 0x01:
+> +		return "predictive failure";
+> +	case 0x02:
+> +		return "thermal warning";
+> +	case 0x03:
+> +		return "data loss";
+> +	case 0x04:
+> +		return "health & performance";
+> +	default:
+> +		return "unknown";
+> +	}
+> +}
+> +
+> +static void dump_error_log(struct ocxlpmem *ocxlpmem)
+> +{
+> +	struct ioctl_ocxl_pmem_error_log log;
+> +	u32 buf_size;
+> +	u8 *buf;
+> +	int rc;
+> +
+> +	if (ocxlpmem->admin_command.data_size == 0)
+> +		return;
+> +
+> +	buf_size = ocxlpmem->admin_command.data_size - 0x48;
+> +	buf = kzalloc(buf_size, GFP_KERNEL);
+> +	if (!buf)
+> +		return;
+> +
+> +	log.buf = buf;
+> +	log.buf_size = buf_size;
+> +
+> +	rc = read_error_log(ocxlpmem, &log, false);
+> +	if (rc < 0)
+> +		goto out;
+> +
+> +	dev_warn(&ocxlpmem->dev,
+> +		 "OCXL PMEM Error log: WWID=0x%016llx%016llx LID=0x%x PRC=%x type=0x%x %s, Uptime=%u seconds timestamp=0x%llx\n",
+> +		 log.wwid[0], log.wwid[1],
+> +		 log.log_identifier, log.program_reference_code,
+> +		 log.error_log_type,
+> +		 decode_error_log_type(log.error_log_type),
+> +		 log.power_on_seconds, log.timestamp);
+> +	print_hex_dump(KERN_WARNING, "buf", DUMP_PREFIX_OFFSET, 16, 1, buf,
+> +		       log.buf_size, false); > +
+> +out:
+> +	kfree(buf);
+> +}
+> +
+>   /**
+>    * probe_function0() - Set up function 0 for an OpenCAPI persistent memory device
+>    * This is important as it enables templates higher than 0 across all other functions,
+> @@ -568,6 +831,7 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>   	struct ocxlpmem *ocxlpmem;
+>   	int rc;
+>   	u16 elapsed, timeout;
+> +	u64 chi;
+>   
+>   	if (PCI_FUNC(pdev->devfn) == 0)
+>   		return probe_function0(pdev);
+> @@ -667,6 +931,11 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+>   	return 0;
+>   
+>   err:
+> +	if (ocxlpmem &&
+> +		    (ocxlpmem_chi(ocxlpmem, &chi) == 0) &&
+> +		    (chi & GLOBAL_MMIO_CHI_ELA))
+> +		dump_error_log(ocxlpmem);
+> +
+>   	/*
+>   	 * Further cleanup is done in the release handler via free_ocxlpmem()
+>   	 * This allows us to keep the character device live to handle IOCTLs to
+> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> index d2d81fec7bb1..b953ee522ed4 100644
+> --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
+> @@ -5,6 +5,7 @@
+>   #include <linux/cdev.h>
+>   #include <misc/ocxl.h>
+>   #include <linux/libnvdimm.h>
+> +#include <uapi/nvdimm/ocxl-pmem.h>
+>   #include <linux/mm.h>
+>   
+>   #define LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
+> diff --git a/include/uapi/nvdimm/ocxl-pmem.h b/include/uapi/nvdimm/ocxl-pmem.h
+> new file mode 100644
+> index 000000000000..b10f8ac0c20f
+> --- /dev/null
+> +++ b/include/uapi/nvdimm/ocxl-pmem.h
+> @@ -0,0 +1,46 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ WITH Linux-syscall-note */
+> +/* Copyright 2017 IBM Corp. */
+> +#ifndef _UAPI_OCXL_SCM_H
+> +#define _UAPI_OCXL_SCM_H
+> +
+> +#include <linux/types.h>
+> +#include <linux/ioctl.h>
+> +
+> +#define OCXL_PMEM_ERROR_LOG_ACTION_RESET	(1 << (32-32))
+> +#define OCXL_PMEM_ERROR_LOG_ACTION_CHKFW	(1 << (53-32))
+> +#define OCXL_PMEM_ERROR_LOG_ACTION_REPLACE	(1 << (54-32))
+> +#define OCXL_PMEM_ERROR_LOG_ACTION_DUMP		(1 << (55-32))
+> +
+> +#define OCXL_PMEM_ERROR_LOG_TYPE_GENERAL		(0x00)
+> +#define OCXL_PMEM_ERROR_LOG_TYPE_PREDICTIVE_FAILURE	(0x01)
+> +#define OCXL_PMEM_ERROR_LOG_TYPE_THERMAL_WARNING	(0x02)
+> +#define OCXL_PMEM_ERROR_LOG_TYPE_DATA_LOSS		(0x03)
+> +#define OCXL_PMEM_ERROR_LOG_TYPE_HEALTH_PERFORMANCE	(0x04)
+> +
+> +struct ioctl_ocxl_pmem_error_log {
+> +	__u32 log_identifier; /* out */
+> +	__u32 program_reference_code; /* out */
+> +	__u32 action_flags; /* out, recommended course of action */
+> +	__u32 power_on_seconds; /* out, Number of seconds the controller has been on when the error occurred */
+> +	__u64 timestamp; /* out, relative time since the current IPL */
+> +	__u64 wwid[2]; /* out, the NAA formatted WWID associated with the controller */
+> +	char  fw_revision[8+1]; /* out, firmware revision as null terminated text */
+> +	__u16 buf_size; /* in/out, buffer size provided/required.
+> +			 * If required is greater than provided, the buffer
+> +			 * will be truncated to the amount provided. If its
+> +			 * less, then only the required bytes will be populated.
+> +			 * If it is 0, then there are no more error log entries.
+> +			 */
+> +	__u8  error_log_type;
+> +	__u8  reserved1;
+> +	__u32 reserved2;
+> +	__u64 reserved3[2];
+> +	__u8 *buf; /* pointer to output buffer */
+> +};
+> +
+> +/* ioctl numbers */
+> +#define OCXL_PMEM_MAGIC 0x5C
+> +/* SCM devices */
+> +#define IOCTL_OCXL_PMEM_ERROR_LOG			_IOWR(OCXL_PMEM_MAGIC, 0x01, struct ioctl_ocxl_pmem_error_log)
+> +
+> +#endif /* _UAPI_OCXL_SCM_H */
+> 
+
 -- 
-2.16.4
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
