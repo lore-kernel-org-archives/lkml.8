@@ -2,162 +2,103 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F21C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD796C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47385217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:50:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="WCIUYoHd"
+	by mail.kernel.org (Postfix) with ESMTP id A33192073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:51:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583311877;
+	bh=lc8ZcrxfTb7ziZCP6ve86LRFQyF/mtfu4M4IYApuctQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Z1UL0bfG3xUuLen/yWFsMDNL28kwQcv101muR9iGGBI+HEC1AvTcdc9bSqTYBT0Wm
+	 7sWwVExnOpvNEtwbMi8eD2KVtj2X1ssMQt/XTapyAAs4TgcuVuQVWI8h5CCEMB/Fug
+	 WOVGvNQ4NfgUt8wiOr9+IqgjLh1s7EEe70Gao2cc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729091AbgCDIt7 (ORCPT
+        id S2387663AbgCDIvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:49:59 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46652 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgCDIt7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:49:59 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0248nw7H078347;
-        Wed, 4 Mar 2020 02:49:58 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583311798;
-        bh=0JcGB+sYExQaFDZtjuC7bhrD3uXfF+I4qmWNu5FYtd4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=WCIUYoHdET3ZvnYO4hTmE0npbgepCGNOICZagrx+WL27oSvGeuT2yfSFeXC6XXcdZ
-         PLfqJJ8+FHRiSz4ZVxRFHh6e0dzDWCHwpjKL7Ivk1OIMfD9CFD6aFcFloA7edUUIgn
-         E3czcYeAvtI6XwEOTOq3MJfCSVR1MlY4VEzbcrIY=
-Received: from DFLE108.ent.ti.com (dfle108.ent.ti.com [10.64.6.29])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0248nwtX093196
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 02:49:58 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 02:49:57 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 02:49:57 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0248nu2i052181;
-        Wed, 4 Mar 2020 02:49:56 -0600
-Subject: Re: [Patch 1/1] media: ti-vpe: cal: fix disable_irqs to only the
- intended target
-To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
-CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, stable <stable@vger.kernel.org>
-References: <20200302135652.9365-1-bparrot@ti.com>
-From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
-Message-ID: <678cb62a-4fdf-3b57-2fe5-699c6bf02b2f@ti.com>
-Date:   Wed, 4 Mar 2020 10:49:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 4 Mar 2020 03:51:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57256 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725271AbgCDIvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 03:51:16 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6893220732;
+        Wed,  4 Mar 2020 08:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583311875;
+        bh=lc8ZcrxfTb7ziZCP6ve86LRFQyF/mtfu4M4IYApuctQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0EPbFPXmlJMC09ZrudEBw1DFLptEzQWrJkwffIcbT2InFZnVfTKtxckc2SINK8V3t
+         ZEk6kf93chQD5mgbqN72G3VD2KPHczTsErUgQn//ZeVIJRl8YK3khNP98vZrkD9/6o
+         0MBUjZ63PcolvfboDVLiw3Hf7YM1hqRv2l/GbA1c=
+Date:   Wed, 4 Mar 2020 09:51:13 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Oliver Upton <oupton@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 111/176] KVM: nVMX: Emulate MTF when performing
+ instruction emulation
+Message-ID: <20200304085113.GA1419475@kroah.com>
+References: <20200303174304.593872177@linuxfoundation.org>
+ <20200303174317.670749078@linuxfoundation.org>
+ <8780cf08-374b-da06-0047-0fe8eeec0113@redhat.com>
+ <CAOQ_QsjG32KrG6hVMaMenUYk1+Z+jhcCsGOk=t9i+-9oZRGWeA@mail.gmail.com>
+ <20200304081001.GB1401372@kroah.com>
+ <04e51276-1759-2793-3b45-168284cbaf67@redhat.com>
+ <20200304082613.GA1407851@kroah.com>
+ <cf7c6b2d-64eb-8d13-3e9a-09c40d2ecf95@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200302135652.9365-1-bparrot@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf7c6b2d-64eb-8d13-3e9a-09c40d2ecf95@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/03/2020 15:56, Benoit Parrot wrote:
-> disable_irqs() was mistakenly disabling all interrupts when called.
-> This cause all port stream to stop even if only stopping one of them.
+On Wed, Mar 04, 2020 at 09:43:18AM +0100, Paolo Bonzini wrote:
+> On 04/03/20 09:26, Greg Kroah-Hartman wrote:
+> > On Wed, Mar 04, 2020 at 09:19:09AM +0100, Paolo Bonzini wrote:
+> >> On 04/03/20 09:10, Greg Kroah-Hartman wrote:
+> >>> I'll be glad to just put KVM into the "never apply any patches to
+> >>> stable unless you explicitly mark it as such", but the sad fact is that
+> >>> many recent KVM fixes for reported CVEs never had any "Cc: stable@vger"
+> >>> markings.
+> >>
+> >> Hmm, I did miss it in 433f4ba1904100da65a311033f17a9bf586b287e and
+> >> acff78477b9b4f26ecdf65733a4ed77fe837e9dc, but that's going back to
+> >> August 2018, so I can do better but it's not too shabby a record. :)
+> > 
+> > 35a571346a94 ("KVM: nVMX: Check IO instruction VM-exit conditions")
+> > e71237d3ff1a ("KVM: nVMX: Refactor IO bitmap checks into helper function")
+> > 
+> > Were both from a few weeks ago and needed to resolve CVE-2020-2732 :(
 > 
-> Cc: stable <stable@vger.kernel.org>
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->   drivers/media/platform/ti-vpe/cal.c | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> index 6e009e479be3..6d4cbb8782ed 100644
-> --- a/drivers/media/platform/ti-vpe/cal.c
-> +++ b/drivers/media/platform/ti-vpe/cal.c
-> @@ -722,16 +722,16 @@ static void enable_irqs(struct cal_ctx *ctx)
->   
->   static void disable_irqs(struct cal_ctx *ctx)
->   {
-> +	u32 val;
-> +
->   	/* Disable IRQ_WDMA_END 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_CLR(2),
-> -			CAL_HL_IRQ_CLEAR,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	val = 0;
-> +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), val);
->   	/* Disable IRQ_WDMA_START 0/1 */
-> -	reg_write_field(ctx->dev,
-> -			CAL_HL_IRQENABLE_CLR(3),
-> -			CAL_HL_IRQ_CLEAR,
-> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	val = 0;
-> +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
-> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), val);
->   	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
->   	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
->   }
-> 
+> No, they weren't, only the patch that was CCed stable was needed to
+> resolve the CVE.
 
-I think the above works. But the enable_irqs is broken too, even if it doesn't cause any issues. Both IRQ_SET and IRQ_CLR are not supposed to be "modified" by a read-mod-write operation, but just written to.
+Ah, that's not what was posted to oss-security :(
 
-The macros used also make the code very difficult to read. Something like this fixes both irq enable and disable, and makes it readable:
+> Remember that at this point a lot of bugfixes or vulnerabilities in KVM
+> exploit corner cases of the architecture and don't show up with the
+> usual guests (Linux, Windows, BSDs).  Since we didn't have full
+> information on the impact on guests that people do run, we started with
+> the bare minimum (the two patches above) but only for 5.6.  The idea was
+> to collect follow-up patches for 2-4 weeks, decide which subset was
+> stable-worthy, and only then post them as stable backport subsets.
 
-diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-index c8b1290c9e2b..660653031a0b 100644
---- a/drivers/media/platform/ti-vpe/cal.c
-+++ b/drivers/media/platform/ti-vpe/cal.c
-@@ -707,15 +707,9 @@ static void cal_quickdump_regs(struct cal_dev *dev)
- static void enable_irqs(struct cal_ctx *ctx)
- {
- 	/* Enable IRQ_WDMA_END 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_SET(2),
--			CAL_HL_IRQ_ENABLE,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(2), 1 << (ctx->csi2_port - 1));
- 	/* Enable IRQ_WDMA_START 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_SET(3),
--			CAL_HL_IRQ_ENABLE,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(3), 1 << (ctx->csi2_port - 1));
- 	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
- 	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0xFF000000);
- }
-@@ -723,15 +717,9 @@ static void enable_irqs(struct cal_ctx *ctx)
- static void disable_irqs(struct cal_ctx *ctx)
- {
- 	/* Disable IRQ_WDMA_END 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(2),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), 1 << (ctx->csi2_port - 1));
- 	/* Disable IRQ_WDMA_START 0/1 */
--	reg_write_field(ctx->dev,
--			CAL_HL_IRQENABLE_CLR(3),
--			CAL_HL_IRQ_CLEAR,
--			CAL_HL_IRQ_MASK(ctx->csi2_port));
-+	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), 1 << (ctx->csi2_port - 1));
- 	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
- 	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
- }
+Ok, that's fine, but it would be good if someone told me about this so
+that I knew what was going on when people asked me about this type of
+thing :)
 
- Tomi
+thanks,
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+greg k-h
