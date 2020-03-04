@@ -2,96 +2,102 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B6E7C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:23:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC66CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 055362166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:23:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83BF42146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Mia0eqxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729979AbgCDSXw (ORCPT
+        id S1730140AbgCDSYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:23:52 -0500
-Received: from mail.manjaro.org ([176.9.38.148]:59550 "EHLO mail.manjaro.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbgCDSXv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:23:51 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.manjaro.org (Postfix) with ESMTP id 4D0B73702361;
-        Wed,  4 Mar 2020 19:23:50 +0100 (CET)
-X-Virus-Scanned: Debian amavisd-new at manjaro.org
-Received: from mail.manjaro.org ([127.0.0.1])
-        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id jKsZACVbmvna; Wed,  4 Mar 2020 19:23:47 +0100 (CET)
-Subject: Re: [PATCH v3 2/2] arm64: dts: rockchip: Add initial support for
- Pinebook Pro
-To:     Johan Jonker <jbx6244@gmail.com>,
-        Tobias Schramm <t.schramm@manjaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andy Yan <andy.yan@rock-chips.com>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        Alexis Ballier <aballier@gentoo.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Nick Xie <nick@khadas.com>,
-        Kever Yang <kever.yang@rock-chips.com>,
-        Vivek Unune <npcomplete13@gmail.com>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Vasily Khoruzhick <anarsoul@gmail.com>
-References: <20200229144817.355678-1-t.schramm@manjaro.org>
- <20200229144817.355678-3-t.schramm@manjaro.org>
- <bcc2c8d4-a2cd-58c1-89af-e42439f8f344@gmail.com>
-From:   Tobias Schramm <t.schramm@manjaro.org>
-Message-ID: <46a66389-c709-2c16-dd9a-f7fd6371a768@manjaro.org>
-Date:   Wed, 4 Mar 2020 19:24:41 +0100
+        Wed, 4 Mar 2020 13:24:15 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43793 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgCDSYO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:24:14 -0500
+Received: by mail-qk1-f195.google.com with SMTP id q18so2594967qki.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:24:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7uGKfMEoQma2YTmYindpAJZ+6Dd9e8pZRREodN0XilM=;
+        b=Mia0eqxiqiZ+f66hq7l6dJh58ejISZYPQsbp5h2zfh7vp/vvIx56r1xShga41jPdFM
+         e087spTKJZixh1I+cmplDpNzi7uP35TRbI1WyoV55iFHQD4y3aa6Uo2Qu0p2vZwEm2oU
+         BRwcjvdDuzGLgSRxdxHfjKtJb+I2IfhjPZsOtLFRERV44TCfb8vgRINjDujDhZCBL1Mq
+         8YVUWjbZl7bQOQtQy8+7vDn0tuTUhfGryD1aZ7KDHPo2Aenypv0LbCQ5WMge9hDq26G5
+         nheK73Rsky6AO2srjk5QIAx2fj2tGoYcKvDjnWOBiJIX4MtqPoKvSOkAsok1NVDRiJdf
+         Y6Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7uGKfMEoQma2YTmYindpAJZ+6Dd9e8pZRREodN0XilM=;
+        b=HIlMk1K7+OdLcYz2iOe8UVbKHyRQPoGPQkc7ETOXFKw+ZfEvYHWk5l2xQ5+OLpa2Fu
+         XHXKMsfGKAvIc8L3BAXVbsQgfSquvd+wh/8ax2EuZ1RqylfseySolTLOkskTp55Apu6j
+         ivrwxEUNdqY1y7iwPBS7kHbypTFNUE6TV7l6FMFnXTcbtdpreGPNE9O5vNKAy5FL6wcW
+         Y5h8+JzqXAxj9EXNVUCI3EgZzs2IHuPh27mryvqM2Ba8xrBmANJQgZCa4dGxmkFQdAE0
+         zBiir00SqKsUQetl6n75h/BMDiDWqpOxUVHZR1WHrEgClegqqzc+X0LhKjmhixZfK9Wb
+         Vgvg==
+X-Gm-Message-State: ANhLgQ2YXrzPmGRiywmcDHce/FGPNKJNz+ykFARPbumC6dsbFJ4/BQ6R
+        +350ExpkOiW0cDOSRAbXSnxrFA==
+X-Google-Smtp-Source: ADFU+vtRodrQGutbTEE2PU9HNmEC1IZAyA11ZBYfVhgiKLz7nf/pB721n80U6tbbZtje9FYX/xbyrw==
+X-Received: by 2002:a05:620a:2012:: with SMTP id c18mr3760545qka.242.1583346252226;
+        Wed, 04 Mar 2020 10:24:12 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id 133sm14361291qkh.109.2020.03.04.10.24.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Mar 2020 10:24:11 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j9Ygl-0000KJ-CH; Wed, 04 Mar 2020 14:24:11 -0400
+Date:   Wed, 4 Mar 2020 14:24:11 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <bmt@zurich.ibm.com>
+Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        netdev@vger.kernel.org, parav@mellanox.com,
+        syzkaller-bugs@googlegroups.com, willy@infradead.org
+Subject: Re: [PATCH for-rc] RDMA/siw: Fix passive connection establishment
+Message-ID: <20200304182411.GA1201@ziepe.ca>
+References: <20200228173534.26815-1-bmt@zurich.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <bcc2c8d4-a2cd-58c1-89af-e42439f8f344@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228173534.26815-1-bmt@zurich.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johan,
-
-thanks for the additional feedback. I'll send a v4 with your fixes included.
-
->> +		partitions {
->> +			compatible = "fixed-partitions";
->> +			#address-cells = <1>;
->> +			#size-cells = <1>;
->> +
->> +			loader@8000 {
->> +				label = "loader";
->> +				reg = <0x0 0x3F8000>;
->> +			};
->> +
->> +			env@3f8000 {
->> +				label = "env";
->> +				reg = <0x3F8000 0x8000>;
->> +			};
->> +
->> +			vendor@7c0000 {
->> +				label = "vendor";
->> +				reg = <0x7C0000 0x40000>;
->> +			};
->> +		};
+On Fri, Feb 28, 2020 at 06:35:34PM +0100, Bernard Metzler wrote:
+> Holding the rtnl_lock while iterating a devices interface
+> address list potentially causes deadlocks with the
+> cma_netdev_callback. While this was implemented to
+> limit the scope of a wildcard listen to addresses
+> of the current device only, a better solution limits
+> the scope of the socket to the device. This completely
+> avoiding locking, and also results in significant code
+> simplification.
 > 
-> Partitions are normaly up to the user and should not be included to dts
-> files,
-> else could you explain why we need this exception?
-> 
-Right. I don't see any reason why we would need to keep it either. I'll
-remove it.
+> Reported-by: syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com
+> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+> Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+> ---
+>  drivers/infiniband/sw/siw/siw_cm.c | 137 +++++++----------------------
+>  1 file changed, 31 insertions(+), 106 deletions(-)
 
-Tobias
+Applied to for-next, the possibility of hitting the locking inversion
+found by syzkaller is really remote as you'd have to run siw on top of
+bond and then do horrible things to the bond.
+
+Jason
