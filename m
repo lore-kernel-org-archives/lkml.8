@@ -2,123 +2,412 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E1AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 533ADC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:40:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E281820674
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:33:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19C7620842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DaxJDru+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728358AbgCDAdO (ORCPT
+        id S2387405AbgCDAkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:33:14 -0500
-Received: from mga06.intel.com ([134.134.136.31]:1425 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgCDAdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:33:13 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 16:33:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="258566718"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by orsmga002.jf.intel.com with ESMTP; 03 Mar 2020 16:33:09 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Mel Gorman <mgorman@suse.de>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-References: <20200228033819.3857058-1-ying.huang@intel.com>
-        <20200228034248.GE29971@bombadil.infradead.org>
-        <87a7538977.fsf@yhuang-dev.intel.com>
-        <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
-        <871rqf850z.fsf@yhuang-dev.intel.com> <20200228094954.GB3772@suse.de>
-        <87h7z76lwf.fsf@yhuang-dev.intel.com> <20200302151607.GC3772@suse.de>
-        <87zhcy5hoj.fsf@yhuang-dev.intel.com> <20200303130241.GE3772@suse.de>
-Date:   Wed, 04 Mar 2020 08:33:08 +0800
-In-Reply-To: <20200303130241.GE3772@suse.de> (Mel Gorman's message of "Tue, 3
-        Mar 2020 13:02:41 +0000")
-Message-ID: <874kv53qnv.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 3 Mar 2020 19:40:32 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:34987 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727854AbgCDAkc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 19:40:32 -0500
+Received: by mail-vs1-f65.google.com with SMTP id u26so65909vsg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:40:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=CK5Jlz1A5OJnYpPacpgEc1DpNLjBDwrpuxqvMyaaKmw=;
+        b=DaxJDru+x+T7YSXz89W4lWrN9GVjSeKZyNJyzTshCQTzWVgHPevbth4re/xYOFBXi9
+         FHKGCeELMSu2JJ8Li1kz4mWQwqkiS62HwxNFAhPX2rPRbBqSI7tohQYEVbeI5ssrJh0M
+         jOxO9uJoyeuynWhvakzzXkPdg594dSI5NmK/k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=CK5Jlz1A5OJnYpPacpgEc1DpNLjBDwrpuxqvMyaaKmw=;
+        b=tvxS0gBccksD4uoX+fkK0RiA11HXjDU0ftdz8BH3CLIaAn8hqg2cy/xoa7jtZILF98
+         lCCxB/hC+S+9lR91iF+Epx+CTggR25KEjqojNjRbnJ3E6g2G7JIG/iKrKsGr5oQOj9FY
+         m6Xoqcifap30dGWu9pPV4XN26bP0iiXRLnm0j+Y2xF+UsZ82kWRbgETxndFcEHZB3krK
+         bzIATsrRtj1NMOeabnvl4cviiNWKpeBTLl30slS5T10VboSedTAgb8KpgpCCRmCnCSQF
+         8f57xp8wm+8ZNcZvAz5NWoaT8sGVWS8ua/Ibgo7QQBER356jR/X7+SP52KudTwUmfNsC
+         Tklg==
+X-Gm-Message-State: ANhLgQ3e9jdrgVqg5GVOIlEmoLJ3KMK6NqMCyZcm5tgNeIB8F1OR6mOK
+        kP0MD34GgEDb44gWv3HklqrCyFRahW8=
+X-Google-Smtp-Source: ADFU+vtaOkkgqMzAbr4rLWBUzluSnmDBx7mqVKH7N4CLyA2YD8AR+YDrJ2l9dHTrgznCYVCautIV9A==
+X-Received: by 2002:a67:edd2:: with SMTP id e18mr346913vsp.211.1583282429616;
+        Tue, 03 Mar 2020 16:40:29 -0800 (PST)
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com. [209.85.222.45])
+        by smtp.gmail.com with ESMTPSA id r199sm1249265vkr.54.2020.03.03.16.40.28
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 03 Mar 2020 16:40:28 -0800 (PST)
+Received: by mail-ua1-f45.google.com with SMTP id p2so51660uao.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:40:28 -0800 (PST)
+X-Received: by 2002:ab0:2006:: with SMTP id v6mr192452uak.22.1583282428083;
+ Tue, 03 Mar 2020 16:40:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+References: <1582889903-12890-1-git-send-email-mkshah@codeaurora.org>
+ <1582889903-12890-4-git-send-email-mkshah@codeaurora.org> <CAD=FV=V92fFH8q+yvMk2sWdgi_xjFyvt3rMu14O+sO5zLp2kGg@mail.gmail.com>
+ <7704638e-b473-d0cf-73ab-2bdb67b636ba@codeaurora.org>
+In-Reply-To: <7704638e-b473-d0cf-73ab-2bdb67b636ba@codeaurora.org>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Tue, 3 Mar 2020 16:40:15 -0800
+X-Gmail-Original-Message-ID: <CAD=FV=XL631dpEY8iB=gzjnh1cZVk6AKRafkQ7ke++AfXtuHNA@mail.gmail.com>
+Message-ID: <CAD=FV=XL631dpEY8iB=gzjnh1cZVk6AKRafkQ7ke++AfXtuHNA@mail.gmail.com>
+Subject: Re: [PATCH v9 3/3] soc: qcom: rpmh: Invoke rpmh_flush() for dirty caches
+To:     Maulik Shah <mkshah@codeaurora.org>
+Cc:     Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mel Gorman <mgorman@suse.de> writes:
+Hi,
 
-> On Tue, Mar 03, 2020 at 09:51:56AM +0800, Huang, Ying wrote:
->> Mel Gorman <mgorman@suse.de> writes:
->> > On Mon, Mar 02, 2020 at 07:23:12PM +0800, Huang, Ying wrote:
->> >> If some applications cannot tolerate the latency incurred by the memory
->> >> allocation and zeroing.  Then we cannot discard instead of migrate
->> >> always.  While in some situations, less memory pressure can help.  So
->> >> it's better to let the administrator and the application choose the
->> >> right behavior in the specific situation?
->> >> 
->> >
->> > Is there an application you have in mind that benefits from discarding
->> > MADV_FREE pages instead of migrating them?
->> >
->> > Allowing the administrator or application to tune this would be very
->> > problematic. An application would require an update to the system call
->> > to take advantage of it and then detect if the running kernel supports
->> > it. An administrator would have to detect that MADV_FREE pages are being
->> > prematurely discarded leading to a slowdown and that is hard to detect.
->> > It could be inferred from monitoring compaction stats and checking
->> > if compaction activity is correlated with higher minor faults in the
->> > target application. Proving the correlation would require using the perf
->> > software event PERF_COUNT_SW_PAGE_FAULTS_MIN and matching the addresses
->> > to MADV_FREE regions that were freed prematurely. That is not an obvious
->> > debugging step to take when an application detects latency spikes.
->> >
->> > Now, you could add a counter specifically for MADV_FREE pages freed for
->> > reasons other than memory pressure and hope the administrator knows about
->> > the counter and what it means. That type of knowledge could take a long
->> > time to spread so it's really very important that there is evidence of
->> > an application that suffers due to the current MADV_FREE and migration
->> > behaviour.
->> 
->> OK.  I understand that this patchset isn't a universal win, so we need
->> some way to justify it.  I will try to find some application for that.
->> 
->> Another thought, as proposed by David Hildenbrand, it's may be a
->> universal win to discard clean MADV_FREE pages when migrating if there are
->> already memory pressure on the target node.  For example, if the free
->> memory on the target node is lower than high watermark?
->> 
+On Mon, Mar 2, 2020 at 9:47 PM Maulik Shah <mkshah@codeaurora.org> wrote:
 >
-> That is an extremely specific corner case that is not likely to occur.
-> NUMA balancing is not going to migrate a MADV_FREE page under these
-> circumstances as a write cancels MADV_FREE is read attempt will probably
-> fail to allocate a destination page in alloc_misplaced_dst_page so the
-> data gets lost instead of remaining remote. sys_movepages is a possibility
-> but the circumstances of an application delibertly trying to migrate to
-> a loaded node is low. Compaction never migrates cross-node so the state
-> of a remote node under pressure do not matter.
 >
-> Once again, there needs to be a reasonable use case to be able to
-> meaningfully balance between the benefits and risks of changing the
-> MADV_FREE semantics.
+> On 2/29/2020 5:15 AM, Doug Anderson wrote:
+> > Hi,
+> >
+> > On Fri, Feb 28, 2020 at 3:38 AM Maulik Shah <mkshah@codeaurora.org> wro=
+te:
+> >> Add changes to invoke rpmh flush() from within cache_lock when the dat=
+a
+> >> in cache is dirty.
+> >>
+> >> This is done only if OSI is not supported in PSCI. If OSI is supported
+> >> rpmh_flush can get invoked when the last cpu going to power collapse
+> >> deepest low power mode.
+> >>
+> >> Also remove "depends on COMPILE_TEST" for Kconfig option QCOM_RPMH so =
+the
+> >> driver is only compiled for arm64 which supports psci_has_osi_support(=
+)
+> >> API.
+> >>
+> >> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> >> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
+> >> ---
+> >>   drivers/soc/qcom/Kconfig |  2 +-
+> >>   drivers/soc/qcom/rpmh.c  | 33 ++++++++++++++++++++++-----------
+> >>   2 files changed, 23 insertions(+), 12 deletions(-)
+> >>
+> >> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> >> index d0a73e7..2e581bc 100644
+> >> --- a/drivers/soc/qcom/Kconfig
+> >> +++ b/drivers/soc/qcom/Kconfig
+> >> @@ -105,7 +105,7 @@ config QCOM_RMTFS_MEM
+> >>
+> >>   config QCOM_RPMH
+> >>          bool "Qualcomm RPM-Hardened (RPMH) Communication"
+> >> -       depends on ARCH_QCOM && ARM64 || COMPILE_TEST
+> >> +       depends on ARCH_QCOM && ARM64
+> >>          help
+> >>            Support for communication with the hardened-RPM blocks in
+> >>            Qualcomm Technologies Inc (QTI) SoCs. RPMH communication us=
+es an
+> >> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
+> >> index f28afe4..6a5a60c 100644
+> >> --- a/drivers/soc/qcom/rpmh.c
+> >> +++ b/drivers/soc/qcom/rpmh.c
+> >> @@ -12,6 +12,7 @@
+> >>   #include <linux/module.h>
+> >>   #include <linux/of.h>
+> >>   #include <linux/platform_device.h>
+> >> +#include <linux/psci.h>
+> >>   #include <linux/slab.h>
+> >>   #include <linux/spinlock.h>
+> >>   #include <linux/types.h>
+> >> @@ -158,6 +159,13 @@ static struct cache_req *cache_rpm_request(struct=
+ rpmh_ctrlr *ctrlr,
+> >>          }
+> >>
+> >>   unlock:
+> >> +       if (ctrlr->dirty && !psci_has_osi_support()) {
+> >> +               if (rpmh_flush(ctrlr)) {
+> >> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, fla=
+gs);
+> >> +                       return ERR_PTR(-EINVAL);
+> >> +               }
+> >> +       }
+> > It's been a long time since I looked in depth at RPMH, but upon a
+> > first glance this seems like it's gonna be terrible for performance.
+> > You're going to send every entry again and again, aren't you?  In
+> > other words in pseudo-code:
+> >
+> > 1. rpmh_write(addr=3D0x10, data=3D0x99);
+> > =3D=3D> writes on the bus (0x10, 0x99)
+> >
+> > 2. rpmh_write(addr=3D0x11, data=3D0xaa);
+> > =3D=3D> writes on the bus (0x10, 0x99)
+> > =3D=3D> writes on the bus (0x11, 0xaa)
+> >
+> > 3. rpmh_write(addr=3D0x10, data=3D0xbb);
+> > =3D=3D> writes on the bus (0x10, 0xbb)
+> > =3D=3D> writes on the bus (0x11, 0xaa)
+> >
+> > 4. rpmh_write(addr=3D0x12, data=3D0xcc);
+> > =3D=3D> writes on the bus (0x10, 0xbb)
+> > =3D=3D> writes on the bus (0x11, 0xaa)
+> > =3D=3D> writes on the bus (0x12, 0xcc)
+> >
+> > That seems bad.
+>
+> Hi Doug,
+>
+> No this is NOT how data is sent to RPMh/AOSS.
+> The rpmh_flush() fills up DRV-2 (HLOS) TCSes, makes it ready and The HW
+> takes care of
+> sending data of Sleep TCSes for each of the EL/ DRV(s) when Last cpu is
+> going to deepest
+> low power mode and of WAKE TCSes while first cpu is waking up.
 
-OK.  Will try to find some workloads for this.
+Ah, I see.  So for sleep / wake commands we never directly wait for
+them to go out on the bus while the system is awake.  We just program
+them all to the RPMH hardware and they'll set there and all get sent
+automatically when the last CPU goes into deepest low power mode.
 
-Best Regards,
-Huang, Ying
+...so actually the whole point of OSI mode (from an RPMH perspective)
+is not to avoid transactions on the bus.  It's just avoiding
+programming RPMH over and over again.  Is that correct?
+
+...and the reason we have all these data structures in the kernel is
+to keep track of auxiliary information about the things in the
+sleep/wake TCSs and make it easier to update bits of them?
+
+
+> > Why can't you just send the new request itself and
+> > forget adding it to the cache?  In other words don't even call
+> > cache_rpm_request() in the non-OSI case and then in __rpmh_write()
+> > just send right away...
+>
+> This won=E2=80=99t work out. Let me explain why=E2=80=A6
+>
+> We have 3 SLEEP and 3 WAKE TCSes from below config..
+>                          qcom,tcs-config =3D <ACTIVE_TCS  2>,
+>                                            <SLEEP_TCS   3>,
+>                                            <WAKE_TCS    3>,
+> Each TCS has total 16 commands so total 48 commands(16*3) for each SLEEP
+> and WAKE TCSes,
+> that can be filled up.
+>
+> Now Lets take a example in pseudo-code on what could happen if we don=E2=
+=80=99t
+> cache and
+> immediately fill up TCSes commands. The triggering part doesn=E2=80=99t h=
+appen
+> as explained above
+> it fills up TCSes and makes them ready..
+>
+> Time-t0 (from client_x invoking rpmh_write_batch() for SLEEP SET, a
+> batch of 3 commands)
+>
+> rpmh_write_batch(
+> addr=3D0x10, data=3D0x99,  -> fills up CMD0 in SLEEP TCS_0
+> addr=3D0x11, data=3D0xaa,  -> fills up CMD1 in SLEEP TCS_0
+> addr=3D0x10, data=3D0xbb); -> fills up CMD2 in SLEEP TCS_0
+>
+> Time-t1 (from client_y invoking rpmh_write(), a single command)
+>
+> rpmh_write(
+> addr=3D0x12, data=3D0xcc,  -> fills up CMD3 in SLEEP TCS_0
+> );
+>
+> Time-t2 (from client_x invokes rpmh_invalidate() which invalidates all
+> previous *batch requests* only)
+>
+> At this point, it should have CMD3 only in TCS while CMD 0,1,2 needs to
+> be freed up, since we expect
+> a new batch request now.
+>
+> Since driver didn=E2=80=99t cache anything in the first place, it doesn=
+=E2=80=99t know
+> details about previous batch request
+> like how many commands it had, what were the commands of those batches
+> when filling up in TCSes, and so on=E2=80=A6
+> (basically all the data required to free up only CMD 0,1,2, and don=E2=80=
+=99t
+> disturb CMD3)
+>
+> Whats more?
+>
+> The new batch request could be of let say 5 commands after invalidation,
+> instead of 3 commands in previous batch.
+> So it will not fit in CMD-0,1,2 and we might want to allocate from
+> CMD-4,5,6,7,8 now.
+>
+> This will leave a hole in TCS CMDs (each TCS has 16 total commands)
+> unless we re-arrange everything.
+> Also we may want to fill up batch request first and then single
+> requests, by not caching anything, driver don=E2=80=99t
+> know which one is batch and which one is single request.
+
+OK, I got it now.  I'll try to spend some time tomorrow looking over
+everything / testing with my new understanding.
+
+
+> There are other cases like below which also gets impacted if driver
+> don't cache anything...
+>
+> for example, when we don=E2=80=99t have dedicated ACTIVE TCS ( if we have=
+ below
+> config with ACTIVE TCS count 0)
+>      qcom,tcs-config =3D <ACTIVE_TCS  0>,
+>                            <SLEEP_TCS   3>,
+>                            <WAKE_TCS    3>,
+>
+> Now to send active data, driver may re-use/ re-purpose few of the sleep
+> or wake TCS, to be used as ACTIVE TCS and once work is done,
+> it will be re-allocated in SLEEP/ WAKE TCS pool accordingly. If driver
+> don=E2=80=99t cache, all the SLEEP and WAKE data is lost when one
+> of TCS is repurposed to use as ACTIVE TCS.
+
+Ah, interesting.  I'll read the code more, but are you expecting this
+type of situation to work today, or is it theoretical for the future?
+
+
+> Hope above explanation clears why caching is important and gives clear
+> view of caching v/s not caching.
+>
+> Thanks,
+> Maulik
+>
+> > I tried to test this and my printouts didn't show anything actually
+> > happening in rpmh_flush().  Maybe I just don't have the write patches
+> > to exercise this properly...
+>
+> it may be due to missing interconnect patches series
+> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=3D247175
+
+I ended up pulling those in but I was still not seeing things work as
+I expected.  I'll debug more tomorrow to see if it was my expectations
+that were wrong or if there was a real issue.
+
+
+> >>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+> >>
+> >>          return req;
+> >> @@ -285,26 +293,35 @@ int rpmh_write(const struct device *dev, enum rp=
+mh_state state,
+> >>   }
+> >>   EXPORT_SYMBOL(rpmh_write);
+> >>
+> >> -static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_=
+req *req)
+> >> +static int cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_r=
+eq *req)
+> >>   {
+> >>          unsigned long flags;
+> >>
+> >>          spin_lock_irqsave(&ctrlr->cache_lock, flags);
+> >> +
+> >>          list_add_tail(&req->list, &ctrlr->batch_cache);
+> >>          ctrlr->dirty =3D true;
+> >> +
+> >> +       if (!psci_has_osi_support()) {
+> >> +               if (rpmh_flush(ctrlr)) {
+> >> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, fla=
+gs);
+> >> +                       return -EINVAL;
+> >> +               }
+> >> +       }
+> >> +
+> >>          spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+> >> +
+> >> +       return 0;
+> >>   }
+> >>
+> >>   static int flush_batch(struct rpmh_ctrlr *ctrlr)
+> >>   {
+> >>          struct batch_cache_req *req;
+> >>          const struct rpmh_request *rpm_msg;
+> >> -       unsigned long flags;
+> >>          int ret =3D 0;
+> >>          int i;
+> >>
+> >>          /* Send Sleep/Wake requests to the controller, expect no resp=
+onse */
+> >> -       spin_lock_irqsave(&ctrlr->cache_lock, flags);
+> >>          list_for_each_entry(req, &ctrlr->batch_cache, list) {
+> >>                  for (i =3D 0; i < req->count; i++) {
+> >>                          rpm_msg =3D req->rpm_msgs + i;
+> >> @@ -314,7 +331,6 @@ static int flush_batch(struct rpmh_ctrlr *ctrlr)
+> >>                                  break;
+> >>                  }
+> >>          }
+> >> -       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
+> >>
+> >>          return ret;
+> >>   }
+> >> @@ -386,10 +402,8 @@ int rpmh_write_batch(const struct device *dev, en=
+um rpmh_state state,
+> >>                  cmd +=3D n[i];
+> >>          }
+> >>
+> >> -       if (state !=3D RPMH_ACTIVE_ONLY_STATE) {
+> >> -               cache_batch(ctrlr, req);
+> >> -               return 0;
+> >> -       }
+> >> +       if (state !=3D RPMH_ACTIVE_ONLY_STATE)
+> >> +               return cache_batch(ctrlr, req);
+> > I'm curious: why not just do:
+> >
+> > if (state !=3D RPMH_ACTIVE_ONLY_STATE && psci_has_osi_support()) {
+> >    cache_batch(ctrlr, req);
+> >    return 0;
+> > }
+> >
+> > ...AKA don't even cache it up if we're not in OSI mode.  IIUC this
+> > would be a huge deal because with your code you're doing the whole
+> > RPMH transfer under "spin_lock_irqsave", right?  And presumably RPMH
+> > transfers are somewhat slow, otherwise why did anyone come up with
+> > this whole caching / last-man-down scheme to start with?
+> >
+> > OK, it turned out to be at least slightly more complex because it
+> > appears that we're supposed to use rpmh_rsc_write_ctrl_data() for
+> > sleep/wake stuff and that they never do completions, but it really
+> > wasn't too hard.  I prototyped it at <http://crrev.com/c/2080916>.
+> > Feel free to hijack that change if it looks like a starting point and
+> > if it looks like I'm not too confused.
+> I looked at this change and thought of it earlier but it won=E2=80=99t wo=
+rk out
+> for the reasons in above example.
+> I have thought of few optimizations in rpmh_flush() to reduce its time,
+> if we *really* see any performance impact=E2=80=A6
+>
+> below is high level idea=E2=80=A6
+> When  rpmh_write_batch() is invoked for SLEEP_SETs, currently
+> rpmh_flush() will update both SLEEP and WAKE TCS contents,
+> However we may change it to update only SLEEP TCS, and when
+> rpmh_write_batch() is invoked for WAKE SETs, update only WAKE TCS content=
+s.
+> This way it may reduce time by roughly ~50%.
+
+OK, that's something to keep in mind.  Agree that it doesn't have the
+be part of the initial change.
+
+-Doug
