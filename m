@@ -2,205 +2,318 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7796FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B23DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE762166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46B752072A
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbgCDMzu (ORCPT
+        id S2388054AbgCDM7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:55:50 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28854 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726440AbgCDMzt (ORCPT
+        Wed, 4 Mar 2020 07:59:36 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:49461 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729175AbgCDM7f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:55:49 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024Crm5M010459
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 07:55:48 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhw6nya93-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:55:48 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 4 Mar 2020 12:55:46 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Mar 2020 12:55:42 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024CsgYl33948012
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Mar 2020 12:54:42 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F6C64C050;
-        Wed,  4 Mar 2020 12:55:40 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3482B4C046;
-        Wed,  4 Mar 2020 12:55:39 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.200.112])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Mar 2020 12:55:39 +0000 (GMT)
-Subject: Re: [PATCH v2] ima: add a new CONFIG for loading arch-specific
- policies
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Ard Biesheuvel <ardb@kernel.org>, Nayna Jain <nayna@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        x86@kernel.org
-Date:   Wed, 04 Mar 2020 07:55:38 -0500
-In-Reply-To: <CAKv+Gu831SRo+Di6WgKTex40TcOVqNQAdeNLtfQpPdgnvrxucw@mail.gmail.com>
-References: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
-         <CAKv+Gu831SRo+Di6WgKTex40TcOVqNQAdeNLtfQpPdgnvrxucw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030412-0012-0000-0000-0000038D17CB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030412-0013-0000-0000-000021C9D293
-Message-Id: <1583326538.6264.32.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_03:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- priorityscore=1501 lowpriorityscore=0 bulkscore=0 spamscore=0
- suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040099
+        Wed, 4 Mar 2020 07:59:35 -0500
+Received: from localhost (unknown [82.66.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id AE2A1200007;
+        Wed,  4 Mar 2020 12:59:22 +0000 (UTC)
+Date:   Wed, 4 Mar 2020 14:08:11 +0100
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Yue Wang <yue.wang@amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+Message-ID: <20200304130811.GP2248@voidbox>
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200123232943.10229-7-repk@triplefau.lt>
+ <14627e42-4894-6674-4911-3205ea8f5e55@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <14627e42-4894-6674-4911-3205ea8f5e55@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc'ing Thomas Gleixner and x86 mailing list]
-
-On Wed, 2020-03-04 at 08:14 +0100, Ard Biesheuvel wrote:
-> On Wed, 4 Mar 2020 at 03:34, Nayna Jain <nayna@linux.ibm.com> wrote:
-> >
-> > Every time a new architecture defines the IMA architecture specific
-> > functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
-> > include file needs to be updated. To avoid this "noise", this patch
-> > defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
-> > the different architectures to select it.
-> >
-> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > Cc: Philipp Rudo <prudo@linux.ibm.com>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+On Wed, Mar 04, 2020 at 04:31:24PM +0530, Kishon Vijay Abraham I wrote:
 > 
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-
-Thanks, Ard.
 > 
-> for the x86 bits, but I'm not an x86 maintainer. Also, you may need to
-> split this if you want to permit arch maintainers to pick up their
-> parts individually.
+> On 24/01/20 4:59 am, Remi Pommarel wrote:
+> > This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
+> > This will allow to mutualize code in pci-meson.c between AXG and G12A
+> > SoC.
+> > 
+> > This PHY also uses and chains an analog PHY, which on AXG platform
+> > is needed to have reliable PCIe communication.
+> 
+> Is the analog PHY an independent block and can be used with other PHYs?
 
-Michael, Philipp, Thomas, do you prefer separate patches?
+It is documented as a separate block yes, but I think it is unlikely
+that it will be used with other PHYs than the PCIe or the MIPI one of
+the AXG SoC.
+
+Thanks,
+Remi
 
 > 
+> For the patch itself
+> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> 
+> Thanks
+> Kishon
+> > 
+> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 > > ---
-> > v2:
-> > * Fixed the issue identified by Mimi. Thanks Mimi, Ard, Heiko and Michael for
-> > discussing the fix.
-> >
-> >  arch/powerpc/Kconfig           | 1 +
-> >  arch/s390/Kconfig              | 1 +
-> >  arch/x86/Kconfig               | 1 +
-> >  include/linux/ima.h            | 3 +--
-> >  security/integrity/ima/Kconfig | 9 +++++++++
-> >  5 files changed, 13 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> > index 497b7d0b2d7e..a5cfde432983 100644
-> > --- a/arch/powerpc/Kconfig
-> > +++ b/arch/powerpc/Kconfig
-> > @@ -979,6 +979,7 @@ config PPC_SECURE_BOOT
-> >         bool
-> >         depends on PPC_POWERNV
-> >         depends on IMA_ARCH_POLICY
-> > +       select IMA_SECURE_AND_OR_TRUSTED_BOOT
-> >         help
-> >           Systems with firmware secure boot enabled need to define security
-> >           policies to extend secure boot to the OS. This config allows a user
-> > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> > index 8abe77536d9d..4a502fbcb800 100644
-> > --- a/arch/s390/Kconfig
-> > +++ b/arch/s390/Kconfig
-> > @@ -195,6 +195,7 @@ config S390
-> >         select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-> >         select SWIOTLB
-> >         select GENERIC_ALLOCATOR
-> > +       select IMA_SECURE_AND_OR_TRUSTED_BOOT if IMA_ARCH_POLICY
-> >
-> >
-> >  config SCHED_OMIT_FRAME_POINTER
-> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > index beea77046f9b..7f5bfaf0cbd2 100644
-> > --- a/arch/x86/Kconfig
-> > +++ b/arch/x86/Kconfig
-> > @@ -230,6 +230,7 @@ config X86
-> >         select VIRT_TO_BUS
-> >         select X86_FEATURE_NAMES                if PROC_FS
-> >         select PROC_PID_ARCH_STATUS             if PROC_FS
-> > +       select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
-> >
-> >  config INSTRUCTION_DECODER
-> >         def_bool y
-> > diff --git a/include/linux/ima.h b/include/linux/ima.h
-> > index 1659217e9b60..aefe758f4466 100644
-> > --- a/include/linux/ima.h
-> > +++ b/include/linux/ima.h
-> > @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
-> >  extern void ima_add_kexec_buffer(struct kimage *image);
-> >  #endif
-> >
-> > -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
-> > -       || defined(CONFIG_PPC_SECURE_BOOT)
-> > +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
-> >  extern bool arch_ima_get_secureboot(void);
-> >  extern const char * const *arch_get_ima_policy(void);
-> >  #else
-> > diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-> > index 3f3ee4e2eb0d..d17972aa413a 100644
-> > --- a/security/integrity/ima/Kconfig
-> > +++ b/security/integrity/ima/Kconfig
-> > @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
-> >         depends on IMA_MEASURE_ASYMMETRIC_KEYS
-> >         depends on SYSTEM_TRUSTED_KEYRING
-> >         default y
+> >  drivers/phy/amlogic/Kconfig              |  11 ++
+> >  drivers/phy/amlogic/Makefile             |   1 +
+> >  drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
+> >  3 files changed, 204 insertions(+)
+> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+> > 
+> > diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+> > index 8c9cf2403591..71801e30d601 100644
+> > --- a/drivers/phy/amlogic/Kconfig
+> > +++ b/drivers/phy/amlogic/Kconfig
+> > @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
+> >  	  in Meson G12A SoCs.
+> >  	  If unsure, say N.
+> >  
+> > +config PHY_MESON_AXG_PCIE
+> > +	tristate "Meson AXG PCIE PHY driver"
+> > +	default ARCH_MESON
+> > +	depends on OF && (ARCH_MESON || COMPILE_TEST)
+> > +	select GENERIC_PHY
+> > +	select REGMAP_MMIO
+> > +	help
+> > +	  Enable this to support the Meson MIPI + PCIE PHY found
+> > +	  in Meson AXG SoCs.
+> > +	  If unsure, say N.
 > > +
-> > +config IMA_SECURE_AND_OR_TRUSTED_BOOT
-> > +       bool
-> > +       depends on IMA
-> > +       depends on IMA_ARCH_POLICY
-> 
-> Doesn't the latter already depend on the former?
-
-Yes, there's no need for the first.
-
-Mimi
-> 
-> > +       default n
-> > +       help
-> > +          This option is selected by architectures to enable secure and/or
-> > +          trusted boot based on IMA runtime policies.
-> > --
-> > 2.13.6
-> >
-
+> >  config PHY_MESON_AXG_MIPI_PCIE_ANALOG
+> >  	tristate "Meson AXG MIPI + PCIE analog PHY driver"
+> >  	default ARCH_MESON
+> > diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+> > index 0aecf92d796a..e2baa133f7af 100644
+> > --- a/drivers/phy/amlogic/Makefile
+> > +++ b/drivers/phy/amlogic/Makefile
+> > @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
+> >  obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
+> >  obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
+> >  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
+> > +obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
+> >  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
+> > diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> > new file mode 100644
+> > index 000000000000..377ed0dcd0d9
+> > --- /dev/null
+> > +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> > @@ -0,0 +1,192 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Amlogic AXG PCIE PHY driver
+> > + *
+> > + * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
+> > + */
+> > +#include <linux/module.h>
+> > +#include <linux/phy/phy.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/reset.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/bitfield.h>
+> > +#include <dt-bindings/phy/phy.h>
+> > +
+> > +#define MESON_PCIE_REG0 0x00
+> > +#define		MESON_PCIE_COMMON_CLK	BIT(4)
+> > +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
+> > +#define		MESON_PCIE_CLK		BIT(1)
+> > +#define		MESON_PCIE_POWERDOWN	BIT(0)
+> > +
+> > +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
+> > +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
+> > +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
+> > +					 MESON_PCIE_COMMON_REF_CLK)
+> > +#define MESON_PCIE_RESET_DELAY		500
+> > +
+> > +struct phy_axg_pcie_priv {
+> > +	struct phy *phy;
+> > +	struct phy *analog;
+> > +	struct regmap *regmap;
+> > +	struct reset_control *reset;
+> > +};
+> > +
+> > +static const struct regmap_config phy_axg_pcie_regmap_conf = {
+> > +	.reg_bits = 8,
+> > +	.val_bits = 32,
+> > +	.reg_stride = 4,
+> > +	.max_register = MESON_PCIE_REG0,
+> > +};
+> > +
+> > +static int phy_axg_pcie_power_on(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret;
+> > +
+> > +	ret = phy_power_on(priv->analog);
+> > +	if (ret != 0)
+> > +		return ret;
+> > +
+> > +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+> > +			   MESON_PCIE_POWERDOWN, 0);
+> > +	return 0;
+> > +}
+> > +
+> > +static int phy_axg_pcie_power_off(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret;
+> > +
+> > +	ret = phy_power_off(priv->analog);
+> > +	if (ret != 0)
+> > +		return ret;
+> > +
+> > +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+> > +			   MESON_PCIE_POWERDOWN, 1);
+> > +	return 0;
+> > +}
+> > +
+> > +static int phy_axg_pcie_init(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret;
+> > +
+> > +	ret = phy_init(priv->analog);
+> > +	if (ret != 0)
+> > +		return ret;
+> > +
+> > +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
+> > +	return reset_control_reset(priv->reset);
+> > +}
+> > +
+> > +static int phy_axg_pcie_exit(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret;
+> > +
+> > +	ret = phy_exit(priv->analog);
+> > +	if (ret != 0)
+> > +		return ret;
+> > +
+> > +	return reset_control_reset(priv->reset);
+> > +}
+> > +
+> > +static int phy_axg_pcie_reset(struct phy *phy)
+> > +{
+> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> > +	int ret = 0;
+> > +
+> > +	ret = phy_reset(priv->analog);
+> > +	if (ret != 0)
+> > +		goto out;
+> > +
+> > +	ret = reset_control_assert(priv->reset);
+> > +	if (ret != 0)
+> > +		goto out;
+> > +	udelay(MESON_PCIE_RESET_DELAY);
+> > +
+> > +	ret = reset_control_deassert(priv->reset);
+> > +	if (ret != 0)
+> > +		goto out;
+> > +	udelay(MESON_PCIE_RESET_DELAY);
+> > +
+> > +out:
+> > +	return ret;
+> > +}
+> > +
+> > +static const struct phy_ops phy_axg_pcie_ops = {
+> > +	.init = phy_axg_pcie_init,
+> > +	.exit = phy_axg_pcie_exit,
+> > +	.power_on = phy_axg_pcie_power_on,
+> > +	.power_off = phy_axg_pcie_power_off,
+> > +	.reset = phy_axg_pcie_reset,
+> > +	.owner = THIS_MODULE,
+> > +};
+> > +
+> > +static int phy_axg_pcie_probe(struct platform_device *pdev)
+> > +{
+> > +	struct phy_provider *pphy;
+> > +	struct device *dev = &pdev->dev;
+> > +	struct phy_axg_pcie_priv *priv;
+> > +	struct device_node *np = dev->of_node;
+> > +	struct resource *res;
+> > +	void __iomem *base;
+> > +	int ret;
+> > +
+> > +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> > +	if (!priv)
+> > +		return -ENOMEM;
+> > +
+> > +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
+> > +	if (IS_ERR(priv->phy)) {
+> > +		ret = PTR_ERR(priv->phy);
+> > +		if (ret != -EPROBE_DEFER)
+> > +			dev_err(dev, "failed to create PHY\n");
+> > +		return ret;
+> > +	}
+> > +
+> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	base = devm_ioremap_resource(dev, res);
+> > +	if (IS_ERR(base))
+> > +		return PTR_ERR(base);
+> > +
+> > +	priv->regmap = devm_regmap_init_mmio(dev, base,
+> > +					     &phy_axg_pcie_regmap_conf);
+> > +	if (IS_ERR(priv->regmap))
+> > +		return PTR_ERR(priv->regmap);
+> > +
+> > +	priv->reset = devm_reset_control_array_get(dev, false, false);
+> > +	if (IS_ERR(priv->reset))
+> > +		return PTR_ERR(priv->reset);
+> > +
+> > +	priv->analog = devm_phy_get(dev, "analog");
+> > +	if (IS_ERR(priv->analog))
+> > +		return PTR_ERR(priv->analog);
+> > +
+> > +	phy_set_drvdata(priv->phy, priv);
+> > +	dev_set_drvdata(dev, priv);
+> > +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> > +
+> > +	return PTR_ERR_OR_ZERO(pphy);
+> > +}
+> > +
+> > +static const struct of_device_id phy_axg_pcie_of_match[] = {
+> > +	{
+> > +		.compatible = "amlogic,axg-pcie-phy",
+> > +	},
+> > +	{ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
+> > +
+> > +static struct platform_driver phy_axg_pcie_driver = {
+> > +	.probe = phy_axg_pcie_probe,
+> > +	.driver = {
+> > +		.name = "phy-axg-pcie",
+> > +		.of_match_table = phy_axg_pcie_of_match,
+> > +	},
+> > +};
+> > +module_platform_driver(phy_axg_pcie_driver);
+> > +
+> > +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
+> > +MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
+> > +MODULE_LICENSE("GPL v2");
+> > 
