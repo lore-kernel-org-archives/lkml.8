@@ -2,132 +2,111 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB2C4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:21:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C21C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 948AD206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:21:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155F720637
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4Q+2KJA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387413AbgCDBUz (ORCPT
+        id S2387418AbgCDBYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 20:20:55 -0500
-Received: from mga03.intel.com ([134.134.136.65]:50660 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbgCDBUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 20:20:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 17:20:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="287177752"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by FMSMGA003.fm.intel.com with ESMTP; 03 Mar 2020 17:20:51 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        "Mel Gorman" <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH] mm: Add PageLayzyFree() helper functions for MADV_FREE
-References: <20200303033738.281908-1-ying.huang@intel.com>
-        <20200303165859.7440f23d388503ca77fdb6c2@linux-foundation.org>
-Date:   Wed, 04 Mar 2020 09:20:51 +0800
-In-Reply-To: <20200303165859.7440f23d388503ca77fdb6c2@linux-foundation.org>
-        (Andrew Morton's message of "Tue, 3 Mar 2020 16:58:59 -0800")
-Message-ID: <87o8tc3ogc.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 3 Mar 2020 20:24:12 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43743 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgCDBYM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 20:24:12 -0500
+Received: by mail-pg1-f193.google.com with SMTP id u12so161194pgb.10
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:24:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Rt8TtTL2J2teY8pg3mAMBDxFdn/EEgf4y2xMHvWn/v8=;
+        b=P4Q+2KJAFjMZOlZOparRgmdpjak5uoAJFTD5Y90LErx3JpfK0UNQGBOM5TQsh4lxw0
+         vnAjLQe0ENDCo0ZQ5hnkkRawhWxRuF3wImszc6mqaZAUmf32J23Y36c3qL2LATOSc2h2
+         tVfjBltn2QrYuDOibSBHTKVxQDmRfLH3BblY27gzz8VkF8PU1bMMY3k4FqUDkcmeaj0i
+         6J+nMb2iMJxcPnvOlMcFlR69jl/RqmbOoafXTX2H0o6QwLhM6dM9YHoCSaA6FUK7qgHW
+         08QwM9aaL559yyLm5RkZljBckbvwIlaynPPEOZ1GlwrypPVsFAsDcc4ElsCiDKbYgt+y
+         C6mA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Rt8TtTL2J2teY8pg3mAMBDxFdn/EEgf4y2xMHvWn/v8=;
+        b=Ozu5kOZGAm2Y+5KTJl1Du5Qzv11ZirPkt7Q14IdbG7mDJHShcyszYYPG/q/ywcTXGx
+         /2zDWMWfber89PBzcEgLL0ujUCZy7hwES3xp0M3l1zyuCJga3LRgWzlIih2GFdbQzT0L
+         VDrvXCmjn/fesYxIs/l7sgPnO9g9f61HufYNUSsoqgBdOINT9GLHqA1kxW3vNB1fD6cb
+         YTR6KDAsgprN0Q9mRtEglyy61KuzHar0jQwsgd8xFhivbIhEtLy3K9tu+7fxHd1Wf6R2
+         8HlzIC6zXxJdVqqrVT+q3Bww7be90V5bFS3EI2sFyLswSisuDHhGbQJiIX5hCJdG7hR0
+         LIfQ==
+X-Gm-Message-State: ANhLgQ2Ej3MlXCK0zUq8QgDTX6nj9Rz8WCqDuo5oSaIlGVTghsg0KecA
+        zL+FrBkIXbtSuHlqBuWJ9SPGBwqUI0M=
+X-Google-Smtp-Source: ADFU+vsn8BpgZ0uD9Kj8MicwFBE3Bv2NWVCEbUXbGCPpouGZIfn6QZU1OP0ZBgg8Au4qQWr8+E19nA==
+X-Received: by 2002:a62:1682:: with SMTP id 124mr550487pfw.107.1583285051211;
+        Tue, 03 Mar 2020 17:24:11 -0800 (PST)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id z13sm26175369pge.29.2020.03.03.17.24.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 03 Mar 2020 17:24:10 -0800 (PST)
+Date:   Wed, 4 Mar 2020 06:54:08 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
+Message-ID: <20200304012408.GA5014@afzalpc>
+References: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
+ <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com>
+ <20200229131553.GA4985@afzalpc>
+ <alpine.LNX.2.22.394.2003010958170.8@nippy.intranet>
+ <20200301010511.GA5195@afzalpc>
+ <alpine.LNX.2.22.394.2003011337590.15@nippy.intranet>
+ <20200301061327.GA5229@afzalpc>
+ <alpine.LNX.2.22.394.2003021717150.8@nippy.intranet>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LNX.2.22.394.2003021717150.8@nippy.intranet>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Andrew,
+Hi Finn,
 
-Andrew Morton <akpm@linux-foundation.org> writes:
+On Mon, Mar 02, 2020 at 05:26:17PM +1100, Finn Thain wrote:
 
-> On Tue,  3 Mar 2020 11:37:38 +0800 "Huang, Ying" <ying.huang@intel.com> wrote:
->
->> From: Huang Ying <ying.huang@intel.com>
->> 
->> Now PageSwapBacked() is used as the helper function to check whether
->> pages have been freed lazily via MADV_FREE.  This isn't very obvious.
->> So Dave suggested to add PageLazyFree() family helper functions to
->> improve the code readability.
->> 
->> --- a/include/linux/page-flags.h
->> +++ b/include/linux/page-flags.h
->> @@ -498,6 +498,31 @@ static __always_inline int PageKsm(struct page *page)
->>  TESTPAGEFLAG_FALSE(Ksm)
->>  #endif
->>  
->> +/*
->> + * For pages freed lazily via MADV_FREE.  lazyfree pages are clean
->> + * anonymous pages.  They have SwapBacked flag cleared to distinguish
->> + * with normal anonymous pages
->> + */
->> +static __always_inline int PageLazyFree(struct page *page)
->> +{
->> +	page = compound_head(page);
->> +	return PageAnon(page) && !PageSwapBacked(page);
->> +}
->> +
->> +static __always_inline void SetPageLazyFree(struct page *page)
->> +{
->> +	VM_BUG_ON_PAGE(PageTail(page), page);
->> +	VM_BUG_ON_PAGE(!PageAnon(page), page);
->> +	ClearPageSwapBacked(page);
->> +}
->> +
->> +static __always_inline void ClearPageLazyFree(struct page *page)
->> +{
->> +	VM_BUG_ON_PAGE(PageTail(page), page);
->> +	VM_BUG_ON_PAGE(!PageAnon(page), page);
->> +	SetPageSwapBacked(page);
->> +}
->
-> These BUG_ONs aren't present in the current code and are
-> unchangelogged.
->
-> And they aren't free!
->
-> before:
->
-> q:/usr/src/25> size -t mm/rmap.o mm/swap.o mm/vmscan.o 
->    text    data     bss     dec     hex filename
->   41580    4211     192   45983    b39f mm/rmap.o
->   50684    9259    1184   61127    eec7 mm/swap.o
->  117728   46775     128  164631   28317 mm/vmscan.o
->  209992   60245    1504  271741   4257d (TOTALS)
->
-> after:
->
->    text    data     bss     dec     hex filename
->   42035    4299     192   46526    b5be mm/rmap.o
->   51091    9347    1184   61622    f0b6 mm/swap.o
->  118132   46775     128  165035   284ab mm/vmscan.o
->  211258   60421    1504  273183   42b1f (TOTALS)
->
-> ALso, if they actually trigger, Linus goes berserk.
->
-> If you have some special reason to add these assertions, please do it
-> as a (changelogged!) followup patch and I'll keep it as a linux-next only thing.
+> I had assumed that your intention was to find a consensus so that the 
+> whole tree could be consistently and automatically improved
 
-Sorry, originally I thought that VM_BUG_ON_PAGE() will not be used in
-the production kernel, so it's cheap.  But it seems that people do care
-about its usage.  I will send v2 to fix this.
+Yeah, my main goal was to get rid of setup_irq(), other things were
+secondary and proceeded to achieve the removal by hook or crook, but was
+caught red handed :)
 
-Best Regards,
-Huang, Ying
+> > Sometimes had a feeling as though the changes in this series is akin to 
+> > cutting the foot to fit the shoe ;), but still went ahead as it was 
+> > legacy code, easier & less error prone. But now based on the overall 
+> > feedback, to proceed, i had to change.
+> > 
+> 
+> Not based on feedback from me I hope -- I have no veto in this case, as 
+> you can see from MAINTAINERS.
+
+i don't know what to say, i attempted to accomodate the reviews as
+much as possible, some times when opinions are conflicting i had to
+take a call one way or the other, with more importance to maintainer's
+view.
+
+Regards
+afzal
