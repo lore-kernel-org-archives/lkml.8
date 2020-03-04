@@ -2,163 +2,87 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C32C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82461C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37FA120866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:23:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AjBLDLRa"
+	by mail.kernel.org (Postfix) with ESMTP id 56F9120866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729575AbgCDOXQ (ORCPT
+        id S1729606AbgCDOYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:23:16 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39685 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgCDOXQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:23:16 -0500
-Received: by mail-lj1-f193.google.com with SMTP id f10so2219791ljn.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 06:23:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=DuM4SHf1sVSRFd0iAfPg/3FUWAci4sdx8YlPTtxLHUA=;
-        b=AjBLDLRaVZo2u3eVMtEp8eF/n6W+A+BSXG1x0tQJO17cbACepFUj9lAAQYvLH+nwIT
-         kFtbfwM6ADxCwKKha/V5bMdPvRNkj1PBa2ds4tOgWDCS6UxryiCc2PLfDFGA1mg+/qtj
-         tu/segWSBZ4AjX0KJ2fF8H9CqDT3NMzYEHWfBrZnJOumiDvXYN+MFgseacU3MoUd5rmR
-         80fqvqmWZzMTG7ig66oQpPjGKJ/7xyzSmlbRFGGcWWmn/lg+anX8O1BnCn3ZI5Yy4HL7
-         LwIbnYpjhvzSEUpQbMAxEbvCmBmG/Y2P2vba5qmJ9i7wmARKsj4ZCCkHv+I1LYEuEpDI
-         6ffw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=DuM4SHf1sVSRFd0iAfPg/3FUWAci4sdx8YlPTtxLHUA=;
-        b=Cu6FllzU6Nyf82IwRntHrFzqCjcCPPqrVhFDJbeGPntJTvFnJwKjMgC4eiPIRr1gzM
-         m0WXPkB8QABZClhthSwTLGqOkCs4nqpXxmda4G4KM/hIWy/NSYYg455cIWkeuQIhMYM1
-         ktULhLDBZ76AvIQkFk7tqfrkA7DckLtsOjWv7uGKOVrxwH8sTmOCpnS4PaGGy7rJ4l1W
-         EA1Shc7DOzsw0goXZQEbMIsD5k4sb1QiJrphdK42hN3HL0nKTDnZ+greF7/4Zjh5WoG4
-         MXHNxgKj3skp2xu3ffUJrh77kNc6VG+LhUZGSDEDVza/OXDo7qMOgIzyetqkTor4+NUj
-         rQ5w==
-X-Gm-Message-State: ANhLgQ2MLCCptzSc/vlL9IGHOJVw+lj2AC4IMe4WTTsAZ6txF7CJ+QKe
-        yoiPX2QkA8G92nnlnjsD8K8=
-X-Google-Smtp-Source: ADFU+vvKA4imZdpFdR2Wcr5JQLvnEaAwkgmbc8Utlu+oNaDX0sfIzjqzNhUBEv1GqpQkCoaeD+Fm+Q==
-X-Received: by 2002:a2e:3807:: with SMTP id f7mr2123355lja.103.1583331791595;
-        Wed, 04 Mar 2020 06:23:11 -0800 (PST)
-Received: from localhost.localdomain (188.146.98.66.nat.umts.dynamic.t-mobile.pl. [188.146.98.66])
-        by smtp.gmail.com with ESMTPSA id z23sm9575712ljg.99.2020.03.04.06.23.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 06:23:11 -0800 (PST)
-From:   mateusznosek0@gmail.com
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Mateusz Nosek <mateusznosek0@gmail.com>, akpm@linux-foundation.org
-Subject: [RFC PATCH] mm: Micro-optimisation: Save two branches on hot - page allocation path
-Date:   Wed,  4 Mar 2020 15:22:30 +0100
-Message-Id: <20200304142230.8753-1-mateusznosek0@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 09:24:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:34938 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726748AbgCDOYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 09:24:04 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BC3FF31B;
+        Wed,  4 Mar 2020 06:24:03 -0800 (PST)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9D5D63F6CF;
+        Wed,  4 Mar 2020 06:24:02 -0800 (PST)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] mm: Make mem_cgroup_id_get_many dependent on MMU and MEMCG_SWAP
+Date:   Wed,  4 Mar 2020 14:23:48 +0000
+Message-Id: <20200304142348.48167-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mateusz Nosek <mateusznosek0@gmail.com>
+mem_cgroup_id_get_many() is currently used only when MMU or MEMCG_SWAP
+configuration options are enabled. Having them disabled triggers the
+following warning at compile time:
 
-This patch makes ALLOC_KSWAPD
-equal to __GFP_KSWAPD_RACLAIM (cast to 'int').
+linux/mm/memcontrol.c:4797:13: warning: ‘mem_cgroup_id_get_many’ defined
+but not used [-Wunused-function]
+ static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned
+ int n)
 
-Thanks to that code like:
-```if (gfp_mask & __GFP_KSWAPD_RECLAIM)
-		alloc_flags |= ALLOC_KSWAPD;```
-can be changed to:
-```alloc_flags |= (__force int) (gfp_mask &__GFP_KSWAPD_RECLAIM);```
-Thanks to this one branch less is generated in the assembly.
+Make mem_cgroup_id_get_many() dependent on MMU and MEMCG_SWAP to address
+the issue.
 
-In case of ALLOC_KSWAPD flag two branches are saved,
-first one in code that always executes in the beggining of page allocation
-and the second one in loop in page allocator slowpath.
-
-Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 ---
- mm/internal.h   |  2 +-
- mm/page_alloc.c | 23 +++++++++++++++--------
- 2 files changed, 16 insertions(+), 9 deletions(-)
+ mm/memcontrol.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/mm/internal.h b/mm/internal.h
-index 86372d164476..7fb724977743 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -535,7 +535,7 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
- #else
- #define ALLOC_NOFRAGMENT	  0x0
- #endif
--#define ALLOC_KSWAPD		0x200 /* allow waking of kswapd */
-+#define ALLOC_KSWAPD		0x800 /* allow waking of kswapd */
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index d09776cd6e10..628cebeb4bdd 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -4794,10 +4794,12 @@ static void mem_cgroup_id_remove(struct mem_cgroup *memcg)
+ 	}
+ }
  
- enum ttu_flags;
- struct tlbflush_unmap_batch;
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 79e950d76ffc..73afd883eab5 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -3609,10 +3609,14 @@ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
- static inline unsigned int
- alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
++#if defined(CONFIG_MEMCG_SWAP) || defined(CONFIG_MMU)
+ static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned int n)
  {
--	unsigned int alloc_flags = 0;
-+	unsigned int alloc_flags;
+ 	refcount_add(n, &memcg->id.ref);
+ }
++#endif
  
--	if (gfp_mask & __GFP_KSWAPD_RECLAIM)
--		alloc_flags |= ALLOC_KSWAPD;
-+	/*
-+	 * __GFP_KSWAPD_RECLAIM is assumed to be the same as ALLOC_KSWAPD
-+	 * to save a branch.
-+	 */
-+	BUILD_BUG_ON(__GFP_KSWAPD_RECLAIM != (__force gfp_t) ALLOC_KSWAPD);
-+	alloc_flags = (__force int) (gfp_mask & __GFP_KSWAPD_RECLAIM);
- 
- #ifdef CONFIG_ZONE_DMA32
- 	if (!zone)
-@@ -4248,8 +4252,13 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
+ static void mem_cgroup_id_put_many(struct mem_cgroup *memcg, unsigned int n)
  {
- 	unsigned int alloc_flags = ALLOC_WMARK_MIN | ALLOC_CPUSET;
- 
--	/* __GFP_HIGH is assumed to be the same as ALLOC_HIGH to save a branch. */
-+	/*
-+	 * __GFP_HIGH is assumed to be the same as ALLOC_HIGH
-+	 * and __GFP_KSWAPD_RECLAIM is assumed to be the same as ALLOC_KSWAPD
-+	 * to save two branches.
-+	 */
- 	BUILD_BUG_ON(__GFP_HIGH != (__force gfp_t) ALLOC_HIGH);
-+	BUILD_BUG_ON(__GFP_KSWAPD_RECLAIM != (__force gfp_t) ALLOC_KSWAPD);
- 
- 	/*
- 	 * The caller may dip into page reserves a bit more if the caller
-@@ -4257,7 +4266,8 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
- 	 * policy or is asking for __GFP_HIGH memory.  GFP_ATOMIC requests will
- 	 * set both ALLOC_HARDER (__GFP_ATOMIC) and ALLOC_HIGH (__GFP_HIGH).
- 	 */
--	alloc_flags |= (__force int) (gfp_mask & __GFP_HIGH);
-+	alloc_flags |= (__force int)
-+		(gfp_mask & (__GFP_HIGH | __GFP_KSWAPD_RECLAIM));
- 
- 	if (gfp_mask & __GFP_ATOMIC) {
- 		/*
-@@ -4274,9 +4284,6 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
- 	} else if (unlikely(rt_task(current)) && !in_interrupt())
- 		alloc_flags |= ALLOC_HARDER;
- 
--	if (gfp_mask & __GFP_KSWAPD_RECLAIM)
--		alloc_flags |= ALLOC_KSWAPD;
--
- #ifdef CONFIG_CMA
- 	if (gfpflags_to_migratetype(gfp_mask) == MIGRATE_MOVABLE)
- 		alloc_flags |= ALLOC_CMA;
 -- 
-2.17.1
+2.25.1
 
