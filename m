@@ -2,165 +2,89 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B501EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6730DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9617A2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40C2020838
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:09:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="N+fvhmze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388140AbgCDNHQ (ORCPT
+        id S2388085AbgCDNJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:07:16 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11550 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387776AbgCDNHQ (ORCPT
+        Wed, 4 Mar 2020 08:09:20 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:60628 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388029AbgCDNJT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:07:16 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024D6TjR177025
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 08:07:14 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfmg2gjgh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:07:13 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Wed, 4 Mar 2020 13:07:04 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Mar 2020 13:07:00 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024D6x1V52756676
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Mar 2020 13:06:59 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4EFC042041;
-        Wed,  4 Mar 2020 13:06:59 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ACE304203F;
-        Wed,  4 Mar 2020 13:06:58 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.0.1])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Mar 2020 13:06:58 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
-        jack@suse.cz, kirill@shutemov.name
-Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v3 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track FOLL_PIN pages"
-Date:   Wed,  4 Mar 2020 14:06:54 +0100
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200304130655.462517-1-imbrenda@linux.ibm.com>
-References: <20200304130655.462517-1-imbrenda@linux.ibm.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030413-0016-0000-0000-000002ED1A6F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030413-0017-0000-0000-000033506807
-Message-Id: <20200304130655.462517-2-imbrenda@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- lowpriorityscore=0 malwarescore=0 adultscore=0 suspectscore=0
- priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040099
+        Wed, 4 Mar 2020 08:09:19 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583327359; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=/9KMV4bz9yQQBdDYMd242fhFL2hzub31ZngWvFmtQFc=; b=N+fvhmzeSmPahgnFY6A/sexV4F24sC3McOWn29oxKwjsZlHN9tYI+U1vFcvO5+C+Ms619yzd
+ sl3KAIF+uAYwzsJ54TrJDEVTAyWVSWB7hC6dctmytSLcnMZwhFFim9zNQhvZa0S1/UAqprgo
+ sXyXUXviZbH0N4LY3Oy9A8Isf2Y=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5fa87b.7f7aaec8ec70-smtp-out-n02;
+ Wed, 04 Mar 2020 13:09:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 469DBC447A2; Wed,  4 Mar 2020 13:09:15 +0000 (UTC)
+Received: from kgunda-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kgunda)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 0F2E8C43383;
+        Wed,  4 Mar 2020 13:09:09 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 0F2E8C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kgunda@codeaurora.org
+From:   Kiran Gunda <kgunda@codeaurora.org>
+To:     bjorn.andersson@linaro.org, jingoohan1@gmail.com,
+        lee.jones@linaro.org, b.zolnierkie@samsung.com,
+        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
+        jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-leds@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: [PATCH V2 0/2] Add support for WLED5
+Date:   Wed,  4 Mar 2020 18:38:53 +0530
+Message-Id: <1583327335-26899-1-git-send-email-kgunda@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case pin fails, we need to unpin, a simple put_page will not be enough
+Currently, WLED driver supports only WLED4 peripherals that is present
+on pmi8998 and pm660L. This patch series  converts the existing WLED4
+bindings from .txt to .yaml format and adds the support for WLED5 peripheral
+that is present on PM8150L.
 
-fixup for commit 9947ea2c1e608e32 ("mm/gup: track FOLL_PIN pages")
+PM8150L WLED supports the following.
+    - Two modulators and each sink can use any of the modulator
+    - Multiple CABC selection options
+    - Multiple brightness width selection (12 bits to 15 bits)
 
-it can be simply squashed in
+Changes from V1:
+	- Rebased on top of the below commit.
+	  backlight: qcom-wled: Fix unsigned comparison to zero
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
----
- mm/gup.c | 46 +++++++++++++++++++++++-----------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+Kiran Gunda (2):
+  backlight: qcom-wled: convert the wled bindings to .yaml format
+  backlight: qcom-wled: Add support for WLED5 peripheral in PM8150L
 
-diff --git a/mm/gup.c b/mm/gup.c
-index f589299b0d4a..81a95fbe9901 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -116,6 +116,28 @@ static __maybe_unused struct page *try_grab_compound_head(struct page *page,
- 	return NULL;
- }
- 
-+static void put_compound_head(struct page *page, int refs, unsigned int flags)
-+{
-+	if (flags & FOLL_PIN) {
-+		mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED,
-+				    refs);
-+
-+		if (hpage_pincount_available(page))
-+			hpage_pincount_sub(page, refs);
-+		else
-+			refs *= GUP_PIN_COUNTING_BIAS;
-+	}
-+
-+	VM_BUG_ON_PAGE(page_ref_count(page) < refs, page);
-+	/*
-+	 * Calling put_page() for each ref is unnecessarily slow. Only the last
-+	 * ref needs a put_page().
-+	 */
-+	if (refs > 1)
-+		page_ref_sub(page, refs - 1);
-+	put_page(page);
-+}
-+
- /**
-  * try_grab_page() - elevate a page's refcount by a flag-dependent amount
-  *
-@@ -2134,7 +2156,7 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
- 			goto pte_unmap;
- 
- 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
--			put_page(head);
-+			put_compound_head(head, 1, flags);
- 			goto pte_unmap;
- 		}
- 
-@@ -2267,28 +2289,6 @@ static int record_subpages(struct page *page, unsigned long addr,
- 	return nr;
- }
- 
--static void put_compound_head(struct page *page, int refs, unsigned int flags)
--{
--	if (flags & FOLL_PIN) {
--		mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED,
--				    refs);
--
--		if (hpage_pincount_available(page))
--			hpage_pincount_sub(page, refs);
--		else
--			refs *= GUP_PIN_COUNTING_BIAS;
--	}
--
--	VM_BUG_ON_PAGE(page_ref_count(page) < refs, page);
--	/*
--	 * Calling put_page() for each ref is unnecessarily slow. Only the last
--	 * ref needs a put_page().
--	 */
--	if (refs > 1)
--		page_ref_sub(page, refs - 1);
--	put_page(page);
--}
--
- #ifdef CONFIG_ARCH_HAS_HUGEPD
- static unsigned long hugepte_addr_end(unsigned long addr, unsigned long end,
- 				      unsigned long sz)
+ .../bindings/leds/backlight/qcom-wled.txt          | 154 -------
+ .../bindings/leds/backlight/qcom-wled.yaml         | 223 ++++++++++
+ drivers/video/backlight/qcom-wled.c                | 459 ++++++++++++++++++---
+ 3 files changed, 634 insertions(+), 202 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/backlight/qcom-wled.yaml
+
 -- 
-2.24.1
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+ a Linux Foundation Collaborative Project
