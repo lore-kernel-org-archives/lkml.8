@@ -2,123 +2,191 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FFC1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE50C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5509B24658
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583336104;
-	bh=mGvRr//+DglMPcp75TxeFCBhxIqq00jQR1JrOSa+h4Q=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=op1IIE3TMhKkbiZhahjIsevfuEF8llZ9Zi9Fo96cYjT1xScf+NTSWal3yA+ihNMrg
-	 lxGfwv74PAIRT9+1jUF9boQQ3VYFQ3EEphbYb0j2THL9E2qJipdiSzHyDWrYpFbzo+
-	 msmmnVl2uFgj/UdNMAecLuNJ3JtFr+LSsy+FwLlk=
+	by mail.kernel.org (Postfix) with ESMTP id 3928524658
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:35:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m+dHif6c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388022AbgCDPfD (ORCPT
+        id S2388121AbgCDPfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:35:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726752AbgCDPfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:35:02 -0500
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D0FC24658;
-        Wed,  4 Mar 2020 15:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583336101;
-        bh=mGvRr//+DglMPcp75TxeFCBhxIqq00jQR1JrOSa+h4Q=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zya9ztGN4pWxB5+fYDdBdITZt8ZGTMnZo+22Td1X1Qkl1YcPxTJtwgEW7yB24Haq+
-         wOH9dOkcSiPsrw87U0Tk8Wk2Tq3s+Wr3sYw90Yz9lQphYvnfFAvOkzS7qqj5f5ZT+m
-         FgPMwPgBQq+rB5PPkPD5iSOjBJvxIg2zoi+0ijLg=
-Received: by mail-qv1-f53.google.com with SMTP id r8so947916qvs.12;
-        Wed, 04 Mar 2020 07:35:01 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0BAIu9rA2czjgJrViQMEE1HUlxKfarrGVvmgn4EUsQIYtCnhVA
-        SUQikMt8hx06fUi2mSq29uMoHB+7SI7pVtdf6w==
-X-Google-Smtp-Source: ADFU+vteyB29cYQ7Q1UB74Gv0vdvXOHZ+jzrw1aE7WliF9I8s/sqI/IDAw2TT3/P6koVZqmBoPO96WROOJctXEQuW7o=
-X-Received: by 2002:a0c:fecb:: with SMTP id z11mr2571272qvs.85.1583336100783;
- Wed, 04 Mar 2020 07:35:00 -0800 (PST)
+        Wed, 4 Mar 2020 10:35:11 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:36306 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388024AbgCDPfJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:35:09 -0500
+Received: by mail-vs1-f65.google.com with SMTP id n6so1413906vsc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:35:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=onLoHv5Ms+4AzZ821JcEV0O5UG1JPs1cK0tJlERjAAQ=;
+        b=m+dHif6cWAhNpvfUPUtJ8bg8npAAbe3Y0SdBgPuCLrgKAty+3VDSzuayGtPAFXEh96
+         d3A5tIF0NrKJfs/U/Yddw2wk3lDqzH+XizvOSbFCw1507ROYd/8Z7wl7kc9tlpcdLJZB
+         8qFWvI7ZzsYxIAS0lC+tb0tLpN5Rfg1IoYOPX++hcJvuQtF1T/WvNJAm0lQ7pfQD+VM0
+         sVDJjrng7+HT0qlSMY1Fn7gwGOhDhmBqR9qtuPQMfrxa6OpGijM14phfR4VfXVGrkGfC
+         gFGo7DPU0rCtPBQ/qLfSFpnjzrn0/KtH7VJywaWSKnxNhxOczJOW3mZLOlhSKG88bosh
+         DdTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=onLoHv5Ms+4AzZ821JcEV0O5UG1JPs1cK0tJlERjAAQ=;
+        b=nmrgYcpKpYmbsyDUgjN7hB0jVNUkRcOdEv0U0vq5ISa64wHnlnxnSvyjiQLpyRk/OR
+         O6NsR4S2im3GJTvQWxX5avean6Af1+txGjQknHjHAiRFp//dsbKdwRfHtTAR5Zu1ckfb
+         WnjBjTsVFErlt2hyxddD8yTHpf/Pyr4/xEHegxij9HH1vO4C8XLLjeZhYXq8bMbYSo2O
+         p9rFMNxYC3JUEJinpkt5y6NHC+QpkcELpvg181mU8PygCyRgzn+Vg5fq+aWi3PnpSjGH
+         gsWOvw0AX3ZEcwVX5LP2Fo2ajwwelV0KgFF7mTu++DdxY19Hi8wnxfVnRmgRmDpjcPdr
+         74JQ==
+X-Gm-Message-State: ANhLgQ1nMAWRNWHcCHXepXvt55iszuD7/+zeU3//qlsAzg1XSvnTOG+R
+        QIeO1dSmL50JKTlZ6rcog2QdHb8/6n2cr6CakQJKTg==
+X-Google-Smtp-Source: ADFU+vtETTmLUCopUJ0sb9jdFffuDWlaNhSB3DL9zpUBToCJK3mx9X4u/fBMgACCt37teT7kHgPNKAJFxU+nOCWg3s0=
+X-Received: by 2002:a67:800e:: with SMTP id b14mr2057435vsd.191.1583336105439;
+ Wed, 04 Mar 2020 07:35:05 -0800 (PST)
 MIME-Version: 1.0
-References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-2-masahiroy@kernel.org>
-In-Reply-To: <20200304032038.14424-2-masahiroy@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 4 Mar 2020 09:34:49 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ3q4txoV6wE-Vk5X9oo0roVbBYpwMuPEngDiEv1XXinQ@mail.gmail.com>
-Message-ID: <CAL_JsqJ3q4txoV6wE-Vk5X9oo0roVbBYpwMuPEngDiEv1XXinQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] kbuild: avoid concurrency issue in parallel building
- dtbs and dtbs_check
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
+References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
+In-Reply-To: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 4 Mar 2020 16:34:29 +0100
+Message-ID: <CAPDyKFqSJ4h7UvQfQzWmSq9gg97A0MXvdcuXXaY7b-YUHs=V2g@mail.gmail.com>
+Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
+ of sdhci-msm platform driver
+To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sahitya Tummala <stummala@codeaurora.org>,
+        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
+        Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        Ram Prakash Gupta <rampraka@codeaurora.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 9:20 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Thu, 20 Feb 2020 at 07:45, Shaik Sajida Bhanu <sbhanu@codeaurora.org> wrote:
 >
-> 'make dtbs_check' checks the shecma in addition to building *.dtb files,
-
-typo
-
-> in other words, 'make dtbs_check' is a super-set of 'make dtbs'.
-> So, you do not have to do 'make dtbs dtbs_check', but I want to keep
-> the build system robust in any use.
+> The existing suspend/resume callbacks of sdhci-msm driver are just
+> gating/un-gating the clocks. During suspend cycle more can be done
+> like disabling controller, disabling card detection, enabling wake-up events.
 >
-> Currently, 'dtbs' and 'dtbs_check' are independent of each other.
-> In parallel building, two threads descend into arch/*/boot/dts/,
-> one for dtbs and the other for dtbs_check, then end up with building
-> the same DTB simultaneously.
+> So updating the system pm callbacks for performing these extra
+> actions besides controlling the clocks.
 >
-> This commit fixes the concurrency issue. Otherwise, I see build errors
-> like follows:
->
-> $ make ARCH=arm64 defconfig
-> $ make -j16 ARCH=arm64 DT_SCHEMA_FILES=Documentation/devicetree/bindings/arm/psci.yaml dtbs dtbs_check
->   <snip>
->   DTC     arch/arm64/boot/dts/qcom/sdm845-cheza-r2.dtb
->   DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtb
->   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
->   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb
->   DTC     arch/arm64/boot/dts/freescale/imx8mn-evk.dtb
->   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
->   DTC     arch/arm64/boot/dts/zte/zx296718-pcbox.dtb
->   DTC     arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
->   DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dtb
->   DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1254-revA.dtb
->   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-pine-h64.dtb
->   DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-inx.dtb
->   DTC     arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb
->   CHECK   arch/arm64/boot/dts/altera/socfpga_stratix10_socdk.dt.yaml
-> fixdep: error opening file: arch/arm64/boot/dts/allwinner/.sun50i-h6-orangepi-lite2.dtb.d: No such file or directory
-> make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb] Error 2
-> make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-lite2.dtb'
-> make[2]: *** Waiting for unfinished jobs....
->   DTC     arch/arm64/boot/dts/rockchip/rk3399-gru-scarlet-kd.dtb
->   DTC     arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p231.dtb
->   DTC     arch/arm64/boot/dts/xilinx/zynqmp-zc1275-revA.dtb
->   DTC     arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dtb
-> fixdep: parse error; no targets found
-> make[2]: *** [scripts/Makefile.lib:296: arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb] Error 1
-> make[2]: *** Deleting file 'arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-one-plus.dtb'
-> make[1]: *** [scripts/Makefile.build:505: arch/arm64/boot/dts/allwinner] Error 2
-> make[1]: *** Waiting for unfinished jobs....
->   DTC     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 > ---
+> Changes since V3:
+>     Invoking sdhci & cqhci resume if sdhci_host_suspend fails.
+>     Removed condition check before invoking cqhci_resume since its a dummy function.
 >
->  Makefile | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+> Changes since V2:
+>     Removed disabling/enabling pwr-irq from system pm ops.
+>
+> Changes since V1:
+>     Invoking pm_runtime_force_suspend/resume instead of
+>     sdhci_msm_runtime_suepend/resume.
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 47 ++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 45 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 3955fa5d..3559b50 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -2159,9 +2159,52 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+>         return 0;
+>  }
+>
+> +static int sdhci_msm_suspend(struct device *dev)
+> +{
+> +       struct sdhci_host *host = dev_get_drvdata(dev);
+> +       int ret;
+> +
+> +       if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> +               ret = cqhci_suspend(host->mmc);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       ret = sdhci_suspend_host(host);
+> +       if (ret)
+> +               goto resume_cqhci;
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+sdhci_suspend_host() can't be called on a device that has been runtime
+suspended, as that would lead to accessing device registers when
+clocks/PM domains are gated.
+
+Depending on how the corresponding cqhci device is managed from a
+runtime PM point of view, it could also be problematic to call
+cqhci_suspend().
+
+> +
+> +       ret = pm_runtime_force_suspend(dev);
+
+It looks to me that perhaps you could make use of solely
+pm_runtime_force_suspend(), then just skip calling
+sdhci_suspend|resume_host() altogether. Do you think that could work?
+
+And vice versa for sdhci_msm_resume(), of course.
+
+> +       if (!ret)
+> +               return ret;
+> +
+> +       sdhci_resume_host(host);
+> +
+> +resume_cqhci:
+> +       cqhci_resume(host->mmc);
+> +       return ret;
+> +}
+> +
+> +static int sdhci_msm_resume(struct device *dev)
+> +{
+> +       struct sdhci_host *host = dev_get_drvdata(dev);
+> +       int ret;
+> +
+> +       ret = pm_runtime_force_resume(dev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = sdhci_resume_host(host);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       ret = cqhci_resume(host->mmc);
+> +       return ret;
+> +}
+> +
+>  static const struct dev_pm_ops sdhci_msm_pm_ops = {
+> -       SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+> -                               pm_runtime_force_resume)
+> +       SET_SYSTEM_SLEEP_PM_OPS(sdhci_msm_suspend,
+> +                               sdhci_msm_resume)
+>         SET_RUNTIME_PM_OPS(sdhci_msm_runtime_suspend,
+>                            sdhci_msm_runtime_resume,
+>                            NULL)
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+>
+
+Kind regards
+Uffe
