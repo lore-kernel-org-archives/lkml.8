@@ -2,108 +2,149 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B91EC3F2DA
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED1BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E3620838
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:41:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R4bWqPW0"
+	by mail.kernel.org (Postfix) with ESMTP id 0D9902166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729481AbgCDOlO (ORCPT
+        id S2388108AbgCDOlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:41:14 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33255 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388023AbgCDOlM (ORCPT
+        Wed, 4 Mar 2020 09:41:18 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:59990 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729501AbgCDOlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:41:12 -0500
-Received: by mail-wr1-f66.google.com with SMTP id x7so2727484wrr.0;
-        Wed, 04 Mar 2020 06:41:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=tCtKJyb0/NtRc1ah/YeyZWRmrmSc960u9t/iq++pctQ=;
-        b=R4bWqPW02fm4nkxV0Ak9O8GdBoEajmQ37qYu+0EweklUM9nyjVIUHvh8+6oCSiZqni
-         /UI75iYEW/gPNcnB403xDMsMsPyQ0Z0XUbtWyAIuxxEF8Xl4LPj47io6o9wQbCAgtNo6
-         3e/5spSmMM50Tam8A794PbBptTnR9RaDVS5b0f56GKR9mJTV3LCr1BoSgYt9X8d0L4Gl
-         x8VZqquFLgKio7ch59MeSiqjH2tfw86Q+QCnaos0CxQaRwV+HhGkKYENhyOZEEF3hiLO
-         LQUetKEibArZLltveclWLmI2vcYFuWZNUEREFkJRnpz7XAjGeC4nU2HoAaDfY9BuCNuc
-         Xj7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tCtKJyb0/NtRc1ah/YeyZWRmrmSc960u9t/iq++pctQ=;
-        b=UTqEm47uNhSYNhXLKW2QNpSThNbfNciqyVSqns78RtEn+5J3wi1njOOEw+eLfCRLaE
-         2S4UacYuzsSkccQ/tk5IIapgprdbqJFsosjyREoACFEsyK+bc65d0rbw+z8SopzeD8Jj
-         Mae3gGBd768JOT/6LYRHK78rAHroEFHMMQrXNO0loMipZcN/Zp0vYkFbKXnolfKXNBcN
-         E3BxjpzBQx4pBFZodlAzDhMa3fIMC0Dc6IGnMwAvzDP7eHwjzDz2q0kTq661nxihwV25
-         Y/8dTQEwA3v0ACJGMHgiEYfVuXiE+W9zo+kaR4Tln82i87niORW3iz3Brgk/hYksRZoO
-         s3qw==
-X-Gm-Message-State: ANhLgQ2qJHd+yZpYlW+pbNakjtVonULw4ZAsG0nwzW+5R0mm7pCJKdvB
-        6wcRDYXyPPHic3GzPLr0Kmk=
-X-Google-Smtp-Source: ADFU+vsV2rXo6R7E8LyFSyxoB2/CQNHH4LKEdBCKcqgGzs6DkRDeFKR72TjfYg/ctlXmu8Su0JfJQA==
-X-Received: by 2002:adf:cd0a:: with SMTP id w10mr4331698wrm.171.1583332869611;
-        Wed, 04 Mar 2020 06:41:09 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d16:4100:3093:39f0:d3ca:23c6])
-        by smtp.gmail.com with ESMTPSA id u20sm4195561wmj.14.2020.03.04.06.41.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 06:41:08 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Borislav Petkov <bp@suse.de>,
-        Yash Shah <yash.shah@sifive.com>, linux-edac@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: rectify EDAC-SIFIVE entry
-Date:   Wed,  4 Mar 2020 15:40:45 +0100
-Message-Id: <20200304144045.15060-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 09:41:15 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024EeD2n007458;
+        Wed, 4 Mar 2020 09:41:14 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52bhdm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 09:41:14 -0500
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 024EfCl2041638
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 4 Mar 2020 09:41:13 -0500
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 4 Mar 2020
+ 06:41:11 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 4 Mar 2020 06:41:11 -0800
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 024Eew6m008599;
+        Wed, 4 Mar 2020 09:41:08 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <devicetree@vger.kernel.org>
+CC:     <jic23@kernel.org>, <robh+dt@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v6 6/8] dt-bindings: iio: adc: add bindings doc for AXI ADC driver
+Date:   Wed, 4 Mar 2020 16:43:59 +0200
+Message-ID: <20200304144401.17794-7-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200304144401.17794-1-alexandru.ardelean@analog.com>
+References: <20200304144401.17794-1-alexandru.ardelean@analog.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=934 mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040111
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 9209fb51896f ("riscv: move sifive_l2_cache.c to drivers/soc") moved
-arch/riscv/mm/sifive_l2_cache.c to drivers/soc/sifive/sifive_l2_cache.c
-and adjusted the MAINTAINERS EDAC-SIFIVE entry but slipped in a mistake.
+This change adds the bindings documentation for the AXI ADC driver.
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
-
-  warning: no file matches F: drivers/soc/sifive_l2_cache.c
-
-Rectify the EDAC-SIFIVE entry in MAINTAINERS now.
-
-Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
-Paul, please pick this patch.
+ .../bindings/iio/adc/adi,axi-adc.yaml         | 63 +++++++++++++++++++
+ 1 file changed, 63 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
 
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6158a143a13e..5c755e03ddee 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6110,7 +6110,7 @@ M:	Yash Shah <yash.shah@sifive.com>
- L:	linux-edac@vger.kernel.org
- S:	Supported
- F:	drivers/edac/sifive_edac.c
--F:	drivers/soc/sifive_l2_cache.c
-+F:	drivers/soc/sifive/sifive_l2_cache.c
- 
- EDAC-SKYLAKE
- M:	Tony Luck <tony.luck@intel.com>
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+new file mode 100644
+index 000000000000..6a51952b8ddd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
+@@ -0,0 +1,63 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi-axi-adc.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AXI ADC IP core
++
++maintainers:
++  - Michael Hennerich <michael.hennerich@analog.com>
++  - Alexandru Ardelean <alexandru.ardelean@analog.com>
++
++description: |
++  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
++  with a high speed serial (JESD204B/C) or source synchronous parallel
++  interface (LVDS/CMOS).
++  Usually, some other interface type (i.e SPI) is used as a control
++  interface for the actual ADC, while this IP core will interface
++  to the data-lines of the ADC and handle the streaming of data into
++  memory via DMA.
++
++  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
++
++properties:
++  compatible:
++    enum:
++      - adi,axi-adc-10.0.a
++
++  reg:
++    maxItems: 1
++
++  dmas:
++    maxItems: 1
++
++  dma-names:
++    maxItems: 1
++    items:
++      - const: rx
++
++  adi,adc-dev:
++    description:
++      A reference to a the actual ADC to which this FPGA ADC interfaces to.
++    maxItems: 1
++
++required:
++  - compatible
++  - dmas
++  - reg
++  - adi,adc-dev
++
++additionalProperties: false
++
++examples:
++  - |
++    axi-adc@44a00000 {
++          compatible = "adi,axi-adc-10.0.a";
++          reg = <0x44a00000 0x10000>;
++          dmas = <&rx_dma 0>;
++          dma-names = "rx";
++
++          adi,adc-dev = <&spi_adc>;
++    };
++...
 -- 
-2.17.1
+2.20.1
 
