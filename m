@@ -2,217 +2,140 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6DE7C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA0DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D59A20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C2E20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583309880;
+	bh=VvP9M7K7X5tlAWb9QFz2KtHF0kHJfukxQs5jv7ivTU8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=PzA/N8ZJG+yjuNjDERUjkDAuV6U0Pdw6MpDQnk8O5UIYZ5/n3rdKtkqzyintGvHNw
+	 uRhJ1eEGFIZsM0TUPZ9x5Yrw5CutOtVrwVabvbEjXhXQstrLMhaTSlLP29QPgWL4QW
+	 KrI88hr9e2Sy+VALm3edZUYe8f9M2ieXSTTdweDU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728588AbgCDIRo (ORCPT
+        id S1728897AbgCDIR6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:17:44 -0500
-Received: from mga12.intel.com ([192.55.52.136]:4963 "EHLO mga12.intel.com"
+        Wed, 4 Mar 2020 03:17:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52096 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgCDIRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:17:44 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 00:17:43 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
-   d="scan'208";a="240378366"
-Received: from yhuang-dev.sh.intel.com ([10.239.159.23])
-  by orsmga003.jf.intel.com with ESMTP; 04 Mar 2020 00:17:39 -0800
-From:   "Huang, Ying" <ying.huang@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Huang Ying <ying.huang@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Minchan Kim <minchan@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: [PATCH -V2] mm: Add PageLayzyFree() helper functions for MADV_FREE
-Date:   Wed,  4 Mar 2020 16:17:32 +0800
-Message-Id: <20200304081732.563536-1-ying.huang@intel.com>
-X-Mailer: git-send-email 2.25.0
+        id S1725271AbgCDIR6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 03:17:58 -0500
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A36721D56
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 08:17:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583309877;
+        bh=VvP9M7K7X5tlAWb9QFz2KtHF0kHJfukxQs5jv7ivTU8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=eW4zwJEdSJY5I0QoJh7Odniwh1Sg0fHbL4TFjN6HFW9JJjGksk7sGD5guX6KFkFnf
+         LTQDCRccwxj2cXUqN3Ti00co9S1ukRyEB5Vhbp3HNYd8fRq0sFi6t9LR4wUePIjQCl
+         X51cq/z0Xud+9r5EBzGIA/P9Oi4d2GtFSCuxqR7s=
+Received: by mail-wm1-f41.google.com with SMTP id a5so874678wmb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:17:57 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3EWa03/hfCV74B+kmal0CpSKacyymAoWxaU0mNds3zZIxAN1yr
+        uZTKvhycIR2x0WipfD0VYMZyEOLBCLFeLO2Zs8GwUw==
+X-Google-Smtp-Source: ADFU+vvkIynVQGoDgk8Ik887VFnxoULfRgVGoR02xmEIWUYBpdzt+my/y+YM0vPHVmy3OcyPNE5HGabbGtrtwarQek8=
+X-Received: by 2002:a7b:cb93:: with SMTP id m19mr2449069wmi.133.1583309875696;
+ Wed, 04 Mar 2020 00:17:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200303205445.3965393-1-nivedita@alum.mit.edu> <20200303205445.3965393-2-nivedita@alum.mit.edu>
+In-Reply-To: <20200303205445.3965393-2-nivedita@alum.mit.edu>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 4 Mar 2020 09:17:44 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
+Message-ID: <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in populate_pud
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huang Ying <ying.huang@intel.com>
+On Tue, 3 Mar 2020 at 21:54, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> Commit d367cef0a7f0 ("x86/mm/pat: Fix boot crash when 1GB pages are not
+> supported by the CPU") added checking for CPU support for 1G pages
+> before using them.
+>
+> However, when support is not present, nothing is done to map the
+> intermediate 1G regions and we go directly to the code that normally
+> maps the remainder after 1G mappings have been done. This code can only
+> handle mappings that fit inside a single PUD entry, but there is no
+> check, and it instead silently produces a corrupted mapping to the end
+> of the PUD entry, and no mapping beyond it, but still returns success.
+>
+> This bug is encountered on EFI machines in mixed mode (32-bit firmware
+> with 64-bit kernel), with RAM beyond 2G. The EFI support code
+> direct-maps all the RAM, so a memory range from below 1G to above 2G
+> triggers the bug and results in no mapping above 2G, and an incorrect
+> mapping in the 1G-2G range. If the kernel resides in the 1G-2G range, a
+> firmware call does not return correctly, and if it resides above 2G, we
+> end up passing addresses that are not mapped in the EFI pagetable.
+>
+> Fix this by mapping the 1G regions using 2M pages when 1G page support
+> is not available.
+>
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-Now PageSwapBacked() is used as the helper function to check whether
-pages have been freed lazily via MADV_FREE.  This isn't very obvious.
-So Dave suggested to add PageLazyFree() family helper functions to
-improve the code readability.
+I was trying to test these patches, and while they seem fine from a
+regression point of view, I can't seem to reproduce this issue and
+make it go away again by applying this patch.
 
-Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: David Hildenbrand <david@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Zi Yan <ziy@nvidia.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Minchan Kim <minchan@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Hugh Dickins <hughd@google.com>
----
+Do you have any detailed instructions how to reproduce this?
 
-Changelog:
-
-v2:
-
-- Avoid code bloat via removing VM_BUG_ON_PAGE(), which doesn't exist
-  in the original code.  Now there is no any text/data/bss size
-  change.
-
-- Fix one wrong replacement in try_to_unmap_one().
----
- include/linux/page-flags.h | 25 +++++++++++++++++++++++++
- mm/rmap.c                  |  4 ++--
- mm/swap.c                  | 11 +++--------
- mm/vmscan.c                |  7 +++----
- 4 files changed, 33 insertions(+), 14 deletions(-)
-
-diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
-index 49c2697046b9..192b593750d3 100644
---- a/include/linux/page-flags.h
-+++ b/include/linux/page-flags.h
-@@ -498,6 +498,31 @@ static __always_inline int PageKsm(struct page *page)
- TESTPAGEFLAG_FALSE(Ksm)
- #endif
- 
-+/*
-+ * For pages freed lazily via MADV_FREE.  lazyfree pages are clean
-+ * anonymous pages.  They have SwapBacked flag cleared to distinguish
-+ * with normal anonymous pages
-+ */
-+static __always_inline int __PageLazyFree(struct page *page)
-+{
-+	return !PageSwapBacked(page);
-+}
-+
-+static __always_inline int PageLazyFree(struct page *page)
-+{
-+	return PageAnon(page) && __PageLazyFree(page);
-+}
-+
-+static __always_inline void SetPageLazyFree(struct page *page)
-+{
-+	ClearPageSwapBacked(page);
-+}
-+
-+static __always_inline void ClearPageLazyFree(struct page *page)
-+{
-+	SetPageSwapBacked(page);
-+}
-+
- u64 stable_page_flags(struct page *page);
- 
- static inline int PageUptodate(struct page *page)
-diff --git a/mm/rmap.c b/mm/rmap.c
-index 1c02adaa233e..6ec96c8e7826 100644
---- a/mm/rmap.c
-+++ b/mm/rmap.c
-@@ -1609,7 +1609,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 			}
- 
- 			/* MADV_FREE page check */
--			if (!PageSwapBacked(page)) {
-+			if (__PageLazyFree(page)) {
- 				if (!PageDirty(page)) {
- 					/* Invalidate as we cleared the pte */
- 					mmu_notifier_invalidate_range(mm,
-@@ -1623,7 +1623,7 @@ static bool try_to_unmap_one(struct page *page, struct vm_area_struct *vma,
- 				 * discarded. Remap the page to page table.
- 				 */
- 				set_pte_at(mm, address, pvmw.pte, pteval);
--				SetPageSwapBacked(page);
-+				ClearPageLazyFree(page);
- 				ret = false;
- 				page_vma_mapped_walk_done(&pvmw);
- 				break;
-diff --git a/mm/swap.c b/mm/swap.c
-index c1d3ca80ea10..d83f2cd4cdb8 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -563,7 +563,7 @@ static void lru_deactivate_fn(struct page *page, struct lruvec *lruvec,
- static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
- 			    void *arg)
- {
--	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
-+	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
- 	    !PageSwapCache(page) && !PageUnevictable(page)) {
- 		bool active = PageActive(page);
- 
-@@ -571,12 +571,7 @@ static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
- 				       LRU_INACTIVE_ANON + active);
- 		ClearPageActive(page);
- 		ClearPageReferenced(page);
--		/*
--		 * lazyfree pages are clean anonymous pages. They have
--		 * SwapBacked flag cleared to distinguish normal anonymous
--		 * pages
--		 */
--		ClearPageSwapBacked(page);
-+		SetPageLazyFree(page);
- 		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
- 
- 		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
-@@ -678,7 +673,7 @@ void deactivate_page(struct page *page)
-  */
- void mark_page_lazyfree(struct page *page)
- {
--	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
-+	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
- 	    !PageSwapCache(page) && !PageUnevictable(page)) {
- 		struct pagevec *pvec = &get_cpu_var(lru_lazyfree_pvecs);
- 
-diff --git a/mm/vmscan.c b/mm/vmscan.c
-index eca49a1c2f68..40bb41ada2d2 100644
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1043,8 +1043,7 @@ static void page_check_dirty_writeback(struct page *page,
- 	 * Anonymous pages are not handled by flushers and must be written
- 	 * from reclaim context. Do not stall reclaim based on them
- 	 */
--	if (!page_is_file_cache(page) ||
--	    (PageAnon(page) && !PageSwapBacked(page))) {
-+	if (!page_is_file_cache(page) || PageLazyFree(page)) {
- 		*dirty = false;
- 		*writeback = false;
- 		return;
-@@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 		 * Try to allocate it some swap space here.
- 		 * Lazyfree page could be freed directly
- 		 */
--		if (PageAnon(page) && PageSwapBacked(page)) {
-+		if (PageAnon(page) && !__PageLazyFree(page)) {
- 			if (!PageSwapCache(page)) {
- 				if (!(sc->gfp_mask & __GFP_IO))
- 					goto keep_locked;
-@@ -1411,7 +1410,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
- 			}
- 		}
- 
--		if (PageAnon(page) && !PageSwapBacked(page)) {
-+		if (PageLazyFree(page)) {
- 			/* follow __remove_mapping for reference */
- 			if (!page_ref_freeze(page, 1))
- 				goto keep_locked;
--- 
-2.25.0
-
+> ---
+>  arch/x86/mm/pat/set_memory.c | 18 ++++++++++++++----
+>  1 file changed, 14 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
+> index c4aedd00c1ba..d0b7b06253a5 100644
+> --- a/arch/x86/mm/pat/set_memory.c
+> +++ b/arch/x86/mm/pat/set_memory.c
+> @@ -1370,12 +1370,22 @@ static int populate_pud(struct cpa_data *cpa, unsigned long start, p4d_t *p4d,
+>         /*
+>          * Map everything starting from the Gb boundary, possibly with 1G pages
+>          */
+> -       while (boot_cpu_has(X86_FEATURE_GBPAGES) && end - start >= PUD_SIZE) {
+> -               set_pud(pud, pud_mkhuge(pfn_pud(cpa->pfn,
+> -                                  canon_pgprot(pud_pgprot))));
+> +       while (end - start >= PUD_SIZE) {
+> +               if (boot_cpu_has(X86_FEATURE_GBPAGES)) {
+> +                       set_pud(pud, pud_mkhuge(pfn_pud(cpa->pfn,
+> +                                          canon_pgprot(pud_pgprot))));
+> +                       cpa->pfn += PUD_SIZE >> PAGE_SHIFT;
+> +               } else {
+> +                       if (pud_none(*pud))
+> +                               if (alloc_pmd_page(pud))
+> +                                       return -1;
+> +                       if (populate_pmd(cpa, start, start + PUD_SIZE,
+> +                                        PUD_SIZE >> PAGE_SHIFT,
+> +                                        pud, pgprot) < 0)
+> +                               return cur_pages;
+> +               }
+>
+>                 start     += PUD_SIZE;
+> -               cpa->pfn  += PUD_SIZE >> PAGE_SHIFT;
+>                 cur_pages += PUD_SIZE >> PAGE_SHIFT;
+>                 pud++;
+>         }
+> --
+> 2.24.1
+>
