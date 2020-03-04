@@ -2,117 +2,95 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE6CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF462C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA00920838
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:01:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ya2Z4J+e"
+	by mail.kernel.org (Postfix) with ESMTP id C8F0A20838
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387925AbgCDOBw (ORCPT
+        id S1729428AbgCDODw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:01:52 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:46407 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgCDOBw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:01:52 -0500
-Received: by mail-qv1-f68.google.com with SMTP id m2so795540qvu.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 06:01:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=G0ueur8yv4OrtDwVZmhHtECCa81dEuCkbNZ37/oy970=;
-        b=Ya2Z4J+eSxcQOV5d06oszbIa4X3j37zkrPzHWr0m3VLWWSE1EpJa9FWGk7hG+HoJEr
-         rlbglJpdg914NhjhUsqzPVyikAOqcMKVFgktQn4Km1tQM6K/ihGTBdUq2zsDFlmf7U3L
-         iiH49uNN2pf2Ud+s+iy6wcW06lTqGYd1QCWWnGP+7i1vkR9sVOG3Ke/Ioe4rbw5NaPp/
-         W1AyYXz4gn0iXeY719PABEp5qB/usWXyVK3ZgkJysq7lP97oSC43J8f8hD/k5IdEbywu
-         SMD/nRV2mfbDoAHUWnnpfex6uOub565TcIL2jOlin9jB23XcKiA3AX6hptbCeWUMo6b8
-         B8Hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=G0ueur8yv4OrtDwVZmhHtECCa81dEuCkbNZ37/oy970=;
-        b=CZZxfKt/4kpYSGpDbbiZ6di1bKNCg5YikIpkDGwbWq+TYiC044jjJDvxKNHlwTWh0D
-         WboF07wsipLs2smfyUAINuDGnCUMgfadpj/5bXLmQfgLFFypU+I6qEbkxe4pVMM2nUW9
-         hWDDLjDVC/bRrRsxRP0HOAbKrRqmIJeDXujubvKmPnQRo3Ou7sNtAHekZSgQ9KFlRwoc
-         QZRzaLDx+CVa4YmpYrlSClcPoIRct0p4PhEwf2WJnDpN72vvYVOYoWZ+5JMk1WYaa2Uk
-         D9bIxBkk7BOBtVWVOgEq0xTnOBLsKjMTMzamIjZkxsXrejqoIKtLczVI+/pyCTX5BJE1
-         IrTg==
-X-Gm-Message-State: ANhLgQ3qqCiJ4Yd8Cbr1gC4BEfierYFYvQdEGVTUvul/TdDRZoU1cLrf
-        wQ1DMuZrAKb4NlCy8AA2chIwqrRk6w4zZzawFlRaWA==
-X-Google-Smtp-Source: ADFU+vuG2iyYLMGh1IS6iEIu1LfzAukMoPtBNYT3AqGM+4EzVMaxPhdBu/huB7llcCDwIDusMq73zFG0FIMAdCKs77w=
-X-Received: by 2002:a0c:e982:: with SMTP id z2mr2124951qvn.22.1583330510867;
- Wed, 04 Mar 2020 06:01:50 -0800 (PST)
+        Wed, 4 Mar 2020 09:03:52 -0500
+Received: from mga02.intel.com ([134.134.136.20]:46935 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725795AbgCDODv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 09:03:51 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 06:03:44 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
+   d="scan'208";a="274677392"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2020 06:03:40 -0800
+Subject: Re: [PATCH V2] mmc: cqhci: Update cqhci memory ioresource name
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, dianders@google.com,
+        mka@chromium.org, Ritesh Harjani <riteshh@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>
+References: <1583323250-23596-1-git-send-email-vbadigan@codeaurora.org>
+ <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <8584d9b7-a3bc-eb18-79c3-8796a07cd460@intel.com>
+Date:   Wed, 4 Mar 2020 16:02:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <0000000000005c967305a006d54d@google.com> <20200304135351.GN2596@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200304135351.GN2596@hirez.programming.kicks-ass.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 4 Mar 2020 15:01:05 +0100
-Message-ID: <CACT4Y+b2Xu_Oj5GnnQFeYQBnyx5+3Fdeaj-OJY4jLyxoS0szkw@mail.gmail.com>
-Subject: Re: WARNING: locking bug in __perf_event_task_sched_in
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     syzbot <syzbot+3daecb3e8271380aeb51@syzkaller.appspotmail.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>, bpf <bpf@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, jolsa@redhat.com,
-        Martin KaFai Lau <kafai@fb.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- happOn Wed, Mar 4, 2020 at 2:54 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Wed, Mar 04, 2020 at 04:48:13AM -0800, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    f8788d86 Linux 5.6-rc3
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=13bcd8f9e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=3daecb3e8271380aeb51
-> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+3daecb3e8271380aeb51@syzkaller.appspotmail.com
-> >
-> > ------------[ cut here ]------------
-> > DEBUG_LOCKS_WARN_ON(1)
-> > WARNING: CPU: 0 PID: 22488 at kernel/locking/lockdep.c:167 hlock_class kernel/locking/lockdep.c:167 [inline]
-> > WARNING: CPU: 0 PID: 22488 at kernel/locking/lockdep.c:167 __lock_acquire+0x18b8/0x1bc0 kernel/locking/lockdep.c:3950
->
-> Something went sideways bad, could be you've overflowed lockdep_depth.
-> For some reason the check:
->
->         if (unlikely(curr->lockdep_depth >= MAX_LOCK_DEPTH))
->
-> is rather late.. Dunno, most times I've hit lockdep errors like this,
-> something else was screwy and we're just the ones to trip over it.
+On 4/03/20 3:25 pm, Veerabhadrarao Badiganti wrote:
+> Update cqhci memory ioresource name from cqhci_mem to cqhci since
+> suffix _mem is redundant.
+> 
+> Only sdhci-msm driver is making use of this resource as of now.
+> No other vendor's driver is using it. So this update shouldn't affect
+> any other vendor's cqhci functionality.
+> 
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
 
-"BUG: MAX_LOCK_DEPTH too low!" is not happening on its own, the last
-"BUG: MAX_LOCK_DEPTH too low!" happened 600 days ago:
-https://syzkaller.appspot.com/bug?extid=802a5abb8abae86eb6de
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+
+> ---
+> Corresponding binding change:
+> https://lore.kernel.org/linux-arm-msm/1582545470-11530-1-git-send-email-vbadigan@codeaurora.org/
+> 
+> Changes sicne V1:
+> 	- Updated commit text expalining this change affects *only*
+> 	  qcom cqhci functionality.
+> 
+> ---
+>  drivers/mmc/host/cqhci.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+> index e2ea2c4..e24b8ff 100644
+> --- a/drivers/mmc/host/cqhci.c
+> +++ b/drivers/mmc/host/cqhci.c
+> @@ -1077,7 +1077,7 @@ struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev)
+>  
+>  	/* check and setup CMDQ interface */
+>  	cqhci_memres = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> -						   "cqhci_mem");
+> +						   "cqhci");
+>  	if (!cqhci_memres) {
+>  		dev_dbg(&pdev->dev, "CMDQ not supported\n");
+>  		return ERR_PTR(-EINVAL);
+> 
+
