@@ -2,151 +2,100 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 938B5C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18459C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C50921556
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E932146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583354218;
-	bh=nT8qpDoXiO2V4s77MJN3BMvs3CrPkyEcY5K0iiRMty0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LtZF059m/FUMR/wtSL/PY/EXfFVp7vRRSDjpU6ZxbRw1DQS7s40LVoVtVWjjeq3Zf
-	 ymhA0oeBWkcGLfHtuUUpLpl92ImC1GS3oo/OpyuzQgn5eLMB4L5NiK3CbbgoTWQirX
-	 PRXZEbGkRdA9bjsJ+Ss3Vg2a3dE+fq5D4HTw3mvw=
+	s=default; t=1583354221;
+	bh=ZK3EZH24PdCA4p7WCYRCBidIeBe2zKk0o/B3DsyXUa0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=sqIKoxSyMes7aCE8PGBDcTCGdVFIfxDJ50Sxp6bkYE+3oe5kmeOCCs+NnWXDXQ9uv
+	 FgxkfI+LpbvIrVr7DBmTJBysO54BiBelekcFziGY9szSX3vXD1F/Q1NKtQDOS1u6MU
+	 nB3qe9QgW+tfbwToTPvbttbaT0oWhwDWENn6zxto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388609AbgCDUg5 (ORCPT
+        id S2388620AbgCDUhB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:36:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37258 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 15:37:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388554AbgCDUgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:36:55 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        id S2388482AbgCDUg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:36:56 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D3502146E;
-        Wed,  4 Mar 2020 20:36:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74E5721556;
+        Wed,  4 Mar 2020 20:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583354214;
-        bh=nT8qpDoXiO2V4s77MJN3BMvs3CrPkyEcY5K0iiRMty0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iHpNeEznFkQBorN6FyeIUYuT3JEc6KZPoJi7d9d9wajThqBVzPdUtsHFvuPbTE7Qd
-         BRsAHqOFJFEwU3wpZZ2pG6EAbsDVn3uFCyUSY05BaDzAR6CRBMx7HEzGNqcp6s07mm
-         RgD8FYdKc4R4awffxIc7vb8L0+Qe/xX0R52+M6No=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j9ajH-00A59R-5S; Wed, 04 Mar 2020 20:34:55 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Robert Richter <rrichter@marvell.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v5 21/23] KVM: arm64: GICv4.1: Reload VLPI configuration on distributor enable/disable
-Date:   Wed,  4 Mar 2020 20:33:28 +0000
-Message-Id: <20200304203330.4967-22-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200304203330.4967-1-maz@kernel.org>
-References: <20200304203330.4967-1-maz@kernel.org>
+        s=default; t=1583354215;
+        bh=ZK3EZH24PdCA4p7WCYRCBidIeBe2zKk0o/B3DsyXUa0=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=hz3fbN5uN/sdJi1K+xLlQ9TrsNkRtVwRQJs7dmN7PvDmGNH6t7tP31oRWZgm9c3wJ
+         Xxk6WgX6q4THg8LmiiNnmpjeSh8hH1pS7Z0vM0ivD4H/Bn6y02Oxc64Cdk+2omq7Ua
+         +QyrBjNbneUXapBT9Q2oTzY55tWuO3xLJzPW2T0w=
+Message-ID: <f09ffef023cfb8740f6a9a289215e53a16bebb2d.camel@kernel.org>
+Subject: Re: [PATCH] fs/ceph/export: remove unused variable 'err'
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Qiujun Huang <hqjagain@gmail.com>
+Cc:     sage@redhat.com, idryomov@gmail.com, ceph-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 04 Mar 2020 15:36:54 -0500
+In-Reply-To: <1583252499-16078-1-git-send-email-hqjagain@gmail.com>
+References: <1583252499-16078-1-git-send-email-hqjagain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, rrichter@marvell.com, tglx@linutronix.de, yuzenghui@huawei.com, eric.auger@redhat.com, james.morse@arm.com, julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Each time a Group-enable bit gets flipped, the state of these bits
-needs to be forwarded to the hardware. This is a pretty heavy
-handed operation, requiring all vcpus to reload their GICv4
-configuration. It is thus implemented as a new request type.
+On Wed, 2020-03-04 at 00:21 +0800, Qiujun Huang wrote:
+> fix gcc '-Wunused-but-set-variable' warning:
+> fs/ceph/export.c: In function ‘__get_parent’:
+> fs/ceph/export.c:294:6: warning: variable ‘err’ set but not used [-Wunused-but-set-variable]
+>   int err;
+> 
+> and needn't use the return value of ceph_mdsc_create_request.
+> 
+> Signed-off-by: Qiujun Huang <hqjagain@gmail.com>
+> ---
+>  fs/ceph/export.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/fs/ceph/export.c b/fs/ceph/export.c
+> index b6bfa94..b7bb41c 100644
+> --- a/fs/ceph/export.c
+> +++ b/fs/ceph/export.c
+> @@ -291,7 +291,6 @@ static struct dentry *__get_parent(struct super_block *sb,
+>  	struct ceph_mds_request *req;
+>  	struct inode *inode;
+>  	int mask;
+> -	int err;
+>  
+>  	req = ceph_mdsc_create_request(mdsc, CEPH_MDS_OP_LOOKUPPARENT,
+>  				       USE_ANY_MDS);
+> @@ -314,7 +313,7 @@ static struct dentry *__get_parent(struct super_block *sb,
+>  	req->r_args.getattr.mask = cpu_to_le32(mask);
+>  
+>  	req->r_num_caps = 1;
+> -	err = ceph_mdsc_do_request(mdsc, NULL, req);
+> +	ceph_mdsc_do_request(mdsc, NULL, req);
+>  	inode = req->r_target_inode;
+>  	if (inode)
+>  		ihold(inode);
 
-Of course, we only support Group-1 for now...
+I think we probably ought to just return ERR_PTR(err) in that case
+instead of discarding it. It looks like today we'll end up returning
+ENOENT when that errors out which doesn't seem right when there is a
+different issue.
 
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- arch/arm/include/asm/kvm_host.h   | 1 +
- arch/arm64/include/asm/kvm_host.h | 1 +
- virt/kvm/arm/arm.c                | 8 ++++++++
- virt/kvm/arm/vgic/vgic-mmio-v3.c  | 5 ++++-
- 4 files changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/include/asm/kvm_host.h b/arch/arm/include/asm/kvm_host.h
-index a827b4d60d38..3da57e863df6 100644
---- a/arch/arm/include/asm/kvm_host.h
-+++ b/arch/arm/include/asm/kvm_host.h
-@@ -39,6 +39,7 @@
- #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
- #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
- #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
-+#define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
- 
- DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
- 
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 57fd46acd058..32c8a675e5a4 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -44,6 +44,7 @@
- #define KVM_REQ_IRQ_PENDING	KVM_ARCH_REQ(1)
- #define KVM_REQ_VCPU_RESET	KVM_ARCH_REQ(2)
- #define KVM_REQ_RECORD_STEAL	KVM_ARCH_REQ(3)
-+#define KVM_REQ_RELOAD_GICv4	KVM_ARCH_REQ(4)
- 
- DECLARE_STATIC_KEY_FALSE(userspace_irqchip_in_use);
- 
-diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-index eda7b624eab8..4d864f857ac8 100644
---- a/virt/kvm/arm/arm.c
-+++ b/virt/kvm/arm/arm.c
-@@ -625,6 +625,14 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
- 
- 		if (kvm_check_request(KVM_REQ_RECORD_STEAL, vcpu))
- 			kvm_update_stolen_time(vcpu);
-+
-+		if (kvm_check_request(KVM_REQ_RELOAD_GICv4, vcpu)) {
-+			/* The distributor enable bits were changed */
-+			preempt_disable();
-+			vgic_v4_put(vcpu, false);
-+			vgic_v4_load(vcpu);
-+			preempt_enable();
-+		}
- 	}
- }
- 
-diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-index 442f3b8c2559..48fd9fc229a2 100644
---- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
-+++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
-@@ -132,7 +132,10 @@ static void vgic_mmio_write_v3_misc(struct kvm_vcpu *vcpu,
- 		if (is_hwsgi != dist->nassgireq)
- 			vgic_v4_configure_vsgis(vcpu->kvm);
- 
--		if (!was_enabled && dist->enabled)
-+		if (kvm_vgic_global_state.has_gicv4_1 &&
-+		    was_enabled != dist->enabled)
-+			kvm_make_all_cpus_request(vcpu->kvm, KVM_REQ_RELOAD_GICv4);
-+		else if (!was_enabled && dist->enabled)
- 			vgic_kick_vcpus(vcpu->kvm);
- 
- 		mutex_unlock(&vcpu->kvm->lock);
 -- 
-2.20.1
+Jeff Layton <jlayton@kernel.org>
 
