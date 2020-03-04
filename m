@@ -2,109 +2,111 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA06EC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:47:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA970C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:48:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E8020637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:47:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B315E20637
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:48:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cA/B56Rz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g2VeURZW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388147AbgCDQrQ (ORCPT
+        id S2388223AbgCDQsR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:47:16 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45989 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729792AbgCDQrP (ORCPT
+        Wed, 4 Mar 2020 11:48:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59797 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729573AbgCDQsQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:47:15 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z12so2245276qkg.12;
-        Wed, 04 Mar 2020 08:47:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=czUUsTYyYv4aMuyuTWXd4LsVX5riUlW5X85NHq9ZSmI=;
-        b=cA/B56Rzwdv57NkhQssbXzL6cC4IXf6Y3TdSU6eACtMMqmTkpjKNaP3AG0RFfQq7hY
-         0dvE9gIncXjPKU9y4sA5LlVd2f4NMSHnowZecE4xZyEIyZnx5UjH1V8e1fFXxFxVMvlo
-         QOenHumwAgOZYAktyYrm8DxsEJiW7h1XpUAiHTlOBEeJeZR7bE8OBht0Ob2I+TpcqjT3
-         jVkUZQDNWY2jcBNzHmcsrKJQ885ylrJDoS1eF6e+u5yWhaBcnzej5bxn813eV5G3ye2N
-         0fAY6dAPC0jnfqlCk2W6eo+tbBXegIwI5bDKidkIWHDms0fWyxxg1M8Bg31hHjLbzsU2
-         HRQA==
+        Wed, 4 Mar 2020 11:48:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583340495;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Iwh6ArBhNlC/QzZYMfW6WQM30EkgNyAS0AeU4Ro9sDY=;
+        b=g2VeURZW/M7CI/argwAv1Gf7LbMF+2h7wGRLMVsIppHFNlfIN3Cc1GHiMzGmdTdHJ3CRd8
+        00R7E1Cn3THrbyx7ntozKOkhNm9irzpFl9DYTqbvQ01MIr1/0SBcliSg1SeNHzHNvqES+/
+        eTAJBw3cxDeC0EYM+Nir6Dyv0l7yyfU=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-t2owdTvEM_eMOjjjGl684g-1; Wed, 04 Mar 2020 11:48:11 -0500
+X-MC-Unique: t2owdTvEM_eMOjjjGl684g-1
+Received: by mail-wm1-f69.google.com with SMTP id w12so770559wmc.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:48:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=czUUsTYyYv4aMuyuTWXd4LsVX5riUlW5X85NHq9ZSmI=;
-        b=GHKfW8bMkiJNLK/vBLX5Y1fJQbHl5WweFITOmxBcsh7nO4OsTjnYlcdvlK8fxkfB8F
-         JTxtQkljuPoPgLxDZWUDvohhaXAuvAtMGW/YEjATVqCZL4CSHer/3TLpROR8rJvl3q9Y
-         bzG+BZCILbiW6Nlvys7zhGEHdqazZ1v2HFKIRZoBxo1oZWNx25VNwofGXhzWjUpyawWH
-         KRgTN6u3PNhZrsjeUKupLz9zDGHD6Rpzj7fEhCytSD56reFYuTmIxBhwLzQd5mZBdYXA
-         ssaIbl0c0Cefob6n/qBO8r7SutBuOjTNk/Sl3fdVMYDRf/EraP9MYxFF6018taGz/28U
-         pQEQ==
-X-Gm-Message-State: ANhLgQ2rVrxfWXk4kUAbY37i9U/h8yHoyT7uISglDUizZD2u+7EmM+ai
-        Km3/pn1yPiL5GTeIfcwXdVc=
-X-Google-Smtp-Source: ADFU+vtKQCMYIACC9m0z0xKgAZngGRhg0Jz+TEUzs2A/FqWhJpQy9OC9+L+Ix6PfTiYdk69lh3sdqQ==
-X-Received: by 2002:ae9:dc85:: with SMTP id q127mr3736449qkf.460.1583340434302;
-        Wed, 04 Mar 2020 08:47:14 -0800 (PST)
-Received: from localhost.localdomain ([65.88.88.177])
-        by smtp.gmail.com with ESMTPSA id t55sm14923074qte.24.2020.03.04.08.47.13
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Iwh6ArBhNlC/QzZYMfW6WQM30EkgNyAS0AeU4Ro9sDY=;
+        b=Y96sej24UV7hrr+9ESHaHTzCutoW5+NtrOnZz6gwk/J+GGEcdcXoNlvTMSxnf+C2Bn
+         UIA8g4ZZvUvqjSlYISLBQ/qxkRZqB7bxj54Co82WJT4+jiDV9YDV/3pczg1EKmBPtach
+         TsbB2EWGDEve5FjQM0UupZDdnr5IC5Ehf0m/am1//p0todaPSlfBP5WxFJVg4Jd5GBpj
+         T7puYseLb3CE088InUmH6tLUmEz2YMNjhDPWk8YVS3BC/clTWOAGeMdvcwkQ8imY0ism
+         uDG5L1K39dLl3d8BSiHFa1V6JCIkXpdpXGYIyqw5BT+LXgEjjQVmpGuJrfzR5TqYm4Tn
+         cOyw==
+X-Gm-Message-State: ANhLgQ1aRvoahZRCRoE51svLkCwAAzbXQwBbBHP8m0h1Pi0sYw2qfq8Z
+        yN8nJF8Elmic3WoXT1YIAHPGNN+Ew2F0bHjOJGfYaBCs7myiVS/rUw36F52QVdDQZc9s6yytCHu
+        ONu8kS3B64cYm2aiq5JIAu+T+
+X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr4326638wmi.108.1583340489629;
+        Wed, 04 Mar 2020 08:48:09 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsNyLWu0uFAuo01q9LkN1pw0Tdrpz/UjV74a4G/Kr0JlmOeAm6griIqJdEVFCpIlrxATT+Wuw==
+X-Received: by 2002:a05:600c:20e:: with SMTP id 14mr4326621wmi.108.1583340489391;
+        Wed, 04 Mar 2020 08:48:09 -0800 (PST)
+Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
+        by smtp.gmail.com with ESMTPSA id n11sm6627994wrw.11.2020.03.04.08.48.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:47:13 -0800 (PST)
-From:   Tony Fischetti <tony.fischetti@gmail.com>
-To:     jikos@kernel.org, benjamin.tissoires@redhat.com
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tony.fischetti@gmail.com
-Subject: [PATCH] add ALWAYS_POLL quirk to lenovo pixart mouse
-Date:   Wed,  4 Mar 2020 11:47:00 -0500
-Message-Id: <20200304164700.11574-1-tony.fischetti@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 04 Mar 2020 08:48:08 -0800 (PST)
+Date:   Wed, 4 Mar 2020 17:48:06 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     axboe@kernel.dk, viro@zeniv.linux.org.uk, io-uring@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] io_uring: Fix unused function warnings
+Message-ID: <20200304164806.3bsr2v7cvpq7sw5e@steredhat>
+References: <20200304075352.31132-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304075352.31132-1-yuehaibing@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A lenovo pixart mouse (17ef:608d) is afflicted common the the malfunction
-where it disconnects and reconnects every minute--each time incrementing
-the device number. This patch adds the device id of the device and
-specifies that it needs the HID_QUIRK_ALWAYS_POLL quirk in order to
-work properly.
----
- drivers/hid/hid-ids.h    | 1 +
- drivers/hid/hid-quirks.c | 1 +
- 2 files changed, 2 insertions(+)
+On Wed, Mar 04, 2020 at 03:53:52PM +0800, YueHaibing wrote:
+> If CONFIG_NET is not set, gcc warns:
+> 
+> fs/io_uring.c:3110:12: warning: io_setup_async_msg defined but not used [-Wunused-function]
+>  static int io_setup_async_msg(struct io_kiocb *req,
+>             ^~~~~~~~~~~~~~~~~~
+> 
+> There are many funcions wraped by CONFIG_NET, move them
+> together to simplify code, also fix this warning.
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  fs/io_uring.c | 98 ++++++++++++++++++++++++++++++++++-------------------------
+>  1 file changed, 57 insertions(+), 41 deletions(-)
+> 
 
-diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-index 3a400ce603c4..9e1dfc714ea8 100644
---- a/drivers/hid/hid-ids.h
-+++ b/drivers/hid/hid-ids.h
-@@ -726,6 +726,7 @@
- #define USB_DEVICE_ID_LENOVO_X1_COVER	0x6085
- #define USB_DEVICE_ID_LENOVO_X1_TAB	0x60a3
- #define USB_DEVICE_ID_LENOVO_X1_TAB3	0x60b5
-+#define USB_DEVICE_ID_LENOVO_PIXART_USB_OPTICAL_MOUSE	0x608d
- 
- #define USB_VENDOR_ID_LG		0x1fd2
- #define USB_DEVICE_ID_LG_MULTITOUCH	0x0064
-diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-index 0e7b2d998395..247747d6d8cf 100644
---- a/drivers/hid/hid-quirks.c
-+++ b/drivers/hid/hid-quirks.c
-@@ -103,6 +103,7 @@ static const struct hid_device_id hid_quirks[] = {
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_PENSKETCH_M912), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_KYE_EASYPEN_M406XE), HID_QUIRK_MULTI_INPUT },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_KYE, USB_DEVICE_ID_PIXART_USB_OPTICAL_MOUSE_ID2), HID_QUIRK_ALWAYS_POLL },
-+	{ HID_USB_DEVICE(USB_VENDOR_ID_LENOVO, USB_DEVICE_ID_LENOVO_PIXART_USB_OPTICAL_MOUSE), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C007), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_C077), HID_QUIRK_ALWAYS_POLL },
- 	{ HID_USB_DEVICE(USB_VENDOR_ID_LOGITECH, USB_DEVICE_ID_LOGITECH_KEYBOARD_G710_PLUS), HID_QUIRK_NOGET },
--- 
-2.20.1
+Since the code under the ifdef/else/endif blocks now are huge, would it make
+sense to add some comments for better readability?
+
+I mean something like this:
+
+#if defined(CONFIG_NET)
+...
+#else /* !CONFIG_NET */
+...
+#endif /* CONFIG_NET */
+
+
+Thanks,
+Stefano
 
