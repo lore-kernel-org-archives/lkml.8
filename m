@@ -2,92 +2,122 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A65C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:53:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED82BC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D00215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:53:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cK3ohcOW"
+	by mail.kernel.org (Postfix) with ESMTP id C5658215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:53:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583340826;
+	bh=mq5Ir+31xRYGJHwOI8gge3EqoXzmFVHabFDNpk3m7fE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LUx3OaODZ0b0rTlZKh35boBIFzUkTajfq74kF3i6dhzFeho9F+buL+WnLQQ1ucsxd
+	 pO7enItzhzGtDqCqaw2AEwsTImP2ZzWy/jyic1sm9oXIlCy3GVKdzfFYUe4lPVXx1Y
+	 S1YucY+4F90JOjkrTZiLFqnC99cdx1EC1m9LzhG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729621AbgCDQxP (ORCPT
+        id S1729739AbgCDQxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:53:15 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37154 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgCDQxP (ORCPT
+        Wed, 4 Mar 2020 11:53:45 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36738 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgCDQxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:53:15 -0500
-Received: by mail-pg1-f196.google.com with SMTP id z12so1255874pgl.4;
-        Wed, 04 Mar 2020 08:53:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SDrq0LCQilEggOddpVsCXxYnWz73kS6jDdpyzCkjlEA=;
-        b=cK3ohcOWvX0JGRCVm7PwhAzjRNkvoneALUpyJFqeiMzKtYdWUYfr8KTxF/KOkh8Xcm
-         fVQELqOCxQlN1lNVuSFj/UPJZ1lH/nnqCHkjwcEpzT9nwMB1tS/cuYHc6AFW7nis+FeB
-         9auOyjDkb40QrkFFhPisG0O0Fm1qicXF0j8vna1My8vcBXJHYXmi2duyHxncmg2FvDtf
-         zidC7T2ACOesE+Dy8HjM7eUIbHp21RcNWhg/kl3fJ6coseK5+ypmZJFGZ5MiGHB25B9m
-         pVZss5T4rtMZdUbNqgedJ4FVSynq658PyZxygEOOybDAEG3pjd/3LwfxwutHf1SnzdRr
-         OX/A==
+        Wed, 4 Mar 2020 11:53:45 -0500
+Received: by mail-wm1-f66.google.com with SMTP id g83so2599836wme.1;
+        Wed, 04 Mar 2020 08:53:43 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SDrq0LCQilEggOddpVsCXxYnWz73kS6jDdpyzCkjlEA=;
-        b=PEDa1C+QVtcpkxpvOtJLN/WtfU3S9tFgAG0W1z2npIXNvIQhgDpp7GVIyYngPcmKsu
-         CrhfiW7cS2w3NU46oJ37XecHoXCs5d/GNL6iJUsnktnehNmAv3rVJh9q1xfG+sNJmOHn
-         wI/GTwX4oPcfTzm7CTYhU6m1OnGtdIKiSiBnLcZVDT553uPqHMaGpwHNkW8V2wSwUCmj
-         Xrl+lYQD6K8DRnP+yYtBbxFIlDVbFlq/8i4LKNPRhZ0kVkcEKgN09f7tEUayN5L+a0l2
-         hhl4lYTg2zXsgX2s7Hr5ORPA+z9gjK9DVUv2nHwwMYniK+ciHwc+PrY8h77DHzCtYWw+
-         4q7w==
-X-Gm-Message-State: ANhLgQ2oAq7OYB9zcRSZIBWOmfIA0sHy2YWynbEO3/zrfS2+Qvdkdcko
-        oaZA/Q5S8eG0oHRBeX+DTxk=
-X-Google-Smtp-Source: ADFU+vsV+hTX8uGIABbRsKEZwuy+DVPHNyZQ0LOF0/+E/OiEgLCtOFOYjGZrn44u2ebgaod7KpsuRw==
-X-Received: by 2002:a63:28c3:: with SMTP id o186mr3478699pgo.248.1583340794000;
-        Wed, 04 Mar 2020 08:53:14 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id d77sm16287341pfd.109.2020.03.04.08.53.12
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Mar 2020 08:53:13 -0800 (PST)
-Date:   Wed, 4 Mar 2020 08:53:12 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 000/176] 5.5.8-stable review
-Message-ID: <20200304165312.GC22358@roeck-us.net>
-References: <20200303174304.593872177@linuxfoundation.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=9rthIHoO9WYjIeblpibGccs1Xx6gpCOxnW4ZP2a/gaI=;
+        b=FSFB3ksVA2joFhOkeDEPMJLvySl97AX2sQLQKOX3jH94yhgjIleNT/oFzy/CmPu536
+         v2E6+sFEYIM5OAQoHFf7HORrKk0mcB9L01YEjXnRwH8Vg0opFbMjGJk8gHsevS3SC/E4
+         oXEFYX3T3ItWHMZeYXoHnqS9W3VfbL0dwu93dZwu8megfOtUL5RYRS0QNInjpH+Teld4
+         7EM612uUpU4ByW8znpqUXm+yON2cOFlVkk+ipg3xXV8aZJjHm5VyjOV5nf85hS5z9Vm1
+         o5Ug59i3gwtB9CFwnMeNhIL1t692arEv3T2TW1JKF7dDhJOxes9FID6kiRm1Czooop4d
+         CVqA==
+X-Gm-Message-State: ANhLgQ22Bzhh/N1HfhAtsdSH72hqNToJl4ogCcasQZSZ/3gxrtLOmtgf
+        KgyGP6mZ88n+qF1ecbtQ4zg=
+X-Google-Smtp-Source: ADFU+vvadTAwlgWmHKFUQufY81fr5wffpBTL2DPa8yHmyED8QcKerjwMWDGiTqW5s9WFSaAyOPO1qg==
+X-Received: by 2002:a1c:2d4f:: with SMTP id t76mr4412820wmt.60.1583340819177;
+        Wed, 04 Mar 2020 08:53:39 -0800 (PST)
+Received: from localhost (ip-37-188-250-99.eurotel.cz. [37.188.250.99])
+        by smtp.gmail.com with ESMTPSA id n11sm6649329wrw.11.2020.03.04.08.53.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 08:53:38 -0800 (PST)
+Date:   Wed, 4 Mar 2020 17:53:36 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm: Make mem_cgroup_id_get_many dependent on MMU and
+ MEMCG_SWAP
+Message-ID: <20200304165336.GO16139@dhcp22.suse.cz>
+References: <20200304142348.48167-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304142348.48167-1-vincenzo.frascino@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:41:04PM +0100, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.8 release.
-> There are 176 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wed 04-03-20 14:23:48, Vincenzo Frascino wrote:
+> mem_cgroup_id_get_many() is currently used only when MMU or MEMCG_SWAP
+> configuration options are enabled. Having them disabled triggers the
+> following warning at compile time:
 > 
-> Responses should be made by Thu, 05 Mar 2020 17:42:06 +0000.
-> Anything received after that time might be too late.
+> linux/mm/memcontrol.c:4797:13: warning: ‘mem_cgroup_id_get_many’ defined
+> but not used [-Wunused-function]
+>  static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned
+>  int n)
 > 
+> Make mem_cgroup_id_get_many() dependent on MMU and MEMCG_SWAP to address
+> the issue.
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 423 pass: 423 fail: 0
+A similar patch has been proposed recently
+http://lkml.kernel.org/r/87fthjh2ib.wl-kuninori.morimoto.gx@renesas.com.
+The conclusion was that the warning is not really worth adding code.
 
-Guenter
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> ---
+>  mm/memcontrol.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index d09776cd6e10..628cebeb4bdd 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -4794,10 +4794,12 @@ static void mem_cgroup_id_remove(struct mem_cgroup *memcg)
+>  	}
+>  }
+>  
+> +#if defined(CONFIG_MEMCG_SWAP) || defined(CONFIG_MMU)
+>  static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned int n)
+>  {
+>  	refcount_add(n, &memcg->id.ref);
+>  }
+> +#endif
+>  
+>  static void mem_cgroup_id_put_many(struct mem_cgroup *memcg, unsigned int n)
+>  {
+> -- 
+> 2.25.1
+
+-- 
+Michal Hocko
+SUSE Labs
