@@ -2,159 +2,182 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC61EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BFF0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:18:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8175B20709
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D7720870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:18:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="BlKPKuyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387872AbgCDLP0 (ORCPT
+        id S2387818AbgCDLSC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:15:26 -0500
-Received: from mga02.intel.com ([134.134.136.20]:35703 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387762AbgCDLP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:15:26 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 03:15:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
-   d="scan'208";a="263571586"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Mar 2020 03:15:21 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mel Gorman <mgorman@suse.de>, David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-References: <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
-        <871rqf850z.fsf@yhuang-dev.intel.com> <20200228094954.GB3772@suse.de>
-        <87h7z76lwf.fsf@yhuang-dev.intel.com> <20200302151607.GC3772@suse.de>
-        <87zhcy5hoj.fsf@yhuang-dev.intel.com>
-        <20200303080945.GX4380@dhcp22.suse.cz>
-        <87o8td4yf9.fsf@yhuang-dev.intel.com>
-        <20200303085805.GB4380@dhcp22.suse.cz>
-        <87ftep4pzy.fsf@yhuang-dev.intel.com>
-        <20200304095802.GE16139@dhcp22.suse.cz>
-Date:   Wed, 04 Mar 2020 19:15:20 +0800
-In-Reply-To: <20200304095802.GE16139@dhcp22.suse.cz> (Michal Hocko's message
-        of "Wed, 4 Mar 2020 10:58:02 +0100")
-Message-ID: <87blpc2wxj.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 4 Mar 2020 06:18:02 -0500
+Received: from mail-db8eur05on2117.outbound.protection.outlook.com ([40.107.20.117]:17953
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387488AbgCDLSB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 06:18:01 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nNkLO6okuSlfBblzjKHWxnSo4VrpIyYpfIKh8vgwQYsBG/t/HaLiwAINrZgoGfeoSe1hKdzcKzuZJTMdk8oNS0GXC/ciJrZJKfqjrOkP5YLuvRbVJuMhuwHrI78TSm+cvWpCju2uCN0Ha3oYWcO8TiOiO0OYfcdm+T7hzgUjEWTszbZej40ltEIl7gGXWHJSp8AcqXeok5rPTaKMwaaRREJtYzfvEHqZ+ERX5JLudeFTKZRFZIZKM0Tbi0/YBshR36enE8YBSKUsZgF3AEDIaz7b/my9pqxgkjDIUWdQWKe4Me5x5mhznVP0934bS9VnXUZcvGpFa5+2RmlZgHo+Tw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nRjKmxvKahZusgK/nxLKQ03jFcuBZyHmlBuOM4g34+8=;
+ b=GFby5gV04QEIH6aQTzTuHFMcOAcWUeuQya/xL332VH8ooaF2YvwDEMZOb+gck+eBliPqVWieBei1uHD1i0LoiX6XIP8A7sF6zJ6JwsYHd9pOgZPtP4cjxaNMkO/IzJeknAzSa5FQMURWglDc395FMfWEP04oAJxZoJZFYkW1idw6QJNcpbJKXTET9oVZQcBzQjNhXrZZHF+sJI1HVcK/AZfRX5I4fm7b8QQHD9EKz4jgQZgjswAFlB/VnV6KvdEziS1r59pmxysDHlXFqX1SdxiFZGN3//VkqFoTG1MCgw97TWFFuCnACzNSuF28mQJ5JBx5sQt1KsMBoOcr4vSUwA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nokia.com; dmarc=pass action=none header.from=nokia.com;
+ dkim=pass header.d=nokia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
+ s=selector1-nokia-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nRjKmxvKahZusgK/nxLKQ03jFcuBZyHmlBuOM4g34+8=;
+ b=BlKPKuyOOzaqKsHcnRgdaqWzYLBOVWWAk2lix+l+gaIUHpdW3qeizvy2O39HckM7W3ZkLRN6oWLv8gw9ZXQPReGR6bGlvbMeCtcITWooLlkqY4gLUeGPRHqZDTPcmy42KGfKc8IxGS/aiEt4VlvC894uHI0ZguemNK2tdCGgRQk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=aaro.koskinen@nokia.com; 
+Received: from VI1PR07MB6174.eurprd07.prod.outlook.com (20.178.9.83) by
+ VI1PR07MB4000.eurprd07.prod.outlook.com (52.134.25.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2793.9; Wed, 4 Mar 2020 11:17:47 +0000
+Received: from VI1PR07MB6174.eurprd07.prod.outlook.com
+ ([fe80::7514:700c:669b:3c8f]) by VI1PR07MB6174.eurprd07.prod.outlook.com
+ ([fe80::7514:700c:669b:3c8f%7]) with mapi id 15.20.2793.011; Wed, 4 Mar 2020
+ 11:17:47 +0000
+From:   aaro.koskinen@nokia.com
+To:     Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@nokia.com>
+Subject: [PATCH] spi: spi_register_controller(): free bus id on error paths
+Date:   Wed,  4 Mar 2020 13:17:40 +0200
+Message-Id: <20200304111740.27915-1-aaro.koskinen@nokia.com>
+X-Mailer: git-send-email 2.11.0
+Content-Type: text/plain
+X-ClientProxiedBy: HE1PR0802CA0003.eurprd08.prod.outlook.com
+ (2603:10a6:3:bd::13) To VI1PR07MB6174.eurprd07.prod.outlook.com
+ (2603:10a6:803:a5::19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from ak-desktop.emea.nsn-net.net (131.228.2.28) by HE1PR0802CA0003.eurprd08.prod.outlook.com (2603:10a6:3:bd::13) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14 via Frontend Transport; Wed, 4 Mar 2020 11:17:46 +0000
+X-Mailer: git-send-email 2.11.0
+X-Originating-IP: [131.228.2.28]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6babef46-ed13-4e9a-4dac-08d7c02daac1
+X-MS-TrafficTypeDiagnostic: VI1PR07MB4000:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR07MB4000335C7583E449E715A81EF4E50@VI1PR07MB4000.eurprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1332;
+X-Forefront-PRVS: 0332AACBC3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(366004)(39860400002)(136003)(396003)(346002)(376002)(199004)(189003)(316002)(81156014)(6506007)(5660300002)(1076003)(478600001)(107886003)(81166006)(66946007)(2616005)(956004)(2906002)(52116002)(8936002)(6486002)(8676002)(66556008)(86362001)(6512007)(26005)(36756003)(16526019)(186003)(66476007)(9686003)(6666004)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR07MB4000;H:VI1PR07MB6174.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nokia.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: PF+x1/4cHJcTkkkhq1QpuLUJwNDhquuo76Sat9SJ+KzULwCZxkL2h9rB7+IkqsamNfqJhPoNZ4/z8Elp7XkH7SlvQMFj2KmjLD9xkM1MUIMDAiQ2oiE6a9A8xrvTbhROGyJd1moLA+oD8zvNfu/SHR3MR+6SFBdOrgRBwpTk/BVMU9PtSV2QofWhu01io8T5nNn2nAkGfiSTlZBVAj6mYNQbMdu0ARHiFS1Gu4/Y0naqxq+ple/J/pL0P0BRvIOw5TFZ/tTwUDZineztDnYdpfSySI6pJ71FFw1fdJcigOikcdptky+y4q4TaD8PhLIe0LGrvoj7QpBSBo6kNNg6JprTUnQaqg1QbV1YFqQkzxHnUGjgBZ7ma8ciDF4c5FxJKpS6Z+4qnGftHZasUFHPIQD4QSOFDASNVIh+mP81C1lD+qkEru2pdyIiTgDlBuCi
+X-MS-Exchange-AntiSpam-MessageData: dnllcsd9VJCrQAH4kDNH7cHsteKJ0jUpFJeaiM59i7sjp0vng4vHNNnyzIlmO6FIbBtPzuG4cvFR/VDCcPEOmMIqTtVswSJRsTmkY7CBACbCEHjYJyoEk9gXzOhs8wYayy8ZwyIu9AewQdXFWyChtQ==
+X-OriginatorOrg: nokia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6babef46-ed13-4e9a-4dac-08d7c02daac1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2020 11:17:46.9349
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 5d471751-9675-428d-917b-70f44f9630b0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: SAoFH3NlF6PdlLL7ZHyS+svO4c1cZdZmq8PTC5Kt7Y94mo0T47XcGmSdhLoNCI3PerEJnINFU777OAqKpFvwPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR07MB4000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michal Hocko <mhocko@kernel.org> writes:
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
 
-> On Tue 03-03-20 19:49:53, Huang, Ying wrote:
->> Michal Hocko <mhocko@kernel.org> writes:
->> 
->> > On Tue 03-03-20 16:47:54, Huang, Ying wrote:
->> >> Michal Hocko <mhocko@kernel.org> writes:
->> >> 
->> >> > On Tue 03-03-20 09:51:56, Huang, Ying wrote:
->> >> >> Mel Gorman <mgorman@suse.de> writes:
->> >> >> > On Mon, Mar 02, 2020 at 07:23:12PM +0800, Huang, Ying wrote:
->> >> >> >> If some applications cannot tolerate the latency incurred by the memory
->> >> >> >> allocation and zeroing.  Then we cannot discard instead of migrate
->> >> >> >> always.  While in some situations, less memory pressure can help.  So
->> >> >> >> it's better to let the administrator and the application choose the
->> >> >> >> right behavior in the specific situation?
->> >> >> >> 
->> >> >> >
->> >> >> > Is there an application you have in mind that benefits from discarding
->> >> >> > MADV_FREE pages instead of migrating them?
->> >> >> >
->> >> >> > Allowing the administrator or application to tune this would be very
->> >> >> > problematic. An application would require an update to the system call
->> >> >> > to take advantage of it and then detect if the running kernel supports
->> >> >> > it. An administrator would have to detect that MADV_FREE pages are being
->> >> >> > prematurely discarded leading to a slowdown and that is hard to detect.
->> >> >> > It could be inferred from monitoring compaction stats and checking
->> >> >> > if compaction activity is correlated with higher minor faults in the
->> >> >> > target application. Proving the correlation would require using the perf
->> >> >> > software event PERF_COUNT_SW_PAGE_FAULTS_MIN and matching the addresses
->> >> >> > to MADV_FREE regions that were freed prematurely. That is not an obvious
->> >> >> > debugging step to take when an application detects latency spikes.
->> >> >> >
->> >> >> > Now, you could add a counter specifically for MADV_FREE pages freed for
->> >> >> > reasons other than memory pressure and hope the administrator knows about
->> >> >> > the counter and what it means. That type of knowledge could take a long
->> >> >> > time to spread so it's really very important that there is evidence of
->> >> >> > an application that suffers due to the current MADV_FREE and migration
->> >> >> > behaviour.
->> >> >> 
->> >> >> OK.  I understand that this patchset isn't a universal win, so we need
->> >> >> some way to justify it.  I will try to find some application for that.
->> >> >> 
->> >> >> Another thought, as proposed by David Hildenbrand, it's may be a
->> >> >> universal win to discard clean MADV_FREE pages when migrating if there are
->> >> >> already memory pressure on the target node.  For example, if the free
->> >> >> memory on the target node is lower than high watermark?
->> >> >
->> >> > This is already happening because if the target node is short on memory
->> >> > it will start to reclaim and if MADV_FREE pages are at the tail of
->> >> > inactive file LRU list then they will be dropped. Please note how that
->> >> > follows proper aging and doesn't introduce any special casing. Really
->> >> > MADV_FREE is an inactive cache for anonymous memory and we treat it like
->> >> > inactive page cache. This is not carved in stone of course but it really
->> >> > requires very good justification to change.
->> >> 
->> >> If my understanding were correct, the newly migrated clean MADV_FREE
->> >> pages will be put at the head of inactive file LRU list instead of the
->> >> tail.  So it's possible that some useful file cache pages will be
->> >> reclaimed.
->> >
->> > This is the case also when you migrate other pages, right? We simply
->> > cannot preserve the aging.
->> 
->> So you consider the priority of the clean MADV_FREE pages is same as
->> that of page cache pages?
->
-> This is how MADV_FREE has been implemented, yes. See f7ad2a6cb9f7 ("mm:
-> move MADV_FREE pages into LRU_INACTIVE_FILE list") for the
-> justification.
+Some error paths leave the bus id allocated. As a result the IDR
+allocation will fail after a deferred probe. Fix by freeing the bus id
+always on error.
 
-Thanks for information.  It's really helpful!
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+---
+ drivers/spi/spi.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
 
->> Because the penalty difference is so large, I
->> think it may be a good idea to always put clean MADV_FREE pages at the
->> tail of the inactive file LRU list?
->
-> You are again making assumptions without giving any actual real
-> examples. Reconstructing MADV_FREE pages cost can differ a lot.
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 38b4c78df506..755221bc3745 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2639,7 +2639,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		if (ctlr->use_gpio_descriptors) {
+ 			status = spi_get_gpio_descs(ctlr);
+ 			if (status)
+-				return status;
++				goto free_bus_id;
+ 			/*
+ 			 * A controller using GPIO descriptors always
+ 			 * supports SPI_CS_HIGH if need be.
+@@ -2649,7 +2649,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 			/* Legacy code path for GPIOs from DT */
+ 			status = of_spi_get_gpio_numbers(ctlr);
+ 			if (status)
+-				return status;
++				goto free_bus_id;
+ 		}
+ 	}
+ 
+@@ -2657,17 +2657,14 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	 * Even if it's just one always-selected device, there must
+ 	 * be at least one chipselect.
+ 	 */
+-	if (!ctlr->num_chipselect)
+-		return -EINVAL;
++	if (!ctlr->num_chipselect) {
++		status = -EINVAL;
++		goto free_bus_id;
++	}
+ 
+ 	status = device_add(&ctlr->dev);
+-	if (status < 0) {
+-		/* free bus id */
+-		mutex_lock(&board_lock);
+-		idr_remove(&spi_master_idr, ctlr->bus_num);
+-		mutex_unlock(&board_lock);
+-		goto done;
+-	}
++	if (status < 0)
++		goto free_bus_id;
+ 	dev_dbg(dev, "registered %s %s\n",
+ 			spi_controller_is_slave(ctlr) ? "slave" : "master",
+ 			dev_name(&ctlr->dev));
+@@ -2683,11 +2680,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		status = spi_controller_initialize_queue(ctlr);
+ 		if (status) {
+ 			device_del(&ctlr->dev);
+-			/* free bus id */
+-			mutex_lock(&board_lock);
+-			idr_remove(&spi_master_idr, ctlr->bus_num);
+-			mutex_unlock(&board_lock);
+-			goto done;
++			goto free_bus_id;
+ 		}
+ 	}
+ 	/* add statistics */
+@@ -2702,7 +2695,12 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	/* Register devices from the device tree and ACPI */
+ 	of_register_spi_devices(ctlr);
+ 	acpi_register_spi_devices(ctlr);
+-done:
++	return status;
++
++free_bus_id:
++	mutex_lock(&board_lock);
++	idr_remove(&spi_master_idr, ctlr->bus_num);
++	mutex_unlock(&board_lock);
+ 	return status;
+ }
+ EXPORT_SYMBOL_GPL(spi_register_controller);
+-- 
+2.11.0
 
-In which situation the cost to reconstruct MADV_FREE pages can be higher
-than the cost to allocate file cache page and read from disk?  Heavy
-contention on mmap_sem?
-
-> This really depends on the specific usecase. Moving pages to the tail
-> of LRU would make them the primary candidate for the reclaim with a
-> strange LIFO semantic. Adding them to the head might be not the
-> universal win but it will at least provide a reasonable FIFO
-> semantic. I also find it much more easier to reason about MADV_FREE as
-> an inactive cache.
-
-Yes.  FIFO is more reasonable than LIFO.
-
-Best Regards,
-Huang, Ying
