@@ -2,103 +2,100 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E479C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:00:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1C7C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:01:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 027BC2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:00:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T+Yk5UsX"
+	by mail.kernel.org (Postfix) with ESMTP id 834102166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387609AbgCDQAb (ORCPT
+        id S2388109AbgCDQBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:00:31 -0500
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:34374 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729389AbgCDQAa (ORCPT
+        Wed, 4 Mar 2020 11:01:40 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24628 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726561AbgCDQBk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:00:30 -0500
-Received: by mail-vk1-f194.google.com with SMTP id w67so706222vkf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:00:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SqEs55y4dEw5uRAexZmSkf/N7GxDvacFCfzXLumfPhk=;
-        b=T+Yk5UsXq7hnVU0JjnMyTsBDjOuUJFVmT8YM7D0B51N0UZCTVLldZ0uTHWY2NX0wmP
-         K8/nKQdhdrrW173wgG+t8GgRNOcM1LrjK22agARS/gkJaRhmZAE4xUtS3xP37JDWTITE
-         OUGGD5uVCJJXMUhB+NUPrmsyBnhPeGPpopfTODebAUmbnkR2XWQAdTnTuSDQ7K9WMS8v
-         I7BqvtLfMPtFfg+qcZ2gHB2RRjNmV6zG6HVqlDxQMTO61Z6oPyBJLtC08tLSUgBhzrs3
-         l4iJUufZ8exJmMweJO6TKMhvJhpSvQKu/eX32eU9iXl3TDfax6nMDGSHOTdTsi3yPCMp
-         Xd8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SqEs55y4dEw5uRAexZmSkf/N7GxDvacFCfzXLumfPhk=;
-        b=H2OehfhEZGt9aUABrbze1oZHIQyjMFUX0B7SB4JcOhgf92JflesIg19085yLSUgMBm
-         siKr0ds//nL+upoDUJL0LTSbjteW6tLpMY2XLqzXYuCmSrTUs5qB5n/nnuJeUgjRsLed
-         LFx7xkWrmhSsxT9RCIpGe6+3JsEOIPAPVKJHTX7UzrbzwkEwRXJFC+lV2dDwfq7Au279
-         c9sxH45FPgr5HWA9RAd56d4Mcs4HrR+/06eBL/l/3XUbIxTeeS6cP37A0zV12jhNQxf2
-         dIvkVCBq7ExjRbftGps1dO31+sQj9+CJrWK12cwVfWBY5pRclDvTbnJQ+f1YSmxey4+M
-         epqw==
-X-Gm-Message-State: ANhLgQ0w40EeOF3K44extl/esBUz1g0WJVmdT7SAI+IuBtrTbKYWUjMi
-        a6cvh3S998vEMrwjRVkEY65IJomBu6Bi+C3VV0SOOQ==
-X-Google-Smtp-Source: ADFU+vvDe6AUVq7FvlD0Zl/y/Oj3Ne1SZTjBontrgT4tGULO92r4fXatr48O/ebUZw7D/ayIYX1ZG9T/mmjQx4yXLIY=
-X-Received: by 2002:ac5:cdcd:: with SMTP id u13mr1841139vkn.0.1583337629345;
- Wed, 04 Mar 2020 08:00:29 -0800 (PST)
+        Wed, 4 Mar 2020 11:01:40 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024FuXSu153036
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 11:01:39 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yhsv3ygnp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:01:38 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Wed, 4 Mar 2020 16:01:31 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 16:01:28 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024G1QSt42467512
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 16:01:26 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3EE92AE058;
+        Wed,  4 Mar 2020 16:01:26 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F1A56AE051;
+        Wed,  4 Mar 2020 16:01:23 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.81.47])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 16:01:23 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
+        mpe@ellerman.id.au, mikey@neuling.org, npiggin@gmail.com,
+        vaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
+        skiboot@lists.ozlabs.org, oohall@gmail.com, psampat@linux.ibm.com,
+        pratik.r.sampat@gmail.com
+Subject: [RFC 0/3] cpuidle/powernv: Interface to handle idle-stop versioning
+Date:   Wed,  4 Mar 2020 21:31:20 +0530
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-References: <1583323250-23596-1-git-send-email-vbadigan@codeaurora.org> <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
-In-Reply-To: <1583328320-9981-1-git-send-email-vbadigan@codeaurora.org>
-From:   Doug Anderson <dianders@google.com>
-Date:   Wed, 4 Mar 2020 08:00:19 -0800
-Message-ID: <CAD=FV=XKFa3vs5Fv0DUwYLF8o4s8cCAsSudYGMn3XZ73wVoOdw@mail.gmail.com>
-Subject: Re: [PATCH V2] mmc: cqhci: Update cqhci memory ioresource name
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linux MMC List <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030416-4275-0000-0000-000003A85BE6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030416-4276-0000-0000-000038BD6917
+Message-Id: <cover.1583332695.git.psampat@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
+ clxscore=1015 mlxlogscore=236 impostorscore=0 malwarescore=0 adultscore=0
+ phishscore=0 suspectscore=0 spamscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+A design patch series illuminates the idea of handling different
+versions of idle-stop, the properties they support and the
+quirks that need to be handled before entering or after exiting stop.
 
-On Wed, Mar 4, 2020 at 5:25 AM Veerabhadrarao Badiganti
-<vbadigan@codeaurora.org> wrote:
->
-> Update cqhci memory ioresource name from cqhci_mem to cqhci since
-> suffix _mem is redundant.
->
-> Only sdhci-msm driver is making use of this resource as of now.
-> No other vendor's driver is using it. So this update shouldn't affect
-> any other vendor's cqhci functionality.
->
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> ---
-> Corresponding binding change:
-> https://lore.kernel.org/linux-arm-msm/1582545470-11530-1-git-send-email-vbadigan@codeaurora.org/
->
-> Changes sicne V1:
->         - Updated commit text expalining this change affects *only*
->           qcom cqhci functionality.
->
-> ---
->  drivers/mmc/host/cqhci.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+It also adds a functionality to identify firmware-enabled-stop and set
+the according bits to encapsulate the support and corresponding handling
 
-...now I guess the last thing is the dts change...
+Corresponding RFC skiboot patch: https://lists.ozlabs.org/pipermail/skiboot/2020-March/016552.html
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Pratik Rajesh Sampat (3):
+  Interface for an idle-stop dependency structure
+  Demonstration of handling an idle-stop quirk version
+  Introduce capability for firmware-enabled-stop
+
+ arch/powerpc/include/asm/processor.h  | 19 +++++++++++++++++
+ arch/powerpc/kernel/dt_cpu_ftrs.c     | 30 +++++++++++++++++++++++++++
+ arch/powerpc/platforms/powernv/idle.c | 25 ++++++++++++++++++----
+ drivers/cpuidle/cpuidle-powernv.c     |  3 ++-
+ 4 files changed, 72 insertions(+), 5 deletions(-)
+
+-- 
+2.24.1
+
