@@ -2,94 +2,205 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 958A5C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7461CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685552073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F922073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="vFs+lrp7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T8AlxQB0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387504AbgCDCR7 (ORCPT
+        id S2387521AbgCDCSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:17:59 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33589 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387480AbgCDCR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:17:59 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48XHbT2VjPz9sNg;
-        Wed,  4 Mar 2020 13:17:56 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583288277;
-        bh=hpgJ2oNDHzFVZ1UIs/SBXcgrzbH4pnZJKFb2uK6CM7A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=vFs+lrp7xK5y2ur+m9MY4atDzgE5ieV40Uw3dVW9WZqhd54ijh/zXtmrndUdWOAOU
-         oM4dvjjo9Bn/iPp0ajdfhrirJ4ee1KxmrwTSuYfvRvUan5O3dUZ7B4rEpfWEz4xk6W
-         quFLfY8ONwxCqK7UCucEOu5g4Ix5cyVDXLonyqM2+gQ9+HZF8wvQ5VoEUFxinWhHhW
-         bos80cb3EC2lEi3ylJ/hF6VaXR/cjzrYqKTUkTbs5piVPXQ8Tho5U9WJTESKoZ1Q2g
-         BM4YDcipW0VUUZLf22AKZbdA7uZrnDQAHMCXzIgINWtmGIxf1Nzb1aiEjTJLL5+Rz6
-         K1MBwoJbpSlcQ==
-Date:   Wed, 4 Mar 2020 13:17:50 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pavel Begunkov <asml.silence@gmail.com>
-Subject: linux-next: build warning after merge of the block tree
-Message-ID: <20200304131750.55d84beb@canb.auug.org.au>
+        Tue, 3 Mar 2020 21:18:38 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44459 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387459AbgCDCSh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 21:18:37 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y26so132980pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 18:18:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=QV949Rj3SIT5hQv6NYpR6RXzDT9qy+AIzP4ZAVBgOIY=;
+        b=T8AlxQB0grraQTN3SYX821Hs2NAC4rtmjN4f+u6itDMX3gg4QoWZHItd6ExweAu7e8
+         Oh2aO0XTOZQjg2yHjm12YMHdUq9oTJHwnhvNdxXnyfu6V+Q5ajjNosTYsdMa7QyrHpFx
+         j09Q0Md55ADFcq4cfHMj3QjhK6Kws6tlgIeHY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=QV949Rj3SIT5hQv6NYpR6RXzDT9qy+AIzP4ZAVBgOIY=;
+        b=UaWIAyqoM+qpkXxEUbtfUqtZCSk4dgEGuKF3Pe9RRtvwDVdMMqU8tqMt+ZCB6PFZTf
+         q6/8pERsJiqUuTT9b1Ckx9qahunksqFQnNWgTeWM+KsGVfngzbW9i2OyFyLODvrKCgRV
+         jSUcVGn9H5C5KIuqqrnh29k0fVoFgSsqI33MNHUgKvFXzZ4l4IKxbx5/FO1T1pzyMZ8l
+         4QuL6tSDvJ61t5raKmO2bxTbS+54D/TjQOJjqEeW6yfvCb12rBueNDGw7UKUcGVeM2WW
+         tJvZVQYnmfSRVdgOYtsDr3DIF/GaQu32iXbsiPTjOwAZpQuqc+Ak6CarUB3vEnCPoass
+         k+vQ==
+X-Gm-Message-State: ANhLgQ2tPokbGZHK5iFpd5CSlyBLzvnLbQ8SsA5ckk45fQtUHb+D2Vir
+        1goE+2bs7Kjc1rdnKMSZxk7bL8bTDtQ=
+X-Google-Smtp-Source: ADFU+vuECxjtA8O7vuZBduDwuodZBCiamgB2PThSyYeI44skV+ytDpW6OfrCvkGtgqWWycYS9PBowg==
+X-Received: by 2002:a63:af53:: with SMTP id s19mr408689pgo.175.1583288316825;
+        Tue, 03 Mar 2020 18:18:36 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id k1sm23809343pgt.70.2020.03.03.18.18.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 18:18:35 -0800 (PST)
+Date:   Tue, 3 Mar 2020 18:18:34 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     bpf@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        linux-kbuild@vger.kernel.org
+Subject: [PATCH bpf-next v2] kbuild: Remove debug info from kallsyms linking
+Message-ID: <202003031814.4AEA3351@keescook>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/2g3lSYciyAYKzTKo8jSMg23";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/2g3lSYciyAYKzTKo8jSMg23
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+When CONFIG_DEBUG_INFO is enabled, the two kallsyms linking steps spend
+time collecting and writing the dwarf sections to the temporary output
+files. kallsyms does not need this information, and leaving it off
+halves their linking time. This is especially noticeable without
+CONFIG_DEBUG_INFO_REDUCED. The BTF linking stage, however, does still
+need those details.
 
-Hi all,
+Refactor the BTF and kallsyms generation stages slightly for more
+regularized temporary names. Skip debug during kallsyms links.
+Additionally move "info BTF" to the correct place since commit
+8959e39272d6 ("kbuild: Parameterize kallsyms generation and correct
+reporting"), which added "info LD ..." to vmlinux_link calls.
 
-After merging the block tree, today's linux-next build (powerpc
-ppc64_defconfig) produced this warning:
+For a full debug info build with BTF, my link time goes from 1m06s to
+0m54s, saving about 12 seconds, or 18%.
 
-fs/io_uring.c: In function 'io_close':
-fs/io_uring.c:3415:3: warning: ignoring return value of 'refcount_inc_not_z=
-ero', declared with attribute warn_unused_result [-Wunused-result]
- 3415 |   refcount_inc_not_zero(&req->refs);
-      |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+---
+v2: add Ack, clarify "info BTF" relocation
+---
+ scripts/link-vmlinux.sh | 28 +++++++++++++++++++---------
+ 1 file changed, 19 insertions(+), 9 deletions(-)
 
-Introduced by commit
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index dd484e92752e..ac569e197bfa 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -63,12 +63,18 @@ vmlinux_link()
+ 	local lds="${objtree}/${KBUILD_LDS}"
+ 	local output=${1}
+ 	local objects
++	local strip_debug
+ 
+ 	info LD ${output}
+ 
+ 	# skip output file argument
+ 	shift
+ 
++	# The kallsyms linking does not need debug symbols included.
++	if [ "$output" != "${output#.tmp_vmlinux.kallsyms}" ] ; then
++		strip_debug=-Wl,--strip-debug
++	fi
++
+ 	if [ "${SRCARCH}" != "um" ]; then
+ 		objects="--whole-archive			\
+ 			${KBUILD_VMLINUX_OBJS}			\
+@@ -79,6 +85,7 @@ vmlinux_link()
+ 			${@}"
+ 
+ 		${LD} ${KBUILD_LDFLAGS} ${LDFLAGS_vmlinux}	\
++			${strip_debug#-Wl,}			\
+ 			-o ${output}				\
+ 			-T ${lds} ${objects}
+ 	else
+@@ -91,6 +98,7 @@ vmlinux_link()
+ 			${@}"
+ 
+ 		${CC} ${CFLAGS_vmlinux}				\
++			${strip_debug}				\
+ 			-o ${output}				\
+ 			-Wl,-T,${lds}				\
+ 			${objects}				\
+@@ -106,6 +114,8 @@ gen_btf()
+ {
+ 	local pahole_ver
+ 	local bin_arch
++	local bin_format
++	local bin_file
+ 
+ 	if ! [ -x "$(command -v ${PAHOLE})" ]; then
+ 		echo >&2 "BTF: ${1}: pahole (${PAHOLE}) is not available"
+@@ -118,8 +128,9 @@ gen_btf()
+ 		return 1
+ 	fi
+ 
+-	info "BTF" ${2}
+ 	vmlinux_link ${1}
++
++	info "BTF" ${2}
+ 	LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
+ 
+ 	# dump .BTF section into raw binary file to link with final vmlinux
+@@ -127,11 +138,12 @@ gen_btf()
+ 		cut -d, -f1 | cut -d' ' -f2)
+ 	bin_format=$(LANG=C ${OBJDUMP} -f ${1} | grep 'file format' | \
+ 		awk '{print $4}')
++	bin_file=.btf.vmlinux.bin
+ 	${OBJCOPY} --change-section-address .BTF=0 \
+ 		--set-section-flags .BTF=alloc -O binary \
+-		--only-section=.BTF ${1} .btf.vmlinux.bin
++		--only-section=.BTF ${1} $bin_file
+ 	${OBJCOPY} -I binary -O ${bin_format} -B ${bin_arch} \
+-		--rename-section .data=.BTF .btf.vmlinux.bin ${2}
++		--rename-section .data=.BTF $bin_file ${2}
+ }
+ 
+ # Create ${2} .o file with all symbols from the ${1} object file
+@@ -166,8 +178,8 @@ kallsyms()
+ kallsyms_step()
+ {
+ 	kallsymso_prev=${kallsymso}
+-	kallsymso=.tmp_kallsyms${1}.o
+-	kallsyms_vmlinux=.tmp_vmlinux${1}
++	kallsyms_vmlinux=.tmp_vmlinux.kallsyms${1}
++	kallsymso=${kallsyms_vmlinux}.o
+ 
+ 	vmlinux_link ${kallsyms_vmlinux} "${kallsymso_prev}" ${btf_vmlinux_bin_o}
+ 	kallsyms ${kallsyms_vmlinux} ${kallsymso}
+@@ -190,7 +202,6 @@ cleanup()
+ {
+ 	rm -f .btf.*
+ 	rm -f .tmp_System.map
+-	rm -f .tmp_kallsyms*
+ 	rm -f .tmp_vmlinux*
+ 	rm -f System.map
+ 	rm -f vmlinux
+@@ -257,9 +268,8 @@ tr '\0' '\n' < modules.builtin.modinfo | sed -n 's/^[[:alnum:]:_]*\.file=//p' |
+ 
+ btf_vmlinux_bin_o=""
+ if [ -n "${CONFIG_DEBUG_INFO_BTF}" ]; then
+-	if gen_btf .tmp_vmlinux.btf .btf.vmlinux.bin.o ; then
+-		btf_vmlinux_bin_o=.btf.vmlinux.bin.o
+-	else
++	btf_vmlinux_bin_o=.btf.vmlinux.bin.o
++	if ! gen_btf .tmp_vmlinux.btf $btf_vmlinux_bin_o ; then
+ 		echo >&2 "Failed to generate BTF for vmlinux"
+ 		echo >&2 "Try to disable CONFIG_DEBUG_INFO_BTF"
+ 		exit 1
+-- 
+2.20.1
 
-  62e0c6b73a2c ("io_uring: make submission ref putting consistent")
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/2g3lSYciyAYKzTKo8jSMg23
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5fD84ACgkQAVBC80lX
-0GyMSAf/ZS/X9mvmvslQ9O0FV3yMqMnxIaKXZmyRqKQlCooOxb8U9tMHfHe6F4K8
-nIMrMx8nwXV6OjJd7GFs6IDSjLw8EUHSd9Abw07p1J7kscWy65k2UJ/W13TdEvJV
-j72yz1TQ8EG/AGAs8y/pWYVyH3uYOifRGZKM2qOCkIPmh5jGn8QP26IIqjXJDEQx
-0Wl3lZJCkIIzpXt8oxEM3QUFf8flMgzedzPnu6Kv7rv5JIbZmNJGUt0ZSR5Zx1Nr
-b307BPZC3F9lv3ZEiO1L36nqPiBEmAmU/0HjmD1zf47+4Cj2vS5pmro4qr56uU47
-ffLDtVOzbXWD6glevVD4Kl75UV2qag==
-=Kpwx
------END PGP SIGNATURE-----
-
---Sig_/2g3lSYciyAYKzTKo8jSMg23--
+-- 
+Kees Cook
