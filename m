@@ -2,108 +2,122 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C03C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8522C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D45FD21775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A384621775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:55:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583344515;
+	bh=GbkfQSF4gx69Uq29jGSUD3eH6p008JMGE1/+vzwNYdM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OYUKe7kKQr7BMFkFmWXuF8lmZ8EcpRMORREcEro9/gzlfaaTX8ffMhBlArM4MUKqu
+	 lJlq6iAN3YyNKDP4lFqLoGwt7yqfcb5Qg/IXK9HIB2RO/r98rLHIbw4I17LArD15iX
+	 5v0nbdwObeYe36gbmGGNedaeOoT3yOVQ12yIEvlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730090AbgCDRxz (ORCPT
+        id S1730005AbgCDRzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:53:55 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37704 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729749AbgCDRxz (ORCPT
+        Wed, 4 Mar 2020 12:55:14 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:40109 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728926AbgCDRzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:53:55 -0500
-Received: from mail-wr1-f69.google.com ([209.85.221.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <andrea.righi@canonical.com>)
-        id 1j9YDR-0005BK-Dm
-        for linux-kernel@vger.kernel.org; Wed, 04 Mar 2020 17:53:53 +0000
-Received: by mail-wr1-f69.google.com with SMTP id p5so1139499wrj.17
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:53:53 -0800 (PST)
+        Wed, 4 Mar 2020 12:55:14 -0500
+Received: by mail-wm1-f65.google.com with SMTP id e26so2807046wme.5;
+        Wed, 04 Mar 2020 09:55:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=tgXnocXG+jZrTeViaEPQZMOPzJF0dDDQTUKioSbPZLw=;
-        b=IHCOuPvr5oQmjiFcEmt16j93HMkH2LXlXI7YpANmPZHnP9AzX/4JpBdh5sA5TJtd28
-         AN5ouh3oDAGXBfuzeX/yGnk6sB7wlziXn1P4EnjfV4nnLW3GfE5dUELVaPYIyO2K2Nk+
-         P51i+Kyx7gE3ezOJYdoaFJCQZq1jjKwATWyAqKSL+XGza+IzqQL63d3Y+vWndpa/tVAf
-         rOjrPGME2cwuLOgkpH/UfiuWwd11Pz+WtKnu4/9Y+8GXu2Mdu5qk+cnMOur1gR5cJH3V
-         wCk7OngyMcqZDYmKh55xFm7wsL+LiT4qQrvOVCZCCI/aGNUiMS25ZFU7ftud+wHA9/+v
-         YM6w==
-X-Gm-Message-State: ANhLgQ3UJCZo4rmnI2V9gQQda/nHD5E8k7ZdDSDmu2i32Zzx8eP45Va9
-        JXE4zULxxvT5DZWXhcT0HgrEdfkvc3r092vmm5mtJ4G7c9n7bBfadZrMXPnKgd/Bljkj4z0I0gH
-        SWM8KJtJ3jkSuDjwELxQRbNzdtZL4Q+phAFmACcsEPw==
-X-Received: by 2002:a05:600c:4151:: with SMTP id h17mr4964392wmm.189.1583344433066;
-        Wed, 04 Mar 2020 09:53:53 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vuL6fP8UzU9Yr2dI0/WuSEUIxMfCycwldfogtODqrI3DPCrLXBqrb8HQ1spg4nDeYKW00haZQ==
-X-Received: by 2002:a05:600c:4151:: with SMTP id h17mr4964377wmm.189.1583344432781;
-        Wed, 04 Mar 2020 09:53:52 -0800 (PST)
-Received: from localhost (host96-127-dynamic.32-79-r.retail.telecomitalia.it. [79.32.127.96])
-        by smtp.gmail.com with ESMTPSA id b10sm5469093wmh.48.2020.03.04.09.53.51
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IXbD/GgJVPZ9WOOjQZpIDfTuKHqUvdwDS5tyVn1vzKs=;
+        b=dZW/rNEE4siDef5TElhDwRimjVffVGL/eOVlNvygHaKe9GqFlWeXkbCIMvCK3PCaQr
+         +RmoAAoMydHmWeDXg35PHKU5FbUnpljLq1iE0S6P3N+yWp0lnYrWw9mM+SnXNNRe6gfl
+         FCISM22tFhE/KC2LjQT1WI5MOSuS/dm54S55YvmE6jjfqLTzfQkQj4HU3RqC89TQ0er3
+         vHYmm64WT8Cjzc3sObAijW4zuScMmaN0Un+Xf4bDjhVTrTrQZxw0gShFf7AOdFTbSzIh
+         oQh3CDKvJCCHSdDEDAUQy+O1WfhJkcVL4oKUE5zZH9jfj5pnWVxthweTDqrqiVXx9gCf
+         R/Nw==
+X-Gm-Message-State: ANhLgQ1DQXr77lGXKu7uGgOwWlInL18ONrS+2rC6uNFh/sD90rRrTFXN
+        GSrpkcotjqAyyhjW1LcUqugC1Bqu
+X-Google-Smtp-Source: ADFU+vs9Ns5cKiBuxZvEKxGfUWqB4Wx333NSJ3TdOFT09JNhgx8N5gGqFg8moiDT+XIM3+5kO/phPg==
+X-Received: by 2002:a7b:c019:: with SMTP id c25mr4825181wmb.126.1583344512200;
+        Wed, 04 Mar 2020 09:55:12 -0800 (PST)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id o8sm5015597wmh.15.2020.03.04.09.55.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 09:53:52 -0800 (PST)
-Date:   Wed, 4 Mar 2020 18:53:50 +0100
-From:   Andrea Righi <andrea.righi@canonical.com>
-To:     Richard Cochran <richardcochran@gmail.com>
-Cc:     Vladis Dronov <vdronov@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ptp: free ptp clock properly
-Message-ID: <20200304175350.GB267906@xps-13>
+        Wed, 04 Mar 2020 09:55:11 -0800 (PST)
+Date:   Wed, 4 Mar 2020 17:55:09 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Dexuan Cui <decui@microsoft.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH] PCI: hv: Replace zero-length array with flexible-array
+ member
+Message-ID: <20200304175509.dwhn63omfzewaukv@debian>
+References: <20200213005048.GA9662@embeddedor.com>
+ <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a bug in ptp_clock_unregister() where ptp_clock_release() can
-free up resources needed by posix_clock_unregister() to properly destroy
-a related sysfs device.
+On Thu, Feb 13, 2020 at 03:43:40AM +0000, Dexuan Cui wrote:
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Gustavo A. R. Silva
+> > Sent: Wednesday, February 12, 2020 4:51 PM
+> >  ...
+> > The current codebase makes use of the zero-length array language
+> > extension to the C90 standard, but the preferred mechanism to declare
+> > variable-length types such as these ones is a flexible array member[1][2],
+> > introduced in C99:
+> > 
+> > struct foo {
+> >         int stuff;
+> >         struct boo array[];
+> > };
+> > 
+> > By making use of the mechanism above, we will get a compiler warning
+> > in case the flexible array does not occur last in the structure, which
+> > will help us prevent some kind of undefined behavior bugs from being
+> > inadvertently introduced[3] to the codebase from now on.
+> > 
+> > Also, notice that, dynamic memory allocations won't be affected by
+> > this change:
+> > 
+> > "Flexible array members have incomplete type, and so the sizeof operator
+> > may not be applied. As a quirk of the original implementation of
+> > zero-length arrays, sizeof evaluates to zero."[1]
+> > 
+> > This issue was found with the help of Coccinelle.
+> 
+> Looks good to me. Thanks, Gustavo!
+>  
+> Reviewed-by: Dexuan Cui <decui@microsoft.com>
+> 
 
-Fix this by calling posix_clock_unregister() in ptp_clock_release().
+Lorenzo, will you be picking up this patch? It seems to me you've been
+handling patches to pci-hyperv.c. This patch is not yet in pci/hv branch
+in your repository.
 
-See also:
-commit 75718584cb3c ("ptp: free ptp device pin descriptors properly").
+Let me know what you think.
 
-BugLink: https://bugs.launchpad.net/bugs/1864754
-Fixes: a33121e5487b ("ptp: fix the race between the release of ptp_clock and cdev")
-Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
----
- drivers/ptp/ptp_clock.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/ptp/ptp_clock.c b/drivers/ptp/ptp_clock.c
-index ac1f2bf9e888..12951023d0c6 100644
---- a/drivers/ptp/ptp_clock.c
-+++ b/drivers/ptp/ptp_clock.c
-@@ -171,6 +171,7 @@ static void ptp_clock_release(struct device *dev)
- 	struct ptp_clock *ptp = container_of(dev, struct ptp_clock, dev);
- 
- 	ptp_cleanup_pin_groups(ptp);
-+	posix_clock_unregister(&ptp->clock);
- 	mutex_destroy(&ptp->tsevq_mux);
- 	mutex_destroy(&ptp->pincfg_mux);
- 	ida_simple_remove(&ptp_clocks_map, ptp->index);
-@@ -303,8 +304,6 @@ int ptp_clock_unregister(struct ptp_clock *ptp)
- 	if (ptp->pps_source)
- 		pps_unregister_source(ptp->pps_source);
- 
--	posix_clock_unregister(&ptp->clock);
--
- 	return 0;
- }
- EXPORT_SYMBOL(ptp_clock_unregister);
--- 
-2.25.0
-
+Wei.
