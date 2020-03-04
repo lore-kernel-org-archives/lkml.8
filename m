@@ -2,337 +2,84 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE0C9C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:40:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0940DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B3320870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D48FC215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:44:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583336658;
+	bh=z1VXR49TU2jEisQHdemESEry9T1v6Xn80PnEDn16EB8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EJVFpUpBxBOWNODYLRjWNAcyWQWaxsB+GcQHYBajVEkdiMBJA8BVgkwGcxjo/976w
+	 SipWJ/IIgZoK9ruUwqlKwkKU3ZA/v1VY1aftdZMfwx7Byz1qiJiQ19LRPyTBdQ2722
+	 0PZtgYb5Hj3CGd2nhEZHapb3SY1486oW6iOzO7OU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727930AbgCDPkt (ORCPT
+        id S1729517AbgCDPoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:40:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63194 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726275AbgCDPks (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:40:48 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024FdnDN129413
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 10:40:47 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yhyxqxq6g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:40:47 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Wed, 4 Mar 2020 15:40:42 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Mar 2020 15:40:34 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024FeWKl48758790
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Mar 2020 15:40:32 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B7001AE05A;
-        Wed,  4 Mar 2020 15:40:32 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A9640AE045;
-        Wed,  4 Mar 2020 15:40:31 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.145.27])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Mar 2020 15:40:31 +0000 (GMT)
-Subject: Re: [PATCH v3 24/27] powerpc/powernv/pmem: Expose SMART data via
- ndctl
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-25-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Wed, 4 Mar 2020 16:40:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 4 Mar 2020 10:44:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726561AbgCDPoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:44:17 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24C5D2166E;
+        Wed,  4 Mar 2020 15:44:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583336655;
+        bh=z1VXR49TU2jEisQHdemESEry9T1v6Xn80PnEDn16EB8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TPbKJ1BeOt1vDP21LVx3cpaqIiQ5ufldGudnjxJ9cRaoRe/9YBXARjwUJR/Brdcnk
+         /rRwqvmOZ1VPO9wHc8y4Yl2aKKt2WupbgVlZMSqmmVJdPwsH8/CDAwINWcFR4yJB3R
+         0MbeqdrE4mBN8i9/58bxjeS0vuSuBkdwJGFKBdao=
+Date:   Wed, 4 Mar 2020 16:44:12 +0100
+From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+To:     "Stahl, Manuel" <manuel.stahl@iis-extern.fraunhofer.de>
+Cc:     "stephen@networkplumber.org" <stephen@networkplumber.org>,
+        "hjk@linutronix.de" <hjk@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "sojkam1@fel.cvut.cz" <sojkam1@fel.cvut.cz>
+Subject: Re: [PATCH 2/2] uio: Prefer MSI(X) interrupts in PCI drivers
+Message-ID: <20200304154412.GA1761004@kroah.com>
+References: <1507296707.2915.14.camel@iis-extern.fraunhofer.de>
+ <1507296804.2915.16.camel@iis-extern.fraunhofer.de>
+ <20171006134550.GA1626@kroah.com>
+ <1507297826.2915.18.camel@iis-extern.fraunhofer.de>
+ <20171006075700.587a5e22@xeon-e3>
+ <20171020125044.GA8634@kroah.com>
+ <1508504312.3128.23.camel@iis-extern.fraunhofer.de>
+ <9ba3cdd6d330486a91cb5c376f012b5b963c4eae.camel@iis-extern.fraunhofer.de>
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-25-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030415-0008-0000-0000-0000035951B1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030415-0009-0000-0000-00004A7A85DB
-Message-Id: <7d461119-12e6-7813-50d5-42e2d7774b54@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- malwarescore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 impostorscore=0 adultscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9ba3cdd6d330486a91cb5c376f012b5b963c4eae.camel@iis-extern.fraunhofer.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Wed, Mar 04, 2020 at 03:19:55PM +0000, Stahl, Manuel wrote:
+> Hi Greg,
 > 
-> This patch retrieves proprietary formatted SMART data and makes it
-> available via ndctl. A later contribution will be made to ndctl to
-> parse this data.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
+> so somehow this discussion stopped without any instructions how to proceed.
 
+What is "this discussion"?
 
-Nothing new to add compared to previous patches with similarities.
+> I think this kind of driver helps every FPGA developer to interface
+> his design via PCIe to a Linux PC.
+> So if there is any chance to get this code merged, I'm glad to rebase
+> this onto the latest kernel release.
 
-   Fred
+Please rebase and resubmit, it's a patch from 2 1/2 years ago, not much
+I can even remember about patch sets sent last week...
 
+thanks,
 
-
->   arch/powerpc/platforms/powernv/pmem/ocxl.c    | 128 ++++++++++++++++++
->   .../platforms/powernv/pmem/ocxl_internal.h    |  18 +++
->   include/uapi/linux/ndctl.h                    |   1 +
->   3 files changed, 147 insertions(+)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> index d4ce5e9e0521..5cd1b6d78dd6 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> @@ -81,6 +81,129 @@ static int ndctl_config_size(struct nd_cmd_get_config_size *command)
->   	return 0;
->   }
->   
-> +/**
-> + * smart_header_parse() - Parse the first 64 bits of the SMART admin command response
-> + * @ocxlpmem: the device metadata
-> + * @length: out, returns the number of bytes in the response (excluding the 64 bit header)
-> + */
-> +static int smart_header_parse(struct ocxlpmem *ocxlpmem, u32 *length)
-> +{
-> +	int rc;
-> +	u64 val;
-> +
-> +	u16 data_identifier;
-> +	u32 data_length;
-> +
-> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> +				     ocxlpmem->admin_command.data_offset,
-> +				     OCXL_LITTLE_ENDIAN, &val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	data_identifier = val >> 48;
-> +	data_length = val & 0xFFFFFFFF;
-> +
-> +	if (data_identifier != 0x534D) { // 'SM'
-> +		dev_err(&ocxlpmem->dev,
-> +			"Bad data identifier for smart data, expected 'SM', got '%-.*s'\n",
-> +			2, (char *)&data_identifier);
-> +		return -EINVAL;
-> +	}
-> +
-> +	*length = data_length;
-> +	return 0;
-> +}
-> +
-> +static int ndctl_smart(struct ocxlpmem *ocxlpmem, struct nd_cmd_pkg *pkg)
-> +{
-> +	u32 length, i;
-> +	struct nd_ocxl_smart *out;
-> +	int rc;
-> +
-> +	mutex_lock(&ocxlpmem->admin_command.lock);
-> +
-> +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_SMART);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_execute(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_complete_timeout(ocxlpmem, ADMIN_COMMAND_SMART);
-> +	if (rc < 0) {
-> +		dev_err(&ocxlpmem->dev, "SMART timeout\n");
-> +		goto out;
-> +	}
-> +
-> +	rc = admin_response(ocxlpmem);
-> +	if (rc < 0)
-> +		goto out;
-> +	if (rc != STATUS_SUCCESS) {
-> +		warn_status(ocxlpmem, "Unexpected status from SMART", rc);
-> +		goto out;
-> +	}
-> +
-> +	rc = smart_header_parse(ocxlpmem, &length);
-> +	if (rc)
-> +		goto out;
-> +
-> +	pkg->nd_fw_size = length;
-> +
-> +	length = min(length, pkg->nd_size_out); // bytes
-> +	out = (struct nd_ocxl_smart *)pkg->nd_payload;
-> +	// Each SMART attribute is 2 * 64 bits
-> +	out->count = length / (2 * sizeof(u64)); // attributes
-> +
-> +	for (i = 0; i < length; i += sizeof(u64)) {
-> +		rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> +					     ocxlpmem->admin_command.data_offset + sizeof(u64) + i,
-> +					     OCXL_LITTLE_ENDIAN,
-> +					     &out->attribs[i/sizeof(u64)]);
-> +		if (rc)
-> +			goto out;
-> +	}
-> +
-> +	rc = admin_response_handled(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = 0;
-> +	goto out;
-> +
-> +out:
-> +	mutex_unlock(&ocxlpmem->admin_command.lock);
-> +	return rc;
-> +}
-> +
-> +static int ndctl_call(struct ocxlpmem *ocxlpmem, void *buf, unsigned int buf_len)
-> +{
-> +	struct nd_cmd_pkg *pkg = buf;
-> +
-> +	if (buf_len < sizeof(struct nd_cmd_pkg)) {
-> +		dev_err(&ocxlpmem->dev, "Invalid ND_CALL size=%u\n", buf_len);
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (pkg->nd_family != NVDIMM_FAMILY_OCXL) {
-> +		dev_err(&ocxlpmem->dev, "Invalid ND_CALL family=0x%llx\n", pkg->nd_family);
-> +		return -EINVAL;
-> +	}
-> +
-> +	switch (pkg->nd_command) {
-> +	case ND_CMD_OCXL_SMART:
-> +		ndctl_smart(ocxlpmem, pkg);
-> +		break;
-> +
-> +	default:
-> +		dev_err(&ocxlpmem->dev, "Invalid ND_CALL command=0x%llx\n", pkg->nd_command);
-> +		return -EINVAL;
-> +	}
-> +
-> +
-> +	return 0;
-> +}
-> +
->   static int ndctl(struct nvdimm_bus_descriptor *nd_desc,
->   		 struct nvdimm *nvdimm,
->   		 unsigned int cmd, void *buf, unsigned int buf_len, int *cmd_rc)
-> @@ -88,6 +211,10 @@ static int ndctl(struct nvdimm_bus_descriptor *nd_desc,
->   	struct ocxlpmem *ocxlpmem = container_of(nd_desc, struct ocxlpmem, bus_desc);
->   
->   	switch (cmd) {
-> +	case ND_CMD_CALL:
-> +		*cmd_rc = ndctl_call(ocxlpmem, buf, buf_len);
-> +		return 0;
-> +
->   	case ND_CMD_GET_CONFIG_SIZE:
->   		*cmd_rc = ndctl_config_size(buf);
->   		return 0;
-> @@ -171,6 +298,7 @@ static int register_lpc_mem(struct ocxlpmem *ocxlpmem)
->   	set_bit(ND_CMD_GET_CONFIG_SIZE, &nvdimm_cmd_mask);
->   	set_bit(ND_CMD_GET_CONFIG_DATA, &nvdimm_cmd_mask);
->   	set_bit(ND_CMD_SET_CONFIG_DATA, &nvdimm_cmd_mask);
-> +	set_bit(ND_CMD_CALL, &nvdimm_cmd_mask);
->   
->   	set_bit(NDD_ALIASING, &nvdimm_flags);
->   
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> index 927690f4888f..0eb7a35d24ae 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl_internal.h
-> @@ -7,6 +7,7 @@
->   #include <linux/libnvdimm.h>
->   #include <uapi/nvdimm/ocxl-pmem.h>
->   #include <linux/mm.h>
-> +#include <linux/ndctl.h>
->   
->   #define LABEL_AREA_SIZE	(1UL << PA_SECTION_SHIFT)
->   #define DEFAULT_TIMEOUT 100
-> @@ -98,6 +99,23 @@ struct ocxlpmem_function0 {
->   	struct ocxl_fn *ocxl_fn;
->   };
->   
-> +struct nd_ocxl_smart {
-> +	__u8 count;
-> +	__u8 reserved[7];
-> +	__u64 attribs[0];
-> +} __packed;
-> +
-> +struct nd_pkg_ocxl {
-> +	struct nd_cmd_pkg gen;
-> +	union {
-> +		struct nd_ocxl_smart smart;
-> +	};
-> +};
-> +
-> +enum nd_cmd_ocxl {
-> +	ND_CMD_OCXL_SMART = 1,
-> +};
-> +
->   struct ocxlpmem {
->   	struct device dev;
->   	struct pci_dev *pdev;
-> diff --git a/include/uapi/linux/ndctl.h b/include/uapi/linux/ndctl.h
-> index de5d90212409..2885052e7f40 100644
-> --- a/include/uapi/linux/ndctl.h
-> +++ b/include/uapi/linux/ndctl.h
-> @@ -244,6 +244,7 @@ struct nd_cmd_pkg {
->   #define NVDIMM_FAMILY_HPE2 2
->   #define NVDIMM_FAMILY_MSFT 3
->   #define NVDIMM_FAMILY_HYPERV 4
-> +#define NVDIMM_FAMILY_OCXL 6
->   
->   #define ND_IOCTL_CALL			_IOWR(ND_IOCTL, ND_CMD_CALL,\
->   					struct nd_cmd_pkg)
-> 
-
+greg k-h
