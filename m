@@ -2,149 +2,186 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09903C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E54EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5F7820842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:25:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="OpZDbhpr"
+	by mail.kernel.org (Postfix) with ESMTP id 3921D20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387519AbgCDCZv (ORCPT
+        id S2387550AbgCDC0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:25:51 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:26327 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387397AbgCDCZv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:25:51 -0500
-X-UUID: c295019e3c2c43a5a5bd5b6731a0597a-20200304
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=WRwJNL3/LSu9YAz4lzMmh4KqQ+Mz5WRqM0Z4EacS3BA=;
-        b=OpZDbhpry9lCxT8XBLFuk96dgH/gU7hMsiAKr6zInqpN7CzkwjGPHy3zWDyBWi64oEYyqAbJi7EE3/gTOpHiJuaelpeL2K05QNWxg3NK0tq64zyLBiJvKXWM1KTektECPOkVJRf+qysm9+bv+GggZwdj08lfoo2gyA1iFALswp4=;
-X-UUID: c295019e3c2c43a5a5bd5b6731a0597a-20200304
-Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1046319018; Wed, 04 Mar 2020 10:25:43 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Mar 2020 10:23:40 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 4 Mar 2020 10:23:04 +0800
-Message-ID: <1583288736.14250.2.camel@mtksdccf07>
-Subject: Re: [RFC PATCH v1] scsi: ufs-mediatek: add inline encryption support
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Eric Biggers <ebiggers@kernel.org>
-CC:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <beanhuo@micron.com>, <cang@codeaurora.org>,
-        <satyat@google.com>, <matthias.bgg@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fscrypt@vger.kernel.org>,
-        <kuohong.wang@mediatek.com>, <peter.wang@mediatek.com>,
-        <chun-hung.wu@mediatek.com>, <andy.teng@mediatek.com>,
-        <light.hsieh@mediatek.com>
-Date:   Wed, 4 Mar 2020 10:25:36 +0800
-In-Reply-To: <20200302180231.GB98133@gmail.com>
-References: <20200302091138.10341-1-stanley.chu@mediatek.com>
-         <20200302180231.GB98133@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Tue, 3 Mar 2020 21:26:48 -0500
+Received: from foss.arm.com ([217.140.110.172]:54850 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387497AbgCDC0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 21:26:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B265030E;
+        Tue,  3 Mar 2020 18:26:47 -0800 (PST)
+Received: from [10.163.1.88] (unknown [10.163.1.88])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3EE53F534;
+        Tue,  3 Mar 2020 18:26:43 -0800 (PST)
+Subject: Re: Linux-next-20200302: arm64 build failed
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
+References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
+ <20200302104726.GA7995@willie-the-truck>
+ <20200302135443.GA24831@linux.ibm.com>
+ <20200302174553.GC4166275@arrakis.emea.arm.com>
+ <c4c6b363-62a8-db27-6ab3-ca2f2d4d082c@arm.com>
+ <20200303162846.GE823373@arrakis.emea.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <e6c907ba-7be4-37a0-7853-3097918baf7b@arm.com>
+Date:   Wed, 4 Mar 2020 07:56:40 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+In-Reply-To: <20200303162846.GE823373@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRXJpYywNCg0KT24gTW9uLCAyMDIwLTAzLTAyIGF0IDEwOjAyIC0wODAwLCBFcmljIEJpZ2dl
-cnMgd3JvdGU6DQo+IE9uIE1vbiwgTWFyIDAyLCAyMDIwIGF0IDA1OjExOjM4UE0gKzA4MDAsIFN0
-YW5sZXkgQ2h1IHdyb3RlOg0KPiA+IEFkZCBpbmxpbmUgZW5jcnlwdGlvbiBzdXBwb3J0IHRvIHVm
-cy1tZWRpYXRlay4NCj4gPiANCj4gPiBUaGUgc3RhbmRhcmRzLWNvbXBsaWFudCBwYXJ0cywgc3Vj
-aCBhcyBxdWVyeWluZyB0aGUgY3J5cHRvIGNhcGFiaWxpdGllcw0KPiA+IGFuZCBlbmFibGluZyBj
-cnlwdG8gZm9yIGluZGl2aWR1YWwgVUZTIHJlcXVlc3RzLCBhcmUgYWxyZWFkeSBoYW5kbGVkIGJ5
-DQo+ID4gdWZzaGNkLWNyeXB0by5jLCB3aGljaCBpdHNlbGYgaXMgd2lyZWQgaW50byB0aGUgYmxr
-LWNyeXB0byBmcmFtZXdvcmsuDQo+ID4gDQo+ID4gSG93ZXZlciBNZWRpYVRlayBVRlMgaG9zdCBy
-ZXF1aXJlcyBhIHZlbmRvci1zcGVjaWZpYyBoY2VfZW5hYmxlIG9wZXJhdGlvbg0KPiA+IHRvIGFs
-bG93IGNyeXB0by1yZWxhdGVkIHJlZ2lzdGVycyBiZWluZyBhY2Nlc3NlZCBub3JtYWxseSBpbiBr
-ZXJuZWwuDQo+ID4gQWZ0ZXIgdGhpcyBzdGVwLCBNZWRpYVRlayBVRlMgaG9zdCBjYW4gd29yayBh
-cyBzdGFuZGFyZC1jb21wbGlhbnQgaG9zdA0KPiA+IGZvciBpbmxpbmUtZW5jcnlwdGlvbiByZWxh
-dGVkIGZ1bmN0aW9ucy4NCj4gPiANCj4gPiBUaGlzIHBhdGNoIGlzIHJlYmFzZWQgdG8gdGhlIGxh
-dGVzdCB3aXAtaW5saW5lLWVuY3J5cHRpb24gYnJhbmNoIGluDQo+ID4gRXJpYyBCaWdnZXJzJ3Mg
-Z2l0Og0KPiA+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0
-L2ViaWdnZXJzL2xpbnV4LmdpdC8NCj4gDQo+IFBsZWFzZSBkb24ndCB1c2UgYSByYW5kb20gd29y
-ay1pbi1wcm9ncmVzcyBicmFuY2ggZnJvbSBteSBnaXQgcmVwb3NpdG9yeSAod2hpY2gNCj4gaGFz
-bid0IGJlZW4gdXBkYXRlZCB0byB0aGUgdjcgcGF0Y2hzZXQgeWV0IGFuZCB3aWxsIGJlIHJlYmFz
-ZWQpOyB1c2UgaW5zdGVhZDoNCj4gDQo+IAlSZXBvOiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1
-Yi9zY20vZnMvZnNjcnlwdC9mc2NyeXB0LmdpdA0KPiAJVGFnOiBpbmxpbmUtZW5jcnlwdGlvbi12
-Nw0KPiANCj4gQWxzbywgdGhpcyBwYXRjaCBkb2Vzbid0IGFwcGx5IHRvIGVpdGhlciBicmFuY2gg
-YW55d2F5Og0KPiANCj4gQXBwbHlpbmc6IHNjc2k6IHVmcy1tZWRpYXRlazogYWRkIGlubGluZSBl
-bmNyeXB0aW9uIHN1cHBvcnQNCj4gVXNpbmcgaW5kZXggaW5mbyB0byByZWNvbnN0cnVjdCBhIGJh
-c2UgdHJlZS4uLg0KPiBlcnJvcjogcGF0Y2ggZmFpbGVkOiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1t
-ZWRpYXRlay5jOjE1DQo+IGVycm9yOiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jOiBw
-YXRjaCBkb2VzIG5vdCBhcHBseQ0KPiBlcnJvcjogcGF0Y2ggZmFpbGVkOiBkcml2ZXJzL3Njc2kv
-dWZzL3Vmcy1tZWRpYXRlay5oOjU4DQo+IGVycm9yOiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRp
-YXRlay5oOiBwYXRjaCBkb2VzIG5vdCBhcHBseQ0KPiBlcnJvcjogRGlkIHlvdSBoYW5kIGVkaXQg
-eW91ciBwYXRjaD8NCg0KU29ycnkgZm9yIHRoaXMuDQpJIHJlYmFzZWQgdGhpcyBwYXRjaCBhcyBS
-RkMgdjIgdG8gYmVsb3cgdGFnLA0KDQoJUmVwbzogaHR0cHM6Ly9naXQua2VybmVsLm9yZy9wdWIv
-c2NtL2ZzL2ZzY3J5cHQvZnNjcnlwdC5naXQNCiAJVGFnOiBpbmxpbmUtZW5jcnlwdGlvbi12Nw0K
-DQoNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYyBiL2Ry
-aXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMNCj4gPiBpbmRleCA1M2VhZTVmZTJhZGUuLjEy
-ZDAxZmQzZDVlMSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRl
-ay5jDQo+ID4gKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KPiA+IEBAIC0x
-NSw2ICsxNSw3IEBADQo+ID4gICNpbmNsdWRlIDxsaW51eC9zb2MvbWVkaWF0ZWsvbXRrX3NpcF9z
-dmMuaD4NCj4gPiAgDQo+ID4gICNpbmNsdWRlICJ1ZnNoY2QuaCINCj4gPiArI2luY2x1ZGUgInVm
-c2hjZC1jcnlwdG8uaCINCj4gPiAgI2luY2x1ZGUgInVmc2hjZC1wbHRmcm0uaCINCj4gPiAgI2lu
-Y2x1ZGUgInVmc19xdWlya3MuaCINCj4gPiAgI2luY2x1ZGUgInVuaXByby5oIg0KPiA+IEBAIC0y
-NCw2ICsyNSw5IEBADQo+ID4gIAlhcm1fc21jY2Nfc21jKE1US19TSVBfVUZTX0NPTlRST0wsIFwN
-Cj4gPiAgCQkgICAgICBjbWQsIHZhbCwgMCwgMCwgMCwgMCwgMCwgJihyZXMpKQ0KPiA+ICANCj4g
-PiArI2RlZmluZSB1ZnNfbXRrX2NyeXB0b19jdHJsKHJlcywgZW5hYmxlKSBcDQo+ID4gKwl1ZnNf
-bXRrX3NtYyhVRlNfTVRLX1NJUF9DUllQVE9fQ1RSTCwgZW5hYmxlLCByZXMpDQo+ID4gKw0KPiA+
-ICAjZGVmaW5lIHVmc19tdGtfcmVmX2Nsa19ub3RpZnkob24sIHJlcykgXA0KPiA+ICAJdWZzX210
-a19zbWMoVUZTX01US19TSVBfUkVGX0NMS19OT1RJRklDQVRJT04sIG9uLCByZXMpDQo+ID4gIA0K
-PiA+IEBAIC02Niw3ICs3MCwyNyBAQCBzdGF0aWMgdm9pZCB1ZnNfbXRrX2NmZ191bmlwcm9fY2co
-c3RydWN0IHVmc19oYmEgKmhiYSwgYm9vbCBlbmFibGUpDQo+ID4gIAl9DQo+ID4gIH0NCj4gPiAg
-DQo+ID4gLXN0YXRpYyBpbnQgdWZzX210a19iaW5kX21waHkoc3RydWN0IHVmc19oYmEgKmhiYSkN
-Cj4gPiArc3RhdGljIHZvaWQgdWZzX210a19jcnlwdG9fZW5hYmxlKHN0cnVjdCB1ZnNfaGJhICpo
-YmEpDQo+ID4gK3sNCj4gPiArCXN0cnVjdCBhcm1fc21jY2NfcmVzIHJlczsNCj4gPiArDQo+ID4g
-Kwl1ZnNfbXRrX2NyeXB0b19jdHJsKHJlcywgMSk7DQo+ID4gKwlpZiAocmVzLmEwKSB7DQo+ID4g
-KwkJZGV2X2luZm8oaGJhLT5kZXYsICIlczogY3J5cHRvIGVuYWJsZSBmYWlsZWQsIGVycjogJWx1
-XG4iLA0KPiA+ICsJCQkgX19mdW5jX18sIHJlcy5hMCk7DQo+ID4gKwl9DQo+ID4gK30NCj4gPiAr
-DQo+ID4gK3N0YXRpYyBpbnQgdWZzX210a19oY2VfZW5hYmxlX25vdGlmeShzdHJ1Y3QgdWZzX2hi
-YSAqaGJhLA0KPiA+ICsJCQkJICAgICBlbnVtIHVmc19ub3RpZnlfY2hhbmdlX3N0YXR1cyBzdGF0
-dXMpDQo+ID4gK3sNCj4gPiArCWlmIChzdGF0dXMgPT0gUFJFX0NIQU5HRSAmJiB1ZnNoY2RfaGJh
-X2lzX2NyeXB0b19zdXBwb3J0ZWQoaGJhKSkNCj4gPiArCQl1ZnNfbXRrX2NyeXB0b19lbmFibGUo
-aGJhKTsNCj4gPiArDQo+ID4gKwlyZXR1cm4gMDsNCj4gPiArfQ0KPiA+ICsNCj4gPiAraW50IHVm
-c19tdGtfYmluZF9tcGh5KHN0cnVjdCB1ZnNfaGJhICpoYmEpDQo+ID4gIHsNCj4gPiAgCXN0cnVj
-dCB1ZnNfbXRrX2hvc3QgKmhvc3QgPSB1ZnNoY2RfZ2V0X3ZhcmlhbnQoaGJhKTsNCj4gPiAgCXN0
-cnVjdCBkZXZpY2UgKmRldiA9IGhiYS0+ZGV2Ow0KPiA+IEBAIC00OTQsNiArNTE4LDcgQEAgc3Rh
-dGljIHN0cnVjdCB1ZnNfaGJhX3ZhcmlhbnRfb3BzIHVmc19oYmFfbXRrX3ZvcHMgPSB7DQo+ID4g
-IAkubmFtZSAgICAgICAgICAgICAgICA9ICJtZWRpYXRlay51ZnNoY2kiLA0KPiA+ICAJLmluaXQg
-ICAgICAgICAgICAgICAgPSB1ZnNfbXRrX2luaXQsDQo+ID4gIAkuc2V0dXBfY2xvY2tzICAgICAg
-ICA9IHVmc19tdGtfc2V0dXBfY2xvY2tzLA0KPiA+ICsJLmhjZV9lbmFibGVfbm90aWZ5ICAgPSB1
-ZnNfbXRrX2hjZV9lbmFibGVfbm90aWZ5LA0KPiA+ICAJLmxpbmtfc3RhcnR1cF9ub3RpZnkgPSB1
-ZnNfbXRrX2xpbmtfc3RhcnR1cF9ub3RpZnksDQo+ID4gIAkucHdyX2NoYW5nZV9ub3RpZnkgICA9
-IHVmc19tdGtfcHdyX2NoYW5nZV9ub3RpZnksDQo+ID4gIAkuYXBwbHlfZGV2X3F1aXJrcyAgICA9
-IHVmc19tdGtfYXBwbHlfZGV2X3F1aXJrcywNCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9zY3Np
-L3Vmcy91ZnMtbWVkaWF0ZWsuaCBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmgNCj4g
-PiBpbmRleCBmY2NkZDk3OWQ2ZmIuLjVlYmFhNTk4OThiZiAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
-ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5oDQo+ID4gKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91
-ZnMtbWVkaWF0ZWsuaA0KPiA+IEBAIC01OCw2ICs1OCw3IEBADQo+ID4gICAqLw0KPiA+ICAjZGVm
-aW5lIE1US19TSVBfVUZTX0NPTlRST0wgICAgICAgICAgICAgICBNVEtfU0lQX1NNQ19DTUQoMHgy
-NzYpDQo+ID4gICNkZWZpbmUgVUZTX01US19TSVBfREVWSUNFX1JFU0VUICAgICAgICAgIEJJVCgx
-KQ0KPiA+ICsjZGVmaW5lIFVGU19NVEtfU0lQX0NSWVBUT19DVFJMICAgICAgICAgICBCSVQoMikN
-Cj4gPiAgI2RlZmluZSBVRlNfTVRLX1NJUF9SRUZfQ0xLX05PVElGSUNBVElPTiAgQklUKDMpDQo+
-IA0KPiBCdXQgaWYgdGhpcyBpcyBhbGwgdGhhdCdzIG5lZWRlZCB0byBnZXQgaW5saW5lIGNyeXB0
-byB3b3JraW5nIHdpdGggTWVkaWF0ZWsgVUZTLA0KPiB0aGF0J3MgZ3JlYXQgbmV3cy4NCg0KVGhh
-bmtzIGZvciB5b3VyIHJldmlldyA6KQ0KDQpTdGFubGV5IENodQ0KDQoNCg0KPiANCj4gVGhhbmtz
-IQ0KPiANCj4gLSBFcmljDQoNCg==
 
+
+On 03/03/2020 09:58 PM, Catalin Marinas wrote:
+> On Tue, Mar 03, 2020 at 09:34:45AM +0530, Anshuman Khandual wrote:
+>> On 03/02/2020 11:15 PM, Catalin Marinas wrote:
+>>> On Mon, Mar 02, 2020 at 03:54:43PM +0200, Mike Rapoport wrote:
+>>>> On Mon, Mar 02, 2020 at 10:47:27AM +0000, Will Deacon wrote:
+>>>>> [+Anshuman and Catalin]
+>>>>>
+>>>>> On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
+>>>>>> Linux-Next 20200302 arm64 build failed due to below errors,
+>>>>>> Suspecting patch causing this build break.
+>>>>>>
+>>>>>> 87d900aef3e2  arm/arm64: add support for folded p4d page tables
+>>>>>>
+>>>>>> Error log,
+>>>>>> -------------
+>>>>>> arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
+>>>>>> include/linux/compiler.h:284:1: error: incompatible type for argument
+>>>>>> 1 of 'p4d_page_paddr'
+>>>>>>  ({         \
+>>>>>>  ^
+>>>>>> arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
+>>>>>> '__phys_to_virt'
+>>>>>>  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
+>>>>>>                                              ^
+>>>>>> arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
+>>>>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>>>>>>                                           ^~~~
+>>>>>> include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
+>>>>>>  #define READ_ONCE(x) __READ_ONCE(x, 1)
+>>>>>>                       ^~~~~~~~~~~
+>>>>>> arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
+>>>>>>  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
+>>>>>> + pud_index(addr) * sizeof(pud_t))
+>>>>>>                                                     ^~~~~~~~~
+>>>>>> arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
+>>>>>> 'pud_offset_phys'
+>>>>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
+>>>>>>                                                ^~~~~~~~~~~~~~~
+>>>>>> arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
+>>>>>>    pudp = pud_offset(pgdp, addr);
+>>>>>>           ^~~~~~~~~~
+>>>>>
+>>>>> Looks like we need an implementation of unmap_hotplug_p4d_range() to
+>>>>> walk the dummy p4d level. Unfortunately, we don't have the folded p4d
+>>>>> patches in the arm64 tree so we'll either need a common branch or the
+>>>>> hotplug patches will need to be dropped for the moment.
+>>>>
+>>>> unmap_hotplug_p4d_range() is easy :)
+>>>>
+>>>> From c7a5d08ff51ca2057b6b0289c4423bdfd7643518 Mon Sep 17 00:00:00 2001
+>>>> From: Mike Rapoport <rppt@linux.ibm.com>
+>>>> Date: Mon, 2 Mar 2020 15:53:17 +0200
+>>>> Subject: [PATCH] arm64/mm: implement unmap_hotplug_p4d_range
+>>>>
+>>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>>>> ---
+>>>>  arch/arm64/mm/mmu.c | 20 +++++++++++++++++++-
+>>>>  1 file changed, 19 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>>> index 05ec8e5f1436..c76b11577558 100644
+>>>> --- a/arch/arm64/mm/mmu.c
+>>>> +++ b/arch/arm64/mm/mmu.c
+>>>> @@ -840,6 +840,24 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
+>>>>  	} while (addr = next, addr < end);
+>>>>  }
+>>>>  
+>>>> +static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
+>>>> +				unsigned long end, bool free_mapped)
+>>>> +{
+>>>> +	unsigned long next;
+>>>> +	pgd_t *p4dp, p4d;
+>>>> +
+>>>> +	do {
+>>>> +		next = p4d_addr_end(addr, end);
+>>>> +		p4dp = p4d_offset(pgd, addr);
+>>>> +		p4d = READ_ONCE(*p4dp);
+>>>> +		if (p4d_none(p4d))
+>>>> +			continue;
+>>>> +
+>>>> +		WARN_ON(!p4d_present(p4d));
+>>>> +		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
+>>>> +	} while (addr = next, addr < end);
+>>>> +}
+>>>> +
+>>>>  static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>>>>  				bool free_mapped)
+>>>>  {
+>>>> @@ -854,7 +872,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
+>>>>  			continue;
+>>>>  
+>>>>  		WARN_ON(!pgd_present(pgd));
+>>>> -		unmap_hotplug_pud_range(pgdp, addr, next, free_mapped);
+>>>> +		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
+>>>>  	} while (addr = next, addr < end);
+>>>>  }
+>>>
+>>> Thanks Mike. With the additional diff below, I can get it to build with
+>>> and without the p4d clean-up patches in -next. If Anshuman confirms that
+>>> they work, I can add them on top of the arm64 for-next/memory-hotremove
+>>> branch.
+>>
+>> These two patches applied on next-20200302 works fine for hot-remove.
+> 
+> Do they also work on top of the vanilla kernel + your hotremove patches
+> (i.e. not on top of -next)?
+
+Yes, they do work on current vanilla kernel (8b614cb8f1dcac8ca77cf4dd85f46)
+and v13 hotremove series.
+
+> 
+>> As the second patch also fixes the first one, IMHO both should be
+>> folded into a single one instead. Just wondering if this combined
+>> patch which enables P4D page table should be posted on the list or do
+>> I need to respin original hot remove patches again.
+> 
+> If your unmap patches plus the fixes from Mike and me work fine on top
+> of 5.6-rc3 (as well as when combined with linux-next), I'd prefer you
+Yes, they do work on both.
+
+> respin your patches to include the p4d support from start. Otherwise, we
+
+Okay. I will be sending V14 on v5.6-rc3 (OR v.5.6-rc4 is preferred ?) with
+p4d support. I will add yours and Mike's Signed-off-by as well.
+
+> create a single patch that Andrew can merge on top of the -mm tree.
+> 
