@@ -2,129 +2,263 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B160C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:11:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAF3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:14:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63E9B20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:11:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583320307;
-	bh=6QGmwW91nEJvgxEq+40qvnflN5tJsMSuNiAE6L04isA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=MZyDze0MteqoMmSyp8zmzrNA2I0Um4qqqk/N8Bojw9QfDA74bTAGXSngXe2ZS9HC6
-	 2K/cilPW/Uv55txj/jwmk0/Nlc+XyVpJ3yvMJ6C4+H+O580wcoQOnhyrCXA8K4cOrA
-	 U1KUUKeCj9ZuNvFS67+8/BCGmRbruJnQjOm9y7LE=
+	by mail.kernel.org (Postfix) with ESMTP id 15B42214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:14:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E5i5pswg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387859AbgCDLLq (ORCPT
+        id S2387803AbgCDLOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:11:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387488AbgCDLLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:11:46 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41F6520709;
-        Wed,  4 Mar 2020 11:11:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583320305;
-        bh=6QGmwW91nEJvgxEq+40qvnflN5tJsMSuNiAE6L04isA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CQKgD6CQPxw+O3Y3MLwSfh7ElCLjT18osaxje158rq6UtfnVF+Xj0GmwvRoitv2Hv
-         fYaxSDobn4YRorkPEW5a8eWk6X9VbJQM/liqcf0rQFLiOqr7kjaLEEAxxtbvIV1CQ0
-         oBTWpTNEtELu72smIlmu02oZceuEvNkfsyooD/rI=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j9RwF-009yDa-GB; Wed, 04 Mar 2020 11:11:43 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Eric Auger <eric.auger@redhat.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <jroedel@suse.de>, Will Deacon <will@kernel.org>,
-        stable@vger.kernel.org
-Subject: [PATCH v2] iommu/dma: Fix MSI reservation allocation
-Date:   Wed,  4 Mar 2020 11:11:17 +0000
-Message-Id: <20200304111117.3540-1-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 4 Mar 2020 06:14:25 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46290 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbgCDLOZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 06:14:25 -0500
+Received: by mail-wr1-f66.google.com with SMTP id j7so1858541wrp.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 03:14:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ytJyZne6tZeakYNWCLvFS4U17Dxs6Z9j14ft6YAqs1Y=;
+        b=E5i5pswg8Xz0wg1+iNVXwEiKmUyrezTIOvhxCawnzSfY7oSbglTIWwQ0fgct0doFOi
+         mX+7kSfBVuPVFpPEzCEhDEhh8GRrgD7j3tcFB/LdMVYLhvEBIouIGY6Njh19ca9EDkKJ
+         d6Bd79K4jVPC5eHh9WqltbZ+JYvFwDPe7mnhnLO9oUS9ucehEhKqGvMgvjO8pPBRtD+h
+         NPNWOeh7FQ0sF2/HHfhwoNJwe0fRGCRfjz15HiKDhYbDBI/pBxD8kUJgL6hDMuqW+kKH
+         dldnc7ZSthkpYEydmwGC1M4kEc8foQKPUPsF/QFx2DA77PKyWN6EHOgatRhJAneAzk2e
+         SsiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ytJyZne6tZeakYNWCLvFS4U17Dxs6Z9j14ft6YAqs1Y=;
+        b=fLC21giaaD/hwbVG8uQIcXIjTygebTYyGXWtOVeK2h1dr6BM+4Vw/rz4j4VcHUoLHH
+         FeE9JZWzIElDe3rfQ67wvNa362FvX9pxYnKWZ3/Df+1zeKuMywFfTcw24cDAaUa5OZT8
+         0ND5n2dvxcEGBQRPbPsNMe1XfTb26gqkHWPFrHh9me3kNs+SDXjn4UJlLVjzt0Y80mSO
+         khfFG2CKUXYFq38qJVxe0Mbi1BsaxCU7HxMr5nZM6rs9onPTNij4Wt7vBI+Y1C56S1o2
+         kmrzQD2V2mK4dWI+fz3elN0NYh9fNxSNVwVL0lKPKMLbNuA+VtOJSE5daAtrQYnSPvPR
+         2t2A==
+X-Gm-Message-State: ANhLgQ0JNzt3dUkYj9YPQijsZB9N08XgJlZ9LFSXFgrF4hm62/FT3Ivq
+        HrfMMhVn7VEsYvdTtD87ip09Xw==
+X-Google-Smtp-Source: ADFU+vttUA1RjZh+6g6P/+H5oxlXGPf7GeFqGD016HHhrN0Eg/GSxV29/Z9pASyta+tTx4cC2FeNiA==
+X-Received: by 2002:a5d:4f12:: with SMTP id c18mr3597686wru.329.1583320463015;
+        Wed, 04 Mar 2020 03:14:23 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id 133sm3877459wmd.5.2020.03.04.03.14.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 03:14:22 -0800 (PST)
+Date:   Wed, 4 Mar 2020 11:14:22 +0000
+From:   Matthias Maennich <maennich@google.com>
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Joe Perches <joe@perches.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/2] modpost: rework and consolidate logging interface
+Message-ID: <20200304111422.GA66900@google.com>
+References: <20200226142608.19499-1-jeyu@kernel.org>
+ <CAK7LNAQZAgobbTTTpLKNActYCYP7UdVgdE-Oz+pvvRxsxd_uaw@mail.gmail.com>
+ <20200303145736.GA16460@linux-8ccs>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, eric.auger@redhat.com, robin.murphy@arm.com, jroedel@suse.de, will@kernel.org, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20200303145736.GA16460@linux-8ccs>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
-structures doesn't match the way iommu_put_dma_cookie() frees them.
+On Tue, Mar 03, 2020 at 03:57:36PM +0100, Jessica Yu wrote:
+>+++ Masahiro Yamada [03/03/20 23:42 +0900]:
+>>On Wed, Feb 26, 2020 at 11:26 PM Jessica Yu <jeyu@kernel.org> wrote:
+>>>
+>>>Rework modpost's logging interface by consolidating merror(), warn(),
+>>>and fatal() to use a single function, modpost_log(). Introduce different
+>>>logging levels (WARN, ERROR, FATAL) as well as a conditional warn
+>>>(warn_unless()). The conditional warn is useful in determining whether
+>>>to use merror() or warn() based on a condition. This reduces code
+>>>duplication overall.
+>>>
+>>>Signed-off-by: Jessica Yu <jeyu@kernel.org>
+>>>---
+>>>v2:
+>>>  - modpost_log: initialize level to ""
+>>>  - remove parens () from case labels
+>>>
+>>> scripts/mod/modpost.c | 69 +++++++++++++++++++++++----------------------------
+>>> scripts/mod/modpost.h | 22 +++++++++++++---
+>>> 2 files changed, 50 insertions(+), 41 deletions(-)
+>>>
+>>>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>>>index 7edfdb2f4497..3201a2ac5cc4 100644
+>>>--- a/scripts/mod/modpost.c
+>>>+++ b/scripts/mod/modpost.c
+>>>@@ -51,41 +51,37 @@ enum export {
+>>>
+>>> #define MODULE_NAME_LEN (64 - sizeof(Elf_Addr))
+>>>
+>>>-#define PRINTF __attribute__ ((format (printf, 1, 2)))
+>>>+#define PRINTF __attribute__ ((format (printf, 2, 3)))
+>>>
+>>>-PRINTF void fatal(const char *fmt, ...)
+>>>+PRINTF void modpost_log(enum loglevel loglevel, const char *fmt, ...)
+>>> {
+>>>+       char *level = "";
+>>
+>>
+>>You can add 'const'.
+>>
+>>
+>>         const char *level = "";
+>>
+>>
+>>
+>>>        va_list arglist;
+>>>
+>>>-       fprintf(stderr, "FATAL: ");
+>>>-
+>>>-       va_start(arglist, fmt);
+>>>-       vfprintf(stderr, fmt, arglist);
+>>>-       va_end(arglist);
+>>>-
+>>>-       exit(1);
+>>>-}
+>>>-
+>>>-PRINTF void warn(const char *fmt, ...)
+>>>-{
+>>>-       va_list arglist;
+>>>+       switch(loglevel) {
+>>>+       case LOG_WARN:
+>>>+               level = "WARNING: ";
+>>>+               break;
+>>>+       case LOG_ERROR:
+>>>+               level = "ERROR: ";
+>>>+               break;
+>>>+       case LOG_FATAL:
+>>>+               level = "FATAL: ";
+>>>+               break;
+>>>+       default: /* invalid loglevel, ignore */
+>>>+               break;
+>>>+       }
+>>>
+>>>-       fprintf(stderr, "WARNING: ");
+>>>+       fprintf(stderr, level);
+>>
+>>
+>>
+>>If I apply this patch, I see this warning:
+>>
+>>scripts/mod/modpost.c: In function ‘modpost_log’:
+>>scripts/mod/modpost.c:77:2: warning: format not a string literal and
+>>no format arguments [-Wformat-security]
+>> fprintf(stderr, level);
+>> ^~~~~~~
+>>
+>>
+>>Please write like this:
+>>
+>>
+>>    fprintf(stderr, "%s", level);
+>>
+>>
+>>
+>>
+>>Or, you can delete 'level', then write
+>>string literals directly in fprintf().
+>>
+>>
+>>switch(loglevel) {
+>>case LOG_WARN:
+>>       fprintf(stderr, "WARNING: ");
+>>       break;
+>>case LOG_ERROR:
+>>       fprintf(stderr, "ERROR: ");
+>>       break;
+>>case LOG_FATAL:
+>>       fprintf(stderr, "FATAL: ");
+>>       break;
+>>}
+>>
+>>
+>>
+>>
+>>>+       fprintf(stderr, "modpost: ");
+>>>
+>>>        va_start(arglist, fmt);
+>>>        vfprintf(stderr, fmt, arglist);
+>>>        va_end(arglist);
+>>>-}
+>>>
+>>
+>><snip>
+>>
+>>>diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
+>>>index 64a82d2d85f6..631d07714f7a 100644
+>>>--- a/scripts/mod/modpost.h
+>>>+++ b/scripts/mod/modpost.h
+>>>@@ -198,6 +198,22 @@ void *grab_file(const char *filename, unsigned long *size);
+>>> char* get_next_line(unsigned long *pos, void *file, unsigned long size);
+>>> void release_file(void *file, unsigned long size);
+>>>
+>>>-void fatal(const char *fmt, ...);
+>>>-void warn(const char *fmt, ...);
+>>>-void merror(const char *fmt, ...);
+>>>+enum loglevel {
+>>>+       LOG_WARN,
+>>>+       LOG_ERROR,
+>>>+       LOG_FATAL
+>>>+};
+>>>+
+>>>+void modpost_log(enum loglevel loglevel, const char *fmt, ...);
+>>>+
+>>>+#define warn(fmt, args...)     modpost_log(LOG_WARN, fmt, ##args)
+>>>+#define merror(fmt, args...)   modpost_log(LOG_ERROR, fmt, ##args)
 
-The former performs a single allocation of all the required structures,
-while the latter tries to free them one at a time. It doesn't quite
-work for the main use case (the GICv3 ITS where the range is 64kB)
-when the base granule size is 4kB.
+The only thing that bothered me a bit was the inconsistent naming with
+'merror'. I know `error` is reserved, but refactoring this whole code
+(thanks for that!) seems like a code opportunity to clean this up. (Or
+is it just me?)
 
-This leads to a nice slab corruption on teardown, which is easily
-observable by simply creating a VF on a SRIOV-capable device, and
-tearing it down immediately (no need to even make use of it).
-Fortunately, this only affects systems where the ITS isn't translated
-by the SMMU, which are both rare and non-standard.
+Cheers,
+Matthias
 
-Fix it by allocating iommu_dma_msi_page structures one at a time.
-
-Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Eric Auger <eric.auger@redhat.com>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Will Deacon <will@kernel.org>
-Cc: stable@vger.kernel.org
----
-* From v1:
-  - Got rid of the superfluous error handling (Robin)
-  - Clarified that it only affects a very small set of systems
-  - Added Eric's RB (which I assume still stands)
-
- drivers/iommu/dma-iommu.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index a2e96a5fd9a7..ba128d1cdaee 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -177,15 +177,15 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
- 	start -= iova_offset(iovad, start);
- 	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
- 
--	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
--	if (!msi_page)
--		return -ENOMEM;
--
- 	for (i = 0; i < num_pages; i++) {
--		msi_page[i].phys = start;
--		msi_page[i].iova = start;
--		INIT_LIST_HEAD(&msi_page[i].list);
--		list_add(&msi_page[i].list, &cookie->msi_page_list);
-+		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
-+		if (!msi_page)
-+			return -ENOMEM;
-+
-+		msi_page->phys = start;
-+		msi_page->iova = start;
-+		INIT_LIST_HEAD(&msi_page->list);
-+		list_add(&msi_page->list, &cookie->msi_page_list);
- 		start += iovad->granule;
- 	}
- 
--- 
-2.20.1
-
+>>>+#define fatal(fmt, args...)    modpost_log(LOG_FATAL, fmt, ##args)
+>>>+/* Warn unless condition is true, then use merror() */
+>>>+#define warn_unless(condition, fmt, args...)   \
+>>>+do {                                           \
+>>>+       if (condition)                          \
+>>>+               merror(fmt, ##args);            \
+>>>+       else                                    \
+>>>+               warn(fmt, ##args);              \
+>>>+} while (0)
+>>
+>>
+>>Hmm, warn_unless() is not intuitive naming...
+>>
+>>You could use modpost_log() directly in C code,
+>>what do you think?
+>>
+>>
+>>           modpost_log(allow_missing_ns_imports ? LOG_WARN : LOG_ERROR,
+>>                       "module %s uses symbol %s from namespace %s,
+>>but does not import it.\n",
+>>                       basename, exp->name, exp->namespace);
+>
+>Yeah, I wasn't sure if I should expose modpost_log() and call it
+>directly, so I wrapped it in warn_unless(). But I think it's not a big
+>deal, so I'll just change it to a direct call. Thank you for the review!
+>
+>Jessica
