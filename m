@@ -2,143 +2,265 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEACC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95631C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 773942072D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:06:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583312762;
-	bh=nv9z76qB1AKdNeHNDVvjHLCUMfYUelYmliFzrlCR1xI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xWvNmWw5GcUwGhD1m8HANhoR9+KkJ2iXsedw0m0TeqFG8d1WSZjPY6OOHCWLmlht+
-	 wefMp/kNuoS833N5CBcaPbRPqIKPC7gikO5agPLIDG1AMidM/wOWeFz8zZDq0pl03O
-	 sZsKfSEM95WWk5mybVbR3D6DWWA8pzvgwSdHy4J8=
+	by mail.kernel.org (Postfix) with ESMTP id 670C42072D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387697AbgCDJGB (ORCPT
+        id S2387729AbgCDJHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:06:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59700 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 04:07:24 -0500
+Received: from mga03.intel.com ([134.134.136.65]:17638 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgCDJGB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:06:01 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D436E2072D;
-        Wed,  4 Mar 2020 09:05:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583312758;
-        bh=nv9z76qB1AKdNeHNDVvjHLCUMfYUelYmliFzrlCR1xI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wTrJb2nLOkC3o5SdH0RfJuDO3+VKd84OhHaBaZVRb3O2Ur83RlzXVHaQkO0GfHzHu
-         3gmkPcBjGwKBXwt3VXDXDLJJXPBz5eP9uphOkBtnCJaPRyDemc+cPP9jUcmkSAR3hn
-         MoNlOP+aswJByig32PeT4UbzI37cRSWxBn7/P6Kg=
-Date:   Wed, 4 Mar 2020 10:05:55 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-kernel@vger.kernel.org,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, f.fainelli@gmail.com,
-        tim.gover@raspberrypi.org, linux-pci@vger.kernel.org,
-        wahrenst@gmx.net
-Subject: Re: [PATCH v3 4/4] USB: pci-quirks: Add Raspberry Pi 4 quirk
-Message-ID: <20200304090555.GC1429273@kroah.com>
-References: <20200302155528.19505-1-nsaenzjulienne@suse.de>
- <20200302155528.19505-5-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302155528.19505-5-nsaenzjulienne@suse.de>
+        id S2387473AbgCDJHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 04:07:23 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 01:07:20 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
+   d="scan'208";a="413074193"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.167])
+  by orsmga005.jf.intel.com with ESMTP; 04 Mar 2020 01:07:16 -0800
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH V4 00/13] perf/x86: Add perf text poke events
+Date:   Wed,  4 Mar 2020 11:06:20 +0200
+Message-Id: <20200304090633.420-1-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 04:55:28PM +0100, Nicolas Saenz Julienne wrote:
-> On the Raspberry Pi 4, after a PCI reset, VL805's firmware may either be
-> loaded directly from an EEPROM or, if not present, by the SoC's
-> VideCore. Inform VideCore that VL805 was just reset.
-> 
-> Also, as this creates a dependency between XHCI_PCI and VideoCore's,
-> reflect that on the firmware interface Kconfg.
-> 
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> 
-> ---
-> 
-> Changes since v1:
->  - Make RASPBERRYPI_FIRMWARE dependent on this quirk to make sure it
->    gets compiled when needed.
-> 
->  drivers/firmware/Kconfig      |  1 +
->  drivers/usb/host/pci-quirks.c | 18 ++++++++++++++++++
->  2 files changed, 19 insertions(+)
-> 
-> diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
-> index ea869addc89b..40a468d712a5 100644
-> --- a/drivers/firmware/Kconfig
-> +++ b/drivers/firmware/Kconfig
-> @@ -180,6 +180,7 @@ config ISCSI_IBFT
->  config RASPBERRYPI_FIRMWARE
->  	tristate "Raspberry Pi Firmware Driver"
->  	depends on BCM2835_MBOX
-> +	default XHCI_PCI
->  	help
->  	  This option enables support for communicating with the firmware on the
->  	  Raspberry Pi.
-> diff --git a/drivers/usb/host/pci-quirks.c b/drivers/usb/host/pci-quirks.c
-> index beb2efa71341..aee2eaa3f0e1 100644
-> --- a/drivers/usb/host/pci-quirks.c
-> +++ b/drivers/usb/host/pci-quirks.c
-> @@ -16,6 +16,9 @@
->  #include <linux/export.h>
->  #include <linux/acpi.h>
->  #include <linux/dmi.h>
-> +
-> +#include <soc/bcm2835/raspberrypi-firmware.h>
-> +
->  #include "pci-quirks.h"
->  #include "xhci-ext-caps.h"
->  
-> @@ -1243,11 +1246,26 @@ static void quirk_usb_handoff_xhci(struct pci_dev *pdev)
->  
->  static void quirk_usb_early_handoff(struct pci_dev *pdev)
->  {
-> +	int ret;
-> +
->  	/* Skip Netlogic mips SoC's internal PCI USB controller.
->  	 * This device does not need/support EHCI/OHCI handoff
->  	 */
->  	if (pdev->vendor == 0x184e)	/* vendor Netlogic */
->  		return;
-> +
-> +	if (pdev->vendor == PCI_VENDOR_ID_VIA && pdev->device == 0x3483) {
-> +		ret = rpi_firmware_init_vl805(pdev);
-> +		if (ret)
-> +			/*
-> +			 * Firmware might be outdated, or else, something
-> +			 * failed, keep going and hope for the best.
-> +			 */
-> +			dev_warn(&pdev->dev,
-> +				 "Failed to load VL805's firmware: %d\n",
-> +				 ret);
+Hi
 
-{} please.
+Here are patches to add a text poke event to record changes to kernel text
+(i.e. self-modifying code) in order to support tracers like Intel PT
+decoding through jump labels, kprobes and ftrace trampolines.
 
-Also, you might want to provide a better warning, something like:
-	"Failed to load VL805's firmware, will continue to attempt to
-	work, but bad things might happen, you should fix this..."
+The first 8 patches make the kernel changes and the subsequent patches are
+tools changes.
 
-or something to give people a chance to know what to do here.
+The next 4 patches add support for updating perf tools' data cache
+with the changed bytes.
 
-thanks,
+The last patch is an Intel PT specific tools change.
 
-greg k-h
+Patches also here:
+
+	git://git.infradead.org/users/ahunter/linux-perf.git text_poke
+
+
+Changes in V4
+
+  kprobes: Add symbols for kprobe insn pages
+
+	Change "module name" from kprobe to __builtin__kprobes
+	Added comment about "module name" use
+
+  ftrace: Add symbols for ftrace trampolines
+	
+	Change "module name" from ftrace to __builtin__ftrace
+	Move calls of ftrace_add_trampoline_to_kallsyms() and
+	ftrace_remove_trampoline_from_kallsyms() into
+	kernel/trace/ftrace.c
+	Added comment about "module name" use
+
+  ftrace: Add perf ksymbol events for ftrace trampolines
+
+	Move changes into kernel/trace/ftrace.c
+
+  ftrace: Add perf text poke events for ftrace trampolines
+
+	Move changes into kernel/trace/ftrace.c
+
+Changes in V3:
+
+  perf: Add perf text poke event
+
+	To prevent warning, cast pointer to (unsigned long) not (u64)
+
+  kprobes: Add symbols for kprobe insn pages
+
+	Expand commit message
+	Remove un-needed declarations of kprobe_cache_get_kallsym() and arch_kprobe_get_kallsym() when !CONFIG_KPROBES
+
+  ftrace: Add symbols for ftrace trampolines
+
+	Expand commit message
+	Make ftrace_get_trampoline_kallsym() static
+
+Changes in V2:
+
+  perf: Add perf text poke event
+
+	Separate out x86 changes
+	The text poke event now has old len and new len
+	Revised commit message
+
+  perf/x86: Add support for perf text poke event for text_poke_bp_batch() callers
+
+	New patch containing x86 changes from original first patch
+
+  kprobes: Add symbols for kprobe insn pages
+  kprobes: Add perf ksymbol events for kprobe insn pages
+  perf/x86: Add perf text poke events for kprobes
+  ftrace: Add symbols for ftrace trampolines
+  ftrace: Add perf ksymbol events for ftrace trampolines
+  ftrace: Add perf text poke events for ftrace trampolines
+  perf kcore_copy: Fix module map when there are no modules loaded
+  perf evlist: Disable 'immediate' events last
+
+	New patches
+
+  perf tools: Add support for PERF_RECORD_TEXT_POKE
+
+	The text poke event now has old len and new len
+	Also select ksymbol events with text poke events
+
+  perf tools: Add support for PERF_RECORD_KSYMBOL_TYPE_OOL
+
+	New patch
+
+  perf intel-pt: Add support for text poke events
+
+	The text poke event now has old len and new len
+	Allow for the address not having a map yet
+
+
+Changes since RFC:
+
+  Dropped 'flags' from the new event.  The consensus seemed to be that text
+  pokes should employ a scheme similar to x86's INT3 method instead.
+
+  dropped tools patches already applied.
+
+
+Example:
+
+  For jump labels, the kernel needs
+	CONFIG_JUMP_LABEL=y
+  and also an easy to flip jump label is in sysctl_schedstats() which needs
+	CONFIG_SCHEDSTATS=y
+	CONFIG_PROC_SYSCTL=y
+	CONFIG_SCHED_DEBUG=y
+
+  Also note the 'sudo perf record' is put into the background which, as
+  written, needs sudo credential caching (otherwise the background task
+  will stop awaiting the sudo password), hence the 'sudo echo' to start.
+
+Before:
+
+  $ sudo echo
+  $ sudo perf record -o perf.data.before --kcore -a -e intel_pt//k -m,64M &
+  [1] 1640
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo bash -c 'echo 1 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  1
+  $ sudo bash -c 'echo 0 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo kill 1640
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 16.635 MB perf.data.before ]
+  $ perf script -i perf.data.before --itrace=e >/dev/null
+  Warning:
+  1946 instruction trace errors
+
+After:
+
+  $ sudo echo
+  $ sudo perf record -o perf.data.after --kcore -a -e intel_pt//k -m,64M &
+  [1] 1882
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo bash -c 'echo 1 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  1
+  $ sudo bash -c 'echo 0 > /proc/sys/kernel/sched_schedstats'
+  $ cat /proc/sys/kernel/sched_schedstats
+  0
+  $ sudo kill 1882
+  [ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 10.893 MB perf.data.after ]
+  $ perf script -i perf.data.after --itrace=e
+  $
+
+
+Adrian Hunter (13):
+      perf: Add perf text poke event
+      perf/x86: Add support for perf text poke event for text_poke_bp_batch() callers
+      kprobes: Add symbols for kprobe insn pages
+      kprobes: Add perf ksymbol events for kprobe insn pages
+      perf/x86: Add perf text poke events for kprobes
+      ftrace: Add symbols for ftrace trampolines
+      ftrace: Add perf ksymbol events for ftrace trampolines
+      ftrace: Add perf text poke events for ftrace trampolines
+      perf kcore_copy: Fix module map when there are no modules loaded
+      perf evlist: Disable 'immediate' events last
+      perf tools: Add support for PERF_RECORD_TEXT_POKE
+      perf tools: Add support for PERF_RECORD_KSYMBOL_TYPE_OOL
+      perf intel-pt: Add support for text poke events
+
+ arch/x86/include/asm/kprobes.h            |   4 ++
+ arch/x86/include/asm/text-patching.h      |   2 +
+ arch/x86/kernel/alternative.c             |  70 +++++++++++++++++----
+ arch/x86/kernel/kprobes/core.c            |   7 +++
+ arch/x86/kernel/kprobes/opt.c             |  18 +++++-
+ include/linux/ftrace.h                    |  12 ++--
+ include/linux/kprobes.h                   |  15 +++++
+ include/linux/perf_event.h                |   8 +++
+ include/uapi/linux/perf_event.h           |  26 +++++++-
+ kernel/events/core.c                      |  90 +++++++++++++++++++++++++-
+ kernel/kallsyms.c                         |  42 +++++++++++--
+ kernel/kprobes.c                          |  57 +++++++++++++++++
+ kernel/trace/ftrace.c                     | 101 +++++++++++++++++++++++++++++-
+ tools/include/uapi/linux/perf_event.h     |  26 +++++++-
+ tools/lib/perf/include/perf/event.h       |   9 +++
+ tools/perf/arch/x86/util/intel-pt.c       |   4 ++
+ tools/perf/builtin-record.c               |  45 +++++++++++++
+ tools/perf/util/dso.c                     |   3 +
+ tools/perf/util/dso.h                     |   1 +
+ tools/perf/util/event.c                   |  40 ++++++++++++
+ tools/perf/util/event.h                   |   5 ++
+ tools/perf/util/evlist.c                  |  31 ++++++---
+ tools/perf/util/evlist.h                  |   1 +
+ tools/perf/util/evsel.c                   |   7 ++-
+ tools/perf/util/intel-pt.c                |  75 ++++++++++++++++++++++
+ tools/perf/util/machine.c                 |  49 +++++++++++++++
+ tools/perf/util/machine.h                 |   3 +
+ tools/perf/util/map.c                     |   5 ++
+ tools/perf/util/map.h                     |   3 +-
+ tools/perf/util/perf_event_attr_fprintf.c |   1 +
+ tools/perf/util/record.c                  |  10 +++
+ tools/perf/util/record.h                  |   1 +
+ tools/perf/util/session.c                 |  23 +++++++
+ tools/perf/util/symbol-elf.c              |   7 +++
+ tools/perf/util/symbol.c                  |   1 +
+ tools/perf/util/tool.h                    |   3 +-
+ 36 files changed, 765 insertions(+), 40 deletions(-)
+
+
+Regards
+Adrian
