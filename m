@@ -2,103 +2,116 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE8C2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A72BC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:30:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850F020870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:28:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583353734;
-	bh=W/R/FWArGtnpFP7wkWD+JUcgbM7aaWuG7tLZ/8wBXGw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yCrnzRAqG+56IsygKo0VDKIgJ7E2psqmxyLsO01iMBnpCJp9BARmtimnnITJe5DDV
-	 qeAgszTEKDmJg4fRkyFZWHXOjUuilYFbvMuQYwYSeoo8jMwk/1oxNkC37PL1n8JXkw
-	 16ey4Mr/Me0zPUfDvrE/2Wy01kSW6Mi34Cxq4eRs=
+	by mail.kernel.org (Postfix) with ESMTP id 1B38620870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:30:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dYC62F7k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388084AbgCDU2x (ORCPT
+        id S2388015AbgCDUae (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:28:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60930 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387469AbgCDU2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:28:53 -0500
-Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 903A920870;
-        Wed,  4 Mar 2020 20:28:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583353732;
-        bh=W/R/FWArGtnpFP7wkWD+JUcgbM7aaWuG7tLZ/8wBXGw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tDe8gBT9u5HZ078rKAVe1u1xlBXjWnRp/sN6UmaMUBd29a99fJgOOdO/WXbl9sonb
-         KY3uqJ0I77CUk2Lqz0Rv7xccr9s7dWXipag9r9p3nTpLEqjXUSqFsHealLWICYRSe5
-         sEI3clS6XIBDHCTF495XzP/Mc5y9l8/KcU21bHvA=
-Date:   Wed, 4 Mar 2020 21:28:46 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
-Message-ID: <20200304212846.0c79c6da@coco.lan>
-In-Reply-To: <20200304131035.731a3947@lwn.net>
-References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
-        <20200304131035.731a3947@lwn.net>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Mar 2020 15:30:34 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42521 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgCDUad (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:30:33 -0500
+Received: by mail-pg1-f194.google.com with SMTP id h8so1526340pgs.9;
+        Wed, 04 Mar 2020 12:30:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=NY5izrCaTjPPMM0nMljJM70P0c5WnZWBbXOSJziAbQI=;
+        b=dYC62F7ks46pS4Q68zNNsItNhXrU184Sts4g63KBpd9Q3R6NQV123wl1oxCHiQ7Jti
+         p1o0QgBv9g21NRNuC3VGkKEQL7hvbwZKVZFH2Pe/ri5oqI4silP8nX8UDgMlY2JNrC0R
+         HQ/6FhGqfyxlI/4LtgDBsW9sh3X2g5XQa6LXm6NrgjQS3WsbHcnM2iQY6gKOl73FQRxK
+         5yZ7/LfRh4L3OhrCZ4w4ysIvEjk74C9jUW1Ug0O+z/T7LXpzp958PMS/j2nbUlZxABq8
+         pCw+CHC7lS4pcj7DyL9uC23oeiS7Pr3rP2daBsOHxEXlZrFE46uTuZzhfTa1LC9wdQQ6
+         k9nA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=NY5izrCaTjPPMM0nMljJM70P0c5WnZWBbXOSJziAbQI=;
+        b=IdIQ3mYlUOgkiRBac8bD7UwWrpIeNtgrpWhnPelWRElUHQpdHRkrUAi0iYMUrwSFrR
+         5jFsxGoF39j9h/qakt0C10fYpSCYdz+rBw7zfBpSmDRnMOHmsVFLM/NL7Uc3kR+HIy7d
+         RhB0QMS5QlZZAJDv4yN+BAuxFqlsecvo1S7esgyZjwEE3HRPGAicXzPY4XOC3ACXAWOo
+         fsUh7AO5Ayg+ZvvO0rK/NDtxsBdu0wVtUPHV452yPlmrEZWyLVic20jXbEq4bWdEomMJ
+         Q/HJI7TClliDlvXldj0ZQ/NvxX5l/j2VrFUzfWEcOz524dScICi+w7RC+fbqm5IdoT/x
+         74Kg==
+X-Gm-Message-State: ANhLgQ2dhc2XKwxVYzSdCQcxVk5NchzHgnZ3iGY6XtQqEBDosCiNjIZx
+        T6K0b5JMSu7tFuwd9O0kR2w=
+X-Google-Smtp-Source: ADFU+vtDiLzB5A+RDGdcwREuzbLcYTrDkbng/6a82Zf9JBW6Two8xHW5WgrddP17z/IaL8xRqbhuWw==
+X-Received: by 2002:a62:a518:: with SMTP id v24mr4543065pfm.77.1583353832440;
+        Wed, 04 Mar 2020 12:30:32 -0800 (PST)
+Received: from [10.2.129.203] ([66.170.99.2])
+        by smtp.gmail.com with ESMTPSA id e189sm24524247pfa.139.2020.03.04.12.30.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Mar 2020 12:30:31 -0800 (PST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH] KVM: X86: Avoid explictly fetch instruction in
+ x86_decode_insn()
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <ad023c34-9a08-7d61-22de-911c4e8760ba@redhat.com>
+Date:   Wed, 4 Mar 2020 12:30:30 -0800
+Cc:     Peter Xu <peterx@redhat.com>, linmiaohe <linmiaohe@huawei.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <13E8DCB7-D977-49AD-B63F-8BF4B06B096E@gmail.com>
+References: <05ca4e7e070844dd92e4f673a1bc15d9@huawei.com>
+ <20200304153253.GB7146@xz-x1>
+ <ad023c34-9a08-7d61-22de-911c4e8760ba@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 4 Mar 2020 13:10:35 -0700
-Jonathan Corbet <corbet@lwn.net> escreveu:
+> On Mar 4, 2020, at 10:19 AM, Paolo Bonzini <pbonzini@redhat.com> =
+wrote:
+>=20
+> On 04/03/20 16:32, Peter Xu wrote:
+>>> Looks good, thanks. But it seems we should also take care of the =
+comment in __do_insn_fetch_bytes(), as we do not
+>>> load instruction at the beginning of x86_decode_insn() now, which =
+may be misleading:
+>>> 		/*
+>>>         * One instruction can only straddle two pages,
+>>>         * and one has been loaded at the beginning of
+>>>         * x86_decode_insn.  So, if not enough bytes
+>>>         * still, we must have hit the 15-byte boundary.
+>>>         */
+>>>        if (unlikely(size < op_size))
+>>>                return emulate_gp(ctxt, 0);
+>> Right, thanks for spotting that (even if the patch to be dropped :).
+>>=20
+>> I guess not only the comment, but the check might even fail if we
+>> apply the patch. Because when the fetch is the 1st attempt and
+>> unluckily that acrosses one page boundary (because we'll only fetch
+>> until either 15 bytes or the page boundary), so that single fetch
+>> could be smaller than op_size provided.
+>=20
+> Right, priming the decode cache with one byte from the current page
+> cannot fail, and then we know that the next call must be at the
+> beginning of the next page.
 
-> On Wed,  4 Mar 2020 08:29:50 +0100
-> Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> 
-> > Mauro's patch series <cover.1581955849.git.mchehab+huawei@kernel.org>
-> > ("[PATCH 00/44] Manually convert filesystem FS documents to ReST")
-> > converts many Documentation/filesystems/ files to ReST.
-> > 
-> > Since then, ./scripts/get_maintainer.pl --self-test complains with 27
-> > warnings on Documentation/filesystems/ of this kind:
-> > 
-> >   warning: no file matches F: Documentation/filesystems/...
-> > 
-> > Adjust MAINTAINERS entries to all files converted from .txt to .rst in the
-> > patch series and address the 27 warnings.
-> > 
-> > Link: https://lore.kernel.org/linux-erofs/cover.1581955849.git.mchehab+huawei@kernel.org
-> > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > ---
-> > Mauro, please ack.
-> > Jonathan, pick pick this patch for doc-next.  
-> 
-> Sigh, I need to work a MAINTAINERS check into my workflow...
-> 
-> Thanks for fixing these, but ... what tree did you generate the patch
-> against?  I doesn't come close to applying to docs-next.
+IIRC I encountered (and fixed) a similar KVM bug in the past. It is a =
+shame
+I never wrote a unit test (and I don=E2=80=99t have time now), but it =
+would be nice
+to have one.
 
-I'm starting to suspect that maybe the best workflow would be to just 
-apply the patches at docs-next keeping links broken, and then run
-./scripts/documentation-file-ref-check --fix by the end of a merge
-window, addressing such breakages.
-
-There are usually lots of churn outside the merge window.
-
-Another alternative would be to split the MAINTAINERS file on a
-per-subsystem basis. If I remember well, someone proposed this once at
-LKML. I vaguely remember that there were even a patch (or RFC)
-adding support for such thing for get_maintainers.pl.
-
-Thanks,
-Mauro
