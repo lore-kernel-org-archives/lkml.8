@@ -2,230 +2,137 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8E5CC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 451EBC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7A32146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:24:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284F22146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388066AbgCDMYa (ORCPT
+        id S2388014AbgCDM2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:24:30 -0500
-Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:44453 "EHLO
-        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388048AbgCDMY3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:24:29 -0500
-Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
-  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 04 Mar 2020 17:54:24 +0530
-Received: from c-rkambl-linux1.qualcomm.com ([10.242.50.190])
-  by ironmsg02-blr.qualcomm.com with ESMTP; 04 Mar 2020 17:54:08 +0530
-Received: by c-rkambl-linux1.qualcomm.com (Postfix, from userid 2344811)
-        id 432FB3A8B; Wed,  4 Mar 2020 17:54:07 +0530 (IST)
-From:   Rajeshwari <rkambl@codeaurora.org>
-To:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sanm@codeaurora.org,
-        sivaa@codeaurora.org, Rajeshwari <rkambl@codeaurora.org>
-Subject: [PATCH 1/1] arm64: dts: qcom: sc7180: Added critical trip point Thermal-zones node
-Date:   Wed,  4 Mar 2020 17:53:55 +0530
-Message-Id: <1583324635-8271-2-git-send-email-rkambl@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583324635-8271-1-git-send-email-rkambl@codeaurora.org>
-References: <1583324635-8271-1-git-send-email-rkambl@codeaurora.org>
+        Wed, 4 Mar 2020 07:28:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:33686 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387801AbgCDM2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:28:17 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A82331B;
+        Wed,  4 Mar 2020 04:28:16 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF4C83F534;
+        Wed,  4 Mar 2020 04:28:14 -0800 (PST)
+Date:   Wed, 4 Mar 2020 12:28:12 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kevin Hilman <khilman@baylibre.com>
+Cc:     Remi Pommarel <repk@triplefau.lt>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
+ platforms
+Message-ID: <20200304122812.GB6613@e121166-lin.cambridge.arm.com>
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
+ <7h8sklbcmo.fsf@baylibre.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7h8sklbcmo.fsf@baylibre.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To enable kernel critical shutdown feature added critical trip point to
-all non CPU sensors to perform shutdown in orderly manner.
+On Sat, Feb 29, 2020 at 05:07:43PM +0100, Kevin Hilman wrote:
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+> 
+> > On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
+> >> PCIe device probing failures have been seen on AXG platforms and were
+> >> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
+> >> in MIPI's PHY registers solved the problem. This bit controls band gap
+> >> reference.
+> >> 
+> >> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
+> >> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
+> >> a PHY driver to control this bit instead, as well as setting the band
+> >> gap one in order to get reliable PCIE communication.
+> >> 
+> >> While at it add another PHY driver to control PCIE only PHY registers,
+> >> making AXG code more similar to G12A platform thus allowing to remove
+> >> some specific platform handling in pci-meson driver.
+> >> 
+> >> Please note that CLKID_MIPI_ENABLE removable will be done in a different
+> >> serie.
+> >> 
+> >> Changes since v5:
+> >>  - Add additionalProperties in device tree binding documentation
+> >>  - Make analog PHY required
+> >> 
+> >> Changes since v4:
+> >>  - Rename the shared MIPI/PCIe PHY to analog
+> >>  - Chain the MIPI/PCIe PHY to the PCIe one
+> >> 
+> >> Changes since v3:
+> >>  - Go back to the shared MIPI/PCIe phy driver solution from v2
+> >>  - Remove syscon usage
+> >>  - Add all dt-bindings documentation
+> >> 
+> >> Changes since v2:
+> >>  - Remove shared MIPI/PCIE device driver and use syscon to access register
+> >>    in PCIE only driver instead
+> >>  - Include devicetree documentation
+> >> 
+> >> Changes sinve v1:
+> >>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
+> >>  - Add a PHY driver for PCIE_PHY registers
+> >>  - Modify pci-meson.c to make use of both PHYs and remove specific
+> >>    handling for AXG and G12A
+> >> 
+> >> [1] https://lkml.org/lkml/2019/12/16/119
+> >> 
+> >> Remi Pommarel (7):
+> >>   dt-bindings: Add AXG PCIE PHY bindings
+> >>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
+> >>   dt-bindings: PCI: meson: Update PCIE bindings documentation
+> >>   arm64: dts: meson-axg: Add PCIE PHY nodes
+> >>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
+> >>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+> >>   PCI: amlogic: Use AXG PCIE
+> >> 
+> >>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
+> >>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
+> >>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
+> >>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
+> >>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
+> >>  drivers/phy/amlogic/Kconfig                   |  22 ++
+> >>  drivers/phy/amlogic/Makefile                  |  12 +-
+> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
+> >>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
+> >>  9 files changed, 543 insertions(+), 112 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
+> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
+> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+> >
+> > Hi Remi,
+> >
+> > I am ready to pull this series in, do you want me to ? Or you prefer
+> > it to go via a different tree upstream ?
+> 
+> To avoid conflicts, I'll take the DT patch (PATCH 4/7) through my
+> amlogic tree, but feel free to take the rest.
 
-Signed-off-by: Rajeshwari <rkambl@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 78 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 78 insertions(+)
+Applied patches [1,2,3,5,6,7] to pci/amlogic for v5.7, thanks.
 
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index b8a72cf..7e5f14f 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -1956,6 +1956,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				aoss0_crit: aoss0_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2011,6 +2017,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				gpuss0_crit: gpuss0_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2026,6 +2038,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				gpuss1_crit: gpuss1_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2041,6 +2059,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				aoss1_crit: aoss1_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2056,6 +2080,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				cwlan_crit: cwlan_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2071,6 +2101,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				audio_crit: audio_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2086,6 +2122,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				ddr_crit: ddr_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2101,6 +2143,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				q6_hvx_crit: q6_hvx_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2116,6 +2164,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				camera_crit: camera_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2131,6 +2185,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				mdm_crit: mdm_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2146,6 +2206,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				mdm_dsp_crit: mdm_dsp_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2161,6 +2227,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				npu_crit: npu_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 
-@@ -2176,6 +2248,12 @@
- 					hysteresis = <2000>;
- 					type = "hot";
- 				};
-+
-+				video_crit: video_crit {
-+                                        temperature = <110000>;
-+                                        hysteresis = <2000>;
-+                                        type = "critical";
-+                                };
- 			};
- 		};
- 	};
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Lorenzo
