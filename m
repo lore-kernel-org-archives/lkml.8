@@ -2,85 +2,130 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ACA9C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BC0C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB7B217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:27:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="BnlGW96a"
+	by mail.kernel.org (Postfix) with ESMTP id E0F91217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:27:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbgCDR1e (ORCPT
+        id S1729997AbgCDR1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:27:34 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:45887 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgCDR1d (ORCPT
+        Wed, 4 Mar 2020 12:27:54 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:44578 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgCDR1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:27:33 -0500
-Received: by mail-pl1-f196.google.com with SMTP id b22so1283974pls.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:27:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=74P0B3neZZuder24JFAe+h37tZ3yaclWrx96mmitxFw=;
-        b=BnlGW96a7KFcplXPG+JtXhFdTR0rjDo+A+Hzm0N6hmOjfZjWfH7tmd6w3B2Y/+ZY1R
-         UJw695NC2b7tTGsoTIWIF0XipjDd9h5nkmsU0WocBuAZ+EPfx6+DULv6RWrmw9YqtQVc
-         G2s4RibC/YTEsjbOg6kUxF4jiFgzNxYAPadHvjyzbFBRLPoQE0sUxCa/obNTMPBnZ0JD
-         pYuzry5dds/uvDl0JAUsx7HfmW4zsUtUp0s5Oh5D3f2YczUeOSTkLqueBRTZxMVZrZ+i
-         Yzrr5QknUYjbwfWABGGVwR4xs95gZfb4gci08aeY4lI0fseNNxdBoIX+NxoFeApqM+FS
-         p9JA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=74P0B3neZZuder24JFAe+h37tZ3yaclWrx96mmitxFw=;
-        b=BcA4aMEQBuWAcxEEE70bL8SooXCSuNqgeAMGVX6LM7OWfirDKjelrB3YQq7aPzq7/O
-         R0aSsecrdpJ6m85TyejHEi4bBuF2jEYr42SyHXYduSwBYgdiM3sQ5tFPwHBg/Vw1TWM8
-         T8uY8vXK68glT0Rh9qDjW9AsVjK71HWq9Jr95xbQCqH3F8YWUYMlowLGU+1pwflP63u/
-         sU45f0GwqQtmHBA3z/HBLrAoDYpJ4YKU71Us9QWED9bm1DwGchSZS5i2zGgQitOp96Ny
-         osSfncAWZUt9j1x9uyj41GhHX3X8CU8M18++qagKTK3FQEuZjUj8shT5zJeJYek1GbCV
-         d9Ig==
-X-Gm-Message-State: ANhLgQ299Kb5+o5kevW/TO1TD0jpvJ1STOaHbQm6VKD0mn3xDMDUHZZC
-        1YDHrqqAzzJSVq5AEs0yKj8IPw==
-X-Google-Smtp-Source: ADFU+vtsjhx5/sY+nX6LOWlNWh5qsA8lhTawE4vjv4t3oH1CXuPXKXaQO4QVQc/f0PzF9DgReb2Crw==
-X-Received: by 2002:a17:90a:3730:: with SMTP id u45mr4047133pjb.8.1583342852552;
-        Wed, 04 Mar 2020 09:27:32 -0800 (PST)
-Received: from nuc7.sifive.com ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id z20sm831526pge.62.2020.03.04.09.27.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 04 Mar 2020 09:27:31 -0800 (PST)
-From:   Alan Mikhak <alan.mikhak@sifive.com>
-X-Google-Original-From: Alan Mikhak < alan.mikhak@sifive.com >
-To:     kishon@ti.com
-Cc:     alan.mikhak@sifive.com, amurray@thegoodpenguin.co.uk,
-        bhelgaas@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        lorenzo.pieralisi@arm.com, tjoseph@cadence.com
-Subject: [PATCH v2 0/5] PCI: functions/pci-epf-test: Add DMA data transfer
-Date:   Wed,  4 Mar 2020 09:27:16 -0800
-Message-Id: <1583342836-10088-1-git-send-email-alan.mikhak@sifive.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20200303103752.13076-1-kishon@ti.com>
-References: <20200303103752.13076-1-kishon@ti.com>
+        Wed, 4 Mar 2020 12:27:53 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 28B561C0321; Wed,  4 Mar 2020 18:27:52 +0100 (CET)
+Date:   Wed, 4 Mar 2020 18:27:36 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Peter Chen <peter.chen@nxp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 60/87] usb: charger: assign specific number for enum
+ value
+Message-ID: <20200304172736.GC2367@duo.ucw.cz>
+References: <20200303174349.075101355@linuxfoundation.org>
+ <20200303174355.750234821@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="32u276st3Jlj2kUU"
+Content-Disposition: inline
+In-Reply-To: <20200303174355.750234821@linuxfoundation.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
 
-I applied this v2 patch series to kernel.org linux 5.6-rc3 and
-built for x86_64 Debian and riscv. I verified that when I execute
-the pcitest command on the x86_64 host with -d flag, the riscv
-endpoint performs the transfer by using an available dma channel.
+--32u276st3Jlj2kUU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
-Alan
+On Tue 2020-03-03 18:43:51, Greg Kroah-Hartman wrote:
+> From: Peter Chen <peter.chen@nxp.com>
+>=20
+> commit ca4b43c14cd88d28cfc6467d2fa075aad6818f1d upstream.
+>=20
+> To work properly on every architectures and compilers, the enum value
+> needs to be specific numbers.
 
-Tested-by: Alan Mikhak <alan.mikhak@sifive.com>
+All compilers are expected to handle this in the same way, as this is
+in C standard. This patch is not neccessary, and should not be in mainline,
+either.
 
+http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1124.pdf
+
+6.7.2.2 Enumeration specifiers
+Syntax
+=2E..
+3 The identifiers in an enumerator list are declared as constants that have=
+ type int and
+may appear wherever such are permitted.107) An enumerator with =3D defines =
+its
+enumeration constant as the value of the constant expression. If the first =
+enumerator has
+no =3D, the value of its enumeration constant is 0. Each subsequent enumera=
+tor with no =3D
+defines its enumeration constant as the value of the constant expression ob=
+tained by
+adding 1 to the value of the previous enumeration constant. (The use of enu=
+merators with
+=3D may produce enumeration constants with values that duplicate other valu=
+es in the same
+enumeration.) The enumerators of an enumeration are also known as its membe=
+rs.
+
+Best regards,
+								Pavel
+
+>  enum usb_charger_type {
+> -	UNKNOWN_TYPE,
+> -	SDP_TYPE,
+> -	DCP_TYPE,
+> -	CDP_TYPE,
+> -	ACA_TYPE,
+> +	UNKNOWN_TYPE =3D 0,
+> +	SDP_TYPE =3D 1,
+> +	DCP_TYPE =3D 2,
+> +	CDP_TYPE =3D 3,
+> +	ACA_TYPE =3D 4,
+>  };
+> =20
+>  /* USB charger state */
+>  enum usb_charger_state {
+> -	USB_CHARGER_DEFAULT,
+> -	USB_CHARGER_PRESENT,
+> -	USB_CHARGER_ABSENT,
+> +	USB_CHARGER_DEFAULT =3D 0,
+> +	USB_CHARGER_PRESENT =3D 1,
+> +	USB_CHARGER_ABSENT =3D 2,
+>  };
+> =20
+>  #endif /* _UAPI__LINUX_USB_CHARGER_H */
+>=20
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--32u276st3Jlj2kUU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXl/lCAAKCRAw5/Bqldv6
+8sHeAJ9tJGXlsIh9klP4VfoBN25aD/3XhACfbsT37Ww/GjwtxlnneGkE48RrJWw=
+=+4hz
+-----END PGP SIGNATURE-----
+
+--32u276st3Jlj2kUU--
