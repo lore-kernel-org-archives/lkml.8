@@ -2,97 +2,315 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2363CC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E42DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C5F21775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:18:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583342301;
-	bh=MUbhpaPxtsmIxbxMQKKGkxYQ5ffHIsrSQGT8xxkgWIg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cmlTnn3onAdfFhs8AzB5Y7F2vdvfbYxgXW5pTAOFNgEalH9eALz+LvZyYTvjnB2Zz
-	 NQHTkxKzWElk3m74BUIV985vVw3FI3OvhG/KygxFdENGAnsjIpeJo98eNL4wyaykFW
-	 PjYzcgg82+Kde23Lqz07vaFOa/qXhi9+N527a5I4=
+	by mail.kernel.org (Postfix) with ESMTP id 50BD022B48
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:18:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KPPUkFiv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbgCDRSU (ORCPT
+        id S1729926AbgCDRSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:18:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbgCDRST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:18:19 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 4 Mar 2020 12:18:25 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56593 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726561AbgCDRSY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 12:18:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583342303;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jniVOVh/M/429QHFUUGmIQdnbB+wp5Ylxxt5p5fe0t4=;
+        b=KPPUkFivE3GbmCVfMd4h55Mx1wQ/Debd3J7kP7mBC9YP+TMlj/QKPrzXOxfC5k4g5yow0f
+        LTEUtfVnMSOMLTd0GIpLzztJ5v7APcGK6V7gC+bdeDTWzmIQxStdzVnlnNGe8zLwFPGXkF
+        xOc/X5jIdCBHzrlhupelrCtRQwvu+R4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-AbolXN_vM-OUO44sTXxuSw-1; Wed, 04 Mar 2020 12:18:19 -0500
+X-MC-Unique: AbolXN_vM-OUO44sTXxuSw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D446F22B48;
-        Wed,  4 Mar 2020 17:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583342299;
-        bh=MUbhpaPxtsmIxbxMQKKGkxYQ5ffHIsrSQGT8xxkgWIg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nA/NS7xr+r9Gf2v19TrGeKMDS0uIKF5sHkAAdYdey463HUKAaDyH4gka9R5JPLeJR
-         hN+ysmVb9Bj04mXnzzctc2ESDEW197wwzEGd26TvfFev0+P/IFgWEd++DIYezV5+cB
-         5tgAkHKC9jKZ73suIBR2WDBp/XBXLUIS0eliR+M4=
-Date:   Wed, 4 Mar 2020 18:18:17 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Stephen Boyd <swboyd@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 04/87] drm/msm: Set dma maximum segment size for mdss
-Message-ID: <20200304171817.GC1852712@kroah.com>
-References: <20200303174349.075101355@linuxfoundation.org>
- <20200303174349.401386271@linuxfoundation.org>
- <20200304151316.GA2367@duo.ucw.cz>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7753018FE866;
+        Wed,  4 Mar 2020 17:18:16 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6AE1026FDF;
+        Wed,  4 Mar 2020 17:18:16 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 58F7D86A04;
+        Wed,  4 Mar 2020 17:18:16 +0000 (UTC)
+Date:   Wed, 4 Mar 2020 12:18:16 -0500 (EST)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Ard Biesheuvel <ardb@kernel.org>, joeyli <jlee@suse.com>,
+        linux-efi <linux-efi@vger.kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <1638562976.13095767.1583342296275.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAKv+Gu_WFL24dGPakcPgGW3MayYx1qND9HxL87vods7h4LyZJw@mail.gmail.com>
+References: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com> <20200304154936.24206-1-vdronov@redhat.com> <CAKv+Gu_WFL24dGPakcPgGW3MayYx1qND9HxL87vods7h4LyZJw@mail.gmail.com>
+Subject: Re: [PATCH v2] efi: fix a race and a buffer overflow while reading
+ efivars via sysfs
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304151316.GA2367@duo.ucw.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.204.205, 10.4.195.2]
+Thread-Topic: fix a race and a buffer overflow while reading efivars via sysfs
+Thread-Index: P8sJMHmxkKIpCZVtU9rWB9NYrEezYw==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:13:16PM +0100, Pavel Machek wrote:
-> Hi!
+Hello, Ard, Joye, all,
+
+----- Original Message -----
+> From: "Ard Biesheuvel" <ardb@kernel.org>
+> To: "Vladis Dronov" <vdronov@redhat.com>
+> Cc: "linux-efi" <linux-efi@vger.kernel.org>, "joeyli" <jlee@suse.com>, "Linux Kernel Mailing List"
+> <linux-kernel@vger.kernel.org>
+> Sent: Wednesday, March 4, 2020 4:57:16 PM
+> Subject: Re: [PATCH v2] efi: fix a race and a buffer overflow while reading efivars via sysfs
 > 
-> > Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
-> > 
-> > [   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than device claims to support [len=3526656] [max=65536]
-> > [   12.089870] WARNING: CPU: 6 PID: 334 at
-> > /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301
-> > debug_dma_map_sg+0x1dc/0x318
+> On Wed, 4 Mar 2020 at 16:50, Vladis Dronov <vdronov@redhat.com> wrote:
+> >
+> > There is a race and a buffer overflow corrupting a kernel memory while
+> > reading an efi variable with a size more than 1024 bytes via the older
+> > sysfs method. This happens because accessing struct efi_variable in
+> > efivar_{attr,size,data}_read() and friends is not protected from
+> > a concurrent access leading to a kernel memory corruption and, at best,
+> > to a crash. The race scenario is the following:
+> >
+> > CPU0:                                CPU1:
+> > efivar_attr_read()
+> >   var->DataSize = 1024;
+> >   efivar_entry_get(... &var->DataSize)
+> >     down_interruptible(&efivars_lock)
+> >                                      efivar_attr_read() // same efi var
+> >                                        var->DataSize = 1024;
+> >                                        efivar_entry_get(... &var->DataSize)
+> >                                          down_interruptible(&efivars_lock)
+> >     virt_efi_get_variable()
+> >     // returns EFI_BUFFER_TOO_SMALL but
+> >     // var->DataSize is set to a real
+> >     // var size more than 1024 bytes
+> >     up(&efivars_lock)
+> >                                          virt_efi_get_variable()
+> >                                          // called with var->DataSize set
+> >                                          // to a real var size, returns
+> >                                          // successfully and overwrites
+> >                                          // a 1024-bytes kernel buffer
+> >                                          up(&efivars_lock)
+> >
+> > This can be reproduced by concurrent reading of an efi variable which size
+> > is more than 1024 bytes:
+> >
+> > ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
+> > cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
+> >
+> > Fix this by using a local variable for a var's data buffer size so it
+> > does not get overwritten. Also add a sanity check to efivar_store_raw().
+> >
+> > Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
+> > Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+
+AFAIU, you can modify suggested patches, could you please, add a link here
+so further reader has a reference (I forgot to do it myself):
+
+Link: https://lore.kernel.org/linux-efi/20200303085528.27658-1-vdronov@redhat.com/T/#u
+
+> > ---
+> >  drivers/firmware/efi/efi-pstore.c |  2 +-
+> >  drivers/firmware/efi/efivars.c    | 32 ++++++++++++++++++++++---------
+> >  drivers/firmware/efi/vars.c       |  2 +-
+> >  3 files changed, 25 insertions(+), 11 deletions(-)
+> >
+> > diff --git a/drivers/firmware/efi/efi-pstore.c
+> > b/drivers/firmware/efi/efi-pstore.c
+> > index 9ea13e8d12ec..e4767a7ce973 100644
+> > --- a/drivers/firmware/efi/efi-pstore.c
+> > +++ b/drivers/firmware/efi/efi-pstore.c
+> > @@ -161,7 +161,7 @@ static int efi_pstore_scan_sysfs_exit(struct
+> > efivar_entry *pos,
+> >   *
+> >   * @record: pstore record to pass to callback
+> >   *
+> > - * You MUST call efivar_enter_iter_begin() before this function, and
+> > + * You MUST call efivar_entry_iter_begin() before this function, and
+> >   * efivar_entry_iter_end() afterwards.
+> >   *
+> >   */
 > 
-> This one leaks resources in the (very improbable) case of error; it
-> needs to goto cleanup instead of simply returning.
+> This hunk can be dropped now, I guess
+
+I surely do not have much experience in writing upstream patches. But I saw people
+doing small fixes like this one, say, commit 589b7289 ("While we are here, the previous
+line has some trailing whitespace; clean that up as well"). This is a small mistype
+and I just wanted to fix it and did not wanted to allocate a whole commit for that.
+I believe a bigger commit is an acceptable place to fix mistypes.
+
+AFAIU, a maintainer can modify suggested patches, so please, feel free to drop this
+hunk, if you feel this is a right thing.
+
+> > diff --git a/drivers/firmware/efi/efivars.c
+> > b/drivers/firmware/efi/efivars.c
+> > index 7576450c8254..16a617f9c5cf 100644
+> > --- a/drivers/firmware/efi/efivars.c
+> > +++ b/drivers/firmware/efi/efivars.c
+> > @@ -83,13 +83,16 @@ static ssize_t
+> >  efivar_attr_read(struct efivar_entry *entry, char *buf)
+> >  {
+> >         struct efi_variable *var = &entry->var;
+> > +       unsigned long size = sizeof(var->Data);
+> >         char *str = buf;
+> > +       int ret;
+> >
+> >         if (!entry || !buf)
+> >                 return -EINVAL;
+> >
+> > -       var->DataSize = 1024;
+> > -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > var->Data))
+> > +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
+> > +       var->DataSize = size;
 > 
-> > +++ b/drivers/gpu/drm/msm/msm_drv.c
-> > @@ -492,6 +492,14 @@ static int msm_drm_init(struct device *dev, struct drm_driver *drv)
-> >  	if (ret)
-> >  		goto err_msm_uninit;
-> >  
-> > +	if (!dev->dma_parms) {
-> > +		dev->dma_parms = devm_kzalloc(dev, sizeof(*dev->dma_parms),
-> > +					      GFP_KERNEL);
-> > +		if (!dev->dma_parms)
-> > +			return -ENOMEM;
-> > +	}
-> > +	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+> For my understanding, could you explain why we do the assignment here?
+> Does var->DataSize matter in this case? Can it deviate from 1024?
+
+Yes, the other code expects var->DataSize to be set to a real size of a var
+after efivar_entry_get() call. For example, efivar_show_raw():
+
+    compat->DataSize = var->DataSize;
+
+and efivar_data_read():
+
+    memcpy(buf, var->Data, var->DataSize);
+    return var->DataSize;
+
+Yes, we can change the code to use size here, but this will make struct efi_variable
+*var inconsistent (name, guid, data, attr set properly, but not size). It feels so
+incorrect to leave this struct inconsistent. I'm not sure that code which calls
+efivar_{attr,size,data}_read()/efivar_show_raw() is not using this struct's ->DataSize
+field later.
+
+> > +       if (ret)
+> >                 return -EIO;
+> >
+> >         if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
+> > @@ -116,13 +119,16 @@ static ssize_t
+> >  efivar_size_read(struct efivar_entry *entry, char *buf)
+> >  {
+> >         struct efi_variable *var = &entry->var;
+> > +       unsigned long size = sizeof(var->Data);
+> >         char *str = buf;
+> > +       int ret;
+> >
+> >         if (!entry || !buf)
+> >                 return -EINVAL;
+> >
+> > -       var->DataSize = 1024;
+> > -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > var->Data))
+> > +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
+> > +       var->DataSize = size;
+> > +       if (ret)
+> >                 return -EIO;
+> >
+> >         str += sprintf(str, "0x%lx\n", var->DataSize);
+> > @@ -133,12 +139,15 @@ static ssize_t
+> >  efivar_data_read(struct efivar_entry *entry, char *buf)
+> >  {
+> >         struct efi_variable *var = &entry->var;
+> > +       unsigned long size = sizeof(var->Data);
+> > +       int ret;
+> >
+> >         if (!entry || !buf)
+> >                 return -EINVAL;
+> >
+> > -       var->DataSize = 1024;
+> > -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize,
+> > var->Data))
+> > +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
+> > +       var->DataSize = size;
+> > +       if (ret)
+> >                 return -EIO;
+> >
+> >         memcpy(buf, var->Data, var->DataSize);
+> > @@ -199,6 +208,9 @@ efivar_store_raw(struct efivar_entry *entry, const char
+> > *buf, size_t count)
+> >         u8 *data;
+> >         int err;
+> >
+> > +       if (!entry || !buf)
+> > +               return -EINVAL;
 > > +
-> >  	msm_gem_shrinker_init(ddev);
-> >  
+> 
+> So what are we sanity checking here? When might this occur? Does it
+> need to be in the same patch?
 
-Can you submit a patch to fix it?
+efivar_{attr,size,data}_read()/efivar_show_raw() has this check, I believe
+it is reasonable to add it here too. In case entry or buf happen to be NULL
+it will lead to a NULL-deref later:
 
-thanks,
+    compat = (struct compat_efi_variable *)buf;
+    memcpy(compat->VariableName, var->VariableName, EFI_VAR_NAME_LEN);
 
-greg k-h
+I see this as more-or-less related and too small for a whole separate commit.
+Please, feel free to drop this hunk, if you believe this is not correct. Would
+you like me to send a separate patch adding the check above in this case?
+
+> >         if (in_compat_syscall()) {
+> >                 struct compat_efi_variable *compat;
+> >
+> > @@ -250,14 +262,16 @@ efivar_show_raw(struct efivar_entry *entry, char
+> > *buf)
+> >  {
+> >         struct efi_variable *var = &entry->var;
+> >         struct compat_efi_variable *compat;
+> > +       unsigned long datasize = sizeof(var->Data);
+> >         size_t size;
+> > +       int ret;
+> >
+> >         if (!entry || !buf)
+> >                 return 0;
+> >
+> > -       var->DataSize = 1024;
+> > -       if (efivar_entry_get(entry, &entry->var.Attributes,
+> > -                            &entry->var.DataSize, entry->var.Data))
+> > +       ret = efivar_entry_get(entry, &var->Attributes, &datasize,
+> > var->Data);
+> > +       var->DataSize = size;
+> > +       if (ret)
+> >                 return -EIO;
+> >
+> >         if (in_compat_syscall()) {
+> > diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
+> > index 436d1776bc7b..5f2a4d162795 100644
+> > --- a/drivers/firmware/efi/vars.c
+> > +++ b/drivers/firmware/efi/vars.c
+> > @@ -1071,7 +1071,7 @@ EXPORT_SYMBOL_GPL(efivar_entry_iter_end);
+> >   * entry on the list. It is safe for @func to remove entries in the
+> >   * list via efivar_entry_delete().
+> >   *
+> > - * You MUST call efivar_enter_iter_begin() before this function, and
+> > + * You MUST call efivar_entry_iter_begin() before this function, and
+> >   * efivar_entry_iter_end() afterwards.
+> >   *
+> >   * It is possible to begin iteration from an arbitrary entry within
+> 
+> We can drop this.
+> 
+> > --
+> > 2.20.1
+
+Best regards,
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
+
