@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5CDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:41:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E66C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1DA206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 488D2206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:41:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jPg4ZbPc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9oc37cK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387414AbgCDAlY (ORCPT
+        id S1728137AbgCDAlu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:41:24 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33967 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727903AbgCDAlY (ORCPT
+        Tue, 3 Mar 2020 19:41:50 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44755 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727864AbgCDAlt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:41:24 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j7so206244plt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:41:23 -0800 (PST)
+        Tue, 3 Mar 2020 19:41:49 -0500
+Received: by mail-pl1-f194.google.com with SMTP id d9so185477plo.11
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:41:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=0v4QnmomYtLDKkZhTWixIsZmvX5XApJobfyYR5hOCfc=;
-        b=jPg4ZbPcHFBSU/Btau79OXjm7VZDCp28YCITyUJ8H0fjNnAm9gnxqh+QNGa5auXJyg
-         E1yaJLI9LA4r+9+5fVplhk3IDrFX6AetBZG6IdxqXUIlIKkKlB/04jlmA3JYwRA9pND3
-         9/vy6DTiTmWPrFhGC75OPyBDkh+1NfhNWdFgWMzTjTKONypvGIM2C0d8W66yFPeCyQyj
-         Jg6UeqUwKk2DTcLzh6pIcaJuFJWH1Mzolv5O1zq2LChVy8TA26on1end9iFLKHzBUiXI
-         GyaGF1hTZSmqdOxY8UkRCdhzsII6mCWomXv2rlktR1rB+1iLfShlV2HLzQNJjnASRv9e
-         PoWw==
+        bh=YfVtEcj6UdX9MlLwkKce0a0SqEPxlr08M2BShSj6sz4=;
+        b=R9oc37cKM6HR31dE+cdHh63uIXBkHcKj2SVq4onjdIGuhpm8Yit6zSuo6nOjn8Icz9
+         y/KaaDFRYq7lNQhoGjDagk7808ClitDdB7h+KWKqJPzF2irJsCDeGRwA2BLXkdjUbPDv
+         r9FgnQ6k5kFNrOKDG0dAblsDTNUMMw7edVUmo4WBc17QwVkzCdyIFxTjAYdESmhj8uKA
+         ZLVnLL1ZBP7fCG4f7NxcQEZd4sGmtjv8OTGoaTJl92u0EGEgiEBp9agcCmuY0KwFSnQf
+         0gCm5ZmH53ly8bmjStQah6mIbr1sHLJaS38TrRMSL+sxtvQdbZOOgOO4rsCyvYy2TDuQ
+         5log==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0v4QnmomYtLDKkZhTWixIsZmvX5XApJobfyYR5hOCfc=;
-        b=fVt6mZfJ+R4XmKt7/y/OM/OfzDhbb8rrWBuGojAKpZvqmz7dHPwGmrhjGq749kX3h7
-         FAC7/xIUILhSXlNAljpDNtOPEAyLmspK7OgVifusrrfXJ4dTMf96t/GK3wnm1KSfh766
-         qa9i+2dwbRnjvW4VRYbc7I4ZSJFiv6KKU/lXmHpyENhHzL/V0GJzqNxnFqH7ZaPa1+Fy
-         03khinyRByUX3emenASMPf/jqqAFpTw1R/YSrD5Ecm1lw0AtD2fi80gt8s0Xr60oowmB
-         Sq0/G88Wa5XV3AfEfCcBn89onKu0kNuMHx2/sveYN9WPgQBPYt0isyNJ2fhsC0Z54s9m
-         7+8w==
-X-Gm-Message-State: ANhLgQ2FTDI2zMPgSb4mNfCJNZ9h9mp5wtOxnVQjRgLXfexu7gbsOYvb
-        DQuhrSRwFBilbFuNcB84XXQ=
-X-Google-Smtp-Source: ADFU+vulai7dCgQLJ2juEnz/tqmXDdI6J3LO0heHRipXrmcux7MRju1odjsKGukCxj6G+zVm4bw7mQ==
-X-Received: by 2002:a17:902:6a84:: with SMTP id n4mr548524plk.294.1583282483035;
-        Tue, 03 Mar 2020 16:41:23 -0800 (PST)
+        bh=YfVtEcj6UdX9MlLwkKce0a0SqEPxlr08M2BShSj6sz4=;
+        b=oKFqI60zoAX8azaoCtklxcA2uHolcA3cc6uXGQMcrWwyXML9tOUYCpkKxlIPmlsjUw
+         nYIFUDbExmRXw3v+O9qNqiuHBStqKK8SJlbEsW0L49gHTXd1l3Zkz6VnUY5mPssR6A6w
+         9MW4SglKUgetSgA4gVmz5kBBXvkp/Cvvl9nyFgDmxyMvLk8CcS2EfV2QxgjMEOs/SRCd
+         McMv6GCXvTk9KB02cDxNO8/5Fp9YPoutDG8K1DwLnnNU1GHjUuxprLXDlqNxCnM9tIlM
+         AJQk6EnzeOcudYxJtiwBUx7RkShBkD5ikBn5PDTqSIor1rURiOElsQHJkaTaOqUCSJ78
+         sTBw==
+X-Gm-Message-State: ANhLgQ0GJCmC35PXPhi/cSBc7XTjXFUNBg3qBJgyDuHRM4Q1guNeB5m/
+        3QUktdBP73E24vCvKQanBW4=
+X-Google-Smtp-Source: ADFU+vt1gCahnrlQeMaYVKC5/bMhhu48XKBNXqUNxKizUN0ORK7QP6GixhG6CpGGLEHwP9buzORqfw==
+X-Received: by 2002:a17:90a:da03:: with SMTP id e3mr233283pjv.57.1583282508819;
+        Tue, 03 Mar 2020 16:41:48 -0800 (PST)
 Received: from localhost.localdomain ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id f8sm25539697pfn.2.2020.03.03.16.41.20
+        by smtp.gmail.com with ESMTPSA id x190sm26416523pfb.96.2020.03.03.16.41.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 16:41:22 -0800 (PST)
+        Tue, 03 Mar 2020 16:41:48 -0800 (PST)
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-xtensa@linux-xtensa.org, linux-kernel@vger.kernel.org
+To:     linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org
 Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH v3] xtensa: replace setup_irq() by request_irq()
-Date:   Wed,  4 Mar 2020 06:11:11 +0530
-Message-Id: <20200304004112.3848-1-afzal.mohd.ma@gmail.com>
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+Subject: [PATCH v3] c6x: replace setup_irq() by request_irq()
+Date:   Wed,  4 Mar 2020 06:11:43 +0530
+Message-Id: <20200304004143.3960-1-afzal.mohd.ma@gmail.com>
 X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -81,9 +81,9 @@ Hence replace setup_irq() by request_irq().
 
 Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 ---
-Hi Max Filippov,
+Hi Mark Salter,
 
-i believe you are the maintainer of xtensa, if you are okay w/ this change,
+i believe you are the maintainer of c6x, if you are okay w/ this change,
 please consider taking it thr' your tree, else please let me know.
 
 Regards
@@ -105,70 +105,38 @@ v2:
            pr_err("%s: request_irq() failed"
  * Commit message massage
 
- arch/xtensa/kernel/smp.c  |  8 ++------
- arch/xtensa/kernel/time.c | 12 +++++-------
- 2 files changed, 7 insertions(+), 13 deletions(-)
+ arch/c6x/platforms/timer64.c | 11 +++--------
+ 1 file changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/arch/xtensa/kernel/smp.c b/arch/xtensa/kernel/smp.c
-index 83b244ce61ee..cd85a7a2722b 100644
---- a/arch/xtensa/kernel/smp.c
-+++ b/arch/xtensa/kernel/smp.c
-@@ -53,16 +53,12 @@ static void system_flush_invalidate_dcache_range(unsigned long start,
- #define IPI_IRQ	0
- 
- static irqreturn_t ipi_interrupt(int irq, void *dev_id);
--static struct irqaction ipi_irqaction = {
--	.handler =	ipi_interrupt,
--	.flags =	IRQF_PERCPU,
--	.name =		"ipi",
--};
- 
- void ipi_init(void)
- {
- 	unsigned irq = irq_create_mapping(NULL, IPI_IRQ);
--	setup_irq(irq, &ipi_irqaction);
-+	if (request_irq(irq, ipi_interrupt, IRQF_PERCPU, "ipi", NULL))
-+		pr_err("Failed to request irq %u (ipi)\n", irq);
- }
- 
- static inline unsigned int get_core_count(void)
-diff --git a/arch/xtensa/kernel/time.c b/arch/xtensa/kernel/time.c
-index 69db8c93c1f9..77971fe4cc95 100644
---- a/arch/xtensa/kernel/time.c
-+++ b/arch/xtensa/kernel/time.c
-@@ -128,12 +128,6 @@ static irqreturn_t timer_interrupt(int irq, void *dev_id)
+diff --git a/arch/c6x/platforms/timer64.c b/arch/c6x/platforms/timer64.c
+index d98d94303498..661f4c7c6ef6 100644
+--- a/arch/c6x/platforms/timer64.c
++++ b/arch/c6x/platforms/timer64.c
+@@ -165,13 +165,6 @@ static irqreturn_t timer_interrupt(int irq, void *dev_id)
  	return IRQ_HANDLED;
  }
  
--static struct irqaction timer_irqaction = {
--	.handler =	timer_interrupt,
--	.flags =	IRQF_TIMER,
--	.name =		"timer",
+-static struct irqaction timer_iact = {
+-	.name		= "timer",
+-	.flags		= IRQF_TIMER,
+-	.handler	= timer_interrupt,
+-	.dev_id		= &t64_clockevent_device,
 -};
 -
- void local_timer_setup(unsigned cpu)
+ void __init timer64_init(void)
  {
- 	struct ccount_timer *timer = &per_cpu(ccount_timer, cpu);
-@@ -184,6 +178,8 @@ static inline void calibrate_ccount(void)
+ 	struct clock_event_device *cd = &t64_clockevent_device;
+@@ -238,7 +231,9 @@ void __init timer64_init(void)
+ 	cd->cpumask		= cpumask_of(smp_processor_id());
  
- void __init time_init(void)
- {
-+	int irq;
-+
- 	of_clk_init(NULL);
- #ifdef CONFIG_XTENSA_CALIBRATE_CCOUNT
- 	pr_info("Calibrating CPU frequency ");
-@@ -199,7 +195,9 @@ void __init time_init(void)
- 	     __func__);
- 	clocksource_register_hz(&ccount_clocksource, ccount_freq);
- 	local_timer_setup(0);
--	setup_irq(this_cpu_ptr(&ccount_timer)->evt.irq, &timer_irqaction);
-+	irq = this_cpu_ptr(&ccount_timer)->evt.irq;
-+	if (request_irq(irq, timer_interrupt, IRQF_TIMER, "timer", NULL))
-+		pr_err("Failed to request irq %d (timer)\n", irq);
- 	sched_clock_register(ccount_sched_clock_read, 32, ccount_freq);
- 	timer_probe();
- }
+ 	clockevents_register_device(cd);
+-	setup_irq(cd->irq, &timer_iact);
++	if (request_irq(cd->irq, timer_interrupt, IRQF_TIMER, "timer",
++			&t64_clockevent_device))
++		pr_err("Failed to request irq %d (timer)\n", cd->irq);
+ 
+ out:
+ 	of_node_put(np);
 -- 
 2.25.1
 
