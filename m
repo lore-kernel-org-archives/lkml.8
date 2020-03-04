@@ -3,135 +3,242 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E16AAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02ABFC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9CF32073D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:53:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07882073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728435AbgCDGxH (ORCPT
+        id S1728454AbgCDGxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 01:53:07 -0500
-Received: from m4a0073g.houston.softwaregrp.com ([15.124.2.131]:58699 "EHLO
-        m4a0073g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725892AbgCDGxH (ORCPT
+        Wed, 4 Mar 2020 01:53:23 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56990 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726957AbgCDGxX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 01:53:07 -0500
-Received: FROM m4a0073g.houston.softwaregrp.com (15.120.17.147) BY m4a0073g.houston.softwaregrp.com WITH ESMTP;
- Wed,  4 Mar 2020 06:50:59 +0000
-Received: from M4W0334.microfocus.com (2002:f78:1192::f78:1192) by
- M4W0335.microfocus.com (2002:f78:1193::f78:1193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 4 Mar 2020 06:51:32 +0000
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (15.124.8.11) by
- M4W0334.microfocus.com (15.120.17.146) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Wed, 4 Mar 2020 06:51:32 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=efs5tIEx1fgONgPwRSNP0QjUBM8YFiiQf63F/zTdqz5klzuIyAby2HnvIwZh+oMJlh9/uIomJzjzzK3T3R9z8cQXiBM/bTYVmIGYvX+g/t4NHVrNGuQTxDGDo9mxhOZGQWziPB46Ke5Ziv/bPCggsLUn1+eUQCE4sArPohPStlqFd1ZYQoB1L6XlBOqWTP0PsWJuWVUkXG5vFbGHDvXESqCqewb9Fkxa45zj+EclICL5cPamAXalxjmYUyhQTVUgJJwrmFtzdXU9hKBdBJfTmHSPSr+uv/5p9MCibI3E2vk6WH8hWQcRgV3lHAIOwJ5LJBggwnprbPKi+BTYCz2P+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=09S13ERhUUn9gu/SfFMi0k0vrtRBkbIaJyf749v8W84=;
- b=Rrfc0rk5WyFUR/Y8nuBtUYrByA33oaVSUjHDrj99LZbofwOxu030XNmgfiLPxm64JT/j4CBWUPLPew7SRDmG29ZAEe/pNyzAXho1BHrV7S2u3yRgpFu2eZYqm2sB2NHYYRFHTCc+hngvRTmhe8Vy4ZnpzEoEbaiuYEsSzJyMnFfc4XXtDNPkAGQCtaeE0XZ+c7K9jDK2h9L88EgGSdxDvP6djxL3ouYovb8zwwruWCjFp0kku4BAB2sjDg7GrSCqC1kve06nH1vuc326oiRHkrH/6G1Dod7qZZt3C6Bls1Baxd5HAe928nsVrPh4o+bHIx9XvQWA8e6udqqpneDQRw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-Authentication-Results: spf=none (sender IP is ) smtp.mailfrom=JLee@suse.com; 
-Received: from CH2PR18MB3240.namprd18.prod.outlook.com (2603:10b6:610:2d::27)
- by CH2PR18MB3351.namprd18.prod.outlook.com (2603:10b6:610:2f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Wed, 4 Mar
- 2020 06:51:31 +0000
-Received: from CH2PR18MB3240.namprd18.prod.outlook.com
- ([fe80::b4b0:7004:b49e:a63]) by CH2PR18MB3240.namprd18.prod.outlook.com
- ([fe80::b4b0:7004:b49e:a63%6]) with mapi id 15.20.2772.019; Wed, 4 Mar 2020
- 06:51:31 +0000
-Date:   Wed, 4 Mar 2020 14:51:22 +0800
-From:   joeyli <jlee@suse.com>
-To:     Vladis Dronov <vdronov@redhat.com>
-CC:     Ard Biesheuvel <ardb@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] efi: fix a race and a buffer overflow while reading
- efivars via sysfs
-Message-ID: <20200304065122.GK16878@linux-l9pv.suse>
-References: <20200303085528.27658-1-vdronov@redhat.com>
- <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
- <1980156503.12639063.1583230452485.JavaMail.zimbra@redhat.com>
- <358842423.12639861.1583231098544.JavaMail.zimbra@redhat.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <358842423.12639861.1583231098544.JavaMail.zimbra@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-ClientProxiedBy: HK2PR03CA0058.apcprd03.prod.outlook.com
- (2603:1096:202:17::28) To CH2PR18MB3240.namprd18.prod.outlook.com
- (2603:10b6:610:2d::27)
+        Wed, 4 Mar 2020 01:53:23 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0246pA4p167782
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 01:53:22 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhhy68akk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 01:53:22 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Wed, 4 Mar 2020 06:53:19 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 06:53:12 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0246qDVG43975134
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 06:52:13 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C3E04C059;
+        Wed,  4 Mar 2020 06:53:11 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE9434C04A;
+        Wed,  4 Mar 2020 06:53:10 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 06:53:10 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A6CBDA023A;
+        Wed,  4 Mar 2020 17:53:05 +1100 (AEDT)
+Subject: Re: [PATCH v3 18/27] powerpc/powernv/pmem: Add controller dump IOCTLs
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-19-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Wed, 4 Mar 2020 17:53:09 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from linux-l9pv.suse (60.251.47.115) by HK2PR03CA0058.apcprd03.prod.outlook.com (2603:1096:202:17::28) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.5 via Frontend Transport; Wed, 4 Mar 2020 06:51:29 +0000
-X-Originating-IP: [60.251.47.115]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 4f71b63c-e37c-4696-b892-08d7c0087846
-X-MS-TrafficTypeDiagnostic: CH2PR18MB3351:
-X-Microsoft-Antispam-PRVS: <CH2PR18MB3351025DCB5604F1138383DCA3E50@CH2PR18MB3351.namprd18.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 0332AACBC3
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(366004)(346002)(136003)(376002)(396003)(199004)(189003)(52116002)(9686003)(55016002)(33656002)(8886007)(36756003)(7696005)(1076003)(5660300002)(6666004)(956004)(66946007)(6506007)(6916009)(16526019)(66556008)(66476007)(316002)(478600001)(54906003)(186003)(4326008)(55236004)(81166006)(81156014)(26005)(86362001)(2906002)(8676002)(8936002)(43062003);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR18MB3351;H:CH2PR18MB3240.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-Received-SPF: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Q5tYLrL/mVfnamlq74XVIFpZ0um/50b9L4o5JNV1vkW/1O1nB0bh0ffkEcRIp7HfXNCFsSU3WRORyraUDXk+PCv444HqZ13NEN3k9WGauXd1n63iTyW1iC7cCHWLHl6zbEXiqYQLKttajFovO1PvmmCug61WXb13hPhKMMfpu+QBycrdFiTXp/FayaZn+Kv2DPP+oMVqstC8+vnBb/CSbwKEiTpMdmosOUdnQ4CtXbxlpCnd/zlTUSbXyYRhMFNzbxlp76Xx1vXfMKe7aJO4AfUdYKlE4mnmCGG9Ch0pKQPfx88YBEm65O6cQs06DtLZ0hlLOrRvDF8s//t0r3cI7lNmbArBECcGv8i6+E51sGspEJrIiQbbUUeP8yAntOLKHkFRAcs1LmAdONwAT5UJbBaVAWLLU4Sqc3qvtWS5ig54dv7PnUpqnc3o3rzKAtKzDdCi+gcFXKMKrzBJ1s4RqQvQ6J2qd0uv4bflx4DhQ3MMWnq5w6dlRB89JOZkF8c5
-X-MS-Exchange-AntiSpam-MessageData: oLy1pVK6zaNsWQ54lD1MCOQnvH5LwhzzVnLLux8FDhCKsq1qVMGzJRuqlAM8bdqA3O3WXPlqK1jAPHQdCyS5CDmpyqn4dVNi72EQNnUzNdVkqaA6bw5BzgnXtLdJO5OpX7f3qMLKcG+6hYEQ2/G8sg==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4f71b63c-e37c-4696-b892-08d7c0087846
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2020 06:51:31.0004
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: L3HNTQGO/bAB5IjnhnNsBUVU5YNFgn2xthlibAk16rOsnYBu1eFJ9I9Z9vMr/oUp
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR18MB3351
-X-OriginatorOrg: suse.com
+In-Reply-To: <20200221032720.33893-19-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030406-0012-0000-0000-0000038CFCD6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030406-0013-0000-0000-000021C9B5FE
+Message-Id: <7fc5ee46-d849-11f1-d0ad-429a8c87d7eb@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_08:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=941 lowpriorityscore=0 suspectscore=0 phishscore=0 mlxscore=0
+ impostorscore=0 bulkscore=0 malwarescore=0 adultscore=0 clxscore=1015
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040052
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> +static int ioctl_controller_dump_data(struct ocxlpmem *ocxlpmem,
+> +		struct ioctl_ocxl_pmem_controller_dump_data __user *uarg)
+> +{
+> +	struct ioctl_ocxl_pmem_controller_dump_data args;
+> +	u16 i;
+> +	u64 val;
+> +	int rc;
+> +
+> +	if (copy_from_user(&args, uarg, sizeof(args)))
+> +		return -EFAULT;
+> +
+> +	if (args.buf_size % 8)
+> +		return -EINVAL;
+> +
+> +	if (args.buf_size > ocxlpmem->admin_command.data_size)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&ocxlpmem->admin_command.lock);
+> +
+> +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_CONTROLLER_DUMP);
+> +	if (rc)
+> +		goto out;
+> +
+> +	val = ((u64)args.offset) << 32;
+> +	val |= args.buf_size;
+> +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
+> +				      ocxlpmem->admin_command.request_offset + 0x08,
+> +				      OCXL_LITTLE_ENDIAN, val);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = admin_command_execute(ocxlpmem);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = admin_command_complete_timeout(ocxlpmem,
+> +					    ADMIN_COMMAND_CONTROLLER_DUMP);
+> +	if (rc < 0) {
+> +		dev_warn(&ocxlpmem->dev, "Controller dump timed out\n");
+> +		goto out;
+> +	}
+> +
+> +	rc = admin_response(ocxlpmem);
+> +	if (rc < 0)
+> +		goto out;
+> +	if (rc != STATUS_SUCCESS) {
+> +		warn_status(ocxlpmem,
+> +			    "Unexpected status from retrieve error log",
 
-On Tue, Mar 03, 2020 at 05:24:58AM -0500, Vladis Dronov wrote:
-> Hello, Ard, all,
-> 
-> > > Wouldn't it be easier to pass a var_data_size stack variable into
-> > > efivar_entry_get(), and only update the value in 'var' if it is <=
-> > > 1024?
-> > > 
-> > 
-> > I was thinking about this approach, but this way we still do not protect
-> > var from a concurrent access. For example, efivar_data_read() can race
-> > with itself:
-> 
-> Oh, indeed, this race is not possible the way you sugget with a var_data_size
-> stack variable. Unfortunately, AFAIU, the read/write race stays:
->  
-> > ... efivar read functions still can race with the write function
-> > efivar_store_raw(). Surely, the race window is much smaller but it is there.
-> > I strongly believe we need to protect all data accesses here with a lock.
->
+Controller dump
 
-Looks that kernel uses EFI protocol to query variable everytime, then
-why should kernel keeps a copy of variable data size, data and attributes in
-memory? It makes sense to keep VariableName and VendorGuid, but why data?
+> +			    rc);
+> +		goto out;
+> +	}
+> +
+> +	for (i = 0; i < args.buf_size; i += 8) {
+> +		u64 val;
+> +
+> +		rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +					     ocxlpmem->admin_command.data_offset + i,
+> +					     OCXL_HOST_ENDIAN, &val);
 
-The efi_variable can be used to interactive with userland. But we do not
-need to keep a data copy in efi_variable with efivar_entry. e.g. The
-efivarfs_file_read() allocates a buffer for reading variable instead
-of using efi_variable->Data. 
+Is a controller dump something where we want to do endian swapping?
 
-Regards
-Joey Lee
+Any reason we're not doing the usual check of the data identifier, 
+additional data length etc?
+
+> +		if (rc)
+> +			goto out;
+> +
+> +		if (copy_to_user(&args.buf[i], &val, sizeof(u64))) {
+> +			rc = -EFAULT;
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	if (copy_to_user(uarg, &args, sizeof(args))) {
+> +		rc = -EFAULT;
+> +		goto out;
+> +	}
+> +
+> +	rc = admin_response_handled(ocxlpmem);
+> +	if (rc)
+> +		goto out;
+> +
+> +out:
+> +	mutex_unlock(&ocxlpmem->admin_command.lock);
+> +	return rc;
+> +}
+> +
+> +int request_controller_dump(struct ocxlpmem *ocxlpmem)
+> +{
+> +	int rc;
+> +	u64 busy = 1;
+> +
+> +	rc = ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_CHIC,
+> +				    OCXL_LITTLE_ENDIAN,
+> +				    GLOBAL_MMIO_CHI_CDA);
+
+This return code is ignored
+
+> +
+> +
+> +	rc = ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
+> +				    OCXL_LITTLE_ENDIAN,
+> +				    GLOBAL_MMIO_HCI_CONTROLLER_DUMP);
+> +	if (rc)
+> +		return rc;
+> +
+> +	while (busy) {
+> +		rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +					     GLOBAL_MMIO_HCI,
+> +					     OCXL_LITTLE_ENDIAN, &busy);
+> +		if (rc)
+> +			return rc;
+> +
+> +		busy &= GLOBAL_MMIO_HCI_CONTROLLER_DUMP;
+> +		cond_resched();
+> +	}
+> +
+> +	return 0;
+> +}
+
+
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
+
