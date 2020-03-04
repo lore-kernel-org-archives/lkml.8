@@ -7,271 +7,121 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362A7C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D15C0C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 067C822B48
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A945122B48
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VOX80ZO3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F74LrpYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730118AbgCDQ73 (ORCPT
+        id S1730135AbgCDQ7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:59:29 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27713 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730077AbgCDQ7Z (ORCPT
+        Wed, 4 Mar 2020 11:59:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42205 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730081AbgCDQ7Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Mar 2020 11:59:25 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583341163;
+        s=mimecast20190719; t=1583341164;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=84soLbFVJt5QLbzQgNHPkCJ8pYYVyUy8Ln63dw+LzP0=;
-        b=VOX80ZO3KziBse8M24epnlO5M9F3otih+ktBgoGqa8YeNXxagpLVs84H0uj/dmRKSjE3RI
-        lFHajmWCB+SxjqJObCaVHH9YfJqN5wKp1yDOMTUQMWjKT/y3KDzEWfxxjy4ujMApS9Y66d
-        v/gbzX37m6IF8YGAmkSs8frkXoKfgXE=
+        bh=S6pQ8jsfaduj841lJuAnYCAgbmehnOTdC6Bq+PWck1A=;
+        b=F74LrpYtXiVb2s9qfsVfLxLDZPnKci2MKaXzCZjGs88nVNDp6gu6jTe1oHkSPe4G60ZYn5
+        3DQA2tX8BHP4LocMOoRR50+hvxXTJX68GnmsqJD6Mz01e/piSsnXeyfwQr68rxvGgNDAbV
+        9YEKtiOr2hAjv2EzcIQ5g8w5DNXojmw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-252-HKxcbV3sMoWZRo33fsAcGw-1; Wed, 04 Mar 2020 11:59:21 -0500
-X-MC-Unique: HKxcbV3sMoWZRo33fsAcGw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-438-PZVYUYR1NCiIri0PTi6-tg-1; Wed, 04 Mar 2020 11:59:20 -0500
+X-MC-Unique: PZVYUYR1NCiIri0PTi6-tg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 56D8E18C35A0;
-        Wed,  4 Mar 2020 16:59:20 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 58FF9800D5C;
+        Wed,  4 Mar 2020 16:59:19 +0000 (UTC)
 Received: from horse.redhat.com (unknown [10.18.25.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD12719C4F;
-        Wed,  4 Mar 2020 16:59:11 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 50DC619E9C;
+        Wed,  4 Mar 2020 16:59:12 +0000 (UTC)
 Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 58FED2257DA; Wed,  4 Mar 2020 11:59:03 -0500 (EST)
+        id 8A0BE225818; Wed,  4 Mar 2020 11:59:03 -0500 (EST)
 From:   Vivek Goyal <vgoyal@redhat.com>
 To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu
 Cc:     vgoyal@redhat.com, stefanha@redhat.com, dgilbert@redhat.com,
         mst@redhat.com
-Subject: [PATCH 08/20] fuse,virtiofs: Add a mount option to enable dax
-Date:   Wed,  4 Mar 2020 11:58:33 -0500
-Message-Id: <20200304165845.3081-9-vgoyal@redhat.com>
+Subject: [PATCH 18/20] fuse: Release file in process context
+Date:   Wed,  4 Mar 2020 11:58:43 -0500
+Message-Id: <20200304165845.3081-19-vgoyal@redhat.com>
 In-Reply-To: <20200304165845.3081-1-vgoyal@redhat.com>
 References: <20200304165845.3081-1-vgoyal@redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a mount option to allow using dax with virtio_fs.
+fuse_file_put(sync) can be called with sync=3Dtrue/false. If sync=3Dtrue,
+it waits for release request response and then calls iput() in the
+caller's context. If sync=3Dfalse, it does not wait for release request
+response, frees the fuse_file struct immediately and req->end function
+does the iput().
+
+iput() can be a problem with DAX if called in req->end context. If this
+is last reference to inode (VFS has let go its reference already), then
+iput() will clean DAX mappings as well and send REMOVEMAPPING requests
+and wait for completion. (All the the worker thread context which is
+processing fuse replies from daemon on the host).
+
+That means it blocks worker thread and it stops processing further
+replies and system deadlocks.
+
+So for now, force sync release of file in case of DAX inodes.
 
 Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 ---
- fs/fuse/fuse_i.h    |  7 ++++
- fs/fuse/inode.c     |  3 ++
- fs/fuse/virtio_fs.c | 82 +++++++++++++++++++++++++++++++++++++--------
- 3 files changed, 78 insertions(+), 14 deletions(-)
+ fs/fuse/file.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/fs/fuse/fuse_i.h b/fs/fuse/fuse_i.h
-index 2cebdf6dcfd8..1fe5065a2902 100644
---- a/fs/fuse/fuse_i.h
-+++ b/fs/fuse/fuse_i.h
-@@ -483,10 +483,14 @@ struct fuse_fs_context {
- 	bool destroy:1;
- 	bool no_control:1;
- 	bool no_force_umount:1;
-+	bool dax:1;
- 	unsigned int max_read;
- 	unsigned int blksize;
- 	const char *subtype;
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index afabeb1acd50..561428b66101 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -543,6 +543,7 @@ void fuse_release_common(struct file *file, bool isdi=
+r)
+ 	struct fuse_file *ff =3D file->private_data;
+ 	struct fuse_release_args *ra =3D ff->release_args;
+ 	int opcode =3D isdir ? FUSE_RELEASEDIR : FUSE_RELEASE;
++	bool sync =3D false;
 =20
-+	/* DAX device, may be NULL */
-+	struct dax_device *dax_dev;
-+
- 	/* fuse_dev pointer to fill in, should contain NULL on entry */
- 	void **fudptr;
- };
-@@ -758,6 +762,9 @@ struct fuse_conn {
+ 	fuse_prepare_release(fi, ff, file->f_flags, opcode);
 =20
- 	/** List of device instances belonging to this connection */
- 	struct list_head devices;
-+
-+	/** DAX device, non-NULL if DAX is supported */
-+	struct dax_device *dax_dev;
- };
-=20
- static inline struct fuse_conn *get_fuse_conn_super(struct super_block *=
-sb)
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index f160a3d47b63..84295fac4ff3 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -569,6 +569,8 @@ static int fuse_show_options(struct seq_file *m, stru=
-ct dentry *root)
- 		seq_printf(m, ",max_read=3D%u", fc->max_read);
- 	if (sb->s_bdev && sb->s_blocksize !=3D FUSE_DEFAULT_BLKSIZE)
- 		seq_printf(m, ",blksize=3D%lu", sb->s_blocksize);
-+	if (fc->dax_dev)
-+		seq_printf(m, ",dax");
- 	return 0;
+@@ -562,8 +563,19 @@ void fuse_release_common(struct file *file, bool isd=
+ir)
+ 	 * Make the release synchronous if this is a fuseblk mount,
+ 	 * synchronous RELEASE is allowed (and desirable) in this case
+ 	 * because the server can be trusted not to screw up.
++	 *
++	 * For DAX, fuse server is trusted. So it should be fine to
++	 * do a sync file put. Doing async file put is creating
++	 * problems right now because when request finish, iput()
++	 * can lead to freeing of inode. That means it tears down
++	 * mappings backing DAX memory and sends REMOVEMAPPING message
++	 * to server and blocks for completion. Currently, waiting
++	 * in req->end context deadlocks the system as same worker thread
++	 * can't process REMOVEMAPPING reply it is waiting for.
+ 	 */
+-	fuse_file_put(ff, ff->fc->destroy, isdir);
++	if (IS_DAX(file_inode(file)) || ff->fc->destroy)
++		sync =3D true;
++	fuse_file_put(ff, sync, isdir);
  }
 =20
-@@ -1185,6 +1187,7 @@ int fuse_fill_super_common(struct super_block *sb, =
-struct fuse_fs_context *ctx)
- 	fc->destroy =3D ctx->destroy;
- 	fc->no_control =3D ctx->no_control;
- 	fc->no_force_umount =3D ctx->no_force_umount;
-+	fc->dax_dev =3D ctx->dax_dev;
-=20
- 	err =3D -ENOMEM;
- 	root =3D fuse_get_root_inode(sb, ctx->rootmode);
-diff --git a/fs/fuse/virtio_fs.c b/fs/fuse/virtio_fs.c
-index 3f786a15b0d9..62cdd6817b5b 100644
---- a/fs/fuse/virtio_fs.c
-+++ b/fs/fuse/virtio_fs.c
-@@ -10,6 +10,7 @@
- #include <linux/virtio_fs.h>
- #include <linux/delay.h>
- #include <linux/fs_context.h>
-+#include <linux/fs_parser.h>
- #include <linux/highmem.h>
- #include "fuse_i.h"
-=20
-@@ -65,6 +66,45 @@ struct virtio_fs_forget {
- static int virtio_fs_enqueue_req(struct virtio_fs_vq *fsvq,
- 				 struct fuse_req *req, bool in_flight);
-=20
-+enum {
-+	OPT_DAX,
-+};
-+
-+static const struct fs_parameter_spec virtio_fs_parameters[] =3D {
-+	fsparam_flag	("dax",		OPT_DAX),
-+	{}
-+};
-+
-+static int virtio_fs_parse_param(struct fs_context *fc,
-+				 struct fs_parameter *param)
-+{
-+	struct fs_parse_result result;
-+	struct fuse_fs_context *ctx =3D fc->fs_private;
-+	int opt;
-+
-+	opt =3D fs_parse(fc, virtio_fs_parameters, param, &result);
-+	if (opt < 0)
-+		return opt;
-+
-+	switch(opt) {
-+	case OPT_DAX:
-+		ctx->dax =3D 1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static void virtio_fs_free_fc(struct fs_context *fc)
-+{
-+	struct fuse_fs_context *ctx =3D fc->fs_private;
-+
-+	if (ctx)
-+		kfree(ctx);
-+}
-+
- static inline struct virtio_fs_vq *vq_to_fsvq(struct virtqueue *vq)
- {
- 	struct virtio_fs *fs =3D vq->vdev->priv;
-@@ -1045,23 +1085,27 @@ static const struct fuse_iqueue_ops virtio_fs_fiq=
-_ops =3D {
- 	.release			=3D virtio_fs_fiq_release,
- };
-=20
--static int virtio_fs_fill_super(struct super_block *sb)
-+static inline void virtio_fs_ctx_set_defaults(struct fuse_fs_context *ct=
-x)
-+{
-+	ctx->rootmode =3D S_IFDIR;
-+	ctx->default_permissions =3D 1;
-+	ctx->allow_other =3D 1;
-+	ctx->max_read =3D UINT_MAX;
-+	ctx->blksize =3D 512;
-+	ctx->destroy =3D true;
-+	ctx->no_control =3D true;
-+	ctx->no_force_umount =3D true;
-+}
-+
-+static int virtio_fs_fill_super(struct super_block *sb, struct fs_contex=
-t *fsc)
- {
- 	struct fuse_conn *fc =3D get_fuse_conn_super(sb);
- 	struct virtio_fs *fs =3D fc->iq.priv;
-+	struct fuse_fs_context *ctx =3D fsc->fs_private;
- 	unsigned int i;
- 	int err;
--	struct fuse_fs_context ctx =3D {
--		.rootmode =3D S_IFDIR,
--		.default_permissions =3D 1,
--		.allow_other =3D 1,
--		.max_read =3D UINT_MAX,
--		.blksize =3D 512,
--		.destroy =3D true,
--		.no_control =3D true,
--		.no_force_umount =3D true,
--	};
-=20
-+	virtio_fs_ctx_set_defaults(ctx);
- 	mutex_lock(&virtio_fs_mutex);
-=20
- 	/* After holding mutex, make sure virtiofs device is still there.
-@@ -1084,8 +1128,10 @@ static int virtio_fs_fill_super(struct super_block=
- *sb)
- 			goto err_free_fuse_devs;
- 	}
-=20
--	ctx.fudptr =3D (void **)&fs->vqs[VQ_REQUEST].fud;
--	err =3D fuse_fill_super_common(sb, &ctx);
-+	ctx->fudptr =3D (void **)&fs->vqs[VQ_REQUEST].fud;
-+	if (ctx->dax)
-+		ctx->dax_dev =3D fs->dax_dev;
-+	err =3D fuse_fill_super_common(sb, ctx);
- 	if (err < 0)
- 		goto err_free_fuse_devs;
-=20
-@@ -1200,7 +1246,7 @@ static int virtio_fs_get_tree(struct fs_context *fs=
-c)
- 		return PTR_ERR(sb);
-=20
- 	if (!sb->s_root) {
--		err =3D virtio_fs_fill_super(sb);
-+		err =3D virtio_fs_fill_super(sb, fsc);
- 		if (err) {
- 			deactivate_locked_super(sb);
- 			return err;
-@@ -1215,11 +1261,19 @@ static int virtio_fs_get_tree(struct fs_context *=
-fsc)
- }
-=20
- static const struct fs_context_operations virtio_fs_context_ops =3D {
-+	.free		=3D virtio_fs_free_fc,
-+	.parse_param	=3D virtio_fs_parse_param,
- 	.get_tree	=3D virtio_fs_get_tree,
- };
-=20
- static int virtio_fs_init_fs_context(struct fs_context *fsc)
- {
-+	struct fuse_fs_context *ctx;
-+
-+	ctx =3D kzalloc(sizeof(struct fuse_fs_context), GFP_KERNEL);
-+	if (!ctx)
-+		return -ENOMEM;
-+	fsc->fs_private =3D ctx;
- 	fsc->ops =3D &virtio_fs_context_ops;
- 	return 0;
- }
+ static int fuse_open(struct inode *inode, struct file *file)
 --=20
 2.20.1
 
