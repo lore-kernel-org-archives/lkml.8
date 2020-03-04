@@ -2,86 +2,132 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6929C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A17C2C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE97215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:45:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GtymdUEo"
+	by mail.kernel.org (Postfix) with ESMTP id 7F78B215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbgCDPpU (ORCPT
+        id S1729742AbgCDPpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:45:20 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60910 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729538AbgCDPpU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:45:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583336718;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=qCLVGTRxnbfjjeCTr0ddYoiLTCcPK4JAZKp83eU87BU=;
-        b=GtymdUEo+HJhDlta0BKTDfN7S4rY5HVjZcSpwR9kwWctdMoxNwjbg0hQW1EYlWlop4dWrk
-        17xWrIJUTltee2jo9DW6nuvGmqtnB0BggaeE2CTfLHUqVs+3oDFrfXgLwBDmJE6PwINJtF
-        q3PLrqXS2VJF8HcERm3oTh0KwFSHXm0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-122-ObxcWQTKPraYzzAA2DDGeQ-1; Wed, 04 Mar 2020 10:45:17 -0500
-X-MC-Unique: ObxcWQTKPraYzzAA2DDGeQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F847800053;
-        Wed,  4 Mar 2020 15:45:16 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 437375DA2C;
-        Wed,  4 Mar 2020 15:45:16 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 339A28174D;
-        Wed,  4 Mar 2020 15:45:16 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 10:45:16 -0500 (EST)
-From:   Vladis Dronov <vdronov@redhat.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Message-ID: <925307051.13073500.1583336716147.JavaMail.zimbra@redhat.com>
-In-Reply-To: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
-References: <20200303085528.27658-1-vdronov@redhat.com> <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
-Subject: Re: [PATCH] efi: fix a race and a buffer overflow while reading
- efivars via sysfs
+        Wed, 4 Mar 2020 10:45:52 -0500
+Received: from mga03.intel.com ([134.134.136.65]:46206 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728278AbgCDPpw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:45:52 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 07:45:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
+   d="scan'208";a="352130079"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga001.fm.intel.com with ESMTP; 04 Mar 2020 07:45:39 -0800
+Date:   Wed, 4 Mar 2020 07:45:38 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Yang Weijiang <weijiang.yang@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        yu.c.zhang@linux.intel.com
+Subject: Re: [PATCH v9 7/7] KVM: X86: Add user-space access interface for CET
+ MSRs
+Message-ID: <20200304154538.GB21662@linux.intel.com>
+References: <20191227021133.11993-1-weijiang.yang@intel.com>
+ <20191227021133.11993-8-weijiang.yang@intel.com>
+ <20200303222827.GC1439@linux.intel.com>
+ <20200304151815.GD5831@local-michael-cet-test.sh.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.40.204.205, 10.4.195.6]
-Thread-Topic: fix a race and a buffer overflow while reading efivars via sysfs
-Thread-Index: dewbhvzFQPAb58gKxgYvGl/QeO33kQ==
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304151815.GD5831@local-michael-cet-test.sh.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Ard,
+On Wed, Mar 04, 2020 at 11:18:15PM +0800, Yang Weijiang wrote:
+> On Tue, Mar 03, 2020 at 02:28:27PM -0800, Sean Christopherson wrote:
+> > > @@ -1886,6 +1976,26 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+> > >  		else
+> > >  			msr_info->data = vmx->pt_desc.guest.addr_a[index / 2];
+> > >  		break;
+> > > +	case MSR_IA32_S_CET:
+> > > +		if (!cet_ctl_access_allowed(vcpu, msr_info))
+> > > +			return 1;
+> > > +		msr_info->data = vmcs_readl(GUEST_S_CET);
+> > > +		break;
+> > > +	case MSR_IA32_INT_SSP_TAB:
+> > > +		if (!cet_ssp_access_allowed(vcpu, msr_info))
+> > > +			return 1;
+> > > +		msr_info->data = vmcs_readl(GUEST_INTR_SSP_TABLE);
+> > > +		break;
+> > > +	case MSR_IA32_U_CET:
+> > > +		if (!cet_ctl_access_allowed(vcpu, msr_info))
+> > > +			return 1;
+> > > +		rdmsrl(MSR_IA32_U_CET, msr_info->data);
+> > > +		break;
+> > > +	case MSR_IA32_PL0_SSP ... MSR_IA32_PL3_SSP:
+> > > +		if (!cet_ssp_access_allowed(vcpu, msr_info))
+> > > +			return 1;
+> > > +		rdmsrl(msr_info->index, msr_info->data);
+> > 
+> > Ugh, thought of another problem.  If a SoftIRQ runs after an IRQ it can
+> > load the kernel FPU state.  So for all the XSAVES MSRs we'll need a helper
+> > similar to vmx_write_guest_kernel_gs_base(), except XSAVES has to be even
+> > more restrictive and disable IRQs entirely.  E.g.
+> > 
+> > static void vmx_get_xsave_msr(struct msr_data *msr_info)
+> > {
+> > 	local_irq_disable();
+> > 	if (test_thread_flag(TIF_NEED_FPU_LOAD))
+> > 		switch_fpu_return();
+> > 	rdmsrl(msr_info->index, msr_info->data);
+> > 	local_irq_enable();
+> In this case, would SoftIRQ destroy vcpu->arch.guest.fpu states which
+> had been restored to XSAVES MSRs that we were accessing?
 
-> Wouldn't it be easier to pass a var_data_size stack variable into
-> efivar_entry_get(), and only update the value in 'var' if it is <=
-> 1024?
+Doing kernel_fpu_begin() from a softirq would swap guest.fpu out of the
+CPUs registers.  It sets TIF_NEED_FPU_LOAD to mark the tasks has needing to
+reload its FPU state prior to returning to userspace.  So it doesn't
+destroy it per se.  The result is that KVM would read/write the CET MSRs
+after they're loaded from the kernel's FPU state instead of reading the
+MSRs loaded from the guest's FPU state.
 
-I have prepared a v2 patch with an approach you suggest and will send it
-out shortly. It indeed simpler and fixes only the overflow bug mentioned.
+> So should we restore
+> guest.fpu or? In previous patch, we have restored guest.fpu before
+> access the XSAVES MSRs.
 
-Could you, please, review it and if you like it, probably, accept it?
-In case I've implemented your idea incorrectly, could you, please,
-correct me?
+There are three different FPU states:
 
-Best regards,
-Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
+  - kernel
+  - userspace
+  - guest
 
+RDMSR/WRMSR for CET MSRs need to run while the guest.fpu state is loaded
+into the CPU registers[1].  At the beginning of the syscall from userspace,
+i.e. the vCPU ioctl(), the task's FPU state[2] holds userspace FPU state.
+Patch 6/7 swaps out the userspace state and loads the guest state.
+
+But, if a softirq runs between kvm_load_guest_fpu() and now, and executes
+kernel_fpu_begin(), it will swap the guest state (out of CPU registers)
+and load the kernel state (into PCU registers).  The actual RDMSR/WRMSR
+needs to ensure the guest state is still loaded by checking and handling
+TIF_NEED_FPU_LOAD.
+
+[1] An alternative to doing switch_fpu_return() on TIF_NEED_FPU_LOAD would
+    be to calculate the offset into the xsave and read/write directly
+    to/from memory.  But IMO that's unnecessary complexity as the guest's
+    fpu state still needs to be reloaded before re-entering the guest, e.g.
+    if vmx_{g,s}et_msr() is invoked on {RD,WR}MSR intercept, while loading
+    or saving MSR state from userspace isn't a hot path.
+
+[2] I worded this to say "task's FPU state" because it's also possible the
+    CPU registers hold kernel state at the beginning of the vCPU ioctl(),
+    e.g. because of softirq.
