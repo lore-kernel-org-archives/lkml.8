@@ -2,324 +2,123 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6532C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F1D1C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB19520728
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:07:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IDePic5F"
+	by mail.kernel.org (Postfix) with ESMTP id 062BD20661
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:07:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583284065;
+	bh=he8hFXzurXLh5g7b8+qJIW+YvCJT2XaTX3aqrgZ9otI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=qSCuLifV3YqnKjt6aL1ESh2mUxhbkOmodnCH7gOtp17rNQUEIlaie6zDOF9C8zFAV
+	 TvNxmoQu2hipcmnVfXiMqU+FDeXIrKUixMqBvUANAxTYtKXtPqXjIL87zxhk6qhzKa
+	 SDevR6Tharg0pa2xvplQWG1AWAJle/kpmEQIaZno=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387578AbgCDBHV (ORCPT
+        id S2387582AbgCDBHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 20:07:21 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43834 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387475AbgCDBHB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 20:07:01 -0500
-Received: by mail-pf1-f196.google.com with SMTP id c144so47571pfb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:07:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=TZYWFU//6XNH8xsyUpNDXcXn9d8YA13QJI1iOPCaVt0=;
-        b=IDePic5Fdv1oCM1SzBMqzHuuSY/jRF6eXC4mhJghJ0Cc21Dur9GGumcMnN1XhHF4yq
-         oB0YTzsSAMGmUq7HQR4PTXgpTh5MGecPgzfKI1BShFslZPzS9ejb6+efp/oYZVU99wnm
-         m6kklYBG0obDYKEhPDJivswi/HXrGGvVjDRmc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=TZYWFU//6XNH8xsyUpNDXcXn9d8YA13QJI1iOPCaVt0=;
-        b=pEA/sxSr0jId4TABT//TNSD91VOVWxNl/zRE2KZPvMP/8nN8OLbuTwv2KB4aU5loNY
-         XDcRcydXlDLGS/v6UZo6zwW2dfFUbvq4pfo4zXKOcR8ecIqJb+z87J0dbYLpNq243s9u
-         WgGe2HnuJLBIqa3JFO4tf7JMktvqgz7I87zXmKKMD7WmGgnj373UKhWuB+RPzxzIPgTo
-         pa5RAnC4HRu9G5Yh34aYomaAy0h1fMVWDtMhLPz4J8s7gV1u4OAEl6EbbAcHcs0f7Ltx
-         cY7yMF88sXCvr8ROSxbIAcl8S32P0ebkQxRWolatlSF3w5q7ZGeRClnshbnaM9VO7DT3
-         FYsQ==
-X-Gm-Message-State: ANhLgQ3NmjF0diL+J1mD5MYdb/RJ3oZkEM+XkgRnWFVwInuOnkprSTl/
-        gX3q/LdYqNOd6vRalLMC5xoLtQ==
-X-Google-Smtp-Source: ADFU+vu0dV8H0SNw4j6I8MP47IzIzhcKBHExbfdiLZ64l3HZesFd8DXtKcJna/3Akg9dBp98n05fKA==
-X-Received: by 2002:aa7:864e:: with SMTP id a14mr509193pfo.240.1583284019970;
-        Tue, 03 Mar 2020 17:06:59 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id w2sm17780889pfb.138.2020.03.03.17.06.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 17:06:59 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     marcel@holtmann.org, luiz.dentz@gmail.com, alainm@chromium.org
-Cc:     linux-bluetooth@vger.kernel.org,
-        chromeos-bluetooth-upstreaming@chromium.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [RFC PATCH v4 2/5] Bluetooth: Handle PM_SUSPEND_PREPARE and PM_POST_SUSPEND
-Date:   Tue,  3 Mar 2020 17:06:47 -0800
-Message-Id: <20200303170610.RFC.v4.2.I62f17edc39370044c75ad43a55a7382b4b8a5ceb@changeid>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-In-Reply-To: <20200304010650.259961-1-abhishekpandit@chromium.org>
-References: <20200304010650.259961-1-abhishekpandit@chromium.org>
+        Tue, 3 Mar 2020 20:07:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58406 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387406AbgCDBHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 20:07:43 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88EBA20661;
+        Wed,  4 Mar 2020 01:07:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583284062;
+        bh=he8hFXzurXLh5g7b8+qJIW+YvCJT2XaTX3aqrgZ9otI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=STQYplSzJyTCChQj2ANUycT53d42crYmY/ElGnM/G/Ye3T5bOU3sW2K9IJ+TpdDF2
+         SbVZAFlYQ+khTWhBhZu+XTDqLGUmKUTq76DsZIfhGSZjIzYROBQXWa5BvYJAoiQLuD
+         pwksw+lZWASlxhhcitbkI2ALgGbtP/tIQIOd/vtI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 5544B35226C4; Tue,  3 Mar 2020 17:07:42 -0800 (PST)
+Date:   Tue, 3 Mar 2020 17:07:42 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [rcu:dev.2020.03.03b 43/45] kernel/rcu/update.c:583:2: error:
+ implicit declaration of function 'rcu_tasks_bootup_oddness'; did you mean
+ 'rcu_early_boot_tests'?
+Message-ID: <20200304010742.GV2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <202003040710.OtaUSqj6%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003040710.OtaUSqj6%lkp@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Register for PM_SUSPEND_PREPARE and PM_POST_SUSPEND to make sure the
-Bluetooth controller is prepared correctly for suspend/resume. Implement
-the registration, scheduling and task handling portions only in this
-patch.
+On Wed, Mar 04, 2020 at 07:59:13AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git dev.2020.03.03b
+> head:   647c0bb2da5c14b25d27661fa93de7fca9042daf
+> commit: d060bd985c4d160df31659a80cf5fabe1cd508b4 [43/45] rcu-tasks: Refactor RCU-tasks to allow variants to be added
+> config: x86_64-defconfig (attached as .config)
+> compiler: gcc-7 (Debian 7.5.0-5) 7.5.0
+> reproduce:
+>         git checkout d060bd985c4d160df31659a80cf5fabe1cd508b4
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    kernel/rcu/update.c: In function 'rcupdate_announce_bootup_oddness':
+> >> kernel/rcu/update.c:583:2: error: implicit declaration of function 'rcu_tasks_bootup_oddness'; did you mean 'rcu_early_boot_tests'? [-Werror=implicit-function-declaration]
+>      rcu_tasks_bootup_oddness();
+>      ^~~~~~~~~~~~~~~~~~~~~~~~
+>      rcu_early_boot_tests
+>    cc1: some warnings being treated as errors
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
----
+Good catch, will fix, thank you!
 
-Changes in v4:
-* Added check for mgmt_powering_down and hdev_is_powered in notifier
+							Thanx, Paul
 
-Changes in v3: None
-Changes in v2:
-* Moved pm notifier registration into its own patch and moved params out
-  of separate suspend_state
+> vim +583 kernel/rcu/update.c
+> 
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  567  
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  568  /*
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  569   * Print any significant non-default boot-time settings.
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  570   */
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  571  void __init rcupdate_announce_bootup_oddness(void)
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  572  {
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  573  	if (rcu_normal)
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  574  		pr_info("\tNo expedited grace period (rcu_normal).\n");
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  575  	else if (rcu_normal_after_boot)
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  576  		pr_info("\tNo expedited grace period (rcu_normal_after_boot).\n");
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  577  	else if (rcu_expedited)
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  578  		pr_info("\tAll grace periods are expedited (rcu_expedited).\n");
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  579  	if (rcu_cpu_stall_suppress)
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  580  		pr_info("\tRCU CPU stall warnings suppressed (rcu_cpu_stall_suppress).\n");
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  581  	if (rcu_cpu_stall_timeout != CONFIG_RCU_CPU_STALL_TIMEOUT)
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  582  		pr_info("\tRCU CPU stall warnings timeout set to %d (rcu_cpu_stall_timeout).\n", rcu_cpu_stall_timeout);
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28 @583  	rcu_tasks_bootup_oddness();
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  584  }
+> 59d80fd8351b7b Paul E. McKenney 2017-04-28  585  
+> 
+> :::::: The code at line 583 was first introduced by commit
+> :::::: 59d80fd8351b7b9a5dc7bbfa8bc4ca19f6ff3dad rcu: Print out rcupdate.c non-default boot-time settings
+> 
+> :::::: TO: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> :::::: CC: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+> 
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
- include/net/bluetooth/hci_core.h | 23 +++++++++
- net/bluetooth/hci_core.c         | 86 ++++++++++++++++++++++++++++++++
- net/bluetooth/hci_request.c      | 19 +++++++
- net/bluetooth/hci_request.h      |  2 +
- 4 files changed, 130 insertions(+)
-
-diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-index 9d9ada5bc9d4..b82a89b88d1b 100644
---- a/include/net/bluetooth/hci_core.h
-+++ b/include/net/bluetooth/hci_core.h
-@@ -88,6 +88,20 @@ struct discovery_state {
- 	unsigned long		scan_duration;
- };
- 
-+#define SUSPEND_NOTIFIER_TIMEOUT	msecs_to_jiffies(2000) /* 2 seconds */
-+
-+enum suspend_tasks {
-+	SUSPEND_POWERING_DOWN,
-+
-+	SUSPEND_PREPARE_NOTIFIER,
-+	__SUSPEND_NUM_TASKS
-+};
-+
-+enum suspended_state {
-+	BT_RUNNING = 0,
-+	BT_SUSPENDED,
-+};
-+
- struct hci_conn_hash {
- 	struct list_head list;
- 	unsigned int     acl_num;
-@@ -389,6 +403,15 @@ struct hci_dev {
- 	void			*smp_bredr_data;
- 
- 	struct discovery_state	discovery;
-+
-+	struct notifier_block	suspend_notifier;
-+	struct work_struct	suspend_prepare;
-+	enum suspended_state	suspend_state_next;
-+	enum suspended_state	suspend_state;
-+
-+	wait_queue_head_t	suspend_wait_q;
-+	DECLARE_BITMAP(suspend_tasks, __SUSPEND_NUM_TASKS);
-+
- 	struct hci_conn_hash	conn_hash;
- 
- 	struct list_head	mgmt_pending;
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index b0b0308127a3..ad89ff3f8f57 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -31,6 +31,8 @@
- #include <linux/debugfs.h>
- #include <linux/crypto.h>
- #include <linux/property.h>
-+#include <linux/suspend.h>
-+#include <linux/wait.h>
- #include <asm/unaligned.h>
- 
- #include <net/bluetooth/bluetooth.h>
-@@ -1764,6 +1766,9 @@ int hci_dev_do_close(struct hci_dev *hdev)
- 	clear_bit(HCI_RUNNING, &hdev->flags);
- 	hci_sock_dev_event(hdev, HCI_DEV_CLOSE);
- 
-+	if (test_and_clear_bit(SUSPEND_POWERING_DOWN, hdev->suspend_tasks))
-+		wake_up(&hdev->suspend_wait_q);
-+
- 	/* After this point our queues are empty
- 	 * and no tasks are scheduled. */
- 	hdev->close(hdev);
-@@ -3241,6 +3246,78 @@ void hci_copy_identity_address(struct hci_dev *hdev, bdaddr_t *bdaddr,
- 	}
- }
- 
-+static int hci_suspend_wait_event(struct hci_dev *hdev)
-+{
-+#define WAKE_COND                                                              \
-+	(find_first_bit(hdev->suspend_tasks, __SUSPEND_NUM_TASKS) ==           \
-+	 __SUSPEND_NUM_TASKS)
-+
-+	int i;
-+	int ret = wait_event_timeout(hdev->suspend_wait_q,
-+				     WAKE_COND, SUSPEND_NOTIFIER_TIMEOUT);
-+
-+	if (ret == 0) {
-+		BT_DBG("Timed out waiting for suspend");
-+		for (i = 0; i < __SUSPEND_NUM_TASKS; ++i) {
-+			if (test_bit(i, hdev->suspend_tasks))
-+				BT_DBG("Bit %d is set", i);
-+			clear_bit(i, hdev->suspend_tasks);
-+		}
-+
-+		ret = -ETIMEDOUT;
-+	} else {
-+		ret = 0;
-+	}
-+
-+	return ret;
-+}
-+
-+static void hci_prepare_suspend(struct work_struct *work)
-+{
-+	struct hci_dev *hdev =
-+		container_of(work, struct hci_dev, suspend_prepare);
-+
-+	hci_dev_lock(hdev);
-+	hci_req_prepare_suspend(hdev, hdev->suspend_state_next);
-+	hci_dev_unlock(hdev);
-+}
-+
-+static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
-+				void *data)
-+{
-+	struct hci_dev *hdev =
-+		container_of(nb, struct hci_dev, suspend_notifier);
-+	int ret = 0;
-+
-+	/* If powering down, wait for completion. */
-+	if (mgmt_powering_down(hdev)) {
-+		set_bit(SUSPEND_POWERING_DOWN, hdev->suspend_tasks);
-+		ret = hci_suspend_wait_event(hdev);
-+		if (ret)
-+			goto done;
-+	}
-+
-+	/* Suspend notifier should only act on events when powered. */
-+	if (!hdev_is_powered(hdev))
-+		goto done;
-+
-+	if (action == PM_SUSPEND_PREPARE) {
-+		hdev->suspend_state_next = BT_SUSPENDED;
-+		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
-+		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
-+
-+		ret = hci_suspend_wait_event(hdev);
-+	} else if (action == PM_POST_SUSPEND) {
-+		hdev->suspend_state_next = BT_RUNNING;
-+		set_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
-+		queue_work(hdev->req_workqueue, &hdev->suspend_prepare);
-+
-+		ret = hci_suspend_wait_event(hdev);
-+	}
-+
-+done:
-+	return ret ? notifier_from_errno(-EBUSY) : NOTIFY_STOP;
-+}
- /* Alloc HCI device */
- struct hci_dev *hci_alloc_dev(void)
- {
-@@ -3319,6 +3396,7 @@ struct hci_dev *hci_alloc_dev(void)
- 	INIT_WORK(&hdev->tx_work, hci_tx_work);
- 	INIT_WORK(&hdev->power_on, hci_power_on);
- 	INIT_WORK(&hdev->error_reset, hci_error_reset);
-+	INIT_WORK(&hdev->suspend_prepare, hci_prepare_suspend);
- 
- 	INIT_DELAYED_WORK(&hdev->power_off, hci_power_off);
- 
-@@ -3327,6 +3405,7 @@ struct hci_dev *hci_alloc_dev(void)
- 	skb_queue_head_init(&hdev->raw_q);
- 
- 	init_waitqueue_head(&hdev->req_wait_q);
-+	init_waitqueue_head(&hdev->suspend_wait_q);
- 
- 	INIT_DELAYED_WORK(&hdev->cmd_timer, hci_cmd_timeout);
- 
-@@ -3438,6 +3517,11 @@ int hci_register_dev(struct hci_dev *hdev)
- 	hci_sock_dev_event(hdev, HCI_DEV_REG);
- 	hci_dev_hold(hdev);
- 
-+	hdev->suspend_notifier.notifier_call = hci_suspend_notifier;
-+	error = register_pm_notifier(&hdev->suspend_notifier);
-+	if (error)
-+		goto err_wqueue;
-+
- 	queue_work(hdev->req_workqueue, &hdev->power_on);
- 
- 	return id;
-@@ -3471,6 +3555,8 @@ void hci_unregister_dev(struct hci_dev *hdev)
- 
- 	hci_dev_do_close(hdev);
- 
-+	unregister_pm_notifier(&hdev->suspend_notifier);
-+
- 	if (!test_bit(HCI_INIT, &hdev->flags) &&
- 	    !hci_dev_test_flag(hdev, HCI_SETUP) &&
- 	    !hci_dev_test_flag(hdev, HCI_CONFIG)) {
-diff --git a/net/bluetooth/hci_request.c b/net/bluetooth/hci_request.c
-index 2a1b64dbf76e..08908469c043 100644
---- a/net/bluetooth/hci_request.c
-+++ b/net/bluetooth/hci_request.c
-@@ -918,6 +918,25 @@ static u8 get_adv_instance_scan_rsp_len(struct hci_dev *hdev, u8 instance)
- 	return adv_instance->scan_rsp_len;
- }
- 
-+/* Call with hci_dev_lock */
-+void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next)
-+{
-+	int old_state;
-+	struct hci_conn *conn;
-+	struct hci_request req;
-+
-+	if (next == hdev->suspend_state) {
-+		BT_DBG("Same state before and after: %d", next);
-+		goto done;
-+	}
-+
-+	hdev->suspend_state = next;
-+
-+done:
-+	clear_bit(SUSPEND_PREPARE_NOTIFIER, hdev->suspend_tasks);
-+	wake_up(&hdev->suspend_wait_q);
-+}
-+
- static u8 get_cur_adv_instance_scan_rsp_len(struct hci_dev *hdev)
- {
- 	u8 instance = hdev->cur_adv_instance;
-diff --git a/net/bluetooth/hci_request.h b/net/bluetooth/hci_request.h
-index a7019fbeadd3..0e81614d235e 100644
---- a/net/bluetooth/hci_request.h
-+++ b/net/bluetooth/hci_request.h
-@@ -68,6 +68,8 @@ void __hci_req_update_eir(struct hci_request *req);
- void hci_req_add_le_scan_disable(struct hci_request *req);
- void hci_req_add_le_passive_scan(struct hci_request *req);
- 
-+void hci_req_prepare_suspend(struct hci_dev *hdev, enum suspended_state next);
-+
- void hci_req_reenable_advertising(struct hci_dev *hdev);
- void __hci_req_enable_advertising(struct hci_request *req);
- void __hci_req_disable_advertising(struct hci_request *req);
--- 
-2.25.0.265.gbab2e86ba0-goog
 
