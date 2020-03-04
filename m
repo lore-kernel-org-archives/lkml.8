@@ -2,197 +2,162 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16958C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB4EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA70E22B48
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC04215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jeBpg3zx"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmHHN+/y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729800AbgCDPsU (ORCPT
+        id S2388269AbgCDPtN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:48:20 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38525 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387801AbgCDPsA (ORCPT
+        Wed, 4 Mar 2020 10:49:13 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43845 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729573AbgCDPtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:48:00 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u9so2377329wml.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:47:59 -0800 (PST)
+        Wed, 4 Mar 2020 10:49:13 -0500
+Received: by mail-qk1-f195.google.com with SMTP id q18so2037757qki.10;
+        Wed, 04 Mar 2020 07:49:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OnY0sLzc6EG75w+2zGbx52f2fr6wBzB9p2HqJRSWjIE=;
-        b=jeBpg3zx7Fq/WdtomdsFbKI/7lD4yn2XfYDa5pB6rTmiZ12Y115rivK54p00W4iK3w
-         1oirVnEoTQV9OKlV+/MaN2u15j9SZI2YyEz2rRzfxxDzE3go9t3zRfzpO8zmihWIMJLb
-         2jSWVAnSZjoyr7Y3W/CZpolMgiS8wq7Ypo414=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TsTKXhrbnw/QAlugyUyOjWQ0P4Lr6lXfLnd3ahgcNlQ=;
+        b=LmHHN+/yzZIXHZsAT4mPjlLhLhDwRzyHrf4mOtnXBsZHhyIBerM7ivcQPYfmN0zu6M
+         MCpqRZ0853FsImWkM8jJqsAAWmYEoyzkUielgjLay4Whb47ZdwgVV/VzoHfmSlnXlNo3
+         vt8KFlhUaOdOYWZq9BPIH3Ak+dzsUQs5cqzn/6cHlOj5RkPT6A0EvUvIKG8+IupQa8wa
+         nHuSVnBnQyFqzFVhr3EUmcXmVdW5VdLx7na6S8dSRUpiMSgUI8B6So0y5dusrau4YXIf
+         gRfJVVqcF0GcwaB+H3QjzSY6fzYJBksg2CAJjjpSFPH+WXaLKAWGoZEqYV4AbysBmG7S
+         KxZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OnY0sLzc6EG75w+2zGbx52f2fr6wBzB9p2HqJRSWjIE=;
-        b=W+ga/UAzH0aOfN0oFL8N70y96IJePog8d3JCIw6PgqxIHq4qS3gsuwcFJfysc3v4Nl
-         SRU/PgiO+p9Ek3zAt/PENWRkV3E/bUcl0h0ImaX/bueIaYwxLwS7UtM0xXUAXA4jrj3x
-         ptw+Xr0eIRant7gbOtq30fV31xIB91PeTuHMOPikDRTQ3epus4sQyr7UQs+cuFpI6lbc
-         6wE8zlmYy5DKC9YsReTzmIQlq3eY9PBEwufk8ZAYHQVAKK+clPTtFpHkaHfKZYJrl6vm
-         Qpn1eqp+vNWhduRoFJNkPERCvX7M3/rY1G+Qa/Smy5t998hDtSJEpVuUMmnsKNh/T9GJ
-         te3w==
-X-Gm-Message-State: ANhLgQ1Rn3AtzWRQrCDDQ/aSpd3TpuMIks9sa1pRXFDpj0QSmDDugd47
-        eF2qfrNdWGTp+Uh0eP7hZHEixw==
-X-Google-Smtp-Source: ADFU+vtyWWEd7y4ar3XJjKvHHh8Lk8eZl5HKOd3/C8g5c0EZydhJWiwJ4rMhfCmFH57jJGr+drrg5A==
-X-Received: by 2002:a1c:1b11:: with SMTP id b17mr4150774wmb.93.1583336878995;
-        Wed, 04 Mar 2020 07:47:58 -0800 (PST)
-Received: from kpsingh-kernel.localdomain ([2a00:79e1:abc:308:8ca0:6f80:af01:b24])
-        by smtp.gmail.com with ESMTPSA id u25sm4816091wml.17.2020.03.04.07.47.58
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TsTKXhrbnw/QAlugyUyOjWQ0P4Lr6lXfLnd3ahgcNlQ=;
+        b=YWOxTE5rd/xZDD6NTHh03SqWsgHNrw6YPwj2IQ31lmwkfeu5C5DgvByztKZV3dsGMe
+         2Lt9X1kdEHvRxeKUDAGdibwlWx7c354R3b4XA9PQ3PC79MQIZ/xhdtu6evpbyxrLgyAi
+         G/xKn7u6geSiD7TMrmPRUJQX4kBi5aCcmZWChl684XsdZiP9M+pnS8OH6qK35xNd7uGI
+         C5N/99aft2O9dMZ+Vr0zg+sp7gPdclJdpSqvrdJ90zWosITnLyOj+pWP6zVd1fya1810
+         y0i8JNn3m0IoEOd11F3P3IJ3o+NMXDpEw5WQCiAsdhBhTOOKZvHu1DXyOoxk5Wl94eyH
+         flUA==
+X-Gm-Message-State: ANhLgQ0b28NxaGJ5aZUWcXgR8qjTg9oSWMwmnboJT4Whh25BG4PNYbfH
+        tf5HB/0eae34vv4CtW2kWRXGMOvly7g=
+X-Google-Smtp-Source: ADFU+vu6MjrfeMJUkM08i6nKGwC401gXeN93yXmVhriRbMKWEwypOR4JepxmDbYtCZB/O4uXmPxkbw==
+X-Received: by 2002:a05:620a:21c9:: with SMTP id h9mr3527412qka.29.1583336951756;
+        Wed, 04 Mar 2020 07:49:11 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 89sm14195261qth.3.2020.03.04.07.49.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 07:47:58 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-To:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: [PATCH bpf-next v3 4/7] bpf: Attachment verification for BPF_MODIFY_RETURN
-Date:   Wed,  4 Mar 2020 16:47:44 +0100
-Message-Id: <20200304154747.23506-5-kpsingh@chromium.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200304154747.23506-1-kpsingh@chromium.org>
-References: <20200304154747.23506-1-kpsingh@chromium.org>
+        Wed, 04 Mar 2020 07:49:11 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 4 Mar 2020 10:49:09 -0500
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in
+ populate_pud
+Message-ID: <20200304154908.GB998825@rani.riverdale.lan>
+References: <20200303205445.3965393-1-nivedita@alum.mit.edu>
+ <20200303205445.3965393-2-nivedita@alum.mit.edu>
+ <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: KP Singh <kpsingh@google.com>
+On Wed, Mar 04, 2020 at 09:17:44AM +0100, Ard Biesheuvel wrote:
+> On Tue, 3 Mar 2020 at 21:54, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > Commit d367cef0a7f0 ("x86/mm/pat: Fix boot crash when 1GB pages are not
+> > supported by the CPU") added checking for CPU support for 1G pages
+> > before using them.
+> >
+> > However, when support is not present, nothing is done to map the
+> > intermediate 1G regions and we go directly to the code that normally
+> > maps the remainder after 1G mappings have been done. This code can only
+> > handle mappings that fit inside a single PUD entry, but there is no
+> > check, and it instead silently produces a corrupted mapping to the end
+> > of the PUD entry, and no mapping beyond it, but still returns success.
+> >
+> > This bug is encountered on EFI machines in mixed mode (32-bit firmware
+> > with 64-bit kernel), with RAM beyond 2G. The EFI support code
+> > direct-maps all the RAM, so a memory range from below 1G to above 2G
+> > triggers the bug and results in no mapping above 2G, and an incorrect
+> > mapping in the 1G-2G range. If the kernel resides in the 1G-2G range, a
+> > firmware call does not return correctly, and if it resides above 2G, we
+> > end up passing addresses that are not mapped in the EFI pagetable.
+> >
+> > Fix this by mapping the 1G regions using 2M pages when 1G page support
+> > is not available.
+> >
+> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> 
+> I was trying to test these patches, and while they seem fine from a
+> regression point of view, I can't seem to reproduce this issue and
+> make it go away again by applying this patch.
+> 
+> Do you have any detailed instructions how to reproduce this?
+> 
 
-- Allow BPF_MODIFY_RETURN attachment only to functions that are:
+The steps I'm following are
+- build x86_64 defconfig + enable EFI_PGT_DUMP (to show the incorrect
+  pagetable)
+- run (QEMU is 4.2.0)
+$ qemu-system-x86_64 -cpu Haswell -pflash qemu/OVMF_32.fd -m 3072 -nographic \
+  -kernel kernel64/arch/x86/boot/bzImage -append "earlyprintk=ttyS0,keep efi=debug nokaslr"
 
-    * Whitelisted for error injection by checking
-      within_error_injection_list. Similar discussions happened for the
-      bpf_override_return helper.
+The EFI memory map I get is (abbreviated to regions of interest):
+...
+[    0.253991] efi: mem10: [Conventional Memory|   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x00000000053e7000-0x000000003fffbfff] (940MB)
+[    0.254424] efi: mem11: [Loader Data        |   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x000000003fffc000-0x000000003fffffff] (0MB)
+[    0.254991] efi: mem12: [Conventional Memory|   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000040000000-0x00000000bbf77fff] (1983MB)
+...
 
-    * security hooks, this is expected to be cleaned up with the LSM
-      changes after the KRSI patches introduce the LSM_HOOK macro:
+The pagetable this produces is (abbreviated again):
+...
+[    0.272980] 0x0000000003400000-0x0000000004800000          20M     ro         PSE         x  pmd
+[    0.273327] 0x0000000004800000-0x0000000005200000          10M     RW         PSE         NX pmd
+[    0.273987] 0x0000000005200000-0x0000000005400000           2M     RW                     NX pte
+[    0.274343] 0x0000000005400000-0x000000003fe00000         938M     RW         PSE         NX pmd
+[    0.274725] 0x000000003fe00000-0x0000000040000000           2M     RW                     NX pte
+[    0.275066] 0x0000000040000000-0x0000000080000000           1G     RW         PSE         NX pmd
+[    0.275437] 0x0000000080000000-0x00000000bbe00000         958M                               pmd
+...
 
-        https://lore.kernel.org/bpf/20200220175250.10795-1-kpsingh@chromium.org/
+Note how 0x80000000-0xbbe00000 range is unmapped in the resulting
+pagetable. The dump doesn't show physical addresses, but the
+0x40000000-0x80000000 range is incorrectly mapped as well, as the loop
+in populate_pmd would just go over that virtual address range twice.
 
-- The attachment is currently limited to functions that return an int.
-  This can be extended later other types (e.g. PTR).
+	while (end - start >= PMD_SIZE) {
+		...
+		pmd = pmd_offset(pud, start);
 
-Signed-off-by: KP Singh <kpsingh@google.com>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
----
- kernel/bpf/btf.c      | 28 ++++++++++++++++++++--------
- kernel/bpf/verifier.c | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 51 insertions(+), 8 deletions(-)
+		set_pmd(pmd, pmd_mkhuge(pfn_pmd(cpa->pfn,
+					canon_pgprot(pmd_pgprot))));
 
-diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-index 30841fb8b3c0..50080add2ab9 100644
---- a/kernel/bpf/btf.c
-+++ b/kernel/bpf/btf.c
-@@ -3710,14 +3710,26 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
- 		nr_args--;
- 	}
- 
--	if ((prog->expected_attach_type == BPF_TRACE_FEXIT ||
--	     prog->expected_attach_type == BPF_MODIFY_RETURN) &&
--	    arg == nr_args) {
--		if (!t)
--			/* Default prog with 5 args. 6th arg is retval. */
--			return true;
--		/* function return type */
--		t = btf_type_by_id(btf, t->type);
-+	if (arg == nr_args) {
-+		if (prog->expected_attach_type == BPF_TRACE_FEXIT) {
-+			if (!t)
-+				return true;
-+			t = btf_type_by_id(btf, t->type);
-+		} else if (prog->expected_attach_type == BPF_MODIFY_RETURN) {
-+			/* For now the BPF_MODIFY_RETURN can only be attached to
-+			 * functions that return an int.
-+			 */
-+			if (!t)
-+				return false;
-+
-+			t = btf_type_skip_modifiers(btf, t->type, NULL);
-+			if (!btf_type_is_int(t)) {
-+				bpf_log(log,
-+					"ret type %s not allowed for fmod_ret\n",
-+					btf_kind_str[BTF_INFO_KIND(t->info)]);
-+				return false;
-+			}
-+		}
- 	} else if (arg >= nr_args) {
- 		bpf_log(log, "func '%s' doesn't have %d-th argument\n",
- 			tname, arg + 1);
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 2460c8e6b5be..ae32517d4ccd 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -19,6 +19,7 @@
- #include <linux/sort.h>
- #include <linux/perf_event.h>
- #include <linux/ctype.h>
-+#include <linux/error-injection.h>
- 
- #include "disasm.h"
- 
-@@ -9800,6 +9801,33 @@ static int check_struct_ops_btf_id(struct bpf_verifier_env *env)
- 
- 	return 0;
- }
-+#define SECURITY_PREFIX "security_"
-+
-+static int check_attach_modify_return(struct bpf_verifier_env *env)
-+{
-+	struct bpf_prog *prog = env->prog;
-+	unsigned long addr = (unsigned long) prog->aux->trampoline->func.addr;
-+
-+	if (within_error_injection_list(addr))
-+		return 0;
-+
-+	/* This is expected to be cleaned up in the future with the KRSI effort
-+	 * introducing the LSM_HOOK macro for cleaning up lsm_hooks.h.
-+	 */
-+	if (!strncmp(SECURITY_PREFIX, prog->aux->attach_func_name,
-+		     sizeof(SECURITY_PREFIX) - 1)) {
-+
-+		if (!capable(CAP_MAC_ADMIN))
-+			return -EPERM;
-+
-+		return 0;
-+	}
-+
-+	verbose(env, "fmod_ret attach_btf_id %u (%s) is not modifiable\n",
-+		prog->aux->attach_btf_id, prog->aux->attach_func_name);
-+
-+	return -EINVAL;
-+}
- 
- static int check_attach_btf_id(struct bpf_verifier_env *env)
- {
-@@ -10000,6 +10028,9 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
- 		}
- 		tr->func.addr = (void *)addr;
- 		prog->aux->trampoline = tr;
-+
-+		if (prog->expected_attach_type == BPF_MODIFY_RETURN)
-+			ret = check_attach_modify_return(env);
- out:
- 		mutex_unlock(&tr->mutex);
- 		if (ret)
--- 
-2.20.1
-
+		start	  += PMD_SIZE;
+		cpa->pfn  += PMD_SIZE >> PAGE_SHIFT;
+		cur_pages += PMD_SIZE >> PAGE_SHIFT;
+	}
