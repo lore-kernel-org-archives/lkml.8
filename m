@@ -2,156 +2,108 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A7DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9C6CC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402FF21739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:22:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583349771;
-	bh=K6IbC9m66srtNpCpNfvPpNHw795EKm+SM6PSXFNj8WI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ngoOOFIwd0nSyDhjDHacJIlv4PL0W9gHqzK1JQ8ZJIUB7uDh3xfFRrlaw9I/nj998
-	 vOPRkj/Mie7g8TALStt9AlcsKYU4lAla7srVdaJeTNTxl8UcbmgwjGzBACQhqPWSlN
-	 tGuWseI38V4UCNZz7F/8d1qN5Vum8Uwnuz3ai+6s=
+	by mail.kernel.org (Postfix) with ESMTP id B1A8821775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:23:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ar6nn8Ge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387566AbgCDTWu (ORCPT
+        id S2387831AbgCDTXD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:22:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45598 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgCDTWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:22:49 -0500
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5047024654
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 19:22:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583349768;
-        bh=K6IbC9m66srtNpCpNfvPpNHw795EKm+SM6PSXFNj8WI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=i4w9yaJNTvVe7/vVFfRjvAicNR9coBRGeOvnAA2okMleX1mkcWOYCx5dq88RP72/P
-         ME68tu5GBXvGjy4YgjPssHTeAc0oXeGQ8IFV/X6ur4U/KHXo+saZp4wsChOZAjZFxU
-         Ra2qSRbYSqsGc4qw4zJiS/c93Fl1Oycnouektkkk=
-Received: by mail-wr1-f46.google.com with SMTP id v2so3864893wrp.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:22:48 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3O4pJQgkSG9k6hLkdyKlU6Z7wMYpbHVjXVf1/L655YnH2CeqFi
-        FpAv23YKk7l7zcqeiWdUEpHHa3mSXyi1YHJGs6Lx4Q==
-X-Google-Smtp-Source: ADFU+vshraEqFOfvTVethdLBrCv1Xc0e8G94b+FblBW5+NtTxR2LmDOZG0ArtmIJr3SJCRB7RLlvGYF5f5sOFLAi2Wc=
-X-Received: by 2002:adf:f84a:: with SMTP id d10mr5648007wrq.208.1583349766740;
- Wed, 04 Mar 2020 11:22:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20200303205445.3965393-1-nivedita@alum.mit.edu>
- <20200303205445.3965393-2-nivedita@alum.mit.edu> <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
- <20200304154908.GB998825@rani.riverdale.lan> <CAKv+Gu-Xo2zj9_N+K8FrpBstgU57GZvWO-pDr4tRAODhsYzW-A@mail.gmail.com>
- <20200304185042.GA281042@rani.riverdale.lan> <CAKv+Gu-6YoJMLbR8UUsBeRPzk7r_4aKBprqay2kf6cKMPwsHgQ@mail.gmail.com>
- <20200304191053.GA291311@rani.riverdale.lan>
-In-Reply-To: <20200304191053.GA291311@rani.riverdale.lan>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 4 Mar 2020 20:22:36 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu84Bj4tBz=+FhG6cqpYUjc5czaqiNAVDdKgqGoXbnHKbQ@mail.gmail.com>
-Message-ID: <CAKv+Gu84Bj4tBz=+FhG6cqpYUjc5czaqiNAVDdKgqGoXbnHKbQ@mail.gmail.com>
-Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in populate_pud
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Wed, 4 Mar 2020 14:23:03 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:54875 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387711AbgCDTXD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 14:23:03 -0500
+Received: from hanvin-mobl2.amr.corp.intel.com ([192.55.55.45])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 024JM4WA436200
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Wed, 4 Mar 2020 11:22:05 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 024JM4WA436200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020022001; t=1583349727;
+        bh=g6Mtry4glpDMxH5UiOpY16heGYyer5fR7lVfPBWaveE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ar6nn8Ge/T+692bP42wyhN6/gA6zy1dzCiGF74CRXJXFqjrk6VwRkFpBhRP3+cZ6P
+         aoecjqhhdSeSkR9EesGi+ThpGixJViS9m59hDZE5MkhJCppsl9CGI+XaXJHL6N9PSz
+         N15YsSpDSe2BGbMQ73a5iqbaYgTLZGuuCk9xtQ+bYyE3yGCxvvNHQZ7Xw/jQnA8xUa
+         jCODCawM3hNRUyrc1PnA5eoR37ZT81R1OELgMwfxsZpMMFvL9tLT1LJphQQCaZE+6J
+         TgBBCCGkC2zFLRAajE3d9FAm6PTlGUqxGMq/StoWIgr6Tz8ZPVJwmUM93IFzinAgT+
+         QzoETf31D45JA==
+Subject: Re: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
+To:     Thomas Garnier <thgarnie@chromium.org>
+Cc:     Kees Cook <keescook@chromium.org>,
         Peter Zijlstra <peterz@infradead.org>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Allison Randal <allison@lohutok.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Linux PM list <linux-pm@vger.kernel.org>
+References: <20200228000105.165012-1-thgarnie@chromium.org>
+ <202003022100.54CEEE60F@keescook>
+ <20200303095514.GA2596@hirez.programming.kicks-ass.net>
+ <CAJcbSZH1oON2VC2U8HjfC-6=M-xn5eU+JxHG2575iMpVoheKdA@mail.gmail.com>
+ <6e7e4191612460ba96567c16b4171f2d2f91b296.camel@linux.intel.com>
+ <202003031314.1AFFC0E@keescook>
+ <20200304092136.GI2596@hirez.programming.kicks-ass.net>
+ <202003041019.C6386B2F7@keescook>
+ <e60876d0-4f7d-9523-bcec-6d002f717623@zytor.com>
+ <CAJcbSZHBB1u2Vq0jZKsmd0UcRj=aichxTtbGvbWgf8-g8WPa7w@mail.gmail.com>
+From:   "H. Peter Anvin" <hpa@zytor.com>
+Message-ID: <627fe5d2-e6c3-4eff-1a58-14e17dc04ac5@zytor.com>
+Date:   Wed, 4 Mar 2020 11:22:04 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <CAJcbSZHBB1u2Vq0jZKsmd0UcRj=aichxTtbGvbWgf8-g8WPa7w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 20:10, Arvind Sankar <nivedita@alum.mit.edu> wrote:
->
-> On Wed, Mar 04, 2020 at 08:04:04PM +0100, Ard Biesheuvel wrote:
-> > On Wed, 4 Mar 2020 at 19:50, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> > >
-> > > On Wed, Mar 04, 2020 at 07:44:50PM +0100, Ard Biesheuvel wrote:
-> > > >
-> > > > I've tried a couple of different ways, but I can't seem to get my
-> > > > memory map organized in the way that will trigger the error.
-> > >
-> > > What does yours look like? efi_merge_regions doesn't merge everything
-> > > that will eventually be mapped the same way, so if there are some
-> > > non-conventional memory regions scattered over the address space, it
-> > > might be breaking up the mappings to the point where this doesn't
-> > > trigger.
-> >
-> > I have a region
-> >
-> > [    0.000000] efi: mem07: [Conventional Memory|   |  |  |  |  |  |  |
-> >  |   |WB|WT|WC|UC] range=[0x0000000001400000-0x00000000b9855fff]
-> > (2948MB)
-> >
-> > which gets covered correctly
-> >
-> > [    0.401766] 0x0000000000a00000-0x0000000040000000        1014M
-> > RW         PSE         NX pmd
-> > [    0.403436] 0x0000000040000000-0x0000000080000000           1G
-> > RW         PSE         NX pud
-> > [    0.404645] 0x0000000080000000-0x00000000b9800000         920M
-> > RW         PSE         NX pmd
-> > [    0.405844] 0x00000000b9800000-0x00000000b9a00000           2M
-> > RW                     NX pte
-> > [    0.407436] 0x00000000b9a00000-0x00000000baa00000          16M
-> > ro         PSE         x  pmd
-> > [    0.408591] 0x00000000baa00000-0x00000000bbe00000          20M
-> > RW         PSE         NX pmd
-> > [    0.409751] 0x00000000bbe00000-0x00000000bc000000           2M
-> > RW                     NX pte
-> > [    0.410821] 0x00000000bc000000-0x00000000be600000          38M
-> > RW         PSE         NX pmd
-> >
-> > However, the fact that you can provide a case where it does fail
-> > should be sufficient justification for taking this patch. I was just
-> > trying to give more than a regression-tested-by
->
-> No, this case is exactly one that should break. But I think you're
-> running on a processor model that _does_ support GB pages, as shown by
-> the "pud" mapping there for the 1G-2G range.
->
-> At least for my version of qemu, -cpu Haswell does not enable the
-> pdpe1gb feature. Which cpu did you specify?
->
+On 2020-03-04 11:19, Thomas Garnier wrote:
+>>
+>> The huge memory model, required for arbitrary placement, has a very
+>> significant performance impact.
+> 
+> I assume you mean mcmodel=large, it doesn't use it. It uses -fPIE and
+> removes -mcmodel=kernel. It favors relative references whenever
+> possible.
+> 
 
-The wrong one, obviously :-)
+I know... this was in reference to a comment of Kees'.
 
-With Haswell, I get [before]
+	-hpa
 
-[    0.368541] 0x0000000000900000-0x0000000000a00000           1M
-RW                     NX pte
-[    0.369118] 0x0000000000a00000-0x0000000080000000        2038M
-RW         PSE         NX pmd
-[    0.369592] 0x0000000080000000-0x00000000b9800000         920M
-                         pmd
-[    0.370177] 0x00000000b9800000-0x00000000b9856000         344K
-                         pte
-[    0.370649] 0x00000000b9856000-0x00000000b9a00000        1704K
-RW                     NX pte
-[    0.371066] 0x00000000b9a00000-0x00000000baa00000          16M
-ro         PSE         x  pmd
-
-and after
-
-[    0.349577] 0x0000000000a00000-0x0000000080000000        2038M
-RW         PSE         NX pmd
-[    0.350049] 0x0000000080000000-0x00000000b9800000         920M
-                         pmd
-[    0.350514] 0x00000000b9800000-0x00000000b9856000         344K
-                         pte
-[    0.351013] 0x00000000b9856000-0x00000000b9a00000        1704K
-RW                     NX pte
-
-so i'm still doing something wrong, I think?
