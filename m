@@ -2,103 +2,89 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FAA8C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C39C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488E720828
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:29:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BMUSDZuK"
+	by mail.kernel.org (Postfix) with ESMTP id 3042A20828
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:30:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388403AbgCDV3w (ORCPT
+        id S2388413AbgCDVaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:29:52 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38863 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388281AbgCDV3w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:29:52 -0500
-Received: by mail-ed1-f67.google.com with SMTP id e25so4083405edq.5;
-        Wed, 04 Mar 2020 13:29:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=ZhvV+X/QugBakZftkSm3Y3Vs/NjUYpL1g5J3nO6+eBo=;
-        b=BMUSDZuKUJEsB0rx65KmLOfr18pOxTALdV6q709AOz4ACj0OKVgMZ35sKyJ4A/9g0S
-         djD3oN6qJ/VOZ+TUE4VK8fvJCkkf5lzPWp9YLyLabXpyEecr3ACz4pb3n8HVLqix0AqJ
-         OPf51c0i38VC4SOGVtFGEfiM+KyQ9G9PbL/RPGQ93coVv4KTbTHNCSY8Drwh9qgbFUDl
-         Ss8xgqc3fn2UDHd42bebeQGNb4XNGp17J/GsP1gYd0J9BUEvUjSvmhbI1TQAzBbAoHLx
-         14wfe2SohwELPdmJMEhWcwSmsbuTys4OsTJUHiDcBjn6blegOJvgQBl7XJdHM/SRYcI0
-         jPZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=ZhvV+X/QugBakZftkSm3Y3Vs/NjUYpL1g5J3nO6+eBo=;
-        b=aUiwpwgVAWAkY/9jStS+CLbt4Cc+zR7GjJmvOfjGQbC8EgzYvggZ/v+JkdKRvJ5VaW
-         renczNoe+Fx6MtU8hB0ekR7GBhGUEsuwYdkOUiLaPgWAwGx0FMQWkVtACCXhpumMD7Gn
-         6fZsQtDTj2NbFgp/MeBAI8w4coesmCgpvd3GbTjBKk3kkyIJpGK1YQHrT6xKcbUnYIOp
-         Elg4Su0A76jBsV3Jk1Nxw7o6zbDiHgdRJz9Q9gLQINurv3Iok33ocEuhfwnSzV2PCfWm
-         hgu3rYKrsHGxlHMcVxq4OW8+YaMhRobuFaR3rzDq0jtB3yGf3FU96t3YRE8AEGpFPzi/
-         aBXQ==
-X-Gm-Message-State: ANhLgQ0nWFHR+ZMCSqioJt4hi6JMKb64GICveTwSZnIjPvmckXCEmNH7
-        7MMbJQqabDiNadRh3wT3xiI=
-X-Google-Smtp-Source: ADFU+vsinGfEMDGvYA3rbefP4+LG0EuZ8p5Sjx1gqvFYpYT40aNciRcBN2rt9NVFEdqWu+XwpOzQpQ==
-X-Received: by 2002:a05:6402:22e9:: with SMTP id dn9mr4755253edb.165.1583357390388;
-        Wed, 04 Mar 2020 13:29:50 -0800 (PST)
-Received: from felia ([2001:16b8:2d16:4100:5c62:5f:595c:f76d])
-        by smtp.gmail.com with ESMTPSA id g31sm1622644edd.53.2020.03.04.13.29.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 13:29:49 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Wed, 4 Mar 2020 22:29:48 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     Chen-Yu Tsai <wens@csie.org>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: update ALLWINNER CPUFREQ DRIVER entry
-In-Reply-To: <CAGb2v66sJ42yaLwHubrOvCNBQQ4sJ1HXYpVmf86oW-sp7bCqGA@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.2003042226380.2698@felia>
-References: <20200304113452.10201-1-lukas.bulwahn@gmail.com> <CAGb2v66sJ42yaLwHubrOvCNBQQ4sJ1HXYpVmf86oW-sp7bCqGA@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 4 Mar 2020 16:30:08 -0500
+Received: from mail.manjaro.org ([176.9.38.148]:47918 "EHLO mail.manjaro.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388237AbgCDVaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 16:30:08 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.manjaro.org (Postfix) with ESMTP id 84C4237019F4;
+        Wed,  4 Mar 2020 22:30:06 +0100 (CET)
+X-Virus-Scanned: Debian amavisd-new at manjaro.org
+Received: from mail.manjaro.org ([127.0.0.1])
+        by localhost (manjaro.org [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3W5thPF20-qO; Wed,  4 Mar 2020 22:29:59 +0100 (CET)
+From:   Tobias Schramm <t.schramm@manjaro.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andy Yan <andy.yan@rock-chips.com>,
+        Johan Jonker <jbx6244@gmail.com>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Markus Reichl <m.reichl@fivetechno.de>,
+        Alexis Ballier <aballier@gentoo.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Nick Xie <nick@khadas.com>,
+        Kever Yang <kever.yang@rock-chips.com>,
+        Vivek Unune <npcomplete13@gmail.com>,
+        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
+        Tobias Schramm <t.schramm@manjaro.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Emmanuel Vadot <manu@freebsd.org>
+Subject: [PATCH v4 0/2] Add support for the pine64 Pinebook Pro
+Date:   Wed,  4 Mar 2020 22:29:16 +0100
+Message-Id: <20200304212918.689936-1-t.schramm@manjaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patchset adds an initial dts and compatible string for the rk3399
+based Pinebook Pro 14" laptop.
 
+This is version 4 of the original patchset with more fixes proposed
+by Johan. Additionally the dt-bindings doc patch has been replaced by
+one from Emmanuel since that patch has already been reviewed by Rob.
 
-On Wed, 4 Mar 2020, Chen-Yu Tsai wrote:
+Contrary to the Rockchip BSP dts proposed mid January this dts has a
+power tree reflecting the actual schematic of the device and features
+full display, audio and WiFi/Bluetooth support.
 
-> On Wed, Mar 4, 2020 at 7:35 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> >
-> >  ALLWINNER CPUFREQ DRIVER
-> >  M:     Yangtao Li <tiny.windzz@gmail.com>
-> > +M:     Chen-Yu Tsai <wens@csie.org>
-> > +M:     Maxime Ripard <mripard@kernel.org>
-> 
-> There's no need to add us. The Allwinner entry already covers this under sun*i.
-> 
+Changelog:
+ v2: Incorporate review by Heiko
+ v3: Add fixes suggested by Johan
+ v4: More fixes by Johan, set data-role on typec connector,
+     use compatible doc patch by Emmanuel
 
-Okay. I sent out a PATCH v2 without adding you as extra maintainers:
+Emmanuel Vadot (1):
+  dt-bindings: Add doc for Pine64 Pinebook Pro
 
-https://lore.kernel.org/linux-pm/20200304212600.6172-1-lukas.bulwahn@gmail.com/T/#u
+Tobias Schramm (1):
+  arm64: dts: rockchip: Add initial support for Pinebook Pro
 
-An ACK is appreciated. Thanks.
+ .../devicetree/bindings/arm/rockchip.yaml     |    5 +
+ arch/arm64/boot/dts/rockchip/Makefile         |    1 +
+ .../boot/dts/rockchip/rk3399-pinebook-pro.dts | 1096 +++++++++++++++++
+ 3 files changed, 1102 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-pinebook-pro.dts
 
-Lukas
+-- 
+2.24.1
+
