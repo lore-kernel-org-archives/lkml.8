@@ -2,127 +2,102 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C91C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8837EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A7920866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:15:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583363741;
-	bh=dZaoSwKBx/t67wOLGqICu1GPOu6Nbpsnkqt1hx+hyOY=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=B/GIBkhepJa5wgEVK1lgYlEQD23KKjmEnppr+bx8qI8vJ2yYTfICs9St50KeYSPQc
-	 KqDxcHzX7qxMSbUZE046nhLChAeP43p1gvlfxIxsLLUiypKsudP7ow0773O+/YiuWa
-	 ujERaFp6AWXe7b3phdXOkEcswPrTgPxl23FqMNfw=
+	by mail.kernel.org (Postfix) with ESMTP id 61D7C2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:16:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="Zfx3aZDH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388549AbgCDXPk (ORCPT
+        id S2388530AbgCDXQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 18:15:40 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45948 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388371AbgCDXPk (ORCPT
+        Wed, 4 Mar 2020 18:16:33 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36321 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388425AbgCDXQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 18:15:40 -0500
-Received: by mail-io1-f67.google.com with SMTP id w9so4333200iob.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:15:39 -0800 (PST)
+        Wed, 4 Mar 2020 18:16:32 -0500
+Received: by mail-pj1-f66.google.com with SMTP id d7so1634426pjw.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:16:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=qnZSwAco/9yGR/2Rk04lTIem1NQkAqUXaZjX8c167Hs=;
-        b=PsHjmeO7PXK1y43SbWXSqitm0T7GjrEaE3aOc4VjlDXTiEUoIifBDtonvjPNfMa8NP
-         COoFK7dpmzQoxB5Ulbg61zCMdxgVzTE/MATvSVpE9Ix4p2zUC7ugmhlCKNm+dpUVEd7y
-         aoDKxbZS2CDeSLEO0pHaRDMiFg60KJV94Rd7U=
+        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
+        h=date:subject:in-reply-to:cc:from:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fLuBSubRkGwc0et1lSwg/yOrJz68JCULXi64QxtD9L4=;
+        b=Zfx3aZDHOKJv/xTct7dFMPFiJ5RG5nooZwf3B1Md2rdmwylu/vxshgKBxR/JXzh0tD
+         ILxZPjvmXfQO/SuH/N0qK07KCfDtfALyxDCCZFxc2B5oaT8B5uCN1n5MIE8fM8Pw8OYT
+         fyBlEUvLtcv7XvQQPzrsehVW9nxkUUlJnBnnBg4nPiFsqZpRmv0BIeAtS5xWy3bAUkK7
+         EKOTDIA9tusMsoUyU23lmsiRUAutFyFaC9sPkiymBzoqkhA8m2XNEP5ACMQ87Dr1K9L7
+         UhONoltdyIcJ0bCTJjQ6f3GbWTkvgcWNwd2jDPQLNNTAck6BZB9ffrWTJncrYXc7y5EN
+         rk3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qnZSwAco/9yGR/2Rk04lTIem1NQkAqUXaZjX8c167Hs=;
-        b=QoDCNDfCKY++dgp2qhEfeD7HN7QOSKDr/FnsRLAeDU1wmJLkEfsrgykg9ib9xhO22a
-         tL+ct2Z2AFQgtBJLAH+KF3OHNwYDIG4QbBsIDDemvLO7J9TsYHmCY5uZWPOPIX2WEmEX
-         niyUGVR3VgBD5nMPPs1pqD+sNa2qgVA8IT6/E8XnhwXqBBlgVJQ9RPQIBJKoJfQoejQX
-         36yb4wFYVDs9RCz4DQZultMyp9vuIlmadbEfxwjOsE9f3RWED3fyrDo+P9lDvOmoK0di
-         4Twxiht46DKRJlIuJpwjpqNCMUx+8sDYWSARJDdVfiV0yZpJon8BixNs13z9O2Xb35nP
-         MO6A==
-X-Gm-Message-State: ANhLgQ1tdDJ0DDGB30pmSBl/iKvaTrqEV4/rf5oFSH4BWsiNJBQDzJ0+
-        gc08I0CNgQKevyFgEWY81GZTnQ==
-X-Google-Smtp-Source: ADFU+vuixjh4NH+5iUMDbrsEt1WSbtzQ1aWggmcxwIHK3oaMulCmtb7CWoIrlP5jRRnEdh/VXGUMlg==
-X-Received: by 2002:a6b:bd04:: with SMTP id n4mr4147979iof.196.1583363739362;
-        Wed, 04 Mar 2020 15:15:39 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id m18sm8782876ill.79.2020.03.04.15.15.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 15:15:38 -0800 (PST)
-Subject: Re: [PATCH 2/4] selftests: Fix seccomp to support relocatable build
- (O=objdir)
-To:     Kees Cook <keescook@chromium.org>
-Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
-        daniel@iogearbox.net, kafai@fb.com, yhs@fb.com, andriin@fb.com,
-        gregkh@linuxfoundation.org, tglx@linutronix.de,
-        khilman@baylibre.com, mpe@ellerman.id.au,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <cover.1583358715.git.skhan@linuxfoundation.org>
- <11967e5f164f0cd717921bd382ff9c13ef740146.1583358715.git.skhan@linuxfoundation.org>
- <202003041442.A46000C@keescook>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <11ffe43f-f777-7881-623d-c93196a44cb6@linuxfoundation.org>
-Date:   Wed, 4 Mar 2020 16:15:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <202003041442.A46000C@keescook>
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=fLuBSubRkGwc0et1lSwg/yOrJz68JCULXi64QxtD9L4=;
+        b=jLFH7vA1Gcr8APN6mtPSdqqkZmNWXAWDMENN9633jt2KP1jBhTKeXO05/PrPUy1uUZ
+         J8GEKlv/dJLsLckQlU3JivAbltBg6EbIzBELDVp4/5q+2s4j6TaL3zNPkG5Fvs2r2I1Y
+         aQsTI/SpXnf17rOFgF27LHqdYMSiZp0agbild21xJIOnL2sBQi14n8GeaJYFa36BR3Q4
+         h2km6i+NUaucsoMqRd3+D8I1OBFZnd5BecsI5b93gAs6oj+AM5FQfPFhTxYSnF5+EuWa
+         /6kPaVUoyzl7UCBGXaS5/bd2cHtiGslL6OaXfaO7dU/7yHI7OFgb6GJlUnMNyGcCJPYt
+         tWEQ==
+X-Gm-Message-State: ANhLgQ0aWn2aAS4PY9x7gcFhXdb6CwbHnTGE1LD0jaZD5OapmHYuIaQa
+        qjLnyRDJzSbMyObTsUMcWC9+Wg==
+X-Google-Smtp-Source: ADFU+vs16bwXQpjbdGTb2gdRF0APKsg86dgJcOqt7o9kJ87t5Lecc5fFkxXvGGtSwPqdwC/b2hv4bg==
+X-Received: by 2002:a17:90a:1f45:: with SMTP id y5mr5271710pjy.170.1583363791341;
+        Wed, 04 Mar 2020 15:16:31 -0800 (PST)
+Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
+        by smtp.gmail.com with ESMTPSA id c5sm29203530pfi.10.2020.03.04.15.16.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 15:16:30 -0800 (PST)
+Date:   Wed, 04 Mar 2020 15:16:30 -0800 (PST)
+X-Google-Original-Date: Wed, 04 Mar 2020 15:10:33 PST (-0800)
+Subject:     Re: [PATCH] riscv: Fix range looking for kernel image memblock
+In-Reply-To: <20200217052847.3174-1-alex@ghiti.fr>
+CC:     Paul Walmsley <paul.walmsley@sifive.com>, anup@brainfault.org,
+        jan.kiszka@web.de, stable@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        alex@ghiti.fr
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     alex@ghiti.fr
+Message-ID: <mhng-2ab0d9dd-182f-4c81-8432-5d510cd3dd51@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 3:42 PM, Kees Cook wrote:
-> On Wed, Mar 04, 2020 at 03:13:33PM -0700, Shuah Khan wrote:
->> Fix seccomp relocatable builds. This is a simple fix to use the
->> right lib.mk variable TEST_GEN_PROGS for objects to leverage
->> lib.mk common framework for relocatable builds.
->>
->> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
->> ---
->>   tools/testing/selftests/seccomp/Makefile | 16 +++-------------
->>   1 file changed, 3 insertions(+), 13 deletions(-)
->>
->> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
->> index 1760b3e39730..a8a9717fc1be 100644
->> --- a/tools/testing/selftests/seccomp/Makefile
->> +++ b/tools/testing/selftests/seccomp/Makefile
->> @@ -1,17 +1,7 @@
->>   # SPDX-License-Identifier: GPL-2.0
->> -all:
->> -
->> -include ../lib.mk
->> -
->> -.PHONY: all clean
->> -
->> -BINARIES := seccomp_bpf seccomp_benchmark
->>   CFLAGS += -Wl,-no-as-needed -Wall
->> +LDFLAGS += -lpthread
->>   
->> -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
-> 
-> How is the ../kselftest_harness.h dependency detected in the resulting
-> build rules?
-> 
-> Otherwise, looks good.
+On Sun, 16 Feb 2020 21:28:47 PST (-0800), alex@ghiti.fr wrote:
+> When looking for the memblock where the kernel lives, we should check
+> that the memory range associated to the memblock entirely comprises the
+> kernel image and not only intersects with it.
+>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> ---
+>  arch/riscv/mm/init.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 965a8cf4829c..fab855963c73 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -131,7 +131,7 @@ void __init setup_bootmem(void)
+>  	for_each_memblock(memory, reg) {
+>  		phys_addr_t end = reg->base + reg->size;
+>
+> -		if (reg->base <= vmlinux_end && vmlinux_end <= end) {
+> +		if (reg->base <= vmlinux_start && vmlinux_end <= end) {
+>  			mem_size = min(reg->size, (phys_addr_t)-PAGE_OFFSET);
+>
+>  			/*
 
-Didn't see any problems. I will look into adding the dependency.
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
-thanks,
--- Shuah
-
+Thanks.  I'm going to target this for the next RC.
