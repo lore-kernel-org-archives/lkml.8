@@ -2,108 +2,122 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14948C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0651C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD38222B48
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:11:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="cNYr+iRC"
+	by mail.kernel.org (Postfix) with ESMTP id 9912E21775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:11:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583341915;
+	bh=qYo4zL0bCFlNPm4vxUukmiyhsb7rAmtPrAf1sy4coTQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KyffuAfQVz/x+cXWZZjvq3xWZTyzPnKgUQn5h0z0GPykVJvHFiHVAsDW4QYD7Nz2q
+	 RTCrfJfBLOJUOxsG38xPqB8vZb8QjWROUF7Pqe7ij4zQxkJ2ppv1naucdW3rpkFCL2
+	 fMQi3c6itHkmGakeumdjRqkeHYmE7p6FM4Ad2GBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbgCDRLC (ORCPT
+        id S1729974AbgCDRLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:11:02 -0500
-Received: from mail-qt1-f171.google.com ([209.85.160.171]:42053 "EHLO
-        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgCDRLB (ORCPT
+        Wed, 4 Mar 2020 12:11:54 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35806 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbgCDRLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:11:01 -0500
-Received: by mail-qt1-f171.google.com with SMTP id r6so1902837qtt.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:11:00 -0800 (PST)
+        Wed, 4 Mar 2020 12:11:54 -0500
+Received: by mail-qt1-f195.google.com with SMTP id v15so1935618qto.2;
+        Wed, 04 Mar 2020 09:11:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=s8bsXGCRRJ0ImpTHMURebBvYjheGcXTfz4nsGdOTkXk=;
-        b=cNYr+iRCJkEFyXleNOGaRrQw2f0+ltCk0IDvDTl74M7Lnm3m+52BRSlEisx0cAaWEY
-         oTkaia1KvzVVUuCOJcYrpNJXRRC8+c5BvecTXPwo6AxLpF8jZQw6fcOk/abyO1wWhD8m
-         SqzhfqyseKlJgEZ6SUMUS9Bra3QM/ison/7izr7oXYi5avhZ8QdrBrQJeVMG6/WWqE3z
-         UB6Elo++zXRkjrB4tJhtbPNI4xXiaCFJVYrdmTB1JGZNPGVr65iEzbyr7m3ERxd7Ta3k
-         0XZ1x1rZB+kOplz86w47eTbPkF/H1sk1BwrXf3PBoDteSOAvM0yWBmSMkwHfQ19Aik9X
-         Mz6w==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kXZ0XxGADAwquLAqrLAfH2eX2Yk3KDxs3aXRaRLxHiQ=;
+        b=Zcf1qSNLsGzt1D3Kh6rbWI9JNilJKbWhmur0D8f7GwPUGk2AYjV6rqQPsKmTcadRFe
+         TcgN1Yo3crTqWatWOycV0xuUwIPUoO3k0J6bryztcx20U6PXcTSUqWoSDwSrm9FM9aHL
+         C+W5ZOH0opIuw3Pf3gJKBSIGDDYyOImxVKXI4Z60ZWzeWA5QA6yKhNkbXyDk3QCAnxeG
+         E8bQEje+fzjnQeweLh2kqldp2qUKQZyCf3Dmk530rWM5Ucs7lWPq5Q3hKmTDIfpDGjGQ
+         cp3JXAOPh8HdA3RyEIbIoxcIlBIAQ0DTJcUUjMaBinz+tQD3y32+lCQX0OgHRJNzIzwM
+         i14w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=s8bsXGCRRJ0ImpTHMURebBvYjheGcXTfz4nsGdOTkXk=;
-        b=GqqCuOJDm9CRZFv1g7xEE0gH3MPJkkUgkqO2ueJsF+kg+YgtvB2XqjIJZEOYuyReq8
-         CBvB+CIH+2SmuyJSnsQMebOK4RSiUwj7Kw4mvgQbm6p0DoqIIJFBRKpfuYw3zVqPtkcm
-         mp3hmBl+8PMtJnexH4Bphzh5rY5tmx8LfYMuZlyy7mhY2aBnyWNAoTsgXR0gPrG1Px0p
-         o+hBKtncmRAFmn9FtqR8fqiO3/3SGlMN0cwDdkgAaLJEJjus2JIITYvOvY/XleZeyQPA
-         j/jHoER93obabf0Gs+bAeQH9pzOZP/HWSPVTd2i5ZqPrGmRuRYicZxR7Lt1W4uVsKzoh
-         FhyQ==
-X-Gm-Message-State: ANhLgQ3MA+2eD5q45UdsSGFrB2BClxSkdf/5pygx9uh6IANuUvBoyWve
-        vdJ1yCBbaW8qqaYp62qfaEJRgA==
-X-Google-Smtp-Source: ADFU+vvFwn7lLQcicTGy7gFAAJWlHgV8j+T+wl/CYuJHilPTKbUrlukgCHes1ArvpLezQ5x/L4lkzA==
-X-Received: by 2002:ac8:3798:: with SMTP id d24mr3358903qtc.178.1583341860182;
-        Wed, 04 Mar 2020 09:11:00 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id x44sm13257923qtc.88.2020.03.04.09.10.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Mar 2020 09:10:59 -0800 (PST)
-Message-ID: <1583341858.7365.155.camel@lca.pw>
-Subject: Re: [PATCH -next] lib: disable KCSAN for XArray
-From:   Qian Cai <cai@lca.pw>
-To:     Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 04 Mar 2020 12:10:58 -0500
-In-Reply-To: <CANpmjNOotdBa_7EhA75f2Y59HfEVsGsquv1cvQ=OjtA784poRA@mail.gmail.com>
-References: <20200304031551.1326-1-cai@lca.pw>
-         <20200304033329.GZ29971@bombadil.infradead.org>
-         <20200304040515.GX2935@paulmck-ThinkPad-P72>
-         <20200304043356.GC29971@bombadil.infradead.org>
-         <20200304141021.GY2935@paulmck-ThinkPad-P72>
-         <CANpmjNOotdBa_7EhA75f2Y59HfEVsGsquv1cvQ=OjtA784poRA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=kXZ0XxGADAwquLAqrLAfH2eX2Yk3KDxs3aXRaRLxHiQ=;
+        b=MRUafnLgW+NVs8YsG5nwwliYpY9ugDvfFuwLsEqrl3fMWhfen5DUsdRQFbbGf2NVfV
+         xtQMnTDzf9Tf8ekBk9fkl+rLYqFeHpv7bbeZgk769DbGHQ4jIXkVjhaxsPUWiDGBZa5i
+         s1s1Y7IPjGpJTQXJsCxXYYHaEAlLFDkUPi8ZfQgZd/gOjIz6dHJ4vxBOqSumV4/tE9Db
+         qoflsRh774BUvUc0Jx7H+r7Hv0lqkVo7fRfflLs3+BIXjV0VO/rwIRkOy6gBOlM5rHOI
+         9oaoNsDkRIUTu4feAv3XU6dWcZc2l34XUvyyiKCvfFc6EHYfSVlvr3aY9SCgpKjtpowo
+         yPpA==
+X-Gm-Message-State: ANhLgQ3UZl9Z+TR489OLk9fTd1EsSpCrT0cXoLh9yZ/TQvD5iX6iUi0G
+        mYwjVyoYHt5AwYIa3FHaw/k=
+X-Google-Smtp-Source: ADFU+vteSVP2OcxEUxrEg2NA9r5+iSxM6GbWg5UxV+DXmWBjg5zVOar4jes1WUOfF75+m6eY670r+g==
+X-Received: by 2002:ac8:7101:: with SMTP id z1mr3134585qto.333.1583341912740;
+        Wed, 04 Mar 2020 09:11:52 -0800 (PST)
+Received: from localhost ([2620:10d:c091:480::1:16fa])
+        by smtp.gmail.com with ESMTPSA id w48sm15237595qtc.40.2020.03.04.09.11.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 09:11:52 -0800 (PST)
+Date:   Wed, 4 Mar 2020 12:11:51 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Josh Don <joshdon@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Paul Turner <pjt@google.com>
+Subject: Re: [PATCH] sched/cpuset: distribute tasks within affinity masks
+Message-ID: <20200304171151.GL189690@mtj.thefacebook.com>
+References: <20200228010134.42866-1-joshdon@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228010134.42866-1-joshdon@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-04 at 17:40 +0100, Marco Elver wrote:
-> On Wed, 4 Mar 2020 at 15:10, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > 
-> > On Tue, Mar 03, 2020 at 08:33:56PM -0800, Matthew Wilcox wrote:
-> > > On Tue, Mar 03, 2020 at 08:05:15PM -0800, Paul E. McKenney wrote:
-> > > > On Tue, Mar 03, 2020 at 07:33:29PM -0800, Matthew Wilcox wrote:
-> > > > > On Tue, Mar 03, 2020 at 10:15:51PM -0500, Qian Cai wrote:
-> > > > > > Functions like xas_find_marked(), xas_set_mark(), and xas_clear_mark()
-> > > > > > could happen concurrently result in data races, but those operate only
-> > > > > > on a single bit that are pretty much harmless. For example,
+On Thu, Feb 27, 2020 at 05:01:34PM -0800, Josh Don wrote:
+> From: Paul Turner <pjt@google.com>
 > 
-> I currently do not see those as justification to blacklist the whole
-> file. Wouldn't __no_kcsan be better? That is, in case there is no
-> other solution that emerges from the remainder of the discussion here.
+> Currently, when updating the affinity of tasks via either cpusets.cpus,
+> or, sched_setaffinity(); tasks not currently running within the newly
+> specified CPU will be arbitrarily assigned to the first CPU within the
+> mask.
+> 
+> This (particularly in the case that we are restricting masks) can
+> result in many tasks being assigned to the first CPUs of their new
+> masks.
+> 
+> This:
+>  1) Can induce scheduling delays while the load-balancer has a chance to
+>     spread them between their new CPUs.
+>  2) Can antogonize a poor load-balancer behavior where it has a
+>     difficult time recognizing that a cross-socket imbalance has been
+>     forced by an affinity mask.
+> 
+> With this change, tasks are distributed ~evenly across the new mask.  We
+> may intentionally move tasks already running on a CPU within the mask to
+> avoid edge cases in which a CPU is already overloaded (or would be
+> assigned to more times than is desired).
+> 
+> We specifically apply this behavior to the following cases:
+> - modifying cpuset.cpus
+> - when tasks join a cpuset
+> - when modifying a task's affinity via sched_setaffinity(2)
 
-I suppose it is up to Matthew. Currently, I can see there are several functions
-may need __no_kcsan,
+Looks fine to me. Peter, what do you think?
 
-xa_get_mark(), xas_find_marked(), xas_find_chunk() etc.
+Thanks.
 
-My worry was that there could be many of those functions operating on marks
-(which is a single-bit) in xarray that could end up needing the same treatment.
-
-So far, my testing is thin on filesystem side where xarray is pretty much used
-for page caches, so the reports I got from KCSAN runs does not necessary tell
-the whole story. Once I updated my KCSAN runs to include things like xfstests,
-it could add quite a few churns later if we decided to go with the __no_kcsan
-route.
+-- 
+tejun
