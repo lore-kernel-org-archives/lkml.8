@@ -2,129 +2,143 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9BFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D260C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E91A2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758FE2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:22:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LDG8TcPS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387640AbgCDJVv (ORCPT
+        id S2387735AbgCDJWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:21:51 -0500
-Received: from mga11.intel.com ([192.55.52.93]:13432 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgCDJVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:21:51 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 01:21:50 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
-   d="scan'208";a="413077488"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.167])
-  by orsmga005.jf.intel.com with ESMTP; 04 Mar 2020 01:21:47 -0800
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/ftrace: Tidy create_trampoline()
-Date:   Wed,  4 Mar 2020 11:21:05 +0200
-Message-Id: <20200304092105.11934-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        Wed, 4 Mar 2020 04:22:19 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:52224 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387644AbgCDJWT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 04:22:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Xz1gqS8mHQf0FeXfh5Zn6ODmAjqLlTi3e7QpQPXzA9Q=; b=LDG8TcPSz6KerDK5RXGKXHL0+s
+        nd+daixZ03zWZPBsZex2W0SE2BU+bLdvHBFIbasjYsjLE9O6AcvIE4aklaE3c2rh36+IES5zOiJKo
+        CZHk/ZIgcOCzatmD7F0LvmIA2106SZonTNmKrjs8DuOvT6kzu3GSWHE0zWKaxMKARsPaQGewBXixa
+        ItobUKdK8g+0ymqN8mZ30rSgQf5HEI0PdCrTHBXpOW9woanZqUxWXgFDIr91oXYH//OaNr2XpNsGu
+        Foq59USFJcUjcKrB2RUG0sl7wBvbaaaFVwnCCFfz9rz8IvgRMTSRUVdUbDAj+EcyeoS8xmPTFub7+
+        KssVL8pg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9QDl-0008ML-Jr; Wed, 04 Mar 2020 09:21:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CDE6B30066E;
+        Wed,  4 Mar 2020 10:19:37 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 407052011CA98; Wed,  4 Mar 2020 10:21:36 +0100 (CET)
+Date:   Wed, 4 Mar 2020 10:21:36 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        Thomas Garnier <thgarnie@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        "VMware, Inc." <pv-drivers@vmware.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jiri Slaby <jslaby@suse.cz>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Cao jin <caoj.fnst@cn.fujitsu.com>,
+        Allison Randal <allison@lohutok.net>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Linux PM list <linux-pm@vger.kernel.org>
+Subject: Re: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
+Message-ID: <20200304092136.GI2596@hirez.programming.kicks-ass.net>
+References: <20200228000105.165012-1-thgarnie@chromium.org>
+ <202003022100.54CEEE60F@keescook>
+ <20200303095514.GA2596@hirez.programming.kicks-ass.net>
+ <CAJcbSZH1oON2VC2U8HjfC-6=M-xn5eU+JxHG2575iMpVoheKdA@mail.gmail.com>
+ <6e7e4191612460ba96567c16b4171f2d2f91b296.camel@linux.intel.com>
+ <202003031314.1AFFC0E@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202003031314.1AFFC0E@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-create_trampoline() returns 2 values that the (only) caller simply
-assigns to ops members. Amend create_trampoline() to make the
-assignments instead, which simplifies the code.
+On Tue, Mar 03, 2020 at 01:19:22PM -0800, Kees Cook wrote:
+> On Tue, Mar 03, 2020 at 01:01:26PM -0800, Kristen Carlson Accardi wrote:
+> > On Tue, 2020-03-03 at 07:43 -0800, Thomas Garnier wrote:
+> > > On Tue, Mar 3, 2020 at 1:55 AM Peter Zijlstra <peterz@infradead.org>
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- arch/x86/kernel/ftrace.c | 21 +++++++++------------
- 1 file changed, 9 insertions(+), 12 deletions(-)
+> > > > But,... do we still need this in the light of that fine-grained
+> > > > kaslr
+> > > > stuff?
+> > > > 
+> > > > What is the actual value of this PIE crud in the face of that?
+> > > 
+> > > If I remember well, it makes it easier/better but I haven't seen a
+> > > recent update on that. Is that accurate Kees?
+> > 
+> > I believe this patchset is valuable if people are trying to brute force
+> > guess the kernel location, but not so awesome in the event of
+> > infoleaks. In the case of the current fgkaslr implementation, we only
+> > randomize within the existing text segment memory area - so with PIE
+> > the text segment base can move around more, but within that it wouldn't
+> > strengthen anything. So, if you have an infoleak, you learn the base
+> > instantly, and are just left with the same extra protection you get
+> > without PIE.
+> 
+> Right -- PIE improves both non- and fg- KASLR similarly, in the sense
+> that the possible entropy for base offset is expanded. It also opens the
+> door to doing even more crazy things. 
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 108ee96f8b66..ee777c76a1c8 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -307,8 +307,7 @@ union ftrace_op_code_union {
- 
- #define RET_SIZE		1
- 
--static unsigned long
--create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
-+static void create_trampoline(struct ftrace_ops *ops)
- {
- 	unsigned long start_offset;
- 	unsigned long end_offset;
-@@ -319,6 +318,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	unsigned long size;
- 	unsigned long retq;
- 	unsigned long *ptr;
-+	unsigned int tramp_size;
- 	void *trampoline;
- 	void *ip;
- 	/* 48 8b 15 <offset> is movq <offset>(%rip), %rdx */
-@@ -347,10 +347,10 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 	 */
- 	trampoline = alloc_tramp(size + RET_SIZE + sizeof(void *));
- 	if (!trampoline)
--		return 0;
-+		return;
- 
--	*tramp_size = size + RET_SIZE + sizeof(void *);
--	npages = DIV_ROUND_UP(*tramp_size, PAGE_SIZE);
-+	tramp_size = size + RET_SIZE + sizeof(void *);
-+	npages = DIV_ROUND_UP(tramp_size, PAGE_SIZE);
- 
- 	/* Copy ftrace_caller onto the trampoline memory */
- 	ret = probe_kernel_read(trampoline, (void *)start_offset, size);
-@@ -403,15 +403,16 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
- 
- 	/* ALLOC_TRAMP flags lets us know we created it */
- 	ops->flags |= FTRACE_OPS_FL_ALLOC_TRAMP;
-+	ops->trampoline = (unsigned long)trampoline;
-+	ops->trampoline_size = tramp_size;
- 
- 	set_vm_flush_reset_perms(trampoline);
- 
- 	set_memory_ro((unsigned long)trampoline, npages);
- 	set_memory_x((unsigned long)trampoline, npages);
--	return (unsigned long)trampoline;
-+	return;
- fail:
- 	tramp_free(trampoline);
--	return 0;
- }
- 
- static unsigned long calc_trampoline_call_offset(bool save_regs)
-@@ -435,14 +436,10 @@ void arch_ftrace_update_trampoline(struct ftrace_ops *ops)
- 	ftrace_func_t func;
- 	unsigned long offset;
- 	unsigned long ip;
--	unsigned int size;
- 	const char *new;
- 
- 	if (!ops->trampoline) {
--		ops->trampoline = create_trampoline(ops, &size);
--		if (!ops->trampoline)
--			return;
--		ops->trampoline_size = size;
-+		create_trampoline(ops);
- 		return;
- 	}
- 
--- 
-2.17.1
+So I'm really confused. I see it increases the aslr range, but I'm still
+not sure why we care in the face of fgkaslr. Current kaslr is completely
+broken because the hardware leaks more bits than we currently have, even
+without the kernel itself leaking an address.
 
+But leaking a single address is not a problem with fgkaslr.
+
+> (e.g. why keep the kernel text all
+> in one contiguous chunk?)
+
+Dear gawd, please no. Also, we're limited to 2G text, that's just not a
+lot of room. I'm really going to object when people propose we introduce
+direct PLT for x86.
+
+> And generally speaking, it seems a nice improvement to me, as it gives
+> the kernel greater addressing flexibility.
+
+But at what cost; it does unspeakable ugly to the asm. And didn't a
+kernel compiled with the extended PIE range produce a measurably slower
+kernel due to all the ugly?
+
+So maybe I'm slow, but please spell out the benefit, because I'm not
+seeing it.
