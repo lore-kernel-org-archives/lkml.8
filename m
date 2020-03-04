@@ -8,66 +8,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF6EC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D3BC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5720B206E2
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7CC5206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:48:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qxWoJ3qi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O3aichfm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387433AbgCDAry (ORCPT
+        id S2387439AbgCDAsq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:47:54 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53441 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbgCDArx (ORCPT
+        Tue, 3 Mar 2020 19:48:46 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:33117 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727854AbgCDAsq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:47:53 -0500
-Received: by mail-pj1-f67.google.com with SMTP id cx7so104448pjb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:47:53 -0800 (PST)
+        Tue, 3 Mar 2020 19:48:46 -0500
+Received: by mail-pg1-f193.google.com with SMTP id m5so144290pgg.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:48:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=FSpmSt4o41NJS1G8psQcEgs7afs+Iy6AdJ2Os7mzKNs=;
-        b=qxWoJ3qi1PX737B47a21RzUIKpJ744UTkaWbP4gQZxoacL8PR2VEFlZqHx6f0swIAV
-         wgaJ54HDbR7GuyC324375KLhsP5u9jo5TpU9JCWYK1bCY0WQZ0BgU7nynQiYk4UMRuWR
-         VVkhXibzijdwpIuWmYkOcq89RIVCRp6Dh61Q79YFwtS4VUeB5vnnpVve7HuM2FyDJp9e
-         m6pWtouxVutUpY3YkKiwc6ZIHlmozM4Bf79SGCNW79msxGH4jxHuFhe1lG5E/FN9JsY3
-         ci9mOr3R8tMQ/vxoQ3qL1yHJyslTqIVQQalvYPkas0wD9Ivz5xjDsvD/LBcNnSIrrrrX
-         chtg==
+        bh=ry3JaErmJ9lopYlpE33S9kkyyccbBBJWwEdUZjnIcow=;
+        b=O3aichfmYWKZsuPd0eojEEFvFiT4kMPBBJoq2r1P+dmBL7BxWQBIjcMDqpneAO5HFQ
+         CEMBISYKvmFraXpFZRDo8kzxlcFHqB5zekjKI+SGJGdOsyBDRJhNmWr/rrv6sf1sfca2
+         +A49TOLbebIIqkm8go7y+3r09bQbHKstbU6ep3XNgsnarOX/aKgT60IXmCYA3kv2CM1d
+         PpAi39H6VGiRIZbQS10WUKK2L0NqYdsf+vDeY9SB0XcAPBhJ55txqpNea/Vawlx+FA88
+         yfCkjN/d5a0UjocZROC7GzMQRa+ZtzV4VQJuUk9rt9Ob0pilCNwm/bCkko2w4v+f+p2a
+         5whQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FSpmSt4o41NJS1G8psQcEgs7afs+Iy6AdJ2Os7mzKNs=;
-        b=IEeIDWFqMU8i7Smvg7WWwfBteT4Xi+VaJvoJxtA38X2ITwAhoO03Inp02B5nVXYbAg
-         hijwtlvzr8pDUQjs+fuZ8YH7sUZmvVQH76uODKNjmQihbumNLRSDz3NYVFR/VOnT5snf
-         rFCLyr/g5r7aEzdtaLE4bAPbhmkDh87AQrLnZCeznRhwP8Xj3Pv+dwomIFfpiP1jYWd2
-         cgENPhVKHh2sX157q9GkwB1NKkdotTFb9+TS3+JZnb2NJ8+KaNPP1G3T0vfaV6FdAsYH
-         NiaNcsxugLFLYDbRip5PTubolFkh7CfTdjVAKdzEIjJSoeaK8q5/sn/UOoDohFCKze2H
-         zKGQ==
-X-Gm-Message-State: ANhLgQ3ZtZeLDiNqZSsxAgh+paI/vY+qk/fiZgD3xABrigBHRgELZZJj
-        K+CUqqjdc7H7cO+HGyYUFtM=
-X-Google-Smtp-Source: ADFU+vtZMGSOMoQrnKgA1ePmEqc7Q15cHe+zNhsGQkHyACV10Y4v0P7VvpaWXIsu2YrWGqzQOSyGnw==
-X-Received: by 2002:a17:902:bf08:: with SMTP id bi8mr531595plb.305.1583282872439;
-        Tue, 03 Mar 2020 16:47:52 -0800 (PST)
+        bh=ry3JaErmJ9lopYlpE33S9kkyyccbBBJWwEdUZjnIcow=;
+        b=Ietdn34Pvqk2ip929IE+dygzBSN1M1E3HjXOPyg6Db+kLvIR7wG7aINVEgc4/I9tsw
+         vLDPyhZBibjhI6ZqU8OlmouTUvs+avMiLYyTfEtNxP6fSGglcncwfWpZsEcfBYTdXnwT
+         htieu/Mlc+6qrefOprHG9UKO9tzlXOpZcaTNfEhtiUuvYZoD5cHukXi+bDCtXTAcGA6R
+         PKhSP2IaUmQlytgly1LOyXU5bJDy83VvcyoDI1xptthJYaKPIfAReCehokXVjMDOrp6v
+         xB8fm08mtTcv4q08IMzwH49rJ9OHoO8TeWSChDw6YvXeHmR7zr3ciab34HWcr7zhgI8z
+         Etgg==
+X-Gm-Message-State: ANhLgQ1u/jxilYRfxi0YEqSCzuvmVl9X/kM4mw1FssznE2hn+/zMnLC6
+        6HoHdke/F+Izu2k575/ccOQKNbo3
+X-Google-Smtp-Source: ADFU+vt+OWRIzO2ZUuiXSacnAu+7bsnR+DofgFPwYGwG0biqrBokY7Iia+qH9F/pV8zYztzN3xLT/Q==
+X-Received: by 2002:a63:f40d:: with SMTP id g13mr145847pgi.374.1583282924708;
+        Tue, 03 Mar 2020 16:48:44 -0800 (PST)
 Received: from localhost.localdomain ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id w2sm17756292pfb.138.2020.03.03.16.47.49
+        by smtp.gmail.com with ESMTPSA id x7sm22910947pgp.0.2020.03.03.16.48.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 16:47:51 -0800 (PST)
+        Tue, 03 Mar 2020 16:48:44 -0800 (PST)
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Scott Wood <oss@buserror.net>,
-        Kumar Gala <galak@kernel.crashing.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vitaly Bordug <vitb@kernel.crashing.org>
-Subject: [PATCH v3] powerpc: Replace setup_irq() by request_irq()
-Date:   Wed,  4 Mar 2020 06:17:45 +0530
-Message-Id: <20200304004746.4557-1-afzal.mohd.ma@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH v3] irqchip: Replace setup_irq() by request_irq()
+Date:   Wed,  4 Mar 2020 06:18:38 +0530
+Message-Id: <20200304004839.4729-1-afzal.mohd.ma@gmail.com>
 X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -86,13 +83,6 @@ Hence replace setup_irq() by request_irq().
 
 Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 ---
-Hi powerpc maintainers,
-
-if okay w/ this change, please consider taking it thr' your tree, else please
-let me know.
-
-Regards
-afzal
 
 Link to v2 & v1,
 [v2] https://lkml.kernel.org/r/cover.1582471508.git.afzal.mohd.ma@gmail.com
@@ -110,216 +100,78 @@ v2:
            pr_err("%s: request_irq() failed"
  * Commit message massage
 
- arch/powerpc/platforms/85xx/mpc85xx_cds.c | 10 +++-----
- arch/powerpc/platforms/8xx/cpm1.c         |  9 ++-----
- arch/powerpc/platforms/8xx/m8xx_setup.c   |  9 ++-----
- arch/powerpc/platforms/chrp/setup.c       | 14 ++++-------
- arch/powerpc/platforms/powermac/pic.c     | 29 +++++++++--------------
- arch/powerpc/platforms/powermac/smp.c     | 12 ++++------
- 6 files changed, 28 insertions(+), 55 deletions(-)
+ drivers/irqchip/irq-i8259.c   | 16 ++++++----------
+ drivers/irqchip/irq-ingenic.c |  9 +++------
+ 2 files changed, 9 insertions(+), 16 deletions(-)
 
-diff --git a/arch/powerpc/platforms/85xx/mpc85xx_cds.c b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
-index 6b1436abe9b1..1c5598877d70 100644
---- a/arch/powerpc/platforms/85xx/mpc85xx_cds.c
-+++ b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
-@@ -218,12 +218,6 @@ static irqreturn_t mpc85xx_8259_cascade_action(int irq, void *dev_id)
- {
- 	return IRQ_HANDLED;
- }
--
--static struct irqaction mpc85xxcds_8259_irqaction = {
--	.handler = mpc85xx_8259_cascade_action,
--	.flags = IRQF_SHARED | IRQF_NO_THREAD,
--	.name = "8259 cascade",
--};
- #endif /* PPC_I8259 */
- #endif /* CONFIG_PCI */
- 
-@@ -271,7 +265,9 @@ static int mpc85xx_cds_8259_attach(void)
- 	 *  disabled when the last user of the shared IRQ line frees their
- 	 *  interrupt.
- 	 */
--	if ((ret = setup_irq(cascade_irq, &mpc85xxcds_8259_irqaction))) {
-+	ret = request_irq(cascade_irq, mpc85xx_8259_cascade_action,
-+			  IRQF_SHARED | IRQF_NO_THREAD, "8259 cascade", NULL);
-+	if (ret) {
- 		printk(KERN_ERR "Failed to setup cascade interrupt\n");
- 		return ret;
- 	}
-diff --git a/arch/powerpc/platforms/8xx/cpm1.c b/arch/powerpc/platforms/8xx/cpm1.c
-index a43ee7d1ff85..4db4ca2e1222 100644
---- a/arch/powerpc/platforms/8xx/cpm1.c
-+++ b/arch/powerpc/platforms/8xx/cpm1.c
-@@ -120,12 +120,6 @@ static irqreturn_t cpm_error_interrupt(int irq, void *dev)
- 	return IRQ_HANDLED;
+diff --git a/drivers/irqchip/irq-i8259.c b/drivers/irqchip/irq-i8259.c
+index d000870d9b6b..b6f6aa7b2862 100644
+--- a/drivers/irqchip/irq-i8259.c
++++ b/drivers/irqchip/irq-i8259.c
+@@ -268,15 +268,6 @@ static void init_8259A(int auto_eoi)
+ 	raw_spin_unlock_irqrestore(&i8259A_lock, flags);
  }
  
--static struct irqaction cpm_error_irqaction = {
--	.handler = cpm_error_interrupt,
+-/*
+- * IRQ2 is cascade interrupt to second interrupt controller
+- */
+-static struct irqaction irq2 = {
+-	.handler = no_action,
+-	.name = "cascade",
 -	.flags = IRQF_NO_THREAD,
--	.name = "error",
 -};
 -
- static const struct irq_domain_ops cpm_pic_host_ops = {
- 	.map = cpm_pic_host_map,
- };
-@@ -187,7 +181,8 @@ unsigned int __init cpm_pic_init(void)
- 	if (!eirq)
- 		goto end;
+ static struct resource pic1_io_resource = {
+ 	.name = "pic1",
+ 	.start = PIC_MASTER_CMD,
+@@ -311,6 +302,10 @@ static const struct irq_domain_ops i8259A_ops = {
+  */
+ struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
+ {
++	/*
++	 * PIC_CASCADE_IR is cascade interrupt to second interrupt controller
++	 */
++	int irq = I8259A_IRQ_BASE + PIC_CASCADE_IR;
+ 	struct irq_domain *domain;
  
--	if (setup_irq(eirq, &cpm_error_irqaction))
-+	if (request_irq(eirq, cpm_error_interrupt, IRQF_NO_THREAD, "error",
-+			NULL))
- 		printk(KERN_ERR "Could not allocate CPM error IRQ!");
+ 	insert_resource(&ioport_resource, &pic1_io_resource);
+@@ -323,7 +318,8 @@ struct irq_domain * __init __init_i8259_irqs(struct device_node *node)
+ 	if (!domain)
+ 		panic("Failed to add i8259 IRQ domain");
  
- 	setbits32(&cpic_reg->cpic_cicr, CICR_IEN);
-diff --git a/arch/powerpc/platforms/8xx/m8xx_setup.c b/arch/powerpc/platforms/8xx/m8xx_setup.c
-index f1c805c8adbc..df4d57d07f9a 100644
---- a/arch/powerpc/platforms/8xx/m8xx_setup.c
-+++ b/arch/powerpc/platforms/8xx/m8xx_setup.c
-@@ -39,12 +39,6 @@ static irqreturn_t timebase_interrupt(int irq, void *dev)
+-	setup_irq(I8259A_IRQ_BASE + PIC_CASCADE_IR, &irq2);
++	if (request_irq(irq, no_action, IRQF_NO_THREAD, "cascade", NULL))
++		pr_err("Failed to register cascade interrupt\n");
+ 	register_syscore_ops(&i8259_syscore_ops);
+ 	return domain;
+ }
+diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
+index c5589ee0dfb3..9f3da4260ca6 100644
+--- a/drivers/irqchip/irq-ingenic.c
++++ b/drivers/irqchip/irq-ingenic.c
+@@ -58,11 +58,6 @@ static irqreturn_t intc_cascade(int irq, void *data)
  	return IRQ_HANDLED;
  }
  
--static struct irqaction tbint_irqaction = {
--	.handler = timebase_interrupt,
--	.flags = IRQF_NO_THREAD,
--	.name = "tbint",
+-static struct irqaction intc_cascade_action = {
+-	.handler = intc_cascade,
+-	.name = "SoC intc cascade interrupt",
 -};
 -
- /* per-board overridable init_internal_rtc() function. */
- void __init __attribute__ ((weak))
- init_internal_rtc(void)
-@@ -157,7 +151,8 @@ void __init mpc8xx_calibrate_decr(void)
- 					(TBSCR_TBF | TBSCR_TBE));
- 	immr_unmap(sys_tmr2);
- 
--	if (setup_irq(virq, &tbint_irqaction))
-+	if (request_irq(virq, timebase_interrupt, IRQF_NO_THREAD, "tbint",
-+			NULL))
- 		panic("Could not allocate timer IRQ!");
- }
- 
-diff --git a/arch/powerpc/platforms/chrp/setup.c b/arch/powerpc/platforms/chrp/setup.c
-index fcf6f2342ef4..8328cd5817b0 100644
---- a/arch/powerpc/platforms/chrp/setup.c
-+++ b/arch/powerpc/platforms/chrp/setup.c
-@@ -451,13 +451,6 @@ static void __init chrp_find_openpic(void)
- 	of_node_put(np);
- }
- 
--#if defined(CONFIG_VT) && defined(CONFIG_INPUT_ADBHID) && defined(CONFIG_XMON)
--static struct irqaction xmon_irqaction = {
--	.handler = xmon_irq,
--	.name = "XMON break",
--};
--#endif
--
- static void __init chrp_find_8259(void)
+ static int __init ingenic_intc_of_init(struct device_node *node,
+ 				       unsigned num_chips)
  {
- 	struct device_node *np, *pic = NULL;
-@@ -541,8 +534,11 @@ static void __init chrp_init_IRQ(void)
- 		if (of_node_is_type(kbd->parent, "adb"))
- 			break;
- 	of_node_put(kbd);
--	if (kbd)
--		setup_irq(HYDRA_INT_ADB_NMI, &xmon_irqaction);
-+	if (kbd) {
-+		if (request_irq(HYDRA_INT_ADB_NMI, xmon_irq, 0, "XMON break",
-+				NULL))
-+			pr_err("Failed to register XMON break interrupt\n");
-+	}
- #endif
- }
- 
-diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
-index 2e969073473d..4921bccf0376 100644
---- a/arch/powerpc/platforms/powermac/pic.c
-+++ b/arch/powerpc/platforms/powermac/pic.c
-@@ -250,20 +250,6 @@ static unsigned int pmac_pic_get_irq(void)
- 	return irq_linear_revmap(pmac_pic_host, irq);
- }
- 
--#ifdef CONFIG_XMON
--static struct irqaction xmon_action = {
--	.handler	= xmon_irq,
--	.flags		= IRQF_NO_THREAD,
--	.name		= "NMI - XMON"
--};
--#endif
--
--static struct irqaction gatwick_cascade_action = {
--	.handler	= gatwick_action,
--	.flags		= IRQF_NO_THREAD,
--	.name		= "cascade",
--};
--
- static int pmac_pic_host_match(struct irq_domain *h, struct device_node *node,
- 			       enum irq_domain_bus_token bus_token)
- {
-@@ -384,12 +370,17 @@ static void __init pmac_pic_probe_oldstyle(void)
- 		out_le32(&pmac_irq_hw[i]->enable, 0);
- 
- 	/* Hookup cascade irq */
--	if (slave && pmac_irq_cascade)
--		setup_irq(pmac_irq_cascade, &gatwick_cascade_action);
-+	if (slave && pmac_irq_cascade) {
-+		if (request_irq(pmac_irq_cascade, gatwick_action,
-+				IRQF_NO_THREAD, "cascade", NULL))
-+			pr_err("Failed to register cascade interrupt\n");
-+	}
- 
- 	printk(KERN_INFO "irq: System has %d possible interrupts\n", max_irqs);
- #ifdef CONFIG_XMON
--	setup_irq(irq_create_mapping(NULL, 20), &xmon_action);
-+	i = irq_create_mapping(NULL, 20);
-+	if (request_irq(i, xmon_irq, IRQF_NO_THREAD, "NMI - XMON", NULL))
-+		pr_err("Failed to register NMI-XMON interrupt\n");
- #endif
- }
- 
-@@ -441,7 +432,9 @@ static void __init pmac_pic_setup_mpic_nmi(struct mpic *mpic)
- 		nmi_irq = irq_of_parse_and_map(pswitch, 0);
- 		if (nmi_irq) {
- 			mpic_irq_set_priority(nmi_irq, 9);
--			setup_irq(nmi_irq, &xmon_action);
-+			if (request_irq(nmi_irq, xmon_irq, IRQF_NO_THREAD,
-+					"NMI - XMON", NULL))
-+				pr_err("Failed to register NMI-XMON interrupt\n");
- 		}
- 		of_node_put(pswitch);
+@@ -130,7 +125,9 @@ static int __init ingenic_intc_of_init(struct device_node *node,
+ 		irq_reg_writel(gc, IRQ_MSK(32), JZ_REG_INTC_SET_MASK);
  	}
-diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
-index f95fbdee6efe..c55bf474ed4e 100644
---- a/arch/powerpc/platforms/powermac/smp.c
-+++ b/arch/powerpc/platforms/powermac/smp.c
-@@ -399,21 +399,19 @@ static int __init smp_psurge_kick_cpu(int nr)
+ 
+-	setup_irq(parent_irq, &intc_cascade_action);
++	if (request_irq(parent_irq, intc_cascade, 0,
++			"SoC intc cascade interrupt", NULL))
++		pr_err("Failed to register SoC intc cascade interrupt\n");
  	return 0;
- }
  
--static struct irqaction psurge_irqaction = {
--	.handler = psurge_ipi_intr,
--	.flags = IRQF_PERCPU | IRQF_NO_THREAD,
--	.name = "primary IPI",
--};
--
- static void __init smp_psurge_setup_cpu(int cpu_nr)
- {
-+	unsigned long flags = IRQF_PERCPU | IRQF_NO_THREAD;
-+	int irq;
-+
- 	if (cpu_nr != 0 || !psurge_start)
- 		return;
- 
- 	/* reset the entry point so if we get another intr we won't
- 	 * try to startup again */
- 	out_be32(psurge_start, 0x100);
--	if (setup_irq(irq_create_mapping(NULL, 30), &psurge_irqaction))
-+	irq = irq_create_mapping(NULL, 30);
-+	if (request_irq(irq, psurge_ipi_intr, flags, "primary IPI", NULL))
- 		printk(KERN_ERR "Couldn't get primary IPI interrupt");
- }
- 
+ out_domain_remove:
 -- 
 2.25.1
 
