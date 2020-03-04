@@ -2,133 +2,71 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96918C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:16:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EA0C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C84A21744
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:16:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="X6aNIugG"
+	by mail.kernel.org (Postfix) with ESMTP id 03AA621739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbgCDNQ4 (ORCPT
+        id S2388176AbgCDNRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:16:56 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:37491 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729118AbgCDNQ4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:16:56 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583327815; h=Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=K4q6i2AGe0LtekAkSNRrYuh3u8TmdkdQFpM4sYuSA1Y=; b=X6aNIugGTc2F3LsH05rYd3uAVcqTMEkZNoXxlzWi5xguYbm4wnRY71uwKuZZzBBtmVg8G4qV
- djQh1wNK/o2dNToLC/G88SFEoCkIsO8EggZEqN7iVXFJspRi4w3sKWq03jYyuctmkfRxg1IA
- tYMSxQ9jxpPacMh+S1sCrC5dLdU=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5faa47.7f935e333c38-smtp-out-n03;
- Wed, 04 Mar 2020 13:16:55 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 04780C4479F; Wed,  4 Mar 2020 13:16:54 +0000 (UTC)
-Received: from rocky-Inspiron-7590.qca.qualcomm.com (unknown [180.166.53.21])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rjliao)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1294C43383;
-        Wed,  4 Mar 2020 13:16:50 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1294C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com
-Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        Rocky Liao <rjliao@codeaurora.org>
-Subject: [PATCH v1] Bluetooth: hci_qca: Replace devm_gpiod_get() with devm_gpiod_get_optional()
-Date:   Wed,  4 Mar 2020 21:16:45 +0800
-Message-Id: <20200304131645.22057-1-rjliao@codeaurora.org>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 08:17:09 -0500
+Received: from mx2.suse.de ([195.135.220.15]:46286 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388094AbgCDNRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 08:17:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D2757AFF0;
+        Wed,  4 Mar 2020 13:17:06 +0000 (UTC)
+Subject: Re: SLUB: sysfs lets root force slab order below required minimum,
+ causing memory corruption
+To:     Jann Horn <jannh@google.com>, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Garrett <mjg59@google.com>
+References: <CAG48ez31PP--h6_FzVyfJ4H86QYczAFPdxtJHUEEan+7VJETAQ@mail.gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <fa479222-5b7a-6f9a-aab0-4e3a8873e3c3@suse.cz>
+Date:   Wed, 4 Mar 2020 14:17:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <CAG48ez31PP--h6_FzVyfJ4H86QYczAFPdxtJHUEEan+7VJETAQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch replaces devm_gpiod_get() with devm_gpiod_get_optional() to get
-bt_en and replaces devm_clk_get() with devm_clk_get_optional() to get
-susclk. It also uses NULL check to determine whether the resource is
-available or not.
+On 3/4/20 1:23 AM, Jann Horn wrote:
+> Hi!
+> 
+> FYI, I noticed that if you do something like the following as root,
+> the system blows up pretty quickly with error messages about stuff
+> like corrupt freelist pointers because SLUB actually allows root to
+> force a page order that is smaller than what is required to store a
+> single object:
+> 
+>     echo 0 > /sys/kernel/slab/task_struct/order
+> 
+> The other SLUB debugging options, like red_zone, also look kind of
+> suspicious with regards to races (either racing with other writes to
+> the SLUB debugging options, or with object allocations).
 
-Fixes: 8a208b24d770 ("Bluetooth: hci_qca: Make bt_en and susclk not mandatory for QCA Rome")
-Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
----
- drivers/bluetooth/hci_qca.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+Yeah I also wondered last week that there seems to be no sychronization with
+alloc/free activity. Increasing order is AFAICS also dangerous with freelist
+randomization:
 
-diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-index 325baa046c3a..439392b1c043 100644
---- a/drivers/bluetooth/hci_qca.c
-+++ b/drivers/bluetooth/hci_qca.c
-@@ -1562,7 +1562,7 @@ static int qca_power_on(struct hci_dev *hdev)
- 		ret = qca_wcn3990_init(hu);
- 	} else {
- 		qcadev = serdev_device_get_drvdata(hu->serdev);
--		if (!IS_ERR(qcadev->bt_en)) {
-+		if (qcadev->bt_en) {
- 			gpiod_set_value_cansleep(qcadev->bt_en, 1);
- 			/* Controller needs time to bootup. */
- 			msleep(150);
-@@ -1752,7 +1752,7 @@ static void qca_power_shutdown(struct hci_uart *hu)
- 		host_set_baudrate(hu, 2400);
- 		qca_send_power_pulse(hu, false);
- 		qca_regulator_disable(qcadev);
--	} else if (!IS_ERR(qcadev->bt_en)) {
-+	} else if (qcadev->bt_en) {
- 		gpiod_set_value_cansleep(qcadev->bt_en, 0);
- 	}
- }
-@@ -1901,15 +1901,15 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 		}
- 	} else {
- 		qcadev->btsoc_type = QCA_ROME;
--		qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
-+		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
- 					       GPIOD_OUT_LOW);
--		if (IS_ERR(qcadev->bt_en)) {
-+		if (!qcadev->bt_en) {
- 			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
- 			power_ctrl_enabled = false;
- 		}
- 
--		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
--		if (IS_ERR(qcadev->susclk)) {
-+		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
-+		if (!qcadev->susclk) {
- 			dev_warn(&serdev->dev, "failed to acquire clk\n");
- 		} else {
- 			err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
-@@ -1924,7 +1924,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
- 		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
- 		if (err) {
- 			BT_ERR("Rome serdev registration failed");
--			if (!IS_ERR(qcadev->susclk))
-+			if (qcadev->susclk)
- 				clk_disable_unprepare(qcadev->susclk);
- 			return err;
- 		}
-@@ -1945,7 +1945,7 @@ static void qca_serdev_remove(struct serdev_device *serdev)
- 
- 	if (qca_is_wcn399x(qcadev->btsoc_type))
- 		qca_power_shutdown(&qcadev->serdev_hu);
--	else if (!IS_ERR(qcadev->susclk))
-+	else if (qcadev->susclk)
- 		clk_disable_unprepare(qcadev->susclk);
- 
- 	hci_uart_unregister_device(&qcadev->serdev_hu);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
+https://lore.kernel.org/linux-mm/d3acc069-a5c6-f40a-f95c-b546664bc4ee@suse.cz/
