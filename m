@@ -2,112 +2,127 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10A0AC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4C91C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:15:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E694420870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99A7920866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:15:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583363741;
+	bh=dZaoSwKBx/t67wOLGqICu1GPOu6Nbpsnkqt1hx+hyOY=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=B/GIBkhepJa5wgEVK1lgYlEQD23KKjmEnppr+bx8qI8vJ2yYTfICs9St50KeYSPQc
+	 KqDxcHzX7qxMSbUZE046nhLChAeP43p1gvlfxIxsLLUiypKsudP7ow0773O+/YiuWa
+	 ujERaFp6AWXe7b3phdXOkEcswPrTgPxl23FqMNfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388534AbgCDXOn convert rfc822-to-8bit (ORCPT
+        id S2388549AbgCDXPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 18:14:43 -0500
-Received: from smtp10.smtpout.orange.fr ([80.12.242.132]:25213 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388425AbgCDXOn (ORCPT
+        Wed, 4 Mar 2020 18:15:40 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45948 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388371AbgCDXPk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 18:14:43 -0500
-Received: from belgarion ([86.210.245.36])
-        by mwinf5d33 with ME
-        id APEe220030nqnCN03PEeCk; Thu, 05 Mar 2020 00:14:41 +0100
-X-ME-Helo: belgarion
-X-ME-Auth: amFyem1pay5yb2JlcnRAb3JhbmdlLmZy
-X-ME-Date: Thu, 05 Mar 2020 00:14:41 +0100
-X-ME-IP: 86.210.245.36
-From:   Robert Jarzmik <robert.jarzmik@free.fr>
-To:     Guenter Roeck <linux@roeck-us.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ASoC: Fix SND_SOC_ALL_CODECS imply ac97 fallout
-References: <20200224112537.14483-1-geert@linux-m68k.org>
-        <20200303143444.GA25683@roeck-us.net>
-        <CAMuHMdWZxc5KjHaOhk5xdcjSn54i3ku7b1dW6tXhXbjku1eLww@mail.gmail.com>
-X-URL:  http://belgarath.falguerolles.org/
-Date:   Thu, 05 Mar 2020 00:14:38 +0100
-In-Reply-To: <CAMuHMdWZxc5KjHaOhk5xdcjSn54i3ku7b1dW6tXhXbjku1eLww@mail.gmail.com>
-        (Geert Uytterhoeven's message of "Tue, 3 Mar 2020 15:56:25 +0100")
-Message-ID: <878skf1zmp.fsf@belgarion.home>
-User-Agent: Gnus/5.130008 (Ma Gnus v0.8) Emacs/26 (gnu/linux)
+        Wed, 4 Mar 2020 18:15:40 -0500
+Received: by mail-io1-f67.google.com with SMTP id w9so4333200iob.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:15:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qnZSwAco/9yGR/2Rk04lTIem1NQkAqUXaZjX8c167Hs=;
+        b=PsHjmeO7PXK1y43SbWXSqitm0T7GjrEaE3aOc4VjlDXTiEUoIifBDtonvjPNfMa8NP
+         COoFK7dpmzQoxB5Ulbg61zCMdxgVzTE/MATvSVpE9Ix4p2zUC7ugmhlCKNm+dpUVEd7y
+         aoDKxbZS2CDeSLEO0pHaRDMiFg60KJV94Rd7U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qnZSwAco/9yGR/2Rk04lTIem1NQkAqUXaZjX8c167Hs=;
+        b=QoDCNDfCKY++dgp2qhEfeD7HN7QOSKDr/FnsRLAeDU1wmJLkEfsrgykg9ib9xhO22a
+         tL+ct2Z2AFQgtBJLAH+KF3OHNwYDIG4QbBsIDDemvLO7J9TsYHmCY5uZWPOPIX2WEmEX
+         niyUGVR3VgBD5nMPPs1pqD+sNa2qgVA8IT6/E8XnhwXqBBlgVJQ9RPQIBJKoJfQoejQX
+         36yb4wFYVDs9RCz4DQZultMyp9vuIlmadbEfxwjOsE9f3RWED3fyrDo+P9lDvOmoK0di
+         4Twxiht46DKRJlIuJpwjpqNCMUx+8sDYWSARJDdVfiV0yZpJon8BixNs13z9O2Xb35nP
+         MO6A==
+X-Gm-Message-State: ANhLgQ1tdDJ0DDGB30pmSBl/iKvaTrqEV4/rf5oFSH4BWsiNJBQDzJ0+
+        gc08I0CNgQKevyFgEWY81GZTnQ==
+X-Google-Smtp-Source: ADFU+vuixjh4NH+5iUMDbrsEt1WSbtzQ1aWggmcxwIHK3oaMulCmtb7CWoIrlP5jRRnEdh/VXGUMlg==
+X-Received: by 2002:a6b:bd04:: with SMTP id n4mr4147979iof.196.1583363739362;
+        Wed, 04 Mar 2020 15:15:39 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id m18sm8782876ill.79.2020.03.04.15.15.37
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 15:15:38 -0800 (PST)
+Subject: Re: [PATCH 2/4] selftests: Fix seccomp to support relocatable build
+ (O=objdir)
+To:     Kees Cook <keescook@chromium.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        daniel@iogearbox.net, kafai@fb.com, yhs@fb.com, andriin@fb.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        khilman@baylibre.com, mpe@ellerman.id.au,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <cover.1583358715.git.skhan@linuxfoundation.org>
+ <11967e5f164f0cd717921bd382ff9c13ef740146.1583358715.git.skhan@linuxfoundation.org>
+ <202003041442.A46000C@keescook>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <11ffe43f-f777-7881-623d-c93196a44cb6@linuxfoundation.org>
+Date:   Wed, 4 Mar 2020 16:15:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <202003041442.A46000C@keescook>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Geert Uytterhoeven <geert@linux-m68k.org> writes:
-
-> Hi Günter
->
-> On Tue, Mar 3, 2020 at 3:34 PM Guenter Roeck <linux@roeck-us.net> wrote:
->> On Mon, Feb 24, 2020 at 12:25:37PM +0100, Geert Uytterhoeven wrote:
->> > On i386 randconfig:
->> >
->> >     sound/soc/codecs/wm9705.o: In function `wm9705_soc_resume':
->> >     wm9705.c:(.text+0x128): undefined reference to `snd_ac97_reset'
->> >     sound/soc/codecs/wm9712.o: In function `wm9712_soc_resume':
->> >     wm9712.c:(.text+0x2d1): undefined reference to `snd_ac97_reset'
->> >     sound/soc/codecs/wm9713.o: In function `wm9713_soc_resume':
->> >     wm9713.c:(.text+0x820): undefined reference to `snd_ac97_reset'
->> >
->> > Fix this by adding the missing dependencies on SND_SOC_AC97_BUS.
->> >
+On 3/4/20 3:42 PM, Kees Cook wrote:
+> On Wed, Mar 04, 2020 at 03:13:33PM -0700, Shuah Khan wrote:
+>> Fix seccomp relocatable builds. This is a simple fix to use the
+>> right lib.mk variable TEST_GEN_PROGS for objects to leverage
+>> lib.mk common framework for relocatable builds.
 >>
->> With this patch applied, arm:pxa_defconfig reports a variety of unmet
->> SND_SOC dependencies, and it fails to build.
+>> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+>> ---
+>>   tools/testing/selftests/seccomp/Makefile | 16 +++-------------
+>>   1 file changed, 3 insertions(+), 13 deletions(-)
 >>
->> ERROR: "snd_ac97_reset" [sound/soc/codecs/snd-soc-wm9713.ko] undefined!
->> ERROR: "snd_ac97_reset" [sound/soc/codecs/snd-soc-wm9712.ko] undefined!
->> ERROR: "snd_ac97_reset" [sound/soc/codecs/snd-soc-wm9705.ko] undefined!
->>
->> Reverting this patch fixes the problem.
->
-> Should SND_PXA2XX_SOC_AC97 in sound/soc/pxa/Kconfig select
-> SND_SOC_AC97_BUS instead of SND_SOC_AC97_BUS_NEW?
-> The latter does not exist.
-Hi Geert,
+>> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+>> index 1760b3e39730..a8a9717fc1be 100644
+>> --- a/tools/testing/selftests/seccomp/Makefile
+>> +++ b/tools/testing/selftests/seccomp/Makefile
+>> @@ -1,17 +1,7 @@
+>>   # SPDX-License-Identifier: GPL-2.0
+>> -all:
+>> -
+>> -include ../lib.mk
+>> -
+>> -.PHONY: all clean
+>> -
+>> -BINARIES := seccomp_bpf seccomp_benchmark
+>>   CFLAGS += -Wl,-no-as-needed -Wall
+>> +LDFLAGS += -lpthread
+>>   
+>> -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+> 
+> How is the ../kselftest_harness.h dependency detected in the resulting
+> build rules?
+> 
+> Otherwise, looks good.
 
-The answer is no, PXA is now specifically ported to work with the new AC97 bus
-implementation, ie. AC97_BUS_NEW=y as in sound/ac97/.
+Didn't see any problems. I will look into adding the dependency.
 
-The 2 implementations of AC97 bus, ie. CONFIG_AC97_BUS and CONFIG_AC97_BUS_NEW
-are exclusive, they cannot coexist in the same kernel AFAIR.
+thanks,
+-- Shuah
 
-Sorry for the late reply on this thread, but I moved house lately and I'm quite
-busy, so my answers are delayed.
-
-As a side note, I've seen somewhere in the patches this :
-SND_SOC_WM971{2,3} depends on SND_SOC_AC97_BUS. This looks wrong to me, as it
-implies that a wolfson wm97xx sound driver can only exist with
-CONFIG_AC97_BUS=y, which is false, because it can exist with
-CONFIG_AC97_BUS_NEW=y.
-
-I also saw someone saying the CONFIG_SND_SOC_AC97_BUS_NEW didn't exist; this is
-true, most likely because I forgot it when I created the new AC97 bus. I'd think
-the natural fix would be to add CONFIG_SND_SOC_AC97_BUS_NEW just after his twin
-definition in sound/soc/Kconfig, but I might be wrong ...
-
-Cheers.
-
---
-Robert
