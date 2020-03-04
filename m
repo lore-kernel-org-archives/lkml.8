@@ -2,170 +2,390 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CF0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD04BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C94921D56
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9749B214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:47:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L11Digy+"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="eeG3Wkrj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387836AbgCDKpU (ORCPT
+        id S1729237AbgCDKrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:45:20 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41658 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387817AbgCDKpT (ORCPT
+        Wed, 4 Mar 2020 05:47:12 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51876 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbgCDKrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:45:19 -0500
-Received: by mail-qt1-f196.google.com with SMTP id l21so951463qtr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:45:18 -0800 (PST)
+        Wed, 4 Mar 2020 05:47:12 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a132so1474193wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:47:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=huiJ97gIg8Vp/O2i1Ez97YEyu+JLeKY5B4/+r4G3YWA=;
-        b=L11Digy+PkNgloldAwW9RxrQsjxuPahfbgTPhljMLZA1NSA04seBp65zQu3orBWXCP
-         ujc+S77td1vf7bZTq2xGoWwNZAjP57v9v7rxQvmoil7us4OK8zeM9EXKA+AKkS51mT/+
-         aAZJOa7AQiHNiC/DiM996CDsGPRL85usUw7IDm8cab1ZLqmmeAALv4CmuPse4svRnYfF
-         qVO6xwUekgpjYAri3OaqrXFtmswbEKnhVQ6gySKvqPPWvzQiZwKEn+azx4/GYDD3zhSZ
-         ZHrR7Eyl5M2IxZsJbtmiwk/llsUljTH0nK/HHAUZb275rmvGecit2whGiJnDGJzu48LJ
-         G1wA==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=usL+Yedbyam7qNCON9a3/+NPKdnFTu+cqc21gDVgrKs=;
+        b=eeG3WkrjTyzKiiKU2sQtKMYjIdn1KotbnEaeZ7ONQS1JPhWw1IvVd0mlryokCDuPFo
+         PwYkW4adkrNzIaeMSZWUH0YKUpI9qM+J66yWygEf+QDL648AfpfCVdBHQyOiEsrRuZnn
+         JLWEHLS/1tL2SJyjGffT5CjqCIH8cvOzxSt2GkwbjKg6kBdzuu+D1zhGiyTJ3uCs1VJW
+         c2I+R5tibr6z47wmWA3qE7bP0BYCrGFlKnvduY2rawaRFWplEPE6q/4+zJhaxaWARlNR
+         eZXdbDGlPm7HwvRFVm6wP62Gw9IlVVg3O61uP4QcMfwc3+r4uxj4U19iWixVKZncciQx
+         TRHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=huiJ97gIg8Vp/O2i1Ez97YEyu+JLeKY5B4/+r4G3YWA=;
-        b=dPxpdFB/ha0UsEL2IeP3zkbf+pQVi3vDbajxgcDLrbk0+rxKTxUcsYKQWfSFcfi68F
-         iTN2en9J6OO5pt5vMbooxN/FN0L8saJY1dBcS8mlavLMgI6kE+vXusx0/EWRZHVZpYBG
-         JvD72SqXcj/PhJ1/IPo0DJR6RyxxlfPa9MqwwMcQPnCS8bz0KpCEfpg5VAbOQTGBBrlS
-         yfq6m1mHlrFPQOD8oWwxVmRyBUf+p/Sh2x7qDkkxbCCMPKGmcixUR+jZyhxm6/6Yb/uM
-         DeycQmu3fadE9EY2mM3Q7RqZux1QtMmUqdfwsBjqqXxO3juQBXa5bReMJoIbNYs1L3Qd
-         lYBw==
-X-Gm-Message-State: ANhLgQ20GwjdltTTOuV0SqBnHAUpTySC3S3m5uhML7Obg6kPfzjn0aCZ
-        1bY/wx8RDhg+tqtOTdZnaNKjaFFkSY51+HI1zJbcnQ==
-X-Google-Smtp-Source: ADFU+vtTPmntYpOJcz/uSFLW22+158HLcsM+4XAySJDIKJAijs8WRfB9AZdn0xgTh4qwPZs2mHwhc+5RvjKSh7qSO74=
-X-Received: by 2002:ac8:3533:: with SMTP id y48mr1787396qtb.380.1583318717797;
- Wed, 04 Mar 2020 02:45:17 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=usL+Yedbyam7qNCON9a3/+NPKdnFTu+cqc21gDVgrKs=;
+        b=cKxC6TYleNpZXEc7S8jv3TtMdgzOePcPgCX/pcbP9VUDtuqqoEc4R7rxbF6k/JlneN
+         X6PqKHLd/eZKbmhteSpntlksD348FQLGMMjyMX8WCGqQc43G5qccfIV+X3JjR8fbtIfk
+         rlwGZyNeTgCpG+x6PC1FgpI27MBEnSB/AZOUGGlYETTCiujXakPqQGrPa94fOoPcmGcT
+         BYMEYy5WXZozr2gISEJ6TBHwFc8iuSoS/JYv18cZiaqTnkgb9Ygsv5L+BkSypaebH3vr
+         f51FbePMbqMdt5zOpAE9pkU5YJ5FWSVAHRNCzrVKyYmM3b4nvilAyOA7nkddUEaq2oLB
+         3eZQ==
+X-Gm-Message-State: ANhLgQ0qDA/ruLor3MgCLhEdBsK5lNIBW9Xrw8Eb6v7O0V0NVurQkWAq
+        MtefasN1zV3IP3wi3WIzjpgoMA==
+X-Google-Smtp-Source: ADFU+vvBb/UydPx2ggP7TXTIEHSmDxaUXMPe+vyW3yYQxe0pCq02ROn414SZNbwy5PWNq8yMyS/WDw==
+X-Received: by 2002:a7b:c1cf:: with SMTP id a15mr3234405wmj.152.1583318828563;
+        Wed, 04 Mar 2020 02:47:08 -0800 (PST)
+Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id f23sm3577508wmb.1.2020.03.04.02.47.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 02:47:07 -0800 (PST)
+Subject: Re: [PATCH v6 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
+To:     Remi Pommarel <repk@triplefau.lt>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Yue Wang <yue.wang@Amlogic.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
+References: <20200123232943.10229-1-repk@triplefau.lt>
+ <20200123232943.10229-7-repk@triplefau.lt>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <91457cca-4ba2-02f5-d8b7-2b926427e2c4@baylibre.com>
+Date:   Wed, 4 Mar 2020 11:47:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <000000000000dd909105a002ebe6@google.com> <20200304102850.2492-1-hdanton@sina.com>
-In-Reply-To: <20200304102850.2492-1-hdanton@sina.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 4 Mar 2020 11:43:15 +0100
-Message-ID: <CACT4Y+ZSyZbDTQ9VOj999eDMiowEQdQmGrNMrQ04SPHe_882pA@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in sys_keyctl
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+0c5c2dbf76930df91489@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200123232943.10229-7-repk@triplefau.lt>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 11:29 AM Hillf Danton <hdanton@sina.com> wrote:
-> On Wed, 04 Mar 2020 00:08:11 -0800
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=15257ba1e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=0c5c2dbf76930df91489
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+0c5c2dbf76930df91489@syzkaller.appspotmail.com
-> >
-> > rcu: INFO: rcu_preempt self-detected stall on CPU
-> > rcu:  0-....: (1 GPs behind) idle=576/1/0x4000000000000002 softirq=55718/56054 fqs=5235
-> >       (t=10500 jiffies g=63445 q=1523)
-> > NMI backtrace for cpu 0
-> > CPU: 0 PID: 18804 Comm: syz-executor.4 Not tainted 5.6.0-rc3-syzkaller #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-> > Call Trace:
-> >  <IRQ>
-> >  __dump_stack lib/dump_stack.c:77 [inline]
-> >  dump_stack+0x197/0x210 lib/dump_stack.c:118
-> >  nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-> >  nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-> >  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
-> >  trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
-> >  rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
-> >  print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
-> >  check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
-> >  rcu_pending kernel/rcu/tree.c:3030 [inline]
-> >  rcu_sched_clock_irq.cold+0x51a/0xc37 kernel/rcu/tree.c:2276
-> >  update_process_times+0x2d/0x70 kernel/time/timer.c:1726
-> >  tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:171
-> >  tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1314
-> >  __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
-> >  __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1579
-> >  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1641
-> >  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1119 [inline]
-> >  smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1144
-> >  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-> >  </IRQ>
-> > RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x16/0x20 kernel/kcov.c:276
-> > Code: 48 89 e5 48 8b 4d 08 e8 d8 fe ff ff 5d c3 66 0f 1f 44 00 00 55 89 f2 89 fe bf 05 00 00 00 48 89 e5 48 8b 4d 08 e8 ba fe ff ff <5d> c3 0f 1f 84 00 00 00 00 00 55 48 89 f2 48 89 fe bf 07 00 00 00
-> > RSP: 0018:ffffc900053877d8 EFLAGS: 00000297 ORIG_RAX: ffffffffffffff13
-> > RAX: 0000000000000002 RBX: 584279fc973b765a RCX: ffffffff83b71a81
-> > RDX: 00000000ffffff75 RSI: 0000000000000000 RDI: 0000000000000005
-> > RBP: ffffc900053877d8 R08: ffff888041a265c0 R09: 0000000000000092
-> > R10: ffffed1015d0707b R11: ffff8880ae8383db R12: ffff88809eb56398
-> > R13: 000000003ab2c4e4 R14: 1b0d4377a72d08f5 R15: 00000000ffffff75
-> >  mpihelp_submul_1+0x161/0x1a0 lib/mpi/generic_mpih-mul3.c:45
-> >  mpihelp_divrem+0x1ce/0x1360 lib/mpi/mpih-div.c:209
-> >  mpi_powm+0xffb/0x1d20 lib/mpi/mpi-pow.c:205
-> >  _compute_val crypto/dh.c:39 [inline]
-> >  dh_compute_value+0x373/0x610 crypto/dh.c:178
-> >  crypto_kpp_generate_public_key include/crypto/kpp.h:315 [inline]
-> >  __keyctl_dh_compute+0x9ae/0x1470 security/keys/dh.c:367
-> >  keyctl_dh_compute+0xcf/0x12d security/keys/dh.c:422
-> >  __do_sys_keyctl security/keys/keyctl.c:1818 [inline]
-> >  __se_sys_keyctl security/keys/keyctl.c:1714 [inline]
-> >  __x64_sys_keyctl+0x159/0x470 security/keys/keyctl.c:1714
-> >  do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
-> >  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > RIP: 0033:0x45c479
-> > Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-> > RSP: 002b:00007f872a51fc78 EFLAGS: 00000246 ORIG_RAX: 00000000000000fa
-> > RAX: ffffffffffffffda RBX: 00007f872a5206d4 RCX: 000000000045c479
-> > RDX: 0000000020002700 RSI: 0000000020000400 RDI: 0000000000000017
-> > RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
-> > R10: 00000000ffffff84 R11: 0000000000000246 R12: 00000000ffffffff
-> > R13: 00000000000006fa R14: 00000000004c9883 R15: 000000000076bfcc
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
->
-> Cut the chance of being a cpu hog.
->
-> --- a/lib/mpi/mpih-div.c
-> +++ b/lib/mpi/mpih-div.c
-> @@ -215,6 +215,8 @@ q_test:
->
->                                 qp[i] = q;
->                                 n0 = np[dsize - 1];
+On 24/01/2020 00:29, Remi Pommarel wrote:
+> This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
+> This will allow to mutualize code in pci-meson.c between AXG and G12A
+> SoC.
+> 
+> This PHY also uses and chains an analog PHY, which on AXG platform
+> is needed to have reliable PCIe communication.
+> 
+> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+> ---
+>  drivers/phy/amlogic/Kconfig              |  11 ++
+>  drivers/phy/amlogic/Makefile             |   1 +
+>  drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
+>  3 files changed, 204 insertions(+)
+>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
+> 
+> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
+> index 8c9cf2403591..71801e30d601 100644
+> --- a/drivers/phy/amlogic/Kconfig
+> +++ b/drivers/phy/amlogic/Kconfig
+> @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
+>  	  in Meson G12A SoCs.
+>  	  If unsure, say N.
+>  
+> +config PHY_MESON_AXG_PCIE
+> +	tristate "Meson AXG PCIE PHY driver"
+> +	default ARCH_MESON
+> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
+> +	select GENERIC_PHY
+> +	select REGMAP_MMIO
+> +	help
+> +	  Enable this to support the Meson MIPI + PCIE PHY found
+> +	  in Meson AXG SoCs.
+> +	  If unsure, say N.
 > +
-> +                               cond_resched();
+>  config PHY_MESON_AXG_MIPI_PCIE_ANALOG
+>  	tristate "Meson AXG MIPI + PCIE analog PHY driver"
+>  	default ARCH_MESON
+> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
+> index 0aecf92d796a..e2baa133f7af 100644
+> --- a/drivers/phy/amlogic/Makefile
+> +++ b/drivers/phy/amlogic/Makefile
+> @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
+>  obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
+>  obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
+>  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
+> +obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
+>  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
+> diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> new file mode 100644
+> index 000000000000..377ed0dcd0d9
+> --- /dev/null
+> +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
+> @@ -0,0 +1,192 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Amlogic AXG PCIE PHY driver
+> + *
+> + * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
+> + */
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/bitfield.h>
+> +#include <dt-bindings/phy/phy.h>
+> +
+> +#define MESON_PCIE_REG0 0x00
+> +#define		MESON_PCIE_COMMON_CLK	BIT(4)
+> +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
+> +#define		MESON_PCIE_CLK		BIT(1)
+> +#define		MESON_PCIE_POWERDOWN	BIT(0)
+> +
+> +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
+> +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
+> +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
+> +					 MESON_PCIE_COMMON_REF_CLK)
+> +#define MESON_PCIE_RESET_DELAY		500
+> +
+> +struct phy_axg_pcie_priv {
+> +	struct phy *phy;
+> +	struct phy *analog;
+> +	struct regmap *regmap;
+> +	struct reset_control *reset;
+> +};
+> +
+> +static const struct regmap_config phy_axg_pcie_regmap_conf = {
+> +	.reg_bits = 8,
+> +	.val_bits = 32,
+> +	.reg_stride = 4,
+> +	.max_register = MESON_PCIE_REG0,
+> +};
+> +
+> +static int phy_axg_pcie_power_on(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = phy_power_on(priv->analog);
+> +	if (ret != 0)
+> +		return ret;
+> +
+> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+> +			   MESON_PCIE_POWERDOWN, 0);
+> +	return 0;
+> +}
+> +
+> +static int phy_axg_pcie_power_off(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = phy_power_off(priv->analog);
+> +	if (ret != 0)
+> +		return ret;
+> +
+> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
+> +			   MESON_PCIE_POWERDOWN, 1);
+> +	return 0;
+> +}
+> +
+> +static int phy_axg_pcie_init(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = phy_init(priv->analog);
+> +	if (ret != 0)
+> +		return ret;
+> +
+> +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
+> +	return reset_control_reset(priv->reset);
+> +}
+> +
+> +static int phy_axg_pcie_exit(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	ret = phy_exit(priv->analog);
+> +	if (ret != 0)
+> +		return ret;
+> +
+> +	return reset_control_reset(priv->reset);
+> +}
+> +
+> +static int phy_axg_pcie_reset(struct phy *phy)
+> +{
+> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
+> +	int ret = 0;
+> +
+> +	ret = phy_reset(priv->analog);
+> +	if (ret != 0)
+> +		goto out;
+> +
+> +	ret = reset_control_assert(priv->reset);
+> +	if (ret != 0)
+> +		goto out;
+> +	udelay(MESON_PCIE_RESET_DELAY);
+> +
+> +	ret = reset_control_deassert(priv->reset);
+> +	if (ret != 0)
+> +		goto out;
+> +	udelay(MESON_PCIE_RESET_DELAY);
+> +
+> +out:
+> +	return ret;
+> +}
+> +
+> +static const struct phy_ops phy_axg_pcie_ops = {
+> +	.init = phy_axg_pcie_init,
+> +	.exit = phy_axg_pcie_exit,
+> +	.power_on = phy_axg_pcie_power_on,
+> +	.power_off = phy_axg_pcie_power_off,
+> +	.reset = phy_axg_pcie_reset,
+> +	.owner = THIS_MODULE,
+> +};
+> +
+> +static int phy_axg_pcie_probe(struct platform_device *pdev)
+> +{
+> +	struct phy_provider *pphy;
+> +	struct device *dev = &pdev->dev;
+> +	struct phy_axg_pcie_priv *priv;
+> +	struct device_node *np = dev->of_node;
+> +	struct resource *res;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
+> +	if (IS_ERR(priv->phy)) {
+> +		ret = PTR_ERR(priv->phy);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to create PHY\n");
+> +		return ret;
+> +	}
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	base = devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(base))
+> +		return PTR_ERR(base);
+> +
+> +	priv->regmap = devm_regmap_init_mmio(dev, base,
+> +					     &phy_axg_pcie_regmap_conf);
+> +	if (IS_ERR(priv->regmap))
+> +		return PTR_ERR(priv->regmap);
+> +
+> +	priv->reset = devm_reset_control_array_get(dev, false, false);
+> +	if (IS_ERR(priv->reset))
+> +		return PTR_ERR(priv->reset);
+> +
+> +	priv->analog = devm_phy_get(dev, "analog");
+> +	if (IS_ERR(priv->analog))
+> +		return PTR_ERR(priv->analog);
+> +
+> +	phy_set_drvdata(priv->phy, priv);
+> +	dev_set_drvdata(dev, priv);
+> +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
+> +
+> +	return PTR_ERR_OR_ZERO(pphy);
+> +}
+> +
+> +static const struct of_device_id phy_axg_pcie_of_match[] = {
+> +	{
+> +		.compatible = "amlogic,axg-pcie-phy",
+> +	},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
+> +
+> +static struct platform_driver phy_axg_pcie_driver = {
+> +	.probe = phy_axg_pcie_probe,
+> +	.driver = {
+> +		.name = "phy-axg-pcie",
+> +		.of_match_table = phy_axg_pcie_of_match,
+> +	},
+> +};
+> +module_platform_driver(phy_axg_pcie_driver);
+> +
+> +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
+> +MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
+> +MODULE_LICENSE("GPL v2");
+> 
 
-Isn't it looping infinitely? cond_resched() won't help in such case.
+The changes since v5 are done (make analog phy mandatory), ok for me then.
+
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+
