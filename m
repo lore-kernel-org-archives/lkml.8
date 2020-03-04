@@ -2,167 +2,164 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ECEAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF676C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C12021741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:58:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583315889;
-	bh=oxAtT37t/QUW55WYFQJAXgnKHOjMiX3jaKwrTE01Ujg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yKEZwHWBmUcABXOHViHoGDfUT55NsAKHYF2YOrZsLsHgH5pUq8bwbzk7yjJMoodG5
-	 JReeUVF9agGvknG64Uo+j8AvTwsywzqDDV9ft1kQu8L6siW24OGm5BZswZH//pExQy
-	 HfrSGcZcviPhM4YFCBjAYC8mUCLXaLXlSGUp4yfM=
+	by mail.kernel.org (Postfix) with ESMTP id A643421741
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:03:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="y5E+wMg9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgCDJ6H (ORCPT
+        id S1728988AbgCDKDf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:58:07 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39919 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727734AbgCDJ6H (ORCPT
+        Wed, 4 Mar 2020 05:03:35 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36752 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbgCDKDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:58:07 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j1so1174373wmi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 01:58:04 -0800 (PST)
+        Wed, 4 Mar 2020 05:03:34 -0500
+Received: by mail-wm1-f68.google.com with SMTP id g83so1202843wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:03:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:autocrypt:organization:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XASc5pfORXYFJOcvcFfrv1FY9S9TSUUxH/SjHngwi20=;
+        b=y5E+wMg9L2TXJSTzTauBIGPuZKTRjLOW89CWTVd5TK/MdLKO1lHbVMHs6D0N1JfLYo
+         XSlqEVThd+Oym+CJC9CNsMrONxCbKVHTdzbOf6NollHtwFziyfVkARSJT1TVPtLBEZYj
+         2y1fFZ6fHGYaM1Aze1ZWoOsFWtoeXzgFp6P3vdjrpVwpBBVqaSRWA1/Bp9Z5y5i3uMNS
+         4Iy/S7g+gA0cnNyw3mumfydMzhG5Akptgk+qojURfxVlDzhcTkVmNUb53bgoGuo/JW93
+         VOstFek6CziW4EhbI7lWkXCwHOSpei7gNkzahg3McaYezF5+54qG/Zb1NdHhbC3BzMSB
+         Q91g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=tGkuJq9p7Ujsv2LZVWZ4XnLUpkAhIf+I1//fbYjfoC4=;
-        b=cfvfojxWJtnKVaUfOyUm8P8JazMxIi+4+nTl7dyKaYJLzITn7HHkNuwIxC5fB7FIj1
-         iJQCe/GPz8oiUpifOLWe0nE3YnmPcq8m+Ud5q+Rwvm4Eyx4+6Ym9s6la0JONQWNzvLMP
-         ccNu4U8b2JhbF/M09omaAnmbXO3sQQ8jmrvIrp1H9/voYQ8K6uw7fUTIjPmzZUyBAter
-         d/NjRB+3Rfjh2nmlFEiOczKY/gx94Ud4EePl0jq8rpprD4g2gg25qPDbBjCzd9wmhf6a
-         Kp3UtXmPJmAiFszRwZMNdGZmBvkopXtKOs698xkUQPW1ElgriheyqLBvmPlU+dAFn+CN
-         oU+Q==
-X-Gm-Message-State: ANhLgQ2jCQ35C/qU5r6KPEOMP2BUOlIZN2a41iOdRK1EkAAB64Oiuu0I
-        t2gBI6M1ASprLP25T4QyQEo=
-X-Google-Smtp-Source: ADFU+vuFxdLBbgqv3WPYMXE5mn7YP+bwIMqE1mGl64ybhaFXG9feJd6vOS3+/Qrgylc2g8UEVXyS2g==
-X-Received: by 2002:a1c:2701:: with SMTP id n1mr531963wmn.180.1583315884003;
-        Wed, 04 Mar 2020 01:58:04 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id u17sm13594305wrq.74.2020.03.04.01.58.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 01:58:03 -0800 (PST)
-Date:   Wed, 4 Mar 2020 10:58:02 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     Mel Gorman <mgorman@suse.de>, David Hildenbrand <david@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Vlastimil Babka <vbabka@suse.cz>,
-        Zi Yan <ziy@nvidia.com>, Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
-Message-ID: <20200304095802.GE16139@dhcp22.suse.cz>
-References: <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
- <871rqf850z.fsf@yhuang-dev.intel.com>
- <20200228094954.GB3772@suse.de>
- <87h7z76lwf.fsf@yhuang-dev.intel.com>
- <20200302151607.GC3772@suse.de>
- <87zhcy5hoj.fsf@yhuang-dev.intel.com>
- <20200303080945.GX4380@dhcp22.suse.cz>
- <87o8td4yf9.fsf@yhuang-dev.intel.com>
- <20200303085805.GB4380@dhcp22.suse.cz>
- <87ftep4pzy.fsf@yhuang-dev.intel.com>
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=XASc5pfORXYFJOcvcFfrv1FY9S9TSUUxH/SjHngwi20=;
+        b=WRMRSz6hW+dipePY3b/6lHVMj69z5+qK27Iirh3HvIug7WKY+JrEEcd854a3VqDQvv
+         rp1mKl2xbSilnwsSJzjT0MFuZnjU+ySLnU2suUwDQB2OuMaw7JavN9fuIOk4JKfPAuDx
+         bFecqTEbmCOftuAmrDiOSvKL80DyDB6dT2qiCwTPE46tYARZAi9ZTsyHd4EwQ2W4NCtn
+         aPa4zJ1DHMHF2NCk765RiChSnTroFIiOOHk2mCWmkuaj464/zcEUmunYW4K4I79VjW5L
+         KSfkpChqQZ/EU1R5jIvQPLOmotQqK8xz4AoIo/Cg6mL0y1gXElN3sJ/ad2hpbrrzOSZO
+         1G8A==
+X-Gm-Message-State: ANhLgQ1bBKrdLD7WWupFvVv0jaNOoS1dY7+BSkRGpf6lCZIVzzlCrNR+
+        O09zvHsiu4rBRkRSdbrGLUplqQ==
+X-Google-Smtp-Source: ADFU+vt3IWN1C2XyOAznoVBbOmgqr+bjcXZ4zI1Ah8fzQf1sD3h+oSNMBTFSdVeHo2UQk9O3L3rDww==
+X-Received: by 2002:a1c:7714:: with SMTP id t20mr2817677wmi.174.1583316211253;
+        Wed, 04 Mar 2020 02:03:31 -0800 (PST)
+Received: from [10.1.3.173] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id s22sm3221091wmc.16.2020.03.04.02.03.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 02:03:30 -0800 (PST)
+Subject: Re: [PATCH] pinctrl: meson: add tsin pinctrl for meson gxbb/gxl/gxm
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Christian Hewitt <christianshewitt@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc:     Kevin Hilman <khilman@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Igor Vavro <afl2001@gmail.com>
+References: <1583124056-94785-1-git-send-email-christianshewitt@gmail.com>
+ <CACRpkdZ4+-26Q01nx9iFJLUSCfM0Cuh6U8=gdtP=63xMd+2jqA@mail.gmail.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ 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
+ BSwxi7g3Mu7u5kUByanqHyA=
+Organization: Baylibre
+Message-ID: <999512c9-e50b-af51-7875-7fe9fca665de@baylibre.com>
+Date:   Wed, 4 Mar 2020 11:03:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87ftep4pzy.fsf@yhuang-dev.intel.com>
+In-Reply-To: <CACRpkdZ4+-26Q01nx9iFJLUSCfM0Cuh6U8=gdtP=63xMd+2jqA@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 03-03-20 19:49:53, Huang, Ying wrote:
-> Michal Hocko <mhocko@kernel.org> writes:
+Hi,
+
+On 03/03/2020 13:40, Linus Walleij wrote:
+> On Mon, Mar 2, 2020 at 5:41 AM Christian Hewitt
+> <christianshewitt@gmail.com> wrote:
 > 
-> > On Tue 03-03-20 16:47:54, Huang, Ying wrote:
-> >> Michal Hocko <mhocko@kernel.org> writes:
-> >> 
-> >> > On Tue 03-03-20 09:51:56, Huang, Ying wrote:
-> >> >> Mel Gorman <mgorman@suse.de> writes:
-> >> >> > On Mon, Mar 02, 2020 at 07:23:12PM +0800, Huang, Ying wrote:
-> >> >> >> If some applications cannot tolerate the latency incurred by the memory
-> >> >> >> allocation and zeroing.  Then we cannot discard instead of migrate
-> >> >> >> always.  While in some situations, less memory pressure can help.  So
-> >> >> >> it's better to let the administrator and the application choose the
-> >> >> >> right behavior in the specific situation?
-> >> >> >> 
-> >> >> >
-> >> >> > Is there an application you have in mind that benefits from discarding
-> >> >> > MADV_FREE pages instead of migrating them?
-> >> >> >
-> >> >> > Allowing the administrator or application to tune this would be very
-> >> >> > problematic. An application would require an update to the system call
-> >> >> > to take advantage of it and then detect if the running kernel supports
-> >> >> > it. An administrator would have to detect that MADV_FREE pages are being
-> >> >> > prematurely discarded leading to a slowdown and that is hard to detect.
-> >> >> > It could be inferred from monitoring compaction stats and checking
-> >> >> > if compaction activity is correlated with higher minor faults in the
-> >> >> > target application. Proving the correlation would require using the perf
-> >> >> > software event PERF_COUNT_SW_PAGE_FAULTS_MIN and matching the addresses
-> >> >> > to MADV_FREE regions that were freed prematurely. That is not an obvious
-> >> >> > debugging step to take when an application detects latency spikes.
-> >> >> >
-> >> >> > Now, you could add a counter specifically for MADV_FREE pages freed for
-> >> >> > reasons other than memory pressure and hope the administrator knows about
-> >> >> > the counter and what it means. That type of knowledge could take a long
-> >> >> > time to spread so it's really very important that there is evidence of
-> >> >> > an application that suffers due to the current MADV_FREE and migration
-> >> >> > behaviour.
-> >> >> 
-> >> >> OK.  I understand that this patchset isn't a universal win, so we need
-> >> >> some way to justify it.  I will try to find some application for that.
-> >> >> 
-> >> >> Another thought, as proposed by David Hildenbrand, it's may be a
-> >> >> universal win to discard clean MADV_FREE pages when migrating if there are
-> >> >> already memory pressure on the target node.  For example, if the free
-> >> >> memory on the target node is lower than high watermark?
-> >> >
-> >> > This is already happening because if the target node is short on memory
-> >> > it will start to reclaim and if MADV_FREE pages are at the tail of
-> >> > inactive file LRU list then they will be dropped. Please note how that
-> >> > follows proper aging and doesn't introduce any special casing. Really
-> >> > MADV_FREE is an inactive cache for anonymous memory and we treat it like
-> >> > inactive page cache. This is not carved in stone of course but it really
-> >> > requires very good justification to change.
-> >> 
-> >> If my understanding were correct, the newly migrated clean MADV_FREE
-> >> pages will be put at the head of inactive file LRU list instead of the
-> >> tail.  So it's possible that some useful file cache pages will be
-> >> reclaimed.
-> >
-> > This is the case also when you migrate other pages, right? We simply
-> > cannot preserve the aging.
+>> From: Igor Vavro <afl2001@gmail.com>
+>>
+>> Add the tsin pinctrl definitions needed for integrated DVB hardware
+>> support on Meson GXBB/GXL/GXM boards.
+>>
+>> Signed-off-by: Igor Vavro <afl2001@gmail.com>
+>> [updated commit message]
+>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
 > 
-> So you consider the priority of the clean MADV_FREE pages is same as
-> that of page cache pages?
+> Can I get Martin and/or Neil to review this?
 
-This is how MADV_FREE has been implemented, yes. See f7ad2a6cb9f7 ("mm:
-move MADV_FREE pages into LRU_INACTIVE_FILE list") for the
-justification.
+Otto replied on linux-amlogic only, reporting an issue with the path, also
+modifying the uart_c pin registers bits.
 
-> Because the penalty difference is so large, I
-> think it may be a good idea to always put clean MADV_FREE pages at the
-> tail of the inactive file LRU list?
+So it needs a resend.
 
-You are again making assumptions without giving any actual real
-examples. Reconstructing MADV_FREE pages cost can differ a lot. This
-really depends on the specific usecase. Moving pages to the tail of LRU
-would make them the primary candidate for the reclaim with a strange
-LIFO semantic. Adding them to the head might be not the universal win
-but it will at least provide a reasonable FIFO semantic. I also find
-it much more easier to reason about MADV_FREE as an inactive cache.
--- 
-Michal Hocko
-SUSE Labs
+Neil
+
+> 
+> Yours,
+> Linus Walleij
+> 
+
