@@ -2,131 +2,113 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42183C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A28C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADFA21775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599912146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:35:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K2zkK61c"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ou8iH/Cm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730153AbgCDSfA (ORCPT
+        id S2388189AbgCDSfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:35:00 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53670 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgCDSe7 (ORCPT
+        Wed, 4 Mar 2020 13:35:53 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:45429 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgCDSfx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:34:59 -0500
-Received: by mail-wm1-f68.google.com with SMTP id g134so3307030wme.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:34:58 -0800 (PST)
+        Wed, 4 Mar 2020 13:35:53 -0500
+Received: by mail-qv1-f68.google.com with SMTP id r8so1233615qvs.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:35:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8DRq31dVT2gcFH3XXRtqpgig/7H0t/mX4ebDUqxQJAM=;
-        b=K2zkK61c2TNW7EUI2Xo/xumazBlU352yLQ8Je3IUqoaUeb9Fj5WXxGXfTelu0rxweA
-         ObkurjlXbq7kKvzJnlUaYK6MV23HpRq6o1fADQJq2vWs3oshVhduVquYNUyMlbMYahbR
-         PJNMcUIuLJjo0nH4eGvCiHgv9H88OuZBtXnHYx0c6QNe8ti5T6nUJumoJ+iaU1oYEtW/
-         4XVPJyD7oyY/uIF7GI9fhE0iAysskUb+HW/wCTDhfvCkO9CtdEV+kJ3CdqWGoIK5RDyh
-         H9wNzAlUkJ+wFWngJvKmHcfSdLHeWE2EDmbaKbD+6zLEyJl9mQmr7XeO58/PNZ/OR9Y9
-         rjTg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ReviJMD+t2nTkEcKpffaEWec1dHi6/oSh/k3dSk9bzo=;
+        b=ou8iH/CmjpYntl/F9Fkt9NpoWHT1vt58MYkHsWR2qot/Pb08OC4XP2hmLo0dXZT2wW
+         3vtMulFdr0ZguIe8awZGOexU+uB6E69wj0GsFTUGVpbTwTphtVql/9oW23CkTkAirAey
+         NNq968SS9AjV7+5SpMKlo5OA2yWyHjtkQXT7UjoUH+hNGVLjZ8kC5xTXry37thc3aoJw
+         8IWze8/4UXaCe7jdPndqaR8+cOYAEpS80tRToFPebLi52O7s8Sz2NdllDKQTSB37UiP3
+         +mF5JSzg5Px2b86YJ+lGK/T25BZLkHNCrTiDQYN1wzdfmxqVW3qPC7cRmr9Bx/tdNpE6
+         OPmQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8DRq31dVT2gcFH3XXRtqpgig/7H0t/mX4ebDUqxQJAM=;
-        b=TX95L4maTWB5EaQTK36pEvH6UK/+LqO9IgCDcGmgktXpq4PCpr4fN7HbyxgTF9MGcJ
-         WvKE5J2x7gybZfnOYfz0tpL8/a98bPBS3ByHwxbPRVIsxg7wgPkUeWOPIa79i9WoDLQ/
-         EivO0tuegR3lD9rChht/E41RynuF33kiFqr9alk2AuMe5DmI0evk/cxIv/AH4uqqPTHm
-         G46jnk2xtSnoNP6EeKwB05BZ86uoL14HoebFGQNzzCy3CmWZQqAvTIvzDyGo96Z9OvpW
-         lshEvG36lAdQjzoIar0J5X3iVCudP6WvXmZND+u0SPS80onayA/3XvdSNeCeVtSk3S1+
-         2OJg==
-X-Gm-Message-State: ANhLgQ1r+Gh3dlpHWA8nUIcVM0d5EwhCiil3dyFJmRwiM/AIYACwKS8u
-        qIfSu/ZBTs1OZNV/lXYLO9Gt5DzoukXXRZazVWQ=
-X-Google-Smtp-Source: ADFU+vuqsD45qASCZnH8XxkPs5xXkVU9VR6SGpBNUzkMJaS9wuU7zXFDdGM4NqqOgbJGLMQvM56J9z4ljMWTDVqqPO4=
-X-Received: by 2002:a05:600c:286:: with SMTP id 6mr4934184wmk.56.1583346897405;
- Wed, 04 Mar 2020 10:34:57 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ReviJMD+t2nTkEcKpffaEWec1dHi6/oSh/k3dSk9bzo=;
+        b=iv8KOcLaPAXzaQHivLdd+WCd26Se44z+KiQgF7HvkanF44svswzagvHucUiAPWzQDH
+         OxF2TBMzTMNIv/GsiAfPRVnP4d+7Dy52Kkf1stJ9qZZjpXAQUJQqgZNl32cAZXBhdVWy
+         riZWbUBa41ALYs10vKdXRtLdQk34H0yAGFQ1bGhAEGLT/RBzXGgO57+dEaWNOTFcYb4G
+         f6FgNizYGDP0vAINUkjWykE1WGJAwzYSYuF5Qn6373We2H+l0s4SXZaAb6YisO5HMB1M
+         pDcVMJwEJ6z/WhrIW9HHqlGQyMXcn03HrCXWVKzlqDMyLj7C981sK8C/VmZKz1uMpg4w
+         16+Q==
+X-Gm-Message-State: ANhLgQ2XseNvrFI+bdHWYF2aTclmVt9W1C5YFIIL0PrZwrusqq85cMCE
+        fhsMGwYIfwIgi7XStzLk3eY0IQ==
+X-Google-Smtp-Source: ADFU+vvvZIHBlgSHtiNu2mflD58ZD6RxqmLjV27603PngSRA/NMR4qXG9NtD3FBZdi3dYx/h7CEpfw==
+X-Received: by 2002:a0c:8402:: with SMTP id l2mr3119381qva.227.1583346952100;
+        Wed, 04 Mar 2020 10:35:52 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id l2sm7743975qtq.16.2020.03.04.10.35.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Mar 2020 10:35:51 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j9Ys3-0003R9-2h; Wed, 04 Mar 2020 14:35:51 -0400
+Date:   Wed, 4 Mar 2020 14:35:51 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Bernard Metzler <bmt@zurich.ibm.com>
+Cc:     dledford@redhat.com, kamalheib1@gmail.com, krishna2@chelsio.com,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH for-rc] RDMA/iwcm: Fix iwcm work deallocation
+Message-ID: <20200304183551.GA7859@ziepe.ca>
+References: <20200302181614.17042-1-bmt@zurich.ibm.com>
 MIME-Version: 1.0
-References: <20200302224217.22590-1-natechancellor@gmail.com>
-In-Reply-To: <20200302224217.22590-1-natechancellor@gmail.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 4 Mar 2020 13:34:46 -0500
-Message-ID: <CADnq5_Me3VGP=WfDuSfwC705b_XVENyn6q9SRU7=pXW-2xEdvg@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Remove pointless NULL checks in dmub_psr_copy_settings
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302181614.17042-1-bmt@zurich.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 5:43 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dmub_psr.c:147:31: warning:
-> address of 'pipe_ctx->plane_res' will always evaluate to 'true'
-> [-Wpointer-bool-conversion]
->         if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
->                          ~ ~~~~~~~~~~^~~~~~~~~
-> drivers/gpu/drm/amd/amdgpu/../display/dc/dce/dmub_psr.c:147:56: warning:
-> address of 'pipe_ctx->stream_res' will always evaluate to 'true'
-> [-Wpointer-bool-conversion]
->         if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
->                                                   ~ ~~~~~~~~~~^~~~~~~~~~
-> 2 warnings generated.
->
-> As long as pipe_ctx is not NULL, the address of members in this struct
-> cannot be NULL, which means these checks will always evaluate to false.
->
-> Fixes: 4c1a1335dfe0 ("drm/amd/display: Driverside changes to support PSR in DMCUB")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/915
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-
-Applied.  Thanks!
-
-Alex
-
-
+On Mon, Mar 02, 2020 at 07:16:14PM +0100, Bernard Metzler wrote:
+> The dealloc_work_entries() function must update the
+> work_free_list pointer while freeing its entries, since
+> potentially called again on same list. A second iteration
+> of the work list caused system crash. This happens, if
+> work allocation fails during cma_iw_listen() and
+> free_cm_id() tries to free the list again during cleanup.
+> 
+> Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
+> Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
 > ---
->  drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-> index 2c932c29f1f9..a9e1c01e9d9b 100644
-> --- a/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-> +++ b/drivers/gpu/drm/amd/display/dc/dce/dmub_psr.c
-> @@ -144,7 +144,7 @@ static bool dmub_psr_copy_settings(struct dmub_psr *dmub,
->                 }
->         }
->
-> -       if (!pipe_ctx || !&pipe_ctx->plane_res || !&pipe_ctx->stream_res)
-> +       if (!pipe_ctx)
->                 return false;
->
->         // First, set the psr version
-> --
-> 2.25.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+>  drivers/infiniband/core/iwcm.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+
+Applied to for-rc, please include Fixes lines in patches like this, I
+added one
+ 
+ diff --git a/drivers/infiniband/core/iwcm.c b/drivers/infiniband/core/iwcm.c
+> index ade71823370f..da8adadf4755 100644
+> --- a/drivers/infiniband/core/iwcm.c
+> +++ b/drivers/infiniband/core/iwcm.c
+> @@ -159,8 +159,10 @@ static void dealloc_work_entries(struct iwcm_id_private *cm_id_priv)
+>  {
+>  	struct list_head *e, *tmp;
+>  
+> -	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list)
+> +	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list) {
+> +		list_del(e);
+>  		kfree(list_entry(e, struct iwcm_work, free_list));
+
+It would be nice if someone were to fix the use of the list macros in
+this file to use the _entry_ versions
+
+Jason
