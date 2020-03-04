@@ -8,64 +8,61 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE84DC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A63EDC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:51:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C0C120637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74D6720675
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:51:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tfTyG1nv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RvMWVXFv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbgCDAvB (ORCPT
+        id S1728343AbgCDAv2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:51:01 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:34910 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727895AbgCDAvB (ORCPT
+        Tue, 3 Mar 2020 19:51:28 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:52905 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727895AbgCDAv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:51:01 -0500
-Received: by mail-pj1-f67.google.com with SMTP id s8so118879pjq.0;
-        Tue, 03 Mar 2020 16:50:59 -0800 (PST)
+        Tue, 3 Mar 2020 19:51:27 -0500
+Received: by mail-pj1-f66.google.com with SMTP id lt1so110361pjb.2;
+        Tue, 03 Mar 2020 16:51:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=YjDxnROOsFBZHH9G4FkwXuXreuByRCX6q2DAdQ6+okY=;
-        b=tfTyG1nvuYZjCHvhLdckSkWT0ydHTOp26o/TpzJtgDi372G8CIy9PQvX/6lJKr3bYm
-         kZ51baTCu5A6t2GzydkX5hH54CVKkANwxX9qGZiFqJdVq+bYQE7OlzcinCcGy8GMNHCH
-         Fm7E53rUzGAsN5PK5kWqjfxuf2+iHvwYIbQlis9AUOFBJQK2jZUw/lrn7YDwKtty4nYH
-         imOmmTxzoWWsmgjXQxtUoIZZsIUUDZ/p64rj/72GgBJNhxqkNx+DoGF7v4dkPALyIbhI
-         /D86tPtXbSF7/w3pTxCpQPDr95EovA4G0+vmkUfCRU7ItyQAE7HgTDxEs786gqaDs5Z2
-         CVPQ==
+        bh=lloNdMClJUSkvGhdIQ2BDntfP0IRWiqdPxWclRqCiGw=;
+        b=RvMWVXFvSBYEeHr9ldSCUeTVDLSVZq2zLb5lJkMCPfhbvAnve8mbBBK6ETIJoYU/El
+         aZ0eFdltzmbf+2ZhrDxZ5EPXSwV6A6oBvhu977alMLc17gGlIvf2eT+Kmmrn2nfatSCG
+         Crxegw5BKcntlWzGXtmChqscDoxQiX7HOunteg8hHBVW2tH6iDJtahv/NSk9RvzJj7tv
+         7JaESdmc0lZPr74DGby2AajKCpgcDDD2Z3v/LbJ79vuwl6HkJqs74u8wP4KaSe+YjQEW
+         OJHB+MpRx4NqTRM99laoYugpAMhz7FosJHzSa6fz+hDJC2G6YoA9Np/kO7H/s+vdqPu9
+         2qBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YjDxnROOsFBZHH9G4FkwXuXreuByRCX6q2DAdQ6+okY=;
-        b=E0frPc13CRgOFcd1mOrx+PS81hD74wBzMAHNgAdKeLChFfb+TtKmgBePgfN0eFKdKJ
-         6kwVym36KrhsWuAExhSVtXuncMdwnooLS640zdN3aF7UoRPTkKEkMd3jdOZDZUFpBVYE
-         Uf0iJ7AKunE9ECeBPrw+akWzW2cLk6h0rbgpgjHaih2Yb+e5j1EtC8jR2xcQa3AS1blA
-         EXIagA9HV9F/XRXRJcHedS38207w0/8Oa5YlYPiQGLEIlMh5v4Qq9EVloztkSd9SEP5H
-         7agWFK9Q5xNE7of0ZHc2pZOfiiOSNx5dERSO9xqH56TrPK0wCD7Ll13/BQq9r2TLC6YM
-         GidA==
-X-Gm-Message-State: ANhLgQ3PPGZ6V7JfW+F/maJkwQ44pb1yqB/ZYwlsFNM1uM5daONjSTJ9
-        tzWU87JxrxQRKkMeHqakL8ZwkzKg
-X-Google-Smtp-Source: ADFU+vs0IvL1EKnpHzB57Z+NA8IvfOLXojPeqBsfUktUQoHUL6iVb/zNL9/XppifWe3mOU7ModOkHg==
-X-Received: by 2002:a17:902:9886:: with SMTP id s6mr611605plp.100.1583283058310;
-        Tue, 03 Mar 2020 16:50:58 -0800 (PST)
+        bh=lloNdMClJUSkvGhdIQ2BDntfP0IRWiqdPxWclRqCiGw=;
+        b=e7qmoWzRKenMBE6CZy81EtUKMo1pjkLFEMB5ALvH08OerDOh0a3Avsvw3mL0bn8MPN
+         rnqmXgEWIm+b8K5Hh9eWv3jBx/1EBGko5q+QBtsTfbR7pWkx5rNmEdl9jUCGNk9hj6/F
+         L2uwWrAlwzdffgrlYvyjD5FpXTBxI7LJFIWxnNrY27D9I0/N7eghp5lI5y6fIcVWhwfI
+         Yx+iLoW+C+khuNbjz7CI+KnXSUGAe+k8LOC/7KEb0rXiD1QE4uZa4O2sJTLJ3lX4/fy0
+         7YYfckRv3B5GUUhsUwmNqrumttHguNIby9Kmx9NB+QBhjqQaSWzByVtQONYpWWj4yznu
+         OTMA==
+X-Gm-Message-State: ANhLgQ1ZP5sxyG0WhwOYS78LjUp14sa1IhgbY2vc9aC5VaiSMH4rqMBm
+        tRaEz/xSkKDk2RwxHuumIiOcphNT
+X-Google-Smtp-Source: ADFU+vsPClorgsn7Ak9F7F8JQ/7j80VJj5SsOnphgb90r20BaUoie/KqjAmU48aPRABYEPe4YRLZzQ==
+X-Received: by 2002:a17:90a:328f:: with SMTP id l15mr275722pjb.55.1583283085004;
+        Tue, 03 Mar 2020 16:51:25 -0800 (PST)
 Received: from localhost.localdomain ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id r13sm343720pjp.14.2020.03.03.16.50.55
+        by smtp.gmail.com with ESMTPSA id y197sm27259685pfc.79.2020.03.03.16.51.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 16:50:57 -0800 (PST)
+        Tue, 03 Mar 2020 16:51:24 -0800 (PST)
 From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+To:     linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: [PATCH v3] s390: replace setup_irq() by request_irq()
-Date:   Wed,  4 Mar 2020 06:20:48 +0530
-Message-Id: <20200304005049.5291-1-afzal.mohd.ma@gmail.com>
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>
+Subject: [PATCH v3] sh: replace setup_irq() by request_irq()
+Date:   Wed,  4 Mar 2020 06:21:19 +0530
+Message-Id: <20200304005120.5403-1-afzal.mohd.ma@gmail.com>
 X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -84,7 +81,7 @@ Hence replace setup_irq() by request_irq().
 
 Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
 ---
-Hi s390 maintainers,
+Hi sh maintainers,
 
 if okay w/ this change, please consider taking it thr' your tree, else please
 let me know.
@@ -108,83 +105,71 @@ v2:
            pr_err("%s: request_irq() failed"
  * Commit message massage
 
- arch/s390/kernel/irq.c  | 8 ++------
- drivers/s390/cio/airq.c | 8 ++------
- drivers/s390/cio/cio.c  | 8 ++------
- 3 files changed, 6 insertions(+), 18 deletions(-)
+ arch/sh/boards/mach-cayman/irq.c | 18 ++++++------------
+ arch/sh/drivers/dma/dma-pvr2.c   |  9 +++------
+ 2 files changed, 9 insertions(+), 18 deletions(-)
 
-diff --git a/arch/s390/kernel/irq.c b/arch/s390/kernel/irq.c
-index 8371855042dc..015c9dc45f7d 100644
---- a/arch/s390/kernel/irq.c
-+++ b/arch/s390/kernel/irq.c
-@@ -294,11 +294,6 @@ static irqreturn_t do_ext_interrupt(int irq, void *dummy)
- 	return IRQ_HANDLED;
+diff --git a/arch/sh/boards/mach-cayman/irq.c b/arch/sh/boards/mach-cayman/irq.c
+index 3b6ea2d99013..0305d0b51730 100644
+--- a/arch/sh/boards/mach-cayman/irq.c
++++ b/arch/sh/boards/mach-cayman/irq.c
+@@ -40,16 +40,6 @@ static irqreturn_t cayman_interrupt_pci2(int irq, void *dev_id)
+ 	return IRQ_NONE;
  }
  
--static struct irqaction external_interrupt = {
--	.name	 = "EXT",
--	.handler = do_ext_interrupt,
+-static struct irqaction cayman_action_smsc = {
+-	.name		= "Cayman SMSC Mux",
+-	.handler	= cayman_interrupt_smsc,
 -};
 -
- void __init init_ext_interrupts(void)
- {
- 	int idx;
-@@ -308,7 +303,8 @@ void __init init_ext_interrupts(void)
- 
- 	irq_set_chip_and_handler(EXT_INTERRUPT,
- 				 &dummy_irq_chip, handle_percpu_irq);
--	setup_irq(EXT_INTERRUPT, &external_interrupt);
-+	if (request_irq(EXT_INTERRUPT, do_ext_interrupt, 0, "EXT", NULL))
-+		pr_err("Failed to register EXT interrupt\n");
- }
- 
- static DEFINE_SPINLOCK(irq_subclass_lock);
-diff --git a/drivers/s390/cio/airq.c b/drivers/s390/cio/airq.c
-index 427b2e24a8ce..a860da77b0d1 100644
---- a/drivers/s390/cio/airq.c
-+++ b/drivers/s390/cio/airq.c
-@@ -105,16 +105,12 @@ static irqreturn_t do_airq_interrupt(int irq, void *dummy)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction airq_interrupt = {
--	.name	 = "AIO",
--	.handler = do_airq_interrupt,
+-static struct irqaction cayman_action_pci2 = {
+-	.name		= "Cayman PCI2 Mux",
+-	.handler	= cayman_interrupt_pci2,
 -};
 -
- void __init init_airq_interrupts(void)
+ static void enable_cayman_irq(struct irq_data *data)
  {
- 	irq_set_chip_and_handler(THIN_INTERRUPT,
- 				 &dummy_irq_chip, handle_percpu_irq);
--	setup_irq(THIN_INTERRUPT, &airq_interrupt);
-+	if (request_irq(THIN_INTERRUPT, do_airq_interrupt, 0, "AIO", NULL))
-+		pr_err("Failed to register AIO interrupt\n");
+ 	unsigned int irq = data->irq;
+@@ -149,6 +139,10 @@ void init_cayman_irq(void)
+ 	}
+ 
+ 	/* Setup the SMSC interrupt */
+-	setup_irq(SMSC_IRQ, &cayman_action_smsc);
+-	setup_irq(PCI2_IRQ, &cayman_action_pci2);
++	if (request_irq(SMSC_IRQ, cayman_interrupt_smsc, 0, "Cayman SMSC Mux",
++			NULL))
++		pr_err("Failed to register Cayman SMSC Mux interrupt\n");
++	if (request_irq(PCI2_IRQ, cayman_interrupt_pci2, 0, "Cayman PCI2 Mux",
++			NULL))
++		pr_err("Failed to register Cayman PCI2 Mux interrupt\n");
+ }
+diff --git a/arch/sh/drivers/dma/dma-pvr2.c b/arch/sh/drivers/dma/dma-pvr2.c
+index b5dbd1f75768..21c347543e19 100644
+--- a/arch/sh/drivers/dma/dma-pvr2.c
++++ b/arch/sh/drivers/dma/dma-pvr2.c
+@@ -64,11 +64,6 @@ static int pvr2_xfer_dma(struct dma_channel *chan)
+ 	return 0;
  }
  
- static inline unsigned long iv_size(unsigned long bits)
-diff --git a/drivers/s390/cio/cio.c b/drivers/s390/cio/cio.c
-index 18f5458f90e8..94a66d6d32a3 100644
---- a/drivers/s390/cio/cio.c
-+++ b/drivers/s390/cio/cio.c
-@@ -563,16 +563,12 @@ static irqreturn_t do_cio_interrupt(int irq, void *dummy)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction io_interrupt = {
--	.name	 = "I/O",
--	.handler = do_cio_interrupt,
+-static struct irqaction pvr2_dma_irq = {
+-	.name		= "pvr2 DMA handler",
+-	.handler	= pvr2_dma_interrupt,
 -};
 -
- void __init init_cio_interrupts(void)
- {
- 	irq_set_chip_and_handler(IO_INTERRUPT,
- 				 &dummy_irq_chip, handle_percpu_irq);
--	setup_irq(IO_INTERRUPT, &io_interrupt);
-+	if (request_irq(IO_INTERRUPT, do_cio_interrupt, 0, "I/O", NULL))
-+		pr_err("Failed to register I/O interrupt\n");
- }
+ static struct dma_ops pvr2_dma_ops = {
+ 	.request	= pvr2_request_dma,
+ 	.get_residue	= pvr2_get_dma_residue,
+@@ -84,7 +79,9 @@ static struct dma_info pvr2_dma_info = {
  
- #ifdef CONFIG_CCW_CONSOLE
+ static int __init pvr2_dma_init(void)
+ {
+-	setup_irq(HW_EVENT_PVR2_DMA, &pvr2_dma_irq);
++	if (request_irq(HW_EVENT_PVR2_DMA, pvr2_dma_interrupt, 0,
++			"pvr2 DMA handler", NULL))
++		pr_err("Failed to register pvr2 DMA handler interrupt\n");
+ 	request_dma(PVR2_CASCADE_CHAN, "pvr2 cascade");
+ 
+ 	return register_dmac(&pvr2_dma_info);
 -- 
 2.25.1
 
