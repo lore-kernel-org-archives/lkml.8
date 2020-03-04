@@ -2,144 +2,104 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF693C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD645C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8719721744
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF2DE21744
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bz7/VMDY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LCcft+2Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbgCDLIL (ORCPT
+        id S1729497AbgCDLIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:08:11 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:34212 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729283AbgCDLIA (ORCPT
+        Wed, 4 Mar 2020 06:08:31 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33910 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729283AbgCDLIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:08:00 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024B46vf167257;
-        Wed, 4 Mar 2020 11:07:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=BabazQ5yP//ASrPjsFgmGIuh28CWLBs/R03HwSSNcmU=;
- b=bz7/VMDYrY9wwas4kpdEkI6DP0kdmz6zQjg+3JR6W3Y92NutFSpqLWKdwwK78y26TUMI
- 1URPnmKOUJ4Zne2gldyjkOH9pJ36t2KYrb6gglj0edjEXehtjslqIaXqs4d+3JKYaA9S
- vn28djzQApY5VX8VydTjsHMdrwo9vBvlSBf93+89nWwnNsrxEXh3YRXTYd6QR983W/aK
- rAviWa6EkNR7f9eDQ5eNlJwn+ZjPuW8PbJM9KDrCCPJBuNdH7w/KJz7l51johhyemNHq
- Ua+yFimiQ0BCxb1PxAI0YKgD5p0BrWIw/MSrG4NCsRn+axdwLrekZAEYKadXc0vuKh4x bw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2yffwqwm7y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Mar 2020 11:07:53 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024B3TYt027639;
-        Wed, 4 Mar 2020 11:07:52 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2yg1h0nbv0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Mar 2020 11:07:52 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 024B7pDv012708;
-        Wed, 4 Mar 2020 11:07:51 GMT
-Received: from dhcp-10-175-165-222.vpn.oracle.com (/10.175.165.222)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 04 Mar 2020 03:07:50 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, frowand.list@gmail.com,
-        gregkh@linuxfoundation.org, shuah@kernel.org
-Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v6 kunit-next 2/4] kunit: add log test
-Date:   Wed,  4 Mar 2020 11:07:14 +0000
-Message-Id: <1583320036-442-3-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1583320036-442-1-git-send-email-alan.maguire@oracle.com>
-References: <1583320036-442-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
- suspectscore=3 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040086
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
- impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=3
- phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003040086
+        Wed, 4 Mar 2020 06:08:31 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c21so325639edt.1;
+        Wed, 04 Mar 2020 03:08:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3yy/OH+uOLzdanIeOX7H2H64xTV/u4qsSGbI1/KJzyQ=;
+        b=LCcft+2QE7nFkT9X5HUWblXU5lWrxdJypIWyYJo3inXIcHdt0vKgmcK+IrS9h2dwro
+         qa7BWl8WjLE+T1r4EH2PRleIDulCN2puooKxfs9ZtRPiobwqs0Rb14VwbEkOfZTQwgn3
+         Ym2McuhANF2g8pWsych3r5aHBj0SN82uOP+vIjjbbxaGd2vuRnflMoCii7XWmOL8Pntg
+         0kyjp8rMjMYu2VnATJ+qoj1OpV3MibWfyDVuzupFeE6OTslpD0bWvABzyXRWRPpBKdDf
+         9s5HmswIkdR9d95fiOLl6UW6VAB91iHxRMXHr9NKD7UEr7PPjl7YdfdDHHjf4YTIRtXy
+         Hn5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3yy/OH+uOLzdanIeOX7H2H64xTV/u4qsSGbI1/KJzyQ=;
+        b=WPuwKFF1v1IoXaBQrqvhCH1PyZel58q6BG4jIJuhGLI2wavTk1WW3HtCpHMxfA4CSk
+         wmlWoZeZMVGQbtMdwa8AzRw6p6DKT1Owmsj96ZW2WmAUwS64EHogGlbiI2Y9Aoesl1Be
+         xFedDvlkxvcBB6zGFciWpkdRBSYs4+13Xbobmo91jTxfHlymsouxIzMqO2QwNmIUIfCb
+         G8P0fsFst1TmRwP51YBxqMd2XfusEWX8m9ArwJwHytNvV9zZLwFgtul/ky2NnBM1QKnc
+         pD50iLJuLpC/hiotHvl+v4wXF63NkHEKe12tjBnQ80LwLv3Z1X4kK6KpdZkbDn52hdk4
+         +ZbA==
+X-Gm-Message-State: ANhLgQ1E0H9zZpthsw2WlHpJd8k2Gfnr31VToiLyHGBeEaly6/P/tgwz
+        u3mhS9EXhDvZelgf++RATzYHEbm8qL8=
+X-Google-Smtp-Source: ADFU+vt49WpWk/Ua0NarpmOvy2WnwfqwmQwVx6samXjJI6itrKgzgZfzc16xKdY/y/XcYduymMXYBw==
+X-Received: by 2002:a50:fc85:: with SMTP id f5mr2142948edq.294.1583320109377;
+        Wed, 04 Mar 2020 03:08:29 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d16:4100:3093:39f0:d3ca:23c6])
+        by smtp.gmail.com with ESMTPSA id d1sm425796edc.71.2020.03.04.03.08.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 03:08:28 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Jonathan Corbet <corbet@lwn.net>, Sameer Rahmani <lxsameer@gnu.org>
+Cc:     linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust to kobject doc ReST conversion
+Date:   Wed,  4 Mar 2020 12:08:21 +0100
+Message-Id: <20200304110821.7243-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-the logging test ensures multiple strings logged appear in the
-log string associated with the test when CONFIG_KUNIT_DEBUGFS is
-enabled.
+Commit 5fed00dcaca8 ("Documentation: kobject.txt has been moved to
+core-api/kobject.rst") missed to adjust the entry in MAINTAINERS.
 
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+Since then, ./scripts/get_maintainer.pl --self-test complains:
+
+  warning: no file matches F: Documentation/kobject.txt
+
+Adjust DRIVER CORE, KOBJECTS, DEBUGFS AND SYSFS entry in MAINTAINERS.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
- lib/kunit/kunit-test.c | 41 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
+Sameer, please ack.
+Jonathan, pick pick this patch for doc-next.
 
-diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
-index aceb5bf..359bc26 100644
---- a/lib/kunit/kunit-test.c
-+++ b/lib/kunit/kunit-test.c
-@@ -329,6 +329,45 @@ static void kunit_resource_test_exit(struct kunit *test)
- 	.exit = kunit_resource_test_exit,
- 	.test_cases = kunit_resource_test_cases,
- };
--kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite);
-+
-+static void kunit_log_test(struct kunit *test);
-+
-+static struct kunit_case kunit_log_test_cases[] = {
-+	KUNIT_CASE(kunit_log_test),
-+	{}
-+};
-+
-+static struct kunit_suite kunit_log_test_suite = {
-+	.name = "kunit-log-test",
-+	.test_cases = kunit_log_test_cases,
-+};
-+
-+
-+static void kunit_log_test(struct kunit *test)
-+{
-+	struct kunit_suite *suite = &kunit_log_test_suite;
-+
-+	kunit_log(KERN_INFO, test, "put this in log.");
-+	kunit_log(KERN_INFO, test, "this too.");
-+	kunit_log(KERN_INFO, suite, "add to suite log.");
-+	kunit_log(KERN_INFO, suite, "along with this.");
-+
-+#ifdef CONFIG_KUNIT_DEBUGFS
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(test->log, "put this in log."));
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(test->log, "this too."));
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(suite->log, "add to suite log."));
-+	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
-+				     strstr(suite->log, "along with this."));
-+#else
-+	KUNIT_EXPECT_PTR_EQ(test, test->log, (char *)NULL);
-+	KUNIT_EXPECT_PTR_EQ(test, suite->log, (char *)NULL);
-+#endif
-+}
-+
-+kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite,
-+		  &kunit_log_test_suite);
- 
- MODULE_LICENSE("GPL v2");
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d064049aad1b..998d56e61a41 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5213,7 +5213,7 @@ M:	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+ R:	"Rafael J. Wysocki" <rafael@kernel.org>
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git
+ S:	Supported
+-F:	Documentation/kobject.txt
++F:	Documentation/core-api/kobject.rst
+ F:	drivers/base/
+ F:	fs/debugfs/
+ F:	fs/sysfs/
 -- 
-1.8.3.1
+2.17.1
 
