@@ -2,121 +2,137 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D01E2C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E043C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF22C20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F163A20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:38:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbgCDShx (ORCPT
+        id S1730174AbgCDSin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:37:53 -0500
-Received: from www62.your-server.de ([213.133.104.62]:57978 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729703AbgCDShx (ORCPT
+        Wed, 4 Mar 2020 13:38:43 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:33000 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgCDSim (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:37:53 -0500
-Received: from sslproxy05.your-server.de ([78.46.172.2])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j9Yty-0006bb-7P; Wed, 04 Mar 2020 19:37:50 +0100
-Received: from [2001:1620:665:0:5795:5b0a:e5d5:5944] (helo=linux.fritz.box)
-        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j9Ytx-000VDw-RH; Wed, 04 Mar 2020 19:37:49 +0100
-Subject: Re: [PATCH bpf-next v3 1/7] bpf: Refactor trampoline update code
-To:     KP Singh <kpsingh@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-References: <20200304154747.23506-1-kpsingh@chromium.org>
- <20200304154747.23506-2-kpsingh@chromium.org>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <cb54c137-6d8e-b4e5-bd17-e0a05368c3eb@iogearbox.net>
-Date:   Wed, 4 Mar 2020 19:37:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 4 Mar 2020 13:38:42 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9Yub-005KCg-A2; Wed, 04 Mar 2020 18:38:30 +0000
+Date:   Wed, 4 Mar 2020 18:38:29 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     Aleksa Sarai <cyphar@cyphar.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mattias Nissler <mnissler@chromium.org>,
+        David Howells <dhowells@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Raul Rangel <rrangel@google.com>,
+        linux-fsdevel@vger.kernel.org,
+        Benjamin Gordon <bmgordon@google.com>,
+        Micah Morton <mortonm@google.com>,
+        Dmitry Torokhov <dtor@google.com>,
+        Ross Zwisler <zwisler@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH RESEND v6] Add a "nosymfollow" mount option.
+Message-ID: <20200304183829.GR23230@ZenIV.linux.org.uk>
+References: <20200304173446.122990-1-zwisler@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200304154747.23506-2-kpsingh@chromium.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.2/25741/Wed Mar  4 15:15:26 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304173446.122990-1-zwisler@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 4:47 PM, KP Singh wrote:
-> From: KP Singh <kpsingh@google.com>
+On Wed, Mar 04, 2020 at 10:34:46AM -0700, Ross Zwisler wrote:
+> From: Mattias Nissler <mnissler@chromium.org>
 > 
-> As we need to introduce a third type of attachment for trampolines, the
-> flattened signature of arch_prepare_bpf_trampoline gets even more
-> complicated.
+> For mounts that have the new "nosymfollow" option, don't follow symlinks
+> when resolving paths. The new option is similar in spirit to the
+> existing "nodev", "noexec", and "nosuid" options, as well as to the
+> LOOKUP_NO_SYMLINKS resolve flag in the openat2(2) syscall. Various BSD
+> variants have been supporting the "nosymfollow" mount option for a long
+> time with equivalent implementations.
 > 
-> Refactor the prog and count argument to arch_prepare_bpf_trampoline to
-> use bpf_tramp_progs to simplify the addition and accounting for new
-> attachment types.
+> Note that symlinks may still be created on file systems mounted with
+> the "nosymfollow" option present. readlink() remains functional, so
+> user space code that is aware of symlinks can still choose to follow
+> them explicitly.
 > 
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
+> Setting the "nosymfollow" mount option helps prevent privileged
+> writers from modifying files unintentionally in case there is an
+> unexpected link along the accessed path. The "nosymfollow" option is
+> thus useful as a defensive measure for systems that need to deal with
+> untrusted file systems in privileged contexts.
+> 
+> More information on the history and motivation for this patch can be
+> found here:
+> 
+> https://sites.google.com/a/chromium.org/dev/chromium-os/chromiumos-design-docs/hardening-against-malicious-stateful-data#TOC-Restricting-symlink-traversal
+> 
+> Signed-off-by: Mattias Nissler <mnissler@chromium.org>
+> Signed-off-by: Ross Zwisler <zwisler@google.com>
+> ---
+> Resending v6 which was previously posted here [0].
+> 
+> Aleksa, if I've addressed all of your feedback, would you mind adding
+> your Reviewed-by?
+> 
+> Andrew, would you please consider merging this?
 
-[...]
-> diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
-> index c498f0fffb40..9f7e0328a644 100644
-> --- a/kernel/bpf/bpf_struct_ops.c
-> +++ b/kernel/bpf/bpf_struct_ops.c
-> @@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
->   	struct bpf_struct_ops_value *uvalue, *kvalue;
->   	const struct btf_member *member;
->   	const struct btf_type *t = st_ops->type;
-> +	struct bpf_tramp_progs *tprogs = NULL;
->   	void *udata, *kdata;
->   	int prog_fd, err = 0;
->   	void *image;
-> @@ -425,10 +426,18 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
->   			goto reset_unlock;
->   		}
->   
-> +		tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(*tprogs), GFP_KERNEL);
-> +		if (!tprogs) {
-> +			err = -ENOMEM;
-> +			goto reset_unlock;
-> +		}
-> +
+NAK.  It's not that I hated the patch, but I call hard moratorium on
+fs/namei.c features this cycle.
 
-Looking over the code again, I'm quite certain that here's a memleak
-since the kcalloc() is done in the for_each_member() loop in the ops
-update but then going out of scope and in the exit path we only kfree
-the last tprogs.
+Reason: very massive rewrite of the entire area about to hit -next.
+Moreover, that rewrite is still in the "might be reordered/rebased/whatnot"
+stage.  The patches had been posted on fsdevel, along with the warning
+that it's going into -next shortly.
 
-> +		tprogs[BPF_TRAMP_FENTRY].progs[0] = prog;
-> +		tprogs[BPF_TRAMP_FENTRY].nr_progs = 1;
->   		err = arch_prepare_bpf_trampoline(image,
->   						  st_map->image + PAGE_SIZE,
->   						  &st_ops->func_models[i], 0,
-> -						  &prog, 1, NULL, 0, NULL);
-> +						  tprogs, NULL);
->   		if (err < 0)
->   			goto reset_unlock;
->   
-> @@ -469,6 +478,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
->   	memset(uvalue, 0, map->value_size);
->   	memset(kvalue, 0, map->value_size);
->   unlock:
-> +	kfree(tprogs);
->   	mutex_unlock(&st_map->lock);
->   	return err;
->   }
+Folks, we are close enough to losing control of complexity in that
+code.  It needs to be sanitized, or we'll get into a state where the
+average amount of new bugs introduced by fixing an old one exceeds 1.
+
+There had been several complexity injections into that thing over
+years (r/o bind-mounts, original RCU pathwalk merge, atomic_open,
+mount traps, openat2 to name some) and while some of that got eventually
+cleaned up, there's a lot of subtle stuff accumulated in the area.
+It can be sanitized and I am doing just that (62 commits in the local
+branch at the moment).  If that gets in the way of someone's patches -
+too fucking bad.  The stuff already in needs to be integrated properly;
+that gets priority over additional security hardening any day, especially
+since this cycle has already seen
+	* user-triggerable oops in several years old hardening stuff
+(use-after-free, unlikely to be escalatable beyond null pointer
+dereference).  And I'm not blaming the patch authors - liveness analysis
+in do_last() as it is in mainline is a nightmare.
+	* my own brown paperbag braino in attempt to fix that.
+Fortunately that one was easily caught by fuzzers and it was trivial to fix
+once found.  Again, liveness analysis (and data invariants) from hell...
+	* gaps in LOOKUP_NO_XDEV (openat2 series, just merged).  Missed
+on review.  Reason: several places implementing mount crossing, with
+varying amount of divergence between them.  One got missed...
+	* rather interesting corner cases of aushit vs. open vs. NFS.
+Fairly old ones, at that.  Still sorting that one out...
+
+Anyway, the bottom line is: leave fs/namei.c (especially around the
+pathwalk-related code) alone for now.  Or work on top of the posted
+series, but expect it to change quite a bit under you.  Trying to
+dump that fun job on akpm is unlikely to work.  And if all of that
+comes as a surprise since you are not following fsdevel, consider
+doing so in the future, please.
+
+PS:
+al@dizzy:~/linux/trees/vfs$ git diff --stat v5.6-rc1..HEAD fs/namei.c
+ fs/namei.c | 1408 +++++++++++++++++++++++++++++++++++++++++++----------------------------------------------------------
+ 1 file changed, 597 insertions(+), 811 deletions(-)
+al@dizzy:~/linux/trees/vfs$ wc -l fs/namei.c
+4723 fs/namei.c
+
+The affected area is almost exclusively in core pathname resolution
+code.
