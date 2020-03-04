@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CEEEC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7156AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 425182146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48C842146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583354096;
-	bh=uSii5kvcqJpXhJm2YAx7jI7czkmeI4JsX7zpI4bw+jg=;
+	s=default; t=1583354109;
+	bh=j8zBrkFAZYg8aOlrVLwQ6xdlqxDuQgnwUjV/YeOSDME=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1aT0lbTIZB2oOYQ3+xox4BVIVxlg7vp3rud6kE2DuZG/5brSyl5DVuReD654f4kuz
-	 zQWTQ0z3H7/8De8w1q9P6SgQyhBDah7kytswyiM3z6SksybmyR5FkT/KIDluLYFNt0
-	 eU6eIFYcHciGLsSfS2jRoAepdEaa9BgE1n0LBN/c=
+	b=xoxI2B84PghlK/woL+XD2FByIdaZ1ualZfbJzsDLJteHtIvw/fZJnZdZpFTfDuijU
+	 OYZ1cSOco0N1vxiRRbZS2msvOwHKcCsmWCk7eymoKhtR+ksojASjNuz32xv9PvDQuo
+	 ScL+vsMB2bC7KXQDLD7+MKMcI2EXPb9L3VyDJsEs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388433AbgCDUez (ORCPT
+        id S2388458AbgCDUfH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:34:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35072 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 15:35:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388369AbgCDUeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:34:46 -0500
+        id S2387996AbgCDUeo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:34:44 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5803F24673;
-        Wed,  4 Mar 2020 20:34:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDA9F24658;
+        Wed,  4 Mar 2020 20:34:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583354085;
-        bh=uSii5kvcqJpXhJm2YAx7jI7czkmeI4JsX7zpI4bw+jg=;
+        s=default; t=1583354084;
+        bh=j8zBrkFAZYg8aOlrVLwQ6xdlqxDuQgnwUjV/YeOSDME=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SqnrA6tk8vN+nFfX38cQRYhECa+/adrKVYGP4C+qHEMRMkgaPnS+x3butGHucFf5S
-         r7qSAUKWMGJ0K57T/M3rJP7fGfR07RrnUlt/W/n6QJ4Hru7PSs1K90wB98l1FKpiXB
-         tepxnvkII8GxLevfx//tNMaFu7WTR4p03IgL7Zlk=
+        b=mKT2wJ5CATASQrCVHIrXAS4mZnE7h3hbQZ4OGF9DK/S4YNdjPBHCanpr/KJ5b4doR
+         7Vov2W70kxrE3d/mpqx5KMosTBEfdYtim4pqxOIDSUY3qWHg2yjMJ0tXkIdSdD94cb
+         D7oh2IjKPIjxmA/NVeZOMcSDeJj5qBmHtRVE4Of8=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1j9aj5-00A59R-M5; Wed, 04 Mar 2020 20:34:43 +0000
+        id 1j9aj4-00A59R-4t; Wed, 04 Mar 2020 20:34:42 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v5 08/23] irqchip/gic-v4.1: Plumb skeletal VSGI irqchip
-Date:   Wed,  4 Mar 2020 20:33:15 +0000
-Message-Id: <20200304203330.4967-9-maz@kernel.org>
+Subject: [PATCH v5 06/23] irqchip/gic-v4.1: Advertise support v4.1 to KVM
+Date:   Wed,  4 Mar 2020 20:33:13 +0000
+Message-Id: <20200304203330.4967-7-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200304203330.4967-1-maz@kernel.org>
 References: <20200304203330.4967-1-maz@kernel.org>
@@ -73,165 +73,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since GICv4.1 has the capability to inject 16 SGIs into each VPE,
-and that I'm keen not to invent too many specific interfaces to
-manipulate these interrupts, let's pretend that each of these SGIs
-is an actual Linux interrupt.
-
-For that matter, let's introduce a minimal irqchip and irqdomain
-setup that will get fleshed up in the following patches.
+Tell KVM that we support v4.1. Nothing uses this information so far.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 ---
- drivers/irqchip/irq-gic-v3-its.c   | 68 +++++++++++++++++++++++++++++-
- drivers/irqchip/irq-gic-v4.c       |  8 +++-
- include/linux/irqchip/arm-gic-v4.h |  9 +++-
- 3 files changed, 81 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c       | 9 ++++++++-
+ drivers/irqchip/irq-gic-v3.c           | 2 ++
+ include/linux/irqchip/arm-gic-common.h | 2 ++
+ 3 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index 54d6fdf7a28e..112b452fcb40 100644
+index fc5788584df7..bcc1a0957cda 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3870,6 +3870,67 @@ static struct irq_chip its_vpe_4_1_irq_chip = {
- 	.irq_set_vcpu_affinity	= its_vpe_4_1_set_vcpu_affinity,
- };
+@@ -4870,6 +4870,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
+ 	struct device_node *of_node;
+ 	struct its_node *its;
+ 	bool has_v4 = false;
++	bool has_v4_1 = false;
+ 	int err;
  
-+static int its_sgi_set_affinity(struct irq_data *d,
-+				const struct cpumask *mask_val,
-+				bool force)
-+{
-+	return -EINVAL;
-+}
-+
-+static struct irq_chip its_sgi_irq_chip = {
-+	.name			= "GICv4.1-sgi",
-+	.irq_set_affinity	= its_sgi_set_affinity,
-+};
-+
-+static int its_sgi_irq_domain_alloc(struct irq_domain *domain,
-+				    unsigned int virq, unsigned int nr_irqs,
-+				    void *args)
-+{
-+	struct its_vpe *vpe = args;
-+	int i;
-+
-+	/* Yes, we do want 16 SGIs */
-+	WARN_ON(nr_irqs != 16);
-+
-+	for (i = 0; i < 16; i++) {
-+		vpe->sgi_config[i].priority = 0;
-+		vpe->sgi_config[i].enabled = false;
-+		vpe->sgi_config[i].group = false;
-+
-+		irq_domain_set_hwirq_and_chip(domain, virq + i, i,
-+					      &its_sgi_irq_chip, vpe);
-+		irq_set_status_flags(virq + i, IRQ_DISABLE_UNLAZY);
+ 	gic_rdists = rdists;
+@@ -4890,8 +4891,14 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
+ 	if (err)
+ 		return err;
+ 
+-	list_for_each_entry(its, &its_nodes, entry)
++	list_for_each_entry(its, &its_nodes, entry) {
+ 		has_v4 |= is_v4(its);
++		has_v4_1 |= is_v4_1(its);
 +	}
 +
-+	return 0;
-+}
-+
-+static void its_sgi_irq_domain_free(struct irq_domain *domain,
-+				    unsigned int virq,
-+				    unsigned int nr_irqs)
-+{
-+	/* Nothing to do */
-+}
-+
-+static int its_sgi_irq_domain_activate(struct irq_domain *domain,
-+				       struct irq_data *d, bool reserve)
-+{
-+	return 0;
-+}
-+
-+static void its_sgi_irq_domain_deactivate(struct irq_domain *domain,
-+					  struct irq_data *d)
-+{
-+	/* Nothing to do */
-+}
-+
-+static struct irq_domain_ops its_sgi_domain_ops = {
-+	.alloc		= its_sgi_irq_domain_alloc,
-+	.free		= its_sgi_irq_domain_free,
-+	.activate	= its_sgi_irq_domain_activate,
-+	.deactivate	= its_sgi_irq_domain_deactivate,
-+};
-+
- static int its_vpe_id_alloc(void)
- {
- 	return ida_simple_get(&its_vpeid_ida, 0, ITS_MAX_VPEID, GFP_KERNEL);
-@@ -4912,8 +4973,13 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
- 		rdists->has_rvpeid = false;
++	/* Don't bother with inconsistent systems */
++	if (WARN_ON(!has_v4_1 && rdists->has_rvpeid))
++		rdists->has_rvpeid = false;
  
  	if (has_v4 & rdists->has_vlpis) {
-+		struct irq_domain_ops *sgi_ops = NULL;
-+
-+		if (has_v4_1)
-+			sgi_ops = &its_sgi_domain_ops;
-+
  		if (its_init_vpe_domain() ||
--		    its_init_v4(parent_domain, &its_vpe_domain_ops)) {
-+		    its_init_v4(parent_domain, &its_vpe_domain_ops, sgi_ops)) {
- 			rdists->has_vlpis = false;
- 			pr_err("ITS: Disabling GICv4 support\n");
- 		}
-diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
-index 45969927cc81..c01910d53f9e 100644
---- a/drivers/irqchip/irq-gic-v4.c
-+++ b/drivers/irqchip/irq-gic-v4.c
-@@ -85,6 +85,7 @@
+diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
+index ba405becab53..03e4eadefb00 100644
+--- a/drivers/irqchip/irq-gic-v3.c
++++ b/drivers/irqchip/irq-gic-v3.c
+@@ -1785,6 +1785,7 @@ static void __init gic_of_setup_kvm_info(struct device_node *node)
+ 		gic_v3_kvm_info.vcpu = r;
  
- static struct irq_domain *gic_domain;
- static const struct irq_domain_ops *vpe_domain_ops;
-+static const struct irq_domain_ops *sgi_domain_ops;
- 
- int its_alloc_vcpu_irqs(struct its_vm *vm)
- {
-@@ -216,12 +217,15 @@ int its_prop_update_vlpi(int irq, u8 config, bool inv)
- 	return irq_set_vcpu_affinity(irq, &info);
+ 	gic_v3_kvm_info.has_v4 = gic_data.rdists.has_vlpis;
++	gic_v3_kvm_info.has_v4_1 = gic_data.rdists.has_rvpeid;
+ 	gic_set_kvm_info(&gic_v3_kvm_info);
  }
  
--int its_init_v4(struct irq_domain *domain, const struct irq_domain_ops *ops)
-+int its_init_v4(struct irq_domain *domain,
-+		const struct irq_domain_ops *vpe_ops,
-+		const struct irq_domain_ops *sgi_ops)
- {
- 	if (domain) {
- 		pr_info("ITS: Enabling GICv4 support\n");
- 		gic_domain = domain;
--		vpe_domain_ops = ops;
-+		vpe_domain_ops = vpe_ops;
-+		sgi_domain_ops = sgi_ops;
- 		return 0;
+@@ -2100,6 +2101,7 @@ static void __init gic_acpi_setup_kvm_info(void)
  	}
  
-diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index 439963f4c66a..44e8c19e3d56 100644
---- a/include/linux/irqchip/arm-gic-v4.h
-+++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -49,6 +49,11 @@ struct its_vpe {
- 		};
- 		/* GICv4.1 implementations */
- 		struct {
-+			struct {
-+				u8	priority;
-+				bool	enabled;
-+				bool	group;
-+			}			sgi_config[16];
- 			atomic_t vmapp_count;
- 		};
- 	};
-@@ -123,6 +128,8 @@ int its_unmap_vlpi(int irq);
- int its_prop_update_vlpi(int irq, u8 config, bool inv);
+ 	gic_v3_kvm_info.has_v4 = gic_data.rdists.has_vlpis;
++	gic_v3_kvm_info.has_v4_1 = gic_data.rdists.has_rvpeid;
+ 	gic_set_kvm_info(&gic_v3_kvm_info);
+ }
  
- struct irq_domain_ops;
--int its_init_v4(struct irq_domain *domain, const struct irq_domain_ops *ops);
-+int its_init_v4(struct irq_domain *domain,
-+		const struct irq_domain_ops *vpe_ops,
-+		const struct irq_domain_ops *sgi_ops);
+diff --git a/include/linux/irqchip/arm-gic-common.h b/include/linux/irqchip/arm-gic-common.h
+index b9850f5f1906..fa8c0455c352 100644
+--- a/include/linux/irqchip/arm-gic-common.h
++++ b/include/linux/irqchip/arm-gic-common.h
+@@ -32,6 +32,8 @@ struct gic_kvm_info {
+ 	struct resource vctrl;
+ 	/* vlpi support */
+ 	bool		has_v4;
++	/* rvpeid support */
++	bool		has_v4_1;
+ };
  
- #endif
+ const struct gic_kvm_info *gic_get_kvm_info(void);
 -- 
 2.20.1
 
