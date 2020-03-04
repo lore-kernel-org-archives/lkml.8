@@ -2,140 +2,246 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD1BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAB6C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F632166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:57:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D85182166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:57:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583337452;
+	bh=ILnFl8RmIMsml+ikE7ngdhxT/GrRssw7KpYC8Sdzi8A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WXwnKsYsPmmiJHw4rmWnbwGp7hLrbTMMYWJzTBLQQv9qvi5gmE9XvjtbcQ4CnReCL
+	 RCWJJsqYqXghOFfXvc5NPjuQgA8Hv6qFssfSu7EELmuLg2DQ0LiaTfBfLD/CaQ84OJ
+	 j8+cCRqdxgStgZmthyaT1+4Xwsghtac5u7VsBIp4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729738AbgCDP5A (ORCPT
+        id S2387801AbgCDP5b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:57:00 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18090 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729389AbgCDP5A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:57:00 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024FtT9a082210
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 10:56:59 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhsv9y57p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:56:59 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
-        Wed, 4 Mar 2020 15:56:57 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Mar 2020 15:56:54 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024Fuq9027787402
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Mar 2020 15:56:52 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 007DAA405D;
-        Wed,  4 Mar 2020 15:56:52 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA117A405B;
-        Wed,  4 Mar 2020 15:56:49 +0000 (GMT)
-Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.81.47])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Mar 2020 15:56:49 +0000 (GMT)
-From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
-To:     skiboot@lists.ozlabs.org, oohall@gmail.com, mikey@neuling.org,
-        npiggin@gmail.com, vaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
-        linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
-        mpe@ellerman.id.au, psampat@linux.ibm.com,
-        pratik.r.sampat@gmail.com
-Subject: [RFC] Support stop state version quirk and firmware enabled stop
-Date:   Wed,  4 Mar 2020 21:26:48 +0530
-X-Mailer: git-send-email 2.24.1
+        Wed, 4 Mar 2020 10:57:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49368 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727709AbgCDP5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:57:31 -0500
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53EAE2166E
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 15:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583337450;
+        bh=ILnFl8RmIMsml+ikE7ngdhxT/GrRssw7KpYC8Sdzi8A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LHgNltKLgLHu9Ig8V+Tymy7PM5UmFZLeJFrCSpeBxRS8h2S5WWK8NrOToq7JPIh1v
+         DRJQq6l36pq5/fnzzAgbXvIS/wD+wQXt0iNff51CA4syuSvvN/2QTmKEaZr6fUlP7r
+         ZsYiljIwdyxcrWvuvk7EmasRmOEXeg+XZV2CozOA=
+Received: by mail-wm1-f50.google.com with SMTP id a132so2688737wme.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:57:30 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2T2vqXstKbp452if79bvoQMgRNt1YCdVCEr+TV3Pv0pe19CNoL
+        LG8dSi4zabc8kHrH7bXFWmsW2yP+6fDVoz+jNWQC2w==
+X-Google-Smtp-Source: ADFU+vunZfY6ZlJCw/RmmWZMdrFRr6f0dI+h9rJagUF2Ca4ke1LTHNYGhV0DKsbWvr8aqreTP2SjzUMyvHX7MYZUv3s=
+X-Received: by 2002:a1c:2d88:: with SMTP id t130mr4576821wmt.68.1583337448738;
+ Wed, 04 Mar 2020 07:57:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030415-0016-0000-0000-000002ED2A5E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030415-0017-0000-0000-0000335079B7
-Message-Id: <20200304155648.11501-1-psampat@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 clxscore=1015 suspectscore=0 impostorscore=0 adultscore=0
- spamscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040117
+References: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
+ <20200304154936.24206-1-vdronov@redhat.com>
+In-Reply-To: <20200304154936.24206-1-vdronov@redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 4 Mar 2020 16:57:16 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu_WFL24dGPakcPgGW3MayYx1qND9HxL87vods7h4LyZJw@mail.gmail.com>
+Message-ID: <CAKv+Gu_WFL24dGPakcPgGW3MayYx1qND9HxL87vods7h4LyZJw@mail.gmail.com>
+Subject: Re: [PATCH v2] efi: fix a race and a buffer overflow while reading
+ efivars via sysfs
+To:     Vladis Dronov <vdronov@redhat.com>
+Cc:     linux-efi <linux-efi@vger.kernel.org>, joeyli <jlee@suse.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A concept patch in Skiboot to illustrate the case wherein handling of
-stop states for different DD versions of a CPU can be achieved by a
-simple modification in the list of cpu_features.
-As an example idle-stop1 is defined which uses P9_CPU_DD1 to define the
-cpu feature.
+On Wed, 4 Mar 2020 at 16:50, Vladis Dronov <vdronov@redhat.com> wrote:
+>
+> There is a race and a buffer overflow corrupting a kernel memory while
+> reading an efi variable with a size more than 1024 bytes via the older
+> sysfs method. This happens because accessing struct efi_variable in
+> efivar_{attr,size,data}_read() and friends is not protected from
+> a concurrent access leading to a kernel memory corruption and, at best,
+> to a crash. The race scenario is the following:
+>
+> CPU0:                                CPU1:
+> efivar_attr_read()
+>   var->DataSize = 1024;
+>   efivar_entry_get(... &var->DataSize)
+>     down_interruptible(&efivars_lock)
+>                                      efivar_attr_read() // same efi var
+>                                        var->DataSize = 1024;
+>                                        efivar_entry_get(... &var->DataSize)
+>                                          down_interruptible(&efivars_lock)
+>     virt_efi_get_variable()
+>     // returns EFI_BUFFER_TOO_SMALL but
+>     // var->DataSize is set to a real
+>     // var size more than 1024 bytes
+>     up(&efivars_lock)
+>                                          virt_efi_get_variable()
+>                                          // called with var->DataSize set
+>                                          // to a real var size, returns
+>                                          // successfully and overwrites
+>                                          // a 1024-bytes kernel buffer
+>                                          up(&efivars_lock)
+>
+> This can be reproduced by concurrent reading of an efi variable which size
+> is more than 1024 bytes:
+>
+> ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
+> cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
+>
+> Fix this by using a local variable for a var's data buffer size so it
+> does not get overwritten. Also add a sanity check to efivar_store_raw().
+>
+> Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
+> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+> ---
+>  drivers/firmware/efi/efi-pstore.c |  2 +-
+>  drivers/firmware/efi/efivars.c    | 32 ++++++++++++++++++++++---------
+>  drivers/firmware/efi/vars.c       |  2 +-
+>  3 files changed, 25 insertions(+), 11 deletions(-)
+>
+> diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
+> index 9ea13e8d12ec..e4767a7ce973 100644
+> --- a/drivers/firmware/efi/efi-pstore.c
+> +++ b/drivers/firmware/efi/efi-pstore.c
+> @@ -161,7 +161,7 @@ static int efi_pstore_scan_sysfs_exit(struct efivar_entry *pos,
+>   *
+>   * @record: pstore record to pass to callback
+>   *
+> - * You MUST call efivar_enter_iter_begin() before this function, and
+> + * You MUST call efivar_entry_iter_begin() before this function, and
+>   * efivar_entry_iter_end() afterwards.
+>   *
+>   */
 
-Along with that, an implementation is being worked upon the LE OPAL
-series which helps OPAL handle the stop state entry and exit.
+This hunk can be dropped now, I guess
 
-This patch advertises this capability of the firmware which can be
-availed if the quirk-version-setting is not cognizable.
+> diff --git a/drivers/firmware/efi/efivars.c b/drivers/firmware/efi/efivars.c
+> index 7576450c8254..16a617f9c5cf 100644
+> --- a/drivers/firmware/efi/efivars.c
+> +++ b/drivers/firmware/efi/efivars.c
+> @@ -83,13 +83,16 @@ static ssize_t
+>  efivar_attr_read(struct efivar_entry *entry, char *buf)
+>  {
+>         struct efi_variable *var = &entry->var;
+> +       unsigned long size = sizeof(var->Data);
+>         char *str = buf;
+> +       int ret;
+>
+>         if (!entry || !buf)
+>                 return -EINVAL;
+>
+> -       var->DataSize = 1024;
+> -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
+> +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
+> +       var->DataSize = size;
 
-The firmware-enabled stop is being worked by Abhishek Goel
-<huntbag@linux.vnet.ibm.com> building upon the LE OPAL series.
+For my understanding, could you explain why we do the assignment here?
+Does var->DataSize matter in this case? Can it deviate from 1024?
 
-Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
----
- core/cpufeatures.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+> +       if (ret)
+>                 return -EIO;
+>
+>         if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
+> @@ -116,13 +119,16 @@ static ssize_t
+>  efivar_size_read(struct efivar_entry *entry, char *buf)
+>  {
+>         struct efi_variable *var = &entry->var;
+> +       unsigned long size = sizeof(var->Data);
+>         char *str = buf;
+> +       int ret;
+>
+>         if (!entry || !buf)
+>                 return -EINVAL;
+>
+> -       var->DataSize = 1024;
+> -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
+> +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
+> +       var->DataSize = size;
+> +       if (ret)
+>                 return -EIO;
+>
+>         str += sprintf(str, "0x%lx\n", var->DataSize);
+> @@ -133,12 +139,15 @@ static ssize_t
+>  efivar_data_read(struct efivar_entry *entry, char *buf)
+>  {
+>         struct efi_variable *var = &entry->var;
+> +       unsigned long size = sizeof(var->Data);
+> +       int ret;
+>
+>         if (!entry || !buf)
+>                 return -EINVAL;
+>
+> -       var->DataSize = 1024;
+> -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize, var->Data))
+> +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
+> +       var->DataSize = size;
+> +       if (ret)
+>                 return -EIO;
+>
+>         memcpy(buf, var->Data, var->DataSize);
+> @@ -199,6 +208,9 @@ efivar_store_raw(struct efivar_entry *entry, const char *buf, size_t count)
+>         u8 *data;
+>         int err;
+>
+> +       if (!entry || !buf)
+> +               return -EINVAL;
+> +
 
-diff --git a/core/cpufeatures.c b/core/cpufeatures.c
-index ec30c975..b9875e7b 100644
---- a/core/cpufeatures.c
-+++ b/core/cpufeatures.c
-@@ -510,6 +510,25 @@ static const struct cpu_feature cpu_features_table[] = {
- 	-1, -1, -1,
- 	NULL, },
- 
-+	/*
-+	 * QUIRK for ISAv3.0B stop idle instructions and registers
-+	 * Helps us determine if there are any quirks
-+	 * XXX: Same of idle-stop
-+	 */
-+	{ "idle-stop-v1",
-+	CPU_P9_DD1,
-+	ISA_V3_0B, USABLE_HV|USABLE_OS,
-+	HV_CUSTOM, OS_CUSTOM,
-+	-1, -1, -1,
-+	NULL, },
-+
-+	{ "firmware-stop-supported",
-+	CPU_P9,
-+	ISA_V3_0B, USABLE_HV|USABLE_OS,
-+	HV_CUSTOM, OS_CUSTOM,
-+	-1, -1, -1,
-+	NULL, },
-+
- 	/*
- 	 * ISAv3.0B Hypervisor Virtualization Interrupt
- 	 * Also associated system registers, LPCR EE, HEIC, HVICE,
-@@ -883,6 +902,9 @@ static void add_cpufeatures(struct dt_node *cpus,
- 		const struct cpu_feature *f = &cpu_features_table[i];
- 
- 		if (f->cpus_supported & cpu_feature_cpu) {
-+			if (!strcmp(f->name, "firmware-stop-supported") &&
-+			    HAVE_BIG_ENDIAN)
-+				continue;
- 			DBG("  '%s'\n", f->name);
- 			add_cpu_feature_nodeps(features, f);
- 		}
--- 
-2.24.1
+So what are we sanity checking here? When might this occur? Does it
+need to be in the same patch?
 
+>         if (in_compat_syscall()) {
+>                 struct compat_efi_variable *compat;
+>
+> @@ -250,14 +262,16 @@ efivar_show_raw(struct efivar_entry *entry, char *buf)
+>  {
+>         struct efi_variable *var = &entry->var;
+>         struct compat_efi_variable *compat;
+> +       unsigned long datasize = sizeof(var->Data);
+>         size_t size;
+> +       int ret;
+>
+>         if (!entry || !buf)
+>                 return 0;
+>
+> -       var->DataSize = 1024;
+> -       if (efivar_entry_get(entry, &entry->var.Attributes,
+> -                            &entry->var.DataSize, entry->var.Data))
+> +       ret = efivar_entry_get(entry, &var->Attributes, &datasize, var->Data);
+> +       var->DataSize = size;
+> +       if (ret)
+>                 return -EIO;
+>
+>         if (in_compat_syscall()) {
+> diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
+> index 436d1776bc7b..5f2a4d162795 100644
+> --- a/drivers/firmware/efi/vars.c
+> +++ b/drivers/firmware/efi/vars.c
+> @@ -1071,7 +1071,7 @@ EXPORT_SYMBOL_GPL(efivar_entry_iter_end);
+>   * entry on the list. It is safe for @func to remove entries in the
+>   * list via efivar_entry_delete().
+>   *
+> - * You MUST call efivar_enter_iter_begin() before this function, and
+> + * You MUST call efivar_entry_iter_begin() before this function, and
+>   * efivar_entry_iter_end() afterwards.
+>   *
+>   * It is possible to begin iteration from an arbitrary entry within
+
+We can drop this.
+
+> --
+> 2.20.1
+>
