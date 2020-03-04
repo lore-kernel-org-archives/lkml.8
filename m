@@ -2,174 +2,361 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BE1DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:48:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B87AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40FBA20732
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:48:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="FLwMrJsD"
+	by mail.kernel.org (Postfix) with ESMTP id EA01B2073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:51:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583319072;
+	bh=UZfLOmwcHYa2dxNe2fin4M3gWxO4z9D5BYe84gx/ap0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=zVWzvcbFKh25PlaPxo+NRVHvNnzDP7aojOrarKRopILGKl6tQwM3+xdTmbCgM29Wa
+	 i0/gGsxGAsDnkH1k+f+lviBGCmnMwjh1OOr/6Gh2glVbitkYcKJpWu/gaxv15HJq71
+	 m4UBb+ag1kq8DAO2EHqLU3SssNM0rkeTowbbjNU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgCDKsi (ORCPT
+        id S2387780AbgCDKvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:48:38 -0500
-Received: from m15-113.126.com ([220.181.15.113]:50240 "EHLO m15-113.126.com"
+        Wed, 4 Mar 2020 05:51:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726137AbgCDKsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:48:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=IeCdyAGFwXp3ZJWoz2
-        7XzqKXoULD6qM3z6NhawmdYlI=; b=FLwMrJsDJPv6HNAMsaGYL/PvWgyW9o9yHK
-        q6HXkdW7AM1QvSpze8XFkN/SeWjbG/ha9btTU56lE+M8PInQu6ULLwfn3eq822dk
-        SrDWA4Xs8tW1x/7nTQS0J5+PPhE+3YyYJI01BS7C3e3bbWs+6NOra1lDgTAZ/hKQ
-        zcoZxa7tE=
-Received: from 192.168.137.251 (unknown [112.10.84.98])
-        by smtp3 (Coremail) with SMTP id DcmowAC3EAc8h19e2h4DCA--.2331S3;
-        Wed, 04 Mar 2020 18:47:26 +0800 (CST)
-From:   Xianting Tian <xianting_tian@126.com>
-To:     akpm@linux-foundation.org, willy@infradead.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mm/filemap.c: clear page error before actual read
-Date:   Wed,  4 Mar 2020 05:47:24 -0500
-Message-Id: <1583318844-22971-1-git-send-email-xianting_tian@126.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: DcmowAC3EAc8h19e2h4DCA--.2331S3
-X-Coremail-Antispam: 1Uf129KBjvJXoWxZF1rGr4DAw1UAryrCrW7Jwb_yoWrAFWDpr
-        ZxK3WDKr4DGrnrCan2q3Z7Ar1rGrnrAay5ZayrW343Zwn8XF1fW34xCFyjg345Gr1FyFWx
-        Xr4FqF98Cr9YqaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jTc_-UUUUU=
-X-Originating-IP: [112.10.84.98]
-X-CM-SenderInfo: h0ld03plqjs3xldqqiyswou0bp/1tbi3B7cpFpD+S1DOAAAsM
+        id S1726137AbgCDKvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 05:51:10 -0500
+Received: from mail.kernel.org (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2DF2A2073D;
+        Wed,  4 Mar 2020 10:51:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583319068;
+        bh=UZfLOmwcHYa2dxNe2fin4M3gWxO4z9D5BYe84gx/ap0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Bu0gtZK8zih9VLmtg/Q24NN9p4iXVP0jv8hg90sAYAhcVLcNQQ7pjmwEjo4WnUkNU
+         TPgAuxgss3Dm7qaXImdblyFgB/k0RuomxBNaLGQ/F5Fb4st5q1kgGOAqNAxmDcUQ16
+         KTWVzugFhaQBmD2yydIepD4av/10qU3GAe5je7h4=
+Received: from mchehab by mail.kernel.org with local (Exim 4.92.3)
+        (envelope-from <mchehab@kernel.org>)
+        id 1j9RcI-0000xt-44; Wed, 04 Mar 2020 11:51:06 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-media@vger.kernel.org
+Subject: [PATCH RFC 2/2] docs: media kAPI docs: move them to driver-api
+Date:   Wed,  4 Mar 2020 11:51:03 +0100
+Message-Id: <a7371f520106ba136da7ed7ed5ba1723f7c9c9cf.1583316037.git.mchehab+huawei@kernel.org>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <cover.1583316037.git.mchehab+huawei@kernel.org>
+References: <cover.1583316037.git.mchehab+huawei@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Mount failure issue happens under the scenario:
-Application forked dozens of threads to mount the same number of
-cramfs images separately in docker, but several mounts failed
-with high probability. Mount failed due to the checking result of
-the page(read from the superblock of loop dev) is not uptodate
-after wait_on_page_locked(page) returned in function cramfs_read:
-   wait_on_page_locked(page);
-   if (!PageUptodate(page)) {
-      ...
-   }
+All those documents describe the media driver API. So, move
+them to the right place within the Kernel documentation.
 
-The reason of the checking result of the page not uptodate:
-systemd-udevd read the loopX dev before mount, because the status
-of loopX is Lo_unbound at this time, so loop_make_request directly
-trigger the calling of io_end handler end_buffer_async_read, which
-called SetPageError(page). So It caused the page can't be set to
-uptodate in function end_buffer_async_read:
-   if(page_uptodate && !PageError(page)) {
-      SetPageUptodate(page);
-   }
-Then mount operation is performed, it used the same page which is
-just accessed by systemd-udevd above, Because this page is not
-uptodate, it will launch a actual read via submit_bh, then wait on
-this page by calling wait_on_page_locked(page). When the I/O of
-the page done, io_end handler end_buffer_async_read is called,
-because no one cleared the page error(during the whole read path of
-mount), which is caused by systemd-udevd reading, so this page is
-still in "PageError" status, which can't be set to uptodate in
-function end_buffer_async_read, then caused mount failure.
-
-But sometimes mount succeed even through systemd-udeved read loopX
-dev just before, The reason is systemd-udevd launched other loopX
-read just between step 3.1 and 3.2, the steps as below:
-1, loopX dev default status is Lo_unbound;
-2, systemd-udved read loopX dev (page is set to PageError);
-3, mount operation
-   1) set loopX status to Lo_bound;
-   ==>systemd-udevd read loopX dev<==
-   2) read loopX dev(page has no error)
-   3) mount succeed
-As the loopX dev status is set to Lo_bound after step 3.1, so the
-other loopX dev read by systemd-udevd will go through the whole
-I/O stack, part of the call trace as below:
-   SYS_read
-      vfs_read
-          do_sync_read
-              blkdev_aio_read
-                 generic_file_aio_read
-                     do_generic_file_read:
-                        ClearPageError(page);
-                        mapping->a_ops->readpage(filp, page);
-here, mapping->a_ops->readpage() is blkdev_readpage.
-In latest kernel, some function name changed, the call trace as
-below:
-   blkdev_read_iter
-      generic_file_read_iter
-         generic_file_buffered_read:
-            /*
-             * A previous I/O error may have been due to temporary
-             * failures, eg. mutipath errors.
-             * Pg_error will be set again if readpage fails.
-             */
-            ClearPageError(page);
-            /* Start the actual read. The read will unlock the page*/
-            error=mapping->a_ops->readpage(flip, page);
-We can see ClearPageError(page) is called before the actual read,
-then the read in step 3.2 succeed.
-
-This patch is to add the calling of ClearPageError just before the
-actual read of read path of cramfs mount.
-Without the patch, the call trace as below when performing cramfs
-mount:
-   do_mount
-      cramfs_read
-         cramfs_blkdev_read
-            read_cache_page
-               do_read_cache_page:
-                  filler(data, page);
-                  or
-                  mapping->a_ops->readpage(data, page);
-With the patch, the call trace as below when performing mount:
-   do_mount
-      cramfs_read
-         cramfs_blkdev_read
-            read_cache_page:
-               do_read_cache_page:
-                  ClearPageError(page); <== new add
-                  filler(data, page);
-                  or
-                  mapping->a_ops->readpage(data, page);
-
-With the patch, mount operation trigger the calling of
-ClearPageError(page) before the actual read, the page has no error
-if no additional page error happen when I/O done.
-
-Signed-off-by: Xianting Tian <xianting_tian@126.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- mm/filemap.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ .../{media/kapi => driver-api/media}/cec-core.rst    |  0
+ .../{media/kapi => driver-api/media}/csi2.rst        |  0
+ .../{media/kapi => driver-api/media}/dtv-ca.rst      |  0
+ .../{media/kapi => driver-api/media}/dtv-common.rst  |  0
+ .../{media/kapi => driver-api/media}/dtv-core.rst    |  0
+ .../{media/kapi => driver-api/media}/dtv-demux.rst   |  0
+ .../kapi => driver-api/media}/dtv-frontend.rst       |  0
+ .../{media/kapi => driver-api/media}/dtv-net.rst     |  0
+ .../media_kapi.rst => driver-api/media/index.rst}    | 12 ++++++------
+ .../{media/kapi => driver-api/media}/mc-core.rst     |  0
+ .../{media/kapi => driver-api/media}/rc-core.rst     |  0
+ .../{media/kapi => driver-api/media}/v4l2-async.rst  |  0
+ .../{media/kapi => driver-api/media}/v4l2-clocks.rst |  0
+ .../{media/kapi => driver-api/media}/v4l2-common.rst |  0
+ .../kapi => driver-api/media}/v4l2-controls.rst      |  0
+ .../{media/kapi => driver-api/media}/v4l2-core.rst   |  0
+ .../{media/kapi => driver-api/media}/v4l2-dev.rst    |  0
+ .../{media/kapi => driver-api/media}/v4l2-device.rst |  0
+ .../kapi => driver-api/media}/v4l2-dv-timings.rst    |  0
+ .../{media/kapi => driver-api/media}/v4l2-event.rst  |  0
+ .../{media/kapi => driver-api/media}/v4l2-fh.rst     |  0
+ .../media}/v4l2-flash-led-class.rst                  |  0
+ .../{media/kapi => driver-api/media}/v4l2-fwnode.rst |  0
+ .../{media/kapi => driver-api/media}/v4l2-intro.rst  |  0
+ .../{media/kapi => driver-api/media}/v4l2-mc.rst     |  0
+ .../kapi => driver-api/media}/v4l2-mediabus.rst      |  0
+ .../kapi => driver-api/media}/v4l2-mem2mem.rst       |  0
+ .../{media/kapi => driver-api/media}/v4l2-rect.rst   |  0
+ .../{media/kapi => driver-api/media}/v4l2-subdev.rst |  0
+ .../{media/kapi => driver-api/media}/v4l2-tuner.rst  |  0
+ .../kapi => driver-api/media}/v4l2-tveeprom.rst      |  0
+ .../kapi => driver-api/media}/v4l2-videobuf.rst      |  0
+ .../kapi => driver-api/media}/v4l2-videobuf2.rst     |  0
+ Documentation/media/index.rst                        |  2 +-
+ Documentation/media/v4l-drivers/max2175.rst          |  2 +-
+ .../zh_CN/video4linux/v4l2-framework.txt             |  2 +-
+ MAINTAINERS                                          |  4 +++-
+ 37 files changed, 12 insertions(+), 10 deletions(-)
+ rename Documentation/{media/kapi => driver-api/media}/cec-core.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/csi2.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/dtv-ca.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/dtv-common.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/dtv-core.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/dtv-demux.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/dtv-frontend.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/dtv-net.rst (100%)
+ rename Documentation/{media/media_kapi.rst => driver-api/media/index.rst} (89%)
+ rename Documentation/{media/kapi => driver-api/media}/mc-core.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/rc-core.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-async.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-clocks.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-common.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-controls.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-core.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-dev.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-device.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-dv-timings.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-event.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-fh.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-flash-led-class.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-fwnode.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-intro.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-mc.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-mediabus.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-mem2mem.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-rect.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-subdev.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-tuner.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-tveeprom.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-videobuf.rst (100%)
+ rename Documentation/{media/kapi => driver-api/media}/v4l2-videobuf2.rst (100%)
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 1784478..77c370d 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2823,6 +2823,14 @@ static struct page *do_read_cache_page(struct address_space *mapping,
- 		unlock_page(page);
- 		goto out;
- 	}
-+
-+	/*
-+	 * A previous I/O error may have been due to temporary
-+	 * failures.
-+	 * Clear page error before actual read, PG_error will be
-+	 * set again if read page fails.
-+	 */
-+	ClearPageError(page);
- 	goto filler;
+diff --git a/Documentation/media/kapi/cec-core.rst b/Documentation/driver-api/media/cec-core.rst
+similarity index 100%
+rename from Documentation/media/kapi/cec-core.rst
+rename to Documentation/driver-api/media/cec-core.rst
+diff --git a/Documentation/media/kapi/csi2.rst b/Documentation/driver-api/media/csi2.rst
+similarity index 100%
+rename from Documentation/media/kapi/csi2.rst
+rename to Documentation/driver-api/media/csi2.rst
+diff --git a/Documentation/media/kapi/dtv-ca.rst b/Documentation/driver-api/media/dtv-ca.rst
+similarity index 100%
+rename from Documentation/media/kapi/dtv-ca.rst
+rename to Documentation/driver-api/media/dtv-ca.rst
+diff --git a/Documentation/media/kapi/dtv-common.rst b/Documentation/driver-api/media/dtv-common.rst
+similarity index 100%
+rename from Documentation/media/kapi/dtv-common.rst
+rename to Documentation/driver-api/media/dtv-common.rst
+diff --git a/Documentation/media/kapi/dtv-core.rst b/Documentation/driver-api/media/dtv-core.rst
+similarity index 100%
+rename from Documentation/media/kapi/dtv-core.rst
+rename to Documentation/driver-api/media/dtv-core.rst
+diff --git a/Documentation/media/kapi/dtv-demux.rst b/Documentation/driver-api/media/dtv-demux.rst
+similarity index 100%
+rename from Documentation/media/kapi/dtv-demux.rst
+rename to Documentation/driver-api/media/dtv-demux.rst
+diff --git a/Documentation/media/kapi/dtv-frontend.rst b/Documentation/driver-api/media/dtv-frontend.rst
+similarity index 100%
+rename from Documentation/media/kapi/dtv-frontend.rst
+rename to Documentation/driver-api/media/dtv-frontend.rst
+diff --git a/Documentation/media/kapi/dtv-net.rst b/Documentation/driver-api/media/dtv-net.rst
+similarity index 100%
+rename from Documentation/media/kapi/dtv-net.rst
+rename to Documentation/driver-api/media/dtv-net.rst
+diff --git a/Documentation/media/media_kapi.rst b/Documentation/driver-api/media/index.rst
+similarity index 89%
+rename from Documentation/media/media_kapi.rst
+rename to Documentation/driver-api/media/index.rst
+index 1389998c90f7..d2842f300bbd 100644
+--- a/Documentation/media/media_kapi.rst
++++ b/Documentation/driver-api/media/index.rst
+@@ -30,9 +30,9 @@ For more details see the file COPYING in the source distribution of Linux.
+     :maxdepth: 5
+     :numbered:
  
- out:
+-    kapi/v4l2-core
+-    kapi/dtv-core
+-    kapi/rc-core
+-    kapi/mc-core
+-    kapi/cec-core
+-    kapi/csi2
++    v4l2-core
++    dtv-core
++    rc-core
++    mc-core
++    cec-core
++    csi2
+diff --git a/Documentation/media/kapi/mc-core.rst b/Documentation/driver-api/media/mc-core.rst
+similarity index 100%
+rename from Documentation/media/kapi/mc-core.rst
+rename to Documentation/driver-api/media/mc-core.rst
+diff --git a/Documentation/media/kapi/rc-core.rst b/Documentation/driver-api/media/rc-core.rst
+similarity index 100%
+rename from Documentation/media/kapi/rc-core.rst
+rename to Documentation/driver-api/media/rc-core.rst
+diff --git a/Documentation/media/kapi/v4l2-async.rst b/Documentation/driver-api/media/v4l2-async.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-async.rst
+rename to Documentation/driver-api/media/v4l2-async.rst
+diff --git a/Documentation/media/kapi/v4l2-clocks.rst b/Documentation/driver-api/media/v4l2-clocks.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-clocks.rst
+rename to Documentation/driver-api/media/v4l2-clocks.rst
+diff --git a/Documentation/media/kapi/v4l2-common.rst b/Documentation/driver-api/media/v4l2-common.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-common.rst
+rename to Documentation/driver-api/media/v4l2-common.rst
+diff --git a/Documentation/media/kapi/v4l2-controls.rst b/Documentation/driver-api/media/v4l2-controls.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-controls.rst
+rename to Documentation/driver-api/media/v4l2-controls.rst
+diff --git a/Documentation/media/kapi/v4l2-core.rst b/Documentation/driver-api/media/v4l2-core.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-core.rst
+rename to Documentation/driver-api/media/v4l2-core.rst
+diff --git a/Documentation/media/kapi/v4l2-dev.rst b/Documentation/driver-api/media/v4l2-dev.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-dev.rst
+rename to Documentation/driver-api/media/v4l2-dev.rst
+diff --git a/Documentation/media/kapi/v4l2-device.rst b/Documentation/driver-api/media/v4l2-device.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-device.rst
+rename to Documentation/driver-api/media/v4l2-device.rst
+diff --git a/Documentation/media/kapi/v4l2-dv-timings.rst b/Documentation/driver-api/media/v4l2-dv-timings.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-dv-timings.rst
+rename to Documentation/driver-api/media/v4l2-dv-timings.rst
+diff --git a/Documentation/media/kapi/v4l2-event.rst b/Documentation/driver-api/media/v4l2-event.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-event.rst
+rename to Documentation/driver-api/media/v4l2-event.rst
+diff --git a/Documentation/media/kapi/v4l2-fh.rst b/Documentation/driver-api/media/v4l2-fh.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-fh.rst
+rename to Documentation/driver-api/media/v4l2-fh.rst
+diff --git a/Documentation/media/kapi/v4l2-flash-led-class.rst b/Documentation/driver-api/media/v4l2-flash-led-class.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-flash-led-class.rst
+rename to Documentation/driver-api/media/v4l2-flash-led-class.rst
+diff --git a/Documentation/media/kapi/v4l2-fwnode.rst b/Documentation/driver-api/media/v4l2-fwnode.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-fwnode.rst
+rename to Documentation/driver-api/media/v4l2-fwnode.rst
+diff --git a/Documentation/media/kapi/v4l2-intro.rst b/Documentation/driver-api/media/v4l2-intro.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-intro.rst
+rename to Documentation/driver-api/media/v4l2-intro.rst
+diff --git a/Documentation/media/kapi/v4l2-mc.rst b/Documentation/driver-api/media/v4l2-mc.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-mc.rst
+rename to Documentation/driver-api/media/v4l2-mc.rst
+diff --git a/Documentation/media/kapi/v4l2-mediabus.rst b/Documentation/driver-api/media/v4l2-mediabus.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-mediabus.rst
+rename to Documentation/driver-api/media/v4l2-mediabus.rst
+diff --git a/Documentation/media/kapi/v4l2-mem2mem.rst b/Documentation/driver-api/media/v4l2-mem2mem.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-mem2mem.rst
+rename to Documentation/driver-api/media/v4l2-mem2mem.rst
+diff --git a/Documentation/media/kapi/v4l2-rect.rst b/Documentation/driver-api/media/v4l2-rect.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-rect.rst
+rename to Documentation/driver-api/media/v4l2-rect.rst
+diff --git a/Documentation/media/kapi/v4l2-subdev.rst b/Documentation/driver-api/media/v4l2-subdev.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-subdev.rst
+rename to Documentation/driver-api/media/v4l2-subdev.rst
+diff --git a/Documentation/media/kapi/v4l2-tuner.rst b/Documentation/driver-api/media/v4l2-tuner.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-tuner.rst
+rename to Documentation/driver-api/media/v4l2-tuner.rst
+diff --git a/Documentation/media/kapi/v4l2-tveeprom.rst b/Documentation/driver-api/media/v4l2-tveeprom.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-tveeprom.rst
+rename to Documentation/driver-api/media/v4l2-tveeprom.rst
+diff --git a/Documentation/media/kapi/v4l2-videobuf.rst b/Documentation/driver-api/media/v4l2-videobuf.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-videobuf.rst
+rename to Documentation/driver-api/media/v4l2-videobuf.rst
+diff --git a/Documentation/media/kapi/v4l2-videobuf2.rst b/Documentation/driver-api/media/v4l2-videobuf2.rst
+similarity index 100%
+rename from Documentation/media/kapi/v4l2-videobuf2.rst
+rename to Documentation/driver-api/media/v4l2-videobuf2.rst
+diff --git a/Documentation/media/index.rst b/Documentation/media/index.rst
+index 8118c2d001ff..308f6a396d1c 100644
+--- a/Documentation/media/index.rst
++++ b/Documentation/media/index.rst
+@@ -13,7 +13,7 @@ Linux Media Subsystem Documentation
+    :maxdepth: 2
+ 
+    ../userspace-api/media/index
+-   media_kapi
++   ../driver-api/media/index
+    dvb-drivers/index
+    v4l-drivers/index
+    cec-drivers/index
+diff --git a/Documentation/media/v4l-drivers/max2175.rst b/Documentation/media/v4l-drivers/max2175.rst
+index a5e35059d98d..35d3c4b41fc7 100644
+--- a/Documentation/media/v4l-drivers/max2175.rst
++++ b/Documentation/media/v4l-drivers/max2175.rst
+@@ -9,7 +9,7 @@ The MAX2175 driver implements the following driver-specific controls:
+ -------------------------------
+     Enable/Disable I2S output of the tuner. This is a private control
+     that can be accessed only using the subdev interface.
+-    Refer to Documentation/media/kapi/v4l2-controls.rst for more details.
++    Refer to Documentation/driver-api/media/v4l2-controls.rst for more details.
+ 
+ .. flat-table::
+     :header-rows:  0
+diff --git a/Documentation/translations/zh_CN/video4linux/v4l2-framework.txt b/Documentation/translations/zh_CN/video4linux/v4l2-framework.txt
+index 9c39ee58ea50..6a41023b7d60 100644
+--- a/Documentation/translations/zh_CN/video4linux/v4l2-framework.txt
++++ b/Documentation/translations/zh_CN/video4linux/v4l2-framework.txt
+@@ -777,7 +777,7 @@ v4l2 核心 API 提供了一个处理视频缓冲的标准方法(称为“videob
+ 线性 DMA(videobuf-dma-contig)以及大多用于 USB 设备的用 vmalloc
+ 分配的缓冲(videobuf-vmalloc)。
+ 
+-请参阅 Documentation/media/kapi/v4l2-videobuf.rst，以获得更多关于 videobuf
++请参阅 Documentation/driver-api/media/v4l2-videobuf.rst，以获得更多关于 videobuf
+ 层的使用信息。
+ 
+ v4l2_fh 结构体
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0ce0a1c93961..b5af1feb5ba1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3853,7 +3853,7 @@ L:	linux-media@vger.kernel.org
+ T:	git git://linuxtv.org/media_tree.git
+ W:	http://linuxtv.org
+ S:	Supported
+-F:	Documentation/media/kapi/cec-core.rst
++F:	Documentation/driver-api/media/cec-core.rst
+ F:	Documentation/userspace-api/media/cec
+ F:	drivers/media/cec/
+ F:	drivers/media/rc/keymaps/rc-cec.c
+@@ -5109,6 +5109,7 @@ X:	Documentation/devicetree/
+ X:	Documentation/i2c/
+ X:	Documentation/media/
+ X:	Documentation/userspace-api/media/
++X:	Documentation/driver-api/media/
+ X:	Documentation/power/
+ X:	Documentation/spi/
+ T:	git git://git.lwn.net/linux.git docs-next
+@@ -10489,6 +10490,7 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/media/
+ F:	Documentation/media/
+ F:	Documentation/userspace-api/media/
++F:	Documentation/driver-api/media/
+ F:	drivers/media/
+ F:	drivers/staging/media/
+ F:	include/linux/platform_data/media/
 -- 
-1.8.3.1
+2.21.1
 
