@@ -2,142 +2,126 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96283C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:42:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E69EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DA520716
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:42:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5299620866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:42:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MjQJRKj7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="isdY1aSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388504AbgCDWmY (ORCPT
+        id S2388539AbgCDWmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:42:24 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53064 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388425AbgCDWmX (ORCPT
+        Wed, 4 Mar 2020 17:42:42 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40974 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388507AbgCDWmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:42:23 -0500
-Received: by mail-pj1-f67.google.com with SMTP id lt1so1564091pjb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 14:42:23 -0800 (PST)
+        Wed, 4 Mar 2020 17:42:42 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b1so1703125pgm.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 14:42:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nl7CdImQYe8yN00GJXA4TWf+5G48+DqEC0606w3AO7Q=;
-        b=MjQJRKj780yFaYsZPjrlEqTrcmIvPBSnI8wh1SeJYQZ1T64EAOr5oxCaDVf8KIZE/8
-         IztcBNIV0hMJvMJCjkRITWZGnt6hWiOghPxQGLJTOkGzy5s89y7pjjueDAXBUfzaxOXX
-         GK7eV3OvbNfG3AJtFXjJ9KxgYEhLcVu+ceTU8owMC1Y/We6NVXaDkJqZq+mCQVZhphz3
-         655xdCxjsA8lk4qElprC6RFamlP2ny9ZZMPElE0soEMAm516eUlVdXvw9X8mOLeoii7Z
-         FanK0IRItuw+4Sp7Gi7oK9giR5G4Sd2ALSQLhKUGYaSKXRaMfk0ZfbgT6NlN29fYHRsj
-         TeGw==
+         :content-disposition:in-reply-to;
+        bh=odK5+dhUnBqo/+13PepNr/CkWlUjNgQ8JDVfrKhakIk=;
+        b=isdY1aSXFghm/7DcPvO2xsBI6RsGzX4b5UMukog5rXaPNNa7gW8dJ13PYJNrekz4Tc
+         dH4RUdCfN25tOEOdXai1KnSscbdIv6B+XYH1HTrplPOXWVVZ5MkyAkwJesiA2LZ15dDh
+         +pBQqERRnjfEMP/stih8i95gBD6GNbY6FH3dI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nl7CdImQYe8yN00GJXA4TWf+5G48+DqEC0606w3AO7Q=;
-        b=qjZuvdxapHGCM3KlZM6TbYWAhqBz4QrDoTbinI4WokEdcd3re+8NKHCnMukQzPp//q
-         8f6EaltE0vAnHsEQc3y8jtdR4hJUJL/ebF0q7tOQAU31iV4Q7SojGRldh2ZnuI87TldP
-         eekEfdJhxgLBNHByps5zRAlJ6b3qw3XSe5rviPu9+V3JIR1B2zNmMDsMsoS7JYVF+wkv
-         mzP0okvQ5wZCaIG0LJIxu0PPQU71kN/r87aORLon0Y8i0N5LkyH0T/XALbrdGW9mrjUO
-         vg+EDrKUWT/yUPh31kxEQqqYsPyjrqlY7GxTC2Vqn3kq2efN5efR34nvqJVH0u52qpS1
-         lY/Q==
-X-Gm-Message-State: ANhLgQ2Vl4Y0sLKF+53mh3fYBCHiN6TArzXpar0meBVn53JrNGe5lcuy
-        X1VGDdfccjEUJ3HLvWGD3aruHQ==
-X-Google-Smtp-Source: ADFU+vvOilnZdqUKfeagNbRk+58xQkNp6dKhGnKC+aBKi7yZqtxIi66oVGLv156OdkPDbUglDI39ZA==
-X-Received: by 2002:a17:902:aa01:: with SMTP id be1mr4825036plb.293.1583361742714;
-        Wed, 04 Mar 2020 14:42:22 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id z6sm4608572pfq.39.2020.03.04.14.42.21
+         :mime-version:content-disposition:in-reply-to;
+        bh=odK5+dhUnBqo/+13PepNr/CkWlUjNgQ8JDVfrKhakIk=;
+        b=d5GcP4OKd6TbNDRYAom4Xbnw0Wcf+fOxgu+JZkm/EXIZF/6oJbaFLScSJrnXJQMjUK
+         CJdfLPsaMeVsuqB5CNVQbjKhKCmUTgzKDgn0hVoFakKTu/3l3XoWWU/hxF1O8bWsFtHx
+         QmDcav+/yYCBW/Aq/7pWthHGVzO6CkfDZdZXoMz0bhKcI4m/Kc97z6y4B0YtKra9q8yP
+         23XaUhfMDt2VLuvUunZO3BIbD81xIGQ1li8A6GpI9aGNfLGsvCfcteV9EnFfGZkrRmem
+         TIh8OE1qxp4KBuJoJOro/QjK6B0QItia4/iesITFNTPHMt/ZgpmlMw3H2R3GJQB0pFF/
+         XfhA==
+X-Gm-Message-State: ANhLgQ1GfMxh/nLJ1d+pxKuJgzJIA0fNXwuih9ETeWe4mDKGQJavB/qi
+        n06IVKBOHeifJfsjuoVGcN6oXw==
+X-Google-Smtp-Source: ADFU+vuKmczxGP4mpY9UFRgyIrH5RPg53yiVBl1Tz6nWTwaU/eXHWFgTXsBhMOZfJPQKyh0YI4ZA9w==
+X-Received: by 2002:aa7:8695:: with SMTP id d21mr5208658pfo.199.1583361760528;
+        Wed, 04 Mar 2020 14:42:40 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w81sm15677072pff.22.2020.03.04.14.42.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 14:42:22 -0800 (PST)
-Date:   Wed, 4 Mar 2020 15:42:20 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, afd@ti.com, s-anna@ti.com,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv7 15/15] remoteproc/omap: Switch to SPDX license
- identifiers
-Message-ID: <20200304224220.GC2799@xps15>
-References: <20200221101936.16833-1-t-kristo@ti.com>
- <20200221101936.16833-16-t-kristo@ti.com>
+        Wed, 04 Mar 2020 14:42:39 -0800 (PST)
+Date:   Wed, 4 Mar 2020 14:42:38 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     shuah@kernel.org, luto@amacapital.net, wad@chromium.org,
+        daniel@iogearbox.net, kafai@fb.com, yhs@fb.com, andriin@fb.com,
+        gregkh@linuxfoundation.org, tglx@linutronix.de,
+        khilman@baylibre.com, mpe@ellerman.id.au,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH 2/4] selftests: Fix seccomp to support relocatable build
+ (O=objdir)
+Message-ID: <202003041442.A46000C@keescook>
+References: <cover.1583358715.git.skhan@linuxfoundation.org>
+ <11967e5f164f0cd717921bd382ff9c13ef740146.1583358715.git.skhan@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221101936.16833-16-t-kristo@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <11967e5f164f0cd717921bd382ff9c13ef740146.1583358715.git.skhan@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 12:19:36PM +0200, Tero Kristo wrote:
-> From: Suman Anna <s-anna@ti.com>
+On Wed, Mar 04, 2020 at 03:13:33PM -0700, Shuah Khan wrote:
+> Fix seccomp relocatable builds. This is a simple fix to use the
+> right lib.mk variable TEST_GEN_PROGS for objects to leverage
+> lib.mk common framework for relocatable builds.
 > 
-> Use the appropriate SPDX license identifiers in various OMAP remoteproc
-> source files and drop the previous boilerplate license text.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 > ---
->  drivers/remoteproc/omap_remoteproc.h | 27 +--------------------------
->  1 file changed, 1 insertion(+), 26 deletions(-)
+>  tools/testing/selftests/seccomp/Makefile | 16 +++-------------
+>  1 file changed, 3 insertions(+), 13 deletions(-)
 > 
-> diff --git a/drivers/remoteproc/omap_remoteproc.h b/drivers/remoteproc/omap_remoteproc.h
-> index 13f17d9135c0..828e13256c02 100644
-> --- a/drivers/remoteproc/omap_remoteproc.h
-> +++ b/drivers/remoteproc/omap_remoteproc.h
-> @@ -1,35 +1,10 @@
-> +/* SPDX-License-Identifier: BSD-3-Clause */
-
-This is odd considering omap_remoteproc.c is GPL-2.0-only
-
-Thanks,
-Mathieu
-
->  /*
->   * Remote processor messaging
->   *
->   * Copyright (C) 2011-2020 Texas Instruments, Inc.
->   * Copyright (C) 2011 Google, Inc.
->   * All rights reserved.
-> - *
-> - * Redistribution and use in source and binary forms, with or without
-> - * modification, are permitted provided that the following conditions
-> - * are met:
-> - *
-> - * * Redistributions of source code must retain the above copyright
-> - *   notice, this list of conditions and the following disclaimer.
-> - * * Redistributions in binary form must reproduce the above copyright
-> - *   notice, this list of conditions and the following disclaimer in
-> - *   the documentation and/or other materials provided with the
-> - *   distribution.
-> - * * Neither the name Texas Instruments nor the names of its
-> - *   contributors may be used to endorse or promote products derived
-> - *   from this software without specific prior written permission.
-> - *
-> - * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-> - * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-> - * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-> - * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-> - * OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-> - * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-> - * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-> - * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-> - * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-> - * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-> - * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
->   */
+> diff --git a/tools/testing/selftests/seccomp/Makefile b/tools/testing/selftests/seccomp/Makefile
+> index 1760b3e39730..a8a9717fc1be 100644
+> --- a/tools/testing/selftests/seccomp/Makefile
+> +++ b/tools/testing/selftests/seccomp/Makefile
+> @@ -1,17 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -all:
+> -
+> -include ../lib.mk
+> -
+> -.PHONY: all clean
+> -
+> -BINARIES := seccomp_bpf seccomp_benchmark
+>  CFLAGS += -Wl,-no-as-needed -Wall
+> +LDFLAGS += -lpthread
 >  
->  #ifndef _OMAP_RPMSG_H
+> -seccomp_bpf: seccomp_bpf.c ../kselftest_harness.h
+
+How is the ../kselftest_harness.h dependency detected in the resulting
+build rules?
+
+Otherwise, looks good.
+
+-Kees
+
+> -	$(CC) $(CFLAGS) $(LDFLAGS) $< -lpthread -o $@
+> -
+> -TEST_PROGS += $(BINARIES)
+> -EXTRA_CLEAN := $(BINARIES)
+> +TEST_GEN_PROGS := seccomp_bpf seccomp_benchmark
+>  
+> -all: $(BINARIES)
+> +include ../lib.mk
 > -- 
-> 2.17.1
+> 2.20.1
 > 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+-- 
+Kees Cook
