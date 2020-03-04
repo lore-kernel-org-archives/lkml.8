@@ -2,156 +2,158 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7103DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6249C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4986E20838
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C16920665
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhx+42/1"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SXGn1tDV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbgCDFI6 (ORCPT
+        id S1725914AbgCDFK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 00:08:58 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:38775 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbgCDFI5 (ORCPT
+        Wed, 4 Mar 2020 00:10:57 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:49422 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgCDFK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 00:08:57 -0500
-Received: by mail-qk1-f196.google.com with SMTP id j7so183483qkd.5;
-        Tue, 03 Mar 2020 21:08:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lFBkP1RFFEIdcOgG68lfqjQkubJEyOh3u9uzQFg3PXI=;
-        b=lhx+42/1YZ+owNuaccXqmeSdz8aF+t0mFBcSs1OBejc/ZSZ2J1sKt7uPbtsVOxsdXz
-         b6zvtL+xRY4s3P3v7SZ4gcNAnU7/BI8kc9Lu2pffyiu9Q3yBNnjN82/YFdUJY+XorFm6
-         nN62BbPq6DX3Hw+DU94GZSOLoSQCjvNkA3zGBKYQCaKaQrq+yz7xfRFoJbicYeUWCf6X
-         G9S+dQPx/06Y7cJa/4zpPkUATPfKewHMHVjUIOCYAp6bb+dgsBbWf0t00XhBM6hP1EWH
-         rmhtc8Xg7dcar/hERqAFDIqh+FlOCveYxLCZrWwuJwdSVmOqYtnEz5SBHgS4DP7AW6zr
-         ocOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lFBkP1RFFEIdcOgG68lfqjQkubJEyOh3u9uzQFg3PXI=;
-        b=RGbCYkureHwrNyPntr7OVYhDI7Yk6/8WPBBqhrS62Zd/hV86ot9jnXjjcC++mWQP99
-         Wj/2HbVAl0swiD+quc/ZMJ2E2m68JYoPNi7JjuPptKBjJ/m/je7KLcZZg0x6/IfFa/fV
-         UJsNoYnW47qmwRmy76Egh2GQ8safKKLg0zvzvw91qiK1YvULiQzjgzo1zJep/Jt+ez8x
-         9qe3TTVdosPy2ILFJTu2ZqCKUqAWWeD3D86v6zRAAbq9V4PbOIPGZ476Ympo0YTPnhqC
-         lpQ8MoXkcBRMWA21/HUlh6H5Kq9L5+YPQ40LJnLbzAjBEKdqizXzP+ib3YU0IYxx700X
-         eQlw==
-X-Gm-Message-State: ANhLgQ2ybZydNlQtOyqlyjU0DnCHoM2/W3FzbcVZyN5Deh5b/Lnb0CJb
-        6A5Kb1bI8LDLEuDGjaS0nk0gwCmHYSOOQ3MlzGo=
-X-Google-Smtp-Source: ADFU+vtnpgo0x+Xbv4iN2D727XNRhH4imzc4Yl8wJSXCkknuXaeEnDGwns7S9VOyl/j/G2rnZ7TnBn0ONavCKWeqaQA=
-X-Received: by 2002:a37:a2d6:: with SMTP id l205mr1369810qke.92.1583298536494;
- Tue, 03 Mar 2020 21:08:56 -0800 (PST)
+        Wed, 4 Mar 2020 00:10:56 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0245Aj6M021833;
+        Tue, 3 Mar 2020 23:10:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583298645;
+        bh=3uVn5qRo3GIhs0+ZbtDUve7iCbFJIoICLR+tQsFcDj0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=SXGn1tDVA49ju/vtsxC1o7ab7U82Vbrb7oPVdm60wwpx+s3pa/tzbojstV6oHqrQ0
+         TCCCzqJRKfwlMG5MaX/ZNGvIh6DeXwu738wDedIw60zeVhn/2wd7en+Wliu1+/iKGs
+         fGWrk6Ry3WfMkbjoQBF3Kc8Ihw9lseAiQADPaCds=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0245AjBD049080
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 3 Mar 2020 23:10:45 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
+ 2020 23:10:45 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 3 Mar 2020 23:10:45 -0600
+Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0245AfCp025360;
+        Tue, 3 Mar 2020 23:10:42 -0600
+Subject: Re: [PATCH 1/5] PCI: endpoint: functions/pci-epf-test: Add DMA
+ support to transfer data
+To:     Alan Mikhak <alan.mikhak@sifive.com>
+CC:     <amurray@thegoodpenguin.co.uk>, <arnd@arndb.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        <lorenzo.pieralisi@arm.com>
+References: <20200225091130.29467-1-kishon@ti.com>
+ <1582665067-20462-1-git-send-email-alan.mikhak@sifive.com>
+ <7e1202a3-037b-d1f3-f2bf-1b8964787ebd@ti.com>
+ <CABEDWGz=4E8mYx0usw4A1UAMHrq+MGyKOX47yO7Cdgmcq=aOag@mail.gmail.com>
+ <CABEDWGwejv-1h=pLt_o5n=Mct+6r9oQdQCLT7GZSMgBR2bDJHg@mail.gmail.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <eb57e52a-be34-dd2c-3820-21fe7dc68185@ti.com>
+Date:   Wed, 4 Mar 2020 10:45:16 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200304015528.29661-1-kpsingh@chromium.org> <20200304015528.29661-4-kpsingh@chromium.org>
-In-Reply-To: <20200304015528.29661-4-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 3 Mar 2020 21:08:45 -0800
-Message-ID: <CAEf4BzbbaiLC+-Gytwcx=i0XTniNH6YNsfOfx3nrU1oo73VsKw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 3/7] bpf: Introduce BPF_MODIFY_RETURN
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-security-module@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CABEDWGwejv-1h=pLt_o5n=Mct+6r9oQdQCLT7GZSMgBR2bDJHg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 5:56 PM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> When multiple programs are attached, each program receives the return
-> value from the previous program on the stack and the last program
-> provides the return value to the attached function.
->
-> The fmod_ret bpf programs are run after the fentry programs and before
-> the fexit programs. The original function is only called if all the
-> fmod_ret programs return 0 to avoid any unintended side-effects. The
-> success value, i.e. 0 is not currently configurable but can be made so
-> where user-space can specify it at load time.
->
-> For example:
->
-> int func_to_be_attached(int a, int b)
-> {  <--- do_fentry
->
-> do_fmod_ret:
->    <update ret by calling fmod_ret>
->    if (ret != 0)
->         goto do_fexit;
->
-> original_function:
->
->     <side_effects_happen_here>
->
-> }  <--- do_fexit
->
-> The fmod_ret program attached to this function can be defined as:
->
-> SEC("fmod_ret/func_to_be_attached")
-> int BPF_PROG(func_name, int a, int b, int ret)
-> {
->         // This will skip the original function logic.
->         return 1;
-> }
->
-> The first fmod_ret program is passed 0 in its return argument.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> ---
->  arch/x86/net/bpf_jit_comp.c    | 130 ++++++++++++++++++++++++++++++---
->  include/linux/bpf.h            |   1 +
->  include/uapi/linux/bpf.h       |   1 +
->  kernel/bpf/btf.c               |   3 +-
->  kernel/bpf/syscall.c           |   1 +
->  kernel/bpf/trampoline.c        |   5 +-
->  kernel/bpf/verifier.c          |   1 +
->  tools/include/uapi/linux/bpf.h |   1 +
->  8 files changed, 130 insertions(+), 13 deletions(-)
->
+Hi Alan,
 
-This looks good, but I'll Alexei check all the assembly generation
-logic, not too big of an expert on that.
+On 04/03/20 5:27 am, Alan Mikhak wrote:
+> On Wed, Feb 26, 2020 at 9:39 AM Alan Mikhak <alan.mikhak@sifive.com> wrote:
+>>
+>> On Tue, Feb 25, 2020 at 9:27 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>
+>>> Hi Alan,
+>>>
+>>> On 26/02/20 2:41 am, Alan Mikhak wrote:
+>>>> @@ -380,6 +572,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
+>>>>         int bar;
+>>>>
+>>>>         cancel_delayed_work(&epf_test->cmd_handler);
+>>>> +       pci_epf_clean_dma_chan(epf_test);
+>>>>         pci_epc_stop(epc);
+>>>>         for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
+>>>>                 epf_bar = &epf->bar[bar];
+>>>> @@ -550,6 +743,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
+>>>>                 }
+>>>>         }
+>>>>
+>>>> +       epf_test->dma_supported = true;
+>>>> +
+>>>> +       ret = pci_epf_init_dma_chan(epf_test);
+>>>> +       if (ret)
+>>>> +               epf_test->dma_supported = false;
+>>>> +
+>>>>         if (linkup_notifier) {
+>>>>                 epf->nb.notifier_call = pci_epf_test_notifier;
+>>>>                 pci_epc_register_notifier(epc, &epf->nb);
+>>>>
+>>>> Hi Kishon,
+>>>>
+>>>> Looking forward to building and trying this patch series on
+>>>> a platform I work on.
+> 
+> Hi Kishon,
+> 
+> I applied this v1 patch series to kernel.org linux 5.6-rc3 and built for
+> x86_64 Debian and riscv. I verified that when I execute the pcitest
+> command on the x86_64 host with -d flag, the riscv endpoint performs
+> the transfer by using an available dma channel.
 
-[...]
+Thank you for testing this.
+I've posted a new version after renaming the function names to
+pci_epf_test_init_dma_chan() and pci_epf_test_cleanup_dma_chan() [1]
+Can you add your "Tested-by: " tag in that series so that Lorenzo can
+pick it up?
 
+Thanks
+Kishon
 
->  static int emit_fallback_jump(u8 **pprog)
-> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> index 98ec10b23dbb..3cfdc216a2f4 100644
-> --- a/include/linux/bpf.h
-> +++ b/include/linux/bpf.h
-> @@ -473,6 +473,7 @@ void notrace __bpf_prog_exit(struct bpf_prog *prog, u64 start);
->
->  enum bpf_tramp_prog_type {
->         BPF_TRAMP_FENTRY,
-> +       BPF_TRAMP_MODIFY_RETURN,
+[1] -> http://lore.kernel.org/r/20200303103752.13076-1-kishon@ti.com
 
-This is probably bad idea to re-number BPF_TRAMP_FEXIT for no good
-reason. E.g., if there are some drgn scripts that do some internal
-state printing, this is major inconvenience, while really providing no
-benefit in itself. Consider putting it right before BPF_TRAMP_MAX.
-
->         BPF_TRAMP_FEXIT,
->         BPF_TRAMP_MAX,
->         BPF_TRAMP_REPLACE, /* more than MAX */
-
-[...]
+> 
+> Regards,
+> Alan
+> 
+>>>>
+>>>> Would you please point me to where I can find the patches
+>>>> which add pci_epf_init_dma_chan() and pci_epf_clean_dma_chan()
+>>>> to Linux PCI Endpoint Framework?
+>>>
+>>> I've added these functions in pci-epf-test itself instead of adding in
+>>> the core files. I realized adding it in core files may not be helpful if
+>>> the endpoint function decides to use more number of DMA channels etc.,
+>>
+>> Thanks Kishon,
+>>
+>> I now realize they are in [PATCH 1/5] of this series. May I suggest renaming
+>> them to pci_epf_test_init_dma_chan() and pci_epf_test_cleanup_dma_chan()?
+>> With just pci_epf in their name, I was looking for them in pci-epf-core.c.
+>>
+>> Regards,
+>> Alan
+>>
+>>>
+>>> Thanks
+>>> Kishon
