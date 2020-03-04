@@ -2,93 +2,71 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C11C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 330D5C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E97520732
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CD320732
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388426AbgCDVxN (ORCPT
+        id S2388431AbgCDVzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:53:13 -0500
-Received: from baldur.buserror.net ([165.227.176.147]:34472 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388351AbgCDVxN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:53:13 -0500
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1j9bws-0000aD-Ml; Wed, 04 Mar 2020 15:53:03 -0600
-Message-ID: <5737c82b1ab4c80e53904e4846694884ca429569.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Jason Yan <yanaijie@huawei.com>, mpe@ellerman.id.au,
-        linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com,
-        christophe.leroy@c-s.fr, benh@kernel.crashing.org,
-        paulus@samba.org, npiggin@gmail.com, keescook@chromium.org,
-        kernel-hardening@lists.openwall.com
-Cc:     linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com
-Date:   Wed, 04 Mar 2020 15:53:01 -0600
-In-Reply-To: <20200206025825.22934-6-yanaijie@huawei.com>
-References: <20200206025825.22934-1-yanaijie@huawei.com>
-         <20200206025825.22934-6-yanaijie@huawei.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v3 5/6] powerpc/fsl_booke/64: clear the original kernel
- if randomized
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Wed, 4 Mar 2020 16:55:42 -0500
+Received: from elvis.franken.de ([193.175.24.41]:51174 "EHLO elvis.franken.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728926AbgCDVzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 16:55:42 -0500
+Received: from uucp (helo=alpha)
+        by elvis.franken.de with local-bsmtp (Exim 3.36 #1)
+        id 1j9bzN-0000mm-00; Wed, 04 Mar 2020 22:55:37 +0100
+Received: by alpha.franken.de (Postfix, from userid 1000)
+        id 832E3C0EF9; Wed,  4 Mar 2020 21:31:44 +0100 (CET)
+Date:   Wed, 4 Mar 2020 21:31:44 +0100
+From:   Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+To:     afzal mohammed <afzal.mohd.ma@gmail.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Keguang Zhang <keguang.zhang@gmail.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        John Crispin <john@phrozen.org>
+Subject: Re: [PATCH v3] MIPS: Replace setup_irq() by request_irq()
+Message-ID: <20200304203144.GA4323@alpha.franken.de>
+References: <20200304005549.5832-1-afzal.mohd.ma@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304005549.5832-1-afzal.mohd.ma@gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-02-06 at 10:58 +0800, Jason Yan wrote:
-> The original kernel still exists in the memory, clear it now.
+On Wed, Mar 04, 2020 at 06:25:43AM +0530, afzal mohammed wrote:
+> Hi mips maintainers,
 > 
-> Signed-off-by: Jason Yan <yanaijie@huawei.com>
-> Cc: Scott Wood <oss@buserror.net>
-> Cc: Diana Craciun <diana.craciun@nxp.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> ---
->  arch/powerpc/mm/nohash/kaslr_booke.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c
-> b/arch/powerpc/mm/nohash/kaslr_booke.c
-> index c6f5c1db1394..ed1277059368 100644
-> --- a/arch/powerpc/mm/nohash/kaslr_booke.c
-> +++ b/arch/powerpc/mm/nohash/kaslr_booke.c
-> @@ -378,8 +378,10 @@ notrace void __init kaslr_early_init(void *dt_ptr,
-> phys_addr_t size)
->  	unsigned int *__kaslr_offset = (unsigned int *)(KERNELBASE + 0x58);
->  	unsigned int *__run_at_load = (unsigned int *)(KERNELBASE + 0x5c);
->  
-> -	if (*__run_at_load == 1)
-> +	if (*__run_at_load == 1) {
-> +		kaslr_late_init();
->  		return;
-> +	}
+> if okay w/ this change, please consider taking it thr' your tree, else please
+> let me know.
 
-What if you're here because kexec set __run_at_load (or
-CONFIG_RELOCATABLE_TEST is enabled), not because kaslr happened?
+sorry this doesn't even compile for the first platform I've tested:
 
--Scott
+In file included from /home/tbogendoerfer/wip/korg/linux/arch/mips/sni/reset.c:11:0:
+/home/tbogendoerfer/wip/korg/linux/arch/mips/include/asm/sni.h:242:8: error: unknown type name ‘irqreturn_t’
+ extern irqreturn_t sni_isa_irq_handler(int dummy, void *p);
+        ~~~~~~~~~~~
 
+Thomas.
 
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
