@@ -2,122 +2,643 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70139C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DABC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:43:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5082F20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDABE20848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:43:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hlXhHnDb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgCDJkR (ORCPT
+        id S1729251AbgCDJnC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:40:17 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47154 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729023AbgCDJkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:40:16 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id C35F3ADBB;
-        Wed,  4 Mar 2020 09:40:14 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 10:40:14 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: misc nits Re: [PATCH 1/2] printk: add lockless buffer
-Message-ID: <20200304094014.dua4ydwat5l6lvfs@pathway.suse.cz>
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
- <20200128161948.8524-2-john.ogness@linutronix.de>
- <20200221120557.lxpeoy6xuuqxzu5w@pathway.suse.cz>
- <87r1ybujm5.fsf@linutronix.de>
- <20200302123249.6khdqpneu7t6l35s@pathway.suse.cz>
- <87a74yrhwy.fsf@linutronix.de>
+        Wed, 4 Mar 2020 04:43:02 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:58385 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728387AbgCDJnC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 04:43:02 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0249E4NE011815;
+        Wed, 4 Mar 2020 10:42:31 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=xTAUbZgzzObrdlT6XJnXg3/PAUo5cKiPBTLGO0YruFg=;
+ b=hlXhHnDbQJxP6dASolVJe0dZAbU211etYavIVMwzJ1KoweX9QigDvPrTsfmZxz0CoBpw
+ IcN68SMkFZgDoVNbcq42E0PypcbBwzWFy/mq3AtFroc+urJch3zu9QaB2THUFZzoJki8
+ Fcptc6XwZ+vfoagCOgTXsWmktJZxSK4FAMC94M/jSCJe76of4Jkq1SSUk3v++wdShlDn
+ jaUY4F13SmSRbrCBIQBQ+GKYlCa+NGxVZLjEZPse29iK9KM3OuoKlD9JsDcuwkaBEOsf
+ lBE7jSUiY/kgbWmRyPSd69DGfLS+l86zeRiLGx1YQXCUOnk8NUCGTqO3IAHV7nGmXjp7 Bg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yfem0yy1n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 10:42:31 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D375D10002A;
+        Wed,  4 Mar 2020 10:42:30 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 96C652A59B8;
+        Wed,  4 Mar 2020 10:42:30 +0100 (CET)
+Received: from localhost (10.75.127.46) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed, 4 Mar 2020 10:42:29
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <lee.jones@linaro.org>,
+        <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <wim@linux-watchdog.org>, <linux@roeck-us.net>, <p.paillet@st.com>
+CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-watchdog@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v5] dt-bindings: mfd: Convert stpmic1 bindings to json-schema
+Date:   Wed, 4 Mar 2020 10:42:20 +0100
+Message-ID: <20200304094220.28156-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87a74yrhwy.fsf@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_01:2020-03-03,2020-03-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2020-03-02 14:43:41, John Ogness wrote:
-> On 2020-03-02, Petr Mladek <pmladek@suse.com> wrote:
-> >>>> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> >>>> new file mode 100644
-> >>>> index 000000000000..796257f226ee
-> >>>> --- /dev/null
-> >>>> +++ b/kernel/printk/printk_ringbuffer.c
-> >>>> +/*
-> >>>> + * Read the record @id and verify that it is committed and has the sequence
-> >>>> + * number @seq. On success, 0 is returned.
-> >>>> + *
-> >>>> + * Error return values:
-> >>>> + * -EINVAL: A committed record @seq does not exist.
-> >>>> + * -ENOENT: The record @seq exists, but its data is not available. This is a
-> >>>> + *          valid record, so readers should continue with the next seq.
-> >>>> + */
-> >>>> +static int desc_read_committed(struct prb_desc_ring *desc_ring,
-> >>>> +			       unsigned long id, u64 seq,
-> >>>> +			       struct prb_desc *desc)
-> >>>> +{
-> >
-> > static enum desc_state
-> > desc_read_by_seq(struct prb_desc_ring *desc_ring,
-> > 		 u64 seq, struct prb_desc *desc)
-> > {
-> > 	struct prb_desc *rdesc = to_desc(desc_ring, seq);
-> > 	atomic_long_t *state_var = &rdesc->state_var;
-> > 	id = DESC_ID(atomic_long_read(state_var));
-> 
-> I think it is error-prone to re-read @state_var here. It is lockless
-> shared data. desc_read_committed() is called twice in prb_read() and it
-> is expected that both calls are using the same @id.
-> 
-> > 	enum desc_state d_state;
-> >
-> > 	d_state = desc_read(desc_ring, id, desc);
-> > 	if (d_state == desc_miss ||
-> > 	    d_state == desc_reserved ||
-> > 	    desc->info.seq != seq)
-> > 		return -EINVAL;
-> >
-> > 	if (d_state == desc_reusable)
-> > 		return -ENOENT;
-> 
-> I can use this refactoring.
-> 
-> >
-> > 	if (d_state != desc_committed)
-> > 		return -EINVAL;
-> 
-> I suppose you meant to remove this check and leave in the @blk_lpos
-> check instead. If we're trying to minimize lines of code, the @blk_lpos
-> check could be combined with the "== desc_reusable" check as well.
+Convert stpmic1 bindings to json-schema.
 
-I am an idiot. I missed that the check "d_state != desc_committed"
-will return -EINVAL also when desc_miss or desc_reserved.
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+version 5:
+- move $ref regulator.yaml under a patternProperties
+- move remain fixed strings under properties field
 
-I was too concentrated by the fact that desc->info.seq was checked
-first even though it might contain garbage.
+version 4:
+- move on uppder node $ref: ../regulator/regulator.yaml 
+- move fixed strings under properties field
+- remove unneeded () in patternProperties
+- keep ldo3 separate from other ldo properties
+Note:
+- 'st,mask-reset' property stay in each subnode, I don't find
+  the syntax to avoid dupliquate it. 
+- ldo6-supply and all possible *-supply are describe by this regular
+  expression: ^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])-supply$":
 
-Also it did not help me much the note about blk_lpos. I did not
-see how it was related to this code.
+version 3:
+- put $ref under allOf keyword
+- for each regulator node add the list of supported regulator properties
 
-To sum up. The original code worked fine. But I would prefer my variant
-that has more lines but it is somehow cleaner.
+ .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 --
+ .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ----
+ .../devicetree/bindings/mfd/st,stpmic1.yaml        | 339 +++++++++++++++++++++
+ .../bindings/regulator/st,stpmic1-regulator.txt    |  64 ----
+ .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 -
+ 5 files changed, 339 insertions(+), 164 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+ delete mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+ delete mode 100644 Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+ delete mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
 
-Best Regards,
-Petr
+diff --git a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt b/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+deleted file mode 100644
+index eb8e83736c02..000000000000
+--- a/Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
++++ /dev/null
+@@ -1,28 +0,0 @@
+-STMicroelectronics STPMIC1 Onkey
+-
+-Required properties:
+-
+-- compatible = "st,stpmic1-onkey";
+-- interrupts: interrupt line to use
+-- interrupt-names = "onkey-falling", "onkey-rising"
+-	onkey-falling: happens when onkey is pressed; IT_PONKEY_F of pmic
+-	onkey-rising: happens when onkey is released; IT_PONKEY_R of pmic
+-
+-Optional properties:
+-
+-- st,onkey-clear-cc-flag: onkey is able power on after an
+-  over-current shutdown event.
+-- st,onkey-pu-inactive: onkey pull up is not active
+-- power-off-time-sec: Duration in seconds which the key should be kept
+-        pressed for device to power off automatically (from 1 to 16 seconds).
+-        see See Documentation/devicetree/bindings/input/input.yaml
+-
+-Example:
+-
+-onkey {
+-	compatible = "st,stpmic1-onkey";
+-	interrupt-parent = <&pmic>;
+-	interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+-	interrupt-names = "onkey-falling", "onkey-rising";
+-	power-off-time-sec = <10>;
+-};
+diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt b/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+deleted file mode 100644
+index afd45c089585..000000000000
+--- a/Documentation/devicetree/bindings/mfd/st,stpmic1.txt
++++ /dev/null
+@@ -1,61 +0,0 @@
+-* STMicroelectronics STPMIC1 Power Management IC
+-
+-Required properties:
+-- compatible:		: "st,stpmic1"
+-- reg:			: The I2C slave address for the STPMIC1 chip.
+-- interrupts:		: The interrupt line the device is connected to.
+-- #interrupt-cells:	: Should be 1.
+-- interrupt-controller:	: Marks the device node as an interrupt controller.
+-			    Interrupt numbers are defined at
+-			    dt-bindings/mfd/st,stpmic1.h.
+-
+-STPMIC1 consists in a varied group of sub-devices.
+-Each sub-device binding is be described in own documentation file.
+-
+-Device			 Description
+-------			------------
+-st,stpmic1-onkey	: Power on key, see ../input/st,stpmic1-onkey.txt
+-st,stpmic1-regulators	: Regulators, see ../regulator/st,stpmic1-regulator.txt
+-st,stpmic1-wdt		: Watchdog, see ../watchdog/st,stpmic1-wdt.txt
+-
+-Example:
+-
+-#include <dt-bindings/mfd/st,stpmic1.h>
+-
+-pmic: pmic@33 {
+-	compatible = "st,stpmic1";
+-	reg = <0x33>;
+-	interrupt-parent = <&gpioa>;
+-	interrupts = <0 2>;
+-
+-	interrupt-controller;
+-	#interrupt-cells = <2>;
+-
+-	onkey {
+-		compatible = "st,stpmic1-onkey";
+-		interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
+-		interrupt-names = "onkey-falling", "onkey-rising";
+-		power-off-time-sec = <10>;
+-	};
+-
+-	watchdog {
+-		compatible = "st,stpmic1-wdt";
+-	};
+-
+-	regulators {
+-		compatible = "st,stpmic1-regulators";
+-
+-		vdd_core: buck1 {
+-			regulator-name = "vdd_core";
+-			regulator-boot-on;
+-			regulator-min-microvolt = <700000>;
+-			regulator-max-microvolt = <1200000>;
+-		};
+-		vdd: buck3 {
+-			regulator-name = "vdd";
+-			regulator-min-microvolt = <3300000>;
+-			regulator-max-microvolt = <3300000>;
+-			regulator-boot-on;
+-			regulator-pull-down;
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+new file mode 100644
+index 000000000000..d9ad9260e348
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/st,stpmic1.yaml
+@@ -0,0 +1,339 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/mfd/st,stpmic1.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: STMicroelectonics STPMIC1 Power Management IC bindings
++
++description: STMicroelectronics STPMIC1 Power Management IC
++
++maintainers:
++  - pascal Paillet <p.paillet@st.com>
++
++properties:
++  compatible:
++    const: st,stpmic1
++
++  reg:
++    const: 0x33
++
++  interrupts:
++    maxItems: 1
++
++  "#interrupt-cells":
++    const: 2
++
++  interrupt-controller: true
++
++  onkey:
++    type: object
++
++    allOf:
++      - $ref: ../input/input.yaml
++
++    properties:
++      compatible:
++        const: st,stpmic1-onkey
++
++      interrupts:
++        items:
++          - description: onkey-falling, happens when onkey is pressed. IT_PONKEY_F of pmic
++          - description: onkey-rising, happens when onkey is released. IT_PONKEY_R of pmic
++
++      interrupt-names:
++        items:
++          - const: onkey-falling
++          - const: onkey-rising
++
++      st,onkey-clear-cc-flag:
++        description: onkey is able power on after an over-current shutdown event.
++        $ref: /schemas/types.yaml#/definitions/flag
++
++      st,onkey-pu-inactive:
++        description: onkey pull up is not active
++        $ref: /schemas/types.yaml#/definitions/flag
++
++      power-off-time-sec:
++        minimum: 1
++        maximum: 16
++
++    required:
++      - compatible
++      - interrupts
++      - interrupt-names
++
++    additionalProperties: false
++
++  watchdog:
++    type: object
++
++    allOf:
++      - $ref: ../watchdog/watchdog.yaml
++
++    properties:
++      compatible:
++        const: st,stpmic1-wdt
++
++      timeout-sec: true
++
++    required:
++      - compatible
++
++    additionalProperties: false
++
++  regulators:
++    type: object
++
++    description: |
++      Available Regulators in STPMIC1 device are:
++        - buck1 for Buck BUCK1
++        - buck2 for Buck BUCK2
++        - buck3 for Buck BUCK3
++        - buck4 for Buck BUCK4
++        - ldo1 for LDO LDO1
++        - ldo2 for LDO LDO2
++        - ldo3 for LDO LDO3
++        - ldo4 for LDO LDO4
++        - ldo5 for LDO LDO5
++        - ldo6 for LDO LDO6
++        - vref_ddr for LDO Vref DDR
++        - boost for Buck BOOST
++        - pwr_sw1 for VBUS_OTG switch
++        - pwr_sw2 for SW_OUT switch
++      Switches are fixed voltage regulators with only enable/disable capability.
++
++    properties:
++      compatible:
++        const: st,stpmic1-regulators
++
++      ldo3:
++        type: object
++
++        properties:
++          interrupts:
++            maxItems: 1
++
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-min-microvolt: true
++          regulator-max-microvolt: true
++          regulator-allow-bypass: true
++          regulator-over-current-protection: true
++
++        additionalProperties: false
++
++      ldo4:
++        type: object
++
++        properties:
++          interrupts:
++            maxItems: 1
++
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-over-current-protection: true
++
++        additionalProperties: false
++
++      vref_ddr:
++        type: object
++
++        properties:
++          interrupts:
++            maxItems: 1
++
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++
++        additionalProperties: false
++
++      boost:
++        type: object
++
++        properties:
++          interrupts:
++            maxItems: 1
++
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-over-current-protection: true
++
++        additionalProperties: false
++
++    patternProperties:
++      "^(buck[1-4]|ldo[1-6]|boost|pwr_sw[1-2])-supply$":
++        description: STPMIC1 voltage regulators supplies
++
++      "^(buck[1-4]|ldo[1-6]|boost|vref_ddr|pwr_sw[1-2])$":
++        allOf:
++          - $ref: ../regulator/regulator.yaml
++
++      "^ldo[1-2,5-6]$":
++        type: object
++
++        properties:
++          interrupts:
++            maxItems: 1
++
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-min-microvolt: true
++          regulator-max-microvolt: true
++          regulator-over-current-protection: true
++          regulator-enable-ramp-delay: true
++
++        additionalProperties: false
++
++      "^buck[1-4]$":
++        type: object
++
++        properties:
++          interrupts:
++            maxItems: 1
++
++          st,mask-reset:
++            description: mask reset for this regulator,
++                         the regulator configuration is maintained during pmic reset.
++            $ref: /schemas/types.yaml#/definitions/flag
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-min-microvolt: true
++          regulator-max-microvolt: true
++          regulator-initial-mode: true
++          regulator-pull-down: true
++          regulator-over-current-protection: true
++          regulator-enable-ramp-delay: true
++
++        additionalProperties: false
++
++      "^pwr_sw[1-2]$":
++        type: object
++
++        properties:
++          interrupts:
++            maxItems: 1
++
++          regulator-name: true
++          regulator-boot-on: true
++          regulator-always-on: true
++          regulator-over-current-protection: true
++          regulator-active-discharge: true
++
++        additionalProperties: false
++
++    required:
++      - compatible
++
++    additionalProperties: false
++
++  additionalProperties: false
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - "#interrupt-cells"
++  - interrupt-controller
++
++examples:
++  - |
++    #include <dt-bindings/mfd/st,stpmic1.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    i2c@0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      pmic@33 {
++        compatible = "st,stpmic1";
++        reg = <0x33>;
++        interrupt-parent = <&gpioa>;
++        interrupts = <0 2>;
++
++        interrupt-controller;
++        #interrupt-cells = <2>;
++
++        onkey {
++          compatible = "st,stpmic1-onkey";
++          interrupts = <IT_PONKEY_F 0>,<IT_PONKEY_R 1>;
++          interrupt-names = "onkey-falling", "onkey-rising";
++          power-off-time-sec = <10>;
++        };
++
++        watchdog {
++          compatible = "st,stpmic1-wdt";
++        };
++
++        regulators {
++          compatible = "st,stpmic1-regulators";
++
++          ldo6-supply = <&v3v3>;
++
++          buck1 {
++            regulator-name = "vdd_core";
++            interrupts = <IT_CURLIM_BUCK1 0>;
++            st,mask-reset;
++            regulator-boot-on;
++            regulator-min-microvolt = <700000>;
++            regulator-max-microvolt = <1200000>;
++          };
++
++          buck3 {
++            regulator-name = "vdd";
++            regulator-min-microvolt = <3300000>;
++            regulator-max-microvolt = <3300000>;
++            regulator-boot-on;
++            regulator-pull-down;
++          };
++
++          buck4 {
++            regulator-name = "v3v3";
++            interrupts = <IT_CURLIM_BUCK4 0>;
++            regulator-min-microvolt = <3300000>;
++            regulator-max-microvolt = <3300000>;
++          };
++
++          ldo6 {
++            regulator-name = "v1v8";
++            regulator-min-microvolt = <1800000>;
++            regulator-max-microvolt = <1800000>;
++            regulator-over-current-protection;
++          };
++        };
++      };
++    };
++
++...
+diff --git a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt b/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
+deleted file mode 100644
+index 6189df71ea98..000000000000
+--- a/Documentation/devicetree/bindings/regulator/st,stpmic1-regulator.txt
++++ /dev/null
+@@ -1,64 +0,0 @@
+-STMicroelectronics STPMIC1 Voltage regulators
+-
+-Regulator Nodes are optional depending on needs.
+-
+-Available Regulators in STPMIC1 device are:
+-  - buck1 for Buck BUCK1
+-  - buck2 for Buck BUCK2
+-  - buck3 for Buck BUCK3
+-  - buck4 for Buck BUCK4
+-  - ldo1 for LDO LDO1
+-  - ldo2 for LDO LDO2
+-  - ldo3 for LDO LDO3
+-  - ldo4 for LDO LDO4
+-  - ldo5 for LDO LDO5
+-  - ldo6 for LDO LDO6
+-  - vref_ddr for LDO Vref DDR
+-  - boost for Buck BOOST
+-  - pwr_sw1 for VBUS_OTG switch
+-  - pwr_sw2 for SW_OUT switch
+-
+-Switches are fixed voltage regulators with only enable/disable capability.
+-
+-Optional properties:
+-- st,mask-reset: mask reset for this regulator: the regulator configuration
+-  is maintained during pmic reset.
+-- regulator-over-current-protection:
+-    if set, all regulators are switched off in case of over-current detection
+-    on this regulator,
+-    if not set, the driver only sends an over-current event.
+-- interrupts: index of current limit detection interrupt
+-- <regulator>-supply: phandle to the parent supply/regulator node
+-	each regulator supply can be described except vref_ddr.
+-- regulator-active-discharge: can be used on pwr_sw1 and pwr_sw2.
+-
+-Example:
+-regulators {
+-	compatible = "st,stpmic1-regulators";
+-
+-	ldo6-supply = <&v3v3>;
+-
+-	vdd_core: buck1 {
+-		regulator-name = "vdd_core";
+-		interrupts = <IT_CURLIM_BUCK1 0>;
+-		st,mask-reset;
+-		regulator-pull-down;
+-		regulator-min-microvolt = <700000>;
+-		regulator-max-microvolt = <1200000>;
+-	};
+-
+-	v3v3: buck4 {
+-		regulator-name = "v3v3";
+-		interrupts = <IT_CURLIM_BUCK4 0>;
+-
+-		regulator-min-microvolt = <3300000>;
+-		regulator-max-microvolt = <3300000>;
+-	};
+-
+-	v1v8: ldo6 {
+-		regulator-name = "v1v8";
+-		regulator-min-microvolt = <1800000>;
+-		regulator-max-microvolt = <1800000>;
+-		regulator-over-current-protection;
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt b/Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+deleted file mode 100644
+index 7cc1407f15cb..000000000000
+--- a/Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
++++ /dev/null
+@@ -1,11 +0,0 @@
+-STMicroelectronics STPMIC1 Watchdog
+-
+-Required properties:
+-
+-- compatible : should be "st,stpmic1-wdt"
+-
+-Example:
+-
+-watchdog {
+-	compatible = "st,stpmic1-wdt";
+-};
+-- 
+2.15.0
+
