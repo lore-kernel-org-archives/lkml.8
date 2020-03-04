@@ -2,125 +2,112 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347E8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA50C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13E7820705
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25581214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:33:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXT5WtUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387782AbgCDKbf (ORCPT
+        id S2387816AbgCDKdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:31:35 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44817 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgCDKbe (ORCPT
+        Wed, 4 Mar 2020 05:33:19 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:46581 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387772AbgCDKdS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:31:34 -0500
-Received: from 79.184.237.41.ipv4.supernova.orange.pl (79.184.237.41) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id f2ea0c19e76830b0; Wed, 4 Mar 2020 11:31:32 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH] cpuidle-haltpoll: allow force loading on hosts without the REALTIME hint
-Date:   Wed, 04 Mar 2020 11:31:31 +0100
-Message-ID: <2118832.28snYOIflM@kreacher>
-In-Reply-To: <75d483b5-8edf-efb1-9642-ca367e2f1423@maciej.szmigiero.name>
-References: <20200221174331.1480468-1-mail@maciej.szmigiero.name> <75d483b5-8edf-efb1-9642-ca367e2f1423@maciej.szmigiero.name>
+        Wed, 4 Mar 2020 05:33:18 -0500
+Received: by mail-vs1-f66.google.com with SMTP id t12so775160vso.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:33:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=oavuclMu1bzFOooB6OMmYHMNvudw3zSMha1bvQGFwlM=;
+        b=mXT5WtUhyrlswngAqH6ya+Juu2LGtRuHOusP2nOG7HjjTZyzZfKHy5sBYZ+UyMuoGx
+         1C9UM1j6DPFWmzU6eIMdSEHuH+Daaw7KNhAnz1qsp7m07VGBy6UCuzNAvI17a0JARLr5
+         GgzJmucnCXZq06g5AKqMDKpJr9i7hC4NjXD4q4WNcTwQH74hs8uvjFZLDNsUPbfJMmxt
+         s1GseK3iVpTYMg6sEJYBbxI59Y0pC5dkMYM3Chc2dpMkt5ItQ3DUbPebklsY6xgSgAgc
+         sySj8ET3u8vjIpi8mF6gZAdbgHWwW4LPMW9oKEA8ygbzFx0BFAi+j7+ztl2Wdr8NNtWQ
+         7qsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=oavuclMu1bzFOooB6OMmYHMNvudw3zSMha1bvQGFwlM=;
+        b=YLLY7dcdfWFiGylCSJEg5NXCmMtZ2/rIhsGoY9Gx0XQ5sOmck2FaD8SAHcPYyAKt3r
+         jC4o1tJOeioBMbVzlBKm1Uy2Xt0NdTD/EkelYBXqe33TocpQWp20P1ANDjIEATK2C0+3
+         8sCuexI5Yu6ifTm+c3bsxTaYiOduCkTyCIRrokfP1xb+xen8onnNRlwhwHqcQmYLa9a+
+         2aGqYzv5NTvaIMUERk/IeN2KxWYVDcvblWITVUqdCgIEE4v/eu3Caj09iPIUko3PUl5r
+         cyCe8rcoRrIJ505D0BfKCBeUVo4P3JOhlTFKaj7P0p0XSFybbe0ujD+DSmr6TW5GBYya
+         ieZA==
+X-Gm-Message-State: ANhLgQ2gpsSmOEWGe+yQVJIphXmcZZaL46Rk35KsjemvefIliJ8KTFvk
+        9qhzJ50mTsM6XfXwfNBWdu4qJgq5K7lbQFnsahVWsw==
+X-Google-Smtp-Source: ADFU+vt8lszpIIskiGB9+FhpTPR1wmM1HuQk0VGywmC3a/Ll2JBX9fYN7Go6GOFSjkphJhvCqF2NGIj6hT+js/1446k=
+X-Received: by 2002:a05:6102:4af:: with SMTP id r15mr1253954vsa.35.1583317997633;
+ Wed, 04 Mar 2020 02:33:17 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
+ <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
+ <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
+ <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
+ <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com> <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
+ <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com> <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
+ <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
+ <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com> <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
+ <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com> <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
+ <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com> <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
+In-Reply-To: <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Wed, 4 Mar 2020 11:32:41 +0100
+Message-ID: <CAPDyKFpPOA7VD0Qw3dnnSdF4i5pNK6buCNCV2izW6xr5Mr9ybA@mail.gmail.com>
+Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alexei Starovoitov <ast@kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        Kishon <kishon@ti.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday, February 28, 2020 6:10:18 PM CET Maciej S. Szmigiero wrote:
-> A friendly ping here.
-> 
-> Maciej
-> 
-> On 21.02.2020 18:43, Maciej S. Szmigiero wrote:
-> > From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
-> > 
-> > Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
-> > when dedicated physical CPUs are available") the cpuidle-haltpoll driver
-> > could also be used in scenarios when the host does not advertise the
-> > KVM_HINTS_REALTIME hint.
-> > 
-> > While the behavior introduced by the aforementioned commit makes sense as
-> > the default there are cases where the old behavior is desired, for example,
-> > when other kernel changes triggered by presence by this hint are unwanted,
-> > for some workloads where the latency benefit from polling overweights the
-> > loss from idle CPU capacity that otherwise would be available, or just when
-> > running under older Qemu versions that lack this hint.
-> > 
-> > Let's provide a typical "force" module parameter that allows restoring the
-> > old behavior.
-> > 
-> > Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
-> > ---
-> >  drivers/cpuidle/cpuidle-haltpoll.c | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
-> > index b0ce9bc78113..07e5b36076bb 100644
-> > --- a/drivers/cpuidle/cpuidle-haltpoll.c
-> > +++ b/drivers/cpuidle/cpuidle-haltpoll.c
-> > @@ -18,6 +18,11 @@
-> >  #include <linux/kvm_para.h>
-> >  #include <linux/cpuidle_haltpoll.h>
-> >  
-> > +static bool force __read_mostly;
-> > +module_param(force, bool, 0444);
-> > +MODULE_PARM_DESC(force,
-> > +		 "Load even if the host does not provide the REALTIME hint");
+[...]
 
-Why not to say "Load unconditionally" here?
+ >
+> > Actually we always use R1B with CMD6 as per spec.
+>
+> I fully agree that R1B is preferable, but it's not against the spec to
+> send CMD13 to poll for busy.
+>
+> Moreover, we need to cope with the scenario when the host has
+> specified a maximum timeout that isn't sufficiently long enough for
+> the requested operation. Do you have another proposal for how to
+> manage this, but disabling MMC_RSP_BUSY?
+>
+> Let's assume you driver would get a R1B for the CMD6 (we force it),
+> then what timeout would the driver be using if we would set
+> cmd.busy_timeout to 30ms?
 
-As is, one needs to know what "the REALTIME hint" is to understand it.
+/s/30ms/30s
 
-> > +
-> >  static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
-> >  static enum cpuhp_state haltpoll_hp_state;
-> >  
-> > @@ -90,6 +95,11 @@ static void haltpoll_uninit(void)
-> >  	haltpoll_cpuidle_devices = NULL;
-> >  }
-> >  
-> > +static bool haltpool_want(void)
-> > +{
-> > +	return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
-> > +}
-> > +
-> >  static int __init haltpoll_init(void)
-> >  {
-> >  	int ret;
-> > @@ -102,7 +112,7 @@ static int __init haltpoll_init(void)
-> >  	cpuidle_poll_state_init(drv);
-> >  
-> >  	if (!kvm_para_available() ||
-> > -		!kvm_para_has_hint(KVM_HINTS_REALTIME))
-> > +	    !haltpool_want())
-
-And you don't need to break this line.
-
-> >  		return -ENODEV;
-> >  
-> >  	ret = cpuidle_register_driver(drv);
-> > 
-> 
-> 
-
-Thanks!
-
-
-
+Kind regards
+Uffe
