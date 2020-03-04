@@ -4,174 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96C3C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D722C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 974BC214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11C542166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:18:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583306102;
-	bh=y/uI56ETxOiF6to8G8JqcU7y5zIAtMZUIPSNK75yQaA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=sBq858kblZA2LShwysxJ1nkAIL83q3Z03nlhvG/+IUmW4Xh/zkRkxJ1rXsp8zF6GE
-	 QU4/bd0EUUWA5rjUJpcN3RHdUAHjI5xbCzSxUL9h+68FZfjWjuXiBVZW79/jYNghe8
-	 pvMh0KvfMfgyXU4qL1nAEljOeNCkfotBvQVnHRhs=
+	s=default; t=1583306310;
+	bh=0rCt2r9mfFhBAcVs16psgL7w47RyVgyV5F8qh9nI3BY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=VMeivvDMUnHlY8EYkkpIgJTx54EQ7nh/7/D2haYg2gWOq61w+x4s2UNINglMjNNdt
+	 oDj7a9zc+jtgji1pkRvQjlYMlHEphxDhKipsgyalGsG9RJX2+wMVj5K3zFjd2ddzMF
+	 +4FLi3AakEkno7vBetJwDB8WYRJqkAn0aksx9WJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgCDHPB (ORCPT
+        id S1728273AbgCDHS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:15:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35440 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 02:18:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbgCDHPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:15:00 -0500
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725971AbgCDHS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 02:18:28 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3DFB21741
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 07:14:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D26B9214D8;
+        Wed,  4 Mar 2020 07:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583306100;
-        bh=y/uI56ETxOiF6to8G8JqcU7y5zIAtMZUIPSNK75yQaA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=frLZ0cOjqoDMu/nKrqwr5M/2S0Lg54WCLE57WKjKfgOG4t8G2LcgVlMX8j6p634LX
-         dnYDdohb3/f5iLpotWSgwS1JYAQxqB7eXsDCFLauTYZ55KdQM2AIrhB9CCbO6CK+mc
-         uMtxUrMe7/de//Ec3ztgKeH/3lwWnQtU2/xq+juY=
-Received: by mail-wr1-f52.google.com with SMTP id z11so981294wro.9
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 23:14:59 -0800 (PST)
-X-Gm-Message-State: ANhLgQ29AyMlaOqna+QBXcLFGBr2Fbu4tsUfqWDDBFZzmDfiDX5OxhbQ
-        cI5dVg4fzac+/pwvV4L3ZfHUHjxY7epYnl99lP2SQQ==
-X-Google-Smtp-Source: ADFU+vsGlLQvbg2b4VyvIhLZsuwvT9bOKvkSVXVxtjdU8xD0muWLXxDg79EArj7HfEYPCjiH5EOmTfKn41X99UZ6YzE=
-X-Received: by 2002:adf:f84a:: with SMTP id d10mr2585836wrq.208.1583306093565;
- Tue, 03 Mar 2020 23:14:53 -0800 (PST)
-MIME-Version: 1.0
-References: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
-In-Reply-To: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 4 Mar 2020 08:14:42 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu831SRo+Di6WgKTex40TcOVqNQAdeNLtfQpPdgnvrxucw@mail.gmail.com>
-Message-ID: <CAKv+Gu831SRo+Di6WgKTex40TcOVqNQAdeNLtfQpPdgnvrxucw@mail.gmail.com>
-Subject: Re: [PATCH v2] ima: add a new CONFIG for loading arch-specific policies
-To:     Nayna Jain <nayna@linux.ibm.com>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        s=default; t=1583306308;
+        bh=0rCt2r9mfFhBAcVs16psgL7w47RyVgyV5F8qh9nI3BY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=khXHERl7dtPVEfszlXXkRxwv3T3rq01nfX8KdtTPSu/MLWVTVLcq3jrlxBZc1zWcE
+         YSCLJCEt42KVGCItM6CQBuJvzz6VwKEYWYJkz2j6owxEMTFyVxFTPqkT/Z5+oCiHXY
+         s7w4mthSOFdYtasvVa1CPRwNKdXt9KNZYv0zoOWQ=
+Date:   Wed, 4 Mar 2020 16:18:23 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Anders Roxell <anders.roxell@linaro.org>, paulmck@kernel.org,
+        joel@joelfernandes.org,
+        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        David Miller <davem@davemloft.net>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [PATCH -tip V4 3/4] kprobes: Fix to protect
+ kick_kprobe_optimizer() by kprobe_mutex
+Message-Id: <20200304161823.afe5ed2b47029e55531329ea@kernel.org>
+In-Reply-To: <20200303185236.23db2ebc@gandalf.local.home>
+References: <158270755997.18966.3544449431956918068.stgit@devnote2>
+        <158270759113.18966.8938334321921933993.stgit@devnote2>
+        <20200303185236.23db2ebc@gandalf.local.home>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 03:34, Nayna Jain <nayna@linux.ibm.com> wrote:
->
-> Every time a new architecture defines the IMA architecture specific
-> functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
-> include file needs to be updated. To avoid this "noise", this patch
-> defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
-> the different architectures to select it.
->
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Philipp Rudo <prudo@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
+On Tue, 3 Mar 2020 18:52:36 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> On Wed, 26 Feb 2020 17:59:51 +0900
+> Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> 
+> > In kprobe_optimizer() kick_kprobe_optimizer() is called
+> > without kprobe_mutex, but this can race with other caller
+> > which is protected by kprobe_mutex.
+> > 
+> > To fix that, expand kprobe_mutex protected area to protect
+> > kick_kprobe_optimizer() call.
+> > 
+> 
+> Should we add
+> 
+>  Cc: stable@vger.kernel.org
+>  Fixes: cd7ebe2298ff ("kprobes: Use text_poke_smp_batch for optimizing")
+> 
+> tags?
 
-for the x86 bits, but I'm not an x86 maintainer. Also, you may need to
-split this if you want to permit arch maintainers to pick up their
-parts individually.
+Good catch! Yes, it is correct commit to be fixed.
+
+Thank you!
+
+> 
+> -- Steve
+> 
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  kernel/kprobes.c |    3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> > index 38d9a5d7c8a4..6d76a6e3e1a5 100644
+> > --- a/kernel/kprobes.c
+> > +++ b/kernel/kprobes.c
+> > @@ -592,11 +592,12 @@ static void kprobe_optimizer(struct work_struct *work)
+> >  	mutex_unlock(&module_mutex);
+> >  	mutex_unlock(&text_mutex);
+> >  	cpus_read_unlock();
+> > -	mutex_unlock(&kprobe_mutex);
+> >  
+> >  	/* Step 5: Kick optimizer again if needed */
+> >  	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
+> >  		kick_kprobe_optimizer();
+> > +
+> > +	mutex_unlock(&kprobe_mutex);
+> >  }
+> >  
+> >  /* Wait for completing optimization and unoptimization */
+> 
 
 
-> ---
-> v2:
-> * Fixed the issue identified by Mimi. Thanks Mimi, Ard, Heiko and Michael for
-> discussing the fix.
->
->  arch/powerpc/Kconfig           | 1 +
->  arch/s390/Kconfig              | 1 +
->  arch/x86/Kconfig               | 1 +
->  include/linux/ima.h            | 3 +--
->  security/integrity/ima/Kconfig | 9 +++++++++
->  5 files changed, 13 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 497b7d0b2d7e..a5cfde432983 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -979,6 +979,7 @@ config PPC_SECURE_BOOT
->         bool
->         depends on PPC_POWERNV
->         depends on IMA_ARCH_POLICY
-> +       select IMA_SECURE_AND_OR_TRUSTED_BOOT
->         help
->           Systems with firmware secure boot enabled need to define security
->           policies to extend secure boot to the OS. This config allows a user
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 8abe77536d9d..4a502fbcb800 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -195,6 +195,7 @@ config S390
->         select ARCH_HAS_FORCE_DMA_UNENCRYPTED
->         select SWIOTLB
->         select GENERIC_ALLOCATOR
-> +       select IMA_SECURE_AND_OR_TRUSTED_BOOT if IMA_ARCH_POLICY
->
->
->  config SCHED_OMIT_FRAME_POINTER
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index beea77046f9b..7f5bfaf0cbd2 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -230,6 +230,7 @@ config X86
->         select VIRT_TO_BUS
->         select X86_FEATURE_NAMES                if PROC_FS
->         select PROC_PID_ARCH_STATUS             if PROC_FS
-> +       select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
->
->  config INSTRUCTION_DECODER
->         def_bool y
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index 1659217e9b60..aefe758f4466 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
->  extern void ima_add_kexec_buffer(struct kimage *image);
->  #endif
->
-> -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
-> -       || defined(CONFIG_PPC_SECURE_BOOT)
-> +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
->  extern bool arch_ima_get_secureboot(void);
->  extern const char * const *arch_get_ima_policy(void);
->  #else
-> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-> index 3f3ee4e2eb0d..d17972aa413a 100644
-> --- a/security/integrity/ima/Kconfig
-> +++ b/security/integrity/ima/Kconfig
-> @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
->         depends on IMA_MEASURE_ASYMMETRIC_KEYS
->         depends on SYSTEM_TRUSTED_KEYRING
->         default y
-> +
-> +config IMA_SECURE_AND_OR_TRUSTED_BOOT
-> +       bool
-> +       depends on IMA
-> +       depends on IMA_ARCH_POLICY
-
-Doesn't the latter already depend on the former?
-
-> +       default n
-> +       help
-> +          This option is selected by architectures to enable secure and/or
-> +          trusted boot based on IMA runtime policies.
-> --
-> 2.13.6
->
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
