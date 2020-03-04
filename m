@@ -2,179 +2,133 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E04C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96918C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:16:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A07C420838
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C84A21744
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:16:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="X6aNIugG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388194AbgCDNQJ (ORCPT
+        id S2388104AbgCDNQ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:16:09 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:55680 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387992AbgCDNQI (ORCPT
+        Wed, 4 Mar 2020 08:16:56 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:37491 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729118AbgCDNQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:16:08 -0500
-Received: from mail-pl1-f200.google.com ([209.85.214.200])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <po-hsu.lin@canonical.com>)
-        id 1j9Tsb-0007MZ-AG
-        for linux-kernel@vger.kernel.org; Wed, 04 Mar 2020 13:16:05 +0000
-Received: by mail-pl1-f200.google.com with SMTP id k16so954502pls.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:16:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=FoiB6hzDhu7zhsE/qqdlngAwyG5TADZ8ljLTza6EBz0=;
-        b=teGkXxAmiazOyojhjVjwLENQCaZ9t2XP0F2unVXF9vQzTXkcSK1ZGxdJm/jG9h3VHj
-         euXnRswOZ+4eCzacaUpn6kYYObgX19pyh6ZtpTMILDfBOOQvhW/lxEFr5zVzESJg6Tdy
-         3IzoGX6zteo5onqOHDjxJgbcbBTt5+b4BRc8Lrk4tphJLyEs10ivNcbx6ThQabqY/j81
-         iOkjLJwXdFCVMJ7F5FeJd23K6MDxIv7KigU0cB8N0p8EhXQOvk/+8HGV6/oT3OJH7XNG
-         uiF+Z4+8vJlwPmw6v/MTutMMNEJOieva+ZfSkqymA3VUgjQoCrv8VFcwKmotlTqiEtzz
-         jDQw==
-X-Gm-Message-State: ANhLgQ21R4m8XDcFpr4B1bZExG0D52DFlS00s0pguh+BgJNegngRR+jG
-        G4NHjOkueHayuJIEtBY5Jf1uNep0r3GKrkQ6P/k7LShU7ThzmYQMKxvcjs+9uCD5ctUcJiSoQMb
-        4pk+j1u6aCnAhQglnLGyP5zmhk855jRQjiPNloiL5
-X-Received: by 2002:a17:902:d90f:: with SMTP id c15mr3056603plz.190.1583327763907;
-        Wed, 04 Mar 2020 05:16:03 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vvK4uTGiKzjtuDXnV1Gfy92QDaS45ZMs1S30Dw1XFtBScjRpPMHg0ViyThdR/UnPOLJjZ/fzQ==
-X-Received: by 2002:a17:902:d90f:: with SMTP id c15mr3056579plz.190.1583327763544;
-        Wed, 04 Mar 2020 05:16:03 -0800 (PST)
-Received: from Leggiero.taipei.internal (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id a143sm3394286pfd.108.2020.03.04.05.16.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 05:16:02 -0800 (PST)
-From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
-To:     linux-kselftest@vger.kernel.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        shuah@kernel.org
-Subject: [PATCH] selftests/powerpc: Turn off timeout setting for benchmarks, dscr, signal, tm
-Date:   Wed,  4 Mar 2020 21:15:53 +0800
-Message-Id: <20200304131553.27582-1-po-hsu.lin@canonical.com>
+        Wed, 4 Mar 2020 08:16:56 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583327815; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=K4q6i2AGe0LtekAkSNRrYuh3u8TmdkdQFpM4sYuSA1Y=; b=X6aNIugGTc2F3LsH05rYd3uAVcqTMEkZNoXxlzWi5xguYbm4wnRY71uwKuZZzBBtmVg8G4qV
+ djQh1wNK/o2dNToLC/G88SFEoCkIsO8EggZEqN7iVXFJspRi4w3sKWq03jYyuctmkfRxg1IA
+ tYMSxQ9jxpPacMh+S1sCrC5dLdU=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5faa47.7f935e333c38-smtp-out-n03;
+ Wed, 04 Mar 2020 13:16:55 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 04780C4479F; Wed,  4 Mar 2020 13:16:54 +0000 (UTC)
+Received: from rocky-Inspiron-7590.qca.qualcomm.com (unknown [180.166.53.21])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A1294C43383;
+        Wed,  4 Mar 2020 13:16:50 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A1294C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rjliao@codeaurora.org
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     marcel@holtmann.org, johan.hedberg@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
+        Rocky Liao <rjliao@codeaurora.org>
+Subject: [PATCH v1] Bluetooth: hci_qca: Replace devm_gpiod_get() with devm_gpiod_get_optional()
+Date:   Wed,  4 Mar 2020 21:16:45 +0800
+Message-Id: <20200304131645.22057-1-rjliao@codeaurora.org>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some specific tests in powerpc can take longer than the default 45
-seconds that added in commit 852c8cbf (selftests/kselftest/runner.sh:
-Add 45 second timeout per test) to run, the following test result was
-collected across 2 Power8 nodes and 1 Power9 node in our pool:
-  powerpc/benchmarks/futex_bench - 52s
-  powerpc/dscr/dscr_sysfs_test - 116s
-  powerpc/signal/signal_fuzzer - 88s
-  powerpc/tm/tm_unavailable_test - 168s
-  powerpc/tm/tm-poison - 240s
+This patch replaces devm_gpiod_get() with devm_gpiod_get_optional() to get
+bt_en and replaces devm_clk_get() with devm_clk_get_optional() to get
+susclk. It also uses NULL check to determine whether the resource is
+available or not.
 
-Thus they will fail with TIMEOUT error. Disable the timeout setting
-for these sub-tests to allow them finish properly.
-
-https://bugs.launchpad.net/bugs/1864642
-Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+Fixes: 8a208b24d770 ("Bluetooth: hci_qca: Make bt_en and susclk not mandatory for QCA Rome")
+Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
 ---
- tools/testing/selftests/powerpc/benchmarks/Makefile | 2 ++
- tools/testing/selftests/powerpc/benchmarks/settings | 1 +
- tools/testing/selftests/powerpc/dscr/Makefile       | 2 ++
- tools/testing/selftests/powerpc/dscr/settings       | 1 +
- tools/testing/selftests/powerpc/signal/Makefile     | 2 ++
- tools/testing/selftests/powerpc/signal/settings     | 1 +
- tools/testing/selftests/powerpc/tm/Makefile         | 2 ++
- tools/testing/selftests/powerpc/tm/settings         | 1 +
- 8 files changed, 12 insertions(+)
- create mode 100644 tools/testing/selftests/powerpc/benchmarks/settings
- create mode 100644 tools/testing/selftests/powerpc/dscr/settings
- create mode 100644 tools/testing/selftests/powerpc/signal/settings
- create mode 100644 tools/testing/selftests/powerpc/tm/settings
+ drivers/bluetooth/hci_qca.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/powerpc/benchmarks/Makefile b/tools/testing/selftests/powerpc/benchmarks/Makefile
-index d40300a..a32a6ab 100644
---- a/tools/testing/selftests/powerpc/benchmarks/Makefile
-+++ b/tools/testing/selftests/powerpc/benchmarks/Makefile
-@@ -2,6 +2,8 @@
- TEST_GEN_PROGS := gettimeofday context_switch fork mmap_bench futex_bench null_syscall
- TEST_GEN_FILES := exec_target
+diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+index 325baa046c3a..439392b1c043 100644
+--- a/drivers/bluetooth/hci_qca.c
++++ b/drivers/bluetooth/hci_qca.c
+@@ -1562,7 +1562,7 @@ static int qca_power_on(struct hci_dev *hdev)
+ 		ret = qca_wcn3990_init(hu);
+ 	} else {
+ 		qcadev = serdev_device_get_drvdata(hu->serdev);
+-		if (!IS_ERR(qcadev->bt_en)) {
++		if (qcadev->bt_en) {
+ 			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+ 			/* Controller needs time to bootup. */
+ 			msleep(150);
+@@ -1752,7 +1752,7 @@ static void qca_power_shutdown(struct hci_uart *hu)
+ 		host_set_baudrate(hu, 2400);
+ 		qca_send_power_pulse(hu, false);
+ 		qca_regulator_disable(qcadev);
+-	} else if (!IS_ERR(qcadev->bt_en)) {
++	} else if (qcadev->bt_en) {
+ 		gpiod_set_value_cansleep(qcadev->bt_en, 0);
+ 	}
+ }
+@@ -1901,15 +1901,15 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 		}
+ 	} else {
+ 		qcadev->btsoc_type = QCA_ROME;
+-		qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
++		qcadev->bt_en = devm_gpiod_get_optional(&serdev->dev, "enable",
+ 					       GPIOD_OUT_LOW);
+-		if (IS_ERR(qcadev->bt_en)) {
++		if (!qcadev->bt_en) {
+ 			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
+ 			power_ctrl_enabled = false;
+ 		}
  
-+TEST_FILES := settings
-+
- CFLAGS += -O2
+-		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+-		if (IS_ERR(qcadev->susclk)) {
++		qcadev->susclk = devm_clk_get_optional(&serdev->dev, NULL);
++		if (!qcadev->susclk) {
+ 			dev_warn(&serdev->dev, "failed to acquire clk\n");
+ 		} else {
+ 			err = clk_set_rate(qcadev->susclk, SUSCLK_RATE_32KHZ);
+@@ -1924,7 +1924,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+ 		err = hci_uart_register_device(&qcadev->serdev_hu, &qca_proto);
+ 		if (err) {
+ 			BT_ERR("Rome serdev registration failed");
+-			if (!IS_ERR(qcadev->susclk))
++			if (qcadev->susclk)
+ 				clk_disable_unprepare(qcadev->susclk);
+ 			return err;
+ 		}
+@@ -1945,7 +1945,7 @@ static void qca_serdev_remove(struct serdev_device *serdev)
  
- top_srcdir = ../../../../..
-diff --git a/tools/testing/selftests/powerpc/benchmarks/settings b/tools/testing/selftests/powerpc/benchmarks/settings
-new file mode 100644
-index 0000000..e7b9417
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/benchmarks/settings
-@@ -0,0 +1 @@
-+timeout=0
-diff --git a/tools/testing/selftests/powerpc/dscr/Makefile b/tools/testing/selftests/powerpc/dscr/Makefile
-index 5df4763..cfa6eed 100644
---- a/tools/testing/selftests/powerpc/dscr/Makefile
-+++ b/tools/testing/selftests/powerpc/dscr/Makefile
-@@ -3,6 +3,8 @@ TEST_GEN_PROGS := dscr_default_test dscr_explicit_test dscr_user_test	\
- 	      dscr_inherit_test dscr_inherit_exec_test dscr_sysfs_test	\
- 	      dscr_sysfs_thread_test
+ 	if (qca_is_wcn399x(qcadev->btsoc_type))
+ 		qca_power_shutdown(&qcadev->serdev_hu);
+-	else if (!IS_ERR(qcadev->susclk))
++	else if (qcadev->susclk)
+ 		clk_disable_unprepare(qcadev->susclk);
  
-+TEST_FILES := settings
-+
- top_srcdir = ../../../../..
- include ../../lib.mk
- 
-diff --git a/tools/testing/selftests/powerpc/dscr/settings b/tools/testing/selftests/powerpc/dscr/settings
-new file mode 100644
-index 0000000..e7b9417
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/dscr/settings
-@@ -0,0 +1 @@
-+timeout=0
-diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
-index 113838f..153fafc 100644
---- a/tools/testing/selftests/powerpc/signal/Makefile
-+++ b/tools/testing/selftests/powerpc/signal/Makefile
-@@ -5,6 +5,8 @@ CFLAGS += -maltivec
- $(OUTPUT)/signal_tm: CFLAGS += -mhtm
- $(OUTPUT)/sigfuz: CFLAGS += -pthread -m64
- 
-+TEST_FILES := settings
-+
- top_srcdir = ../../../../..
- include ../../lib.mk
- 
-diff --git a/tools/testing/selftests/powerpc/signal/settings b/tools/testing/selftests/powerpc/signal/settings
-new file mode 100644
-index 0000000..e7b9417
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/signal/settings
-@@ -0,0 +1 @@
-+timeout=0
-diff --git a/tools/testing/selftests/powerpc/tm/Makefile b/tools/testing/selftests/powerpc/tm/Makefile
-index b15a1a3..7b99d09 100644
---- a/tools/testing/selftests/powerpc/tm/Makefile
-+++ b/tools/testing/selftests/powerpc/tm/Makefile
-@@ -7,6 +7,8 @@ TEST_GEN_PROGS := tm-resched-dscr tm-syscall tm-signal-msr-resv tm-signal-stack
- 	$(SIGNAL_CONTEXT_CHK_TESTS) tm-sigreturn tm-signal-sigreturn-nt \
- 	tm-signal-context-force-tm tm-poison
- 
-+TEST_FILES := settings
-+
- top_srcdir = ../../../../..
- include ../../lib.mk
- 
-diff --git a/tools/testing/selftests/powerpc/tm/settings b/tools/testing/selftests/powerpc/tm/settings
-new file mode 100644
-index 0000000..e7b9417
---- /dev/null
-+++ b/tools/testing/selftests/powerpc/tm/settings
-@@ -0,0 +1 @@
-+timeout=0
+ 	hci_uart_unregister_device(&qcadev->serdev_hu);
 -- 
-2.7.4
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum, a Linux Foundation Collaborative Project
