@@ -2,584 +2,182 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB93AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA0EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89B212166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:41:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4BD20838
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:42:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKlndwSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388211AbgCDOla (ORCPT
+        id S2387508AbgCDOmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:41:30 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:9518 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388022AbgCDOl1 (ORCPT
+        Wed, 4 Mar 2020 09:42:52 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:39549 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726650AbgCDOmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:41:27 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024EWQdX023651;
-        Wed, 4 Mar 2020 09:41:15 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yfnrapsu4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Mar 2020 09:41:14 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 024EfDfq044838
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 4 Mar 2020 09:41:13 -0500
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX8.ad.analog.com (10.64.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 4 Mar 2020 09:41:12 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 4 Mar 2020 09:41:12 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 4 Mar 2020 09:41:12 -0500
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 024Eew6n008599;
-        Wed, 4 Mar 2020 09:41:10 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>
-CC:     <jic23@kernel.org>, <robh+dt@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v6 7/8] iio: adc: ad9467: add support AD9467 ADC
-Date:   Wed, 4 Mar 2020 16:44:00 +0200
-Message-ID: <20200304144401.17794-8-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200304144401.17794-1-alexandru.ardelean@analog.com>
-References: <20200304144401.17794-1-alexandru.ardelean@analog.com>
+        Wed, 4 Mar 2020 09:42:52 -0500
+Received: by mail-wr1-f68.google.com with SMTP id y17so2707267wrn.6;
+        Wed, 04 Mar 2020 06:42:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=R7ESO1ICYvzhxBC83G1oLfhCtw+YJhZp4yaAWrE9QuM=;
+        b=vKlndwSGauqJuCx/Zn2oRyheGjFspzCiAiWIdjNtI68Ne4R2OxgSHngZBNrI8W3lv4
+         DPMC9PzIjl1WIFps0wuPinkDN0+u1boGCkTXwtaZwR6Fw7paZQFt991LRl+ej9TTiLzA
+         55lRH2gAEs88mMUfbo8Ev3J5yUd4WW7Qa1BNlaWt5tEXD6/MXXReunc/m6YycfDkLU00
+         GdeSCDrm6Ey+E+3lCLgg5r8PdhuYpne+Gcuh2No3tBTRiovs4KCsEa15RBfnvLvVabL9
+         TMp5bniEZ/tz9hRLt7r743eHzj+Uv1frtZeYnlPVA9DXoIBmSG+5KfG3I47+Tye9P1OS
+         kZ2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=R7ESO1ICYvzhxBC83G1oLfhCtw+YJhZp4yaAWrE9QuM=;
+        b=NguEF153uZ/078SbIDdVUMMY95bd49Dd3okKoSkn1rSJDPYoR7Vc1MVDRDT3XX2SII
+         VuIFegnqvmRIJzzOgT6FhXBK4/k+0zh4XbDWqoU+rJaqyiG1cfMvwG7Y3pbFUiypMyLk
+         sZEvn3qEudS6rwP7TPuIG73DZIosL2XpAFBz2z4firL6cTUqjjB35yCxKJGAHD/oIILt
+         AOy3kskEwFX9o/hDIOOC5TjebwQND3APwBiSykttT21i3IurjFPf2tf9KAGE7//aXGUj
+         lUZXThpdVRLyD4vAGp+0uMoDx8l3HmfDUqVQJP6N9N0pQQW0m9e8GCe5cSJy++z8R5NU
+         xIyw==
+X-Gm-Message-State: ANhLgQ1BMCTzVfGl5D0y63Q1X+GW7uiSVkgvqqHFdi4Pb26wfMFxETNB
+        QXXF12QGPM0wn5B02V9qvG4=
+X-Google-Smtp-Source: ADFU+vtAhIPNliYww6bzbsUloSXqc7HIP6YA41fqecOEcw5BCjXfmMJ/mcqjWdRuW04qUKbj8CddMw==
+X-Received: by 2002:a05:6000:18f:: with SMTP id p15mr4785053wrx.149.1583332969016;
+        Wed, 04 Mar 2020 06:42:49 -0800 (PST)
+Received: from ziggy.stardust (81.172.58.205.dyn.user.ono.com. [81.172.58.205])
+        by smtp.gmail.com with ESMTPSA id g7sm39361979wrq.21.2020.03.04.06.42.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 06:42:48 -0800 (PST)
+Subject: Re: [RESEND PATCH v1 0/3] set ro attribute of block device according
+ to write-protection status
+To:     light.hsieh@mediatek.com, ulf.hansson@linaro.org
+Cc:     axboe@kernel.dk, kuohong.wang@mediatek.com,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, stanley.chu@mediatek.com
+References: <1583291537-15053-1-git-send-email-light.hsieh@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <ea744da4-5615-7353-9677-846d15695f48@gmail.com>
+Date:   Wed, 4 Mar 2020 15:42:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- malwarescore=0 clxscore=1015 spamscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040110
+In-Reply-To: <1583291537-15053-1-git-send-email-light.hsieh@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Hennerich <michael.hennerich@analog.com>
+Hi Light,
 
-The AD9467 is a 16-bit, monolithic, IF sampling analog-to-digital converter
-(ADC). It is optimized for high performanceover wide bandwidths and ease of
-use. The product operates at a 250 MSPS conversion rate and is designed for
-wireless receivers, instrumentation, and test equipment that require a high
-dynamic range. The ADC requires 1.8 V and 3.3 V power supplies and a low
-voltage differential input clock for full performance operation. No
-external reference or driver components are required for many applications.
-Data outputs are LVDS compatible (ANSI-644 compatible) and include the
-means to reduce the overall current needed for short trace distances.
+You send this series 3 times and this one as a resend. Please check your mail
+config, it seems there is something wrong with it.
 
-Since the chip can operate at such high sample-rates (much higher than
-classical interfaces), it requires that a DMA controller be used to
-interface directly to the chip and push data into memory.
-Typically, the AXI ADC IP core is used to interface with it.
+Regards,
+Matthias
 
-Link: https://www.analog.com/media/en/technical-documentation/data-sheets/AD9467.pdf
-
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/Kconfig  |  15 ++
- drivers/iio/adc/Makefile |   1 +
- drivers/iio/adc/ad9467.c | 432 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 448 insertions(+)
- create mode 100644 drivers/iio/adc/ad9467.c
-
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 445070abf376..a0796510f9d4 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -246,6 +246,21 @@ config AD799X
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called ad799x.
- 
-+config AD9467
-+	tristate "Analog Devices AD9467 High Speed ADC driver"
-+	depends on SPI
-+	select ADI_AXI_ADC
-+	help
-+	  Say yes here to build support for Analog Devices:
-+	  * AD9467 16-Bit, 200 MSPS/250 MSPS Analog-to-Digital Converter
-+
-+	  The driver requires the assistance of the AXI ADC IP core to operate,
-+	  since SPI is used for configuration only, while data has to be
-+	  streamed into memory via DMA.
-+
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called ad9467.
-+
- config ADI_AXI_ADC
- 	tristate "Analog Devices Generic AXI ADC IP core driver"
- 	select IIO_BUFFER
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 7c6594d049f9..59722770a654 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -26,6 +26,7 @@ obj-$(CONFIG_AD7793) += ad7793.o
- obj-$(CONFIG_AD7887) += ad7887.o
- obj-$(CONFIG_AD7949) += ad7949.o
- obj-$(CONFIG_AD799X) += ad799x.o
-+obj-$(CONFIG_AD9467) += ad9467.o
- obj-$(CONFIG_ADI_AXI_ADC) += adi-axi-adc.o
- obj-$(CONFIG_ASPEED_ADC) += aspeed_adc.o
- obj-$(CONFIG_AT91_ADC) += at91_adc.o
-diff --git a/drivers/iio/adc/ad9467.c b/drivers/iio/adc/ad9467.c
-new file mode 100644
-index 000000000000..35324bd1f0ee
---- /dev/null
-+++ b/drivers/iio/adc/ad9467.c
-@@ -0,0 +1,432 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Analog Devices AD9467 SPI ADC driver
-+ *
-+ * Copyright 2012-2020 Analog Devices Inc.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/slab.h>
-+#include <linux/spi/spi.h>
-+#include <linux/err.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/of.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/sysfs.h>
-+
-+#include <linux/clk.h>
-+
-+#include <linux/iio/adc/adi-axi-adc.h>
-+
-+/*
-+ * ADI High-Speed ADC common spi interface registers
-+ * See Application-Note AN-877:
-+ *   https://www.analog.com/media/en/technical-documentation/application-notes/AN-877.pdf
-+ */
-+
-+#define AN877_ADC_REG_CHIP_PORT_CONF		0x00
-+#define AN877_ADC_REG_CHIP_ID			0x01
-+#define AN877_ADC_REG_CHIP_GRADE		0x02
-+#define AN877_ADC_REG_CHAN_INDEX		0x05
-+#define AN877_ADC_REG_TRANSFER			0xFF
-+#define AN877_ADC_REG_MODES			0x08
-+#define AN877_ADC_REG_TEST_IO			0x0D
-+#define AN877_ADC_REG_ADC_INPUT			0x0F
-+#define AN877_ADC_REG_OFFSET			0x10
-+#define AN877_ADC_REG_OUTPUT_MODE		0x14
-+#define AN877_ADC_REG_OUTPUT_ADJUST		0x15
-+#define AN877_ADC_REG_OUTPUT_PHASE		0x16
-+#define AN877_ADC_REG_OUTPUT_DELAY		0x17
-+#define AN877_ADC_REG_VREF			0x18
-+#define AN877_ADC_REG_ANALOG_INPUT		0x2C
-+
-+/* AN877_ADC_REG_TEST_IO */
-+#define AN877_ADC_TESTMODE_OFF			0x0
-+#define AN877_ADC_TESTMODE_MIDSCALE_SHORT	0x1
-+#define AN877_ADC_TESTMODE_POS_FULLSCALE	0x2
-+#define AN877_ADC_TESTMODE_NEG_FULLSCALE	0x3
-+#define AN877_ADC_TESTMODE_ALT_CHECKERBOARD	0x4
-+#define AN877_ADC_TESTMODE_PN23_SEQ		0x5
-+#define AN877_ADC_TESTMODE_PN9_SEQ		0x6
-+#define AN877_ADC_TESTMODE_ONE_ZERO_TOGGLE	0x7
-+#define AN877_ADC_TESTMODE_USER			0x8
-+#define AN877_ADC_TESTMODE_BIT_TOGGLE		0x9
-+#define AN877_ADC_TESTMODE_SYNC			0xA
-+#define AN877_ADC_TESTMODE_ONE_BIT_HIGH		0xB
-+#define AN877_ADC_TESTMODE_MIXED_BIT_FREQUENCY	0xC
-+#define AN877_ADC_TESTMODE_RAMP			0xF
-+
-+/* AN877_ADC_REG_TRANSFER */
-+#define AN877_ADC_TRANSFER_SYNC			0x1
-+
-+/* AN877_ADC_REG_OUTPUT_MODE */
-+#define AN877_ADC_OUTPUT_MODE_OFFSET_BINARY	0x0
-+#define AN877_ADC_OUTPUT_MODE_TWOS_COMPLEMENT	0x1
-+#define AN877_ADC_OUTPUT_MODE_GRAY_CODE		0x2
-+
-+/* AN877_ADC_REG_OUTPUT_PHASE */
-+#define AN877_ADC_OUTPUT_EVEN_ODD_MODE_EN	0x20
-+#define AN877_ADC_INVERT_DCO_CLK		0x80
-+
-+/* AN877_ADC_REG_OUTPUT_DELAY */
-+#define AN877_ADC_DCO_DELAY_ENABLE		0x80
-+
-+/*
-+ * Analog Devices AD9467 16-Bit, 200/250 MSPS ADC
-+ */
-+
-+#define CHIPID_AD9467			0x50
-+#define AD9467_DEF_OUTPUT_MODE		0x08
-+#define AD9467_REG_VREF_MASK		0x0F
-+
-+enum {
-+	ID_AD9467,
-+};
-+
-+struct ad9467_state {
-+	struct spi_device		*spi;
-+	struct clk			*clk;
-+	unsigned int			output_mode;
-+
-+	struct gpio_desc		*pwrdown_gpio;
-+	struct gpio_desc		*reset_gpio;
-+};
-+
-+static int ad9467_spi_read(struct spi_device *spi, unsigned int reg)
-+{
-+	unsigned char buf[3];
-+	int ret;
-+
-+	buf[0] = 0x80 | (reg >> 8);
-+	buf[1] = reg & 0xFF;
-+
-+	ret = spi_write_then_read(spi, &buf[0], 2, &buf[2], 1);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	return buf[2];
-+}
-+
-+static int ad9467_spi_write(struct spi_device *spi, unsigned int reg,
-+			    unsigned int val)
-+{
-+	unsigned char buf[3];
-+
-+	buf[0] = reg >> 8;
-+	buf[1] = reg & 0xFF;
-+	buf[2] = val;
-+
-+	return spi_write(spi, buf, ARRAY_SIZE(buf));
-+}
-+
-+static int ad9467_reg_access(struct adi_axi_adc_conv *conv, unsigned int reg,
-+			     unsigned int writeval, unsigned int *readval)
-+{
-+	struct ad9467_state *st = adi_axi_adc_conv_priv(conv);
-+	struct spi_device *spi = st->spi;
-+	int ret;
-+
-+	if (readval == NULL) {
-+		ret = ad9467_spi_write(spi, reg, writeval);
-+		ad9467_spi_write(spi, AN877_ADC_REG_TRANSFER,
-+				 AN877_ADC_TRANSFER_SYNC);
-+		return ret;
-+	}
-+
-+	ret = ad9467_spi_read(spi, reg);
-+	if (ret < 0)
-+		return ret;
-+	*readval = ret;
-+
-+	return 0;
-+}
-+
-+static const unsigned int ad9467_scale_table[][2] = {
-+	{2000, 0}, {2100, 6}, {2200, 7},
-+	{2300, 8}, {2400, 9}, {2500, 10},
-+};
-+
-+static void __ad9467_get_scale(struct adi_axi_adc_conv *conv, int index,
-+			       unsigned int *val, unsigned int *val2)
-+{
-+	const struct adi_axi_adc_chip_info *info = conv->chip_info;
-+	const struct iio_chan_spec *chan = &info->channels[0];
-+	unsigned int tmp;
-+
-+	tmp = (info->scale_table[index][0] * 1000000ULL) >>
-+			chan->scan_type.realbits;
-+	*val = tmp / 1000000;
-+	*val2 = tmp % 1000000;
-+}
-+
-+#define AD9467_CHAN(_chan, _si, _bits, _sign)				\
-+{									\
-+	.type = IIO_VOLTAGE,						\
-+	.indexed = 1,							\
-+	.channel = _chan,						\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |		\
-+		BIT(IIO_CHAN_INFO_SAMP_FREQ),				\
-+	.scan_index = _si,						\
-+	.scan_type = {							\
-+		.sign = _sign,						\
-+		.realbits = _bits,					\
-+		.storagebits = 16,					\
-+	},								\
-+}
-+
-+static const struct iio_chan_spec ad9467_channels[] = {
-+	AD9467_CHAN(0, 0, 16, 'S'),
-+};
-+
-+static const struct adi_axi_adc_chip_info ad9467_chip_info_tbl[] = {
-+	[ID_AD9467] = {
-+		.id = CHIPID_AD9467,
-+		.max_rate = 250000000UL,
-+		.scale_table = ad9467_scale_table,
-+		.num_scales = ARRAY_SIZE(ad9467_scale_table),
-+		.channels = ad9467_channels,
-+		.num_channels = ARRAY_SIZE(ad9467_channels),
-+	},
-+};
-+
-+static int ad9467_get_scale(struct adi_axi_adc_conv *conv, int *val, int *val2)
-+{
-+	const struct adi_axi_adc_chip_info *info = conv->chip_info;
-+	struct ad9467_state *st = adi_axi_adc_conv_priv(conv);
-+	unsigned int i, vref_val, vref_mask;
-+
-+	vref_val = ad9467_spi_read(st->spi, AN877_ADC_REG_VREF);
-+
-+	switch (info->id) {
-+	case CHIPID_AD9467:
-+		vref_mask = AD9467_REG_VREF_MASK;
-+		break;
-+	default:
-+		vref_mask = 0xFFFF;
-+		break;
-+	}
-+
-+	vref_val &= vref_mask;
-+
-+	for (i = 0; i < info->num_scales; i++) {
-+		if (vref_val == info->scale_table[i][1])
-+			break;
-+	}
-+
-+	if (i == info->num_scales)
-+		return -ERANGE;
-+
-+	__ad9467_get_scale(conv, i, val, val2);
-+
-+	return IIO_VAL_INT_PLUS_MICRO;
-+}
-+
-+static int ad9467_set_scale(struct adi_axi_adc_conv *conv, int val, int val2)
-+{
-+	const struct adi_axi_adc_chip_info *info = conv->chip_info;
-+	struct ad9467_state *st = adi_axi_adc_conv_priv(conv);
-+	unsigned int scale_val[2];
-+	unsigned int i;
-+
-+	if (val != 0)
-+		return -EINVAL;
-+
-+	for (i = 0; i < info->num_scales; i++) {
-+		__ad9467_get_scale(conv, i, &scale_val[0], &scale_val[1]);
-+		if (scale_val[0] != val || scale_val[1] != val2)
-+			continue;
-+
-+		ad9467_spi_write(st->spi, AN877_ADC_REG_VREF,
-+				 info->scale_table[i][1]);
-+		ad9467_spi_write(st->spi, AN877_ADC_REG_TRANSFER,
-+				 AN877_ADC_TRANSFER_SYNC);
-+		return 0;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static int ad9467_read_raw(struct adi_axi_adc_conv *conv,
-+			   struct iio_chan_spec const *chan,
-+			   int *val, int *val2, long m)
-+{
-+	struct ad9467_state *st = adi_axi_adc_conv_priv(conv);
-+
-+	switch (m) {
-+	case IIO_CHAN_INFO_SCALE:
-+		return ad9467_get_scale(conv, val, val2);
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		if (!st->clk)
-+			return -ENODEV;
-+
-+		*val = clk_get_rate(st->clk);
-+
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad9467_write_raw(struct adi_axi_adc_conv *conv,
-+			    struct iio_chan_spec const *chan,
-+			    int val, int val2, long mask)
-+{
-+	const struct adi_axi_adc_chip_info *info = conv->chip_info;
-+	struct ad9467_state *st = adi_axi_adc_conv_priv(conv);
-+	unsigned long r_clk;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		return ad9467_set_scale(conv, val, val2);
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		if (!st->clk)
-+			return -ENODEV;
-+
-+		if (chan->extend_name)
-+			return -ENODEV;
-+
-+		r_clk = clk_round_rate(st->clk, val);
-+		if (r_clk < 0 || r_clk > info->max_rate) {
-+			dev_warn(&st->spi->dev,
-+				 "Error setting ADC sample rate %ld", r_clk);
-+			return -EINVAL;
-+		}
-+
-+		return clk_set_rate(st->clk, r_clk);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int ad9467_outputmode_set(struct spi_device *spi, unsigned int mode)
-+{
-+	int ret;
-+
-+	ret = ad9467_spi_write(spi, AN877_ADC_REG_OUTPUT_MODE, mode);
-+	if (ret < 0)
-+		return ret;
-+
-+	return ad9467_spi_write(spi, AN877_ADC_REG_TRANSFER,
-+				AN877_ADC_TRANSFER_SYNC);
-+}
-+
-+static int ad9467_preenable_setup(struct adi_axi_adc_conv *conv)
-+{
-+	struct ad9467_state *st = adi_axi_adc_conv_priv(conv);
-+
-+	return ad9467_outputmode_set(st->spi, st->output_mode);
-+}
-+
-+static int ad9467_setup(struct ad9467_state *st, unsigned int chip_id)
-+{
-+	switch (chip_id) {
-+	case CHIPID_AD9467:
-+		st->output_mode = AD9467_DEF_OUTPUT_MODE |
-+				  AN877_ADC_OUTPUT_MODE_TWOS_COMPLEMENT;
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static void ad9467_clk_disable(void *data)
-+{
-+	struct ad9467_state *st = data;
-+
-+	clk_disable_unprepare(st->clk);
-+}
-+
-+static const struct of_device_id ad9467_of_match[] = {
-+	{ .compatible = "adi,ad9467", .data = (void *)ID_AD9467, },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, ad9467_of_match);
-+
-+static int ad9467_probe(struct spi_device *spi)
-+{
-+	const struct of_device_id *oid;
-+	struct adi_axi_adc_conv *conv;
-+	struct ad9467_state *st;
-+	unsigned int id;
-+	int ret;
-+
-+	if (!spi->dev.of_node) {
-+		dev_err(&spi->dev, "DT node is null\n");
-+		return -ENODEV;
-+	}
-+
-+	oid = of_match_node(ad9467_of_match, spi->dev.of_node);
-+	if (!oid)
-+		return -ENODEV;
-+
-+	conv = devm_adi_axi_adc_conv_register(&spi->dev, sizeof(*st));
-+	if (IS_ERR(conv))
-+		return PTR_ERR(conv);
-+
-+	st = adi_axi_adc_conv_priv(conv);
-+	st->spi = spi;
-+
-+	st->clk = devm_clk_get(&spi->dev, "adc-clk");
-+	if (IS_ERR(st->clk))
-+		return PTR_ERR(st->clk);
-+
-+	ret = clk_prepare_enable(st->clk);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = devm_add_action_or_reset(&spi->dev, ad9467_clk_disable, st);
-+	if (ret)
-+		return ret;
-+
-+	st->pwrdown_gpio = devm_gpiod_get_optional(&spi->dev, "powerdown",
-+						   GPIOD_OUT_LOW);
-+	if (IS_ERR(st->pwrdown_gpio))
-+		return PTR_ERR(st->pwrdown_gpio);
-+
-+	st->reset_gpio = devm_gpiod_get_optional(&spi->dev, "reset",
-+						 GPIOD_OUT_LOW);
-+	if (IS_ERR(st->reset_gpio))
-+		return PTR_ERR(st->reset_gpio);
-+
-+	if (st->reset_gpio) {
-+		udelay(1);
-+		ret = gpiod_direction_output(st->reset_gpio, 1);
-+		mdelay(10);
-+	}
-+
-+	spi_set_drvdata(spi, st);
-+
-+	id = (unsigned int)oid->data;
-+	conv->chip_info = &ad9467_chip_info_tbl[id];
-+
-+	id = ad9467_spi_read(spi, AN877_ADC_REG_CHIP_ID);
-+	if (id != conv->chip_info->id) {
-+		dev_err(&spi->dev, "Unrecognized CHIP_ID 0x%X\n", id);
-+		return -ENODEV;
-+	}
-+
-+	conv->reg_access = ad9467_reg_access;
-+	conv->write_raw = ad9467_write_raw;
-+	conv->read_raw = ad9467_read_raw;
-+	conv->preenable_setup = ad9467_preenable_setup;
-+
-+	return ad9467_setup(st, id);
-+}
-+
-+static struct spi_driver ad9467_driver = {
-+	.driver = {
-+		.name = "ad9467",
-+		.of_match_table = ad9467_of_match,
-+	},
-+	.probe = ad9467_probe,
-+};
-+module_spi_driver(ad9467_driver);
-+
-+MODULE_AUTHOR("Michael Hennerich <michael.hennerich@analog.com>");
-+MODULE_DESCRIPTION("Analog Devices AD9467 ADC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.20.1
-
+On 04/03/2020 04:12, light.hsieh@mediatek.com wrote:
+> From: Light Hsieh <light.hsieh@mediatek.com>
+> 
+>   set ro attribute of block device according to write-protection status
+> 
+> Light Hsieh (3):
+>   mmc: record wp_grp_size and boot_wp_status
+>   mmc: check write-protection status during BLKROSET ioctl
+>   block: set partition read/write policy according to write-protection
+>     status
+> 
+>  block/ioctl.c             |   2 +-
+>  block/partition-generic.c |  10 +++
+>  drivers/mmc/core/block.c  | 217 ++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/mmc/core/mmc.c    |  16 ++++
+>  include/linux/blkdev.h    |   1 +
+>  include/linux/mmc/card.h  |   3 +
+>  include/linux/mmc/mmc.h   |   2 +
+>  7 files changed, 250 insertions(+), 1 deletion(-)
+> 
