@@ -2,92 +2,78 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0282C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AE4C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D76C24654
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:12:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583341975;
-	bh=fGZO8IiDt6IouMRYJcdwHaQ/Nli/lNDUQPVQ+t4fUJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BM1Y1pUY44G1MrW/1qM7yrWTv2SL9BHiM3yGw31P2nRkYWUd9H9seZFDbdBAryT3J
-	 N4tEtIsysKL57oVZrIelLlXOjbebNJfzQIIuOZaEdXQQBndLJjnXPU/yWUiiDZFCJa
-	 ++jXsKFRnLdKs9FwUoU9ItQZYxpK2hZT2owxyrBo=
+	by mail.kernel.org (Postfix) with ESMTP id 6944321775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:13:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729863AbgCDRMy (ORCPT
+        id S1729955AbgCDRNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:12:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43584 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 12:13:37 -0500
+Received: from mga02.intel.com ([134.134.136.20]:63724 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726748AbgCDRMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:12:54 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7108221775;
-        Wed,  4 Mar 2020 17:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583341973;
-        bh=fGZO8IiDt6IouMRYJcdwHaQ/Nli/lNDUQPVQ+t4fUJE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QGSNA6SCwIwmnoXq6unuaIbYou3KDT8LlCwlB35VykB+lCFs9M3ouwd7ho1ObbzG1
-         vc2rDlHbd4UG0eRfdCIbaSZIhpjLDBquwL0RNFqYK5keUyYUConYjvrxEeaIgYynhV
-         0tLrwmAprP16lTXMmQO0oYYSp1tAww5C173kUmMw=
-Date:   Wed, 4 Mar 2020 18:12:52 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        Todd Kjos <tkjos@google.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-pm@vger.kernel.org
-Subject: Re: [PATCH v5 0/6] driver core: Improve and cleanup
- driver_deferred_probe_check_state()
-Message-ID: <20200304171252.GA1852336@kroah.com>
-References: <20200225050828.56458-1-john.stultz@linaro.org>
+        id S1726748AbgCDRNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 12:13:37 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 09:13:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
+   d="scan'208";a="240523072"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga003.jf.intel.com with ESMTP; 04 Mar 2020 09:13:36 -0800
+Date:   Wed, 4 Mar 2020 09:13:36 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        DavidWang@zhaoxin.com, CooperYan@zhaoxin.com,
+        QiyuanWang@zhaoxin.com, HerryYang@zhaoxin.com
+Subject: Re: [PATCH] x86/Kconfig: Make X86_UMIP to cover Zhaoxin CPUs too
+Message-ID: <20200304171336.GD21662@linux.intel.com>
+References: <1583288285-2804-1-git-send-email-TonyWWang-oc@zhaoxin.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200225050828.56458-1-john.stultz@linaro.org>
+In-Reply-To: <1583288285-2804-1-git-send-email-TonyWWang-oc@zhaoxin.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 25, 2020 at 05:08:22AM +0000, John Stultz wrote:
-> This series goal is to improve and cleanup the
-> driver_deferred_probe_check_state() code in the driver core.
+On Wed, Mar 04, 2020 at 10:18:05AM +0800, Tony W Wang-oc wrote:
+> New Zhaoxin family 7 CPUs support the UMIP (User-Mode Instruction
+> Prevention) feature. So, modify X86_UMIP depends on Zhaoxin CPUs too.
 > 
-> This series is useful for being able to support modules
-> dependencies which may be loaded by userland, far after
-> late_initcall is done. For instance, this series allows us to
-> successfully use various clk drivers as modules on the db845c
-> board. And without it, those drivers have to be statically built
-> in to work.
+> Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+> ---
+>  arch/x86/Kconfig | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Since I first sent out this patch, Saravana suggested an
-> alternative approach which also works for our needs, and is a
-> bit simpler:
->  https://lore.kernel.org/lkml/20200220055250.196456-1-saravanak@google.com/T/#u
-> 
-> However, while that patch provides the functionality we need,
-> I still suspect the driver_deferred_probe_check_state() code
-> could benefit from the cleanup in this patch, as the existing
-> logic is somewhat muddy.
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 16a4b39..ca4beb8 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1877,7 +1877,7 @@ config X86_SMAP
+>  
+>  config X86_UMIP
+>  	def_bool y
+> -	depends on CPU_SUP_INTEL || CPU_SUP_AMD
+> +	depends on CPU_SUP_INTEL || CPU_SUP_AMD || CPU_SUP_CENTAUR || CPU_SUP_ZHAOXIN
 
-This looks much better, thanks for sticking with it, all now queued up.
+The changelog only mentions Zhaoxin, but this also adds Centaur...
 
-greg k-h
+>  	prompt "User Mode Instruction Prevention" if EXPERT
+>  	---help---
+>  	  User Mode Instruction Prevention (UMIP) is a security feature in
+> -- 
+> 2.7.4
+> 
