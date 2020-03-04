@@ -2,121 +2,130 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C08E4C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:45:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A585AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B10121739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:45:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E8B52146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:46:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=shipmail.org header.i=@shipmail.org header.b="EzwiVbDw"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FKOJXMWu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729439AbgCDLpz (ORCPT
+        id S1729463AbgCDLqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:45:55 -0500
-Received: from pio-pvt-msa1.bahnhof.se ([79.136.2.40]:34832 "EHLO
-        pio-pvt-msa1.bahnhof.se" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729389AbgCDLpx (ORCPT
+        Wed, 4 Mar 2020 06:46:03 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45104 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729389AbgCDLqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:45:53 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTP id 7B3D93F6D0;
-        Wed,  4 Mar 2020 12:45:50 +0100 (CET)
-Authentication-Results: pio-pvt-msa1.bahnhof.se;
-        dkim=pass (1024-bit key; unprotected) header.d=shipmail.org header.i=@shipmail.org header.b="EzwiVbDw";
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at bahnhof.se
-Received: from pio-pvt-msa1.bahnhof.se ([127.0.0.1])
-        by localhost (pio-pvt-msa1.bahnhof.se [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0YoJBpSr6G0B; Wed,  4 Mar 2020 12:45:49 +0100 (CET)
-Received: from mail1.shipmail.org (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        (Authenticated sender: mb878879)
-        by pio-pvt-msa1.bahnhof.se (Postfix) with ESMTPA id ED6AB3F5E6;
-        Wed,  4 Mar 2020 12:45:43 +0100 (CET)
-Received: from localhost.localdomain.localdomain (h-205-35.A357.priv.bahnhof.se [155.4.205.35])
-        by mail1.shipmail.org (Postfix) with ESMTPSA id 88CAA36037A;
-        Wed,  4 Mar 2020 12:45:43 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=shipmail.org; s=mail;
-        t=1583322343; bh=DkZKy1wxQheUXkdvovfrp91b02AhTEEUVAqp7+y35v4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EzwiVbDwAhXV/f1h/n/D9arFrtr4vg44pc78QosAdspFrqHgPEnxhAZU5T+ybQXGL
-         5b8Ve7NgSbH6L+UhU69baqJY7I010YPB+RV+qsDrLNdXkL1tcUqrOLk12xQYgNOGTZ
-         jb9qqkimgJgMlZQLlNxIG8XTU3oUWq3e9o76/WgU=
-From:   =?UTF-8?q?Thomas=20Hellstr=C3=B6m=20=28VMware=29?= 
-        <thomas_os@shipmail.org>
-To:     x86@kernel.org, Christoph Hellwig <hch@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 2/2] dma-mapping: Fix dma_pgprot() for unencrypted coherent pages
-Date:   Wed,  4 Mar 2020 12:45:27 +0100
-Message-Id: <20200304114527.3636-3-thomas_os@shipmail.org>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200304114527.3636-1-thomas_os@shipmail.org>
-References: <20200304114527.3636-1-thomas_os@shipmail.org>
+        Wed, 4 Mar 2020 06:46:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583322361;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cCc7BElPshbmHtWbpagJwHxtkWCPSA1SVypRulNi+oI=;
+        b=FKOJXMWujAvERLLKRrmsTbWT56z/bgErDTEtVycy+R+jo9KQnnHoIu9CWqJDJlZ6JlYLAU
+        d0fyM091ECUrBTfORSLtdU5qmAG/xsp1f1+QYFzv18G7T1VgmpN6CaY4FUVa0l/e9uJ2vZ
+        zpx+D5+vhMbdr3u3avQMEWh7v0DiCfg=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-242-5xgQfrUINiy2i2oqR1RjMQ-1; Wed, 04 Mar 2020 06:45:57 -0500
+X-MC-Unique: 5xgQfrUINiy2i2oqR1RjMQ-1
+Received: by mail-wr1-f70.google.com with SMTP id n7so738150wro.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 03:45:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cCc7BElPshbmHtWbpagJwHxtkWCPSA1SVypRulNi+oI=;
+        b=uPI75ZP5CcDfavZcjVjmRvTlXvX1J6vrAp/S6uKCokAC8lQaiyJ0ASe18x1SyHilIq
+         dE4a1i8BjOip57c+TXFKl9rEoUKQtJL/XxTEp+FmnJB0Qd9+ZzJZnSM+r91cxNoCuAF8
+         qgg3qNCdm/D7IKaBcwgs3fAGPuW+2RpPCrLqKtHDZ2Ac58IUy3F+NEz3KbJhK6rTBNvI
+         QZEi811t5F0IWTGyKOIw2DfcSFy7ygi5xoBNqa3VNuHx+tipiX7RRDSCpbVXnlLmjhMq
+         q6e3W2y6S8Ewy5mk9JGRQwfKpTi2LKBUhbVFlnR6BGfYmhUN7VKitcd3gYidYsOvz6/y
+         YN+w==
+X-Gm-Message-State: ANhLgQ3LtOcSyHFYxoFpjoJ/nvVJ1ZrTre6DRrl8luarlglHzXFCsngC
+        YqNwa+IoTBmU+x+j8aQLivtlTh/FXtzYNtsHgbiK4o3Zhcu+zZYlh8kXid8WNR0oZaMdaKu+n3y
+        dDeWUyu1F6AyvwpQWdKL9Jp5/
+X-Received: by 2002:a05:600c:34b:: with SMTP id u11mr3265900wmd.69.1583322356248;
+        Wed, 04 Mar 2020 03:45:56 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vtDCFoIzfRfvbrwlxy97mJ/vLfuAr+c71xd1ne4wJN7KG9hlnGajvZ1LeDt6NFSBwXSN8nQog==
+X-Received: by 2002:a05:600c:34b:: with SMTP id u11mr3265875wmd.69.1583322355946;
+        Wed, 04 Mar 2020 03:45:55 -0800 (PST)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-fc7e-fd47-85c1-1ab3.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:fc7e:fd47:85c1:1ab3])
+        by smtp.gmail.com with ESMTPSA id z12sm11885882wrs.43.2020.03.04.03.45.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 03:45:55 -0800 (PST)
+Subject: Re: Updating cypress/brcm firmware in linux-firmware for
+ CVE-2019-15126
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        Chirjeev Singh <Chirjeev.Singh@cypress.com>,
+        Chung-Hsien Hsu <cnhu@cypress.com>
+List-Id: <linux-firmware.lore.kernel.org>
+Cc:     linux-firmware@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <93dba8d2-6e46-9157-d292-4d93feb8ec1a@redhat.com>
+Message-ID: <c2f75e84-6c8d-f4f0-bcc6-5fb2b662de33@redhat.com>
+Date:   Wed, 4 Mar 2020 12:45:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <93dba8d2-6e46-9157-d292-4d93feb8ec1a@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Hellstrom <thellstrom@vmware.com>
+Hi,
 
-When dma_mmap_coherent() sets up a mapping to unencrypted coherent memory
-under SEV encryption and sometimes under SME encryption, it will actually
-set up an encrypted mapping rather than an unencrypted, causing devices
-that DMAs from that memory to read encrypted contents. Fix this.
+On 2/26/20 11:16 PM, Hans de Goede wrote:
+> Hello Cypress people,
+> 
+> Can we please get updated firmware for
+> brcm/brcmfmac4356-pcie.bin and brcm/brcmfmac4356-sdio.bin
+> fixing CVE-2019-15126 as well as for any other affected
+> models (the 4356 is explicitly named in the CVE description) ?
+> 
+> The current Cypress firmware files in linux-firmware are
+> quite old, e.g. for brcm/brcmfmac4356-pcie.bin linux-firmware has:
+> version 7.35.180.176 dated 2017-10-23, way before the CVE
+> 
+> Where as https://community.cypress.com/docs/DOC-19000 /
+> cypress-fmac-v4.14.77-2020_0115.zip has:
+> version 7.35.180.197 which presumably contains a fix (no changelog)
 
-When force_dma_unencrypted() returns true, the linear kernel map of the
-coherent pages have had the encryption bit explicitly cleared and the
-page content is unencrypted. Make sure that any additional PTEs we set
-up to these pages also have the encryption bit cleared by having
-dma_pgprot() return a protection with the encryption bit cleared in this
-case.
+Ping?
 
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Christian König <christian.koenig@amd.com>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
----
- kernel/dma/mapping.c | 2 ++
- 1 file changed, 2 insertions(+)
+The very old age of the firmware files in linux-firmware is really
+UNACCEPTABLE and very irresponsible from a security POV. Please
+fix this very soon.
 
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 12ff766ec1fa..98e3d873792e 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -154,6 +154,8 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
-  */
- pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
- {
-+	if (force_dma_unencrypted(dev))
-+		prot = pgprot_decrypted(prot);
- 	if (dev_is_dma_coherent(dev) ||
- 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
-              (attrs & DMA_ATTR_NON_CONSISTENT)))
--- 
-2.21.1
+If you do not reply to this email I see no choice but to switch
+the firmwares in linux-firmware over to the ones from the SDK which
+you do regularly update, e.g. those from:
+https://community.cypress.com/docs/DOC-19000
+
+Yes those are under an older, slightly different version of the Cypress
+license, which is less then ideal, but that license is still acceptable
+for linux-firmware (*) and since you are not providing any updates to
+the special builds you have been doing for linux-firmware you are
+really leaving us no option other then switching to the SDK version
+of the firmwares.
+
+Regards,
+
+Hans
+
+*) We have distributed files under the old version of the license before
 
