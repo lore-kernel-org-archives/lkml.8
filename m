@@ -2,284 +2,133 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B417C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86659C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065FF2073D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D84F2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:33:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VPyu0sm/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbgCDPap (ORCPT
+        id S1729447AbgCDPdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:30:45 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:60406 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgCDPao (ORCPT
+        Wed, 4 Mar 2020 10:33:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23981 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725897AbgCDPdA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:30:44 -0500
-Received: from b2b-5-147-251-51.unitymedia.biz ([5.147.251.51] helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1j9VyE-0002FV-Te; Wed, 04 Mar 2020 15:30:03 +0000
-Date:   Wed, 4 Mar 2020 16:30:02 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Bernd Edlinger <bernd.edlinger@hotmail.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jann Horn <jannh@google.com>, Jonathan Corbet <corbet@lwn.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Andrei Vagin <avagin@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Yuyang Du <duyuyang@gmail.com>,
-        David Hildenbrand <david@redhat.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        David Howells <dhowells@redhat.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christian Kellner <christian@kellner.me>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Wed, 4 Mar 2020 10:33:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583335978;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=DvMXhwaYEf1u8lhU5yD2w5KVrzZ7oi00fPBDP3UuBlI=;
+        b=VPyu0sm/4C/xHixNW/EflzN6H0Q2JKnG4DqmNV4IYL05nLfoPzmRvWICQ3AGfW4rhTOBCu
+        7/az4RtiN+l6fXMoUoPTNSRgog+zm5jtadKb96K+idXXVloNsvBt1DlvvTJyA40QzfWD5Z
+        gKDjUTWBQHSyEpPeKXDPnEkkTLfF424=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-158-41TH1scaNtWcs88fk-GEcw-1; Wed, 04 Mar 2020 10:32:57 -0500
+X-MC-Unique: 41TH1scaNtWcs88fk-GEcw-1
+Received: by mail-qt1-f197.google.com with SMTP id d2so1680841qtr.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:32:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=DvMXhwaYEf1u8lhU5yD2w5KVrzZ7oi00fPBDP3UuBlI=;
+        b=PBxQXxf/tSLT0gJ34vIvUZDMY1dfc47qoSu2w89wVp42Ii8s0oA2XlwUhA5PtwCZvT
+         FSHApTQIZS9bTfd4DXlD42mPBOqeN/fUKUYhZAe/7PclTOuL9Fr+IZrNt36F/Qwn1GSh
+         4dk+yaahfYkestLWxcN1An3dzXVwwwtpnrt04uX3RLizaUX0JLmeA9ylhwU2++6YW+ct
+         Pgn/notL3/W2oQBrXNUrc9nGPgFql7kVt0VrRjMiAST7+2anZOfp8GeaYx1ex4dsS6jK
+         qa+1SPwS4WUEDoJU/QV1xRYjZZVFHSpriqUd7Gg+cbzgBrfFROkRks4NznUMkbz/BF84
+         7P0A==
+X-Gm-Message-State: ANhLgQ1/QBj1kJaWNo4x490K8Nr6lvXd61JQKG7k6qpyDMoxyD7cd7Ql
+        O4c5uN3f7dnHpYWQQ+TiSAJN5CqnC0qks92i1n8l1jhUU3MYxxcQ7i7xKzobM1hNlGD7fcRTzDV
+        f5XrKRleZt4jEXYR/EoNkRpTl
+X-Received: by 2002:a05:6214:16c3:: with SMTP id d3mr2510370qvz.244.1583335976571;
+        Wed, 04 Mar 2020 07:32:56 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsWlCEhg5A5OIWwDFtxlNHlAgmp4hY10amevunpEqVD30iTAynmKtqHiq8Z/L6AG/8livfJPg==
+X-Received: by 2002:a05:6214:16c3:: with SMTP id d3mr2510339qvz.244.1583335976173;
+        Wed, 04 Mar 2020 07:32:56 -0800 (PST)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id c13sm8350268qtv.37.2020.03.04.07.32.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 07:32:55 -0800 (PST)
+Date:   Wed, 4 Mar 2020 10:32:53 -0500
+From:   Peter Xu <peterx@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCHv4] exec: Fix a deadlock in ptrace
-Message-ID: <20200304153002.ck77l6nifnvn647p@wittgenstein>
-References: <87k142lpfz.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51704206634C009500A8080DE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <875zfmloir.fsf@x220.int.ebiederm.org>
- <AM6PR03MB51707ABF20B6CBBECC34865FE4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <87v9nmjulm.fsf@x220.int.ebiederm.org>
- <AM6PR03MB5170B976E6387FDDAD59A118E4E70@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003021531.C77EF10@keescook>
- <AM6PR03MB5170B5C1B95CB1D065EE3AFAE4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
- <202003022103.196C313623@keescook>
- <AM6PR03MB5170A15099986CEC3189F251E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH] KVM: X86: Avoid explictly fetch instruction in
+ x86_decode_insn()
+Message-ID: <20200304153253.GB7146@xz-x1>
+References: <05ca4e7e070844dd92e4f673a1bc15d9@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <AM6PR03MB5170A15099986CEC3189F251E4E40@AM6PR03MB5170.eurprd03.prod.outlook.com>
+In-Reply-To: <05ca4e7e070844dd92e4f673a1bc15d9@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 08:08:26AM +0000, Bernd Edlinger wrote:
-> On 3/3/20 6:29 AM, Kees Cook wrote:
-> > On Tue, Mar 03, 2020 at 04:54:34AM +0000, Bernd Edlinger wrote:
-> >> On 3/3/20 3:26 AM, Kees Cook wrote:
-> >>> On Mon, Mar 02, 2020 at 10:18:07PM +0000, Bernd Edlinger wrote:
-> >>>> [...]
-> >>>
-> >>> If I'm reading this patch correctly, this changes the lifetime of the
-> >>> cred_guard_mutex lock to be:
-> >>> 	- during prepare_bprm_creds()
-> >>> 	- from flush_old_exec() through install_exec_creds()
-> >>> Before, cred_guard_mutex was held from prepare_bprm_creds() through
-> >>> install_exec_creds().
+On Wed, Mar 04, 2020 at 02:37:06AM +0000, linmiaohe wrote:
+> Hi:
+> Peter Xu <peterx@redhat.com> writes:
+> >insn_fetch() will always implicitly refill instruction buffer properly when the buffer is empty, so we don't need to explicitly fetch it even if insn_len==0 for x86_decode_insn().
+> >
+> >Signed-off-by: Peter Xu <peterx@redhat.com>
+> >---
+> > arch/x86/kvm/emulate.c | 5 -----
+> > 1 file changed, 5 deletions(-)
+> >
+> >diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c index dd19fb3539e0..04f33c1ca926 100644
+> >--- a/arch/x86/kvm/emulate.c
+> >+++ b/arch/x86/kvm/emulate.c
+> >@@ -5175,11 +5175,6 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len)
+> > 	ctxt->opcode_len = 1;
+> > 	if (insn_len > 0)
+> > 		memcpy(ctxt->fetch.data, insn, insn_len);
+> >-	else {
+> >-		rc = __do_insn_fetch_bytes(ctxt, 1);
+> >-		if (rc != X86EMUL_CONTINUE)
+> >-			goto done;
+> >-	}
 > > 
-> > BTW, I think the effect of this change (i.e. my paragraph above) should
-> > be distinctly called out in the commit log if this solution moves
-> > forward.
-> > 
+> > 	switch (mode) {
+> > 	case X86EMUL_MODE_REAL:
 > 
-> Okay, will do.
-> 
-> >>> That means, for example, that check_unsafe_exec()'s documented invariant
-> >>> is violated:
-> >>>     /*
-> >>>      * determine how safe it is to execute the proposed program
-> >>>      * - the caller must hold ->cred_guard_mutex to protect against
-> >>>      *   PTRACE_ATTACH or seccomp thread-sync
-> >>>      */
-> >>
-> >> Oh, right, I haven't understood that hint...
-> > 
-> > I know no_new_privs is checked there, but I haven't studied the
-> > PTRACE_ATTACH part of that comment. If that is handled with the new
-> > check, this comment should be updated.
-> > 
-> 
-> Okay, I change that comment to:
-> 
-> /*
->  * determine how safe it is to execute the proposed program
->  * - the caller must have set ->cred_locked_in_execve to protect against
->  *   PTRACE_ATTACH or seccomp thread-sync
->  */
-> 
-> >>> I think it also means that the potentially multiple invocations
-> >>> of bprm_fill_uid() (via prepare_binprm() via binfmt_script.c and
-> >>> binfmt_misc.c) would be changing bprm->cred details (uid, gid) without
-> >>> a lock (another place where current's no_new_privs is evaluated).
-> >>
-> >> So no_new_privs can change from 0->1, but should not
-> >> when execve is running.
-> >>
-> >> As long as the calling thread is in execve it won't do this,
-> >> and the only other place, where it may set for other threads
-> >> is in seccomp_sync_threads, but that can easily be avoided see below.
-> > 
-> > Yeah, everything was fine until I had to go complicate things with
-> > TSYNC. ;) The real goal is making sure an exec cannot gain privs while
-> > later gaining a seccomp filter from an unpriv process. The no_new_privs
-> > flag was used to control this, but it required that the filter not get
-> > applied during exec.
-> > 
-> >>> Related, it also means that cred_guard_mutex is unheld for every
-> >>> invocation of search_binary_handler() (which can loop via the previously
-> >>> mentioned binfmt_script.c and binfmt_misc.c), if any of them have hidden
-> >>> dependencies on cred_guard_mutex. (Thought I only see bprm_fill_uid()
-> >>> currently.)
-> >>>
-> >>> For seccomp, the expectations about existing thread states risks races
-> >>> too. There are two locks held for TSYNC:
-> >>> - current->sighand->siglock is held to keep new threads from
-> >>>   appearing/disappearing, which would destroy filter refcounting and
-> >>>   lead to memory corruption.
-> >>
-> >> I don't understand what you mean here.
-> >> How can this lead to memory corruption?
-> > 
-> > Mainly this is a matter of how seccomp manages its filter hierarchy
-> > (since the filters are shared through process ancestry), so if a thread
-> > appears in the middle of TSYNC it may be racing another TSYNC and break
-> > ancestry, leading to bad reference counting on process death, etc.
-> > (Though, yes, with refcount_t now, things should never corrupt, just
-> > waste memory.)
-> > 
-> 
-> I assume for now, that the current->sighand->siglock held while iterating all
-> threads is sufficient here.
-> 
-> >>> - cred_guard_mutex is held to keep no_new_privs in sync with filters to
-> >>>   avoid no_new_privs and filter confusion during exec, which could
-> >>>   lead to exploitable setuid conditions (see below).
-> >>>
-> >>> Just racing a malicious thread during TSYNC is not a very strong
-> >>> example (a malicious thread could do lots of fun things to "current"
-> >>> before it ever got near calling TSYNC), but I think there is the risk
-> >>> of mismatched/confused states that we don't want to allow. One is a
-> >>> particularly bad state that could lead to privilege escalations (in the
-> >>> form of the old "sendmail doesn't check setuid" flaw; if a setuid process
-> >>> has a filter attached that silently fails a priv-dropping setuid call
-> >>> and continues execution with elevated privs, it can be tricked into
-> >>> doing bad things on behalf of the unprivileged parent, which was the
-> >>> primary goal of the original use of cred_guard_mutex with TSYNC[1]):
-> >>>
-> >>> thread A clones thread B
-> >>> thread B starts setuid exec
-> >>> thread A sets no_new_privs
-> >>> thread A calls seccomp with TSYNC
-> >>> thread A in seccomp_sync_threads() sets seccomp filter on self and thread B
-> >>> thread B passes check_unsafe_exec() with no_new_privs unset
-> >>> thread B reaches bprm_fill_uid() with no_new_privs unset and gains privs
-> >>> thread A still in seccomp_sync_threads() sets no_new_privs on thread B
-> >>> thread B finishes exec, now running with elevated privs, a filter chosen
-> >>>          by thread A, _and_ nnp set (which doesn't matter)
-> >>>
-> >>> With the original locking, thread B will fail check_unsafe_exec()
-> >>> because filter and nnp state are changed together, with "atomicity"
-> >>> protected by the cred_guard_mutex.
-> >>>
-> >>
-> >> Ah, good point, thanks!
-> >>
-> >> This can be fixed by checking current->signal->cred_locked_for_ptrace
-> >> while the cred_guard_mutex is locked, like this for instance:
-> >>
-> >> diff --git a/kernel/seccomp.c b/kernel/seccomp.c
-> >> index b6ea3dc..377abf0 100644
-> >> --- a/kernel/seccomp.c
-> >> +++ b/kernel/seccomp.c
-> >> @@ -342,6 +342,9 @@ static inline pid_t seccomp_can_sync_threads(void)
-> >>         BUG_ON(!mutex_is_locked(&current->signal->cred_guard_mutex));
-> >>         assert_spin_locked(&current->sighand->siglock);
-> >>  
-> >> +       if (current->signal->cred_locked_for_ptrace)
-> >> +               return -EAGAIN;
-> >> +
-> > 
-> > Hmm. I guess something like that could work. TSYNC expects to be able to
-> > report _which_ thread wrecked the call, though... I wonder if in_execve
-> > could be used to figure out the offending thread. Hm, nope, that would
-> > be outside of lock too (and all users are "current" right now, so the
-> > lock wasn't needed before).
-> > 
-> 
-> I could move that in_execve = 1 to prepare_bprm_creds, if it really matters,
-> but the caller will die quickly and cannot do anything with that information
-> when another thread executes execve, right?
-> 
-> >>         /* Validate all threads being eligible for synchronization. */
-> >>         caller = current;
-> >>         for_each_thread(caller, thread) {
-> >>
-> >>
-> >>> And this is just the bad state I _can_ see. I'm worried there are more...
-> >>>
-> >>> All this said, I do see a small similarity here to the work I did to
-> >>> stabilize stack rlimits (there was an ongoing problem with making multiple
-> >>> decisions for the bprm based on current's state -- but current's state
-> >>> was mutable during exec). For this, I saved rlim_stack to bprm and ignored
-> >>> current's copy until exec ended and then stored bprm's copy into current.
-> >>> If the only problem anyone can see here is the handling of no_new_privs,
-> >>> we might be able to solve that similarly, at least disentangling tsync/nnp
-> >>> from cred_guard_mutex.
-> >>>
-> >>
-> >> I still think that is solvable with using cred_locked_for_ptrace and
-> >> simply make the tsync fail if it would otherwise be blocked.
-> > 
-> > I wonder if we can find a better name than "cred_locked_for_ptrace"?
-> > Maybe "cred_unfinished" or "cred_locked_in_exec" or something?
-> > 
-> 
-> Yeah, I'd go with "cred_locked_in_execve".
-> 
-> > And the comment on bool cred_locked_for_ptrace should mention that
-> > access is only allowed under cred_guard_mutex lock.
-> > 
-> 
-> okay.
-> 
-> >>>> +	sig->cred_locked_for_ptrace = false;
-> > 
-> > This is redundant to the zalloc -- I think you can drop it (unless
-> > someone wants to keep it for clarify?)
-> > 
-> 
-> I'll remove that here and in init/init_task.c
-> 
-> > Also, I think cred_locked_for_ptrace needs checking deeper, in
-> > __ptrace_may_access(), not in ptrace_attach(), since LOTS of things make
-> > calls to ptrace_may_access() holding cred_guard_mutex, expecting that to
-> > be sufficient to see a stable version of the thread...
-> > 
-> 
-> No, these need to be addressed individually, but most users just want
-> to know if the current credentials are sufficient at this moment, but will
-> not change the credentials, as ptrace and TSYNC do. 
-> 
-> BTW: Not all users have cred_guard_mutex, see mm/migrate.c,
-> mm/mempolicy.c, kernel/futex.c, fs/proc/namespaces.c etc.
-> So adding an access to cred_locked_for_execve in ptrace_may_access is
-> probably not an option.
+> Looks good, thanks. But it seems we should also take care of the comment in __do_insn_fetch_bytes(), as we do not
+> load instruction at the beginning of x86_decode_insn() now, which may be misleading:
+> 		/*
+>          * One instruction can only straddle two pages,
+>          * and one has been loaded at the beginning of
+>          * x86_decode_insn.  So, if not enough bytes
+>          * still, we must have hit the 15-byte boundary.
+>          */
+>         if (unlikely(size < op_size))
+>                 return emulate_gp(ctxt, 0);
 
-That could be solved by e.g. adding ptrace_may_access_{no}exec() taking
-cred_guard_mutex.
+Right, thanks for spotting that (even if the patch to be dropped :).
+
+I guess not only the comment, but the check might even fail if we
+apply the patch. Because when the fetch is the 1st attempt and
+unluckily that acrosses one page boundary (because we'll only fetch
+until either 15 bytes or the page boundary), so that single fetch
+could be smaller than op_size provided.
+
+Thanks,
+
+-- 
+Peter Xu
+
