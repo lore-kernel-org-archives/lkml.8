@@ -2,112 +2,103 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 887FFC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B956DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C1C2072D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:14:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583313248;
-	bh=aYWTuYPbbEBkZskmvEU9FbjcMOeg17ouLoavelFG8wI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FJGg4nadZYALVEuIrDKz3qz/wcxvWthOXxoq5QGwegLNdgGj1/dQgPX0yFNyiwXHq
-	 BS7zT2ZOOtQFGYpg1n/8Qrpba/MSbwfiLeNBRebe9iicAU86MmjYuK8yG1GYLS0AHF
-	 tD8OE5F8aUFdjTni6xOd1B4ZJKGgRtMQc3X5c+1k=
+	by mail.kernel.org (Postfix) with ESMTP id 9C8AA2072D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbgCDJOH convert rfc822-to-8bit (ORCPT
+        id S1728894AbgCDJPl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:14:07 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:34363 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgCDJOH (ORCPT
+        Wed, 4 Mar 2020 04:15:41 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57539 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgCDJPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:14:07 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j16so1339193otl.1;
-        Wed, 04 Mar 2020 01:14:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=2yqcmNpEhEyaoox7sgCu8vgkk/Ww/B7auVe1x64oSBk=;
-        b=j2diKycW4GOtU6AnzvAzCml2SGfkMYP0g4a1XcRmhSAJxaocdO7v5mJ9DAWQKUs5IK
-         okoUG3OExWv7IQ4/KhM5a6t+PADRtpMSwfE13UMZc2n9hQyV0KWZhNNm86CsP81mlAMX
-         AZeP0+Y2iAgCIkJzKut8Ikt+izg55VWjyVLF6Tp3kykU+nYKI39vyCxLLSPKajAW8Ns1
-         LLqLs/oJNl2fedu5I5J81bo5h1Fs9SHOyV0+VLUjZvqGuUJnfNYy3/HVpFviOtpM1m8r
-         O5o5oYjbgTa18iq8ny0OYCgP2IZIWVS4OrNOQAjTP1awtUOT6yy5aXv6RkAPee4gDhuQ
-         /TNQ==
-X-Gm-Message-State: ANhLgQ2uAK/xYxY9X6hSTT2aUS4FxJ0Q0mm9/Jtsn49gXvuhaj2TrqnY
-        z+6pN2f+zvPXfE4BT4qokVSI1oWbEyxR0fUG/qA=
-X-Google-Smtp-Source: ADFU+vvJVrT5XzB+LN4pvHpPN9koJloy6ZWiadNJKU6hGzyCilF4pGMcGTQth78LVdONiuIhebTgdghVxAbgAmk19GE=
-X-Received: by 2002:a05:6830:4b9:: with SMTP id l25mr1612658otd.266.1583313246413;
- Wed, 04 Mar 2020 01:14:06 -0800 (PST)
-MIME-Version: 1.0
-References: <2094703.CetWLLyMuz@kreacher> <CAD8Lp46VbG3b5NV54vmBFQH2YLY6wRngYv0oY2tiveovPRhiVw@mail.gmail.com>
- <CAPpJ_edfTg11QZs25MrThj2+FKUo2103rv7iYNzo=kr-jeg1MA@mail.gmail.com>
- <CAJZ5v0gB9yuVmPjJ_MvfT8aFpvP-X5JRsNfZn8+Mv5RwTednGg@mail.gmail.com>
- <CAJZ5v0imqwdmXzKayqs1kgHOb-mXrkr61uNxVka8J9bKca989Q@mail.gmail.com>
- <CAPpJ_efvF0XzjevA1eL3BUJqBwxRTOPLcqWKN40Azj-n1AtjcA@mail.gmail.com>
- <CAJZ5v0hie79+jG+3h4t5Q8r0M7E37HY-7i8ijg8DpvS0RXZSiQ@mail.gmail.com>
- <CAJZ5v0hwrZX4+4m-g0c2bUTHxJO=1+kenXBjLz1ChWdcxSLJbA@mail.gmail.com> <CAPpJ_ed5KPPu47ri3phnjKrToqJ8vSNV32zaRmBPLr3pq4M_4A@mail.gmail.com>
-In-Reply-To: <CAPpJ_ed5KPPu47ri3phnjKrToqJ8vSNV32zaRmBPLr3pq4M_4A@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 4 Mar 2020 10:13:54 +0100
-Message-ID: <CAJZ5v0jVNXGxko+LUJ5K91UmM_Fz4Q=JN2eK1sSxO7AsDj=Gyw@mail.gmail.com>
-Subject: Re: [PATCH 0/6] ACPI: EC: Updates related to initialization
-To:     Jian-Hong Pan <jian-hong@endlessm.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Daniel Drake <drake@endlessm.com>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Upstreaming Team <linux@endlessm.com>
+        Wed, 4 Mar 2020 04:15:41 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j9Q7q-0002le-4g; Wed, 04 Mar 2020 10:15:34 +0100
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j9Q7o-0004aA-7T; Wed, 04 Mar 2020 10:15:32 +0100
+Message-ID: <4d0e0f3ec4a883889f3abfb1d222abe8e137af2a.camel@pengutronix.de>
+Subject: Re: [PATCH 2/4] dt-bindings: reset: imx7: Document usage on i.MX8MP
+ SoC
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Anson Huang <Anson.Huang@nxp.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, festevam@gmail.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Date:   Wed, 04 Mar 2020 10:15:32 +0100
+In-Reply-To: <1582708431-14161-2-git-send-email-Anson.Huang@nxp.com>
+References: <1582708431-14161-1-git-send-email-Anson.Huang@nxp.com>
+         <1582708431-14161-2-git-send-email-Anson.Huang@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 3:54 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
->
-> Rafael J. Wysocki <rafael@kernel.org> 於 2020年3月4日 週三 上午6:23寫道：
-> >
-> > On Tue, Mar 3, 2020 at 10:09 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Tue, Mar 3, 2020 at 8:29 AM Jian-Hong Pan <jian-hong@endlessm.com> wrote:
-> > > >
-> > > > Rafael J. Wysocki <rafael@kernel.org> 於 2020年3月2日 週一 下午7:45寫道：
-> > > > >
-> >
-> > [cut]
-> >
-> > > >
-> > > > Originally, ec_install_handlers() will return the returned value from
-> > > > install_gpio_irq_event_handler() from acpi_dev_gpio_irq_get(), which
-> > > > is -EPROBE_DEFER, instead of -ENXIO.  However, ec_install_handlers()
-> > > > returns -ENXIO directly if install_gpio_irq_event_handler() returns
-> > > > false in patch ("ACPI: EC: Consolidate event handler installation
-> > > > code").  Here needs some modification.
-> > >
-> > > Thanks, I forgot about the -EPROBE_DEFER case.
-> >
-> > The top-most commit in the git branch at
-> >
-> >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> >  acpi-ec-work
-> >
-> > has been updated to take that case into account (I think that it
-> > should be spelled out explicitly or it will be very easy to overlook
-> > in the future).
-> >
-> > Please test this one if possible.
->
-> Tested the commits on some laptops including ASUS UX434DA.  The
-> brightness hotkeys are working now.
+Hi Anson,
 
-Thank you!
+On Wed, 2020-02-26 at 17:13 +0800, Anson Huang wrote:
+> The driver now supports i.MX8MP, so update bindings accordingly.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  .../devicetree/bindings/reset/fsl,imx7-src.txt     |  4 +-
+>  include/dt-bindings/reset/imx8mp-reset.h           | 50 ++++++++++++++++++++++
+>  2 files changed, 53 insertions(+), 1 deletion(-)
+>  create mode 100644 include/dt-bindings/reset/imx8mp-reset.h
+> 
+> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> index 38ac251..e10502d 100644
+> --- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> +++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>  	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
+>  	- For i.MX8MM SoCs should be "fsl,imx8mm-src", "fsl,imx8mq-src", "syscon"
+>  	- For i.MX8MN SoCs should be "fsl,imx8mn-src", "fsl,imx8mq-src", "syscon"
+> +	- For i.MX8MP SoCs should be "fsl,imx8mp-src", "syscon"
+>  - reg: should be register base and length as documented in the
+>    datasheet
+>  - interrupts: Should contain SRC interrupt
+> @@ -51,4 +52,5 @@ For list of all valid reset indices see
+>  <dt-bindings/reset/imx7-reset.h> for i.MX7,
+>  <dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ and
+>  <dt-bindings/reset/imx8mq-reset.h> for i.MX8MM and
+> -<dt-bindings/reset/imx8mq-reset.h> for i.MX8MN
+> +<dt-bindings/reset/imx8mq-reset.h> for i.MX8MN and
+> +<dt-bindings/reset/imx8mp-reset.h> for i.MX8MP
+> diff --git a/include/dt-bindings/reset/imx8mp-reset.h b/include/dt-bindings/reset/imx8mp-reset.h
+> new file mode 100644
+> index 0000000..ee37769
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/imx8mp-reset.h
+> @@ -0,0 +1,50 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+
+Thank you, I've changed this to
+
+/* SPDX-License-Identifier: GPL-2.0-only */
+
+and applied patches 1, 2, and 4.
+
+regards
+Philipp
