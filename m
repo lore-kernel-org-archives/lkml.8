@@ -7,40 +7,40 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2776C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:29:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FB0EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F1121775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:29:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25493217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583346553;
-	bh=B+cQ4/aW/thQ8NZTM8FXjSeLhbYgNROzJ+lgs+70Uis=;
+	s=default; t=1583346558;
+	bh=HTHiE9UYFaApK5pXuucaW/bFYvXB0lTmLfkOM6gDAxU=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=EpgVFm3haGAJDsgT55GSRljR78fH81kktfRIbWCEveSHPtWFtciCsv2g4Zd1amGwD
-	 t/axpUog8tEmJvwT2wMJtszxgA92+/OKSGggLRVhVbdBO/ZjYtK9NEyvvyT1FLeha9
-	 I9x+5TVajsQFzX5/x+ZPi0sfDsZkXtpRpTNKZ6/I=
+	b=HKXkGj2YLRpKnJKqlhdiKDRDdPLAGw6XFq6X1Grck94hClwlAVm9PUH5xa3NnICec
+	 DhT2Jvlhs0N4rs5ibykhxcPIop2xNPBzaj3kRWifhNp7rUwFIveChJmZ9R3xqB3Z+J
+	 +xKCpqAwQNCL/pR79cCMX9+lBtxsyn8khjrXnzCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbgCDS3M (ORCPT
+        id S1730154AbgCDS3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:29:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:38278 "EHLO foss.arm.com"
+        Wed, 4 Mar 2020 13:29:17 -0500
+Received: from foss.arm.com ([217.140.110.172]:38286 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbgCDS3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:29:12 -0500
+        id S1725795AbgCDS3Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:29:16 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9401E31B;
-        Wed,  4 Mar 2020 10:29:11 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1588831B;
+        Wed,  4 Mar 2020 10:29:16 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 161153F6C4;
-        Wed,  4 Mar 2020 10:29:10 -0800 (PST)
-Date:   Wed, 04 Mar 2020 18:29:09 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8B4DE3F6C4;
+        Wed,  4 Mar 2020 10:29:15 -0800 (PST)
+Date:   Wed, 04 Mar 2020 18:29:14 +0000
 From:   Mark Brown <broonie@kernel.org>
 To:     Vladimir Oltean <vladimir.oltean@nxp.com>
 Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
         linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: spi-fsl-dspi: Add specific compatibles for all Layerscape SoCs" to the spi tree
-In-Reply-To:  <20200302001958.11105-2-olteanv@gmail.com>
-Message-Id:  <applied-20200302001958.11105-2-olteanv@gmail.com>
+Subject: Applied "spi: spi-fsl-dspi: Convert the instantiations that support it to DMA" to the spi tree
+In-Reply-To:  <20200302001958.11105-7-olteanv@gmail.com>
+Message-Id:  <applied-20200302001958.11105-7-olteanv@gmail.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -49,7 +49,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: spi-fsl-dspi: Add specific compatibles for all Layerscape SoCs
+   spi: spi-fsl-dspi: Convert the instantiations that support it to DMA
 
 has been applied to the spi tree at
 
@@ -74,58 +74,82 @@ to this mail.
 Thanks,
 Mark
 
-From 50b62071deab48c1a69c471f9a7d0c8ff9ef23eb Mon Sep 17 00:00:00 2001
+From 0feaf8f5afe057c397a440e76865b3d746dc9f7e Mon Sep 17 00:00:00 2001
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
-Date: Mon, 2 Mar 2020 02:19:53 +0200
-Subject: [PATCH] spi: spi-fsl-dspi: Add specific compatibles for all
- Layerscape SoCs
+Date: Mon, 2 Mar 2020 02:19:58 +0200
+Subject: [PATCH] spi: spi-fsl-dspi: Convert the instantiations that support it
+ to DMA
 
-Make the second compatible string optional for LS1012A, LS1088A and
-LS2080A. Old versions of the spi-fsl-dspi.c driver still need to probe
-on the old, generic compatible string for these controllers (such as
-"fsl,ls1021a-v1.0-dspi") which provides less functionality.
+The A-011218 eDMA/DSPI erratum affects most of the older Layerscape SoCs
+with DSPI, and its workaround is a bit intrusive.
 
-Document the device tree bindings for LS1043A and LS1046A, whose
-bindings are already in use in fsl-ls1043a.dtsi and fsl-ls1046a.dtsi.
-
-Introduce new compatible strings for LS1028A and LX2160A. There will be
-no second compatible string for these.
+After this patch, there are no users of TCFQ mode that don't also
+support XSPI (previously there was LS2085A).
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Message-Id: <20200302001958.11105-2-olteanv@gmail.com>
+Message-Id: <20200302001958.11105-7-olteanv@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- .../devicetree/bindings/spi/spi-fsl-dspi.txt    | 17 +++++++++++------
- 1 file changed, 11 insertions(+), 6 deletions(-)
+ drivers/spi/spi-fsl-dspi.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-index 162e024b95a0..99b94cfe1623 100644
---- a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
-@@ -1,12 +1,17 @@
- ARM Freescale DSPI controller
- 
- Required properties:
--- compatible : "fsl,vf610-dspi", "fsl,ls1021a-v1.0-dspi",
--		"fsl,ls2085a-dspi"
--		or
--		"fsl,ls2080a-dspi" followed by "fsl,ls2085a-dspi"
--		"fsl,ls1012a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
--		"fsl,ls1088a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
-+- compatible : must be one of:
-+	"fsl,vf610-dspi",
-+	"fsl,ls1021a-v1.0-dspi",
-+	"fsl,ls1012a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
-+	"fsl,ls1028a-dspi",
-+	"fsl,ls1043a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
-+	"fsl,ls1046a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
-+	"fsl,ls1088a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
-+	"fsl,ls2080a-dspi" (optionally followed by "fsl,ls2085a-dspi"),
-+	"fsl,ls2085a-dspi",
-+	"fsl,lx2160a-dspi",
- - reg : Offset and length of the register set for the device
- - interrupts : Should contain SPI controller interrupt
- - clocks: from common clock binding: handle to dspi clock.
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index c26a42f8ecbc..c357c3247232 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -147,42 +147,49 @@ static const struct fsl_dspi_devtype_data devtype_data[] = {
+ 		.fifo_size		= 4,
+ 	},
+ 	[LS1021A] = {
++		/* Has A-011218 DMA erratum */
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 4,
+ 	},
+ 	[LS1012A] = {
++		/* Has A-011218 DMA erratum */
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 16,
+ 	},
+ 	[LS1043A] = {
++		/* Has A-011218 DMA erratum */
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 16,
+ 	},
+ 	[LS1046A] = {
++		/* Has A-011218 DMA erratum */
+ 		.trans_mode		= DSPI_TCFQ_MODE,
+ 		.max_clock_factor	= 8,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 16,
+ 	},
+ 	[LS2080A] = {
+-		.trans_mode		= DSPI_TCFQ_MODE,
++		.trans_mode		= DSPI_DMA_MODE,
++		.dma_bufsize		= 8,
+ 		.max_clock_factor	= 8,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 4,
+ 	},
+ 	[LS2085A] = {
+-		.trans_mode		= DSPI_TCFQ_MODE,
++		.trans_mode		= DSPI_DMA_MODE,
++		.dma_bufsize		= 8,
+ 		.max_clock_factor	= 8,
+ 		.fifo_size		= 4,
+ 	},
+ 	[LX2160A] = {
+-		.trans_mode		= DSPI_TCFQ_MODE,
++		.trans_mode		= DSPI_DMA_MODE,
++		.dma_bufsize		= 8,
+ 		.max_clock_factor	= 8,
+ 		.xspi_mode		= true,
+ 		.fifo_size		= 4,
 -- 
 2.20.1
 
