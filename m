@@ -2,246 +2,156 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6A4C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBFBC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DF34214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDFC214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHlVS1j7"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="83HOrTPe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgCDGfQ (ORCPT
+        id S1728280AbgCDGfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 01:35:16 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35000 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgCDGfP (ORCPT
+        Wed, 4 Mar 2020 01:35:50 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:10764 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725971AbgCDGft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 01:35:15 -0500
-Received: by mail-qt1-f194.google.com with SMTP id v15so591679qto.2
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 22:35:14 -0800 (PST)
+        Wed, 4 Mar 2020 01:35:49 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0246U8o0025658;
+        Wed, 4 Mar 2020 01:35:31 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52a0wh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 01:35:31 -0500
+Received: from m0167088.ppops.net (m0167088.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0246ZUNd017235;
+        Wed, 4 Mar 2020 01:35:30 -0500
+Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2109.outbound.protection.outlook.com [104.47.55.109])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52a0wg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 01:35:30 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O4IC5HbO2hfz6q1kAw2A/00a1ofBCt5YiK9w3FZUQXEiq6ZI+f7lSVg3D4IRTj5fkQQnFYiA3gzn8H6MyDaQ3g5X77IZDLpeFzXJq5Hu4likkUXwWmr+yW/F79hnoB0WIzPGe/eQYwPDQB5MaiaMI5Z40QaNGbAogPPHZ8nNlNnV1NpauSwK/O1r7qcRWfc5mRSGSSvzmcAcIZy/DIg1d9fKt/NYzOmkGVHCmIHSYwXqRidbmg0AFUd90MDesLXP/GDfMEygf1QHDW+Q2cNZV6Ee6/rP7cU806JWP3VEfAOg2yw0sDnFqzaFCbiZm1AxAJZn/SduqkA9rBx4a0hIug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZGABZ9wflZW9RBMnSQfCWxA5KPsGuhYk+6oHuihVtew=;
+ b=YeQ3u/7jB9FDNqxrt9OIUx7M7x5g5PrraON5Fr8wqXDY34asH731tfXeas5W5vb1uBMkm5GfNuKU4ZKiOGy0fABRMjml+B2fWxD2zw8drowC9hxOh5Nq4ZqjAJuyD5togL+MJZQr1k0Z13wnv6TeORfSG2bU06gSheOrYJtvAHFMHKYX9+AwRh5umd0NzSQ0Lh99IVLjk0uf7Kv2IfPyY0FuUejBJdIEScVAPeCpITOrgBphLBNVy/MqVBpnbI0wyDSBy9sAocO5aXV5sirU1Eu3dH4Xzk+S85ds5XsKZz2uz7Bu/iVdv/7TinlL7bYfTAza7P5+eEnuuqfP6JNfNA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pRV4q0RECloAIigH1EtXD7ojzqVokhP4l3P7T2qRJSc=;
-        b=vHlVS1j783AEDx9vp9QAk6qirR5NrKJfcrCnKHY9716hTKVBuGENHJ14Y6hDFA4bGt
-         L0tAKuz33Ryfvl4ZpwzrDoXROn+IikVwXuMOLgHPpiMJ8u2TCfF321HUj+ShcjgkfTVn
-         MySpj96WSVvRzspSZu2MhTqlDDlHIIKuJPpFzcP/wz1oJsTPIV20H/eJfxyZTDMVaGzQ
-         1vJ0BHr83tLkSwevxEZPqEIItbiRyPNTTYNi7D7PsbpWXQr8ghN3gqKkwf9eSgsBP0eR
-         jCKC2Ccwa+0jtT7gjfyko9MJp91G2awKYC3zWZh1qdbVFYYRDpkeJruFqvXyc6HYjRo9
-         Jong==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pRV4q0RECloAIigH1EtXD7ojzqVokhP4l3P7T2qRJSc=;
-        b=PTkLr68GcBY4CU5oRNlFNn2fsQ2nxQ9BllvzSIXXQTL8qhqbtLeBlgGQmvc3M5XIGh
-         05/5A98w31WkVo7Vj5LUe1daimXRxAlVodpbD04wCpG3dvcTq5fo+zD35RiXARVMiQPg
-         vdSpYy1bk/LEolT53Q2/GavYEtlkrVTpmDJ+Mxw3nAk3o2h7FRWtiHu3zC5BUCQQERxH
-         fU5AgaLrdLqk59ALLPNnfmN7lqzaXBPJRyGINZDMsnnREYy3kK9OFmuUlojgIL3D+IBa
-         S89siP0QOWnwptWFeLHXWbhvt6/TU9egMjqn0qy1cj/4Wk58O8cCXuPtKZE7gwf0j+O3
-         wVCA==
-X-Gm-Message-State: ANhLgQ2Ews9WRz/Ylj7hm5bHVO1GOEkkBGzPVh5fwJ/Qm8rht8pvt0wq
-        etlwhcoU0RoKgI+uyfAcUW9pQ+p3Bvgo181Y8GC3gA==
-X-Google-Smtp-Source: ADFU+vsF14TrN/4+OIYQ5aK+sQ/D/SCWCJvMUWvwob5LzYyU3IfwXfowTvL5LDEUKUK72frvFveq2Q+z58B7AXXDz/8=
-X-Received: by 2002:ac8:1846:: with SMTP id n6mr1102349qtk.257.1583303714054;
- Tue, 03 Mar 2020 22:35:14 -0800 (PST)
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZGABZ9wflZW9RBMnSQfCWxA5KPsGuhYk+6oHuihVtew=;
+ b=83HOrTPeq3HdpuLCuubLI8YXL7NR9aA/1eFIjrpZeyHT8/lsiL/ZmpxUf/ZW5fBD2Q0d599jMn1DfGNwkPUBq3QtigwEvw3e9LLUGrOkXB3TMsJLAkBNUFLAC7kEgFV4TCl2ORMXT0mGTgXUv8uaJNpCA4VYud+5lJzBBMMk7DI=
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com (2603:10b6:610:90::24)
+ by CH2PR03MB5288.namprd03.prod.outlook.com (2603:10b6:610:9b::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Wed, 4 Mar
+ 2020 06:35:28 +0000
+Received: from CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::edf0:3922:83f0:3056]) by CH2PR03MB5192.namprd03.prod.outlook.com
+ ([fe80::edf0:3922:83f0:3056%4]) with mapi id 15.20.2772.019; Wed, 4 Mar 2020
+ 06:35:28 +0000
+From:   "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
+To:     "stefan.popa@analog.com" <stefan.popa@analog.com>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
+        "lars@metafoo.de" <lars@metafoo.de>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
+Subject: Re: [PATCH -next] iio:ad7797: Use correct attribute_group
+Thread-Topic: [PATCH -next] iio:ad7797: Use correct attribute_group
+Thread-Index: AQHV8JcykIQvd1F1BESz2s3+VspUbqg3/d0A
+Date:   Wed, 4 Mar 2020 06:35:28 +0000
+Message-ID: <8d7a7062af94a3531dd519bd60fe26c8530c6a43.camel@analog.com>
+References: <20200302133249.23152-1-yuehaibing@huawei.com>
+In-Reply-To: <20200302133249.23152-1-yuehaibing@huawei.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: c6ea24c1-d7c0-49c4-0360-08d7c0063ae6
+x-ms-traffictypediagnostic: CH2PR03MB5288:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CH2PR03MB5288A8ADF039AF13A2D74E54F9E50@CH2PR03MB5288.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0332AACBC3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(396003)(366004)(39860400002)(346002)(199004)(189003)(316002)(478600001)(8676002)(81156014)(8936002)(81166006)(86362001)(2616005)(36756003)(6512007)(26005)(110136005)(54906003)(66556008)(66446008)(2906002)(71200400001)(64756008)(4326008)(6486002)(66946007)(186003)(66476007)(76116006)(5660300002)(6506007)(91956017);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR03MB5288;H:CH2PR03MB5192.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: HqxBpoES798/HV70j6bNv3ZQtd/4iDWF9JWkaVurTL41N5OGJXXhRU76oltTOwAoCeSaZWenVDbN3hJ71irc6cQszIG7AujGDgTKpBpCYrjHfA29Mj+VFLvQPrYzHTw4Ni20vrHfk/6loTCNa9cZXIuxu3hsjzTbHbuUXLpcw6HIgSL6Wo63SCB0gSCKunn9Ncm2FBcpNJ+KhcwUPfonuzWqSiH67Nt89xZSxoOr5NEgKyX784OcLyDgLUFWOrLmXlU/gSbgMtIgvZdm6SVYs38MCjhwOLKzfrFZptcwTv7rXGxYq8gLvw6MTjkdfwgHxGQAY2ZrTVZMckh9DzuHKWuw/ZWsjCYLqo/jM/hbfKFLw5/KcCOBHWO/q1wk0DqhxHFGi+3X8ubyDaRY8Di+sbZharjT0B7/YiCse0cP2yLFkis90am6AElwRE4qombh
+x-ms-exchange-antispam-messagedata: /c2T0Q3P6FwzTWitRhNsBxjLdGRNHKyXLrVRE/XI6VCMjKNDlZz3COj3yvjDL4I5BQEfi/2TYVy8Z3lhvO4Z9QJ/GGYvG/nTBFlE9nqxjpiwTe10Pg8GNPFRxibEQXyn1YTKr0h5BgJD1ER8GPg9Gw==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A5CD79DF82943548B78547085A4DBD2C@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20200227024301.217042-1-trishalfonso@google.com> <20200227024301.217042-2-trishalfonso@google.com>
-In-Reply-To: <20200227024301.217042-2-trishalfonso@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 4 Mar 2020 07:35:02 +0100
-Message-ID: <CACT4Y+avZ5ZdTUPQy7as3PAvdYd0NcSsyUukiumHa_Ah9ZYCFA@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
-To:     Patricia Alfonso <trishalfonso@google.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c6ea24c1-d7c0-49c4-0360-08d7c0063ae6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2020 06:35:28.5957
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: y+lfJ9dX5aJGlOoodgCoWIwuNQNGGxjLsEJiqW9kWS5YiQhMTUQ6oHI4BgGB2EF6Y6XvcOFp4fOrgiEhihYXqE4BzBIg1mIlMjxYeke43n8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR03MB5288
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_08:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1011 adultscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
-<kasan-dev@googlegroups.com> wrote:
->
-> Integrate KASAN into KUnit testing framework.
->  - Fail tests when KASAN reports an error that is not expected
->  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
->  - KUnit struct added to current task to keep track of the current test
-> from KASAN code
->  - Booleans representing if a KASAN report is expected and if a KASAN
->  report is found added to kunit struct
->  - This prints "line# has passed" or "line# has failed"
->
-> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
-> ---
-> If anyone has any suggestions on how best to print the failure
-> messages, please share!
->
-> One issue I have found while testing this is the allocation fails in
-> kmalloc_pagealloc_oob_right() sometimes, but not consistently. This
-> does cause the test to fail on the KUnit side, as expected, but it
-> seems to skip all the tests before this one because the output starts
-> with this failure instead of with the first test, kmalloc_oob_right().
->
->  include/kunit/test.h                | 24 ++++++++++++++++++++++++
->  include/linux/sched.h               |  7 ++++++-
->  lib/kunit/test.c                    |  7 ++++++-
->  mm/kasan/report.c                   | 19 +++++++++++++++++++
->  tools/testing/kunit/kunit_kernel.py |  2 +-
->  5 files changed, 56 insertions(+), 3 deletions(-)
->
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index 2dfb550c6723..2e388f8937f3 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -21,6 +21,8 @@ struct kunit_resource;
->  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
->  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
->
-> +void kunit_set_failure(struct kunit *test);
-> +
->  /**
->   * struct kunit_resource - represents a *test managed resource*
->   * @allocation: for the user to store arbitrary data.
-> @@ -191,6 +193,9 @@ struct kunit {
->          * protect it with some type of lock.
->          */
->         struct list_head resources; /* Protected by lock. */
-> +
-> +       bool kasan_report_expected;
-> +       bool kasan_report_found;
->  };
->
->  void kunit_init_test(struct kunit *test, const char *name);
-> @@ -941,6 +946,25 @@ do {                                                                              \
->                                                 ptr,                           \
->                                                 NULL)
->
-> +/**
-> + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
-> + * not cause a KASAN error.
-> + *
-> + */
-> +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do {  \
-> +       test->kasan_report_expected = true;     \
-> +       test->kasan_report_found = false; \
-> +       condition; \
-> +       if (test->kasan_report_found == test->kasan_report_expected) { \
-> +               pr_info("%d has passed", __LINE__); \
-> +       } else { \
-> +               kunit_set_failure(test); \
-> +               pr_info("%d has failed", __LINE__); \
-> +       } \
-> +       test->kasan_report_expected = false;    \
-> +       test->kasan_report_found = false;       \
-> +} while (0)
-> +
->  /**
->   * KUNIT_EXPECT_TRUE() - Causes a test failure when the expression is not true.
->   * @test: The test context object.
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 04278493bf15..db23d56061e7 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -32,6 +32,8 @@
->  #include <linux/posix-timers.h>
->  #include <linux/rseq.h>
->
-> +#include <kunit/test.h>
-> +
->  /* task_struct member predeclarations (sorted alphabetically): */
->  struct audit_context;
->  struct backing_dev_info;
-> @@ -1178,7 +1180,10 @@ struct task_struct {
->
->  #ifdef CONFIG_KASAN
->         unsigned int                    kasan_depth;
-> -#endif
-> +#ifdef CONFIG_KUNIT
-> +       struct kunit *kasan_kunit_test;
-> +#endif /* CONFIG_KUNIT */
-> +#endif /* CONFIG_KASAN */
->
->  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->         /* Index of current stored address in ret_stack: */
-> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-> index 9242f932896c..d266b9495c67 100644
-> --- a/lib/kunit/test.c
-> +++ b/lib/kunit/test.c
-> @@ -9,11 +9,12 @@
->  #include <kunit/test.h>
->  #include <linux/kernel.h>
->  #include <linux/sched/debug.h>
-> +#include <linux/sched.h>
->
->  #include "string-stream.h"
->  #include "try-catch-impl.h"
->
-> -static void kunit_set_failure(struct kunit *test)
-> +void kunit_set_failure(struct kunit *test)
->  {
->         WRITE_ONCE(test->success, false);
->  }
-> @@ -236,6 +237,10 @@ static void kunit_try_run_case(void *data)
->         struct kunit_suite *suite = ctx->suite;
->         struct kunit_case *test_case = ctx->test_case;
->
-> +#ifdef CONFIG_KASAN
-> +       current->kasan_kunit_test = test;
-> +#endif
-> +
->         /*
->          * kunit_run_case_internal may encounter a fatal error; if it does,
->          * abort will be called, this thread will exit, and finally the parent
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 5ef9f24f566b..5554d23799a5 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -32,6 +32,8 @@
->
->  #include <asm/sections.h>
->
-> +#include <kunit/test.h>
-> +
->  #include "kasan.h"
->  #include "../slab.h"
->
-> @@ -461,6 +463,15 @@ void kasan_report_invalid_free(void *object, unsigned long ip)
->         u8 tag = get_tag(object);
->
->         object = reset_tag(object);
-> +
-> +       if (current->kasan_kunit_test) {
-> +               if (current->kasan_kunit_test->kasan_report_expected) {
-> +                       current->kasan_kunit_test->kasan_report_found = true;
-> +                       return;
-
-I think we need to continue and print KASAN report even in this case.
-2 reasons:
- - tests don't check validity of printed reports, but at least human
-can verify sanity of the report
- - report printing code also needs to be tested, at least that it does
-not crash/hang
-If we don't print reports, it may look nicer, but will be less useful.
-
-> +               }
-> +               kunit_set_failure(current->kasan_kunit_test);
-> +       }
-> +
+T24gTW9uLCAyMDIwLTAzLTAyIGF0IDIxOjMyICswODAwLCBZdWVIYWliaW5nIHdyb3RlOg0KPiBb
+RXh0ZXJuYWxdDQo+IA0KPiBJdCBzZWVtcyBhZDc3OTdfYXR0cmlidXRlX2dyb3VwIHNob3VsZCBi
+ZSB1c2VkIGluIGFkNzc5N19pbmZvLA0KPiBhY2NvcmRpbmcgdG8gY29tbWl0ICgiaWlvOmFkNzc5
+MzogQWRkIHN1cHBvcnQgZm9yIHRoZSBhZDc3OTYgYW5kIGFkNzc5NyIpLg0KDQpXaGlsZSB0aGUg
+Y2hhbmdlIGxvb2tzIGdvb2QgYXQgZmlyc3QsIEkgYW0gdGhpbmtpbmcgdGhhdCB0aGlzIG1pZ2h0
+IGludHJvZHVjZQ0KYW5vdGhlciBpc3N1ZSB3aGlsZSBmaXhpbmcgdGhpcyBvbmUuDQoNCkl0IGxv
+b2tzIGxpa2UgdGhlIGFkNzc5N19hdHRyaWJ1dGVzW10gYXJyYXkgbWF5IGFsc28gcmVxdWlyZSB0
+aGUNCiZpaW9fZGV2X2F0dHJfaW5fbV9pbl9zY2FsZV9hdmFpbGFibGUuZGV2X2F0dHIuYXR0ciBh
+dHRyaWJ1dGUgYXMgd2VsbC4NCkl0IGxvb2tzIGxpa2UgdGhlIGF2YWlsYWJsZSBzY2FsZXMgc2hv
+dWxkIGJlIHByaW50ZWQgZm9yIEFENzk5NyBhcyB3ZWxsLg0KDQpUaGF0IGJlaW5nIHNhaWQsIHRo
+aXMgcGF0Y2ggaXMgZmluZSBhcy1pcy4NCkJ1dCBpdCB3b3VsZCByZXF1aXJlIGEgcGF0Y2ggW2Jl
+Zm9yZS10aGlzLXBhdGNoXSB0byBmaXggdGhlIGFkNzc5N19hdHRyaWJ1dGVzDQphcnJheS4NCg0K
+U29tZXRoaW5nIGxpa2UgdGhpczoNCg0Kc3RhdGljIHN0cnVjdCBhdHRyaWJ1dGUgKmFkNzc5N19h
+dHRyaWJ1dGVzW10gPSB7DQogICAgICAgICZpaW9fY29uc3RfYXR0cl9zYW1wbGluZ19mcmVxdWVu
+Y3lfYXZhaWxhYmxlX2FkNzc5Ny5kZXZfYXR0ci5hdHRyLA0KKyAgICAgICAmaWlvX2Rldl9hdHRy
+X2luX21faW5fc2NhbGVfYXZhaWxhYmxlLmRldl9hdHRyLmF0dHIsDQogICAgICAgTlVMTA0KfTsN
+Cg0KSSdtIGhvcGluZyBJJ20gcmlnaHQgYWJvdXQgdGhpcyBvbmUuIEkgc29tZXRpbWVzIGRvbid0
+IG5vdGljZSB0aGluZ3MgdG9vIHdlbGwuDQoNCj4gDQo+IEZpeGVzOiBmZDFhOGI5MTI4NDEgKCJp
+aW86YWQ3NzkzOiBBZGQgc3VwcG9ydCBmb3IgdGhlIGFkNzc5NiBhbmQgYWQ3Nzk3IikNCj4gU2ln
+bmVkLW9mZi1ieTogWXVlSGFpYmluZyA8eXVlaGFpYmluZ0BodWF3ZWkuY29tPg0KPiAtLS0NCj4g
+IGRyaXZlcnMvaWlvL2FkYy9hZDc3OTMuYyB8IDIgKy0NCj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
+c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvaWlv
+L2FkYy9hZDc3OTMuYyBiL2RyaXZlcnMvaWlvL2FkYy9hZDc3OTMuYw0KPiBpbmRleCBiNzQ3ZGI5
+Li5lNTY5MWUzIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2lpby9hZGMvYWQ3NzkzLmMNCj4gKysr
+IGIvZHJpdmVycy9paW8vYWRjL2FkNzc5My5jDQo+IEBAIC01NDIsNyArNTQyLDcgQEAgc3RhdGlj
+IGNvbnN0IHN0cnVjdCBpaW9faW5mbyBhZDc3OTdfaW5mbyA9IHsNCj4gIAkucmVhZF9yYXcgPSAm
+YWQ3NzkzX3JlYWRfcmF3LA0KPiAgCS53cml0ZV9yYXcgPSAmYWQ3NzkzX3dyaXRlX3JhdywNCj4g
+IAkud3JpdGVfcmF3X2dldF9mbXQgPSAmYWQ3NzkzX3dyaXRlX3Jhd19nZXRfZm10LA0KPiAtCS5h
+dHRycyA9ICZhZDc3OTNfYXR0cmlidXRlX2dyb3VwLA0KPiArCS5hdHRycyA9ICZhZDc3OTdfYXR0
+cmlidXRlX2dyb3VwLA0KPiAgCS52YWxpZGF0ZV90cmlnZ2VyID0gYWRfc2RfdmFsaWRhdGVfdHJp
+Z2dlciwNCj4gIH07DQo+ICANCg==
