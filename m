@@ -2,110 +2,273 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 404E9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7CCC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1207020732
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drTJ2zTM"
+	by mail.kernel.org (Postfix) with ESMTP id A7275214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:48:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387804AbgCDKr2 (ORCPT
+        id S2387824AbgCDKsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:47:28 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:38535 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387488AbgCDKr1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:47:27 -0500
-Received: by mail-ed1-f66.google.com with SMTP id e25so1751036edq.5;
-        Wed, 04 Mar 2020 02:47:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=b6DQCUS0+Ug7UlNm5mZo2LZjk1wdwZ8PPHxJgscamZg=;
-        b=drTJ2zTMj0NNTZz8bc6a7Qn9zT9Qkuo5l8l38x7+6y1beHr0FBGlK/Re5BDWKyeD+l
-         kdVh3Jxm2m3t5SCQl24C/QuaCD9kjRZZ9oRTRI2tXAB+3DmjU4lQT6woIGKyDe8Dg1s2
-         cjUAzathkzY7gd5/KxgEgwp8PmO/dHTFtkfE8NxeBhas24s+4DYimHvDe7KCCtfDHxE3
-         6iYEXmG61vBibkXmvkAs8G7MoGCsS81jLRsF8joiK1TsFxb98cCO1H3X/FbnWzyRSx/R
-         kXPKyoNnMfSowRHQBe2CMXfsNsjKSCIlHJ5L+eXmz1gUYIjqNlB3Bi/2uucf22iNzSmF
-         Nbjg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=b6DQCUS0+Ug7UlNm5mZo2LZjk1wdwZ8PPHxJgscamZg=;
-        b=KNkB39CYXDpio5YDiNTIA+yBXmtSCWsD2STl6HT/J1WWFQUaJq44dwoCyGe/0S3gA8
-         PMhmGzALCf+FeqP/nN4hkwYsltrJjaW714CmpPwGNYSPy4fEqef8EImnKrjisA2eXYxl
-         EUvLNelCgg93Hp/kt9chAtz2ZxJC1IMkYRCHHo7wvlUAr7s8sLT6FkfUELa5n8jeJoNK
-         oK+J1LDpreVloWMj3nzLzAvJebs++vCTuXNUfq7vl0TsWJGK0Kc4ebluuI8M4TV5uhNI
-         LbVVyD0rEVvPz9oUUHbR35IgM90pLbtalMdqYks3x/sDY5c21GJR6n9d51PwHAcmByPZ
-         Pygg==
-X-Gm-Message-State: ANhLgQ3j/+njcs0+xgI5YH6BzqffLbCLS38l41fFxh+TTgARqlkxp+CR
-        iNqZZSvcjXXO57VDkT53t3A4BJyC4x4=
-X-Google-Smtp-Source: ADFU+vseIgFS3ZIL+3zyZq5qbs5LEoXF3Ie+FFY6418MPbDsbyXXQiJ4InDXicWMqYfHwlHZx0Rpxw==
-X-Received: by 2002:a50:d0d0:: with SMTP id g16mr2114242edf.187.1583318845457;
-        Wed, 04 Mar 2020 02:47:25 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d16:4100:3093:39f0:d3ca:23c6])
-        by smtp.gmail.com with ESMTPSA id 29sm1122854ejb.4.2020.03.04.02.47.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 02:47:24 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     linux-doc@vger.kernel.org,
-        Stefan Schmidt <stefan@datenfreihafen.org>,
-        linux-bluetooth@vger.kernel.org,
-        Alexander Aring <alex.aring@gmail.com>,
-        Jukka Rissanen <jukka.rissanen@linux.intel.com>,
-        linux-wpan@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH] MAINTAINERS: adjust to 6lowpan doc ReST conversion
-Date:   Wed,  4 Mar 2020 11:47:17 +0100
-Message-Id: <20200304104717.5841-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 05:48:06 -0500
+Received: from relay.sw.ru ([185.231.240.75]:53360 "EHLO relay.sw.ru"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726137AbgCDKsG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 05:48:06 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j9RZ9-0005TX-Tr; Wed, 04 Mar 2020 13:47:52 +0300
+Subject: Re: [PATCH v2 1/1] mm: fix interrupt disabled long time inside
+ deferred_init_memmap()
+To:     Shile Zhang <shile.zhang@linux.alibaba.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@suse.com>
+References: <20200303161551.132263-1-shile.zhang@linux.alibaba.com>
+ <20200303161551.132263-2-shile.zhang@linux.alibaba.com>
+ <fc22967d-0803-2e6f-26af-148a24f8f958@virtuozzo.com>
+ <386d7d5f-a57d-f5b1-acee-131ce23d35ec@linux.alibaba.com>
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+Message-ID: <2d4defb7-8816-3447-3d65-f5d80067a9fd@virtuozzo.com>
+Date:   Wed, 4 Mar 2020 13:47:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
+MIME-Version: 1.0
+In-Reply-To: <386d7d5f-a57d-f5b1-acee-131ce23d35ec@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 107db7ec7838 ("docs: networking: convert 6lowpan.txt to ReST")
-renamed 6lowpan.txt to 6lowpan.rst for the ReST conversion.
+On 04.03.2020 05:34, Shile Zhang wrote:
+> Hi Kirill,
+> 
+> Thanks for your quickly reply!
+> 
+> On 2020/3/4 00:52, Kirill Tkhai wrote:
+>> On 03.03.2020 19:15, Shile Zhang wrote:
+>>> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdatinit' kthread will
+>>> initialise the deferred pages with local interrupts disabled. It is
+>>> introduced by commit 3a2d7fa8a3d5 ("mm: disable interrupts while
+>>> initializing deferred pages").
+>>>
+>>> The local interrupt will be disabled long time inside
+>>> deferred_init_memmap(), depends on memory size.
+>>> On machine with NCPUS <= 2, the 'pgdatinit' kthread could be pined on
+>>> boot CPU, then the tick timer will stuck long time, which caused the
+>>> system wall time inaccuracy.
+>>>
+>>> For example, the dmesg shown that:
+>>>
+>>>    [    0.197975] node 0 initialised, 32170688 pages in 1ms
+>>>
+>>> Obviously, 1ms is unreasonable.
+>>> Now, fix it by restore in the pending interrupts inside the while loop.
+>>> The reasonable demsg shown likes:
+>>>
+>>> [    1.069306] node 0 initialised, 32203456 pages in 894ms
+>> The way I understand the original problem, that Pavel fixed:
+>>
+>> we need disable irqs in deferred_init_memmap() since this function may be called
+>> in parallel with deferred_grow_zone() called from interrupt handler. So, Pavel
+>> added lock to fix the race.
+>>
+>> In case of we temporary unlock the lock, interrupt still be possible,
+>> so my previous proposition returns the problem back.
+>>
+>> Now thought again, I think we have to just add:
+>>
+>>     pgdat_resize_unlock();
+>>     pgdat_resize_lock();
+>>
+>> instead of releasing interrupts, since in case of we just release them with lock held,
+>> a call of interrupt->deferred_grow_zone() bring us to a deadlock.
+>>
+>> So, unlock the lock is must.
+> 
+> Yes, you're right! I missed this point.
+> Thanks for your comment!
+> 
+>>
+>>> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
+>>> ---
+>>>   mm/page_alloc.c | 6 +++++-
+>>>   1 file changed, 5 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>> index 3c4eb750a199..d3f337f2e089 100644
+>>> --- a/mm/page_alloc.c
+>>> +++ b/mm/page_alloc.c
+>>> @@ -1809,8 +1809,12 @@ static int __init deferred_init_memmap(void *data)
+>>>        * that we can avoid introducing any issues with the buddy
+>>>        * allocator.
+>>>        */
+>>> -    while (spfn < epfn)
+>>> +    while (spfn < epfn) {
+>>>           nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+>>> +        /* let in any pending interrupts */
+>>> +        local_irq_restore(flags);
+>>> +        local_irq_save(flags);
+>>> +    }
+>>>   zone_empty:
+>>>       pgdat_resize_unlock(pgdat, &flags);
+>> I think we need here something like below (untested):
+>>
+>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> index 79e950d76ffc..323afa9a4db5 100644
+>> --- a/mm/page_alloc.c
+>> +++ b/mm/page_alloc.c
+>> @@ -1828,7 +1828,7 @@ static int __init deferred_init_memmap(void *data)
+>>   {
+>>       pg_data_t *pgdat = data;
+>>       const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
+>> -    unsigned long spfn = 0, epfn = 0, nr_pages = 0;
+>> +    unsigned long spfn = 0, epfn = 0, nr_pages = 0, prev_nr_pages = 0;
+>>       unsigned long first_init_pfn, flags;
+>>       unsigned long start = jiffies;
+>>       struct zone *zone;
+>> @@ -1869,8 +1869,18 @@ static int __init deferred_init_memmap(void *data)
+>>        * that we can avoid introducing any issues with the buddy
+>>        * allocator.
+>>        */
+>> -    while (spfn < epfn)
+>> +    while (spfn < epfn) {
+>>           nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+>> +        /*
+>> +         * Release interrupts every 1Gb to give a possibility
+>> +         * a timer to advance jiffies.
+>> +         */
+>> +        if (nr_pages - prev_nr_pages > (1UL << (30 - PAGE_SHIFT))) {
+>> +            prev_nr_pages = nr_pages;
+>> +            pgdat_resize_unlock(pgdat, &flags);
+>> +            pgdat_resize_lock(pgdat, &flags);
+>> +        }
+>> +    }
+>>   zone_empty:
+>>       pgdat_resize_unlock(pgdat, &flags);
+>>  
+>> (I believe the comment may be improved more).
+> 
+> Yeah, your patch is better!
+> I test your code and it works!
+> But it seems that 1G is still hold the interrupts too long, about 40ms in my env
+> with Intel(R) Xeon(R) 2.5GHz). I tried other size, it is OK to use 1024 pages (4MB),
+> which suggested by Andrew's before.
+> 
+> Could you please help to review it again?
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 3c4eb750a199..5def66d3ffcd 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1768,7 +1768,7 @@ static int __init deferred_init_memmap(void *data)
+>  {
+>         pg_data_t *pgdat = data;
+>         const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
+> -       unsigned long spfn = 0, epfn = 0, nr_pages = 0;
+> +       unsigned long spfn = 0, epfn = 0, nr_pages = 0, prev_nr_pages = 0;
+>         unsigned long first_init_pfn, flags;
+>         unsigned long start = jiffies;
+>         struct zone *zone;
+> @@ -1809,8 +1809,17 @@ static int __init deferred_init_memmap(void *data)
+>          * that we can avoid introducing any issues with the buddy
+>          * allocator.
+>          */
+> -       while (spfn < epfn)
+> +       while (spfn < epfn) {
+>                 nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
+> +               /*
+> +                * Restore pending interrupts every 1024 pages to give
+> +                * the chance tick timer to advance jiffies.
+> +                */
+> +               if (nr_pages - prev_nr_pages > 1024) {
+> +                       pgdat_resize_unlock(&flags);
+> +                       pgdat_resize_lock(&flags);
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+Here is problem: prev_nr_pages must be updated.
 
-  warning: no file matches F: Documentation/networking/6lowpan.txt
+Anyway, releasing every 4M looks wrong for me, since you removes the fix that Pavel introduced.
+He protected against big allocations made from interrupt content. But in case of we unlock
+the lock after 4Mb, only 4Mb will be available for allocations from interrupts. pgdat->first_deferred_pfn
+is updated at the start of function, so interrupt allocations won't be able to initialize
+mode for themselve.
 
-Adjust 6LOWPAN GENERIC (BTLE/IEEE 802.15.4) entry in MAINTAINERS.
+In case of you want unlock interrupts very often, you should make some creativity with first_deferred_pfn.
+We should update it sequentially. Something like below (untested):
 
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 ---
-Mauro, please ack.
-Marcel, please pick for bluetooth-next.
-
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e19b275f2ac2..d064049aad1b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -176,7 +176,7 @@ L:	linux-wpan@vger.kernel.org
- S:	Maintained
- F:	net/6lowpan/
- F:	include/net/6lowpan.h
--F:	Documentation/networking/6lowpan.txt
-+F:	Documentation/networking/6lowpan.rst
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 79e950d76ffc..be09d158baeb 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -1828,7 +1828,7 @@ static int __init deferred_init_memmap(void *data)
+ {
+ 	pg_data_t *pgdat = data;
+ 	const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
+-	unsigned long spfn = 0, epfn = 0, nr_pages = 0;
++	unsigned long spfn = 0, epfn = 0, nr_pages;
+ 	unsigned long first_init_pfn, flags;
+ 	unsigned long start = jiffies;
+ 	struct zone *zone;
+@@ -1838,7 +1838,7 @@ static int __init deferred_init_memmap(void *data)
+ 	/* Bind memory initialisation thread to a local node if possible */
+ 	if (!cpumask_empty(cpumask))
+ 		set_cpus_allowed_ptr(current, cpumask);
+-
++again:
+ 	pgdat_resize_lock(pgdat, &flags);
+ 	first_init_pfn = pgdat->first_deferred_pfn;
+ 	if (first_init_pfn == ULONG_MAX) {
+@@ -1850,7 +1850,6 @@ static int __init deferred_init_memmap(void *data)
+ 	/* Sanity check boundaries */
+ 	BUG_ON(pgdat->first_deferred_pfn < pgdat->node_start_pfn);
+ 	BUG_ON(pgdat->first_deferred_pfn > pgdat_end_pfn(pgdat));
+-	pgdat->first_deferred_pfn = ULONG_MAX;
  
- 6PACK NETWORK DRIVER FOR AX.25
- M:	Andreas Koensgen <ajk@comnets.uni-bremen.de>
--- 
-2.17.1
+ 	/* Only the highest zone is deferred so find it */
+ 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
+@@ -1864,14 +1863,30 @@ static int __init deferred_init_memmap(void *data)
+ 						 first_init_pfn))
+ 		goto zone_empty;
+ 
++	nr_pages = 0;
++
+ 	/*
+ 	 * Initialize and free pages in MAX_ORDER sized increments so
+ 	 * that we can avoid introducing any issues with the buddy
+ 	 * allocator.
++	 * Final iteration marker is: spfn=ULONG_MAX and epfn=0.
+ 	 */
+-	while (spfn < epfn)
++	while (spfn < epfn) {
+ 		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
++		if (!epfn)
++			break;
++		pgdat->first_deferred_pfn = epfn;
++		/*
++		 * Restore pending interrupts every 128Mb to give
++		 * the chance tick timer to advance jiffies.
++		 */
++		if (nr_pages > (1UL << 27 - PAGE_SHIFT)) {
++			pgdat_resize_unlock(pgdat, &flags);
++			goto again;
++		}
++	}
+ zone_empty:
++	pgdat->first_deferred_pfn = ULONG_MAX;
+ 	pgdat_resize_unlock(pgdat, &flags);
+ 
+ 	/* Sanity check that the next zone really is unpopulated */
+
+
 
