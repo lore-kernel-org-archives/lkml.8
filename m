@@ -2,105 +2,148 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52888C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CC5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2811120870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3737720870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:44:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JOyfmgSG"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FSyk0RND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388324AbgCDSmR (ORCPT
+        id S1730157AbgCDSop (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:42:17 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36313 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgCDSmQ (ORCPT
+        Wed, 4 Mar 2020 13:44:45 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56032 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729965AbgCDSoo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:42:16 -0500
-Received: by mail-wm1-f67.google.com with SMTP id g83so2958890wme.1;
-        Wed, 04 Mar 2020 10:42:13 -0800 (PST)
+        Wed, 4 Mar 2020 13:44:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 6so3361594wmi.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:44:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Taz9B582B17QJFHq4vnyy3ks6+/Yxqr+YFZUhRft8sQ=;
-        b=JOyfmgSGO+maesgkLYYDa0CJeG7EdGd6AzUXmExJB2vvYlruA9zcJHaLaBClmeMSEs
-         q1SjIwXR4xJfZLtV5cXNlVWfBv1EWzNZj7Rnh5EnLDHTGsYSlDX8njy2SoiOjEX0qoJs
-         fQeoeP1NW8tmls0GKQkkLWdpUU4NADd7UwAuXobByJrORXReSn6EuqRrBC9wZ4dmUnVf
-         mgHxVCrA0eSDGpUREUE7knc8U4GsHJsZmuypfQKeij2bPTwllOH0Zcvs1fC3PbH3oF1J
-         R24Umg04leHsDw7iUWZm7DPtnqwGavl/ldcx8UG21M2VWrkZQ/qpApMVzzu0jscUjmLs
-         kmIQ==
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=McYCjFd7DNHcc98fHYBjU5qExu0x6OSshDp3fc3A0zc=;
+        b=FSyk0RNDcJgmtsUCb5U3SP0sB3JM7GBEhNfl/HKWYonQ92L1E5AgCodzJTjDIS0lZQ
+         iDTBH/Ozz1R+wL1OEZaX7dDMKzwjND4A7r4AJsxeYy5UxbF8rDU0yri2C0fraZbVLFGp
+         2EPwzUp9CcVrzBsGO7IE+y/kEbmZcKMUJznNo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Taz9B582B17QJFHq4vnyy3ks6+/Yxqr+YFZUhRft8sQ=;
-        b=i+aYYx9IBeTgh0aVW1acoWb19RRUIrxWpWdkv44qZbPLF+zWTuR/mFT0SPyjTvzVMz
-         DSZ8dwd1igNItoUhpYq/dOSYrC6eCZiPRxY6KUWUWXigkMX5FRebuzflZdtGAXEtvorL
-         FDxWHqhCoJVC8FXbL+r2wv5ITpz4vEU63GmXtoG25RIaGsetfUShqfH9oOGGzA5Bbw1e
-         hG19hYukrKzF27fTzJj2HADs/Kk91budlMKX+BHk2hYWfzlcmwA9x6mM8cC2jFB8eQWj
-         39LK6mydff4EXlckNruEIYZLsgR7a3kr6Zws8SFOpNvDvymoVwk51H+Ir/r316XdC+Ab
-         mwnQ==
-X-Gm-Message-State: ANhLgQ2CKsVQ9Dcx5RQsquI7A8RYG8Gox/IRLnF4j2+EMQJ6dyAx/kdi
-        NnCQrHupH25wNTa1zDkb5ZI=
-X-Google-Smtp-Source: ADFU+vu89SUtNLXOa0wDBls7mVKttadFUyRVC8wIrTXOR1+RiC1XClyH+9OgoeF0Ll5q4Sa3ayoZlw==
-X-Received: by 2002:a7b:c4d9:: with SMTP id g25mr3634960wmk.121.1583347332383;
-        Wed, 04 Mar 2020 10:42:12 -0800 (PST)
-Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
-        by smtp.gmail.com with ESMTPSA id v11sm28175848wrs.54.2020.03.04.10.42.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Mar 2020 10:42:11 -0800 (PST)
-From:   Johan Jonker <jbx6244@gmail.com>
-To:     broonie@kernel.org
-Cc:     heiko@sntech.de, robh+dt@kernel.org, linux-spi@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/3] dt-bindings: spi: spi-rockchip: add description for rk3328
-Date:   Wed,  4 Mar 2020 19:42:03 +0100
-Message-Id: <20200304184203.9548-3-jbx6244@gmail.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20200304184203.9548-1-jbx6244@gmail.com>
-References: <20200304184203.9548-1-jbx6244@gmail.com>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=McYCjFd7DNHcc98fHYBjU5qExu0x6OSshDp3fc3A0zc=;
+        b=EmNdSBEh+h5fuuMl9MtpQgE8eukZT540wM3lhfDsroDe9fnj+66QYNm9hidnYhf8iG
+         u21eZPmeE40xf93vRX1UMOJjU0XjOXF0PfTaFYcmfRUpWA3sJJdx7axx1/zZ2Le6XxXP
+         +2nZU5oS3QjNsa/j6EU++1YewZsv02h2/B3Yo7cYu5DaNjCsL8x0tVSan/2H4VRK2D1g
+         9HpheN5sZ3HYcHwJVedlThWtRSHqfDqkW2+VzB5VyH2paruoZ/XL7zAz1dd4MdPXT2M4
+         5bJENn3ih6bAGOzb/+KQpgp1U8QBn0nFZEZRXET64dlITglyJYlWxcIgZt/uiaEjH8gy
+         QBwA==
+X-Gm-Message-State: ANhLgQ3pSLZYIb4WO4kGtFgq62g7l0M7IeMZSNgIcExmqbv1bsHZiKu9
+        az049YwZmSYcSb9jGDwbePnoXg==
+X-Google-Smtp-Source: ADFU+vvZqJ7orqfIUz6zCACqQsDhFoNWWvxIGDk+ionaaED7Zge9hIRJH3EBO1ViFWFT9WeNMdMwMg==
+X-Received: by 2002:a05:600c:249:: with SMTP id 9mr4786974wmj.186.1583347483522;
+        Wed, 04 Mar 2020 10:44:43 -0800 (PST)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id d63sm5340119wmd.44.2020.03.04.10.44.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 10:44:42 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Wed, 4 Mar 2020 19:44:41 +0100
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: Re: [PATCH bpf-next v3 1/7] bpf: Refactor trampoline update code
+Message-ID: <20200304184441.GA25392@chromium.org>
+References: <20200304154747.23506-1-kpsingh@chromium.org>
+ <20200304154747.23506-2-kpsingh@chromium.org>
+ <cb54c137-6d8e-b4e5-bd17-e0a05368c3eb@iogearbox.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <cb54c137-6d8e-b4e5-bd17-e0a05368c3eb@iogearbox.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The description below is already in use for rk3328.dtsi,
-but was somehow never added to a document, so add
-"rockchip,rk3328-spi", "rockchip,rk3066-spi"
-for spi nodes on a rk3328 platform to spi-rockchip.yaml.
+On 04-Mär 19:37, Daniel Borkmann wrote:
+> On 3/4/20 4:47 PM, KP Singh wrote:
+> > From: KP Singh <kpsingh@google.com>
+> > 
+> > As we need to introduce a third type of attachment for trampolines, the
+> > flattened signature of arch_prepare_bpf_trampoline gets even more
+> > complicated.
+> > 
+> > Refactor the prog and count argument to arch_prepare_bpf_trampoline to
+> > use bpf_tramp_progs to simplify the addition and accounting for new
+> > attachment types.
+> > 
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > Acked-by: Andrii Nakryiko <andriin@fb.com>
+> 
+> [...]
+> > diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
+> > index c498f0fffb40..9f7e0328a644 100644
+> > --- a/kernel/bpf/bpf_struct_ops.c
+> > +++ b/kernel/bpf/bpf_struct_ops.c
+> > @@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+> >   	struct bpf_struct_ops_value *uvalue, *kvalue;
+> >   	const struct btf_member *member;
+> >   	const struct btf_type *t = st_ops->type;
+> > +	struct bpf_tramp_progs *tprogs = NULL;
+> >   	void *udata, *kdata;
+> >   	int prog_fd, err = 0;
+> >   	void *image;
+> > @@ -425,10 +426,18 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+> >   			goto reset_unlock;
+> >   		}
+> > +		tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(*tprogs), GFP_KERNEL);
+> > +		if (!tprogs) {
+> > +			err = -ENOMEM;
+> > +			goto reset_unlock;
+> > +		}
+> > +
+> 
+> Looking over the code again, I'm quite certain that here's a memleak
+> since the kcalloc() is done in the for_each_member() loop in the ops
+> update but then going out of scope and in the exit path we only kfree
+> the last tprogs.
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
-Changes v3:
-  remove some comments
+You're right, nice catch. Fixing it.
 
-Changes v2:
-  add acked by
----
- Documentation/devicetree/bindings/spi/spi-rockchip.yaml | 1 +
- 1 file changed, 1 insertion(+)
+- KP
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-index 456896e2d..81ad4b761 100644
---- a/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-+++ b/Documentation/devicetree/bindings/spi/spi-rockchip.yaml
-@@ -30,6 +30,7 @@ properties:
-             - rockchip,rk3188-spi
-             - rockchip,rk3288-spi
-             - rockchip,rk3308-spi
-+            - rockchip,rk3328-spi
-             - rockchip,rk3368-spi
-             - rockchip,rk3399-spi
-           - const: rockchip,rk3066-spi
--- 
-2.11.0
-
+> 
+> > +		tprogs[BPF_TRAMP_FENTRY].progs[0] = prog;
+> > +		tprogs[BPF_TRAMP_FENTRY].nr_progs = 1;
+> >   		err = arch_prepare_bpf_trampoline(image,
+> >   						  st_map->image + PAGE_SIZE,
+> >   						  &st_ops->func_models[i], 0,
+> > -						  &prog, 1, NULL, 0, NULL);
+> > +						  tprogs, NULL);
+> >   		if (err < 0)
+> >   			goto reset_unlock;
+> > @@ -469,6 +478,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+> >   	memset(uvalue, 0, map->value_size);
+> >   	memset(kvalue, 0, map->value_size);
+> >   unlock:
+> > +	kfree(tprogs);
+> >   	mutex_unlock(&st_map->lock);
+> >   	return err;
+> >   }
