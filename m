@@ -2,183 +2,141 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60693C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64DBC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:05:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C1C920870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:00:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SjfdFlS3"
+	by mail.kernel.org (Postfix) with ESMTP id BA0E820870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:05:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388092AbgCDNAI (ORCPT
+        id S2387805AbgCDNFN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:00:08 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:37473 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388060AbgCDNAH (ORCPT
+        Wed, 4 Mar 2020 08:05:13 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:52747 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387776AbgCDNFN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:00:07 -0500
-Received: by mail-qv1-f65.google.com with SMTP id c19so716920qvv.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:00:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Beu3qvFTUH06Rlm0/R7E/eA87SF87SDv5KPlGbUEFUY=;
-        b=SjfdFlS3wO55dVhIbilav3RQtVBWgW91Cnb/+8n7jkIY3LxEaXZNW4wSRZ1w0P+Y2Z
-         m2wcVG3v4ccrUcE2gOaZ9eeheXa1jOFC15/2rUmkBSsjvSz5A70/65MZ8+07ABoV8gmL
-         lUJOwfGxVQgX8ZwatFqrgLAj0QQ4QVNzVsKWc=
+        Wed, 4 Mar 2020 08:05:13 -0500
+Received: by mail-il1-f197.google.com with SMTP id d2so1330974ilf.19
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:05:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Beu3qvFTUH06Rlm0/R7E/eA87SF87SDv5KPlGbUEFUY=;
-        b=btj/eIFVNg4r3QzmJBWwH96RS6mNbscI5Oi1VolJjt7bq3B2Ar9oQMEIkzfRiYiIuz
-         F7gW4pS2rBWMegaqxwB/YBD3LxWo5ziuT6qKhaU1biegcvG35FhlO/nBY+dF1JVYvMfJ
-         9yd283aOfWkVoQYrpd1hZ3gQoK2TzQH2mhKgdz5zcYacM/BqG+KE9IFCNF5rAtaXWq03
-         I8azpOwwc9XYYiS3EsFLsIeb1uMwj69UXzI1WIQsTZpGLzK1TQ236l4UdBRukG+9onoi
-         9xAfqFiacWP0DVfoDtdoegPXz1c/6tGk/zOhl4630G8aHvw+YW6C182sq5K7O9WfGqyG
-         VDVw==
-X-Gm-Message-State: ANhLgQ3peP9XF9BZAtRk2AvfOwLdGGqwNvyOjyKuBPMIjwxbVVD+DuyY
-        ZbXBaTsxWax6hGkjkcq9E23vrPLiI9D2BA/YZxHJaQ==
-X-Google-Smtp-Source: ADFU+vvAPd9eUBLgxOcz8KO1mdbkjC+PQUvSPfxQ3LEaj+3mlGdcvGhxsv7PsukxnD5IbwUM3xFfAimQpPOT+wKAGoo=
-X-Received: by 2002:a05:6214:1750:: with SMTP id dc16mr1985308qvb.47.1583326806377;
- Wed, 04 Mar 2020 05:00:06 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Czz7rgum7/L7+4HMs+7TnQ38o1eJc5E8CEn7vJGv6Vs=;
+        b=lnN1S200TH8UI20kPiS4QMzJMAOvKei9dVmc9KJoaVm47loRA+sM0WHkMFOShnT209
+         JnQyY02CyitukSXNcTX4QQlMnDb8MRiyN9YNEeGDM4tSYmZsmfz8rHqN7sNwnKmxQkYK
+         HslFO4qODdMTtszmGywozG+nuHhkMpeSTTShUfRB3FvDHCZCkShKFdi8mWFQfIry8OE0
+         sxzHGnq2EobfVbyhlv8xQ1/brfiBourUURhdSjKas5X2Gww4DSQbux0Q+bkSRK2Pl7Yg
+         dPoAU5CPKcY9wb1n+lhb1lpIh8xGwTY3RfHk7xt5Nm/5EmzYz6LPdgmKCQ5xqmssRyZp
+         UTjw==
+X-Gm-Message-State: ANhLgQ11QMkzlyiGAjrJ4M/D0vOk6fMycnuV6eYcR5ZbNF+4zQPNS/za
+        NA4CDCOg+Tr44DEs5cRR6/dSzbO0/g68n4R1Us66kScle8iL
+X-Google-Smtp-Source: ADFU+vu1NPRP/5ciJYIv3k8/c9GsV9hKRSP0DJON+1fkuNyPCMjgPXFsBOyeaDit6IfVKBAWiEJQKV6eXl7BsEl3Lw5EHGlgE7WI
 MIME-Version: 1.0
-References: <1580730044-30501-1-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1580730044-30501-5-git-send-email-hsin-hsiung.wang@mediatek.com>
- <1580748607.31376.3.camel@mtksdaap41> <1581911502.20099.13.camel@mhfsdcap03>
-In-Reply-To: <1581911502.20099.13.camel@mhfsdcap03>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Wed, 4 Mar 2020 20:59:55 +0800
-Message-ID: <CANMq1KDTHcFV8Gue1PuOWkWXL20z_-j58u8JpwbBm_wUvLeqSg@mail.gmail.com>
-Subject: Re: [PATCH v8 4/5] rtc: mt6397: Add support for the MediaTek MT6358 RTC
-To:     Ran Bi <ran.bi@mediatek.com>
-Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Josef Friedl <josef.friedl@speed.at>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Frank Wunderlich <frank-w@public-files.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eddie Huang <eddie.huang@mediatek.com>,
-        linux-rtc@vger.kernel.org
+X-Received: by 2002:a02:90d0:: with SMTP id c16mr2663415jag.22.1583327112844;
+ Wed, 04 Mar 2020 05:05:12 -0800 (PST)
+Date:   Wed, 04 Mar 2020 05:05:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001fdbd605a00712b1@google.com>
+Subject: WARNING: locking bug in finish_lock_switch
+From:   syzbot <syzbot+91e3de3393c461e632ee@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello,
 
-On Mon, Feb 17, 2020 at 11:52 AM Ran Bi <ran.bi@mediatek.com> wrote:
->
-> On Tue, 2020-02-04 at 00:50 +0800, Yingjoe Chen wrote:
-> > > diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
-> > > index f84b916..fffe34a 100644
-> > > --- a/include/linux/mfd/mt6397/rtc.h
-> > > +++ b/include/linux/mfd/mt6397/rtc.h
-> > > @@ -18,7 +18,8 @@
-> > >  #define RTC_BBPU_CBUSY         BIT(6)
-> > >  #define RTC_BBPU_KEY            (0x43 << 8)
-> > >
-> > > -#define RTC_WRTGR              0x003c
-> > > +#define RTC_WRTGR_MT6358       0x3a
-> > > +#define RTC_WRTGR_MT6397       0x3c
-> > >
-> > >  #define RTC_IRQ_STA            0x0002
-> > >  #define RTC_IRQ_STA_AL         BIT(0)
-> > > @@ -57,6 +58,10 @@
-> > >  #define MTK_RTC_POLL_DELAY_US  10
-> > >  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
-> > >
-> > > +struct mtk_rtc_data {
-> > > +   u32                     wrtgr;
-> > > +};
-> > > +
-> > >  struct mt6397_rtc {
-> > >     struct device           *dev;
-> > >     struct rtc_device       *rtc_dev;
-> > > @@ -66,6 +71,15 @@ struct mt6397_rtc {
-> > >     struct regmap           *regmap;
-> > >     int                     irq;
-> > >     u32                     addr_base;
-> > > +   const struct mtk_rtc_data *data;
-> > > +};
-> > > +
-> > > +static const struct mtk_rtc_data mt6358_rtc_data = {
-> > > +   .wrtgr = RTC_WRTGR_MT6358,
-> > > +};
-> > > +
-> > > +static const struct mtk_rtc_data mt6397_rtc_data = {
-> > > +   .wrtgr = RTC_WRTGR_MT6397,
-> > >  };
-> >
-> > Hi,
-> >
-> > Putting these in header file doesn't looks right to me.
-> > Who need this? can you move them back to rtc-mt6397.c?
-> > Joe.C
-> >
->
-> This could also effect kernel/drivers/power/reset/mt6323-poweroff.c
-> which using same region of RTC registers.
-> There are 2 ways of modification:
-> 1. kernel/drivers/rtc/rtc-mt6397.c implement do_pwroff function and
-> export to mt6323-poweroff.c
-> 2. Just modify mt6323-poweroff.c file to compatible this patch. I mean
-> using RTC_WRTGR_MT6397 to replace RTC_WRTGR. Or modify mt6323-poweroff.c
-> like rtc-mt6397.c
+syzbot found the following crash on:
 
-Oh, I see, so basically both rtc-mt6397.c and mt6323-poweroff.c need
-to know at what offset RTC_WRTGR actually is. Correct?
+HEAD commit:    f8788d86 Linux 5.6-rc3
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15cc8331e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
+dashboard link: https://syzkaller.appspot.com/bug?extid=91e3de3393c461e632ee
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=158b72c3e00000
 
-Is there any plan to have mt6323-poweroff.c support any of the other
-PMICs (not just MT6323?)?
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+91e3de3393c461e632ee@syzkaller.appspotmail.com
 
-a. If not, I'd just add:
-#define RTC_WRTGR_MT6323 RTC_WRTGR_MT6397
-in rtc.h, for added clarity, use that in mt6323-poweroff.c
-(s/RTC_WRTGR/RTC_WRTGR_MT6323/), and be done with it.
+------------[ cut here ]------------
+DEBUG_LOCKS_WARN_ON(1)
+WARNING: CPU: 1 PID: 10050 at kernel/locking/lockdep.c:167 hlock_class kernel/locking/lockdep.c:167 [inline]
+WARNING: CPU: 1 PID: 10050 at kernel/locking/lockdep.c:167 __lock_acquire+0x18b8/0x1bc0 kernel/locking/lockdep.c:3950
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 10050 Comm: syz-executor.0 Not tainted 5.6.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ panic+0x264/0x7a9 kernel/panic.c:221
+ __warn+0x209/0x210 kernel/panic.c:582
+ report_bug+0x1b6/0x2f0 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ do_error_trap+0xcf/0x1c0 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:hlock_class kernel/locking/lockdep.c:167 [inline]
+RIP: 0010:__lock_acquire+0x18b8/0x1bc0 kernel/locking/lockdep.c:3950
+Code: 08 00 0f 85 f5 f0 ff ff 45 31 f6 48 c7 c7 bd aa e3 88 48 c7 c6 76 6b e8 88 31 c0 e8 72 e8 ec ff 48 bf 00 00 00 00 00 fc ff df <0f> 0b e9 a4 f2 ff ff 45 31 f6 e9 92 f2 ff ff 48 c7 c1 c4 ea 69 89
+RSP: 0018:ffffc900052a77b0 EFLAGS: 00010046
+RAX: 6d156fc8d8732800 RBX: 00000000000008fb RCX: ffff88808d76c240
+RDX: 0000000040000000 RSI: 0000000000000001 RDI: dffffc0000000000
+RBP: ffffc900052a7910 R08: ffffffff817cb4ba R09: fffffbfff125af8f
+R10: fffffbfff125af8f R11: 0000000000000000 R12: 3476ca37373763a9
+R13: ffff88808d76cad0 R14: 0000000000000000 R15: ffff88808d76c240
+ lock_acquire+0x154/0x250 kernel/locking/lockdep.c:4484
+ finish_lock_switch+0x25/0x40 kernel/sched/core.c:3118
+ finish_task_switch+0x24f/0x550 kernel/sched/core.c:3219
+ context_switch kernel/sched/core.c:3383 [inline]
+ __schedule+0x887/0xcd0 kernel/sched/core.c:4080
+ preempt_schedule_irq+0xca/0x150 kernel/sched/core.c:4337
+ retint_kernel+0x1b/0x2b
+RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:752 [inline]
+RIP: 0010:lock_acquire+0x1ae/0x250 kernel/locking/lockdep.c:4487
+Code: c1 e8 03 42 80 3c 30 00 74 0c 48 c7 c7 10 d3 2a 89 e8 56 67 58 00 48 83 3d 6e 07 cf 07 00 0f 84 9c 00 00 00 48 8b 7d c0 57 9d <0f> 1f 44 00 00 48 83 c4 30 5b 41 5c 41 5d 41 5e 41 5f 5d c3 44 89
+RSP: 0018:ffffc900052a7ba8 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
+RAX: 1ffffffff1255a62 RBX: 0000000000000000 RCX: ffffffff815cb150
+RDX: dffffc0000000000 RSI: 0000000000000004 RDI: 0000000000000282
+RBP: ffffc900052a7c00 R08: dffffc0000000000 R09: fffffbfff1384111
+R10: fffffbfff1384111 R11: 0000000000000000 R12: 0000000000000001
+R13: 0000000000000000 R14: dffffc0000000000 R15: ffff8880a3fd1928
+ flush_workqueue+0x10a/0x1820 kernel/workqueue.c:2775
+ hci_dev_open+0x21d/0x2e0 net/bluetooth/hci_core.c:1626
+ hci_sock_bind+0x1620/0x1b10 net/bluetooth/hci_sock.c:1200
+ __sys_bind+0x2bd/0x3a0 net/socket.c:1662
+ __do_sys_bind net/socket.c:1673 [inline]
+ __se_sys_bind net/socket.c:1671 [inline]
+ __x64_sys_bind+0x7a/0x90 net/socket.c:1671
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x45c449
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f46d8bebc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
+RAX: ffffffffffffffda RBX: 00007f46d8bec6d4 RCX: 000000000045c449
+RDX: 0000000000000006 RSI: 00000000200007c0 RDI: 0000000000000005
+RBP: 000000000076c060 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 000000000000002c R14: 00000000004c28c9 R15: 000000000076c06c
 
-Actually, even if there's a plan, you can go ahead with this simpler
-solution for now, and fix later when the issue comes up.
 
-b. If you ever want to support multiple PMICs with mt6323-poweroff.c,
-you'd need that offset for 2 different sub-devices under the same mfd,
-so the matching logic belongs in the main mfd device, not in
-rtc/poweroff driver.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-So I'd move the matching logic in drivers/mfd/mt6397-core.c, and add
-rtc_wrtgr offset (or a full _data structure) to `struct mt6397_chip`,
-or, probably better, add a IORESOURCE_REG to the matching resources to
-specify the offset (that's what drivers/mfd/88pm860x-core.c seems to
-be doing, for example).
-
-And then mt6323-poweroff.c should probably be renamed to mt6397-poweroff.c.
-
-(actually, looking at this, I'm even questioning if mt6323-poweroff.c
-should even exist, and if you should just fold it into rtc-mt6397.c?
-Since they use the same registers?)
-
-Hope this makes sense?
-
-Best,
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
