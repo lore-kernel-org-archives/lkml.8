@@ -2,217 +2,141 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF21FC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E70BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FAB624654
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XabP4KAA"
+	by mail.kernel.org (Postfix) with ESMTP id 60AA922B48
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730082AbgCDRCt (ORCPT
+        id S1730105AbgCDRDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:02:49 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37782 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727804AbgCDRCt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:02:49 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b8so1270216plx.4;
-        Wed, 04 Mar 2020 09:02:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N9lOtVrft0/qB707n6HjzkBxcOjRFvTGY92Y8JzpDCQ=;
-        b=XabP4KAApP77XUAYcTnaIzXQeuabw9MkJ0yRu6X8zGBT+xeGPMG7bwJf1sX53KoR/p
-         L09+g2GDYU1oTPBxZAvl+zxP0lcii67bfIpL6/nQJTIdkXFaWJEdavS1VUGZ/VwKnUOT
-         bbLmQoiMta+UPN0T53/2FLS90bd6d9OJtJ6pU/j02DKVv+ZDWKa7AX42mxClYzILIzTD
-         4A/3xllTeQN8PUVk3EMmJZdmJ9Mfr9/5alqR6qNLy43X+ZMwsq4J1HsRP1DSrJ44hHHP
-         AAtwRewPBGHDO2IJrF0XyerLMkRwCAY++ypMhtVqCpBslhW5+bB6nH+lKA6NbZ6NRkvB
-         YEcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N9lOtVrft0/qB707n6HjzkBxcOjRFvTGY92Y8JzpDCQ=;
-        b=c7Dj4jvQW2Jz4KztdZNzw8GbcEgU/aRibEjkcx+SVkzfUh7Dpl26X+fQYKmYi0gTY0
-         V8XkxTzAP7q0Dbh+/it4Nomv9O+EKzZOEcNDOldy/w1JKjjfNkT+Hqo9n7TncIPwMeUo
-         ECffFPDeOpBpPG/Z/KW0RvonuQ4uKwfBzVjVs2XqPdaq6OHDc0/BKrMUNpk3oOCodp2c
-         WfvRva0ivwLPKD+o4G+WEznYyTKU0K6cQl545qxLPgXs6UG6pKJdF/eOK5rfdVTbifb5
-         s/+KiOZBwCmhsYivcJ+dgTbX6pKotwWBmvl2jupLQHoRcVybbRpwT1WUittYkwB/fzNH
-         3vKA==
-X-Gm-Message-State: ANhLgQ1X6vD4T79h4o1UYk2WR0rejpuOcr2/KORTb4gFmuABqgQUanN5
-        KTwnS//GbmtHq8dhaaLddIg=
-X-Google-Smtp-Source: ADFU+vuHh3uIaECJkr38nrkoc1tUd41kATobscfYurPIlrK7EFpgGljUrjyHqxOx5ZtQW8+RyFGOTw==
-X-Received: by 2002:a17:902:b085:: with SMTP id p5mr3882183plr.218.1583341367729;
-        Wed, 04 Mar 2020 09:02:47 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b184sm15647035pfb.89.2020.03.04.09.02.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Mar 2020 09:02:46 -0800 (PST)
-Date:   Wed, 4 Mar 2020 09:02:45 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        linux-watchdog@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH v2 3/3] watchdog: npcm: remove whitespaces
-Message-ID: <20200304170245.GA22851@roeck-us.net>
-References: <20200303100114.87786-1-tmaimon77@gmail.com>
- <20200303100114.87786-4-tmaimon77@gmail.com>
- <20200303212512.GA20448@roeck-us.net>
- <CAP6Zq1gW53NEH7vD9C9GK2sg1pOxeZinA5uMJQQmbntrf=2ySA@mail.gmail.com>
+        Wed, 4 Mar 2020 12:03:24 -0500
+Received: from foss.arm.com ([217.140.110.172]:37294 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbgCDRDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 12:03:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6697E31B;
+        Wed,  4 Mar 2020 09:03:23 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3073A3F6CF;
+        Wed,  4 Mar 2020 09:03:22 -0800 (PST)
+Date:   Wed, 4 Mar 2020 17:03:20 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
+Message-ID: <20200304170319.GB44525@bogus>
+References: <1583201219-15839-1-git-send-email-peng.fan@nxp.com>
+ <1583201219-15839-3-git-send-email-peng.fan@nxp.com>
+ <20200304103954.GA25004@bogus>
+ <AM0PR04MB4481A6DB7339C22A848DAFC988E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <AM0PR04MB44814B71E92C02956F4BED4588E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAP6Zq1gW53NEH7vD9C9GK2sg1pOxeZinA5uMJQQmbntrf=2ySA@mail.gmail.com>
+In-Reply-To: <AM0PR04MB44814B71E92C02956F4BED4588E50@AM0PR04MB4481.eurprd04.prod.outlook.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 10:18:12AM +0200, Tomer Maimon wrote:
-> Hi Guenter,
-> 
-> I still see the whitespaces warning in v5.6-rc4
-> 
-> https://github.com/torvalds/linux/blob/master/drivers/watchdog/npcm_wdt.c#L106
-> 
-You are corerct, sorry. No idea what I looked at yesterday.
+Hi Peng,
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+On Wed, Mar 04, 2020 at 02:16:00PM +0000, Peng Fan wrote:
+> > Subject: RE: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
+> >
+> > Hi Sudeep,
+> >
+> > > Subject: Re: [PATCH V4 2/2] firmware: arm_scmi: add smc/hvc transport
+> > >
+> > > On Tue, Mar 03, 2020 at 10:06:59AM +0800, peng.fan@nxp.com wrote:
+> > > > From: Peng Fan <peng.fan@nxp.com>
+> > > >
+> > > > Take arm,smc-id as the 1st arg, leave the other args as zero for now.
+> > > > There is no Rx, only Tx because of smc/hvc not support Rx.
+> > > >
+> > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > [...]
+> > >
+> > > > +static int smc_send_message(struct scmi_chan_info *cinfo,
+> > > > +			    struct scmi_xfer *xfer)
+> > > > +{
+> > > > +	struct scmi_smc *scmi_info = cinfo->transport_info;
+> > > > +	struct arm_smccc_res res;
+> > > > +
+> > > > +	shmem_tx_prepare(scmi_info->shmem, xfer);
+> > >
+> > > How do we protect another thread/process on another CPU going and
+> > > modifying the same shmem with another request ? We may need notion of
+> > > channel with associated shmem and it is protected with some lock.
+> >
+> > This is valid concern. But I think if shmem is shared bwteen protocols, the
+> > access to shmem should be protected in
+> > drivers/firmware/arm_scmi/driver.c: scmi_do_xfer, because send_message
+> > and fetch_response both touches shmem
+> >
+> > The mailbox transport also has the issue you mentioned, I think.
 
-> 
-> bash-4.2$ ./scripts/checkpatch.pl --strict --file
-> drivers/watchdog/npcm_wdt.c
-> CHECK: Please don't use multiple blank lines
-> #106: FILE: drivers/watchdog/npcm_wdt.c:106:
+No, it doesn't. I hope you realised that now based on your statement below.
+
+>
+> Ignore my upper comments. How do think the following diff based on current patch?
+>
+> If ok, I'll squash it with current patch and send out v5.
+>
+> diff --git a/drivers/firmware/arm_scmi/smc.c b/drivers/firmware/arm_scmi/smc.c
+> index 88f91b68f297..7d770112f339 100644
+> --- a/drivers/firmware/arm_scmi/smc.c
+> +++ b/drivers/firmware/arm_scmi/smc.c
+> @@ -29,6 +29,8 @@ struct scmi_smc {
+>         u32 func_id;
+>  };
+>
+> +static DEFINE_MUTEX(smc_mutex);
 > +
+>  static bool smc_chan_available(struct device *dev, int idx)
+>  {
+>         return true;
+> @@ -99,11 +101,15 @@ static int smc_send_message(struct scmi_chan_info *cinfo,
+>         struct scmi_smc *scmi_info = cinfo->transport_info;
+>         struct arm_smccc_res res;
+>
+> +       mutex_lock(&smc_mutex);
 > +
-> 
-> WARNING: suspect code indent for conditional statements (8, 14)
-> #112: FILE: drivers/watchdog/npcm_wdt.c:112:
-> + else if (timeout < 3)
-> +      wdd->timeout = 2;
-> 
-> WARNING: suspect code indent for conditional statements (8, 14)
-> #114: FILE: drivers/watchdog/npcm_wdt.c:114:
-> + else if (timeout < 6)
-> +      wdd->timeout = 5;
-> 
-> WARNING: suspect code indent for conditional statements (8, 14)
-> #116: FILE: drivers/watchdog/npcm_wdt.c:116:
-> + else if (timeout < 11)
-> +      wdd->timeout = 10;
-> 
-> WARNING: suspect code indent for conditional statements (8, 14)
-> #118: FILE: drivers/watchdog/npcm_wdt.c:118:
-> + else if (timeout < 22)
-> +      wdd->timeout = 21;
-> 
-> WARNING: suspect code indent for conditional statements (8, 14)
-> #120: FILE: drivers/watchdog/npcm_wdt.c:120:
-> + else if (timeout < 44)
-> +      wdd->timeout = 43;
-> 
-> WARNING: suspect code indent for conditional statements (8, 14)
-> #122: FILE: drivers/watchdog/npcm_wdt.c:122:
-> + else if (timeout < 87)
-> +      wdd->timeout = 86;
-> 
-> WARNING: suspect code indent for conditional statements (8, 14)
-> #124: FILE: drivers/watchdog/npcm_wdt.c:124:
-> + else if (timeout < 173)
-> +      wdd->timeout = 172;
-> 
-> WARNING: suspect code indent for conditional statements (8, 14)
-> #126: FILE: drivers/watchdog/npcm_wdt.c:126:
-> + else if (timeout < 688)
-> +      wdd->timeout = 687;
-> 
-> WARNING: suspect code indent for conditional statements (8, 14)
-> #128: FILE: drivers/watchdog/npcm_wdt.c:128:
-> + else
-> +      wdd->timeout = 2750;
-> 
-> Thanks,
-> 
-> Tomer
-> 
-> On Tue, 3 Mar 2020 at 23:25, Guenter Roeck <linux@roeck-us.net> wrote:
-> 
-> > On Tue, Mar 03, 2020 at 12:01:14PM +0200, Tomer Maimon wrote:
-> > > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> >
-> > Turns out this problem does not actually exist in the upstream driver
-> > (as of v5.6-rc4). You might want to align your code with the upstream
-> > kernel.
-> >
-> > Guenter
-> >
-> > > ---
-> > >  drivers/watchdog/npcm_wdt.c | 19 +++++++++----------
-> > >  1 file changed, 9 insertions(+), 10 deletions(-)
-> > >
-> > > diff --git a/drivers/watchdog/npcm_wdt.c b/drivers/watchdog/npcm_wdt.c
-> > > index 84a728af6664..bd38bf1ee6a1 100644
-> > > --- a/drivers/watchdog/npcm_wdt.c
-> > > +++ b/drivers/watchdog/npcm_wdt.c
-> > > @@ -123,30 +123,29 @@ static int npcm_wdt_stop(struct watchdog_device
-> > *wdd)
-> > >       return 0;
-> > >  }
-> > >
-> > > -
-> > >  static int npcm_wdt_set_timeout(struct watchdog_device *wdd,
-> > >                               unsigned int timeout)
-> > >  {
-> > >       if (timeout < 2)
-> > >               wdd->timeout = 1;
-> > >       else if (timeout < 3)
-> > > -           wdd->timeout = 2;
-> > > +             wdd->timeout = 2;
-> > >       else if (timeout < 6)
-> > > -           wdd->timeout = 5;
-> > > +             wdd->timeout = 5;
-> > >       else if (timeout < 11)
-> > > -           wdd->timeout = 10;
-> > > +             wdd->timeout = 10;
-> > >       else if (timeout < 22)
-> > > -           wdd->timeout = 21;
-> > > +             wdd->timeout = 21;
-> > >       else if (timeout < 44)
-> > > -           wdd->timeout = 43;
-> > > +             wdd->timeout = 43;
-> > >       else if (timeout < 87)
-> > > -           wdd->timeout = 86;
-> > > +             wdd->timeout = 86;
-> > >       else if (timeout < 173)
-> > > -           wdd->timeout = 172;
-> > > +             wdd->timeout = 172;
-> > >       else if (timeout < 688)
-> > > -           wdd->timeout = 687;
-> > > +             wdd->timeout = 687;
-> > >       else
-> > > -           wdd->timeout = 2750;
-> > > +             wdd->timeout = 2750;
-> > >
-> > >       if (watchdog_active(wdd))
-> > >               npcm_wdt_start(wdd);
-> >
+>         shmem_tx_prepare(scmi_info->shmem, xfer);
+>
+>         arm_smccc_1_1_invoke(scmi_info->func_id, 0, 0, 0, 0, 0, 0, 0, &res);
+>         scmi_rx_callback(scmi_info->cinfo, shmem_read_header(scmi_info->shmem));
+>
+> +       mutex_unlock(&smc_mutex);
+> +
+>         return res.a0;
+>  }
+>
+
+Yes, this may fix the issue. However I would like to know if we need to
+support multiple channels/shared memory simultaneously. It is fair
+requirement and may need some work which should be fine. I just want to
+make sure we don't need anything more from DT or if we need to add more
+to DT bindings, we need to ensure it won't break single channel. I will
+think about that, but I would like to hear from other users of this SMC
+for SCMI.
+
+--
+Regards,
+Sudeep
