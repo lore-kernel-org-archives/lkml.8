@@ -7,281 +7,161 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8343CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 715EDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52D7221739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:08:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4918821775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:09:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eC21OGjc"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g1F21Jna"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbgCDTIN (ORCPT
+        id S1729410AbgCDTI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:08:13 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:52098 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729702AbgCDTIN (ORCPT
+        Wed, 4 Mar 2020 14:08:59 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41286 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgCDTI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:08:13 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 024J8Aeg110938;
-        Wed, 4 Mar 2020 13:08:10 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583348890;
-        bh=P5aIg4NXmcAVM1iCQgBoIzJYdeBCCLe5HapuwYRNjck=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eC21OGjcnMbMSZX+84rM5u8OGBxDVSutn+cufBvVOKVAM1CWXoxokTOntG4Iy2UqW
-         +ZaUQHUTqND56bpQn3dwj9K6UljuyaW9bzYaILdmt3Dq+wLQUj8qzzvnkXPEynBpy5
-         8vMSDVf9alS3PuiN+AI+/I32Abnga878DwN9sj8I=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 024J8Aff028016
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 13:08:10 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 13:08:10 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 13:08:10 -0600
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 024J87Cx111603;
-        Wed, 4 Mar 2020 13:08:08 -0600
-Subject: Re: [PATCHv7 04/15] remoteproc/omap: Add support to parse internal
- memories from DT
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     <bjorn.andersson@linaro.org>, <ohad@wizery.com>,
-        <linux-remoteproc@vger.kernel.org>, <afd@ti.com>, <s-anna@ti.com>,
-        <linux-kernel@vger.kernel.org>, <linux-omap@vger.kernel.org>
-References: <20200221101936.16833-1-t-kristo@ti.com>
- <20200221101936.16833-5-t-kristo@ti.com> <20200304173207.GC8197@xps15>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <12cfb0db-f86e-3cd8-5010-d96daa91c184@ti.com>
-Date:   Wed, 4 Mar 2020 21:08:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 4 Mar 2020 14:08:59 -0500
+Received: by mail-wr1-f68.google.com with SMTP id v4so3835194wrs.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:08:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=3SS4fekyQGzGk+bEcZn0ToSHy9OyXafStxdmWHS/l5c=;
+        b=g1F21JnaXgZ/b+fqRbHrmibZXuy6uq7quiVcj8o9bY3mtdTjKW3DwnytkGBBhsYcBz
+         uurPUDZheKBecYlKZ3hwqF8Cb18i0zHW+C8J92SS+gHJqjOdtmI/z5qi78VIzgn5ovdf
+         OctW/J68R2IVHrpLo6q3sEsBevRAWmSywJ3Vw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=3SS4fekyQGzGk+bEcZn0ToSHy9OyXafStxdmWHS/l5c=;
+        b=ob0SBCgs5Q2SiGeMFF4kLQDVnxs5nfr4dIrQ8ZlWj2Gl2NNAV2lvMA+UHIMV7J2z74
+         DasW16iNv+mt711d1hOYPdN/xuUwtsmAPmiaKULDSrQHSms79UyWOuYn/cowYMebOXzY
+         HjUJ6Bhc+taBxadEtIkLK0I0oL7Uuwy1SEf3x1WhyzxRovof9IL54BZI5zVci3hTiBah
+         Hn3EpC7yKk3mv5AIFAxyclX82DXd65cxYSV4kdm6tmCc9kGWPPl+5Xylav1eipJwJHD1
+         4iB1xrluwvskDWsWoOnCAdK7hUuLn5f2eC3VcmWa25fQuPm9GH+OMba3s+2UkY7hY14z
+         dxxw==
+X-Gm-Message-State: ANhLgQ0zH7RX8MxshiiS604NEq5AgAZsxE0LX5IhTG4vSGzUs1Wvtqf+
+        Z/QBIBrd/IaQD6ObRZ6fHJutSQ==
+X-Google-Smtp-Source: ADFU+vvQX/rymjiQTTfmrRp8pXMzu+YTmiwg5naE9OKjaOSx1gH5F4Y92Cp+WVSUK0MJ9+BB0OphxQ==
+X-Received: by 2002:adf:b189:: with SMTP id q9mr4679569wra.169.1583348937825;
+        Wed, 04 Mar 2020 11:08:57 -0800 (PST)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id j14sm41257638wrn.32.2020.03.04.11.08.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 11:08:57 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Wed, 4 Mar 2020 20:08:55 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        linux-security-module@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: Re: [PATCH bpf-next v3 1/7] bpf: Refactor trampoline update code
+Message-ID: <20200304190855.GA31073@chromium.org>
+References: <20200304154747.23506-1-kpsingh@chromium.org>
+ <20200304154747.23506-2-kpsingh@chromium.org>
+ <cb54c137-6d8e-b4e5-bd17-e0a05368c3eb@iogearbox.net>
+ <20200304184441.GA25392@chromium.org>
+ <CAEf4Bza4y_H+Avry=OdQ=j6Ey-niTYLafKUwicVeutmQ3X5g=g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200304173207.GC8197@xps15>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4Bza4y_H+Avry=OdQ=j6Ey-niTYLafKUwicVeutmQ3X5g=g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/2020 19:32, Mathieu Poirier wrote:
-> On Fri, Feb 21, 2020 at 12:19:25PM +0200, Tero Kristo wrote:
->> From: Suman Anna <s-anna@ti.com>
->>
->> The OMAP remoteproc driver has been enhanced to parse and store
->> the kernel mappings for different internal RAM memories that may
->> be present within each remote processor IP subsystem. Different
->> devices have varying memories present on current SoCs. The current
->> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
->> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
->> L2 RAM memories.
->>
->> IPUs are expected to have the L2RAM at a fixed device address of
->> 0x20000000, based on the current limitations on Attribute MMU
->> configurations.
->>
->> NOTE:
->> The current logic doesn't handle the parsing of memories for DRA7
->> remoteproc devices, and will be added alongside the DRA7 support.
->>
->> Signed-off-by: Suman Anna <s-anna@ti.com>
->> [t-kristo: converted to parse mem names / device addresses from pdata]
->> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->> ---
->>   drivers/remoteproc/omap_remoteproc.c | 89 ++++++++++++++++++++++++++++
->>   1 file changed, 89 insertions(+)
->>
->> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
->> index 64b559caadff..4f92b069f5d0 100644
->> --- a/drivers/remoteproc/omap_remoteproc.c
->> +++ b/drivers/remoteproc/omap_remoteproc.c
->> @@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
->>   	unsigned int boot_reg;
->>   };
->>   
->> +/**
->> + * struct omap_rproc_mem - internal memory structure
->> + * @cpu_addr: MPU virtual address of the memory region
->> + * @bus_addr: bus address used to access the memory region
->> + * @dev_addr: device address of the memory region from DSP view
->> + * @size: size of the memory region
->> + */
->> +struct omap_rproc_mem {
->> +	void __iomem *cpu_addr;
->> +	phys_addr_t bus_addr;
->> +	u32 dev_addr;
->> +	size_t size;
->> +};
->> +
->>   /**
->>    * struct omap_rproc - omap remote processor state
->>    * @mbox: mailbox channel handle
->>    * @client: mailbox client to request the mailbox channel
->>    * @boot_data: boot data structure for setting processor boot address
->> + * @mem: internal memory regions data
->> + * @num_mems: number of internal memory regions
->>    * @rproc: rproc handle
->>    * @reset: reset handle
->>    */
->> @@ -51,16 +67,30 @@ struct omap_rproc {
->>   	struct mbox_chan *mbox;
->>   	struct mbox_client client;
->>   	struct omap_rproc_boot_data *boot_data;
->> +	struct omap_rproc_mem *mem;
->> +	int num_mems;
->>   	struct rproc *rproc;
->>   	struct reset_control *reset;
->>   };
->>   
->> +/**
->> + * struct omap_rproc_mem_data - memory definitions for an omap remote processor
->> + * @name: name for this memory entry
->> + * @dev_addr: device address for the memory entry
->> + */
->> +struct omap_rproc_mem_data {
->> +	const char *name;
->> +	const u32 dev_addr;
->> +};
->> +
->>   /**
->>    * struct omap_rproc_dev_data - device data for the omap remote processor
->>    * @device_name: device name of the remote processor
->> + * @mems: memory definitions for this remote processor
->>    */
->>   struct omap_rproc_dev_data {
->>   	const char *device_name;
->> +	const struct omap_rproc_mem_data *mems;
->>   };
->>   
->>   /**
->> @@ -223,12 +253,18 @@ static const struct rproc_ops omap_rproc_ops = {
->>   	.kick		= omap_rproc_kick,
->>   };
->>   
->> +static const struct omap_rproc_mem_data ipu_mems[] = {
->> +	{ .name = "l2ram", .dev_addr = 0x20000000 },
->> +	{ },
->> +};
->> +
->>   static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
->>   	.device_name	= "dsp",
->>   };
->>   
->>   static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
->>   	.device_name	= "ipu",
->> +	.mems		= ipu_mems,
->>   };
->>   
->>   static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
->> @@ -237,6 +273,7 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
->>   
->>   static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
->>   	.device_name	= "ipu",
->> +	.mems		= ipu_mems,
->>   };
->>   
->>   static const struct of_device_id omap_rproc_of_match[] = {
->> @@ -311,6 +348,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
->>   	return 0;
->>   }
->>   
->> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
->> +					       struct rproc *rproc)
->> +{
->> +	struct omap_rproc *oproc = rproc->priv;
->> +	struct device *dev = &pdev->dev;
->> +	const struct omap_rproc_dev_data *data;
->> +	struct resource *res;
->> +	int num_mems;
->> +	int i;
->> +
->> +	data = of_device_get_match_data(&pdev->dev);
->> +	if (!data)
->> +		return -ENODEV;
->> +
->> +	if (!data->mems)
->> +		return 0;
->> +
->> +	for (num_mems = 0; data->mems[num_mems].name; num_mems++)
->> +		;
+On 04-Mär 10:47, Andrii Nakryiko wrote:
+> On Wed, Mar 4, 2020 at 10:44 AM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > On 04-Mär 19:37, Daniel Borkmann wrote:
+> > > On 3/4/20 4:47 PM, KP Singh wrote:
+> > > > From: KP Singh <kpsingh@google.com>
+> > > >
+> > > > As we need to introduce a third type of attachment for trampolines, the
+> > > > flattened signature of arch_prepare_bpf_trampoline gets even more
+> > > > complicated.
+> > > >
+> > > > Refactor the prog and count argument to arch_prepare_bpf_trampoline to
+> > > > use bpf_tramp_progs to simplify the addition and accounting for new
+> > > > attachment types.
+> > > >
+> > > > Signed-off-by: KP Singh <kpsingh@google.com>
+> > > > Acked-by: Andrii Nakryiko <andriin@fb.com>
+> > >
+> > > [...]
+> > > > diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
+> > > > index c498f0fffb40..9f7e0328a644 100644
+> > > > --- a/kernel/bpf/bpf_struct_ops.c
+> > > > +++ b/kernel/bpf/bpf_struct_ops.c
+> > > > @@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+> > > >     struct bpf_struct_ops_value *uvalue, *kvalue;
+> > > >     const struct btf_member *member;
+> > > >     const struct btf_type *t = st_ops->type;
+> > > > +   struct bpf_tramp_progs *tprogs = NULL;
+> > > >     void *udata, *kdata;
+> > > >     int prog_fd, err = 0;
+> > > >     void *image;
+> > > > @@ -425,10 +426,18 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+> > > >                     goto reset_unlock;
+> > > >             }
+> > > > +           tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(*tprogs), GFP_KERNEL);
+> > > > +           if (!tprogs) {
+> > > > +                   err = -ENOMEM;
+> > > > +                   goto reset_unlock;
+> > > > +           }
+> > > > +
+> > >
+> > > Looking over the code again, I'm quite certain that here's a memleak
+> > > since the kcalloc() is done in the for_each_member() loop in the ops
+> > > update but then going out of scope and in the exit path we only kfree
+> > > the last tprogs.
+> >
+> > You're right, nice catch. Fixing it.
 > 
-> Please use of_property_count_elems_of_size() as it was done in omap_hwmod.c [1]
+> There is probably no need to do many allocations as well, just one
+> outside of the loop and reuse?
 
-There is reason why it was not done like that here. We want to make sure 
-all the memories required for the remoteproc are in place, missing any 
-one of them is a fatal error as you see in the code few lines below (my 
-comment.)
+Yeah moved it out of the loop and before we grab the mutex, returning
+an -ENOMEM directly.
+
+Thanks for noticing this. Sending v4 now.
+
+- KP
 
 > 
-> [1]. https://elixir.bootlin.com/linux/v5.6-rc4/source/arch/arm/mach-omap2/omap_hwmod.c#L717
-> 
-> With the above:
-> 
-> Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> 
-> 
->> +
->> +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
->> +				  GFP_KERNEL);
->> +	if (!oproc->mem)
->> +		return -ENOMEM;
->> +
->> +	for (i = 0; i < num_mems; i++) {
->> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> +						   data->mems[i].name);
->> +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
->> +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
->> +			dev_err(dev, "failed to parse and map %s memory\n",
->> +				data->mems[i].name);
->> +			return PTR_ERR(oproc->mem[i].cpu_addr);
->> +		}
-
-We check here that all the memories required are defined for the 
-remoteproc. If we use of_property_count_elems_of_size, we only get the 
-number of memories defined in DT.
-
--Tero
-
->> +		oproc->mem[i].bus_addr = res->start;
->> +		oproc->mem[i].dev_addr = data->mems[i].dev_addr;
->> +		oproc->mem[i].size = resource_size(res);
->> +
->> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %pK da 0x%x\n",
->> +			data->mems[i].name, &oproc->mem[i].bus_addr,
->> +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
->> +			oproc->mem[i].dev_addr);
->> +	}
->> +	oproc->num_mems = num_mems;
->> +
->> +	return 0;
->> +}
->> +
->>   static int omap_rproc_probe(struct platform_device *pdev)
->>   {
->>   	struct device_node *np = pdev->dev.of_node;
->> @@ -350,6 +435,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
->>   	/* All existing OMAP IPU and DSP processors have an MMU */
->>   	rproc->has_iommu = true;
->>   
->> +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
->> +	if (ret)
->> +		goto free_rproc;
->> +
->>   	ret = omap_rproc_get_boot_data(pdev, rproc);
->>   	if (ret)
->>   		goto free_rproc;
->> -- 
->> 2.17.1
->>
->> --
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> >
+> > - KP
+> >
+> > >
+> > > > +           tprogs[BPF_TRAMP_FENTRY].progs[0] = prog;
+> > > > +           tprogs[BPF_TRAMP_FENTRY].nr_progs = 1;
+> > > >             err = arch_prepare_bpf_trampoline(image,
+> > > >                                               st_map->image + PAGE_SIZE,
+> > > >                                               &st_ops->func_models[i], 0,
+> > > > -                                             &prog, 1, NULL, 0, NULL);
+> > > > +                                             tprogs, NULL);
+> > > >             if (err < 0)
+> > > >                     goto reset_unlock;
+> > > > @@ -469,6 +478,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
+> > > >     memset(uvalue, 0, map->value_size);
+> > > >     memset(kvalue, 0, map->value_size);
+> > > >   unlock:
+> > > > +   kfree(tprogs);
+> > > >     mutex_unlock(&st_map->lock);
+> > > >     return err;
+> > > >   }
