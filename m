@@ -2,130 +2,56 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF21AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDECC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C839021739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583335520;
-	bh=ZumlGMcBmAVs+fBT0aWZfIg+A2t7B3lHLFRmYusJrmM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oiPpbUrbd1B/UXOuLV8JH06eq395mVOR0r8XRTi6H7G7l8mcLlkGG2jbzt1+Xj4np
-	 UytJPMC2AKseuruWo1VrV4aM45vgKFjU9JzpaJvmnCBkmO2EJnpNljLgWVvL9LwoEg
-	 Auq5H6O3M3XzGi4xgqiqyDOr9oj+Dz0TurL7IAwE=
+	by mail.kernel.org (Postfix) with ESMTP id 3FC432166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbgCDPZU (ORCPT
+        id S1729741AbgCDPZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:25:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60774 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 10:25:30 -0500
+Received: from 8bytes.org ([81.169.241.247]:50014 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725765AbgCDPZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:25:19 -0500
-Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EEE7217F4;
-        Wed,  4 Mar 2020 15:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583335518;
-        bh=ZumlGMcBmAVs+fBT0aWZfIg+A2t7B3lHLFRmYusJrmM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QdKv8fpiPzelRasvXYQYduHy1HtpRJFB/do486BVeN6dh1HIo5wN5nyDc4YFz+MbV
-         U1slqVJXuCpDun27GAhCCxkmS/+PiQGDGzOJU3c5o+P5RMIDxGGTq4zTVUFSOiwodS
-         1tSDanrvqFh6iT6UX6YVCLJdlSsWUI4nsHdyLd9g=
-Received: by mail-qv1-f50.google.com with SMTP id r8so932090qvs.12;
-        Wed, 04 Mar 2020 07:25:18 -0800 (PST)
-X-Gm-Message-State: ANhLgQ3gSkbkELZEDWvpkqj+nzdlJSfvwtGex46xHNsz9QxJ6gVzQmLJ
-        b9ANYh4qbAHWOr2Zc/HFSSqzfcVyr5r1ZSxX2g==
-X-Google-Smtp-Source: ADFU+vtW6eH2lMW1v5UZ2ywbP709qBKs59VL/I7EP4ShzFBY269q/YEygQz3Hie30VlnYHvQUn3WzoF/MDSrL5uju4k=
-X-Received: by 2002:a0c:fecb:: with SMTP id z11mr2534654qvs.85.1583335517496;
- Wed, 04 Mar 2020 07:25:17 -0800 (PST)
+        id S1725765AbgCDPZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:25:29 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id DCA7420A; Wed,  4 Mar 2020 16:25:27 +0100 (CET)
+Date:   Wed, 4 Mar 2020 16:25:23 +0100
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Suman Anna <s-anna@ti.com>
+Subject: Re: [RESEND PATCH 1/4] iommu/omap: Fix pointer cast
+ -Wpointer-to-int-cast warnings on 64 bit
+Message-ID: <20200304152522.GA3315@8bytes.org>
+References: <20200303202751.5153-1-krzk@kernel.org>
 MIME-Version: 1.0
-References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-4-masahiroy@kernel.org>
-In-Reply-To: <20200304032038.14424-4-masahiroy@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 4 Mar 2020 09:25:06 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKt1K6nOED2TeUfyxkbWHi_KrbZFDW-ZxwgHZX-Og7-DA@mail.gmail.com>
-Message-ID: <CAL_JsqKt1K6nOED2TeUfyxkbWHi_KrbZFDW-ZxwgHZX-Og7-DA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] kbuild: allow to run dt_binding_check without kernel configuration
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     devicetree@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200303202751.5153-1-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 9:21 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> The dt_binding_check target is located outside of the
-> 'ifneq ($(dtstree),) ... endif' block.
->
-> Hence, you can run 'make dt_binding_check' on any architecture.
-> This makes a perfect sense because the dt-schema is arch-agnostic.
->
-> The only one problem I see is that scripts/dtc/dtc is not always built.
-> For example, ARCH=x86 defconfig does not define CONFIG_DTC. Kbuild
-> descends into scripts/dtc/, but does nothing. Then, it fails to build
-> *.example.dt.yaml files.
+On Tue, Mar 03, 2020 at 09:27:48PM +0100, Krzysztof Kozlowski wrote:
+> pointers should be casted to unsigned long to avoid
+> -Wpointer-to-int-cast warnings when compiling on 64-bit platform (e.g.
+> with COMPILE_TEST):
+> 
+>     drivers/iommu/omap-iommu.c: In function ‘omap2_iommu_enable’:
+>     drivers/iommu/omap-iommu.c:170:25: warning:
+>         cast from pointer to integer of different size [-Wpointer-to-int-cast]
+>       if (!obj->iopgd || !IS_ALIGNED((u32)obj->iopgd,  SZ_16K))
+>                              ^
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Yeah, I've just worked around this by doing 'make CONFIG_DTC=y
-dt_binding_check'.
-
-The only thing I'd come up with was just always building dtc, but I
-didn't want to do that.
-
-> Let's build scripts/dtc/dtc forcibly when running dt_binding_check.
->
-> The dt-schema does not depend on any CONFIG option either, so you
-> should be able to run dt_binding_check without the .config file.
->
-> Going forward, you can directly run 'make dt_binding_check' in a
-> pristine source tree.
->
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> ---
->
->  Makefile             | 2 +-
->  scripts/dtc/Makefile | 5 +++--
->  2 files changed, 4 insertions(+), 3 deletions(-)
->
-> diff --git a/Makefile b/Makefile
-> index 7dec7b343842..190f595c7bfc 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -255,7 +255,7 @@ clean-targets := %clean mrproper cleandocs
->  no-dot-config-targets := $(clean-targets) \
->                          cscope gtags TAGS tags help% %docs check% coccicheck \
->                          $(version_h) headers headers_% archheaders archscripts \
-> -                        %asm-generic kernelversion %src-pkg
-> +                        %asm-generic kernelversion %src-pkg dt_binding_check
->  no-sync-config-targets := $(no-dot-config-targets) install %install \
->                            kernelrelease
->  single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.s %.symtypes %/
-> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> index 3acbb410904c..2f3c3a7e1620 100644
-> --- a/scripts/dtc/Makefile
-> +++ b/scripts/dtc/Makefile
-> @@ -1,8 +1,9 @@
->  # SPDX-License-Identifier: GPL-2.0
->  # scripts/dtc makefile
->
-> -hostprogs              := dtc
-> -always-$(CONFIG_DTC)   := $(hostprogs)
-> +hostprogs                      := dtc
-> +always-$(CONFIG_DTC)           += $(hostprogs)
-> +always-$(CHECK_DT_BINDING)     += $(hostprogs)
-
-This looks like a good solution.
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied all, thanks.
