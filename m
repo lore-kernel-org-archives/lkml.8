@@ -2,105 +2,99 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C4AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:50:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DB4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B13E21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:50:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491BE20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6XelXIL"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Kllkpw2m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729892AbgCDUuu (ORCPT
+        id S2387989AbgCDUx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:50:50 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34699 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728482AbgCDUut (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:50:49 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c21so2455896edt.1;
-        Wed, 04 Mar 2020 12:50:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=zt0RLm7OTdsp3yOD+OCYiUKlYSum620aC9kq/4VQu2c=;
-        b=b6XelXILrfVo4hOq8Bxsv/Ld0eB3+mY3MTj88ek+YrPTQGEUfBk/ETftrELd4JEMFF
-         S4zkxC+lWlrYJzpv5jTaTixOGpneRoR4kxzY762Uw1basiuicdGEtHL3VuPxw7h0fV2O
-         qqhR49z9mT3VgNmtaYbKvgY2g4MmdmEPwliE/nXBNoTwpd19yy6d8SmvrUZo1ERnqdV6
-         VbMszUyDOxEuAcpH8X/GCH+jvFAgPyBOlF7QrJrVtkFA/Tpe5IXp/WqlYzpn6s6D58bF
-         /USdzLTL07HyT8o2zDHmwkHm8IS9s29ypYAITTvjWmwxRIbpTJkQP7LTkOyyrar7P8hn
-         jXHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=zt0RLm7OTdsp3yOD+OCYiUKlYSum620aC9kq/4VQu2c=;
-        b=ebfvW469mA6/kz+KFRt1iTQ75A0CiCXdPgdvzlawdVvLUshftIoohhwLB61iPWR5RY
-         AsmOYajkd3CFh8Bn9QXJcfQXSeA5OnuyK2Tkw8zzcSVw+z9UHoFFi/y8W3NaKs8jzLmA
-         +ojO+LeCl9SXhrPu6yttlP3KsjlsGBSmUKT5sUiN6AvMJ9YsFTfTkhR8HJXjrIYVWp3r
-         J+YOdvpFg94FfM+1dpnJHEp+ZAVf8k3lq3neEgiJJ6/mmzT6KqmSLuEKUywrmryx7Zfd
-         QaGWQXLcmqyziP7602WIUOX3wI0ZGJQx7csXsxKaWIUo6DCJ3fciE8DSP9PzOIdNoNxx
-         20DA==
-X-Gm-Message-State: ANhLgQ0jfxC7H+JQhBgd1nexZEnnEVEnwkH1ZeOrJd5pfgLHOHWphMWf
-        fZc8XMZjb3tOfobid9HuZLg=
-X-Google-Smtp-Source: ADFU+vsa8BpqTZFAAWs88Do5WrkxCwKcJwPQ4lgHcetbGp8wCV2tilCvbDjuH441aG9SvMa7IFQxHA==
-X-Received: by 2002:aa7:c54a:: with SMTP id s10mr4665670edr.345.1583355047588;
-        Wed, 04 Mar 2020 12:50:47 -0800 (PST)
-Received: from felia ([2001:16b8:2d16:4100:5c62:5f:595c:f76d])
-        by smtp.gmail.com with ESMTPSA id q3sm1384115eju.88.2020.03.04.12.50.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 12:50:46 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Wed, 4 Mar 2020 21:50:39 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     Jonathan Corbet <corbet@lwn.net>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
-In-Reply-To: <20200304131035.731a3947@lwn.net>
-Message-ID: <alpine.DEB.2.21.2003042145340.2698@felia>
-References: <20200304072950.10532-1-lukas.bulwahn@gmail.com> <20200304131035.731a3947@lwn.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 4 Mar 2020 15:53:58 -0500
+Received: from ozlabs.org ([203.11.71.1]:40519 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727137AbgCDUx5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:53:57 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48XmM72rzBz9sPF;
+        Thu,  5 Mar 2020 07:53:55 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1583355235;
+        bh=RqAi5CvPVw1gFc466MpgquVuPMzpy99Da1Iv73HB5AM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Kllkpw2mIBd+SAFoCd/7NOTfc3Y/kEBtLUEX485QLkCL6rBu5ux1Do2zYOd/U7Bul
+         tkxzTjk91MIOygx7IBfzd4QsJFSlQasBwO378GN0tJ5MCNxOp2KOamQLU/YtShCVl/
+         aert0XmRfPyWkfZ7bXCIJRgqoK9UfjXvN/LYKouOr/7v/rDWk0nRwcpaKWrYILCSIB
+         /BxOJe7NdkIPwoxb2zQBRKxV3kCxJ8qqjbuElb6lOrFKl4m+q5Z19WdiFlU5WbetOB
+         HtwNmisSa4CMEVZ+Qc1fVx71yDF6D52OoeagnttRXh4NmGGX4KOtxeIDqNP5pF0VUg
+         zjmUE4N8Pwg+Q==
+Date:   Thu, 5 Mar 2020 07:53:46 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: linux-next: Fixes tag needs some work in the pm tree
+Message-ID: <20200305075346.3945ce54@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; boundary="Sig_/WhGlSwEtQ.4JGYVW4wtqs7K";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/WhGlSwEtQ.4JGYVW4wtqs7K
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On Wed, 4 Mar 2020, Jonathan Corbet wrote:
+In commit
 
-> On Wed,  4 Mar 2020 08:29:50 +0100
-> Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> > Jonathan, pick pick this patch for doc-next.
-> 
-> Sigh, I need to work a MAINTAINERS check into my workflow...
->
+  ea28c454067f ("docs: cpufreq: fix a broken reference")
 
-I getting closer to have zero warnings on the MAINTAINER file matches and 
-then, I would set up a bot following the mailing lists to warn when anyone
-sends a patch that potentially introduces such warning.
- 
-> Thanks for fixing these, but ... what tree did you generate the patch
-> against?  I doesn't come close to applying to docs-next.
->
+Fixes tag
 
-My patch was based on next-20200303, probably too much noise on 
-MAINTAINERS, such that it does not apply cleanly on docs-next.
-If you want, I can send a patch that fits to docs-next. Anyway, merging 
-will be similarly difficult later :(
+  Fixes: 78a0abeca1bd ("Documentation: cpufreq: Move legacy driver document=
+ation")
 
-Lukas
+has these problem(s):
+
+  - Target SHA1 does not exist
+
+Maybe you meant
+
+Fixes: 03b22496502d ("Documentation: cpufreq: Move legacy driver documentat=
+ion")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/WhGlSwEtQ.4JGYVW4wtqs7K
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5gFVoACgkQAVBC80lX
+0Gz5nAf/ZFSR8vurb5aN1yhfs7sLd3QgQKlt3CRvoFYBGRgDMesvOcFLQdg1i2iR
+iyx6IijsOsIEG3FBlp6iSPbrwD+Sd8kgeLaHZTIMiOEuklLB+5Z5DtoVm7tBYVOG
+KPdt0fxZAjYbEQqS6zBRKkZiR12U+rHcCt+Wh2PlhK8sbJxf+f83Ipvq0LHfgQOe
+ABqnCQHKJ7q7njd9xoy8WOcCLChKpU2D6+dxceYscpGpqE3SV4o2H4+MLOQepgSv
++I7Dus6nXRYIi3FolfudU6GTT0rjVvuQ2ZsjnNt1d63tB3Gn1kGBFXNXbzdy81El
+Wg0lQKdjVCHstQKhGqCgW2jrom8sYQ==
+=06vE
+-----END PGP SIGNATURE-----
+
+--Sig_/WhGlSwEtQ.4JGYVW4wtqs7K--
