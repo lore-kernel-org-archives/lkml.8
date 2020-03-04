@@ -2,172 +2,102 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C01C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CBBFC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC97621775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Og0kIOAh"
+	by mail.kernel.org (Postfix) with ESMTP id E324821741
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbgCDPNJ (ORCPT
+        id S1729617AbgCDPNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:13:09 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:34698 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgCDPNI (ORCPT
+        Wed, 4 Mar 2020 10:13:19 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:57444 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728278AbgCDPNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:13:08 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z15so2866126wrl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:13:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hZJyRWg+l1EQKudArZuRb63dEwzdCahRlAsMV0GZXUw=;
-        b=Og0kIOAhyFhYo3ateVctfHnwO5v/TiVer2LAVTuJ+JE681tg1mBEauXqfv73ltQLMI
-         Xcu6v/I1lrQ4GzL3amoni5XrY0fVwPdqea8/iV3yOz3SW2GGIunF83E2lKzpsz/Kem2N
-         TtJEWU3/NnYISird4p5efZ7QX3nJzYV9Qlpt8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=hZJyRWg+l1EQKudArZuRb63dEwzdCahRlAsMV0GZXUw=;
-        b=BE1IIP5/Ios1wy4X8lh9CwjEH2IWTerap3ee+yIcLTx2RlrKCgyRk3v6UA+F+ERjdU
-         2ntxFkts7z/0CitxGNu+qdBAVkIW0xaO8qmT2bwg3QgmqOdoz585HIUXEshKHWqq0oxX
-         AovH55NHF66QsIDInfrBBxRbZIXgnSZG+jXeGgEGAeKiHpUjak4dXV8wxc6dvN+CfHOM
-         O1Dy5LEdUfRL3LzAH+fHrZDfPy2ZPnDk415bRQbcbhXwg5cicLB5NPuJie7QKHy1gxMA
-         9TN6DgQ5o/aEuel1z8K1apSuSo5uMt45nGaM1lnyGojBeHuljsOue81GRAuro4YxhSEb
-         Il+Q==
-X-Gm-Message-State: ANhLgQ27CX/vy+5H+Drs52eoULpJN32zin1r3ZPLZj0ol4dlZgo+MhhA
-        DjPH13iM8k8uBMbnrQAcEjYz/w==
-X-Google-Smtp-Source: ADFU+vvHG3HAkh9oCxuhuVqTYsrbfmOiHuluXZ/uTiIfc9wVHLVTyn3vt6erjUnGoxP4uO3TiM1chQ==
-X-Received: by 2002:adf:df8d:: with SMTP id z13mr2907749wrl.302.1583334784893;
-        Wed, 04 Mar 2020 07:13:04 -0800 (PST)
-Received: from chromium.org ([2a00:79e1:abc:308:8ca0:6f80:af01:b24])
-        by smtp.gmail.com with ESMTPSA id z131sm4420307wmg.25.2020.03.04.07.13.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 07:13:04 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 4 Mar 2020 16:13:03 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     linux-security-module@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next v2 3/7] bpf: Introduce BPF_MODIFY_RETURN
-Message-ID: <20200304151303.GC9984@chromium.org>
-References: <20200304015528.29661-1-kpsingh@chromium.org>
- <20200304015528.29661-4-kpsingh@chromium.org>
- <CAEf4BzbbaiLC+-Gytwcx=i0XTniNH6YNsfOfx3nrU1oo73VsKw@mail.gmail.com>
+        Wed, 4 Mar 2020 10:13:18 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 143A51C031D; Wed,  4 Mar 2020 16:13:17 +0100 (CET)
+Date:   Wed, 4 Mar 2020 16:13:16 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 04/87] drm/msm: Set dma maximum segment size for mdss
+Message-ID: <20200304151316.GA2367@duo.ucw.cz>
+References: <20200303174349.075101355@linuxfoundation.org>
+ <20200303174349.401386271@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="pWyiEgJYm5f9v55/"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbbaiLC+-Gytwcx=i0XTniNH6YNsfOfx3nrU1oo73VsKw@mail.gmail.com>
+In-Reply-To: <20200303174349.401386271@linuxfoundation.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-Mär 21:08, Andrii Nakryiko wrote:
-> On Tue, Mar 3, 2020 at 5:56 PM KP Singh <kpsingh@chromium.org> wrote:
-> >
-> > From: KP Singh <kpsingh@google.com>
-> >
-> > When multiple programs are attached, each program receives the return
-> > value from the previous program on the stack and the last program
-> > provides the return value to the attached function.
-> >
-> > The fmod_ret bpf programs are run after the fentry programs and before
-> > the fexit programs. The original function is only called if all the
-> > fmod_ret programs return 0 to avoid any unintended side-effects. The
-> > success value, i.e. 0 is not currently configurable but can be made so
-> > where user-space can specify it at load time.
-> >
-> > For example:
-> >
-> > int func_to_be_attached(int a, int b)
-> > {  <--- do_fentry
-> >
-> > do_fmod_ret:
-> >    <update ret by calling fmod_ret>
-> >    if (ret != 0)
-> >         goto do_fexit;
-> >
-> > original_function:
-> >
-> >     <side_effects_happen_here>
-> >
-> > }  <--- do_fexit
-> >
-> > The fmod_ret program attached to this function can be defined as:
-> >
-> > SEC("fmod_ret/func_to_be_attached")
-> > int BPF_PROG(func_name, int a, int b, int ret)
-> > {
-> >         // This will skip the original function logic.
-> >         return 1;
-> > }
-> >
-> > The first fmod_ret program is passed 0 in its return argument.
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > ---
-> >  arch/x86/net/bpf_jit_comp.c    | 130 ++++++++++++++++++++++++++++++---
-> >  include/linux/bpf.h            |   1 +
-> >  include/uapi/linux/bpf.h       |   1 +
-> >  kernel/bpf/btf.c               |   3 +-
-> >  kernel/bpf/syscall.c           |   1 +
-> >  kernel/bpf/trampoline.c        |   5 +-
-> >  kernel/bpf/verifier.c          |   1 +
-> >  tools/include/uapi/linux/bpf.h |   1 +
-> >  8 files changed, 130 insertions(+), 13 deletions(-)
-> >
-> 
-> This looks good, but I'll Alexei check all the assembly generation
-> logic, not too big of an expert on that.
-> 
-> [...]
-> 
-> 
-> >  static int emit_fallback_jump(u8 **pprog)
-> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-> > index 98ec10b23dbb..3cfdc216a2f4 100644
-> > --- a/include/linux/bpf.h
-> > +++ b/include/linux/bpf.h
-> > @@ -473,6 +473,7 @@ void notrace __bpf_prog_exit(struct bpf_prog *prog, u64 start);
-> >
-> >  enum bpf_tramp_prog_type {
-> >         BPF_TRAMP_FENTRY,
-> > +       BPF_TRAMP_MODIFY_RETURN,
-> 
-> This is probably bad idea to re-number BPF_TRAMP_FEXIT for no good
-> reason. E.g., if there are some drgn scripts that do some internal
-> state printing, this is major inconvenience, while really providing no
-> benefit in itself. Consider putting it right before BPF_TRAMP_MAX.
 
-Makes sense, I somehow initially (incorrectly) assumed that the order
-represented the order of execution. But the only real demarcation
-is the BPF_TRAMP_MAX. Updated it for v3.
+--pWyiEgJYm5f9v55/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- KP
+Hi!
 
-> 
-> >         BPF_TRAMP_FEXIT,
-> >         BPF_TRAMP_MAX,
-> >         BPF_TRAMP_REPLACE, /* more than MAX */
-> 
-> [...]
+> Turning on CONFIG_DMA_API_DEBUG_SG results in the following error:
+>=20
+> [   12.078665] msm ae00000.mdss: DMA-API: mapping sg segment longer than =
+device claims to support [len=3D3526656] [max=3D65536]
+> [   12.089870] WARNING: CPU: 6 PID: 334 at
+> /mnt/host/source/src/third_party/kernel/v4.19/kernel/dma/debug.c:1301
+> debug_dma_map_sg+0x1dc/0x318
+
+This one leaks resources in the (very improbable) case of error; it
+needs to goto cleanup instead of simply returning.
+
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -492,6 +492,14 @@ static int msm_drm_init(struct device *dev, struct d=
+rm_driver *drv)
+>  	if (ret)
+>  		goto err_msm_uninit;
+> =20
+> +	if (!dev->dma_parms) {
+> +		dev->dma_parms =3D devm_kzalloc(dev, sizeof(*dev->dma_parms),
+> +					      GFP_KERNEL);
+> +		if (!dev->dma_parms)
+> +			return -ENOMEM;
+> +	}
+> +	dma_set_max_seg_size(dev, DMA_BIT_MASK(32));
+> +
+>  	msm_gem_shrinker_init(ddev);
+> =20
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--pWyiEgJYm5f9v55/
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXl/FjAAKCRAw5/Bqldv6
+8rTIAJ4/hePVrpzv/17tNe4THoUwLxsNIQCgmmOuDfrbfxZjctYeTlR8ZcTce2s=
+=f9d2
+-----END PGP SIGNATURE-----
+
+--pWyiEgJYm5f9v55/--
