@@ -2,134 +2,112 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F8EC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:10:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CFCC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:13:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BCC0217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583345424;
-	bh=iJcfw2m9ZtH/3QEd6OmIJVwbzsZ1SqfvLUtpswYJGvY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=D09vTmBIQ6uaAFFtypyJ6hO29hCbT//oDFlFPhDRaAgxBiLm9Qb0lCJCeSh49r1tG
-	 cnUwvASn32EAkXjQPWOqM4iN//LXHI5TezzlnXLTUl0DTBZhg/bQzZLHqhZrqaR18M
-	 YkX3vq6EIPtLb2y61tYYsvoJXHloUVviLCz4FrKA=
+	by mail.kernel.org (Postfix) with ESMTP id D925724673
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:13:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="MRC+I6Iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388254AbgCDSKX (ORCPT
+        id S1729662AbgCDSNo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:10:23 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33527 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388189AbgCDSKW (ORCPT
+        Wed, 4 Mar 2020 13:13:44 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35665 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgCDSNo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:10:22 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a25so5285872wmm.0;
-        Wed, 04 Mar 2020 10:10:20 -0800 (PST)
+        Wed, 4 Mar 2020 13:13:44 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 7so1369816pgr.2
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:13:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=hO3w4DJRn7wTnz66wgWmC++WgyY9DoLHVWfMImbW8/o=;
+        b=MRC+I6IuPV6i8l4nSO0sW2+Ske/TqndiMSE3AxrrUaGT0c+zsVsFNOA0AdsgeSdxaY
+         wLcg8ECuDYkTG40t4WEVikBHsMUXIXNz0thls9PuvC14LtzJlgC+yiw+mnwcYqD8ABmk
+         /+XAkn4ZLwqUqi8dU6gNFCIXzXZfOWgOyQAsA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6K5mSx3hLH2eC6TJDpwRSBd6DNa0fXfEXM9YJbhKTUo=;
-        b=X/blQgC7janOQG/uErT1N7XiZKBg6Xy1ve+jBJwpYUjlyKMs9GvWC+KJEfUZ7NezSz
-         BsLAtkRSDgNKrjZJ7C06qL2IEXqsuZt7/j+AUmCMo2b23j65c/O9zztUjMm6ucfrHAJc
-         FQ5Nprvk211O8Fg7CjADu9+RHBsf125RuRD6lU/PO8OHIUUGzD2PmlHPglV+paYnQTo8
-         BA58lHlZDhkvb0Z6Wlhh3Qs23+7kbSzABxwcwDZq3LkCvoLsjTEVEOxFHmem3cffj9/C
-         GJ5X4QO1cD5jT76F8pknl8CTKL+YJEQn65raHOV3mQXYjCtYAzUKooERz3S7G0xM29PW
-         z0LQ==
-X-Gm-Message-State: ANhLgQ1aUHQiOtqbmZ20K+tJNxlBB0Y/oNWQA3PqWfDHyL58bvtOYw2m
-        OA20a/56bYFb1SLFk1w1qAY=
-X-Google-Smtp-Source: ADFU+vv8F7j77Sv2x6A2y7G2otTcm4JBrH0lQ9MmEphsTYfNiML6p42pZ9rYylq3kZ7sK2hY/cJjww==
-X-Received: by 2002:a1c:750e:: with SMTP id o14mr4618729wmc.156.1583345420226;
-        Wed, 04 Mar 2020 10:10:20 -0800 (PST)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id z12sm3468853wrl.48.2020.03.04.10.10.19
+         :mime-version:content-disposition:in-reply-to;
+        bh=hO3w4DJRn7wTnz66wgWmC++WgyY9DoLHVWfMImbW8/o=;
+        b=ipelihwuqPScUFBiLRIxeKypX5MZjNPf0mao9a7kmBk6Ctai0Hyw1/GAeQRbSekzBR
+         HNALAyRitKtkdFrmaI5t7/DL7D7t15DaWeFl93q09Bp9wrMS+w1iM4cIYVW30EC5oTHN
+         NA3bsLNFVH4+x7JPz0VgHpKHE7UqgWkcA2yCzed7QIBllaUraVmaT1miqRiiWFnLqgfG
+         P3k4aBFwFAGpK1+bvJcpPnCMzvl/IXxJkfFOOUIxyiDl65GhPHQzGJFLZHbDkC4rC6WS
+         S21CEwwH3UvyL2q6Xv+/nqmbip+6iNyGvoOPheZBFsGhb+zJH+9J5BUCWBFyFgNe3YAN
+         fskg==
+X-Gm-Message-State: ANhLgQ07YZfHsE5Fy2sRoiUQzjh5QjmmRVgaBvaYsW62/F1tgT8XLAMm
+        Y3uoyGgUYwuxMjnDh0KgdeyN7g==
+X-Google-Smtp-Source: ADFU+vvL8XSLOA0GTBkkKw2dgU6SPfjDqx9VbF027Nkp1x/qfEkrey4TGjVh6Ja3hQMfaMCMT0BRnA==
+X-Received: by 2002:a63:1926:: with SMTP id z38mr3591934pgl.303.1583345622972;
+        Wed, 04 Mar 2020 10:13:42 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id g12sm28275304pfh.170.2020.03.04.10.13.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 10:10:19 -0800 (PST)
-Date:   Wed, 4 Mar 2020 18:10:17 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] PCI: hv: Replace zero-length array with flexible-array
- member
-Message-ID: <20200304181017.epqvhmtegefb4eba@debian>
-References: <20200213005048.GA9662@embeddedor.com>
- <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
- <20200304175509.dwhn63omfzewaukv@debian>
- <20200304180635.GA21844@e121166-lin.cambridge.arm.com>
+        Wed, 04 Mar 2020 10:13:41 -0800 (PST)
+Date:   Wed, 4 Mar 2020 10:13:40 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Jann Horn <jannh@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        Todd Kjos <tkjos@google.com>
+Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to
+ copy_from_user()
+Message-ID: <202003040951.7857DFD936@keescook>
+References: <20200302130430.201037-1-glider@google.com>
+ <20200302130430.201037-2-glider@google.com>
+ <0eaac427354844a4fcfb0d9843cf3024c6af21df.camel@perches.com>
+ <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com>
+ <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
+ <CAG_fn=XOyPGau9m7x8eCLJHy3m-H=nbMODewWVJ1xb2e+BPdFw@mail.gmail.com>
+ <18b0d6ea5619c34ca4120a6151103dbe9bfa0cbe.camel@perches.com>
+ <CAG_fn=U2T--j_uhyppqzFvMO3w3yUA529pQrCpbhYvqcfh9Z1w@mail.gmail.com>
+ <20200303093832.GD24372@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200304180635.GA21844@e121166-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200303093832.GD24372@kadam>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 06:06:35PM +0000, Lorenzo Pieralisi wrote:
-> On Wed, Mar 04, 2020 at 05:55:09PM +0000, Wei Liu wrote:
-> > On Thu, Feb 13, 2020 at 03:43:40AM +0000, Dexuan Cui wrote:
-> > > > From: linux-hyperv-owner@vger.kernel.org
-> > > > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Gustavo A. R. Silva
-> > > > Sent: Wednesday, February 12, 2020 4:51 PM
-> > > >  ...
-> > > > The current codebase makes use of the zero-length array language
-> > > > extension to the C90 standard, but the preferred mechanism to declare
-> > > > variable-length types such as these ones is a flexible array member[1][2],
-> > > > introduced in C99:
-> > > > 
-> > > > struct foo {
-> > > >         int stuff;
-> > > >         struct boo array[];
-> > > > };
-> > > > 
-> > > > By making use of the mechanism above, we will get a compiler warning
-> > > > in case the flexible array does not occur last in the structure, which
-> > > > will help us prevent some kind of undefined behavior bugs from being
-> > > > inadvertently introduced[3] to the codebase from now on.
-> > > > 
-> > > > Also, notice that, dynamic memory allocations won't be affected by
-> > > > this change:
-> > > > 
-> > > > "Flexible array members have incomplete type, and so the sizeof operator
-> > > > may not be applied. As a quirk of the original implementation of
-> > > > zero-length arrays, sizeof evaluates to zero."[1]
-> > > > 
-> > > > This issue was found with the help of Coccinelle.
-> > > 
-> > > Looks good to me. Thanks, Gustavo!
-> > >  
-> > > Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> > > 
-> > 
-> > Lorenzo, will you be picking up this patch? It seems to me you've been
-> > handling patches to pci-hyperv.c. This patch is not yet in pci/hv branch
-> > in your repository.
-> > 
-> > Let me know what you think.
-> 
-> I shall pick it up, I checked patchwork and it was erroneously
-> assigned to Bjorn, that's why I have not taken it yet.
-> 
-> Fixed now, apologies, I will merge it shortly.
+On Tue, Mar 03, 2020 at 12:38:32PM +0300, Dan Carpenter wrote:
+> The real fix is to initialize everything manually, the automated
+> initialization is a hardenning feature which many people will disable.
 
-Thanks for picking it up.
+I cannot disagree more with this sentiment. Linus has specifically said he
+wants this initialization on by default[1], and the major thing holding
+that back from happening is that no one working on GCC has had time to
+add this feature there. All the kernels I know of that are built with
+Clang (Android, Chrome OS, OpenMandriva) either already have this turned
+on or have plans to do so shortly.
 
-Wei.
+> So I don't think the hardenning needs to be perfect, it needs to simple
+> and fast.
 
-> 
-> Lorenzo
+I think it should be able to be intelligently optimized, so I'm all for
+finding ways to mark function arguments as "will be initialized" in some
+fashion.
+
+-Kees
+
+[1] "Oh, I love that patch." https://lore.kernel.org/lkml/CA+55aFykZL+cSBJjBBts7ebEFfyGPdMzTmLSxKnT_29=j942dA@mail.gmail.com/
+
+-- 
+Kees Cook
