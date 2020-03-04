@@ -2,221 +2,174 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BA0C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 495D8C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8137324654
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2192B24654
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:01:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="ds2gCVke"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DFBMGL+H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388498AbgCDRBF (ORCPT
+        id S1729822AbgCDRBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:01:05 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:33300 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729811AbgCDRAI (ORCPT
+        Wed, 4 Mar 2020 12:01:10 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49981 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729870AbgCDQ7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:00:08 -0500
-Received: by mail-qt1-f196.google.com with SMTP id d22so1907702qtn.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:00:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ZcWqV6JD+NpCxVyUMWr25+OOQvCNBSUoF3Hhx9DhCSI=;
-        b=ds2gCVke6rgnscwflfWsWa4/02xZE9rlbG0jpAqRtttP303WSpmGc5u+Leh2MJeIvY
-         NLmAFZf2U12ZCqTKqF1yQ1OLbpOfhM9T0yI8PW+eWfdAMfk0+6XlCk+BRcv92NyjtTay
-         gNlpaHjzcxXhsVFTX7lc64B713pIOAwPfXFrA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ZcWqV6JD+NpCxVyUMWr25+OOQvCNBSUoF3Hhx9DhCSI=;
-        b=BpFFwE3RO3TzjqWs8lVPifNvIfANw2ZOqdNkAvouF7B0KkZaftwV03NDhx2M8BrgUK
-         AT2YJmJ81jLkkzC4BB8FsvYLfkYwpW2zul4B9kPFxLcgImcPKFkTcKp+9fh0gib1yT6N
-         R/Mxmo9VUlnK8JoUnvfTgAnDGM1vkn8iPHKJ1p81O8YxvGXWlsx9krNvTmbXtabPYIY2
-         lrgzQIPTZtL5N2KM4Bu5la76LgzI9nf61NJoNZFHmfPF+KvRizH0sl858Z8MfiGCONGU
-         oZtrgU4dzQmV9GmU/5jX05d+JJ5UdgLTOG+0Uu4kmgeHo9H7AtyPM3txdE25nEPDN9DX
-         40og==
-X-Gm-Message-State: ANhLgQ1k+7zj88ezoKyEeFkvfc6nkusSuRu46TFrYYXXNArJzP53NJl8
-        zsFjSvAJybYFodkUrfSXsrjl75s1S0I=
-X-Google-Smtp-Source: ADFU+vuXyZvSjd61Q2etCVeeIdxusnGaaWXDBPmDBEDG1oaiT00o4qyyknz+6JUPLG1cEDdYU+ewEw==
-X-Received: by 2002:aed:2a5c:: with SMTP id k28mr3316939qtf.132.1583341206525;
-        Wed, 04 Mar 2020 09:00:06 -0800 (PST)
-Received: from s2r5node9 ([162.243.188.99])
-        by smtp.gmail.com with ESMTPSA id o6sm3506117qkj.96.2020.03.04.09.00.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 09:00:05 -0800 (PST)
-From:   vpillai <vpillai@digitalocean.com>
-To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
-        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
-Cc:     vpillai <vpillai@digitalocean.com>, linux-kernel@vger.kernel.org,
-        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>, aubrey.li@linux.intel.com,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>, joel@joelfernandes.org
-Subject: [RFC PATCH 00/13] Core scheduling v5
-Date:   Wed,  4 Mar 2020 16:59:50 +0000
-Message-Id: <cover.1583332764.git.vpillai@digitalocean.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 11:59:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583341155;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ljm8bumTyb/4W3KUJ3oIqUfg3wZGMAKiuOFC8bfSc0U=;
+        b=DFBMGL+H8WNR4Lg2f5FkSsfFWsZ2aU5OOUdhg+1tRchz0MAz3CTU+LHDUYBt+VyE/HqaKz
+        vK21T90GjpEfC5UnNylQlYu12YS13dLGrCvl9BVirLxESpdnS9My/LpYLtELDrDk47eMyS
+        Eb0UM+ft5n/uMAUghrKrwVIDApUeOnM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-63-ygJdFtY3NkStZ0nPmlTODw-1; Wed, 04 Mar 2020 11:59:13 -0500
+X-MC-Unique: ygJdFtY3NkStZ0nPmlTODw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 459D3DB65;
+        Wed,  4 Mar 2020 16:59:12 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1EF7273893;
+        Wed,  4 Mar 2020 16:59:12 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 78406225814; Wed,  4 Mar 2020 11:59:03 -0500 (EST)
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu
+Cc:     vgoyal@redhat.com, stefanha@redhat.com, dgilbert@redhat.com,
+        mst@redhat.com
+Subject: [PATCH 14/20] fuse,dax: add DAX mmap support
+Date:   Wed,  4 Mar 2020 11:58:39 -0500
+Message-Id: <20200304165845.3081-15-vgoyal@redhat.com>
+In-Reply-To: <20200304165845.3081-1-vgoyal@redhat.com>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Stefan Hajnoczi <stefanha@redhat.com>
 
-Fifth iteration of the Core-Scheduling feature.
+Add DAX mmap() support.
 
-Core scheduling is a feature that only allows trusted tasks to run
-concurrently on cpus sharing compute resources(eg: hyperthreads on a
-core). The goal is to mitigate the core-level side-channel attacks
-without requiring to disable SMT (which has a significant impact on
-performance in some situations). So far, the feature mitigates user-space
-to user-space attacks but not user-space to kernel attack, when one of
-the hardware thread enters the kernel (syscall, interrupt etc).
-
-By default, the feature doesn't change any of the current scheduler
-behavior. The user decides which tasks can run simultaneously on the
-same core (for now by having them in the same tagged cgroup). When
-a tag is enabled in a cgroup and a task from that cgroup is running
-on a hardware thread, the scheduler ensures that only idle or trusted
-tasks run on the other sibling(s). Besides security concerns, this
-feature can also be beneficial for RT and performance applications
-where we want to control how tasks make use of SMT dynamically.
-
-This version was focusing on performance and stability. Couple of
-crashes related to task tagging and cpu hotplug path were fixed.
-This version also improves the performance considerably by making
-task migration and load balancing coresched aware.
-
-In terms of performance, the major difference since the last iteration
-is that now even IO-heavy and mixed-resources workloads are less
-impacted by core-scheduling than by disabling SMT. Both host-level and
-VM-level benchmarks were performed. Details in:
-https://lkml.org/lkml/2020/2/12/1194
-https://lkml.org/lkml/2019/11/1/269
-
-v5 is rebased on top of 5.5.5(449718782a46)
-https://github.com/digitalocean/linux-coresched/tree/coresched/v5-v5.5.y
-
-Changes in v5
--------------
-- Fixes for cgroup/process tagging during corner cases like cgroup
-  destroy, task moving across cgroups etc
-  - Tim Chen
-- Coresched aware task migrations
-  - Aubrey Li
-- Other minor stability fixes.
-
-Changes in v4
--------------
-- Implement a core wide min_vruntime for vruntime comparison of tasks
-  across cpus in a core.
-  - Aaron Lu
-- Fixes a typo bug in setting the forced_idle cpu.
-  - Aaron Lu
-
-Changes in v3
--------------
-- Fixes the issue of sibling picking up an incompatible task
-  - Aaron Lu
-  - Vineeth Pillai
-  - Julien Desfossez
-- Fixes the issue of starving threads due to forced idle
-  - Peter Zijlstra
-- Fixes the refcounting issue when deleting a cgroup with tag
-  - Julien Desfossez
-- Fixes a crash during cpu offline/online with coresched enabled
-  - Vineeth Pillai
-- Fixes a comparison logic issue in sched_core_find
-  - Aaron Lu
-
-Changes in v2
--------------
-- Fixes for couple of NULL pointer dereference crashes
-  - Subhra Mazumdar
-  - Tim Chen
-- Improves priority comparison logic for process in different cpus
-  - Peter Zijlstra
-  - Aaron Lu
-- Fixes a hard lockup in rq locking
-  - Vineeth Pillai
-  - Julien Desfossez
-- Fixes a performance issue seen on IO heavy workloads
-  - Vineeth Pillai
-  - Julien Desfossez
-- Fix for 32bit build
-  - Aubrey Li
-
-ISSUES
-------
-- Aaron(Intel) found an issue with load balancing when the tasks have
-  different weights(nice or cgroup shares). Task weight is not considered
-  in coresched aware load balancing and causes those higher weights task
-  to starve.
-- Joel(ChromeOS) found an issue where RT task may be preempted by a
-  lower class task.
-- Joel(ChromeOS) found a deadlock and crash on PREEMPT kernel in the
-  coreshed idle balance logic
-
-TODO
-----
-- Work on merging patches that are ready to be merged
-- Decide on the API for exposing the feature to userland
-- Experiment with adding synchronization points in VMEXIT to mitigate
-  the VM-to-host-kernel leaking
-- Investigate the source of the overhead even when no tasks are tagged:
-  https://lkml.org/lkml/2019/10/29/242
-
+Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
 ---
+ fs/fuse/file.c | 62 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 61 insertions(+), 1 deletion(-)
 
-Aaron Lu (2):
-  sched/fair: wrapper for cfs_rq->min_vruntime
-  sched/fair: core wide vruntime comparison
-
-Aubrey Li (1):
-  sched: migration changes for core scheduling
-
-Peter Zijlstra (9):
-  sched: Wrap rq::lock access
-  sched: Introduce sched_class::pick_task()
-  sched: Core-wide rq->lock
-  sched/fair: Add a few assertions
-  sched: Basic tracking of matching tasks
-  sched: Add core wide task selection and scheduling.
-  sched: Trivial forced-newidle balancer
-  sched: cgroup tagging interface for core scheduling
-  sched: Debug bits...
-
-Tim Chen (1):
-  sched: Update core scheduler queue when taking cpu online/offline
-
- include/linux/sched.h    |    9 +-
- kernel/Kconfig.preempt   |    6 +
- kernel/sched/core.c      | 1037 +++++++++++++++++++++++++++++++++++++-
- kernel/sched/cpuacct.c   |   12 +-
- kernel/sched/deadline.c  |   69 ++-
- kernel/sched/debug.c     |    4 +-
- kernel/sched/fair.c      |  387 +++++++++++---
- kernel/sched/idle.c      |   11 +-
- kernel/sched/pelt.h      |    2 +-
- kernel/sched/rt.c        |   65 ++-
- kernel/sched/sched.h     |  248 +++++++--
- kernel/sched/stop_task.c |   13 +-
- kernel/sched/topology.c  |    4 +-
- 13 files changed, 1672 insertions(+), 195 deletions(-)
-
--- 
-2.17.1
+diff --git a/fs/fuse/file.c b/fs/fuse/file.c
+index 9effdd3dc6d6..303496e6617f 100644
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -2870,10 +2870,15 @@ static const struct vm_operations_struct fuse_fil=
+e_vm_ops =3D {
+ 	.page_mkwrite	=3D fuse_page_mkwrite,
+ };
+=20
++static int fuse_dax_mmap(struct file *file, struct vm_area_struct *vma);
+ static int fuse_file_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+ 	struct fuse_file *ff =3D file->private_data;
+=20
++	/* DAX mmap is superior to direct_io mmap */
++	if (IS_DAX(file_inode(file)))
++		return fuse_dax_mmap(file, vma);
++
+ 	if (ff->open_flags & FOPEN_DIRECT_IO) {
+ 		/* Can't provide the coherency needed for MAP_SHARED */
+ 		if (vma->vm_flags & VM_MAYSHARE)
+@@ -2892,9 +2897,63 @@ static int fuse_file_mmap(struct file *file, struc=
+t vm_area_struct *vma)
+ 	return 0;
+ }
+=20
++static vm_fault_t __fuse_dax_fault(struct vm_fault *vmf,
++				   enum page_entry_size pe_size, bool write)
++{
++	vm_fault_t ret;
++	struct inode *inode =3D file_inode(vmf->vma->vm_file);
++	struct super_block *sb =3D inode->i_sb;
++	pfn_t pfn;
++
++	if (write)
++		sb_start_pagefault(sb);
++
++	ret =3D dax_iomap_fault(vmf, pe_size, &pfn, NULL, &fuse_iomap_ops);
++
++	if (ret & VM_FAULT_NEEDDSYNC)
++		ret =3D dax_finish_sync_fault(vmf, pe_size, pfn);
++
++	if (write)
++		sb_end_pagefault(sb);
++
++	return ret;
++}
++
++static vm_fault_t fuse_dax_fault(struct vm_fault *vmf)
++{
++	return __fuse_dax_fault(vmf, PE_SIZE_PTE,
++				vmf->flags & FAULT_FLAG_WRITE);
++}
++
++static vm_fault_t fuse_dax_huge_fault(struct vm_fault *vmf,
++			       enum page_entry_size pe_size)
++{
++	return __fuse_dax_fault(vmf, pe_size, vmf->flags & FAULT_FLAG_WRITE);
++}
++
++static vm_fault_t fuse_dax_page_mkwrite(struct vm_fault *vmf)
++{
++	return __fuse_dax_fault(vmf, PE_SIZE_PTE, true);
++}
++
++static vm_fault_t fuse_dax_pfn_mkwrite(struct vm_fault *vmf)
++{
++	return __fuse_dax_fault(vmf, PE_SIZE_PTE, true);
++}
++
++static const struct vm_operations_struct fuse_dax_vm_ops =3D {
++	.fault		=3D fuse_dax_fault,
++	.huge_fault	=3D fuse_dax_huge_fault,
++	.page_mkwrite	=3D fuse_dax_page_mkwrite,
++	.pfn_mkwrite	=3D fuse_dax_pfn_mkwrite,
++};
++
+ static int fuse_dax_mmap(struct file *file, struct vm_area_struct *vma)
+ {
+-	return -EINVAL; /* TODO */
++	file_accessed(file);
++	vma->vm_ops =3D &fuse_dax_vm_ops;
++	vma->vm_flags |=3D VM_MIXEDMAP | VM_HUGEPAGE;
++	return 0;
+ }
+=20
+ static int convert_fuse_file_lock(struct fuse_conn *fc,
+@@ -3940,6 +3999,7 @@ static const struct file_operations fuse_file_opera=
+tions =3D {
+ 	.release	=3D fuse_release,
+ 	.fsync		=3D fuse_fsync,
+ 	.lock		=3D fuse_file_lock,
++	.get_unmapped_area =3D thp_get_unmapped_area,
+ 	.flock		=3D fuse_file_flock,
+ 	.splice_read	=3D generic_file_splice_read,
+ 	.splice_write	=3D iter_file_splice_write,
+--=20
+2.20.1
 
