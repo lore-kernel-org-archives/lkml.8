@@ -2,143 +2,139 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D260C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9CEEC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758FE2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2EF320732
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:22:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LDG8TcPS"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aQSKRBoJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387735AbgCDJWT (ORCPT
+        id S1728971AbgCDJWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:22:19 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:52224 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387644AbgCDJWT (ORCPT
+        Wed, 4 Mar 2020 04:22:33 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:56776 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387644AbgCDJWd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:22:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Xz1gqS8mHQf0FeXfh5Zn6ODmAjqLlTi3e7QpQPXzA9Q=; b=LDG8TcPSz6KerDK5RXGKXHL0+s
-        nd+daixZ03zWZPBsZex2W0SE2BU+bLdvHBFIbasjYsjLE9O6AcvIE4aklaE3c2rh36+IES5zOiJKo
-        CZHk/ZIgcOCzatmD7F0LvmIA2106SZonTNmKrjs8DuOvT6kzu3GSWHE0zWKaxMKARsPaQGewBXixa
-        ItobUKdK8g+0ymqN8mZ30rSgQf5HEI0PdCrTHBXpOW9woanZqUxWXgFDIr91oXYH//OaNr2XpNsGu
-        Foq59USFJcUjcKrB2RUG0sl7wBvbaaaFVwnCCFfz9rz8IvgRMTSRUVdUbDAj+EcyeoS8xmPTFub7+
-        KssVL8pg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9QDl-0008ML-Jr; Wed, 04 Mar 2020 09:21:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CDE6B30066E;
-        Wed,  4 Mar 2020 10:19:37 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 407052011CA98; Wed,  4 Mar 2020 10:21:36 +0100 (CET)
-Date:   Wed, 4 Mar 2020 10:21:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Allison Randal <allison@lohutok.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
-Message-ID: <20200304092136.GI2596@hirez.programming.kicks-ass.net>
-References: <20200228000105.165012-1-thgarnie@chromium.org>
- <202003022100.54CEEE60F@keescook>
- <20200303095514.GA2596@hirez.programming.kicks-ass.net>
- <CAJcbSZH1oON2VC2U8HjfC-6=M-xn5eU+JxHG2575iMpVoheKdA@mail.gmail.com>
- <6e7e4191612460ba96567c16b4171f2d2f91b296.camel@linux.intel.com>
- <202003031314.1AFFC0E@keescook>
+        Wed, 4 Mar 2020 04:22:33 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0249MVVd021446;
+        Wed, 4 Mar 2020 03:22:31 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583313751;
+        bh=2d9mOhOZdqG8REHoaeHfSFUIKR7jOmqd2Qz00FQ0jJE=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=aQSKRBoJaka7PthutzerBCcYwSqMPCyIAkRlyUA5H5ZTkNVvr5JAjg04o0qQw8R+b
+         k4yBrVBRu3DbxFxE9EYR60+C52NubKXBqewWc1V8X4YQ3a7on3xD8vuBvM5PZdAvCM
+         qplNtgS9gG57XCSEgxIA1mZBNR5kbCV8lTazCXew=
+Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0249MVlA123075;
+        Wed, 4 Mar 2020 03:22:31 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
+ 2020 03:22:31 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Mar 2020 03:22:31 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0249MRMo067256;
+        Wed, 4 Mar 2020 03:22:28 -0600
+Subject: Re: [Patch] media: ti-vpe: cal: fix a kernel oops when unloading
+ module
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20200303172629.21339-1-bparrot@ti.com>
+ <4010c13f-6a32-f3c3-5b6d-62a4e3782c64@ti.com>
+ <f7f6dd87-147f-b9e9-aaa7-c063a8f3c11e@ti.com>
+Message-ID: <a2e6510f-ffd9-060e-ab03-cdc261ecc778@ti.com>
+Date:   Wed, 4 Mar 2020 11:22:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202003031314.1AFFC0E@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <f7f6dd87-147f-b9e9-aaa7-c063a8f3c11e@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 01:19:22PM -0800, Kees Cook wrote:
-> On Tue, Mar 03, 2020 at 01:01:26PM -0800, Kristen Carlson Accardi wrote:
-> > On Tue, 2020-03-03 at 07:43 -0800, Thomas Garnier wrote:
-> > > On Tue, Mar 3, 2020 at 1:55 AM Peter Zijlstra <peterz@infradead.org>
+On 04/03/2020 10:41, Tomi Valkeinen wrote:
 
-> > > > But,... do we still need this in the light of that fine-grained
-> > > > kaslr
-> > > > stuff?
-> > > > 
-> > > > What is the actual value of this PIE crud in the face of that?
-> > > 
-> > > If I remember well, it makes it easier/better but I haven't seen a
-> > > recent update on that. Is that accurate Kees?
-> > 
-> > I believe this patchset is valuable if people are trying to brute force
-> > guess the kernel location, but not so awesome in the event of
-> > infoleaks. In the case of the current fgkaslr implementation, we only
-> > randomize within the existing text segment memory area - so with PIE
-> > the text segment base can move around more, but within that it wouldn't
-> > strengthen anything. So, if you have an infoleak, you learn the base
-> > instantly, and are just left with the same extra protection you get
-> > without PIE.
+>> Thanks, this fixes the crash for me.
+>>
+>> It does look a bit odd that something is allocated with kzalloc, and then it's freed somewhere 
+>> inside v4l2_async_notifier_cleanup, though. But if that's how it supposed to be used, looks fine 
+>> to me.
 > 
-> Right -- PIE improves both non- and fg- KASLR similarly, in the sense
-> that the possible entropy for base offset is expanded. It also opens the
-> door to doing even more crazy things. 
+> Well, sent that a few seconds too early... With this patch, I see kmemleaks.
 
-So I'm really confused. I see it increases the aslr range, but I'm still
-not sure why we care in the face of fgkaslr. Current kaslr is completely
-broken because the hardware leaks more bits than we currently have, even
-without the kernel itself leaking an address.
+This is caused by allocating asd for all ports, even if the port is not used, causing the allocated asd to be forgotten. Also, any error there would cause leak too.
 
-But leaking a single address is not a problem with fgkaslr.
+I think something like this fixes both the unused port case and error paths:
 
-> (e.g. why keep the kernel text all
-> in one contiguous chunk?)
+diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+index a928c9d66d5d..4b89dd53d2b4 100644
+--- a/drivers/media/platform/ti-vpe/cal.c
++++ b/drivers/media/platform/ti-vpe/cal.c
+@@ -372,8 +372,6 @@ struct cal_ctx {
+ 	struct v4l2_subdev	*sensor;
+ 	struct v4l2_fwnode_endpoint	endpoint;
+ 
+-	struct v4l2_async_subdev asd;
+-
+ 	struct v4l2_fh		fh;
+ 	struct cal_dev		*dev;
+ 	struct cc_data		*cc;
+@@ -2020,7 +2018,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+ 
+ 	parent = pdev->dev.of_node;
+ 
+-	asd = &ctx->asd;
+ 	endpoint = &ctx->endpoint;
+ 
+ 	ep_node = NULL;
+@@ -2067,8 +2064,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+ 		ctx_dbg(3, ctx, "can't get remote parent\n");
+ 		goto cleanup_exit;
+ 	}
+-	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
+-	asd->match.fwnode = of_fwnode_handle(sensor_node);
+ 
+ 	v4l2_fwnode_endpoint_parse(of_fwnode_handle(ep_node), endpoint);
+ 
+@@ -2098,9 +2093,17 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+ 
+ 	v4l2_async_notifier_init(&ctx->notifier);
+ 
++	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
++	if (!asd)
++		goto cleanup_exit;
++
++	asd->match_type = V4L2_ASYNC_MATCH_FWNODE;
++	asd->match.fwnode = of_fwnode_handle(sensor_node);
++
+ 	ret = v4l2_async_notifier_add_subdev(&ctx->notifier, asd);
+ 	if (ret) {
+ 		ctx_err(ctx, "Error adding asd\n");
++		kfree(asd);
+ 		goto cleanup_exit;
+ 	}
+ 
+ Tomi
 
-Dear gawd, please no. Also, we're limited to 2G text, that's just not a
-lot of room. I'm really going to object when people propose we introduce
-direct PLT for x86.
-
-> And generally speaking, it seems a nice improvement to me, as it gives
-> the kernel greater addressing flexibility.
-
-But at what cost; it does unspeakable ugly to the asm. And didn't a
-kernel compiled with the extended PIE range produce a measurably slower
-kernel due to all the ugly?
-
-So maybe I'm slow, but please spell out the benefit, because I'm not
-seeing it.
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
