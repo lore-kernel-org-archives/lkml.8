@@ -2,221 +2,381 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76184C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A774EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D3A424671
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:26:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF142467F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:27:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eJu+CLk6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388325AbgCDQ04 (ORCPT
+        id S2388346AbgCDQ07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:26:56 -0500
-Received: from foss.arm.com ([217.140.110.172]:36644 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388315AbgCDQ0x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:26:53 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 70FCB31B;
-        Wed,  4 Mar 2020 08:26:52 -0800 (PST)
-Received: from e120937-lin.cambridge.arm.com (e120937-lin.cambridge.arm.com [10.1.197.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 721AC3F6CF;
-        Wed,  4 Mar 2020 08:26:51 -0800 (PST)
-From:   Cristian Marussi <cristian.marussi@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     sudeep.holla@arm.com, lukasz.luba@arm.com,
-        james.quinlan@broadcom.com, Jonathan.Cameron@Huawei.com,
-        cristian.marussi@arm.com
-Subject: [PATCH v4 13/13] firmware: arm_scmi: Add Base notifications support
-Date:   Wed,  4 Mar 2020 16:25:58 +0000
-Message-Id: <20200304162558.48836-14-cristian.marussi@arm.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200304162558.48836-1-cristian.marussi@arm.com>
-References: <20200304162558.48836-1-cristian.marussi@arm.com>
+        Wed, 4 Mar 2020 11:26:59 -0500
+Received: from mail-wm1-f74.google.com ([209.85.128.74]:33505 "EHLO
+        mail-wm1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388327AbgCDQ05 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:26:57 -0500
+Received: by mail-wm1-f74.google.com with SMTP id p4so2062215wmp.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:26:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=gWOrBh3oN76+CKwSk0doDLVP37A7Mfhwrga+6Wn1PRM=;
+        b=eJu+CLk6rs811Rhmt42J7akOHqFIr0xJN+w2p8++OXzV/Z5j3gJx+UGhGtP4xs/ZvU
+         zSsGv8vcGYR17kZ2t2E3swBHeZyK5yEtk4IFrC4i3FttUcqNU461Ks/ovyRppbgdOybM
+         7HWodQzpyaiVzcpIQ4eYRj7gZvUY/ItZQJG0QMRblunUDdhCz54m5vshnc7pY8e+9SgF
+         sMr7TspcchcuhkGm48zAG57DuZrerm23sdlJdkUeqacdWbof9VBWg61i2Qpa+g7kY5QY
+         vG+8Pqmy4T4m1x6neqNSpdGVLFC40wQVECsrgDgsdWuleLJ++9a3x+PB+oMARRdG3L1P
+         p8Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=gWOrBh3oN76+CKwSk0doDLVP37A7Mfhwrga+6Wn1PRM=;
+        b=jpYIYDT32Wys38AOt8exHml5IWP7Ghyr5T6U9NrfOrUXIlbo7wrW7D0W5LOuBiM68Q
+         kmIXuoKAxBGIxijHqYRRuGnG2s+OtDSMRoVF78C8JIbeGobijbN1pLCGC3EYaqnxb4UM
+         wV5GeSuNFOoPfhOHT7YOc2IW70lAu0TIArrwTGFJ3kvaqlJT5HAsolTL2RlebAHHlpWO
+         7Dbu1GlHy7E2h7BWtOcR2zRuA9pQSx+6+Rp9D+QmKIYrRuYGESUwKPzEtLGwatltKRRm
+         HTe7+PPDtTFPCbZ2OXKzA20Fpn4Yc/OyoC38E+6jWRyccI/HLgwjZtpmMnL80zMo+tIG
+         oPnw==
+X-Gm-Message-State: ANhLgQ1jMRsxYU88LWikRBSsWcygujssF5lOtqqY4LiXXRgffaWbtqi6
+        1fTRQFNd07L5tZkWSrlNxeZA52P26Q==
+X-Google-Smtp-Source: ADFU+vtyd2GOn6plGBBK3B72m7K0TOoCXY9LFO9jQrjI4oqfFbgrRT4duHTtLEwUFDWlvzKWb8ILGDkVAQ==
+X-Received: by 2002:adf:f087:: with SMTP id n7mr4641157wro.328.1583339212658;
+ Wed, 04 Mar 2020 08:26:52 -0800 (PST)
+Date:   Wed,  4 Mar 2020 17:25:40 +0100
+In-Reply-To: <20200304162541.46663-1-elver@google.com>
+Message-Id: <20200304162541.46663-2-elver@google.com>
+Mime-Version: 1.0
+References: <20200304162541.46663-1-elver@google.com>
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH 2/3] kcsan: Update Documentation/dev-tools/kcsan.rst
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make SCMI Base protocol register with the notification core.
+Extend and improve based on recent changes, and summarize important
+bits that have been missing. Tested with "make htmldocs".
 
-Signed-off-by: Cristian Marussi <cristian.marussi@arm.com>
+Signed-off-by: Marco Elver <elver@google.com>
 ---
-V3 --> V4
-- scmi_event field renamed
-V2 --> V3
-- added handle awareness
-V1 --> V2
-- simplified .set_notify_enabled() implementation moving the ALL_SRCIDs
-  logic out of protocol. ALL_SRCIDs logic is now in charge of the
-  notification core, together with proper reference counting of enables
-- switched to devres protocol-registration
+Preview of generated documentation (with the next patch):
+https://htmlpreview.github.io/?https://github.com/google/ktsan/blob/kcsan-kerneldoc/output/dev-tools/kcsan.html#race-detection-beyond-data-races
 ---
- drivers/firmware/arm_scmi/base.c | 109 +++++++++++++++++++++++++++++++
- include/linux/scmi_protocol.h    |   8 +++
- 2 files changed, 117 insertions(+)
+ Documentation/dev-tools/kcsan.rst | 206 ++++++++++++++++++------------
+ 1 file changed, 124 insertions(+), 82 deletions(-)
 
-diff --git a/drivers/firmware/arm_scmi/base.c b/drivers/firmware/arm_scmi/base.c
-index ce7d9203e41b..0582df9e0512 100644
---- a/drivers/firmware/arm_scmi/base.c
-+++ b/drivers/firmware/arm_scmi/base.c
-@@ -6,6 +6,9 @@
-  */
+diff --git a/Documentation/dev-tools/kcsan.rst b/Documentation/dev-tools/kcsan.rst
+index 65a0be513b7de..323ddc1547751 100644
+--- a/Documentation/dev-tools/kcsan.rst
++++ b/Documentation/dev-tools/kcsan.rst
+@@ -1,27 +1,22 @@
+ The Kernel Concurrency Sanitizer (KCSAN)
+ ========================================
  
- #include "common.h"
-+#include "notify.h"
-+
-+#define SCMI_BASE_NUM_SOURCES	1
+-Overview
+---------
+-
+-*Kernel Concurrency Sanitizer (KCSAN)* is a dynamic data race detector for
+-kernel space. KCSAN is a sampling watchpoint-based data race detector. Key
+-priorities in KCSAN's design are lack of false positives, scalability, and
+-simplicity. More details can be found in `Implementation Details`_.
+-
+-KCSAN uses compile-time instrumentation to instrument memory accesses. KCSAN is
+-supported in both GCC and Clang. With GCC it requires version 7.3.0 or later.
+-With Clang it requires version 7.0.0 or later.
++The Kernel Concurrency Sanitizer (KCSAN) is a dynamic race detector, which
++relies on compile-time instrumentation, and uses a watchpoint-based sampling
++approach to detect races. KCSAN's primary purpose is to detect `data races`_.
  
- enum scmi_base_protocol_cmd {
- 	BASE_DISCOVER_VENDOR = 0x3,
-@@ -29,6 +32,19 @@ struct scmi_msg_resp_base_attributes {
- 	__le16 reserved;
- };
+ Usage
+ -----
  
-+struct scmi_msg_base_error_notify {
-+	__le32 event_control;
-+#define BASE_TP_NOTIFY_ALL	BIT(0)
-+};
+-To enable KCSAN configure kernel with::
++KCSAN is supported in both GCC and Clang. With GCC it requires version 7.3.0 or
++later. With Clang it requires version 7.0.0 or later.
 +
-+struct scmi_base_error_notify_payld {
-+	__le32 agent_id;
-+	__le32 error_status;
-+#define IS_FATAL_ERROR(x)	((x) & BIT(31))
-+#define ERROR_CMD_COUNT(x)	FIELD_GET(GENMASK(9, 0), (x))
-+	__le64 msg_reports[8192];
-+};
-+
- /**
-  * scmi_base_attributes_get() - gets the implementation details
-  *	that are associated with the base protocol.
-@@ -222,6 +238,93 @@ static int scmi_base_discover_agent_get(const struct scmi_handle *handle,
- 	return ret;
- }
++To enable KCSAN configure the kernel with::
  
-+static int scmi_base_error_notify(const struct scmi_handle *handle, bool enable)
-+{
-+	int ret;
-+	u32 evt_cntl = enable ? BASE_TP_NOTIFY_ALL : 0;
-+	struct scmi_xfer *t;
-+	struct scmi_msg_base_error_notify *cfg;
-+
-+	ret = scmi_xfer_get_init(handle, BASE_NOTIFY_ERRORS,
-+				 SCMI_PROTOCOL_BASE, sizeof(*cfg), 0, &t);
-+	if (ret)
-+		return ret;
-+
-+	cfg = t->tx.buf;
-+	cfg->event_control = cpu_to_le32(evt_cntl);
-+
-+	ret = scmi_do_xfer(handle, t);
-+
-+	scmi_xfer_put(handle, t);
-+	return ret;
-+}
-+
-+static bool scmi_base_set_notify_enabled(const struct scmi_handle *handle,
-+					 u8 evt_id, u32 src_id, bool enable)
-+{
-+	int ret;
-+
-+	ret = scmi_base_error_notify(handle, enable);
-+	if (ret)
-+		pr_warn("SCMI Notifications - Proto:%X - FAIL_ENABLED - evt[%X] ret:%d\n",
-+			SCMI_PROTOCOL_BASE, evt_id, ret);
-+
-+	return !ret ? true : false;
-+}
-+
-+static void *scmi_base_fill_custom_report(u8 evt_id, u64 timestamp,
-+					  const void *payld, size_t payld_sz,
-+					  void *report, u32 *src_id)
-+{
-+	void *rep = NULL;
-+
-+	switch (evt_id) {
-+	case BASE_ERROR_EVENT:
-+	{
-+		int i;
-+		const struct scmi_base_error_notify_payld *p = payld;
-+		struct scmi_base_error_report *r = report;
-+
-+		/*
-+		 * BaseError notification payload is variable in size but
-+		 * up to a maximum length determined by the struct ponted by p.
-+		 * Instead payld_sz is the effective length of this notification
-+		 * payload so cannot be greater of the maximum allowed size as
-+		 * pointed by p.
-+		 */
-+		if (sizeof(*p) < payld_sz)
-+			break;
-+
-+		r->timestamp = timestamp;
-+		r->agent_id = le32_to_cpu(p->agent_id);
-+		r->fatal = IS_FATAL_ERROR(le32_to_cpu(p->error_status));
-+		r->cmd_count = ERROR_CMD_COUNT(le32_to_cpu(p->error_status));
-+		for (i = 0; i < r->cmd_count; i++)
-+			r->reports[i] = le64_to_cpu(p->msg_reports[i]);
-+		*src_id = 0;
-+		rep = r;
-+		break;
-+	}
-+	default:
-+		break;
-+	}
-+
-+	return rep;
-+}
-+
-+static const struct scmi_event base_events[] = {
-+	{
-+		.id = BASE_ERROR_EVENT,
-+		.max_payld_sz = 8192,
-+		.max_report_sz = sizeof(struct scmi_base_error_report),
-+	},
-+};
-+
-+static const struct scmi_protocol_event_ops base_event_ops = {
-+	.set_notify_enabled = scmi_base_set_notify_enabled,
-+	.fill_custom_report = scmi_base_fill_custom_report,
-+};
-+
- int scmi_base_protocol_init(struct scmi_handle *h)
- {
- 	int id, ret;
-@@ -256,6 +359,12 @@ int scmi_base_protocol_init(struct scmi_handle *h)
- 	dev_dbg(dev, "Found %d protocol(s) %d agent(s)\n", rev->num_protocols,
- 		rev->num_agents);
+     CONFIG_KCSAN = y
  
-+	scmi_register_protocol_events(handle,
-+				      SCMI_PROTOCOL_BASE, (4 * PAGE_SIZE),
-+				      &base_event_ops, base_events,
-+				      ARRAY_SIZE(base_events),
-+				      SCMI_BASE_NUM_SOURCES);
-+
- 	for (id = 0; id < rev->num_agents; id++) {
- 		scmi_base_discover_agent_get(handle, id, name);
- 		dev_dbg(dev, "Agent %d: %s\n", id, name);
-diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-index 91c5fdf567d5..3a1bc8014f51 100644
---- a/include/linux/scmi_protocol.h
-+++ b/include/linux/scmi_protocol.h
-@@ -420,4 +420,12 @@ struct scmi_reset_issued_report {
- 	u32	reset_state;
- };
+ KCSAN provides several other configuration options to customize behaviour (see
+-their respective help text for more info).
++the respective help text in ``lib/Kconfig.kcsan`` for more info).
  
-+struct scmi_base_error_report {
-+	ktime_t	timestamp;
-+	u32	agent_id;
-+	bool	fatal;
-+	u16	cmd_count;
-+	u64	reports[8192];
-+};
+ Error reports
+ ~~~~~~~~~~~~~
+@@ -96,7 +91,8 @@ The other less common type of data race report looks like this::
+ This report is generated where it was not possible to determine the other
+ racing thread, but a race was inferred due to the data value of the watched
+ memory location having changed. These can occur either due to missing
+-instrumentation or e.g. DMA accesses.
++instrumentation or e.g. DMA accesses. These reports will only be generated if
++``CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN=y`` (selected by default).
+ 
+ Selective analysis
+ ~~~~~~~~~~~~~~~~~~
+@@ -111,8 +107,8 @@ the below options are available:
+ 
+ * Disabling data race detection for entire functions can be accomplished by
+   using the function attribute ``__no_kcsan`` (or ``__no_kcsan_or_inline`` for
+-  ``__always_inline`` functions). To dynamically control for which functions
+-  data races are reported, see the `debugfs`_ blacklist/whitelist feature.
++  ``__always_inline`` functions). To dynamically limit for which functions to
++  generate reports, see the `DebugFS interface`_ blacklist/whitelist feature.
+ 
+ * To disable data race detection for a particular compilation unit, add to the
+   ``Makefile``::
+@@ -124,13 +120,27 @@ the below options are available:
+ 
+     KCSAN_SANITIZE := n
+ 
+-debugfs
+-~~~~~~~
++Furthermore, it is possible to tell KCSAN to show or hide entire classes of
++data races, depending on preferences. These can be changed via the following
++Kconfig options:
 +
- #endif /* _LINUX_SCMI_PROTOCOL_H */
++* ``CONFIG_KCSAN_REPORT_VALUE_CHANGE_ONLY``: If enabled and a conflicting write
++  is observed via a watchpoint, but the data value of the memory location was
++  observed to remain unchanged, do not report the data race.
++
++* ``CONFIG_KCSAN_ASSUME_PLAIN_WRITES_ATOMIC``: Assume that plain aligned writes
++  up to word size are atomic by default. Assumes that such writes are not
++  subject to unsafe compiler optimizations resulting in data races. The option
++  causes KCSAN to not report data races due to conflicts where the only plain
++  accesses are aligned writes up to word size.
+ 
+-* The file ``/sys/kernel/debug/kcsan`` can be read to get stats.
++DebugFS interface
++~~~~~~~~~~~~~~~~~
+ 
+-* KCSAN can be turned on or off by writing ``on`` or ``off`` to
+-  ``/sys/kernel/debug/kcsan``.
++* Reading ``/sys/kernel/debug/kcsan`` returns various runtime statistics.
++
++* Writing ``on`` or ``off`` to ``/sys/kernel/debug/kcsan`` allows turning KCSAN
++  on or off, respectively.
+ 
+ * Writing ``!some_func_name`` to ``/sys/kernel/debug/kcsan`` adds
+   ``some_func_name`` to the report filter list, which (by default) blacklists
+@@ -142,91 +152,120 @@ debugfs
+   can be used to silence frequently occurring data races; the whitelist feature
+   can help with reproduction and testing of fixes.
+ 
++Tuning performance
++~~~~~~~~~~~~~~~~~~
++
++Core parameters that affect KCSAN's overall performance and bug detection
++ability are exposed as kernel command-line arguments whose defaults can also be
++changed via the corresponding Kconfig options.
++
++* ``kcsan.skip_watch`` (``CONFIG_KCSAN_SKIP_WATCH``): Number of per-CPU memory
++  operations to skip, before another watchpoint is set up. Setting up
++  watchpoints more frequently will result in the likelihood of races to be
++  observed to increase. This parameter has the most significant impact on
++  overall system performance and race detection ability.
++
++* ``kcsan.udelay_task`` (``CONFIG_KCSAN_UDELAY_TASK``): For tasks, the
++  microsecond delay to stall execution after a watchpoint has been set up.
++  Larger values result in the window in which we may observe a race to
++  increase.
++
++* ``kcsan.udelay_interrupt`` (``CONFIG_KCSAN_UDELAY_INTERRUPT``): For
++  interrupts, the microsecond delay to stall execution after a watchpoint has
++  been set up. Interrupts have tighter latency requirements, and their delay
++  should generally be smaller than the one chosen for tasks.
++
++They may be tweaked at runtime via ``/sys/module/kcsan/parameters/``.
++
+ Data Races
+ ----------
+ 
+-Informally, two operations *conflict* if they access the same memory location,
+-and at least one of them is a write operation. In an execution, two memory
+-operations from different threads form a **data race** if they *conflict*, at
+-least one of them is a *plain access* (non-atomic), and they are *unordered* in
+-the "happens-before" order according to the `LKMM
+-<../../tools/memory-model/Documentation/explanation.txt>`_.
++In an execution, two memory accesses form a *data race* if they *conflict*,
++they happen concurrently in different threads, and at least one of them is a
++*plain access*; they *conflict* if both access the same memory location, and at
++least one is a write. For a more thorough discussion and definition, see `"Plain
++Accesses and Data Races" in the LKMM`_.
++
++.. _"Plain Accesses and Data Races" in the LKMM: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/tools/memory-model/Documentation/explanation.txt#n1922
+ 
+-Relationship with the Linux Kernel Memory Model (LKMM)
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++Relationship with the Linux-Kernel Memory Consistency Model (LKMM)
++~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ The LKMM defines the propagation and ordering rules of various memory
+ operations, which gives developers the ability to reason about concurrent code.
+ Ultimately this allows to determine the possible executions of concurrent code,
+ and if that code is free from data races.
+ 
+-KCSAN is aware of *atomic* accesses (``READ_ONCE``, ``WRITE_ONCE``,
+-``atomic_*``, etc.), but is oblivious of any ordering guarantees. In other
+-words, KCSAN assumes that as long as a plain access is not observed to race
+-with another conflicting access, memory operations are correctly ordered.
++KCSAN is aware of *marked atomic operations* (``READ_ONCE``, ``WRITE_ONCE``,
++``atomic_*``, etc.), but is oblivious of any ordering guarantees and simply
++assumes that memory barriers are placed correctly. In other words, KCSAN
++assumes that as long as a plain access is not observed to race with another
++conflicting access, memory operations are correctly ordered.
+ 
+ This means that KCSAN will not report *potential* data races due to missing
+-memory ordering. If, however, missing memory ordering (that is observable with
+-a particular compiler and architecture) leads to an observable data race (e.g.
+-entering a critical section erroneously), KCSAN would report the resulting
+-data race.
+-
+-Race conditions vs. data races
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-
+-Race conditions are logic bugs, where unexpected interleaving of racing
+-concurrent operations result in an erroneous state.
+-
+-Data races on the other hand are defined at the *memory model/language level*.
+-Many data races are also harmful race conditions, which a tool like KCSAN
+-reports!  However, not all data races are race conditions and vice-versa.
+-KCSAN's intent is to report data races according to the LKMM. A data race
+-detector can only work at the memory model/language level.
+-
+-Deeper analysis, to find high-level race conditions only, requires conveying
+-the intended kernel logic to a tool. This requires (1) the developer writing a
+-specification or model of their code, and then (2) the tool verifying that the
+-implementation matches. This has been done for small bits of code using model
+-checkers and other formal methods, but does not scale to the level of what can
+-be covered with a dynamic analysis based data race detector such as KCSAN.
+-
+-For reasons outlined in this `article <https://lwn.net/Articles/793253/>`_,
+-data races can be much more subtle, but can cause no less harm than high-level
+-race conditions.
++memory ordering. Developers should therefore carefully consider the required
++memory ordering requirements that remain unchecked. If, however, missing
++memory ordering (that is observable with a particular compiler and
++architecture) leads to an observable data race (e.g. entering a critical
++section erroneously), KCSAN would report the resulting data race.
++
++Race Detection Beyond Data Races
++--------------------------------
++
++For code with complex concurrency design, race-condition bugs may not always
++manifest as data races. Race conditions occur if concurrently executing
++operations result in unexpected system behaviour. On the other hand, data races
++are defined at the C-language level. The following macros can be used to check
++properties of concurrent code where bugs would not manifest as data races.
++
++.. kernel-doc:: include/linux/kcsan-checks.h
++    :functions: ASSERT_EXCLUSIVE_WRITER ASSERT_EXCLUSIVE_ACCESS
++                ASSERT_EXCLUSIVE_BITS
+ 
+ Implementation Details
+ ----------------------
+ 
+-The general approach is inspired by `DataCollider
++KCSAN relies on observing that two accesses happen concurrently. Crucially, we
++want to (a) increase the chances of observing races (especially for races that
++manifest rarely), and (b) be able to actually observe them. We can accomplish
++(a) by injecting various delays, and (b) by using address watchpoints (or
++breakpoints).
++
++If we deliberately stall a memory access, while we have a watchpoint for its
++address set up, and then observe the watchpoint to fire, two accesses to the
++same address just raced. Using hardware watchpoints, this is the approach taken
++in `DataCollider
+ <http://usenix.org/legacy/events/osdi10/tech/full_papers/Erickson.pdf>`_.
+ Unlike DataCollider, KCSAN does not use hardware watchpoints, but instead
+-relies on compiler instrumentation. Watchpoints are implemented using an
+-efficient encoding that stores access type, size, and address in a long; the
+-benefits of using "soft watchpoints" are portability and greater flexibility in
+-limiting which accesses trigger a watchpoint.
++relies on compiler instrumentation and "soft watchpoints".
+ 
+-More specifically, KCSAN requires instrumenting plain (unmarked, non-atomic)
+-memory operations; for each instrumented plain access:
++In KCSAN, watchpoints are implemented using an efficient encoding that stores
++access type, size, and address in a long; the benefits of using "soft
++watchpoints" are portability and greater flexibility. KCSAN then relies on the
++compiler instrumenting plain accesses. For each instrumented plain access:
+ 
+ 1. Check if a matching watchpoint exists; if yes, and at least one access is a
+    write, then we encountered a racing access.
+ 
+ 2. Periodically, if no matching watchpoint exists, set up a watchpoint and
+-   stall for a small delay.
++   stall for a small randomized delay.
+ 
+ 3. Also check the data value before the delay, and re-check the data value
+    after delay; if the values mismatch, we infer a race of unknown origin.
+ 
+-To detect data races between plain and atomic memory operations, KCSAN also
+-annotates atomic accesses, but only to check if a watchpoint exists
+-(``kcsan_check_atomic_*``); i.e.  KCSAN never sets up a watchpoint on atomic
+-accesses.
++To detect data races between plain and marked accesses, KCSAN also annotates
++marked accesses, but only to check if a watchpoint exists; i.e. KCSAN never
++sets up a watchpoint on marked accesses. By never setting up watchpoints for
++marked operations, if all accesses to a variable that is accessed concurrently
++are properly marked, KCSAN will never trigger a watchpoint and therefore never
++report the accesses.
+ 
+ Key Properties
+ ~~~~~~~~~~~~~~
+ 
+-1. **Memory Overhead:**  The current implementation uses a small array of longs
+-   to encode watchpoint information, which is negligible.
++1. **Memory Overhead:**  The overall memory overhead is only a few MiB
++   depending on configuration. The current implementation uses a small array of
++   longs to encode watchpoint information, which is negligible.
+ 
+ 2. **Performance Overhead:** KCSAN's runtime aims to be minimal, using an
+    efficient watchpoint encoding that does not require acquiring any shared
+@@ -253,14 +292,17 @@ Key Properties
+ Alternatives Considered
+ -----------------------
+ 
+-An alternative data race detection approach for the kernel can be found in
++An alternative data race detection approach for the kernel can be found in the
+ `Kernel Thread Sanitizer (KTSAN) <https://github.com/google/ktsan/wiki>`_.
+ KTSAN is a happens-before data race detector, which explicitly establishes the
+ happens-before order between memory operations, which can then be used to
+-determine data races as defined in `Data Races`_. To build a correct
+-happens-before relation, KTSAN must be aware of all ordering rules of the LKMM
+-and synchronization primitives. Unfortunately, any omission leads to false
+-positives, which is especially important in the context of the kernel which
+-includes numerous custom synchronization mechanisms. Furthermore, KTSAN's
+-implementation requires metadata for each memory location (shadow memory);
+-currently, for each page, KTSAN requires 4 pages of shadow memory.
++determine data races as defined in `Data Races`_.
++
++To build a correct happens-before relation, KTSAN must be aware of all ordering
++rules of the LKMM and synchronization primitives. Unfortunately, any omission
++leads to large numbers of false positives, which is especially detrimental in
++the context of the kernel which includes numerous custom synchronization
++mechanisms. To track the happens-before relation, KTSAN's implementation
++requires metadata for each memory location (shadow memory), which for each page
++corresponds to 4 pages of shadow memory, and can translate into overhead of
++tens of GiB on a large system.
 -- 
-2.17.1
+2.25.0.265.gbab2e86ba0-goog
 
