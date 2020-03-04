@@ -2,45 +2,46 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588A6C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AE4C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:21:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CC220842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:21:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9EA20836
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583292067;
-	bh=bGb2p1eYOb5lM+eE/w9Asa4nOuO+8y41wwBY1BBS3zg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=QdMykGoa40N0hALUrw22BkYNvVYpi7Ne2VGOZ8e1mwEmreIXg8yPui5ZkgG7L7Cst
-	 3XA/99L61nVHyM6XfMAgavi0ofqTCdpiquAuae6z0HLMrJtYkeYAPzZsEhYD9LeM3K
-	 OMEBuTjRcjqhBeFzLKAM2ycD+BPjlzXsQ8v2WdyI=
+	s=default; t=1583292086;
+	bh=jlGFdpxOfvdd0i8pDFg4Q34tKK6XUXIDfN/KhrQlXj0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mou413QoJpRLGRn4uSKvEfnFrAzgbpQg//nTTMNG+r3/6vuuFfAfj38Q0CUwq2ZSb
+	 tyti36UAE9RL3HvtZAlgCi5aJ+FGLM8mmr4zdL79jvbRXWyF+YYhiKTUYoS3ctxHsw
+	 7HYpx0OGkCeXTktCmh1jKjrbK2mi++J7PWEPSEqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387673AbgCDDVG (ORCPT
+        id S2387694AbgCDDVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 22:21:06 -0500
-Received: from conuserg-12.nifty.com ([210.131.2.79]:63546 "EHLO
+        Tue, 3 Mar 2020 22:21:25 -0500
+Received: from conuserg-12.nifty.com ([210.131.2.79]:64195 "EHLO
         conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387400AbgCDDVF (ORCPT
+        with ESMTP id S2387400AbgCDDVZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 22:21:05 -0500
+        Tue, 3 Mar 2020 22:21:25 -0500
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id 0243Kef3018747;
-        Wed, 4 Mar 2020 12:20:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0243Kef3018747
+        by conuserg-12.nifty.com with ESMTP id 0243Kef6018747;
+        Wed, 4 Mar 2020 12:20:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com 0243Kef6018747
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1583292042;
-        bh=QzOTO3SsMKY2Q7DQRWMpf5aQpJE3CwBx59JpgxcTX4U=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Ygx/N2hhBeHixhHaqfP20GATLfA3Eu+vtWQpIWRWkpwlUJY8Y7S9GbzQIcnbR5YUg
-         ef3dormx12kdAiDEQ1/1aLBlL7tBXtNeu8Q9mwPNTmZMmaE68M6gC4B53Q8ZgX38hj
-         70zI+ayoixK+Sfd7rjpdhoV3xe8q7HdItbcKZvIKH/chRntmK0OoxYWCBKr+Y4IJj+
-         nirXT20MDU2dvIl3I+DjBbuhmkzICd5hjHNa+39V1COsKbqdJVIDMj8rt163iT8Mna
-         4oHHmuuMi6G2yeoNqGtOkgU5Sg+982q22FUpLB87njz0oDFwWRmhzxc3dELXQvQjGm
-         kVi1BoL3UF7Ow==
+        s=dec2015msa; t=1583292045;
+        bh=v2vJfpnqozXNkEifp79FluQTimJVampIAlakCpTKI9o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nKKD3muBJ0m/YtVBc8JE/Aa5V22EojkwDntV6b7YPhjlSrnAfwn7kf5+Dnz6XgstE
+         zoCnF0F0WglpiFMNLmDan8WZbUAjY4qqrp1oQx1YTRxArHcoFdMyPIytG3DROCfJQ1
+         TjboNnqww42k7q5gwnpA/5H9h+r86AwbiQ+VKXAO4nIj65miHrEKwMSZAbWYTSkB/w
+         qsZ/H6c3ckDabFevv5dN8DmYVk7UquO16Oc/6ZtJK5A57gx3K8Rfi0Oq63GHy4R4WU
+         MsrupfHEyH5E1k8Xwp5BuKeP/cLirWfT07iaooAZoGT+Tqj5mIYFJ3AK69OqXtVLcf
+         8fAAxrt8UXvBA==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <masahiroy@kernel.org>
 To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
@@ -48,39 +49,73 @@ To:     devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
 Cc:     linux-kernel@vger.kernel.org,
         Masahiro Yamada <masahiroy@kernel.org>,
         Frank Rowand <frowand.list@gmail.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
         Michal Marek <michal.lkml@markovi.net>
-Subject: [PATCH 0/3] kbuild: improve DT build rules
-Date:   Wed,  4 Mar 2020 12:20:35 +0900
-Message-Id: <20200304032038.14424-1-masahiroy@kernel.org>
+Subject: [PATCH 3/3] kbuild: allow to run dt_binding_check without kernel configuration
+Date:   Wed,  4 Mar 2020 12:20:38 +0900
+Message-Id: <20200304032038.14424-4-masahiroy@kernel.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200304032038.14424-1-masahiroy@kernel.org>
+References: <20200304032038.14424-1-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The dt_binding_check target is located outside of the
+'ifneq ($(dtstree),) ... endif' block.
 
-This series is applicable on
-Linus' tree + the following two patches:
-https://patchwork.kernel.org/patch/11413625/
-https://patchwork.kernel.org/patch/11413623/
+Hence, you can run 'make dt_binding_check' on any architecture.
+This makes a perfect sense because the dt-schema is arch-agnostic.
 
+The only one problem I see is that scripts/dtc/dtc is not always built.
+For example, ARCH=x86 defconfig does not define CONFIG_DTC. Kbuild
+descends into scripts/dtc/, but does nothing. Then, it fails to build
+*.example.dt.yaml files.
 
+Let's build scripts/dtc/dtc forcibly when running dt_binding_check.
 
-Masahiro Yamada (3):
-  kbuild: avoid concurrency issue in parallel building dtbs and
-    dtbs_check
-  kbuild: allow to run dt_binding_check and dtbs_check in a single
-    command
-  kbuild: allow to run dt_binding_check without kernel configuration
+The dt-schema does not depend on any CONFIG option either, so you
+should be able to run dt_binding_check without the .config file.
 
- Documentation/devicetree/bindings/Makefile  |  8 +++-----
- Documentation/devicetree/writing-schema.rst |  4 ++++
- Makefile                                    | 16 ++++++++++++----
- scripts/dtc/Makefile                        |  5 +++--
- 4 files changed, 22 insertions(+), 11 deletions(-)
+Going forward, you can directly run 'make dt_binding_check' in a
+pristine source tree.
 
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ Makefile             | 2 +-
+ scripts/dtc/Makefile | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 7dec7b343842..190f595c7bfc 100644
+--- a/Makefile
++++ b/Makefile
+@@ -255,7 +255,7 @@ clean-targets := %clean mrproper cleandocs
+ no-dot-config-targets := $(clean-targets) \
+ 			 cscope gtags TAGS tags help% %docs check% coccicheck \
+ 			 $(version_h) headers headers_% archheaders archscripts \
+-			 %asm-generic kernelversion %src-pkg
++			 %asm-generic kernelversion %src-pkg dt_binding_check
+ no-sync-config-targets := $(no-dot-config-targets) install %install \
+ 			   kernelrelease
+ single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.s %.symtypes %/
+diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+index 3acbb410904c..2f3c3a7e1620 100644
+--- a/scripts/dtc/Makefile
++++ b/scripts/dtc/Makefile
+@@ -1,8 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
+ # scripts/dtc makefile
+ 
+-hostprogs		:= dtc
+-always-$(CONFIG_DTC)	:= $(hostprogs)
++hostprogs			:= dtc
++always-$(CONFIG_DTC)		+= $(hostprogs)
++always-$(CHECK_DT_BINDING)	+= $(hostprogs)
+ 
+ dtc-objs	:= dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
+ 		   srcpos.o checks.o util.o
 -- 
 2.17.1
 
