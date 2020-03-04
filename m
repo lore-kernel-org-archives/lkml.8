@@ -2,118 +2,130 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B16C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF21AC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7165D21739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C839021739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583335520;
+	bh=ZumlGMcBmAVs+fBT0aWZfIg+A2t7B3lHLFRmYusJrmM=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oiPpbUrbd1B/UXOuLV8JH06eq395mVOR0r8XRTi6H7G7l8mcLlkGG2jbzt1+Xj4np
+	 UytJPMC2AKseuruWo1VrV4aM45vgKFjU9JzpaJvmnCBkmO2EJnpNljLgWVvL9LwoEg
+	 Auq5H6O3M3XzGi4xgqiqyDOr9oj+Dz0TurL7IAwE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbgCDPZH convert rfc822-to-8bit (ORCPT
+        id S1729723AbgCDPZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:25:07 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:50050 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbgCDPZH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:25:07 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 024FOnXA032127, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 024FOnXA032127
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 4 Mar 2020 23:24:49 +0800
-Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 4 Mar 2020 23:24:48 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 4 Mar 2020 23:24:48 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
- RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
- 15.01.1779.005; Wed, 4 Mar 2020 23:24:48 +0800
-From:   Hau <hau@realtek.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
-CC:     Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Linux Netdev List <netdev@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>,
-        Anthony Wong <anthony.wong@canonical.com>,
-        Jason Yen <jason.yen@canonical.com>
-Subject: RE: SFP+ support for 8168fp/8117
-Thread-Topic: SFP+ support for 8168fp/8117
-Thread-Index: AQHVwTo87C9FPgb4q0K7N9j/9Mzg+6fW+ByAgAAXwwCAAE15gIAAfZ0AgECGEQCAAkeigIAECCeAgAQrRCCADDcng4AJ2WCQ
-Date:   Wed, 4 Mar 2020 15:24:48 +0000
-Message-ID: <e10eef58d8fc4b67ac2a73784bf86381@realtek.com>
-References: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
- <20200102152143.GB1397@lunn.ch>
- <DC28A43E-4F1A-40B6-84B0-3E79215527C9@canonical.com>
- <c148fefc-fd56-26a8-9f9b-fbefbaf25050@gmail.com>
- <02F7CBDE-B877-481C-A5AF-2F4CBF830A2C@canonical.com>
- <80E9C881-91C8-4F29-B9CE-652F9EE0B018@canonical.com>
- <995bddbc4f9d48cbb3a289a7e9799f15@realtek.com>
- <12EA7285-06D7-44D3-B033-4F52A06123CC@canonical.com>
- <cae39cfbb5174c8884328887cdfb5a89@realtek.com>
- <9AAC75D4-B04F-49CD-BBB9-11AE3382E4D8@canonical.com>
- <5A21808E-C9DA-44BF-952B-4A5077B52E9B@canonical.com>
-In-Reply-To: <5A21808E-C9DA-44BF-952B-4A5077B52E9B@canonical.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.177.157]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 4 Mar 2020 10:25:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60774 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725765AbgCDPZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:25:19 -0500
+Received: from mail-qv1-f50.google.com (mail-qv1-f50.google.com [209.85.219.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EEE7217F4;
+        Wed,  4 Mar 2020 15:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583335518;
+        bh=ZumlGMcBmAVs+fBT0aWZfIg+A2t7B3lHLFRmYusJrmM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QdKv8fpiPzelRasvXYQYduHy1HtpRJFB/do486BVeN6dh1HIo5wN5nyDc4YFz+MbV
+         U1slqVJXuCpDun27GAhCCxkmS/+PiQGDGzOJU3c5o+P5RMIDxGGTq4zTVUFSOiwodS
+         1tSDanrvqFh6iT6UX6YVCLJdlSsWUI4nsHdyLd9g=
+Received: by mail-qv1-f50.google.com with SMTP id r8so932090qvs.12;
+        Wed, 04 Mar 2020 07:25:18 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3gSkbkELZEDWvpkqj+nzdlJSfvwtGex46xHNsz9QxJ6gVzQmLJ
+        b9ANYh4qbAHWOr2Zc/HFSSqzfcVyr5r1ZSxX2g==
+X-Google-Smtp-Source: ADFU+vtW6eH2lMW1v5UZ2ywbP709qBKs59VL/I7EP4ShzFBY269q/YEygQz3Hie30VlnYHvQUn3WzoF/MDSrL5uju4k=
+X-Received: by 2002:a0c:fecb:: with SMTP id z11mr2534654qvs.85.1583335517496;
+ Wed, 04 Mar 2020 07:25:17 -0800 (PST)
 MIME-Version: 1.0
+References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-4-masahiroy@kernel.org>
+In-Reply-To: <20200304032038.14424-4-masahiroy@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 4 Mar 2020 09:25:06 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKt1K6nOED2TeUfyxkbWHi_KrbZFDW-ZxwgHZX-Og7-DA@mail.gmail.com>
+Message-ID: <CAL_JsqKt1K6nOED2TeUfyxkbWHi_KrbZFDW-ZxwgHZX-Og7-DA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] kbuild: allow to run dt_binding_check without kernel configuration
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     devicetree@vger.kernel.org,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Michal Marek <michal.lkml@markovi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi Hau,
-> 
-> > On Feb 19, 2020, at 22:48, Kai-Heng Feng <kai.heng.feng@canonical.com>
-> wrote:
-> >
-> > Hi Hau,
-> >
-> >> On Feb 19, 2020, at 22:22, Hau <hau@realtek.com> wrote:
-> >
-> > [snipped]
-> >
-> >>
-> >> Hi Kai-Heng,
-> >>
-> >> Attached file is r8168 that I have add SFP+ support for rtl8168fp. If
-> possible, please give it a try.
-> >
-> > I've already tested r8168 and it does support SFP+.
-> >
-> > What we are discussing here is to support this chip properly in mainline
-> kernel.
-> >
-> > This is what we've discussed so far:
-> > https://lore.kernel.org/lkml/2D8F5FFE-3EC3-480B-9D15-
-> 23CACE5556DF@canonical.com/
-> 
-> Is there anything you can share so we can support this chip properly in
-> upstream?
-> 
+On Tue, Mar 3, 2020 at 9:21 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
+>
+> The dt_binding_check target is located outside of the
+> 'ifneq ($(dtstree),) ... endif' block.
+>
+> Hence, you can run 'make dt_binding_check' on any architecture.
+> This makes a perfect sense because the dt-schema is arch-agnostic.
+>
+> The only one problem I see is that scripts/dtc/dtc is not always built.
+> For example, ARCH=x86 defconfig does not define CONFIG_DTC. Kbuild
+> descends into scripts/dtc/, but does nothing. Then, it fails to build
+> *.example.dt.yaml files.
 
-Hi Kai-Heng,
+Yeah, I've just worked around this by doing 'make CONFIG_DTC=y
+dt_binding_check'.
 
-For adding SFP+ support for rtl8168fp, 
-1.Some power saving features must be disabled, like APDLS/EEE/EEEPLUS...
-2.PHY capability must be set to auto-negation.
+The only thing I'd come up with was just always building dtc, but I
+didn't want to do that.
 
-I am kind of busy this week. I will try to add support for this chip into upstream next week.
+> Let's build scripts/dtc/dtc forcibly when running dt_binding_check.
+>
+> The dt-schema does not depend on any CONFIG option either, so you
+> should be able to run dt_binding_check without the .config file.
+>
+> Going forward, you can directly run 'make dt_binding_check' in a
+> pristine source tree.
+>
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+>
+>  Makefile             | 2 +-
+>  scripts/dtc/Makefile | 5 +++--
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+>
+> diff --git a/Makefile b/Makefile
+> index 7dec7b343842..190f595c7bfc 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -255,7 +255,7 @@ clean-targets := %clean mrproper cleandocs
+>  no-dot-config-targets := $(clean-targets) \
+>                          cscope gtags TAGS tags help% %docs check% coccicheck \
+>                          $(version_h) headers headers_% archheaders archscripts \
+> -                        %asm-generic kernelversion %src-pkg
+> +                        %asm-generic kernelversion %src-pkg dt_binding_check
+>  no-sync-config-targets := $(no-dot-config-targets) install %install \
+>                            kernelrelease
+>  single-targets := %.a %.i %.ko %.lds %.ll %.lst %.mod %.o %.s %.symtypes %/
+> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> index 3acbb410904c..2f3c3a7e1620 100644
+> --- a/scripts/dtc/Makefile
+> +++ b/scripts/dtc/Makefile
+> @@ -1,8 +1,9 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # scripts/dtc makefile
+>
+> -hostprogs              := dtc
+> -always-$(CONFIG_DTC)   := $(hostprogs)
+> +hostprogs                      := dtc
+> +always-$(CONFIG_DTC)           += $(hostprogs)
+> +always-$(CHECK_DT_BINDING)     += $(hostprogs)
 
-Thanks,
-Hau
+This looks like a good solution.
 
-> ------Please consider the environment before printing this e-mail.
+Reviewed-by: Rob Herring <robh@kernel.org>
