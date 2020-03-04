@@ -2,67 +2,104 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F75C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB203C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B19D2084E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABF9A2084E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:40:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lNJIoHOg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388497AbgCDWjx (ORCPT
+        id S2388522AbgCDWkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:39:53 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:46952 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388281AbgCDWjw (ORCPT
+        Wed, 4 Mar 2020 17:40:06 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:39393 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388281AbgCDWkF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:39:52 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id D6FE015ADAAEA;
-        Wed,  4 Mar 2020 14:39:51 -0800 (PST)
-Date:   Wed, 04 Mar 2020 14:39:51 -0800 (PST)
-Message-Id: <20200304.143951.1102411401290807167.davem@davemloft.net>
-To:     grygorii.strashko@ti.com
-Cc:     m-karicheri2@ti.com, kishon@ti.com, t-kristo@ti.com,
-        nsekhar@ti.com, robh+dt@kernel.org, netdev@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [for-next PATCH v2 0/5] phy: ti: gmii-sel: add support for
- am654x/j721e soc
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200303160029.345-1-grygorii.strashko@ti.com>
-References: <20200303160029.345-1-grygorii.strashko@ti.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 04 Mar 2020 14:39:52 -0800 (PST)
+        Wed, 4 Mar 2020 17:40:05 -0500
+Received: by mail-qt1-f194.google.com with SMTP id e13so2711762qts.6;
+        Wed, 04 Mar 2020 14:40:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=feOnCN+Y0rQBJPN3bP11NNN5wOI8xf9VdxZEkk0/kGQ=;
+        b=lNJIoHOg4x/rDJ3ZgZ2VbInIRw7Edj0fkDgxTw2YNEeZlxxU8WxHLQEfLBXgG+lPEK
+         YEeG/ZACpcdTdOiFVGUWUwu/XzLstSxATXc1SFzzQM00XY39ZuPfCI1rXv8QAU7UogH7
+         r9emQtUrxLti7PUtYuolWemZ+56O2jxVLUNrc2d42okoFuwUMvP8uv890loIB7cAp0Tb
+         /lmQ8q1LnLIsRSv4QNpCvsMkMa18x2yHj1l3/tp4sJrLU81tFOPG2eHTJXTwONr9JYQY
+         Hp3h/Xxxt9vifr376EtbADQm4F63/t3gTfTha3mxIPSXAGxGJSLJ5oUkVnDEVHNcOaiZ
+         shAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=feOnCN+Y0rQBJPN3bP11NNN5wOI8xf9VdxZEkk0/kGQ=;
+        b=LisONSZ2RLW0EqSeuQxdE6Nlwhe3ggi+SVGlVa+ZH44oM1VVKw8Qt/dXJmkEaIsF5Q
+         CNWFhAYCIY2H+3Kqk8T+iykChBSj46+wUFWp99jcSS5nioXrTOUqBxiUHP12DM3fdAZy
+         b0z9BRo2XxphiORF3k0vv80aCo5SJJsZs6MIDP1iON0V3c3umRZr/rjktyAsjE4G/gt0
+         Q0uBmUgSZjMeXwwFB6e6IwpxhlGCd7TDmWFYTOVoaQEh3i/pOD2eDx6RP6MflHeAcCOo
+         qx5dS3ypfR9dTxzfHEDFZfHIW/T3LeXO3TGPSZ6TtowYuM2rnfe0CwtFffyWSv6/lr9N
+         W0tg==
+X-Gm-Message-State: ANhLgQ3cRjdDqnBMugkMrVfu8OEYhwleiuSr4gcrJGr2NTXINxGwgg+5
+        TPSzm2ts75joFvfGuhi8aGw=
+X-Google-Smtp-Source: ADFU+vsQJSdGKIEy7u65Y3clG6XrDsdnH/unXYT6C7zgOVlFSPKuiU/V5WQcdHXMfFA8AjRKQXp/4A==
+X-Received: by 2002:ac8:4547:: with SMTP id z7mr4635518qtn.33.1583361604658;
+        Wed, 04 Mar 2020 14:40:04 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id x34sm10786493qta.82.2020.03.04.14.40.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 14:40:04 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 4 Mar 2020 17:40:02 -0500
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in
+ populate_pud
+Message-ID: <20200304224002.GA511869@rani.riverdale.lan>
+References: <20200303205445.3965393-2-nivedita@alum.mit.edu>
+ <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
+ <20200304154908.GB998825@rani.riverdale.lan>
+ <CAKv+Gu-Xo2zj9_N+K8FrpBstgU57GZvWO-pDr4tRAODhsYzW-A@mail.gmail.com>
+ <20200304185042.GA281042@rani.riverdale.lan>
+ <CAKv+Gu-6YoJMLbR8UUsBeRPzk7r_4aKBprqay2kf6cKMPwsHgQ@mail.gmail.com>
+ <20200304191053.GA291311@rani.riverdale.lan>
+ <CAKv+Gu84Bj4tBz=+FhG6cqpYUjc5czaqiNAVDdKgqGoXbnHKbQ@mail.gmail.com>
+ <20200304195447.GA295419@rani.riverdale.lan>
+ <CAKv+Gu8sTuj+Wkk8g2tv+1k9LczXV4yV4KSbaJ6Bs69SQwR2_A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu8sTuj+Wkk8g2tv+1k9LczXV4yV4KSbaJ6Bs69SQwR2_A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Date: Tue, 3 Mar 2020 18:00:24 +0200
+On Wed, Mar 04, 2020 at 10:51:01PM +0100, Ard Biesheuvel wrote:
+> On Wed, 4 Mar 2020 at 20:54, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> >
+> > You're *sure* the after is actually after? There seems to be no change
+> > at all, the patch should have had some effect.
+> 
+> Duh.
+> 
+> Yes, you are right. It was 'operator error'
 
-> Hi Kishon,
-> 
-> This series adds support for TI K3 AM654x/J721E SoCs in TI phy-gmii-sel PHY
-> driver, which is required for future adding networking support.
-> 
-> depends on:
->  [PATCH 0/2] phy: ti: gmii-sel: two fixes
->  https://lkml.org/lkml/2020/2/14/2510
-> 
-> Changes in v2:
->  - fixed comments
-> 
-> v1: https://lkml.org/lkml/2020/2/22/100
-
-This is mostly DT updates and not much networking code changes, will some other
-tree take this?
+Phew! Thanks for the test :)
