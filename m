@@ -2,122 +2,143 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8522C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE08AC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A384621775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583344515;
-	bh=GbkfQSF4gx69Uq29jGSUD3eH6p008JMGE1/+vzwNYdM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OYUKe7kKQr7BMFkFmWXuF8lmZ8EcpRMORREcEro9/gzlfaaTX8ffMhBlArM4MUKqu
-	 lJlq6iAN3YyNKDP4lFqLoGwt7yqfcb5Qg/IXK9HIB2RO/r98rLHIbw4I17LArD15iX
-	 5v0nbdwObeYe36gbmGGNedaeOoT3yOVQ12yIEvlE=
+	by mail.kernel.org (Postfix) with ESMTP id B83E324654
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZluYnYJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730005AbgCDRzO (ORCPT
+        id S2387459AbgCDR4P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:55:14 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40109 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728926AbgCDRzO (ORCPT
+        Wed, 4 Mar 2020 12:56:15 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60771 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729471AbgCDR4P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:55:14 -0500
-Received: by mail-wm1-f65.google.com with SMTP id e26so2807046wme.5;
-        Wed, 04 Mar 2020 09:55:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IXbD/GgJVPZ9WOOjQZpIDfTuKHqUvdwDS5tyVn1vzKs=;
-        b=dZW/rNEE4siDef5TElhDwRimjVffVGL/eOVlNvygHaKe9GqFlWeXkbCIMvCK3PCaQr
-         +RmoAAoMydHmWeDXg35PHKU5FbUnpljLq1iE0S6P3N+yWp0lnYrWw9mM+SnXNNRe6gfl
-         FCISM22tFhE/KC2LjQT1WI5MOSuS/dm54S55YvmE6jjfqLTzfQkQj4HU3RqC89TQ0er3
-         vHYmm64WT8Cjzc3sObAijW4zuScMmaN0Un+Xf4bDjhVTrTrQZxw0gShFf7AOdFTbSzIh
-         oQh3CDKvJCCHSdDEDAUQy+O1WfhJkcVL4oKUE5zZH9jfj5pnWVxthweTDqrqiVXx9gCf
-         R/Nw==
-X-Gm-Message-State: ANhLgQ1DQXr77lGXKu7uGgOwWlInL18ONrS+2rC6uNFh/sD90rRrTFXN
-        GSrpkcotjqAyyhjW1LcUqugC1Bqu
-X-Google-Smtp-Source: ADFU+vs9Ns5cKiBuxZvEKxGfUWqB4Wx333NSJ3TdOFT09JNhgx8N5gGqFg8moiDT+XIM3+5kO/phPg==
-X-Received: by 2002:a7b:c019:: with SMTP id c25mr4825181wmb.126.1583344512200;
-        Wed, 04 Mar 2020 09:55:12 -0800 (PST)
-Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
-        by smtp.gmail.com with ESMTPSA id o8sm5015597wmh.15.2020.03.04.09.55.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 09:55:11 -0800 (PST)
-Date:   Wed, 4 Mar 2020 17:55:09 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Dexuan Cui <decui@microsoft.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH] PCI: hv: Replace zero-length array with flexible-array
- member
-Message-ID: <20200304175509.dwhn63omfzewaukv@debian>
-References: <20200213005048.GA9662@embeddedor.com>
- <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
+        Wed, 4 Mar 2020 12:56:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583344573;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=i1Cgn4yp7EaKnNlZymNOD5ifYaNSlnfx75qVUEAj3xM=;
+        b=ZluYnYJHXohvqOIBHhL2M0CV7Rt6oLSVBaOywYgCcjp/oonSZSjioI7p5oIcDvvrYx72kn
+        dEPsu7Dg8fPg/wGDVWFKQxWexELn14MjxK4JCfL9EFxX898Jqq6MC8KQSffH0z0LL34upA
+        WjC2sBcZkwBnpDJfB79PFejIXIjlwuo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-7y7GWO5UPeCY2a9BNTDovA-1; Wed, 04 Mar 2020 12:56:10 -0500
+X-MC-Unique: 7y7GWO5UPeCY2a9BNTDovA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D99F9801E76;
+        Wed,  4 Mar 2020 17:56:07 +0000 (UTC)
+Received: from ws.net.home (ovpn-204-202.brq.redhat.com [10.40.204.202])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45A915C548;
+        Wed,  4 Mar 2020 17:55:59 +0000 (UTC)
+Date:   Wed, 4 Mar 2020 18:55:56 +0100
+From:   Karel Zak <kzak@redhat.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Ian Kent <raven@themaw.net>, Miklos Szeredi <miklos@szeredi.hu>,
+        David Howells <dhowells@redhat.com>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Steven Whitehouse <swhiteho@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <christian@brauner.io>,
+        Jann Horn <jannh@google.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
+ #17]
+Message-ID: <20200304175556.45dsgxumv4ubz7qy@ws.net.home>
+References: <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
+ <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
+ <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
+ <1509948.1583226773@warthog.procyon.org.uk>
+ <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
+ <20200303113814.rsqhljkch6tgorpu@ws.net.home>
+ <20200303130347.GA2302029@kroah.com>
+ <33d900c8061c40f70ba2b9d1855fd6bd1c2b68bb.camel@themaw.net>
+ <20200304152241.iaiulvl5xisnuxp6@ws.net.home>
+ <20200304164913.GB1763256@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <HK0P153MB0148FB68FCBAE908CA5991C3BF1A0@HK0P153MB0148.APCP153.PROD.OUTLOOK.COM>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20200304164913.GB1763256@kroah.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 03:43:40AM +0000, Dexuan Cui wrote:
-> > From: linux-hyperv-owner@vger.kernel.org
-> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Gustavo A. R. Silva
-> > Sent: Wednesday, February 12, 2020 4:51 PM
-> >  ...
-> > The current codebase makes use of the zero-length array language
-> > extension to the C90 standard, but the preferred mechanism to declare
-> > variable-length types such as these ones is a flexible array member[1][2],
-> > introduced in C99:
-> > 
-> > struct foo {
-> >         int stuff;
-> >         struct boo array[];
-> > };
-> > 
-> > By making use of the mechanism above, we will get a compiler warning
-> > in case the flexible array does not occur last in the structure, which
-> > will help us prevent some kind of undefined behavior bugs from being
-> > inadvertently introduced[3] to the codebase from now on.
-> > 
-> > Also, notice that, dynamic memory allocations won't be affected by
-> > this change:
-> > 
-> > "Flexible array members have incomplete type, and so the sizeof operator
-> > may not be applied. As a quirk of the original implementation of
-> > zero-length arrays, sizeof evaluates to zero."[1]
-> > 
-> > This issue was found with the help of Coccinelle.
-> 
-> Looks good to me. Thanks, Gustavo!
->  
-> Reviewed-by: Dexuan Cui <decui@microsoft.com>
-> 
+On Wed, Mar 04, 2020 at 05:49:13PM +0100, Greg Kroah-Hartman wrote:
+> On Wed, Mar 04, 2020 at 04:22:41PM +0100, Karel Zak wrote:
+> > $ strace -e openat,read,close -c ps aux
+> > ...
+> > % time     seconds  usecs/call     calls    errors syscall
+> > ------ ----------- ----------- --------- --------- ----------------
+> >  43.32    0.004190           4       987           read
+> >  31.42    0.003039           3       844         4 openat
+> >  25.26    0.002443           2       842           close
+> > ------ ----------- ----------- --------- --------- ----------------
+> > 100.00    0.009672                  2673         4 total
+> >=20
+> > $ strace -e openat,read,close -c lsns
+> > ...
+> > % time     seconds  usecs/call     calls    errors syscall
+> > ------ ----------- ----------- --------- --------- ----------------
+> >  39.95    0.001567           2       593           openat
+> >  30.93    0.001213           2       597           close
+> >  29.12    0.001142           3       365           read
+> > ------ ----------- ----------- --------- --------- ----------------
+> > 100.00    0.003922                  1555           total
+> >=20
+> >=20
+> > $ strace -e openat,read,close -c lscpu
+> > ...
+> > % time     seconds  usecs/call     calls    errors syscall
+> > ------ ----------- ----------- --------- --------- ----------------
+> >  44.67    0.001480           7       189        52 openat
+> >  34.77    0.001152           6       180           read
+> >  20.56    0.000681           4       140           close
+> > ------ ----------- ----------- --------- --------- ----------------
+> > 100.00    0.003313                   509        52 total
+>=20
+> As a "real-world" test, would you recommend me converting one of the
+> above tools to my implementation of readfile to see how/if it actually
+> makes sense, or do you have some other tool you would rather see me try=
+?
 
-Lorenzo, will you be picking up this patch? It seems to me you've been
-handling patches to pci-hyperv.c. This patch is not yet in pci/hv branch
-in your repository.
+See lib/path.c and lib/sysfs.c in util-linux (https://github.com/karelzak=
+/util-linux).=20
+For example ul_path_read() and ul_path_scanf().=20
 
-Let me know what you think.
+We use it for lsblk, lsmem, lscpu, etc.
 
-Wei.
+=A0$ git grep -c ul_path_read misc-utils/lsblk.c sys-utils/lscpu.c
+ misc-utils/lsblk.c:30
+ sys-utils/lscpu.c:31
+
+We're probably a little bit off-topic here, no problem to continue on
+util-linux@vger.kernel.org or by private mails. Thanks!
+
+    Karel
+
+--=20
+ Karel Zak  <kzak@redhat.com>
+ http://karelzak.blogspot.com
+
