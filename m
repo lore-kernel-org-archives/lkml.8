@@ -2,96 +2,213 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B3DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07403C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF3C920842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C966720842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:55:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="tOkMJEqC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388273AbgCDUyd (ORCPT
+        id S2388339AbgCDUzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:54:33 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:34666 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728665AbgCDUyd (ORCPT
+        Wed, 4 Mar 2020 15:55:20 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:45013 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388280AbgCDUzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:54:33 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9b2C-005Nol-K0; Wed, 04 Mar 2020 20:54:28 +0000
-Date:   Wed, 4 Mar 2020 20:54:28 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v3)
-Message-ID: <20200304205428.GA1280418@ZenIV.linux.org.uk>
-References: <20200223011154.GY23230@ZenIV.linux.org.uk>
- <20200301215125.GA873525@ZenIV.linux.org.uk>
- <CAHk-=wh1Q=H-YstHZRKfEw2McUBX2_TfTc=+5N-iH8DSGz44Qg@mail.gmail.com>
- <20200302003926.GM23230@ZenIV.linux.org.uk>
- <87o8tdgfu8.fsf@x220.int.ebiederm.org>
- <20200304002434.GO23230@ZenIV.linux.org.uk>
- <87wo80g0bo.fsf@x220.int.ebiederm.org>
- <20200304065547.GP23230@ZenIV.linux.org.uk>
- <20200304132812.GE29971@bombadil.infradead.org>
- <20200304162051.GQ23230@ZenIV.linux.org.uk>
+        Wed, 4 Mar 2020 15:55:20 -0500
+Received: by mail-lj1-f196.google.com with SMTP id a10so3576244ljp.11
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 12:55:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=N8TMoVnGizDGjD4F+oBcA8gM1V3wB7c/2Mybba8wb0M=;
+        b=tOkMJEqCwb18LfVUT8bCabUDthEP/rfNZr/z/EUZfIKF6gCJ5031XaOtiydhCJjwhF
+         NdJwlOOQr7CQ4/lap7BYu5U4cQmsWI219S8uL0KMsYJ+Gvap3V2CoCwyIk+klfmTMal1
+         AQTL8BXPwhUv36T4Z6U+HI1rHHRQAj0n4DUJ3UxuDvIDVKctGeOQKzhCDdyQLz4q9iv/
+         dIRI0UHxVwuRaxx8yPdJ8a++afV3hhVUk6GG6bp1rJDPydaQTNfWb6LYhvMngtWHamDW
+         rjWWUaG1zDDcwmXlRSw3jAfzkvFDdb4buppmA2OW1NVA0eC89R1DFEL+M2qPZ2AvaQ7z
+         pb0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=N8TMoVnGizDGjD4F+oBcA8gM1V3wB7c/2Mybba8wb0M=;
+        b=BkXDGnGOhAjIwH2fjMBL0opEI9WEFxZ/mcJ7MdRpZYOxgogZSiKjbiqaAt4vJLaBhy
+         XhOCCXSq12+3Aiuu8tqSKX9ZDtd1TMyovwDOrwnaybW2fKbXmX/lsYesZaFn1+/m/BVR
+         sItFIXElupUvfhGrwmOb/TblQKwzhxRmSESJOa6hUgyAgdnE0RKRd0DakHu4qRUhAKjl
+         xUHjS/Kx1ldEJGFdV31dpWWE6L9jAyQ14SldiHrxIrmqqJjUarqsE+Vnis6kt0kMdTXV
+         pU5/oPgPSFM1L+R70UJQeQJ6evue+gWebHnns6yYWHyncUohYnDjWGIPpgxJZMFYjOuy
+         MKmw==
+X-Gm-Message-State: ANhLgQ3VT5zVGpLP69nkvGhtXmBn1yevPzB7DYpiJ5bd145UTtd+b3nT
+        FXm6IM+Z18HgNyySN0gQ7eScjg==
+X-Google-Smtp-Source: ADFU+vvGT8h9y5D5IP2yuhAd5w4BRZjij5dQKsXZveJYJfXMfBouDMsJyUJyTrGN7XomFrl9MAxJGA==
+X-Received: by 2002:a2e:8250:: with SMTP id j16mr3024159ljh.274.1583355317967;
+        Wed, 04 Mar 2020 12:55:17 -0800 (PST)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id f19sm3794523ljc.37.2020.03.04.12.55.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 12:55:17 -0800 (PST)
+Date:   Wed, 4 Mar 2020 21:55:16 +0100
+From:   Niklas <niklas.soderlund@ragnatech.se>
+To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: Re: [PATCH 2/2] media: rcar-vin: Add support for SRGGB8_1X8
+Message-ID: <20200304205516.GD1791497@oden.dyn.berto.se>
+References: <20200228165011.17898-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20200228165011.17898-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200304162051.GQ23230@ZenIV.linux.org.uk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200228165011.17898-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:20:51PM +0000, Al Viro wrote:
-> On Wed, Mar 04, 2020 at 05:28:12AM -0800, Matthew Wilcox wrote:
-> > On Wed, Mar 04, 2020 at 06:55:47AM +0000, Al Viro wrote:
-> > > On Tue, Mar 03, 2020 at 11:23:39PM -0600, Eric W. Biederman wrote:
-> > > > Do the xfs-tests cover that sort of thing?
-> > > > The emphasis is stress testing the filesystem not the VFS but there is a
-> > > > lot of overlap between the two.
-> > > 
-> > > I do run xfstests.  But "runs in KVM without visible slowdowns" != "won't
-> > > cause them on 48-core bare metal".  And this area (especially when it
-> > > comes to RCU mode) can be, er, interesting in that respect.
-> > > 
-> > > FWIW, I'm putting together some litmus tests for pathwalk semantics -
-> > > one of the things I'd like to discuss at LSF; quite a few codepaths
-> > > are simply not touched by anything in xfstests.
-> > 
-> > Might be more appropriate for LTP than xfstests?  will-it-scale might be
-> > the right place for performance benchmarks.
-> 
-> Might be...  I do run LTP as well, but it's still a 4-way KVM on a 6-way
-> amd64 host (phenom II X6 1100T) - not well-suited for catching scalability
-> issues.
-> 
-> Litmus tests mentioned above are more about verifying the semantics;
-> I hadn't moved past the "bunch of home-grown scripts creating setups
-> that would exercise the codepaths in question + trivial pieces
-> in C, pretty much limited to syscall()" stage with that; moving those
-> to LTP framework is something I'll need to look into.  Might very well
-> make sense; for now I just want a way to get test coverage of that code
-> with minimal headache.
+Hi Lad,
 
-FWIW, I've just took mainline and added to follow_dotdot{,_rcu}() (.. handling,
-RCU and non-RCU cases) gathering the number of full iterations through the
-first loop, the way that loop had been left and the number of full iterations
-through the second loop.  Anything other than 3 common cases (think /..,
-/proc/.., /proc/scsi/..) get reported.  Built, booted and started xfstests
-on it.  So far all it has caught was .. into overmounted root early in the
-boot (0 full passes through the first loop, left it via the first break
-when it ran into current->fs->root, 1 full pass through the second loop).
-Nothing from xfstests run (yet); LTP will be the next one to go...
+Thanks for your work.
 
-Note, BTW, that this unusual call in early boot has hit RCU case and would
-almost certainly do so on all boxen.  So in all of that there had not been
-a single sodding call that would've hit the traversal into overmount of
-parent in non-RCU case.
+On 2020-02-28 16:50:11 +0000, Lad Prabhakar wrote:
+> Most of the RZ/G2x boards can support capturing frames in SRGGB8_1X8
+> format, add support for this with a runtime check that the running
+> hardware supports it.
+
+Where is the runtime check for supported hardware? Also out of curiosity 
+which boars can't support SRGGB and what setup are you using to test 
+SRGGB capture?
+
+> 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> ---
+>  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
+>  drivers/media/platform/rcar-vin/rcar-csi2.c |  1 +
+>  drivers/media/platform/rcar-vin/rcar-dma.c  | 14 ++++++++++++--
+>  drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
+
+This patch shall be split in two. One which touches rcar-csi2.c and one 
+for the other files as they are two different drivers.
+
+>  4 files changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
+> index 7440c8965d27..76daf2fe5bcd 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-core.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
+> @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct rvin_dev *vin,
+>  		case MEDIA_BUS_FMT_UYVY8_2X8:
+>  		case MEDIA_BUS_FMT_UYVY10_2X10:
+>  		case MEDIA_BUS_FMT_RGB888_1X24:
+> +		case MEDIA_BUS_FMT_SRGGB8_1X8:
+>  			vin->mbus_code = code.code;
+>  			vin_dbg(vin, "Found media bus format for %s: %d\n",
+>  				subdev->name, vin->mbus_code);
+> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> index 5b04e4768eb1..97e4886f63f0 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> @@ -320,6 +320,7 @@ static const struct rcar_csi2_format rcar_csi2_formats[] = {
+>  	{ .code = MEDIA_BUS_FMT_YUYV8_1X16,	.datatype = 0x1e, .bpp = 16 },
+>  	{ .code = MEDIA_BUS_FMT_UYVY8_2X8,	.datatype = 0x1e, .bpp = 16 },
+>  	{ .code = MEDIA_BUS_FMT_YUYV10_2X10,	.datatype = 0x1e, .bpp = 20 },
+> +	{ .code = MEDIA_BUS_FMT_SRGGB8_1X8,     .datatype = 0x2a, .bpp = 8 },
+>  };
+>  
+>  static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int code)
+> diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
+> index 1a30cd036371..63709b4bbf7a 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-dma.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
+> @@ -85,6 +85,7 @@
+>  #define VNMC_INF_YUV8_BT601	(1 << 16)
+>  #define VNMC_INF_YUV10_BT656	(2 << 16)
+>  #define VNMC_INF_YUV10_BT601	(3 << 16)
+> +#define VNMC_INF_RAW8		(4 << 16)
+>  #define VNMC_INF_YUV16		(5 << 16)
+>  #define VNMC_INF_RGB888		(6 << 16)
+>  #define VNMC_VUP		(1 << 10)
+> @@ -587,13 +588,15 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
+>  	rvin_write(vin, vin->crop.top, VNSLPRC_REG);
+>  	rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
+>  
+> -
+>  	/* TODO: Add support for the UDS scaler. */
+>  	if (vin->info->model != RCAR_GEN3)
+>  		rvin_crop_scale_comp_gen2(vin);
+>  
+>  	fmt = rvin_format_from_pixel(vin, vin->format.pixelformat);
+> -	stride = vin->format.bytesperline / fmt->bpp;
+> +	if (vin->format.pixelformat == V4L2_PIX_FMT_SRGGB8)
+> +		stride = ALIGN(vin->format.bytesperline / 2, 0x10);
+> +	else
+> +		stride = vin->format.bytesperline / fmt->bpp;
+
+This does not look right, you should to move this logic into 
+rvin_format_bytesperline().
+
+>  	rvin_write(vin, stride, VNIS_REG);
+>  }
+>  
+> @@ -676,6 +679,9 @@ static int rvin_setup(struct rvin_dev *vin)
+>  
+>  		input_is_yuv = true;
+>  		break;
+> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
+> +		vnmc |= VNMC_INF_RAW8;
+> +		break;
+>  	default:
+>  		break;
+>  	}
+> @@ -737,6 +743,9 @@ static int rvin_setup(struct rvin_dev *vin)
+>  	case V4L2_PIX_FMT_ABGR32:
+>  		dmr = VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTMD_ARGB;
+>  		break;
+> +	case V4L2_PIX_FMT_SRGGB8:
+> +		dmr = 0;
+> +		break;
+>  	default:
+>  		vin_err(vin, "Invalid pixelformat (0x%x)\n",
+>  			vin->format.pixelformat);
+> @@ -1110,6 +1119,7 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
+>  	case MEDIA_BUS_FMT_UYVY8_2X8:
+>  	case MEDIA_BUS_FMT_UYVY10_2X10:
+>  	case MEDIA_BUS_FMT_RGB888_1X24:
+> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
+>  		vin->mbus_code = fmt.format.code;
+>  		break;
+>  	default:
+> diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> index b12b3f88836a..d56cf85ba065 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
+> @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[] = {
+>  		.fourcc			= V4L2_PIX_FMT_ABGR32,
+>  		.bpp			= 4,
+>  	},
+> +	{
+> +		.fourcc			= V4L2_PIX_FMT_SRGGB8,
+> +		.bpp			= 1,
+> +	},
+>  };
+>  
+>  const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev *vin,
+> -- 
+> 2.20.1
+> 
+
+-- 
+Regards,
+Niklas Söderlund
