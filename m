@@ -2,150 +2,324 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B966FC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DF6EC3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D9EF206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:47:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583282829;
-	bh=diuJPD0msX5YpFoYb6xNzZ7AYZRY8vVbqZwfzwXJlmk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=lBVW0IiLOBoXxX9OAkXTzKNlW7DbWYkGeZW3sUzCpKDRAGhQeIqJqqBxwmjcDtUy+
-	 OUjxWp3PYsibm3D/+etcmLfDJunCb4hDa/e7gHZRYx402capXJoLUE5s5Cvl7rt2Fo
-	 8/yFpRtoYumDJAhRVZ5chqQLCT5voEUC1MuXhyCQ=
+	by mail.kernel.org (Postfix) with ESMTP id 5720B206E2
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:47:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qxWoJ3qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387428AbgCDArI (ORCPT
+        id S2387433AbgCDAry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:47:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54962 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727725AbgCDArI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:47:08 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 03C2F206E2;
-        Wed,  4 Mar 2020 00:47:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583282827;
-        bh=diuJPD0msX5YpFoYb6xNzZ7AYZRY8vVbqZwfzwXJlmk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=evur9zd6hr9qaJH2hXyDD2IYqzy2nR2150ZKP5xifGjPwkD+UeQtfMih1gyGIynHB
-         qjfsKbtfvL32MFQCpAdIOGlQnCUyeERY1pCyEDuFe81Uga4e97i7VKf0yFCC2jCSwy
-         GWfNHlipv0RIw/1Fps0rwsjwhUqPG8ZESW2Iua4w=
-Date:   Tue, 3 Mar 2020 18:47:05 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     sathyanarayanan.kuppuswamy@linux.intel.com
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ashok.raj@intel.com
-Subject: Re: [PATCH v16 5/9] PCI/DPC: Cache DPC capabilities in
- pci_init_capabilities()
-Message-ID: <20200304004705.GA184443@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3a634b6c6012773e9e668c2110e13a5bd196bb8.1582850766.git.sathyanarayanan.kuppuswamy@linux.intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        Tue, 3 Mar 2020 19:47:54 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:53441 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727725AbgCDArx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 19:47:53 -0500
+Received: by mail-pj1-f67.google.com with SMTP id cx7so104448pjb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:47:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=FSpmSt4o41NJS1G8psQcEgs7afs+Iy6AdJ2Os7mzKNs=;
+        b=qxWoJ3qi1PX737B47a21RzUIKpJ744UTkaWbP4gQZxoacL8PR2VEFlZqHx6f0swIAV
+         wgaJ54HDbR7GuyC324375KLhsP5u9jo5TpU9JCWYK1bCY0WQZ0BgU7nynQiYk4UMRuWR
+         VVkhXibzijdwpIuWmYkOcq89RIVCRp6Dh61Q79YFwtS4VUeB5vnnpVve7HuM2FyDJp9e
+         m6pWtouxVutUpY3YkKiwc6ZIHlmozM4Bf79SGCNW79msxGH4jxHuFhe1lG5E/FN9JsY3
+         ci9mOr3R8tMQ/vxoQ3qL1yHJyslTqIVQQalvYPkas0wD9Ivz5xjDsvD/LBcNnSIrrrrX
+         chtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=FSpmSt4o41NJS1G8psQcEgs7afs+Iy6AdJ2Os7mzKNs=;
+        b=IEeIDWFqMU8i7Smvg7WWwfBteT4Xi+VaJvoJxtA38X2ITwAhoO03Inp02B5nVXYbAg
+         hijwtlvzr8pDUQjs+fuZ8YH7sUZmvVQH76uODKNjmQihbumNLRSDz3NYVFR/VOnT5snf
+         rFCLyr/g5r7aEzdtaLE4bAPbhmkDh87AQrLnZCeznRhwP8Xj3Pv+dwomIFfpiP1jYWd2
+         cgENPhVKHh2sX157q9GkwB1NKkdotTFb9+TS3+JZnb2NJ8+KaNPP1G3T0vfaV6FdAsYH
+         NiaNcsxugLFLYDbRip5PTubolFkh7CfTdjVAKdzEIjJSoeaK8q5/sn/UOoDohFCKze2H
+         zKGQ==
+X-Gm-Message-State: ANhLgQ3ZtZeLDiNqZSsxAgh+paI/vY+qk/fiZgD3xABrigBHRgELZZJj
+        K+CUqqjdc7H7cO+HGyYUFtM=
+X-Google-Smtp-Source: ADFU+vtZMGSOMoQrnKgA1ePmEqc7Q15cHe+zNhsGQkHyACV10Y4v0P7VvpaWXIsu2YrWGqzQOSyGnw==
+X-Received: by 2002:a17:902:bf08:: with SMTP id bi8mr531595plb.305.1583282872439;
+        Tue, 03 Mar 2020 16:47:52 -0800 (PST)
+Received: from localhost.localdomain ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id w2sm17756292pfb.138.2020.03.03.16.47.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 16:47:51 -0800 (PST)
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Scott Wood <oss@buserror.net>,
+        Kumar Gala <galak@kernel.crashing.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Vitaly Bordug <vitb@kernel.crashing.org>
+Subject: [PATCH v3] powerpc: Replace setup_irq() by request_irq()
+Date:   Wed,  4 Mar 2020 06:17:45 +0530
+Message-Id: <20200304004746.4557-1-afzal.mohd.ma@gmail.com>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 27, 2020 at 04:59:47PM -0800, sathyanarayanan.kuppuswamy@linux.intel.com wrote:
-> From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> 
-> Since we need to re-use DPC error handling routines in Error Disconnect
-> Recover (EDR) driver, move the initalization and caching of DPC
-> capabilities to pci_init_capabilities().
-> 
-> Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-> ---
->  drivers/pci/pci.h      |  2 ++
->  drivers/pci/pcie/dpc.c | 32 ++++++++++++++++++++------------
->  2 files changed, 22 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index c2c35f152cde..e57e78b619f8 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -448,9 +448,11 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
->  #ifdef CONFIG_PCIE_DPC
->  void pci_save_dpc_state(struct pci_dev *dev);
->  void pci_restore_dpc_state(struct pci_dev *dev);
-> +void pci_dpc_init(struct pci_dev *pdev);
->  #else
->  static inline void pci_save_dpc_state(struct pci_dev *dev) {}
->  static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
-> +static inline void pci_dpc_init(struct pci_dev *pdev) {}
->  #endif
->  
->  #ifdef CONFIG_PCI_ATS
-> diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-> index 114358d62ddf..57e7f94b98cf 100644
-> --- a/drivers/pci/pcie/dpc.c
-> +++ b/drivers/pci/pcie/dpc.c
-> @@ -249,6 +249,26 @@ static irqreturn_t dpc_irq(int irq, void *context)
->  	return IRQ_HANDLED;
->  }
->  
-> +void pci_dpc_init(struct pci_dev *pdev)
-> +{
+request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+occur after memory allocators are ready.
 
-I think you forgot to call this?
+Per tglx[1], setup_irq() existed in olden days when allocators were not
+ready by the time early interrupts were initialized.
 
-> +	u16 cap;
-> +
-> +	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
-> +	if (!pdev->dpc_cap)
-> +		return;
-> +
-> +	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
-> +	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
-> +	if (pdev->dpc_rp_extensions) {
-> +		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
-> +		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
-> +			pci_err(pdev, "RP PIO log size %u is invalid\n",
-> +				pdev->dpc_rp_log_size);
-> +			pdev->dpc_rp_log_size = 0;
-> +		}
-> +	}
-> +}
-> +
->  #define FLAG(x, y) (((x) & (y)) ? '+' : '-')
->  static int dpc_probe(struct pcie_device *dev)
->  {
-> @@ -260,8 +280,6 @@ static int dpc_probe(struct pcie_device *dev)
->  	if (pcie_aer_get_firmware_first(pdev) && !pcie_ports_dpc_native)
->  		return -ENOTSUPP;
->  
-> -	pdev->dpc_cap = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
-> -
->  	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
->  					   dpc_handler, IRQF_SHARED,
->  					   "pcie-dpc", pdev);
-> @@ -274,16 +292,6 @@ static int dpc_probe(struct pcie_device *dev)
->  	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CAP, &cap);
->  	pci_read_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, &ctl);
->  
-> -	pdev->dpc_rp_extensions = (cap & PCI_EXP_DPC_CAP_RP_EXT) ? 1 : 0;
-> -	if (pdev->dpc_rp_extensions) {
-> -		pdev->dpc_rp_log_size = (cap & PCI_EXP_DPC_RP_PIO_LOG_SIZE) >> 8;
-> -		if (pdev->dpc_rp_log_size < 4 || pdev->dpc_rp_log_size > 9) {
-> -			pci_err(pdev, "RP PIO log size %u is invalid\n",
-> -				pdev->dpc_rp_log_size);
-> -			pdev->dpc_rp_log_size = 0;
-> -		}
-> -	}
-> -
->  	ctl = (ctl & 0xfff4) | PCI_EXP_DPC_CTL_EN_FATAL | PCI_EXP_DPC_CTL_INT_EN;
->  	pci_write_config_word(pdev, pdev->dpc_cap + PCI_EXP_DPC_CTL, ctl);
->  
-> -- 
-> 2.21.0
-> 
+Hence replace setup_irq() by request_irq().
+
+[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
+Hi powerpc maintainers,
+
+if okay w/ this change, please consider taking it thr' your tree, else please
+let me know.
+
+Regards
+afzal
+
+Link to v2 & v1,
+[v2] https://lkml.kernel.org/r/cover.1582471508.git.afzal.mohd.ma@gmail.com
+[v1] https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
+
+v3:
+ * Split out from tree wide series, as Thomas suggested to get it thr'
+	respective maintainers
+ * Modify pr_err displayed in case of error
+ * Re-arrange code & choose pr_err args as required to improve readability
+ * Remove irrelevant parts from commit message & improve
+ 
+v2:
+ * Replace pr_err("request_irq() on %s failed" by
+           pr_err("%s: request_irq() failed"
+ * Commit message massage
+
+ arch/powerpc/platforms/85xx/mpc85xx_cds.c | 10 +++-----
+ arch/powerpc/platforms/8xx/cpm1.c         |  9 ++-----
+ arch/powerpc/platforms/8xx/m8xx_setup.c   |  9 ++-----
+ arch/powerpc/platforms/chrp/setup.c       | 14 ++++-------
+ arch/powerpc/platforms/powermac/pic.c     | 29 +++++++++--------------
+ arch/powerpc/platforms/powermac/smp.c     | 12 ++++------
+ 6 files changed, 28 insertions(+), 55 deletions(-)
+
+diff --git a/arch/powerpc/platforms/85xx/mpc85xx_cds.c b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
+index 6b1436abe9b1..1c5598877d70 100644
+--- a/arch/powerpc/platforms/85xx/mpc85xx_cds.c
++++ b/arch/powerpc/platforms/85xx/mpc85xx_cds.c
+@@ -218,12 +218,6 @@ static irqreturn_t mpc85xx_8259_cascade_action(int irq, void *dev_id)
+ {
+ 	return IRQ_HANDLED;
+ }
+-
+-static struct irqaction mpc85xxcds_8259_irqaction = {
+-	.handler = mpc85xx_8259_cascade_action,
+-	.flags = IRQF_SHARED | IRQF_NO_THREAD,
+-	.name = "8259 cascade",
+-};
+ #endif /* PPC_I8259 */
+ #endif /* CONFIG_PCI */
+ 
+@@ -271,7 +265,9 @@ static int mpc85xx_cds_8259_attach(void)
+ 	 *  disabled when the last user of the shared IRQ line frees their
+ 	 *  interrupt.
+ 	 */
+-	if ((ret = setup_irq(cascade_irq, &mpc85xxcds_8259_irqaction))) {
++	ret = request_irq(cascade_irq, mpc85xx_8259_cascade_action,
++			  IRQF_SHARED | IRQF_NO_THREAD, "8259 cascade", NULL);
++	if (ret) {
+ 		printk(KERN_ERR "Failed to setup cascade interrupt\n");
+ 		return ret;
+ 	}
+diff --git a/arch/powerpc/platforms/8xx/cpm1.c b/arch/powerpc/platforms/8xx/cpm1.c
+index a43ee7d1ff85..4db4ca2e1222 100644
+--- a/arch/powerpc/platforms/8xx/cpm1.c
++++ b/arch/powerpc/platforms/8xx/cpm1.c
+@@ -120,12 +120,6 @@ static irqreturn_t cpm_error_interrupt(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irqaction cpm_error_irqaction = {
+-	.handler = cpm_error_interrupt,
+-	.flags = IRQF_NO_THREAD,
+-	.name = "error",
+-};
+-
+ static const struct irq_domain_ops cpm_pic_host_ops = {
+ 	.map = cpm_pic_host_map,
+ };
+@@ -187,7 +181,8 @@ unsigned int __init cpm_pic_init(void)
+ 	if (!eirq)
+ 		goto end;
+ 
+-	if (setup_irq(eirq, &cpm_error_irqaction))
++	if (request_irq(eirq, cpm_error_interrupt, IRQF_NO_THREAD, "error",
++			NULL))
+ 		printk(KERN_ERR "Could not allocate CPM error IRQ!");
+ 
+ 	setbits32(&cpic_reg->cpic_cicr, CICR_IEN);
+diff --git a/arch/powerpc/platforms/8xx/m8xx_setup.c b/arch/powerpc/platforms/8xx/m8xx_setup.c
+index f1c805c8adbc..df4d57d07f9a 100644
+--- a/arch/powerpc/platforms/8xx/m8xx_setup.c
++++ b/arch/powerpc/platforms/8xx/m8xx_setup.c
+@@ -39,12 +39,6 @@ static irqreturn_t timebase_interrupt(int irq, void *dev)
+ 	return IRQ_HANDLED;
+ }
+ 
+-static struct irqaction tbint_irqaction = {
+-	.handler = timebase_interrupt,
+-	.flags = IRQF_NO_THREAD,
+-	.name = "tbint",
+-};
+-
+ /* per-board overridable init_internal_rtc() function. */
+ void __init __attribute__ ((weak))
+ init_internal_rtc(void)
+@@ -157,7 +151,8 @@ void __init mpc8xx_calibrate_decr(void)
+ 					(TBSCR_TBF | TBSCR_TBE));
+ 	immr_unmap(sys_tmr2);
+ 
+-	if (setup_irq(virq, &tbint_irqaction))
++	if (request_irq(virq, timebase_interrupt, IRQF_NO_THREAD, "tbint",
++			NULL))
+ 		panic("Could not allocate timer IRQ!");
+ }
+ 
+diff --git a/arch/powerpc/platforms/chrp/setup.c b/arch/powerpc/platforms/chrp/setup.c
+index fcf6f2342ef4..8328cd5817b0 100644
+--- a/arch/powerpc/platforms/chrp/setup.c
++++ b/arch/powerpc/platforms/chrp/setup.c
+@@ -451,13 +451,6 @@ static void __init chrp_find_openpic(void)
+ 	of_node_put(np);
+ }
+ 
+-#if defined(CONFIG_VT) && defined(CONFIG_INPUT_ADBHID) && defined(CONFIG_XMON)
+-static struct irqaction xmon_irqaction = {
+-	.handler = xmon_irq,
+-	.name = "XMON break",
+-};
+-#endif
+-
+ static void __init chrp_find_8259(void)
+ {
+ 	struct device_node *np, *pic = NULL;
+@@ -541,8 +534,11 @@ static void __init chrp_init_IRQ(void)
+ 		if (of_node_is_type(kbd->parent, "adb"))
+ 			break;
+ 	of_node_put(kbd);
+-	if (kbd)
+-		setup_irq(HYDRA_INT_ADB_NMI, &xmon_irqaction);
++	if (kbd) {
++		if (request_irq(HYDRA_INT_ADB_NMI, xmon_irq, 0, "XMON break",
++				NULL))
++			pr_err("Failed to register XMON break interrupt\n");
++	}
+ #endif
+ }
+ 
+diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
+index 2e969073473d..4921bccf0376 100644
+--- a/arch/powerpc/platforms/powermac/pic.c
++++ b/arch/powerpc/platforms/powermac/pic.c
+@@ -250,20 +250,6 @@ static unsigned int pmac_pic_get_irq(void)
+ 	return irq_linear_revmap(pmac_pic_host, irq);
+ }
+ 
+-#ifdef CONFIG_XMON
+-static struct irqaction xmon_action = {
+-	.handler	= xmon_irq,
+-	.flags		= IRQF_NO_THREAD,
+-	.name		= "NMI - XMON"
+-};
+-#endif
+-
+-static struct irqaction gatwick_cascade_action = {
+-	.handler	= gatwick_action,
+-	.flags		= IRQF_NO_THREAD,
+-	.name		= "cascade",
+-};
+-
+ static int pmac_pic_host_match(struct irq_domain *h, struct device_node *node,
+ 			       enum irq_domain_bus_token bus_token)
+ {
+@@ -384,12 +370,17 @@ static void __init pmac_pic_probe_oldstyle(void)
+ 		out_le32(&pmac_irq_hw[i]->enable, 0);
+ 
+ 	/* Hookup cascade irq */
+-	if (slave && pmac_irq_cascade)
+-		setup_irq(pmac_irq_cascade, &gatwick_cascade_action);
++	if (slave && pmac_irq_cascade) {
++		if (request_irq(pmac_irq_cascade, gatwick_action,
++				IRQF_NO_THREAD, "cascade", NULL))
++			pr_err("Failed to register cascade interrupt\n");
++	}
+ 
+ 	printk(KERN_INFO "irq: System has %d possible interrupts\n", max_irqs);
+ #ifdef CONFIG_XMON
+-	setup_irq(irq_create_mapping(NULL, 20), &xmon_action);
++	i = irq_create_mapping(NULL, 20);
++	if (request_irq(i, xmon_irq, IRQF_NO_THREAD, "NMI - XMON", NULL))
++		pr_err("Failed to register NMI-XMON interrupt\n");
+ #endif
+ }
+ 
+@@ -441,7 +432,9 @@ static void __init pmac_pic_setup_mpic_nmi(struct mpic *mpic)
+ 		nmi_irq = irq_of_parse_and_map(pswitch, 0);
+ 		if (nmi_irq) {
+ 			mpic_irq_set_priority(nmi_irq, 9);
+-			setup_irq(nmi_irq, &xmon_action);
++			if (request_irq(nmi_irq, xmon_irq, IRQF_NO_THREAD,
++					"NMI - XMON", NULL))
++				pr_err("Failed to register NMI-XMON interrupt\n");
+ 		}
+ 		of_node_put(pswitch);
+ 	}
+diff --git a/arch/powerpc/platforms/powermac/smp.c b/arch/powerpc/platforms/powermac/smp.c
+index f95fbdee6efe..c55bf474ed4e 100644
+--- a/arch/powerpc/platforms/powermac/smp.c
++++ b/arch/powerpc/platforms/powermac/smp.c
+@@ -399,21 +399,19 @@ static int __init smp_psurge_kick_cpu(int nr)
+ 	return 0;
+ }
+ 
+-static struct irqaction psurge_irqaction = {
+-	.handler = psurge_ipi_intr,
+-	.flags = IRQF_PERCPU | IRQF_NO_THREAD,
+-	.name = "primary IPI",
+-};
+-
+ static void __init smp_psurge_setup_cpu(int cpu_nr)
+ {
++	unsigned long flags = IRQF_PERCPU | IRQF_NO_THREAD;
++	int irq;
++
+ 	if (cpu_nr != 0 || !psurge_start)
+ 		return;
+ 
+ 	/* reset the entry point so if we get another intr we won't
+ 	 * try to startup again */
+ 	out_be32(psurge_start, 0x100);
+-	if (setup_irq(irq_create_mapping(NULL, 30), &psurge_irqaction))
++	irq = irq_create_mapping(NULL, 30);
++	if (request_irq(irq, psurge_ipi_intr, flags, "primary IPI", NULL))
+ 		printk(KERN_ERR "Couldn't get primary IPI interrupt");
+ }
+ 
+-- 
+2.25.1
+
