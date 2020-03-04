@@ -2,124 +2,111 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD18CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DE2C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B65820870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B99320848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:10:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iPlIPmCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387727AbgCDKJk (ORCPT
+        id S1729164AbgCDKK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:09:40 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40390 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgCDKJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:09:40 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 79181AF62;
-        Wed,  4 Mar 2020 10:09:37 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 11:09:36 +0100
-From:   Petr Mladek <pmladek@suse.com>
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: misc nits Re: [PATCH 1/2] printk: add lockless buffer
-Message-ID: <20200304100936.dfsdfd3wgabopfzd@pathway.suse.cz>
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
- <20200128161948.8524-2-john.ogness@linutronix.de>
- <20200221120557.lxpeoy6xuuqxzu5w@pathway.suse.cz>
- <87r1ybujm5.fsf@linutronix.de>
- <20200302123249.6khdqpneu7t6l35s@pathway.suse.cz>
- <87a74yrhwy.fsf@linutronix.de>
- <20200303094758.ubylqjqns7zbg6gb@pathway.suse.cz>
- <87d09tcunk.fsf@linutronix.de>
+        Wed, 4 Mar 2020 05:10:57 -0500
+Received: from terminus.zytor.com ([198.137.202.136]:51935 "EHLO
+        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726860AbgCDKK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 05:10:56 -0500
+Received: from [IPv6:2601:646:8600:3281:d841:929b:f37:3a31] ([IPv6:2601:646:8600:3281:d841:929b:f37:3a31])
+        (authenticated bits=0)
+        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 024AAZQc311953
+        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+        Wed, 4 Mar 2020 02:10:38 -0800
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 024AAZQc311953
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2020022001; t=1583316638;
+        bh=c7JAi1VlSKPPzJ5Tyh0qCJzeKbXKmYAvZ7n163Neqv4=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=iPlIPmCgk+q9AqXQuGU1Ne5GrRRYgzMxOsSienrKJi4avOWTvi1nVZl2Uzea2quY/
+         7ZgB4oFPQM3M/qHL+4EaBZB5D2toljgmT+YaIhyO+I8qA3IiCC4eGR4QWPD6NynVkl
+         PyNNusTks1jPeOSADA1BFMGuTzIdkXcuN8gwxn/fg9Cs+ybuXVcIZFnrR6J0KJA1bx
+         Wip1QbfPCQ31sEWmzVnlCqXUTGm3G7YEaO0E4shdZMichts0BSZSEtPFNAF9E5tQRH
+         sRjVMBjdTzII1psNWgP2boxOzpMTfkHWUX8Du9NWcTZ4Hi5Y6u5SrS+jR+nTlq62/F
+         frE66rXl65kmA==
+Date:   Wed, 04 Mar 2020 02:10:29 -0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200304100437.GM2596@hirez.programming.kicks-ass.net>
+References: <20200303204144.GA9913@avx2> <9947D7CB-B9CD-47E0-BC5E-C7FC3A81FC7B@zytor.com> <20200304100437.GM2596@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87d09tcunk.fsf@linutronix.de>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] x86/acpi: make "asmlinkage" part first thing in the function definition
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Alexey Dobriyan <adobriyan@gmail.com>, rjw@rjwysocki.net,
+        lenb@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, luto@kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
+From:   hpa@zytor.com
+Message-ID: <E88DA201-307C-4F47-A931-13C3894D2E8F@zytor.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 2020-03-03 16:42:07, John Ogness wrote:
-> On 2020-03-03, Petr Mladek <pmladek@suse.com> wrote:
-> >>>>>> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> >>>>>> new file mode 100644
-> >>>>>> index 000000000000..796257f226ee
-> >>>>>> --- /dev/null
-> >>>>>> +++ b/kernel/printk/printk_ringbuffer.c
-> >>>>>> +/*
-> >>>>>> + * Read the record @id and verify that it is committed and has the sequence
-> >>>>>> + * number @seq. On success, 0 is returned.
-> >>>>>> + *
-> >>>>>> + * Error return values:
-> >>>>>> + * -EINVAL: A committed record @seq does not exist.
-> >>>>>> + * -ENOENT: The record @seq exists, but its data is not available. This is a
-> >>>>>> + *          valid record, so readers should continue with the next seq.
-> >>>>>> + */
-> >>>>>> +static int desc_read_committed(struct prb_desc_ring *desc_ring,
-> >>>>>> +			       unsigned long id, u64 seq,
-> >>>>>> +			       struct prb_desc *desc)
-> >>>>>> +{
-> >>>
-> @id _is_ very important because that is how descriptors are
-> read. desc_read() takes @id as an argument and it is @id that identifies
-> the descriptor. @seq is only meta-data within a descriptor. The only
-> reason @seq is even checked is because of possible ABA issues with @id
-> on 32-bit systems.
+On March 4, 2020 2:04:38 AM PST, Peter Zijlstra <peterz@infradead=2Eorg> wr=
+ote:
+>On Wed, Mar 04, 2020 at 12:54:09AM -0800, hpa@zytor=2Ecom wrote:
+>> On March 3, 2020 12:41:44 PM PST, Alexey Dobriyan
+><adobriyan@gmail=2Ecom> wrote:
+>> >g++ insists that function declaration must start with extern "C"
+>> >(which asmlinkage expands to)=2E
+>> >
+>> >gcc doesn't care=2E
+>> >
+>> >Signed-off-by: _Z6Alexeyv <adobriyan@gmail=2Ecom>
+>> >---
+>> >
+>> > arch/x86/kernel/acpi/sleep=2Ec |    2 +-
+>> > arch/x86/kernel/acpi/sleep=2Eh |    2 +-
+>> > 2 files changed, 2 insertions(+), 2 deletions(-)
+>> >
+>> >--- a/arch/x86/kernel/acpi/sleep=2Ec
+>> >+++ b/arch/x86/kernel/acpi/sleep=2Ec
+>> >@@ -43,7 +43,7 @@ unsigned long acpi_get_wakeup_address(void)
+>> >  *
+>> >  * Wrapper around acpi_enter_sleep_state() to be called by
+>assmebly=2E
+>> >  */
+>> >-acpi_status asmlinkage __visible x86_acpi_enter_sleep_state(u8
+>state)
+>> >+asmlinkage acpi_status __visible x86_acpi_enter_sleep_state(u8
+>state)
+>> > {
+>> > 	return acpi_enter_sleep_state(state);
+>> > }
+>> >--- a/arch/x86/kernel/acpi/sleep=2Eh
+>> >+++ b/arch/x86/kernel/acpi/sleep=2Eh
+>> >@@ -19,4 +19,4 @@ extern void do_suspend_lowlevel(void);
+>> >=20
+>> > extern int x86_acpi_suspend_lowlevel(void);
+>> >=20
+>> >-acpi_status asmlinkage x86_acpi_enter_sleep_state(u8 state);
+>> >+asmlinkage acpi_status x86_acpi_enter_sleep_state(u8 state);
+>>=20
+>> Are you building the kernel with C++?!
+>
+>He is :-) IIRC he's got a whole bunch of patches that removes all the
+>C++ keywords from the kernel=2E
 
-I think that the different view is because I look at this API
-from the reader API side. It is called the following way:
+I'm genuinely curious: I have heard it says that gcc is something like 10x=
+ slower in C++ mode even for what is otherwise basically C code (i=2Ee=2E n=
+o templates etc=2E)
 
-prb_read_valid(, seq, )
-  _prb_read_valid( , &seq, )
-    prb_read( , *seq, )
-        # id is read from address defined by seq
-	rdesc = dr->descs[seq & MASK];
-	id = rdesc->state_var && MASK_ID;
-
-        desc_read_commited( , id, seq, )
-	  desc_read( , id, )
-	    # desc is the same as rdesc above because
-	    # seq & MASK == id & MASK
-	    desc = dr->descs[id & MASK];
-
-Note that prb_read_valid() and prb_read() are addressed by seq.
-
-It would be perfectly fine to pass only seq to desc_read_committed()
-and read id from inside.
-
-The name desc_read_committed() suggests that the important condition
-is that the descriptor is in the committed state. It is not obvious
-that seq is important as well.
-
-From my POV, it will be more clear to pass only seq and rename the
-function to desc_read_by_seq() or so:
-
-  + seq is enough for addressing
-  + function returns true only when the stored seq matches
-  + the stored seq is valid only when the state is committed
-    or reusable
-
-
-Please, do not reply to this mail. Either take the idea or keep
-the code as is. I could live with it. And it is not important
-enough to spend more time on it. I just wanted to explain my view.
-But it is obviously just a personal preference.
-
-Best Regards,
-Petr
+Does that match observations?
+--=20
+Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
