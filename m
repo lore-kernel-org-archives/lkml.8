@@ -2,140 +2,95 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 699EEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB71C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:26:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A88420848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AD42214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:26:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583310377;
+	bh=x6wzgGIrSbAYLKLQSa5BAJp1UsDUYJF/rw2ZgyF37hs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xNedsXvIUfEiclF/tkNsZQ/bNOOONklOA4iJGU0lIsRncsBT4pDZNlW0hx6rdgKDC
+	 uhQJ66lwRdjXN3kQU3LDBTUvUpGO3sPJ6ioDFnSfwndsyeyKa6+aVGviRQHrpCqhSi
+	 xvRDZ0in4feXSKgsDvb3tUpheY45e7LhGpja3QtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbgCDIX7 (ORCPT
+        id S1728574AbgCDI0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:23:59 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:47312 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727734AbgCDIX6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:23:58 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0248MV1J023832;
-        Wed, 4 Mar 2020 03:23:54 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yfnranm8m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Mar 2020 03:23:54 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 0248NrYx038023
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 4 Mar 2020 03:23:53 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Wed, 4 Mar 2020
- 03:23:52 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 4 Mar 2020 03:23:52 -0500
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 0248NoSZ020227;
-        Wed, 4 Mar 2020 03:23:51 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <j.anaszewski@samsung.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] iio: light: gp2ap020a00f: fix iio_triggered_buffer_{predisable,postenable} positions
-Date:   Wed, 4 Mar 2020 10:26:53 +0200
-Message-ID: <20200304082653.19374-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 4 Mar 2020 03:26:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726137AbgCDI0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 03:26:15 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E01D520726;
+        Wed,  4 Mar 2020 08:26:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583310375;
+        bh=x6wzgGIrSbAYLKLQSa5BAJp1UsDUYJF/rw2ZgyF37hs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cQRFBtzytnMhUGKmVUPKTzMPi9FUSzZkjbHk7VBek6sf035SkspTgk40kf1YX9sa9
+         4TmPepphEuTEFZXZ/vqL98+AWyb+nd9+TVnKanKFGTrOtAJ4MoqBhEDmvP1NnRXiD+
+         sSSiT0dXbjB0kH+AZH3iM8gSQw7dTgntwKOXJgPE=
+Date:   Wed, 4 Mar 2020 09:26:13 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Oliver Upton <oupton@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 111/176] KVM: nVMX: Emulate MTF when performing
+ instruction emulation
+Message-ID: <20200304082613.GA1407851@kroah.com>
+References: <20200303174304.593872177@linuxfoundation.org>
+ <20200303174317.670749078@linuxfoundation.org>
+ <8780cf08-374b-da06-0047-0fe8eeec0113@redhat.com>
+ <CAOQ_QsjG32KrG6hVMaMenUYk1+Z+jhcCsGOk=t9i+-9oZRGWeA@mail.gmail.com>
+ <20200304081001.GB1401372@kroah.com>
+ <04e51276-1759-2793-3b45-168284cbaf67@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_01:2020-03-03,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- malwarescore=0 clxscore=1011 spamscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040065
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04e51276-1759-2793-3b45-168284cbaf67@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-the poll functions.
+On Wed, Mar 04, 2020 at 09:19:09AM +0100, Paolo Bonzini wrote:
+> On 04/03/20 09:10, Greg Kroah-Hartman wrote:
+> > I'll be glad to just put KVM into the "never apply any patches to
+> > stable unless you explicitly mark it as such", but the sad fact is that
+> > many recent KVM fixes for reported CVEs never had any "Cc: stable@vger"
+> > markings.
+> 
+> Hmm, I did miss it in 433f4ba1904100da65a311033f17a9bf586b287e and
+> acff78477b9b4f26ecdf65733a4ed77fe837e9dc, but that's going back to
+> August 2018, so I can do better but it's not too shabby a record. :)
 
-For the predisable hook, the disable code should occur before detaching
-the poll func, and for the postenable hook, the poll func should be
-attached before the enable code.
+35a571346a94 ("KVM: nVMX: Check IO instruction VM-exit conditions")
+e71237d3ff1a ("KVM: nVMX: Refactor IO bitmap checks into helper function")
 
-This change moves the postenable/predisable hooks into the correct
-positions.
+Were both from a few weeks ago and needed to resolve CVE-2020-2732 :(
 
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/light/gp2ap020a00f.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+> > They only had "Fixes:" tags and so I have had to dig them out
+> > of the tree and backport them myself in order to resolve those very
+> > public issues.
+> > 
+> > So can I ask that you always properly tag things for stable?  If so, I
+> > will be glad to ignore Fixes: tags for KVM patches in the future.
+> > 
+> > I'll go drop this patch as well.  Note, there are other KVM patches in
+> > this release cycle also, can someone verify that I did not overreach for
+> > them as well?
+> 
+> I checked them and they are fine.
 
-diff --git a/drivers/iio/light/gp2ap020a00f.c b/drivers/iio/light/gp2ap020a00f.c
-index 4d70c5bf35da..24339098e707 100644
---- a/drivers/iio/light/gp2ap020a00f.c
-+++ b/drivers/iio/light/gp2ap020a00f.c
-@@ -1390,6 +1390,12 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
- 
- 	mutex_lock(&data->lock);
- 
-+	err = iio_triggered_buffer_postenable(indio_dev);
-+	if (err < 0) {
-+		mutex_unlock(&data->lock);
-+		return err;
-+	}
-+
- 	/*
- 	 * Enable triggers according to the scan_mask. Enabling either
- 	 * LIGHT_CLEAR or LIGHT_IR scan mode results in enabling ALS
-@@ -1420,14 +1426,12 @@ static int gp2ap020a00f_buffer_postenable(struct iio_dev *indio_dev)
- 		goto error_unlock;
- 
- 	data->buffer = kmalloc(indio_dev->scan_bytes, GFP_KERNEL);
--	if (!data->buffer) {
-+	if (!data->buffer)
- 		err = -ENOMEM;
--		goto error_unlock;
--	}
--
--	err = iio_triggered_buffer_postenable(indio_dev);
- 
- error_unlock:
-+	if (err < 0)
-+		iio_triggered_buffer_predisable(indio_dev);
- 	mutex_unlock(&data->lock);
- 
- 	return err;
-@@ -1440,10 +1444,6 @@ static int gp2ap020a00f_buffer_predisable(struct iio_dev *indio_dev)
- 
- 	mutex_lock(&data->lock);
- 
--	err = iio_triggered_buffer_predisable(indio_dev);
--	if (err < 0)
--		goto error_unlock;
--
- 	for_each_set_bit(i, indio_dev->active_scan_mask,
- 		indio_dev->masklength) {
- 		switch (i) {
-@@ -1466,6 +1466,8 @@ static int gp2ap020a00f_buffer_predisable(struct iio_dev *indio_dev)
- 		kfree(data->buffer);
- 
- error_unlock:
-+	iio_triggered_buffer_predisable(indio_dev);
-+
- 	mutex_unlock(&data->lock);
- 
- 	return err;
--- 
-2.20.1
+Thank you for that.
 
+greg k-h
