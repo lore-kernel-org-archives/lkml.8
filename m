@@ -2,129 +2,192 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C18AC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:39:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EBFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 059712084E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:39:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0055F2084E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wh+3HRWn"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="D03vy1zE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388557AbgCDXjp (ORCPT
+        id S2388543AbgCDXry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 18:39:45 -0500
-Received: from mail-pj1-f73.google.com ([209.85.216.73]:35633 "EHLO
-        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388513AbgCDXjo (ORCPT
+        Wed, 4 Mar 2020 18:47:54 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:53166 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387931AbgCDXry (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 18:39:44 -0500
-Received: by mail-pj1-f73.google.com with SMTP id ep22so1941153pjb.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:39:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=a2ls/0+XhOrLTmzZ82TksSq7Jty/zbg+jikoqthrwds=;
-        b=Wh+3HRWnRFld+I3x/Iifo4+Qouth/uqsuqouyd2n/JVRzs9fT4wd7TvoPNIYriz/Kp
-         q/ZzDURRIGkj4pUguk91KE/6rt+WdnjL0J5r6Qz0wKMf4mZmTjGIBYrLk+a9icvBsfWy
-         PzVErlzx+MQRl34XA1leAHz1Ui4XPsgnEjvPb6bFxpbQ8c0zsORYd/0t1HdfNr7eUipJ
-         UYaLKuTFBQU3V4w48Zs6JfULm4w7tz/MYUXXUZGzPjsKpKo2/vhRg0oXzHVj9LREpp7Q
-         eaLrpnMd04umIx9Pfv/QovyVUcvq4z5TO9ANWCic7ekQ/kF+iashcbQirvtdtNHDBSkw
-         gmpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=a2ls/0+XhOrLTmzZ82TksSq7Jty/zbg+jikoqthrwds=;
-        b=MHGu8OgWh8yl6AU5+t1ZzCpAN2OLH8dWYgKXSUIXISUHWesObGUPaBJkd2TpFEP8It
-         gsl99fKn5WiRPQW+GclHyCSyRCpdCYCAAX6m0pivNfvgyArheAh4OFGpsrPrSOVQDNEg
-         Tzx6Hs9ayKGuQUyznpTrKoTcX1ci2cpZWkpoOwEx+r8rGKhiMlOSuckSR+/OriSwqaYb
-         jXWgxHg571cmNJ1UTUD1pQgHi91DvqQTEAhNae46DRF+ArWX9B2jT6qFpPzMErYf8gN0
-         c9I9bCvJu1ecugspD9mkTkMLt4C+LZ9oxdcDKsYEHxPjN/McAd1LHzRHplw8a/68zlNl
-         G8XA==
-X-Gm-Message-State: ANhLgQ1lVkv3eaFOIk6Ru2ulclkJkYMgbafplDzf9PLjlPrDjh9I5xsL
-        Vv7t9KayFsgqgD0WnAcx/+J0IwQe8NGfPA==
-X-Google-Smtp-Source: ADFU+vsMk53h0+vE5U7wBkmRmT2KSMldVQZ0OPGijtXBgWljM7h4j+abzTpnMdLnMtsyvZtdLF1qFkjtxpGxZA==
-X-Received: by 2002:a63:7783:: with SMTP id s125mr4643014pgc.214.1583365183575;
- Wed, 04 Mar 2020 15:39:43 -0800 (PST)
-Date:   Wed,  4 Mar 2020 15:38:56 -0800
-Message-Id: <20200304233856.257891-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
-Subject: [PATCH v2] net: memcg: late association of sock to memcg
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Eric Dumazet <edumazet@google.com>, Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        netdev@vger.kernel.org, linux-mm@kvack.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 4 Mar 2020 18:47:54 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 62F1533E;
+        Thu,  5 Mar 2020 00:47:51 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1583365671;
+        bh=CVzOs6nXVVRXv3pOcJIWVztPVoqRpIhrp3kbugpN03U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D03vy1zEy48QRXTnuRqBwitdr1xjAd+u/tif6XiU/8tm4571CnhA69+V3vSd+5V8T
+         v/jeU00zrkuzpJNZRnzS5CJ6YnDiFaoGbyToXl6U1DaB9qH9T9vEP5RDn0Rm4NOy63
+         Nxgl8yfIL1RVfbLGG3T0rNHNripCW7eDuYwMSCq8=
+Date:   Thu, 5 Mar 2020 01:47:48 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] drm/bridge: dw-hdmi: Add support for RGB limited
+ range
+Message-ID: <20200304234748.GG28814@pendragon.ideasonboard.com>
+References: <20200304232512.51616-1-jernej.skrabec@siol.net>
+ <20200304232512.51616-4-jernej.skrabec@siol.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200304232512.51616-4-jernej.skrabec@siol.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a TCP socket is allocated in IRQ context or cloned from unassociated
-(i.e. not associated to a memcg) in IRQ context then it will remain
-unassociated for its whole life. Almost half of the TCPs created on the
-system are created in IRQ context, so, memory used by such sockets will
-not be accounted by the memcg.
+Hi Jernej,
 
-This issue is more widespread in cgroup v1 where network memory
-accounting is opt-in but it can happen in cgroup v2 if the source socket
-for the cloning was created in root memcg.
+Thank you for the patch.
 
-To fix the issue, just do the late association of the unassociated
-sockets at accept() time in the process context and then force charge
-the memory buffer already reserved by the socket.
+On Thu, Mar 05, 2020 at 12:25:11AM +0100, Jernej Skrabec wrote:
+> CEA 861 standard requestis that RGB quantization range is "limited" for
+> CEA modes. Support that by adding CSC matrix which downscales values.
+> 
+> This allows proper color reproduction on TV and PC monitor at the same
+> time. In future, override property can be added, like "Broadcast RGB"
+> in i915 driver.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
----
-Changes since v1:
-- added sk->sk_rmem_alloc to initial charging.
-- added synchronization to get memory usage and set sk_memcg race-free.
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
- net/ipv4/inet_connection_sock.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+> ---
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 63 +++++++++++++++++------
+>  1 file changed, 46 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> index de2c7ec887c8..c8a02e5b5e1b 100644
+> --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> @@ -92,6 +92,12 @@ static const u16 csc_coeff_rgb_in_eitu709[3][4] = {
+>  	{ 0x6756, 0x78ab, 0x2000, 0x0200 }
+>  };
+>  
+> +static const u16 csc_coeff_rgb_full_to_rgb_limited[3][4] = {
+> +	{ 0x1b7c, 0x0000, 0x0000, 0x0020 },
+> +	{ 0x0000, 0x1b7c, 0x0000, 0x0020 },
+> +	{ 0x0000, 0x0000, 0x1b7c, 0x0020 }
+> +};
+> +
+>  struct hdmi_vmode {
+>  	bool mdataenablepolarity;
+>  
+> @@ -109,6 +115,7 @@ struct hdmi_data_info {
+>  	unsigned int pix_repet_factor;
+>  	unsigned int hdcp_enable;
+>  	struct hdmi_vmode video_mode;
+> +	bool rgb_limited_range;
+>  };
+>  
+>  struct dw_hdmi_i2c {
+> @@ -956,7 +963,11 @@ static void hdmi_video_sample(struct dw_hdmi *hdmi)
+>  
+>  static int is_color_space_conversion(struct dw_hdmi *hdmi)
+>  {
+> -	return hdmi->hdmi_data.enc_in_bus_format != hdmi->hdmi_data.enc_out_bus_format;
+> +	return (hdmi->hdmi_data.enc_in_bus_format !=
+> +			hdmi->hdmi_data.enc_out_bus_format) ||
+> +	       (hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) &&
+> +		hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format) &&
+> +		hdmi->hdmi_data.rgb_limited_range);
+>  }
+>  
+>  static int is_color_space_decimation(struct dw_hdmi *hdmi)
+> @@ -986,25 +997,27 @@ static int is_color_space_interpolation(struct dw_hdmi *hdmi)
+>  static void dw_hdmi_update_csc_coeffs(struct dw_hdmi *hdmi)
+>  {
+>  	const u16 (*csc_coeff)[3][4] = &csc_coeff_default;
+> +	bool is_input_rgb, is_output_rgb;
+>  	unsigned i;
+>  	u32 csc_scale = 1;
+>  
+> -	if (is_color_space_conversion(hdmi)) {
+> -		if (hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format)) {
+> -			if (hdmi->hdmi_data.enc_out_encoding ==
+> -						V4L2_YCBCR_ENC_601)
+> -				csc_coeff = &csc_coeff_rgb_out_eitu601;
+> -			else
+> -				csc_coeff = &csc_coeff_rgb_out_eitu709;
+> -		} else if (hdmi_bus_fmt_is_rgb(
+> -					hdmi->hdmi_data.enc_in_bus_format)) {
+> -			if (hdmi->hdmi_data.enc_out_encoding ==
+> -						V4L2_YCBCR_ENC_601)
+> -				csc_coeff = &csc_coeff_rgb_in_eitu601;
+> -			else
+> -				csc_coeff = &csc_coeff_rgb_in_eitu709;
+> -			csc_scale = 0;
+> -		}
+> +	is_input_rgb = hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format);
+> +	is_output_rgb = hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format);
+> +
+> +	if (!is_input_rgb && is_output_rgb) {
+> +		if (hdmi->hdmi_data.enc_out_encoding == V4L2_YCBCR_ENC_601)
+> +			csc_coeff = &csc_coeff_rgb_out_eitu601;
+> +		else
+> +			csc_coeff = &csc_coeff_rgb_out_eitu709;
+> +	} else if (is_input_rgb && !is_output_rgb) {
+> +		if (hdmi->hdmi_data.enc_out_encoding == V4L2_YCBCR_ENC_601)
+> +			csc_coeff = &csc_coeff_rgb_in_eitu601;
+> +		else
+> +			csc_coeff = &csc_coeff_rgb_in_eitu709;
+> +		csc_scale = 0;
+> +	} else if (is_input_rgb && is_output_rgb &&
+> +		   hdmi->hdmi_data.rgb_limited_range) {
+> +		csc_coeff = &csc_coeff_rgb_full_to_rgb_limited;
+>  	}
+>  
+>  	/* The CSC registers are sequential, alternating MSB then LSB */
+> @@ -1614,6 +1627,18 @@ static void hdmi_config_AVI(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+>  	drm_hdmi_avi_infoframe_from_display_mode(&frame,
+>  						 &hdmi->connector, mode);
+>  
+> +	if (hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format)) {
+> +		drm_hdmi_avi_infoframe_quant_range(&frame, &hdmi->connector,
+> +						   mode,
+> +						   hdmi->hdmi_data.rgb_limited_range ?
+> +						   HDMI_QUANTIZATION_RANGE_LIMITED :
+> +						   HDMI_QUANTIZATION_RANGE_FULL);
+> +	} else {
+> +		frame.quantization_range = HDMI_QUANTIZATION_RANGE_DEFAULT;
+> +		frame.ycc_quantization_range =
+> +			HDMI_YCC_QUANTIZATION_RANGE_LIMITED;
+> +	}
+> +
+>  	if (hdmi_bus_fmt_is_yuv444(hdmi->hdmi_data.enc_out_bus_format))
+>  		frame.colorspace = HDMI_COLORSPACE_YUV444;
+>  	else if (hdmi_bus_fmt_is_yuv422(hdmi->hdmi_data.enc_out_bus_format))
+> @@ -2099,6 +2124,10 @@ static int dw_hdmi_setup(struct dw_hdmi *hdmi, struct drm_display_mode *mode)
+>  	/* TOFIX: Default to RGB888 output format */
+>  	hdmi->hdmi_data.enc_out_bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+>  
+> +	hdmi->hdmi_data.rgb_limited_range = hdmi->sink_is_hdmi &&
+> +		drm_default_rgb_quant_range(mode) ==
+> +		HDMI_QUANTIZATION_RANGE_LIMITED;
+> +
+>  	hdmi->hdmi_data.pix_repet_factor = 0;
+>  	hdmi->hdmi_data.hdcp_enable = 0;
+>  	hdmi->hdmi_data.video_mode.mdataenablepolarity = true;
 
-diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
-index a4db79b1b643..7bcd657cd45e 100644
---- a/net/ipv4/inet_connection_sock.c
-+++ b/net/ipv4/inet_connection_sock.c
-@@ -482,6 +482,25 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
- 		}
- 		spin_unlock_bh(&queue->fastopenq.lock);
- 	}
-+
-+	if (mem_cgroup_sockets_enabled && !newsk->sk_memcg) {
-+		int amt;
-+
-+		/* atomically get the memory usage and set sk->sk_memcg. */
-+		lock_sock(newsk);
-+
-+		/* The sk has not been accepted yet, no need to look at
-+		 * sk->sk_wmem_queued.
-+		 */
-+		amt = sk_mem_pages(newsk->sk_forward_alloc +
-+				   atomic_read(&sk->sk_rmem_alloc));
-+		mem_cgroup_sk_alloc(newsk);
-+
-+		release_sock(newsk);
-+
-+		if (newsk->sk_memcg)
-+			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
-+	}
- out:
- 	release_sock(sk);
- 	if (req)
 -- 
-2.25.0.265.gbab2e86ba0-goog
+Regards,
 
+Laurent Pinchart
