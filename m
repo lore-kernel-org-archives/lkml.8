@@ -2,353 +2,90 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B6AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF27C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:05:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8158920842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:02:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4ACB12146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:05:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583294720;
+	bh=p68B3/NdMMEqbeyhZmAihrJUVvRMPdRtxZQobAvEOyM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=uf1JLIt8sjB2GCWHxBQ/qyVaDuMx+UIram653MWszBbuXLtm05w63YQ2X2AtL7sxF
+	 M3sLpe6mm73nAJWpdu7O0dA71u10rskRX+3EuxgIJj4pK73cRvUJJeZ/L+0bBLs/bD
+	 be/zIjndKYKHsyPvxrx46BMtRLAffLpXpBULIv0c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbgCDECH (ORCPT
+        id S1726390AbgCDEFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 23:02:07 -0500
-Received: from aclms1.advantech.com.tw ([61.58.41.199]:20298 "EHLO
-        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbgCDECH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 23:02:07 -0500
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Tddb1d555c4ac14014bd38@ACLMS1.advantech.com.tw>;
- Wed, 4 Mar 2020 12:02:00 +0800
-Received: from mail-oi1-f171.google.com (209.85.167.171) by
- taipei08.ADVANTECH.CORP (172.20.0.235) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 4 Mar 2020 12:01:59 +0800
-Received: by mail-oi1-f171.google.com with SMTP id a22so667500oid.13;
-        Tue, 03 Mar 2020 20:01:59 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1uvrArWfVHd8wVDvbvF3yMyDy1wuHtNcR0lhLUW3VbasvToEGW
-        V6SlWpE/Uta2PVJkFkGQmVa90CxsNArsEFXdQJU=
-X-Google-Smtp-Source: ADFU+vsvLdTUn8kSKeBQqDk120p17ftIj5h4cQo9sQ7Hh4eBvnfJcREK1xcdgdBI8xz5gBtJtyv57zp0DdPxFI10SGc=
-X-Received: by 2002:aca:4d47:: with SMTP id a68mr450765oib.145.1583294516798;
- Tue, 03 Mar 2020 20:01:56 -0800 (PST)
+        Tue, 3 Mar 2020 23:05:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51592 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbgCDEFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 23:05:16 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2552D20842;
+        Wed,  4 Mar 2020 04:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583294716;
+        bh=p68B3/NdMMEqbeyhZmAihrJUVvRMPdRtxZQobAvEOyM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=j3Kw6Ptf84PP0JOZulhFtKrdFN3Dvd+4jR6BYn8Ca/sFmyWJN1NMIXcCFceMBbJVp
+         7q1/XrSmLvybJXlJ9Ji3OuS7Cj8OxCPUYUnBp2lPkydnFToZydwHD/X8HiJlV+OS1g
+         t+eJhXsmGAMGSmjwtH2aoU2r0wVFkyD+i7C2CUcY=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E291835226C4; Tue,  3 Mar 2020 20:05:15 -0800 (PST)
+Date:   Tue, 3 Mar 2020 20:05:15 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Qian Cai <cai@lca.pw>, elver@google.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] lib: disable KCSAN for XArray
+Message-ID: <20200304040515.GX2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200304031551.1326-1-cai@lca.pw>
+ <20200304033329.GZ29971@bombadil.infradead.org>
 MIME-Version: 1.0
-From:   Andrea Ho <andrea.ho@advantech.com.tw>
-Date:   Wed, 4 Mar 2020 12:01:30 +0800
-X-Gmail-Original-Message-ID: <CAGBRx8Ne6t9TAKPgdkeFurJRR8p+hBkofFGOWn6m-Ym23epXMg@mail.gmail.com>
-Message-ID: <CAGBRx8Ne6t9TAKPgdkeFurJRR8p+hBkofFGOWn6m-Ym23epXMg@mail.gmail.com>
-Subject: [RESEND,V3,1/1] Input/misc: add support for Advantech software
- defined button
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Andrea Ho <andrea.ho@advantech.com.tw>
-Content-Type: text/plain; charset="UTF-8"
-X-Originating-IP: [209.85.167.171]
-X-ClientProxiedBy: taipei08.ADVANTECH.CORP (172.20.0.235) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304033329.GZ29971@bombadil.infradead.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
+On Tue, Mar 03, 2020 at 07:33:29PM -0800, Matthew Wilcox wrote:
+> On Tue, Mar 03, 2020 at 10:15:51PM -0500, Qian Cai wrote:
+> > Functions like xas_find_marked(), xas_set_mark(), and xas_clear_mark()
+> > could happen concurrently result in data races, but those operate only
+> > on a single bit that are pretty much harmless. For example,
+> 
+> Those aren't data races.  The writes are protected by a spinlock and the
+> reads by the RCU read lock.  If the tool can't handle RCU protection,
+> it's not going to be much use.
 
-Advantech sw_button is a ACPI event trigger button.
+Would KCSAN's ASSERT_EXCLUSIVE_BITS() help here?
 
-With this driver, we can report KEY_EVENT on the
-Advantech Tabletop Network Appliances products and it has been
-tested in FWA1112VC.
+If not, you lost me on this one.  RCU readers don't exclude lock-based
+writers.
 
-Add the software define button support to report EV_REP key_event
-(BTN_TRIGGER_HAPPY) by pressing button that cloud be get on user
-interface and trigger the customized actions.
+RCU readers -do- exclude pre-insertion initialization on the one hand,
+and those post-removal accesses that follow a grace period, but only
+if that grace period starts after the removal.  In addition, the
+accesses due to rcu_dereference(), rcu_assign_pointer(), and similar
+are guaranteed to work even if they are concurrent.
 
-Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
+Or am I missing something subtle here?
 
-v2:
-        - remove fix-patch in patch
-        - fix build WARNING on format string.
-        - using linux kernel sort function
-v3:
-        - remove X86 dependency
-        - License only for GPL 2.0 and remove redundancy paragraphs
-        - remove version and prefix
-        - remove printk message
-        - remove double click and long press event check
-        - remove MODULE_PARAM
----
- MAINTAINERS                       |   5 +
- drivers/input/misc/Kconfig        |  11 ++
- drivers/input/misc/Makefile       |   2 +-
- drivers/input/misc/adv_swbutton.c | 207 ++++++++++++++++++++++++++++++
- 4 files changed, 224 insertions(+), 1 deletion(-)
- create mode 100644 drivers/input/misc/adv_swbutton.c
+That said, you are permitted to define "data race" for your subsystem
+by choosing KCSAN settings, up to and including keeping KCSAN out
+entirely.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8982c6e013b3..821c5cacf553 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -543,6 +543,11 @@ S: Maintained
- F:     Documentation/scsi/advansys.txt
- F:     drivers/scsi/advansys.c
-
-+ADVANTECH SWBTN DRIVER
-+M:     Andrea Ho <Andrea.Ho@advantech.com.tw>
-+S:     Maintained
-+F:     drivers/input/misc/adv_swbutton.c
-+
- ADXL34X THREE-AXIS DIGITAL ACCELEROMETER DRIVER (ADXL345/ADXL346)
- M:     Michael Hennerich <michael.hennerich@analog.com>
- W:     http://wiki.analog.com/ADXL345
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index 7e2e658d551c..b49a0fad60b0 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -879,4 +879,15 @@ config INPUT_STPMIC1_ONKEY
-          To compile this driver as a module, choose M here: the
-          module will be called stpmic1_onkey.
-
-+config INPUT_ADV_SWBUTTON
-+        tristate "Advantech ACPI Software button Driver"
-+        depends on ACPI
-+        help
-+          Say Y here to enable support for Advantech software defined
-+          button feature. More information can be fount at
-+          <http://www.advantech.com.tw/products/>
-+
-+          To compile this driver as a module, choose M here. The module will
-+          be called adv_swbutton.
-+
- endif
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 8fd187f314bd..a5ceb98f18f6 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -85,4 +85,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)         += wm831x-on.o
- obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)        += xen-kbdfront.o
- obj-$(CONFIG_INPUT_YEALINK)            += yealink.o
- obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)   += ideapad_slidebar.o
--
-+obj-$(CONFIG_INPUT_ADV_SWBUTTON)    += adv_swbutton.o
-diff --git a/drivers/input/misc/adv_swbutton.c
-b/drivers/input/misc/adv_swbutton.c
-new file mode 100644
-index 000000000000..ef237f9c4f52
---- /dev/null
-+++ b/drivers/input/misc/adv_swbutton.c
-@@ -0,0 +1,207 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ *  adv_swbutton.c - Software Button Interface Driver.
-+ *
-+ *  (C) Copyright 2020 Advantech Corporation, Inc
-+ *
-+ */
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/version.h>
-+#include <linux/types.h>
-+#include <linux/proc_fs.h>
-+#include <linux/seq_file.h>
-+#include <linux/input.h>
-+#include <linux/slab.h>
-+#include <linux/acpi.h>
-+#include <linux/ktime.h>
-+#include <linux/moduleparam.h>
-+#include <acpi/button.h>
-+#include <acpi/acpi_bus.h>
-+#include <acpi/acpi_drivers.h>
-+
-+#define ACPI_BUTTON_CLASS                   "button"
-+#define ACPI_BUTTON_FILE_INFO               "info"
-+#define ACPI_BUTTON_FILE_STATE              "state"
-+#define ACPI_BUTTON_TYPE_UNKNOWN            0x00
-+
-+#define ACPI_BUTTON_SUBCLASS_SOFTWARE       "software"
-+#define ACPI_BUTTON_HID_SWBTN               "AHC0310"
-+#define ACPI_BUTTON_DEVICE_NAME_SOFTWARE    "Software Button"
-+#define ACPI_BUTTON_TYPE_SOFTWARE           0x07
-+
-+#define ACPI_BUTTON_NOTIFY_SWBTN_RELEASE    0x86
-+#define ACPI_BUTTON_NOTIFY_SWBTN_PRESSED    0x85
-+
-+#define SOFTWARE_BUTTON                     BTN_TRIGGER_HAPPY
-+
-+#define _COMPONENT                          ACPI_BUTTON_COMPONENT
-+
-+ACPI_MODULE_NAME("swbutton");
-+
-+MODULE_AUTHOR("Andrea Ho");
-+MODULE_DESCRIPTION("Advantech ACPI SW Button Driver");
-+MODULE_LICENSE("GPL");
-+
-+static const struct acpi_device_id button_device_ids[] = {
-+       {ACPI_BUTTON_HID_SWBTN, 0},
-+       {"", 0},
-+};
-+MODULE_DEVICE_TABLE(acpi, button_device_ids);
-+
-+static int acpi_button_add(struct acpi_device *device);
-+static int acpi_button_remove(struct acpi_device *device);
-+static void acpi_button_notify(struct acpi_device *device, u32 event);
-+
-+static struct acpi_driver acpi_button_driver = {
-+       .name = ACPI_BUTTON_DEVICE_NAME_SOFTWARE,
-+       .class = ACPI_BUTTON_CLASS,
-+       .owner = THIS_MODULE,
-+       .ids = button_device_ids,
-+       .ops = {
-+               .add = acpi_button_add,
-+               .remove = acpi_button_remove,
-+               .notify = acpi_button_notify,
-+       },
-+};
-+
-+struct acpi_button {
-+       unsigned int type;
-+       struct input_dev *input;
-+       char phys[32];
-+       bool pressed;
-+};
-+
-+/*-------------------------------------------------------------------------
-+ *                               Driver Interface
-+ *--------------------------------------------------------------------------
-+ */
-+static void acpi_button_notify(struct acpi_device *device, u32 event)
-+{
-+       struct acpi_button *button = acpi_driver_data(device);
-+       struct input_dev *input;
-+
-+       int keycode, BTN_KEYCODE = SOFTWARE_BUTTON;
-+
-+       switch (event) {
-+       case ACPI_BUTTON_NOTIFY_SWBTN_RELEASE:
-+               input = button->input;
-+
-+               if (!button->pressed)
-+                       return;
-+
-+               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
-+                               BTN_KEYCODE : KEY_UNKNOWN;
-+
-+               button->pressed = false;
-+
-+               input_report_key(input, keycode, 0);
-+               input_sync(input);
-+       break;
-+       case ACPI_BUTTON_NOTIFY_SWBTN_PRESSED:
-+               input = button->input;
-+               button->pressed = true;
-+
-+               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
-+                           BTN_KEYCODE : KEY_UNKNOWN;
-+
-+               input_report_key(input, keycode, 1);
-+               input_sync(input);
-+       break;
-+       default:
-+               ACPI_DEBUG_PRINT((ACPI_DB_INFO,
-+                                 "Unsupported event [0x%x]\n", event));
-+       break;
-+       }
-+}
-+
-+static int __init acpi_button_init(void)
-+{
-+       return acpi_bus_register_driver(&acpi_button_driver);
-+}
-+
-+static void __exit acpi_button_exit(void)
-+{
-+       acpi_bus_unregister_driver(&acpi_button_driver);
-+}
-+
-+static int acpi_button_add(struct acpi_device *device)
-+{
-+       struct acpi_button *button;
-+       struct input_dev *input;
-+       const char *hid = acpi_device_hid(device);
-+       char *name, *class;
-+       int error;
-+
-+       button = kzalloc(sizeof(struct acpi_button), GFP_KERNEL);
-+       if (!button)
-+               return -ENOMEM;
-+
-+       device->driver_data = button;
-+
-+       button->input = input_allocate_device();
-+       input = button->input;
-+       if (!input) {
-+               error = -ENOMEM;
-+               goto err_free_button;
-+       }
-+
-+       name = acpi_device_name(device);
-+       class = acpi_device_class(device);
-+
-+       if (!strcmp(hid, ACPI_BUTTON_HID_SWBTN)) {
-+               button->type = ACPI_BUTTON_TYPE_SOFTWARE;
-+               button->pressed = false;
-+               strcpy(name, ACPI_BUTTON_DEVICE_NAME_SOFTWARE);
-+               sprintf(class, "%s/%s", ACPI_BUTTON_CLASS,
-+                       ACPI_BUTTON_SUBCLASS_SOFTWARE);
-+       } else {
-+               error = -ENODEV;
-+               goto err_free_input;
-+       }
-+
-+       snprintf(button->phys, sizeof(button->phys), "%s/button/input0", hid);
-+
-+       input->name = name;
-+       input->phys = button->phys;
-+       input->id.bustype = BUS_HOST;
-+       input->id.product = button->type;
-+       input->dev.parent = &device->dev;
-+
-+       switch (button->type) {
-+       case ACPI_BUTTON_TYPE_SOFTWARE:
-+               set_bit(EV_KEY, input->evbit);
-+               set_bit(EV_REP, input->evbit);
-+
-+               input_set_capability(input, EV_KEY, SOFTWARE_BUTTON);
-+       break;
-+       }
-+
-+       input_set_drvdata(input, device);
-+       error = input_register_device(input);
-+       if (error)
-+               goto err_free_input;
-+
-+       device_init_wakeup(&device->dev, true);
-+
-+       return 0;
-+
-+err_free_input:
-+       input_free_device(input);
-+err_free_button:
-+       kfree(button);
-+       return error;
-+}
-+
-+static int acpi_button_remove(struct acpi_device *device)
-+{
-+       struct acpi_button *button = acpi_driver_data(device);
-+
-+       input_unregister_device(button->input);
-+       kfree(button);
-+       return 0;
-+}
-+
-+module_init(acpi_button_init);
-+module_exit(acpi_button_exit);
---
-2.17.1
+							Thanx, Paul
