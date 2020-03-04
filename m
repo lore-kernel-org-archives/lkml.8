@@ -2,75 +2,129 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3AEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49CC9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759D62166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:48:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583304492;
-	bh=yN/luUhk9sZoRMguRNrPehHcGwLuSq+z6P8y708HX2U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BqDzOkqWWqv0bHQ42kJ0b/Ov2HFoxHX9k68DwRahnrPok7NstFrzwLGo54KkekYFj
-	 3cEmzuczneXk9BcJd3k7wFOf9kE+ycMfKqR3TqF/hTD44/AT3AUWAxl/z4xkiCB+co
-	 rLPCUD07L6dv6d+vFgD5wVWN+jSEZ6K6l8kiRj/8=
+	by mail.kernel.org (Postfix) with ESMTP id 1FBB82146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:49:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TjnV6xMQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387415AbgCDGsL (ORCPT
+        id S2387553AbgCDGtF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 01:48:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56134 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 01:49:05 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:7396 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbgCDGsL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 01:48:11 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 209672146E;
-        Wed,  4 Mar 2020 06:48:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583304490;
-        bh=yN/luUhk9sZoRMguRNrPehHcGwLuSq+z6P8y708HX2U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=HBBKqHXsUn20IUYFP2Ot0oMeIMRYHgdsk3+a8f3tf9+j1gCZ/Iu/mNx0bV0uV3xXH
-         N4nT5SSgkiCRKCxdKecVGABm89b8blckrPmV4kVqxTOC9Gx/uBlXson80BcbCNEUDL
-         hhg8Zoo/TJZHir1QF8jmUBQwSrk3vFVmXaftmmvI=
-Date:   Wed, 4 Mar 2020 07:48:08 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Cc:     Joe Perches <joe@perches.com>, jerome.pouiller@silabs.com,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] staging: wfx: data_tx.c: match parentheses alignment
-Message-ID: <20200304064808.GA1232166@kroah.com>
-References: <20200223193201.GA20843@kaaira-HP-Pavilion-Notebook>
- <8c458c189abb45fb3021f7882a40d28a24cc662d.camel@perches.com>
- <20200224162621.GA6611@kaaira-HP-Pavilion-Notebook>
+        id S1725283AbgCDGtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 01:49:05 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48XPcF5vVkz9v0st;
+        Wed,  4 Mar 2020 07:49:01 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=TjnV6xMQ; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id dW39OVxTZgd8; Wed,  4 Mar 2020 07:49:01 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48XPcF4ZcKz9v0ss;
+        Wed,  4 Mar 2020 07:49:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1583304541; bh=wrQNL9rvesEDlWoNS4tGcfPvGhYnLZNAbgZHq9fGbnE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=TjnV6xMQKz2IO1bGDE4HAZJMFDjYTtnjTtNNjZEsh1GJH/DNUiegOPbfzQzRdUJdq
+         mfbcsqR6vxFcKaMgtar20QBjEJl5cDZGZqEWM5VabMwt/qfmG0b/5ARzKJJU0pQlpP
+         HX98Thi1AQonukArlC4ShOrxhDCLgoABIqbXgKFo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 784788B826;
+        Wed,  4 Mar 2020 07:49:02 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id oPUcSMTN_Vcy; Wed,  4 Mar 2020 07:49:02 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2A1098B820;
+        Wed,  4 Mar 2020 07:49:02 +0100 (CET)
+Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Qian Cai <cai@lca.pw>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390@vger.kernel.org, linux-riscv@lists.infradead.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+References: <1581909460-19148-1-git-send-email-anshuman.khandual@arm.com>
+ <1582726182.7365.123.camel@lca.pw>
+ <7c707b7f-ce3d-993b-8042-44fdc1ed28bf@c-s.fr>
+ <1582732318.7365.129.camel@lca.pw> <1583178042.7365.146.camel@lca.pw>
+ <e8516497-f1b9-b222-e219-73b68880ac75@arm.com>
+ <12260F9A-695D-40F8-932F-61D86D77D441@lca.pw>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <c022e863-0807-fab1-cd41-3c320381f448@c-s.fr>
+Date:   Wed, 4 Mar 2020 07:48:54 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200224162621.GA6611@kaaira-HP-Pavilion-Notebook>
+In-Reply-To: <12260F9A-695D-40F8-932F-61D86D77D441@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 09:56:21PM +0530, Kaaira Gupta wrote:
-> On Mon, Feb 24, 2020 at 06:13:32AM -0800, Joe Perches wrote:
-> > On Mon, 2020-02-24 at 01:02 +0530, Kaaira Gupta wrote:
-> > > Match next line with open parentheses by giving appropriate tabs.
+
+
+Le 04/03/2020 à 02:39, Qian Cai a écrit :
 > 
-> Changed the first word to caps. Will keep this in mind from now on.
-> Thanks!
+>> Below is slightly modified version of your change above and should still
+>> prevent the bug on powerpc. Will it be possible for you to re-test this
+>> ? Once confirmed, will send a patch enabling this test on powerpc64
+>> keeping your authorship. Thank you.
 > 
+> This works fine on radix MMU but I decided to go a bit future to test hash
+> MMU. The kernel will stuck here below. I did confirm that pte_alloc_map_lock()
+> was successful, so I don’t understand hash MMU well enough to tell why
+> it could still take an interrupt at pte_clear_tests() even before we calls
+> pte_unmap_unlock()?
 
-There was no "v2" patch in this email, what happened to it?
+AFAIU, you are not taking an interrupt here. You are stuck in the 
+pte_update(), most likely due to nested locks. Try with LOCKDEP ?
 
-I've dropped this thread now, please resend the patch if you have an
-updated version.
+Christophe
 
-thanks,
+> 
+> [   33.881515][    T1] ok 8 - property-entry
+> [   33.883653][    T1] debug_vm_pgtable: debug_vm_pgtable: Validating
+> architecture page table helpers
+> [   60.418885][    C8] watchdog: BUG: soft lockup - CPU#8 stuck for 23s!
+> [swapper/0:1]
 
-greg k-h
