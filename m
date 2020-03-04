@@ -2,97 +2,96 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12D9C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AD1C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F4820866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F030A215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:03:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Yz3sfhkQ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gt4O3kKN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728530AbgCDICw (ORCPT
+        id S1728542AbgCDIDj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:02:52 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:37981 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgCDICw (ORCPT
+        Wed, 4 Mar 2020 03:03:39 -0500
+Received: from mail-qv1-f42.google.com ([209.85.219.42]:42421 "EHLO
+        mail-qv1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbgCDIDj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:02:52 -0500
-Received: by mail-lj1-f194.google.com with SMTP id w1so928101ljh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:02:51 -0800 (PST)
+        Wed, 4 Mar 2020 03:03:39 -0500
+Received: by mail-qv1-f42.google.com with SMTP id e7so391444qvy.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:03:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NJwXQHOGfBvRfP8VBWg2bX3dJRR6Y/FuTLO1IQfTw1A=;
-        b=Yz3sfhkQCsVRs2839qs1BfeyedHx2siPjrgeKySlIDpScCfojGKQCbXYvL39Fq3EYM
-         HHQGJyPEuUTpxzf4IuJCTMQa8C2Gn3y1ANBqWZ4zlVXkkyoLFVlRGvWQ4LTj6mBNrHZU
-         xOeDs9VQ4NyQhxwcungr9jQGvvJVT8rKEv72BnR3jOkYDQ9WzJY+wTzkBVKqf/lOyb/s
-         lgZxU6z9GXgYBYPL5KJ2XcjhqcSfqSiyHtUFMLmLiCexiiZWysJzBYl6FpHvkJsQ1Z7r
-         RQMUwPw8LxBzH/6ihsNX+3J1/vHGjtrOmbgn19h1VGvkNQrp+VNCRy1vb1zxbUV4G283
-         XUYg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fvcgS0kaXJOVRywfNG/lNV2uF4vbt2syEwAD5+QBlzo=;
+        b=Gt4O3kKNzok2CysVWD2u3PBvZtBIGkUhLJORObJgQFPs1Y7YFnfuyfGf0IfBx8ZQ6b
+         p9HsmW9q9BNbFTFVIf5K3vLxwkMJKJJmbc0OUO9Zk2BhG7rz0Pdev1f0YCblgQwmOGXf
+         MmD2PpAwnKc1pJra4Wq+VUWyK0UaiWPrLNw+qhxbUC7RlFqjGAZcH1OabQg6Dx14jUJ6
+         QL0PoSg4O2TR3vtJdT8kEkFUrjUf+SFq4KeZ13AEAqtKK0idqq8MMAcrDUhoDZzqRVnh
+         soPslGD1sOK53cGMv1QR9ngzipDeIgchY6Vpfd9Q7s2S+YAnBgUhcIeKxxdp5Bwh+ATi
+         Tbkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NJwXQHOGfBvRfP8VBWg2bX3dJRR6Y/FuTLO1IQfTw1A=;
-        b=Pw3sfp1x7gXHWxK0yXa2CiAhZ5uBhmsekyOmTbz8i5/c26THZUNMD2PBrPc8jNFh6V
-         a4V2ZPZRpsjgrQR4THKa2LanHCJOzDzpzvv6KFUFE//Ws6IsiQob4tnD1e0KIMDm14sC
-         KG/7gZ024gSLhyRGFuWOQk5LYn0fT1jyN7IPCi7O4Ijn3g2cE9TVrGuvAIXBV9nqVy0O
-         eWby9QaebG7x3w78Rz+jfweQu1B/xmpAefP2jPJ3arwGt3vrKd030NvkFf7PQClOGF3M
-         wMrvFfoW4aVck4zoCwemOEC3FSSCcw+4rTX6s0WIS5Rf0CblEc6kZtLe8RyWNunt9/vk
-         or6Q==
-X-Gm-Message-State: ANhLgQ18cu6YWJ99TIVzRlyADILNvREKUm9RLdD+0MwqqBYvi4IM5eyg
-        2P3M4CJON5gz9KE74kmxBAfuLA==
-X-Google-Smtp-Source: ADFU+vvkwU/GzcL4pLeLhMMhkTpWZOVBAFzfm69VarafgvEVC8sWssS6tTWvQlMWM188Qc550cKVCQ==
-X-Received: by 2002:a2e:8015:: with SMTP id j21mr1215994ljg.194.1583308970222;
-        Wed, 04 Mar 2020 00:02:50 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id s21sm15487953lfb.27.2020.03.04.00.02.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 00:02:49 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 7F01F100FE1; Wed,  4 Mar 2020 11:02:48 +0300 (+03)
-Date:   Wed, 4 Mar 2020 11:02:48 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     cgroups@vger.kernel.org, akpm@linux-foundation.org,
-        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
-        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
-        yang.shi@linux.alibaba.com, willy@infradead.org,
-        hannes@cmpxchg.org, lkp@intel.com,
-        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 06/20] mm/thp: narrow lru locking
-Message-ID: <20200304080248.wuj3vqlz46ehhptg@box>
-References: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
- <1583146830-169516-7-git-send-email-alex.shi@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fvcgS0kaXJOVRywfNG/lNV2uF4vbt2syEwAD5+QBlzo=;
+        b=gexu0XCD/dkXiYPLfx5DInVJIv6suYpKl1TxhdZQmA04FVPddvL8D7UTntX6L//Zwp
+         jQsddeE5ywYdWwkfZ+yb+Wr13gJdIf2xiQag73Nbrs9BngcxFHLB30gM2uVJ5t9oTDdl
+         HUi7ZKtqBov7LhtCmnZCxdD8hmdV3mvisS+q/Tw0Xe7wBOknE+eo4Vl7mNoQE5xXEwOu
+         rtjl1TZ/FaqH7190Yi/yuUFpRZhxGpIuQw5yd03rreh+VyXTphLOOS3FnrMWZXp4udZo
+         eufbD1VgXDFcjqOCtluiTo6LmBcxDUdD9iY6HFTUX2KDHiJL8UAcYxvuqjhcQIU6N+wX
+         jZSw==
+X-Gm-Message-State: ANhLgQ1Jq/iPDV3b4J/hJ6PeaPkXB6JJejbtHhd+c+tj8S3bcVb3FL5h
+        dj+psEI1krVTOUCPFfMTvEoIftSJVVHfmrsGQ8iEBQ==
+X-Google-Smtp-Source: ADFU+vur/xZleKVdRHzI0H1ZvQvwTlsXpp6Y39wE53NWXVg1mf/u1WO9LRq/X33XIyAxU5944mW6rgngj0asd9wn9FA=
+X-Received: by 2002:a05:6214:1467:: with SMTP id c7mr1167140qvy.122.1583309016750;
+ Wed, 04 Mar 2020 00:03:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583146830-169516-7-git-send-email-alex.shi@linux.alibaba.com>
+References: <0000000000007523a60576e80a47@google.com> <CACT4Y+b3AmVQMjPNsPHOXRZS4tNYb6Z9h5-c=1ZwZk0VR-5J5Q@mail.gmail.com>
+ <20180928070042.GF3439@hirez.programming.kicks-ass.net> <CACT4Y+YFmSmXjs5EMNRPvsR-mLYeAYKypBppYq_M_boTi8a9uQ@mail.gmail.com>
+ <CACT4Y+ZBYYUiJejNbPcZWS+aHehvkgKkTKm0gvuviXGGcirJ5g@mail.gmail.com>
+ <CACT4Y+bTGp1J9Wn=93LUObdTcWPo2JrChYKF-1v6aXmtvoQgPQ@mail.gmail.com>
+ <CAM_iQpVtcNFeEtW15z_nZoyC1Q-_pCq+UfZ4vYBB3Lb2CMm4Mg@mail.gmail.com>
+ <CAMArcTUJ=Nemq=hsEeOzc-hOU4bPOKq_Xa1ECGDk4ceZHzhGVw@mail.gmail.com> <CAM_iQpU+d4bbtN_oE+G0CaWmeSbBEyS1Wuc7s1vK36gGrcYzjQ@mail.gmail.com>
+In-Reply-To: <CAM_iQpU+d4bbtN_oE+G0CaWmeSbBEyS1Wuc7s1vK36gGrcYzjQ@mail.gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 4 Mar 2020 09:03:25 +0100
+Message-ID: <CACT4Y+Y-602aWheEZT8ha7qJ=P7uhu3LG5PqFebB7guNg8z=_w@mail.gmail.com>
+Subject: Re: BUG: MAX_LOCKDEP_CHAINS too low!
+To:     Cong Wang <xiyou.wangcong@gmail.com>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        syzbot <syzbot+aaa6fa4949cc5d9b7b25@syzkaller.appspotmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 07:00:16PM +0800, Alex Shi wrote:
-> @@ -2564,6 +2565,9 @@ static void __split_huge_page(struct page *page, struct list_head *list,
->  		xa_lock(&swap_cache->i_pages);
->  	}
->  
-> +	/* Lru list would be changed, don't care head's LRU bit. */
-> +	spin_lock_irqsave(&pgdat->lru_lock, flags);
-> +
->  	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
->  		__split_huge_page_tail(head, i, lruvec, list);
->  		/* Some pages can be beyond i_size: drop them from page cache */
+On Sat, Jan 18, 2020 at 9:41 PM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>
+> On Thu, Jan 16, 2020 at 7:09 AM Taehee Yoo <ap420073@gmail.com> wrote:
+> > Yes, I fully agree with this.
+> > If we calculate the subclass for lock_nested() very well, I think we
+> > might use static lockdep key for addr_list_lock_key too. I think
+> > "dev->upper_level" and "dev->lower_level" might be used as subclass.
+> > These values are updated recursively in master/nomaster operation.
+>
+> Great! I will think about this too. At least I will remove the other keys
+> for net-next.
 
-You change locking order WRT i_pages lock. Is it safe?
+Hi Cong,
 
--- 
- Kirill A. Shutemov
+Was this done? This still harms testing of the whole kernel. Disabling
+LOCKDEP does not look good either...
