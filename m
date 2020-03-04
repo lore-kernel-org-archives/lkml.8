@@ -2,111 +2,116 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AF8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF8AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:43:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B937206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCEC206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:43:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="L24u5zqD"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="J5dJtf5o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387410AbgCDAnF (ORCPT
+        id S2387426AbgCDAnr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:43:05 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33472 "EHLO
+        Tue, 3 Mar 2020 19:43:47 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:36952 "EHLO
         mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727864AbgCDAnF (ORCPT
+        with ESMTP id S2387396AbgCDAnq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:43:05 -0500
-Received: by mail-qk1-f196.google.com with SMTP id p62so7106qkb.0
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:43:04 -0800 (PST)
+        Tue, 3 Mar 2020 19:43:46 -0500
+Received: by mail-qk1-f196.google.com with SMTP id m9so5454333qke.4
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:43:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wOjgETEggr7acXmXSIGKLYA84kpLrcA+aOyLjNXDSaw=;
-        b=L24u5zqDkHCBPaOj1oSrn6IQPgzZGnryJZeVmIyRZITl1GRSlm2vWmgiDWPb6UlNCa
-         hZZmmHLySwl37+ZRqpogB1VkAKXaTlIi7WqTlPaVS+b7YIhQa0b/wqwTo5IeAFn1Jtgl
-         uCi+r0RahZAfqaPh+2nq/7T0OIQhkrwiCM+yTj3N8PxqLD6gz4GOCkDRl6++fYML/rQv
-         jhm5o1hID6OaRxNCKMgayYNz62i7oEE7rc3Ms3nriNevMaotorpYTSYkKGBherhb5R9i
-         nUVUhJccEJGYcjKXw/h5IZ5qOGnqlkEfdx8atzZtYl0pR/uAZs/zqfk6GYx4PFlrf2Jk
-         A6AA==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DRZPjOU86C+QBTaOB6DsJlZhFthqBDzzJfXy4mDxK2E=;
+        b=J5dJtf5oYmzUXexSyHe+zHPOgeJmiMlpBKHCOi4i4YYu4dpJRn+Pbu450LBkIBtNDJ
+         uyNQlkVBnAyZQ6CvoXptBQSCXSwVGZq1GSk1YYKrIkaBLFe/fV5jlamq7cMbwKQlJojW
+         S/lAP4inVw4lAR88C4BzNgptPwd3Kq53+D/WrM3nPrKh5cEoc2BSIIpNIs1tnRQnYUD6
+         aqSv/l34Gtn3NsWHJapV8yGVO5MDmf5rGMtsD5LevkFpQP14UdWwJrrWKKEJZzFq8nFp
+         XfZCrFT1+/5SJvnYSr0cMI9opufqhxEUqeX9yzoP9BSyqRmRTHRraCHGzWCfPMwMlOq4
+         g0vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wOjgETEggr7acXmXSIGKLYA84kpLrcA+aOyLjNXDSaw=;
-        b=mXgc9jFGobz5Qeac5C/Toemryl364ufEKQBtDYGHjlsTg8AvJ+bAWqoFI0e8F6hmat
-         QQXRRQoCQgisJHbabMb+6vcaR7Yn76iFeOaPJ4+C3uq9IoboA0UaEXuERmVxOn5kpxKZ
-         j9md/mAkfgLOqQaPGsBQJCzkhzYHIg0QsTUy206pr98XNBqv3EIPFr3KtYsmIN7OLDir
-         TY42Sj8oSu5bMrnNCQ1RyOdT6k7oZmJoNYyQGXqWsMCgK60Vh165rntTwFe8epBIs4e3
-         3LV+77f44akkz7l1RsaaInF8W3rH6Yjy5HWGtWvJen/MAgPQ+Gn1CUdDf6WS3aNOxwXv
-         ssfg==
-X-Gm-Message-State: ANhLgQ2WbOSxtXjMg8zEpe+mNIRVnHEl75hqT996SBJ+8n/W8LXrLo70
-        sbwF9pJhvVfAx8aKRmIIDH0nLQ==
-X-Google-Smtp-Source: ADFU+vtT815ZqojFX5Xd5JyTcZYq1D4yYzc3QBiv54PBkSjODKMU8WjxMws4JqGmk+Jx1vFpgBEn7g==
-X-Received: by 2002:a37:7746:: with SMTP id s67mr634304qkc.127.1583282583953;
-        Tue, 03 Mar 2020 16:43:03 -0800 (PST)
-Received: from localhost (pool-96-232-200-60.nycmny.fios.verizon.net. [96.232.200.60])
-        by smtp.gmail.com with ESMTPSA id 8sm44239qke.80.2020.03.03.16.43.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 16:43:03 -0800 (PST)
-Date:   Tue, 3 Mar 2020 19:43:02 -0500
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        kernel-team@fb.com, linux-kernel@vger.kernel.org,
-        Bharata B Rao <bharata@linux.ibm.com>, stable@vger.kernel.org
-Subject: Re: [PATCH] mm: fork: fix kernel_stack memcg stats for various stack
- implementations
-Message-ID: <20200304004302.GB76149@cmpxchg.org>
-References: <20200303233550.251375-1-guro@fb.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DRZPjOU86C+QBTaOB6DsJlZhFthqBDzzJfXy4mDxK2E=;
+        b=sgiyFDwebqHAcVzBgzCbA6m84Ui6unzpEl71J6WBFVaYGVuw5gaRRu8hftO8hdk37Y
+         f+kKfXWQ49i0On1FJ98zpbMfgRs9BKGrOnRVXjbOc2qNzAnQuzoWOtJf1YIfAK57MdRB
+         3s2nhFKtvFpmWW7glohFgyVTwr5Qw5fd77Ba+T+s2m2RfzRX9VQdSiSAkBELqRH1rfr9
+         6fzdAOFifhiC2oOcO1ydLRg5n7UVRt8l3mZZu/H8sXA3WgB6ajUx6S5gYc8JgiDbGTmO
+         QDl8drv7v3EKGqNeB2ucX2quIlypSVMRX0MH0P1NJ/23A79o1Dl7BrTC2813+OXocMZN
+         FDCw==
+X-Gm-Message-State: ANhLgQ0GMXMSg5vLGIcLVSc6001wxiFe69KvqoxieXVMjaVr5cF8+ytq
+        BtNHo4kQONmL/53xKa1KRnsfOyvzJd07OQ==
+X-Google-Smtp-Source: ADFU+vsgG146lXuiifbBZ94JzvpBcPtzlNUuXJJh3mMTUvsDDiTgL3moviBSD4srwd5s+UiV0qppcw==
+X-Received: by 2002:a05:620a:806:: with SMTP id s6mr664391qks.235.1583282625401;
+        Tue, 03 Mar 2020 16:43:45 -0800 (PST)
+Received: from ovpn-121-139.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id w48sm14038759qtc.40.2020.03.03.16.43.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2020 16:43:44 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     tglx@linutronix.de
+Cc:     ebiederm@xmission.com, oleg@redhat.com,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] posix-cpu-timers: fix memory leaks for task_struct
+Date:   Tue,  3 Mar 2020 19:43:36 -0500
+Message-Id: <20200304004336.960-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122.2)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303233550.251375-1-guro@fb.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 03:35:50PM -0800, Roman Gushchin wrote:
-> Depending on CONFIG_VMAP_STACK and the THREAD_SIZE / PAGE_SIZE ratio
-> the space for task stacks can be allocated using __vmalloc_node_range(),
-> alloc_pages_node() and kmem_cache_alloc_node(). In the first and the
-> second cases page->mem_cgroup pointer is set, but in the third it's
-> not: memcg membership of a slab page should be determined using the
-> memcg_from_slab_page() function, which looks at
-> page->slab_cache->memcg_params.memcg . In this case, using
-> mod_memcg_page_state() (as in account_kernel_stack()) is incorrect:
-> page->mem_cgroup pointer is NULL even for pages charged to a non-root
-> memory cgroup.
-> 
-> It can lead to kernel_stack per-memcg counters permanently showing 0
-> on some architectures (depending on the configuration).
-> 
-> In order to fix it, let's introduce a mod_memcg_obj_state() helper,
-> which takes a pointer to a kernel object as a first argument, uses
-> mem_cgroup_from_obj() to get a RCU-protected memcg pointer and
-> calls mod_memcg_state(). It allows to handle all possible
-> configurations (CONFIG_VMAP_STACK and various THREAD_SIZE/PAGE_SIZE
-> values) without spilling any memcg/kmem specifics into fork.c .
-> 
-> Note: this patch has been first posted as a part of the new slab
-> controller patchset. This is a slightly updated version: the fixes
-> tag has been added and the commit log was extended by the advice
-> of Johannes Weiner. Because it's a fix that makes sense by itself,
-> I'm re-posting it as a standalone patch.
-> 
-> Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Cc: stable@vger.kernel.org
+The recent commit removed put_task_struct() in posix_cpu_timer_del()
+results in many memory leaks like this,
 
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+unreferenced object 0xc0000016d9b44480 (size 8192):
+  comm "timer_create01", pid 57749, jiffies 4295163733 (age 6159.670s)
+  hex dump (first 32 bytes):
+    02 00 00 00 00 00 00 00 10 00 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<0000000056aca129>] copy_process+0x26c/0x18e0
+    alloc_task_struct_node at kernel/fork.c:169
+    (inlined by) dup_task_struct at kernel/fork.c:877
+    (inlined by) copy_process at kernel/fork.c:1929
+    [<00000000bdbbf9f8>] _do_fork+0xac/0xb20
+    [<00000000dcb1c445>] __do_sys_clone+0x98/0xe0
+    __do_sys_clone at kernel/fork.c:2591
+    [<000000006c059205>] ppc_clone+0x8/0xc
+    ppc_clone at arch/powerpc/kernel/entry_64.S:479
 
-Thanks for pointing out the user impact.
+Fixes: 672ebe8eb017a5 ("posix-cpu-timers: Store a reference to a pid not a task")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ kernel/time/posix-cpu-timers.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
+index afd1e959a282..e0b580deb61a 100644
+--- a/kernel/time/posix-cpu-timers.c
++++ b/kernel/time/posix-cpu-timers.c
+@@ -446,8 +446,10 @@ static int posix_cpu_timer_del(struct k_itimer *timer)
+ 
+ out:
+ 	rcu_read_unlock();
+-	if (!ret)
++	if (!ret) {
+ 		put_pid(ctmr->pid);
++		put_task_struct(p);
++	}
+ 
+ 	return ret;
+ }
+-- 
+2.21.0 (Apple Git-122.2)
+
