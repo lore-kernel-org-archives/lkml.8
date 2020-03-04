@@ -2,137 +2,105 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451EBC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:28:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACEFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284F22146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:28:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CEE2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388014AbgCDM2R (ORCPT
+        id S1729333AbgCDM32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:28:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:33686 "EHLO foss.arm.com"
+        Wed, 4 Mar 2020 07:29:28 -0500
+Received: from mga09.intel.com ([134.134.136.24]:29032 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387801AbgCDM2R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:28:17 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A82331B;
-        Wed,  4 Mar 2020 04:28:16 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CF4C83F534;
-        Wed,  4 Mar 2020 04:28:14 -0800 (PST)
-Date:   Wed, 4 Mar 2020 12:28:12 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kevin Hilman <khilman@baylibre.com>
-Cc:     Remi Pommarel <repk@triplefau.lt>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Yue Wang <yue.wang@Amlogic.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 0/7] PCI: amlogic: Make PCIe working reliably on AXG
- platforms
-Message-ID: <20200304122812.GB6613@e121166-lin.cambridge.arm.com>
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200224141549.GB15614@e121166-lin.cambridge.arm.com>
- <7h8sklbcmo.fsf@baylibre.com>
+        id S1729175AbgCDM32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:29:28 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 04:29:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
+   d="scan'208";a="274651100"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2020 04:29:24 -0800
+Subject: Re: [PATCH V2] mmc: sdhci-msm: Disable CQE during SDHC reset
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
+ <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <da449444-1878-e387-6ebf-4ddb282a9b71@intel.com>
+Date:   Wed, 4 Mar 2020 14:28:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7h8sklbcmo.fsf@baylibre.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 29, 2020 at 05:07:43PM +0100, Kevin Hilman wrote:
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> writes:
+On 4/03/20 1:54 pm, Veerabhadrarao Badiganti wrote:
+> When SDHC gets reset (E.g. in suspend path), CQE also gets reset
+> and goes to disable state. But s/w state still points it as CQE
+> is in enabled state. Since s/w and h/w states goes out of sync,
+> it results in s/w request timeout for subsequent CQE requests.
 > 
-> > On Fri, Jan 24, 2020 at 12:29:36AM +0100, Remi Pommarel wrote:
-> >> PCIe device probing failures have been seen on AXG platforms and were
-> >> due to unreliable clock signal output. Setting HHI_MIPI_CNTL0[26] bit
-> >> in MIPI's PHY registers solved the problem. This bit controls band gap
-> >> reference.
-> >> 
-> >> As discussed here [1] one of these shared MIPI/PCIE analog PHY register
-> >> bits was implemented in the clock driver as CLKID_MIPI_ENABLE. This adds
-> >> a PHY driver to control this bit instead, as well as setting the band
-> >> gap one in order to get reliable PCIE communication.
-> >> 
-> >> While at it add another PHY driver to control PCIE only PHY registers,
-> >> making AXG code more similar to G12A platform thus allowing to remove
-> >> some specific platform handling in pci-meson driver.
-> >> 
-> >> Please note that CLKID_MIPI_ENABLE removable will be done in a different
-> >> serie.
-> >> 
-> >> Changes since v5:
-> >>  - Add additionalProperties in device tree binding documentation
-> >>  - Make analog PHY required
-> >> 
-> >> Changes since v4:
-> >>  - Rename the shared MIPI/PCIe PHY to analog
-> >>  - Chain the MIPI/PCIe PHY to the PCIe one
-> >> 
-> >> Changes since v3:
-> >>  - Go back to the shared MIPI/PCIe phy driver solution from v2
-> >>  - Remove syscon usage
-> >>  - Add all dt-bindings documentation
-> >> 
-> >> Changes since v2:
-> >>  - Remove shared MIPI/PCIE device driver and use syscon to access register
-> >>    in PCIE only driver instead
-> >>  - Include devicetree documentation
-> >> 
-> >> Changes sinve v1:
-> >>  - Move HHI_MIPI_CNTL0 bit control in its own PHY driver
-> >>  - Add a PHY driver for PCIE_PHY registers
-> >>  - Modify pci-meson.c to make use of both PHYs and remove specific
-> >>    handling for AXG and G12A
-> >> 
-> >> [1] https://lkml.org/lkml/2019/12/16/119
-> >> 
-> >> Remi Pommarel (7):
-> >>   dt-bindings: Add AXG PCIE PHY bindings
-> >>   dt-bindings: Add AXG shared MIPI/PCIE analog PHY bindings
-> >>   dt-bindings: PCI: meson: Update PCIE bindings documentation
-> >>   arm64: dts: meson-axg: Add PCIE PHY nodes
-> >>   phy: amlogic: Add Amlogic AXG MIPI/PCIE analog PHY Driver
-> >>   phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-> >>   PCI: amlogic: Use AXG PCIE
-> >> 
-> >>  .../bindings/pci/amlogic,meson-pcie.txt       |  22 +-
-> >>  .../amlogic,meson-axg-mipi-pcie-analog.yaml   |  35 ++++
-> >>  .../bindings/phy/amlogic,meson-axg-pcie.yaml  |  52 +++++
-> >>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |  16 ++
-> >>  drivers/pci/controller/dwc/pci-meson.c        | 116 ++---------
-> >>  drivers/phy/amlogic/Kconfig                   |  22 ++
-> >>  drivers/phy/amlogic/Makefile                  |  12 +-
-> >>  .../amlogic/phy-meson-axg-mipi-pcie-analog.c  | 188 +++++++++++++++++
-> >>  drivers/phy/amlogic/phy-meson-axg-pcie.c      | 192 ++++++++++++++++++
-> >>  9 files changed, 543 insertions(+), 112 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-mipi-pcie-analog.yaml
-> >>  create mode 100644 Documentation/devicetree/bindings/phy/amlogic,meson-axg-pcie.yaml
-> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-mipi-pcie-analog.c
-> >>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
-> >
-> > Hi Remi,
-> >
-> > I am ready to pull this series in, do you want me to ? Or you prefer
-> > it to go via a different tree upstream ?
+> To synchronize CQE s/w and h/w state during SDHC reset,
+> explicitly disable CQE after reset.
+
+Shouldn't you be calling cqhci_suspend() / cqhci_resume() in the suspend and
+resume paths?
+
 > 
-> To avoid conflicts, I'll take the DT patch (PATCH 4/7) through my
-> amlogic tree, but feel free to take the rest.
+> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+> ---
+> Changes since V1:
+> 	- Disable CQE only when SDHC undergoes s/w reset for all.
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index 53b79ee..75929d3 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -1823,6 +1823,13 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>  }
+>  
+> +static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
+> +{
+> +	sdhci_reset(host, mask);
+> +	if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
+> +		cqhci_suspend(host->mmc);
+> +}
+> +
+>  static const struct sdhci_msm_variant_ops mci_var_ops = {
+>  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+> @@ -1861,7 +1868,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
+>  MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
+>  
+>  static const struct sdhci_ops sdhci_msm_ops = {
+> -	.reset = sdhci_reset,
+> +	.reset = sdhci_msm_reset,
+>  	.set_clock = sdhci_msm_set_clock,
+>  	.get_min_clock = sdhci_msm_get_min_clock,
+>  	.get_max_clock = sdhci_msm_get_max_clock,
+> 
 
-Applied patches [1,2,3,5,6,7] to pci/amlogic for v5.7, thanks.
-
-Lorenzo
