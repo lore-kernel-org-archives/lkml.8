@@ -2,158 +2,106 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6249C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 658D3C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C16920665
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D4A42146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:13:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SXGn1tDV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5Fn7w8S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725914AbgCDFK5 (ORCPT
+        id S1725963AbgCDFNK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 00:10:57 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49422 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgCDFK4 (ORCPT
+        Wed, 4 Mar 2020 00:13:10 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:41316 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgCDFNK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 00:10:56 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0245Aj6M021833;
-        Tue, 3 Mar 2020 23:10:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583298645;
-        bh=3uVn5qRo3GIhs0+ZbtDUve7iCbFJIoICLR+tQsFcDj0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SXGn1tDVA49ju/vtsxC1o7ab7U82Vbrb7oPVdm60wwpx+s3pa/tzbojstV6oHqrQ0
-         TCCCzqJRKfwlMG5MaX/ZNGvIh6DeXwu738wDedIw60zeVhn/2wd7en+Wliu1+/iKGs
-         fGWrk6Ry3WfMkbjoQBF3Kc8Ihw9lseAiQADPaCds=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0245AjBD049080
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 3 Mar 2020 23:10:45 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 23:10:45 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 23:10:45 -0600
-Received: from [10.24.69.159] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0245AfCp025360;
-        Tue, 3 Mar 2020 23:10:42 -0600
-Subject: Re: [PATCH 1/5] PCI: endpoint: functions/pci-epf-test: Add DMA
- support to transfer data
-To:     Alan Mikhak <alan.mikhak@sifive.com>
-CC:     <amurray@thegoodpenguin.co.uk>, <arnd@arndb.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        <gregkh@linuxfoundation.org>, <linux-kernel@vger.kernel.org>,
-        linux-pci <linux-pci@vger.kernel.org>,
-        <lorenzo.pieralisi@arm.com>
-References: <20200225091130.29467-1-kishon@ti.com>
- <1582665067-20462-1-git-send-email-alan.mikhak@sifive.com>
- <7e1202a3-037b-d1f3-f2bf-1b8964787ebd@ti.com>
- <CABEDWGz=4E8mYx0usw4A1UAMHrq+MGyKOX47yO7Cdgmcq=aOag@mail.gmail.com>
- <CABEDWGwejv-1h=pLt_o5n=Mct+6r9oQdQCLT7GZSMgBR2bDJHg@mail.gmail.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <eb57e52a-be34-dd2c-3820-21fe7dc68185@ti.com>
-Date:   Wed, 4 Mar 2020 10:45:16 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 4 Mar 2020 00:13:10 -0500
+Received: by mail-qk1-f194.google.com with SMTP id b5so430261qkh.8;
+        Tue, 03 Mar 2020 21:13:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HxfKMRYycoYJCMjo+bMFWJRwnGnU13AVvKUckPyxeSo=;
+        b=K5Fn7w8SmnIBj8Lc9FZok49SJWB6g/q/Iga7hGwmiFt+PvrkBDKrKfNigTp77YxG9X
+         DPuvoDPY+71aruC/wBH3cVGt1rRCaJEXKOLVpxMsDTPajmm72QvPDOWHNN8zLSHzdtuG
+         KFoCJVbiTmToQ5WIewb6q7t96jAnIeGAcol4qQRWHd994e9P/bnG8+ryfXWaHqoMcBTO
+         dMml4IRUX9PPz/kzdO5V5UgWu4+yMXt3B8I3WPmTxvJhNurnND1C9wqIdue+KZk564qh
+         OzvlIfr4noAmNfAOCdekZQe6ygE8ZqthS2f8MWN1pKfkJ9S6bLCEZ8aozzFOImi6VKr2
+         gk8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HxfKMRYycoYJCMjo+bMFWJRwnGnU13AVvKUckPyxeSo=;
+        b=q5XfS03CdwdaB2aTikw8fhf7cSPbL4WijAv5cuPt8yoNtTcPNVMNSKscl2dSvbdc7D
+         aV1+bioHBAAheDZkiZMpr2SiYyxtaFOGdXpNRvcEiQ+S82oGZLoIvEtnKmyovyG7XX15
+         Rw0wXpdf+vYFlbg5uAGPj9Amk9eNV0VmM1hIxvq/lR8NoDcCsgV2pXSPYTWJyU7B7VPJ
+         4Bg1RcVa6VWoCiw0iHDsBzYKlfXp/7gKzZyk0z+jJJxMT3uDS5H6tiapxLjY+8SjmCjn
+         8U60+VEmye88sm0PdzWI0fu4Mu5ChVSOUNqMZjcPZ8fAM7Anwn22KKZZ55b7PGnspoI9
+         FYJg==
+X-Gm-Message-State: ANhLgQ3ZwlnfXDm1E756thEnsakdJg95MPextP80aiVImWFSc5aubxSs
+        VWdNqvmsZuXK9N55vYWZxTQlCleeOb17Iz16C6Q=
+X-Google-Smtp-Source: ADFU+vtzCLI06uGJU75QdLWpADbjaRR4sP9m7GAksEwL9DWlE1GZMxFgdM8Vtf8bZY4MVdtet9MF9YvtDv9Tkt89qoY=
+X-Received: by 2002:a37:a70c:: with SMTP id q12mr1440438qke.36.1583298789150;
+ Tue, 03 Mar 2020 21:13:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CABEDWGwejv-1h=pLt_o5n=Mct+6r9oQdQCLT7GZSMgBR2bDJHg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200304015528.29661-1-kpsingh@chromium.org> <20200304015528.29661-5-kpsingh@chromium.org>
+In-Reply-To: <20200304015528.29661-5-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 3 Mar 2020 21:12:57 -0800
+Message-ID: <CAEf4BzZdR-PTFZT5VJ7kMw=FNhsCUpbQvdypEWSF1JNuaye6Kw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 4/7] bpf: Attachment verification for BPF_MODIFY_RETURN
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-security-module@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
+On Tue, Mar 3, 2020 at 5:56 PM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> - Allow BPF_MODIFY_RETURN attachment only to functions that are:
+>
+>     * Whitelisted by for error injection i.e. by checking
+>       within_error_injection_list. Similar disucssions happened for the
+>       bpf_overrie_return helper.
 
-On 04/03/20 5:27 am, Alan Mikhak wrote:
-> On Wed, Feb 26, 2020 at 9:39 AM Alan Mikhak <alan.mikhak@sifive.com> wrote:
->>
->> On Tue, Feb 25, 2020 at 9:27 PM Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>
->>> Hi Alan,
->>>
->>> On 26/02/20 2:41 am, Alan Mikhak wrote:
->>>> @@ -380,6 +572,7 @@ static void pci_epf_test_unbind(struct pci_epf *epf)
->>>>         int bar;
->>>>
->>>>         cancel_delayed_work(&epf_test->cmd_handler);
->>>> +       pci_epf_clean_dma_chan(epf_test);
->>>>         pci_epc_stop(epc);
->>>>         for (bar = 0; bar < PCI_STD_NUM_BARS; bar++) {
->>>>                 epf_bar = &epf->bar[bar];
->>>> @@ -550,6 +743,12 @@ static int pci_epf_test_bind(struct pci_epf *epf)
->>>>                 }
->>>>         }
->>>>
->>>> +       epf_test->dma_supported = true;
->>>> +
->>>> +       ret = pci_epf_init_dma_chan(epf_test);
->>>> +       if (ret)
->>>> +               epf_test->dma_supported = false;
->>>> +
->>>>         if (linkup_notifier) {
->>>>                 epf->nb.notifier_call = pci_epf_test_notifier;
->>>>                 pci_epc_register_notifier(epc, &epf->nb);
->>>>
->>>> Hi Kishon,
->>>>
->>>> Looking forward to building and trying this patch series on
->>>> a platform I work on.
-> 
-> Hi Kishon,
-> 
-> I applied this v1 patch series to kernel.org linux 5.6-rc3 and built for
-> x86_64 Debian and riscv. I verified that when I execute the pcitest
-> command on the x86_64 host with -d flag, the riscv endpoint performs
-> the transfer by using an available dma channel.
+2 typos: discussions and bpf_override_return ;)
 
-Thank you for testing this.
-I've posted a new version after renaming the function names to
-pci_epf_test_init_dma_chan() and pci_epf_test_cleanup_dma_chan() [1]
-Can you add your "Tested-by: " tag in that series so that Lorenzo can
-pick it up?
+>
+>     * security hooks, this is expected to be cleaned up with the LSM
+>       changes after the KRSI patches introduce the LSM_HOOK macro:
+>
+>         https://lore.kernel.org/bpf/20200220175250.10795-1-kpsingh@chromium.org/
+>
+> - The attachment is currently limited to functions that return an int.
+>   This can be extended later other types (e.g. PTR).
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
 
-Thanks
-Kishon
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-[1] -> http://lore.kernel.org/r/20200303103752.13076-1-kishon@ti.com
+>  kernel/bpf/btf.c      | 28 ++++++++++++++++++++--------
+>  kernel/bpf/verifier.c | 31 +++++++++++++++++++++++++++++++
+>  2 files changed, 51 insertions(+), 8 deletions(-)
+>
 
-> 
-> Regards,
-> Alan
-> 
->>>>
->>>> Would you please point me to where I can find the patches
->>>> which add pci_epf_init_dma_chan() and pci_epf_clean_dma_chan()
->>>> to Linux PCI Endpoint Framework?
->>>
->>> I've added these functions in pci-epf-test itself instead of adding in
->>> the core files. I realized adding it in core files may not be helpful if
->>> the endpoint function decides to use more number of DMA channels etc.,
->>
->> Thanks Kishon,
->>
->> I now realize they are in [PATCH 1/5] of this series. May I suggest renaming
->> them to pci_epf_test_init_dma_chan() and pci_epf_test_cleanup_dma_chan()?
->> With just pci_epf in their name, I was looking for them in pci-epf-core.c.
->>
->> Regards,
->> Alan
->>
->>>
->>> Thanks
->>> Kishon
+[...]
