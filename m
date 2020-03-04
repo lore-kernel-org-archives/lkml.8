@@ -2,105 +2,156 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20FB8C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BA4C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:03:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC4262166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:57:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 148C02166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:03:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="P+wHUgAf"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lv5XmrPO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388294AbgCDS5Y (ORCPT
+        id S1730131AbgCDTD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:57:24 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36008 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgCDS5Y (ORCPT
+        Wed, 4 Mar 2020 14:03:27 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41732 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbgCDTD1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:57:24 -0500
-Received: by mail-pg1-f193.google.com with SMTP id d9so1431612pgu.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:57:23 -0800 (PST)
+        Wed, 4 Mar 2020 14:03:27 -0500
+Received: by mail-pf1-f196.google.com with SMTP id z65so923446pfz.8
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:03:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=idtFy8s7OaNPWyKbg7P+1dRKvA+ZRf5zuxknR7OyW1o=;
-        b=P+wHUgAfTLxMQ2NcHR/tTiyoigV9cEhyD/cKtzqf91Cc47F9lSfj2Sbn3vBkR8MKA4
-         HKATzrSgYdIqrlRSJ+u52MpPHsjvVLLagl6mT+sTceC5IVRaJI/IVta88WVHPHpDjCi/
-         MdtGjOBHDRAVq41VdjCz1mMvtjAHJogDft0A0=
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=5TjbY4GEQcUBSuOZ3RlaB1Ghuf3vDqDXE20DOsWONH0=;
+        b=lv5XmrPOoGKdCPO/GpdsKXBp9iLUqDpmu2DPMA3TlPDemcOpuemqp5eieDPfz+t7Il
+         LNN69mMJ6aaxOZzYEsGXWs02yKsHy8OpSdhH6uwUy1G+IWb89y+qhOoqkvef8uvOWjSg
+         MCDJE1HLXFcecJXaIleOmpvfLPnhqgj4y0+xk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=idtFy8s7OaNPWyKbg7P+1dRKvA+ZRf5zuxknR7OyW1o=;
-        b=MnWIUSyaArGerFN/tVdt1IBWgYkOtG8dQXtCaiWglIC9m/bLdLVaHVHn3cJdcmL7/Q
-         P1QhUsHlVU2wBZgQpPa1kyS0Oc87wrpN5KgKcorn/g9cR1vcAsOwVwoWTObiIP3UpWna
-         pQMPcn4H0Z+oXixFORd6XzD3fZK6+BZWhD5Gm0gU37ALZS+z8Ja9XeB3uj/kJRuzpQBm
-         97kJCbbU/Jul9b+SRjMLCZ94ohlvgPxU8DuzMt1eWcnGVqPqDCY5yR7txM02CzUyLKOt
-         lmgelPWNGanedD+07BhQ9ubmB1KnIfXe2m4w494Dzy3RHRNTyAkgt/er0wvkNYtEZy9d
-         c1hg==
-X-Gm-Message-State: ANhLgQ13Rugx6fdjkbF1t7XTYAS3oBNLOM5Sc+DN/FYcnqDnFBtU1sy9
-        7rGFfPobDtwQgjBbFs63vM9x7A==
-X-Google-Smtp-Source: ADFU+vsFNLAgknRkVaIM88rGnq3JGV02sq8SLXTLvL9+Yxwez8qby8TqAzle/IPrOWuYWkvutiT15w==
-X-Received: by 2002:a63:5859:: with SMTP id i25mr3699184pgm.74.1583348243434;
-        Wed, 04 Mar 2020 10:57:23 -0800 (PST)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id cm2sm3576394pjb.23.2020.03.04.10.57.22
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=5TjbY4GEQcUBSuOZ3RlaB1Ghuf3vDqDXE20DOsWONH0=;
+        b=Am4X7EUU1iy1PU/67q2LYP0akqds4yXsjgSdWVa2eTEqoG4fy4F8YzVjHiIehZhaCy
+         S4Yex13mHJYrU8UyCfO9gQem6oRcjMj5uK9B1RD6rJhLT2s+TG5D9GdNr2ecKula0vRn
+         he8pwlT879ppihtYMrnb3QWq1yjYoP7+LB4Z4ZugrMQQixUQJDWEgVkCYszfFGkc/24w
+         o9T2kM2ErGkBytcetJJjXBe0p0ScLwHJVqZSmcCJXvKrGIuQ+JdV3BDmhHChbMQh0Ha7
+         X0NAtvrgvy82n/3+fdQ3gnmNjZVB3QxAGsrFGcyvsVuUQjcergJjjA0Fdv9gtH0jZ7Zl
+         E+4Q==
+X-Gm-Message-State: ANhLgQ34HXg/wFi7Q7Z4+EYv0NOT8hBILnAA6JdHUL2N5dK1hlU35YfJ
+        Zv49TCq2aT8YD7vBVpiyEvDFXw==
+X-Google-Smtp-Source: ADFU+vsVcBfZ2QwQDf3QDE8S0SgijoH1lmHzLI+CblXB0MxvcDpeHgHCnUP0kbb+4jz5YRecrQczFQ==
+X-Received: by 2002:a63:ce42:: with SMTP id r2mr4075199pgi.106.1583348606353;
+        Wed, 04 Mar 2020 11:03:26 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x65sm16783249pfd.34.2020.03.04.11.03.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 10:57:22 -0800 (PST)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Taniya Das <tdas@codeaurora.org>, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] arm64: dts: sc7180: Add unit name to soc node
-Date:   Wed,  4 Mar 2020 10:56:56 -0800
-Message-Id: <20200304105638.1.I9ea0d337fcb927f52a28b20613b2377b6249c222@changeid>
-X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+        Wed, 04 Mar 2020 11:03:25 -0800 (PST)
+Date:   Wed, 4 Mar 2020 11:03:24 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Joe Perches <joe@perches.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: deprecated.rst: Clean up fall-through details
+Message-ID: <202003041102.47A4E4B62@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is just like commit a1875bf98290 ("arm64: dts: qcom: sdm845: Add
-unit name to soc node") but for sc7180.
+Add example of fall-through, list-ify the case ending statements, and
+adjust the markup for links and readability. While here, adjust
+strscpy() details to mention strscpy_pad().
 
-For reference, the warning being fixed was:
-  Warning (unit_address_vs_reg): /soc:
-  node has a reg or ranges property, but no unit name
-
-Fixes: 90db71e48070 ("arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc")
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
+ Documentation/process/deprecated.rst | 48 +++++++++++++++++-----------
+ 1 file changed, 29 insertions(+), 19 deletions(-)
 
- arch/arm64/boot/dts/qcom/sc7180.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-index 253274d5f04c..8e71f543819e 100644
---- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
-@@ -359,7 +359,7 @@ psci {
- 		method = "smc";
- 	};
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index 179f2a5625a0..f9f196d3a69b 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -94,8 +94,8 @@ and other misbehavior due to the missing termination. It also NUL-pads the
+ destination buffer if the source contents are shorter than the destination
+ buffer size, which may be a needless performance penalty for callers using
+ only NUL-terminated strings. The safe replacement is :c:func:`strscpy`.
+-(Users of :c:func:`strscpy` still needing NUL-padding will need an
+-explicit :c:func:`memset` added.)
++(Users of :c:func:`strscpy` still needing NUL-padding should instead
++use strscpy_pad().)
  
--	soc: soc {
-+	soc: soc@0 {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
- 		ranges = <0 0 0 0 0x10 0>;
+ If a caller is using non-NUL-terminated strings, :c:func:`strncpy()` can
+ still be used, but destinations should be marked with the `__nonstring
+@@ -122,27 +122,37 @@ memory adjacent to the stack (when built without `CONFIG_VMAP_STACK=y`)
+ 
+ Implicit switch case fall-through
+ ---------------------------------
+-The C language allows switch cases to "fall-through" when a "break" statement
+-is missing at the end of a case. This, however, introduces ambiguity in the
+-code, as it's not always clear if the missing break is intentional or a bug.
++The C language allows switch cases to fall through to the next case
++when a "break" statement is missing at the end of a case. This, however,
++introduces ambiguity in the code, as it's not always clear if the missing
++break is intentional or a bug. For example, it's not obvious just from
++looking at the code if `STATE_ONE` is intentionally designed to fall
++through into `STATE_TWO`::
++
++	switch (value) {
++	case STATE_ONE:
++		do_something();
++	case STATE_TWO:
++		do_other();
++		break;
++	default:
++		WARN("unknown state");
++	}
+ 
+ As there have been a long list of flaws `due to missing "break" statements
+ <https://cwe.mitre.org/data/definitions/484.html>`_, we no longer allow
+-"implicit fall-through".
+-
+-In order to identify intentional fall-through cases, we have adopted a
+-pseudo-keyword macro 'fallthrough' which expands to gcc's extension
+-__attribute__((__fallthrough__)).  `Statement Attributes
+-<https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html>`_
+-
+-When the C17/C18  [[fallthrough]] syntax is more commonly supported by
++implicit fall-through. In order to identify intentional fall-through
++cases, we have adopted a pseudo-keyword macro "fallthrough" which
++expands to gcc's extension `__attribute__((__fallthrough__))
++<https://gcc.gnu.org/onlinedocs/gcc/Statement-Attributes.html>`_.
++(When the C17/C18  `[[fallthrough]]` syntax is more commonly supported by
+ C compilers, static analyzers, and IDEs, we can switch to using that syntax
+-for the macro pseudo-keyword.
++for the macro pseudo-keyword.)
+ 
+ All switch/case blocks must end in one of:
+ 
+-	break;
+-	fallthrough;
+-	continue;
+-	goto <label>;
+-	return [expression];
++* break;
++* fallthrough;
++* continue;
++* goto <label>;
++* return [expression];
 -- 
-2.25.0.265.gbab2e86ba0-goog
+2.20.1
 
+
+-- 
+Kees Cook
