@@ -2,167 +2,138 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAD6C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB9D1C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E079320842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:05:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OEq2r8fA"
+	by mail.kernel.org (Postfix) with ESMTP id 7F4332146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:11:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727060AbgCDEF5 (ORCPT
+        id S1726359AbgCDEL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 23:05:57 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48934 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbgCDEF5 (ORCPT
+        Tue, 3 Mar 2020 23:11:57 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35704 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725773AbgCDEL5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 23:05:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:
-        Subject:Sender:Reply-To:Cc:Content-ID:Content-Description;
-        bh=N7489+DvZFXDsAxs/5zrBWYAyH6nC/7dSqSyIv694O4=; b=OEq2r8fAS6nfUOSCQYPvW8y4Iv
-        SBZow0oDBWUVJemZMZ4g6N+8W5S1cMqrqOtxvAJddejKRbmMxGyO19K0B9J4f6sgUJTE0KzmPe28P
-        j9c14DCsQGjj8gXbrBB+Khe9N+7mevFKSuh8M/Gd7VoFC0DFpGEYfHjtYpmHeXd2XtIuk3251TnhK
-        fEM6ubKxb0t5ovqdjalLIR3f5C2yReGxa0+SUmONQc2bvxOe5qsIyoZ35W8zliEXnWOA867BBg7v5
-        s4oAd8TDOxbptiCGk2W59XdhbQH8eZKJJ/L1lOWaeOz1IuSek8Q4NQHZ//CJYmhBpdSMKa9sFSneR
-        3UQuTA2g==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9LIA-0006sA-RF; Wed, 04 Mar 2020 04:05:54 +0000
-Subject: Re: v5.5-rc1 and beyond insta-kills some Comcast wifi routers
-To:     "Mancini, Jason" <Jason.Mancini@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Yan-Hsuan Chuang <yhchuang@realtek.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-References: <DM6PR12MB4331FD3C4EF86E6AF2B3EBC7E5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4e2a1fc1-4c14-733d-74e2-750ef1f81bf6@infradead.org>
-Date:   Tue, 3 Mar 2020 20:05:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 3 Mar 2020 23:11:57 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024492hE073399
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Mar 2020 23:11:55 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yhs0tha5m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 23:11:55 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 4 Mar 2020 04:11:53 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 04:11:45 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0244BiE520054216
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 04:11:44 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A02484C046;
+        Wed,  4 Mar 2020 04:11:44 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C6AE4C044;
+        Wed,  4 Mar 2020 04:11:44 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 04:11:44 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 6B764A023A;
+        Wed,  4 Mar 2020 15:11:39 +1100 (AEDT)
+Subject: Re: [PATCH v3 26/27] powerpc/powernv/pmem: Expose the firmware
+ version in sysfs
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Wed, 04 Mar 2020 15:11:43 +1100
+In-Reply-To: <2253010d-c7ad-347b-4668-d5f1a95d3f1e@linux.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <20200221032720.33893-27-alastair@au1.ibm.com>
+         <2253010d-c7ad-347b-4668-d5f1a95d3f1e@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-In-Reply-To: <DM6PR12MB4331FD3C4EF86E6AF2B3EBC7E5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030404-0016-0000-0000-000002ECF535
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030404-0017-0000-0000-000033503FA6
+Message-Id: <e38656ebfe2b79ad34b16e777d0719006527e04d.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_08:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
+ lowpriorityscore=0 impostorscore=0 spamscore=0 clxscore=1015 adultscore=0
+ phishscore=0 mlxlogscore=633 mlxscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003040028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[add netdev mailing list + 2 patch signers]
-
-On 3/3/20 7:34 PM, Mancini, Jason wrote:
-> [I can't seem to access the linux-net ml per kernel.org faq, apology
-> in advance.]
+On Mon, 2020-03-02 at 18:35 +1100, Andrew Donnellan wrote:
+> On 21/2/20 2:27 pm, Alastair D'Silva wrote:
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > This information will be used by ndctl in userspace to help users
+> > identify
+> > the device.
 > 
-> This change, which I think first appeared for v5.5-rc1, basically
-> within seconds, knocks out our [apparently buggy] Comcast wifi for
-> about 2-3 minutes.  Is there a boot option (or similar) where I can
-> achieve prior kernel behavior?  Otherwise I am stuck on kernel 5.4
-> (or Win10) it seems, or forever compiling custom kernels for my
-> choice of distribution [as I don't have physical access to the router
-> in question.]
-> Thanks!
-> Jason
+> You should include the information from the subject line in the body
+> of 
+> the commit message too.
 > 
-> ================
-> 
-> 127eef1d46f80056fe9f18406c6eab38778d8a06 is the first bad commit
-> commit 127eef1d46f80056fe9f18406c6eab38778d8a06
-> Author: Yan-Hsuan Chuang <yhchuang@realtek.com>
-> Date:   Wed Oct 2 14:35:23 2019 +0800
-> 
->     rtw88: add TX-AMSDU support
-> 
->     Based on the mac80211's TXQ implementation, TX-AMSDU can
->     be used to get higher MAC efficiency. To make mac80211
->     aggregate MSDUs, low level driver just need to leave skbs
->     in the TXQ, and mac80211 will try to aggregate them if
->     possible. As driver will schedule a tasklet when the TX
->     queue is woke, until the tasklet being served, there will
->     have some skbs in the queue if traffic is heavy.
-> 
->     Driver can control the max AMSDU size depending on the
->     current bit rate used by hardware/firmware. The higher
->     rates are used, the larger AMSDU size can be.
-> 
->     It is tested that can achieve higher T-Put at higher rates.
->     If the environment is relatively clean, and the bit_rate
->     is high enough, we can get about 80Mbps improvement.
-> 
->     For lower bit rates, not much gain can we get, so leave
->     the max_amsdu length low to prevent aggregation.
-> 
->     Signed-off-by: Yan-Hsuan Chuang <yhchuang@realtek.com>
->     Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
-> 
->  drivers/net/wireless/realtek/rtw88/fw.c   | 24 ++++++++++++++++++++++++
->  drivers/net/wireless/realtek/rtw88/main.c |  1 +
->  2 files changed, 25 insertions(+)
-> 
-> ------------------- drivers/net/wireless/realtek/rtw88/fw.c -------------------
-> index 4b41bf531998..51649df7cc98 100644
-> @@ -29,6 +29,28 @@ static void rtw_fw_c2h_cmd_handle_ext(struct rtw_dev *rtwdev,
->         }
->  }
->  
-> +static u16 get_max_amsdu_len(u32 bit_rate)
-> +{
-> +       /* lower than ofdm, do not aggregate */
-> +       if (bit_rate < 550)
-> +               return 1;
-> +
-> +       /* lower than 20M 2ss mcs8, make it small */
-> +       if (bit_rate < 1800)
-> +               return 1200;
-> +
-> +       /* lower than 40M 2ss mcs9, make it medium */
-> +       if (bit_rate < 4000)
-> +               return 2600;
-> +
-> +       /* not yet 80M 2ss mcs8/9, make it twice regular packet size */
-> +       if (bit_rate < 7000)
-> +               return 3500;
-> +
-> +       /* unlimited */
-> +       return 0;
-> +}
-> +
->  struct rtw_fw_iter_ra_data {
->         struct rtw_dev *rtwdev;
->         u8 *payload;
-> @@ -83,6 +105,8 @@ static void rtw_fw_ra_report_iter(void *data, struct ieee80211_sta *sta)
->  
->         si->ra_report.desc_rate = rate;
->         si->ra_report.bit_rate = bit_rate;
-> +
-> +       sta->max_rc_amsdu_len = get_max_amsdu_len(bit_rate);
->  }
->  
->  static void rtw_fw_ra_report_handle(struct rtw_dev *rtwdev, u8 *payload,
-> 
-> ------------------ drivers/net/wireless/realtek/rtw88/main.c ------------------
-> index 690a5c4d64e7..f7044e8bcb5b 100644
-> @@ -1310,6 +1310,7 @@ int rtw_register_hw(struct rtw_dev *rtwdev, struct ieee80211_hw *hw)
->         ieee80211_hw_set(hw, SUPPORT_FAST_XMIT);
->         ieee80211_hw_set(hw, SUPPORTS_AMSDU_IN_AMPDU);
->         ieee80211_hw_set(hw, HAS_RATE_CONTROL);
-> +       ieee80211_hw_set(hw, TX_AMSDU);
->  
->         hw->wiphy->interface_modes = BIT(NL80211_IFTYPE_STATION) |
->                                      BIT(NL80211_IFTYPE_AP) |
+> I think this patch could probably be squashed in with the last one.
 > 
 
+Ok
 
 -- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
+
