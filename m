@@ -2,70 +2,78 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D72FC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1596C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C97D20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:28:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8286E2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:28:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eq5l3g1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388068AbgCDN2B (ORCPT
+        id S2388125AbgCDN2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:28:01 -0500
-Received: from 8bytes.org ([81.169.241.247]:49976 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387919AbgCDN2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:28:01 -0500
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 59B1C3A4; Wed,  4 Mar 2020 14:27:59 +0100 (CET)
-Date:   Wed, 4 Mar 2020 14:27:53 +0100
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        virtualization@lists.linux-foundation.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Hanjun Guo <guohanjun@huawei.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 00/14] iommu: Move iommu_fwspec out of 'struct device'
-Message-ID: <20200304132753.GA4177@8bytes.org>
-References: <20200228150820.15340-1-joro@8bytes.org>
- <20200303191624.GC27329@willie-the-truck>
+        Wed, 4 Mar 2020 08:28:17 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:49726 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387919AbgCDN2R (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 08:28:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=vcyjl/gf9IB6qjHUL3x/zChqzGCsLcScrsxnmpIoAjU=; b=eq5l3g1Tod0dAnZbI4RkPb4doi
+        2dFO7PzAPS1zgq9oQM512m58g5Gc2wzNrgvVGouydIulxHhfHCPTP3zUFL6XpoGTDCbdd36NVH3mH
+        7Au7SnFiEDp1OBbDewb9Da2OEX33OFf0jew/JLvAhHYMNSyHun0llahx5201paync0Ls7pO2YAXgy
+        bypnEAWWHugKhvGwdCWlHORtqxR4QQZkvlv1D7BtmwpnkEt8XTX2h0C8Q9E0dCKF441nkdH2Y+t2B
+        Fxlw32Ip+xO6WguWKS0rTc2zIQLeUCB5QgkVwRTSrkGqv+tXon0u05MLNvPL8nFly6QP827eBzFqu
+        Nb8cv/DQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9U4K-0006L0-P1; Wed, 04 Mar 2020 13:28:12 +0000
+Date:   Wed, 4 Mar 2020 05:28:12 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v3)
+Message-ID: <20200304132812.GE29971@bombadil.infradead.org>
+References: <20200223011154.GY23230@ZenIV.linux.org.uk>
+ <20200301215125.GA873525@ZenIV.linux.org.uk>
+ <CAHk-=wh1Q=H-YstHZRKfEw2McUBX2_TfTc=+5N-iH8DSGz44Qg@mail.gmail.com>
+ <20200302003926.GM23230@ZenIV.linux.org.uk>
+ <87o8tdgfu8.fsf@x220.int.ebiederm.org>
+ <20200304002434.GO23230@ZenIV.linux.org.uk>
+ <87wo80g0bo.fsf@x220.int.ebiederm.org>
+ <20200304065547.GP23230@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303191624.GC27329@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200304065547.GP23230@ZenIV.linux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Will,
-
-On Tue, Mar 03, 2020 at 07:16:25PM +0000, Will Deacon wrote:
-> I haven't had a chance to review this properly yet, but I did take it
-> for a spin on my Seattle board with MMU-400 (arm-smmu) and it seems to
-> work the same as before, so:
+On Wed, Mar 04, 2020 at 06:55:47AM +0000, Al Viro wrote:
+> On Tue, Mar 03, 2020 at 11:23:39PM -0600, Eric W. Biederman wrote:
+> > Do the xfs-tests cover that sort of thing?
+> > The emphasis is stress testing the filesystem not the VFS but there is a
+> > lot of overlap between the two.
 > 
-> Tested-by: Will Deacon <will@kernel.org> # arm-smmu
+> I do run xfstests.  But "runs in KVM without visible slowdowns" != "won't
+> cause them on 48-core bare metal".  And this area (especially when it
+> comes to RCU mode) can be, er, interesting in that respect.
 > 
-> I'll try to review the patches soon.
+> FWIW, I'm putting together some litmus tests for pathwalk semantics -
+> one of the things I'd like to discuss at LSF; quite a few codepaths
+> are simply not touched by anything in xfstests.
 
-Thanks for testing it! I will send out a new version probably beginning
-of next week (I am travelling this week) to fix the kbuild issue and
-anything you might find.
+Might be more appropriate for LTP than xfstests?  will-it-scale might be
+the right place for performance benchmarks.
 
-Thanks,
-
-	Joerg
