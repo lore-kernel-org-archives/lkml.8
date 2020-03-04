@@ -2,133 +2,103 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AF3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82EB4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:15:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901112146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:14:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583356459;
-	bh=qWstThEPisjkoufeUGKImiiH/cu9kG08/ODouMKhUow=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=TrzZngNAadAgfg/t62gveqZ6Y2yGKO7rOKzEQfkgIfg/QqTb7qV2s1sbjaVSU6Fau
-	 786bIRvWJ/TGZMj/cpop1VTB6ekHEnBQwREEvUs3vj0ib59UyllSUAQ1sWclgt1jre
-	 9ZRB6f0kgLhH/B/Rv83TNSnKB5ZZnwc4VhB2ez+s=
+	by mail.kernel.org (Postfix) with ESMTP id 5499720842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:15:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rpIeztq7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388302AbgCDVOS convert rfc822-to-8bit (ORCPT
+        id S2388335AbgCDVP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:14:18 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:34754 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgCDVOS (ORCPT
+        Wed, 4 Mar 2020 16:15:57 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:40522 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgCDVP4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:14:18 -0500
-Received: by mail-ot1-f65.google.com with SMTP id j16so3544810otl.1;
-        Wed, 04 Mar 2020 13:14:17 -0800 (PST)
+        Wed, 4 Mar 2020 16:15:56 -0500
+Received: by mail-ed1-f67.google.com with SMTP id a13so4024447edu.7;
+        Wed, 04 Mar 2020 13:15:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Em+PlQiOtj4b65IT/F3S+R3l1hsqSkR2d5+J1YRJyRk=;
+        b=rpIeztq7F3sX6zjxbhir4885stPfdoyMPD7XM/MG+0p0rleBmGcxRh6hHqQHHWaGtK
+         +vy/wGjzwyzIopeZohV5yY6ak/lABt6v/tPrtnSUsJEKn4gqlRMQC1EJgoGv9p6dzIK3
+         rSe3QedbCh51qJ58HdVOjpWaDEtW20IDvW0Nok67XnkHTlbjJy+Bu89GRlWVGBcGolWS
+         l8oC/kj/6rBdc6f/KjxgtJCxojakt7mNhQIdiEsY9mVf0xA+BSYc4HP/3rkZut4QbjpX
+         jhCPCMkKNUiTHFZl7jn8GJuEbt04o02iJ3t9o7hofKRomGvtN/uL6aK/3MRPCHiAYlD9
+         z5YQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JLQZ2G1Xjci6M9Tdj0KmF35kuRwhcReJ8Bh0Us9PzUc=;
-        b=CqK/TyqU9m7Ex6bN8OKK8owMDs2BuSv8dUOy70L5GNcmZw3ecmbD7UuV2wFgfhschL
-         QGQROMpIUj6SiJyKbqkeVuZGxzTtpDL2hpLR3RgL5rGLTMJGuQEk44/WEsm2D7dIUPAJ
-         XppQs7UCoxqAmLvTD9rH5Oa8aPhJ4NgogvG7w+xdvLBsMoXrMTqM4XA4Iyk2RHjmgWoO
-         PYv3BhLTFgKNeQFZ/IFutkY+DEZ+IWhYWVTmZoEsAOvyP7gWj9hzQUqWqh6EmlEoqiq3
-         BmXlQy/dPzfETVj4pFGIdZvt4pBf9lMhyDNKp3qH09NH7BTGVfSgRX7stQHv1MTIEzL9
-         LVXQ==
-X-Gm-Message-State: ANhLgQ2SpszchG0psh5aksgTuAyWQRNPYKnq9XnkCCrwccXFGbE82c2D
-        hqJLGd2rcKe9Ps1zKCeDISBHKL+TZoNgBoy6jtoEJz2P
-X-Google-Smtp-Source: ADFU+vsO2OteMecxFWmOO5z9/LBDPBK1mmNYWFu+lKjiP3PM6glg8i8Fx9E51YzIPILiDF6bsax+ZdIN8NNKcaHFzAQ=
-X-Received: by 2002:a9d:7653:: with SMTP id o19mr3801182otl.118.1583356457362;
- Wed, 04 Mar 2020 13:14:17 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Em+PlQiOtj4b65IT/F3S+R3l1hsqSkR2d5+J1YRJyRk=;
+        b=oI7S5BAd5QV+OboxbAwZEgK7eZgWYQi3goHqzaQmmEEaMpY2FlAluxcu2x7MTwDDMs
+         aZHs1ultT5T1BagkFvA5HRA5Q2/qBm6STAuSM8FACpxVwe922QBZHzEOfzZdQunKQrRW
+         JmP5TsrT4mUfk9dyb0Cgfxw5sn2/0CpD+oFfJUoCMhXHnT28/OYV9iDxsMUuJnRQZ0t6
+         BuEQVvA/kLAAV0h7rEcE4qWxou0eASvVEPe1JThS437ik/2UJE+iu7SsKNVYJHZdGH8s
+         jb3NKZdIzqQoLazZFmpq9wZvgv9kg3im280Oj12uwnHSZAsPR8cv0uIdri30ygWPfFko
+         h0/A==
+X-Gm-Message-State: ANhLgQ3mYNIfFz1D9QrruEIS88slvx7PU5GTphZ3fnzlkoHD7RdFPwJu
+        StgmHRVdFTILSudYqgfJwdU=
+X-Google-Smtp-Source: ADFU+vsskwQ2kRTF4Kq4c201RyQOGF1Y34XBafQH0inJlyarAtMkOuxBj2qs8K+F/666Z9EL7+gVUw==
+X-Received: by 2002:a05:6402:22e9:: with SMTP id dn9mr4702173edb.165.1583356554894;
+        Wed, 04 Mar 2020 13:15:54 -0800 (PST)
+Received: from felia ([2001:16b8:2d16:4100:5c62:5f:595c:f76d])
+        by smtp.gmail.com with ESMTPSA id r25sm610123edo.19.2020.03.04.13.15.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 13:15:54 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Wed, 4 Mar 2020 22:15:53 +0100 (CET)
+X-X-Sender: lukas@felia
+To:     James Bottomley <jejb@linux.ibm.com>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: adjust to trusted keys subsystem creation
+In-Reply-To: <1583338378.3284.7.camel@linux.ibm.com>
+Message-ID: <alpine.DEB.2.21.2003042214170.2698@felia>
+References: <20200304160359.16809-1-lukas.bulwahn@gmail.com> <1583338378.3284.7.camel@linux.ibm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
- <20200303170948.1.I108734f38ade020c3e5da825839dca11d2a2ff87@changeid>
- <CAJZ5v0j+bx5fh1wv738MNoui_SaZ-c21rDnZkWOqi_GCVg5stQ@mail.gmail.com> <F8C6368A-1537-482B-8FE5-350A18D936A8@intel.com>
-In-Reply-To: <F8C6368A-1537-482B-8FE5-350A18D936A8@intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 4 Mar 2020 22:14:06 +0100
-Message-ID: <CAJZ5v0iBMiGKeFXRTLkR8oFQbdCJq0TnhpFZkMBK4gF0VNjumA@mail.gmail.com>
-Subject: Re: [PATCH v3] intel_idle: Add Comet Lake support
-To:     "Pan, Harry" <harry.pan@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Harry Pan <gs0622@gmail.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 12:57 PM Pan, Harry <harry.pan@intel.com> wrote:
->
-> Hi Rafael,
->
-> Yes, I skipped it considering to align CML-U V0 and A0 stepping w/ the same table; I sent v4 for your review.
 
-Skipping that flag is risky, because it may cause some C-states to be
-enabled on systems where they have not been validated (e.g. systems
-shipping with other OSes which only use _CST C-states).  There were
-problems related to that in the past which is one of the reasons for
-adding _CST support to intel_idle.  use_acpi should be set for all new
-platforms going forward as a rule.
+On Wed, 4 Mar 2020, James Bottomley wrote:
 
-> In the other hand, I am proposing using _CST as long term plan in CrOS dev teams.
+> On Wed, 2020-03-04 at 17:03 +0100, Lukas Bulwahn wrote:
+> > +F:	include/keys/trusted_tpm.h
+> > +F:	security/keys/trusted-keys/trusted_tpm1.c
+> 
+> Everything under trusted-keys is part of the subsystem, so this should
+> be a glob not a single file.
+> 
 
-That I obviously agree with. :-)
+Agree. I sent out a PATCH v2 for that:
 
+https://lore.kernel.org/linux-integrity/20200304211254.5127-1-lukas.bulwahn@gmail.com/T/#u
 
-> > On Mar 4, 2020, at 17:53, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > ﻿On Tue, Mar 3, 2020 at 10:10 AM Harry Pan <harry.pan@intel.com> wrote:
-> >>
-> >> Add a general C-state table in order to support Comet Lake.
-> >>
-> >> Signed-off-by: Harry Pan <harry.pan@intel.com>
-> >>
-> >> ---
-> >>
-> >> drivers/idle/intel_idle.c | 7 +++++++
-> >> 1 file changed, 7 insertions(+)
-> >>
-> >> diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
-> >> index d55606608ac8..05bce595fafe 100644
-> >> --- a/drivers/idle/intel_idle.c
-> >> +++ b/drivers/idle/intel_idle.c
-> >> @@ -1067,6 +1067,11 @@ static const struct idle_cpu idle_cpu_dnv = {
-> >>        .use_acpi = true,
-> >> };
-> >>
-> >> +static const struct idle_cpu idle_cpu_cml = {
-> >> +       .state_table = skl_cstates,
-> >> +       .disable_promotion_to_c1e = true,
-> >
-> > .use_acpi = true,
-> >
-> > missing?  Otherwise you can just use idle_cpu_skl as is, can't you?
-> >
-> >> +};
-> >> +
-> >> static const struct x86_cpu_id intel_idle_ids[] __initconst = {
-> >>        INTEL_CPU_FAM6(NEHALEM_EP,              idle_cpu_nhx),
-> >>        INTEL_CPU_FAM6(NEHALEM,                 idle_cpu_nehalem),
-> >> @@ -1105,6 +1110,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
-> >>        INTEL_CPU_FAM6(ATOM_GOLDMONT_PLUS,      idle_cpu_bxt),
-> >>        INTEL_CPU_FAM6(ATOM_GOLDMONT_D,         idle_cpu_dnv),
-> >>        INTEL_CPU_FAM6(ATOM_TREMONT_D,          idle_cpu_dnv),
-> >> +       INTEL_CPU_FAM6(COMETLAKE_L,             idle_cpu_cml),
-> >> +       INTEL_CPU_FAM6(COMETLAKE,               idle_cpu_cml),
-> >>        {}
-> >> };
-> >>
-> >> --
-> >> 2.24.1
-> >>
+Please ignore this v1 here and pick v2.
+
+Thanks,
+
+Lukas
