@@ -2,117 +2,136 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9C2C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31929C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67BC821739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:11:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09B1D2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583309492;
-	bh=w96FJLfkzr8JilQIZUTQAJsDJd9ZgFl/LK4eeVwZFIY=;
+	s=default; t=1583309518;
+	bh=+TTNamvFjlVpUSsKDThvge8lazOlfMCkgiABCsiTxkI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JoC7ha81zqG8vPo5QjirXYo44cXQV+83wgUKnjEUQTTSn5I8yPQj0Y/KU9mdiZ9+h
-	 Sbr8rUEKCGeO2gEbKg9ZL/J7Eo7vEKVTt0GCJ8xK/UDXq2vENvHpvX00u4/EEFe+rj
-	 k9RHQFrWwS7cqod+/0ZcSa8gROdwcIc5ypcBt/T8=
+	b=vMygtedSJIyK2cHWMhgROzMZN69FxlowJnfWrVGdXJDeDYT7WNRBrhEiVAg9SmVg0
+	 oEO+UX3zMAXI4ExeTjF1sA/v2PSMXCF1JFp+ULRwQTQ2Ub5Or+AIIWBUOnW3nzUAbI
+	 xg3Dv0LAL66G7JZ5Av0c8zsDDgcRTCnT6saYiUtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728760AbgCDILb (ORCPT
+        id S2387510AbgCDIL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:11:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725283AbgCDILb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:11:31 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F408D2166E;
-        Wed,  4 Mar 2020 08:11:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583309490;
-        bh=w96FJLfkzr8JilQIZUTQAJsDJd9ZgFl/LK4eeVwZFIY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VpaaCSJNRBLV4noydn2vaZqPfOkRg9eImCQLX78lOgC/PB2YrIn6tTQs5pjsq58CB
-         yuWT5s1dG/arCGfmap8JKAR8gI+6f+YAGKeWwvvCAB+UXk584sRcVHhbwMI+SYe3Km
-         9AN0M7OdMyb30UDfPOsxlqzBpQHMKhw1ZXnmrxyg=
-Date:   Wed, 4 Mar 2020 09:11:28 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 5.5 000/176] 5.5.8-stable review
-Message-ID: <20200304081128.GC1401372@kroah.com>
-References: <20200303174304.593872177@linuxfoundation.org>
- <CA+G9fYtNKXBOQKE_AD6qLoRo4TeaBYOc9Ce3kBxdLap1av4v=Q@mail.gmail.com>
+        Wed, 4 Mar 2020 03:11:56 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35999 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725271AbgCDIL4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 03:11:56 -0500
+Received: by mail-ed1-f68.google.com with SMTP id a13so1232502edh.3;
+        Wed, 04 Mar 2020 00:11:54 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bc4qmKJt/lAzS0lpfRM9DbEOWoXovtwmwwXu2IbTRzo=;
+        b=EBDKff7ewYDJhiOVL0TmnEeb4mXPS2AysuCb0B1N48Cxf7gLjRGXSA1F4/2UCeIs5E
+         Br69ShUoqQOA+5wnC886trhrO7f1sD6TkWli3WvWPjH0dw5iHH2IdzUlNS6IubDluIbO
+         ylBEa2APcbmlqMnrJ5fW+hLE6OzNNifUEufsEF6huVMXg6+iumdVzjGGHtmH+CdITOr3
+         7lMpr9xuzAgCiBgisD7EipXmAB/C210qQ9Nt4sAWPG+ldKEICaXWZHmCxaFLRd51/7fb
+         4Yuz0NrGrLtRFf0UaI2hjuwL1Inwxue9Zxc72SGBwMhSMc+W9FdQJ85tnPlZdIhmsdQU
+         siJA==
+X-Gm-Message-State: ANhLgQ3mYWhwRcvTak0FSM2IdnuWYGl0DjrbsgPxT3gEmTNjxkslhX+H
+        FAMqwvRDHepezOZWEjpH6wI=
+X-Google-Smtp-Source: ADFU+vvW40T8j5meoZiNaJ/0F7CHytNOStLYgpJxQMZhhi7lUyOEErJ4auD/xDioBTEYC65TyLQkfQ==
+X-Received: by 2002:a17:906:8254:: with SMTP id f20mr1508858ejx.43.1583309514196;
+        Wed, 04 Mar 2020 00:11:54 -0800 (PST)
+Received: from pi3 ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id a10sm1467746edt.50.2020.03.04.00.11.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 00:11:53 -0800 (PST)
+Date:   Wed, 4 Mar 2020 09:11:51 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv2 0/3] Add support for suspend clk for Exynos5422 SoC
+Message-ID: <20200304081151.GA17560@pi3>
+References: <20200301212019.2248-1-linux.amoon@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CA+G9fYtNKXBOQKE_AD6qLoRo4TeaBYOc9Ce3kBxdLap1av4v=Q@mail.gmail.com>
+In-Reply-To: <20200301212019.2248-1-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 12:43:42PM +0530, Naresh Kamboju wrote:
-> On Tue, 3 Mar 2020 at 23:16, Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > This is the start of the stable review cycle for the 5.5.8 release.
-> > There are 176 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> >
-> > Responses should be made by Thu, 05 Mar 2020 17:42:06 +0000.
-> > Anything received after that time might be too late.
-> >
-> > The whole patch series can be found in one patch at:
-> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.8-rc1.gz
-> > or in the git tree and branch at:
-> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > and the diffstat can be found below.
-> >
-> > thanks,
-> >
-> > greg k-h
-> >
+On Sun, Mar 01, 2020 at 09:20:15PM +0000, Anand Moon wrote:
+> Seried build and tested on linux next-20200228.
 > 
-> Results from Linaro’s test farm.
-> Regressions detected on x86_64 and i386.
+> This patch series tries to enable suspend clk using
+> exynos dwc3 driver, for this I have added new
+> compatible string "samsung,exynos5420-dwusb3"
+> so that we could add new suspend clk in addition
+> to the core clk. exynos dwc3 driver will help
+> enable/disable these clk.
+
+That's not entirely correct. You enable there SCLK which is a "special
+clock", not a "suspend clock". You use word "suspend: in multiple places
+in commits making an impression that it is about some suspend clock...
+no, there is no suspend clock.
+
+There is however a clock which driver calls suspend_clk (but it is just
+some name) and it is being enabled for entire lifetime of device (so
+also during suspend). AFAIU, this is not needed for Exynos5422 but I am
+not sure. So please convince me...
+
+However I have still the same questions:
+1. What problem are you trying to solve here?
+2. Why this is needed?
+3. What is fixed with this patch?
+
+Best regards,
+Krzysztof
+
 > 
-> Test failure output:
-> CVE-2017-5715: VULN (IBRS+IBPB or retpoline+IBPB+RSB filling, is
-> needed to mitigate the vulnerability)
+> This series PatchV2.
+> --Added the clk names for exynos5420 compatible.
+> --Added missing support for Exyno5410 SoC suspend clock.
+> --Update the commit message to support suspend clk usages.
 > 
-> Test description:
-> CVE-2017-5715 branch target injection (Spectre Variant 2)
+> ---
+> Long time ago I tried to add suspend clk for dwc3 phy
+> which was wrong appoch, see below.
 > 
-> Impact: Kernel
-> Mitigation 1: new opcode via microcode update that should be used by
-> up to date compilers to protect the BTB (by flushing indirect branch
-> predictors)
-> Mitigation 2: introducing "retpoline" into compilers, and recompile
-> software/OS with it
-> Performance impact of the mitigation: high for mitigation 1, medium
-> for mitigation 2, depending on your CPU
-
-So these are regressions or just new tests?
-
-If regressions, can you do 'git bisect' to find the offending commit?
-
-Also, are you sure you have an updated microcode on these machines and a
-proper compiler for retpoline?
-
-thanks,
-
-greg k-h
+> [0] https://lore.kernel.org/patchwork/patch/837635/
+> [1] https://lore.kernel.org/patchwork/patch/837636/
+> 
+> Previous changes V3 (It was send with wrong Patch version)
+> [2] https://patchwork.kernel.org/cover/11373043/
+> 
+> -Anand
+> 
+> Anand Moon (3):
+>   devicetree: bindings: exynos: Add new compatible for Exynos5420 dwc3
+>     clocks support
+>   ARM: dts: exynos: Add missing usbdrd3 suspend clk
+>   usb: dwc3: exynos: Add support for Exynos5422 suspend clk
+> 
+>  Documentation/devicetree/bindings/usb/exynos-usb.txt | 5 ++++-
+>  arch/arm/boot/dts/exynos5410.dtsi                    | 8 ++++----
+>  arch/arm/boot/dts/exynos5420.dtsi                    | 8 ++++----
+>  arch/arm/boot/dts/exynos54xx.dtsi                    | 4 ++--
+>  drivers/usb/dwc3/dwc3-exynos.c                       | 9 +++++++++
+>  5 files changed, 23 insertions(+), 11 deletions(-)
+> 
+> -- 
+> 2.25.1
+> 
