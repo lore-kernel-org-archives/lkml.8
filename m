@@ -2,105 +2,147 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE77AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8BCC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C091B2146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583323405;
-	bh=ngZGyk6qLBiIKqhNyOYfQtSNN1Zuio5UyG02XlxIspc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZkSkzdozhBGqbsUTfIOSHUBFkZmIHXIBbXBgCdqWUnJRyOF3FsLjfk48zap65hVRo
-	 urJSYYAYDqjE84Q8NrlWzC0PwaNc5ztIrvUJB37hmomihXB4H3KG0MCsolMo20xAIR
-	 6rFnj5dHbbEZxefsuJl5ff3s5sTDXYK+hSaD8eRM=
+	by mail.kernel.org (Postfix) with ESMTP id E97E721739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387950AbgCDMDY (ORCPT
+        id S2388006AbgCDMDa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:03:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:33380 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgCDMDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:03:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 95AE831B;
-        Wed,  4 Mar 2020 04:03:23 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1947D3F534;
-        Wed,  4 Mar 2020 04:03:22 -0800 (PST)
-Date:   Wed, 4 Mar 2020 12:03:21 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Lars =?iso-8859-1?Q?M=F6llendorf?= <lars.moellendorf@plating.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Question about regmap_range_cfg and regmap_mmio
-Message-ID: <20200304120321.GA5646@sirena.org.uk>
-References: <d2eb2248-0120-7b0f-9bcf-4f9c71954117@plating.de>
+        Wed, 4 Mar 2020 07:03:30 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:56243 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387801AbgCDMD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:03:29 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j9SkE-00046M-B3; Wed, 04 Mar 2020 13:03:22 +0100
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j9SkB-0006zp-D7; Wed, 04 Mar 2020 13:03:19 +0100
+Message-ID: <a2878b95da2afaeb0eac1a8f2f1991ef5ff9cace.camel@pengutronix.de>
+Subject: Re: [PATCH 25/89] reset: simple: Add reset callback
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Maxime Ripard <maxime@cerno.tech>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Eric Anholt <eric@anholt.net>
+Cc:     dri-devel@lists.freedesktop.org,
+        linux-rpi-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Dave Stevenson <dave.stevenson@raspberrypi.com>,
+        Tim Gover <tim.gover@raspberrypi.com>,
+        Phil Elwell <phil@raspberrypi.com>
+Date:   Wed, 04 Mar 2020 13:03:19 +0100
+In-Reply-To: <e7e2c84206f2cc8c0cb36cd734226f73f3331198.1582533919.git-series.maxime@cerno.tech>
+References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
+         <e7e2c84206f2cc8c0cb36cd734226f73f3331198.1582533919.git-series.maxime@cerno.tech>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
-Content-Disposition: inline
-In-Reply-To: <d2eb2248-0120-7b0f-9bcf-4f9c71954117@plating.de>
-X-Cookie: Tomorrow, you can be anywhere.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Maxime,
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
+> The reset-simple code lacks a reset callback that is still pretty easy to
+> implement. The only real thing to consider is the delay needed for a device
+> to be reset, so let's expose that as part of the reset-simple driver data.
+>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 
-On Wed, Mar 04, 2020 at 12:25:09PM +0100, Lars M=F6llendorf wrote:
+This shoulod be done in such a way that simple reset drivers which do
+not set the reset delay continue to return -ENOTSUPP from
+reset_control_reset().
 
-> this mail is copied from internal issue written in markdown - I hope
-> this is still readable as mail.
+> ---
+>  drivers/reset/reset-simple.c       | 21 +++++++++++++++++++++
+>  include/linux/reset/reset-simple.h |  4 ++++
+>  2 files changed, 25 insertions(+)
+> 
+> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
+> index c854aa351640..7a8c56512ae9 100644
+> --- a/drivers/reset/reset-simple.c
+> +++ b/drivers/reset/reset-simple.c
+> @@ -11,6 +11,7 @@
+>   * Maxime Ripard <maxime.ripard@free-electrons.com>
+>   */
+>  
+> +#include <linux/delay.h>
+>  #include <linux/device.h>
+>  #include <linux/err.h>
+>  #include <linux/io.h>
+> @@ -63,6 +64,25 @@ static int reset_simple_deassert(struct reset_controller_dev *rcdev,
+>  	return reset_simple_update(rcdev, id, false);
+>  }
+>  
+> +static int reset_simple_reset(struct reset_controller_dev *rcdev,
+> +			       unsigned long id)
+> +{
+> +	struct reset_simple_data *data = to_reset_simple_data(rcdev);
+> +	int ret;
 
-Not really frankly.  I *think* you are saying that paging doesn't work
-due to relying on having register read and write operations?
+You could just return -ENOTSUPP here if data->reset_ms == 0.
 
-> My assumption is that paging is not a common use case for Memory-mapped
-> I/O and thus has not been implemented for this case.
+> +	ret = reset_simple_assert(rcdev, id);
+> +	if (ret)
+> +		return ret;
+> +
+> +	mdelay(data->reset_ms);
 
-> - Are my assumptions correct?
-> - If so, what would you recommend me to do:
->   - Continue using `regmap-mmio` and implement my custom paging
-> functions on top of that?
+Have you considered specifying the delay in microseconds instead?
+That would allow to use usleep_range() for shorter delays.
 
-This will obviously work.
+> +	ret = reset_simple_deassert(rcdev, id);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+>  static int reset_simple_status(struct reset_controller_dev *rcdev,
+>  			       unsigned long id)
+>  {
+> @@ -80,6 +100,7 @@ static int reset_simple_status(struct reset_controller_dev *rcdev,
+>  const struct reset_control_ops reset_simple_ops = {
+>  	.assert		= reset_simple_assert,
+>  	.deassert	= reset_simple_deassert,
+> +	.reset		= reset_simple_reset,
+>  	.status		= reset_simple_status,
+>  };
+>  EXPORT_SYMBOL_GPL(reset_simple_ops);
+> diff --git a/include/linux/reset/reset-simple.h b/include/linux/reset/reset-simple.h
+> index 08ccb25a55e6..a5887f6cbe50 100644
+> --- a/include/linux/reset/reset-simple.h
+> +++ b/include/linux/reset/reset-simple.h
+> @@ -27,6 +27,9 @@
+>   * @status_active_low: if true, bits read back as cleared while the reset is
+>   *                     asserted. Otherwise, bits read back as set while the
+>   *                     reset is asserted.
+> + * @reset_ms: Minimum delay in milliseconds needed that needs to be
+> + *            waited for between an assert and a deassert to reset the
+> + *            device.
 
->   - Enhance the current `regmap-mmio` implementation so it does paging
-> and submit a patch?
+If multiple consumers with different delay requirements are connected to
+this reset controllers, this must the largest minimum delay. Could you
+add mention for this in the comment?
 
-That's not really possible since MMIO never writes the register address
-to the bus.
-
->   - Write my own `better-regmap-mmio` implementation?
-
-It's not clear what that would mean.
-
-You could also look into making the paging code not rely on explicit
-register read and write operations.
-
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5fmQYACgkQJNaLcl1U
-h9D3yQf/UKX+tbsv4ndgOEtwq4K+LBy2wvNpprCJ4eStbWILTnSqxHW4Va0aJG/6
-z4w2M11jzUjyrqXa3dDKTTFjeRo/n27XmGhu2x1IQJq+kMHKMRywIrhEPMcfljeX
-cZX/J0GmELaRISFqzAKuSZ7v7ct2wdpdjRTJQQb1D9pvxUlE+SlCQTyHRY64T8JC
-BQW12Dg7YasFxRcpp3+Le0Er6ez7GYslXKGNdR9JEMQnI+e6KBXpI2s9pql+p7eA
-EnAejaDidYxptqlsw94VOAa50VtXd0/oGxkOcXuZLQu5fbWb3qwHQgNOVy+D3vYZ
-zBjvE6GPIxSUwNZ577VOAdHu3ni7GA==
-=91IF
------END PGP SIGNATURE-----
-
---XsQoSWH+UP9D9v3l--
+regards
+Philipp
