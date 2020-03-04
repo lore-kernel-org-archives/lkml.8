@@ -8,66 +8,62 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C87C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3872CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57C021741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04F3C217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:14:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="elTxoKyu"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="ySCW+/49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387884AbgCDKNy (ORCPT
+        id S2387974AbgCDKON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:13:54 -0500
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:39118 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387817AbgCDKNu (ORCPT
+        Wed, 4 Mar 2020 05:14:13 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43863 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387854AbgCDKNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:13:50 -0500
-Received: by mail-lf1-f54.google.com with SMTP id n30so1018177lfh.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:13:49 -0800 (PST)
+        Wed, 4 Mar 2020 05:13:53 -0500
+Received: by mail-lj1-f196.google.com with SMTP id e3so1332339lja.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:13:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloudflare.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0JG4vRN2U1vBjajCliJupAy0Xm38EfZHPBvH9KwfXgk=;
-        b=elTxoKyu7RkdVLYq8DExwAcOXjjfFBZEbcj6vrF5UpngljtRqGrZ7ebgasBZPsdubp
-         zuovFtYIe0rEhyusnKUocgzt3WlrXT9ZeqK8YMpldRtrMSXiw8t9Hir0CdQkbdyOFnYw
-         I7z3lQfWSwm41cFGvT8VytXTt1vcuzNp4ypXQ=
+        bh=qgZ3nu/Bbfdwe+GDZ451yJiCX8ETGH9pPjG5oF9BPog=;
+        b=ySCW+/494DSUY4cH8Co3m45bz7DMpeO9CAnj98zfqwTTzI6K8q1UlVQRUkLGDlt/d7
+         RNSQjkbvG60q9UO7X/8/o4gI+fdQ6QOcPERwiIryv5cZqD696LhWx8/37cYgqtAoTO90
+         OemD9o6+jsOY/Gnl3e3M3hgT0Tq4823cj9Q2Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0JG4vRN2U1vBjajCliJupAy0Xm38EfZHPBvH9KwfXgk=;
-        b=iNr885Ts4TLOXJjUCV4jFa1/IiBa+6ULmI56ulKG5DQnpO+WWhePHW9NfBB7vsDO4G
-         6Ll0aevZ/5AaeMV6w0s48qdjxdx6BCcco0TfFbLMYhFUkaLV71kf6+mXMhvBj8P6aRZU
-         6B0LUhzi4/vC587BWwzSOTJCsnhVNXUKh8a7JjvwbPa4Pstr9XNFEJtOV8edx7zi1ikA
-         SIITB7zbjJsdh+/KIFQgFRJOC3drqNRzf+/xEt+5zMlngZdzK9ISQmYj7AC3UurvTlUb
-         5sMArtN1LXGDR4Dx33WDAV0+grDdHw+XVG8uzWT9w7gqAqMcGvPi/sZRagzaHBZ1bS/q
-         EIOQ==
-X-Gm-Message-State: ANhLgQ3c465UzYiiqbrpxdU7TacVnyc8NpK9NDc9viuCPUUrd252peUQ
-        zQu61F69JfKuI861xpJu8NBL1A==
-X-Google-Smtp-Source: ADFU+vtOHKTMDKLBdW063ze8vJHAb6ivzE/JIjJvB1eGckwN1kulKZrWnFhZaB0IdtDF9F6BE/XHCQ==
-X-Received: by 2002:a19:760b:: with SMTP id c11mr982899lff.140.1583316828295;
-        Wed, 04 Mar 2020 02:13:48 -0800 (PST)
+        bh=qgZ3nu/Bbfdwe+GDZ451yJiCX8ETGH9pPjG5oF9BPog=;
+        b=WJHBGTKE+r84g4zgB9crVa6E87g2U0Af+9uivZDXkcO65Wj3S+pkRjXkX7/lXSQCtk
+         uHhFmxLeVzfUAuhKua7vVE2uMmK0bW8/fAark4hjuqGl5cbCrmD/aS2TI7Ffsz6YEkI+
+         xfaN+jOawQ0paiFVw/o/v42vfQ/6w67M+0IPPFkH9aCIoezAQl9zPweAO+xR2Serlsqd
+         HQmj1UhgRdZALdfzkx8UT4r/K4LVS6KecL+JGcoB2uu/mWumR6zmZHs+ZJOeq60FwepW
+         oQM1gm1S0mtoYkxPC+L9BUOdUXRE5H1SExUxDVLykbavoHjuB0P/ZSY1pKBR05sr0aq5
+         JfEw==
+X-Gm-Message-State: ANhLgQ26T01aJyjwByMvbTUCLgbHFbMbQykREUwRyDRJPiPkRJ4nNeMO
+        JVAKtqX/pi4Qkin3GNX2sjQJ5Q==
+X-Google-Smtp-Source: ADFU+vsHkXTuwBCutx37rT+SHK3e40nGnHVZjL5Auj0/0SfQrk66wtGroFLclar6ISuTu7pr9C04Og==
+X-Received: by 2002:a2e:9094:: with SMTP id l20mr1423596ljg.131.1583316831827;
+        Wed, 04 Mar 2020 02:13:51 -0800 (PST)
 Received: from localhost.localdomain ([176.221.114.230])
-        by smtp.gmail.com with ESMTPSA id l7sm341777lfk.65.2020.03.04.02.13.47
+        by smtp.gmail.com with ESMTPSA id l7sm341777lfk.65.2020.03.04.02.13.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 02:13:47 -0800 (PST)
+        Wed, 04 Mar 2020 02:13:51 -0800 (PST)
 From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     john.fastabend@gmail.com, "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Lorenz Bauer <lmb@cloudflare.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Cc:     kernel-team@cloudflare.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH bpf-next v3 07/12] bpf: add sockmap hooks for UDP sockets
-Date:   Wed,  4 Mar 2020 11:13:12 +0100
-Message-Id: <20200304101318.5225-8-lmb@cloudflare.com>
+To:     john.fastabend@gmail.com, Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
+        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next v3 09/12] selftests: bpf: don't listen() on UDP sockets
+Date:   Wed,  4 Mar 2020 11:13:14 +0100
+Message-Id: <20200304101318.5225-10-lmb@cloudflare.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200304101318.5225-1-lmb@cloudflare.com>
 References: <20200304101318.5225-1-lmb@cloudflare.com>
@@ -78,116 +74,213 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add basic psock hooks for UDP sockets. This allows adding and
-removing sockets, as well as automatic removal on unhash and close.
+Most tests for TCP sockmap can be adapted to UDP sockmap if the
+listen call is skipped. Rename listen_loopback, etc. to socket_loopback
+and skip listen() for SOCK_DGRAM.
 
 Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
 ---
- MAINTAINERS        |  1 +
- include/net/udp.h  |  5 +++++
- net/ipv4/Makefile  |  1 +
- net/ipv4/udp_bpf.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 60 insertions(+)
- create mode 100644 net/ipv4/udp_bpf.c
+ .../selftests/bpf/prog_tests/sockmap_listen.c | 47 ++++++++++---------
+ 1 file changed, 25 insertions(+), 22 deletions(-)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 8f27f40d22bb..b2fae56dca9f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9359,6 +9359,7 @@ F:	include/linux/skmsg.h
- F:	net/core/skmsg.c
- F:	net/core/sock_map.c
- F:	net/ipv4/tcp_bpf.c
-+F:	net/ipv4/udp_bpf.c
- 
- LANTIQ / INTEL Ethernet drivers
- M:	Hauke Mehrtens <hauke@hauke-m.de>
-diff --git a/include/net/udp.h b/include/net/udp.h
-index e55d5f765807..a8fa6c0c6ded 100644
---- a/include/net/udp.h
-+++ b/include/net/udp.h
-@@ -503,4 +503,9 @@ static inline struct sk_buff *udp_rcv_segment(struct sock *sk,
- 	return segs;
+diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+index b1b2acea0638..4ba41dd26d6b 100644
+--- a/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
++++ b/tools/testing/selftests/bpf/prog_tests/sockmap_listen.c
+@@ -230,7 +230,7 @@ static int enable_reuseport(int s, int progfd)
+ 	return 0;
  }
  
-+#ifdef CONFIG_BPF_STREAM_PARSER
-+struct sk_psock;
-+struct proto *udp_bpf_get_proto(struct sock *sk, struct sk_psock *psock);
-+#endif /* BPF_STREAM_PARSER */
-+
- #endif	/* _UDP_H */
-diff --git a/net/ipv4/Makefile b/net/ipv4/Makefile
-index 9d97bace13c8..9e1a186a3671 100644
---- a/net/ipv4/Makefile
-+++ b/net/ipv4/Makefile
-@@ -61,6 +61,7 @@ obj-$(CONFIG_TCP_CONG_LP) += tcp_lp.o
- obj-$(CONFIG_TCP_CONG_YEAH) += tcp_yeah.o
- obj-$(CONFIG_TCP_CONG_ILLINOIS) += tcp_illinois.o
- obj-$(CONFIG_NET_SOCK_MSG) += tcp_bpf.o
-+obj-$(CONFIG_BPF_STREAM_PARSER) += udp_bpf.o
- obj-$(CONFIG_NETLABEL) += cipso_ipv4.o
+-static int listen_loopback_reuseport(int family, int sotype, int progfd)
++static int socket_loopback_reuseport(int family, int sotype, int progfd)
+ {
+ 	struct sockaddr_storage addr;
+ 	socklen_t len;
+@@ -249,6 +249,9 @@ static int listen_loopback_reuseport(int family, int sotype, int progfd)
+ 	if (err)
+ 		goto close;
  
- obj-$(CONFIG_XFRM) += xfrm4_policy.o xfrm4_state.o xfrm4_input.o \
-diff --git a/net/ipv4/udp_bpf.c b/net/ipv4/udp_bpf.c
-new file mode 100644
-index 000000000000..eddd973e6575
---- /dev/null
-+++ b/net/ipv4/udp_bpf.c
-@@ -0,0 +1,53 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2020 Cloudflare Ltd https://cloudflare.com */
++	if (sotype == SOCK_DGRAM)
++		return s;
 +
-+#include <linux/skmsg.h>
-+#include <net/sock.h>
-+#include <net/udp.h>
-+
-+enum {
-+	UDP_BPF_IPV4,
-+	UDP_BPF_IPV6,
-+	UDP_BPF_NUM_PROTS,
-+};
-+
-+static struct proto *udpv6_prot_saved __read_mostly;
-+static DEFINE_SPINLOCK(udpv6_prot_lock);
-+static struct proto udp_bpf_prots[UDP_BPF_NUM_PROTS];
-+
-+static void udp_bpf_rebuild_protos(struct proto *prot, const struct proto *base)
-+{
-+	*prot        = *base;
-+	prot->unhash = sock_map_unhash;
-+	prot->close  = sock_map_close;
-+}
-+
-+static void udp_bpf_check_v6_needs_rebuild(struct sock *sk, struct proto *ops)
-+{
-+	if (sk->sk_family == AF_INET6 &&
-+	    unlikely(ops != smp_load_acquire(&udpv6_prot_saved))) {
-+		spin_lock_bh(&udpv6_prot_lock);
-+		if (likely(ops != udpv6_prot_saved)) {
-+			udp_bpf_rebuild_protos(&udp_bpf_prots[UDP_BPF_IPV6], ops);
-+			smp_store_release(&udpv6_prot_saved, ops);
-+		}
-+		spin_unlock_bh(&udpv6_prot_lock);
-+	}
-+}
-+
-+static int __init udp_bpf_v4_build_proto(void)
-+{
-+	udp_bpf_rebuild_protos(&udp_bpf_prots[UDP_BPF_IPV4], &udp_prot);
-+	return 0;
-+}
-+core_initcall(udp_bpf_v4_build_proto);
-+
-+struct proto *udp_bpf_get_proto(struct sock *sk, struct sk_psock *psock)
-+{
-+	int family = sk->sk_family == AF_INET ? UDP_BPF_IPV4 : UDP_BPF_IPV6;
-+
-+	if (!psock->sk_proto)
-+		udp_bpf_check_v6_needs_rebuild(sk, READ_ONCE(sk->sk_prot));
-+
-+	return &udp_bpf_prots[family];
-+}
+ 	err = xlisten(s, SOMAXCONN);
+ 	if (err)
+ 		goto close;
+@@ -259,9 +262,9 @@ static int listen_loopback_reuseport(int family, int sotype, int progfd)
+ 	return -1;
+ }
+ 
+-static int listen_loopback(int family, int sotype)
++static int socket_loopback(int family, int sotype)
+ {
+-	return listen_loopback_reuseport(family, sotype, -1);
++	return socket_loopback_reuseport(family, sotype, -1);
+ }
+ 
+ static void test_insert_invalid(int family, int sotype, int mapfd)
+@@ -333,7 +336,7 @@ static void test_insert_listening(int family, int sotype, int mapfd)
+ 	u32 key;
+ 	int s;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -349,7 +352,7 @@ static void test_delete_after_insert(int family, int sotype, int mapfd)
+ 	u32 key;
+ 	int s;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -366,7 +369,7 @@ static void test_delete_after_close(int family, int sotype, int mapfd)
+ 	u64 value;
+ 	u32 key;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -390,7 +393,7 @@ static void test_lookup_after_insert(int family, int sotype, int mapfd)
+ 	u32 key;
+ 	int s;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -417,7 +420,7 @@ static void test_lookup_after_delete(int family, int sotype, int mapfd)
+ 	u64 value;
+ 	u32 key;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -439,7 +442,7 @@ static void test_lookup_32_bit_value(int family, int sotype, int mapfd)
+ 	u32 key, value32;
+ 	int err, s;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -470,11 +473,11 @@ static void test_update_listening(int family, int sotype, int mapfd)
+ 	u64 value;
+ 	u32 key;
+ 
+-	s1 = listen_loopback(family, sotype);
++	s1 = socket_loopback(family, sotype);
+ 	if (s1 < 0)
+ 		return;
+ 
+-	s2 = listen_loopback(family, sotype);
++	s2 = socket_loopback(family, sotype);
+ 	if (s2 < 0)
+ 		goto close_s1;
+ 
+@@ -500,7 +503,7 @@ static void test_destroy_orphan_child(int family, int sotype, int mapfd)
+ 	u64 value;
+ 	u32 key;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -534,7 +537,7 @@ static void test_clone_after_delete(int family, int sotype, int mapfd)
+ 	u64 value;
+ 	u32 key;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -570,7 +573,7 @@ static void test_accept_after_delete(int family, int sotype, int mapfd)
+ 	socklen_t len;
+ 	u64 value;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s == -1)
+ 		return;
+ 
+@@ -624,7 +627,7 @@ static void test_accept_before_delete(int family, int sotype, int mapfd)
+ 	socklen_t len;
+ 	u64 value;
+ 
+-	s = listen_loopback(family, sotype);
++	s = socket_loopback(family, sotype);
+ 	if (s == -1)
+ 		return;
+ 
+@@ -735,7 +738,7 @@ static void test_syn_recv_insert_delete(int family, int sotype, int mapfd)
+ 	int err, s;
+ 	u64 value;
+ 
+-	s = listen_loopback(family, sotype | SOCK_NONBLOCK);
++	s = socket_loopback(family, sotype | SOCK_NONBLOCK);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -877,7 +880,7 @@ static void redir_to_connected(int family, int sotype, int sock_mapfd,
+ 
+ 	zero_verdict_count(verd_mapfd);
+ 
+-	s = listen_loopback(family, sotype | SOCK_NONBLOCK);
++	s = socket_loopback(family, sotype | SOCK_NONBLOCK);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -1009,7 +1012,7 @@ static void redir_to_listening(int family, int sotype, int sock_mapfd,
+ 
+ 	zero_verdict_count(verd_mapfd);
+ 
+-	s = listen_loopback(family, sotype | SOCK_NONBLOCK);
++	s = socket_loopback(family, sotype | SOCK_NONBLOCK);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -1120,7 +1123,7 @@ static void test_reuseport_select_listening(int family, int sotype,
+ 
+ 	zero_verdict_count(verd_map);
+ 
+-	s = listen_loopback_reuseport(family, sotype, reuseport_prog);
++	s = socket_loopback_reuseport(family, sotype, reuseport_prog);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -1174,7 +1177,7 @@ static void test_reuseport_select_connected(int family, int sotype,
+ 
+ 	zero_verdict_count(verd_map);
+ 
+-	s = listen_loopback_reuseport(family, sotype, reuseport_prog);
++	s = socket_loopback_reuseport(family, sotype, reuseport_prog);
+ 	if (s < 0)
+ 		return;
+ 
+@@ -1249,11 +1252,11 @@ static void test_reuseport_mixed_groups(int family, int sotype, int sock_map,
+ 	zero_verdict_count(verd_map);
+ 
+ 	/* Create two listeners, each in its own reuseport group */
+-	s1 = listen_loopback_reuseport(family, sotype, reuseport_prog);
++	s1 = socket_loopback_reuseport(family, sotype, reuseport_prog);
+ 	if (s1 < 0)
+ 		return;
+ 
+-	s2 = listen_loopback_reuseport(family, sotype, reuseport_prog);
++	s2 = socket_loopback_reuseport(family, sotype, reuseport_prog);
+ 	if (s2 < 0)
+ 		goto close_srv1;
+ 
 -- 
 2.20.1
 
