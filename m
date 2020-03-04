@@ -2,85 +2,70 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8C8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:41:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B0BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B863020848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:41:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583325668;
-	bh=jNEaYxh5Fbbk4JweyFBVsD+Lzsdt6itFGpc7/yDJ9GQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VZFeC5RicqTKfLchHG9iDwgZTdVz3b3QRCy7UssBomnE9I+24LhL3W5nS1ICk0pVS
-	 K+uam7FrD42vD8Td/79jSKbNhtXG7DrhA0uMVNzLknhv3+p53HTmCHrrw2VNd8n3FV
-	 qZsBh3QVyWz5rVh33ocHA1ZqngpvWBN4m7Y1ku6w=
+	by mail.kernel.org (Postfix) with ESMTP id 7537320848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:46:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388035AbgCDMlH (ORCPT
+        id S2388043AbgCDMqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:41:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgCDMlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:41:07 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A16C620848;
-        Wed,  4 Mar 2020 12:41:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583325667;
-        bh=jNEaYxh5Fbbk4JweyFBVsD+Lzsdt6itFGpc7/yDJ9GQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EEeqGCZdCxzn023C97FHgCQxELIp8g8fZpmFex7KrfsOu/sKtHZxNeO4GwDhE1gkw
-         RhZXEt/5DO8wotiiS0D8bS2L7OUPf8xqeOPYoZDrZHgZ9cVVmWl9jqwdt6tzjyeZ6G
-         nyrbUks3DScJ190lyzbZYPk/zwqd7QkVFa7MLCUU=
-Date:   Wed, 4 Mar 2020 13:41:04 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] PHY: For 5.6 -rc
-Message-ID: <20200304124104.GA1629188@kroah.com>
-References: <20200221115356.6587-1-kishon@ti.com>
+        Wed, 4 Mar 2020 07:46:37 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:47291 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387776AbgCDMqg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:46:36 -0500
+Received: from p5de0bf0b.dip0.t-ipconnect.de ([93.224.191.11] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j9TPp-0003QV-Ke; Wed, 04 Mar 2020 13:46:21 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id E2994101161; Wed,  4 Mar 2020 13:46:20 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Alexandre Chartre <alexandre.chartre@oracle.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Brian Gerst <brgerst@gmail.com>,
+        Juergen Gross <jgross@suse.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [patch 06/24] x86/idtentry: Provide macros to define/declare IDT entry points
+In-Reply-To: <9382db5c-90e2-f5bc-279e-9c92e282b0b3@oracle.com>
+References: <20200225221606.511535280@linutronix.de> <20200225222648.772492410@linutronix.de> <9382db5c-90e2-f5bc-279e-9c92e282b0b3@oracle.com>
+Date:   Wed, 04 Mar 2020 13:46:20 +0100
+Message-ID: <87o8tcl23n.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200221115356.6587-1-kishon@ti.com>
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 05:23:56PM +0530, Kishon Vijay Abraham I wrote:
-> Hi Greg,
-> 
-> Please find the pull request for 5.6 -rc cycle below.
-> 
-> It fixes an issue caused because of adding device_link_add() on platforms
-> which have cyclic dependency between PHY consumer and PHY provider.
-> 
-> It also includes misc fixes in Motorola, TI and Broadcom's PHY driver.
-> Please see the tag message for the complete list of changes and let me
-> know if I have to change something.
-> 
-> Thanks
-> Kishon
-> 
-> The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
-> 
->   Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.6-rc
+Alexandre Chartre <alexandre.chartre@oracle.com> writes:
+> On 2/25/20 11:16 PM, Thomas Gleixner wrote:
+>> +#else /* !__ASSEMBLY__ */
+>> +
+>> +/* Defines for ASM code to construct the IDT entries */
+>> +#define DECLARE_IDTENTRY(vector, func)				\
+>> +	idtentry vector asm_##func func has_error_code=0
+>
+> Should be DEFINE_IDENTRY(), no? Like the comment says: "Defines for
+> ..."
 
-Oops, just saw this now, sorry for not getting to it.  HOpefully all of
-these were in the pull request I just took.
+No. That's my confused brain. DECLARE_IDTENTRY is used for declarations
+in C code and for emitting the ASM stubs when included from entry*.S
 
-thanks,
+I'll reword the comment and add some more documentation.
 
-greg k-h
+Thanks,
+
+        tglx
