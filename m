@@ -2,270 +2,148 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA60C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C140EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAF221739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:52:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E352166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:53:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583312030;
+	bh=Ru4Pzde+8HgzouRWC8l/xExemayC50GC9qCPd1jTeVc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jH+GqrU5/pxMF1OXtzdayIkb1TVSgYGrSg2gVNo4pn1pyx/XRXwVzpS99JLs3S7zq
+	 nXBEzdL3x85HCokUPJpu/7ig61vcc1uFOrtKoWdmnR+WlGtg1CRhha6Og2M+Ubv+CA
+	 T7gp4aU/oc/+Q2RTcdr9OiCnFv+pq7NQhAqWG2ZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387769AbgCDIwL (ORCPT
+        id S2387716AbgCDIxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:52:11 -0500
-Received: from mga07.intel.com ([134.134.136.100]:16742 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgCDIwL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:52:11 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 00:52:09 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
-   d="scan'208";a="240388574"
-Received: from local-michael-cet-test.sh.intel.com (HELO localhost) ([10.239.159.128])
-  by orsmga003.jf.intel.com with ESMTP; 04 Mar 2020 00:52:07 -0800
-Date:   Wed, 4 Mar 2020 16:55:37 +0800
-From:   Yang Weijiang <weijiang.yang@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Yang Weijiang <weijiang.yang@intel.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        jmattson@google.com, yu.c.zhang@linux.intel.com
-Subject: Re: [PATCH v9 4/7] KVM: VMX: Load CET states on vmentry/vmexit
-Message-ID: <20200304085537.GC5831@local-michael-cet-test.sh.intel.com>
-References: <20191227021133.11993-1-weijiang.yang@intel.com>
- <20191227021133.11993-5-weijiang.yang@intel.com>
- <20200303220618.GB1439@linux.intel.com>
+        Wed, 4 Mar 2020 03:53:49 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:45556 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728744AbgCDIxt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 03:53:49 -0500
+Received: by mail-lf1-f67.google.com with SMTP id b13so804683lfb.12;
+        Wed, 04 Mar 2020 00:53:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=I9+aL780TGa2bAdTy5D8onwjF2cwdZt5A8dBDQnrtx4=;
+        b=mSgSnSYsc7j1ch2rUpzF9UFNMOmmVqKtde4IPZ/1oNLhqWVVnU2B4qEULNO17WtRPu
+         U1Bh5gwC8LqGoXDuI+sIgF44+ul/xxEzvXVazuL/CFh86shGevWKB7gqn9lg02WbdoIp
+         uNhx6wK0yd6ERqaYg06NMBZnDoUU3thC77w7on35KbWjpJkX32thRvVuY517SYk8V7oU
+         k8oXaO21xuam/GJ6lZO0uhIiTSxktCNAJl0WhQsbq1EtBJPthcKLiJPB/rwsqSv5VZCT
+         B/MlMuDBBYjWzfy2GN6AFm7lPMkG52k+UdqQfSl9MDs5X9ot267QS5odFjh6KkhUvxn8
+         fKFQ==
+X-Gm-Message-State: ANhLgQ03iCNl9jSQJahGLotAzfoiBGf8yDHJfVDY84b7FwaWGQwsRo8X
+        YU/oPBdMVIdMky5zQco42nATdNyw
+X-Google-Smtp-Source: ADFU+vuc36aEPaMkEB93k8MtGuOq9qmShZI1iyvTJWtxbGwjDSf14rSMM1iYeTB2d/6kBLQKyhCdVg==
+X-Received: by 2002:a19:c20b:: with SMTP id l11mr1363543lfc.135.1583312026813;
+        Wed, 04 Mar 2020 00:53:46 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id b20sm13664470ljp.20.2020.03.04.00.53.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 00:53:45 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@kernel.org>)
+        id 1j9Pmf-0003KL-Ol; Wed, 04 Mar 2020 09:53:41 +0100
+Date:   Wed, 4 Mar 2020 09:53:41 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rocky Liao <rjliao@codeaurora.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Make bt_en and susclk not
+ mandatory for QCA Rome
+Message-ID: <20200304085341.GF32540@localhost>
+References: <20200304015429.20615-1-rjliao@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303220618.GB1439@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20200304015429.20615-1-rjliao@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 02:06:18PM -0800, Sean Christopherson wrote:
-> On Fri, Dec 27, 2019 at 10:11:30AM +0800, Yang Weijiang wrote:
-> > "Load {guest,host} CET state" bit controls whether guest/host
-> > CET states will be loaded at VM entry/exit. Before doing that,
-> > KVM needs to check if CET can be enabled both on host and guest.
-> > 
-> > Note:
-> > 1)The processor does not allow CR4.CET to be set if CR0.WP = 0,
-> >   similarly, it does not allow CR0.WP to be cleared while CR4.CET = 1.
-> >   In either case, KVM would inject #GP to guest.
-> > 
-> > 2)SHSTK and IBT features share one control MSR:
-> >   MSR_IA32_{U,S}_CET, which means it's difficult to hide
-> >   one feature from another in the case of SHSTK != IBT,
-> >   after discussed in community, it's agreed to allow Guest
-> >   control two features independently as it won't introduce
-> >   security hole.
-> > 
-> > Co-developed-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > Signed-off-by: Zhang Yi Z <yi.z.zhang@linux.intel.com>
-> > Signed-off-by: Yang Weijiang <weijiang.yang@intel.com>
-> > ---
-> >  arch/x86/kvm/vmx/capabilities.h | 10 ++++++
-> >  arch/x86/kvm/vmx/vmx.c          | 56 +++++++++++++++++++++++++++++++--
-> >  arch/x86/kvm/x86.c              |  3 ++
-> >  3 files changed, 67 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-> > index 7aa69716d516..4a67d35a42a2 100644
-> > --- a/arch/x86/kvm/vmx/capabilities.h
-> > +++ b/arch/x86/kvm/vmx/capabilities.h
-> > @@ -106,6 +106,16 @@ static inline bool vmx_mpx_supported(void)
-> >  		(vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_BNDCFGS);
-> >  }
-> >  
-> > +static inline bool cpu_has_load_guest_cet_states_ctrl(void)
-> > +{
-> > +	return ((vmcs_config.vmentry_ctrl) & VM_ENTRY_LOAD_GUEST_CET_STATE);
-> > +}
-> > +
-> > +static inline bool cpu_has_load_host_cet_states_ctrl(void)
-> > +{
-> > +	return ((vmcs_config.vmexit_ctrl) & VM_EXIT_LOAD_HOST_CET_STATE);
+On Wed, Mar 04, 2020 at 09:54:29AM +0800, Rocky Liao wrote:
+> On some platforms the bt_en pin and susclk are default on and there
+> is no exposed resource to control them. This patch makes the bt_en
+> and susclk not mandatory to have BT work. It also will not set the
+> HCI_QUIRK_NON_PERSISTENT_SETUP and shutdown() callback if bt_en is
+> not available.
 > 
-> No need for parantheses around vmcs_config.vmexit_ctrl.
+> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+> ---
+>  drivers/bluetooth/hci_qca.c | 47 ++++++++++++++++++++-----------------
+>  1 file changed, 26 insertions(+), 21 deletions(-)
 > 
-> > +}
-> > +
-> >  static inline bool cpu_has_vmx_tpr_shadow(void)
-> >  {
-> >  	return vmcs_config.cpu_based_exec_ctrl & CPU_BASED_TPR_SHADOW;
-> > diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> > index 61fc846c7ef3..95063cc7da89 100644
-> > --- a/arch/x86/kvm/vmx/vmx.c
-> > +++ b/arch/x86/kvm/vmx/vmx.c
-> > @@ -44,6 +44,7 @@
-> >  #include <asm/spec-ctrl.h>
-> >  #include <asm/virtext.h>
-> >  #include <asm/vmx.h>
-> > +#include <asm/cet.h>
-> >  
-> >  #include "capabilities.h"
-> >  #include "cpuid.h"
-> > @@ -2445,7 +2446,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
-> >  	      VM_EXIT_LOAD_IA32_EFER |
-> >  	      VM_EXIT_CLEAR_BNDCFGS |
-> >  	      VM_EXIT_PT_CONCEAL_PIP |
-> > -	      VM_EXIT_CLEAR_IA32_RTIT_CTL;
-> > +	      VM_EXIT_CLEAR_IA32_RTIT_CTL |
-> > +	      VM_EXIT_LOAD_HOST_CET_STATE;
-> >  	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_EXIT_CTLS,
-> >  				&_vmexit_control) < 0)
-> >  		return -EIO;
-> > @@ -2469,7 +2471,8 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
-> >  	      VM_ENTRY_LOAD_IA32_EFER |
-> >  	      VM_ENTRY_LOAD_BNDCFGS |
-> >  	      VM_ENTRY_PT_CONCEAL_PIP |
-> > -	      VM_ENTRY_LOAD_IA32_RTIT_CTL;
-> > +	      VM_ENTRY_LOAD_IA32_RTIT_CTL |
-> > +	      VM_ENTRY_LOAD_GUEST_CET_STATE;
-> >  	if (adjust_vmx_controls(min, opt, MSR_IA32_VMX_ENTRY_CTLS,
-> >  				&_vmentry_control) < 0)
-> >  		return -EIO;
-> > @@ -3027,6 +3030,25 @@ void vmx_set_cr3(struct kvm_vcpu *vcpu, unsigned long cr3)
-> >  	vmcs_writel(GUEST_CR3, guest_cr3);
-> >  }
-> >  
-> > +bool is_cet_bit_allowed(struct kvm_vcpu *vcpu)
-> 
-> This should be static.  I'd also include cr4 in the name, e.g.
-> 
->   static bool is_cr4_set_allowed(...)
-> 
->
-Got it, thank you!
-> > +{
-> > +	u64 kvm_xss = kvm_supported_xss();
-> > +	unsigned long cr0;
-> > +	bool cet_allowed;
-> > +
-> > +	cr0 = kvm_read_cr0(vcpu);
-> > +
-> > +	/* Right now, only user-mode CET is supported.*/
-> > +	cet_allowed = (kvm_xss & XFEATURE_MASK_CET_USER) &&
-> > +		      (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> > +		      guest_cpuid_has(vcpu, X86_FEATURE_IBT));
-> 
-> Probably makes sense to add a "is_cet_supported()" helper.  That'd reduce
-> the amount of copy+paste and would probably add clarity to most flows.
+> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> index bf436d6e638e..325baa046c3a 100644
+> --- a/drivers/bluetooth/hci_qca.c
+> +++ b/drivers/bluetooth/hci_qca.c
+> @@ -1562,9 +1562,11 @@ static int qca_power_on(struct hci_dev *hdev)
+>  		ret = qca_wcn3990_init(hu);
+>  	} else {
+>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+> -		gpiod_set_value_cansleep(qcadev->bt_en, 1);
+> -		/* Controller needs time to bootup. */
+> -		msleep(150);
+> +		if (!IS_ERR(qcadev->bt_en)) {
+> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+> +			/* Controller needs time to bootup. */
+> +			msleep(150);
+> +		}
+>  	}
+>  
+>  	return ret;
+> @@ -1750,7 +1752,7 @@ static void qca_power_shutdown(struct hci_uart *hu)
+>  		host_set_baudrate(hu, 2400);
+>  		qca_send_power_pulse(hu, false);
+>  		qca_regulator_disable(qcadev);
+> -	} else {
+> +	} else if (!IS_ERR(qcadev->bt_en)) {
+>  		gpiod_set_value_cansleep(qcadev->bt_en, 0);
+>  	}
+>  }
+> @@ -1852,6 +1854,7 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  	struct hci_dev *hdev;
+>  	const struct qca_vreg_data *data;
+>  	int err;
+> +	bool power_ctrl_enabled = true;
+>  
+>  	qcadev = devm_kzalloc(&serdev->dev, sizeof(*qcadev), GFP_KERNEL);
+>  	if (!qcadev)
+> @@ -1901,35 +1904,37 @@ static int qca_serdev_probe(struct serdev_device *serdev)
+>  		qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
+>  					       GPIOD_OUT_LOW);
 
-Good suggestion, wrapping the code in a helper looks better :-)
-> 
-> > +
-> > +	if ((cr0 & X86_CR0_WP) && cet_allowed)
-> > +		return true;
-> > +
-> > +	return false;
-> 
-> 	return (cr0 & X86_CR0_WP) && cet_allowed;
-> 
-> Even better, especially if you add is_cet_supported(), to avoid VMREAD of
-> CR0 when CET isn't supported.
-> 
-> 	return is_cet_supported() && (kvm_read_cr0(vcpu) & X86_CR0_WP);
-> 
-> At that point, you can probably even forgo the helper, e.g.
-> 
-> 	if ((cr4 & X86_CR4_CET) &&
-> 	    (!is_cet_supported() || !(kvm_read_cr0(vcpu) & X86_CR0_WP)))
-> 		return 1;
-> 
-OK, will tweak the code, thank you!
-> > +}
-> > +
-> >  int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-> >  {
-> >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > @@ -3067,6 +3089,9 @@ int vmx_set_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
-> >  			return 1;
-> >  	}
-> >  
-> > +	if ((cr4 & X86_CR4_CET) && !is_cet_bit_allowed(vcpu))
-> > +		return 1;
-> > +
-> >  	if (vmx->nested.vmxon && !nested_cr4_valid(vcpu, cr4))
-> >  		return 1;
-> >  
-> > @@ -3930,6 +3955,12 @@ void vmx_set_constant_host_state(struct vcpu_vmx *vmx)
-> >  
-> >  	if (cpu_has_load_ia32_efer())
-> >  		vmcs_write64(HOST_IA32_EFER, host_efer);
-> > +
-> > +	if (cpu_has_load_host_cet_states_ctrl()) {
-> > +		vmcs_writel(HOST_S_CET, 0);
-> > +		vmcs_writel(HOST_INTR_SSP_TABLE, 0);
-> > +		vmcs_writel(HOST_SSP, 0);
-> > +	}
-> >  }
-> >  
-> >  void set_cr4_guest_host_mask(struct vcpu_vmx *vmx)
-> > @@ -6499,7 +6530,9 @@ bool __vmx_vcpu_run(struct vcpu_vmx *vmx, unsigned long *regs, bool launched);
-> >  static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >  {
-> >  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> > +	u64 kvm_xss = kvm_supported_xss();
-> >  	unsigned long cr3, cr4;
-> > +	bool cet_allowed;
-> >  
-> >  	/* Record the guest's net vcpu time for enforced NMI injections. */
-> >  	if (unlikely(!enable_vnmi &&
-> > @@ -6530,6 +6563,25 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
-> >  		vmx->loaded_vmcs->host_state.cr3 = cr3;
-> >  	}
-> >  
-> > +	/* Right now, only user-mode CET is supported.*/
-> > +	cet_allowed = (kvm_xss & XFEATURE_MASK_CET_USER) &&
-> > +		      (guest_cpuid_has(vcpu, X86_FEATURE_SHSTK) ||
-> > +		      guest_cpuid_has(vcpu, X86_FEATURE_IBT));
-> > +
-> > +	if (cpu_has_load_guest_cet_states_ctrl() && cet_allowed)
-> > +		vmcs_set_bits(VM_ENTRY_CONTROLS,
-> > +			      VM_ENTRY_LOAD_GUEST_CET_STATE);
-> > +	else
-> > +		vmcs_clear_bits(VM_ENTRY_CONTROLS,
-> > +				VM_ENTRY_LOAD_GUEST_CET_STATE);
-> > +
-> > +	if (cpu_has_load_host_cet_states_ctrl() && cet_allowed)
-> > +		vmcs_set_bits(VM_EXIT_CONTROLS,
-> > +			      VM_EXIT_LOAD_HOST_CET_STATE);
-> > +	else
-> > +		vmcs_clear_bits(VM_EXIT_CONTROLS,
-> > +				VM_EXIT_LOAD_HOST_CET_STATE);
-> 
-> Why are you clearing VMCS bits in vmx_vcpu_run()?  Unless I'm missing
-> something, these can go in vmx_cpuid_update().
-Yes, I need to find a good place to do the work, thank you for pointing
-it out.
-> 
-> > +
-> >  	cr4 = cr4_read_shadow();
-> >  	if (unlikely(cr4 != vmx->loaded_vmcs->host_state.cr4)) {
-> >  		vmcs_writel(HOST_CR4, cr4);
-> > diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> > index a9b1140d0508..b27d97eaec24 100644
-> > --- a/arch/x86/kvm/x86.c
-> > +++ b/arch/x86/kvm/x86.c
-> > @@ -788,6 +788,9 @@ int kvm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
-> >  	if (!(cr0 & X86_CR0_PG) && kvm_read_cr4_bits(vcpu, X86_CR4_PCIDE))
-> >  		return 1;
-> >  
-> > +	if (!(cr0 & X86_CR0_WP) && kvm_read_cr4_bits(vcpu, X86_CR4_CET))
-> > +		return 1;
-> > +
-> >  	kvm_x86_ops->set_cr0(vcpu, cr0);
-> >  
-> >  	if ((cr0 ^ old_cr0) & X86_CR0_PG) {
-> > -- 
-> > 2.17.2
-> > 
+Shouldn't you use devm_gpiod_get_optional()?
+
+>  		if (IS_ERR(qcadev->bt_en)) {
+> -			dev_err(&serdev->dev, "failed to acquire enable gpio\n");
+> -			return PTR_ERR(qcadev->bt_en);
+> +			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
+> +			power_ctrl_enabled = false;
+
+And bail out on errors, but treat NULL as !port_ctrl_enabled?
+
+>  		}
+>  
+>  		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+
+And devm_clk_get_optional() here.
+
+Etc.
+
+Also does the devicetree binding need to be updated to reflect this
+change?
+
+Johan
