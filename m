@@ -2,147 +2,205 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47599C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7796FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DD242072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:51:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T3fI3J62"
+	by mail.kernel.org (Postfix) with ESMTP id 3BE762166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388080AbgCDMvq (ORCPT
+        id S1729380AbgCDMzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:51:46 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45236 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387776AbgCDMvp (ORCPT
+        Wed, 4 Mar 2020 07:55:50 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28854 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726440AbgCDMzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:51:45 -0500
-Received: by mail-wr1-f65.google.com with SMTP id v2so2227920wrp.12;
-        Wed, 04 Mar 2020 04:51:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=slqfxWKHrSdIw9QfR0BP/gbOIKFxiCgZIC59uZ7bA1g=;
-        b=T3fI3J62Qx0pCDIHyM4bu7UUP4rwdo+ZSZDcZkQ+Y+rpqzDzK9xG0IMbmKLQcuydpE
-         t8OC44HEjNkv+WM7ojqUAr5A5AJ2tPlU+n10uDIwfyHo+N8KU0DMsb0jCL/c0PpHFKRC
-         JtZ6Hh4Kcjseh6WnO2lHL6OAmE/8DQlEmf5YBBAkqCTKD04jledDZRW2wZir1SM2or3r
-         a7okpASxsZ1H6kaG7LVCql491u4PEHz7PSrG9H/DsL+5SITRi3/3Qz6OH2X4aLCxKLJE
-         FJXEs2aJ1qsTWSeW2OyHSFFvbwqsYJca6jQIVn3x3L1gq90fYzhdfiElCXM2eQ6yjvco
-         XJqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=slqfxWKHrSdIw9QfR0BP/gbOIKFxiCgZIC59uZ7bA1g=;
-        b=WC8isSJ//vQVrtPKxHvxz2wOOYvDi+ojI2YMG3TdjpyhjtyuC6SeuNqeQlMJPbiFBg
-         tMWNBhhBJAB9hkCK63Xsc9vPv24njq39czz1slsshPKw0/ky0el4FTpaLA5QB7OjjIbr
-         D7n+ZrRMj1Bb/mobEC1pQ35BQNQwZGHTPSmnZEqKr+cFsTCgGWxohDCs7QabaPKZ36XP
-         brexm0y1NUKXKW9+cUSMuY7Z4hLm2sfze7qdTvJqykg/ymGb0q1KbLOSwieooyq97ACB
-         c0dHTi71dI42PwNHmEnBxPai9I82RQ/3PeCtQGlfEHrB/dzSO7ZDdDaiq62I+2VeLdvc
-         Z56w==
-X-Gm-Message-State: ANhLgQ2RNVXd0WVrtTIHYD0kGzJ8r5ngvpuaIgEJoBrAZsFHpvF53sNG
-        iS7M2pqqcA/Bo/TLiNoCU1tBY2ka
-X-Google-Smtp-Source: ADFU+vtho9USVhYD0f78d0OPAj15suoFb8GtVQUyhjTdnVj0hpXXhHtM1VhO3XLZpBl/NPm/DmkD9g==
-X-Received: by 2002:a5d:4e8b:: with SMTP id e11mr1002920wru.136.1583326302395;
-        Wed, 04 Mar 2020 04:51:42 -0800 (PST)
-Received: from [192.168.43.187] ([109.126.130.242])
-        by smtp.gmail.com with ESMTPSA id t187sm4247704wmt.25.2020.03.04.04.51.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 04:51:41 -0800 (PST)
-Subject: Re: linux-next: build warning after merge of the block tree
-To:     Jens Axboe <axboe@kernel.dk>,
-        Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200304131750.55d84beb@canb.auug.org.au>
- <cd8154ef-bb6f-aa7c-2553-582f0b497516@kernel.dk>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <d19697ab-8cb0-fad2-3dd8-dab296f61c69@gmail.com>
-Date:   Wed, 4 Mar 2020 15:50:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <cd8154ef-bb6f-aa7c-2553-582f0b497516@kernel.dk>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Wed, 4 Mar 2020 07:55:49 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024Crm5M010459
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 07:55:48 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhw6nya93-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:55:48 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 4 Mar 2020 12:55:46 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 12:55:42 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024CsgYl33948012
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 12:54:42 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F6C64C050;
+        Wed,  4 Mar 2020 12:55:40 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3482B4C046;
+        Wed,  4 Mar 2020 12:55:39 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.200.112])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 12:55:39 +0000 (GMT)
+Subject: Re: [PATCH v2] ima: add a new CONFIG for loading arch-specific
+ policies
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Ard Biesheuvel <ardb@kernel.org>, Nayna Jain <nayna@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        x86@kernel.org
+Date:   Wed, 04 Mar 2020 07:55:38 -0500
+In-Reply-To: <CAKv+Gu831SRo+Di6WgKTex40TcOVqNQAdeNLtfQpPdgnvrxucw@mail.gmail.com>
+References: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
+         <CAKv+Gu831SRo+Di6WgKTex40TcOVqNQAdeNLtfQpPdgnvrxucw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030412-0012-0000-0000-0000038D17CB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030412-0013-0000-0000-000021C9D293
+Message-Id: <1583326538.6264.32.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_03:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040099
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/2020 06:01, Jens Axboe wrote:
-> On 3/3/20 7:17 PM, Stephen Rothwell wrote:
->> Hi all,
->>
->> After merging the block tree, today's linux-next build (powerpc
->> ppc64_defconfig) produced this warning:
->>
->> fs/io_uring.c: In function 'io_close':
->> fs/io_uring.c:3415:3: warning: ignoring return value of 'refcount_inc_not_zero', declared with attribute warn_unused_result [-Wunused-result]
->>  3415 |   refcount_inc_not_zero(&req->refs);
->>       |   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>
->> Introduced by commit
->>
->>   62e0c6b73a2c ("io_uring: make submission ref putting consistent")
+[Cc'ing Thomas Gleixner and x86 mailing list]
+
+On Wed, 2020-03-04 at 08:14 +0100, Ard Biesheuvel wrote:
+> On Wed, 4 Mar 2020 at 03:34, Nayna Jain <nayna@linux.ibm.com> wrote:
+> >
+> > Every time a new architecture defines the IMA architecture specific
+> > functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+> > include file needs to be updated. To avoid this "noise", this patch
+> > defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+> > the different architectures to select it.
+> >
+> > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > Cc: Philipp Rudo <prudo@linux.ibm.com>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
 > 
-> That should just be a refcount_inc() and also looks like it should happen
-> before the async queue. I'll fix it up.
+> Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
-Yes, it's better to. Thanks!
+Thanks, Ard.
+> 
+> for the x86 bits, but I'm not an x86 maintainer. Also, you may need to
+> split this if you want to permit arch maintainers to pick up their
+> parts individually.
 
+Michael, Philipp, Thomas, do you prefer separate patches?
 
--- 
-Pavel Begunkov
+> 
+> > ---
+> > v2:
+> > * Fixed the issue identified by Mimi. Thanks Mimi, Ard, Heiko and Michael for
+> > discussing the fix.
+> >
+> >  arch/powerpc/Kconfig           | 1 +
+> >  arch/s390/Kconfig              | 1 +
+> >  arch/x86/Kconfig               | 1 +
+> >  include/linux/ima.h            | 3 +--
+> >  security/integrity/ima/Kconfig | 9 +++++++++
+> >  5 files changed, 13 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> > index 497b7d0b2d7e..a5cfde432983 100644
+> > --- a/arch/powerpc/Kconfig
+> > +++ b/arch/powerpc/Kconfig
+> > @@ -979,6 +979,7 @@ config PPC_SECURE_BOOT
+> >         bool
+> >         depends on PPC_POWERNV
+> >         depends on IMA_ARCH_POLICY
+> > +       select IMA_SECURE_AND_OR_TRUSTED_BOOT
+> >         help
+> >           Systems with firmware secure boot enabled need to define security
+> >           policies to extend secure boot to the OS. This config allows a user
+> > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> > index 8abe77536d9d..4a502fbcb800 100644
+> > --- a/arch/s390/Kconfig
+> > +++ b/arch/s390/Kconfig
+> > @@ -195,6 +195,7 @@ config S390
+> >         select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+> >         select SWIOTLB
+> >         select GENERIC_ALLOCATOR
+> > +       select IMA_SECURE_AND_OR_TRUSTED_BOOT if IMA_ARCH_POLICY
+> >
+> >
+> >  config SCHED_OMIT_FRAME_POINTER
+> > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > index beea77046f9b..7f5bfaf0cbd2 100644
+> > --- a/arch/x86/Kconfig
+> > +++ b/arch/x86/Kconfig
+> > @@ -230,6 +230,7 @@ config X86
+> >         select VIRT_TO_BUS
+> >         select X86_FEATURE_NAMES                if PROC_FS
+> >         select PROC_PID_ARCH_STATUS             if PROC_FS
+> > +       select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
+> >
+> >  config INSTRUCTION_DECODER
+> >         def_bool y
+> > diff --git a/include/linux/ima.h b/include/linux/ima.h
+> > index 1659217e9b60..aefe758f4466 100644
+> > --- a/include/linux/ima.h
+> > +++ b/include/linux/ima.h
+> > @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+> >  extern void ima_add_kexec_buffer(struct kimage *image);
+> >  #endif
+> >
+> > -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+> > -       || defined(CONFIG_PPC_SECURE_BOOT)
+> > +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+> >  extern bool arch_ima_get_secureboot(void);
+> >  extern const char * const *arch_get_ima_policy(void);
+> >  #else
+> > diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> > index 3f3ee4e2eb0d..d17972aa413a 100644
+> > --- a/security/integrity/ima/Kconfig
+> > +++ b/security/integrity/ima/Kconfig
+> > @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+> >         depends on IMA_MEASURE_ASYMMETRIC_KEYS
+> >         depends on SYSTEM_TRUSTED_KEYRING
+> >         default y
+> > +
+> > +config IMA_SECURE_AND_OR_TRUSTED_BOOT
+> > +       bool
+> > +       depends on IMA
+> > +       depends on IMA_ARCH_POLICY
+> 
+> Doesn't the latter already depend on the former?
+
+Yes, there's no need for the first.
+
+Mimi
+> 
+> > +       default n
+> > +       help
+> > +          This option is selected by architectures to enable secure and/or
+> > +          trusted boot based on IMA runtime policies.
+> > --
+> > 2.13.6
+> >
+
