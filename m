@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4640C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20EDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C3A32084E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88FDC20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JY1t4OZ9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajmDo6wH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388487AbgCDWCB (ORCPT
+        id S2388599AbgCDWCc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:02:01 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44099 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCDWB7 (ORCPT
+        Wed, 4 Mar 2020 17:02:32 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51124 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388281AbgCDWCB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:01:59 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n7so4411261wrt.11;
-        Wed, 04 Mar 2020 14:01:56 -0800 (PST)
+        Wed, 4 Mar 2020 17:02:01 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so3980974wmb.0;
+        Wed, 04 Mar 2020 14:01:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=jKtUnbnCDPAHUPw1HurGDuA6lHZnQeUDjcK4VLHPbLM=;
-        b=JY1t4OZ9N00wP7OviW2anDxcnO5bjGI1gHaeVVMg5PuqdkMibSlkP/OkrxbEEhRoL0
-         CvbE6Uyl6ZZcv34JaxE2uYSTI3wh4R8txNxN6oeSAEm8UUlnVEA99R6hFcqjhrzMnSOk
-         gozg2lYI32u8NjFIZPfaDZW17hk+w8CnYc7DhsSgy96EZEHixgMTAxWpIVJ6Btlbicbu
-         wR+peaRH46mCbjzpmHHAK8dP7aKSByFhT5b9XbHaNhzI6uI0QRkQQHYCDI397AMOxsAL
-         iBN6bgNZ1jBY2hu3SZyKkjkbaTCHCXyiKUxzJMUabR6namwDTVaFWNZy4uJMTXzaSs13
-         gIkw==
+        bh=T/l0focuCxU+0lWxK9yvmCbc/6KKaIJvq1+i8TBaK8g=;
+        b=ajmDo6wH9aduuzFZRphrtOLa+jl30EGDPklWmmfDte8+9N+cSnNu0V7DXDBjipjMBU
+         Nd+hvpvkn1ikWs6dL5YYPKKRhcNJ4B7S+cMKjXlpF9/0tDuyxPYOPbHaBKC5Ku8NSN7R
+         /j/I8etoksIS3XMU9bB+6g6R04LcG62b6+mB/rN4OrBpSLONkvCnpRU2sI9jklPlfNJz
+         ckPIRJZdoSWkhn4JfI+klM5119iY4HIBTUfmiGNSmEN6wlyueI8q65ykZ8Vfi0IrS/n2
+         oqGkDfc5IOqtG2W/Ja419uyC27HzUwnZwIewtxpYVR+lVjPx9SgSpDuL/MBwp5ccN/kd
+         dYBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=jKtUnbnCDPAHUPw1HurGDuA6lHZnQeUDjcK4VLHPbLM=;
-        b=Ue/SPFJD7lqZMHCGtV1CI855hblk2WYKMIbyC2rFrZJB1sjAW1M4AnlA2foLLMEqmy
-         4MWTUFq10Hs257vvpkfHAYIcXKzMHWJIAjrR6U2zFfxTdYOMWmjIQYYQzlragtPWnvOR
-         DfBhWnP5bSwWcMHm4vwo+SXHZFxiYBxmXF3iWQGCryRbJiF3LWAzToayPZ8l80W+ahPs
-         J3Kz/Jg4ab+5i4kd/CX+hK/z5tWNU3VnNeS+t4h9kqA6y5NgVqcjX9dGdR4QE5tTKeaF
-         /1DUwYdRI/zzsrLy0s9oOJt0lWsT/DWUV0383qDinKQYMIn5OB9A3V2qXWF3jlThKrtq
-         Tcjw==
-X-Gm-Message-State: ANhLgQ2WLDDmu5J04iSN9Aq7aHc3ArIEic1UqSL1gTlXnvgh7j5+Qdq+
-        rGZH9oM4KemHsnFKkLzU4CE=
-X-Google-Smtp-Source: ADFU+vvt8RSj6uUID0ESiDY4iOV6VEibME60xB1AZdc+Bn8U47ESEYs1gamcKtnt/xMrc9yozBiOjg==
-X-Received: by 2002:adf:b609:: with SMTP id f9mr5606100wre.380.1583359316058;
-        Wed, 04 Mar 2020 14:01:56 -0800 (PST)
+        bh=T/l0focuCxU+0lWxK9yvmCbc/6KKaIJvq1+i8TBaK8g=;
+        b=WO++NQ3YIK2VpxoE+HwrrPIk1YBobRkENFOBhqHrhHnHt/mnnS8rZaLYsvdwgQtA0p
+         VANK2Q4buTHUuD51sdbVYq5ycyKgoEX1CagYME6nKsRkvnUnnFx8VIs22vdAgYaiMxIJ
+         CsqEi8W1gM3IbLG02tov/YLR35mSBNuioL3qpypwGqsSq7Vb2ZhYRTPHXf9JMEF2RLaY
+         fWxgd7Nb04nMkSXUX6BTKgaDCU2Az2yXxCzWHdUjCle6BFo0oZDMX2jdTiK4G8kjZf5i
+         nWcjR4jq8hq+mwztzD1GI/IUSNinKUG9uh3s6gX2GRn23/mZwvAPuVjlHjnuuhJGn/uK
+         D72Q==
+X-Gm-Message-State: ANhLgQ0g3Ep8HQFy0rsZerCAXtKb5oNAzzhG1VIKsmC+Jb/wsUD2DGr4
+        sR+SlHaqzIkbNUdKeQr56X+00ayb
+X-Google-Smtp-Source: ADFU+vtLjzFP70YoMuO9LYP02avhUML631vsNZch4eudLOzu7eOEacvy5fJcyroV37UmvHxi6oDc+A==
+X-Received: by 2002:a1c:e206:: with SMTP id z6mr5184526wmg.141.1583359319182;
+        Wed, 04 Mar 2020 14:01:59 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id z2sm36776402wrq.95.2020.03.04.14.01.55
+        by smtp.gmail.com with ESMTPSA id z2sm36776402wrq.95.2020.03.04.14.01.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 14:01:55 -0800 (PST)
+        Wed, 04 Mar 2020 14:01:58 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         eha@deif.com, angelo@sysam.it, andrew.smirnov@gmail.com,
         gustavo@embeddedor.com, weic@nvidia.com, mhosny@nvidia.com
-Subject: [PATCH 01/12] spi: spi-fsl-dspi: Simplify bytes_per_word gymnastics
-Date:   Thu,  5 Mar 2020 00:00:33 +0200
-Message-Id: <20200304220044.11193-2-olteanv@gmail.com>
+Subject: [PATCH 04/12] spi: spi-fsl-dspi: Add comments around dspi_pop_tx and dspi_push_rx functions
+Date:   Thu,  5 Mar 2020 00:00:36 +0200
+Message-Id: <20200304220044.11193-5-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200304220044.11193-1-olteanv@gmail.com>
 References: <20200304220044.11193-1-olteanv@gmail.com>
@@ -74,63 +74,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-Reduce the if-then-else-if-then-else sequence to:
- - a simple division in the case of bytes_per_word calculation
- - a memcpy command with a variable size. The semantics of larger-than-8
-   xfer->bits_per_word is that those words are to be interpreted and
-   transmitted in CPU native endianness.
+Their names are confusing, since dspi_pop_tx prepares a word to be
+written to the PUSHR register, and dspi_push_rx gets a word from the
+POPR register.
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
- drivers/spi/spi-fsl-dspi.c | 21 +++------------------
- 1 file changed, 3 insertions(+), 18 deletions(-)
+ drivers/spi/spi-fsl-dspi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index c357c3247232..896d7a0f45b0 100644
+index b92c2b84a94b..a8077d4903c7 100644
 --- a/drivers/spi/spi-fsl-dspi.c
 +++ b/drivers/spi/spi-fsl-dspi.c
-@@ -252,12 +252,7 @@ static u32 dspi_pop_tx(struct fsl_dspi *dspi)
+@@ -245,6 +245,10 @@ struct fsl_dspi {
+ 	struct fsl_dspi_dma			*dma;
+ };
+ 
++/*
++ * Pop one word from the TX buffer for pushing into the
++ * PUSHR register (TX FIFO)
++ */
+ static u32 dspi_pop_tx(struct fsl_dspi *dspi)
+ {
  	u32 txdata = 0;
- 
- 	if (dspi->tx) {
--		if (dspi->bytes_per_word == 1)
--			txdata = *(u8 *)dspi->tx;
--		else if (dspi->bytes_per_word == 2)
--			txdata = *(u16 *)dspi->tx;
--		else  /* dspi->bytes_per_word == 4 */
--			txdata = *(u32 *)dspi->tx;
-+		memcpy(&txdata, dspi->tx, dspi->bytes_per_word);
- 		dspi->tx += dspi->bytes_per_word;
- 	}
- 	dspi->len -= dspi->bytes_per_word;
-@@ -284,12 +279,7 @@ static void dspi_push_rx(struct fsl_dspi *dspi, u32 rxdata)
- 	/* Mask off undefined bits */
- 	rxdata &= (1 << dspi->bits_per_word) - 1;
- 
--	if (dspi->bytes_per_word == 1)
--		*(u8 *)dspi->rx = rxdata;
--	else if (dspi->bytes_per_word == 2)
--		*(u16 *)dspi->rx = rxdata;
--	else /* dspi->bytes_per_word == 4 */
--		*(u32 *)dspi->rx = rxdata;
-+	memcpy(dspi->rx, &rxdata, dspi->bytes_per_word);
- 	dspi->rx += dspi->bytes_per_word;
+@@ -257,6 +261,7 @@ static u32 dspi_pop_tx(struct fsl_dspi *dspi)
+ 	return txdata;
  }
  
-@@ -814,12 +804,7 @@ static int dspi_transfer_one_message(struct spi_controller *ctlr,
- 		dspi->progress = 0;
- 		/* Validated transfer specific frame size (defaults applied) */
- 		dspi->bits_per_word = transfer->bits_per_word;
--		if (transfer->bits_per_word <= 8)
--			dspi->bytes_per_word = 1;
--		else if (transfer->bits_per_word <= 16)
--			dspi->bytes_per_word = 2;
--		else
--			dspi->bytes_per_word = 4;
-+		dspi->bytes_per_word = DIV_ROUND_UP(dspi->bits_per_word, 8);
++/* Prepare one TX FIFO entry (txdata plus cmd) */
+ static u32 dspi_pop_tx_pushr(struct fsl_dspi *dspi)
+ {
+ 	u16 cmd = dspi->tx_cmd, data = dspi_pop_tx(dspi);
+@@ -269,6 +274,7 @@ static u32 dspi_pop_tx_pushr(struct fsl_dspi *dspi)
+ 	return cmd << 16 | data;
+ }
  
- 		regmap_update_bits(dspi->regmap, SPI_MCR,
- 				   SPI_MCR_CLR_TXF | SPI_MCR_CLR_RXF,
++/* Push one word to the RX buffer from the POPR register (RX FIFO) */
+ static void dspi_push_rx(struct fsl_dspi *dspi, u32 rxdata)
+ {
+ 	if (!dspi->rx)
 -- 
 2.17.1
 
