@@ -2,160 +2,142 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916D2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:04:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE482C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613FA24658
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:04:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583341450;
-	bh=jn/uUffJq458TIftk9tVEIsDWPChKp3QU03s22kQWMw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=G0cmIVBuWwPqDO0gPm9cUk5auAc6TPFg6rxELYOtW9b1Zv/zUTgqSsc4Qydo3bAP7
-	 jpAoUF7WJK+YcKAeb1k0oN5dz5Hcce0DIHaPNfPeEWNVppBX+B8LIU0PUe5SVmt3SS
-	 31piBSYoHYWlZB9UYYT4nWZ1CfHzD4GXU6nBnnQA=
+	by mail.kernel.org (Postfix) with ESMTP id 87BF522B48
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:08:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPtvWklQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgCDREJ (ORCPT
+        id S1729704AbgCDRIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:04:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40860 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727308AbgCDREI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:04:08 -0500
-Received: from linux-8ccs.suse.de (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C869922B48;
-        Wed,  4 Mar 2020 17:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583341448;
-        bh=jn/uUffJq458TIftk9tVEIsDWPChKp3QU03s22kQWMw=;
-        h=From:To:Cc:Subject:Date:From;
-        b=nZcLEj0K+TlsI8XZeVLuArCpvVVu5vdOhzZZ+5kcQjJrlnYp6p9JXyPNJqPbjEo9z
-         vq3zYMaxK691nZrus2xftAgMYSi4WahmtavLAuFgb3tKEKWvNp+H+JNDjhIIFTgwyV
-         etEhmGZHmIBWmDhkwq7COFxSCnxfzjAlLUxMFy6I=
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Matthias Maennich <maennich@google.com>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        linux-kernel@vger.kernel.org, Jessica Yu <jeyu@kernel.org>
-Subject: [PATCH] modpost: move the namespace field in Module.symvers last
-Date:   Wed,  4 Mar 2020 18:03:45 +0100
-Message-Id: <20200304170345.21218-1-jeyu@kernel.org>
-X-Mailer: git-send-email 2.16.4
+        Wed, 4 Mar 2020 12:08:35 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37366 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbgCDRIf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 12:08:35 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p14so1268868pfn.4;
+        Wed, 04 Mar 2020 09:08:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=WcXiDjy33PYge8hUsXuS+/8NVEyCDj8/Q41XwHVNKcw=;
+        b=nPtvWklQt9QghWJiSdW0QkhlOrTOjZ3+Pds6ZlGJMH65EhPXyR/CLtQPDyWFP6vkVk
+         WBs9KyqFwr2826o1eb60HIE/D7eB88nLn5qItsO4QRJum9NW2rUgoDgdu2C/+OBnAOSm
+         7VGNMVXMqTvDsGKcEVAvHD4xY3TNY3Ecoz0Qo3LB+REQP+1vkTxrkDtf35T1c8a3WTAq
+         sLvRu06xnTEnC5SFMLwJEPp9umUI7fdjZNSUghVcNxaa2fnjI1marOElFj9M6v17L6Tc
+         cDQfQ0dSZIo4z57MzT4QliTFyIk634DnwZVwEEfcMAlNnN7o5KsNQ0HOvPjIMqpmRcrW
+         VDkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=WcXiDjy33PYge8hUsXuS+/8NVEyCDj8/Q41XwHVNKcw=;
+        b=LtxuIWkB7jA7iRBbH6itoPJdHforyXTj/PopdN5BWPKOWqc8XqIXJ/ZbsznIscN52q
+         cR7aDVeZm5wYrXIhEz/9IigxyWt0MSBq+tTAN9ujucnvE2HAsLaU2wxwvtLBGDZscEJH
+         0UhyZrANerWSeYWlm+wohZI6muLvDxCigOj5hfdn3oxXGMI8s8lypbvwJC0bp6NJIQyH
+         XcwAp5PqVG1+4L2nb8rEPSR4da95/AP+m15hr0ujyQC8iGuhzVA5AAmFeHKzFIAawdFx
+         TINtFEQPeRZrbdhXUH2CQ3siRsRvvq2+/cewYI9mgyjKNuzlZBQ7Qj9EGVgzb/hk59yI
+         AeeA==
+X-Gm-Message-State: ANhLgQ369ya3bfrbkODjHrg40I9W6sxjFPb9gJ8ZEL3P8TsbSAbjx2/N
+        zLHijcR3W8Lw+KE51x19E7o=
+X-Google-Smtp-Source: ADFU+vv+Df31P92V8d+K3fXU/m2exn8CF+UTDgAxezww+iG60GrEAezFnJETx5JbDF0id9d06IG8bw==
+X-Received: by 2002:aa7:91d7:: with SMTP id z23mr1179323pfa.160.1583341714250;
+        Wed, 04 Mar 2020 09:08:34 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id h8sm1192994pfn.59.2020.03.04.09.08.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Mar 2020 09:08:33 -0800 (PST)
+Date:   Wed, 4 Mar 2020 09:08:32 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     wim@linux-watchdog.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        joel@jms.id.au, avifishman70@gmail.com, tali.perry1@gmail.com,
+        yuenn@google.com, benjaminfair@google.com,
+        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v2 1/3] dt-binding: watchdog: add bootstatus reset type
+ documentation
+Message-ID: <20200304170832.GA22914@roeck-us.net>
+References: <20200303100114.87786-1-tmaimon77@gmail.com>
+ <20200303100114.87786-2-tmaimon77@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303100114.87786-2-tmaimon77@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to preserve backwards compatability with kmod tools, we have to
-move the namespace field in Module.symvers last, as the depmod -e -E
-option looks at the first three fields in Module.symvers to check symbol
-versions (and it's expected they stay in the original order of crc,
-symbol, module).
+On Tue, Mar 03, 2020 at 12:01:12PM +0200, Tomer Maimon wrote:
+> Add device tree three bootstatus reset types documentation.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  .../bindings/watchdog/nuvoton,npcm-wdt.txt    | 30 +++++++++++++++++++
+>  1 file changed, 30 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> index 6d593003c933..65e24a80ee70 100644
+> --- a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
+> @@ -17,6 +17,33 @@ Required clocking property, have to be one of:
+>  
+>  Optional properties:
+>  - timeout-sec : Contains the watchdog timeout in seconds
+> +- nuvoton,card-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
+> +  Contains the card reset type for checking and indicating
+> +  the last card reset status (WDIOF_CARDRESET)
+> +
+> +  If 'nuvoton,card-reset-type' is not specified the default is porst
+> +
+> +  Reset types:
+> +       - porst: Power reset
+> +       - corst: Core reset
+> +	   - wdX : Watchdog reset X (X represante 0-2)
+> +	   - swX : Software reset X (X represante 1-4)
+> +
+> +- nuvoton,ext1-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
+> +  Contains the external 2 reset type for checking and indicating
+> +  the last external 2 reset status (WDIOF_EXTERN1)
+> +
+> +  If 'nuvoton,card-reset-type' is not specified the default is wd0.
+> +
+> +  Reset types are the same as in nuvoton,card-reset-type property.
+> +
+> +- nuvoton,ext2-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
+> +  Contains the external 2 reset type for checking and indicating
+> +  the last external 2 reset status (WDIOF_EXTERN2)
+> +
+> +  If 'nuvoton,card-reset-type' is not specified the default is sw1.
+> +
+> +  Reset types are the same as in nuvoton,card-reset-type property.
+>  
+>  Example:
+>  
+> @@ -25,4 +52,7 @@ timer@f000801c {
+>      interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
+>      reg = <0xf000801c 0x4>;
+>      clocks = <&clk NPCM7XX_CLK_TIMER>;
+> +	nuvoton,card-reset-type = "porst";
+> +	nuvoton,ext1-reset-type = "wd1";
+> +	nuvoton,ext2-reset-type = "sw2";
 
-Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
-Cc: stable@vger.kernel.org
-Signed-off-by: Jessica Yu <jeyu@kernel.org>
----
- Documentation/kbuild/modules.rst |  4 ++--
- scripts/export_report.pl         |  2 +-
- scripts/mod/modpost.c            | 24 ++++++++++++------------
- 3 files changed, 15 insertions(+), 15 deletions(-)
+This set of properties maps chip reset types to reset types defined
+by the Linux watchdog subsystem (ie WDIOF_CARDRESET, WDIOF_EXTERN1,
+and WDIOF_EXTERN2). It is neither a hardware description nor a system
+configuration.
 
-diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
-index 69fa48ee93d6..e0b45a257f21 100644
---- a/Documentation/kbuild/modules.rst
-+++ b/Documentation/kbuild/modules.rst
-@@ -470,9 +470,9 @@ build.
- 
- 	The syntax of the Module.symvers file is::
- 
--	<CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
-+	<CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
- 
--	0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
-+	0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
- 
- 	The fields are separated by tabs and values may be empty (e.g.
- 	if no namespace is defined for an exported symbol).
-diff --git a/scripts/export_report.pl b/scripts/export_report.pl
-index 548330e8c4e7..feb3d5542a62 100755
---- a/scripts/export_report.pl
-+++ b/scripts/export_report.pl
-@@ -94,7 +94,7 @@ if (defined $opt{'o'}) {
- #
- while ( <$module_symvers> ) {
- 	chomp;
--	my (undef, $symbol, $namespace, $module, $gpl) = split('\t');
-+	my (undef, $symbol, $module, $gpl, $namespace) = split('\t');
- 	$SYMBOL { $symbol } =  [ $module , "0" , $symbol, $gpl];
- }
- close($module_symvers);
-diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
-index 7edfdb2f4497..6ab235354f36 100644
---- a/scripts/mod/modpost.c
-+++ b/scripts/mod/modpost.c
-@@ -2427,7 +2427,7 @@ static void write_if_changed(struct buffer *b, const char *fname)
- }
- 
- /* parse Module.symvers file. line format:
-- * 0x12345678<tab>symbol<tab>module[[<tab>export]<tab>something]
-+ * 0x12345678<tab>symbol<tab>module<tab>export<tab>namespace
-  **/
- static void read_dump(const char *fname, unsigned int kernel)
- {
-@@ -2440,7 +2440,7 @@ static void read_dump(const char *fname, unsigned int kernel)
- 		return;
- 
- 	while ((line = get_next_line(&pos, file, size))) {
--		char *symname, *namespace, *modname, *d, *export, *end;
-+		char *symname, *namespace, *modname, *d, *export;
- 		unsigned int crc;
- 		struct module *mod;
- 		struct symbol *s;
-@@ -2448,16 +2448,16 @@ static void read_dump(const char *fname, unsigned int kernel)
- 		if (!(symname = strchr(line, '\t')))
- 			goto fail;
- 		*symname++ = '\0';
--		if (!(namespace = strchr(symname, '\t')))
--			goto fail;
--		*namespace++ = '\0';
--		if (!(modname = strchr(namespace, '\t')))
-+		if (!(modname = strchr(symname, '\t')))
- 			goto fail;
- 		*modname++ = '\0';
--		if ((export = strchr(modname, '\t')) != NULL)
--			*export++ = '\0';
--		if (export && ((end = strchr(export, '\t')) != NULL))
--			*end = '\0';
-+		if (!(export = strchr(modname, '\t')))
-+			goto fail;
-+		*export++ = '\0';
-+		if (!(namespace = strchr(export, '\t')))
-+			goto fail;
-+		*namespace++ = '\0';
-+
- 		crc = strtoul(line, &d, 16);
- 		if (*symname == '\0' || *modname == '\0' || *d != '\0')
- 			goto fail;
-@@ -2508,9 +2508,9 @@ static void write_dump(const char *fname)
- 				namespace = symbol->namespace;
- 				buf_printf(&buf, "0x%08x\t%s\t%s\t%s\t%s\n",
- 					   symbol->crc, symbol->name,
--					   namespace ? namespace : "",
- 					   symbol->module->name,
--					   export_str(symbol->export));
-+					   export_str(symbol->export),
-+					   namespace ? namespace : "");
- 			}
- 			symbol = symbol->next;
- 		}
--- 
-2.16.4
+It is up to Rob to decide, but I personally don't think it is appropriate.
 
+Guenter
