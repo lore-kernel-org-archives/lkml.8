@@ -2,142 +2,148 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B05FBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BD8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 819F621775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583350110;
-	bh=cbKeshrW7BI/dDw2hjMfEtgr8prbIHBJLGREJIVzAYU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hAoU3ZMeXQcuxYLAa453Un5MGaIwuiyOBogs2Mujb6ibVYdCNDlT7fdZbj4gm1wwl
-	 0rKRh55DEt114gokM8qkxwttCJSZcJJugxGJ7Udp+vaAPdrGdGhZg4TyQPnNU2t3pf
-	 YQUJ4/Ibh01aa931swJ9icxGu4yE+catjLYZ7K1w=
+	by mail.kernel.org (Postfix) with ESMTP id 1CAFF21775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:30:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XdhUAXzg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729511AbgCDT23 (ORCPT
+        id S1729002AbgCDT37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:28:29 -0500
-Received: from foss.arm.com ([217.140.110.172]:38772 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727137AbgCDT23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:28:29 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B71551FB;
-        Wed,  4 Mar 2020 11:28:28 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 375AF3F6C4;
-        Wed,  4 Mar 2020 11:28:28 -0800 (PST)
-Date:   Wed, 4 Mar 2020 19:28:26 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Lars =?iso-8859-1?Q?M=F6llendorf?= <lars.moellendorf@plating.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Question about regmap_range_cfg and regmap_mmio
-Message-ID: <20200304192826.GG5646@sirena.org.uk>
-References: <d2eb2248-0120-7b0f-9bcf-4f9c71954117@plating.de>
- <20200304120321.GA5646@sirena.org.uk>
- <61cb178b-dc9b-12fb-0443-d38e0c43e046@plating.de>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="3607uds81ZQvwCD0"
+        Wed, 4 Mar 2020 14:29:59 -0500
+Received: from mail-eopbgr70059.outbound.protection.outlook.com ([40.107.7.59]:56135
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727137AbgCDT36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 14:29:58 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=O28yo6HF05cOsDBFSqz1xMDAtNrElXsrbcRnlYMGaj2kyYG4lQSelyzHTf8j+k7ZFPi61Xz+B0JDTn5V4o/w8UpVsrhHegKh2ibvYPw2iG5bc353ghz2hzsC6qtzsqhMj4qmh7dCCUrf9Bh8Nl52Kq8yHp1IrsfoYKERvWMixe24BgPyZXOMqEZ4x0u9XFPuiuZWt2BNe4mypSBT+v1BVNRzXlnNho+UyjJzGhPXadfuVTXny+j4kxUbuwCAsbaYto2QNkATYpDMoPTq/XoL7D2Fxsq3UkXOyoweyRR+Saq9aynNXs2cYQydhVf/ja4KoE1jmj9BOXAndFKnNnaw+Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BdAaCaeS6gH3f4tq2Jl1Gb8UTkCxekN4gIDIDC+Aqrg=;
+ b=NPkj7Xw6JJhBzULl8qRtCh5SdrJhHVx1Ky7opqsmY3dXeFQ5yp4mPYKXdU3ztXqx1KAjO1CeYpL7sMx43iQ6FhDKNBWQdGWex4wUOGhPxbal9SNg1jP2/kmdx5dMpk4pj9NQPcHDnV9T+9vKlA5OpJ9IrevbxISiPF/RUThUcWcUzcil73wZJzJiGfVePm7h5/fltnaZ1yDCXj/IeRWRyCe6YtlZX0dApyno4cJVKzem/AX+3c894tHE8rL/eFtUuAkKas1O0SaS+wSBjbz7wgU4HSfjRZ146uNWrX5NHUWp+mTOtM8T56J+SdAR4OufOmQVFQ3lha48907Rw8Xqcg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BdAaCaeS6gH3f4tq2Jl1Gb8UTkCxekN4gIDIDC+Aqrg=;
+ b=XdhUAXzgUWUmvJv97oAXj/MKjzreQtkMbpM5u2QjlMiqBcNAbPkXLpx1K4GfuDRmOrYDDgGPtRKjHVIWLLDQDD+TJf8JKRHRQIbjI4ghmlKmX0crc8EoXY6kxmx4E6rgvelsc25O9Y50WEv1fzvZ7gz/PElgvbFPbS8tF4DCsgk=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
+ VI1PR05MB5517.eurprd05.prod.outlook.com (20.177.63.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15; Wed, 4 Mar 2020 19:29:54 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::1c00:7925:d5c6:d60d%7]) with mapi id 15.20.2772.019; Wed, 4 Mar 2020
+ 19:29:53 +0000
+Date:   Wed, 4 Mar 2020 15:29:49 -0400
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        tiwei.bie@intel.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        gdawar@xilinx.com, saugatm@xilinx.com, vmireyno@marvell.com
+Subject: Re: [PATCH V5 3/5] vDPA: introduce vDPA bus
+Message-ID: <20200304192949.GR26318@mellanox.com>
+References: <20200226060456.27275-1-jasowang@redhat.com>
+ <20200226060456.27275-4-jasowang@redhat.com>
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <61cb178b-dc9b-12fb-0443-d38e0c43e046@plating.de>
-X-Cookie: Tomorrow, you can be anywhere.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200226060456.27275-4-jasowang@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-ClientProxiedBy: MN2PR10CA0033.namprd10.prod.outlook.com
+ (2603:10b6:208:120::46) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:44::15)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from mlx.ziepe.ca (142.68.57.212) by MN2PR10CA0033.namprd10.prod.outlook.com (2603:10b6:208:120::46) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.15 via Frontend Transport; Wed, 4 Mar 2020 19:29:53 +0000
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)     (envelope-from <jgg@mellanox.com>)      id 1j9ZiH-00049z-RF; Wed, 04 Mar 2020 15:29:49 -0400
+X-Originating-IP: [142.68.57.212]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: d98aec35-0972-4f40-4e0b-08d7c0726a09
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5517:|VI1PR05MB5517:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB55177CA4E470400BD227AFACCFE50@VI1PR05MB5517.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3631;
+X-Forefront-PRVS: 0332AACBC3
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(366004)(346002)(136003)(376002)(39860400002)(189003)(199004)(5660300002)(66476007)(66556008)(1076003)(2906002)(186003)(26005)(66946007)(4744005)(2616005)(478600001)(4326008)(9786002)(86362001)(7416002)(9746002)(33656002)(316002)(52116002)(8936002)(6916009)(81156014)(36756003)(8676002)(81166006)(24400500001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5517;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Cs+Oqh1WVP0VX5f10uU7496uwqpHzFRQZ4St/l9G0+aHAHkA2m4poO6MRBAy8QDNkUHGmlh4tyNxDBYGal8BQq9DUvrKmoUs2fff6Js7+pS3dEMm5g+RFg6nDvx/GZfG7ppJffjFhFq5BsboG9ZQtY+b4CvkKmvyJrVw4WQ1sgyewj9iPdq29jMuT21bqCUc39Rf/etKlAgrESAj2LZO1++GLdCF0S9eRUG2KXlLn0z0zkkjew5qFSHJzpOC7PyT5CtQ4q8EvmHgn4qGq1N6Xty9EyME05XUV4qhOwymtvPE5Ol6kp5g72PIPUEO6uFEOjg5m490cQARg53YkgejufLAgB3+NGG0fAfBod1U+eFRuBZ2Z+ItF3g3SX7FnFgkLJNOyDYZ0PhE08QabNQMiljN/uCx31xdRKHsgRpArp2OZoi5+UTss2ZJ0XR9Xux2dy0wxIFgL/GfABVC7os2dopjgDpLNZZFsSFJLWXv3EFL1GZpDWj9eZFzM5FEEdce
+X-MS-Exchange-AntiSpam-MessageData: G5bmvnIdH/p+8eBLKd/Pv2g3KSi+XqfhCywq5AL8n2zB8cW+S6JbYTF7KdzfKnEPuJ1RLvgKKCns1nRhSwbWgpvOdE/jfPkXdLZW6FP2R/OpHrv3R6PWJNkBvObHMyiM4dUTHSgc//c358DLdm+Hdg==
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d98aec35-0972-4f40-4e0b-08d7c0726a09
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Mar 2020 19:29:53.7052
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Gm95soseglM49q+o7mL7+vmRjQK8qoTKXNbiKqcZ/f/ZYos7+evrQihzO6cBRFlQv4URKt3+4bsSiLOrxBlcDg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5517
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Feb 26, 2020 at 02:04:54PM +0800, Jason Wang wrote:
+> +struct vdpa_device *vdpa_alloc_device(struct device *parent,
+> +				      struct device *dma_dev,
+> +				      const struct vdpa_config_ops *config)
+> +{
+> +	struct vdpa_device *vdev;
+> +	int err = -ENOMEM;
+> +
+> +	if (!parent || !dma_dev || !config)
+> +		goto err;
+> +
+> +	vdev = kzalloc(sizeof(*vdev), GFP_KERNEL);
+> +	if (!vdev)
+> +		goto err;
+> +
+> +	err = ida_simple_get(&vdpa_index_ida, 0, 0, GFP_KERNEL);
+> +	if (err < 0)
+> +		goto err_ida;
+> +
+> +	vdev->dev.bus = &vdpa_bus;
+> +	vdev->dev.parent = parent;
+> +	vdev->dev.release = vdpa_release_dev;
+> +
+> +	device_initialize(&vdev->dev);
+> +
+> +	vdev->index = err;
+> +	vdev->dma_dev = dma_dev;
+> +	vdev->config = config;
+> +
+> +	dev_set_name(&vdev->dev, "vdpa%u", vdev->index);
 
---3607uds81ZQvwCD0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Probably shouldn't ignore the error for dev_set_name ?
 
-On Wed, Mar 04, 2020 at 02:28:25PM +0100, Lars M=F6llendorf wrote:
-> On 04.03.20 13:03, Mark Brown wrote:
-> > On Wed, Mar 04, 2020 at 12:25:09PM +0100, Lars M=F6llendorf wrote:
+err = dev_set_name()
+if (err) {
+   put_device(&vdev->dev);
+   return ERR_PTR(err);
+}
 
-> In `__regmap_init()` `_regmap_bus_reg_read()`is assigned to
-> `regmap.reg_read()` if there are no `bus->read/write` functions, else
-> `_regmap_bus_read()` is assigned.
->=20
-> `_regmap_bus_reg_read()` calls the `reg_read` function of the bus
-> directly, `_regmap_bus_read()` instead calls `_regmap_raw_read()`.
->=20
-> `_regmap_raw_read()` in turn calls `_regmap_range_lookup()` and
-> `_regmap_select_page()` which do the paging.
->=20
-> `regmap_mmio` does not contain `bus->read/write`, but does contain
-> `bus->reg_read/reg_write` only.
-
-This is basically just saying that the paging is done in the bulk I/O
-code only (partly for performance, partly since we may need to page in
-the middle of a bulk operation), not in the per-register I/O paths.
-
-> >>   - Enhance the current `regmap-mmio` implementation so it does paging
-> >> and submit a patch?
-
-> > That's not really possible since MMIO never writes the register address
-> > to the bus
-
-> Sorry, but I do not get why this shouldn't work with MMIO? If I
-> understood the code correctly in  `_regmap_raw_read` the address is
-> checked before it is used anywhere. If
-> `_regmap_range_lookup()` returns a range it does the paging, i.e.
-> translates the virtual address into the real address
-> (`_regmap_select_page`). If so the real address is passed to
-> `bus->read/write`, else the given address is used directly. Do I miss
-> something here?
-
-The plain read and write operations sit at the bottom of a stack that
-(especially in the write path) deals with byte streams rather than
-parsed data, they're only differentiated for read since there's a mix of
-read and write I/O in a read operation.  Since for MMIO the register is
-never part of a byte stream you'd need to contort things to parse the
-address back out of the byte stream which is not great for abstraction
-and likely to lead to bugs as different parts of the stack get confused
-about what is handling endinaness and register size issues.
-
-> >>   - Write my own `better-regmap-mmio` implementation?
-
-> > It's not clear what that would mean.
-
-> Maybe for some reason the current MMIO implementation should not be
-> touched, or paging for MMIO is not wanted?
-
-That doesn't really answer the question - what such an implementation
-would look like?
-
-> > You could also look into making the paging code not rely on explicit
-> > register read and write operations.
-
-> Maybe it is sufficient to implement `bus->read/write` as a wrapper of
-> `bus->reg_read/reg_write` in regmap-mmio.c?
-
-For the reasons outlined above that's an abstraction problem.  This is
-not something that should be being done in the physical I/O code, that's
-not the right layer of abstraction.  Like I say push it up into the
-core.
-
---3607uds81ZQvwCD0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5gAVkACgkQJNaLcl1U
-h9Axzwf+N5C5kFTyf1wTgILDQ5pGMQA4HFn7QDIxvupDAvKvf+h/vTbkOqhbC2hd
-cJ6/ae2Z9nz9avL4Tub2gwfQfFfGMUjI+EOtprmTbA3gGuFP52HdDUY14PRW/l0s
-F8/vu6WvrgOWjluTqRbPb0+jLewK14RZbSszfZn3A6Wi9DLqIcoQeylk9qJQsLYS
-7A2QPHstHPqcldfK9KNIZ5jiIpe6cdgGWvFbgrgFW08ifXugLGou4pqCjYfvIFFn
-W66wVq/qkl/fE6dtZre7KT5ev8VKFMvgOczXwbsmifVmkAoNe08Qx6zYeKuBz7bu
-QDYF2gBKNJyWjI4n02ImCaIPxx/8fg==
-=R7GU
------END PGP SIGNATURE-----
-
---3607uds81ZQvwCD0--
+Jason
