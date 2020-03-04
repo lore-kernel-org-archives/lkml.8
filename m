@@ -2,199 +2,209 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 029EBC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED2C9C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A977A21739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:14:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="qC9nslTA";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="g7DSi85V"
+	by mail.kernel.org (Postfix) with ESMTP id C610A215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583338540;
+	bh=VvKrAZFOSRZVsonXXhzM0ppD0dERScxsXi3DIaqeq78=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YyYSKDcwpJK0Hf4iH5HkFbGOS/QG8ViTJ9y6+W23Qv6Q2N5inbi1A4TsRWAjKX5IT
+	 AcNnK3zngbx3MohtiJUv2Zzrizw0Vgl1SN4usOK7caNXbGCS4zQtxhWXzES3BjSABX
+	 XwjvzbWWlzzhqLMYn9vmeOjvySfHUwCWwDKQ6v6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388119AbgCDQOy (ORCPT
+        id S2388162AbgCDQPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:14:54 -0500
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:49856 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726650AbgCDQOx (ORCPT
+        Wed, 4 Mar 2020 11:15:40 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44264 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgCDQPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:14:53 -0500
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024G6ZxW027647;
-        Wed, 4 Mar 2020 08:14:31 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-id : content-transfer-encoding : mime-version; s=pfpt0818;
- bh=WXoMkNEwEalfB5NFLOCsUY4eDvlrUPdU3JckQHy2fN8=;
- b=qC9nslTA50+k6ib66SUXjzrr3CKsxVO/mvAPOZTkA+lrfbpMkK+JwBqErGnGWaQgFwDA
- WBc7VQoCnUQ7h43AKsbeGVFqMBwF7v64DfW5pocxiohIOrm6fnYCEOCM11zvmguPmc2u
- qer4xLQefUMp8j4QYXoySHQUG7YcFmYxHqxRKW2N94hI8zoqDxwmrDD9eQ6jMeKndifE
- kJOzQvsNSF4S6K2MfXPzr3ZNwtwP0FVGE7Muo3DCyH8iBu0JUA3RItGlPfIPYHxrfMCR
- 06awiugg43qTO3vJKN/H1rocMSzca6qX03ebtbuSVcYIIM0kTAjgZgqIkOL38SWZdw2X Aw== 
-Received: from sc-exch01.marvell.com ([199.233.58.181])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2yhxw4da6q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 04 Mar 2020 08:14:31 -0800
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH01.marvell.com
- (10.93.176.81) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Wed, 4 Mar
- 2020 08:14:30 -0800
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (104.47.56.177)
- by SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2 via Frontend Transport; Wed, 4 Mar 2020 08:14:30 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SaohUtP42cutqTiWw+5QBV4pl7qmEzaLuQrsEykktphKwj+l3Df3bwfRN38ClSXuKZMojGCb97Bc89qm1mrwN/U/nAdjMMjMRv5iVTTrfZWzUTJZpNGl4x97IQwm6Fzium1y5K1CktT8TYLTmUKgipfTqZSOrX3c7XuaFILubVOrwg4X1ioHE7qNaffwwm4cBte5nXUCbbrhvU/zmBPA6C0FupVv3Pv12zImn2WHz3REDAWXMAtsuy8hJmpZJWrfXzLR8Sg5mfb6yUhfleG1pgSd4IUQsWRF0a5djVBnVHhTVAa1//Fg9QNCgPud7cJl/nxvVai4NB8YQjESEEfwRw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WXoMkNEwEalfB5NFLOCsUY4eDvlrUPdU3JckQHy2fN8=;
- b=ZtRhbVMMVzPX7v1bV2cg8R693yWtmj3JUdTCMbKqCEvnaMVU5v39o8IgMvN55kUiPEfBcDQa8VXaVqkjHK0FnXPITu7hEdzdfOZfxynuPcknwntZ4PBY/h/7M0R0nkXm4fdWbOiLJRYGyTTVmVI/g9UKEGMmynrFqqy6Rlrl7aU/9DSOe4W63x6aCjk7DqDDaZAcy4hMD02cJxGlidw8clRM4Q8uC93P5lArSkJzIIk7DO8yiSxfkFR8+DB1IaHlIRKuh5n036V/30C6Zt3aalbpTZH13cTJ5iFIVHb4/D/fqsAszLiwli6uIFpcv5eg60srNdEhNfvmFA3PSqtP3A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector1-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WXoMkNEwEalfB5NFLOCsUY4eDvlrUPdU3JckQHy2fN8=;
- b=g7DSi85VSRqPFkwTgn+GVq+TdVbVh3a35pTAPt8Vpyhamafe2zGa6aTqy03YfB3QXnmmrnQpiYWQBgicdyGTmYC+QT7mp1fiIU2qxb/oym3mZwx8hxS/t18qS8DVEktKITYA0ZEhfimWLwspBzEMdMqoBA//kN5G5i+ndcbCYZo=
-Received: from BYAPR18MB2535.namprd18.prod.outlook.com (2603:10b6:a03:137::17)
- by BYAPR18MB2727.namprd18.prod.outlook.com (2603:10b6:a03:107::28) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Wed, 4 Mar
- 2020 16:14:29 +0000
-Received: from BYAPR18MB2535.namprd18.prod.outlook.com
- ([fe80::8cd1:1741:8d2d:1c23]) by BYAPR18MB2535.namprd18.prod.outlook.com
- ([fe80::8cd1:1741:8d2d:1c23%7]) with mapi id 15.20.2772.019; Wed, 4 Mar 2020
- 16:14:29 +0000
-From:   Alex Belits <abelits@marvell.com>
-To:     "frederic@kernel.org" <frederic@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>
-CC:     "mingo@kernel.org" <mingo@kernel.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Prasun Kapoor <pkapoor@marvell.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
-        "linux-mm@vger.kernel.org" <linux-mm@vger.kernel.org>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
-Subject: [PATCH 10/12] task_isolation: ringbuffer: don't interrupt CPUs
- running isolated tasks on buffer resize
-Thread-Topic: [PATCH 10/12] task_isolation: ringbuffer: don't interrupt CPUs
- running isolated tasks on buffer resize
-Thread-Index: AQHV8j/7ALIHiMasDUewTuILAelrGA==
-Date:   Wed, 4 Mar 2020 16:14:28 +0000
-Message-ID: <426ee885b89985f6bf348d64909eeb6a2cd83162.camel@marvell.com>
-References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
-In-Reply-To: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [199.233.58.128]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 13ce92aa-b089-467e-e882-08d7c0571df4
-x-ms-traffictypediagnostic: BYAPR18MB2727:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR18MB2727DCD201D4A6DCF656516EBCE50@BYAPR18MB2727.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0332AACBC3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(376002)(366004)(136003)(189003)(199004)(478600001)(4326008)(26005)(36756003)(6486002)(8676002)(6512007)(8936002)(86362001)(81156014)(6506007)(71200400001)(186003)(81166006)(2616005)(64756008)(66556008)(66476007)(54906003)(110136005)(91956017)(66946007)(76116006)(316002)(66446008)(5660300002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR18MB2727;H:BYAPR18MB2535.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KWbyOHnimLrEptrhaXYr0FmB2PtAsIiIRuj9fBFDKA65i/SnITr3DxxpWwI7E8iCcfPeyoY3UH5+LB27fSYCGKAnVl7+CFkKbAWyNfJ2/ZLNhnCVWQ6s80OGCEv1JrLQ38UhTtm2ecZWjnASY3I+Qwuuzkr4Y6S8/Rr0YHzNI820Z3abmz0pPCaSrs87yoebqOPgKR0xj6nJDVQf4uHLfIswNgE9MQxpRIQFcrjmrXvKLR8zF+mlH0MrTjuyM3boUxpc5jgVitwbWPngun6dhZEL+E4Tw/x7DZCFwCsQNhlRh/O9gu2akhlX8c1vGR+17lZLPA7f0DBZi006m2WLGYo15ycYPSQpKgYOhnOzRbUzy+yUlmsCuxHQVkiJuFBtU712YE8l5JZBEXTMcWM3W7rHsdsURjrvpDTkRq1EEao8Ijaew3ttmtsGL0M8ez5M
-x-ms-exchange-antispam-messagedata: XgLjSnZUNhEWr1B+QD9UX23JiQtJLWM07Pi6I4SbOWcHjsdmNrVTkcyfCbw1yk0RA9EaZ5Sw1wwrUC5kYAFbf0+8XOXQZ3XTQd9U1KvCFAagiOPCe1ORqx3stus6Ocl3tGM5tNg79ZXDrO3e6OUqgw==
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E153F72FDB45B04287EDA1D4247A88EA@namprd18.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 4 Mar 2020 11:15:39 -0500
+Received: by mail-oi1-f195.google.com with SMTP id d62so2604253oia.11;
+        Wed, 04 Mar 2020 08:15:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G/m9Dnt93HLh8ZZeYopXZOgJzRYkBJrpgZdowTke/ZA=;
+        b=L7n10FCrkw01jAghMOOReCAs/sbDtLbEesLrEQYqoCP2ahyG9H8g3Eb5rFOQbtMgvu
+         hEibq6E6uYWcr/675ZKZUmuWRrdXZw7vtXoQURWQdohhIHspjA5GnDe3iM1CBOMANI7+
+         PMheEcDLNWHwaA4mTsbJeREXt26VM/BMFlhcr1nwVGpYJOziOSCgGILEICAZ1+eSXOOw
+         U/SVe3E2jxQzrhB667SzdCN3q8vie/ILFtDLP9/K+f13gDDc29N3+qWCWVvxoQX10n7C
+         ZUMneBKJDe7Y6uaAPjJhegGS8qokkoRaLriX/unOkwbfKo9CllRCodugB0CuWwpGzNxL
+         LgqQ==
+X-Gm-Message-State: ANhLgQ2AAyjfiHkjUTpq+do1rjBZ6H9dVuCX3Fst7PhXEwclANcT79W8
+        NYlmmc8jHjWatGKJCRUFKg==
+X-Google-Smtp-Source: ADFU+vvQPKn3HTHYpHagUTruHe80jgRcAKAs1iIPLjepLVEiIsroKoDtfMT7OCsZXUt/LNxDyx47Yw==
+X-Received: by 2002:aca:a9d4:: with SMTP id s203mr2347678oie.106.1583338538421;
+        Wed, 04 Mar 2020 08:15:38 -0800 (PST)
+Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v65sm965478oib.17.2020.03.04.08.15.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 08:15:37 -0800 (PST)
+Received: (nullmailer pid 26064 invoked by uid 1000);
+        Wed, 04 Mar 2020 16:15:36 -0000
+Date:   Wed, 4 Mar 2020 10:15:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Jitao Shi <jitao.shi@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
+        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
+        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
+        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
+Subject: Re: [PATCH v12 4/6] dt-bindings: display: mediatek: convert the
+ document format from txt to yaml
+Message-ID: <20200304161536.GA20736@bogus>
+References: <20200303052722.94795-1-jitao.shi@mediatek.com>
+ <20200303052722.94795-5-jitao.shi@mediatek.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 13ce92aa-b089-467e-e882-08d7c0571df4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2020 16:14:29.1792
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZHPb32g3OpHw2CmBvwL+vG3f3gdCGNvuG0NIb/RiZXa3/D/r0WDd4WiCpXmtRa+3pU9DsrfNwDEJ0LNIaDsi8g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR18MB2727
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303052722.94795-5-jitao.shi@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogWXVyaSBOb3JvdiA8eW5vcm92QG1hcnZlbGwuY29tPg0KDQpDUFVzIHJ1bm5pbmcgaXNv
-bGF0ZWQgdGFza3MgYXJlIGluIHVzZXJzcGFjZSwgc28gdGhleSBkb24ndCBoYXZlIHRvDQpwZXJm
-b3JtIHJpbmcgYnVmZmVyIHVwZGF0ZXMgaW1tZWRpYXRlbHkuIElmIHJpbmdfYnVmZmVyX3Jlc2l6
-ZSgpDQpzY2hlZHVsZXMgdGhlIHVwZGF0ZSBvbiB0aG9zZSBDUFVzLCBpc29sYXRpb24gaXMgYnJv
-a2VuLiBUbyBwcmV2ZW50DQp0aGF0LCB1cGRhdGVzIGZvciBDUFVzIHJ1bm5pbmcgaXNvbGF0ZWQg
-dGFza3MgYXJlIHBlcmZvcm1lZCBsb2NhbGx5LA0KbGlrZSBmb3Igb2ZmbGluZSBDUFVzLg0KDQpB
-IHJhY2UgY29uZGl0aW9uIGJldHdlZW4gdGhpcyB1cGRhdGUgYW5kIGlzb2xhdGlvbiBicmVha2lu
-ZyBpcyBhdm9pZGVkDQphdCB0aGUgY29zdCBvZiBkaXNhYmxpbmcgcGVyX2NwdSBidWZmZXIgd3Jp
-dGluZyBmb3IgdGhlIHRpbWUgb2YgdXBkYXRlDQp3aGVuIGl0IGNvaW5jaWRlcyB3aXRoIGlzb2xh
-dGlvbiBicmVha2luZy4NCg0KU2lnbmVkLW9mZi1ieTogQWxleCBCZWxpdHMgPGFiZWxpdHNAbWFy
-dmVsbC5jb20+DQotLS0NCiBrZXJuZWwvdHJhY2UvcmluZ19idWZmZXIuYyB8IDYxICsrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKystLS0tDQogMSBmaWxlIGNoYW5nZWQsIDU1IGluc2Vy
-dGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9rZXJuZWwvdHJhY2Uvcmlu
-Z19idWZmZXIuYyBiL2tlcm5lbC90cmFjZS9yaW5nX2J1ZmZlci5jDQppbmRleCA2MWYwZTkyYWNl
-OTkuLjZjNzQ3OWI2NDExZCAxMDA2NDQNCi0tLSBhL2tlcm5lbC90cmFjZS9yaW5nX2J1ZmZlci5j
-DQorKysgYi9rZXJuZWwvdHJhY2UvcmluZ19idWZmZXIuYw0KQEAgLTIxLDYgKzIxLDcgQEANCiAj
-aW5jbHVkZSA8bGludXgvZGVsYXkuaD4NCiAjaW5jbHVkZSA8bGludXgvc2xhYi5oPg0KICNpbmNs
-dWRlIDxsaW51eC9pbml0Lmg+DQorI2luY2x1ZGUgPGxpbnV4L2lzb2xhdGlvbi5oPg0KICNpbmNs
-dWRlIDxsaW51eC9oYXNoLmg+DQogI2luY2x1ZGUgPGxpbnV4L2xpc3QuaD4NCiAjaW5jbHVkZSA8
-bGludXgvY3B1Lmg+DQpAQCAtMTcwMSw2ICsxNzAyLDM3IEBAIHN0YXRpYyB2b2lkIHVwZGF0ZV9w
-YWdlc19oYW5kbGVyKHN0cnVjdCB3b3JrX3N0cnVjdCAqd29yaykNCiAJY29tcGxldGUoJmNwdV9i
-dWZmZXItPnVwZGF0ZV9kb25lKTsNCiB9DQogDQorc3RhdGljIGJvb2wgdXBkYXRlX2lmX2lzb2xh
-dGVkKHN0cnVjdCByaW5nX2J1ZmZlcl9wZXJfY3B1ICpjcHVfYnVmZmVyLA0KKwkJCSAgICAgICBp
-bnQgY3B1KQ0KK3sNCisJYm9vbCBydiA9IGZhbHNlOw0KKw0KKwlpZiAodGFza19pc29sYXRpb25f
-b25fY3B1KGNwdSkpIHsNCisJCS8qDQorCQkgKiBDUFUgaXMgcnVubmluZyBpc29sYXRlZCB0YXNr
-LiBTaW5jZSBpdCBtYXkgbG9zZQ0KKwkJICogaXNvbGF0aW9uIGFuZCByZS1lbnRlciBrZXJuZWwg
-c2ltdWx0YW5lb3VzbHkgd2l0aA0KKwkJICogdGhpcyB1cGRhdGUsIGRpc2FibGUgcmVjb3JkaW5n
-IHVudGlsIGl0J3MgZG9uZS4NCisJCSAqLw0KKwkJYXRvbWljX2luYygmY3B1X2J1ZmZlci0+cmVj
-b3JkX2Rpc2FibGVkKTsNCisJCS8qIE1ha2Ugc3VyZSwgdXBkYXRlIGlzIGRvbmUsIGFuZCBpc29s
-YXRpb24gc3RhdGUgaXMgY3VycmVudCAqLw0KKwkJc21wX21iKCk7DQorCQlpZiAodGFza19pc29s
-YXRpb25fb25fY3B1KGNwdSkpIHsNCisJCQkvKg0KKwkJCSAqIElmIENQVSBpcyBzdGlsbCBydW5u
-aW5nIGlzb2xhdGVkIHRhc2ssIHdlDQorCQkJICogY2FuIGJlIHN1cmUgdGhhdCBicmVha2luZyBp
-c29sYXRpb24gd2lsbA0KKwkJCSAqIGhhcHBlbiB3aGlsZSByZWNvcmRpbmcgaXMgZGlzYWJsZWQs
-IGFuZCBDUFUNCisJCQkgKiB3aWxsIG5vdCB0b3VjaCB0aGlzIGJ1ZmZlciB1bnRpbCB0aGUgdXBk
-YXRlDQorCQkJICogaXMgZG9uZS4NCisJCQkgKi8NCisJCQlyYl91cGRhdGVfcGFnZXMoY3B1X2J1
-ZmZlcik7DQorCQkJY3B1X2J1ZmZlci0+bnJfcGFnZXNfdG9fdXBkYXRlID0gMDsNCisJCQlydiA9
-IHRydWU7DQorCQl9DQorCQlhdG9taWNfZGVjKCZjcHVfYnVmZmVyLT5yZWNvcmRfZGlzYWJsZWQp
-Ow0KKwl9DQorCXJldHVybiBydjsNCit9DQorDQogLyoqDQogICogcmluZ19idWZmZXJfcmVzaXpl
-IC0gcmVzaXplIHRoZSByaW5nIGJ1ZmZlcg0KICAqIEBidWZmZXI6IHRoZSBidWZmZXIgdG8gcmVz
-aXplLg0KQEAgLTE3ODQsMTMgKzE4MTYsMjIgQEAgaW50IHJpbmdfYnVmZmVyX3Jlc2l6ZShzdHJ1
-Y3QgdHJhY2VfYnVmZmVyICpidWZmZXIsIHVuc2lnbmVkIGxvbmcgc2l6ZSwNCiAJCQlpZiAoIWNw
-dV9idWZmZXItPm5yX3BhZ2VzX3RvX3VwZGF0ZSkNCiAJCQkJY29udGludWU7DQogDQotCQkJLyog
-Q2FuJ3QgcnVuIHNvbWV0aGluZyBvbiBhbiBvZmZsaW5lIENQVS4gKi8NCisJCQkvKg0KKwkJCSAq
-IENhbid0IHJ1biBzb21ldGhpbmcgb24gYW4gb2ZmbGluZSBDUFUuDQorCQkJICoNCisJCQkgKiBD
-UFVzIHJ1bm5pbmcgaXNvbGF0ZWQgdGFza3MgZG9uJ3QgaGF2ZSB0bw0KKwkJCSAqIHVwZGF0ZSBy
-aW5nIGJ1ZmZlcnMgdW50aWwgdGhleSBleGl0DQorCQkJICogaXNvbGF0aW9uIGJlY2F1c2UgdGhl
-eSBhcmUgaW4NCisJCQkgKiB1c2Vyc3BhY2UuIFVzZSB0aGUgcHJvY2VkdXJlIHRoYXQgcHJldmVu
-dHMNCisJCQkgKiByYWNlIGNvbmRpdGlvbiB3aXRoIGlzb2xhdGlvbiBicmVha2luZy4NCisJCQkg
-Ki8NCiAJCQlpZiAoIWNwdV9vbmxpbmUoY3B1KSkgew0KIAkJCQlyYl91cGRhdGVfcGFnZXMoY3B1
-X2J1ZmZlcik7DQogCQkJCWNwdV9idWZmZXItPm5yX3BhZ2VzX3RvX3VwZGF0ZSA9IDA7DQogCQkJ
-fSBlbHNlIHsNCi0JCQkJc2NoZWR1bGVfd29ya19vbihjcHUsDQotCQkJCQkJJmNwdV9idWZmZXIt
-PnVwZGF0ZV9wYWdlc193b3JrKTsNCisJCQkJaWYgKCF1cGRhdGVfaWZfaXNvbGF0ZWQoY3B1X2J1
-ZmZlciwgY3B1KSkNCisJCQkJCXNjaGVkdWxlX3dvcmtfb24oY3B1LA0KKwkJCQkJJmNwdV9idWZm
-ZXItPnVwZGF0ZV9wYWdlc193b3JrKTsNCiAJCQl9DQogCQl9DQogDQpAQCAtMTgyOSwxMyArMTg3
-MCwyMiBAQCBpbnQgcmluZ19idWZmZXJfcmVzaXplKHN0cnVjdCB0cmFjZV9idWZmZXIgKmJ1ZmZl
-ciwgdW5zaWduZWQgbG9uZyBzaXplLA0KIA0KIAkJZ2V0X29ubGluZV9jcHVzKCk7DQogDQotCQkv
-KiBDYW4ndCBydW4gc29tZXRoaW5nIG9uIGFuIG9mZmxpbmUgQ1BVLiAqLw0KKwkJLyoNCisJCSAq
-IENhbid0IHJ1biBzb21ldGhpbmcgb24gYW4gb2ZmbGluZSBDUFUuDQorCQkgKg0KKwkJICogQ1BV
-cyBydW5uaW5nIGlzb2xhdGVkIHRhc2tzIGRvbid0IGhhdmUgdG8gdXBkYXRlDQorCQkgKiByaW5n
-IGJ1ZmZlcnMgdW50aWwgdGhleSBleGl0IGlzb2xhdGlvbiBiZWNhdXNlIHRoZXkNCisJCSAqIGFy
-ZSBpbiB1c2Vyc3BhY2UuIFVzZSB0aGUgcHJvY2VkdXJlIHRoYXQgcHJldmVudHMNCisJCSAqIHJh
-Y2UgY29uZGl0aW9uIHdpdGggaXNvbGF0aW9uIGJyZWFraW5nLg0KKwkJICovDQogCQlpZiAoIWNw
-dV9vbmxpbmUoY3B1X2lkKSkNCiAJCQlyYl91cGRhdGVfcGFnZXMoY3B1X2J1ZmZlcik7DQogCQll
-bHNlIHsNCi0JCQlzY2hlZHVsZV93b3JrX29uKGNwdV9pZCwNCisJCQlpZiAoIXVwZGF0ZV9pZl9p
-c29sYXRlZChjcHVfYnVmZmVyLCBjcHVfaWQpKQ0KKwkJCQlzY2hlZHVsZV93b3JrX29uKGNwdV9p
-ZCwNCiAJCQkJCSAmY3B1X2J1ZmZlci0+dXBkYXRlX3BhZ2VzX3dvcmspOw0KLQkJCXdhaXRfZm9y
-X2NvbXBsZXRpb24oJmNwdV9idWZmZXItPnVwZGF0ZV9kb25lKTsNCisJCQkJd2FpdF9mb3JfY29t
-cGxldGlvbigmY3B1X2J1ZmZlci0+dXBkYXRlX2RvbmUpOw0KKwkJCX0NCiAJCX0NCiANCiAJCWNw
-dV9idWZmZXItPm5yX3BhZ2VzX3RvX3VwZGF0ZSA9IDA7DQotLSANCjIuMjAuMQ0KDQo=
+On Tue, Mar 03, 2020 at 01:27:20PM +0800, Jitao Shi wrote:
+> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> ---
+>  .../display/mediatek/mediatek,dpi.txt         | 45 ---------
+>  .../display/mediatek/mediatek,dpi.yaml        | 92 +++++++++++++++++++
+>  2 files changed, 92 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
+>  create mode 100644 Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+
+You need to run 'make dt_binding_check' on this and fix the errors.
+
+[...]
+
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> new file mode 100644
+> index 000000000000..eb2b0cb5eb5a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.yaml
+> @@ -0,0 +1,92 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/display/mediatek,dpi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: mediatek DPI Controller Device Tree Bindings
+> +
+> +maintainers:
+> +  - CK Hu <ck.hu@mediatek.com>
+> +  - Jitao shi <jitao.shi@mediatek.com>
+> +
+> +description: |
+> +  The Mediatek DPI function block is a sink of the display subsystem and
+> +  provides 8-bit RGB/YUV444 or 8/10/10-bit YUV422 pixel data on a parallel
+> +  output bus.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mediatek,mt2701-dpi
+> +      - mediatek,mt8173-dpi
+> +      - mediatek,mt8183-dpi
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    items:
+> +      - description: Pixel Clock
+> +      - description: Engine Clock
+> +      - description: DPI PLL
+> +
+> +  clock-names:
+> +    items:
+> +      - const: pixel
+> +      - const: engine
+> +      - const: pll
+> +
+> +  pinctrl-names:
+> +    items:
+> +      - const: default
+> +      - const: sleep
+
+Doesn't match what you just added to the binding...
+
+> +
+> +  port:
+> +    type: object
+> +    description:
+> +      Output port node with endpoint definitions as described in
+> +      Documentation/devicetree/bindings/graph.txt. This port should be connected
+> +      to the input port of an attached HDMI or LVDS encoder chip.
+> +
+> +    properties:
+> +      pclk-sample:
+> +      description: refer Documentation/devicetree/bindings/media/video-interfaces.txt.
+
+This is wrong in multiple ways. 'description' is missing indentation, so 
+you are defining 'description' to be a property.
+
+And 'pclk-sample' is not a property of 'port' node, but 'endpoint'.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +  - clock-names
+> +  - port
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    dpi0: dpi@1401d000 {
+> +        compatible = "mediatek,mt8173-dpi";
+> +        reg = <0 0x1401d000 0 0x1000>;
+> +        interrupts = <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
+> +        clocks = <&mmsys CLK_MM_DPI_PIXEL>,
+> +             <&mmsys CLK_MM_DPI_ENGINE>,
+> +             <&apmixedsys CLK_APMIXED_TVDPLL>;
+
+Examples are built now and you need to add includes for these defines.
+
+> +        clock-names = "pixel", "engine", "pll";
+> +        pinctrl-names = "default", "sleep";
+> +        pinctrl-0 = <&dpi_pin_func>;
+> +        pinctrl-1 = <&dpi_pin_idle>;
+> +
+> +        port {
+> +            reg = <0>;
+
+Drop 'reg'.
+
+> +            dpi0_out: endpoint {
+> +                pclk-sample = <0>;
+> +                remote-endpoint = <&hdmi0_in>;
+> +            };
+> +        };
+> +    };
+> +
+> +...
+> -- 
+> 2.21.0
