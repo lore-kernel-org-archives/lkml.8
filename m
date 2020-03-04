@@ -2,179 +2,133 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECEA1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:45:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655ABC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEFA620842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:45:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DAF420842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:49:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="TbF3sFLv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HCInrvUh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727405AbgCDEpW (ORCPT
+        id S1727459AbgCDEtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 23:45:22 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42862 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbgCDEpV (ORCPT
+        Tue, 3 Mar 2020 23:49:15 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44924 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgCDEtP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 23:45:21 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0244ivrG024092;
-        Tue, 3 Mar 2020 22:44:57 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583297097;
-        bh=SGsbks8+4AvLnHdN2mgK11maD+F3vSBL3viu3KdMGVc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=TbF3sFLvoS24d/BcSM3VztS5d/ph+Fk8hBXT3+e9C8seVl387vO23cI1eWEC9ntUM
-         qesc8tJYLnZqY6UhaNGR+ANPIxlSEbh9swa/Ik8jJKu3dNPZx8Gd2ucMBngewORRl4
-         zUhgoh1o5CJy2gsG5q+ydJsOpcN/cYK98rYbWyXA=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0244ivcq118799;
-        Tue, 3 Mar 2020 22:44:57 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 3 Mar
- 2020 22:44:56 -0600
-Received: from localhost.localdomain (10.64.41.19) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 3 Mar 2020 22:44:56 -0600
-Received: from [10.24.69.20] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 0244iq4A053386;
-        Tue, 3 Mar 2020 22:44:53 -0600
-Subject: Re: [PATCH v2 2/5] clocksource: timer-ti-dm: Implement cpu_pm
- notifier for context save and restore
-To:     Tony Lindgren <tony@atomide.com>
-CC:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        <linux-pwm@vger.kernel.org>, Sekhar Nori <nsekhar@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Keerthy <j-keerthy@ti.com>,
-        Dave Gerlach <d-gerlach@ti.com>
-References: <20200228095346.32177-1-lokeshvutla@ti.com>
- <20200228095346.32177-3-lokeshvutla@ti.com>
- <20200303163259.GU37466@atomide.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <dfe74d0a-a092-474c-5c66-402ab0724a8f@ti.com>
-Date:   Wed, 4 Mar 2020 10:14:00 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 3 Mar 2020 23:49:15 -0500
+Received: by mail-qk1-f196.google.com with SMTP id f198so380317qke.11;
+        Tue, 03 Mar 2020 20:49:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tLh2t8ZxrQBaE7gNcsphAEc0sv2uDeMMUkAe4uCR56E=;
+        b=HCInrvUhEUF02OYcK6mqXOlHVZL0s9reDN2rTvIbiPTBOSzaRK9Do71mx1576p4F+N
+         bv4uKyqWe2Dr4Thtu9gu7hJ/aoKMqPA4k5XFCGbzIonR6tQwc/wCkisy4UAVSSp5GA6c
+         fUjhUDxXy59ieUrYiBZeVCe18ewiyzVkjgDOhuCuqAIXNL9UdT39sUACcpiLSvbWde2q
+         GmtVJ5ubTTylyiKCpK2c6xvjXBMpsUwjg4kc33x42yU/cbS5p4yWfyjVoGIYViZ3A1N4
+         tvx7t9/6Hx/2KooiORFGr3cwgkdANj8RYKjt62MrvYQZW+YehRpuhrooViVvgOapYnoM
+         QG9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tLh2t8ZxrQBaE7gNcsphAEc0sv2uDeMMUkAe4uCR56E=;
+        b=IuLD8ynFmDa0GGsCPLz+TnmRoWYoUROvDVFwlpdrUyxwjQ0mrczbvV2vml41Do5vAf
+         kW9m7oxHDs5cKQ5CbJM/90wT93OKEduzfKhbUVaYsAdym6dJKq130Bmw9TIOekMkDah6
+         +cmsZZnrZDKVSyYsOaJHTPhPQxL2DqbbTSnJ7j+bRDlZHMs7MVha6nZCRQWZnjkteQTx
+         LB3CI4D3wZF37bkp4XXGiiujD0Xe/h2xC5NFvo/Q86J/+fqzqifNN7mBPzrSO6Rp5jVq
+         VkBfP9ttfAe20vhF1S/Vi22Ia4tRuphWfqOz0pfTEsYzCIUlAbWDDd+u1TszxucGQxzO
+         fjDw==
+X-Gm-Message-State: ANhLgQ1O0PJrPIqHGYN7dUKf+6UU5ZRk5upgYR2Jn1VXXrzsSg/xodQL
+        T5ix6uAg83VSXNUzbI2K/5FQzDnwZA+bRkfv1NU=
+X-Google-Smtp-Source: ADFU+vsd9kw2Aw/vR4b8MZQEChp3C4LPMq0HGJoVad+NcWeQ67Fguaa5Imjp/4V9DWD7WH+znJfMXEJmiAk273+dS6g=
+X-Received: by 2002:a37:a2d6:: with SMTP id l205mr1319554qke.92.1583297353989;
+ Tue, 03 Mar 2020 20:49:13 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200303163259.GU37466@atomide.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200304015528.29661-1-kpsingh@chromium.org> <20200304015528.29661-2-kpsingh@chromium.org>
+In-Reply-To: <20200304015528.29661-2-kpsingh@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 3 Mar 2020 20:49:02 -0800
+Message-ID: <CAEf4BzZ58iymCdqqCe=p-7BSF_kt+Dd19taEjTJBEt_ZBZz0=Q@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 1/7] bpf: Refactor trampoline update code
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     linux-security-module@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tony,
+On Tue, Mar 3, 2020 at 5:56 PM KP Singh <kpsingh@chromium.org> wrote:
+>
+> From: KP Singh <kpsingh@google.com>
+>
+> As we need to introduce a third type of attachment for trampolines, the
+> flattened signature of arch_prepare_bpf_trampoline gets even more
+> complicated.
+>
+> Refactor the prog and count argument to arch_prepare_bpf_trampoline to
+> use bpf_tramp_progs to simplify the addition and accounting for new
+> attachment types.
+>
+> Signed-off-by: KP Singh <kpsingh@google.com>
+> ---
 
-On 03/03/20 10:02 PM, Tony Lindgren wrote:
-> Hi,
-> 
-> * Lokesh Vutla <lokeshvutla@ti.com> [200228 09:55]:
->> omap_dm_timer_enable() restores the entire context(including counter)
->> based on 2 conditions:
->> - If get_context_loss_count is populated and context is lost.
->> - If get_context_loss_count is not populated update unconditionally.
->>
->> Case2 has a side effect of updating the counter register even though
->> context is not lost. When timer is configured in pwm mode, this is
->> causing undesired behaviour in the pwm period.
->>
->> Instead of using get_context_loss_count call back, implement cpu_pm
->> notifier with context save and restore support. And delete the
->> get_context_loss_count callback all together.
-> 
-> Thanks for getting this going.
-> 
-> I noticed system timers are not working properly now though. Not
+See note about const-ification of trampoline and naming suggestion,
+but looks good overall:
 
-Can you provide me details on how you are testing and on which SoC?
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-> sure what might cause that, but I spotted few issues below.
-> 
->> --- a/drivers/clocksource/timer-ti-dm.c
->> +++ b/drivers/clocksource/timer-ti-dm.c
-> ...
->> +static void omap_timer_save_context(struct omap_dm_timer *timer)
->> +{
->> +	pm_runtime_get_sync(&timer->pdev->dev);
->> +	timer->context.tclr =
->> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
->> +	timer->context.twer =
->> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_WAKEUP_EN_REG);
->> +	timer->context.tldr =
->> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_LOAD_REG);
->> +	timer->context.tmar =
->> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_MATCH_REG);
->> +	timer->context.tier = readl_relaxed(timer->irq_ena);
->> +	timer->context.tsicr =
->> +			omap_dm_timer_read_reg(timer, OMAP_TIMER_IF_CTRL_REG);
->> +	pm_runtime_put_sync(&timer->pdev->dev);
->> +}
-> 
-> We must not use pm_runtime functions here, these notifiers run
-> at a point when runtime PM is out of the picture already. And
-> we really don't want to tag any modules with pm_runtime_irq_safe()
-> as it takes a permanent use count on the parent device.
-> 
-> Instead, just add atomic_t awake that runtime_resume sets at the end,
-> and runtime_suspend clears first thing. Then you can check for awake
-> here, and there's nothing to do here if !awake.
 
-But context should be saved when awake is enabled. In this case how to make sure
-the registers are accessible? Driver heavily uses pm_runtime calls for most
-register access. When timer is running the register are made accessible but I am
-worried about the case when timer is not running and trying to save context.
+>  arch/x86/net/bpf_jit_comp.c | 31 ++++++++++---------
+>  include/linux/bpf.h         | 13 ++++++--
+>  kernel/bpf/bpf_struct_ops.c | 12 ++++++-
+>  kernel/bpf/trampoline.c     | 62 +++++++++++++++++++++----------------
+>  4 files changed, 73 insertions(+), 45 deletions(-)
+>
 
-Also in CLUSTER_PM_EXIT case,  how to guarantee that registers are accessible?
+[...]
 
-> 
-> And then runtime_suspend should save the context too and
-> runtime_resume restore it :)
-> 
->> @@ -827,6 +830,8 @@ static int omap_dm_timer_remove(struct platform_device *pdev)
->>  	list_for_each_entry(timer, &omap_timer_list, node)
->>  		if (!strcmp(dev_name(&timer->pdev->dev),
->>  			    dev_name(&pdev->dev))) {
->> +			if (!(timer->capability & OMAP_TIMER_ALWON))
->> +				cpu_pm_unregister_notifier(&timer->nb);
->>  			list_del(&timer->node);
->>  			ret = 0;
->>  			break;
-> 
-> For the OMAP_TIMER_ALWON checks, I believe am335x and am437x have
-> OMAP_TIMER_ALWON set for timers but will still have context lost
-> in deeper idle states as only the PMIC is enabled.
-> 
-> For those cases, at least runtime_suspend and resume functions
-> need to save and restore context based on setting some flag
-> maybe based on of_machine_is_compatible() or soc_device_match().
+> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> index 704fa787fec0..cfe96d4cd89f 100644
+> --- a/kernel/bpf/trampoline.c
+> +++ b/kernel/bpf/trampoline.c
+> @@ -190,40 +190,49 @@ static int register_fentry(struct bpf_trampoline *tr, void *new_addr)
+>         return ret;
+>  }
+>
+> -/* Each call __bpf_prog_enter + call bpf_func + call __bpf_prog_exit is ~50
+> - * bytes on x86.  Pick a number to fit into BPF_IMAGE_SIZE / 2
+> - */
+> -#define BPF_MAX_TRAMP_PROGS 40
+> +static struct bpf_tramp_progs *
+> +bpf_trampoline_update_progs(struct bpf_trampoline *tr, int *total)
 
-hmm..then it is better to not mark as alwon in case of am335x and am43xx no? I
-don't see the flag being used for anything else other that context save and restore.
+reading the code again, seems like bpf_trampoline_update_progs is
+really more like bpf_trampoline_get_progs, no? It doesn't modify
+trampoline itself, so might as well mark tr as const pointer.
 
-Thanks and regards,
-Lokesh
 
-> 
-> I guess with recent cpuidle patches, this needs to be also done
-> during runtime for am335x and am437x. Maybe Dave or Keerthy have
-> more comments on that part?
-> 
-> Regards,
-> 
-> Tony
-> 
+> +{
+> +       struct bpf_tramp_progs *tprogs;
+> +       struct bpf_prog **progs;
+> +       struct bpf_prog_aux *aux;
+> +       int kind;
+> +
+
+[...]
