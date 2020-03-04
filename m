@@ -2,67 +2,139 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90000C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:28:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B15D2C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7349124654
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:28:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8990422522
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:30:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MRJAXSTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388316AbgCDQ2x (ORCPT
+        id S1729813AbgCDQag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:28:53 -0500
-Received: from muru.com ([72.249.23.125]:58776 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388019AbgCDQ2w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:28:52 -0500
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id AC18380F5;
-        Wed,  4 Mar 2020 16:29:37 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 08:28:49 -0800
-From:   Tony Lindgren <tony@atomide.com>
-To:     Suman Anna <s-anna@ti.com>
-Cc:     Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] ti-sysc support for PRUSS
-Message-ID: <20200304162849.GW37466@atomide.com>
-References: <20200227222837.7329-1-s-anna@ti.com>
+        Wed, 4 Mar 2020 11:30:36 -0500
+Received: from mail-wr1-f50.google.com ([209.85.221.50]:33685 "EHLO
+        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726694AbgCDQag (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:30:36 -0500
+Received: by mail-wr1-f50.google.com with SMTP id x7so3202270wrr.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:30:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YhB88TIgmNlGh4QV3oKo77OJ9RLyveUHZ47zGdAxc9U=;
+        b=MRJAXSTneB6L1oif6lUKqMEw4K0Q3pFQ0uKmoBsFQ0GYWu6u+FgxyGhueH5tJhCYBh
+         Cvb4+RCpc3Yh/cNUSyvaytm/yROBp/WaoweknPrWGWMxRk8bE6Hb1zUHzAkQtckOq7p5
+         e6f1HULqcir5WbPAigHnf0lTr1yC+7RcrrdvVWsz4gPPMTrVl8ZfNguLThq5tVFkUmR8
+         VJc6z9jpwZydt3aCpgb/QYw02j7gA4ObuS35pyT+G997n4vsjhoCCCVT12WO98hbQYW/
+         wyx6CB521uP/7CCk/WK8h4Kftmi2oDGw/grGeg0fkhvjgfwuAdI7saqmBoOF5F0FcFmX
+         Xm5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YhB88TIgmNlGh4QV3oKo77OJ9RLyveUHZ47zGdAxc9U=;
+        b=khah1gGkCmiEYNf/kEyXt1oGQgs3zsfyQwAOW5uj+5j0aBlnkU4jaFML85ZEYoS/g6
+         diiHwJfp5L66E6yp217CI5zyv3ulPVHMukCtWba7IMj7u5E8ufEv3s3jIkNuoyK11qgj
+         iDj7dyZP2fz7LkzktXqmLSC3VHQ1KPKMz+9big37Btl4Qlz1AHzOOlrgmBGcD7foCZ0J
+         ofsYx+r1HyKVkFj65OfbGut2fsV35W137sidiFNtipU+ubzWBYjOnawyqwf+hMLGPVF8
+         2aNjfuSDsS52XitaIfYgoEn+LTEzqwga+WS3wD3E3thkOOX/LJwGeHzWlMk2AxcikyHS
+         KPgg==
+X-Gm-Message-State: ANhLgQ39XLNhcErQWVHHsKMyjWUVaGXQ/bZyTzyq8F3LF5ixvfA1Ku/g
+        4gnPdDy11tuYKjT4vDVmy8KIYA==
+X-Google-Smtp-Source: ADFU+vsZIb09OZJmrrBgfgh7XZoULYAmsF3FqidGTz9tBE79VJ5ZUG4vk429Jf3B8yAH4aqv9jxinQ==
+X-Received: by 2002:adf:b641:: with SMTP id i1mr1584455wre.18.1583339433801;
+        Wed, 04 Mar 2020 08:30:33 -0800 (PST)
+Received: from [10.44.66.8] ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id k2sm8685864wrn.57.2020.03.04.08.30.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Mar 2020 08:30:33 -0800 (PST)
+Subject: Re: [v5, 3/3] arm64: dts: sc7180: Add interconnect provider DT nodes
+To:     Odelu Kukatla <okukatla@codeaurora.org>, bjorn.andersson@linaro.org
+Cc:     daidavid1@codeaurora.org, evgreen@google.com,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sboyd@kernel.org,
+        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
+        linux-pm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+References: <1583241493-21212-1-git-send-email-okukatla@codeaurora.org>
+ <1583241493-21212-4-git-send-email-okukatla@codeaurora.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+ KEmKjLDvB0pePJkdTw==
+Message-ID: <87da985b-19b4-e7f9-50ab-f8178e055041@linaro.org>
+Date:   Wed, 4 Mar 2020 18:30:31 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200227222837.7329-1-s-anna@ti.com>
+In-Reply-To: <1583241493-21212-4-git-send-email-okukatla@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Suman Anna <s-anna@ti.com> [200227 14:29]:
-> Hi Tony,
+On 3/3/20 15:18, Odelu Kukatla wrote:
+> Add the DT nodes for the network-on-chip interconnect buses found
+> on sc7180-based platforms.
 > 
-> The following is a revised series of the ti-sysc support for PRUSS.
-> Please refer to the original series cover-letter [1] for details.
-> 
-> Following are the main changes in v2:
->  - Drop the enabling of the interconnect nodes from various AM335x and
->    AM437x board dts files (last 7 patches from original series)
->  - Enable the target-module node for AM437x by default. None of the
->    current AM437x board dts files use AM4372, so there should not be
->    any regressions.
-> 
-> We can drop the status=disabled in the am33xx.dtsi file once we add the
-> SoC revision support for AM335x SoCs. This is already disabled before the
-> series as well. I have identified a few boards which use the older SoCs
-> that can disable the node in dts, but there were few others which can
-> use any of the SoCs, so those will definitely require the SoC device
-> match logic and an additional PRUSS disable quirk in the ti-sysc bus
-> driver.
+> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
 
-OK thanks, applied and pushed out into omap-for-v5.7/ti-sysc-drop-pdata.
+Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-Regards,
+The ack is also valid for v4 of the same patch, just in case it's preferred.
 
-Tony
+Thanks,
+Georgi
