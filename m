@@ -2,1232 +2,349 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79600C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:45:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92416C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28DC024654
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DB362166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:46:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ctuYI8Kq"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="Q1FEb9hH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387746AbgCDTpM (ORCPT
+        id S2387807AbgCDTqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:45:12 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:48520 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728946AbgCDTpM (ORCPT
+        Wed, 4 Mar 2020 14:46:05 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:33037 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728946AbgCDTqE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:45:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583351109;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=MYTlvE225yjHAB1eytiGhLDE5hwDW0XaKRabhRc08M0=;
-        b=ctuYI8KqVnnFNM8Y7t3czTKQ+zMcRzWJBnuhfKNHicQsef/sn4C5qmRgch0snJR71Lfjj+
-        7Yo6MY84J3hL39DLDYK1KriBIko4IUNaZAIltLUt2uBbVoEBeVuu6kwBn5Wwbg+B0L0EHJ
-        3uYAFwv4XHrTH1BgmJlaAzd4ysosWwM=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-396-fGnnr9g9N2SSR_eefU8nKA-1; Wed, 04 Mar 2020 14:45:08 -0500
-X-MC-Unique: fGnnr9g9N2SSR_eefU8nKA-1
-Received: by mail-io1-f72.google.com with SMTP id l62so2240487ioa.19
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:45:08 -0800 (PST)
+        Wed, 4 Mar 2020 14:46:04 -0500
+Received: by mail-lj1-f194.google.com with SMTP id f13so3405983ljp.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:46:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Irm/TMjxr5YwTosbyzA6jl2EamRKH1MHnbQv6yYchcs=;
+        b=Q1FEb9hHirTLjxuG+gw1+P3mvyj+5EJwQYyEwpMNwBHWXIy1F3KrOaTl9YEa6/AwTP
+         1p5mDDzSEgwJZMHuqltUmvjYLmc/RSLBVe2TjT+ivO+M2+mEcY3lt/oZKcB+arrMJbvS
+         suTi0uNVeI7Ixagp5qt6GRZFjmwvmNPdxzUycrBCL/wc50Lj9k5rzNp45O2qmU4DLgAR
+         hWy6N15moeEU6AqYeOpJaaJ3AsHm9NFcxLZhob3FpYA/rvXW7LlkGNFj7Wr+ZkRPUVch
+         asmQ9y1jxBaLX3bhGej/gXyrbxi2UQ5D7V/CDa3nvZXMCZk0Qt2FNQ/Ue2dgaGPzOYP6
+         KHVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MYTlvE225yjHAB1eytiGhLDE5hwDW0XaKRabhRc08M0=;
-        b=dw6RxuLl9pUoTrHEwJy1Bb5kbX5/JnO3Lo0Ix2Tmc/sWofikQYOGPhY9DByxPY/zKs
-         eSklX5/Y3Xaz2ChdT9TII27HGdWmN8ndc/A+80tp7j2jKPNz/RcQIR732xlTOCrg43xH
-         HFCsABsvoyEY/VR9RQfgzwTMAHAm/6NiGZDC842VgIQK+2st1TfysG+KYM6ViSfE8zW2
-         ezB0o6vWSjxw4iXi+UgNDVc2HUi9Cnho5rWdy9JADq2SvW8eNDRVDFrOKSvDGKpT5Ynk
-         oheQoWyYtSAntI78fu+28zm0Mc6o6R2kpOhzng65jIuDK0ysZtQKqObztVlYuIf9Ydki
-         rrew==
-X-Gm-Message-State: ANhLgQ3SkAC2Ct/QTCZ2WMNRsEsFbgyFbp6GAeGmOGCRKMBwu7y+leVw
-        th8FepVkVL/9NXPj02FUY1Arg3XGRqsyWIEefQa4WuhAfwUgqIBajAHbAVSpZsRPlo01PTSZgoA
-        HTQjZ/3lJQfJ9HZBmG/HmuZKKKgGX4sh639JboQ53
-X-Received: by 2002:a92:9f4e:: with SMTP id u75mr4211906ili.116.1583351105291;
-        Wed, 04 Mar 2020 11:45:05 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vtrzju66vDtf65j4nIv6rLKTi7YZzB5Dr9+W9RUpGDLtMsvp3V3AIXbOj0UV70NyRS/hFxmZwoXLKT4Qg3XkBU=
-X-Received: by 2002:a92:9f4e:: with SMTP id u75mr4211851ili.116.1583351104713;
- Wed, 04 Mar 2020 11:45:04 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Irm/TMjxr5YwTosbyzA6jl2EamRKH1MHnbQv6yYchcs=;
+        b=SJLobdOWpvEOGg+K4oPx8E/3RAA2b5IJnXDEiHMKFWFh4rM9lDzy+Z0gImtLiAxLwQ
+         AiqwqKPrfG75iZ+1ACALgz4q9UlcjRbFWXjpa9NGTvxcAWmVMKqrrIMjxgfOI7zSjrFC
+         zzbKvHJCIcaOm6FoI12jkSrb768lTbrxj7MEvy7aqEN1aw2QepNEKU38vxPAP1fmZCPr
+         r3A6Gx2Hg0dvG8WXiERwZxbGwjOVBM4goVRNKRTvl6odg0kJUI2OnXfM6nNjwJ1/X8OW
+         Mi2pkcrRADhMvalax4g7akSD1SziZ0EcKT7S/Ws10ydw4k7fJYo4yNnOlWjL3j+RzyZ2
+         iLqg==
+X-Gm-Message-State: ANhLgQ3Ekc86JUJCZySLkM77oTZsdRNIqKTcjNW5YzFrg55I+M/jqNIn
+        BtmGBxdPTyaBvTP3VyDpHy+kUg==
+X-Google-Smtp-Source: ADFU+vszXu2LJmEsqH/nltzG5nfLhM79Tqw1ksvA+proLNRq0s4Irs3//YiQl1yIB22ohOSsxIVwnA==
+X-Received: by 2002:a2e:b521:: with SMTP id z1mr3004705ljm.19.1583351162156;
+        Wed, 04 Mar 2020 11:46:02 -0800 (PST)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id h9sm14535638ljg.3.2020.03.04.11.46.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 11:46:01 -0800 (PST)
+Date:   Wed, 4 Mar 2020 20:46:00 +0100
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Suresh Udipi <sudipi@jp.adit-jv.com>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        Eugen Friedrich <efriedrich@de.adit-jv.com>,
+        akiyama@nds-osk.co.jp, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, securitycheck@denso.co.jp
+Subject: Re: [PATCH] [RFC] media: rcar-csi2: Corrects the selection of
+ hsfreqrange
+Message-ID: <20200304194600.GA1791497@oden.dyn.berto.se>
+References: <1582174149-11547-1-git-send-email-sudipi@jp.adit-jv.com>
 MIME-Version: 1.0
-References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
-In-Reply-To: <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
-From:   Nathaniel McCallum <npmccallum@redhat.com>
-Date:   Wed, 4 Mar 2020 14:44:53 -0500
-Message-ID: <CAOASepPRvPL6yggWDa=Cair4yOijsUdYviHk99NaP4gZJRoK3A@mail.gmail.com>
-Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
-        dave.hansen@intel.com,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Neil Horman <nhorman@redhat.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
-        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
-        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
-        Patrick Uiterwijk <puiterwijk@redhat.com>,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1582174149-11547-1-git-send-email-sudipi@jp.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 6:39 PM Jarkko Sakkinen
-<jarkko.sakkinen@linux.intel.com> wrote:
->
-> Add a selftest for SGX. It is a trivial test where a simple enclave
-> copies one 64-bit word of memory between two memory locations given to
-> the enclave as arguments. Use ENCLS[EENTER] to invoke the enclave.
->
-> Cc: linux-sgx@vger.kernel.org
-> Cc: linux-kselftest@vger.kernel.org
-> Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Hi Suresh,
+
+Thanks for your work!
+
+On 2020-02-20 13:49:09 +0900, Suresh Udipi wrote:
+> hsfreqrange should be chosen based on the calculated mbps which
+> is closer to the default bit rate  and within the range as per
+> table[1]. But current calculation always selects fist value which
+> greater than the calcuated mbps which may lead to chosing a
+> wrong range in some cases.
+> 
+> For example for 360 mbps for H3/M3N
+> Existing logic selects
+> Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
+> 
+> This hsfreqrange is buggy and also out of range.
+> 
+> The logic is changed to get the default value which is closest to the
+> calculated value [1]
+> 
+> Calculate value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
+> 
+>  [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
+
+It's great that you are addressing this issue. Out of curiosity what 
+hardware setup and configuration have you used to trigger the issue (if 
+any)?
+
+> 
+> Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+> Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
 > ---
->  tools/testing/selftests/x86/sgx/.gitignore    |   3 +
->  tools/testing/selftests/x86/sgx/Makefile      |  48 ++
->  tools/testing/selftests/x86/sgx/defines.h     |  17 +
->  tools/testing/selftests/x86/sgx/encl.c        |  20 +
->  tools/testing/selftests/x86/sgx/encl.lds      |  34 ++
->  .../selftests/x86/sgx/encl_bootstrap.S        |  94 ++++
->  tools/testing/selftests/x86/sgx/main.c        | 247 +++++++++
->  tools/testing/selftests/x86/sgx/sgx_call.S    |  23 +
->  tools/testing/selftests/x86/sgx/sgx_call.h    |  11 +
->  tools/testing/selftests/x86/sgx/sgxsign.c     | 493 ++++++++++++++++++
->  .../testing/selftests/x86/sgx/signing_key.pem |  39 ++
->  11 files changed, 1029 insertions(+)
->  create mode 100644 tools/testing/selftests/x86/sgx/.gitignore
->  create mode 100644 tools/testing/selftests/x86/sgx/Makefile
->  create mode 100644 tools/testing/selftests/x86/sgx/defines.h
->  create mode 100644 tools/testing/selftests/x86/sgx/encl.c
->  create mode 100644 tools/testing/selftests/x86/sgx/encl.lds
->  create mode 100644 tools/testing/selftests/x86/sgx/encl_bootstrap.S
->  create mode 100644 tools/testing/selftests/x86/sgx/main.c
->  create mode 100644 tools/testing/selftests/x86/sgx/sgx_call.S
->  create mode 100644 tools/testing/selftests/x86/sgx/sgx_call.h
->  create mode 100644 tools/testing/selftests/x86/sgx/sgxsign.c
->  create mode 100644 tools/testing/selftests/x86/sgx/signing_key.pem
->
-> diff --git a/tools/testing/selftests/x86/sgx/.gitignore b/tools/testing/selftests/x86/sgx/.gitignore
-> new file mode 100644
-> index 000000000000..98eb2d439606
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/.gitignore
-> @@ -0,0 +1,3 @@
-> +encl.ss
-> +sgxsign
-> +test_sgx
-> diff --git a/tools/testing/selftests/x86/sgx/Makefile b/tools/testing/selftests/x86/sgx/Makefile
-> new file mode 100644
-> index 000000000000..f838700029e2
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/Makefile
-> @@ -0,0 +1,48 @@
-> +top_srcdir = ../../../../..
+>  drivers/media/platform/rcar-vin/rcar-csi2.c | 185 +++++++++++++++-------------
+>  1 file changed, 97 insertions(+), 88 deletions(-)
+> 
+> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> index faa9fb2..1966ece 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> @@ -134,6 +134,8 @@ struct phtw_value {
+>  struct rcsi2_mbps_reg {
+>  	u16 mbps;
+>  	u16 reg;
+> +	u16 min;
+> +	u16 max;
+>  };
+>  
+>  static const struct rcsi2_mbps_reg phtw_mbps_h3_v3h_m3n[] = {
+> @@ -201,96 +203,96 @@ static const struct rcsi2_mbps_reg phtw_mbps_v3m_e3[] = {
+>  #define PHYPLL_HSFREQRANGE(n)		((n) << 16)
+>  
+>  static const struct rcsi2_mbps_reg hsfreqrange_h3_v3h_m3n[] = {
+> -	{ .mbps =   80, .reg = 0x00 },
+> -	{ .mbps =   90, .reg = 0x10 },
+> -	{ .mbps =  100, .reg = 0x20 },
+> -	{ .mbps =  110, .reg = 0x30 },
+> -	{ .mbps =  120, .reg = 0x01 },
+> -	{ .mbps =  130, .reg = 0x11 },
+> -	{ .mbps =  140, .reg = 0x21 },
+> -	{ .mbps =  150, .reg = 0x31 },
+> -	{ .mbps =  160, .reg = 0x02 },
+> -	{ .mbps =  170, .reg = 0x12 },
+> -	{ .mbps =  180, .reg = 0x22 },
+> -	{ .mbps =  190, .reg = 0x32 },
+> -	{ .mbps =  205, .reg = 0x03 },
+> -	{ .mbps =  220, .reg = 0x13 },
+> -	{ .mbps =  235, .reg = 0x23 },
+> -	{ .mbps =  250, .reg = 0x33 },
+> -	{ .mbps =  275, .reg = 0x04 },
+> -	{ .mbps =  300, .reg = 0x14 },
+> -	{ .mbps =  325, .reg = 0x25 },
+> -	{ .mbps =  350, .reg = 0x35 },
+> -	{ .mbps =  400, .reg = 0x05 },
+> -	{ .mbps =  450, .reg = 0x16 },
+> -	{ .mbps =  500, .reg = 0x26 },
+> -	{ .mbps =  550, .reg = 0x37 },
+> -	{ .mbps =  600, .reg = 0x07 },
+> -	{ .mbps =  650, .reg = 0x18 },
+> -	{ .mbps =  700, .reg = 0x28 },
+> -	{ .mbps =  750, .reg = 0x39 },
+> -	{ .mbps =  800, .reg = 0x09 },
+> -	{ .mbps =  850, .reg = 0x19 },
+> -	{ .mbps =  900, .reg = 0x29 },
+> -	{ .mbps =  950, .reg = 0x3a },
+> -	{ .mbps = 1000, .reg = 0x0a },
+> -	{ .mbps = 1050, .reg = 0x1a },
+> -	{ .mbps = 1100, .reg = 0x2a },
+> -	{ .mbps = 1150, .reg = 0x3b },
+> -	{ .mbps = 1200, .reg = 0x0b },
+> -	{ .mbps = 1250, .reg = 0x1b },
+> -	{ .mbps = 1300, .reg = 0x2b },
+> -	{ .mbps = 1350, .reg = 0x3c },
+> -	{ .mbps = 1400, .reg = 0x0c },
+> -	{ .mbps = 1450, .reg = 0x1c },
+> -	{ .mbps = 1500, .reg = 0x2c },
+> +	{ .mbps =   80, .reg = 0x00, .min =   80, .max =   97 },
+> +	{ .mbps =   90, .reg = 0x10, .min =   80, .max =  107 },
+> +	{ .mbps =  100, .reg = 0x20, .min =   83, .max =  118 },
+> +	{ .mbps =  110, .reg = 0x30, .min =   93, .max =  128 },
+> +	{ .mbps =  120, .reg = 0x01, .min =  103, .max =  139 },
+> +	{ .mbps =  130, .reg = 0x11, .min =  112, .max =  149 },
+> +	{ .mbps =  140, .reg = 0x21, .min =  122, .max =  160 },
+> +	{ .mbps =  150, .reg = 0x31, .min =  131, .max =  170 },
+> +	{ .mbps =  160, .reg = 0x02, .min =  141, .max =  181 },
+> +	{ .mbps =  170, .reg = 0x12, .min =  150, .max =  191 },
+> +	{ .mbps =  180, .reg = 0x22, .min =  160, .max =  202 },
+> +	{ .mbps =  190, .reg = 0x32, .min =  169, .max =  212 },
+> +	{ .mbps =  205, .reg = 0x03, .min =  183, .max =  228 },
+> +	{ .mbps =  220, .reg = 0x13, .min =  198, .max =  224 },
+> +	{ .mbps =  235, .reg = 0x23, .min =  212, .max =  259 },
+> +	{ .mbps =  250, .reg = 0x33, .min =  226, .max =  275 },
+> +	{ .mbps =  275, .reg = 0x04, .min =  250, .max =  301 },
+> +	{ .mbps =  300, .reg = 0x14, .min =  274, .max =  328 },
+> +	{ .mbps =  325, .reg = 0x25, .min =  297, .max =  354 },
+> +	{ .mbps =  350, .reg = 0x35, .min =  321, .max =  380 },
+> +	{ .mbps =  400, .reg = 0x05, .min =  369, .max =  433 },
+> +	{ .mbps =  450, .reg = 0x16, .min =  416, .max =  485 },
+> +	{ .mbps =  500, .reg = 0x26, .min =  464, .max =  538 },
+> +	{ .mbps =  550, .reg = 0x37, .min =  499, .max =  590 },
+> +	{ .mbps =  600, .reg = 0x07, .min =  559, .max =  643 },
+> +	{ .mbps =  650, .reg = 0x18, .min =  606, .max =  695 },
+> +	{ .mbps =  700, .reg = 0x28, .min =  654, .max =  748 },
+> +	{ .mbps =  750, .reg = 0x39, .min =  701, .max =  800 },
+> +	{ .mbps =  800, .reg = 0x09, .min =  749, .max =  853 },
+> +	{ .mbps =  850, .reg = 0x19, .min =  796, .max =  905 },
+> +	{ .mbps =  900, .reg = 0x29, .min =  844, .max =  958 },
+> +	{ .mbps =  950, .reg = 0x3a, .min =  891, .max = 1010 },
+> +	{ .mbps = 1000, .reg = 0x0a, .min =  939, .max = 1063 },
+> +	{ .mbps = 1050, .reg = 0x1a, .min =  986, .max = 1115 },
+> +	{ .mbps = 1100, .reg = 0x2a, .min = 1034, .max = 1168 },
+> +	{ .mbps = 1150, .reg = 0x3b, .min = 1081, .max = 1220 },
+> +	{ .mbps = 1200, .reg = 0x0b, .min = 1129, .max = 1273 },
+> +	{ .mbps = 1250, .reg = 0x1b, .min = 1176, .max = 1325 },
+> +	{ .mbps = 1300, .reg = 0x2b, .min = 1212, .max = 1378 },
+> +	{ .mbps = 1350, .reg = 0x3c, .min = 1271, .max = 1430 },
+> +	{ .mbps = 1400, .reg = 0x0c, .min = 1319, .max = 1483 },
+> +	{ .mbps = 1450, .reg = 0x1c, .min = 1366, .max = 1500 },
+> +	{ .mbps = 1500, .reg = 0x2c, .min = 1414, .max = 1500 },
+>  	{ /* sentinel */ },
+>  };
+>  
+>  static const struct rcsi2_mbps_reg hsfreqrange_m3w_h3es1[] = {
+> -	{ .mbps =   80,	.reg = 0x00 },
+> -	{ .mbps =   90,	.reg = 0x10 },
+> -	{ .mbps =  100,	.reg = 0x20 },
+> -	{ .mbps =  110,	.reg = 0x30 },
+> -	{ .mbps =  120,	.reg = 0x01 },
+> -	{ .mbps =  130,	.reg = 0x11 },
+> -	{ .mbps =  140,	.reg = 0x21 },
+> -	{ .mbps =  150,	.reg = 0x31 },
+> -	{ .mbps =  160,	.reg = 0x02 },
+> -	{ .mbps =  170,	.reg = 0x12 },
+> -	{ .mbps =  180,	.reg = 0x22 },
+> -	{ .mbps =  190,	.reg = 0x32 },
+> -	{ .mbps =  205,	.reg = 0x03 },
+> -	{ .mbps =  220,	.reg = 0x13 },
+> -	{ .mbps =  235,	.reg = 0x23 },
+> -	{ .mbps =  250,	.reg = 0x33 },
+> -	{ .mbps =  275,	.reg = 0x04 },
+> -	{ .mbps =  300,	.reg = 0x14 },
+> -	{ .mbps =  325,	.reg = 0x05 },
+> -	{ .mbps =  350,	.reg = 0x15 },
+> -	{ .mbps =  400,	.reg = 0x25 },
+> -	{ .mbps =  450,	.reg = 0x06 },
+> -	{ .mbps =  500,	.reg = 0x16 },
+> -	{ .mbps =  550,	.reg = 0x07 },
+> -	{ .mbps =  600,	.reg = 0x17 },
+> -	{ .mbps =  650,	.reg = 0x08 },
+> -	{ .mbps =  700,	.reg = 0x18 },
+> -	{ .mbps =  750,	.reg = 0x09 },
+> -	{ .mbps =  800,	.reg = 0x19 },
+> -	{ .mbps =  850,	.reg = 0x29 },
+> -	{ .mbps =  900,	.reg = 0x39 },
+> -	{ .mbps =  950,	.reg = 0x0a },
+> -	{ .mbps = 1000,	.reg = 0x1a },
+> -	{ .mbps = 1050,	.reg = 0x2a },
+> -	{ .mbps = 1100,	.reg = 0x3a },
+> -	{ .mbps = 1150,	.reg = 0x0b },
+> -	{ .mbps = 1200,	.reg = 0x1b },
+> -	{ .mbps = 1250,	.reg = 0x2b },
+> -	{ .mbps = 1300,	.reg = 0x3b },
+> -	{ .mbps = 1350,	.reg = 0x0c },
+> -	{ .mbps = 1400,	.reg = 0x1c },
+> -	{ .mbps = 1450,	.reg = 0x2c },
+> -	{ .mbps = 1500,	.reg = 0x3c },
+> +	{ .mbps =   80,	.reg = 0x00, .min =   80,  .max =   110 },
+> +	{ .mbps =   90,	.reg = 0x10, .min =   80,  .max =   120 },
+> +	{ .mbps =  100,	.reg = 0x20, .min =   80,  .max =   131 },
+> +	{ .mbps =  110,	.reg = 0x30, .min =   81,  .max =   141 },
+> +	{ .mbps =  120,	.reg = 0x01, .min =   91,  .max =   152 },
+> +	{ .mbps =  130,	.reg = 0x11, .min =  100,  .max =   162 },
+> +	{ .mbps =  140,	.reg = 0x21, .min =  110,  .max =   173 },
+> +	{ .mbps =  150,	.reg = 0x31, .min =  119,  .max =   183 },
+> +	{ .mbps =  160,	.reg = 0x02, .min =  129,  .max =   194 },
+> +	{ .mbps =  170,	.reg = 0x12, .min =  138,  .max =   204 },
+> +	{ .mbps =  180,	.reg = 0x22, .min =  148,  .max =   215 },
+> +	{ .mbps =  190,	.reg = 0x32, .min =  157,  .max =   225 },
+> +	{ .mbps =  205,	.reg = 0x03, .min =  171,  .max =   241 },
+> +	{ .mbps =  220,	.reg = 0x13, .min =  186,  .max =   257 },
+> +	{ .mbps =  235,	.reg = 0x23, .min =  200,  .max =   273 },
+> +	{ .mbps =  250,	.reg = 0x33, .min =  238,  .max =   276 },
+> +	{ .mbps =  275,	.reg = 0x04, .min =  250,  .max =   301 },
+> +	{ .mbps =  300,	.reg = 0x14, .min =  274,  .max =   328 },
+> +	{ .mbps =  325,	.reg = 0x05, .min =  297,  .max =   354 },
+> +	{ .mbps =  350,	.reg = 0x15, .min =  321,  .max =   393 },
+> +	{ .mbps =  400,	.reg = 0x25, .min =  357,  .max =   446 },
+> +	{ .mbps =  450,	.reg = 0x06, .min =  404,  .max =   498 },
+> +	{ .mbps =  500,	.reg = 0x16, .min =  452,  .max =   551 },
+> +	{ .mbps =  550,	.reg = 0x07, .min =  499,  .max =   603 },
+> +	{ .mbps =  600,	.reg = 0x17, .min =  547,  .max =   656 },
+> +	{ .mbps =  650,	.reg = 0x08, .min =  594,  .max =   708 },
+> +	{ .mbps =  700,	.reg = 0x18, .min =  642,  .max =   761 },
+> +	{ .mbps =  750,	.reg = 0x09, .min =  689,  .max =   813 },
+> +	{ .mbps =  800,	.reg = 0x19, .min =  737,  .max =   866 },
+> +	{ .mbps =  850,	.reg = 0x29, .min =  784,  .max =   918 },
+> +	{ .mbps =  900,	.reg = 0x39, .min =  832,  .max =   971 },
+> +	{ .mbps =  950,	.reg = 0x0a, .min =  879,  .max =  1023 },
+> +	{ .mbps = 1000,	.reg = 0x1a, .min =  927,  .max =  1076 },
+> +	{ .mbps = 1050,	.reg = 0x2a, .min =  974,  .max =  1128 },
+> +	{ .mbps = 1100,	.reg = 0x3a, .min = 1022,  .max =  1181 },
+> +	{ .mbps = 1150,	.reg = 0x0b, .min = 1069,  .max =  1233 },
+> +	{ .mbps = 1200,	.reg = 0x1b, .min = 1117,  .max =  1286 },
+> +	{ .mbps = 1250,	.reg = 0x2b, .min = 1164,  .max =  1338 },
+> +	{ .mbps = 1300,	.reg = 0x3b, .min = 1212,  .max =  1391 },
+> +	{ .mbps = 1350,	.reg = 0x0c, .min = 1259,  .max =  1443 },
+> +	{ .mbps = 1400,	.reg = 0x1c, .min = 1307,  .max =  1496 },
+> +	{ .mbps = 1450,	.reg = 0x2c, .min = 1354,  .max =  1500 },
+> +	{ .mbps = 1500,	.reg = 0x3c, .min = 1402,  .max =  1500 },
+>  	{ /* sentinel */ },
+>  };
+>  
+> @@ -430,11 +432,18 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
+>  
+>  static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+>  {
+> -	const struct rcsi2_mbps_reg *hsfreq;
+> +	const struct rcsi2_mbps_reg *hsfreq, *hsfreq_prev = NULL;
+>  
+> -	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
+> +	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
+>  		if (hsfreq->mbps >= mbps)
+>  			break;
+> +		hsfreq_prev = hsfreq;
+> +	}
 > +
-> +include ../../lib.mk
-> +
-> +ifndef OBJCOPY
-> +OBJCOPY := $(CROSS_COMPILE)objcopy
-> +endif
-> +
-> +INCLUDES := -I$(top_srcdir)/tools/include
-> +HOST_CFLAGS := -Wall -Werror -g $(INCLUDES) -fPIC -z noexecstack
-> +ENCL_CFLAGS := -Wall -Werror -static -nostdlib -nostartfiles -fPIC \
-> +              -fno-stack-protector -mrdrnd $(INCLUDES)
-> +
-> +TEST_CUSTOM_PROGS := $(OUTPUT)/test_sgx $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
-> +
-> +all: $(TEST_CUSTOM_PROGS)
-> +
-> +$(OUTPUT)/test_sgx: $(OUTPUT)/main.o $(OUTPUT)/sgx_call.o
-> +       $(CC) $(HOST_CFLAGS) -o $@ $^
-> +
-> +$(OUTPUT)/main.o: main.c
-> +       $(CC) $(HOST_CFLAGS) -c $< -o $@
-> +
-> +$(OUTPUT)/sgx_call.o: sgx_call.S
-> +       $(CC) $(HOST_CFLAGS) -c $< -o $@
-> +
-> +$(OUTPUT)/encl.bin: $(OUTPUT)/encl.elf $(OUTPUT)/sgxsign
-> +       $(OBJCOPY) -O binary $< $@
-> +
-> +$(OUTPUT)/encl.elf: encl.lds encl.c encl_bootstrap.S
-> +       $(CC) $(ENCL_CFLAGS) -T $^ -o $@
-> +
-> +$(OUTPUT)/encl.ss: $(OUTPUT)/encl.bin
-> +       $(OUTPUT)/sgxsign signing_key.pem $(OUTPUT)/encl.bin $(OUTPUT)/encl.ss
-> +
-> +$(OUTPUT)/sgxsign: sgxsign.c
-> +       $(CC) $(INCLUDES) -o $@ $< -lcrypto
-> +
-> +EXTRA_CLEAN := \
-> +       $(OUTPUT)/encl.bin \
-> +       $(OUTPUT)/encl.elf \
-> +       $(OUTPUT)/encl.ss \
-> +       $(OUTPUT)/sgx_call.o \
-> +       $(OUTPUT)/sgxsign \
-> +       $(OUTPUT)/test_sgx \
-> +       $(OUTPUT)/test_sgx.o \
-> +
-> +.PHONY: clean
-> diff --git a/tools/testing/selftests/x86/sgx/defines.h b/tools/testing/selftests/x86/sgx/defines.h
-> new file mode 100644
-> index 000000000000..87264f85cb9f
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/defines.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright(c) 2016-19 Intel Corporation.
-> + */
-> +
-> +#ifndef DEFINES_H
-> +#define DEFINES_H
-> +
-> +#include <stdint.h>
-> +
-> +#define __aligned(x) __attribute__((__aligned__(x)))
-> +#define __packed __attribute__((packed))
-> +
-> +#include "../../../../../arch/x86/kernel/cpu/sgx/arch.h"
-> +#include "../../../../../arch/x86/include/uapi/asm/sgx.h"
-> +
-> +#endif /* DEFINES_H */
-> diff --git a/tools/testing/selftests/x86/sgx/encl.c b/tools/testing/selftests/x86/sgx/encl.c
-> new file mode 100644
-> index 000000000000..ede915399742
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/encl.c
-> @@ -0,0 +1,20 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +// Copyright(c) 2016-18 Intel Corporation.
-> +
-> +#include <stddef.h>
-> +#include "defines.h"
-> +
-> +static void *memcpy(void *dest, const void *src, size_t n)
-> +{
-> +       size_t i;
-> +
-> +       for (i = 0; i < n; i++)
-> +               ((char *)dest)[i] = ((char *)src)[i];
-> +
-> +       return dest;
-> +}
-> +
-> +void encl_body(void *rdi, void *rsi)
-> +{
-> +       memcpy(rsi, rdi, 8);
-> +}
-> diff --git a/tools/testing/selftests/x86/sgx/encl.lds b/tools/testing/selftests/x86/sgx/encl.lds
-> new file mode 100644
-> index 000000000000..9a56d3064104
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/encl.lds
-> @@ -0,0 +1,34 @@
-> +OUTPUT_FORMAT(elf64-x86-64)
-> +
-> +SECTIONS
-> +{
-> +       . = 0;
-> +       .tcs : {
-> +               *(.tcs*)
-> +       }
-> +
-> +       . = ALIGN(4096);
-> +       .text : {
-> +               *(.text*)
-> +               *(.rodata*)
-> +       }
-> +
-> +       . = ALIGN(4096);
-> +       .data : {
-> +               *(.data*)
-> +       }
-> +
-> +       /DISCARD/ : {
-> +               *(.data*)
-> +               *(.comment*)
-> +               *(.note*)
-> +               *(.debug*)
-> +               *(.eh_frame*)
-> +       }
-> +}
-> +
-> +ASSERT(!DEFINED(.altinstructions), "ALTERNATIVES are not supported in enclaves")
-> +ASSERT(!DEFINED(.altinstr_replacement), "ALTERNATIVES are not supported in enclaves")
-> +ASSERT(!DEFINED(.discard.retpoline_safe), "RETPOLINE ALTERNATIVES are not supported in enclaves")
-> +ASSERT(!DEFINED(.discard.nospec), "RETPOLINE ALTERNATIVES are not supported in enclaves")
-> +ASSERT(!DEFINED(.got.plt), "Libcalls are not supported in enclaves")
-> diff --git a/tools/testing/selftests/x86/sgx/encl_bootstrap.S b/tools/testing/selftests/x86/sgx/encl_bootstrap.S
-> new file mode 100644
-> index 000000000000..d07f970ccdf9
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/encl_bootstrap.S
-> @@ -0,0 +1,94 @@
-> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-> +/*
-> + * Copyright(c) 2016-18 Intel Corporation.
-> + */
-> +
-> +       .macro ENCLU
-> +       .byte 0x0f, 0x01, 0xd7
-> +       .endm
-> +
-> +       .section ".tcs", "a"
-> +       .balign 4096
-> +
-> +       .fill   1, 8, 0                 # STATE (set by CPU)
-> +       .fill   1, 8, 0                 # FLAGS
-> +       .quad   encl_ssa                # OSSA
-> +       .fill   1, 4, 0                 # CSSA (set by CPU)
-> +       .fill   1, 4, 1                 # NSSA
-> +       .quad   encl_entry              # OENTRY
-> +       .fill   1, 8, 0                 # AEP (set by EENTER and ERESUME)
-> +       .fill   1, 8, 0                 # OFSBASE
-> +       .fill   1, 8, 0                 # OGSBASE
-> +       .fill   1, 4, 0xFFFFFFFF        # FSLIMIT
-> +       .fill   1, 4, 0xFFFFFFFF        # GSLIMIT
-> +       .fill   4024, 1, 0              # Reserved
-> +
-> +       .text
-> +
-> +encl_entry:
-> +       # RBX contains the base address for TCS, which is also the first address
-> +       # inside the enclave. By adding the value of le_stack_end to it, we get
-> +       # the absolute address for the stack.
-> +       lea     (encl_stack)(%rbx), %rax
-> +       xchg    %rsp, %rax
-> +       push    %rax
-> +
-> +       push    %rcx # push the address after EENTER
-> +       push    %rbx # push the enclave base address
-> +
-> +       call    encl_body
-> +
-> +       pop     %rbx # pop the enclave base address
-> +
-> +       # Restore XSAVE registers to a synthetic state.
-> +       mov     $0xFFFFFFFF, %rax
-> +       mov     $0xFFFFFFFF, %rdx
-> +       lea     (xsave_area)(%rbx), %rdi
-> +       fxrstor (%rdi)
-> +
-> +       # Clear GPRs.
-> +       xor     %rcx, %rcx
-> +       xor     %rdx, %rdx
-> +       xor     %rdi, %rdi
-> +       xor     %rsi, %rsi
-> +       xor     %r8, %r8
-> +       xor     %r9, %r9
-> +       xor     %r10, %r10
-> +       xor     %r11, %r11
-> +       xor     %r12, %r12
-> +       xor     %r13, %r13
-> +       xor     %r14, %r14
-> +       xor     %r15, %r15
-> +
-> +       # Reset status flags.
-> +       add     %rdx, %rdx # OF = SF = AF = CF = 0; ZF = PF = 1
+> +	if (hsfreq_prev &&
+> +	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)) &&
+> +	    (hsfreq_prev->max >= mbps && hsfreq_prev->min <= mbps))
+> +		hsfreq = hsfreq_prev;
 
-# Reset status flags.
-add     %rdx, %rdx # OF = SF = AF = CF = 0; ZF = PF = 1
-cld # DF = 0
+Would it be possible to rework this to get rid of the mbps variable from 
+strcut rcsi2_mbps_reg? I'm thinking of making the logic selecting the 
+first entry in the table where mbps argument falls between the min and 
+max values introduced in this patch.
 
-This was a recent CVE on the SDK. We don't need more people copying
-vulnerable code into their own projects.
+>  
+>  	if (!hsfreq->mbps) {
+>  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+> -- 
+> 2.7.4
+> 
 
-Likewise, you should also clear GPRs, reset extended GPU state and
-reset flags before calling encl_body().
-
-Alternatively, drop all the state clearing and simply put a comment in
-for people to do that. My general rule here is to either not provide
-an example at all or provide a secure example that people can copy.
-
-> +       # Prepare EEXIT target by popping the address of the instruction after
-> +       # EENTER to RBX.
-> +       pop     %rbx
-> +
-> +       # Restore the caller stack.
-> +       pop     %rax
-> +       mov     %rax, %rsp
-> +
-> +       # EEXIT
-> +       mov     $4, %rax
-> +       enclu
-> +
-> +       .section ".data", "aw"
-> +
-> +encl_ssa:
-> +       .space 4096
-> +
-> +xsave_area:
-> +       .fill   1, 4, 0x037F            # FCW
-> +       .fill   5, 4, 0
-> +       .fill   1, 4, 0x1F80            # MXCSR
-> +       .fill   1, 4, 0xFFFF            # MXCSR_MASK
-> +       .fill   123, 4, 0
-> +       .fill   1, 4, 0x80000000        # XCOMP_BV[63] = 1, compaction mode
-> +       .fill   12, 4, 0
-> +
-> +       .balign 4096
-> +       .space 8192
-> +encl_stack:
-> diff --git a/tools/testing/selftests/x86/sgx/main.c b/tools/testing/selftests/x86/sgx/main.c
-> new file mode 100644
-> index 000000000000..48ed5fdfb3cb
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/main.c
-> @@ -0,0 +1,247 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +// Copyright(c) 2016-18 Intel Corporation.
-> +
-> +#include <elf.h>
-> +#include <errno.h>
-> +#include <fcntl.h>
-> +#include <stdbool.h>
-> +#include <stdio.h>
-> +#include <stdint.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <unistd.h>
-> +#include <sys/ioctl.h>
-> +#include <sys/mman.h>
-> +#include <sys/stat.h>
-> +#include <sys/time.h>
-> +#include <sys/types.h>
-> +#include "defines.h"
-> +#include "sgx_call.h"
-> +
-> +#define PAGE_SIZE  4096
-> +
-> +static const uint64_t MAGIC = 0x1122334455667788ULL;
-> +
-> +static bool encl_create(int dev_fd, unsigned long bin_size,
-> +                       struct sgx_secs *secs)
-> +{
-> +       struct sgx_enclave_create ioc;
-> +       void *area;
-> +       int rc;
-> +
-> +       memset(secs, 0, sizeof(*secs));
-> +       secs->ssa_frame_size = 1;
-> +       secs->attributes = SGX_ATTR_MODE64BIT;
-> +       secs->xfrm = 3;
-> +
-> +       for (secs->size = 4096; secs->size < bin_size; )
-> +               secs->size <<= 1;
-> +
-> +       area = mmap(NULL, secs->size * 2, PROT_NONE, MAP_SHARED, dev_fd, 0);
-> +       if (area == MAP_FAILED) {
-> +               perror("mmap");
-> +               return false;
-> +       }
-> +
-> +       secs->base = ((uint64_t)area + secs->size - 1) & ~(secs->size - 1);
-> +
-> +       munmap(area, secs->base - (uint64_t)area);
-> +       munmap((void *)(secs->base + secs->size),
-> +              (uint64_t)area + secs->size - secs->base);
-> +
-> +       ioc.src = (unsigned long)secs;
-> +       rc = ioctl(dev_fd, SGX_IOC_ENCLAVE_CREATE, &ioc);
-> +       if (rc) {
-> +               fprintf(stderr, "ECREATE failed rc=%d, err=%d.\n", rc, errno);
-> +               munmap((void *)secs->base, secs->size);
-> +               return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +static bool encl_add_pages(int dev_fd, unsigned long offset, void *data,
-> +                          unsigned long length, uint64_t flags)
-> +{
-> +       struct sgx_enclave_add_pages ioc;
-> +       struct sgx_secinfo secinfo;
-> +       int rc;
-> +
-> +       memset(&secinfo, 0, sizeof(secinfo));
-> +       secinfo.flags = flags;
-> +
-> +       ioc.src = (uint64_t)data;
-> +       ioc.offset = offset;
-> +       ioc.length = length;
-> +       ioc.secinfo = (unsigned long)&secinfo;
-> +       ioc.flags = SGX_PAGE_MEASURE;
-> +
-> +       rc = ioctl(dev_fd, SGX_IOC_ENCLAVE_ADD_PAGES, &ioc);
-> +       if (rc) {
-> +               fprintf(stderr, "EADD failed rc=%d.\n", rc);
-> +               return false;
-> +       }
-> +
-> +       if (ioc.count != ioc.length) {
-> +               fprintf(stderr, "Partially processed, update the test.\n");
-> +               return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +#define SGX_REG_PAGE_FLAGS \
-> +       (SGX_SECINFO_REG | SGX_SECINFO_R | SGX_SECINFO_W | SGX_SECINFO_X)
-> +
-> +static bool encl_build(struct sgx_secs *secs, void *bin,
-> +                      unsigned long bin_size, struct sgx_sigstruct *sigstruct)
-> +{
-> +       struct sgx_enclave_init ioc;
-> +       void *addr;
-> +       int dev_fd;
-> +       int rc;
-> +
-> +       dev_fd = open("/dev/sgx/enclave", O_RDWR);
-> +       if (dev_fd < 0) {
-> +               fprintf(stderr, "Unable to open /dev/sgx\n");
-> +               return false;
-> +       }
-> +
-> +       if (!encl_create(dev_fd, bin_size, secs))
-> +               goto out_dev_fd;
-> +
-> +       if (!encl_add_pages(dev_fd, 0, bin, PAGE_SIZE, SGX_SECINFO_TCS))
-> +               goto out_dev_fd;
-> +
-> +       if (!encl_add_pages(dev_fd, PAGE_SIZE, bin + PAGE_SIZE,
-> +                           bin_size - PAGE_SIZE, SGX_REG_PAGE_FLAGS))
-> +               goto out_dev_fd;
-> +
-> +       ioc.sigstruct = (uint64_t)sigstruct;
-> +       rc = ioctl(dev_fd, SGX_IOC_ENCLAVE_INIT, &ioc);
-> +       if (rc) {
-> +               printf("EINIT failed rc=%d\n", rc);
-> +               goto out_map;
-> +       }
-> +
-> +       addr = mmap((void *)secs->base, PAGE_SIZE, PROT_READ | PROT_WRITE,
-> +                   MAP_SHARED | MAP_FIXED, dev_fd, 0);
-> +       if (addr == MAP_FAILED) {
-> +               fprintf(stderr, "mmap() failed on TCS, errno=%d.\n", errno);
-> +               return false;
-> +       }
-> +
-> +       addr = mmap((void *)(secs->base + PAGE_SIZE), bin_size - PAGE_SIZE,
-> +                   PROT_READ | PROT_WRITE | PROT_EXEC,
-> +                   MAP_SHARED | MAP_FIXED, dev_fd, 0);
-> +       if (addr == MAP_FAILED) {
-> +               fprintf(stderr, "mmap() failed, errno=%d.\n", errno);
-> +               return false;
-> +       }
-> +
-> +       close(dev_fd);
-> +       return true;
-> +out_map:
-> +       munmap((void *)secs->base, secs->size);
-> +out_dev_fd:
-> +       close(dev_fd);
-> +       return false;
-> +}
-> +
-> +bool get_file_size(const char *path, off_t *bin_size)
-> +{
-> +       struct stat sb;
-> +       int ret;
-> +
-> +       ret = stat(path, &sb);
-> +       if (ret) {
-> +               perror("stat");
-> +               return false;
-> +       }
-> +
-> +       if (!sb.st_size || sb.st_size & 0xfff) {
-> +               fprintf(stderr, "Invalid blob size %lu\n", sb.st_size);
-> +               return false;
-> +       }
-> +
-> +       *bin_size = sb.st_size;
-> +       return true;
-> +}
-> +
-> +bool encl_data_map(const char *path, void **bin, off_t *bin_size)
-> +{
-> +       int fd;
-> +
-> +       fd = open(path, O_RDONLY);
-> +       if (fd == -1)  {
-> +               fprintf(stderr, "open() %s failed, errno=%d.\n", path, errno);
-> +               return false;
-> +       }
-> +
-> +       if (!get_file_size(path, bin_size))
-> +               goto err_out;
-> +
-> +       *bin = mmap(NULL, *bin_size, PROT_READ, MAP_PRIVATE, fd, 0);
-> +       if (*bin == MAP_FAILED) {
-> +               fprintf(stderr, "mmap() %s failed, errno=%d.\n", path, errno);
-> +               goto err_out;
-> +       }
-> +
-> +       close(fd);
-> +       return true;
-> +
-> +err_out:
-> +       close(fd);
-> +       return false;
-> +}
-> +
-> +bool load_sigstruct(const char *path, void *sigstruct)
-> +{
-> +       int fd;
-> +
-> +       fd = open(path, O_RDONLY);
-> +       if (fd == -1)  {
-> +               fprintf(stderr, "open() %s failed, errno=%d.\n", path, errno);
-> +               return false;
-> +       }
-> +
-> +       if (read(fd, sigstruct, sizeof(struct sgx_sigstruct)) !=
-> +           sizeof(struct sgx_sigstruct)) {
-> +               fprintf(stderr, "read() %s failed, errno=%d.\n", path, errno);
-> +               close(fd);
-> +               return false;
-> +       }
-> +
-> +       close(fd);
-> +       return true;
-> +}
-> +
-> +int main(int argc, char *argv[], char *envp[])
-> +{
-> +       struct sgx_sigstruct sigstruct;
-> +       struct sgx_secs secs;
-> +       uint64_t result = 0;
-> +       off_t bin_size;
-> +       void *bin;
-> +
-> +       if (!encl_data_map("encl.bin", &bin, &bin_size))
-> +               exit(1);
-> +
-> +       if (!load_sigstruct("encl.ss", &sigstruct))
-> +               exit(1);
-> +
-> +       if (!encl_build(&secs, bin, bin_size, &sigstruct))
-> +               exit(1);
-> +
-> +       printf("Input: 0x%lx\n", MAGIC);
-> +
-> +       sgx_call_eenter((void *)&MAGIC, &result, (void *)secs.base);
-> +       if (result != MAGIC) {
-> +               fprintf(stderr, "0x%lx != 0x%lx\n", result, MAGIC);
-> +               exit(1);
-> +       }
-> +
-> +       printf("Output: 0x%lx\n", result);
-> +
-> +       exit(0);
-> +}
-> diff --git a/tools/testing/selftests/x86/sgx/sgx_call.S b/tools/testing/selftests/x86/sgx/sgx_call.S
-> new file mode 100644
-> index 000000000000..ca4c7893f9d9
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/sgx_call.S
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
-> +/**
-> +* Copyright(c) 2016-18 Intel Corporation.
-> +*/
-> +
-> +       .text
-> +
-> +       .macro ENCLU
-> +       .byte 0x0f, 0x01, 0xd7
-> +       .endm
-> +
-> +       .text
-> +
-> +       .global sgx_call_eenter
-> +sgx_call_eenter:
-> +       push    %rbx
-> +       mov     $0x02, %rax
-> +       mov     %rdx, %rbx
-> +       lea     sgx_async_exit(%rip), %rcx
-> +sgx_async_exit:
-> +       ENCLU
-> +       pop     %rbx
-> +       ret
-> diff --git a/tools/testing/selftests/x86/sgx/sgx_call.h b/tools/testing/selftests/x86/sgx/sgx_call.h
-> new file mode 100644
-> index 000000000000..bf72068ada23
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/sgx_call.h
-> @@ -0,0 +1,11 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Copyright(c) 2016-19 Intel Corporation.
-> + */
-> +
-> +#ifndef SGX_CALL_H
-> +#define SGX_CALL_H
-> +
-> +void sgx_call_eenter(void *rdi, void *rsi, void *entry);
-> +
-> +#endif /* SGX_CALL_H */
-> diff --git a/tools/testing/selftests/x86/sgx/sgxsign.c b/tools/testing/selftests/x86/sgx/sgxsign.c
-> new file mode 100644
-> index 000000000000..3d9007af40c9
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/sgxsign.c
-> @@ -0,0 +1,493 @@
-> +// SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause)
-> +// Copyright(c) 2016-18 Intel Corporation.
-> +
-> +#define _GNU_SOURCE
-> +#include <getopt.h>
-> +#include <stdbool.h>
-> +#include <stdint.h>
-> +#include <stdio.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <sys/stat.h>
-> +#include <sys/types.h>
-> +#include <unistd.h>
-> +#include <openssl/err.h>
-> +#include <openssl/pem.h>
-> +#include "defines.h"
-> +
-> +struct sgx_sigstruct_payload {
-> +       struct sgx_sigstruct_header header;
-> +       struct sgx_sigstruct_body body;
-> +};
-> +
-> +static bool check_crypto_errors(void)
-> +{
-> +       int err;
-> +       bool had_errors = false;
-> +       const char *filename;
-> +       int line;
-> +       char str[256];
-> +
-> +       for ( ; ; ) {
-> +               if (ERR_peek_error() == 0)
-> +                       break;
-> +
-> +               had_errors = true;
-> +               err = ERR_get_error_line(&filename, &line);
-> +               ERR_error_string_n(err, str, sizeof(str));
-> +               fprintf(stderr, "crypto: %s: %s:%d\n", str, filename, line);
-> +       }
-> +
-> +       return had_errors;
-> +}
-> +
-> +static void exit_usage(const char *program)
-> +{
-> +       fprintf(stderr,
-> +               "Usage: %s/sign-le <key> <enclave> <sigstruct>\n", program);
-> +       exit(1);
-> +}
-> +
-> +static inline const BIGNUM *get_modulus(RSA *key)
-> +{
-> +#if OPENSSL_VERSION_NUMBER < 0x10100000L
-> +       return key->n;
-> +#else
-> +       const BIGNUM *n;
-> +
-> +       RSA_get0_key(key, &n, NULL, NULL);
-> +       return n;
-> +#endif
-> +}
-> +
-> +static RSA *load_sign_key(const char *path)
-> +{
-> +       FILE *f;
-> +       RSA *key;
-> +
-> +       f = fopen(path, "rb");
-> +       if (!f) {
-> +               fprintf(stderr, "Unable to open %s\n", path);
-> +               return NULL;
-> +       }
-> +       key = RSA_new();
-> +       if (!PEM_read_RSAPrivateKey(f, &key, NULL, NULL))
-> +               return NULL;
-> +       fclose(f);
-> +
-> +       if (BN_num_bytes(get_modulus(key)) != SGX_MODULUS_SIZE) {
-> +               fprintf(stderr, "Invalid key size %d\n",
-> +                       BN_num_bytes(get_modulus(key)));
-> +               RSA_free(key);
-> +               return NULL;
-> +       }
-> +
-> +       return key;
-> +}
-> +
-> +static void reverse_bytes(void *data, int length)
-> +{
-> +       int i = 0;
-> +       int j = length - 1;
-> +       uint8_t temp;
-> +       uint8_t *ptr = data;
-> +
-> +       while (i < j) {
-> +               temp = ptr[i];
-> +               ptr[i] = ptr[j];
-> +               ptr[j] = temp;
-> +               i++;
-> +               j--;
-> +       }
-> +}
-> +
-> +enum mrtags {
-> +       MRECREATE = 0x0045544145524345,
-> +       MREADD = 0x0000000044444145,
-> +       MREEXTEND = 0x00444E4554584545,
-> +};
-> +
-> +static bool mrenclave_update(EVP_MD_CTX *ctx, const void *data)
-> +{
-> +       if (!EVP_DigestUpdate(ctx, data, 64)) {
-> +               fprintf(stderr, "digest update failed\n");
-> +               return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +static bool mrenclave_commit(EVP_MD_CTX *ctx, uint8_t *mrenclave)
-> +{
-> +       unsigned int size;
-> +
-> +       if (!EVP_DigestFinal_ex(ctx, (unsigned char *)mrenclave, &size)) {
-> +               fprintf(stderr, "digest commit failed\n");
-> +               return false;
-> +       }
-> +
-> +       if (size != 32) {
-> +               fprintf(stderr, "invalid digest size = %u\n", size);
-> +               return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +struct mrecreate {
-> +       uint64_t tag;
-> +       uint32_t ssaframesize;
-> +       uint64_t size;
-> +       uint8_t reserved[44];
-> +} __attribute__((__packed__));
-> +
-> +
-> +static bool mrenclave_ecreate(EVP_MD_CTX *ctx, uint64_t blob_size)
-> +{
-> +       struct mrecreate mrecreate;
-> +       uint64_t encl_size;
-> +
-> +       for (encl_size = 0x1000; encl_size < blob_size; )
-> +               encl_size <<= 1;
-> +
-> +       memset(&mrecreate, 0, sizeof(mrecreate));
-> +       mrecreate.tag = MRECREATE;
-> +       mrecreate.ssaframesize = 1;
-> +       mrecreate.size = encl_size;
-> +
-> +       if (!EVP_DigestInit_ex(ctx, EVP_sha256(), NULL))
-> +               return false;
-> +
-> +       return mrenclave_update(ctx, &mrecreate);
-> +}
-> +
-> +struct mreadd {
-> +       uint64_t tag;
-> +       uint64_t offset;
-> +       uint64_t flags; /* SECINFO flags */
-> +       uint8_t reserved[40];
-> +} __attribute__((__packed__));
-> +
-> +static bool mrenclave_eadd(EVP_MD_CTX *ctx, uint64_t offset, uint64_t flags)
-> +{
-> +       struct mreadd mreadd;
-> +
-> +       memset(&mreadd, 0, sizeof(mreadd));
-> +       mreadd.tag = MREADD;
-> +       mreadd.offset = offset;
-> +       mreadd.flags = flags;
-> +
-> +       return mrenclave_update(ctx, &mreadd);
-> +}
-> +
-> +struct mreextend {
-> +       uint64_t tag;
-> +       uint64_t offset;
-> +       uint8_t reserved[48];
-> +} __attribute__((__packed__));
-> +
-> +static bool mrenclave_eextend(EVP_MD_CTX *ctx, uint64_t offset, uint8_t *data)
-> +{
-> +       struct mreextend mreextend;
-> +       int i;
-> +
-> +       for (i = 0; i < 0x1000; i += 0x100) {
-> +               memset(&mreextend, 0, sizeof(mreextend));
-> +               mreextend.tag = MREEXTEND;
-> +               mreextend.offset = offset + i;
-> +
-> +               if (!mrenclave_update(ctx, &mreextend))
-> +                       return false;
-> +
-> +               if (!mrenclave_update(ctx, &data[i + 0x00]))
-> +                       return false;
-> +
-> +               if (!mrenclave_update(ctx, &data[i + 0x40]))
-> +                       return false;
-> +
-> +               if (!mrenclave_update(ctx, &data[i + 0x80]))
-> +                       return false;
-> +
-> +               if (!mrenclave_update(ctx, &data[i + 0xC0]))
-> +                       return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +/**
-> + * measure_encl - measure enclave
-> + * @path: path to the enclave
-> + * @mrenclave: measurement
-> + *
-> + * Calculates MRENCLAVE. Assumes that the very first page is a TCS page and
-> + * following pages are regular pages. Does not measure the contents of the
-> + * enclave as the signing tool is used at the moment only for the launch
-> + * enclave, which is pass-through (everything gets a token).
-> + */
-> +static bool measure_encl(const char *path, uint8_t *mrenclave)
-> +{
-> +       FILE *file;
-> +       struct stat sb;
-> +       EVP_MD_CTX *ctx;
-> +       uint64_t flags;
-> +       uint64_t offset;
-> +       uint8_t data[0x1000];
-> +       int rc;
-> +
-> +       ctx = EVP_MD_CTX_create();
-> +       if (!ctx)
-> +               return false;
-> +
-> +       file = fopen(path, "rb");
-> +       if (!file) {
-> +               perror("fopen");
-> +               EVP_MD_CTX_destroy(ctx);
-> +               return false;
-> +       }
-> +
-> +       rc = stat(path, &sb);
-> +       if (rc) {
-> +               perror("stat");
-> +               goto out;
-> +       }
-> +
-> +       if (!sb.st_size || sb.st_size & 0xfff) {
-> +               fprintf(stderr, "Invalid blob size %lu\n", sb.st_size);
-> +               goto out;
-> +       }
-> +
-> +       if (!mrenclave_ecreate(ctx, sb.st_size))
-> +               goto out;
-> +
-> +       for (offset = 0; offset < sb.st_size; offset += 0x1000) {
-> +               if (!offset)
-> +                       flags = SGX_SECINFO_TCS;
-> +               else
-> +                       flags = SGX_SECINFO_REG | SGX_SECINFO_R |
-> +                               SGX_SECINFO_W | SGX_SECINFO_X;
-> +
-> +               if (!mrenclave_eadd(ctx, offset, flags))
-> +                       goto out;
-> +
-> +               rc = fread(data, 1, 0x1000, file);
-> +               if (!rc)
-> +                       break;
-> +               if (rc < 0x1000)
-> +                       goto out;
-> +
-> +               if (!mrenclave_eextend(ctx, offset, data))
-> +                       goto out;
-> +       }
-> +
-> +       if (!mrenclave_commit(ctx, mrenclave))
-> +               goto out;
-> +
-> +       fclose(file);
-> +       EVP_MD_CTX_destroy(ctx);
-> +       return true;
-> +out:
-> +       fclose(file);
-> +       EVP_MD_CTX_destroy(ctx);
-> +       return false;
-> +}
-> +
-> +/**
-> + * sign_encl - sign enclave
-> + * @sigstruct: pointer to SIGSTRUCT
-> + * @key: 3072-bit RSA key
-> + * @signature: byte array for the signature
-> + *
-> + * Calculates EMSA-PKCSv1.5 signature for the given SIGSTRUCT. The result is
-> + * stored in big-endian format so that it can be further passed to OpenSSL
-> + * libcrypto functions.
-> + */
-> +static bool sign_encl(const struct sgx_sigstruct *sigstruct, RSA *key,
-> +                     uint8_t *signature)
-> +{
-> +       struct sgx_sigstruct_payload payload;
-> +       unsigned int siglen;
-> +       uint8_t digest[SHA256_DIGEST_LENGTH];
-> +       bool ret;
-> +
-> +       memcpy(&payload.header, &sigstruct->header, sizeof(sigstruct->header));
-> +       memcpy(&payload.body, &sigstruct->body, sizeof(sigstruct->body));
-> +
-> +       SHA256((unsigned char *)&payload, sizeof(payload), digest);
-> +
-> +       ret = RSA_sign(NID_sha256, digest, SHA256_DIGEST_LENGTH, signature,
-> +                      &siglen, key);
-> +
-> +       return ret;
-> +}
-> +
-> +struct q1q2_ctx {
-> +       BN_CTX *bn_ctx;
-> +       BIGNUM *m;
-> +       BIGNUM *s;
-> +       BIGNUM *q1;
-> +       BIGNUM *qr;
-> +       BIGNUM *q2;
-> +};
-> +
-> +static void free_q1q2_ctx(struct q1q2_ctx *ctx)
-> +{
-> +       BN_CTX_free(ctx->bn_ctx);
-> +       BN_free(ctx->m);
-> +       BN_free(ctx->s);
-> +       BN_free(ctx->q1);
-> +       BN_free(ctx->qr);
-> +       BN_free(ctx->q2);
-> +}
-> +
-> +static bool alloc_q1q2_ctx(const uint8_t *s, const uint8_t *m,
-> +                          struct q1q2_ctx *ctx)
-> +{
-> +       ctx->bn_ctx = BN_CTX_new();
-> +       ctx->s = BN_bin2bn(s, SGX_MODULUS_SIZE, NULL);
-> +       ctx->m = BN_bin2bn(m, SGX_MODULUS_SIZE, NULL);
-> +       ctx->q1 = BN_new();
-> +       ctx->qr = BN_new();
-> +       ctx->q2 = BN_new();
-> +
-> +       if (!ctx->bn_ctx || !ctx->s || !ctx->m || !ctx->q1 || !ctx->qr ||
-> +           !ctx->q2) {
-> +               free_q1q2_ctx(ctx);
-> +               return false;
-> +       }
-> +
-> +       return true;
-> +}
-> +
-> +static bool calc_q1q2(const uint8_t *s, const uint8_t *m, uint8_t *q1,
-> +                     uint8_t *q2)
-> +{
-> +       struct q1q2_ctx ctx;
-> +
-> +       if (!alloc_q1q2_ctx(s, m, &ctx)) {
-> +               fprintf(stderr, "Not enough memory for Q1Q2 calculation\n");
-> +               return false;
-> +       }
-> +
-> +       if (!BN_mul(ctx.q1, ctx.s, ctx.s, ctx.bn_ctx))
-> +               goto out;
-> +
-> +       if (!BN_div(ctx.q1, ctx.qr, ctx.q1, ctx.m, ctx.bn_ctx))
-> +               goto out;
-> +
-> +       if (BN_num_bytes(ctx.q1) > SGX_MODULUS_SIZE) {
-> +               fprintf(stderr, "Too large Q1 %d bytes\n",
-> +                       BN_num_bytes(ctx.q1));
-> +               goto out;
-> +       }
-> +
-> +       if (!BN_mul(ctx.q2, ctx.s, ctx.qr, ctx.bn_ctx))
-> +               goto out;
-> +
-> +       if (!BN_div(ctx.q2, NULL, ctx.q2, ctx.m, ctx.bn_ctx))
-> +               goto out;
-> +
-> +       if (BN_num_bytes(ctx.q2) > SGX_MODULUS_SIZE) {
-> +               fprintf(stderr, "Too large Q2 %d bytes\n",
-> +                       BN_num_bytes(ctx.q2));
-> +               goto out;
-> +       }
-> +
-> +       BN_bn2bin(ctx.q1, q1);
-> +       BN_bn2bin(ctx.q2, q2);
-> +
-> +       free_q1q2_ctx(&ctx);
-> +       return true;
-> +out:
-> +       free_q1q2_ctx(&ctx);
-> +       return false;
-> +}
-> +
-> +static bool save_sigstruct(const struct sgx_sigstruct *sigstruct,
-> +                          const char *path)
-> +{
-> +       FILE *f = fopen(path, "wb");
-> +
-> +       if (!f) {
-> +               fprintf(stderr, "Unable to open %s\n", path);
-> +               return false;
-> +       }
-> +
-> +       fwrite(sigstruct, sizeof(*sigstruct), 1, f);
-> +       fclose(f);
-> +       return true;
-> +}
-> +
-> +int main(int argc, char **argv)
-> +{
-> +       uint64_t header1[2] = {0x000000E100000006, 0x0000000000010000};
-> +       uint64_t header2[2] = {0x0000006000000101, 0x0000000100000060};
-> +       struct sgx_sigstruct ss;
-> +       const char *program;
-> +       int opt;
-> +       RSA *sign_key;
-> +
-> +       memset(&ss, 0, sizeof(ss));
-> +       ss.header.header1[0] = header1[0];
-> +       ss.header.header1[1] = header1[1];
-> +       ss.header.header2[0] = header2[0];
-> +       ss.header.header2[1] = header2[1];
-> +       ss.exponent = 3;
-> +
-> +#ifndef CONFIG_EINITTOKENKEY
-> +       ss.body.attributes = SGX_ATTR_MODE64BIT;
-> +#else
-> +       ss.body.attributes = SGX_ATTR_MODE64BIT | SGX_ATTR_EINITTOKENKEY;
-> +#endif
-> +       ss.body.xfrm = 3,
-> +
-> +       program = argv[0];
-> +
-> +       do {
-> +               opt = getopt(argc, argv, "");
-> +               switch (opt) {
-> +               case -1:
-> +                       break;
-> +               default:
-> +                       exit_usage(program);
-> +               }
-> +       } while (opt != -1);
-> +
-> +       argc -= optind;
-> +       argv += optind;
-> +
-> +       if (argc < 3)
-> +               exit_usage(program);
-> +
-> +       /* sanity check only */
-> +       if (check_crypto_errors())
-> +               exit(1);
-> +
-> +       sign_key = load_sign_key(argv[0]);
-> +       if (!sign_key)
-> +               goto out;
-> +
-> +       BN_bn2bin(get_modulus(sign_key), ss.modulus);
-> +
-> +       if (!measure_encl(argv[1], ss.body.mrenclave))
-> +               goto out;
-> +
-> +       if (!sign_encl(&ss, sign_key, ss.signature))
-> +               goto out;
-> +
-> +       if (!calc_q1q2(ss.signature, ss.modulus, ss.q1, ss.q2))
-> +               goto out;
-> +
-> +       /* convert to little endian */
-> +       reverse_bytes(ss.signature, SGX_MODULUS_SIZE);
-> +       reverse_bytes(ss.modulus, SGX_MODULUS_SIZE);
-> +       reverse_bytes(ss.q1, SGX_MODULUS_SIZE);
-> +       reverse_bytes(ss.q2, SGX_MODULUS_SIZE);
-> +
-> +       if (!save_sigstruct(&ss, argv[2]))
-> +               goto out;
-> +       exit(0);
-> +out:
-> +       check_crypto_errors();
-> +       exit(1);
-> +}
-> diff --git a/tools/testing/selftests/x86/sgx/signing_key.pem b/tools/testing/selftests/x86/sgx/signing_key.pem
-> new file mode 100644
-> index 000000000000..d76f21f19187
-> --- /dev/null
-> +++ b/tools/testing/selftests/x86/sgx/signing_key.pem
-> @@ -0,0 +1,39 @@
-> +-----BEGIN RSA PRIVATE KEY-----
-> +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
-> +-----END RSA PRIVATE KEY-----
-> --
-> 2.25.0
->
-
+-- 
+Regards,
+Niklas Söderlund
