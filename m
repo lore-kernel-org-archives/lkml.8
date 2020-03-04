@@ -2,38 +2,39 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB627C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84808C3F2DA
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8831E20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6650C20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:53:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387949AbgCDKxB (ORCPT
+        id S2387965AbgCDKxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:53:01 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:61986 "EHLO
+        Wed, 4 Mar 2020 05:53:05 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:43875 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387905AbgCDKw5 (ORCPT
+        with ESMTP id S2387850AbgCDKw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:52:57 -0500
+        Wed, 4 Mar 2020 05:52:58 -0500
 Received: from 79.184.237.41.ipv4.supernova.orange.pl (79.184.237.41) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 8085f99e0095f875; Wed, 4 Mar 2020 11:52:56 +0100
+ id c8a51d99c2fb8d5f; Wed, 4 Mar 2020 11:52:57 +0100
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux ACPI <linux-acpi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
         Daniel Drake <drake@endlessm.com>,
         Jian-Hong Pan <jian-hong@endlessm.com>
-Subject: [PATCH v2 1/6] ACPI: EC: Avoid printing confusing messages in acpi_ec_setup()
-Date:   Wed, 04 Mar 2020 11:44:46 +0100
-Message-ID: <2452684.omWlTi7MXd@kreacher>
-In-Reply-To: <2411774.6kdisLRoUK@kreacher>
-References: <2094703.CetWLLyMuz@kreacher> <2411774.6kdisLRoUK@kreacher>
+Subject: [PATCH v2 0/6] ACPI: EC: Updates related to initialization
+Date:   Wed, 04 Mar 2020 11:42:07 +0100
+Message-ID: <2411774.6kdisLRoUK@kreacher>
+In-Reply-To: <2094703.CetWLLyMuz@kreacher>
+References: <2094703.CetWLLyMuz@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -42,68 +43,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Hi All,
 
-It doesn't really make sense to pass ec->handle of the ECDT EC to
-acpi_handle_info(), because it is set to ACPI_ROOT_OBJECT in
-acpi_ec_ecdt_probe(), so rework acpi_ec_setup() to avoid using
-acpi_handle_info() for printing messages.
+On Thursday, February 27, 2020 11:19:19 PM CET Rafael J. Wysocki wrote:
+> 
+> The purpose of this series of update of the ACPI EC driver is to make its
+> initialization more straightforward.
+> 
+> They fix a couple of issues, clean up some things, remove redundant code etc.
+> 
+> Please refer to the changelogs of individual patches for details.
+> 
+> For easier access, the series is available in the git branch at
+> 
+>  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
+>  acpi-ec-work
+> 
+> on top of 5.6-rc3.
 
-First, notice that the "Used as first EC" message is not really
-useful, because it is immediately followed by a more meaningful one
-from either acpi_ec_ecdt_probe() or acpi_ec_dsdt_probe() (the latter
-also includes the EC object path), so drop it altogether.
+The above is still true, including the location of the git branch containing
+the changes.
 
-Second, use pr_info() for printing the EC configuration information.
+Since the original submission, the series has been rearranged to reduce
+artificial dependencies between the patches and the last patch (previously
+[4/6]) has been reworked to take deferred probing into account properly.
 
-While at it, make the code in question avoid printing invalid GPE or
-IRQ numbers and make it print the GPE/IRQ information only when the
-driver is ready to handle events.
-
-Fixes: 72c77b7ea9ce ("ACPI / EC: Cleanup first_ec/boot_ec code")
-Fixes: 406857f773b0 ("ACPI: EC: add support for hardware-reduced systems")
-Cc: 5.5+ <stable@vger.kernel.org> # 5.5+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
--> v2: No changes.
-
----
- drivers/acpi/ec.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/acpi/ec.c b/drivers/acpi/ec.c
-index d1f1cf5d4bf0..2dc7cf2aeb21 100644
---- a/drivers/acpi/ec.c
-+++ b/drivers/acpi/ec.c
-@@ -1584,14 +1584,19 @@ static int acpi_ec_setup(struct acpi_ec *ec, struct acpi_device *device,
- 		return ret;
- 
- 	/* First EC capable of handling transactions */
--	if (!first_ec) {
-+	if (!first_ec)
- 		first_ec = ec;
--		acpi_handle_info(first_ec->handle, "Used as first EC\n");
-+
-+	pr_info("EC_CMD/EC_SC=0x%lx, EC_DATA=0x%lx\n", ec->command_addr,
-+		ec->data_addr);
-+
-+	if (test_bit(EC_FLAGS_EVENT_HANDLER_INSTALLED, &ec->flags)) {
-+		if (ec->gpe >= 0)
-+			pr_info("GPE=0x%x\n", ec->gpe);
-+		else
-+			pr_info("IRQ=%d\n", ec->irq);
- 	}
- 
--	acpi_handle_info(ec->handle,
--			 "GPE=0x%x, IRQ=%d, EC_CMD/EC_SC=0x%lx, EC_DATA=0x%lx\n",
--			 ec->gpe, ec->irq, ec->command_addr, ec->data_addr);
- 	return ret;
- }
- 
--- 
-2.16.4
-
+Thanks!
 
 
 
