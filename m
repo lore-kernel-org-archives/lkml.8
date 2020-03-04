@@ -2,141 +2,111 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E66C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AF8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:43:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488D2206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B937206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:43:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R9oc37cK"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="L24u5zqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbgCDAlu (ORCPT
+        id S2387410AbgCDAnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:41:50 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44755 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727864AbgCDAlt (ORCPT
+        Tue, 3 Mar 2020 19:43:05 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:33472 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727864AbgCDAnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:41:49 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d9so185477plo.11
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:41:49 -0800 (PST)
+        Tue, 3 Mar 2020 19:43:05 -0500
+Received: by mail-qk1-f196.google.com with SMTP id p62so7106qkb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 16:43:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YfVtEcj6UdX9MlLwkKce0a0SqEPxlr08M2BShSj6sz4=;
-        b=R9oc37cKM6HR31dE+cdHh63uIXBkHcKj2SVq4onjdIGuhpm8Yit6zSuo6nOjn8Icz9
-         y/KaaDFRYq7lNQhoGjDagk7808ClitDdB7h+KWKqJPzF2irJsCDeGRwA2BLXkdjUbPDv
-         r9FgnQ6k5kFNrOKDG0dAblsDTNUMMw7edVUmo4WBc17QwVkzCdyIFxTjAYdESmhj8uKA
-         ZLVnLL1ZBP7fCG4f7NxcQEZd4sGmtjv8OTGoaTJl92u0EGEgiEBp9agcCmuY0KwFSnQf
-         0gCm5ZmH53ly8bmjStQah6mIbr1sHLJaS38TrRMSL+sxtvQdbZOOgOO4rsCyvYy2TDuQ
-         5log==
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wOjgETEggr7acXmXSIGKLYA84kpLrcA+aOyLjNXDSaw=;
+        b=L24u5zqDkHCBPaOj1oSrn6IQPgzZGnryJZeVmIyRZITl1GRSlm2vWmgiDWPb6UlNCa
+         hZZmmHLySwl37+ZRqpogB1VkAKXaTlIi7WqTlPaVS+b7YIhQa0b/wqwTo5IeAFn1Jtgl
+         uCi+r0RahZAfqaPh+2nq/7T0OIQhkrwiCM+yTj3N8PxqLD6gz4GOCkDRl6++fYML/rQv
+         jhm5o1hID6OaRxNCKMgayYNz62i7oEE7rc3Ms3nriNevMaotorpYTSYkKGBherhb5R9i
+         nUVUhJccEJGYcjKXw/h5IZ5qOGnqlkEfdx8atzZtYl0pR/uAZs/zqfk6GYx4PFlrf2Jk
+         A6AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YfVtEcj6UdX9MlLwkKce0a0SqEPxlr08M2BShSj6sz4=;
-        b=oKFqI60zoAX8azaoCtklxcA2uHolcA3cc6uXGQMcrWwyXML9tOUYCpkKxlIPmlsjUw
-         nYIFUDbExmRXw3v+O9qNqiuHBStqKK8SJlbEsW0L49gHTXd1l3Zkz6VnUY5mPssR6A6w
-         9MW4SglKUgetSgA4gVmz5kBBXvkp/Cvvl9nyFgDmxyMvLk8CcS2EfV2QxgjMEOs/SRCd
-         McMv6GCXvTk9KB02cDxNO8/5Fp9YPoutDG8K1DwLnnNU1GHjUuxprLXDlqNxCnM9tIlM
-         AJQk6EnzeOcudYxJtiwBUx7RkShBkD5ikBn5PDTqSIor1rURiOElsQHJkaTaOqUCSJ78
-         sTBw==
-X-Gm-Message-State: ANhLgQ0GJCmC35PXPhi/cSBc7XTjXFUNBg3qBJgyDuHRM4Q1guNeB5m/
-        3QUktdBP73E24vCvKQanBW4=
-X-Google-Smtp-Source: ADFU+vt1gCahnrlQeMaYVKC5/bMhhu48XKBNXqUNxKizUN0ORK7QP6GixhG6CpGGLEHwP9buzORqfw==
-X-Received: by 2002:a17:90a:da03:: with SMTP id e3mr233283pjv.57.1583282508819;
-        Tue, 03 Mar 2020 16:41:48 -0800 (PST)
-Received: from localhost.localdomain ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id x190sm26416523pfb.96.2020.03.03.16.41.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wOjgETEggr7acXmXSIGKLYA84kpLrcA+aOyLjNXDSaw=;
+        b=mXgc9jFGobz5Qeac5C/Toemryl364ufEKQBtDYGHjlsTg8AvJ+bAWqoFI0e8F6hmat
+         QQXRRQoCQgisJHbabMb+6vcaR7Yn76iFeOaPJ4+C3uq9IoboA0UaEXuERmVxOn5kpxKZ
+         j9md/mAkfgLOqQaPGsBQJCzkhzYHIg0QsTUy206pr98XNBqv3EIPFr3KtYsmIN7OLDir
+         TY42Sj8oSu5bMrnNCQ1RyOdT6k7oZmJoNYyQGXqWsMCgK60Vh165rntTwFe8epBIs4e3
+         3LV+77f44akkz7l1RsaaInF8W3rH6Yjy5HWGtWvJen/MAgPQ+Gn1CUdDf6WS3aNOxwXv
+         ssfg==
+X-Gm-Message-State: ANhLgQ2WbOSxtXjMg8zEpe+mNIRVnHEl75hqT996SBJ+8n/W8LXrLo70
+        sbwF9pJhvVfAx8aKRmIIDH0nLQ==
+X-Google-Smtp-Source: ADFU+vtT815ZqojFX5Xd5JyTcZYq1D4yYzc3QBiv54PBkSjODKMU8WjxMws4JqGmk+Jx1vFpgBEn7g==
+X-Received: by 2002:a37:7746:: with SMTP id s67mr634304qkc.127.1583282583953;
+        Tue, 03 Mar 2020 16:43:03 -0800 (PST)
+Received: from localhost (pool-96-232-200-60.nycmny.fios.verizon.net. [96.232.200.60])
+        by smtp.gmail.com with ESMTPSA id 8sm44239qke.80.2020.03.03.16.43.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 16:41:48 -0800 (PST)
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org
-Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Mark Salter <msalter@redhat.com>,
-        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
-Subject: [PATCH v3] c6x: replace setup_irq() by request_irq()
-Date:   Wed,  4 Mar 2020 06:11:43 +0530
-Message-Id: <20200304004143.3960-1-afzal.mohd.ma@gmail.com>
-X-Mailer: git-send-email 2.18.0
+        Tue, 03 Mar 2020 16:43:03 -0800 (PST)
+Date:   Tue, 3 Mar 2020 19:43:02 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Roman Gushchin <guro@fb.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        kernel-team@fb.com, linux-kernel@vger.kernel.org,
+        Bharata B Rao <bharata@linux.ibm.com>, stable@vger.kernel.org
+Subject: Re: [PATCH] mm: fork: fix kernel_stack memcg stats for various stack
+ implementations
+Message-ID: <20200304004302.GB76149@cmpxchg.org>
+References: <20200303233550.251375-1-guro@fb.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303233550.251375-1-guro@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-request_irq() is preferred over setup_irq(). Invocations of setup_irq()
-occur after memory allocators are ready.
+On Tue, Mar 03, 2020 at 03:35:50PM -0800, Roman Gushchin wrote:
+> Depending on CONFIG_VMAP_STACK and the THREAD_SIZE / PAGE_SIZE ratio
+> the space for task stacks can be allocated using __vmalloc_node_range(),
+> alloc_pages_node() and kmem_cache_alloc_node(). In the first and the
+> second cases page->mem_cgroup pointer is set, but in the third it's
+> not: memcg membership of a slab page should be determined using the
+> memcg_from_slab_page() function, which looks at
+> page->slab_cache->memcg_params.memcg . In this case, using
+> mod_memcg_page_state() (as in account_kernel_stack()) is incorrect:
+> page->mem_cgroup pointer is NULL even for pages charged to a non-root
+> memory cgroup.
+> 
+> It can lead to kernel_stack per-memcg counters permanently showing 0
+> on some architectures (depending on the configuration).
+> 
+> In order to fix it, let's introduce a mod_memcg_obj_state() helper,
+> which takes a pointer to a kernel object as a first argument, uses
+> mem_cgroup_from_obj() to get a RCU-protected memcg pointer and
+> calls mod_memcg_state(). It allows to handle all possible
+> configurations (CONFIG_VMAP_STACK and various THREAD_SIZE/PAGE_SIZE
+> values) without spilling any memcg/kmem specifics into fork.c .
+> 
+> Note: this patch has been first posted as a part of the new slab
+> controller patchset. This is a slightly updated version: the fixes
+> tag has been added and the commit log was extended by the advice
+> of Johannes Weiner. Because it's a fix that makes sense by itself,
+> I'm re-posting it as a standalone patch.
+> 
+> Fixes: 4d96ba353075 ("mm: memcg/slab: stop setting page->mem_cgroup pointer for slab pages")
+> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Cc: stable@vger.kernel.org
 
-Per tglx[1], setup_irq() existed in olden days when allocators were not
-ready by the time early interrupts were initialized.
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-Hence replace setup_irq() by request_irq().
-
-[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
----
-Hi Mark Salter,
-
-i believe you are the maintainer of c6x, if you are okay w/ this change,
-please consider taking it thr' your tree, else please let me know.
-
-Regards
-afzal
-
-Link to v2 & v1,
-[v2] https://lkml.kernel.org/r/cover.1582471508.git.afzal.mohd.ma@gmail.com
-[v1] https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
-
-v3:
- * Split out from tree wide series, as Thomas suggested to get it thr'
-	respective maintainers
- * Modify pr_err displayed in case of error
- * Re-arrange code & choose pr_err args as required to improve readability
- * Remove irrelevant parts from commit message & improve
- 
-v2:
- * Replace pr_err("request_irq() on %s failed" by
-           pr_err("%s: request_irq() failed"
- * Commit message massage
-
- arch/c6x/platforms/timer64.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
-
-diff --git a/arch/c6x/platforms/timer64.c b/arch/c6x/platforms/timer64.c
-index d98d94303498..661f4c7c6ef6 100644
---- a/arch/c6x/platforms/timer64.c
-+++ b/arch/c6x/platforms/timer64.c
-@@ -165,13 +165,6 @@ static irqreturn_t timer_interrupt(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction timer_iact = {
--	.name		= "timer",
--	.flags		= IRQF_TIMER,
--	.handler	= timer_interrupt,
--	.dev_id		= &t64_clockevent_device,
--};
--
- void __init timer64_init(void)
- {
- 	struct clock_event_device *cd = &t64_clockevent_device;
-@@ -238,7 +231,9 @@ void __init timer64_init(void)
- 	cd->cpumask		= cpumask_of(smp_processor_id());
- 
- 	clockevents_register_device(cd);
--	setup_irq(cd->irq, &timer_iact);
-+	if (request_irq(cd->irq, timer_interrupt, IRQF_TIMER, "timer",
-+			&t64_clockevent_device))
-+		pr_err("Failed to request irq %d (timer)\n", cd->irq);
- 
- out:
- 	of_node_put(np);
--- 
-2.25.1
-
+Thanks for pointing out the user impact.
