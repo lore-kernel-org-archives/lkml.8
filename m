@@ -2,111 +2,282 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86BFDC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537CEC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5667324658
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583343564;
-	bh=zmIwO51Hh63E1n4MRaJjKLbrwtR5cfkgw9392d7mZws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JX/dqneipSbMiDQ9ri5FDu3Ap6jL6BZ4lIDF7BURWqGHTPuuG9gYQ0OjA4cHT3l3j
-	 WKjtfMfnffdp9clmBqjMhq8C8Bfd+2k25Yg3W7nk249xXqKC2NFdU5O5rdjs+2x03N
-	 e8Mk6eF8/qSPxNnggNR0ktpkyaTHaAEAiSIWTIlk=
+	by mail.kernel.org (Postfix) with ESMTP id 2B3DA22B48
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgCDRjX (ORCPT
+        id S1730011AbgCDRjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:39:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53430 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 12:39:31 -0500
+Received: from foss.arm.com ([217.140.110.172]:37674 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727084AbgCDRjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:39:23 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC64722B48;
-        Wed,  4 Mar 2020 17:39:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583343562;
-        bh=zmIwO51Hh63E1n4MRaJjKLbrwtR5cfkgw9392d7mZws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xZh5c4jDIW0uTlWHNG1M7ujBNVkDJZuO6YnMu46FwMPJs6WWSnWSxQaruozBa0kg6
-         tAfCOf8aFk5I7PwG/VJEj5qEgdtxQ7vXsCCx+wyvd0p+3eG4x/K9Pduom66bgdIOGP
-         73DdrjeItnicDz0iw+EccziwygH57A3bzSP/bjSQ=
-Date:   Wed, 4 Mar 2020 18:39:20 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Machek <pavel@denx.de>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Peter Chen <peter.chen@nxp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 60/87] usb: charger: assign specific number for enum
- value
-Message-ID: <20200304173920.GA1866286@kroah.com>
-References: <20200303174349.075101355@linuxfoundation.org>
- <20200303174355.750234821@linuxfoundation.org>
- <20200304172736.GC2367@duo.ucw.cz>
+        id S1726561AbgCDRja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 12:39:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC17831B;
+        Wed,  4 Mar 2020 09:39:29 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5981D3F6CF;
+        Wed,  4 Mar 2020 09:39:28 -0800 (PST)
+Date:   Wed, 4 Mar 2020 17:39:26 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Pavan Kondeti <pkondeti@codeaurora.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 1/6] sched/rt: cpupri_find: Implement fallback
+ mechanism for !fit case
+Message-ID: <20200304173925.43xq4wztummxgs3x@e107158-lin.cambridge.arm.com>
+References: <20200302132721.8353-1-qais.yousef@arm.com>
+ <20200302132721.8353-2-qais.yousef@arm.com>
+ <20200304112739.7b99677e@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200304172736.GC2367@duo.ucw.cz>
+In-Reply-To: <20200304112739.7b99677e@gandalf.local.home>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 06:27:36PM +0100, Pavel Machek wrote:
-> On Tue 2020-03-03 18:43:51, Greg Kroah-Hartman wrote:
-> > From: Peter Chen <peter.chen@nxp.com>
-> > 
-> > commit ca4b43c14cd88d28cfc6467d2fa075aad6818f1d upstream.
-> > 
-> > To work properly on every architectures and compilers, the enum value
-> > needs to be specific numbers.
+On 03/04/20 11:27, Steven Rostedt wrote:
+> On Mon,  2 Mar 2020 13:27:16 +0000
+> Qais Yousef <qais.yousef@arm.com> wrote:
 > 
-> All compilers are expected to handle this in the same way, as this is
-> in C standard. This patch is not neccessary, and should not be in mainline,
-> either.
 > 
-> http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1124.pdf
+> >  /**
+> >   * cpupri_find - find the best (lowest-pri) CPU in the system
+> >   * @cp: The cpupri context
+> > @@ -62,80 +115,72 @@ int cpupri_find(struct cpupri *cp, struct task_struct *p,
+> >  		struct cpumask *lowest_mask,
+> >  		bool (*fitness_fn)(struct task_struct *p, int cpu))
+> >  {
+> > -	int idx = 0;
+> >  	int task_pri = convert_prio(p->prio);
+> > +	int best_unfit_idx = -1;
+> > +	int idx = 0, cpu;
 > 
-> 6.7.2.2 Enumeration specifiers
-> Syntax
-> ...
-> 3 The identifiers in an enumerator list are declared as constants that have type int and
-> may appear wherever such are permitted.107) An enumerator with = defines its
-> enumeration constant as the value of the constant expression. If the first enumerator has
-> no =, the value of its enumeration constant is 0. Each subsequent enumerator with no =
-> defines its enumeration constant as the value of the constant expression obtained by
-> adding 1 to the value of the previous enumeration constant. (The use of enumerators with
-> = may produce enumeration constants with values that duplicate other values in the same
-> enumeration.) The enumerators of an enumeration are also known as its members.
-> 
-> Best regards,
-> 								Pavel
-> 
-> >  enum usb_charger_type {
-> > -	UNKNOWN_TYPE,
-> > -	SDP_TYPE,
-> > -	DCP_TYPE,
-> > -	CDP_TYPE,
-> > -	ACA_TYPE,
-> > +	UNKNOWN_TYPE = 0,
-> > +	SDP_TYPE = 1,
-> > +	DCP_TYPE = 2,
-> > +	CDP_TYPE = 3,
-> > +	ACA_TYPE = 4,
-> >  };
+> Nit, but if you moved idx, might as well remove the unnecessary
+> initialization of it as well ;-)
 
-It specified that we need to do this by the in-kernel documentation
-about how to write a solid api (which I can't find at the moment to
-point you at, sorry...)  Also, you pointed at a draft C standard, is
-that really implemented by older compilers?
+Sure :)
 
-thanks,
+> 
+> >  
+> >  	BUG_ON(task_pri >= CPUPRI_NR_PRIORITIES);
+> >  
+> >  	for (idx = 0; idx < task_pri; idx++) {
+> 
+> It's initialized here.
+> 
+> > -		struct cpupri_vec *vec  = &cp->pri_to_cpu[idx];
+> > -		int skip = 0;
+> >  
+> > -		if (!atomic_read(&(vec)->count))
+> > -			skip = 1;
+> > -		/*
+> > -		 * When looking at the vector, we need to read the counter,
+> > -		 * do a memory barrier, then read the mask.
+> > -		 *
+> > -		 * Note: This is still all racey, but we can deal with it.
+> > -		 *  Ideally, we only want to look at masks that are set.
+> > -		 *
+> > -		 *  If a mask is not set, then the only thing wrong is that we
+> > -		 *  did a little more work than necessary.
+> > -		 *
+> > -		 *  If we read a zero count but the mask is set, because of the
+> > -		 *  memory barriers, that can only happen when the highest prio
+> > -		 *  task for a run queue has left the run queue, in which case,
+> > -		 *  it will be followed by a pull. If the task we are processing
+> > -		 *  fails to find a proper place to go, that pull request will
+> > -		 *  pull this task if the run queue is running at a lower
+> > -		 *  priority.
+> > -		 */
+> > -		smp_rmb();
+> > -
+> > -		/* Need to do the rmb for every iteration */
+> > -		if (skip)
+> > -			continue;
+> > -
+> > -		if (cpumask_any_and(p->cpus_ptr, vec->mask) >= nr_cpu_ids)
+> > +		if (!__cpupri_find(cp, p, lowest_mask, idx))
+> >  			continue;
+> >  
+> > -		if (lowest_mask) {
+> > -			int cpu;
+> > +		if (!lowest_mask || !fitness_fn)
+> > +			return 1;
+> >  
+> > -			cpumask_and(lowest_mask, p->cpus_ptr, vec->mask);
+> > +		/* Ensure the capacity of the CPUs fit the task */
+> > +		for_each_cpu(cpu, lowest_mask) {
+> > +			if (!fitness_fn(p, cpu))
+> > +				cpumask_clear_cpu(cpu, lowest_mask);
+> > +		}
+> >  
+> > +		/*
+> > +		 * If no CPU at the current priority can fit the task
+> > +		 * continue looking
+> > +		 */
+> > +		if (cpumask_empty(lowest_mask)) {
+> >  			/*
+> > -			 * We have to ensure that we have at least one bit
+> > -			 * still set in the array, since the map could have
+> > -			 * been concurrently emptied between the first and
+> > -			 * second reads of vec->mask.  If we hit this
+> > -			 * condition, simply act as though we never hit this
+> > -			 * priority level and continue on.
+> > +			 * Store our fallback priority in case we
+> > +			 * didn't find a fitting CPU
+> >  			 */
+> > -			if (cpumask_empty(lowest_mask))
+> > -				continue;
+> > +			if (best_unfit_idx == -1)
+> > +				best_unfit_idx = idx;
+> >  
+> > -			if (!fitness_fn)
+> > -				return 1;
+> > -
+> > -			/* Ensure the capacity of the CPUs fit the task */
+> > -			for_each_cpu(cpu, lowest_mask) {
+> > -				if (!fitness_fn(p, cpu))
+> > -					cpumask_clear_cpu(cpu, lowest_mask);
+> > -			}
+> > -
+> > -			/*
+> > -			 * If no CPU at the current priority can fit the task
+> > -			 * continue looking
+> > -			 */
+> > -			if (cpumask_empty(lowest_mask))
+> > -				continue;
+> > +			continue;
+> >  		}
+> >  
+> >  		return 1;
+> >  	}
+> >  
+> > +	/*
+> > +	 * If we failed to find a fitting lowest_mask, make sure we fall back
+> > +	 * to the last known unfitting lowest_mask.
+> > +	 *
+> > +	 * Note that the map of the recorded idx might have changed since then,
+> > +	 * so we must ensure to do the full dance to make sure that level still
+> > +	 * holds a valid lowest_mask.
+> > +	 *
+> > +	 * As per above, the map could have been concurrently emptied while we
+> > +	 * were busy searching for a fitting lowest_mask at the other priority
+> > +	 * levels.
+> > +	 *
+> > +	 * This rule favours honouring priority over fitting the task in the
+> > +	 * correct CPU (Capacity Awareness being the only user now).
+> > +	 * The idea is that if a higher priority task can run, then it should
+> > +	 * run even if this ends up being on unfitting CPU.
+> > +	 *
+> > +	 * The cost of this trade-off is not entirely clear and will probably
+> > +	 * be good for some workloads and bad for others.
+> > +	 *
+> > +	 * The main idea here is that if some CPUs were overcommitted, we try
+> > +	 * to spread which is what the scheduler traditionally did. Sys admins
+> > +	 * must do proper RT planning to avoid overloading the system if they
+> > +	 * really care.
+> > +	 */
+> > +	if (best_unfit_idx != -1)
+> > +		return __cpupri_find(cp, p, lowest_mask, best_unfit_idx);
+> 
+> Hmm, this only checks the one index, which can change and then we miss
+> everything. I think we can do better. What about this:
 
-greg k-h
+Hmm. I see 2 issues with this approach:
+
+> 
+> 
+>         for (idx = 0; idx < task_pri; idx++) {
+> 		int found = -1;
+> 
+>                 if (!__cpupri_find(cp, p, lowest_mask, idx))
+>                         continue;
+
+1.
+
+__cpupri_find() could update the lowest_mask at the next iteration, so the
+fallback wouldn't be the lowest level, right?
+
+> 
+>                 if (!lowest_mask || !fitness_fn)
+>                         return 1;
+> 
+> 		/* Make sure we have one fit CPU before clearing */
+> 		for_each_cpu(cpu, lowest_mask) {
+> 			if (fitness_fn(p, cpu)) {
+> 				found = cpu;
+> 				break;
+> 			}
+> 		}
+> 
+> 		if (found == -1)
+> 			continue;
+
+2.
+
+If we fix 1, then assuming found == -1 for all level, we'll still have the
+problem that the mask is stale.
+
+We can do a full scan again as Tao was suggestion, the 2nd one without any
+fitness check that is. But isn't this expensive?
+
+We risk the mask being stale anyway directly after selecting it. Or a priority
+level might become the lowest level just after we dismissed it.
+
+So our best effort could end up lying even if we do the right thing (TM).
+
+> 
+>                 /* Ensure the capacity of the CPUs fit the task */
+>                 for_each_cpu(cpu, lowest_mask) {
+>                         if (cpu < found || !fitness_fn(p, cpu))
+>                                 cpumask_clear_cpu(cpu, lowest_mask);
+>                 }
+> 
+>                 return 1;
+>         }
+> 
+> This way, if nothing fits we return the untouched lowest_mask, and only
+> clear the lowest_mask bits if we found a fitness cpu.
+
+Because of 1, I think the lowest mask will not be the true lowest mask, no?
+Please correct me if I missed something.
+
+There's another 'major' problem that I need to bring your attention to,
+find_lowest_rq() always returns the first CPU in the mask.
+
+See discussion below for more details
+
+	https://lore.kernel.org/lkml/20200219140243.wfljmupcrwm2jelo@e107158-lin/
+
+In my test because multiple tasks wakeup together they all end up going to CPU1
+(the first fitting CPU in the mask), then just to be pushed back again. Not
+necessarily to where they were running before.
+
+Not sure if there are other situations where this could happen.
+
+If we fix this problem then we can help reduce the effect of this raciness in
+find_lowest_rq(), and end up with less ping-ponging if tasks happen to
+wakeup/sleep at the wrong time during the scan.
+
+Or maybe there is a way to eliminate all these races with the current design?
+
+Thanks
+
+--
+Qais Yousef
