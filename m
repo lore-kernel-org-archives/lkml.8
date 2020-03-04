@@ -2,112 +2,85 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32472C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE8C8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1424820848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:37:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B863020848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:41:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583325668;
+	bh=jNEaYxh5Fbbk4JweyFBVsD+Lzsdt6itFGpc7/yDJ9GQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VZFeC5RicqTKfLchHG9iDwgZTdVz3b3QRCy7UssBomnE9I+24LhL3W5nS1ICk0pVS
+	 K+uam7FrD42vD8Td/79jSKbNhtXG7DrhA0uMVNzLknhv3+p53HTmCHrrw2VNd8n3FV
+	 qZsBh3QVyWz5rVh33ocHA1ZqngpvWBN4m7Y1ku6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388045AbgCDMg7 (ORCPT
+        id S2388035AbgCDMlH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:36:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:33774 "EHLO foss.arm.com"
+        Wed, 4 Mar 2020 07:41:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388005AbgCDMg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:36:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E353731B;
-        Wed,  4 Mar 2020 04:36:57 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0CDB3F6C4;
-        Wed,  4 Mar 2020 04:36:56 -0800 (PST)
-Subject: Re: [PATCH v2] iommu/dma: Fix MSI reservation allocation
-To:     Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Eric Auger <eric.auger@redhat.com>, Joerg Roedel <jroedel@suse.de>,
-        Will Deacon <will@kernel.org>, stable@vger.kernel.org
-References: <20200304111117.3540-1-maz@kernel.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <35a91284-619e-398a-decc-2e3879702335@arm.com>
-Date:   Wed, 4 Mar 2020 12:36:54 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728953AbgCDMlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:41:07 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A16C620848;
+        Wed,  4 Mar 2020 12:41:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583325667;
+        bh=jNEaYxh5Fbbk4JweyFBVsD+Lzsdt6itFGpc7/yDJ9GQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EEeqGCZdCxzn023C97FHgCQxELIp8g8fZpmFex7KrfsOu/sKtHZxNeO4GwDhE1gkw
+         RhZXEt/5DO8wotiiS0D8bS2L7OUPf8xqeOPYoZDrZHgZ9cVVmWl9jqwdt6tzjyeZ6G
+         nyrbUks3DScJ190lyzbZYPk/zwqd7QkVFa7MLCUU=
+Date:   Wed, 4 Mar 2020 13:41:04 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL] PHY: For 5.6 -rc
+Message-ID: <20200304124104.GA1629188@kroah.com>
+References: <20200221115356.6587-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20200304111117.3540-1-maz@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221115356.6587-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/2020 11:11 am, Marc Zyngier wrote:
-> The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
-> structures doesn't match the way iommu_put_dma_cookie() frees them.
+On Fri, Feb 21, 2020 at 05:23:56PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Greg,
 > 
-> The former performs a single allocation of all the required structures,
-> while the latter tries to free them one at a time. It doesn't quite
-> work for the main use case (the GICv3 ITS where the range is 64kB)
-> when the base granule size is 4kB.
+> Please find the pull request for 5.6 -rc cycle below.
 > 
-> This leads to a nice slab corruption on teardown, which is easily
-> observable by simply creating a VF on a SRIOV-capable device, and
-> tearing it down immediately (no need to even make use of it).
-> Fortunately, this only affects systems where the ITS isn't translated
-> by the SMMU, which are both rare and non-standard.
+> It fixes an issue caused because of adding device_link_add() on platforms
+> which have cyclic dependency between PHY consumer and PHY provider.
 > 
-> Fix it by allocating iommu_dma_msi_page structures one at a time.
+> It also includes misc fixes in Motorola, TI and Broadcom's PHY driver.
+> Please see the tag message for the complete list of changes and let me
+> know if I have to change something.
+> 
+> Thanks
+> Kishon
+> 
+> The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+> 
+>   Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.6-rc
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Oops, just saw this now, sorry for not getting to it.  HOpefully all of
+these were in the pull request I just took.
 
-> Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Reviewed-by: Eric Auger <eric.auger@redhat.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: Joerg Roedel <jroedel@suse.de>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: stable@vger.kernel.org
-> ---
-> * From v1:
->    - Got rid of the superfluous error handling (Robin)
->    - Clarified that it only affects a very small set of systems
->    - Added Eric's RB (which I assume still stands)
-> 
->   drivers/iommu/dma-iommu.c | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> index a2e96a5fd9a7..ba128d1cdaee 100644
-> --- a/drivers/iommu/dma-iommu.c
-> +++ b/drivers/iommu/dma-iommu.c
-> @@ -177,15 +177,15 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
->   	start -= iova_offset(iovad, start);
->   	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
->   
-> -	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
-> -	if (!msi_page)
-> -		return -ENOMEM;
-> -
->   	for (i = 0; i < num_pages; i++) {
-> -		msi_page[i].phys = start;
-> -		msi_page[i].iova = start;
-> -		INIT_LIST_HEAD(&msi_page[i].list);
-> -		list_add(&msi_page[i].list, &cookie->msi_page_list);
-> +		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
-> +		if (!msi_page)
-> +			return -ENOMEM;
-> +
-> +		msi_page->phys = start;
-> +		msi_page->iova = start;
-> +		INIT_LIST_HEAD(&msi_page->list);
-> +		list_add(&msi_page->list, &cookie->msi_page_list);
->   		start += iovad->granule;
->   	}
->   
-> 
+thanks,
+
+greg k-h
