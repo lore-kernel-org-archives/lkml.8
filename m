@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88A8C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CA3C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E6E2146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2152146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:19:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HkgfDg34"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KrYHo+/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729725AbgCDTTP (ORCPT
+        id S1729566AbgCDTTI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:19:15 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37655 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729028AbgCDTTH (ORCPT
+        Wed, 4 Mar 2020 14:19:08 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:33910 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728955AbgCDTTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:19:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id q8so3874066wrm.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:19:06 -0800 (PST)
+        Wed, 4 Mar 2020 14:19:04 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z15so3900199wrl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:19:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=JH3iKdoX60vBDf5RPVZX6I6Dg2qntJTjRhn9rqqRbkU=;
-        b=HkgfDg34Y9S1r1aUYc2WzszZi+OHc7WMrHSZcuJ7UW0X9/KCI5F1lMKrYwIVuXVagU
-         6WA2SNU4O3Y7J4HukdiRqVubR4/J4mi3f7fwhSyhE+Bi/j8nhtqGvhSqgSovJKqCZCER
-         jAkauOChBh/Jd5NymJac7OCRGu5jOt6ftwkEQ=
+        bh=OnY0sLzc6EG75w+2zGbx52f2fr6wBzB9p2HqJRSWjIE=;
+        b=KrYHo+/bLsRjUZcEbIkwebji3qt7L79xT3U0cAYrKWEPwSuoqQx9lrwQVmBjPaeNbw
+         eQ+/lzkfmqPSd3QW1qa1wfD0mrKx6SlTRjSXWlsGPkaBFMLEr047YBzANy7ElGgtUKjU
+         rqjcRgXGtvkONacDRZFLmCfDWFm5CU2B1zaLg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=JH3iKdoX60vBDf5RPVZX6I6Dg2qntJTjRhn9rqqRbkU=;
-        b=Z17flSQIIB5VqhLKQ1BAhbtuVIUe7QmenHgOdHpRjAbOMvXhmJbfziQBo+H8WKHXYJ
-         V0ogEAf7W1Nht73yZl7YrxXd6B5Ihn72pBgCLNvPHwjx9C5tBnfF5jCMrbl4+Mo1Hcd8
-         ptzpI2v2f269+VZ1EF1QPJZZi7haR/+oxnFCpZsBn9KefOmLdoih6LT1TzkEcTuwpE75
-         aIJBye5D7Lkh4qiu9t+rdrjl3kw+n3Gkt4LCGTsQoYrSOMFx9kMAjm8Rf6PAkF2m8zxg
-         IL7nBl0YrdLCQN4S11qCv7E+6wZhz6RFpIeN4oplG9RV39JCDR+5ON7ndKdn1H8Qg4TR
-         9v+Q==
-X-Gm-Message-State: ANhLgQ0nY3UGN81xi+QhlVdFHSWV3StyLwe+FKJfP9k1GVgE+wit8rm9
-        hLG20FvZmuuFAUejh1I62hgtmA==
-X-Google-Smtp-Source: ADFU+vvM081dkI4BPq5Ksk1QLSoPEztpVw/YEoRfNQzv8OHVRkGJG40z3kFrTEgE8ZQ79OVR7enZnA==
-X-Received: by 2002:adf:fd92:: with SMTP id d18mr5749973wrr.16.1583349545947;
-        Wed, 04 Mar 2020 11:19:05 -0800 (PST)
+        bh=OnY0sLzc6EG75w+2zGbx52f2fr6wBzB9p2HqJRSWjIE=;
+        b=ploKO/jm1uiVEwxuEnjMQf7M8wYvrBI3jApdNeK2iSJPtske7LOEMGHox3P4n0z5G6
+         lk+DqC8WUqUHpLEbnjGvGlczxNvLnLzS7XJkIzDi0gt6cUAcfyWQgJslVsAOibao1W/c
+         T3pnTm/u+pXE960ageLmzT0HHfn4jTT2jDmJlRel377viGlYkCjWr6/rX7T1C+tUOwjH
+         0QGp753zp2cCSAzmdSeTkPRUDgtY43garBp2RFGUNUSxDgtOe96JRz44FltEjJLYplzd
+         bn9CH1mkpACTG54hqyPl0vO7JEDuL2fgCUqdRi8nDwpq55/IGrOpzsES9PE+Z6Gek3zL
+         JLfQ==
+X-Gm-Message-State: ANhLgQ2jJ4FEmo/20ns6i/q5Hoy+wdxPQ0UyTa2vbIaljQ7eMdfOsoN2
+        5CyLvBWlXIbcwn051I9Wv9t4zg==
+X-Google-Smtp-Source: ADFU+vvHwAciakiJxwlmepwHyW2J21FSSjWdRYPxPdRLAVA7EUQMGTrOrOYDWbPSeIo+YU+6uqiwjA==
+X-Received: by 2002:adf:e9c2:: with SMTP id l2mr5325388wrn.86.1583349542937;
+        Wed, 04 Mar 2020 11:19:02 -0800 (PST)
 Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id w9sm2018556wrn.35.2020.03.04.11.19.04
+        by smtp.gmail.com with ESMTPSA id w9sm2018556wrn.35.2020.03.04.11.19.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 11:19:05 -0800 (PST)
+        Wed, 04 Mar 2020 11:19:02 -0800 (PST)
 From:   KP Singh <kpsingh@chromium.org>
 To:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, bpf@vger.kernel.org
@@ -62,9 +62,9 @@ Cc:     Andrii Nakryiko <andriin@fb.com>,
         Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
         Florent Revest <revest@chromium.org>,
         Brendan Jackman <jackmanb@chromium.org>
-Subject: [PATCH bpf-next v4 7/7] bpf: Add selftests for BPF_MODIFY_RETURN
-Date:   Wed,  4 Mar 2020 20:18:53 +0100
-Message-Id: <20200304191853.1529-8-kpsingh@chromium.org>
+Subject: [PATCH bpf-next v4 4/7] bpf: Attachment verification for BPF_MODIFY_RETURN
+Date:   Wed,  4 Mar 2020 20:18:50 +0100
+Message-Id: <20200304191853.1529-5-kpsingh@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200304191853.1529-1-kpsingh@chromium.org>
 References: <20200304191853.1529-1-kpsingh@chromium.org>
@@ -77,212 +77,122 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: KP Singh <kpsingh@google.com>
 
-Test for two scenarios:
+- Allow BPF_MODIFY_RETURN attachment only to functions that are:
 
-  * When the fmod_ret program returns 0, the original function should
-    be called along with fentry and fexit programs.
-  * When the fmod_ret program returns a non-zero value, the original
-    function should not be called, no side effect should be observed and
-    fentry and fexit programs should be called.
+    * Whitelisted for error injection by checking
+      within_error_injection_list. Similar discussions happened for the
+      bpf_override_return helper.
 
-The result from the kernel function call and whether a side-effect is
-observed is returned via the retval attr of the BPF_PROG_TEST_RUN (bpf)
-syscall.
+    * security hooks, this is expected to be cleaned up with the LSM
+      changes after the KRSI patches introduce the LSM_HOOK macro:
+
+        https://lore.kernel.org/bpf/20200220175250.10795-1-kpsingh@chromium.org/
+
+- The attachment is currently limited to functions that return an int.
+  This can be extended later other types (e.g. PTR).
 
 Signed-off-by: KP Singh <kpsingh@google.com>
 Acked-by: Andrii Nakryiko <andriin@fb.com>
 ---
- net/bpf/test_run.c                            | 22 ++++++-
- .../selftests/bpf/prog_tests/modify_return.c  | 65 +++++++++++++++++++
- .../selftests/bpf/progs/modify_return.c       | 49 ++++++++++++++
- 3 files changed, 135 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/bpf/prog_tests/modify_return.c
- create mode 100644 tools/testing/selftests/bpf/progs/modify_return.c
+ kernel/bpf/btf.c      | 28 ++++++++++++++++++++--------
+ kernel/bpf/verifier.c | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+), 8 deletions(-)
 
-diff --git a/net/bpf/test_run.c b/net/bpf/test_run.c
-index 3600f098e7c6..4c921f5154e0 100644
---- a/net/bpf/test_run.c
-+++ b/net/bpf/test_run.c
-@@ -10,6 +10,7 @@
- #include <net/bpf_sk_storage.h>
- #include <net/sock.h>
- #include <net/tcp.h>
-+#include <linux/error-injection.h>
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/bpf_test_run.h>
-@@ -143,6 +144,14 @@ int noinline bpf_fentry_test6(u64 a, void *b, short c, int d, void *e, u64 f)
- 	return a + (long)b + c + d + (long)e + f;
- }
- 
-+int noinline bpf_modify_return_test(int a, int *b)
-+{
-+	*b += 1;
-+	return a + *b;
-+}
-+
-+ALLOW_ERROR_INJECTION(bpf_modify_return_test, ERRNO);
-+
- static void *bpf_test_init(const union bpf_attr *kattr, u32 size,
- 			   u32 headroom, u32 tailroom)
- {
-@@ -168,7 +177,9 @@ int bpf_prog_test_run_tracing(struct bpf_prog *prog,
- 			      const union bpf_attr *kattr,
- 			      union bpf_attr __user *uattr)
- {
--	int err = -EFAULT;
-+	u16 side_effect = 0, ret = 0;
-+	int b = 2, err = -EFAULT;
-+	u32 retval = 0;
- 
- 	switch (prog->expected_attach_type) {
- 	case BPF_TRACE_FENTRY:
-@@ -181,10 +192,19 @@ int bpf_prog_test_run_tracing(struct bpf_prog *prog,
- 		    bpf_fentry_test6(16, (void *)17, 18, 19, (void *)20, 21) != 111)
- 			goto out;
- 		break;
-+	case BPF_MODIFY_RETURN:
-+		ret = bpf_modify_return_test(1, &b);
-+		if (b != 2)
-+			side_effect = 1;
-+		break;
- 	default:
- 		goto out;
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 30841fb8b3c0..50080add2ab9 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -3710,14 +3710,26 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
+ 		nr_args--;
  	}
  
-+	retval = ((u32)side_effect << 16) | ret;
-+	if (copy_to_user(&uattr->test.retval, &retval, sizeof(retval)))
-+		goto out;
+-	if ((prog->expected_attach_type == BPF_TRACE_FEXIT ||
+-	     prog->expected_attach_type == BPF_MODIFY_RETURN) &&
+-	    arg == nr_args) {
+-		if (!t)
+-			/* Default prog with 5 args. 6th arg is retval. */
+-			return true;
+-		/* function return type */
+-		t = btf_type_by_id(btf, t->type);
++	if (arg == nr_args) {
++		if (prog->expected_attach_type == BPF_TRACE_FEXIT) {
++			if (!t)
++				return true;
++			t = btf_type_by_id(btf, t->type);
++		} else if (prog->expected_attach_type == BPF_MODIFY_RETURN) {
++			/* For now the BPF_MODIFY_RETURN can only be attached to
++			 * functions that return an int.
++			 */
++			if (!t)
++				return false;
 +
- 	err = 0;
- out:
- 	trace_bpf_test_finish(&err);
-diff --git a/tools/testing/selftests/bpf/prog_tests/modify_return.c b/tools/testing/selftests/bpf/prog_tests/modify_return.c
-new file mode 100644
-index 000000000000..97fec70c600b
---- /dev/null
-+++ b/tools/testing/selftests/bpf/prog_tests/modify_return.c
-@@ -0,0 +1,65 @@
-+// SPDX-License-Identifier: GPL-2.0
++			t = btf_type_skip_modifiers(btf, t->type, NULL);
++			if (!btf_type_is_int(t)) {
++				bpf_log(log,
++					"ret type %s not allowed for fmod_ret\n",
++					btf_kind_str[BTF_INFO_KIND(t->info)]);
++				return false;
++			}
++		}
+ 	} else if (arg >= nr_args) {
+ 		bpf_log(log, "func '%s' doesn't have %d-th argument\n",
+ 			tname, arg + 1);
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 2460c8e6b5be..ae32517d4ccd 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -19,6 +19,7 @@
+ #include <linux/sort.h>
+ #include <linux/perf_event.h>
+ #include <linux/ctype.h>
++#include <linux/error-injection.h>
+ 
+ #include "disasm.h"
+ 
+@@ -9800,6 +9801,33 @@ static int check_struct_ops_btf_id(struct bpf_verifier_env *env)
+ 
+ 	return 0;
+ }
++#define SECURITY_PREFIX "security_"
 +
-+/*
-+ * Copyright 2020 Google LLC.
-+ */
-+
-+#include <test_progs.h>
-+#include "modify_return.skel.h"
-+
-+#define LOWER(x) ((x) & 0xffff)
-+#define UPPER(x) ((x) >> 16)
-+
-+
-+static void run_test(__u32 input_retval, __u16 want_side_effect, __s16 want_ret)
++static int check_attach_modify_return(struct bpf_verifier_env *env)
 +{
-+	struct modify_return *skel = NULL;
-+	int err, prog_fd;
-+	__u32 duration = 0, retval;
-+	__u16 side_effect;
-+	__s16 ret;
++	struct bpf_prog *prog = env->prog;
++	unsigned long addr = (unsigned long) prog->aux->trampoline->func.addr;
 +
-+	skel = modify_return__open_and_load();
-+	if (CHECK(!skel, "skel_load", "modify_return skeleton failed\n"))
-+		goto cleanup;
++	if (within_error_injection_list(addr))
++		return 0;
 +
-+	err = modify_return__attach(skel);
-+	if (CHECK(err, "modify_return", "attach failed: %d\n", err))
-+		goto cleanup;
-+
-+	skel->bss->input_retval = input_retval;
-+	prog_fd = bpf_program__fd(skel->progs.fmod_ret_test);
-+	err = bpf_prog_test_run(prog_fd, 1, NULL, 0, NULL, 0,
-+				&retval, &duration);
-+
-+	CHECK(err, "test_run", "err %d errno %d\n", err, errno);
-+
-+	side_effect = UPPER(retval);
-+	ret  = LOWER(retval);
-+
-+	CHECK(ret != want_ret, "test_run",
-+	      "unexpected ret: %d, expected: %d\n", ret, want_ret);
-+	CHECK(side_effect != want_side_effect, "modify_return",
-+	      "unexpected side_effect: %d\n", side_effect);
-+
-+	CHECK(skel->bss->fentry_result != 1, "modify_return",
-+	      "fentry failed\n");
-+	CHECK(skel->bss->fexit_result != 1, "modify_return",
-+	      "fexit failed\n");
-+	CHECK(skel->bss->fmod_ret_result != 1, "modify_return",
-+	      "fmod_ret failed\n");
-+
-+cleanup:
-+	modify_return__destroy(skel);
-+}
-+
-+void test_modify_return(void)
-+{
-+	run_test(0 /* input_retval */,
-+		 1 /* want_side_effect */,
-+		 4 /* want_ret */);
-+	run_test(-EINVAL /* input_retval */,
-+		 0 /* want_side_effect */,
-+		 -EINVAL /* want_ret */);
-+}
-+
-diff --git a/tools/testing/selftests/bpf/progs/modify_return.c b/tools/testing/selftests/bpf/progs/modify_return.c
-new file mode 100644
-index 000000000000..8b7466a15c6b
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/modify_return.c
-@@ -0,0 +1,49 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Copyright 2020 Google LLC.
-+ */
-+
-+#include <linux/bpf.h>
-+#include <bpf/bpf_helpers.h>
-+#include <bpf/bpf_tracing.h>
-+
-+char _license[] SEC("license") = "GPL";
-+
-+static int sequence = 0;
-+__s32 input_retval = 0;
-+
-+__u64 fentry_result = 0;
-+SEC("fentry/bpf_modify_return_test")
-+int BPF_PROG(fentry_test, int a, __u64 b)
-+{
-+	sequence++;
-+	fentry_result = (sequence == 1);
-+	return 0;
-+}
-+
-+__u64 fmod_ret_result = 0;
-+SEC("fmod_ret/bpf_modify_return_test")
-+int BPF_PROG(fmod_ret_test, int a, int *b, int ret)
-+{
-+	sequence++;
-+	/* This is the first fmod_ret program, the ret passed should be 0 */
-+	fmod_ret_result = (sequence == 2 && ret == 0);
-+	return input_retval;
-+}
-+
-+__u64 fexit_result = 0;
-+SEC("fexit/bpf_modify_return_test")
-+int BPF_PROG(fexit_test, int a, __u64 b, int ret)
-+{
-+	sequence++;
-+	/* If the input_reval is non-zero a successful modification should have
-+	 * occurred.
++	/* This is expected to be cleaned up in the future with the KRSI effort
++	 * introducing the LSM_HOOK macro for cleaning up lsm_hooks.h.
 +	 */
-+	if (input_retval)
-+		fexit_result = (sequence == 3 && ret == input_retval);
-+	else
-+		fexit_result = (sequence == 3 && ret == 4);
++	if (!strncmp(SECURITY_PREFIX, prog->aux->attach_func_name,
++		     sizeof(SECURITY_PREFIX) - 1)) {
 +
-+	return 0;
++		if (!capable(CAP_MAC_ADMIN))
++			return -EPERM;
++
++		return 0;
++	}
++
++	verbose(env, "fmod_ret attach_btf_id %u (%s) is not modifiable\n",
++		prog->aux->attach_btf_id, prog->aux->attach_func_name);
++
++	return -EINVAL;
 +}
+ 
+ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ {
+@@ -10000,6 +10028,9 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ 		}
+ 		tr->func.addr = (void *)addr;
+ 		prog->aux->trampoline = tr;
++
++		if (prog->expected_attach_type == BPF_MODIFY_RETURN)
++			ret = check_attach_modify_return(env);
+ out:
+ 		mutex_unlock(&tr->mutex);
+ 		if (ret)
 -- 
 2.20.1
 
