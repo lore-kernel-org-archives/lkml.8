@@ -2,261 +2,138 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6BBEC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864ABC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7733221744
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="joS53tQJ"
+	by mail.kernel.org (Postfix) with ESMTP id 6A34021739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729425AbgCDLIE (ORCPT
+        id S1729394AbgCDLID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:08:04 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:44172 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgCDLIB (ORCPT
+        Wed, 4 Mar 2020 06:08:03 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:45242 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729286AbgCDLIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 4 Mar 2020 06:08:01 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024B3kJp008287;
-        Wed, 4 Mar 2020 11:07:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
- bh=JLdZ0cB8n+9TLXBTjDiTs1wJ2xozCxHqyOnmFBylWSM=;
- b=joS53tQJZ4l++bXwLXk5tmxJglpt0QPN8/1/FqNFRe00fbelvYUjOKDEgxLKJTpPr1hN
- w4AGIkpVAzT45nhi/sgCnJSkvuJDP0zp236Y+Oe2OErd3+REzfg4BHdn7mHgCrUoihhF
- Hh3vRCbUBGzQ+r6c850BJfSV72354mbPUIQPkRtgN/VovNuQ8rHy/eFCY9IBbHNrIDmR
- h8Lpj3bdDTy99a62izQnA8/SxPV+E+NSuXN8tlJPHv18a8PVCZeNGTIapjOUf8OfrR8o
- Tk7HBw4PV0t6E9WC8RMSktUNhYjCQ+EwY0vwZPU9cU0mV+aSTfFGkJ7lC2c+4K7d7LMv bA== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2yffcunq9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Mar 2020 11:07:55 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024B2h24152477;
-        Wed, 4 Mar 2020 11:07:55 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2yg1epj2pk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 04 Mar 2020 11:07:55 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 024B7sEK012783;
-        Wed, 4 Mar 2020 11:07:54 GMT
-Received: from dhcp-10-175-165-222.vpn.oracle.com (/10.175.165.222)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 04 Mar 2020 03:07:53 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, frowand.list@gmail.com,
-        gregkh@linuxfoundation.org, shuah@kernel.org
-Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-doc@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v6 kunit-next 3/4] kunit: subtests should be indented 4 spaces according to TAP
-Date:   Wed,  4 Mar 2020 11:07:15 +0000
-Message-Id: <1583320036-442-4-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1583320036-442-1-git-send-email-alan.maguire@oracle.com>
-References: <1583320036-442-1-git-send-email-alan.maguire@oracle.com>
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 suspectscore=3 spamscore=0
- mlxlogscore=999 malwarescore=0 bulkscore=0 mlxscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003040086
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 mlxscore=0 bulkscore=0
- adultscore=0 suspectscore=3 spamscore=0 malwarescore=0 impostorscore=0
- priorityscore=1501 mlxlogscore=999 lowpriorityscore=0 clxscore=1015
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2003040086
+Received: from 79.184.237.41.ipv4.supernova.orange.pl (79.184.237.41) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 2bd8be21abd0c5ba; Wed, 4 Mar 2020 12:07:58 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     pavel@ucw.cz, len.brown@intel.com, gregkh@linuxfoundation.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        joel@joelfernandes.org, frextrite@gmail.com,
+        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
+Subject: Re: [PATCH 1/2] drivers: base: power: main.c: Use built-in RCU list checking
+Date:   Wed, 04 Mar 2020 12:07:58 +0100
+Message-ID: <1643853.WSYDh8IRHD@kreacher>
+In-Reply-To: <20200303194130.24617-1-madhuparnabhowmik10@gmail.com>
+References: <20200303194130.24617-1-madhuparnabhowmik10@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce KUNIT_INDENT macro which corresponds to 4-space indentation,
-and use it to modify indentation from tab to 4 spaces.
+On Tuesday, March 3, 2020 8:41:30 PM CET madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> This patch passes the cond argument to list_for_each_entry_rcu()
+> to fix the following false-positive lockdep warnings:
+> (with CONFIG_PROVE_RCU_LIST = y)
+> 
+> [  330.302784] =============================
+> [  330.302789] WARNING: suspicious RCU usage
+> [  330.302796] 5.6.0-rc1+ #5 Not tainted
+> [  330.302801] -----------------------------
+> [  330.302808] drivers/base/power/main.c:326 RCU-list traversed in non-reader section!!
+> 
+> [  330.303303] =============================
+> [  330.303307] WARNING: suspicious RCU usage
+> [  330.303311] 5.6.0-rc1+ #5 Not tainted
+> [  330.303315] -----------------------------
+> [  330.303319] drivers/base/power/main.c:1698 RCU-list traversed in non-reader section!!
+> 
+> [  331.934969] =============================
+> [  331.934971] WARNING: suspicious RCU usage
+> [  331.934973] 5.6.0-rc1+ #5 Not tainted
+> [  331.934975] -----------------------------
+> [  331.934977] drivers/base/power/main.c:1238 RCU-list traversed in non-reader section!!
+> 
+> [  332.467772] WARNING: suspicious RCU usage
+> [  332.467775] 5.6.0-rc1+ #5 Not tainted
+> [  332.467775] -----------------------------
+> [  332.467778] drivers/base/power/main.c:269 RCU-list traversed in non-reader section!!
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> ---
+>  drivers/base/power/main.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+> index 0e99a760aebd..6d1dee7051eb 100644
+> --- a/drivers/base/power/main.c
+> +++ b/drivers/base/power/main.c
+> @@ -40,6 +40,10 @@
+>  
+>  typedef int (*pm_callback_t)(struct device *);
+>  
+> +#define list_for_each_entry_rcu_locked(pos, head, member) \
+> +	list_for_each_entry_rcu(pos, head, member, \
+> +			device_links_read_lock_held())
+> +
+>  /*
+>   * The entries in the dpm_list list are in a depth first order, simply
+>   * because children are guaranteed to be discovered after parents, and
+> @@ -266,7 +270,7 @@ static void dpm_wait_for_suppliers(struct device *dev, bool async)
+>  	 * callbacks freeing the link objects for the links in the list we're
+>  	 * walking.
+>  	 */
+> -	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
+> +	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
+>  		if (READ_ONCE(link->status) != DL_STATE_DORMANT)
+>  			dpm_wait(link->supplier, async);
+>  
+> @@ -323,7 +327,7 @@ static void dpm_wait_for_consumers(struct device *dev, bool async)
+>  	 * continue instead of trying to continue in parallel with its
+>  	 * unregistration).
+>  	 */
+> -	list_for_each_entry_rcu(link, &dev->links.consumers, s_node)
+> +	list_for_each_entry_rcu_locked(link, &dev->links.consumers, s_node)
+>  		if (READ_ONCE(link->status) != DL_STATE_DORMANT)
+>  			dpm_wait(link->consumer, async);
+>  
+> @@ -1235,7 +1239,7 @@ static void dpm_superior_set_must_resume(struct device *dev)
+>  
+>  	idx = device_links_read_lock();
+>  
+> -	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
+> +	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
+>  		link->supplier->power.must_resume = true;
+>  
+>  	device_links_read_unlock(idx);
+> @@ -1695,7 +1699,7 @@ static void dpm_clear_superiors_direct_complete(struct device *dev)
+>  
+>  	idx = device_links_read_lock();
+>  
+> -	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node) {
+> +	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
+>  		spin_lock_irq(&link->supplier->power.lock);
+>  		link->supplier->power.direct_complete = false;
+>  		spin_unlock_irq(&link->supplier->power.lock);
+> 
 
-Suggested-by: Frank Rowand <frowand.list@gmail.com>
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
----
- include/kunit/test.h |  7 ++++-
- lib/kunit/assert.c   | 79 ++++++++++++++++++++++++++--------------------------
- lib/kunit/test.c     |  2 +-
- 3 files changed, 47 insertions(+), 41 deletions(-)
+Applied along with the [2/2] (with updated changelogs) as 5.7 material.
 
-diff --git a/include/kunit/test.h b/include/kunit/test.h
-index f7b2ed4c..d49cdb4 100644
---- a/include/kunit/test.h
-+++ b/include/kunit/test.h
-@@ -84,6 +84,10 @@ struct kunit_resource {
- /* Size of log associated with test. */
- #define KUNIT_LOG_SIZE	512
- 
-+/* TAP specifies subtest indentation of 4 spaces. */
-+#define KUNIT_INDENT	"    "
-+#define KUNIT_INDENT2	KUNIT_INDENT KUNIT_INDENT
-+
- /**
-  * struct kunit_case - represents an individual test case.
-  *
-@@ -395,7 +399,8 @@ static inline void *kunit_kzalloc(struct kunit *test, size_t size, gfp_t gfp)
- 	} while (0)
- 
- #define kunit_printk(lvl, test, fmt, ...)				\
--	kunit_log(lvl, test, "\t# %s: " fmt, (test)->name, ##__VA_ARGS__)
-+	kunit_log(lvl, test, KUNIT_INDENT "# %s: " fmt, (test)->name,	\
-+		  ##__VA_ARGS__)
- 
- /**
-  * kunit_info() - Prints an INFO level message associated with @test.
-diff --git a/lib/kunit/assert.c b/lib/kunit/assert.c
-index b24bebc..17b0214 100644
---- a/lib/kunit/assert.c
-+++ b/lib/kunit/assert.c
-@@ -6,6 +6,7 @@
-  * Author: Brendan Higgins <brendanhiggins@google.com>
-  */
- #include <kunit/assert.h>
-+#include <kunit/test.h>
- 
- #include "string-stream.h"
- 
-@@ -53,12 +54,12 @@ void kunit_unary_assert_format(const struct kunit_assert *assert,
- 	kunit_base_assert_format(assert, stream);
- 	if (unary_assert->expected_true)
- 		string_stream_add(stream,
--				 "\tExpected %s to be true, but is false\n",
--				 unary_assert->condition);
-+				  KUNIT_INDENT "Expected %s to be true, but is false\n",
-+				  unary_assert->condition);
- 	else
- 		string_stream_add(stream,
--				 "\tExpected %s to be false, but is true\n",
--				 unary_assert->condition);
-+				  KUNIT_INDENT "Expected %s to be false, but is true\n",
-+				  unary_assert->condition);
- 	kunit_assert_print_msg(assert, stream);
- }
- EXPORT_SYMBOL_GPL(kunit_unary_assert_format);
-@@ -72,13 +73,13 @@ void kunit_ptr_not_err_assert_format(const struct kunit_assert *assert,
- 	kunit_base_assert_format(assert, stream);
- 	if (!ptr_assert->value) {
- 		string_stream_add(stream,
--				 "\tExpected %s is not null, but is\n",
--				 ptr_assert->text);
-+				  KUNIT_INDENT "Expected %s is not null, but is\n",
-+				  ptr_assert->text);
- 	} else if (IS_ERR(ptr_assert->value)) {
- 		string_stream_add(stream,
--				 "\tExpected %s is not error, but is: %ld\n",
--				 ptr_assert->text,
--				 PTR_ERR(ptr_assert->value));
-+				  KUNIT_INDENT "Expected %s is not error, but is: %ld\n",
-+				  ptr_assert->text,
-+				  PTR_ERR(ptr_assert->value));
- 	}
- 	kunit_assert_print_msg(assert, stream);
- }
-@@ -92,16 +93,16 @@ void kunit_binary_assert_format(const struct kunit_assert *assert,
- 
- 	kunit_base_assert_format(assert, stream);
- 	string_stream_add(stream,
--			 "\tExpected %s %s %s, but\n",
--			 binary_assert->left_text,
--			 binary_assert->operation,
--			 binary_assert->right_text);
--	string_stream_add(stream, "\t\t%s == %lld\n",
--			 binary_assert->left_text,
--			 binary_assert->left_value);
--	string_stream_add(stream, "\t\t%s == %lld",
--			 binary_assert->right_text,
--			 binary_assert->right_value);
-+			  KUNIT_INDENT "Expected %s %s %s, but\n",
-+			  binary_assert->left_text,
-+			  binary_assert->operation,
-+			  binary_assert->right_text);
-+	string_stream_add(stream, KUNIT_INDENT2 "%s == %lld\n",
-+			  binary_assert->left_text,
-+			  binary_assert->left_value);
-+	string_stream_add(stream, KUNIT_INDENT "%s == %lld",
-+			  binary_assert->right_text,
-+			  binary_assert->right_value);
- 	kunit_assert_print_msg(assert, stream);
- }
- EXPORT_SYMBOL_GPL(kunit_binary_assert_format);
-@@ -114,16 +115,16 @@ void kunit_binary_ptr_assert_format(const struct kunit_assert *assert,
- 
- 	kunit_base_assert_format(assert, stream);
- 	string_stream_add(stream,
--			 "\tExpected %s %s %s, but\n",
--			 binary_assert->left_text,
--			 binary_assert->operation,
--			 binary_assert->right_text);
--	string_stream_add(stream, "\t\t%s == %pK\n",
--			 binary_assert->left_text,
--			 binary_assert->left_value);
--	string_stream_add(stream, "\t\t%s == %pK",
--			 binary_assert->right_text,
--			 binary_assert->right_value);
-+			  KUNIT_INDENT "Expected %s %s %s, but\n",
-+			  binary_assert->left_text,
-+			  binary_assert->operation,
-+			  binary_assert->right_text);
-+	string_stream_add(stream, KUNIT_INDENT2 "%s == %pK\n",
-+			  binary_assert->left_text,
-+			  binary_assert->left_value);
-+	string_stream_add(stream, KUNIT_INDENT2 "%s == %pK",
-+			  binary_assert->right_text,
-+			  binary_assert->right_value);
- 	kunit_assert_print_msg(assert, stream);
- }
- EXPORT_SYMBOL_GPL(kunit_binary_ptr_assert_format);
-@@ -136,16 +137,16 @@ void kunit_binary_str_assert_format(const struct kunit_assert *assert,
- 
- 	kunit_base_assert_format(assert, stream);
- 	string_stream_add(stream,
--			 "\tExpected %s %s %s, but\n",
--			 binary_assert->left_text,
--			 binary_assert->operation,
--			 binary_assert->right_text);
--	string_stream_add(stream, "\t\t%s == %s\n",
--			 binary_assert->left_text,
--			 binary_assert->left_value);
--	string_stream_add(stream, "\t\t%s == %s",
--			 binary_assert->right_text,
--			 binary_assert->right_value);
-+			  KUNIT_INDENT "Expected %s %s %s, but\n",
-+			  binary_assert->left_text,
-+			  binary_assert->operation,
-+			  binary_assert->right_text);
-+	string_stream_add(stream, KUNIT_INDENT2 "%s == %s\n",
-+			  binary_assert->left_text,
-+			  binary_assert->left_value);
-+	string_stream_add(stream, KUNIT_INDENT2 "%s == %s",
-+			  binary_assert->right_text,
-+			  binary_assert->right_value);
- 	kunit_assert_print_msg(assert, stream);
- }
- EXPORT_SYMBOL_GPL(kunit_binary_str_assert_format);
-diff --git a/lib/kunit/test.c b/lib/kunit/test.c
-index 908e643..3fdc1f9 100644
---- a/lib/kunit/test.c
-+++ b/lib/kunit/test.c
-@@ -96,7 +96,7 @@ static void kunit_print_ok_not_ok(void *test_or_suite,
- 			kunit_status_to_string(is_ok),
- 			test_number, description);
- 	else
--		kunit_log(KERN_INFO, test, "\t%s %zd - %s",
-+		kunit_log(KERN_INFO, test, KUNIT_INDENT "%s %zd - %s",
- 			  kunit_status_to_string(is_ok),
- 			  test_number, description);
- }
--- 
-1.8.3.1
+Thanks!
+
+
+
 
