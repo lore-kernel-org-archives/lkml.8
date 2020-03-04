@@ -2,67 +2,133 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D16C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D22C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F5F22B48
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583341148;
-	bh=FQJSk9E9cGV2olbAq15IXg0ngbl4HxcZVCftTjJCUfY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=vZc9Kd2xDClKijhJYGfTUmDb8LKwxslWUJ3BWXEYmz3nhRY130r9+tnFHiN55s0da
-	 R0xRsVZm5cnCajEXJbKc4gqXcov5qjNTjIB2f+gmlCPEJtBJvG81jiCBVrANrYd94+
-	 BcNRMY9ru3vmv4KPmoZ0tZ1dNnllznNEPotvt8KM=
+	by mail.kernel.org (Postfix) with ESMTP id A0F5E22B48
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:59:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FvPXh0yR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729686AbgCDQ7H (ORCPT
+        id S1729928AbgCDQ7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:59:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37742 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbgCDQ7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:59:07 -0500
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 4 Mar 2020 11:59:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38691 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729766AbgCDQ7P (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:59:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583341154;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yNJScXKPSu34/afg2dYxwu2AJJv0EUhtGNAZFgv6Rso=;
+        b=FvPXh0yR4vXkB4Yx7qQUA7I1tXcn0xMrSZPZj3Z7tab79KCFSVAIHIWpq08JDPu+HZvcFd
+        x8oLfkvW4YfR2ExNr/oCdKVCDpj/xGaxP1kjPX5F74Nf8kkPKZwOUNolGRPp5ZTQV/GPUY
+        B0qBMMXMDO4p8VYu6Ih19muJDvpeHMw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-429-_MIWAM0ZOIan349uUKUBcA-1; Wed, 04 Mar 2020 11:59:13 -0500
+X-MC-Unique: _MIWAM0ZOIan349uUKUBcA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 600C921D56;
-        Wed,  4 Mar 2020 16:59:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583341146;
-        bh=FQJSk9E9cGV2olbAq15IXg0ngbl4HxcZVCftTjJCUfY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=2Zr9+YkuiQdVRJO0bZKlDvnpapkcJZFRtX9xUaJMXM5KPRxd3LP586Og89lfK0nag
-         Y30aIlJgJd3hhq46DRh7mi7mSly3xSJ0C3/8elWdxa/ClPJ4YpCYE4l/kQHsij+QyA
-         ijNVi4YJUhxK5oQdpc1Pj7MpJuuri/cKNVv31U7s=
-Date:   Wed, 4 Mar 2020 10:59:04 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     David Miller <davem@davemloft.net>
-Cc:     hkallweit1@gmail.com, nic_swsd@realtek.com, mlindner@marvell.com,
-        stephen@networkplumber.org, clemens@ladisch.de, perex@perex.cz,
-        tiwai@suse.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: Re: [PATCH v4 00/10] PCI: Add and use constant PCI_STATUS_ERROR_BITS
- and helper pci_status_get_and_clear_errors
-Message-ID: <20200304165904.GA231103@google.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD1C9800D50;
+        Wed,  4 Mar 2020 16:59:11 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D38D90779;
+        Wed,  4 Mar 2020 16:59:03 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 40DEE2257D5; Wed,  4 Mar 2020 11:59:03 -0500 (EST)
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, virtio-fs@redhat.com, miklos@szeredi.hu
+Cc:     vgoyal@redhat.com, stefanha@redhat.com, dgilbert@redhat.com,
+        mst@redhat.com, Sebastien Boeuf <sebastien.boeuf@intel.com>
+Subject: [PATCH 03/20] virtio: Add get_shm_region method
+Date:   Wed,  4 Mar 2020 11:58:28 -0500
+Message-Id: <20200304165845.3081-4-vgoyal@redhat.com>
+In-Reply-To: <20200304165845.3081-1-vgoyal@redhat.com>
+References: <20200304165845.3081-1-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303.185937.1365050844508788930.davem@davemloft.net>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 06:59:37PM -0800, David Miller wrote:
-> 
-> Bjorn, please review and let me know if it is OK to merge this via the
-> networking tree.
+From: Sebastien Boeuf <sebastien.boeuf@intel.com>
 
-I acked the relevant patches and you're welcome to merge it via
-networking.  Thanks!
+Virtio defines 'shared memory regions' that provide a continuously
+shared region between the host and guest.
+
+Provide a method to find a particular region on a device.
+
+Signed-off-by: Sebastien Boeuf <sebastien.boeuf@intel.com>
+Signed-off-by: Dr. David Alan Gilbert <dgilbert@redhat.com>
+---
+ include/linux/virtio_config.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/include/linux/virtio_config.h b/include/linux/virtio_config.=
+h
+index bb4cc4910750..c859f000a751 100644
+--- a/include/linux/virtio_config.h
++++ b/include/linux/virtio_config.h
+@@ -10,6 +10,11 @@
+=20
+ struct irq_affinity;
+=20
++struct virtio_shm_region {
++       u64 addr;
++       u64 len;
++};
++
+ /**
+  * virtio_config_ops - operations for configuring a virtio device
+  * Note: Do not assume that a transport implements all of the operations
+@@ -65,6 +70,7 @@ struct irq_affinity;
+  *      the caller can then copy.
+  * @set_vq_affinity: set the affinity for a virtqueue (optional).
+  * @get_vq_affinity: get the affinity for a virtqueue (optional).
++ * @get_shm_region: get a shared memory region based on the index.
+  */
+ typedef void vq_callback_t(struct virtqueue *);
+ struct virtio_config_ops {
+@@ -88,6 +94,8 @@ struct virtio_config_ops {
+ 			       const struct cpumask *cpu_mask);
+ 	const struct cpumask *(*get_vq_affinity)(struct virtio_device *vdev,
+ 			int index);
++	bool (*get_shm_region)(struct virtio_device *vdev,
++			       struct virtio_shm_region *region, u8 id);
+ };
+=20
+ /* If driver didn't advertise the feature, it will never appear. */
+@@ -250,6 +258,15 @@ int virtqueue_set_affinity(struct virtqueue *vq, con=
+st struct cpumask *cpu_mask)
+ 	return 0;
+ }
+=20
++static inline
++bool virtio_get_shm_region(struct virtio_device *vdev,
++                         struct virtio_shm_region *region, u8 id)
++{
++	if (!vdev->config->get_shm_region)
++		return false;
++	return vdev->config->get_shm_region(vdev, region, id);
++}
++
+ static inline bool virtio_is_little_endian(struct virtio_device *vdev)
+ {
+ 	return virtio_has_feature(vdev, VIRTIO_F_VERSION_1) ||
+--=20
+2.20.1
+
