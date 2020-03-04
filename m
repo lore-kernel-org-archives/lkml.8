@@ -2,124 +2,132 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464C0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:40:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC536C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4DD207FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:40:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A702166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:41:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oVfcmTnp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipv6JMiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgCDHkI (ORCPT
+        id S2387501AbgCDHlC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:40:08 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39570 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728259AbgCDHkH (ORCPT
+        Wed, 4 Mar 2020 02:41:02 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34548 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728499AbgCDHlC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:40:07 -0500
-Received: by mail-wr1-f68.google.com with SMTP id y17so1070312wrn.6
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 23:40:06 -0800 (PST)
+        Wed, 4 Mar 2020 02:41:02 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z15so1094593wrl.1;
+        Tue, 03 Mar 2020 23:41:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6RNmsQpiHqfF/YSgO9NIM7W8CLgp3pdAVo9ykmJZlRo=;
-        b=oVfcmTnpm3IisBAZOZhFMkm7jHzBWZKMQy3+fNwZiE84ISTMMwdHR1M2MI70C7JE79
-         h+dlEJg1WqUTz5KeXNoPplBU/9fJtSyIUHStuFpxS15Kv20WMab3XUFasOOQTFzcflko
-         d5yg1p4aGWRTggfr9RGgCuaDX0ya9cMQaVvGSd83TYZjcWbJ9NoKGu1qOEZ78t7A9O0b
-         8sVO4QYD0K2fCCfY7gLSC/VzgwIiJfcurQT078dwwtQ5uLRDwCbbnyLI0pwwZ8TDSbpP
-         ++jH3VqahXiptnqdTexN3p5HK9iOprfA8vR3Z3lBfMp6dKQSfryU9aCkBBE+0ZNYu/YA
-         lDgw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CrHAGg7xO0NT1A0T82S72pHlkMFHuRzLgTSmN7ed1nE=;
+        b=ipv6JMiDw6jP42BqOvDDy9Yh3RXYzZGPYyDcU9jXEqL4JxdqaTmfpcYntDy+H33beR
+         2f0GsEhs7IsntUPTAfnYI33ifPrYDREXuxlsb3vVIEOu/NhxBcW14ekLXlN1tn3uRxEQ
+         rfG14QpPV2D07MSU0WGqQV0A9EpuwEzueZF/uIBBK6FQTvQPCYYB+vVBGAgt7GoKJsOr
+         qf/8dgdyaoCc4cHLCTFG5CFuWSCbhQP0H0R6mE5k/N2ahBwO1tBdxSPqHaBUGzGz6iqp
+         JfAlYBFJaoyPJ0EkhHQDoawMGHk657Jnl4ifI2eGN3IkzFC65H1mQfCKcRoH5v1VTjbg
+         SxKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6RNmsQpiHqfF/YSgO9NIM7W8CLgp3pdAVo9ykmJZlRo=;
-        b=S9O04IebPGonf9zwxq85b6FFbDi+wXbPUpKrTC5plPdwZD/J3bUhIP1I9WckDEr2Ok
-         r8p3rHBV8JGEmzalc08lvMAJqu2NL8kMzhT8kAqgOA5JZgnLCQ5f7xdbIpqSozy39tso
-         2iXu28ozTHGrW4qSo2NmLbZXW60FPD7Ite/AbtKQDtLsdZEywsIwRTQLuxaPIoAgkRYr
-         QBnjhWhdnOBY/F+5/FTEDu+nDYqxkkQw8nK9I29Oz7rAhuy7DyeNRZiIHbrgE1Br6Eav
-         Se2lx6jx1EyK4wjCi2r9hJgmDINjtRoIkZJI9bOpBj3XUbf/3rmg9BuH3wCWd45Iubcw
-         PQfw==
-X-Gm-Message-State: ANhLgQ0LBVvDmezS8y90j0a+8loaI6jz49X+zP93b2LwdJhxlwG4hVsE
-        aPtSg0aytxz2hw2JmPSWGkdzSWgtc/oWSmawmkeWKQ==
-X-Google-Smtp-Source: ADFU+vskboW/92fGHw8yfZSMDhTfUOgsQTJ3wM7mHxf3B6ugHu5h8UWfmWEUpFJKno4fiCYNiO2lp5cnJ56nibBCSbQ=
-X-Received: by 2002:adf:a411:: with SMTP id d17mr2624915wra.126.1583307605723;
- Tue, 03 Mar 2020 23:40:05 -0800 (PST)
-MIME-Version: 1.0
-References: <c41cc67321d0b366e356440e6dbc9eceb1babfe4.1583105749.git.stefan@agner.ch>
-In-Reply-To: <c41cc67321d0b366e356440e6dbc9eceb1babfe4.1583105749.git.stefan@agner.ch>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 4 Mar 2020 08:39:54 +0100
-Message-ID: <CAKv+Gu-myRS5FWEVucdpS5zUXM+UjBdMGCiFbgu0=3=T8-9LFQ@mail.gmail.com>
-Subject: Re: [PATCH] crypto: arm/ghash-ce - define fpu before fpu registers
- are referenced
-To:     Stefan Agner <stefan@agner.ch>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Russell King <linux@armlinux.org.uk>,
-        Manoj Gupta <manojgupta@google.com>,
-        Jian Cai <jiancai@google.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CrHAGg7xO0NT1A0T82S72pHlkMFHuRzLgTSmN7ed1nE=;
+        b=a3Xayg7ZYpD6XfhTFY7gRC5PYY5zEDDr4lDMqEcQl0fM0m3Dq55QfLsO3lfJzaYsTd
+         NORGsZ/fZ9dmIu0AgiSzQ+GvG6tKOGEwNB9aw3JePOBjyXhI4TbsEH5ke39EVnp62ryy
+         0sujdJCpnyJb68lUHBVpjMmxaSNrMkl5okFlruXy2ufIhB1q/TiMGz3x7f9JI2/gH2la
+         1JSqQLAu7MuAK0bHtbEkajfydUkNA0f2Ou7MQgFZkopk6ZanBaVvB+WvUj7DP0cTAy6p
+         j8+Kp0rQJnsVWDqIsL6QYV6nZVcyE6dmxAQ7Zy9dW1w3nJQXSdgyrdmlzBhZw0fA1EOc
+         my2w==
+X-Gm-Message-State: ANhLgQ0k3/8cchoobv9oOodJQQeekoGYezw9cCxtijtgby8vDP1aXH3B
+        Cv6KYPWnufszkwCPhNVwFh8=
+X-Google-Smtp-Source: ADFU+vs1bZk9bnffIwK2hnQ7f7/N9rjAEGy/0M/3YUa4nM2yYGwzhot/uOrj5R/5NG1RttDv7QCOWw==
+X-Received: by 2002:a5d:410f:: with SMTP id l15mr2638334wrp.245.1583307660517;
+        Tue, 03 Mar 2020 23:41:00 -0800 (PST)
+Received: from debian.home (ip51ccf9cd.speed.planet.nl. [81.204.249.205])
+        by smtp.gmail.com with ESMTPSA id m16sm6410530wrs.67.2020.03.03.23.40.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 03 Mar 2020 23:40:59 -0800 (PST)
+From:   Johan Jonker <jbx6244@gmail.com>
+To:     heiko@sntech.de
+Cc:     robh+dt@kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/3] ARM: dts: rockchip: add missing model properties
+Date:   Wed,  4 Mar 2020 08:40:49 +0100
+Message-Id: <20200304074051.8742-1-jbx6244@gmail.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2 Mar 2020 at 00:37, Stefan Agner <stefan@agner.ch> wrote:
->
-> Building ARMv7 with Clang's integrated assembler leads to errors such
-> as:
-> arch/arm/crypto/ghash-ce-core.S:34:11: error: register name expected
->  t3l .req d16
->           ^
->
-> Since no FPU has selected yet Clang considers d16 not a valid register.
-> Moving the FPU directive on-top allows Clang to parse the registers and
-> allows to successfully build this file with Clang's integrated assembler.
->
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+A test with the command below gives these errors:
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+arch/arm/boot/dts/rk3288-evb-act8846.dt.yaml: /: 'model'
+is a required property
+arch/arm/boot/dts/rk3288-evb-rk808.dt.yaml: /: 'model'
+is a required property
+arch/arm/boot/dts/rk3288-r89.dt.yaml: /: 'model'
+is a required property
 
-> ---
->  arch/arm/crypto/ghash-ce-core.S | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/crypto/ghash-ce-core.S b/arch/arm/crypto/ghash-ce-core.S
-> index 534c9647726d..9f51e3fa4526 100644
-> --- a/arch/arm/crypto/ghash-ce-core.S
-> +++ b/arch/arm/crypto/ghash-ce-core.S
-> @@ -8,6 +8,9 @@
->  #include <linux/linkage.h>
->  #include <asm/assembler.h>
->
-> +       .arch           armv8-a
-> +       .fpu            crypto-neon-fp-armv8
-> +
->         SHASH           .req    q0
->         T1              .req    q1
->         XL              .req    q2
-> @@ -88,8 +91,6 @@
->         T3_H            .req    d17
->
->         .text
-> -       .arch           armv8-a
-> -       .fpu            crypto-neon-fp-armv8
->
->         .macro          __pmull_p64, rd, rn, rm, b1, b2, b3, b4
->         vmull.p64       \rd, \rn, \rm
-> --
-> 2.25.1
->
+Fix this error by adding the missing model properties to
+the involved dts files.
+
+make ARCH=arm dtbs_check
+DT_SCHEMA_FILES=~/.local/lib/python3.5/site-packages/dtschema/
+schemas/root-node.yaml
+
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3288-evb-act8846.dts | 1 +
+ arch/arm/boot/dts/rk3288-evb-rk808.dts   | 1 +
+ arch/arm/boot/dts/rk3288-r89.dts         | 1 +
+ 3 files changed, 3 insertions(+)
+
+diff --git a/arch/arm/boot/dts/rk3288-evb-act8846.dts b/arch/arm/boot/dts/rk3288-evb-act8846.dts
+index 80080767c..be695b8c1 100644
+--- a/arch/arm/boot/dts/rk3288-evb-act8846.dts
++++ b/arch/arm/boot/dts/rk3288-evb-act8846.dts
+@@ -4,6 +4,7 @@
+ #include "rk3288-evb.dtsi"
+ 
+ / {
++	model = "Rockchip RK3288 EVB ACT8846";
+ 	compatible = "rockchip,rk3288-evb-act8846", "rockchip,rk3288";
+ 
+ 	vcc_lcd: vcc-lcd {
+diff --git a/arch/arm/boot/dts/rk3288-evb-rk808.dts b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+index 167882096..42384ea4c 100644
+--- a/arch/arm/boot/dts/rk3288-evb-rk808.dts
++++ b/arch/arm/boot/dts/rk3288-evb-rk808.dts
+@@ -4,6 +4,7 @@
+ #include "rk3288-evb.dtsi"
+ 
+ / {
++	model = "Rockchip RK3288 EVB RK808";
+ 	compatible = "rockchip,rk3288-evb-rk808", "rockchip,rk3288";
+ };
+ 
+diff --git a/arch/arm/boot/dts/rk3288-r89.dts b/arch/arm/boot/dts/rk3288-r89.dts
+index a6ffc381a..a258c7ae5 100644
+--- a/arch/arm/boot/dts/rk3288-r89.dts
++++ b/arch/arm/boot/dts/rk3288-r89.dts
+@@ -9,6 +9,7 @@
+ #include "rk3288.dtsi"
+ 
+ / {
++	model = "Netxeon R89";
+ 	compatible = "netxeon,r89", "rockchip,rk3288";
+ 
+ 	memory@0 {
+-- 
+2.11.0
+
