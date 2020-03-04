@@ -2,138 +2,140 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8080C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:51:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD1BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC20420705
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:51:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="jVLz4RYp"
+	by mail.kernel.org (Postfix) with ESMTP id B7F632166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388091AbgCDPvP (ORCPT
+        id S1729738AbgCDP5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:51:15 -0500
-Received: from mail-eopbgr60070.outbound.protection.outlook.com ([40.107.6.70]:40318
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726694AbgCDPvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:51:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HmTy0faVQbPQIQ+Uc93GYCrAXMzOxv4z6bFJVSWQ2OTfxPnPTjso6sohUHLilJTUOxjLJIEaepEbReZ2msNKMnIoWl6b4jBVLwUXxL8t10Ltx4JGmgylvR97kHVceXfRZkJT0SPuhb2qjpD/IyJZwAYXDZj/STsjtoTp4kYEyaEW5WdyBMq2VoLm9MHGdGR0xZHGp7L8nWpbkforlKhKpplhRRjNWY4Olvs5CUfHDmeGieG+ZTVIeSpAJDAY2KpMCwoBTw2sPcMR+0+/JGSLcx9UrRRkSFyUmL8hH0mwLMsCyDqVJdeYT52jLrB3ELZTQ9pe7C4K2sQwD6NUgKy0rw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vBeFW1yG20wPZPdehT1xqOp4uhTWVml3/+s4z/1Y2Vw=;
- b=LtmVF6U22DWplA7sIxjiyQ+eQSGuU0ZoeXGvcDecbP3eIIWj4IYPwLPcx1uEhIMYXgOn/x0GxmwAuGk7x2wiQK6FB4x9ZX5IwuKnSdCAGsJ3n7bBeastJTk3r7x6kVh45qFYT31H7phO62yzCkJluJ20OeGQnrGCxLDlKkLMeGxWNQSHgUtid4ILPS/sReGvtboGPx2ZDTvOx9IOhmQzZ4eUbpWVChucieC4ZgjhdMWd4Ea2iSD1ScZGCXY6JqNjJYSIndB/ICt3SduANp5aGYndhfzk1I/DOac2W0H59p5EomAPvVKIrkCnUI0vtJyF/BVud3itGRs4yQIiSkVWEw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vBeFW1yG20wPZPdehT1xqOp4uhTWVml3/+s4z/1Y2Vw=;
- b=jVLz4RYpKV3o3PLcWItVizggIbItxgKDCO5tqTo1Nc6I75Gylu/2JgPGlZllgQ9pBfT8oJ9oOcemxJ919LMvQ4c6gIL6aPvyED7ZFar1em8qY5jzHTxE+hjGCWLPVcuys0orNKj2QqydzRYhqTAFfzS+q0bWqNXrbEdng1C+Nbg=
-Received: from DB8PR04MB6985.eurprd04.prod.outlook.com (52.133.243.85) by
- DB8PR04MB7001.eurprd04.prod.outlook.com (52.133.243.147) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15; Wed, 4 Mar 2020 15:51:09 +0000
-Received: from DB8PR04MB6985.eurprd04.prod.outlook.com
- ([fe80::a523:58cc:b584:2c2]) by DB8PR04MB6985.eurprd04.prod.outlook.com
- ([fe80::a523:58cc:b584:2c2%6]) with mapi id 15.20.2772.019; Wed, 4 Mar 2020
- 15:51:09 +0000
-From:   "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-To:     David Miller <davem@davemloft.net>,
-        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net 4/4] dpaa_eth: FMan erratum A050385 workaround
-Thread-Topic: [PATCH net 4/4] dpaa_eth: FMan erratum A050385 workaround
-Thread-Index: AQHV8XQ1jxLNvYe7SU6nAtqZw5H1/Kg3izsAgAEKvhA=
-Date:   Wed, 4 Mar 2020 15:51:09 +0000
-Message-ID: <DB8PR04MB69853AF43BD3252FF06A57D0ECE50@DB8PR04MB6985.eurprd04.prod.outlook.com>
-References: <1583250939-24645-1-git-send-email-madalin.bucur@oss.nxp.com>
-        <1583250939-24645-5-git-send-email-madalin.bucur@oss.nxp.com>
- <20200303.155426.707583465205863443.davem@davemloft.net>
-In-Reply-To: <20200303.155426.707583465205863443.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=madalin.bucur@oss.nxp.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [79.115.171.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: cec77265-3846-4e1d-c97e-08d7c053db8b
-x-ms-traffictypediagnostic: DB8PR04MB7001:|DB8PR04MB7001:
-x-ms-exchange-sharedmailbox-routingagent-processed: True
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB700128FBD45DAA4FA30410D6ADE50@DB8PR04MB7001.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3631;
-x-forefront-prvs: 0332AACBC3
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(39860400002)(346002)(376002)(366004)(396003)(199004)(189003)(26005)(71200400001)(52536014)(5660300002)(33656002)(8936002)(86362001)(186003)(9686003)(8676002)(81166006)(64756008)(66476007)(66946007)(66556008)(478600001)(7696005)(66446008)(54906003)(76116006)(53546011)(81156014)(6506007)(55016002)(110136005)(4326008)(316002)(2906002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB8PR04MB7001;H:DB8PR04MB6985.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: oss.nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SkW1593UvbzhsADJyvRe9nGdK+zzLcwbHIVY7VDtJ23m3B0nKNWQvHor391I7rjumkDYan583ClQ334NKmZzrCUKSnGK/QL+r4ErJ/tVXDUAmpuZRkhgRvTVQUsTWxz3gcbbenRudWVJvN5Xs65zDhWfPVLOUZ0nBeVG55Nglr44Y8FVYrtSl4weXX7vylBrDe8BB5JM3soGaCMyEDu5XNhechZUMNSU6FzClzpWjkb6JL03PJjORRB+YeL44xPRQlpCZbzMf3sgRtR3bhyzPD4nY6iwngMrODl0wqWri1zI9j5z0e9v51vnpbf8+5bKGTvHqyTjdVrZuGAgIGP3Qp0nvlUh+ykPrjuGUmoDSMhgfUeARrJmvRMFanpPGUaFVam1z5H5cU1tFuAzo7heBIIYuFk+rHORjGYxkKrh6chvG7SdXTxoqnbfHjCft2cI
-x-ms-exchange-antispam-messagedata: mRjEFNqjtLAeFJRrhKQqe0EYXPnr0rRUay2TZh2Z36ZC5NMySbvCzae1lBQthlhCKXECFIsPa3WnY7m44BPp8was7XLBgwAYtpXTsAu7zRYupMZ2xs1PUKDKdXiGZ26JuXdGT/pOAfy2l8VDvKd2gA==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 4 Mar 2020 10:57:00 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18090 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729389AbgCDP5A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:57:00 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024FtT9a082210
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 10:56:59 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhsv9y57p-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:56:59 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <psampat@linux.ibm.com>;
+        Wed, 4 Mar 2020 15:56:57 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 15:56:54 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024Fuq9027787402
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 15:56:52 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 007DAA405D;
+        Wed,  4 Mar 2020 15:56:52 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BA117A405B;
+        Wed,  4 Mar 2020 15:56:49 +0000 (GMT)
+Received: from pratiks-thinkpad.ibmuc.com (unknown [9.85.81.47])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 15:56:49 +0000 (GMT)
+From:   Pratik Rajesh Sampat <psampat@linux.ibm.com>
+To:     skiboot@lists.ozlabs.org, oohall@gmail.com, mikey@neuling.org,
+        npiggin@gmail.com, vaidy@linux.ibm.com, ego@linux.vnet.ibm.com,
+        linuxppc-dev@ozlabs.org, linux-kernel@vger.kernel.org,
+        mpe@ellerman.id.au, psampat@linux.ibm.com,
+        pratik.r.sampat@gmail.com
+Subject: [RFC] Support stop state version quirk and firmware enabled stop
+Date:   Wed,  4 Mar 2020 21:26:48 +0530
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cec77265-3846-4e1d-c97e-08d7c053db8b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2020 15:51:09.3259
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5i0m19K3GCmOMmqNbdc3Uha5nv6/Rr5TCX1JfvioJ9grfLYns3AO788kq4qM/Ro+yOwLKm8tJ/9lrIQk3AUUKQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB7001
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030415-0016-0000-0000-000002ED2A5E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030415-0017-0000-0000-0000335079B7
+Message-Id: <20200304155648.11501-1-psampat@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 clxscore=1015 suspectscore=0 impostorscore=0 adultscore=0
+ spamscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040117
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: David Miller <davem@davemloft.net>
-> Sent: Wednesday, March 4, 2020 1:54 AM
-> To: Madalin Bucur (OSS) <madalin.bucur@oss.nxp.com>
-> Subject: Re: [PATCH net 4/4] dpaa_eth: FMan erratum A050385 workaround
->=20
-> From: Madalin Bucur <madalin.bucur@oss.nxp.com>
-> Date: Tue,  3 Mar 2020 17:55:39 +0200
->=20
-> > +#define DPAA_FD_DATA_ALIGNMENT  ((fman_has_errata_a050385()) ? \
->=20
-> You don't need parenthesis around that fman_has_errata_a050385() call.
->=20
-> > +#define dpaa_bp_size(raw_size) ((SKB_WITH_OVERHEAD(raw_size)) & \
->=20
-> Similar again for SKB_WITH_OVERHEAD()
+A concept patch in Skiboot to illustrate the case wherein handling of
+stop states for different DD versions of a CPU can be achieved by a
+simple modification in the list of cpu_features.
+As an example idle-stop1 is defined which uses P9_CPU_DD1 to define the
+cpu feature.
 
-I'll send a v2, thanks.
-=20
-> Also, how often does this errata code trigger on effected platforms and
-> what is the performance degradation from that?  I don't see this analysis
-> performed anywhere.
+Along with that, an implementation is being worked upon the LE OPAL
+series which helps OPAL handle the stop state entry and exit.
 
-To reproduce this issue when the workaround is not applied, one
-needs to ensure the FMan DMA transaction queue is already full
-when a transaction split occurs so the system must be under high
-traffic load (i.e. multiple ports at line rate). After the errata
-occurs, the traffic stops. The only SoC impacted by this is the
-LS1043A, the other ARM DPAA 1 SoC or the PPC DPAA 1 SoCs do not
-have this erratum.
+This patch advertises this capability of the firmware which can be
+availed if the quirk-version-setting is not cognizable.
 
-Madalin
+The firmware-enabled stop is being worked by Abhishek Goel
+<huntbag@linux.vnet.ibm.com> building upon the LE OPAL series.
+
+Signed-off-by: Pratik Rajesh Sampat <psampat@linux.ibm.com>
+---
+ core/cpufeatures.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/core/cpufeatures.c b/core/cpufeatures.c
+index ec30c975..b9875e7b 100644
+--- a/core/cpufeatures.c
++++ b/core/cpufeatures.c
+@@ -510,6 +510,25 @@ static const struct cpu_feature cpu_features_table[] = {
+ 	-1, -1, -1,
+ 	NULL, },
+ 
++	/*
++	 * QUIRK for ISAv3.0B stop idle instructions and registers
++	 * Helps us determine if there are any quirks
++	 * XXX: Same of idle-stop
++	 */
++	{ "idle-stop-v1",
++	CPU_P9_DD1,
++	ISA_V3_0B, USABLE_HV|USABLE_OS,
++	HV_CUSTOM, OS_CUSTOM,
++	-1, -1, -1,
++	NULL, },
++
++	{ "firmware-stop-supported",
++	CPU_P9,
++	ISA_V3_0B, USABLE_HV|USABLE_OS,
++	HV_CUSTOM, OS_CUSTOM,
++	-1, -1, -1,
++	NULL, },
++
+ 	/*
+ 	 * ISAv3.0B Hypervisor Virtualization Interrupt
+ 	 * Also associated system registers, LPCR EE, HEIC, HVICE,
+@@ -883,6 +902,9 @@ static void add_cpufeatures(struct dt_node *cpus,
+ 		const struct cpu_feature *f = &cpu_features_table[i];
+ 
+ 		if (f->cpus_supported & cpu_feature_cpu) {
++			if (!strcmp(f->name, "firmware-stop-supported") &&
++			    HAVE_BIG_ENDIAN)
++				continue;
+ 			DBG("  '%s'\n", f->name);
+ 			add_cpu_feature_nodeps(features, f);
+ 		}
+-- 
+2.24.1
+
