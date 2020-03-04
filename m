@@ -2,158 +2,156 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E4BC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A7DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3BE24684
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nDBn0SdZ"
+	by mail.kernel.org (Postfix) with ESMTP id 402FF21739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:22:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583349771;
+	bh=K6IbC9m66srtNpCpNfvPpNHw795EKm+SM6PSXFNj8WI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ngoOOFIwd0nSyDhjDHacJIlv4PL0W9gHqzK1JQ8ZJIUB7uDh3xfFRrlaw9I/nj998
+	 vOPRkj/Mie7g8TALStt9AlcsKYU4lAla7srVdaJeTNTxl8UcbmgwjGzBACQhqPWSlN
+	 tGuWseI38V4UCNZz7F/8d1qN5Vum8Uwnuz3ai+6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388070AbgCDTUC (ORCPT
+        id S2387566AbgCDTWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:20:02 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44502 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387406AbgCDTUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:20:02 -0500
-Received: by mail-ed1-f66.google.com with SMTP id g19so3626413eds.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:20:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cFsbFw0YKq63mN4kk6cHyhQWkj6+cfAUWsGxTYtg/zw=;
-        b=nDBn0SdZFqEAWyplGDuVVyCUbVweD3UVmTUas+PF5dDOYARN/7YmBRHICsQ65dOabg
-         1CV71i2U64XmzdBXXOUhdWzg3vyWxAZOcINdLaJ3/Dz245ZCnNgJv2yPIGfjoCB19RyP
-         c0pOAlPq9+G9kihFmOZZfCArlHHOjP6Zlf8cc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cFsbFw0YKq63mN4kk6cHyhQWkj6+cfAUWsGxTYtg/zw=;
-        b=sZ/JvWDcVP2dPH2fsBp7XM05a/jsFlyjHP1h8bk6alyojgoCthQqFz/HPdOkz4NFcp
-         kDfGT/15w9TjuMG6RynLq9X4HIjP/cd+47ppZhkfj0N5IPCZPvCMrF+1OLRtYzbmTZ+6
-         WZfnvx0MYJKlC6lChV/+8GZupH7nyBg315fT4NBb04/tn5K9LzoisDKQbxcKeGuocwaV
-         ux9VfF1nvbKbFrFSw3fATCfPoJuSO2y/vPQUD6ZXripUGjAJAefHB3EobR+Y+G68Fyaz
-         skJmF3AznihifBWQFQzXsH8xoMwZjeA3jOKZqOwBSShkko6A+tJEqVuSsiQ3UPjeJuM7
-         5ZTg==
-X-Gm-Message-State: ANhLgQ1cNP2RXAeF9Y6wgW24mQpcnyhOoY3PT4XVauliXkw2fXwBNwEg
-        kMvFHCcQgsD9eTJDmWW4LaSaUHQy4Sc=
-X-Google-Smtp-Source: ADFU+vuiu2mH08qwZknDPf8y/4j+5tQPkuUxAG1lAYjaL+yT8UuRvk/8XkkRfqgXSs7rER67uuwTFw==
-X-Received: by 2002:a50:c099:: with SMTP id k25mr4485593edf.178.1583349599618;
-        Wed, 04 Mar 2020 11:19:59 -0800 (PST)
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com. [209.85.128.45])
-        by smtp.gmail.com with ESMTPSA id m6sm1296251ejb.51.2020.03.04.11.19.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 11:19:59 -0800 (PST)
-Received: by mail-wm1-f45.google.com with SMTP id a132so3471016wme.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:19:57 -0800 (PST)
-X-Received: by 2002:a7b:c4cb:: with SMTP id g11mr5219880wmk.83.1583349596173;
- Wed, 04 Mar 2020 11:19:56 -0800 (PST)
+        Wed, 4 Mar 2020 14:22:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbgCDTWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 14:22:49 -0500
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5047024654
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 19:22:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583349768;
+        bh=K6IbC9m66srtNpCpNfvPpNHw795EKm+SM6PSXFNj8WI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=i4w9yaJNTvVe7/vVFfRjvAicNR9coBRGeOvnAA2okMleX1mkcWOYCx5dq88RP72/P
+         ME68tu5GBXvGjy4YgjPssHTeAc0oXeGQ8IFV/X6ur4U/KHXo+saZp4wsChOZAjZFxU
+         Ra2qSRbYSqsGc4qw4zJiS/c93Fl1Oycnouektkkk=
+Received: by mail-wr1-f46.google.com with SMTP id v2so3864893wrp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:22:48 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3O4pJQgkSG9k6hLkdyKlU6Z7wMYpbHVjXVf1/L655YnH2CeqFi
+        FpAv23YKk7l7zcqeiWdUEpHHa3mSXyi1YHJGs6Lx4Q==
+X-Google-Smtp-Source: ADFU+vshraEqFOfvTVethdLBrCv1Xc0e8G94b+FblBW5+NtTxR2LmDOZG0ArtmIJr3SJCRB7RLlvGYF5f5sOFLAi2Wc=
+X-Received: by 2002:adf:f84a:: with SMTP id d10mr5648007wrq.208.1583349766740;
+ Wed, 04 Mar 2020 11:22:46 -0800 (PST)
 MIME-Version: 1.0
-References: <20200228000105.165012-1-thgarnie@chromium.org>
- <202003022100.54CEEE60F@keescook> <20200303095514.GA2596@hirez.programming.kicks-ass.net>
- <CAJcbSZH1oON2VC2U8HjfC-6=M-xn5eU+JxHG2575iMpVoheKdA@mail.gmail.com>
- <6e7e4191612460ba96567c16b4171f2d2f91b296.camel@linux.intel.com>
- <202003031314.1AFFC0E@keescook> <20200304092136.GI2596@hirez.programming.kicks-ass.net>
- <202003041019.C6386B2F7@keescook> <e60876d0-4f7d-9523-bcec-6d002f717623@zytor.com>
-In-Reply-To: <e60876d0-4f7d-9523-bcec-6d002f717623@zytor.com>
-From:   Thomas Garnier <thgarnie@chromium.org>
-Date:   Wed, 4 Mar 2020 11:19:44 -0800
-X-Gmail-Original-Message-ID: <CAJcbSZHBB1u2Vq0jZKsmd0UcRj=aichxTtbGvbWgf8-g8WPa7w@mail.gmail.com>
-Message-ID: <CAJcbSZHBB1u2Vq0jZKsmd0UcRj=aichxTtbGvbWgf8-g8WPa7w@mail.gmail.com>
-Subject: Re: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     Kees Cook <keescook@chromium.org>,
+References: <20200303205445.3965393-1-nivedita@alum.mit.edu>
+ <20200303205445.3965393-2-nivedita@alum.mit.edu> <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
+ <20200304154908.GB998825@rani.riverdale.lan> <CAKv+Gu-Xo2zj9_N+K8FrpBstgU57GZvWO-pDr4tRAODhsYzW-A@mail.gmail.com>
+ <20200304185042.GA281042@rani.riverdale.lan> <CAKv+Gu-6YoJMLbR8UUsBeRPzk7r_4aKBprqay2kf6cKMPwsHgQ@mail.gmail.com>
+ <20200304191053.GA291311@rani.riverdale.lan>
+In-Reply-To: <20200304191053.GA291311@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 4 Mar 2020 20:22:36 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu84Bj4tBz=+FhG6cqpYUjc5czaqiNAVDdKgqGoXbnHKbQ@mail.gmail.com>
+Message-ID: <CAKv+Gu84Bj4tBz=+FhG6cqpYUjc5czaqiNAVDdKgqGoXbnHKbQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in populate_pud
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Kristen Carlson Accardi <kristen@linux.intel.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Allison Randal <allison@lohutok.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux PM list <linux-pm@vger.kernel.org>
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 10:45 AM H. Peter Anvin <hpa@zytor.com> wrote:
+On Wed, 4 Mar 2020 at 20:10, Arvind Sankar <nivedita@alum.mit.edu> wrote:
 >
-> On 2020-03-04 10:21, Kees Cook wrote:
-> > On Wed, Mar 04, 2020 at 10:21:36AM +0100, Peter Zijlstra wrote:
-> >> But at what cost; it does unspeakable ugly to the asm. And didn't a
-> >> kernel compiled with the extended PIE range produce a measurably slower
-> >> kernel due to all the ugly?
+> On Wed, Mar 04, 2020 at 08:04:04PM +0100, Ard Biesheuvel wrote:
+> > On Wed, 4 Mar 2020 at 19:50, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > >
+> > > On Wed, Mar 04, 2020 at 07:44:50PM +0100, Ard Biesheuvel wrote:
+> > > >
+> > > > I've tried a couple of different ways, but I can't seem to get my
+> > > > memory map organized in the way that will trigger the error.
+> > >
+> > > What does yours look like? efi_merge_regions doesn't merge everything
+> > > that will eventually be mapped the same way, so if there are some
+> > > non-conventional memory regions scattered over the address space, it
+> > > might be breaking up the mappings to the point where this doesn't
+> > > trigger.
 > >
-> > Was that true? I thought the final results were a wash and that earlier
-> > benchmarks weren't accurate for some reason? I can't find the thread
-> > now. Thomas, do you have numbers on that?
-
-I have never seen a significant performance impact. Performance and
-size is better on more recent versions of gcc as it has better
-generation of PIE code (for example generation of switches).
-
+> > I have a region
 > >
-> > BTW, I totally agree that fgkaslr is the way to go in the future. I
-> > am mostly arguing for this under the assumption that it doesn't
-> > have meaningful performance impact and that it gains the kernel some
-> > flexibility in the kinds of things it can do in the future. If the former
-> > is not true, then I'd agree, the benefit needs to be more clear.
+> > [    0.000000] efi: mem07: [Conventional Memory|   |  |  |  |  |  |  |
+> >  |   |WB|WT|WC|UC] range=[0x0000000001400000-0x00000000b9855fff]
+> > (2948MB)
 > >
+> > which gets covered correctly
+> >
+> > [    0.401766] 0x0000000000a00000-0x0000000040000000        1014M
+> > RW         PSE         NX pmd
+> > [    0.403436] 0x0000000040000000-0x0000000080000000           1G
+> > RW         PSE         NX pud
+> > [    0.404645] 0x0000000080000000-0x00000000b9800000         920M
+> > RW         PSE         NX pmd
+> > [    0.405844] 0x00000000b9800000-0x00000000b9a00000           2M
+> > RW                     NX pte
+> > [    0.407436] 0x00000000b9a00000-0x00000000baa00000          16M
+> > ro         PSE         x  pmd
+> > [    0.408591] 0x00000000baa00000-0x00000000bbe00000          20M
+> > RW         PSE         NX pmd
+> > [    0.409751] 0x00000000bbe00000-0x00000000bc000000           2M
+> > RW                     NX pte
+> > [    0.410821] 0x00000000bc000000-0x00000000be600000          38M
+> > RW         PSE         NX pmd
+> >
+> > However, the fact that you can provide a case where it does fail
+> > should be sufficient justification for taking this patch. I was just
+> > trying to give more than a regression-tested-by
 >
-> "Making the assembly really ugly" by itself is a reason not to do it, in my
-> Not So Humble Opinion[TM]; but the reason the kernel and small memory models
-> exist in the first place is because there is a nonzero performance impact of
-> the small-PIC memory model. Having modules in separate regions would further
-> add the cost of a GOT references all over the place (PLT is optional, useless
-> and deprecated for eager binding) *plus* might introduce at least one new
-> vector of attack: overwrite a random GOT slot, and just wait until it gets hit
-> by whatever code path it happens to be in; the exact code path doesn't matter.
-> From an kASLR perspective this is *very* bad, since you only need to guess the
-> general region of a GOT rather than an exact address.
-
-I agree that it would add GOT references and I can explore that more
-in terms of performance impact and size. This patchset makes the GOT
-readonly too so I don't think the attack vector applies.
-
+> No, this case is exactly one that should break. But I think you're
+> running on a processor model that _does_ support GB pages, as shown by
+> the "pud" mapping there for the 1G-2G range.
 >
-> The huge memory model, required for arbitrary placement, has a very
-> significant performance impact.
-
-I assume you mean mcmodel=large, it doesn't use it. It uses -fPIE and
-removes -mcmodel=kernel. It favors relative references whenever
-possible.
-
+> At least for my version of qemu, -cpu Haswell does not enable the
+> pdpe1gb feature. Which cpu did you specify?
 >
-> The assembly code is *very* different across memory models.
->
->         -hpa
+
+The wrong one, obviously :-)
+
+With Haswell, I get [before]
+
+[    0.368541] 0x0000000000900000-0x0000000000a00000           1M
+RW                     NX pte
+[    0.369118] 0x0000000000a00000-0x0000000080000000        2038M
+RW         PSE         NX pmd
+[    0.369592] 0x0000000080000000-0x00000000b9800000         920M
+                         pmd
+[    0.370177] 0x00000000b9800000-0x00000000b9856000         344K
+                         pte
+[    0.370649] 0x00000000b9856000-0x00000000b9a00000        1704K
+RW                     NX pte
+[    0.371066] 0x00000000b9a00000-0x00000000baa00000          16M
+ro         PSE         x  pmd
+
+and after
+
+[    0.349577] 0x0000000000a00000-0x0000000080000000        2038M
+RW         PSE         NX pmd
+[    0.350049] 0x0000000080000000-0x00000000b9800000         920M
+                         pmd
+[    0.350514] 0x00000000b9800000-0x00000000b9856000         344K
+                         pte
+[    0.351013] 0x00000000b9856000-0x00000000b9a00000        1704K
+RW                     NX pte
+
+so i'm still doing something wrong, I think?
