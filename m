@@ -2,89 +2,82 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA15C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00465C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4739C22B48
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:43:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE898217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="U6+qoKiO"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIFzhcIu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbgCDRnI (ORCPT
+        id S1730012AbgCDRr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:43:08 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34142 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728361AbgCDRnI (ORCPT
+        Wed, 4 Mar 2020 12:47:57 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33208 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729904AbgCDRr5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:43:08 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j16so2890949otl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:43:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Wel1JEO/E9eVNEX7Tkf4Unp84Qyn6ST0gR4MiIt2Igc=;
-        b=U6+qoKiOF0TyylLlrE1G6SritxaDt8X475He0dDCbOzHYLXrKZ6X6pSWgsmkgPpyLU
-         ysN7a2JlmBcrPV5KhfRdiJN0YV7Gp0FD+FCE7CrAttaw43FRxeY1dFGY1midGDo+NYIe
-         DNutxvlVKL/bxCM3EwFEiOGCqMfaFeuztVoYU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Wel1JEO/E9eVNEX7Tkf4Unp84Qyn6ST0gR4MiIt2Igc=;
-        b=P6cG5w/PuuqpG+MqBhwZ5IiXc6wrb+c6eERAsg4gO20cXkGhsKz81fh/bKv3x9OHVx
-         5wdOJ3xEBaCTFd/UOrM+wxpwGAcBZbgjK+9TYP+6iw4VYQ7VTa57QHYfgxF4QPcO2CVK
-         adGBP6d4z7W9/9EYPSF5XI0tZlB+g0blybfMMO5hkLHadiYZoVszW/WhZmLS/b9i2jYH
-         whgI0Z73VC+ewDXTe4SwpCyQ9nujgr6vlZ3OuITkwo9DeopPZ/jsKF6FkwwXHCrgCC6R
-         4exQDKy1keK/7b2wCMxgGKQyX++VzE41C/lAjlkq5wnuJpCiq/PgzvLHeI3pX1hq1QnB
-         AjCQ==
-X-Gm-Message-State: ANhLgQ0PZuRToN32mzuxszQlT46RmEhu36w79VC5NCMyY1e2gNsfiiUv
-        SHbVVBGd0n9u/q8Id+Y0Tjoh8ClBECUhweL+FdVhmg==
-X-Google-Smtp-Source: ADFU+vsLQ7o1wHymKj4RDew/ck4Fo2ZijcSPVm+MdcWrw93paF9JmQcXBxW58Idr/UGXcvnUp3kzHpAeTrxOvaPyqjs=
-X-Received: by 2002:a9d:64b:: with SMTP id 69mr3159164otn.237.1583343786118;
- Wed, 04 Mar 2020 09:43:06 -0800 (PST)
+        Wed, 4 Mar 2020 12:47:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583344076;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qFsgHwaWXmIBlPzKK/shVPEiYQi0kQM9th6g/XxIkjg=;
+        b=VIFzhcIuGqdaSkzWalEA7OWm10VLvdueXUGKkynPSrEKs7n9bh3UFoaTiaUDhpOdBRKd79
+        KbHjHXKsrelSznnj1yN/+XXzvwv2tjDul9YxNpB2SdZis0aSq+vq1fBIKfnPOh3cMwlvdi
+        gTr8DbuDZ5qhh05vbfsm+avypNaXQDI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-98uK-k8WNZ2HS1UAWR7nsw-1; Wed, 04 Mar 2020 12:47:54 -0500
+X-MC-Unique: 98uK-k8WNZ2HS1UAWR7nsw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 162A3107ACCD;
+        Wed,  4 Mar 2020 17:47:53 +0000 (UTC)
+Received: from treble (ovpn-121-218.rdu2.redhat.com [10.10.121.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id DBE9F8B56A;
+        Wed,  4 Mar 2020 17:47:51 +0000 (UTC)
+Date:   Wed, 4 Mar 2020 11:47:49 -0600
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/unwind/orc: Do not skip the first frame unless
+ explicitly asked for
+Message-ID: <20200304174749.iwoyf5gp4lkb22t5@treble>
+References: <20200304123259.32199-1-mbenes@suse.cz>
 MIME-Version: 1.0
-References: <cover.1583332764.git.vpillai@digitalocean.com> <e65d3cd4-9339-4586-7aff-07652cb1ae47@linux.intel.com>
-In-Reply-To: <e65d3cd4-9339-4586-7aff-07652cb1ae47@linux.intel.com>
-From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
-Date:   Wed, 4 Mar 2020 12:42:55 -0500
-Message-ID: <CANaguZAdK0HBqK80+8rs0X3afGkNZpzfK3OF17jiP=OM_n6qQg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/13] Core scheduling v5
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-Cc:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        "Li, Aubrey" <aubrey.li@linux.intel.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200304123259.32199-1-mbenes@suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->
-> Just to set the record straight, Aaron works at Alibaba.
->
-Sorry about this. Thanks for the correction.
+On Wed, Mar 04, 2020 at 01:32:59PM +0100, Miroslav Benes wrote:
+> ORC unwinder can currently skip the first frame even if a user does not
+> ask for it. If both regs and first_frame parameters of unwind_start()
+> are set to NULL, state->sp and first_frame are later initialized to the
+> same value for an inactive task. Given there is "less than or equal to"
+> comparison used at the end of __unwind_start() for skipping stack frames,
+> the first frame is always skipped in this case.
+> 
+> Drop the equal part of the comparison and make it equivalent to the
+> frame pointer unwinder.
+> 
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
 
-~Vineeth
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+
+-- 
+Josh
+
