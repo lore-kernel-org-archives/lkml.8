@@ -2,137 +2,129 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADEFC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C18AC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CFC620866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 059712084E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:39:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Wh+3HRWn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388642AbgCDXZp (ORCPT
+        id S2388557AbgCDXjp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 18:25:45 -0500
-Received: from mailoutvs4.siol.net ([185.57.226.195]:47953 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388622AbgCDXZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 18:25:44 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 8EAAC523EAA;
-        Thu,  5 Mar 2020 00:25:42 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 4GlHJmcXyjtl; Thu,  5 Mar 2020 00:25:42 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 34B7152273A;
-        Thu,  5 Mar 2020 00:25:42 +0100 (CET)
-Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id AECC4523FC2;
-        Thu,  5 Mar 2020 00:25:39 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     a.hajda@samsung.com, narmstrong@baylibre.com
-Cc:     Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
-        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/4] drm/bridge: dw-hdmi: rework csc related functions
-Date:   Thu,  5 Mar 2020 00:25:12 +0100
-Message-Id: <20200304232512.51616-5-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200304232512.51616-1-jernej.skrabec@siol.net>
-References: <20200304232512.51616-1-jernej.skrabec@siol.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Wed, 4 Mar 2020 18:39:45 -0500
+Received: from mail-pj1-f73.google.com ([209.85.216.73]:35633 "EHLO
+        mail-pj1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388513AbgCDXjo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 18:39:44 -0500
+Received: by mail-pj1-f73.google.com with SMTP id ep22so1941153pjb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:39:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=a2ls/0+XhOrLTmzZ82TksSq7Jty/zbg+jikoqthrwds=;
+        b=Wh+3HRWnRFld+I3x/Iifo4+Qouth/uqsuqouyd2n/JVRzs9fT4wd7TvoPNIYriz/Kp
+         q/ZzDURRIGkj4pUguk91KE/6rt+WdnjL0J5r6Qz0wKMf4mZmTjGIBYrLk+a9icvBsfWy
+         PzVErlzx+MQRl34XA1leAHz1Ui4XPsgnEjvPb6bFxpbQ8c0zsORYd/0t1HdfNr7eUipJ
+         UYaLKuTFBQU3V4w48Zs6JfULm4w7tz/MYUXXUZGzPjsKpKo2/vhRg0oXzHVj9LREpp7Q
+         eaLrpnMd04umIx9Pfv/QovyVUcvq4z5TO9ANWCic7ekQ/kF+iashcbQirvtdtNHDBSkw
+         gmpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=a2ls/0+XhOrLTmzZ82TksSq7Jty/zbg+jikoqthrwds=;
+        b=MHGu8OgWh8yl6AU5+t1ZzCpAN2OLH8dWYgKXSUIXISUHWesObGUPaBJkd2TpFEP8It
+         gsl99fKn5WiRPQW+GclHyCSyRCpdCYCAAX6m0pivNfvgyArheAh4OFGpsrPrSOVQDNEg
+         Tzx6Hs9ayKGuQUyznpTrKoTcX1ci2cpZWkpoOwEx+r8rGKhiMlOSuckSR+/OriSwqaYb
+         jXWgxHg571cmNJ1UTUD1pQgHi91DvqQTEAhNae46DRF+ArWX9B2jT6qFpPzMErYf8gN0
+         c9I9bCvJu1ecugspD9mkTkMLt4C+LZ9oxdcDKsYEHxPjN/McAd1LHzRHplw8a/68zlNl
+         G8XA==
+X-Gm-Message-State: ANhLgQ1lVkv3eaFOIk6Ru2ulclkJkYMgbafplDzf9PLjlPrDjh9I5xsL
+        Vv7t9KayFsgqgD0WnAcx/+J0IwQe8NGfPA==
+X-Google-Smtp-Source: ADFU+vsMk53h0+vE5U7wBkmRmT2KSMldVQZ0OPGijtXBgWljM7h4j+abzTpnMdLnMtsyvZtdLF1qFkjtxpGxZA==
+X-Received: by 2002:a63:7783:: with SMTP id s125mr4643014pgc.214.1583365183575;
+ Wed, 04 Mar 2020 15:39:43 -0800 (PST)
+Date:   Wed,  4 Mar 2020 15:38:56 -0800
+Message-Id: <20200304233856.257891-1-shakeelb@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.265.gbab2e86ba0-goog
+Subject: [PATCH v2] net: memcg: late association of sock to memcg
+From:   Shakeel Butt <shakeelb@google.com>
+To:     Eric Dumazet <edumazet@google.com>, Roman Gushchin <guro@fb.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shakeel Butt <shakeelb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-is_color_space_conversion() is a misnomer. It checks not only if color
-space conversion is needed, but also if format conversion is needed.
-This is actually desired behaviour because result of this function
-determines if CSC block should be enabled or not (CSC block can also do
-format conversion).
+If a TCP socket is allocated in IRQ context or cloned from unassociated
+(i.e. not associated to a memcg) in IRQ context then it will remain
+unassociated for its whole life. Almost half of the TCPs created on the
+system are created in IRQ context, so, memory used by such sockets will
+not be accounted by the memcg.
 
-In order to clear misunderstandings, let's rework
-is_color_space_conversion() to do exactly what is supposed to do and add
-another function which will determine if CSC block must be enabled or
-not.
+This issue is more widespread in cgroup v1 where network memory
+accounting is opt-in but it can happen in cgroup v2 if the source socket
+for the cloning was created in root memcg.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+To fix the issue, just do the late association of the unassociated
+sockets at accept() time in the process context and then force charge
+the memory buffer already reserved by the socket.
+
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
 ---
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 31 +++++++++++++++--------
- 1 file changed, 21 insertions(+), 10 deletions(-)
+Changes since v1:
+- added sk->sk_rmem_alloc to initial charging.
+- added synchronization to get memory usage and set sk_memcg race-free.
 
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/=
-bridge/synopsys/dw-hdmi.c
-index c8a02e5b5e1b..7724191e0a8b 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -963,11 +963,14 @@ static void hdmi_video_sample(struct dw_hdmi *hdmi)
-=20
- static int is_color_space_conversion(struct dw_hdmi *hdmi)
- {
--	return (hdmi->hdmi_data.enc_in_bus_format !=3D
--			hdmi->hdmi_data.enc_out_bus_format) ||
--	       (hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) &&
--		hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format) &&
--		hdmi->hdmi_data.rgb_limited_range);
-+	struct hdmi_data_info *hdmi_data =3D &hdmi->hdmi_data;
-+	bool is_input_rgb, is_output_rgb;
+ net/ipv4/inet_connection_sock.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+
+diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+index a4db79b1b643..7bcd657cd45e 100644
+--- a/net/ipv4/inet_connection_sock.c
++++ b/net/ipv4/inet_connection_sock.c
+@@ -482,6 +482,25 @@ struct sock *inet_csk_accept(struct sock *sk, int flags, int *err, bool kern)
+ 		}
+ 		spin_unlock_bh(&queue->fastopenq.lock);
+ 	}
 +
-+	is_input_rgb =3D hdmi_bus_fmt_is_rgb(hdmi_data->enc_in_bus_format);
-+	is_output_rgb =3D hdmi_bus_fmt_is_rgb(hdmi_data->enc_out_bus_format);
++	if (mem_cgroup_sockets_enabled && !newsk->sk_memcg) {
++		int amt;
 +
-+	return (is_input_rgb !=3D is_output_rgb) ||
-+	       (is_input_rgb && is_output_rgb && hdmi_data->rgb_limited_range);
- }
-=20
- static int is_color_space_decimation(struct dw_hdmi *hdmi)
-@@ -994,6 +997,13 @@ static int is_color_space_interpolation(struct dw_hd=
-mi *hdmi)
- 	return 0;
- }
-=20
-+static bool is_conversion_needed(struct dw_hdmi *hdmi)
-+{
-+	return is_color_space_conversion(hdmi) ||
-+	       is_color_space_decimation(hdmi) ||
-+	       is_color_space_interpolation(hdmi);
-+}
++		/* atomically get the memory usage and set sk->sk_memcg. */
++		lock_sock(newsk);
 +
- static void dw_hdmi_update_csc_coeffs(struct dw_hdmi *hdmi)
- {
- 	const u16 (*csc_coeff)[3][4] =3D &csc_coeff_default;
-@@ -2014,18 +2024,19 @@ static void dw_hdmi_enable_video_path(struct dw_h=
-dmi *hdmi)
- 	hdmi_writeb(hdmi, hdmi->mc_clkdis, HDMI_MC_CLKDIS);
-=20
- 	/* Enable csc path */
--	if (is_color_space_conversion(hdmi)) {
-+	if (is_conversion_needed(hdmi)) {
- 		hdmi->mc_clkdis &=3D ~HDMI_MC_CLKDIS_CSCCLK_DISABLE;
- 		hdmi_writeb(hdmi, hdmi->mc_clkdis, HDMI_MC_CLKDIS);
--	}
-=20
--	/* Enable color space conversion if needed */
--	if (is_color_space_conversion(hdmi))
- 		hdmi_writeb(hdmi, HDMI_MC_FLOWCTRL_FEED_THROUGH_OFF_CSC_IN_PATH,
- 			    HDMI_MC_FLOWCTRL);
--	else
-+	} else {
-+		hdmi->mc_clkdis |=3D HDMI_MC_CLKDIS_CSCCLK_DISABLE;
-+		hdmi_writeb(hdmi, hdmi->mc_clkdis, HDMI_MC_CLKDIS);
++		/* The sk has not been accepted yet, no need to look at
++		 * sk->sk_wmem_queued.
++		 */
++		amt = sk_mem_pages(newsk->sk_forward_alloc +
++				   atomic_read(&sk->sk_rmem_alloc));
++		mem_cgroup_sk_alloc(newsk);
 +
- 		hdmi_writeb(hdmi, HDMI_MC_FLOWCTRL_FEED_THROUGH_OFF_CSC_BYPASS,
- 			    HDMI_MC_FLOWCTRL);
++		release_sock(newsk);
++
++		if (newsk->sk_memcg)
++			mem_cgroup_charge_skmem(newsk->sk_memcg, amt);
 +	}
- }
-=20
- /* Workaround to clear the overflow condition */
---=20
-2.25.1
+ out:
+ 	release_sock(sk);
+ 	if (req)
+-- 
+2.25.0.265.gbab2e86ba0-goog
 
