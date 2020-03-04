@@ -2,198 +2,223 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9746C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADA13C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96BD820870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:32:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fwzzrgG0"
+	by mail.kernel.org (Postfix) with ESMTP id 8828320870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgCDJcm (ORCPT
+        id S1729143AbgCDJd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:32:42 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42183 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728916AbgCDJcm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:32:42 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z11so1462299wro.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 01:32:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LM09aI8hT3E7eSpPRMixvbuVdkHccR+97mzsVvQTqFw=;
-        b=fwzzrgG0U/O8OvHqSLknOC1y/PyQ5EAazTL3Z+i8L15pFlC/bcTiRIb44KxPXD7w93
-         gco1q4LgIgfXkvDy5KFN2I1Tsqe7nSrg0S+0Andr8tSTto08bFpbf6Y3o8a8XtRx+AgL
-         S5XAPzjmPTqEhv5UR5WG/H2JFHRUyNOc9/Sdxm6V1VO/caryvLJ9uCBq1B6y5T8wn6Nj
-         rp5ZOawQwLFY5yYF6MZXpcdQTQug4MAnXFKcfh/vO4050UwSPYX/6XWISpM4op7C+wVM
-         MuMP0lpRuB78BDDZ7lBenC8atVcJqr5N28tcgYr1cD8BDimcu3h846h1+TESnitIrZgO
-         fKIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LM09aI8hT3E7eSpPRMixvbuVdkHccR+97mzsVvQTqFw=;
-        b=o0pj8RGNWbpKBnExyCsDLsECx+RWIqge+RkQlmDlo27GYTQRMb7B8u9Lxel2LGOFjH
-         tpvyalIWkaQILvWh1Cs/4UUSbsF/s9xdrLbvnzkPM+tb7b0fJBnxPlIXSPA0woG+ck1f
-         AnfVq3eURrrCUjAzw7f6niN/yshPEu4F1j9Csm6NUNhU0jJTE6YNrfb2hIJ0Q6dp3I6f
-         KiIHpvNiP4rUQF7uor+Fhka7FkMd4zFcH8PEIUF8YysXeEjmAiTah9o5kO22vOyLrUQ8
-         QMHL3oh9i56aNs/JZkLoj07AJ6k494pZ4KEiBfcOjSZdAcG5cF+O2MRx2ar5YXd8bmHe
-         9Ong==
-X-Gm-Message-State: ANhLgQ3fBLKrXfSX/Np0jtZpSGgYB9OZbchTyaM0T9nBvZjyjRhy2bft
-        8tRiRA2bevErSs9R15cqhmCdK9T2YEz1n0t/xr2abQ==
-X-Google-Smtp-Source: ADFU+vuy7/WdBUoVhMsMrydTfEVCqb2MgwkL1Sw/J9F8ewGCTvi6pifQI9kvwFInIXpkRzR63omdwH8M08Ft1DpAB2s=
-X-Received: by 2002:adf:ffc4:: with SMTP id x4mr3266322wrs.306.1583314359012;
- Wed, 04 Mar 2020 01:32:39 -0800 (PST)
+        Wed, 4 Mar 2020 04:33:28 -0500
+Received: from mga11.intel.com ([192.55.52.93]:14299 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728916AbgCDJd2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 04:33:28 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 01:33:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
+   d="scan'208";a="352054757"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 04 Mar 2020 01:33:24 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 04 Mar 2020 11:33:24 +0200
+Date:   Wed, 4 Mar 2020 11:33:24 +0200
+From:   Mika Westerberg <mika.westerberg@intel.com>
+To:     Karol Herbst <kherbst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Lyude Paul <lyude@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        linux-pci@vger.kernel.org, linux-pm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org
+Subject: Re: [PATCH v6] pci: prevent putting nvidia GPUs into lower device
+ states on certain intel bridges
+Message-ID: <20200304093324.GI2540@lahna.fi.intel.com>
+References: <20200303101052.133631-1-kherbst@redhat.com>
 MIME-Version: 1.0
-References: <20200303163228.52741-1-john.stultz@linaro.org> <CAKoKPbzUKUtpKVAYKMe4vYi70T33aeN74Q6oR8Ngw70CJ3t96Q@mail.gmail.com>
-In-Reply-To: <CAKoKPbzUKUtpKVAYKMe4vYi70T33aeN74Q6oR8Ngw70CJ3t96Q@mail.gmail.com>
-From:   Xinliang Liu <xinliang.liu@linaro.org>
-Date:   Wed, 4 Mar 2020 17:32:24 +0800
-Message-ID: <CAKoKPbwmOp6gvwgdAsb9si220iVbbkQpqyvZbOK==es=nyJOBQ@mail.gmail.com>
-Subject: Re: [PATCH] drm: kirin: Revert "Fix for hikey620 display offset problem"
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200303101052.133631-1-kherbst@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 17:28, Xinliang Liu <xinliang.liu@linaro.org> wrote:
->
-> On Wed, 4 Mar 2020 at 00:32, John Stultz <john.stultz@linaro.org> wrote:
-> >
-> > This reverts commit ff57c6513820efe945b61863cf4a51b79f18b592.
-> >
-> > With the commit ff57c6513820 ("drm: kirin: Fix for hikey620
-> > display offset problem") we added support for handling LDI
-> > overflows by resetting the hardware.
-> >
-> > However, its been observed that when we do hit the LDI overflow
-> > condition, the irq seems to be screaming, and we do nothing but
-> > stream:
-> >   [drm:ade_irq_handler [kirin_drm]] *ERROR* LDI underflow!
-> > over and over to the screen
-> >
-> > I've tried a few appraoches to avoid this, but none has yet
-> > been successful and the cure here is worse then the original
-> > disease, so revert this for now.
->
-> Sorry to hear that. Then it seems such underflow errors can't be
-> recovered via reset.
-> Anyway, for this patch
-> Acked-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
+Hi,
 
-Sorry , should be:
- Acked-by: Xinliang Liu <xinliang.liu@linaro.org>
+On Tue, Mar 03, 2020 at 11:10:52AM +0100, Karol Herbst wrote:
+> Fixes state transitions of Nvidia Pascal GPUs from D3cold into higher device
+> states.
 
->
-> And applied to drm-misc .
->
-> -xinliang
->
-> >
-> > Cc: Xinliang Liu <xinliang.liu@linaro.org>
-> > Cc: Rongrong Zou <zourongrong@gmail.com>
-> > Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> > Cc: Chen Feng <puck.chen@hisilicon.com>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: David Airlie <airlied@linux.ie>
-> > Cc: Daniel Vetter <daniel@ffwll.ch>
-> > Cc: dri-devel <dri-devel@lists.freedesktop.org>
-> > Fixes: ff57c6513820 ("drm: kirin: Fix for hikey620 display offset problem")
-> > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > ---
-> >  .../gpu/drm/hisilicon/kirin/kirin_ade_reg.h   |  1 -
-> >  .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 20 -------------------
-> >  2 files changed, 21 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-> > index 0da860200410..e2ac09894a6d 100644
-> > --- a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-> > +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-> > @@ -83,7 +83,6 @@
-> >  #define VSIZE_OFST                     20
-> >  #define LDI_INT_EN                     0x741C
-> >  #define FRAME_END_INT_EN_OFST          1
-> > -#define UNDERFLOW_INT_EN_OFST          2
-> >  #define LDI_CTRL                       0x7420
-> >  #define BPP_OFST                       3
-> >  #define DATA_GATE_EN                   BIT(2)
-> > diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> > index 73cd28a6ea07..86000127d4ee 100644
-> > --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> > +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> > @@ -46,7 +46,6 @@ struct ade_hw_ctx {
-> >         struct clk *media_noc_clk;
-> >         struct clk *ade_pix_clk;
-> >         struct reset_control *reset;
-> > -       struct work_struct display_reset_wq;
-> >         bool power_on;
-> >         int irq;
-> >
-> > @@ -136,7 +135,6 @@ static void ade_init(struct ade_hw_ctx *ctx)
-> >          */
-> >         ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
-> >                         FRM_END_START_MASK, REG_EFFECTIVE_IN_ADEEN_FRMEND);
-> > -       ade_update_bits(base + LDI_INT_EN, UNDERFLOW_INT_EN_OFST, MASK(1), 1);
-> >  }
-> >
-> >  static bool ade_crtc_mode_fixup(struct drm_crtc *crtc,
-> > @@ -304,17 +302,6 @@ static void ade_crtc_disable_vblank(struct drm_crtc *crtc)
-> >                         MASK(1), 0);
-> >  }
-> >
-> > -static void drm_underflow_wq(struct work_struct *work)
-> > -{
-> > -       struct ade_hw_ctx *ctx = container_of(work, struct ade_hw_ctx,
-> > -                                             display_reset_wq);
-> > -       struct drm_device *drm_dev = ctx->crtc->dev;
-> > -       struct drm_atomic_state *state;
-> > -
-> > -       state = drm_atomic_helper_suspend(drm_dev);
-> > -       drm_atomic_helper_resume(drm_dev, state);
-> > -}
-> > -
-> >  static irqreturn_t ade_irq_handler(int irq, void *data)
-> >  {
-> >         struct ade_hw_ctx *ctx = data;
-> > @@ -331,12 +318,6 @@ static irqreturn_t ade_irq_handler(int irq, void *data)
-> >                                 MASK(1), 1);
-> >                 drm_crtc_handle_vblank(crtc);
-> >         }
-> > -       if (status & BIT(UNDERFLOW_INT_EN_OFST)) {
-> > -               ade_update_bits(base + LDI_INT_CLR, UNDERFLOW_INT_EN_OFST,
-> > -                               MASK(1), 1);
-> > -               DRM_ERROR("LDI underflow!");
-> > -               schedule_work(&ctx->display_reset_wq);
-> > -       }
-> >
-> >         return IRQ_HANDLED;
-> >  }
-> > @@ -919,7 +900,6 @@ static void *ade_hw_ctx_alloc(struct platform_device *pdev,
-> >         if (ret)
-> >                 return ERR_PTR(-EIO);
-> >
-> > -       INIT_WORK(&ctx->display_reset_wq, drm_underflow_wq);
-> >         ctx->crtc = crtc;
-> >
-> >         return ctx;
-> > --
-> > 2.17.1
-> >
+I think it is good to explain bit more here why this fix is needed.
+
+> v2: convert to pci_dev quirk
+>     put a proper technical explanation of the issue as a in-code comment
+> v3: disable it only for certain combinations of intel and nvidia hardware
+> v4: simplify quirk by setting flag on the GPU itself
+> v5: restructure quirk to make it easier to add new IDs
+>     fix whitespace issues
+>     fix potential NULL pointer access
+>     update the quirk documentation
+> v6: move quirk into nouveau
+
+This information typically goes under the '---' line.
+
+> Signed-off-by: Karol Herbst <kherbst@redhat.com>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Lyude Paul <lyude@redhat.com>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>
+> Cc: Mika Westerberg <mika.westerberg@intel.com>
+
+I have few minor comments but regardless,
+
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: nouveau@lists.freedesktop.org
+> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=205623
+> ---
+>  drivers/gpu/drm/nouveau/nouveau_drm.c | 56 +++++++++++++++++++++++++++
+>  drivers/pci/pci.c                     |  8 ++++
+>  include/linux/pci.h                   |  1 +
+>  3 files changed, 65 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/nouveau/nouveau_drm.c b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> index 2cd83849600f..51d3a7ba7731 100644
+> --- a/drivers/gpu/drm/nouveau/nouveau_drm.c
+> +++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
+> @@ -618,6 +618,59 @@ nouveau_drm_device_fini(struct drm_device *dev)
+>  	kfree(drm);
+>  }
+>  
+> +/*
+> + * On some Intel PCIe bridge controllers doing a
+> + * D0 -> D3hot -> D3cold -> D0 sequence causes Nvidia GPUs to not reappear.
+> + * Skipping the intermediate D3hot step seems to make it work again. Thise is
+                                                                        ^^^^^
+Thise -> This
+
+> + * probably caused by not meeting the expectation the involved AML code has
+> + * when the GPU is put into D3hot state before invoking it.
+> + *
+> + * This leads to various manifestations of this issue:
+> + *  - AML code execution to power on the GPU hits an infinite loop (as the
+> + *    code waits on device memory to change).
+> + *  - kernel crashes, as all PCI reads return -1, which most code isn't able
+> + *    to handle well enough.
+> + *
+> + * In all cases dmesg will contain at least one line like this:
+> + * 'nouveau 0000:01:00.0: Refused to change power state, currently in D3'
+> + * followed by a lot of nouveau timeouts.
+> + *
+> + * In the \_SB.PCI0.PEG0.PG00._OFF code deeper down writes bit 0x80 to the not
+> + * documented PCI config space register 0x248 of the Intel PCIe bridge
+> + * controller (0x1901) in order to change the state of the PCIe link between
+> + * the PCIe port and the GPU. There are alternative code paths using other
+> + * registers, which seem to work fine (executed pre Windows 8):
+> + *  - 0xbc bit 0x20 (publicly available documentation claims 'reserved')
+> + *  - 0xb0 bit 0x10 (link disable)
+> + * Changing the conditions inside the firmware by poking into the relevant
+> + * addresses does resolve the issue, but it seemed to be ACPI private memory
+> + * and not any device accessible memory at all, so there is no portable way of
+> + * changing the conditions.
+> + * On a XPS 9560 that means bits [0,3] on \CPEX need to be cleared.
+> + *
+> + * The only systems where this behavior can be seen are hybrid graphics laptops
+> + * with a secondary Nvidia Maxwell, Pascal or Turing GPU. Its unclear wheather
+                                                             ^^^         ^^^^^^^^
+Its -> It's
+wheather -> whether
+
+> + * this issue only occurs in combination with listed Intel PCIe bridge
+> + * controllers and the mentioned GPUs or other devices as well.
+> + *
+> + * documentation on the PCIe bridge controller can be found in the
+> + * "7th Generation Intel® Processor Families for H Platforms Datasheet Volume 2"
+> + * Section "12 PCI Express* Controller (x16) Registers"
+> + */
+> +
+> +static void quirk_broken_nv_runpm(struct pci_dev *dev)
+> +{
+> +	struct pci_dev *bridge = pci_upstream_bridge(dev);
+> +
+> +	if (!bridge || bridge->vendor != PCI_VENDOR_ID_INTEL)
+> +		return;
+> +
+> +	switch (bridge->device) {
+> +	case 0x1901:
+> +		dev->parent_d3cold = 1;
+
+I think it is better to add
+
+		break;
+
+here.
+
+> +	}
+> +}
+> +
+>  static int nouveau_drm_probe(struct pci_dev *pdev,
+>  			     const struct pci_device_id *pent)
+>  {
+> @@ -699,6 +752,7 @@ static int nouveau_drm_probe(struct pci_dev *pdev,
+>  	if (ret)
+>  		goto fail_drm_dev_init;
+>  
+> +	quirk_broken_nv_runpm(pdev);
+>  	return 0;
+>  
+>  fail_drm_dev_init:
+> @@ -737,6 +791,8 @@ nouveau_drm_remove(struct pci_dev *pdev)
+>  {
+>  	struct drm_device *dev = pci_get_drvdata(pdev);
+>  
+> +	/* revert our workaround */
+> +	pdev->parent_d3cold = false;
+>  	nouveau_drm_device_remove(dev);
+>  }
+>  
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index 951099279192..6ece05723fa2 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -860,6 +860,14 @@ static int pci_raw_set_power_state(struct pci_dev *dev, pci_power_t state)
+>  	   || (state == PCI_D2 && !dev->d2_support))
+>  		return -EIO;
+>  
+> +	/*
+> +	 * Power management can be disabled for certain devices as they don't
+> +	 * come back up later on runtime_resume. We rely on platform means to
+> +	 * cut power consumption instead (e.g. ACPI).
+> +	 */
+> +	if (state != PCI_D0 && dev->parent_d3cold)
+> +		return 0;
+> +
+>  	pci_read_config_word(dev, dev->pm_cap + PCI_PM_CTRL, &pmcsr);
+>  	if (pmcsr == (u16) ~0) {
+>  		pci_err(dev, "can't change power state from %s to %s (config space inaccessible)\n",
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 930fab293073..3e5938b91966 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -340,6 +340,7 @@ struct pci_dev {
+>  	unsigned int	no_d3cold:1;	/* D3cold is forbidden */
+>  	unsigned int	bridge_d3:1;	/* Allow D3 for bridge */
+>  	unsigned int	d3cold_allowed:1;	/* D3cold is allowed by user */
+> +	unsigned int	parent_d3cold:1;	/* power manage the parent instead */
+
+Just to be consistent with the other comments, start with a capital
+letter:
+
+	unsigned int	parent_d3cold:1;	/* Power manage the parent instead */
