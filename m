@@ -2,120 +2,181 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B482C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E061FC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:22:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7B072146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:21:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4D1324684
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:22:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EtH+RNLz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NY2qlbYB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgCDSVv (ORCPT
+        id S1730137AbgCDSWP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:21:51 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42473 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730032AbgCDSVv (ORCPT
+        Wed, 4 Mar 2020 13:22:15 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:48828 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729675AbgCDSWO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:21:51 -0500
-Received: by mail-pf1-f196.google.com with SMTP id f5so1359833pfk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:21:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=xF2I7tf+DwxpQhNciBVkWhhaWOLjPvYzGL3E90sj2so=;
-        b=EtH+RNLzhqY+QqYdV6X7ap6Xu3EpSaat18+ckZb/mOfySU0ooqa/9cKD/lI/wgqztb
-         ZK2Ma6j1qv5DcakHHIlnNCH8JvP6u0Ga6Lxhnp2OX/arBJTY2+8pgH3SNyBm7i2VIJ2k
-         nN0QThNn3RyhAFc+q1sXxzjkc/ZdjOgh2+oOU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xF2I7tf+DwxpQhNciBVkWhhaWOLjPvYzGL3E90sj2so=;
-        b=uDu4MwZIy1ZQga8/7PS1cnkMrLSxALQyry1Jq8YZ1Ca7yLeOop2JWEq5RHlncYavg5
-         kNDd5X4gsXwIIOvrGdxyQiyyjw8q6v31WoTTpMrhIYRaMLJEN3QDfmLC7Dn/hIvRrfjf
-         jqeiAfRZMYijz7N6iD0JcquKrs5yXPExIQPuwIzBfw4UotFnBBebllynestQk5+/QcBK
-         JikfGLiAauSeAP0+QYc22vseJuBtMnCMDdMqIZVsNhBqhibHfYBqvMAR1PbeFYIZFF4o
-         qB7W4rYupoMV9zcXCjW4iExI2VKM1FGZgNZ2dKJTLpnhYkAlYk4VHdubgg0/ZmoslqZR
-         A20Q==
-X-Gm-Message-State: ANhLgQ0WTYTkE1l6JJJizVl1hcjRJ/E139iqy7OSbSlpSKLJlPOYW2R1
-        l119VEoLTu47rLqknFBWRuOvSQ==
-X-Google-Smtp-Source: ADFU+vuGalFADUNS2CsAir9E+YeLAVnzSZsmifwLoGDru8DbnpAUozLyZDUnqEqdqAQL4AUGpiCQNw==
-X-Received: by 2002:a63:ed14:: with SMTP id d20mr3606078pgi.267.1583346110401;
-        Wed, 04 Mar 2020 10:21:50 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m59sm3603815pjb.41.2020.03.04.10.21.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 10:21:49 -0800 (PST)
-Date:   Wed, 4 Mar 2020 10:21:48 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Thomas Garnier <thgarnie@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        "VMware, Inc." <pv-drivers@vmware.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Will Deacon <will@kernel.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Slaby <jslaby@suse.cz>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Cao jin <caoj.fnst@cn.fujitsu.com>,
-        Allison Randal <allison@lohutok.net>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Linux PM list <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v11 00/11] x86: PIE support to extend KASLR randomization
-Message-ID: <202003041019.C6386B2F7@keescook>
-References: <20200228000105.165012-1-thgarnie@chromium.org>
- <202003022100.54CEEE60F@keescook>
- <20200303095514.GA2596@hirez.programming.kicks-ass.net>
- <CAJcbSZH1oON2VC2U8HjfC-6=M-xn5eU+JxHG2575iMpVoheKdA@mail.gmail.com>
- <6e7e4191612460ba96567c16b4171f2d2f91b296.camel@linux.intel.com>
- <202003031314.1AFFC0E@keescook>
- <20200304092136.GI2596@hirez.programming.kicks-ass.net>
+        Wed, 4 Mar 2020 13:22:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=hKyWk7Lq9ur1Op8sObVzpsl0Nt0c5ZcDaJMgGzKn8JE=; b=NY2qlbYBsu9O8vYaS7tyE5l9MV
+        AmD64y52Ym5b+53nu8nhjjIy86DdgdzHv6M9XPy1Bt8m1eTKWH26Sa2J/6i0vUl56tBwnidlxdItv
+        hm0VLOonJMI+2O7PSHkchFj27+lL/fwtdiH3pTNTiyCM+Eju56n7fANmWpnTPp02ivGzw+zvZcGgs
+        Qa4iJO2RjOyDxcLNQMIjcKk8ZdLwAkXVgWMaqwxRJMRtm5qCGJ4XDDBCi0vJuNHoEIANp3RdDJa4A
+        2vpc/fIpflsJyq2WIkJSnfHqtMUjPam47XOnMJnkjtQpi9CVGUsqfteXwJ1PWVF0Gk8CFu6HrONx3
+        uOByesWA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9YeM-0002BO-IQ; Wed, 04 Mar 2020 18:21:43 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E36C8303DA3;
+        Wed,  4 Mar 2020 19:19:40 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9213E23CE6B20; Wed,  4 Mar 2020 19:21:39 +0100 (CET)
+Date:   Wed, 4 Mar 2020 19:21:39 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Josh Don <joshdon@google.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Li Zefan <lizefan@huawei.com>, Tejun Heo <tj@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel@vger.kernel.org, cgroups@vger.kernel.org,
+        Paul Turner <pjt@google.com>
+Subject: Re: [PATCH] sched/cpuset: distribute tasks within affinity masks
+Message-ID: <20200304182139.GO2596@hirez.programming.kicks-ass.net>
+References: <20200228010134.42866-1-joshdon@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200304092136.GI2596@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200228010134.42866-1-joshdon@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 10:21:36AM +0100, Peter Zijlstra wrote:
-> But at what cost; it does unspeakable ugly to the asm. And didn't a
-> kernel compiled with the extended PIE range produce a measurably slower
-> kernel due to all the ugly?
+On Thu, Feb 27, 2020 at 05:01:34PM -0800, Josh Don wrote:
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 04278493bf15..a2aab6a8a794 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -1587,6 +1587,8 @@ extern int task_can_attach(struct task_struct *p, const struct cpumask *cs_cpus_
+>  #ifdef CONFIG_SMP
+>  extern void do_set_cpus_allowed(struct task_struct *p, const struct cpumask *new_mask);
+>  extern int set_cpus_allowed_ptr(struct task_struct *p, const struct cpumask *new_mask);
+> +extern int set_cpus_allowed_ptr_distribute(struct task_struct *p,
+> +				const struct cpumask *new_mask);
 
-Was that true? I thought the final results were a wash and that earlier
-benchmarks weren't accurate for some reason? I can't find the thread
-now. Thomas, do you have numbers on that?
+Why? Changelog doesn't seem to give a reason for adding another
+interface.
 
-BTW, I totally agree that fgkaslr is the way to go in the future. I
-am mostly arguing for this under the assumption that it doesn't
-have meaningful performance impact and that it gains the kernel some
-flexibility in the kinds of things it can do in the future. If the former
-is not true, then I'd agree, the benefit needs to be more clear.
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 1a9983da4408..2336d6d66016 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1612,6 +1612,32 @@ void do_set_cpus_allowed(struct task_struct *p, const struct cpumask *new_mask)
+>  		set_next_task(rq, p);
+>  }
+>  
+> +static DEFINE_PER_CPU(int, distribute_cpu_mask_prev);
+> +
+> +/*
+> + * Returns an arbitrary cpu within *srcp1 & srcp2
+> + *
+> + * Iterated calls using the same srcp1 and srcp2, passing the previous cpu each
+> + * time, will be distributed within their intersection.
+> + */
+> +static int distribute_to_new_cpumask(const struct cpumask *src1p,
+> +				     const struct cpumask *src2p)
+> +{
+> +	int next, prev;
+> +
+> +	/* NOTE: our first selection will skip 0. */
+> +	prev = __this_cpu_read(distribute_cpu_mask_prev);
+> +
+> +	next = cpumask_next_and(prev, src1p, src2p);
+> +	if (next >= nr_cpu_ids)
+> +		next = cpumask_first_and(src1p, src2p);
+> +
+> +	if (next < nr_cpu_ids)
+> +		__this_cpu_write(distribute_cpu_mask_prev, next);
+> +
+> +	return next;
+> +}
 
--- 
-Kees Cook
+That's a valid implementation of cpumask_any_and(), it just has a really
+weird name.
+
+>  /*
+>   * Change a given task's CPU affinity. Migrate the thread to a
+>   * proper CPU and schedule it away if the CPU it's executing on
+> @@ -1621,11 +1647,11 @@ void do_set_cpus_allowed(struct task_struct *p, const struct cpumask *new_mask)
+>   * task must not exit() & deallocate itself prematurely. The
+>   * call is not atomic; no spinlocks may be held.
+>   */
+> -static int __set_cpus_allowed_ptr(struct task_struct *p,
+> +static int __set_cpus_allowed_ptr(struct task_struct *p, bool distribute_cpus,
+>  				  const struct cpumask *new_mask, bool check)
+>  {
+>  	const struct cpumask *cpu_valid_mask = cpu_active_mask;
+> -	unsigned int dest_cpu;
+> +	unsigned int dest_cpu, prev_cpu;
+>  	struct rq_flags rf;
+>  	struct rq *rq;
+>  	int ret = 0;
+> @@ -1652,8 +1678,33 @@ static int __set_cpus_allowed_ptr(struct task_struct *p,
+>  	if (cpumask_equal(p->cpus_ptr, new_mask))
+>  		goto out;
+>  
+> -	dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
+> -	if (dest_cpu >= nr_cpu_ids) {
+> +	if (!cpumask_intersects(new_mask, cpu_valid_mask)) {
+> +		ret = -EINVAL;
+> +		goto out;
+> +	}
+> +
+> +	prev_cpu = task_cpu(p);
+> +	if (distribute_cpus) {
+> +		dest_cpu = distribute_to_new_cpumask(new_mask,
+> +						     cpu_valid_mask);
+> +	} else {
+> +		/*
+> +		 * Can the task run on the task's current CPU? If so, we're
+> +		 * done.
+> +		 *
+> +		 * We only enable this short-circuit in the case that we're
+> +		 * not trying to distribute tasks.  As we may otherwise not
+> +		 * distribute away from a loaded CPU, or make duplicate
+> +		 * assignments to it.
+> +		 */
+> +		if (cpumask_test_cpu(prev_cpu, new_mask))
+> +			dest_cpu = prev_cpu;
+> +		else
+> +			dest_cpu = cpumask_any_and(cpu_valid_mask, new_mask);
+> +	}
+
+That all seems overly complicated; what is wrong with just this:
+
+	dest_cpu = cpumask_any_and_fancy(cpu_valid_mask, new_mask);
+
+I don't really buy the argument why that shortcut is problematic; it's
+all averages anyway, and keeping a task on a CPU where it's already
+running seems like a win.
+
+> +	/* May have raced with cpu_down */
+> +	if (unlikely(dest_cpu >= nr_cpu_ids)) {
+>  		ret = -EINVAL;
+>  		goto out;
+>  	}
