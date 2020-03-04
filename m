@@ -2,164 +2,177 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5037C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B041EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F16C20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8277D20848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:04:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="aQIWpoMk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388519AbgCDW6m (ORCPT
+        id S2388494AbgCDXEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:58:42 -0500
-Received: from smtprelay0238.hostedemail.com ([216.40.44.238]:50423 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387931AbgCDW6l (ORCPT
+        Wed, 4 Mar 2020 18:04:48 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42718 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388371AbgCDXEs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:58:41 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id B2C97442C;
-        Wed,  4 Mar 2020 22:58:39 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: trick98_688caee61ad1c
-X-Filterd-Recvd-Size: 7192
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf11.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  4 Mar 2020 22:58:38 +0000 (UTC)
-Message-ID: <e43f0cf0117fbfa8fe8c7e62538fd47a24b4657a.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
-From:   Joe Perches <joe@perches.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 04 Mar 2020 14:57:04 -0800
-In-Reply-To: <alpine.DEB.2.21.2003042145340.2698@felia>
-References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
-         <20200304131035.731a3947@lwn.net>
-         <alpine.DEB.2.21.2003042145340.2698@felia>
-Content-Type: multipart/mixed; boundary="=-o23BfZrrZ2cR0WULJF0x"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 4 Mar 2020 18:04:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=KBopAHgFDixzDq6Ax+SWWuSfKv62JIccBqFFr2DrJjk=; b=aQIWpoMkR+D7S+hbnVCV2OK3o7
+        pyXLsB0DwzNJjTjcOk1toIYJEcw6Ouih/Uutx9qZGBZK6/MMadq9u48qcc6XIaClhhar0A/KTUqal
+        JvcOk2lWo2azi1eWwFPUBVPDUqGdbLbB7WU1Ljm77VXIEt2e1dKZWvw11ne5e8Uo6mAUph3+oDlF/
+        +VsQ2A9S61tV6UGyvxox85pRRi511MOPIEJefDUSyXZ//0Zu/dNQsbRcuHhzSfPfe+ztL0ol5m/zr
+        Nt2ULIkHCk3MlN17tO+mMyFAlO6iUPEDj82AQaVJAeHpDHGtAYSMTvucQzAnpd5lT4gZJRHDj6f1J
+        64sFwSVg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9d4G-0002y6-Ui; Wed, 04 Mar 2020 23:04:45 +0000
+Subject: Re: [PATCH 1/2] bootconfig: Support O=<builddir> option
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+References: <158323467008.10560.4307464503748340855.stgit@devnote2>
+ <158323468033.10560.14661631369326294355.stgit@devnote2>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <27ae25f5-29c6-62f3-5531-78fcc28b7d3c@infradead.org>
+Date:   Wed, 4 Mar 2020 15:04:43 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <158323468033.10560.14661631369326294355.stgit@devnote2>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 3/3/20 3:24 AM, Masami Hiramatsu wrote:
+> Support O=<builddir> option to build bootconfig tool in
+> the other directory. As same as other tools, if you specify
+> O=<builddir>, bootconfig command is build under <builddir>.
 
---=-o23BfZrrZ2cR0WULJF0x
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Hm.  If I use
+$ make O=~/tmp -C tools/bootconfig
 
-On Wed, 2020-03-04 at 21:50 +0100, Lukas Bulwahn wrote:
+that works: it builds bootconfig in ~/tmp.
+
+OTOH, if I sit at the top of the kernel source tree
+and I enter
+$ mkdir builddir
+$ make O=builddir -C tools/bootconfig
+
+I get this:
+make: Entering directory '/home/rdunlap/lnx/next/linux-next-20200304/tools/bootconfig'
+../scripts/Makefile.include:4: *** O=builddir does not exist.  Stop.
+make: Leaving directory '/home/rdunlap/lnx/next/linux-next-20200304/tools/bootconfig'
+
+so it looks like tools/scripts/Makefile.include doesn't handle this case correctly
+(which is how I do all of my builds).
+
+
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  tools/bootconfig/Makefile           |   27 +++++++++++++++++----------
+>  tools/bootconfig/test-bootconfig.sh |   14 ++++++++++----
+>  2 files changed, 27 insertions(+), 14 deletions(-)
 > 
-> On Wed, 4 Mar 2020, Jonathan Corbet wrote:
+> diff --git a/tools/bootconfig/Makefile b/tools/bootconfig/Makefile
+> index a6146ac64458..da5975775337 100644
+> --- a/tools/bootconfig/Makefile
+> +++ b/tools/bootconfig/Makefile
+> @@ -1,23 +1,30 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  # Makefile for bootconfig command
+> +include ../scripts/Makefile.include
+>  
+>  bindir ?= /usr/bin
+>  
+> -HEADER = include/linux/bootconfig.h
+> -CFLAGS = -Wall -g -I./include
+> +ifeq ($(srctree),)
+> +srctree := $(patsubst %/,%,$(dir $(CURDIR)))
+> +srctree := $(patsubst %/,%,$(dir $(srctree)))
+> +endif
+>  
+> -PROGS = bootconfig
+> +LIBSRC = $(srctree)/lib/bootconfig.c $(srctree)/include/linux/bootconfig.h
+> +CFLAGS = -Wall -g -I$(CURDIR)/include
+>  
+> -all: $(PROGS)
+> +ALL_TARGETS := bootconfig
+> +ALL_PROGRAMS := $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS))
+>  
+> -bootconfig: ../../lib/bootconfig.c main.c $(HEADER)
+> +all: $(ALL_PROGRAMS)
+> +
+> +$(OUTPUT)bootconfig: main.c $(LIBSRC)
+>  	$(CC) $(filter %.c,$^) $(CFLAGS) -o $@
+>  
+> -install: $(PROGS)
+> -	install bootconfig $(DESTDIR)$(bindir)
+> +test: $(ALL_PROGRAMS) test-bootconfig.sh
+> +	./test-bootconfig.sh $(OUTPUT)
+>  
+> -test: bootconfig
+> -	./test-bootconfig.sh
+> +install: $(ALL_PROGRAMS)
+> +	install $(OUTPUT)bootconfig $(DESTDIR)$(bindir)
+>  
+>  clean:
+> -	$(RM) -f *.o bootconfig
+> +	$(RM) -f $(OUTPUT)*.o $(ALL_PROGRAMS)
+> diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+> index 1411f4c3454f..81b350ffd03f 100755
+> --- a/tools/bootconfig/test-bootconfig.sh
+> +++ b/tools/bootconfig/test-bootconfig.sh
+> @@ -3,9 +3,16 @@
+>  
+>  echo "Boot config test script"
+>  
+> -BOOTCONF=./bootconfig
+> -INITRD=`mktemp initrd-XXXX`
+> -TEMPCONF=`mktemp temp-XXXX.bconf`
+> +if [ -d "$1" ]; then
+> +  TESTDIR=$1
+> +else
+> +  TESTDIR=.
+> +fi
+> +BOOTCONF=${TESTDIR}/bootconfig
+> +
+> +INITRD=`mktemp ${TESTDIR}/initrd-XXXX`
+> +TEMPCONF=`mktemp ${TESTDIR}/temp-XXXX.bconf`
+> +OUTFILE=`mktemp ${TESTDIR}/tempout-XXXX`
+>  NG=0
+>  
+>  cleanup() {
+> @@ -65,7 +72,6 @@ new_size=$(stat -c %s $INITRD)
+>  xpass test $new_size -eq $initrd_size
+>  
+>  echo "No error messge while applying"
+> -OUTFILE=`mktemp tempout-XXXX`
+>  dd if=/dev/zero of=$INITRD bs=4096 count=1
+>  printf " \0\0\0 \0\0\0" >> $INITRD
+>  $BOOTCONF -a $TEMPCONF $INITRD > $OUTFILE 2>&1
 > 
-> > On Wed,  4 Mar 2020 08:29:50 +0100
-> > Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> > > Jonathan, pick pick this patch for doc-next.
-> > 
-> > Sigh, I need to work a MAINTAINERS check into my workflow...
-> > 
-> 
-> I getting closer to have zero warnings on the MAINTAINER file matches and 
-> then, I would set up a bot following the mailing lists to warn when anyone
-> sends a patch that potentially introduces such warning.
-
-Hey Lukas.
-
-I wrote a hacky script that sent emails
-for invalid MAINTAINER F: and X: patterns
-a couple years back.
-
-I ran it in September 2018 and March 2019.
-
-It's attached if you want to play with it.
-The email sending bit is commented out.
-
-The script is used like:
-
-$ perl ./scripts/get_maintainer.pl --self-test=patterns | \
-  cut -f2 -d: | \
-  while read line ; do \
-    perl ./dump_section.perl $line \
-  done
 
 
---=-o23BfZrrZ2cR0WULJF0x
-Content-Type: application/x-perl; name="dump_section.perl"
-Content-Disposition: attachment; filename="dump_section.perl"
-Content-Transfer-Encoding: base64
-
-bXkgJGkgPSAkQVJHVlswXTsKCm15IEBvdXRwdXQgPSAoKTsKbXkgQGxpbmVzID0gKCk7Cm9wZW4g
-KG15ICRtYWludCwgJzwnLCAiTUFJTlRBSU5FUlMiKQogICAgb3IgZGllICIkUDogQ2FuJ3Qgb3Bl
-biBNQUlOVEFJTkVSUyBmaWxlICdNQUlOVEFJTkVSUyc6ICQhXG4iOwp3aGlsZSAoPCRtYWludD4p
-IHsKICAgIG15ICRsaW5lID0gJF87CiAgICBwdXNoKEBsaW5lcywgJGxpbmUpOwp9CmNsb3NlKCRt
-YWludCk7CgpteSAkbG93X2luZGV4ID0gJGkgLSAxOwoKd2hpbGUgKCRsaW5lc1skbG93X2luZGV4
-XSA9fiAvXi46LyAmJiAkbG93X2luZGV4ID4gMCkgewogICAgJGxvd19pbmRleC0tOwp9CgpteSAk
-aGlnaF9pbmRleCA9ICRpIC0gMTsKd2hpbGUgKCRsaW5lc1skaGlnaF9pbmRleF0gPX4gL14uOi8g
-JiYgJGhpZ2hfaW5kZXggPCAkI2xpbmVzKSB7CiAgICAkaGlnaF9pbmRleCsrOwp9CgpwdXNoKEBv
-dXRwdXQsICJBIGZpbGUgcGF0dGVybiBsaW5lIGluIHRoaXMgc2VjdGlvbiBvZiB0aGUgTUFJTlRB
-SU5FUlMgZmlsZSBpbiBsaW51eC1uZXh0XG4iKTsKcHVzaChAb3V0cHV0LCAiZG9lcyBub3QgaGF2
-ZSBhIG1hdGNoIGluIHRoZSBsaW51eCBzb3VyY2UgZmlsZXMuXG4iKTsKcHVzaChAb3V0cHV0LCAi
-XG4iKTsKcHVzaChAb3V0cHV0LCAiVGhpcyBjb3VsZCBvY2N1ciBiZWNhdXNlIGEgbWF0Y2hpbmcg
-ZmlsZW5hbWUgd2FzIG5ldmVyIGFkZGVkLCB3YXMgZGVsZXRlZFxuIik7CnB1c2goQG91dHB1dCwg
-Im9yIHJlbmFtZWQgaW4gc29tZSBvdGhlciBjb21taXQuXG4iKTsKcHVzaChAb3V0cHV0LCAiXG4i
-KTsKcHVzaChAb3V0cHV0LCAiVGhlIGNvbW1pdHMgdGhhdCBhZGRlZCBhbmQgaWYgZm91bmQgcmVu
-YW1lZCBvciByZW1vdmVkIHRoZSBmaWxlIHBhdHRlcm5cbiIpOwpwdXNoKEBvdXRwdXQsICJhcmUg
-c2hvd24gYmVsb3cuXG4iKTsKcHVzaChAb3V0cHV0LCAiXG4iKTsKcHVzaChAb3V0cHV0LCAiUGxl
-YXNlIGZpeCB0aGlzIGRlZmVjdCBhcHByb3ByaWF0ZWx5LlxuIik7CnB1c2goQG91dHB1dCwgIlxu
-Iik7CgpwdXNoKEBvdXRwdXQsICIxOiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS1cbiIpOwpwdXNoKEBvdXRw
-dXQsICJcbiIpOwpwdXNoKEBvdXRwdXQsICJsaW51eC1uZXh0IE1BSU5UQUlORVJTIHNlY3Rpb246
-XG4iKTsKcHVzaChAb3V0cHV0LCAiXG4iKTsKCm15ICRmaWxlID0gJGxpbmVzWyRpLTFdOwokZmls
-ZSA9fiBzL15bQS1aXTpccysvLzsKY2hvbXAgJGZpbGU7CgpteSAkc2VjdGlvbiA9ICRsaW5lc1sk
-bG93X2luZGV4XTsKCndoaWxlICgkbG93X2luZGV4IDwgJGhpZ2hfaW5kZXgpIHsKICAgIHB1c2go
-QG91dHB1dCwgIi0tPiIpIGlmICgkbG93X2luZGV4ID09ICRpLTEpOwogICAgcHVzaChAb3V0cHV0
-LCAiXHQiIC4gKCRsb3dfaW5kZXgrMSkgLiAiXHQiIC4gJGxpbmVzWyRsb3dfaW5kZXhdKTsKICAg
-ICRsb3dfaW5kZXgrKzsKfQoKcHVzaChAb3V0cHV0LCAiXG4iKTsKcHVzaChAb3V0cHV0LCAiMjog
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tXG4iKTsKcHVzaChAb3V0cHV0LCAiXG4iKTsKCm15IEBibGFtZSA9
-IGBnaXQgYmxhbWUgLUwkaSwrMSBNQUlOVEFJTkVSU2A7Cm15IEBjb21taXRzID0gc3BsaXQoJyAn
-LCAkYmxhbWVbMF0pOwpteSAkY29tbWl0ID0gJGNvbW1pdHNbMF07Cm15IEBjb21taXRfbGluZXMg
-PSBgZ2l0IGxvZyAtMSAtLXN0YXQgJGNvbW1pdGA7CgpwdXNoKEBvdXRwdXQsICJUaGUgbW9zdCBy
-ZWNlbnQgY29tbWl0IHRoYXQgYWRkZWQgb3IgbW9kaWZpZWQgZmlsZSBwYXR0ZXJuICckZmlsZSc6
-XG4iKTsKcHVzaChAb3V0cHV0LCAiXG4iKTsKcHVzaChAb3V0cHV0LCBAY29tbWl0X2xpbmVzKTsK
-CnB1c2goQG91dHB1dCwgIlxuIik7CnB1c2goQG91dHB1dCwgIjM6IC0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LVxuIik7CnB1c2goQG91dHB1dCwgIlxuIik7CgpteSBAZm9sbG93ID0gYGdpdCBsb2cgLS1mb2xs
-b3cgLTEgLS1zdGF0IC1NIC0tICckZmlsZSdgOwppZiAoIUBmb2xsb3cpIHsKICAgIHB1c2goQG91
-dHB1dCwgIk5vIGNvbW1pdCB3aXRoIGZpbGUgcGF0dGVybiAnJGZpbGUnIHdhcyBmb3VuZFxuIik7
-Cn0gZWxzZSB7CiAgICBteSAkY29tbWl0ID0gJGZvbGxvd1swXTsKICAgICRjb21taXQgPX4gcy9e
-Y29tbWl0IC8vOwogICAgQGZvbGxvdyA9IGBnaXQgbG9nIC0tc3RhdCAtMSAtTSAkY29tbWl0YDsK
-ICAgIHB1c2goQG91dHB1dCwgIlRoZSBsYXN0IGNvbW1pdCB3aXRoIGEgcmVhbCBwcmVzZW5jZSBv
-ZiBmaWxlIHBhdHRlcm4gJyRmaWxlJzpcbiIpOwogICAgcHVzaChAb3V0cHV0LCAiXG4iKTsKICAg
-IHB1c2goQG91dHB1dCwgQGZvbGxvdyk7Cn0KCm15IEBtYWludGFpbmVycyA9IGdyZXAoL15ccytc
-ZCtccytbTFJNXTouKiQvLCBAb3V0cHV0KTsKbXkgQHNpZ25lcnMgPSBncmVwKC9eXHMrLiotYnk6
-LiokLywgQG91dHB1dCk7CgpvcGVuIChteSAkZmlsZWgsICc+JywgInBhdHRlcm5zLyRpLnR4dCIp
-OwoKJHNlY3Rpb24gPX4gcy9eXHMrXGQrXHMrLy87CiRzZWN0aW9uID1+IHMvXG4kLy87Cgpwcmlu
-dCAkZmlsZWggIlN1YmplY3Q6IEJhZCBmaWxlIHBhdHRlcm4gaW4gTUFJTlRBSU5FUlMgc2VjdGlv
-biAnJHNlY3Rpb24nXG4iOwpwcmludCAkZmlsZWggIlxuIjsKcHJpbnQgJGZpbGVoIChAb3V0cHV0
-KTsKCmZvcmVhY2ggbXkgJG0gKEBtYWludGFpbmVycykgewogICAgJG0gPX4gcy9eXHMrXGQrXHMr
-LjpccysvLzsKICAgICRtID1+IHMvXHMqXCguKlwpLiokLy87Cn0KCmZvcmVhY2ggbXkgJHMgKEBz
-aWduZXJzKSB7CiAgICAkcyA9fiBzL15ccypbXHdcLV0rLWJ5OlxzKi8vOwp9CgojcHJpbnQgJGZp
-bGVoICgiXG5tYWludGFpbmVyczpcblxuIik7CiNwcmludCAkZmlsZWggKEBtYWludGFpbmVycyk7
-CiNwcmludCAkZmlsZWggKCJcbnNpZ25lcnM6XG5cbiIpOwojcHJpbnQgJGZpbGVoIChAc2lnbmVy
-cyk7CgpteSBAZW1haWxzID0gKCk7CmZvcmVhY2ggbXkgJGVtYWlsIChAbWFpbnRhaW5lcnMsQHNp
-Z25lcnMpIHsKICAgIHB1c2goQGVtYWlscywgJGVtYWlsKSB1bmxlc3MgJGF7JGVtYWlsfSsrOwp9
-CgojcHJpbnQgJGZpbGVoICgiXG5lbWFpbHM6XG5cbiIpOwojcHJpbnQgJGZpbGVoIChAZW1haWxz
-KTsKCm15ICRjYyA9ICIiOwpmb3JlYWNoIG15ICRlbWFpbCAoQGVtYWlscykgewogICAgbXkgJHQg
-PSAkZW1haWw7CiAgICAkdCA9fiBzL1xuJC8vOwogICAgJHQgPX4gcy8iLy9nOwogICAgJGNjIC49
-ICIgLS1jYyBcIiR0XCIiOwp9CgpjbG9zZSAkZmlsZWg7CgpteSAkZ3NtID0gImdpdCBzZW5kLWVt
-YWlsIC0tdG8gXCJsaW51eC1rZXJuZWxcQHZnZXIua2VybmVsLm9yZ1wiIiAuICRjYyAuICIgcGF0
-dGVybnMvJGkudHh0IjsKcHJpbnQoIiRnc21cbiIpOwoKI215IEBnc21fb3V0cHV0ID0gYCRnc21g
-OwoKI3ByaW50KEBnc21fb3V0cHV0KTsK
-
-
---=-o23BfZrrZ2cR0WULJF0x--
-
+-- 
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
