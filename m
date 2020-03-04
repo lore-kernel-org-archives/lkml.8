@@ -2,143 +2,149 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE08AC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A25EC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B83E324654
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1658724658
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:58:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZluYnYJH"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="GoRtYlVU";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=synopsys.onmicrosoft.com header.i=@synopsys.onmicrosoft.com header.b="HHKo60Wm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387459AbgCDR4P (ORCPT
+        id S1729715AbgCDR6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:56:15 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:60771 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729471AbgCDR4P (ORCPT
+        Wed, 4 Mar 2020 12:58:19 -0500
+Received: from smtprelay-out1.synopsys.com ([149.117.87.133]:59794 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728168AbgCDR6T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:56:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583344573;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i1Cgn4yp7EaKnNlZymNOD5ifYaNSlnfx75qVUEAj3xM=;
-        b=ZluYnYJHXohvqOIBHhL2M0CV7Rt6oLSVBaOywYgCcjp/oonSZSjioI7p5oIcDvvrYx72kn
-        dEPsu7Dg8fPg/wGDVWFKQxWexELn14MjxK4JCfL9EFxX898Jqq6MC8KQSffH0z0LL34upA
-        WjC2sBcZkwBnpDJfB79PFejIXIjlwuo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-7y7GWO5UPeCY2a9BNTDovA-1; Wed, 04 Mar 2020 12:56:10 -0500
-X-MC-Unique: 7y7GWO5UPeCY2a9BNTDovA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 4 Mar 2020 12:58:19 -0500
+Received: from mailhost.synopsys.com (badc-mailhost2.synopsys.com [10.192.0.18])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D99F9801E76;
-        Wed,  4 Mar 2020 17:56:07 +0000 (UTC)
-Received: from ws.net.home (ovpn-204-202.brq.redhat.com [10.40.204.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 45A915C548;
-        Wed,  4 Mar 2020 17:55:59 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 18:55:56 +0100
-From:   Karel Zak <kzak@redhat.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Ian Kent <raven@themaw.net>, Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200304175556.45dsgxumv4ubz7qy@ws.net.home>
-References: <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home>
- <20200303130347.GA2302029@kroah.com>
- <33d900c8061c40f70ba2b9d1855fd6bd1c2b68bb.camel@themaw.net>
- <20200304152241.iaiulvl5xisnuxp6@ws.net.home>
- <20200304164913.GB1763256@kroah.com>
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 37EE8C0F5D;
+        Wed,  4 Mar 2020 17:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1583344698; bh=//qSpTdmMsKXyA8ral7/gdacuF+bngrYZrDtzideAhE=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=GoRtYlVUYIycu4OEkypmcRNqhBc1k42K4yZy47g+3QH/DlFsoUB1oq4BpmcJ2ig1v
+         ipYSAdHx68M1wnVnBG3qxUaJqRxBILhqaj3bPEyALK1b6RyGz7aHlvjFj1PP94Q+aV
+         h+leyiaBRquoEA5p+cO0NPWw4tDgQpJdAs+YYTFWlK9xLzQjRx9ALt8ysxK/VUXVPH
+         nYu0q/7E2Fkz7njwxMvjn2T//G2DBWom8rk/BcQ3uLcus9QEVrO8QuQnhwh1NzWYfR
+         7b0ZmPuH85o+LXO5bnu6MCFhSRleCS+MkZtn8TxmPJQNLfwMv7TJrbFkUybqNTtbRA
+         0/kS3uqSLXVHw==
+Received: from US01WEHTC3.internal.synopsys.com (us01wehtc3.internal.synopsys.com [10.15.84.232])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 69AECA0071;
+        Wed,  4 Mar 2020 17:58:15 +0000 (UTC)
+Received: from us01hybrid1.internal.synopsys.com (10.200.27.51) by
+ US01WEHTC3.internal.synopsys.com (10.15.84.232) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 4 Mar 2020 09:58:05 -0800
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (10.202.3.67) by
+ mrs.synopsys.com (10.200.27.51) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Wed, 4 Mar 2020 09:58:04 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=OZQKbieuCEPQRXtSJC5xn9mPAztXP5C3XXEZlkGAVE/tla44vweIItTZgNojV0187959z2YuxY1CoBcg8mlhoQMsq27J6qFd61TsPU0Wr5a+Anmxl75owv7w1RUPtqytbqaQmEDXYEH/W94usfRmX5WmYxj0SB4jideuMOepfBoCJ9XdQgngeQt5Ve8Znnsrq6sRRf6uvFhMX80DuV7ZVqNdLj6GSXfXd84zthwnYOO883C0aJh0sbATXq4KKUz3PoW3aqI7k5NeAqvw09RM8kiuLS3OjM+sBm6GOOvhXnTgeRwpM4U3+GEF1fC+w8kw0AP2aOUjTrelcqCLeGnmsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=//qSpTdmMsKXyA8ral7/gdacuF+bngrYZrDtzideAhE=;
+ b=inHD1QsST4wV9ZfrCpKjYiwUmHBzITzJIDuAQABGujMth1zlG+EFkOUV4qZeDpp4w+d3tsDVicNKEbAnfUj5Q0xZJ/1kRJoHDhVmXKYstiBDxj1Q6wYGl6nytb4GxDxupfdAJEa2cmqmYsZgGjIU+3ZCVrKdroe10Sr8ubnNEpQXihzCHrmdOqokMiH6w7oR/rIKo0jmND6Tubsd1d0qO7+BpAx1YdIUVBIxupWT5w9ZEy1fqsI1QtfG4QY5cWQ6L8X1BSdHJY17WGvEOCxdmlPntrlQ/FnlOWpdOt1uORup1leW5QWCLfwayhHu7fmnkvcJhitq7qu+lOB846rwyQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=synopsys.com; dmarc=pass action=none header.from=synopsys.com;
+ dkim=pass header.d=synopsys.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=synopsys.onmicrosoft.com; s=selector2-synopsys-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=//qSpTdmMsKXyA8ral7/gdacuF+bngrYZrDtzideAhE=;
+ b=HHKo60Wm1XIMjn5zrQCttNY1+CIPfFiv1ZX4E2RJfn84cw3BSzGvdvPDm8vSaUuQJzHCE4jT2fERB5ojbbe9iScIVs2DId4zl1nbNHutlMmQhM7NFSmKZ78W6Ge/KlyCWlucqRbpY617V+YN7Vvhs7UhjMtK3PYbG3LllTlYOq8=
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com (2603:10b6:a03:db::25)
+ by BYAPR12MB3222.namprd12.prod.outlook.com (2603:10b6:a03:12c::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Wed, 4 Mar
+ 2020 17:58:04 +0000
+Received: from BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::a45a:6a41:3fe5:2eb7]) by BYAPR12MB3592.namprd12.prod.outlook.com
+ ([fe80::a45a:6a41:3fe5:2eb7%7]) with mapi id 15.20.2772.019; Wed, 4 Mar 2020
+ 17:58:04 +0000
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexey Brodkin" <Alexey.Brodkin@synopsys.com>
+Subject: Re: [PATCH 4/5] ARC: add support for DSP-enabled userspace
+ applications
+Thread-Topic: [PATCH 4/5] ARC: add support for DSP-enabled userspace
+ applications
+Thread-Index: AQHVvOALEgJG1jhHKUKrXAMj7igcXqfflg6AgFkkVq+AAGjCgA==
+Date:   Wed, 4 Mar 2020 17:58:04 +0000
+Message-ID: <8f5af6bd-af31-8f2f-9565-f1f505e6ba11@synopsys.com>
+References: <20191227180347.3579-1-Eugeniy.Paltsev@synopsys.com>
+ <20191227180347.3579-5-Eugeniy.Paltsev@synopsys.com>
+ <a3890ccb-e948-6ad6-c2ea-5b77b9d3a289@synopsys.com>
+ <BY5PR12MB4034D0D8EDD029E90642012EDEE50@BY5PR12MB4034.namprd12.prod.outlook.com>
+In-Reply-To: <BY5PR12MB4034D0D8EDD029E90642012EDEE50@BY5PR12MB4034.namprd12.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=vgupta@synopsys.com; 
+x-originating-ip: [149.117.75.13]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 55049197-d510-46b4-3e9f-08d7c0659674
+x-ms-traffictypediagnostic: BYAPR12MB3222:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR12MB32222FE61AEBA46A3A8109D8B6E50@BYAPR12MB3222.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0332AACBC3
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(366004)(136003)(376002)(39860400002)(189003)(199004)(81166006)(6512007)(2906002)(86362001)(66946007)(4326008)(66556008)(64756008)(4744005)(31696002)(8676002)(81156014)(478600001)(8936002)(110136005)(66446008)(54906003)(6506007)(76116006)(31686004)(53546011)(5660300002)(66476007)(107886003)(316002)(6486002)(26005)(36756003)(71200400001)(186003)(2616005);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR12MB3222;H:BYAPR12MB3592.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: synopsys.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lX+soZC1ZjlLA1z16uLePq4QHSHO4tp5D+YXXG9mk9dAc6l8uc1Taukc7OPfrkyP1YqVz2TGxCyfmlbW0Y4oGEpun1mfYLpe0vI5RvP9jGaQAwBkQc0C+jl5tSBTqPoXubaHRXD/AgcbgBG653BIdCXATYfVaAm7ArwB6BZ4qmXvAGIuhUWcH3yUbtwxtR42m+B0XbHeXOnrmWQdWfDQR9EwPnNZ2TfCyGSmA3X3GsnB5+/2IBqVL8CGZWCW9U8zGMaHB9i6Hi83wfHfKdoLk6Wb6HHZyeCYFd8F1tV5ON11X1m3BifRyB7+u/iMZ6tyTuDVze+AVaKHSQ1YS7BhLVOsH0kH4OHABJTMHJtGOPAuT2ndF4VXC4+GgRPgzPBReeVstkdAkhFy6H/Wuar1R0Ar474DrCVM8Y3KvzA7ga+dSqLa4MLbU1R+ZMPn7zDD
+x-ms-exchange-antispam-messagedata: pvyU+hik1gAT1jL1BaqE9XPdIoOrR87/OGCk4yBz0wPL+S1EzhId18RsePy9WcFLEAQ7ivgRDG/1P5izuMYmblZ+bFFU+sn9lfxKcjd3LU+C2PSEy0CxmSlF+K3ecOgcc02nNnh2PM36teXIlqeIcA==
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E9379F4BD0EB094CACB682C035E771C9@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-In-Reply-To: <20200304164913.GB1763256@kroah.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-CrossTenant-Network-Message-Id: 55049197-d510-46b4-3e9f-08d7c0659674
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Mar 2020 17:58:04.2776
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: c33c9f88-1eb7-4099-9700-16013fd9e8aa
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6MI6dx0k2BFkg4k2+96mTHFU5W8FJR84GyTRFY7jFKHD9e7/9hEpcNmdsDbSQAoGdjRJRxwDHJ97n+r0JeGaNA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3222
+X-OriginatorOrg: synopsys.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 05:49:13PM +0100, Greg Kroah-Hartman wrote:
-> On Wed, Mar 04, 2020 at 04:22:41PM +0100, Karel Zak wrote:
-> > $ strace -e openat,read,close -c ps aux
-> > ...
-> > % time     seconds  usecs/call     calls    errors syscall
-> > ------ ----------- ----------- --------- --------- ----------------
-> >  43.32    0.004190           4       987           read
-> >  31.42    0.003039           3       844         4 openat
-> >  25.26    0.002443           2       842           close
-> > ------ ----------- ----------- --------- --------- ----------------
-> > 100.00    0.009672                  2673         4 total
-> >=20
-> > $ strace -e openat,read,close -c lsns
-> > ...
-> > % time     seconds  usecs/call     calls    errors syscall
-> > ------ ----------- ----------- --------- --------- ----------------
-> >  39.95    0.001567           2       593           openat
-> >  30.93    0.001213           2       597           close
-> >  29.12    0.001142           3       365           read
-> > ------ ----------- ----------- --------- --------- ----------------
-> > 100.00    0.003922                  1555           total
-> >=20
-> >=20
-> > $ strace -e openat,read,close -c lscpu
-> > ...
-> > % time     seconds  usecs/call     calls    errors syscall
-> > ------ ----------- ----------- --------- --------- ----------------
-> >  44.67    0.001480           7       189        52 openat
-> >  34.77    0.001152           6       180           read
-> >  20.56    0.000681           4       140           close
-> > ------ ----------- ----------- --------- --------- ----------------
-> > 100.00    0.003313                   509        52 total
->=20
-> As a "real-world" test, would you recommend me converting one of the
-> above tools to my implementation of readfile to see how/if it actually
-> makes sense, or do you have some other tool you would rather see me try=
-?
-
-See lib/path.c and lib/sysfs.c in util-linux (https://github.com/karelzak=
-/util-linux).=20
-For example ul_path_read() and ul_path_scanf().=20
-
-We use it for lsblk, lsmem, lscpu, etc.
-
-=A0$ git grep -c ul_path_read misc-utils/lsblk.c sys-utils/lscpu.c
- misc-utils/lsblk.c:30
- sys-utils/lscpu.c:31
-
-We're probably a little bit off-topic here, no problem to continue on
-util-linux@vger.kernel.org or by private mails. Thanks!
-
-    Karel
-
---=20
- Karel Zak  <kzak@redhat.com>
- http://karelzak.blogspot.com
-
+T24gMy80LzIwIDM6NTEgQU0sIEV1Z2VuaXkgUGFsdHNldiB3cm90ZToNCj4+PiArICAgICAgICAg
+ICAgICAgICJyIiAoX3NhdmV0byksICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgXA0KPj4+ICsgICAgICAgICAgICAgICAgInIiIChfcmVhZGZyb20pLCAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBcDQo+Pj4gKyAgICAgICAgICAgICAgICAiSSIgKF9hdXgp
+LCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwNCj4+PiArICAgICAg
+ICAgICAgICAgICJJIiAoX29mZnQpICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgXA0KPj4+ICsgICAgICAgICAgICAgOiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICBcDQo+Pg0KPj4gQUVYIHdpdGggIkkiIGNvbnN0cmFp
+bnQgd2lsbCBsaWtlbHkgYmUgYW4gOCBieXRlIGluc3RydWN0aW9ucyBhbHdheXMuIEJlc3QgdG8g
+Z2l2ZQ0KPj4gY29tcGlsZXIgd2lnZ2xlIHJvb20gd2l0aCAiSXIiDQo+DQo+IENvdWxkIHlvdSBw
+bGVhc2UgZXhwbGFpbiBob3cgIklyIiB3aWxsIHdvcmsgaW4gdGhpcyBjYXNlPw0KPiBEb2VzIHRo
+aXMgbWVhbiB0aGF0IGNvbXBpbGVyIGNhbiBwYXNzIHRoZSB2YWx1ZSBlaXRoZXIgYXMgY29uc3Rh
+bnQgKCdJJykgb3INCj4gdmlhIHJlZ2lzdGVyICgncicpPw0KDQpSaWdodC4gSWYgdGhlIHNhbWUg
+Y29tcGlsZS10aW1lIGNvbnN0IGlzIHVzZWQgbXVsdGlwbGUgdGltZXMsIHNheSBTUiBvZiBzYW1l
+IHZhbHVlDQp0byBhIHJlZywgaWYgY2FuIGRlY2lkZSB0byBob2lzdCB0aGUgdmFsdWUgaW4gYSBy
+ZWdpc3RlciwgaWYgeW91IHByb3ZpZGUgaXQgInIiIG9yDQoiSXIiLCBsZWFkaW5nIHRvIHNob3J0
+ZXIgb3ZlcmFsbCBjb2RlLg0KDQotVmluZWV0DQoNCg0K
