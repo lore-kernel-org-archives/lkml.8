@@ -2,92 +2,92 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E04AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A2FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1739220842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:58:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1747A2073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 04:00:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="I6mcHjis"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbgCDD6l (ORCPT
+        id S1726674AbgCDEAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 22:58:41 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11141 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbgCDD6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 22:58:41 -0500
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 43BDCC901401D4F4FFA7;
-        Wed,  4 Mar 2020 11:58:39 +0800 (CST)
-Received: from localhost.localdomain (10.67.165.24) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Wed, 4 Mar 2020 11:58:32 +0800
-From:   Zeng Tao <prime.zeng@hisilicon.com>
-To:     <sudeep.holla@arm.com>
-CC:     <linuxarm@huawei.com>, Zeng Tao <prime.zeng@hisilicon.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] cpu-topology: Fix the potential data corruption
-Date:   Wed, 4 Mar 2020 11:54:52 +0800
-Message-ID: <1583294092-5929-1-git-send-email-prime.zeng@hisilicon.com>
-X-Mailer: git-send-email 2.8.1
+        Tue, 3 Mar 2020 23:00:52 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48572 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbgCDEAw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 23:00:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=6/6c+4Ziln2SU67GLquqkGhtyon3m67WJ0bPB86NfHA=; b=I6mcHjisMiRDqK11Gwk1JD1J0F
+        S3XOn8t+X3Fodr6hziGsiNQve3+OwbyipWlDGpFR51AEV/RNM115YeKajck5yVnCu7kaBkwLDn/Fi
+        vOQOZ10grbNFuI1W58NjOJU4J0LKlM8yjkxqpHuNRUlB7Nx9PUPdyGljBcueA6y96qfy5dAnz5Hcu
+        5Rhz29XabtvwTKP9eKqa4oNq9yBHja9YEvB0CEMS4pLK8omtqUlNxOioT6Z9jeMD/+M/Q4ae2rupT
+        tsrVeDWpQOlkiEclICHEO3cTbUbGvluky91MSUQzXoNIM786sCn/KgLesZQdXKj/F87VR5//vp9T9
+        1i87verg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9LDH-0005CN-C7; Wed, 04 Mar 2020 04:00:51 +0000
+Date:   Tue, 3 Mar 2020 20:00:51 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     paulmck@kernel.org, elver@google.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] lib: disable KCSAN for XArray
+Message-ID: <20200304040051.GB29971@bombadil.infradead.org>
+References: <20200304031551.1326-1-cai@lca.pw>
+ <20200304033329.GZ29971@bombadil.infradead.org>
+ <409B9444-73B7-4686-B0ED-892ECDECE462@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.165.24]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <409B9444-73B7-4686-B0ED-892ECDECE462@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently there are only 10 bytes to store the cpu-topology 'name'
-information. Only 10 bytes copied into cluster/thread/core names.
+On Tue, Mar 03, 2020 at 10:55:02PM -0500, Qian Cai wrote:
+> 
+> 
+> > On Mar 3, 2020, at 10:33 PM, Matthew Wilcox <willy@infradead.org> wrote:
+> > 
+> > On Tue, Mar 03, 2020 at 10:15:51PM -0500, Qian Cai wrote:
+> >> Functions like xas_find_marked(), xas_set_mark(), and xas_clear_mark()
+> >> could happen concurrently result in data races, but those operate only
+> >> on a single bit that are pretty much harmless. For example,
+> > 
+> > Those aren't data races.  The writes are protected by a spinlock and the
+> > reads by the RCU read lock.  If the tool can't handle RCU protection,
+> > it's not going to be much use.
+> > 
+> 
+> Maybe the commit log is a bit confusing if you did not look at the example closely
+> enough. It is actually one read and one write result in data races where one spin_lock()
+> and one rcu_read_lock()  can’t prevent that from happening. We also have,
 
-If the cluster ID exceeds 2-digit number, it will result in the data
-corruption, and ending up in a dead loop in the parsing routines. The
-same applies to the thread names with more that 3-digit number.
+Yes.  All these examples have the reader protected by the RCU read lock
+and the writer protected by the spinlock.  Does the tool need some kind
+of extra annotation here?
 
-This issue was found using the boundary tests under virtualised
-environment like QEMU.
+> [19522.548668][T39646] BUG: KCSAN: data-race in xas_clear_mark / xas_find_marked 
+> [19522.583776][T39646]  
+> [19522.593816][T39646] write to 0xffff9ffb56c5c238 of 8 bytes by interrupt on cpu 16: 
+> [19522.628560][T39646]  xas_clear_mark+0x8e/0x1a0 
+> [19522.648993][T39646]  __xa_clear_mark+0xe7/0x110 
+> [19522.669367][T39646]  test_clear_page_writeback+0x3e9/0x712 [19522.694638][T39646]  end_page_writeback+0xaa/0x2b0 
 
-Let us increase the buffer to fix such potential issues.
+Spinlock taken here ^^^
 
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-Signed-off-by: Zeng Tao <prime.zeng@hisilicon.com>
+> [19523.533125][T39646] read to 0xffff9ffb56c5c238 of 8 bytes by task 39646 on cpu 16: 
+> [19523.570758][T39646]  xas_find_marked+0xe9/0x750 
+> [19523.594276][T39646]  find_get_pages_range_tag+0x1bf/0xa90 
 
----
-Changelog:
-v1->v2: update the commit message suggested by sudeep.
----
- drivers/base/arch_topology.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
-index 6119e11..f489883 100644
---- a/drivers/base/arch_topology.c
-+++ b/drivers/base/arch_topology.c
-@@ -281,7 +281,7 @@ static int __init get_cpu_for_node(struct device_node *node)
- static int __init parse_core(struct device_node *core, int package_id,
- 			     int core_id)
- {
--	char name[10];
-+	char name[20];
- 	bool leaf = true;
- 	int i = 0;
- 	int cpu;
-@@ -327,7 +327,7 @@ static int __init parse_core(struct device_node *core, int package_id,
- 
- static int __init parse_cluster(struct device_node *cluster, int depth)
- {
--	char name[10];
-+	char name[20];
- 	bool leaf = true;
- 	bool has_cores = false;
- 	struct device_node *c;
--- 
-2.8.1
+RCU read lock taken here ^^^
 
