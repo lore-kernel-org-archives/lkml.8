@@ -2,82 +2,91 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A642C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85771C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65338207FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:42:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53F72207FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:42:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJEz6AJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbgCDHmF (ORCPT
+        id S1728636AbgCDHmX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:42:05 -0500
-Received: from mga12.intel.com ([192.55.52.136]:2134 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728301AbgCDHmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:42:05 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 23:42:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
-   d="scan'208";a="440914043"
-Received: from liujing-mobl1.ccr.corp.intel.com (HELO [10.249.174.187]) ([10.249.174.187])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Mar 2020 23:41:59 -0800
-Subject: Re: [PATCH 3/4] KVM: x86: Revert "KVM: X86: Fix fpu state crash in
- kvm guest"
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Derek Yerger <derek@djy.llc>,
-        kernel@najdan.com, Thomas Lambertz <mail@thomaslambertz.de>,
-        Rik van Riel <riel@surriel.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200117062628.6233-1-sean.j.christopherson@intel.com>
- <20200117062628.6233-4-sean.j.christopherson@intel.com>
-From:   "Liu, Jing2" <jing2.liu@linux.intel.com>
-Message-ID: <ca47fce8-a042-f967-513c-93cabac2122d@linux.intel.com>
-Date:   Wed, 4 Mar 2020 15:41:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200117062628.6233-4-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Wed, 4 Mar 2020 02:42:23 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:38043 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728486AbgCDHmW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 02:42:22 -0500
+Received: by mail-pg1-f196.google.com with SMTP id x7so585825pgh.5;
+        Tue, 03 Mar 2020 23:42:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=CCrrlatLGe2pch85eka5KdA5M3nlY74sUhCA0YXJUZE=;
+        b=GJEz6AJb/KHRv9csq+7DgHrOWlhG5OHcKer3cBUjJEe/j5EBdcEFxbfthHuzJQtyg0
+         qBnsLuR8W/oV84NVivKrsGNTW1dP/CcjGyfCb2a2pTUIdK8nkGVmD3176rf01oQVW+wB
+         U9rJTMwK0sFfdtXe9nYOOozN5o9S+i/47xfYRWm1XXdvNYi/tB1yPRUNBr9vgLJDSxi0
+         JTqTz7rfmIvhlvYE4hfsaEbDoSkd4zVvbeYrszWGOb2SLr3PB1CYJCJwLrwfSmrMqiGu
+         CucAWKSOc40584s5BEW6c2XrbaY4E/Z9eFVbrheqTvo+l+n1EghGyFMA89MHooD63sM1
+         0wWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=CCrrlatLGe2pch85eka5KdA5M3nlY74sUhCA0YXJUZE=;
+        b=YU1ZS61Hx99uMJcxYSeOe7C8tBGlIAb2QrcFbS76Jn7TwDAeDDIsYm7FE5VMmGKDhe
+         ziufDb71dTucpAocOZ8L9gps4ex1eTTcH4nLZ5ZTDuFvb5NRoMwdIshzIxYzwGzLTFM7
+         WR5jd6atLYt3zJcXrzVbz+mWaZnSM8NmJVtE2Tojw1J/IMsJ1wgzIzrMmM3D40eixEBd
+         /ncNgvX4WdkdOtLmEUvWsnIfWBW7vkgPyhVCUVBRlXO+puA7RfY7V6FbaxogzFA6IHtY
+         IVcmWEIrqcfV4Ga6KureNSM21W6hL+NmdOoce0UxIxeZ8wGRXb9oviF7pSFqJuX54Ur8
+         Ib0A==
+X-Gm-Message-State: ANhLgQ0zSPpCqeCIWZHj4/S3oL9Vr1wqybIyKz1vh7ShHZSCjGK9N/jR
+        oJj3fC3dq7LGiRVFbIzge6s=
+X-Google-Smtp-Source: ADFU+vu5fZuXu66R5s8Y3mLio5TM8/kNc5DuVeYxvMEYhsmQWENep4y6myvf8QCC/HM/JRRuN0JBKw==
+X-Received: by 2002:a62:e217:: with SMTP id a23mr1908057pfi.50.1583307740276;
+        Tue, 03 Mar 2020 23:42:20 -0800 (PST)
+Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
+        by smtp.gmail.com with ESMTPSA id k24sm24097374pgm.61.2020.03.03.23.42.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 03 Mar 2020 23:42:19 -0800 (PST)
+From:   Baolin Wang <baolin.wang7@gmail.com>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
+        arnd@arndb.de, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RESEND PATCH 0/3] Introduce the request_atomic() for the host
+Date:   Wed,  4 Mar 2020 15:41:59 +0800
+Message-Id: <cover.1583307441.git.baolin.wang7@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch set introduces a new request_atomic() interface for the
+MMC host controller, which is used to submit a request to host in
+the atomic context, such as in the irq hard handler, to reduce the
+request latency.
 
-On 1/17/2020 2:26 PM, Sean Christopherson wrote:
-> @@ -8198,8 +8194,9 @@ static int vcpu_enter_guest(struct kvm_vcpu *vcpu)
->   	trace_kvm_entry(vcpu->vcpu_id);
->   	guest_enter_irqoff();
->   
-> -	/* The preempt notifier should have taken care of the FPU already.  */
-> -	WARN_ON_ONCE(test_thread_flag(TIF_NEED_FPU_LOAD));
-> +	fpregs_assert_state_consistent();
-> +	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-> +		switch_fpu_return();
->   
->   	if (unlikely(vcpu->arch.switch_db_regs)) {
->   		set_debugreg(0, 7);
+Any comments are welcome. Thanks.
 
-Can kvm be preempt out again after this (before really enter to guest)?
+Baolin Wang (3):
+  mmc: host: Introduce the request_atomic() for the host
+  mmc: host: sdhci-sprd: Implement the request_atomic() API
+  mmc: host: hsq: Support request_atomic() API
 
-Thanks,
+ drivers/mmc/host/mmc_hsq.c    |  5 ++++-
+ drivers/mmc/host/sdhci-sprd.c | 28 ++++++++++++++++++++++++++--
+ drivers/mmc/host/sdhci.c      | 27 +++++++++++++++++++--------
+ drivers/mmc/host/sdhci.h      |  1 +
+ include/linux/mmc/host.h      |  3 +++
+ 5 files changed, 53 insertions(+), 11 deletions(-)
 
-Jing
+-- 
+1.9.1
 
