@@ -2,141 +2,110 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6847C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E85DC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:13:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EE8F2146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:10:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D704A21775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAIlV8aN"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KrDb4dJR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387706AbgCDTK5 (ORCPT
+        id S1728499AbgCDTNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:10:57 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:41898 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgCDTK4 (ORCPT
+        Wed, 4 Mar 2020 14:13:31 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:42384 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgCDTNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:10:56 -0500
-Received: by mail-qk1-f195.google.com with SMTP id b5so2765351qkh.8;
-        Wed, 04 Mar 2020 11:10:56 -0800 (PST)
+        Wed, 4 Mar 2020 14:13:31 -0500
+Received: by mail-pl1-f194.google.com with SMTP id u3so1431709plr.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:13:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nM1dA0CwnvAM+gebairRIvq9J2g7Xu9WpCogn31XPBo=;
-        b=TAIlV8aNIDDYyO3ACIaObRlbYK3dBnJamRbkfvCJbacLxiZgD7T6PhJrwsOM/t+BJ3
-         pPWQVc2vDWHmcy+DS3TCkwxR+VnZAwBU9KoRg2adXHYZhWIlu1he3j6pukRHDnbKveGV
-         WhRW6QUl3vlCIM2AN7JkH9xdtJuahL0JrtLGc3rOa4/UykNbHqYvj2639Jk7f6NzsBSk
-         cgD3EdIWOeGy9DsqMhAmqK/iYgJJ092oG4XT24lb/VPaR0ItDN51TeqD0d/XGH+0ip05
-         lbndHnePSLHZVULLe27S1rUALeGOx1+U7kdqri+VEnnGYXt5FnNLHhu+Eanxp0Wcfi6N
-         7KpQ==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=bWWT0U7gHG36go3/z5DgOvjRYUt+7WTsiRbz2Kqd1qY=;
+        b=KrDb4dJR9TipAek99R/Qkotco316kjOROJVvfj5QLq2nQMUrLqLQWHPvZ2YmRFk+gL
+         Xb457WqeHGsnYiVRwkmmRDvKa0Ml4oO6WGX1TAw3O/GjciLLmoxs89vhtJe24P2pItz7
+         3cdXBGHTQ9kIWAKHZdsOk9hBs8MK1zInEOie8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nM1dA0CwnvAM+gebairRIvq9J2g7Xu9WpCogn31XPBo=;
-        b=ryrasN/sjNGeKQ+HG2XGxOVvuzTkkGtIds9m7Yp03CWkW+3cFGKZ0n16/pnOsvLF5W
-         8P8mXUJeNbwA0CH4y4HzrOgVjjlnwgoPlDBJRW4dK7aW1bFYNuGTCZAydrAyfhyVcB3U
-         ZIV1u2+YxIkkcRVMZ8bK3/JKR/cEQUlRYJDaBeh7G5QHC+Yzo3HSUgsLLzQpqDMT2n4T
-         3eMy7T734350JPfi0iDas9uJaBG30VYzwHaPgr5xtfQ0d4iNdpmfxiiLuCKllFTa3YEO
-         kDN99Cmh9Gs/iqSf9zUEo8cjAKkUrJX/38UJZQ4J2QMkiV2fITDPXDFsoMkcwUzl9mXE
-         WzoQ==
-X-Gm-Message-State: ANhLgQ3g6qC6fsOkBdZZmGUlePIAUJLkpA4Sdfqo0TKX4uUEzo99oJfV
-        G+kMFlvdgzJdKL2eVYmZ4tU=
-X-Google-Smtp-Source: ADFU+vufyb826SsxzvUtT1EsUhRKy/q1n1dOTjmZJPqrU5E86YpX38WayTTGOVMur15k1YgmK6OeSQ==
-X-Received: by 2002:a05:620a:5f8:: with SMTP id z24mr4396267qkg.203.1583349055725;
-        Wed, 04 Mar 2020 11:10:55 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id 89sm14483809qth.3.2020.03.04.11.10.55
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=bWWT0U7gHG36go3/z5DgOvjRYUt+7WTsiRbz2Kqd1qY=;
+        b=b0+uy63X2KMDrLbL0h9t9kXIsSV3Zx6QnZzlAd/nASkgILWs95zgAkJr9iQdElm1Ot
+         DbLbYBsdbLb0GXFY4Mn4STUqIx2EfQ1L3OfJ1eV9XYH6fG70U9kBooh2Js+ONwWx7XI6
+         AQEuxzR/nteyK3PggNiyopDN2MS7RAqF6sJ5H0cI8Vz9EeB4nN4QvzdTVbA3/CK97lql
+         Tp1NSZz0cEbs4HQMqQ5BxRfXP1vQ0XkJ/+fn5eR6V1ajzdQjRP3VS/k0X94WxQem/GeR
+         KuHSL0ZskXV2hnZs/jPHxs6C6oyN97CbE2PkXcdm/0Sq+b7TcPvwP4nVlSTAn9czIhSj
+         chRw==
+X-Gm-Message-State: ANhLgQ2M2Xex837XG3Z1/qBC6udZPx+dxZtHSUt6e8UzolTXACiEXHiV
+        bRU8ZlDSfNYL2ZOVYhsPm3LgdQ==
+X-Google-Smtp-Source: ADFU+vs8lPKj88hbp2zjV9Zwouj4ueT/9QLwk1yoVWR8eEp+HS7tGSSmKS4bSvY+HXXNwHbodHUsdg==
+X-Received: by 2002:a17:90a:f0c8:: with SMTP id fa8mr4540508pjb.136.1583349210375;
+        Wed, 04 Mar 2020 11:13:30 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id r12sm29051419pgu.93.2020.03.04.11.13.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 11:10:55 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 4 Mar 2020 14:10:53 -0500
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in
- populate_pud
-Message-ID: <20200304191053.GA291311@rani.riverdale.lan>
-References: <20200303205445.3965393-1-nivedita@alum.mit.edu>
- <20200303205445.3965393-2-nivedita@alum.mit.edu>
- <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
- <20200304154908.GB998825@rani.riverdale.lan>
- <CAKv+Gu-Xo2zj9_N+K8FrpBstgU57GZvWO-pDr4tRAODhsYzW-A@mail.gmail.com>
- <20200304185042.GA281042@rani.riverdale.lan>
- <CAKv+Gu-6YoJMLbR8UUsBeRPzk7r_4aKBprqay2kf6cKMPwsHgQ@mail.gmail.com>
+        Wed, 04 Mar 2020 11:13:29 -0800 (PST)
+Date:   Wed, 4 Mar 2020 11:13:28 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] docs: deprecated.rst: Add %p to the list
+Message-ID: <202003041103.A5842AD@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu-6YoJMLbR8UUsBeRPzk7r_4aKBprqay2kf6cKMPwsHgQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 08:04:04PM +0100, Ard Biesheuvel wrote:
-> On Wed, 4 Mar 2020 at 19:50, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Wed, Mar 04, 2020 at 07:44:50PM +0100, Ard Biesheuvel wrote:
-> > >
-> > > I've tried a couple of different ways, but I can't seem to get my
-> > > memory map organized in the way that will trigger the error.
-> >
-> > What does yours look like? efi_merge_regions doesn't merge everything
-> > that will eventually be mapped the same way, so if there are some
-> > non-conventional memory regions scattered over the address space, it
-> > might be breaking up the mappings to the point where this doesn't
-> > trigger.
-> 
-> I have a region
-> 
-> [    0.000000] efi: mem07: [Conventional Memory|   |  |  |  |  |  |  |
->  |   |WB|WT|WC|UC] range=[0x0000000001400000-0x00000000b9855fff]
-> (2948MB)
-> 
-> which gets covered correctly
-> 
-> [    0.401766] 0x0000000000a00000-0x0000000040000000        1014M
-> RW         PSE         NX pmd
-> [    0.403436] 0x0000000040000000-0x0000000080000000           1G
-> RW         PSE         NX pud
-> [    0.404645] 0x0000000080000000-0x00000000b9800000         920M
-> RW         PSE         NX pmd
-> [    0.405844] 0x00000000b9800000-0x00000000b9a00000           2M
-> RW                     NX pte
-> [    0.407436] 0x00000000b9a00000-0x00000000baa00000          16M
-> ro         PSE         x  pmd
-> [    0.408591] 0x00000000baa00000-0x00000000bbe00000          20M
-> RW         PSE         NX pmd
-> [    0.409751] 0x00000000bbe00000-0x00000000bc000000           2M
-> RW                     NX pte
-> [    0.410821] 0x00000000bc000000-0x00000000be600000          38M
-> RW         PSE         NX pmd
-> 
-> However, the fact that you can provide a case where it does fail
-> should be sufficient justification for taking this patch. I was just
-> trying to give more than a regression-tested-by
+Once in a while %p usage comes up, and I've needed to have a reference
+to point people to. Add %p details to deprecated.rst.
 
-No, this case is exactly one that should break. But I think you're
-running on a processor model that _does_ support GB pages, as shown by
-the "pud" mapping there for the 1G-2G range.
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ Documentation/process/deprecated.rst | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-At least for my version of qemu, -cpu Haswell does not enable the
-pdpe1gb feature. Which cpu did you specify?
+diff --git a/Documentation/process/deprecated.rst b/Documentation/process/deprecated.rst
+index f9f196d3a69b..a4db119f4e09 100644
+--- a/Documentation/process/deprecated.rst
++++ b/Documentation/process/deprecated.rst
+@@ -109,6 +109,23 @@ the given limit of bytes to copy. This is inefficient and can lead to
+ linear read overflows if a source string is not NUL-terminated. The
+ safe replacement is :c:func:`strscpy`.
+ 
++%p format specifier
++-------------------
++Using %p in format strings leads to a huge number of address exposures.
++Instead of leaving these to be exploitable, "%p" should not be used in
++the kernel. If used currently, it is a hashed value, rendering it
++unusable for addressing. Paraphrasing Linus's current `guideance <https://lore.kernel.org/lkml/CA+55aFwQEd_d40g4mUCSsVRZzrFPUJt74vc6PPpb675hYNXcKw@mail.gmail.com/>`_:
++
++- Just use %p and get the hashed value.
++- If the hashed value is pointless, ask yourself whether the pointer
++  itself is important. Maybe it should be removed entirely?
++- As a last option, if you really think the true pointer value is
++  important, why is some system state or user privilege level considered
++  "special"? If it is well justified (in comments and commit log), maybe
++  you can use %px along with making sure you have sensible permissions.
++
++A system-wide toggle will `not be accepted <https://lore.kernel.org/lkml/CA+55aFwieC1-nAs+NFq9RTwaR8ef9hWa4MjNBWL41F-8wM49eA@mail.gmail.com/>`_.
++
+ Variable Length Arrays (VLAs)
+ -----------------------------
+ Using stack VLAs produces much worse machine code than statically
+-- 
+2.20.1
 
-Thanks.
+
+-- 
+Kees Cook
