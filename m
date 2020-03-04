@@ -2,113 +2,93 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89A28C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A6DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599912146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 183352166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ou8iH/Cm"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="OjnU5uVr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388189AbgCDSfx (ORCPT
+        id S1730139AbgCDSgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:35:53 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:45429 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725795AbgCDSfx (ORCPT
+        Wed, 4 Mar 2020 13:36:39 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:40557 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730021AbgCDSgi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:35:53 -0500
-Received: by mail-qv1-f68.google.com with SMTP id r8so1233615qvs.12
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:35:52 -0800 (PST)
+        Wed, 4 Mar 2020 13:36:38 -0500
+Received: by mail-qk1-f194.google.com with SMTP id m2so2655778qka.7
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:36:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ziepe.ca; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=ReviJMD+t2nTkEcKpffaEWec1dHi6/oSh/k3dSk9bzo=;
-        b=ou8iH/CmjpYntl/F9Fkt9NpoWHT1vt58MYkHsWR2qot/Pb08OC4XP2hmLo0dXZT2wW
-         3vtMulFdr0ZguIe8awZGOexU+uB6E69wj0GsFTUGVpbTwTphtVql/9oW23CkTkAirAey
-         NNq968SS9AjV7+5SpMKlo5OA2yWyHjtkQXT7UjoUH+hNGVLjZ8kC5xTXry37thc3aoJw
-         8IWze8/4UXaCe7jdPndqaR8+cOYAEpS80tRToFPebLi52O7s8Sz2NdllDKQTSB37UiP3
-         +mF5JSzg5Px2b86YJ+lGK/T25BZLkHNCrTiDQYN1wzdfmxqVW3qPC7cRmr9Bx/tdNpE6
-         OPmQ==
+        bh=BTZGkR5oJbEVIGvYgx8yo/76DyQUafIlIN4hqBpP97M=;
+        b=OjnU5uVrfIPDZs47K0nAL/eBE/nD5yfzsJrdujAUAEZcfHOxLjR2q5tjKvwGOuyzhL
+         rATMCnRPtkUfYzns52w36tXGs6cNTeA1FUh/ZONJjzjtZ+j+VHppGG7UtNyPnksZ2ELF
+         gYlNGHqJRU038L7+GoUXabYJbp71QMwWFYjAbDvn9nVuzPWDKp1N4Uc24GYh122RkZEJ
+         aoP8icI/jaIPPbHA46okbonqnhBt5f6BkswyYCY6EDpcp6C1Iah2bk0degti+sWoU4Ah
+         ut4X96UCj3ZocInP2p11AK+YF9jnpKNeTX1pVnmY/Qw1lXmMYHk4qnaKeAlmhmltptX7
+         1+7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ReviJMD+t2nTkEcKpffaEWec1dHi6/oSh/k3dSk9bzo=;
-        b=iv8KOcLaPAXzaQHivLdd+WCd26Se44z+KiQgF7HvkanF44svswzagvHucUiAPWzQDH
-         OxF2TBMzTMNIv/GsiAfPRVnP4d+7Dy52Kkf1stJ9qZZjpXAQUJQqgZNl32cAZXBhdVWy
-         riZWbUBa41ALYs10vKdXRtLdQk34H0yAGFQ1bGhAEGLT/RBzXGgO57+dEaWNOTFcYb4G
-         f6FgNizYGDP0vAINUkjWykE1WGJAwzYSYuF5Qn6373We2H+l0s4SXZaAb6YisO5HMB1M
-         pDcVMJwEJ6z/WhrIW9HHqlGQyMXcn03HrCXWVKzlqDMyLj7C981sK8C/VmZKz1uMpg4w
-         16+Q==
-X-Gm-Message-State: ANhLgQ2XseNvrFI+bdHWYF2aTclmVt9W1C5YFIIL0PrZwrusqq85cMCE
-        fhsMGwYIfwIgi7XStzLk3eY0IQ==
-X-Google-Smtp-Source: ADFU+vvvZIHBlgSHtiNu2mflD58ZD6RxqmLjV27603PngSRA/NMR4qXG9NtD3FBZdi3dYx/h7CEpfw==
-X-Received: by 2002:a0c:8402:: with SMTP id l2mr3119381qva.227.1583346952100;
-        Wed, 04 Mar 2020 10:35:52 -0800 (PST)
+        bh=BTZGkR5oJbEVIGvYgx8yo/76DyQUafIlIN4hqBpP97M=;
+        b=QCGZ74iFDhjXIbeTkhOxDJg8nZQ6I+4P/PS5JBeTu5IrZcVWCFvtptPca500dVp3yU
+         8Oj4Bw/1gnu1MEV4CXl7m8aUrHHoMyZPqA2ssl9uob71e0W9Nod27hkzMXLvM2KpHQfi
+         sUsm/7gj34UZB/IwpjhOqiCLOe4UFWOXm13JI21lfLeZQi9PiUWx32e0qTDmWC77meRT
+         92Ub85DS0Eb6DM2HFQ+q3UnhnY35z267NxzHpk3zLlRmk4x965+tEJMNIGrUX4z0unrq
+         UxSzyD8/9mYemcqNODSQYRwfET0OqJxlXsms428hobJ5e3E1ZrDYoa6a4p5NQctLbrDX
+         pj2w==
+X-Gm-Message-State: ANhLgQ1y7yaJHpalngF9Ev2ZfP87qnaB4Ml/nOuCetS2ni71DubAP5Em
+        y5ZNqIpuH2zjd0srYjpM8k1NKQ==
+X-Google-Smtp-Source: ADFU+vv3IY/dEewbZ3PVzTR22dzcBCye571kokXxK2nB/kL3DOI7LkFGdmEpCqtLU9gFGOacLPQ1ng==
+X-Received: by 2002:a05:620a:13a9:: with SMTP id m9mr4368318qki.359.1583346997748;
+        Wed, 04 Mar 2020 10:36:37 -0800 (PST)
 Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id l2sm7743975qtq.16.2020.03.04.10.35.51
+        by smtp.gmail.com with ESMTPSA id w13sm7822900qtn.83.2020.03.04.10.36.37
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Mar 2020 10:35:51 -0800 (PST)
+        Wed, 04 Mar 2020 10:36:37 -0800 (PST)
 Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
         (envelope-from <jgg@ziepe.ca>)
-        id 1j9Ys3-0003R9-2h; Wed, 04 Mar 2020 14:35:51 -0400
-Date:   Wed, 4 Mar 2020 14:35:51 -0400
+        id 1j9Ysm-0003Tw-QC; Wed, 04 Mar 2020 14:36:36 -0400
+Date:   Wed, 4 Mar 2020 14:36:36 -0400
 From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <bmt@zurich.ibm.com>
-Cc:     dledford@redhat.com, kamalheib1@gmail.com, krishna2@chelsio.com,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH for-rc] RDMA/iwcm: Fix iwcm work deallocation
-Message-ID: <20200304183551.GA7859@ziepe.ca>
-References: <20200302181614.17042-1-bmt@zurich.ibm.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
+        Doug Ledford <dledford@redhat.com>, linux-rdma@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] RDMA/hns: fix spelling mistake "attatch" ->
+ "attach"
+Message-ID: <20200304183636.GA13359@ziepe.ca>
+References: <20200304081045.81164-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302181614.17042-1-bmt@zurich.ibm.com>
+In-Reply-To: <20200304081045.81164-1-colin.king@canonical.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 07:16:14PM +0100, Bernard Metzler wrote:
-> The dealloc_work_entries() function must update the
-> work_free_list pointer while freeing its entries, since
-> potentially called again on same list. A second iteration
-> of the work list caused system crash. This happens, if
-> work allocation fails during cma_iw_listen() and
-> free_cm_id() tries to free the list again during cleanup.
+On Wed, Mar 04, 2020 at 09:10:45AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Reported-by: syzbot+cb0c054eabfba4342146@syzkaller.appspotmail.com
-> Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+> There is a spelling mistake in an error message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->  drivers/infiniband/core/iwcm.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+>  drivers/infiniband/hw/hns/hns_roce_qp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Applied to for-rc, please include Fixes lines in patches like this, I
-added one
- 
- diff --git a/drivers/infiniband/core/iwcm.c b/drivers/infiniband/core/iwcm.c
-> index ade71823370f..da8adadf4755 100644
-> --- a/drivers/infiniband/core/iwcm.c
-> +++ b/drivers/infiniband/core/iwcm.c
-> @@ -159,8 +159,10 @@ static void dealloc_work_entries(struct iwcm_id_private *cm_id_priv)
->  {
->  	struct list_head *e, *tmp;
->  
-> -	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list)
-> +	list_for_each_safe(e, tmp, &cm_id_priv->work_free_list) {
-> +		list_del(e);
->  		kfree(list_entry(e, struct iwcm_work, free_list));
-
-It would be nice if someone were to fix the use of the list macros in
-this file to use the _entry_ versions
+Applied to for-next, thanks
 
 Jason
