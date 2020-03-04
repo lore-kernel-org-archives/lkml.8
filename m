@@ -2,199 +2,167 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78969C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:26:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE341C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D5220866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:26:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 917D020848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583332152;
+	bh=MoVMyRxpuSKRHRt4lMrhqnWM+ARRucdTScPkRq8a2sI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=2apKSI3m6GuV5dbnCN9AMDN9l0nRiOgcBJjapIgWY+7a/zWJhUceDw8GS+WOxBjVE
+	 y0oWLYDyEzV4Y2acp2XCMsGTq+eWkMqZQ1qMTtmz4ZkJEpVfwNz0c9V/7TrtY5TFCW
+	 6WiuIUqG0X9LYsEJ8bORLGfxgp7TI8qCAtjEPwSY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729601AbgCDO0M (ORCPT
+        id S2387937AbgCDO3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:26:12 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32316 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729386AbgCDO0L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:26:11 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024ENpYg117451
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 09:26:10 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yhpwn2yjm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:26:09 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Wed, 4 Mar 2020 14:26:07 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Mar 2020 14:26:00 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024EPwZ512648592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Mar 2020 14:25:58 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93DBCAE04D;
-        Wed,  4 Mar 2020 14:25:58 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8A97CAE045;
-        Wed,  4 Mar 2020 14:25:57 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.145.27])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Mar 2020 14:25:57 +0000 (GMT)
-Subject: Re: [PATCH v3 22/27] powerpc/powernv/pmem: Implement the heartbeat
- command
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-23-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Wed, 4 Mar 2020 15:25:57 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-23-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030414-0016-0000-0000-000002ED23C9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030414-0017-0000-0000-00003350725A
-Message-Id: <c660294c-58aa-24cc-efd1-291ffe4836c1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- adultscore=0 spamscore=0 bulkscore=0 priorityscore=1501 suspectscore=0
- mlxlogscore=999 phishscore=0 malwarescore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040109
+        Wed, 4 Mar 2020 09:29:11 -0500
+Received: from foss.arm.com ([217.140.110.172]:35018 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729484AbgCDO3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 09:29:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFC6B31B;
+        Wed,  4 Mar 2020 06:29:10 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 51E353F6CF;
+        Wed,  4 Mar 2020 06:29:10 -0800 (PST)
+Date:   Wed, 04 Mar 2020 14:29:08 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Aaro Koskinen <aaro.koskinen@nokia.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: spi_register_controller(): free bus id on error paths" to the spi tree
+In-Reply-To:  <20200304111740.27915-1-aaro.koskinen@nokia.com>
+Message-Id:  <applied-20200304111740.27915-1-aaro.koskinen@nokia.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
+   spi: spi_register_controller(): free bus id on error paths
 
-Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> The heartbeat admin command is a simple admin command that exercises
-> the communication mechanisms within the controller.
-> 
-> This patch issues a heartbeat command to the card during init to ensure
-> we can communicate with the card's controller.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
+has been applied to the spi tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
 
-Nothing to add compared to what has already been commented on previous 
-patches (rc not set in probe(), higher level function to execute admin 
-command in one call).
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-   Fred
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
->   arch/powerpc/platforms/powernv/pmem/ocxl.c | 43 ++++++++++++++++++++++
->   1 file changed, 43 insertions(+)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> index 081883a8247a..e01f6f9fc180 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> @@ -306,6 +306,44 @@ static bool is_usable(const struct ocxlpmem *ocxlpmem, bool verbose)
->   	return true;
->   }
->   
-> +/**
-> + * heartbeat() - Issue a heartbeat command to the controller
-> + * @ocxlpmem: the device metadata
-> + * Return: 0 if the controller responded correctly, negative on error
-> + */
-> +static int heartbeat(struct ocxlpmem *ocxlpmem)
-> +{
-> +	int rc;
-> +
-> +	mutex_lock(&ocxlpmem->admin_command.lock);
-> +
-> +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_HEARTBEAT);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_execute(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_complete_timeout(ocxlpmem, ADMIN_COMMAND_HEARTBEAT);
-> +	if (rc < 0) {
-> +		dev_err(&ocxlpmem->dev, "Heartbeat timeout\n");
-> +		goto out;
-> +	}
-> +
-> +	rc = admin_response(ocxlpmem);
-> +	if (rc < 0)
-> +		goto out;
-> +	if (rc != STATUS_SUCCESS)
-> +		warn_status(ocxlpmem, "Unexpected status from heartbeat", rc);
-> +
-> +	(void)admin_response_handled(ocxlpmem);
-> +
-> +out:
-> +	mutex_unlock(&ocxlpmem->admin_command.lock);
-> +	return rc;
-> +}
-> +
->   /**
->    * allocate_minor() - Allocate a minor number to use for an OpenCAPI pmem device
->    * @ocxlpmem: the device metadata
-> @@ -1458,6 +1496,11 @@ static int probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->   		goto err;
->   	}
->   
-> +	if (heartbeat(ocxlpmem)) {
-> +		dev_err(&pdev->dev, "Heartbeat failed\n");
-> +		goto err;
-> +	}
-> +
->   	elapsed = 0;
->   	timeout = ocxlpmem->readiness_timeout + ocxlpmem->memory_available_timeout;
->   	while (!is_usable(ocxlpmem, false)) {
-> 
+Thanks,
+Mark
+
+From f9981d4f50b475d7dbb70f3022b87a3c8bba9fd6 Mon Sep 17 00:00:00 2001
+From: Aaro Koskinen <aaro.koskinen@nokia.com>
+Date: Wed, 4 Mar 2020 13:17:40 +0200
+Subject: [PATCH] spi: spi_register_controller(): free bus id on error paths
+
+Some error paths leave the bus id allocated. As a result the IDR
+allocation will fail after a deferred probe. Fix by freeing the bus id
+always on error.
+
+Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+Message-Id: <20200304111740.27915-1-aaro.koskinen@nokia.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi.c | 32 +++++++++++++++-----------------
+ 1 file changed, 15 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 197c9e0ac2a6..94145b25f446 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2645,7 +2645,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		if (ctlr->use_gpio_descriptors) {
+ 			status = spi_get_gpio_descs(ctlr);
+ 			if (status)
+-				return status;
++				goto free_bus_id;
+ 			/*
+ 			 * A controller using GPIO descriptors always
+ 			 * supports SPI_CS_HIGH if need be.
+@@ -2655,7 +2655,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 			/* Legacy code path for GPIOs from DT */
+ 			status = of_spi_get_gpio_numbers(ctlr);
+ 			if (status)
+-				return status;
++				goto free_bus_id;
+ 		}
+ 	}
+ 
+@@ -2663,17 +2663,14 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	 * Even if it's just one always-selected device, there must
+ 	 * be at least one chipselect.
+ 	 */
+-	if (!ctlr->num_chipselect)
+-		return -EINVAL;
++	if (!ctlr->num_chipselect) {
++		status = -EINVAL;
++		goto free_bus_id;
++	}
+ 
+ 	status = device_add(&ctlr->dev);
+-	if (status < 0) {
+-		/* free bus id */
+-		mutex_lock(&board_lock);
+-		idr_remove(&spi_master_idr, ctlr->bus_num);
+-		mutex_unlock(&board_lock);
+-		goto done;
+-	}
++	if (status < 0)
++		goto free_bus_id;
+ 	dev_dbg(dev, "registered %s %s\n",
+ 			spi_controller_is_slave(ctlr) ? "slave" : "master",
+ 			dev_name(&ctlr->dev));
+@@ -2689,11 +2686,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		status = spi_controller_initialize_queue(ctlr);
+ 		if (status) {
+ 			device_del(&ctlr->dev);
+-			/* free bus id */
+-			mutex_lock(&board_lock);
+-			idr_remove(&spi_master_idr, ctlr->bus_num);
+-			mutex_unlock(&board_lock);
+-			goto done;
++			goto free_bus_id;
+ 		}
+ 	}
+ 	/* add statistics */
+@@ -2708,7 +2701,12 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 	/* Register devices from the device tree and ACPI */
+ 	of_register_spi_devices(ctlr);
+ 	acpi_register_spi_devices(ctlr);
+-done:
++	return status;
++
++free_bus_id:
++	mutex_lock(&board_lock);
++	idr_remove(&spi_master_idr, ctlr->bus_num);
++	mutex_unlock(&board_lock);
+ 	return status;
+ }
+ EXPORT_SYMBOL_GPL(spi_register_controller);
+-- 
+2.20.1
 
