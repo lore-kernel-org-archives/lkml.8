@@ -2,121 +2,253 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B76C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EC5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DC1420732
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:00:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583334002;
-	bh=wvxq/vGbzNiq8n/RK5/EhcHV3z/kcMg9Bm6arutZxwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OMBQ6rs7XwLt7Nmt4PEPrHK2cmXQa0+ZvATqnkzRpG7rBELBDz6AebRNHzE5xkR9b
-	 u0HDfFGybjNmYjxgFEG+NwxQb9CZ5SbpbtGJfd8SJRBQhOFVHs6E2KW1Q2Mz/OVvVy
-	 tvT9JG0iyWgz62qOr7JR6yRPvVw1i0vZgGaqY8vA=
+	by mail.kernel.org (Postfix) with ESMTP id 8D8DD21741
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:01:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728422AbgCDPAB (ORCPT
+        id S1728048AbgCDPBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:00:01 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:43275 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgCDPAB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:00:01 -0500
-Received: by mail-oi1-f194.google.com with SMTP id p125so2335677oif.10;
-        Wed, 04 Mar 2020 07:00:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5kzs+suiXGOLM6214SN1xySZQC2yuoHuAv+kXNmxnJI=;
-        b=lcRtyXlcvbKwgeaV9KVnIuJXQjvC/Jf5lmd69MWPJEk5efZonlrtTATuknOsOFZKbp
-         fSESkjBWIKORTGhEyq93mJt02ujRmICM2NwL8BbsBoMugDv7kqqHItpecZxQyW0UVo0t
-         9jXCZulEF4Fx5KjbpX/j0WtBXYTXQj+77Q3RHZoMltx41B/kv1RpMwRLGXTGQpPQUYzA
-         kCFS9GFYbNeX9qXR9dNEscSAtnZLfOjm6WL2uHp66CgATHyrvauCkUnRo7poE4/sH/sQ
-         lG1Bl/xttv6whB6Eqb2yRydxJvZHEdBpoVXPGKdmJTRkv7T1P0WIb5NbONvkTsKOZiLY
-         Sl2g==
-X-Gm-Message-State: ANhLgQ2WZhcmYr6mDtJQlE5tnQ08EkzoXTF097kTE69GX4q8DvggxZxc
-        YOH7mDIlUm4ojluZBzgYig==
-X-Google-Smtp-Source: ADFU+vv8e6bqzfrEUfhRglZm6ics/VgmQ0DWwpgysZeN1Q7F7AyUjL7HRD+dgHJdDUz55H2/3Q1G6Q==
-X-Received: by 2002:aca:5194:: with SMTP id f142mr2089262oib.100.1583333999966;
-        Wed, 04 Mar 2020 06:59:59 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id b15sm6358282oic.52.2020.03.04.06.59.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 06:59:59 -0800 (PST)
-Received: (nullmailer pid 20406 invoked by uid 1000);
-        Wed, 04 Mar 2020 14:59:58 -0000
-Date:   Wed, 4 Mar 2020 08:59:58 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Jitao Shi <jitao.shi@mediatek.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, srv_heupstream@mediatek.com,
-        yingjoe.chen@mediatek.com, eddie.huang@mediatek.com,
-        cawa.cheng@mediatek.com, bibby.hsieh@mediatek.com,
-        ck.hu@mediatek.com, stonea168@163.com, huijuan.xie@mediatek.com
-Subject: Re: [PATCH v12 2/6] dt-bindings: display: mediatek: control dpi pins
- mode to avoid leakage
-Message-ID: <20200304145958.GA17716@bogus>
-References: <20200303052722.94795-1-jitao.shi@mediatek.com>
- <20200303052722.94795-3-jitao.shi@mediatek.com>
+        Wed, 4 Mar 2020 10:01:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:35468 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbgCDPBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:01:51 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B86231B;
+        Wed,  4 Mar 2020 07:01:50 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD8FF3F6CF;
+        Wed,  4 Mar 2020 07:01:48 -0800 (PST)
+Date:   Wed, 4 Mar 2020 15:01:46 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH] sched: fair: Use the earliest break even
+Message-ID: <20200304150145.agekdwrpvvamttk6@e107158-lin.cambridge.arm.com>
+References: <20200304114844.17700-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200303052722.94795-3-jitao.shi@mediatek.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200304114844.17700-1-daniel.lezcano@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 01:27:18PM +0800, Jitao Shi wrote:
-> Add property "pinctrl-names" to swap pin mode between gpio and dpi mode. Set
-> the dpi pins to gpio mode and output-low to avoid leakage current when dpi
-> disabled.
+Hi Daniel
+
+Adding Rafael to CC as I think he might be interested in this too.
+
+On 03/04/20 12:48, Daniel Lezcano wrote:
+> In the idle CPU selection process occuring in the slow path via the
+> find_idlest_group_cpu() function, we pick up in priority an idle CPU
+> with the shallowest idle state otherwise we fall back to the least
+> loaded CPU.
 > 
-> Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+> In order to be more energy efficient but without impacting the
+> performances, let's use another criteria: the break even deadline.
+
+What is the break even deadline?
+
+> 
+> At idle time, when we store the idle state the CPU is entering in, we
+> compute the next deadline where the CPU could be woken up without
+> spending more energy to sleep.
+
+I think that's its definition, but could do with more explanation.
+
+So the break even deadline is the time window during which we can abort the CPU
+while entering its shallowest idle state?
+
+So if we have 2 cpus entering the shallowest idle state, we pick the one that
+has a faster abort? And the energy saving comes from the fact we avoided
+unnecessary sleep-just-to-wakeup-immediately cycle?
+
+> 
+> At the selection process, we use the shallowest CPU but in addition we
+> choose the one with the minimal break even deadline instead of relying
+> on the idle_timestamp. When the CPU is idle, the timestamp has less
+> meaning because the CPU could have wake up and sleep again several times
+> without exiting the idle loop. In this case the break even deadline is
+> more relevant as it increases the probability of choosing a CPU which
+> reached its break even.
+> 
+> Tested on a synquacer 24 cores, 6 sched domains:
+> 
+> sched/perf and messaging does not show a performance regression. Ran
+> 10 times schbench and adrestia.
+> 
+> with break-even deadline:
+> -------------------------
+> schbench *99.0th        : 14844.8
+> adrestia / periodic     : 57.95
+> adrestia / single       : 49.3
+> 
+> Without break-even deadline:
+> ----------------------------
+> schbench / *99.0th      : 15017.6
+> adrestia / periodic     : 57
+> adrestia / single       : 55.4
+
+Lower is better or worse? The numbers might be popular and maybe I should have
+known them, but adding some explanation will always help.
+
+Do you have any energy measurement on the impact of this patch?
+
+> 
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 > ---
->  .../devicetree/bindings/display/mediatek/mediatek,dpi.txt  | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  kernel/sched/fair.c  | 18 ++++++++++++++++--
+>  kernel/sched/idle.c  |  9 ++++++++-
+>  kernel/sched/sched.h | 20 ++++++++++++++++++++
+>  3 files changed, 44 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> index 58914cf681b8..77ca32a32399 100644
-> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt
-> @@ -17,6 +17,10 @@ Required properties:
->    Documentation/devicetree/bindings/graph.txt. This port should be connected
->    to the input port of an attached HDMI or LVDS encoder chip.
->  
-> +Optional properties:
-> +- pinctrl-names: Contain "gpiomode" and "dpimode".
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index fcc968669aea..520c5e822fdd 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5793,6 +5793,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+>  {
+>  	unsigned long load, min_load = ULONG_MAX;
+>  	unsigned int min_exit_latency = UINT_MAX;
+> +	s64 min_break_even = S64_MAX;
+>  	u64 latest_idle_timestamp = 0;
+>  	int least_loaded_cpu = this_cpu;
+>  	int shallowest_idle_cpu = -1;
+> @@ -5810,6 +5811,8 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+>  		if (available_idle_cpu(i)) {
+>  			struct rq *rq = cpu_rq(i);
+>  			struct cpuidle_state *idle = idle_get_state(rq);
+> +			s64 break_even = idle_get_break_even(rq);
+> +			
+>  			if (idle && idle->exit_latency < min_exit_latency) {
+>  				/*
+>  				 * We give priority to a CPU whose idle state
+> @@ -5817,10 +5820,21 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+>  				 * of any idle timestamp.
+>  				 */
+>  				min_exit_latency = idle->exit_latency;
+> +				min_break_even = break_even;
+>  				latest_idle_timestamp = rq->idle_stamp;
+>  				shallowest_idle_cpu = i;
+> -			} else if ((!idle || idle->exit_latency == min_exit_latency) &&
+> -				   rq->idle_stamp > latest_idle_timestamp) {
+> +			} else if ((idle && idle->exit_latency == min_exit_latency) &&
+> +				   break_even < min_break_even) {
+> +				/*
+> +				 * We give priority to the shallowest
+> +				 * idle states with the minimal break
+> +				 * even deadline to decrease the
+> +				 * probability to choose a CPU which
+> +				 * did not reach its break even yet
+> +				 */
+> +				min_break_even = break_even;
+> +				shallowest_idle_cpu = i;
+> +			} else if (!idle && rq->idle_stamp > latest_idle_timestamp) {
 
-Doesn't match the example.
+Shouldn't you retain the original if condition here? You omitted the 2nd part
+of this check compared to the original condition
 
-> +  pinctrl-names see Documentation/devicetree/bindings/pinctrlpinctrl-bindings.txt
+	(!idle || >>>idle->exit_latency == min_exit_latency<<<)
+
+>  				/*
+>  				 * If equal or no active idle state, then
+>  				 * the most recently idled CPU might have
+> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+> index b743bf38f08f..189cd51cd474 100644
+> --- a/kernel/sched/idle.c
+> +++ b/kernel/sched/idle.c
+> @@ -19,7 +19,14 @@ extern char __cpuidle_text_start[], __cpuidle_text_end[];
+>   */
+>  void sched_idle_set_state(struct cpuidle_state *idle_state)
+>  {
+> -	idle_set_state(this_rq(), idle_state);
+> +	struct rq *rq = this_rq();
+> +	ktime_t kt;
 > +
->  Example:
+> +	if (likely(idle_state)) {
+> +		kt = ktime_add_ns(ktime_get(), idle_state->exit_latency_ns);
+> +		idle_set_state(rq, idle_state);
+
+This changes the behavior of the function.
+
+There's a call to sched_idle_set_state(NULL), so with this it'd be a NOP.
+
+Is this intentional?
+
+Don't you need to reset the break_even value if idle_state is NULL too?
+
+
+Thanks
+
+--
+Qais Yousef
+
+> +		idle_set_break_even(rq, ktime_to_ns(kt));
+> +	}
+>  }
 >  
->  dpi0: dpi@1401d000 {
-> @@ -27,6 +31,9 @@ dpi0: dpi@1401d000 {
->  		 <&mmsys CLK_MM_DPI_ENGINE>,
->  		 <&apmixedsys CLK_APMIXED_TVDPLL>;
->  	clock-names = "pixel", "engine", "pll";
-> +	pinctrl-names = "active", "idle";
-> +	pinctrl-0 = <&dpi_pin_func>;
-> +	pinctrl-1 = <&dpi_pin_idle>;
+>  static int __read_mostly cpu_idle_force_poll;
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 2a0caf394dd4..abf2d2e73575 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1015,6 +1015,7 @@ struct rq {
+>  #ifdef CONFIG_CPU_IDLE
+>  	/* Must be inspected within a rcu lock section */
+>  	struct cpuidle_state	*idle_state;
+> +	s64			break_even;
+>  #endif
+>  };
 >  
->  	port {
->  		dpi0_out: endpoint {
+> @@ -1850,6 +1851,16 @@ static inline struct cpuidle_state *idle_get_state(struct rq *rq)
+>  
+>  	return rq->idle_state;
+>  }
+> +
+> +static inline void idle_set_break_even(struct rq *rq, s64 break_even)
+> +{
+> +	rq->break_even = break_even;
+> +}
+> +
+> +static inline s64 idle_get_break_even(struct rq *rq)
+> +{
+> +	return rq->break_even;
+> +}
+>  #else
+>  static inline void idle_set_state(struct rq *rq,
+>  				  struct cpuidle_state *idle_state)
+> @@ -1860,6 +1871,15 @@ static inline struct cpuidle_state *idle_get_state(struct rq *rq)
+>  {
+>  	return NULL;
+>  }
+> +
+> +static inline void idle_set_break_even(struct rq *rq, s64 break_even)
+> +{
+> +}
+> +
+> +static inline s64 idle_get_break_even(struct rq *rq)
+> +{
+> +	return 0;
+> +}
+>  #endif
+>  
+>  extern void schedule_idle(void);
 > -- 
-> 2.21.0
+> 2.17.1
+> 
