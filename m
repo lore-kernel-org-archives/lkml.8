@@ -2,104 +2,193 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54392C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40042C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:06:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DB852072D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D66821739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:06:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SJy5M/ff"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TlS//aLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729210AbgCDKEo (ORCPT
+        id S2387692AbgCDKG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:04:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54284 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgCDKEo (ORCPT
+        Wed, 4 Mar 2020 05:06:29 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45101 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbgCDKG2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:04:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=joc6mkpsAJhcX0YbSolxXtfYnAc+3nHjCaHtP4av6cA=; b=SJy5M/ffBE1p9hJhif0f8H62mq
-        hEX2p1T7p2fmGz0zJQJ9bgotX/ie27/bPzy4ZJCya+QsQYcA/NGPslBJlpDuu6vodH+MwhcpHtoeO
-        2OIX/ztQ/gj5RMwHNndjuRtPW37hpJwjphRsVknIRPL0MPH6snmxX3NaQLYoqucw37WVEO/MDQ+zb
-        B72Zh6wpkL1i55feEvJSOZOfIxuelto44mvAjfgHREW57zd5/stIByD5PvGy3KvrOmym0opWWdzF6
-        fGnrVFZSn3GPDp22KXP1pwYEuVB3PeUvNENlJjQve2/6BVzQolYNBjtIxWJmCIpfjkruLPPoSjBVj
-        F4V3FnkA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9QtL-0001om-Vx; Wed, 04 Mar 2020 10:04:40 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8E35D3013A4;
-        Wed,  4 Mar 2020 11:02:39 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 12DBF20BCBDC5; Wed,  4 Mar 2020 11:04:38 +0100 (CET)
-Date:   Wed, 4 Mar 2020 11:04:38 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     hpa@zytor.com
-Cc:     Alexey Dobriyan <adobriyan@gmail.com>, rjw@rjwysocki.net,
-        lenb@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, luto@kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] x86/acpi: make "asmlinkage" part first thing in the
- function definition
-Message-ID: <20200304100437.GM2596@hirez.programming.kicks-ass.net>
-References: <20200303204144.GA9913@avx2>
- <9947D7CB-B9CD-47E0-BC5E-C7FC3A81FC7B@zytor.com>
+        Wed, 4 Mar 2020 05:06:28 -0500
+Received: by mail-ed1-f66.google.com with SMTP id h62so1573518edd.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:06:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qvjAotCReIalwn7hfhRA/t4b2Gvv6W6FE/RxEgqf7t8=;
+        b=TlS//aLMBwYMpsokQs4f+uhkB8/BG6XV1ID6SLScsSnRde6IV1KEaVzUesz7X0HS48
+         sIqEqXZkY/mPsymtHOURw4GXi3q66hWqhz2+X9RmD1Tt6GIOl5oQyAoTRaDV+5sRRvhv
+         IvnergFq3KB0EY3wYxA/Gb3RTzWpD64yfgeDV3JxMSWKZo+ch1ImmDmVc8jJLAtePuTN
+         5+J8TBDTgjG5wlwCK7CmVA+ykJI20Yp+CqZVyJsr1sUMeh2NpynuAmioA6YLOSuZCp3t
+         ktALDGuW+aAoYRgsy3D1e9JSlCS0FPG0GzdP12OhnzaiM45ZI2LYw36sH6Z1KBVgRgP7
+         DORg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qvjAotCReIalwn7hfhRA/t4b2Gvv6W6FE/RxEgqf7t8=;
+        b=OhEqwDI21YIWyRyIfksL4AJKjQX136yy+vNKkYNe6C/HUXjLZsf+VvC0MnrI/rkCzO
+         UscCrtZQneDk7hlsxAKsNjmDM9/awljxIOrBJzeKzH70bDT4Kg4d/JQpKUK1YkjY4Mnf
+         Cfn1F0kzLJF6iQ8dmUJxef9xBUPjdDKUNPSjx/mmYUlLlJX6nxD5+P4ohN9BfIKlux1g
+         qEtjtN0cYwlRk1S00QzjAdatGec9cUHASG6g+qMyTOJnt6ljPCS03g2y+Xy4McxBJGtX
+         jA5F+mE5yrmNSCit6aFPMfaPxiBCXG3dokgEocP/eCBw9h1lebxSH9v7Y5a+VYYIkI+N
+         AG+Q==
+X-Gm-Message-State: ANhLgQ0YPsDaN8rPZm6SqTeYfMus23aeIZ4UTXwBLdSS96fXXsEbjOd8
+        hrTGEHXh0LCjcpyQ94fmYXA1XWA/Cbypjh7aOkzdQA==
+X-Google-Smtp-Source: ADFU+vsOS1A0XyioMVvDKG5rYZHg689H6J6a0RrbmZGMdwpvoTGbmXSr6HznowYHxLngFqxStbYPiqT+Uq3K7hbs3qQ=
+X-Received: by 2002:a17:906:15c2:: with SMTP id l2mr1771475ejd.302.1583316386498;
+ Wed, 04 Mar 2020 02:06:26 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9947D7CB-B9CD-47E0-BC5E-C7FC3A81FC7B@zytor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200228105435.75298-1-lrizzo@google.com> <20200228110043.2771fddb@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+ <CA+FuTSfd80pZroxtqZDsTeEz4FaronC=pdgjeaBBfYqqi5HiyQ@mail.gmail.com> <3c27d9c0-eb17-b20f-2d10-01f3bdf8c0d6@iogearbox.net>
+In-Reply-To: <3c27d9c0-eb17-b20f-2d10-01f3bdf8c0d6@iogearbox.net>
+From:   Luigi Rizzo <lrizzo@google.com>
+Date:   Wed, 4 Mar 2020 02:06:15 -0800
+Message-ID: <CAMOZA0+T3k25ndRKpSwDZ9vHkMaJUz4XhtfGFGNn=sPrGoSQ4Q@mail.gmail.com>
+Subject: Re: [PATCH v4] netdev attribute to control xdpgeneric skb linearization
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        =?UTF-8?B?VG9rZSBIw7hpbGFuZC1Kw7hyZ2Vuc2Vu?= <toke@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        "Jubran, Samih" <sameehj@amazon.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, ast@kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 12:54:09AM -0800, hpa@zytor.com wrote:
-> On March 3, 2020 12:41:44 PM PST, Alexey Dobriyan <adobriyan@gmail.com> wrote:
-> >g++ insists that function declaration must start with extern "C"
-> >(which asmlinkage expands to).
-> >
-> >gcc doesn't care.
-> >
-> >Signed-off-by: _Z6Alexeyv <adobriyan@gmail.com>
-> >---
-> >
-> > arch/x86/kernel/acpi/sleep.c |    2 +-
-> > arch/x86/kernel/acpi/sleep.h |    2 +-
-> > 2 files changed, 2 insertions(+), 2 deletions(-)
-> >
-> >--- a/arch/x86/kernel/acpi/sleep.c
-> >+++ b/arch/x86/kernel/acpi/sleep.c
-> >@@ -43,7 +43,7 @@ unsigned long acpi_get_wakeup_address(void)
-> >  *
-> >  * Wrapper around acpi_enter_sleep_state() to be called by assmebly.
-> >  */
-> >-acpi_status asmlinkage __visible x86_acpi_enter_sleep_state(u8 state)
-> >+asmlinkage acpi_status __visible x86_acpi_enter_sleep_state(u8 state)
-> > {
-> > 	return acpi_enter_sleep_state(state);
-> > }
-> >--- a/arch/x86/kernel/acpi/sleep.h
-> >+++ b/arch/x86/kernel/acpi/sleep.h
-> >@@ -19,4 +19,4 @@ extern void do_suspend_lowlevel(void);
-> > 
-> > extern int x86_acpi_suspend_lowlevel(void);
-> > 
-> >-acpi_status asmlinkage x86_acpi_enter_sleep_state(u8 state);
-> >+asmlinkage acpi_status x86_acpi_enter_sleep_state(u8 state);
-> 
-> Are you building the kernel with C++?!
+[taking one message in the thread to answer multiple issues]
 
-He is :-) IIRC he's got a whole bunch of patches that removes all the
-C++ keywords from the kernel.
+On Tue, Mar 3, 2020 at 11:47 AM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>
+> On 2/29/20 12:53 AM, Willem de Bruijn wrote:
+> > On Fri, Feb 28, 2020 at 2:01 PM Jakub Kicinski <kuba@kernel.org> wrote:
+> >> On Fri, 28 Feb 2020 02:54:35 -0800 Luigi Rizzo wrote:
+> >>> Add a netdevice flag to control skb linearization in generic xdp mode.
+> >>>
+> >>> The attribute can be modified through
+> >>>        /sys/class/net/<DEVICE>/xdpgeneric_linearize
+> >>> The default is 1 (on)
+...
+> >>> ns/pkt                   RECEIVER                 SENDER
+> >>>
+> >>>                      p50     p90     p99       p50   p90    p99
+> >>>
+> >>> LINEARIZATION:    600ns  1090ns  4900ns     149ns 249ns  460ns
+> >>> NO LINEARIZATION:  40ns    59ns    90ns      40ns  50ns  100ns
+...
+> >> Just load your program in cls_bpf. No extensions or knobs needed.
+
+Yes this is indeed an option, perhaps the only downside is that
+it acts after packet taps, so if, say, the program is there to filter unwanted
+traffic we would miss that protection.
+
+...
+> >> Making xdpgeneric-only extensions without touching native XDP makes
+> >> no sense to me. Is this part of some greater vision?
+> >
+> > Yes, native xdp has the same issue when handling packets that exceed a
+> > page (4K+ MTU) or otherwise consist of multiple segments. The issue is
+> > just more acute in generic xdp. But agreed that both need to be solved
+> > together.
+> >
+> > Many programs need only access to the header. There currently is not a
+> > way to express this, or for xdp to convey that the buffer covers only
+> > part of the packet.
+>
+> Right, my only question I had earlier was that when users ship their
+> application with /sys/class/net/<DEVICE>/xdpgeneric_linearize turned off,
+> how would they know how much of the data is actually pulled in? Afaik,
+
+The short answer is that before turning linearization off, the sysadmin should
+make sure that the linear section contains enough data for the program
+to operate.
+In doubt, leave linearization on and live with the cost.
+
+The long answer (which probably repeats things I already discussed
+with some of you):
+clearly this patch is not perfect, as it lacks ways for the kernel and
+bpf program to
+communicate
+a) whether there is a non-linear section, and
+b) whether the bpf program understands non-linear/partial packets and how much
+linear data (and headroom) it expects.
+
+Adding these two features needs some agreement on the details.
+We had a thread a few weeks ago about multi-segment xdp support, I am not sure
+we reached a conclusion, and I am concerned that we may end up reimplementing
+sg lists or simplified-skbs for use in bpf programs where perhaps we
+could just live
+with pull_up/accessor for occasional access to the non-linear part,
+and some hints
+that the program can pass to the driver/xdpgeneric to specify
+requirements. for #b
+
+Specifically:
+#a is trivial -- add a field to the xdp_buff, and a helper to read it
+from the bpf program;
+#b is a bit less clear -- it involves a helper to either pull_up or
+access the non linear data
+(which one is preferable probably depends on the use case and we may want both),
+and some attribute that the program passes to the kernel at load time,
+to control
+when linearization should be applied. I have hacked the 'license'
+section to pass this
+information on a per-program basis, but we need a cleaner way.
+
+My reasoning for suggesting this patch, as an interim solution, is that
+being completely opt-in, one can carefully evaluate when it is safe to use
+even without having #b implemented.
+For #a, the program might infer (but not reliably) that some data are
+missing by looking
+at the payload length which may be present in some of the headers. We
+could mitigate
+abuse by e.g. forcing XDP_REDIRECT and XDP_TX in xdpgeneric only
+accept linear packets.
+
+cheers
+luigi
+
+> some drivers might only have a linear section that covers the eth header
+> and that is it. What should the BPF prog do in such case? Drop the skb
+> since it does not have the rest of the data to e.g. make a XDP_PASS
+> decision or fallback to tc/BPF altogether? I hinted earlier, one way to
+> make this more graceful is to add a skb pointer inside e.g. struct
+> xdp_rxq_info and then enable an bpf_skb_pull_data()-like helper e.g. as:
+>
+> BPF_CALL_2(bpf_xdp_pull_data, struct xdp_buff *, xdp, u32, len)
+> {
+>          struct sk_buff *skb = xdp->rxq->skb;
+>
+>          return skb ? bpf_try_make_writable(skb, len ? :
+>                                             skb_headlen(skb)) : -ENOTSUPP;
+> }
+>
+> Thus, when the data/data_end test fails in generic XDP, the user can
+> call e.g. bpf_xdp_pull_data(xdp, 64) to make sure we pull in as much as
+> is needed w/o full linearization and once done the data/data_end can be
+> repeated to proceed. Native XDP will leave xdp->rxq->skb as NULL, but
+> later we could perhaps reuse the same bpf_xdp_pull_data() helper for
+> native with skb-less backing. Thoughts?
+>
+> Thanks,
+> Daniel
