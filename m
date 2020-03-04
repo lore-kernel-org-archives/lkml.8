@@ -2,101 +2,148 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BD0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A8CC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FC5620842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D1E420866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:18:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HrgFjRhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388358AbgCDVQJ (ORCPT
+        id S1729823AbgCDVSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:16:09 -0500
-Received: from baldur.buserror.net ([165.227.176.147]:34298 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387762AbgCDVQI (ORCPT
+        Wed, 4 Mar 2020 16:18:14 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45519 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgCDVSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:16:08 -0500
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1j9bIq-0000R4-KO; Wed, 04 Mar 2020 15:11:40 -0600
-Message-ID: <b5854fd867982527c107138d52a61010079d2321.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Kees Cook <keescook@chromium.org>, Jason Yan <yanaijie@huawei.com>
-Cc:     pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
-        linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Axtens <dja@axtens.net>
-Date:   Wed, 04 Mar 2020 15:11:39 -0600
-In-Reply-To: <202003041022.26AF0178@keescook>
-References: <20200304124707.22650-1-yanaijie@huawei.com>
-         <202003041022.26AF0178@keescook>
-Organization: Red Hat
+        Wed, 4 Mar 2020 16:18:13 -0500
+Received: by mail-ot1-f67.google.com with SMTP id f21so3502986otp.12;
+        Wed, 04 Mar 2020 13:18:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=btFxI1AY902XfnaAbQ65M1jnLtqbJ2OeOdebXmzbiT8=;
+        b=HrgFjRhWzaQHkAI3vNc7+HytZ01Wr0Dz4sMaw2UVaZFnuBjfR4TEcv4rhqM+ZLsI5/
+         GK7CHt4XYQmlabtfqTHhMAPpOZYDA2eS35+9dNCJumVMrzQLUFhd7dpT1tiIDpgWxtkE
+         zRNGmLDrwoO5x1UCOvcv/V25aCRb2Gt3Mzu/RPFKdNdviZG1/jdfdeAbYPlxefCuItpY
+         74508y7QtZUQx04AmAbPC6ss1g/skvPHZAWGznrEaME1lAba508HB+N0xH4pMLb5jC3l
+         QBXyTyDIV4jJyxDlL9CBJQZG9xamQCVxNVETHIOFBx41eWFzSotNemL9TB9D2O7Ts8l1
+         RDBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=btFxI1AY902XfnaAbQ65M1jnLtqbJ2OeOdebXmzbiT8=;
+        b=uDI1uAcxgJVB59oYUJ2dnw0shkHn92toW/27BGH9gN/KkXo4ZSBdIfmjdDXSKEhLVW
+         Ti/H8CVPIJuTwC6DyrB5XxSfrL5s76AkNh5AeWUO5oVzDwZGLBY0gWagybkBlLKXXY6v
+         fNIaP8akUop+CP0KK5ks4fMk12m803Vp0tvnL4mffeHhoV3eYQSCKhs07G5sd11rtAqn
+         eT0IQTRg/qHPwDiRw4IvzveyvgbZTCF4hnkPzHaSddEPo3y3w6ohFH7XJWd/8OzEmbuV
+         6kKMyqzkkoOuQIf555reStNGGrV7iUtrL1Hyo5kIhmHFgBP1ANoYeM1rDQREWQG/pgXS
+         os8g==
+X-Gm-Message-State: ANhLgQ1C4c9/2qNZyeZBuNNu0F2/AePOUbWuNz2L3tMVJ4Gns0huIncN
+        x+AhU5TP3uY1WrJqdJZduXHQXee4FuKRyfC/ATriV/b1
+X-Google-Smtp-Source: ADFU+vuKMWo98jcRpBlk+SPgl3sQeKW2MIMB3GnOgWY1Yk1k25I+PGlDa50ZrasHDUNpJAgCWqru+lt2za3rFdN3HHM=
+X-Received: by 2002:a9d:6a06:: with SMTP id g6mr3674841otn.305.1583356692708;
+ Wed, 04 Mar 2020 13:18:12 -0800 (PST)
+MIME-Version: 1.0
+References: <20200304093633.32264-1-alexandru.ardelean@analog.com> <20200304094105.2586-1-alexandru.ardelean@analog.com>
+In-Reply-To: <20200304094105.2586-1-alexandru.ardelean@analog.com>
+From:   Matt Ranostay <mranostay@gmail.com>
+Date:   Wed, 4 Mar 2020 13:17:36 -0800
+Message-ID: <CAKzfze8KMLG=GbMvZ9eydOer5wZw-i7_5fJVjpFcZ6fqyoHgJQ@mail.gmail.com>
+Subject: Re: [PATCH v2] iio: potentiostat: lmp9100: fix iio_triggered_buffer_{predisable,postenable}
+ positions
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jonathan Cameron <jic23@kernel.org>, matt.ranostay@konsulko.com
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: keescook@chromium.org, yanaijie@huawei.com, pmladek@suse.com, rostedt@goodmis.org, sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org, tobin@kernel.org, torvalds@linux-foundation.org, dja@axtens.net
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-04 at 10:34 -0800, Kees Cook wrote:
-> On Wed, Mar 04, 2020 at 08:47:07PM +0800, Jason Yan wrote:
-> > When I am implementing KASLR for powerpc, Scott Wood argued that format
-> > specifier "%p" always hashes the addresses that people do not have a
-> > choice to shut it down: https://patchwork.kernel.org/cover/11367547/
-> > 
-> > It's true that if in a debug environment or security is not concerned,
-> > such as KASLR is absent or kptr_restrict = 0,  there is no way to shut
-> > the hashing down except changing the code and build the kernel again
-> > to use a different format specifier like "%px". And when we want to
-> > turn to security environment, the format specifier has to be changed
-> > back and rebuild the kernel.
-> > 
-> > As KASLR is available on most popular platforms and enabled by default,
-> > print the raw value of address while KASLR is absent and kptr_restrict
-> > is zero. Those who concerns about security must have KASLR enabled or
-> > kptr_restrict set properly.
-> 
-> Sorry, but no: %p censoring is there to stem the flood of endless pointer
-> leaks into logs, sysfs, proc, etc. These are used for attacks to build
-> reliable kernel memory targets, regardless of KASLR. (KASLR can be
-> bypassed with all kinds of sampling methods, side-channels, etc.)
-> 
-> Linus has rejected past suggestions to provide a flag for it[1],
-> wanting %p to stay unconditionally censored.
+On Wed, Mar 4, 2020 at 1:38 AM Alexandru Ardelean
+<alexandru.ardelean@analog.com> wrote:
+>
+> The iio_triggered_buffer_{predisable,postenable} functions attach/detach
+> the poll functions.
+>
+> For the predisable hook, the disable code should occur before detaching
+> the poll func, and for the postenable hook, the poll func should be
+> attached before the enable code.
+>
+> The lmp9100 was attaching a poll function but never detaching it via any
+> IIO disable hook.
+>
+> This change adds the detaching of the poll function, and moves/renames
+> lmp91000_buffer_preenable() function to lmp91000_buffer_postenable().
+> The idea is to make it more symmetrical, so that when the
+> iio_triggered_buffer_{predisable,postenable} functions get removed, it's
+> easier to see.
+>
+> Fixes: 67e17300dc1d7 ("iio: potentiostat: add LMP91000 support")
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 
-The frustration is with the inability to set a flag to say, "I'm debugging and
-don't care about leaks... in fact I'd like as much information as possible to
-leak to me."  Hashed addresses only allow comparison to other hashes which
-doesn't help when looking at (or trying to find) data structures in kernel
-memory, etc.  I get what Linus is saying about "you can't have nice things
-because people won't test the normal config" but it's still annoying. :-P
+Acked-by: Matt Ranostay <matt.ranostay@konsulko.com>
 
-In any case, this came up now due to a question about what to use when
-printing crash dumps.  PowerPC currently prints stack and return addresses
-with %lx (in addition to %pS in the latter case) and someone proposed
-converting them to %p and/or removing them altogether.  Is there a consensus
-on whether crash dumps need to be sanitized of this stuff as well?  It seems
-like you'd have the addresses in the register dump as well (please don't take
-that away too...).  Maybe crash dumps would be a less problematic place to
-make the hashing conditional (i.e. less likely to break something in userspace
-that wasn't expecting a hash)?
-
--Scott
-
-
+> ---
+>
+> Changelog v1 -> v2:
+> * forgot to call iio_triggered_buffer_postenable() in
+>   lmp91000_buffer_postenable() in v1
+>
+>  drivers/iio/potentiostat/lmp91000.c | 18 +++++++++++++-----
+>  1 file changed, 13 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/iio/potentiostat/lmp91000.c b/drivers/iio/potentiostat/lmp91000.c
+> index a0e5f530faa9..2cb11da18e0f 100644
+> --- a/drivers/iio/potentiostat/lmp91000.c
+> +++ b/drivers/iio/potentiostat/lmp91000.c
+> @@ -275,11 +275,20 @@ static int lmp91000_buffer_cb(const void *val, void *private)
+>  static const struct iio_trigger_ops lmp91000_trigger_ops = {
+>  };
+>
+> -static int lmp91000_buffer_preenable(struct iio_dev *indio_dev)
+> +static int lmp91000_buffer_postenable(struct iio_dev *indio_dev)
+>  {
+>         struct lmp91000_data *data = iio_priv(indio_dev);
+> +       int err;
+>
+> -       return iio_channel_start_all_cb(data->cb_buffer);
+> +       err = iio_triggered_buffer_postenable(indio_dev);
+> +       if (err)
+> +               return err;
+> +
+> +       err = iio_channel_start_all_cb(data->cb_buffer);
+> +       if (err)
+> +               iio_triggered_buffer_predisable(indio_dev);
+> +
+> +       return err;
+>  }
+>
+>  static int lmp91000_buffer_predisable(struct iio_dev *indio_dev)
+> @@ -288,12 +297,11 @@ static int lmp91000_buffer_predisable(struct iio_dev *indio_dev)
+>
+>         iio_channel_stop_all_cb(data->cb_buffer);
+>
+> -       return 0;
+> +       return iio_triggered_buffer_predisable(indio_dev);
+>  }
+>
+>  static const struct iio_buffer_setup_ops lmp91000_buffer_setup_ops = {
+> -       .preenable = lmp91000_buffer_preenable,
+> -       .postenable = iio_triggered_buffer_postenable,
+> +       .postenable = lmp91000_buffer_postenable,
+>         .predisable = lmp91000_buffer_predisable,
+>  };
+>
+> --
+> 2.20.1
+>
