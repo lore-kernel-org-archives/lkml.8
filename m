@@ -2,186 +2,137 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E54EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F61BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3921D20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:26:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 660EA20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:31:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="S8jgdom0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387550AbgCDC0s (ORCPT
+        id S2387499AbgCDCbX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:26:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:54850 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387497AbgCDC0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:26:48 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B265030E;
-        Tue,  3 Mar 2020 18:26:47 -0800 (PST)
-Received: from [10.163.1.88] (unknown [10.163.1.88])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3EE53F534;
-        Tue,  3 Mar 2020 18:26:43 -0800 (PST)
-Subject: Re: Linux-next-20200302: arm64 build failed
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>, Will Deacon <will@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>, lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        suzuki.poulose@arm.com, Anders Roxell <anders.roxell@linaro.org>
-References: <CA+G9fYtAM-m0jygud+i0ymU+XknV9_GcAbDQChiD2NZjvQ+D3w@mail.gmail.com>
- <20200302104726.GA7995@willie-the-truck>
- <20200302135443.GA24831@linux.ibm.com>
- <20200302174553.GC4166275@arrakis.emea.arm.com>
- <c4c6b363-62a8-db27-6ab3-ca2f2d4d082c@arm.com>
- <20200303162846.GE823373@arrakis.emea.arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <e6c907ba-7be4-37a0-7853-3097918baf7b@arm.com>
-Date:   Wed, 4 Mar 2020 07:56:40 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 3 Mar 2020 21:31:23 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:37888 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387432AbgCDCbX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 21:31:23 -0500
+Received: by mail-il1-f196.google.com with SMTP id f5so510696ilq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 18:31:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cs.washington.edu; s=goo201206;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iDh/enhDaAA8PUFA/sO33m/8w76mEhVPC2n0905OieU=;
+        b=S8jgdom0wODh397o+u6x7vdYMOxPd/sn1jhl7jFTzqmZwArA/RGIOqXd1Lfk54/0Vl
+         OnuKtqPJi4jEGtECkwc5BXE+qT27/RonNFdTLx9kPE210O+Z5T2l6hPG58KWXs+eDdf1
+         pHa2aWWb75igheHNKaBH3PpojCyHVsQH0TMYk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iDh/enhDaAA8PUFA/sO33m/8w76mEhVPC2n0905OieU=;
+        b=tq1cUY+q6bF3Ua+gQyjjQayTJr7xUjLjcGTVbzw6WabI/okgSaoWwM2Ay6wyoCD9Vu
+         0Kx0+DwzBvdnsI3C7nuV25x430EEhLDfAYD9H3vs1G4d6zQeAaVFzjjEIfMRWlGAjlw/
+         j2CL1w1LlqXb3SfEZQEz9HmkBzkXWqVOBHh/wkyUaiHL8BDn29nGyeoZFX0MAfO2HUeP
+         6usPJwGxVpMspt3cqUxaa1jRzlWeu9We/paza5H+nL+zKj3EfSZ4kqHGPeBJEp3VPrsY
+         py9JLQja9kKwJe4y/MJjUEl3dHS4Hn/Vf8KnDh17XDGZODfehHYadm7yFXdLz/HQd/l/
+         B9ig==
+X-Gm-Message-State: ANhLgQ2Suj7mCnSr9JYd1oUE95cNsh2UhcjsAiY86xKy74blIE5iFaZe
+        82am59xLuicZwZHII1hnokOXzUB0F8CiyD/fTEzUVA==
+X-Google-Smtp-Source: ADFU+vtpJ/AVr87l3sVJ8pp3Eu7HomjQQiORzxtMTMauDedmgqcfPEE0GdUhImRuEnjWdcebpvzP0Zzi0Nqw6HfYP3A=
+X-Received: by 2002:a92:860a:: with SMTP id g10mr674584ild.280.1583289081991;
+ Tue, 03 Mar 2020 18:31:21 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200303162846.GE823373@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200303005035.13814-1-luke.r.nels@gmail.com> <20200303005035.13814-2-luke.r.nels@gmail.com>
+ <CAJ+HfNhSj9ycgh8Y44b_ZruW1A=+W_53fXnCDc488WXSESJ3dw@mail.gmail.com>
+In-Reply-To: <CAJ+HfNhSj9ycgh8Y44b_ZruW1A=+W_53fXnCDc488WXSESJ3dw@mail.gmail.com>
+From:   Luke Nelson <lukenels@cs.washington.edu>
+Date:   Tue, 3 Mar 2020 18:31:11 -0800
+Message-ID: <CADasFoC5EEXdq43waj9pQDb9HtpG2bWE2yMVySBZ4rpopYbROQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 1/4] riscv, bpf: move common riscv JIT code to header
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
+Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bj=C3=B6rn,
 
+Thanks for the comments! Inlined responses below:
 
-On 03/03/2020 09:58 PM, Catalin Marinas wrote:
-> On Tue, Mar 03, 2020 at 09:34:45AM +0530, Anshuman Khandual wrote:
->> On 03/02/2020 11:15 PM, Catalin Marinas wrote:
->>> On Mon, Mar 02, 2020 at 03:54:43PM +0200, Mike Rapoport wrote:
->>>> On Mon, Mar 02, 2020 at 10:47:27AM +0000, Will Deacon wrote:
->>>>> [+Anshuman and Catalin]
->>>>>
->>>>> On Mon, Mar 02, 2020 at 01:58:26PM +0530, Naresh Kamboju wrote:
->>>>>> Linux-Next 20200302 arm64 build failed due to below errors,
->>>>>> Suspecting patch causing this build break.
->>>>>>
->>>>>> 87d900aef3e2  arm/arm64: add support for folded p4d page tables
->>>>>>
->>>>>> Error log,
->>>>>> -------------
->>>>>> arch/arm64/mm/mmu.c: In function 'unmap_hotplug_pud_range':
->>>>>> include/linux/compiler.h:284:1: error: incompatible type for argument
->>>>>> 1 of 'p4d_page_paddr'
->>>>>>  ({         \
->>>>>>  ^
->>>>>> arch/arm64/include/asm/memory.h:270:45: note: in definition of macro
->>>>>> '__phys_to_virt'
->>>>>>  #define __phys_to_virt(x) ((unsigned long)((x) - physvirt_offset))
->>>>>>                                              ^
->>>>>> arch/arm64/include/asm/pgtable.h:629:42: note: in expansion of macro '__va'
->>>>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
->>>>>>                                           ^~~~
->>>>>> include/linux/compiler.h:293:22: note: in expansion of macro '__READ_ONCE'
->>>>>>  #define READ_ONCE(x) __READ_ONCE(x, 1)
->>>>>>                       ^~~~~~~~~~~
->>>>>> arch/arm64/include/asm/pgtable.h:628:52: note: in expansion of macro 'READ_ONCE'
->>>>>>  #define pud_offset_phys(dir, addr) (p4d_page_paddr(READ_ONCE(*(dir)))
->>>>>> + pud_index(addr) * sizeof(pud_t))
->>>>>>                                                     ^~~~~~~~~
->>>>>> arch/arm64/include/asm/pgtable.h:629:47: note: in expansion of macro
->>>>>> 'pud_offset_phys'
->>>>>>  #define pud_offset(dir, addr)  ((pud_t *)__va(pud_offset_phys((dir), (addr))))
->>>>>>                                                ^~~~~~~~~~~~~~~
->>>>>> arch/arm64/mm/mmu.c:827:10: note: in expansion of macro 'pud_offset'
->>>>>>    pudp = pud_offset(pgdp, addr);
->>>>>>           ^~~~~~~~~~
->>>>>
->>>>> Looks like we need an implementation of unmap_hotplug_p4d_range() to
->>>>> walk the dummy p4d level. Unfortunately, we don't have the folded p4d
->>>>> patches in the arm64 tree so we'll either need a common branch or the
->>>>> hotplug patches will need to be dropped for the moment.
->>>>
->>>> unmap_hotplug_p4d_range() is easy :)
->>>>
->>>> From c7a5d08ff51ca2057b6b0289c4423bdfd7643518 Mon Sep 17 00:00:00 2001
->>>> From: Mike Rapoport <rppt@linux.ibm.com>
->>>> Date: Mon, 2 Mar 2020 15:53:17 +0200
->>>> Subject: [PATCH] arm64/mm: implement unmap_hotplug_p4d_range
->>>>
->>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->>>> ---
->>>>  arch/arm64/mm/mmu.c | 20 +++++++++++++++++++-
->>>>  1 file changed, 19 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->>>> index 05ec8e5f1436..c76b11577558 100644
->>>> --- a/arch/arm64/mm/mmu.c
->>>> +++ b/arch/arm64/mm/mmu.c
->>>> @@ -840,6 +840,24 @@ static void unmap_hotplug_pud_range(pgd_t *pgdp, unsigned long addr,
->>>>  	} while (addr = next, addr < end);
->>>>  }
->>>>  
->>>> +static void unmap_hotplug_p4d_range(pgd_t *pgd, unsigned long addr,
->>>> +				unsigned long end, bool free_mapped)
->>>> +{
->>>> +	unsigned long next;
->>>> +	pgd_t *p4dp, p4d;
->>>> +
->>>> +	do {
->>>> +		next = p4d_addr_end(addr, end);
->>>> +		p4dp = p4d_offset(pgd, addr);
->>>> +		p4d = READ_ONCE(*p4dp);
->>>> +		if (p4d_none(p4d))
->>>> +			continue;
->>>> +
->>>> +		WARN_ON(!p4d_present(p4d));
->>>> +		unmap_hotplug_pud_range(p4dp, addr, next, free_mapped);
->>>> +	} while (addr = next, addr < end);
->>>> +}
->>>> +
->>>>  static void unmap_hotplug_range(unsigned long addr, unsigned long end,
->>>>  				bool free_mapped)
->>>>  {
->>>> @@ -854,7 +872,7 @@ static void unmap_hotplug_range(unsigned long addr, unsigned long end,
->>>>  			continue;
->>>>  
->>>>  		WARN_ON(!pgd_present(pgd));
->>>> -		unmap_hotplug_pud_range(pgdp, addr, next, free_mapped);
->>>> +		unmap_hotplug_p4d_range(pgdp, addr, next, free_mapped);
->>>>  	} while (addr = next, addr < end);
->>>>  }
->>>
->>> Thanks Mike. With the additional diff below, I can get it to build with
->>> and without the p4d clean-up patches in -next. If Anshuman confirms that
->>> they work, I can add them on top of the arm64 for-next/memory-hotremove
->>> branch.
->>
->> These two patches applied on next-20200302 works fine for hot-remove.
-> 
-> Do they also work on top of the vanilla kernel + your hotremove patches
-> (i.e. not on top of -next)?
+On Mon, Mar 2, 2020 at 11:50 PM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.co=
+m> wrote:
+>
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Common functionality for RV32 and RV64 BPF JIT compilers
+> > + *
+> > + * Copyright (c) 2019 Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+> > + * Copyright (c) 2020 Luke Nelson <luke.r.nels@gmail.com>
+> > + * Copyright (c) 2020 Xi Wang <xi.wang@gmail.com>
+>
+> I'm no lawyer, so this is more of a question; You've pulled out code
+> into a header, and renamed two functions. Does that warrant copyright
+> line additions? Should my line be removed?
 
-Yes, they do work on current vanilla kernel (8b614cb8f1dcac8ca77cf4dd85f46)
-and v13 hotremove series.
+This header also includes new code for emitting instructions required
+for the RV32 JIT (e.g., sltu) and some additional pseudoinstructions
+(e.g., bgtu and similar). I'm also no lawyer, so I don't know either
+if this rises to the level of adding copyright lines. I'm happy to
+do the following in v5 if it looks better:
 
-> 
->> As the second patch also fixes the first one, IMHO both should be
->> folded into a single one instead. Just wondering if this combined
->> patch which enables P4D page table should be posted on the list or do
->> I need to respin original hot remove patches again.
-> 
-> If your unmap patches plus the fixes from Mike and me work fine on top
-> of 5.6-rc3 (as well as when combined with linux-next), I'd prefer you
-Yes, they do work on both.
++ * Copyright (c) 2019 Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
++ *
++ * Modified by ...
 
-> respin your patches to include the p4d support from start. Otherwise, we
+> > +#if __riscv_xlen =3D=3D 64
+>
+> Please remove this. If the inlined functions are not used, they're not
+> part of the binary. This adds complexity to the code, and without it
+> we can catch build errors early on!
 
-Okay. I will be sending V14 on v5.6-rc3 (OR v.5.6-rc4 is preferred ?) with
-p4d support. I will add yours and Mike's Signed-off-by as well.
+I agree in general we should avoid #if. The reason for using it
+here is to cause build errors if the RV32 JIT ever tries to emit
+an RV64-only instruction by mistake. Otherwise, what is now a build
+error would be delayed to an illegal instruction trap when the JITed
+code is executed, which is much harder to find and diagnose.
 
-> create a single patch that Andrew can merge on top of the -mm tree.
-> 
+We could use separate files, bpf_jit_32.h and bpf_jit_64.h (the
+latter will include the former), if we want to avoid #if. Though
+this adds another form of complexity.
+
+So the options here are 1) using no #if, with the risk of hiding
+subtle bugs in the RV32 JIT; 2) using #if as is; and 3) using
+separate headers. What do you think?
+
+Thanks!
+
+Luke
