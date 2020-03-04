@@ -2,62 +2,62 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552A1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6421C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E91C20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:11:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C16C20848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AwWGHCjd"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LK9qIEqA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728969AbgCDPLL (ORCPT
+        id S1729488AbgCDPLv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:11:11 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46346 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726740AbgCDPLL (ORCPT
+        Wed, 4 Mar 2020 10:11:51 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45222 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729012AbgCDPLv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:11:11 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j7so2800774wrp.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:11:10 -0800 (PST)
+        Wed, 4 Mar 2020 10:11:51 -0500
+Received: by mail-wr1-f65.google.com with SMTP id v2so2806032wrp.12
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:11:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=yT7XeoSwUdQk121SDMf3G5g+/PJMGsICwgeNmRY4RQs=;
-        b=AwWGHCjdbOoLCZNfTjqCPibGkm2uREaDzZapM7b/n3n7Nwkrs1hqcGWlxuLlrw2muO
-         1j29uSfwHFQVcOeMU9krUtHsG7P+kDz5jRFL8cWEYsyVC2DqWybq30o9KuKutALdHKfz
-         LlPQoJFSTux9e0xsm51R7QkJlMMo5Zd6C6708=
+        bh=VOLjflFVC/lWbN0oTsQoOMlRo2O6lU0WwAevEZ9SEdI=;
+        b=LK9qIEqAos8I+5PbVxeMUNEQowsGtb2yvZBfKLIL9byiCFb2lM/Z1VX1MUVZ2vTsq4
+         uUKx54WRPsWHJ9c28c79a62LXsGPnzf2yJKMxPLnsTDVKJWC7TdavhOj0h5vL2NN2CbN
+         v7K/pyiwWMEWyHrPwkv0ylf6chj5d2kI0PN6s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=yT7XeoSwUdQk121SDMf3G5g+/PJMGsICwgeNmRY4RQs=;
-        b=ap4ULkWDCWmrK0px39vgoAavdp4B7MKuH6qKZh4nZ44FEjHrM1XCOS8qxZzvV0cbBU
-         JoWE/d6uwY1MArEslyAYH36X8Af0+frpBjPuxgA/1By4qTveWDeYerJj88itYtgSof81
-         UmoE2UlROQ9kE2VvJttuWWzEwYMYlZnCzBM52t8DgUr7nNf/nIPswUy5SqEhk8SK5c+Q
-         xFfyYAt7+aW4UprKnEavwLN1AY56xtuwP2hOhscZJBCmV8o6MMZVYVw5qjcLi7YwF+2f
-         euHLUYrZUu95kvQYhkX6ls9DCSI69xDJm9Q4W4NqfprDlDG4qaBdOE5LmlavxwlbuUO0
-         01Jg==
-X-Gm-Message-State: ANhLgQ2xhzFEyQxGZfMehy611wpPDg1ji/QQ6bhiSBCtOw9lm5yGMczz
-        RpvhVeIQhCR+2HzSxxqPRVuO4Q==
-X-Google-Smtp-Source: ADFU+vto2Y4+7brCgQ56OnMcDSr46ZwMvvFzkph4qgpP4LS5CH2zpn81VmjOJ0tB9uRs5I9cRSNrVA==
-X-Received: by 2002:a5d:6986:: with SMTP id g6mr4555742wru.421.1583334669504;
-        Wed, 04 Mar 2020 07:11:09 -0800 (PST)
+        bh=VOLjflFVC/lWbN0oTsQoOMlRo2O6lU0WwAevEZ9SEdI=;
+        b=o8NpCyV0ybheUxBH2yHhxSryheVNjkFEYY3M8XYkmr+1P8wakuwV15sBG0YsgBFDAi
+         xJsW9KUDU6aOFPs7KNMoDRZqS31ahRC3aXMxcJKqDtVJLAIgsUAJq+ElDIuYe7ryxEh3
+         EMPnfrGoEwRHVLb8XY/KZ+1mRgFdfqAcUGvxvVn3HIO+tlNI7GyCw8cwPGlyYP/LR8ox
+         tV1AhpKGk84B9n1W4Dl5nuQz9bb9JOqUueAmm/43yWHw20PL1NbJj9OMZfBCRazFS35f
+         JhVnSOkkcvi+sE2IG6RKH0XgwE3eHEih6oU/XOqPje1YIKSTAuyvXFhScZlaWE2TS6K1
+         E6AA==
+X-Gm-Message-State: ANhLgQ02+ILs/RzLQUMqxV9OTzYr0NG4XzTrGn9WbGw1AZLEqDJx5N2f
+        7DZAtLqsFxaow52Wu3xqYB4WOw==
+X-Google-Smtp-Source: ADFU+vvmwLJVhHP8ankCTyjBG5OOGXMaCLj3M653APMUHZ2b0hi7BJdsXPK8oA0X1aSIXr+EIHZPIw==
+X-Received: by 2002:adf:d4ca:: with SMTP id w10mr4443265wrk.407.1583334707456;
+        Wed, 04 Mar 2020 07:11:47 -0800 (PST)
 Received: from chromium.org ([2a00:79e1:abc:308:8ca0:6f80:af01:b24])
-        by smtp.gmail.com with ESMTPSA id v8sm4971969wma.28.2020.03.04.07.11.08
+        by smtp.gmail.com with ESMTPSA id z16sm38642092wrp.33.2020.03.04.07.11.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 07:11:08 -0800 (PST)
+        Wed, 04 Mar 2020 07:11:46 -0800 (PST)
 From:   KP Singh <kpsingh@chromium.org>
 X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 4 Mar 2020 16:11:07 +0100
+Date:   Wed, 4 Mar 2020 16:11:45 +0100
 To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     linux-security-module@vger.kernel.org,
         open list <linux-kernel@vger.kernel.org>,
@@ -66,61 +66,49 @@ Cc:     linux-security-module@vger.kernel.org,
         Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
         Florent Revest <revest@chromium.org>,
         Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next v2 1/7] bpf: Refactor trampoline update code
-Message-ID: <20200304151107.GA9984@chromium.org>
+Subject: Re: [PATCH bpf-next v2 2/7] bpf: JIT helpers for fmod_ret progs
+Message-ID: <20200304151145.GB9984@chromium.org>
 References: <20200304015528.29661-1-kpsingh@chromium.org>
- <20200304015528.29661-2-kpsingh@chromium.org>
- <CAEf4BzZ58iymCdqqCe=p-7BSF_kt+Dd19taEjTJBEt_ZBZz0=Q@mail.gmail.com>
+ <20200304015528.29661-3-kpsingh@chromium.org>
+ <CAEf4Bzah9CpWJ1vLuy+V1K26Ka1ovKvvAnbRuYBJ1GF-xcQbJQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzZ58iymCdqqCe=p-7BSF_kt+Dd19taEjTJBEt_ZBZz0=Q@mail.gmail.com>
+In-Reply-To: <CAEf4Bzah9CpWJ1vLuy+V1K26Ka1ovKvvAnbRuYBJ1GF-xcQbJQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-Mär 20:49, Andrii Nakryiko wrote:
+On 03-Mär 20:52, Andrii Nakryiko wrote:
 > On Tue, Mar 3, 2020 at 5:56 PM KP Singh <kpsingh@chromium.org> wrote:
 > >
 > > From: KP Singh <kpsingh@google.com>
 > >
-> > As we need to introduce a third type of attachment for trampolines, the
-> > flattened signature of arch_prepare_bpf_trampoline gets even more
-> > complicated.
-> >
-> > Refactor the prog and count argument to arch_prepare_bpf_trampoline to
-> > use bpf_tramp_progs to simplify the addition and accounting for new
-> > attachment types.
+> > * Split the invoke_bpf program to prepare for special handling of
+> >   fmod_ret programs introduced in a subsequent patch.
+> > * Move the definition of emit_cond_near_jump and emit_nops as they are
+> >   needed for fmod_ret.
+> > * Refactor branch target alignment into its own function
+> >   align16_branch_target.
 > >
 > > Signed-off-by: KP Singh <kpsingh@google.com>
 > > ---
 > 
-> See note about const-ification of trampoline and naming suggestion,
-> but looks good overall:
-> 
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> 
-> > +static struct bpf_tramp_progs *
-> > +bpf_trampoline_update_progs(struct bpf_trampoline *tr, int *total)
-> 
-> reading the code again, seems like bpf_trampoline_update_progs is
-> really more like bpf_trampoline_get_progs, no? It doesn't modify
-> trampoline itself, so might as well mark tr as const pointer.
+> I trust invoke_bpf_prog logic didn't change, code was just moved around, right?
 
-Makes sense. I will send a v3 with these some minor fixes by EOD ZRH.
+Yes, that's correct.
 
 - KP
 
 > 
+> Acked-by: Andrii Nakryiko <andriin@fb.com>
 > 
-> > +{
-> > +       struct bpf_tramp_progs *tprogs;
-> > +       struct bpf_prog **progs;
-> > +       struct bpf_prog_aux *aux;
-> > +       int kind;
-> > +
+> 
+> >  arch/x86/net/bpf_jit_comp.c | 148 +++++++++++++++++++++---------------
+> >  1 file changed, 85 insertions(+), 63 deletions(-)
+> >
 > 
 > [...]
