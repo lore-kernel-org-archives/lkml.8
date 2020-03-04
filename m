@@ -2,99 +2,246 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22BCC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D6A4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5BCC215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:34:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583303684;
-	bh=vm1PJxz1Eur0jQnEA+GnvtmblRRiAYg6kBegxtix3Bo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jvbk0B9zGdLQ9d5VPx9ZzuhrhrMkoS7raV7rn/Eez9cXbYRHG4xv4moEXyqVT0Tcm
-	 2K7q9ev7dzQzHsZe//zidvAD0Vpv6o/zkw5FRvFdbnjq16UtN2PT2/sN/dFGlcGjnr
-	 RiRFc3TwSrxB8bBxnBD1swHtc2gonzlJ4WRUxxbI=
+	by mail.kernel.org (Postfix) with ESMTP id 3DF34214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 06:35:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vHlVS1j7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbgCDGen (ORCPT
+        id S1728270AbgCDGfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 01:34:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbgCDGen (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 01:34:43 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35695214D8;
-        Wed,  4 Mar 2020 06:34:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583303682;
-        bh=vm1PJxz1Eur0jQnEA+GnvtmblRRiAYg6kBegxtix3Bo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A6yFeSNHdCYhPPIIgRcIrRNojRmLP6Ail8pRYkFFedfhi7lKkle5n/m4mQrzXM0cR
-         af/2+OcwZF3ukOauSj0dPbgR80gSg++tEifjJitgLVg8Bm59vdawfsXq4G0L5yeblG
-         Gq+535m28Di1mXFW6+eeYRjuJS9ZNLvxUB64XEdU=
-Date:   Wed, 4 Mar 2020 07:34:40 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jon Hunter <jonathanh@nvidia.com>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org,
-        linux-tegra <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH 5.5 000/176] 5.5.8-stable review
-Message-ID: <20200304063440.GC1202498@kroah.com>
-References: <20200303174304.593872177@linuxfoundation.org>
- <f109bb1e-1520-893b-ae48-70a80fc3f29b@nvidia.com>
+        Wed, 4 Mar 2020 01:35:16 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35000 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725797AbgCDGfP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 01:35:15 -0500
+Received: by mail-qt1-f194.google.com with SMTP id v15so591679qto.2
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 22:35:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pRV4q0RECloAIigH1EtXD7ojzqVokhP4l3P7T2qRJSc=;
+        b=vHlVS1j783AEDx9vp9QAk6qirR5NrKJfcrCnKHY9716hTKVBuGENHJ14Y6hDFA4bGt
+         L0tAKuz33Ryfvl4ZpwzrDoXROn+IikVwXuMOLgHPpiMJ8u2TCfF321HUj+ShcjgkfTVn
+         MySpj96WSVvRzspSZu2MhTqlDDlHIIKuJPpFzcP/wz1oJsTPIV20H/eJfxyZTDMVaGzQ
+         1vJ0BHr83tLkSwevxEZPqEIItbiRyPNTTYNi7D7PsbpWXQr8ghN3gqKkwf9eSgsBP0eR
+         jCKC2Ccwa+0jtT7gjfyko9MJp91G2awKYC3zWZh1qdbVFYYRDpkeJruFqvXyc6HYjRo9
+         Jong==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pRV4q0RECloAIigH1EtXD7ojzqVokhP4l3P7T2qRJSc=;
+        b=PTkLr68GcBY4CU5oRNlFNn2fsQ2nxQ9BllvzSIXXQTL8qhqbtLeBlgGQmvc3M5XIGh
+         05/5A98w31WkVo7Vj5LUe1daimXRxAlVodpbD04wCpG3dvcTq5fo+zD35RiXARVMiQPg
+         vdSpYy1bk/LEolT53Q2/GavYEtlkrVTpmDJ+Mxw3nAk3o2h7FRWtiHu3zC5BUCQQERxH
+         fU5AgaLrdLqk59ALLPNnfmN7lqzaXBPJRyGINZDMsnnREYy3kK9OFmuUlojgIL3D+IBa
+         S89siP0QOWnwptWFeLHXWbhvt6/TU9egMjqn0qy1cj/4Wk58O8cCXuPtKZE7gwf0j+O3
+         wVCA==
+X-Gm-Message-State: ANhLgQ2Ews9WRz/Ylj7hm5bHVO1GOEkkBGzPVh5fwJ/Qm8rht8pvt0wq
+        etlwhcoU0RoKgI+uyfAcUW9pQ+p3Bvgo181Y8GC3gA==
+X-Google-Smtp-Source: ADFU+vsF14TrN/4+OIYQ5aK+sQ/D/SCWCJvMUWvwob5LzYyU3IfwXfowTvL5LDEUKUK72frvFveq2Q+z58B7AXXDz/8=
+X-Received: by 2002:ac8:1846:: with SMTP id n6mr1102349qtk.257.1583303714054;
+ Tue, 03 Mar 2020 22:35:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f109bb1e-1520-893b-ae48-70a80fc3f29b@nvidia.com>
+References: <20200227024301.217042-1-trishalfonso@google.com> <20200227024301.217042-2-trishalfonso@google.com>
+In-Reply-To: <20200227024301.217042-2-trishalfonso@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 4 Mar 2020 07:35:02 +0100
+Message-ID: <CACT4Y+avZ5ZdTUPQy7as3PAvdYd0NcSsyUukiumHa_Ah9ZYCFA@mail.gmail.com>
+Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
+To:     Patricia Alfonso <trishalfonso@google.com>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        David Gow <davidgow@google.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:11:19PM +0000, Jon Hunter wrote:
-> 
-> On 03/03/2020 17:41, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.5.8 release.
-> > There are 176 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Thu, 05 Mar 2020 17:42:06 +0000.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.8-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> 
-> All tests passing for Tegra ...
-> 
-> Test results for stable-v5.5:
->     13 builds:	13 pass, 0 fail
->     22 boots:	22 pass, 0 fail
->     40 tests:	40 pass, 0 fail
-> 
-> Linux version:	5.5.8-rc1-g3517b32c0774
-> Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
->                 tegra194-p2972-0000, tegra20-ventana,
->                 tegra210-p2371-2180, tegra210-p3450-0000,
->                 tegra30-cardhu-a04
-> 
+On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
+<kasan-dev@googlegroups.com> wrote:
+>
+> Integrate KASAN into KUnit testing framework.
+>  - Fail tests when KASAN reports an error that is not expected
+>  - Use KUNIT_EXPECT_KASAN_FAIL to expect a KASAN error in KASAN tests
+>  - KUnit struct added to current task to keep track of the current test
+> from KASAN code
+>  - Booleans representing if a KASAN report is expected and if a KASAN
+>  report is found added to kunit struct
+>  - This prints "line# has passed" or "line# has failed"
+>
+> Signed-off-by: Patricia Alfonso <trishalfonso@google.com>
+> ---
+> If anyone has any suggestions on how best to print the failure
+> messages, please share!
+>
+> One issue I have found while testing this is the allocation fails in
+> kmalloc_pagealloc_oob_right() sometimes, but not consistently. This
+> does cause the test to fail on the KUnit side, as expected, but it
+> seems to skip all the tests before this one because the output starts
+> with this failure instead of with the first test, kmalloc_oob_right().
+>
+>  include/kunit/test.h                | 24 ++++++++++++++++++++++++
+>  include/linux/sched.h               |  7 ++++++-
+>  lib/kunit/test.c                    |  7 ++++++-
+>  mm/kasan/report.c                   | 19 +++++++++++++++++++
+>  tools/testing/kunit/kunit_kernel.py |  2 +-
+>  5 files changed, 56 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/kunit/test.h b/include/kunit/test.h
+> index 2dfb550c6723..2e388f8937f3 100644
+> --- a/include/kunit/test.h
+> +++ b/include/kunit/test.h
+> @@ -21,6 +21,8 @@ struct kunit_resource;
+>  typedef int (*kunit_resource_init_t)(struct kunit_resource *, void *);
+>  typedef void (*kunit_resource_free_t)(struct kunit_resource *);
+>
+> +void kunit_set_failure(struct kunit *test);
+> +
+>  /**
+>   * struct kunit_resource - represents a *test managed resource*
+>   * @allocation: for the user to store arbitrary data.
+> @@ -191,6 +193,9 @@ struct kunit {
+>          * protect it with some type of lock.
+>          */
+>         struct list_head resources; /* Protected by lock. */
+> +
+> +       bool kasan_report_expected;
+> +       bool kasan_report_found;
+>  };
+>
+>  void kunit_init_test(struct kunit *test, const char *name);
+> @@ -941,6 +946,25 @@ do {                                                                              \
+>                                                 ptr,                           \
+>                                                 NULL)
+>
+> +/**
+> + * KUNIT_EXPECT_KASAN_FAIL() - Causes a test failure when the expression does
+> + * not cause a KASAN error.
+> + *
+> + */
+> +#define KUNIT_EXPECT_KASAN_FAIL(test, condition) do {  \
+> +       test->kasan_report_expected = true;     \
+> +       test->kasan_report_found = false; \
+> +       condition; \
+> +       if (test->kasan_report_found == test->kasan_report_expected) { \
+> +               pr_info("%d has passed", __LINE__); \
+> +       } else { \
+> +               kunit_set_failure(test); \
+> +               pr_info("%d has failed", __LINE__); \
+> +       } \
+> +       test->kasan_report_expected = false;    \
+> +       test->kasan_report_found = false;       \
+> +} while (0)
+> +
+>  /**
+>   * KUNIT_EXPECT_TRUE() - Causes a test failure when the expression is not true.
+>   * @test: The test context object.
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index 04278493bf15..db23d56061e7 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -32,6 +32,8 @@
+>  #include <linux/posix-timers.h>
+>  #include <linux/rseq.h>
+>
+> +#include <kunit/test.h>
+> +
+>  /* task_struct member predeclarations (sorted alphabetically): */
+>  struct audit_context;
+>  struct backing_dev_info;
+> @@ -1178,7 +1180,10 @@ struct task_struct {
+>
+>  #ifdef CONFIG_KASAN
+>         unsigned int                    kasan_depth;
+> -#endif
+> +#ifdef CONFIG_KUNIT
+> +       struct kunit *kasan_kunit_test;
+> +#endif /* CONFIG_KUNIT */
+> +#endif /* CONFIG_KASAN */
+>
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>         /* Index of current stored address in ret_stack: */
+> diff --git a/lib/kunit/test.c b/lib/kunit/test.c
+> index 9242f932896c..d266b9495c67 100644
+> --- a/lib/kunit/test.c
+> +++ b/lib/kunit/test.c
+> @@ -9,11 +9,12 @@
+>  #include <kunit/test.h>
+>  #include <linux/kernel.h>
+>  #include <linux/sched/debug.h>
+> +#include <linux/sched.h>
+>
+>  #include "string-stream.h"
+>  #include "try-catch-impl.h"
+>
+> -static void kunit_set_failure(struct kunit *test)
+> +void kunit_set_failure(struct kunit *test)
+>  {
+>         WRITE_ONCE(test->success, false);
+>  }
+> @@ -236,6 +237,10 @@ static void kunit_try_run_case(void *data)
+>         struct kunit_suite *suite = ctx->suite;
+>         struct kunit_case *test_case = ctx->test_case;
+>
+> +#ifdef CONFIG_KASAN
+> +       current->kasan_kunit_test = test;
+> +#endif
+> +
+>         /*
+>          * kunit_run_case_internal may encounter a fatal error; if it does,
+>          * abort will be called, this thread will exit, and finally the parent
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index 5ef9f24f566b..5554d23799a5 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -32,6 +32,8 @@
+>
+>  #include <asm/sections.h>
+>
+> +#include <kunit/test.h>
+> +
+>  #include "kasan.h"
+>  #include "../slab.h"
+>
+> @@ -461,6 +463,15 @@ void kasan_report_invalid_free(void *object, unsigned long ip)
+>         u8 tag = get_tag(object);
+>
+>         object = reset_tag(object);
+> +
+> +       if (current->kasan_kunit_test) {
+> +               if (current->kasan_kunit_test->kasan_report_expected) {
+> +                       current->kasan_kunit_test->kasan_report_found = true;
+> +                       return;
 
-thanks for testing all of these and letting me know.
+I think we need to continue and print KASAN report even in this case.
+2 reasons:
+ - tests don't check validity of printed reports, but at least human
+can verify sanity of the report
+ - report printing code also needs to be tested, at least that it does
+not crash/hang
+If we don't print reports, it may look nicer, but will be less useful.
 
-greg k-h
+> +               }
+> +               kunit_set_failure(current->kasan_kunit_test);
+> +       }
+> +
