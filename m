@@ -2,204 +2,170 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C0BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:34:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53012C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D43B20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:34:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D2E520842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:34:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387629AbgCDCeT (ORCPT
+        id S2387581AbgCDCet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:34:19 -0500
-Received: from out30-57.freemail.mail.aliyun.com ([115.124.30.57]:48880 "EHLO
-        out30-57.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387473AbgCDCeT (ORCPT
+        Tue, 3 Mar 2020 21:34:49 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51698 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387473AbgCDCes (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:34:19 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R331e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=7;SR=0;TI=SMTPD_---0TrbZL9z_1583289243;
-Received: from ali-6c96cfdd1403.local(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0TrbZL9z_1583289243)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Wed, 04 Mar 2020 10:34:15 +0800
-Subject: Re: [PATCH v2 1/1] mm: fix interrupt disabled long time inside
- deferred_init_memmap()
-To:     Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>
-References: <20200303161551.132263-1-shile.zhang@linux.alibaba.com>
- <20200303161551.132263-2-shile.zhang@linux.alibaba.com>
- <fc22967d-0803-2e6f-26af-148a24f8f958@virtuozzo.com>
-From:   Shile Zhang <shile.zhang@linux.alibaba.com>
-Message-ID: <386d7d5f-a57d-f5b1-acee-131ce23d35ec@linux.alibaba.com>
-Date:   Wed, 4 Mar 2020 10:34:03 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <fc22967d-0803-2e6f-26af-148a24f8f958@virtuozzo.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Tue, 3 Mar 2020 21:34:48 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0242TQAM090644
+        for <linux-kernel@vger.kernel.org>; Tue, 3 Mar 2020 21:34:47 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yhyxq5m7h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 21:34:47 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Wed, 4 Mar 2020 02:34:45 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 02:34:41 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0242YdrU48693396
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 02:34:39 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA3CD42084;
+        Wed,  4 Mar 2020 02:34:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A9194207C;
+        Wed,  4 Mar 2020 02:33:40 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.57.81])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 02:33:39 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-efi@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, zohar@linux.ibm.com,
+        linux-kernel@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH v2] ima: add a new CONFIG for loading arch-specific policies
+Date:   Tue,  3 Mar 2020 21:33:31 -0500
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 20030402-0016-0000-0000-000002ECF156
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030402-0017-0000-0000-000033503B67
+Message-Id: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_08:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ malwarescore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 impostorscore=0 adultscore=0
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040017
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kirill,
+Every time a new architecture defines the IMA architecture specific
+functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+include file needs to be updated. To avoid this "noise", this patch
+defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+the different architectures to select it.
 
-Thanks for your quickly reply!
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Philipp Rudo <prudo@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+---
+v2:
+* Fixed the issue identified by Mimi. Thanks Mimi, Ard, Heiko and Michael for
+discussing the fix.
 
-On 2020/3/4 00:52, Kirill Tkhai wrote:
-> On 03.03.2020 19:15, Shile Zhang wrote:
->> When 'CONFIG_DEFERRED_STRUCT_PAGE_INIT' is set, 'pgdatinit' kthread will
->> initialise the deferred pages with local interrupts disabled. It is
->> introduced by commit 3a2d7fa8a3d5 ("mm: disable interrupts while
->> initializing deferred pages").
->>
->> The local interrupt will be disabled long time inside
->> deferred_init_memmap(), depends on memory size.
->> On machine with NCPUS <= 2, the 'pgdatinit' kthread could be pined on
->> boot CPU, then the tick timer will stuck long time, which caused the
->> system wall time inaccuracy.
->>
->> For example, the dmesg shown that:
->>
->>    [    0.197975] node 0 initialised, 32170688 pages in 1ms
->>
->> Obviously, 1ms is unreasonable.
->> Now, fix it by restore in the pending interrupts inside the while loop.
->> The reasonable demsg shown likes:
->>
->> [    1.069306] node 0 initialised, 32203456 pages in 894ms
-> The way I understand the original problem, that Pavel fixed:
->
-> we need disable irqs in deferred_init_memmap() since this function may be called
-> in parallel with deferred_grow_zone() called from interrupt handler. So, Pavel
-> added lock to fix the race.
->
-> In case of we temporary unlock the lock, interrupt still be possible,
-> so my previous proposition returns the problem back.
->
-> Now thought again, I think we have to just add:
->
-> 	pgdat_resize_unlock();
-> 	pgdat_resize_lock();
->
-> instead of releasing interrupts, since in case of we just release them with lock held,
-> a call of interrupt->deferred_grow_zone() bring us to a deadlock.
->
-> So, unlock the lock is must.
+ arch/powerpc/Kconfig           | 1 +
+ arch/s390/Kconfig              | 1 +
+ arch/x86/Kconfig               | 1 +
+ include/linux/ima.h            | 3 +--
+ security/integrity/ima/Kconfig | 9 +++++++++
+ 5 files changed, 13 insertions(+), 2 deletions(-)
 
-Yes, you're right! I missed this point.
-Thanks for your comment!
-
->
->> Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
->> ---
->>   mm/page_alloc.c | 6 +++++-
->>   1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index 3c4eb750a199..d3f337f2e089 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -1809,8 +1809,12 @@ static int __init deferred_init_memmap(void *data)
->>   	 * that we can avoid introducing any issues with the buddy
->>   	 * allocator.
->>   	 */
->> -	while (spfn < epfn)
->> +	while (spfn < epfn) {
->>   		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
->> +		/* let in any pending interrupts */
->> +		local_irq_restore(flags);
->> +		local_irq_save(flags);
->> +	}
->>   zone_empty:
->>   	pgdat_resize_unlock(pgdat, &flags);
-> I think we need here something like below (untested):
->
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 79e950d76ffc..323afa9a4db5 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1828,7 +1828,7 @@ static int __init deferred_init_memmap(void *data)
->   {
->   	pg_data_t *pgdat = data;
->   	const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
-> -	unsigned long spfn = 0, epfn = 0, nr_pages = 0;
-> +	unsigned long spfn = 0, epfn = 0, nr_pages = 0, prev_nr_pages = 0;
->   	unsigned long first_init_pfn, flags;
->   	unsigned long start = jiffies;
->   	struct zone *zone;
-> @@ -1869,8 +1869,18 @@ static int __init deferred_init_memmap(void *data)
->   	 * that we can avoid introducing any issues with the buddy
->   	 * allocator.
->   	 */
-> -	while (spfn < epfn)
-> +	while (spfn < epfn) {
->   		nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
-> +		/*
-> +		 * Release interrupts every 1Gb to give a possibility
-> +		 * a timer to advance jiffies.
-> +		 */
-> +		if (nr_pages - prev_nr_pages > (1UL << (30 - PAGE_SHIFT))) {
-> +			prev_nr_pages = nr_pages;
-> +			pgdat_resize_unlock(pgdat, &flags);
-> +			pgdat_resize_lock(pgdat, &flags);
-> +		}
-> +	}
->   zone_empty:
->   	pgdat_resize_unlock(pgdat, &flags);
->   
->
-> (I believe the comment may be improved more).
-
-Yeah, your patch is better!
-I test your code and it works!
-But it seems that 1G is still hold the interrupts too long, about 40ms 
-in my env
-with Intel(R) Xeon(R) 2.5GHz). I tried other size, it is OK to use 1024 
-pages (4MB),
-which suggested by Andrew's before.
-
-Could you please help to review it again?
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3c4eb750a199..5def66d3ffcd 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1768,7 +1768,7 @@ static int __init deferred_init_memmap(void *data)
-  {
-         pg_data_t *pgdat = data;
-         const struct cpumask *cpumask = cpumask_of_node(pgdat->node_id);
--       unsigned long spfn = 0, epfn = 0, nr_pages = 0;
-+       unsigned long spfn = 0, epfn = 0, nr_pages = 0, prev_nr_pages = 0;
-         unsigned long first_init_pfn, flags;
-         unsigned long start = jiffies;
-         struct zone *zone;
-@@ -1809,8 +1809,17 @@ static int __init deferred_init_memmap(void *data)
-          * that we can avoid introducing any issues with the buddy
-          * allocator.
-          */
--       while (spfn < epfn)
-+       while (spfn < epfn) {
-                 nr_pages += deferred_init_maxorder(&i, zone, &spfn, &epfn);
-+               /*
-+                * Restore pending interrupts every 1024 pages to give
-+                * the chance tick timer to advance jiffies.
-+                */
-+               if (nr_pages - prev_nr_pages > 1024) {
-+                       pgdat_resize_unlock(&flags);
-+                       pgdat_resize_lock(&flags);
-+               }
-+       }
-  zone_empty:
-         pgdat_resize_unlock(pgdat, &flags);
-
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 497b7d0b2d7e..a5cfde432983 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -979,6 +979,7 @@ config PPC_SECURE_BOOT
+ 	bool
+ 	depends on PPC_POWERNV
+ 	depends on IMA_ARCH_POLICY
++	select IMA_SECURE_AND_OR_TRUSTED_BOOT
+ 	help
+ 	  Systems with firmware secure boot enabled need to define security
+ 	  policies to extend secure boot to the OS. This config allows a user
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 8abe77536d9d..4a502fbcb800 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -195,6 +195,7 @@ config S390
+ 	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+ 	select SWIOTLB
+ 	select GENERIC_ALLOCATOR
++	select IMA_SECURE_AND_OR_TRUSTED_BOOT if IMA_ARCH_POLICY
+ 
+ 
+ config SCHED_OMIT_FRAME_POINTER
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea77046f9b..7f5bfaf0cbd2 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -230,6 +230,7 @@ config X86
+ 	select VIRT_TO_BUS
+ 	select X86_FEATURE_NAMES		if PROC_FS
+ 	select PROC_PID_ARCH_STATUS		if PROC_FS
++	select IMA_SECURE_AND_OR_TRUSTED_BOOT	if EFI && IMA_ARCH_POLICY
+ 
+ config INSTRUCTION_DECODER
+ 	def_bool y
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 1659217e9b60..aefe758f4466 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+ extern void ima_add_kexec_buffer(struct kimage *image);
+ #endif
+ 
+-#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+-	|| defined(CONFIG_PPC_SECURE_BOOT)
++#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+ extern bool arch_ima_get_secureboot(void);
+ extern const char * const *arch_get_ima_policy(void);
+ #else
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index 3f3ee4e2eb0d..d17972aa413a 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+ 	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+ 	depends on SYSTEM_TRUSTED_KEYRING
+ 	default y
++
++config IMA_SECURE_AND_OR_TRUSTED_BOOT
++	bool
++	depends on IMA
++	depends on IMA_ARCH_POLICY
++	default n
++	help
++	   This option is selected by architectures to enable secure and/or
++	   trusted boot based on IMA runtime policies.
+-- 
+2.13.6
 
