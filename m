@@ -2,114 +2,110 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A98AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAA0C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD9220866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3CDA20828
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Eb3IOFXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgCDV0I (ORCPT
+        id S2388355AbgCDV0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:26:08 -0500
-Received: from baldur.buserror.net ([165.227.176.147]:34358 "EHLO
-        baldur.buserror.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgCDV0H (ORCPT
+        Wed, 4 Mar 2020 16:26:17 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33604 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729825AbgCDV0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:26:07 -0500
-Received: from [2601:449:8480:af0:12bf:48ff:fe84:c9a0]
-        by baldur.buserror.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <oss@buserror.net>)
-        id 1j9bSE-0000Sw-JS; Wed, 04 Mar 2020 15:21:23 -0600
-Message-ID: <d673649d6f371e82d4a94ba62bfd0d44efeca7b4.camel@buserror.net>
-From:   Scott Wood <oss@buserror.net>
-To:     Daniel Axtens <dja@axtens.net>, Jason Yan <yanaijie@huawei.com>,
-        mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org,
-        diana.craciun@nxp.com, christophe.leroy@c-s.fr,
-        benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com,
-        keescook@chromium.org, kernel-hardening@lists.openwall.com
-Cc:     linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com
-Date:   Wed, 04 Mar 2020 15:21:21 -0600
-In-Reply-To: <87tv3drf79.fsf@dja-thinkpad.axtens.net>
-References: <20200206025825.22934-1-yanaijie@huawei.com>
-         <87tv3drf79.fsf@dja-thinkpad.axtens.net>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2601:449:8480:af0:12bf:48ff:fe84:c9a0
-X-SA-Exim-Rcpt-To: dja@axtens.net, yanaijie@huawei.com, mpe@ellerman.id.au, linuxppc-dev@lists.ozlabs.org, diana.craciun@nxp.com, christophe.leroy@c-s.fr, benh@kernel.crashing.org, paulus@samba.org, npiggin@gmail.com, keescook@chromium.org, kernel-hardening@lists.openwall.com, linux-kernel@vger.kernel.org, zhaohongjiang@huawei.com
-X-SA-Exim-Mail-From: oss@buserror.net
-Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on baldur.buserror.net)
+        Wed, 4 Mar 2020 16:26:16 -0500
+Received: by mail-ed1-f68.google.com with SMTP id c62so4082595edf.0;
+        Wed, 04 Mar 2020 13:26:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=eMvhBOIg5MRjHF1oFd/XQ7SSnXXeEGxIFK8nINn5g7k=;
+        b=Eb3IOFXsE/5oc8UPJfOC7SVDxP8zUqyH896zGb2lG90S92LZk+QnhPw4pVvGkuUOBc
+         HNNsuwN8g4bIw/+bygigUIyQKJD/dfC8mJ3EKwOiH5mRU9/gG0AvuY3Q3Dg5yAwO7RZ4
+         jtSI3psRzrtJ/pMIT/q2i5jPkznXQcEtRj3jIc9pJ3e9XZBnSXXLXANUpAWvHvr8RgYv
+         UdfrXmvdYQSm1ZjK6rHHxch+eHZcWs5gxG/b0VpLsvwOLoktgmI+ac0Ez0dINeXkQzn7
+         caRHXsHS/MDmtrJwJaPuE/nSk0XsJmSMFdMuNcwzd0BUrrVPgIa+Z6+2oWfWT2arzwej
+         2Jtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=eMvhBOIg5MRjHF1oFd/XQ7SSnXXeEGxIFK8nINn5g7k=;
+        b=Z+qgQAg7m+jrRnD1ftT3V1ZHIJbh7QapYMC3lRPEFHdHNHxrIhRtXLyFLmPkqvRCt3
+         NLQ5d+8uTRn8IGXFWMp3pMMcLZuJIt809vDF3d40SFAZE8rtjr1lEn2sr3dHWQRrkZmU
+         N78Ks7GRMg1zpyjFieMJ0EtrHZP6SkdFLdeDS7Scw3412seooWki5JovjQmb9QTIO0jJ
+         ZSNHMVHu10BSiro2aQlb0jg8xHi2n7u/Zn7UUnlmmQDgyL7prrHSzirLghlCuRZ5FSL7
+         7VRM6ho0nsoD8kDBM4SVrWxfeLpuvdFryqF1MjHgHYH/2TreEyGW8ajpHaNvraZtzaT4
+         GtHg==
+X-Gm-Message-State: ANhLgQ3YC6GBH5N89YXhk60b0KIU/IWuiNZ92MOJYkp9Q7xz0WwY7rs+
+        b0PDgTL5dGeK0XuQS+KtMGp2HsmrimI=
+X-Google-Smtp-Source: ADFU+vsYttFIIZKSMto/Dsvrd8XkxFID6j5epaPlIKW2H/3V/H1ZiJlIaehOf50JN/z7KI79i34OKQ==
+X-Received: by 2002:a50:b043:: with SMTP id i61mr4672103edd.194.1583357174832;
+        Wed, 04 Mar 2020 13:26:14 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d16:4100:5c62:5f:595c:f76d])
+        by smtp.gmail.com with ESMTPSA id ss15sm1332396ejb.10.2020.03.04.13.26.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 13:26:14 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     Chen-Yu Tsai <wens@csie.org>, Yangtao Li <tiny.windzz@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh@kernel.org>
+Cc:     linux-pm@vger.kernel.org, Joe Perches <joe@perches.com>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH v2] MAINTAINERS: update ALLWINNER CPUFREQ DRIVER entry
+Date:   Wed,  4 Mar 2020 22:26:00 +0100
+Message-Id: <20200304212600.6172-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-02-26 at 18:16 +1100, Daniel Axtens wrote:
-> Hi Jason,
-> 
-> > This is a try to implement KASLR for Freescale BookE64 which is based on
-> > my earlier implementation for Freescale BookE32:
-> > https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=131718
-> > 
-> > The implementation for Freescale BookE64 is similar as BookE32. One
-> > difference is that Freescale BookE64 set up a TLB mapping of 1G during
-> > booting. Another difference is that ppc64 needs the kernel to be
-> > 64K-aligned. So we can randomize the kernel in this 1G mapping and make
-> > it 64K-aligned. This can save some code to creat another TLB map at
-> > early boot. The disadvantage is that we only have about 1G/64K = 16384
-> > slots to put the kernel in.
-> > 
-> >     KERNELBASE
-> > 
-> >           64K                     |--> kernel <--|
-> >            |                      |              |
-> >         +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
-> >         |  |  |  |....|  |  |  |  |  |  |  |  |  |....|  |  |
-> >         +--+--+--+    +--+--+--+--+--+--+--+--+--+    +--+--+
-> >         |                         |                        1G
-> >         |----->   offset    <-----|
-> > 
-> >                               kernstart_virt_addr
-> > 
-> > I'm not sure if the slot numbers is enough or the design has any
-> > defects. If you have some better ideas, I would be happy to hear that.
-> > 
-> > Thank you all.
-> > 
-> 
-> Are you making any attempt to hide kernel address leaks in this series?
-> I've just been looking at the stackdump code just now, and it directly
-> prints link registers and stack pointers, which is probably enough to
-> determine the kernel base address:
-> 
->                   SPs:               LRs:             %pS pointer
-> [    0.424506] [c0000000de403970] [c000000001fc0458] dump_stack+0xfc/0x154
-> (unreliable)
-> [    0.424593] [c0000000de4039c0] [c000000000267eec] panic+0x258/0x5ac
-> [    0.424659] [c0000000de403a60] [c0000000024d7a00]
-> mount_block_root+0x634/0x7c0
-> [    0.424734] [c0000000de403be0] [c0000000024d8100]
-> prepare_namespace+0x1ec/0x23c
-> [    0.424811] [c0000000de403c60] [c0000000024d7010]
-> kernel_init_freeable+0x804/0x880
-> 
-> git grep \\\"REG\\\" arch/powerpc shows a few other uses like this, all
-> in process.c or in xmon.
-> 
-> Maybe replacing the REG format string in KASLR mode would be sufficient?
+Commit b30d8cf5e171 ("dt-bindings: opp: Convert Allwinner H6 OPP to a
+schema") converted in Documentation/devicetree/bindings/opp/ the file
+sun50i-nvmem-cpufreq.txt to allwinner,sun50i-h6-operating-points.yaml.
 
-Whatever we decide to do here, it's not book3e-specific so it should be
-considered separately from these patches.
+Since then, ./scripts/get_maintainer.pl --self-test complains:
 
--Scott
+  warning: no file matches \
+  F: Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
 
+Adjust the file pattern in the ALLWINNER CPUFREQ DRIVER entry.
+
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Changes to v1:
+  - do not include new maintainers because it is not needed.
+
+Maxime, Chen-Yu, Yangtao, please ack.
+Rob, please pick this patch.
+
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6158a143a13e..9402b05630f9 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -693,7 +693,7 @@ ALLWINNER CPUFREQ DRIVER
+ M:	Yangtao Li <tiny.windzz@gmail.com>
+ L:	linux-pm@vger.kernel.org
+ S:	Maintained
+-F:	Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
++F:	Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
+ F:	drivers/cpufreq/sun50i-cpufreq-nvmem.c
+ 
+ ALLWINNER CRYPTO DRIVERS
+-- 
+2.17.1
 
