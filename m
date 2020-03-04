@@ -2,172 +2,116 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51219C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8391AC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29FD821D56
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CA5622B48
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XsKXAVLh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s+Ps3L3a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388397AbgCDRu1 (ORCPT
+        id S1730136AbgCDRud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:50:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:51657 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388378AbgCDRuY (ORCPT
+        Wed, 4 Mar 2020 12:50:33 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37537 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388403AbgCDRu3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:50:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583344223;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Thxl5wIjIKH5B5NXRPkB8aLAOUeG1jEuoKaVSkWq1z8=;
-        b=XsKXAVLhISj+RiObLcLeKcLTjfbYbz+d7CYjtuGb1bntfmxSZQwkCMjPqOvq0xvDF2F/xo
-        DlNTuoqA+GyheesFWpcK+Xfy1DMPMljnN8V4qkvXi2xZ28YyKA0NkxlxIeSuqw4Chl/Asc
-        mg09M2UpbjzH/Xi66d8f/bf1viAcCNA=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-156-BXl2AcMOOMOpRCOsnTG_5A-1; Wed, 04 Mar 2020 12:50:22 -0500
-X-MC-Unique: BXl2AcMOOMOpRCOsnTG_5A-1
-Received: by mail-qk1-f198.google.com with SMTP id n6so1847916qkk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:50:21 -0800 (PST)
+        Wed, 4 Mar 2020 12:50:29 -0500
+Received: by mail-lj1-f194.google.com with SMTP id q23so3018630ljm.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:50:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YanxhDNwSrOQ8EEY63icXGm0gGnIdDmC5NC1S8xKJaQ=;
+        b=s+Ps3L3aloOq7/NilQpwIe3UQ0kxFVT7tQEak79iSy5xKTVd9hDlCq0Ylq5ZOF1CBI
+         cFVEjLyQC7pecWUzFANZ7gTSxz5Th66Kay3SzBvtcDIabWc7byndjvriOuRJV6P2pvrs
+         /BnMCaNQUFFiYBKS3+imIwgztiNDjeROsE7gZzQL7DspM4BJGNbSR0cQOoebaTt6Wfy9
+         waDR6Ul7ceU+uK4G5vrjuB6bF/ykHRbjvxtUnAdAjmHwy3Z6DVgLogeF0PcpkXgy2zXK
+         7WyP1DzBpOurb4KTvWDQNitWI7gFtfbNCy4XOLT1JKUu3GmYQwrr4yd1M7h1HUCkvxm3
+         d0VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Thxl5wIjIKH5B5NXRPkB8aLAOUeG1jEuoKaVSkWq1z8=;
-        b=aR/iKdOANIOiH3wRZnNlOUCaM45UNiClXKqUgLb3MMtfHd5sK3WfdVL9LJaDh/LM/K
-         PfN03LQH4WAFenKDJxCwc6bANuU/U3YviiudN5rj99ntivDlYbgr8fjG68MIM99Oj71V
-         +biLgO8/CqWb3kwqPzHtuckcb4dshk0Izp0Svq1QWIEeu0dmxBdetLc3WUT2Y7kO5QdJ
-         d5GfJe1zfUydksdaH9roy95Z/7YKn/emMLl1GXiZVlPUNg4cpE8jmbSt+gTAR9RAeG4d
-         8cibRpjlXTql3NI1MXN1cCtOgMn4Ss/QhykXNJppEFqePW8uILCbpNfLVtUJAXFAT+B+
-         2Udw==
-X-Gm-Message-State: ANhLgQ1CqNkfOxUJCXwLjyKAb8n6QeSGWO7NjZ6dZ2JcZ/1zBSoX/tnI
-        9vH5k3MtXF5gEx0UGX7cuuZTfCAHJM14hBD474K5+Rer8JqJUIArPnHu4W3P4K0RYJ3mAVgp0kU
-        DJM4SYcp1+IFfkicxEP/baJcM
-X-Received: by 2002:a37:a38b:: with SMTP id m133mr4006217qke.418.1583344221057;
-        Wed, 04 Mar 2020 09:50:21 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vuIqOLXAjTIseX/1wpACTFkqf8S628dua+pQStSDFhdsTp5TywiNGVu9CXRRDz1KWYlmxRKpg==
-X-Received: by 2002:a37:a38b:: with SMTP id m133mr4006190qke.418.1583344220813;
-        Wed, 04 Mar 2020 09:50:20 -0800 (PST)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id z8sm1805606qtq.11.2020.03.04.09.50.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 09:50:20 -0800 (PST)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Yan Zhao <yan.y.zhao@intel.com>, peterx@redhat.com,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "Dr . David Alan Gilbert" <dgilbert@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Kevin Tian <kevin.tian@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Christophe de Dinechin <dinechin@redhat.com>
-Subject: [PATCH v5 09/14] KVM: selftests: Sync uapi/linux/kvm.h to tools/
-Date:   Wed,  4 Mar 2020 12:49:42 -0500
-Message-Id: <20200304174947.69595-10-peterx@redhat.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200304174947.69595-1-peterx@redhat.com>
-References: <20200304174947.69595-1-peterx@redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YanxhDNwSrOQ8EEY63icXGm0gGnIdDmC5NC1S8xKJaQ=;
+        b=VGzLBJJ1eBVt3zgQ6ftdgSpaJvkvQVx4fAEm4pslGtqAF6sPZ54PqP3mDn9EuTk3UL
+         ko/tz3Mdb+enCnH/nBIzOEAFDeP5An1EXe9pPgM0wOrCev5U26q5SJ/QA3F5TjCrPpEF
+         AvRaj2G2Fl6n2zghSf1K3gYeij36VpB25uL6jW1YMt88F5SlsHgsqu9+0td1nlmcJyQs
+         79fOQhf7p4J2Q9jWNtzUgRqcDr2v+CcsTt0QswufxF8FPzJgjaees75VdWJ51wjbbDXX
+         ZOQh3Ew8F8j9uFm7DkcAoOl0koUyIrYiC5Hz1UfsSW/g39NOauMk+Se3MLNwEj+ekRdF
+         ioug==
+X-Gm-Message-State: ANhLgQ1kjb8Vft4Iazg272NhEx/rqGRRz5sXITXqgn7bjld6SyzCHWfj
+        /DQFlwXlH9P3gDphC8P14KkmILxdWy3yy1oo3l0nyg==
+X-Google-Smtp-Source: ADFU+vugR28AJaRLbZ4M2FnsU/0hysorMlPynp1fbMwBBqDBNVDfKBAUmVQdVEzs3kaemubGGVLU2X1ioHfnquWHVJc=
+X-Received: by 2002:a2e:8546:: with SMTP id u6mr27796ljj.21.1583344227317;
+ Wed, 04 Mar 2020 09:50:27 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200304151748.26135-1-vincent.guittot@linaro.org>
+In-Reply-To: <20200304151748.26135-1-vincent.guittot@linaro.org>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 4 Mar 2020 18:50:14 +0100
+Message-ID: <CAKfTPtBDeTg0MEsazrtNRObL9nC2wjZTwo944kjZ7O8H0-n4nQ@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair : fix reordering of enqueue_task_fair
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Cc:     Phil Auld <pauld@redhat.com>, Parth Shah <parth@linux.ibm.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Hillf Danton <hdanton@sina.com>, Tao Zhou <zhout@vivaldi.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This will be needed to extend the kvm selftest program.
+On Wed, 4 Mar 2020 at 16:17, Vincent Guittot <vincent.guittot@linaro.org> wrote:
+>
+> Even when a cgroup is throttled, the group se of a child cgroup can still
+> be enqueued and its gse->on_rq stays true. When a task is enqueued on such
+> child, we still have to update the load_avg and increase h_nr_running of
+> the throttled cfs. Nevertheless, the 1st for_each_sched_entity loop is
+> skipped because of gse->on_rq == true and the 2nd loop because the cfs is
+> throttled whereas we have to update both load_avg with the old
+> h_nr_running and increment h_nr_running in such case.
+>
+> Note that the update of load_avg will effectively happen only once in order
+> to sync with the throttled time. Next call for updating load_avg will stop
+> early because the clock stays unchanged.
+>
+> Fixes: 6d4d22468dae ("sched/fair: Reorder enqueue/dequeue_task_fair path")
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> ---
 
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- tools/include/uapi/linux/kvm.h | 44 ++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Please ignore this patch, it's not enough to fix all cases
 
-diff --git a/tools/include/uapi/linux/kvm.h b/tools/include/uapi/linux/kvm.h
-index 4b95f9a31a2f..50bf39d24f17 100644
---- a/tools/include/uapi/linux/kvm.h
-+++ b/tools/include/uapi/linux/kvm.h
-@@ -236,6 +236,7 @@ struct kvm_hyperv_exit {
- #define KVM_EXIT_IOAPIC_EOI       26
- #define KVM_EXIT_HYPERV           27
- #define KVM_EXIT_ARM_NISV         28
-+#define KVM_EXIT_DIRTY_RING_FULL  29
- 
- /* For KVM_EXIT_INTERNAL_ERROR */
- /* Emulate instruction failed. */
-@@ -1010,6 +1011,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_ARM_NISV_TO_USER 177
- #define KVM_CAP_ARM_INJECT_EXT_DABT 178
- #define KVM_CAP_S390_VCPU_RESETS 179
-+#define KVM_CAP_DIRTY_LOG_RING 180
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1478,6 +1480,9 @@ struct kvm_enc_region {
- #define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
- #define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
- 
-+/* Available with KVM_CAP_DIRTY_LOG_RING */
-+#define KVM_RESET_DIRTY_RINGS     _IO(KVMIO, 0xc5)
-+
- /* Secure Encrypted Virtualization command */
- enum sev_cmd_id {
- 	/* Guest initialization commands */
-@@ -1628,4 +1633,43 @@ struct kvm_hyperv_eventfd {
- #define KVM_HYPERV_CONN_ID_MASK		0x00ffffff
- #define KVM_HYPERV_EVENTFD_DEASSIGN	(1 << 0)
- 
-+/*
-+ * KVM dirty GFN flags, defined as:
-+ *
-+ * |---------------+---------------+--------------|
-+ * | bit 1 (reset) | bit 0 (dirty) | Status       |
-+ * |---------------+---------------+--------------|
-+ * |             0 |             0 | Invalid GFN  |
-+ * |             0 |             1 | Dirty GFN    |
-+ * |             1 |             X | GFN to reset |
-+ * |---------------+---------------+--------------|
-+ *
-+ * Lifecycle of a dirty GFN goes like:
-+ *
-+ *      dirtied         collected        reset
-+ * 00 -----------> 01 -------------> 1X -------+
-+ *  ^                                          |
-+ *  |                                          |
-+ *  +------------------------------------------+
-+ *
-+ * The userspace program is only responsible for the 01->1X state
-+ * conversion (to collect dirty bits).  Also, it must not skip any
-+ * dirty bits so that dirty bits are always collected in sequence.
-+ */
-+#define KVM_DIRTY_GFN_F_DIRTY           BIT(0)
-+#define KVM_DIRTY_GFN_F_RESET           BIT(1)
-+#define KVM_DIRTY_GFN_F_MASK            0x3
-+
-+/*
-+ * KVM dirty rings should be mapped at KVM_DIRTY_LOG_PAGE_OFFSET of
-+ * per-vcpu mmaped regions as an array of struct kvm_dirty_gfn.  The
-+ * size of the gfn buffer is decided by the first argument when
-+ * enabling KVM_CAP_DIRTY_LOG_RING.
-+ */
-+struct kvm_dirty_gfn {
-+	__u32 flags;
-+	__u32 slot;
-+	__u64 offset;
-+};
-+
- #endif /* __LINUX_KVM_H */
--- 
-2.24.1
 
+>  kernel/sched/fair.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index fcc968669aea..22d827fc46c3 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5432,7 +5432,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
+>                 cfs_rq = cfs_rq_of(se);
+>
+>                 /* end evaluation on encountering a throttled cfs_rq */
+> -               if (cfs_rq_throttled(cfs_rq))
+> +               if (!se->on_rq && cfs_rq_throttled(cfs_rq))
+>                         goto enqueue_throttle;
+>
+>                 update_load_avg(cfs_rq, se, UPDATE_TG);
+> --
+> 2.17.1
+>
