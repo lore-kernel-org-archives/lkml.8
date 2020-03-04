@@ -2,98 +2,125 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F362FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828DEC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C69382166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:56:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AkyYdyS8"
+	by mail.kernel.org (Postfix) with ESMTP id 56ABC21739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:57:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583330263;
+	bh=TElYCsPC/KjwS0PoNhsiB2JHg6pH7mVlsUEWPAPpKe0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=V19l2Yx4nNPKxqW+oMt5gtHIROsadJdRcd2vuPn9XsocMBQQq5wryRwWTKPQOlqFY
+	 GB8xiEzcmNnS0fRJ07/oSjVbXeo81fYOuaQB9d2TnLpqZzpViacR2kuVktGrpGu6po
+	 SSSsdo6PC7g8LWyQ0Au+DtqrEWw1cB++TePHCl2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbgCDN4v (ORCPT
+        id S2387938AbgCDN5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:56:51 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:36863 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729334AbgCDN4v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:56:51 -0500
-Received: by mail-qv1-f65.google.com with SMTP id r15so798207qve.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:56:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Rhip11nFmECovpT8lVmLzpPD3W/d2rlBg3mYVPTEngc=;
-        b=AkyYdyS8nPkSQXKZ597tNqH6yb1SpRkXmJHVHxqVbM5fXqWPTLgiXZJ3zXtK4pSVAZ
-         UPFlP20GJMn3HxihX5oIqnYZ6IaPCfYm950jychfRYSv+PwRaJxWif7QD3xgm7qWa2Uy
-         uFJAxC4d73bNdcNwBOEOZl3RARtwcJAZEoUOcoh4DAzF/4yzM3GXSs18t08pn79cVE8M
-         QsAeQmvhfW4jVZqcn5YI3kB41XAlQdDW6cF7b5WZCOqrAI0r+aHMrqZfuimI6zrmPqg8
-         E5KtDlY1q+Y+kBRM42S2u73yhX0o+fyzcqOcnnghBDoQIN60UyIvb7Rn6O+dlg2yr0dn
-         g3TQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rhip11nFmECovpT8lVmLzpPD3W/d2rlBg3mYVPTEngc=;
-        b=FaoYyGc5gzAdk60F/0CQpzPi6lJU6CnTulOs4nU9dXF+a3Dz59mQKE/1hrwJhJi0ga
-         GiS8lThy1r9CpcPsdnMj6ewFNYgh8dVLCy21HPcqpeIhz5Xs7ut8Z0jt3T+lRNNb3vHL
-         GyGtE+6tbVR9xXEj5qhqjY5hCgDzN5SsbxsNW9dyDcqP7LJ2WGDy8GKdQx61gicny3d6
-         IfcnvQnh/REA1cRRUMM/lPSwqStNjMlH8g8YuqyEhMER9cQqnN0xrn71B53oEDxrAn1M
-         MO+o6Kj5JqQ1Tvu6PTg6DWncUUTy0nme52d+MSaNN/fLkYUX8GbLBsI6mepKOMDtrXqB
-         uoaA==
-X-Gm-Message-State: ANhLgQ0y542txgm3bnAG//edxFgY0w0jZVFKf8rqTyQdyxcCfDbLGwwI
-        w0yJqLS0Hhqm53Jp+duiEEr4Zg==
-X-Google-Smtp-Source: ADFU+vtecS5RrQ+sxl8h3ySuGL8wlLaGGPNxYxgbTg1P8ayAf6WqAVpCIwyGNMIOM2Za30TvZrOI1w==
-X-Received: by 2002:ad4:58b3:: with SMTP id ea19mr2220940qvb.80.1583330210441;
-        Wed, 04 Mar 2020 05:56:50 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id a6sm12453365qkn.104.2020.03.04.05.56.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Mar 2020 05:56:49 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j9UW1-0008CZ-3g; Wed, 04 Mar 2020 09:56:49 -0400
-Date:   Wed, 4 Mar 2020 09:56:49 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     syzbot <syzbot+2b10b240fbbed30f10fb@syzkaller.appspotmail.com>
-Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        parav@mellanox.com, syzkaller-bugs@googlegroups.com,
-        willy@infradead.org
-Subject: Re: BUG: corrupted list in cma_listen_on_dev
-Message-ID: <20200304135649.GE31668@ziepe.ca>
-References: <00000000000020c5d205a001c308@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <00000000000020c5d205a001c308@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 4 Mar 2020 08:57:42 -0500
+Received: from foss.arm.com ([217.140.110.172]:34506 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728432AbgCDN5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 08:57:42 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FFEA31B;
+        Wed,  4 Mar 2020 05:57:41 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B61B03F6CF;
+        Wed,  4 Mar 2020 05:57:40 -0800 (PST)
+Date:   Wed, 04 Mar 2020 13:57:39 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     alexandre.torgue@st.com, broonie@kernel.org,
+        fabrice.gasnier@st.com, lgirdwood@gmail.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com
+Subject: Applied "regulator: stm32-vrefbuf: fix a possible overshoot when re-enabling" to the regulator tree
+In-Reply-To:  <1583312132-20932-1-git-send-email-fabrice.gasnier@st.com>
+Message-Id:  <applied-1583312132-20932-1-git-send-email-fabrice.gasnier@st.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 10:45:12PM -0800, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11123e65e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=2b10b240fbbed30f10fb
-> compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d3b329e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16291291e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+2b10b240fbbed30f10fb@syzkaller.appspotmail.com
+The patch
 
-#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
+   regulator: stm32-vrefbuf: fix a possible overshoot when re-enabling
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 02fbabd5f4ed182d2c616e49309f5a3efd9ec671 Mon Sep 17 00:00:00 2001
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Date: Wed, 4 Mar 2020 09:55:32 +0100
+Subject: [PATCH] regulator: stm32-vrefbuf: fix a possible overshoot when
+ re-enabling
+
+There maybe an overshoot, when disabling, then re-enabling vrefbuf
+too quickly. VREFBUF is used by ADC/DAC on some boards. When re-enabling
+too quickly, an overshoot on the reference voltage make the conversions
+inaccurate for a short period of time.
+- Don't put the VREFBUF in HiZ when disabling, to force an active
+discharge.
+- Enforce a 1ms OFF/ON delay
+
+Fixes: 0cdbf481e927 ("regulator: Add support for stm32-vrefbuf")
+
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-Id: <1583312132-20932-1-git-send-email-fabrice.gasnier@st.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/stm32-vrefbuf.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/regulator/stm32-vrefbuf.c b/drivers/regulator/stm32-vrefbuf.c
+index bdfaf7edb75a..992bc18101ef 100644
+--- a/drivers/regulator/stm32-vrefbuf.c
++++ b/drivers/regulator/stm32-vrefbuf.c
+@@ -88,7 +88,7 @@ static int stm32_vrefbuf_disable(struct regulator_dev *rdev)
+ 	}
+ 
+ 	val = readl_relaxed(priv->base + STM32_VREFBUF_CSR);
+-	val = (val & ~STM32_ENVR) | STM32_HIZ;
++	val &= ~STM32_ENVR;
+ 	writel_relaxed(val, priv->base + STM32_VREFBUF_CSR);
+ 
+ 	pm_runtime_mark_last_busy(priv->dev);
+@@ -175,6 +175,7 @@ static const struct regulator_desc stm32_vrefbuf_regu = {
+ 	.volt_table = stm32_vrefbuf_voltages,
+ 	.n_voltages = ARRAY_SIZE(stm32_vrefbuf_voltages),
+ 	.ops = &stm32_vrefbuf_volt_ops,
++	.off_on_delay = 1000,
+ 	.type = REGULATOR_VOLTAGE,
+ 	.owner = THIS_MODULE,
+ };
+-- 
+2.20.1
+
