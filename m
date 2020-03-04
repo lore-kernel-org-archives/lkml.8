@@ -2,165 +2,80 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C336C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BB1C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 351CB21739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583338698;
-	bh=rkEU4eLVPSGyjC+W5QQXVir/h4v8Bes9tXj7f/O6jSk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Om21/pWaJZyjzfITlHOHszY9/L07PnptWvSJuiITZ+/bU9BCDo0S6Er6XMniATJp+
-	 cD1lbHN5F66UZifAKfeBPoZzf4qqefB/BfzXrUPZvtHdDxGgz/1HHU35lLPGXAm7sa
-	 CNBdFGQ5hrU8vnP/EZeMN2Kd9AbllKz0xbwfbUuo=
+	by mail.kernel.org (Postfix) with ESMTP id B42E2215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388222AbgCDQSR (ORCPT
+        id S2388274AbgCDQSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:18:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55274 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 11:18:37 -0500
+Received: from mga07.intel.com ([134.134.136.100]:47764 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgCDQSR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:18:17 -0500
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBF4A21739;
-        Wed,  4 Mar 2020 16:18:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583338695;
-        bh=rkEU4eLVPSGyjC+W5QQXVir/h4v8Bes9tXj7f/O6jSk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=dBr54LAnn55gniSieBFpR/b0Ke8+EqQyDZO9+0o3LMC83AcG6pl5rPTwzvraciZfp
-         N6PFmoXmvDA7/qCZnHEV56WMwA/9p4RXS0L7Z472UM/bw2VNO9Z71ghAd1WcFl7287
-         TBGWZgcK48wRwkkXwRhAmdvqQxIIEmY1tX3t+1gE=
-Received: by mail-qk1-f177.google.com with SMTP id e16so2163029qkl.6;
-        Wed, 04 Mar 2020 08:18:15 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0y+h9qyRnT792B9Fep3JYFLQxGyVws2Hl7Dt7lOCNOrgV1FqM+
-        tYOehhhzGpmZnoPcX0sn2HuHzT5CE/KnZKtjlQ==
-X-Google-Smtp-Source: ADFU+vsjnswSGP2m60kwTzWnFzRxFJmlLh7GF6JHFk0NmQeplvYVYnDswx1IFykpcXGAhgSdECAQY+TKoUoOtoR6z50=
-X-Received: by 2002:ae9:f205:: with SMTP id m5mr3729521qkg.152.1583338694869;
- Wed, 04 Mar 2020 08:18:14 -0800 (PST)
+        id S1726275AbgCDQSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:18:36 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 08:18:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
+   d="scan'208";a="352136478"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 04 Mar 2020 08:18:28 -0800
+Received: by lahna (sSMTP sendmail emulation); Wed, 04 Mar 2020 18:18:27 +0200
+Date:   Wed, 4 Mar 2020 18:18:27 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v2 3/3] Revert "thunderbolt: Prevent crash if non-active
+ NVMem file is read"
+Message-ID: <20200304161827.GQ2540@lahna.fi.intel.com>
+References: <PSXP216MB0438FE68DAAFC23CB9AAD5E180E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <PSXP216MB04388C56BECC4CE5EC81EA2680E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20200303103310.GN2540@lahna.fi.intel.com>
+ <PSXP216MB04384541A10255DF4E70F4D480E50@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-References: <20200227082719.6343-1-alexandru.ardelean@analog.com>
- <20200227082719.6343-7-alexandru.ardelean@analog.com> <20200303165323.GA32472@bogus>
- <e8075f2fc949b541ccc369bc0cc5d3726ea0a3bf.camel@analog.com>
-In-Reply-To: <e8075f2fc949b541ccc369bc0cc5d3726ea0a3bf.camel@analog.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 4 Mar 2020 10:18:03 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJrzjKbKF3A1EGFVpP=KgeRY97yWf_k+T4t-nWZ3=n0zg@mail.gmail.com>
-Message-ID: <CAL_JsqJrzjKbKF3A1EGFVpP=KgeRY97yWf_k+T4t-nWZ3=n0zg@mail.gmail.com>
-Subject: Re: [PATCH v3 6/8] dt-bindings: iio: adc: add bindings doc for AXI
- ADC driver
-To:     "Ardelean, Alexandru" <alexandru.Ardelean@analog.com>
-Cc:     "jic23@kernel.org" <jic23@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PSXP216MB04384541A10255DF4E70F4D480E50@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 1:55 AM Ardelean, Alexandru
-<alexandru.Ardelean@analog.com> wrote:
->
-> On Tue, 2020-03-03 at 10:53 -0600, Rob Herring wrote:
-> > On Thu, Feb 27, 2020 at 10:27:17AM +0200, Alexandru Ardelean wrote:
-> > > This change adds the bindings documentation for the AXI ADC driver.
-> > >
-> > > Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > ---
-> > >  .../bindings/iio/adc/adi-axi-adc.yaml         | 69 +++++++++++++++++++
-> >
-> > Follow the compatible string: adi,axi-adc.yaml
->
-> ack
->
-> >
-> > >  1 file changed, 69 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi-axi-
-> > > adc.yaml
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
-> > > b/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
-> > > new file mode 100644
-> > > index 000000000000..d45d41f4f08e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/adc/adi-axi-adc.yaml
-> > > @@ -0,0 +1,69 @@
-> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/iio/adc/adi-axi-adc.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: Analog Devices AXI ADC IP core
-> > > +
-> > > +maintainers:
-> > > +  - Michael Hennerich <michael.hennerich@analog.com>
-> > > +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
-> > > +
-> > > +description: |
-> > > +  Analog Devices Generic AXI ADC IP core for interfacing an ADC device
-> > > +  with a high speed serial (JESD204B/C) or source synchronous parallel
-> > > +  interface (LVDS/CMOS).
-> > > +  Usually, some other interface type (i.e SPI) is used as a control
-> > > +  interface for the actual ADC, while this IP core will interface
-> > > +  to the data-lines of the ADC and handle the streaming of data into
-> > > +  memory via DMA.
-> > > +
-> > > +  https://wiki.analog.com/resources/fpga/docs/axi_adc_ip
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    enum:
-> > > +      - adi,axi-adc-10.0.a
-> > > +
-> > > +  reg:
-> > > +    maxItems: 1
-> > > +
-> > > +  dmas:
-> > > +    minItems: 1
-> > > +    maxItems: 1
-> >
-> > Just maxItems is enough.
->
-> ack
->
-> >
-> > > +
-> > > +  dma-names:
-> > > +    maxItems: 1
-> > > +    items:
-> > > +      - const: rx
-> > > +
-> > > +  adi-axi-adc-client:
-> >
-> > adi,axi-adc-client
-> >
-> > Though I think 'adi,adc-dev' would be better name.
->
-> works for me
-> one question though; this still gives:
->
->   CHKDT   Documentation/devicetree/bindings/iio/adc/adi,axi-adc.yaml
-> /home/sandu/work/linux/upstream/Documentation/devicetree/bindings/iio/adc/adi,ax
-> i-adc.yaml: properties:adi,adc-dev: {'description': 'A reference to a the actual
-> ADC to which this FPGA ADC interfaces to.', 'maxItems': 1} is not valid under
-> any of the given schemas (Possible causes of the failure):
->         /home/sandu/work/linux/upstream/Documentation/devicetree/bindings/iio/ad
-> c/adi,axi-adc.yaml: properties:adi,adc-dev: 'not' is a required property
+On Wed, Mar 04, 2020 at 04:07:29PM +0000, Nicholas Johnson wrote:
+> On Tue, Mar 03, 2020 at 12:33:10PM +0200, Mika Westerberg wrote:
+> > On Mon, Mar 02, 2020 at 03:43:29PM +0000, Nicholas Johnson wrote:
+> > > This reverts commit 03cd45d2e219301880cabc357e3cf478a500080f.
+> > > 
+> > > Since NVMEM subsystem gained support for write-only instances, this
+> > > workaround is no longer required, so drop it.
+> > > 
+> > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+> > 
+> > Assuming this goes through The NVMem tree:
+> > 
+> > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > 
+> > If that's not the case, please let me know. I can also take them through
+> > the Thunderbolt tree.
+> I do not know how this would normally work - I have not experienced much 
+> cross-subsystem work. Perhaps it should be taken through your tree. If 
+> it goes through your tree and not part of this series, perhaps it does 
+> not make sense for it to be authored by me, either. It's just a revert; 
+> it does not take a lot of effort or doing something original.
 
-Yes, not the most helpful errors I know. You need a type reference and
-'maxItems' should be dropped.
+Your authorship is fine.
 
-$ref: /schemas/types.yaml#/definitions/phandle
-
-Rob
+Since this patch depends on the first one, it should go together with
+that one either to NVMem tree or Thunderbolt tree. Either is fine by me
+but if I take them then I need an ack from Srinivas.
