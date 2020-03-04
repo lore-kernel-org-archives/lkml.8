@@ -2,112 +2,88 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA50C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE870C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:39:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25581214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:33:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mXT5WtUh"
+	by mail.kernel.org (Postfix) with ESMTP id AF7B62072D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:39:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387816AbgCDKdT (ORCPT
+        id S2387770AbgCDKjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:33:19 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:46581 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387772AbgCDKdS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:33:18 -0500
-Received: by mail-vs1-f66.google.com with SMTP id t12so775160vso.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:33:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oavuclMu1bzFOooB6OMmYHMNvudw3zSMha1bvQGFwlM=;
-        b=mXT5WtUhyrlswngAqH6ya+Juu2LGtRuHOusP2nOG7HjjTZyzZfKHy5sBYZ+UyMuoGx
-         1C9UM1j6DPFWmzU6eIMdSEHuH+Daaw7KNhAnz1qsp7m07VGBy6UCuzNAvI17a0JARLr5
-         GgzJmucnCXZq06g5AKqMDKpJr9i7hC4NjXD4q4WNcTwQH74hs8uvjFZLDNsUPbfJMmxt
-         s1GseK3iVpTYMg6sEJYBbxI59Y0pC5dkMYM3Chc2dpMkt5ItQ3DUbPebklsY6xgSgAgc
-         sySj8ET3u8vjIpi8mF6gZAdbgHWwW4LPMW9oKEA8ygbzFx0BFAi+j7+ztl2Wdr8NNtWQ
-         7qsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oavuclMu1bzFOooB6OMmYHMNvudw3zSMha1bvQGFwlM=;
-        b=YLLY7dcdfWFiGylCSJEg5NXCmMtZ2/rIhsGoY9Gx0XQ5sOmck2FaD8SAHcPYyAKt3r
-         jC4o1tJOeioBMbVzlBKm1Uy2Xt0NdTD/EkelYBXqe33TocpQWp20P1ANDjIEATK2C0+3
-         8sCuexI5Yu6ifTm+c3bsxTaYiOduCkTyCIRrokfP1xb+xen8onnNRlwhwHqcQmYLa9a+
-         2aGqYzv5NTvaIMUERk/IeN2KxWYVDcvblWITVUqdCgIEE4v/eu3Caj09iPIUko3PUl5r
-         cyCe8rcoRrIJ505D0BfKCBeUVo4P3JOhlTFKaj7P0p0XSFybbe0ujD+DSmr6TW5GBYya
-         ieZA==
-X-Gm-Message-State: ANhLgQ2gpsSmOEWGe+yQVJIphXmcZZaL46Rk35KsjemvefIliJ8KTFvk
-        9qhzJ50mTsM6XfXwfNBWdu4qJgq5K7lbQFnsahVWsw==
-X-Google-Smtp-Source: ADFU+vt8lszpIIskiGB9+FhpTPR1wmM1HuQk0VGywmC3a/Ll2JBX9fYN7Go6GOFSjkphJhvCqF2NGIj6hT+js/1446k=
-X-Received: by 2002:a05:6102:4af:: with SMTP id r15mr1253954vsa.35.1583317997633;
- Wed, 04 Mar 2020 02:33:17 -0800 (PST)
+        Wed, 4 Mar 2020 05:39:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:60620 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728301AbgCDKjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 05:39:55 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9335530E;
+        Wed,  4 Mar 2020 02:39:54 -0800 (PST)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 88AAE3F534;
+        Wed,  4 Mar 2020 02:39:53 -0800 (PST)
+Date:   Wed, 4 Mar 2020 10:39:50 +0000
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, alex.williamson@redhat.com,
+        stable@vger.kernel.org, cohuck@redhat.com
+Subject: Re: [PATCH] vfio: platform: Switch to platform_get_irq_optional()
+Message-ID: <20200304103950.4e98d0ff@donnerap.cambridge.arm.com>
+In-Reply-To: <20200302203715.13889-1-eric.auger@redhat.com>
+References: <20200302203715.13889-1-eric.auger@redhat.com>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
- <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
- <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
- <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com> <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
- <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com> <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
- <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
- <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com> <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
- <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com> <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
- <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com> <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
-In-Reply-To: <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 4 Mar 2020 11:32:41 +0100
-Message-ID: <CAPDyKFpPOA7VD0Qw3dnnSdF4i5pNK6buCNCV2izW6xr5Mr9ybA@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
+On Mon,  2 Mar 2020 21:37:15 +0100
+Eric Auger <eric.auger@redhat.com> wrote:
 
- >
-> > Actually we always use R1B with CMD6 as per spec.
->
-> I fully agree that R1B is preferable, but it's not against the spec to
-> send CMD13 to poll for busy.
->
-> Moreover, we need to cope with the scenario when the host has
-> specified a maximum timeout that isn't sufficiently long enough for
-> the requested operation. Do you have another proposal for how to
-> manage this, but disabling MMC_RSP_BUSY?
->
-> Let's assume you driver would get a R1B for the CMD6 (we force it),
-> then what timeout would the driver be using if we would set
-> cmd.busy_timeout to 30ms?
+> Since commit 7723f4c5ecdb ("driver core: platform: Add an error
+> message to platform_get_irq*()"), platform_get_irq() calls dev_err()
+> on an error. As we enumerate all interrupts until platform_get_irq()
+> fails, we now systematically get a message such as:
+> "vfio-platform fff51000.ethernet: IRQ index 3 not found" which is
+> a false positive.
+> 
+> Let's use platform_get_irq_optional() instead.
 
-/s/30ms/30s
+Yes, that seems correct to me and avoids the false positive error message I saw before.
+ 
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> Cc: stable@vger.kernel.org # v5.3+
 
-Kind regards
-Uffe
+Reviewed-by: Andre Przywara <andre.przywara@arm.com>
+Tested-by: Andre Przywara <andre.przywara@arm.com>
+
+Thanks!
+Andre
+
+> ---
+>  drivers/vfio/platform/vfio_platform.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/vfio/platform/vfio_platform.c b/drivers/vfio/platform/vfio_platform.c
+> index ae1a5eb98620..1e2769010089 100644
+> --- a/drivers/vfio/platform/vfio_platform.c
+> +++ b/drivers/vfio/platform/vfio_platform.c
+> @@ -44,7 +44,7 @@ static int get_platform_irq(struct vfio_platform_device *vdev, int i)
+>  {
+>  	struct platform_device *pdev = (struct platform_device *) vdev->opaque;
+>  
+> -	return platform_get_irq(pdev, i);
+> +	return platform_get_irq_optional(pdev, i);
+>  }
+>  
+>  static int vfio_platform_probe(struct platform_device *pdev)
+
