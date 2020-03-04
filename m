@@ -2,141 +2,106 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55744C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFBF3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:17:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22F2D2073B
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A81492073B
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:17:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E5/nlC5F"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RkMGg80R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387447AbgCDCLT (ORCPT
+        id S2387475AbgCDCRB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:11:19 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:45780 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbgCDCLS (ORCPT
+        Tue, 3 Mar 2020 21:17:01 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20049 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387400AbgCDCRB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:11:18 -0500
-Received: by mail-pg1-f196.google.com with SMTP id m15so207806pgv.12
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 18:11:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=rt5Y6CjiWdPEMugA5HAYufaZHsJJ5Khz6YMhwDYj0u8=;
-        b=E5/nlC5F6noM3LAr7LHBxwclPghaTl+9XMAexj/5eZ/ku4DJS/vJ/KQHwGU9AAfdNW
-         AXrb2JUBlot7D2rvgXM8VQV8gkItV+9RkAAcvw1YWd9FSllYHWAIk3z9hVTwn41NP7ny
-         cczZmHuRwYRR8V/1eyBhOfr63oWunNI5YRH08=
+        Tue, 3 Mar 2020 21:17:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583288219;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=zwpmLVhYAg+RzC4wgoFG5yb2Ol28WwASDz+oEeK9Uow=;
+        b=RkMGg80ReMekloKrhUk7steiD/j0iRh1+Vg3U/b+El4vCyvrWwy7FAqUmhwkFEumaMavTB
+        yyo4gZhAS0aiTs+3CflFE1aYwSnfRmDEMhiMnSKZzylnMYVUWBF+GFNB9acgZlPZw8QwKi
+        zUM2QXWC7m24dzz5CaeSzNhmK7aZvFo=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-334-KLrQ_LnZNW2aluW2YA0jjA-1; Tue, 03 Mar 2020 21:16:55 -0500
+X-MC-Unique: KLrQ_LnZNW2aluW2YA0jjA-1
+Received: by mail-qk1-f200.google.com with SMTP id w6so315080qki.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 18:16:55 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=rt5Y6CjiWdPEMugA5HAYufaZHsJJ5Khz6YMhwDYj0u8=;
-        b=VQEGnQLzbtGDR/Dv74xS9y5jNUo9outpUC/2sLuTUqUvpuMRfsUf/mRvO2o2R6e+ms
-         xif18Wdfqa7Z/IyJTNPLtEDBo7vi3CTT/73qJVBjftcM9vLvJxSbpzpFpAj1QRD3pCcK
-         o/4/BrNWp07sV4C7tnrIxKy2mb1WNLqoYt2gsNK588rirhWO7uet3IMLCgyw35jc7cpU
-         L2kBCVDkMqyU0Gp+RTdo3xW78eoL8pwwjiAfpn/MqTM/NIdMubCz0gGAYBmSAcXHq/67
-         Oviv64aDvJWvWmz/Khu3Ea3nLJPrTNOg1YkS1JBA7AFx8rQavwug76ydBOC06QQM4WIl
-         0KzQ==
-X-Gm-Message-State: ANhLgQ1EfLcYCbhpTh5vFv8gjCgLgV8Tm9o0euODcOESUhL3DXTlqGYa
-        yaUgU7sg02ZJQ6qB4qJ4ctSFLg==
-X-Google-Smtp-Source: ADFU+vu1JdyqwDDPG1P25oqdOG6+XnVmRBU3PqYvGB4n2cjt3qBJeULCjCcl4OCUJu5/D2EQG50qqA==
-X-Received: by 2002:a63:d658:: with SMTP id d24mr430043pgj.340.1583287877965;
-        Tue, 03 Mar 2020 18:11:17 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f3sm19363907pgg.46.2020.03.03.18.11.16
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zwpmLVhYAg+RzC4wgoFG5yb2Ol28WwASDz+oEeK9Uow=;
+        b=GKXW4RuCUGWe43r9j/uHmNwBuMZmmTsRR8RsbTbI/Sahrt+CgFBnywDYFR6SCc1Njv
+         4I43/GCJpXgUTPZaopjm8y38PTsFuptDRBPMqKKhyQYknlsctqinPg50vQZ64a4gyKiK
+         AOz6oenUnpq8F60eBsI7z11qBI1zDzB7DZyXrcOleRjGvwkXErJ7mKjVj8avUHad7+4H
+         khqb48bX3Ywa1/GhtEsRoDMy92Q+8lflsnge7J7AhB2JV8PE/L7rykIY02b63RuCD8nk
+         UBtAM5mcBSl2NMDe9n6vZk6f3cR9a663c7ifLHBPShCZCNV59fSGsiBRStTmJ845GWJK
+         fqNQ==
+X-Gm-Message-State: ANhLgQ3Z6rFBfI0z0gHW4pndmv5txaGs9qrQyg6Bow8qfTQDVjIVWYYF
+        I3gNkc9ZNasNjSFpuXhHMlq0MTkdyGt9LITAwlmUzfFCXsuWw6dyfYzxrdLs6JieC9hsKYBqgUR
+        NS1p11+D+AFhMNyORmGmPBy/0
+X-Received: by 2002:a05:620a:350:: with SMTP id t16mr936780qkm.238.1583288214462;
+        Tue, 03 Mar 2020 18:16:54 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vu1ZMXcr1gqC/Zi87ZN+GHeSsAkSbjaQbQrEwLisqJpF+0jVmM6F3RpKZnuzgvqnsEWVWUn7Q==
+X-Received: by 2002:a05:620a:350:: with SMTP id t16mr936762qkm.238.1583288214196;
+        Tue, 03 Mar 2020 18:16:54 -0800 (PST)
+Received: from xz-x1.hitronhub.home ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id n59sm4185363qtd.77.2020.03.03.18.16.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 18:11:17 -0800 (PST)
-Date:   Tue, 3 Mar 2020 18:11:16 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] kbuild: Remove debug info from kallsyms linking
-Message-ID: <202003031758.AE8FEB7@keescook>
-References: <202002242114.CBED7F1@keescook>
- <CAEf4BzYrBoQJ1tPMRMQ_-G6e76=zj4zyC=HrY-mxH_9QK65oqg@mail.gmail.com>
- <202003031301.083CF048C2@keescook>
- <CAEf4BzbX-Eo3+DCG4zBMhJtLSZrtp48Z-8SvA8qy-WXA5kjR6A@mail.gmail.com>
+        Tue, 03 Mar 2020 18:16:53 -0800 (PST)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        peterx@redhat.com, Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH] KVM: X86: Avoid explictly fetch instruction in x86_decode_insn()
+Date:   Tue,  3 Mar 2020 21:16:37 -0500
+Message-Id: <20200304021637.17856-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4BzbX-Eo3+DCG4zBMhJtLSZrtp48Z-8SvA8qy-WXA5kjR6A@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 01:50:52PM -0800, Andrii Nakryiko wrote:
-> On Tue, Mar 3, 2020 at 1:06 PM Kees Cook <keescook@chromium.org> wrote:
-> >
-> > On Mon, Mar 02, 2020 at 10:55:04PM -0800, Andrii Nakryiko wrote:
-> > > On Mon, Feb 24, 2020 at 9:17 PM Kees Cook <keescook@chromium.org> wrote:
-> > > > [...]
-> > > > @@ -118,8 +128,9 @@ gen_btf()
-> > > >                 return 1
-> > > >         fi
-> > > >
-> > > > -       info "BTF" ${2}
-> > > >         vmlinux_link ${1}
-> > > > +
-> > > > +       info "BTF" ${2}
-> > >
-> > > Any reason to exclude linking from "BTF" step? It's still a part of
-> > > BTF generation, so seems fair to have BTF encompass both vmlinux
-> > > linking and BTF generation/deduplication?
-> >
-> > I'm not sure I'm following what you're saying here. If you're asking why
-> > BTF linking is separate from the final vmlinux link, it's because of how
-> > kallsyms is generated. Currently it's using a rather brute-force
-> 
-> No, I meant that you moved `info "BTF"` to after `vmlinux_link` call,
-> which will make it appear (from make output) as if BTF generation
-> phase is shorter than it is. No big deal, was just wondering if it was
-> done on purpose.
+insn_fetch() will always implicitly refill instruction buffer properly
+when the buffer is empty, so we don't need to explicitly fetch it even
+if insn_len==0 for x86_decode_insn().
 
-Oh! Yes. I changed the reporting in commit 8959e39272d6 ("kbuild:
-Parameterize kallsyms generation and correct reporting") so that
-vmlinux_link reports the "info LD ..." line instead of each of the callers.
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/x86/kvm/emulate.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-This current patch adjusts it so "info BTF ..." is reported for the BTF
-generation stage (right now there's no delay between "info BTF ..." and
-"info LD ...", and it looks like the "info LD" stages takes way too
-long. ;)
-
-> > approach to figure out exactly where everything is going to be in the
-> > final link, and for that it need to have both the BTF symbols present
-> > and the kallysms symbols present. So, unfortunately, each needs to be a
-> > separate step. I spent some time trying to merge BTF and kallsyms phase
-> > 1, but I didn't find a viable solution. I'm *sure* there is a better way
-> > to handle kallsyms, but I haven't had the time to really investigate it.
-> > I think it would require some close coordination with linker behavior
-> > changes...
-> >
-> > >
-> > > >         LLVM_OBJCOPY=${OBJCOPY} ${PAHOLE} -J ${1}
-> > > >
-> > > >         # dump .BTF section into raw binary file to link with final vmlinux
-> >
-> > BTW, in looking at BTF generation, why is this cut up into three steps:
-> > pahole, objcopy, objcopy... shouldn't pahole just gross an output method
-> > to dump the final .o file? That would be MUCH nicer. Especially since
-> > the first step ends up rewriting (?!) the original ELF. This is a lot of
-> > needless IO...
-> 
-> Just mostly historical reasons, that was the interface pahole already
-> supported. I agree that it's a good idea to teach pahole to just emit
-> a binary BTF section dump.
-
-/me adds it to giant TODO list ;)
-
+diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
+index dd19fb3539e0..04f33c1ca926 100644
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5175,11 +5175,6 @@ int x86_decode_insn(struct x86_emulate_ctxt *ctxt, void *insn, int insn_len)
+ 	ctxt->opcode_len = 1;
+ 	if (insn_len > 0)
+ 		memcpy(ctxt->fetch.data, insn, insn_len);
+-	else {
+-		rc = __do_insn_fetch_bytes(ctxt, 1);
+-		if (rc != X86EMUL_CONTINUE)
+-			goto done;
+-	}
+ 
+ 	switch (mode) {
+ 	case X86EMUL_MODE_REAL:
 -- 
-Kees Cook
+2.24.1
+
