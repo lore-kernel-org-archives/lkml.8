@@ -2,80 +2,83 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1BB1C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 200D0C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B42E2215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB4121775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:20:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S8gzW6+g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388274AbgCDQSh (ORCPT
+        id S1729782AbgCDQUj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:18:37 -0500
-Received: from mga07.intel.com ([134.134.136.100]:47764 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726275AbgCDQSg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:18:36 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 08:18:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
-   d="scan'208";a="352136478"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 04 Mar 2020 08:18:28 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 04 Mar 2020 18:18:27 +0200
-Date:   Wed, 4 Mar 2020 18:18:27 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v2 3/3] Revert "thunderbolt: Prevent crash if non-active
- NVMem file is read"
-Message-ID: <20200304161827.GQ2540@lahna.fi.intel.com>
-References: <PSXP216MB0438FE68DAAFC23CB9AAD5E180E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <PSXP216MB04388C56BECC4CE5EC81EA2680E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
- <20200303103310.GN2540@lahna.fi.intel.com>
- <PSXP216MB04384541A10255DF4E70F4D480E50@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+        Wed, 4 Mar 2020 11:20:39 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40656 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726275AbgCDQUi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:20:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=i6EPXcsPhf+W5yJHKSE2MmxHE7uZjMhGSjJOHrOggdc=; b=S8gzW6+gR7oJRlslNUP/b1ARaY
+        3jgyftu6vahHcFT2DEary7hCm+MUfyMyuceCJuVqz55SnIBZKeQOzpjw5LanLUnL8tGIRgJk/WQR7
+        B7IHthWQK0Eu52RRL6p+BXdSyWS+nUcnbXH7yDjl694NSbne4GkDR0T9brSvkg7jlGI9OXMJuhAf7
+        7nK17/mFl5xnsHeLx0zhH0g+uaKxQ3B3DnR9YKpLrghWNoNJvlM3477ecj/LPGaS0NdoA2/2ySHI3
+        NfLm5uQbwOETmrMB2nx5hAhjmQPCExJ7j1/+T5w2QE5ulKAc9u2XxKQWUiyKd112pNtP9B82bPG73
+        VYk3svKQ==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9WlB-0007WO-Q9; Wed, 04 Mar 2020 16:20:37 +0000
+Subject: Re: [v4] Documentation: bootconfig: Update boot configuration
+ documentation
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-doc@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+References: <158322634266.31847.8245359938993378502.stgit@devnote2>
+ <158322635301.31847.15011454479023637649.stgit@devnote2>
+ <ad1e9855-4c64-53bd-7da5-f7cdafe78571@infradead.org>
+ <20200304203722.8e8699c2a3e0a979aae091b1@kernel.org>
+ <3a3a5f1a-3654-d96d-3b4a-dd649a366c65@web.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <531371ef-354a-b0fa-f69f-c8cf9ecc9919@infradead.org>
+Date:   Wed, 4 Mar 2020 08:20:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PSXP216MB04384541A10255DF4E70F4D480E50@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <3a3a5f1a-3654-d96d-3b4a-dd649a366c65@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:07:29PM +0000, Nicholas Johnson wrote:
-> On Tue, Mar 03, 2020 at 12:33:10PM +0200, Mika Westerberg wrote:
-> > On Mon, Mar 02, 2020 at 03:43:29PM +0000, Nicholas Johnson wrote:
-> > > This reverts commit 03cd45d2e219301880cabc357e3cf478a500080f.
-> > > 
-> > > Since NVMEM subsystem gained support for write-only instances, this
-> > > workaround is no longer required, so drop it.
-> > > 
-> > > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> > 
-> > Assuming this goes through The NVMem tree:
-> > 
-> > Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > 
-> > If that's not the case, please let me know. I can also take them through
-> > the Thunderbolt tree.
-> I do not know how this would normally work - I have not experienced much 
-> cross-subsystem work. Perhaps it should be taken through your tree. If 
-> it goes through your tree and not part of this series, perhaps it does 
-> not make sense for it to be authored by me, either. It's just a revert; 
-> it does not take a lot of effort or doing something original.
+On 3/4/20 6:45 AM, Markus Elfring wrote:
+>> What about the following?
+>>
+>> User can group identical parent keys together and use braces to list child keys
 
-Your authorship is fine.
+   The user
+(as Markus noted)
 
-Since this patch depends on the first one, it should go together with
-that one either to NVMem tree or Thunderbolt tree. Either is fine by me
-but if I take them then I need an ack from Srinivas.
+>> under them.
+> 
+> Another wording alternative:
+> 
+> The user can group settings together. Curly brackets enclose a configuration then
+> according to a parent context.
+
+I slightly prefer Masami's text.
+
+-- 
+~Randy
+
