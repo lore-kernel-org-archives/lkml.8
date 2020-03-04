@@ -2,382 +2,276 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735E8C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B95C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 374322166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:41:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hAhpgMvg"
+	by mail.kernel.org (Postfix) with ESMTP id 6F9DE2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:41:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbgCDLlS (ORCPT
+        id S1729405AbgCDLlo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:41:18 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41456 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729307AbgCDLlS (ORCPT
+        Wed, 4 Mar 2020 06:41:44 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:40913 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729377AbgCDLlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:41:18 -0500
-Received: by mail-qt1-f195.google.com with SMTP id l21so1054877qtr.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 03:41:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=8we+KmoFgb0f1SdWSTkNbXpKVEQ3mQv4+x5NOeTrT9E=;
-        b=hAhpgMvguL+0Sl+C0Y4w5NF3FdnsBt6UQ9fEzebTZpKZn7IoThHzrDoMkSIxNWUZbt
-         nErTXYqR5LZkXCRxcqEe9oN0Ec1aR+A9AX3z4CP2UsAXQ3Zz42K3QL8TMfNETqCJO7xS
-         RYcdghPV/cnjozssmHlesWwTGfKKweEEGszrHkPzgw7SS8AOVvby52vDjxkzFIoxq6GM
-         /h/b/fAKsJj+TNYDWHR83m/CgPdBQMBDtmjGAEvSmdLOsHhgPhYh5PCg6E0skacJzNr3
-         go8KhL1ybF3B5HLdgm2tb79zom/6RsRFNXelgdYGdY/2CqrQTpgE7UrebnyUOIMsZJmD
-         ec+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=8we+KmoFgb0f1SdWSTkNbXpKVEQ3mQv4+x5NOeTrT9E=;
-        b=UOF/ZJ7SGf1UZ4giKzugHkaFaP8JvV0Fnr6gG1FT/HCgUz2ydW0LZz5mOBlwRqfeMb
-         kpaA8+koMhFarXVgOlM/M8NoM0TU08fGLSqGLy/PB+2Zc1f9UPSHl77GXavxAYydAvd8
-         13s8aERMV7Fi48BiaebhM8CM+2MGuD6UU/lTebNpZFIRDIxmqMl1CKR9HBeITK5ZBCzh
-         LFk/ZS/YmONU5Pm2SUp3N/Rq0bbE0SYhNU1R/C7Dh1756L4qCCYblL7wIpZ1MNBSDfn9
-         VikACxbtC02jEr4Clhb781Y0ya3AfAYXf8nS+WT4n6rJtkxf5PP+qDHMSWc+j7+qCeoK
-         Gk8A==
-X-Gm-Message-State: ANhLgQ0srA8kEzAgUTEwkDN6zVds98g6xa9Dbnr9LntE60uEvG6tE2is
-        KJhtpvxMcWyv4Pn59GLMChjcp1SOcz5CI8RtJMrwPQ==
-X-Google-Smtp-Source: ADFU+vuVA+L/jjkp9i68p6aWcuFW7rOO9fJxRVZk/aTzJPCz1qwrZ8Zixv12e1NIAQSlmZoF3VF7C0L3MbefXktoiMs=
-X-Received: by 2002:aed:3f3c:: with SMTP id p57mr2016443qtf.234.1583322076769;
- Wed, 04 Mar 2020 03:41:16 -0800 (PST)
-MIME-Version: 1.0
-References: <20200131092147.32063-1-benjamin.gaignard@st.com>
-In-Reply-To: <20200131092147.32063-1-benjamin.gaignard@st.com>
-From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Date:   Wed, 4 Mar 2020 12:41:04 +0100
-Message-ID: <CA+M3ks5y457YP4x_W8_Bv4OooicJSHtFyZ4CAfbEPvkhiQ5wSw@mail.gmail.com>
-Subject: Re: [PATCH] gpu: drm: context: Clean up documentation
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        Wed, 4 Mar 2020 06:41:44 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j9SP7-0001eR-T3; Wed, 04 Mar 2020 12:41:33 +0100
+Received: from pza by lupine with local (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1j9SP7-0005kZ-6Z; Wed, 04 Mar 2020 12:41:33 +0100
+Message-ID: <ac6eb54c01cce4ec52560ac622e024ab47f2136c.camel@pengutronix.de>
+Subject: Re: [RFC 10/11] reset: imx: Add audiomix reset controller support
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Abel Vesa <abel.vesa@nxp.com>, Rob Herring <robh@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Mike Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Anson Huang <anson.huang@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>, Jacky Bai <ping.bai@nxp.com>
+Cc:     devicetree@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Date:   Wed, 04 Mar 2020 12:41:33 +0100
+In-Reply-To: <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
+References: <1583226206-19758-1-git-send-email-abel.vesa@nxp.com>
+         <1583226206-19758-11-git-send-email-abel.vesa@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.30.5-1.1 
+MIME-Version: 1.0
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lun. 3 f=C3=A9vr. 2020 =C3=A0 09:11, Benjamin Gaignard
-<benjamin.gaignard@st.com> a =C3=A9crit :
->
-> Fix kernel doc comments to avoid warnings when compiling with W=3D1.
+Hi Abel,
 
-gentle ping.
-
-Benjamin
-
->
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+On Tue, 2020-03-03 at 11:03 +0200, Abel Vesa wrote:
+> The imx-mix MFD driver registers some devices, one of which, in case of
+> audiomix, maps correctly to a reset controller type. This driver registers
+> a reset controller for that. For now, only the EARC specific resets are added.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@nxp.com>
+> Reviewed-by: Leonard Crestez <leonard.crestez@nxp.com>
 > ---
->  drivers/gpu/drm/drm_context.c | 145 ++++++++++++++++++------------------=
-------
->  1 file changed, 61 insertions(+), 84 deletions(-)
->
-> diff --git a/drivers/gpu/drm/drm_context.c b/drivers/gpu/drm/drm_context.=
-c
-> index 1f802d8e5681..54e64d612a2b 100644
-> --- a/drivers/gpu/drm/drm_context.c
-> +++ b/drivers/gpu/drm/drm_context.c
-> @@ -43,15 +43,11 @@ struct drm_ctx_list {
->         struct drm_file *tag;
->  };
->
-> -/******************************************************************/
-> -/** \name Context bitmap support */
-> -/*@{*/
-> -
->  /**
-> - * Free a handle from the context bitmap.
-> + * drm_legacy_ctxbitmap_free() - Free a handle from the context bitmap.
->   *
-> - * \param dev DRM device.
-> - * \param ctx_handle context handle.
-> + * @dev: DRM device.
-> + * @ctx_handle: context handle.
->   *
->   * Clears the bit specified by \p ctx_handle in drm_device::ctx_bitmap a=
-nd the entry
->   * in drm_device::ctx_idr, while holding the drm_device::struct_mutex
-> @@ -69,10 +65,10 @@ void drm_legacy_ctxbitmap_free(struct drm_device * de=
-v, int ctx_handle)
->  }
->
->  /**
-> - * Context bitmap allocation.
-> + * drm_legacy_ctxbitmap_next() - Context bitmap allocation.
->   *
-> - * \param dev DRM device.
-> - * \return (non-negative) context handle on success or a negative number=
- on failure.
-> + * @dev: DRM device.
-> + * Return: (non-negative) context handle on success or a negative number=
- on failure.
->   *
->   * Allocate a new idr from drm_device::ctx_idr while holding the
->   * drm_device::struct_mutex lock.
-> @@ -89,9 +85,9 @@ static int drm_legacy_ctxbitmap_next(struct drm_device =
-* dev)
->  }
->
->  /**
-> - * Context bitmap initialization.
-> + * drm_legacy_ctxbitmap_init() - Context bitmap initialization.
->   *
-> - * \param dev DRM device.
-> + * @dev: DRM device.
->   *
->   * Initialise the drm_device::ctx_idr
->   */
-> @@ -105,9 +101,9 @@ void drm_legacy_ctxbitmap_init(struct drm_device * de=
-v)
->  }
->
->  /**
-> - * Context bitmap cleanup.
-> + * drm_legacy_ctxbitmap_cleanup() - bitmap cleanup.
->   *
-> - * \param dev DRM device.
-> + * @dev: DRM device.
->   *
->   * Free all idr members using drm_ctx_sarea_free helper function
->   * while holding the drm_device::struct_mutex lock.
-> @@ -157,20 +153,13 @@ void drm_legacy_ctxbitmap_flush(struct drm_device *=
-dev, struct drm_file *file)
->         mutex_unlock(&dev->ctxlist_mutex);
->  }
->
-> -/*@}*/
-> -
-> -/******************************************************************/
-> -/** \name Per Context SAREA Support */
-> -/*@{*/
-> -
->  /**
-> - * Get per-context SAREA.
-> + * drm_legacy_getsareactx() - Get per-context SAREA.
->   *
-> - * \param inode device inode.
-> - * \param file_priv DRM file private.
-> - * \param cmd command.
-> - * \param arg user argument pointing to a drm_ctx_priv_map structure.
-> - * \return zero on success or a negative number on failure.
-> + * @dev: DRM device to operate on
-> + * @data: request data
-> + * @file_priv: DRM file private.
-> + * Return:  zero on success or a negative number on failure.
->   *
->   * Gets the map from drm_device::ctx_idr with the handle specified and
->   * returns its handle.
-> @@ -212,13 +201,12 @@ int drm_legacy_getsareactx(struct drm_device *dev, =
-void *data,
->  }
->
->  /**
-> - * Set per-context SAREA.
-> + * drm_legacy_setsareactx() - Set per-context SAREA.
->   *
-> - * \param inode device inode.
-> - * \param file_priv DRM file private.
-> - * \param cmd command.
-> - * \param arg user argument pointing to a drm_ctx_priv_map structure.
-> - * \return zero on success or a negative number on failure.
-> + * @dev: DRM device to operate on
-> + * @data: request data
-> + * @file_priv: DRM file private.
-> + * Return: zero on success or a negative number on failure.
->   *
->   * Searches the mapping specified in \p arg and update the entry in
->   * drm_device::ctx_idr with it.
-> @@ -257,19 +245,13 @@ int drm_legacy_setsareactx(struct drm_device *dev, =
-void *data,
->         return 0;
->  }
->
-> -/*@}*/
-> -
-> -/******************************************************************/
-> -/** \name The actual DRM context handling routines */
-> -/*@{*/
-> -
->  /**
-> - * Switch context.
-> + * drm_context_switch() - Switch context.
->   *
-> - * \param dev DRM device.
-> - * \param old old context handle.
-> - * \param new new context handle.
-> - * \return zero on success or a negative number on failure.
-> + * @dev: DRM device.
-> + * @old: old context handle.
-> + * @new: new context handle.
-> + * Return: zero on success or a negative number on failure.
->   *
->   * Attempt to set drm_device::context_flag.
->   */
-> @@ -291,11 +273,12 @@ static int drm_context_switch(struct drm_device * d=
-ev, int old, int new)
->  }
->
->  /**
-> - * Complete context switch.
-> + * drm_context_switch_complete() - Complete context switch.
->   *
-> - * \param dev DRM device.
-> - * \param new new context handle.
-> - * \return zero on success or a negative number on failure.
-> + * @dev: DRM device.
-> + * @file_priv: DRM file private.
-> + * @new: new context handle.
-> + * Return: zero on success or a negative number on failure.
->   *
->   * Updates drm_device::last_context and drm_device::last_switch. Verifie=
-s the
->   * hardware lock is held, clears the drm_device::context_flag and wakes =
-up
-> @@ -319,13 +302,13 @@ static int drm_context_switch_complete(struct drm_d=
-evice *dev,
->  }
->
->  /**
-> - * Reserve contexts.
-> + * drm_legacy_resctx() - Reserve contexts.
-> + *
-> + * @dev: DRM device to operate on
-> + * @data: request data
-> + * @file_priv: DRM file private.
->   *
-> - * \param inode device inode.
-> - * \param file_priv DRM file private.
-> - * \param cmd command.
-> - * \param arg user argument pointing to a drm_ctx_res structure.
-> - * \return zero on success or a negative number on failure.
-> + * Return: zero on success or a negative number on failure.
->   */
->  int drm_legacy_resctx(struct drm_device *dev, void *data,
->                       struct drm_file *file_priv)
-> @@ -352,15 +335,13 @@ int drm_legacy_resctx(struct drm_device *dev, void =
-*data,
->  }
->
->  /**
-> - * Add context.
-> + * drm_legacy_addctx() - Add context.
->   *
-> - * \param inode device inode.
-> - * \param file_priv DRM file private.
-> - * \param cmd command.
-> - * \param arg user argument pointing to a drm_ctx structure.
-> - * \return zero on success or a negative number on failure.
-> + * @dev: DRM device to operate on
-> + * @data: request data
-> + * @file_priv: DRM file private.
->   *
-> - * Get a new handle for the context and copy to userspace.
-> + * Return: zero on success or a negative number on failure.
->   */
->  int drm_legacy_addctx(struct drm_device *dev, void *data,
->                       struct drm_file *file_priv)
-> @@ -405,13 +386,12 @@ int drm_legacy_addctx(struct drm_device *dev, void =
-*data,
->  }
->
->  /**
-> - * Get context.
-> + * drm_legacy_getctx() - Get context.
->   *
-> - * \param inode device inode.
-> - * \param file_priv DRM file private.
-> - * \param cmd command.
-> - * \param arg user argument pointing to a drm_ctx structure.
-> - * \return zero on success or a negative number on failure.
-> + * @dev: DRM device to operate on
-> + * @data: request data
-> + * @file_priv: DRM file private.
-> + * Return: zero on success or a negative number on failure.
->   */
->  int drm_legacy_getctx(struct drm_device *dev, void *data,
->                       struct drm_file *file_priv)
-> @@ -429,13 +409,12 @@ int drm_legacy_getctx(struct drm_device *dev, void =
-*data,
->  }
->
->  /**
-> - * Switch context.
-> + * drm_legacy_switchctx() - Switch context.
->   *
-> - * \param inode device inode.
-> - * \param file_priv DRM file private.
-> - * \param cmd command.
-> - * \param arg user argument pointing to a drm_ctx structure.
-> - * \return zero on success or a negative number on failure.
-> + * @dev: DRM device to operate on
-> + * @data: request data
-> + * @file_priv: DRM file private.
-> + * Return: zero on success or a negative number on failure.
->   *
->   * Calls context_switch().
->   */
-> @@ -453,13 +432,12 @@ int drm_legacy_switchctx(struct drm_device *dev, vo=
-id *data,
->  }
->
->  /**
-> - * New context.
-> + * drm_legacy_newctx() - New context.
->   *
-> - * \param inode device inode.
-> - * \param file_priv DRM file private.
-> - * \param cmd command.
-> - * \param arg user argument pointing to a drm_ctx structure.
-> - * \return zero on success or a negative number on failure.
-> + * @dev: DRM device to operate on
-> + * @data: request data
-> + * @file_priv: DRM file private.
-> + * Return: zero on success or a negative number on failure.
->   *
->   * Calls context_switch_complete().
->   */
-> @@ -479,13 +457,12 @@ int drm_legacy_newctx(struct drm_device *dev, void =
-*data,
->  }
->
->  /**
-> - * Remove context.
-> + * drm_legacy_rmctx() - Remove context.
->   *
-> - * \param inode device inode.
-> - * \param file_priv DRM file private.
-> - * \param cmd command.
-> - * \param arg user argument pointing to a drm_ctx structure.
-> - * \return zero on success or a negative number on failure.
-> + * @dev: DRM device to operate on
-> + * @data: request data
-> + * @file_priv: DRM file private.
-> + * Return: zero on success or a negative number on failure.
->   *
->   * If not the special kernel context, calls ctxbitmap_free() to free the=
- specified context.
->   */
-> --
-> 2.15.0
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>  drivers/reset/Kconfig                          |   7 ++
+>  drivers/reset/Makefile                         |   1 +
+>  drivers/reset/reset-imx-audiomix.c             | 122 +++++++++++++++++++++++++
+>  include/dt-bindings/reset/imx-audiomix-reset.h |  15 +++
+>  4 files changed, 145 insertions(+)
+>  create mode 100644 drivers/reset/reset-imx-audiomix.c
+>  create mode 100644 include/dt-bindings/reset/imx-audiomix-reset.h
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index d9efbfd..2f8d9b3 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -81,6 +81,13 @@ config RESET_INTEL_GW
+>  	  Say Y to control the reset signals provided by reset controller.
+>  	  Otherwise, say N.
+>  
+> +config RESET_IMX_AUDIOMIX
+> +	bool "i.MX Audiomix Reset Driver" if COMPILE_TEST
+> +	depends on HAS_IOMEM
+> +	default ARCH_MXC
+> +	help
+> +	  This enables the audiomix reset controller driver for i.MX SoCs.
+> +
+>  config RESET_LANTIQ
+>  	bool "Lantiq XWAY Reset Driver" if COMPILE_TEST
+>  	default SOC_TYPE_XWAY
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index 249ed35..cf23d38 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -12,6 +12,7 @@ obj-$(CONFIG_RESET_BRCMSTB_RESCAL) += reset-brcmstb-rescal.o
+>  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>  obj-$(CONFIG_RESET_INTEL_GW) += reset-intel-gw.o
+> +obj-$(CONFIG_RESET_IMX_AUDIOMIX) += reset-imx-audiomix.o
+>  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
+>  obj-$(CONFIG_RESET_LPC18XX) += reset-lpc18xx.o
+>  obj-$(CONFIG_RESET_MESON) += reset-meson.o
+> diff --git a/drivers/reset/reset-imx-audiomix.c b/drivers/reset/reset-imx-audiomix.c
+> new file mode 100644
+> index 00000000..d1c62ef
+> --- /dev/null
+> +++ b/drivers/reset/reset-imx-audiomix.c
+> @@ -0,0 +1,122 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#include <dt-bindings/reset/imx-audiomix-reset.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/reset-controller.h>
+> +
+> +#define IMX_AUDIOMIX_EARC_CTRL_REG	0x200
+> +
+> +#define IMX_AUDIOMIX_EARC_RESET_BIT	0x0
+> +#define IMX_AUDIOMIX_EARC_PHY_RESET_BIT	0x1
+> +
+> +struct imx_audiomix_reset_data {
+> +	void __iomem *base;
+> +	struct reset_controller_dev rcdev;
+> +	spinlock_t lock;
+> +};
+> +
+> +static int imx_audiomix_reset_set(struct reset_controller_dev *rcdev,
+> +			  unsigned long id, bool assert)
+> +{
+> +	struct imx_audiomix_reset_data *drvdata = container_of(rcdev,
+> +			struct imx_audiomix_reset_data, rcdev);
+> +	void __iomem *reg_addr = drvdata->base;
+> +	unsigned long flags;
+> +	unsigned int offset;
+> +	u32 reg;
+> +
+> +	switch (id) {
+> +	case IMX_AUDIOMIX_EARC_PHY_RESET:
+> +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
+> +		offset = IMX_AUDIOMIX_EARC_PHY_RESET_BIT;
+> +		break;
+> +	case IMX_AUDIOMIX_EARC_RESET:
+> +		reg_addr += IMX_AUDIOMIX_EARC_CTRL_REG;
+> +		offset = IMX_AUDIOMIX_EARC_RESET_BIT;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (assert) {
+> +		pm_runtime_get_sync(rcdev->dev);
+
+This seems wrong. Why is the runtime PM reference count incremented when
+a reset is asserted ...
+
+> +		spin_lock_irqsave(&drvdata->lock, flags);
+> +		reg = readl(reg_addr);
+> +		writel(reg & ~BIT(offset), reg_addr);
+> +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> +	} else {
+> +		spin_lock_irqsave(&drvdata->lock, flags);
+> +		reg = readl(reg_addr);
+> +		writel(reg | BIT(offset), reg_addr);
+> +		spin_unlock_irqrestore(&drvdata->lock, flags);
+> +		pm_runtime_put(rcdev->dev);
+
+... and decremented when a reset is deasserted?
+
+Apart from the runtime PM handling this looks like it could reuse reset-
+simple.
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int imx_audiomix_reset_assert(struct reset_controller_dev *rcdev,
+> +			     unsigned long id)
+> +{
+> +	return imx_audiomix_reset_set(rcdev, id, true);
+> +}
+> +
+> +static int imx_audiomix_reset_deassert(struct reset_controller_dev *rcdev,
+> +			       unsigned long id)
+> +{
+> +	return imx_audiomix_reset_set(rcdev, id, false);
+> +}
+> +
+> +static const struct reset_control_ops imx_audiomix_reset_ops = {
+> +	.assert		= imx_audiomix_reset_assert,
+> +	.deassert	= imx_audiomix_reset_deassert,
+> +};
+> +
+> +static int imx_audiomix_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct imx_audiomix_reset_data *drvdata;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (drvdata == NULL)
+> +		return -ENOMEM;
+> +
+> +	drvdata->base = dev_get_drvdata(dev->parent);
+> +
+> +	platform_set_drvdata(pdev, drvdata);
+> +
+> +	pm_runtime_enable(dev);
+> +
+> +	spin_lock_init(&drvdata->lock);
+> +
+> +	drvdata->rcdev.owner     = THIS_MODULE;
+> +	drvdata->rcdev.nr_resets = IMX_AUDIOMIX_RESET_NUM;
+> +	drvdata->rcdev.ops       = &imx_audiomix_reset_ops;
+> +	drvdata->rcdev.of_node   = dev->of_node;
+> +	drvdata->rcdev.dev	 = dev;
+> +
+> +	return devm_reset_controller_register(dev, &drvdata->rcdev);
+> +}
+> +
+> +static const struct of_device_id imx_audiomix_reset_dt_ids[] = {
+> +	{ .compatible = "fsl,imx8mp-audiomix-reset", },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +static struct platform_driver imx_audiomix_reset_driver = {
+> +	.probe	= imx_audiomix_reset_probe,
+> +	.driver = {
+> +		.name		= KBUILD_MODNAME,
+> +		.of_match_table	= imx_audiomix_reset_dt_ids,
+> +	},
+> +};
+> +module_platform_driver(imx_audiomix_reset_driver);
+> diff --git a/include/dt-bindings/reset/imx-audiomix-reset.h b/include/dt-bindings/reset/imx-audiomix-reset.h
+> new file mode 100644
+> index 00000000..2e26878
+> --- /dev/null
+> +++ b/include/dt-bindings/reset/imx-audiomix-reset.h
+> @@ -0,0 +1,15 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2019 NXP.
+> + */
+> +
+> +#ifndef DT_BINDING_RESET_IMX_AUDIOMIX_H
+> +#define DT_BINDING_RESET_IMX_AUDIOMIX_H
+> +
+> +#define IMX_AUDIOMIX_EARC_RESET		0x0
+> +#define IMX_AUDIOMIX_EARC_PHY_RESET	0x1
+> +
+> +#define IMX_AUDIOMIX_RESET_NUM		2
+> +
+> +#endif
+> +
+
+The imx-audiomix-reset.h change should go into a separate patch,
+together with the binding docs for fsl,imx8mp-audiomix-reset.
+
+regards
+Philipp
