@@ -2,100 +2,172 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BE3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:12:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C01C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D64620848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:12:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC97621775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:13:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Og0kIOAh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbgCDPM3 (ORCPT
+        id S1729570AbgCDPNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:12:29 -0500
-Received: from mga17.intel.com ([192.55.52.151]:12633 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbgCDPM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:12:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 07:12:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
-   d="scan'208";a="258787670"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga002.jf.intel.com with ESMTP; 04 Mar 2020 07:12:25 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j9VhC-006s8I-RJ; Wed, 04 Mar 2020 17:12:26 +0200
-Date:   Wed, 4 Mar 2020 17:12:26 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jason Yan <yanaijie@huawei.com>
-Cc:     pmladek@suse.com, rostedt@goodmis.org,
-        sergey.senozhatsky@gmail.com, linux@rasmusvillemoes.dk,
-        linux-kernel@vger.kernel.org, Scott Wood <oss@buserror.net>,
-        Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <tobin@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Daniel Axtens <dja@axtens.net>
-Subject: Re: [PATCH] vfsprintf: only hash addresses in security environment
-Message-ID: <20200304151226.GE1224808@smile.fi.intel.com>
-References: <20200304124707.22650-1-yanaijie@huawei.com>
+        Wed, 4 Mar 2020 10:13:09 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34698 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgCDPNI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:13:08 -0500
+Received: by mail-wr1-f65.google.com with SMTP id z15so2866126wrl.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:13:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=hZJyRWg+l1EQKudArZuRb63dEwzdCahRlAsMV0GZXUw=;
+        b=Og0kIOAhyFhYo3ateVctfHnwO5v/TiVer2LAVTuJ+JE681tg1mBEauXqfv73ltQLMI
+         Xcu6v/I1lrQ4GzL3amoni5XrY0fVwPdqea8/iV3yOz3SW2GGIunF83E2lKzpsz/Kem2N
+         TtJEWU3/NnYISird4p5efZ7QX3nJzYV9Qlpt8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=hZJyRWg+l1EQKudArZuRb63dEwzdCahRlAsMV0GZXUw=;
+        b=BE1IIP5/Ios1wy4X8lh9CwjEH2IWTerap3ee+yIcLTx2RlrKCgyRk3v6UA+F+ERjdU
+         2ntxFkts7z/0CitxGNu+qdBAVkIW0xaO8qmT2bwg3QgmqOdoz585HIUXEshKHWqq0oxX
+         AovH55NHF66QsIDInfrBBxRbZIXgnSZG+jXeGgEGAeKiHpUjak4dXV8wxc6dvN+CfHOM
+         O1Dy5LEdUfRL3LzAH+fHrZDfPy2ZPnDk415bRQbcbhXwg5cicLB5NPuJie7QKHy1gxMA
+         9TN6DgQ5o/aEuel1z8K1apSuSo5uMt45nGaM1lnyGojBeHuljsOue81GRAuro4YxhSEb
+         Il+Q==
+X-Gm-Message-State: ANhLgQ27CX/vy+5H+Drs52eoULpJN32zin1r3ZPLZj0ol4dlZgo+MhhA
+        DjPH13iM8k8uBMbnrQAcEjYz/w==
+X-Google-Smtp-Source: ADFU+vvHG3HAkh9oCxuhuVqTYsrbfmOiHuluXZ/uTiIfc9wVHLVTyn3vt6erjUnGoxP4uO3TiM1chQ==
+X-Received: by 2002:adf:df8d:: with SMTP id z13mr2907749wrl.302.1583334784893;
+        Wed, 04 Mar 2020 07:13:04 -0800 (PST)
+Received: from chromium.org ([2a00:79e1:abc:308:8ca0:6f80:af01:b24])
+        by smtp.gmail.com with ESMTPSA id z131sm4420307wmg.25.2020.03.04.07.13.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 07:13:04 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Wed, 4 Mar 2020 16:13:03 +0100
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     linux-security-module@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: Re: [PATCH bpf-next v2 3/7] bpf: Introduce BPF_MODIFY_RETURN
+Message-ID: <20200304151303.GC9984@chromium.org>
+References: <20200304015528.29661-1-kpsingh@chromium.org>
+ <20200304015528.29661-4-kpsingh@chromium.org>
+ <CAEf4BzbbaiLC+-Gytwcx=i0XTniNH6YNsfOfx3nrU1oo73VsKw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200304124707.22650-1-yanaijie@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzbbaiLC+-Gytwcx=i0XTniNH6YNsfOfx3nrU1oo73VsKw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 08:47:07PM +0800, Jason Yan wrote:
-> When I am implementing KASLR for powerpc, Scott Wood argued that format
-> specifier "%p" always hashes the addresses that people do not have a
-> choice to shut it down: https://patchwork.kernel.org/cover/11367547/
+On 03-Mär 21:08, Andrii Nakryiko wrote:
+> On Tue, Mar 3, 2020 at 5:56 PM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > When multiple programs are attached, each program receives the return
+> > value from the previous program on the stack and the last program
+> > provides the return value to the attached function.
+> >
+> > The fmod_ret bpf programs are run after the fentry programs and before
+> > the fexit programs. The original function is only called if all the
+> > fmod_ret programs return 0 to avoid any unintended side-effects. The
+> > success value, i.e. 0 is not currently configurable but can be made so
+> > where user-space can specify it at load time.
+> >
+> > For example:
+> >
+> > int func_to_be_attached(int a, int b)
+> > {  <--- do_fentry
+> >
+> > do_fmod_ret:
+> >    <update ret by calling fmod_ret>
+> >    if (ret != 0)
+> >         goto do_fexit;
+> >
+> > original_function:
+> >
+> >     <side_effects_happen_here>
+> >
+> > }  <--- do_fexit
+> >
+> > The fmod_ret program attached to this function can be defined as:
+> >
+> > SEC("fmod_ret/func_to_be_attached")
+> > int BPF_PROG(func_name, int a, int b, int ret)
+> > {
+> >         // This will skip the original function logic.
+> >         return 1;
+> > }
+> >
+> > The first fmod_ret program is passed 0 in its return argument.
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > ---
+> >  arch/x86/net/bpf_jit_comp.c    | 130 ++++++++++++++++++++++++++++++---
+> >  include/linux/bpf.h            |   1 +
+> >  include/uapi/linux/bpf.h       |   1 +
+> >  kernel/bpf/btf.c               |   3 +-
+> >  kernel/bpf/syscall.c           |   1 +
+> >  kernel/bpf/trampoline.c        |   5 +-
+> >  kernel/bpf/verifier.c          |   1 +
+> >  tools/include/uapi/linux/bpf.h |   1 +
+> >  8 files changed, 130 insertions(+), 13 deletions(-)
+> >
 > 
-> It's true that if in a debug environment or security is not concerned,
-> such as KASLR is absent or kptr_restrict = 0,  there is no way to shut
-> the hashing down except changing the code and build the kernel again
-> to use a different format specifier like "%px". And when we want to
-> turn to security environment, the format specifier has to be changed
-> back and rebuild the kernel.
+> This looks good, but I'll Alexei check all the assembly generation
+> logic, not too big of an expert on that.
 > 
-> As KASLR is available on most popular platforms and enabled by default,
-> print the raw value of address while KASLR is absent and kptr_restrict
-> is zero. Those who concerns about security must have KASLR enabled or
-> kptr_restrict set properly.
+> [...]
+> 
+> 
+> >  static int emit_fallback_jump(u8 **pprog)
+> > diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> > index 98ec10b23dbb..3cfdc216a2f4 100644
+> > --- a/include/linux/bpf.h
+> > +++ b/include/linux/bpf.h
+> > @@ -473,6 +473,7 @@ void notrace __bpf_prog_exit(struct bpf_prog *prog, u64 start);
+> >
+> >  enum bpf_tramp_prog_type {
+> >         BPF_TRAMP_FENTRY,
+> > +       BPF_TRAMP_MODIFY_RETURN,
+> 
+> This is probably bad idea to re-number BPF_TRAMP_FEXIT for no good
+> reason. E.g., if there are some drgn scripts that do some internal
+> state printing, this is major inconvenience, while really providing no
+> benefit in itself. Consider putting it right before BPF_TRAMP_MAX.
 
-Even w/o KASLR the kernel address is sensitive material.
-However, as a developer, I would like to have means to shut the hashing down.
+Makes sense, I somehow initially (incorrectly) assumed that the order
+represented the order of execution. But the only real demarcation
+is the BPF_TRAMP_MAX. Updated it for v3.
 
-Btw, when pass 'nokaslr' to the kernel it should turned off as well.
+- KP
 
-> +	/*
-> +	 * In security environment, while kaslr is enabled or kptr_restrict is
-
-kaslr -> KASLR
-
-> +	 * not zero, hash before printing so that addresses will not be
-> +	 * leaked. And if not in a security environment, print the raw value
-
-Missed period at the end of sentence.
-
-> +	 */
-> +	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) || kptr_restrict)
-> +		return ptr_to_id(buf, end, ptr, spec);
-> +	else
-> +		return pointer_string(buf, end, ptr, spec);
->  }
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> 
+> >         BPF_TRAMP_FEXIT,
+> >         BPF_TRAMP_MAX,
+> >         BPF_TRAMP_REPLACE, /* more than MAX */
+> 
+> [...]
