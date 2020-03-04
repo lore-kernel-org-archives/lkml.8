@@ -2,142 +2,150 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE482C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:08:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F7FC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:09:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87BF522B48
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:08:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8FEA22B48
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:09:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nPtvWklQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rIcS+2ej"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbgCDRIf (ORCPT
+        id S2388139AbgCDRJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:08:35 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37366 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgCDRIf (ORCPT
+        Wed, 4 Mar 2020 12:09:20 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38906 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbgCDRJU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:08:35 -0500
-Received: by mail-pf1-f195.google.com with SMTP id p14so1268868pfn.4;
-        Wed, 04 Mar 2020 09:08:34 -0800 (PST)
+        Wed, 4 Mar 2020 12:09:20 -0500
+Received: by mail-lf1-f65.google.com with SMTP id x22so2138748lff.5;
+        Wed, 04 Mar 2020 09:09:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WcXiDjy33PYge8hUsXuS+/8NVEyCDj8/Q41XwHVNKcw=;
-        b=nPtvWklQt9QghWJiSdW0QkhlOrTOjZ3+Pds6ZlGJMH65EhPXyR/CLtQPDyWFP6vkVk
-         WBs9KyqFwr2826o1eb60HIE/D7eB88nLn5qItsO4QRJum9NW2rUgoDgdu2C/+OBnAOSm
-         7VGNMVXMqTvDsGKcEVAvHD4xY3TNY3Ecoz0Qo3LB+REQP+1vkTxrkDtf35T1c8a3WTAq
-         sLvRu06xnTEnC5SFMLwJEPp9umUI7fdjZNSUghVcNxaa2fnjI1marOElFj9M6v17L6Tc
-         cDQfQ0dSZIo4z57MzT4QliTFyIk634DnwZVwEEfcMAlNnN7o5KsNQ0HOvPjIMqpmRcrW
-         VDkw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yBZl3/9H7qG9t1GNuyPAhwaMbhvgRw8oAIP4mrCDQgs=;
+        b=rIcS+2ejqyuy3Or/TxDzvhbS0RjAO9grbala4uKp9TkZwSL/5Viw5A9kGIV5D2BKbx
+         AxY/ZqCamkTU2MUinGOxrxqa1N+/wZWi5RdlUUdyMIw5Vd8BmAEpf9r81qddGJqWztif
+         T/1GRWfoq1fm5/NQhGQmO/vxc0LgrHSwmD8a+ODGMMrNK+aztcl64OTnt4DxQ+0u8WEP
+         e7Tr7n5Y+IyiWefPikWfQJoOHbGNb3jXhRNu1dn8lX6Aitl1JhY7ED0y9tdil38BYE/N
+         fSConbhm/ZN556D61NU6fh2KQnP32TgPdOomVRvPEqMVlBAWwMuXfUBm/SF/0yxrlP5m
+         1CNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WcXiDjy33PYge8hUsXuS+/8NVEyCDj8/Q41XwHVNKcw=;
-        b=LtxuIWkB7jA7iRBbH6itoPJdHforyXTj/PopdN5BWPKOWqc8XqIXJ/ZbsznIscN52q
-         cR7aDVeZm5wYrXIhEz/9IigxyWt0MSBq+tTAN9ujucnvE2HAsLaU2wxwvtLBGDZscEJH
-         0UhyZrANerWSeYWlm+wohZI6muLvDxCigOj5hfdn3oxXGMI8s8lypbvwJC0bp6NJIQyH
-         XcwAp5PqVG1+4L2nb8rEPSR4da95/AP+m15hr0ujyQC8iGuhzVA5AAmFeHKzFIAawdFx
-         TINtFEQPeRZrbdhXUH2CQ3siRsRvvq2+/cewYI9mgyjKNuzlZBQ7Qj9EGVgzb/hk59yI
-         AeeA==
-X-Gm-Message-State: ANhLgQ369ya3bfrbkODjHrg40I9W6sxjFPb9gJ8ZEL3P8TsbSAbjx2/N
-        zLHijcR3W8Lw+KE51x19E7o=
-X-Google-Smtp-Source: ADFU+vv+Df31P92V8d+K3fXU/m2exn8CF+UTDgAxezww+iG60GrEAezFnJETx5JbDF0id9d06IG8bw==
-X-Received: by 2002:aa7:91d7:: with SMTP id z23mr1179323pfa.160.1583341714250;
-        Wed, 04 Mar 2020 09:08:34 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id h8sm1192994pfn.59.2020.03.04.09.08.33
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Mar 2020 09:08:33 -0800 (PST)
-Date:   Wed, 4 Mar 2020 09:08:32 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Tomer Maimon <tmaimon77@gmail.com>
-Cc:     wim@linux-watchdog.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        joel@jms.id.au, avifishman70@gmail.com, tali.perry1@gmail.com,
-        yuenn@google.com, benjaminfair@google.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v2 1/3] dt-binding: watchdog: add bootstatus reset type
- documentation
-Message-ID: <20200304170832.GA22914@roeck-us.net>
-References: <20200303100114.87786-1-tmaimon77@gmail.com>
- <20200303100114.87786-2-tmaimon77@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yBZl3/9H7qG9t1GNuyPAhwaMbhvgRw8oAIP4mrCDQgs=;
+        b=iWmhNFZ5WxRQEaV1NCy4O0tCp6z3BWSDF8v5Kh14WgfOSmSYXhmRdC2P+/rdZjHMBE
+         yZT1MGqErCtIPHMCa2YIYfvZDvDZpkbZbU9TepYmyDsF+c615eDl6+EZ+wa2cEhz3yVc
+         JzNP/vLEzC0KsNvC7q+Cm6IjKgsphmgSsR330Ayhm9mUjUjazvicrCVUEoiG4AUcp8TJ
+         e/wdyXWDyuZmm5+/E4JypZHLGZN7mba5aKqUCACXs11I19Xm/NCEZWizAWkYqK7xuJFx
+         gudU+1HUis7q7gKYZaBLb2iB4heF0phCQbzHVJqRK45KYR0brPiHJt5Fv6AGwjr/9W0h
+         Ctng==
+X-Gm-Message-State: ANhLgQ3oXGbPQrihcmfXkLdo4DbCfSnf4dHOg33kcuXf5A8ky1q9zv9A
+        thBS9MOD0Oxwm70fUA8Iw2Hst0dG
+X-Google-Smtp-Source: ADFU+vuG3z6ZnGM1bBt/YG1AYECEmQSaA1rt4z0OWiGLEyfUTpo8iXhF1qDr8fpQC9WQIGwBx+ugxQ==
+X-Received: by 2002:ac2:4a84:: with SMTP id l4mr2533938lfp.217.1583341756930;
+        Wed, 04 Mar 2020 09:09:16 -0800 (PST)
+Received: from [192.168.2.145] (94-29-39-224.dynamic.spd-mgts.ru. [94.29.39.224])
+        by smtp.googlemail.com with ESMTPSA id v15sm13994290lfg.51.2020.03.04.09.09.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 09:09:16 -0800 (PST)
+Subject: Re: [PATCH v1 3/3] partitions: Introduce NVIDIA Tegra Partition Table
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Stephen Warren <swarren@wwwdotorg.org>
+Cc:     Jens Axboe <axboe@kernel.dk>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
+        David Heidelberg <david@ixit.cz>,
+        Peter Geis <pgwipeout@gmail.com>,
+        Nicolas Chauvet <kwizart@gmail.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Billy Laws <blaws05@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>,
+        linux-block <linux-block@vger.kernel.org>,
+        Andrey Danin <danindrey@mail.ru>,
+        Gilles Grandou <gilles@grandou.net>,
+        Ryan Grachek <ryan@edited.us>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200224231841.26550-1-digetx@gmail.com>
+ <20200224231841.26550-4-digetx@gmail.com>
+ <44c22925-a14e-96d0-1f93-1979c0c60525@wwwdotorg.org>
+ <CAPDyKFoXnoukjH_2cM=f0DGHBHS6kVUQSYOa_5ffQppC7VOn2A@mail.gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <824a4d5f-8280-8860-3e80-68188a13aa3d@gmail.com>
+Date:   Wed, 4 Mar 2020 20:09:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303100114.87786-2-tmaimon77@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAPDyKFoXnoukjH_2cM=f0DGHBHS6kVUQSYOa_5ffQppC7VOn2A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 12:01:12PM +0200, Tomer Maimon wrote:
-> Add device tree three bootstatus reset types documentation.
+04.03.2020 19:36, Ulf Hansson пишет:
+> On Tue, 25 Feb 2020 at 01:20, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>
+>> On 2/24/20 4:18 PM, Dmitry Osipenko wrote:
+>>> All NVIDIA Tegra devices use a special partition table format for the
+>>> internal storage partitioning. Most of Tegra devices have GPT partition
+>>> in addition to TegraPT, but some older Android consumer-grade devices do
+>>> not or GPT is placed in a wrong sector, and thus, the TegraPT is needed
+>>> in order to support these devices properly in the upstream kernel. This
+>>> patch adds support for NVIDIA Tegra Partition Table format that is used
+>>> at least by all NVIDIA Tegra20 and Tegra30 devices.
+>>
+>>> diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
+>>
+>>> +static void __init tegra_boot_config_table_init(void)
+>>> +{
+>>> +     void __iomem *bct_base;
+>>> +     u16 pt_addr, pt_size;
+>>> +
+>>> +     bct_base = IO_ADDRESS(TEGRA_IRAM_BASE) + TEGRA_IRAM_BCT_OFFSET;
+>>
+>> This shouldn't be hard-coded. IIRC, the boot ROM writes a BIT (Boot
+>> Information Table) to a fixed location in IRAM, and there's some value
+>> in the BIT that points to where the BCT is in IRAM. In practice, it
+>> might work out that the BCT is always at the same place in IRAM, but
+>> this certainly isn't guaranteed. I think there's code in U-Boot which
+>> extracts the BCT location from the BIT? Yes, see
+>> arch/arm/mach-tegra/ap.c:get_odmdata().
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../bindings/watchdog/nuvoton,npcm-wdt.txt    | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
+> So, have you considered using the command line partition option,
+> rather than adding yet another partition scheme to the kernel?
 > 
-> diff --git a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
-> index 6d593003c933..65e24a80ee70 100644
-> --- a/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/nuvoton,npcm-wdt.txt
-> @@ -17,6 +17,33 @@ Required clocking property, have to be one of:
->  
->  Optional properties:
->  - timeout-sec : Contains the watchdog timeout in seconds
-> +- nuvoton,card-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
-> +  Contains the card reset type for checking and indicating
-> +  the last card reset status (WDIOF_CARDRESET)
-> +
-> +  If 'nuvoton,card-reset-type' is not specified the default is porst
-> +
-> +  Reset types:
-> +       - porst: Power reset
-> +       - corst: Core reset
-> +	   - wdX : Watchdog reset X (X represante 0-2)
-> +	   - swX : Software reset X (X represante 1-4)
-> +
-> +- nuvoton,ext1-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
-> +  Contains the external 2 reset type for checking and indicating
-> +  the last external 2 reset status (WDIOF_EXTERN1)
-> +
-> +  If 'nuvoton,card-reset-type' is not specified the default is wd0.
-> +
-> +  Reset types are the same as in nuvoton,card-reset-type property.
-> +
-> +- nuvoton,ext2-reset-type : "porst|corst|wd0|wd1|wd2|sw1|sw2|sw3|sw4"
-> +  Contains the external 2 reset type for checking and indicating
-> +  the last external 2 reset status (WDIOF_EXTERN2)
-> +
-> +  If 'nuvoton,card-reset-type' is not specified the default is sw1.
-> +
-> +  Reset types are the same as in nuvoton,card-reset-type property.
->  
->  Example:
->  
-> @@ -25,4 +52,7 @@ timer@f000801c {
->      interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
->      reg = <0xf000801c 0x4>;
->      clocks = <&clk NPCM7XX_CLK_TIMER>;
-> +	nuvoton,card-reset-type = "porst";
-> +	nuvoton,ext1-reset-type = "wd1";
-> +	nuvoton,ext2-reset-type = "sw2";
+> In principle, you would let the boot loader scan for the partitions,
+> likely from machine specific code in U-boot. Then you append these to
+> the kernel command line and let block/partitions/cmdline.c scan for
+> it.
 
-This set of properties maps chip reset types to reset types defined
-by the Linux watchdog subsystem (ie WDIOF_CARDRESET, WDIOF_EXTERN1,
-and WDIOF_EXTERN2). It is neither a hardware description nor a system
-configuration.
+The bootloader is usually locked-down on a consumer Tegra machines (it's
+signed / encrypted).
 
-It is up to Rob to decide, but I personally don't think it is appropriate.
+Technically, it should be possible to chain-load some custom secondary
+bootloader instead of a kernel image, but this is not very practical
+because now:
 
-Guenter
+1. There is a need to make a custom bootloader and it is quite a lot of
+work.
+
+2. You'll have to tell everybody that a custom booloader may need to be
+used in order to get a working eMMC.
+
+3. NVIDIA's bootloader already passes a command line parameter to kernel
+for locating GPT entry, but this hack is not acceptable for the upstream
+kernel.
