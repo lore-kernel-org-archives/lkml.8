@@ -2,105 +2,85 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACEFC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:29:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9664C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15CEE2146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:29:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802182166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:29:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583324981;
+	bh=q2HpzpEFlt66LCc0CN8paD0dy7D/lMctDByWBOfYWDY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=YkQ1GKWW72NsJ9ixyvupOLCM+nvMOdlVFCSVqnUVRacRdJiq2wx9ot4C1x2Oji4hR
+	 oEA1cE+kGyjMcrb459OM6ZOD91YgslyhzrFeQyuvyp+5IgXIWgm8C5/5qI4Unt6ESx
+	 6NyZE+xMWUFJXPSNddADFczWaVyBwXN3RRaQymSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbgCDM32 (ORCPT
+        id S1729404AbgCDM3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:29:28 -0500
-Received: from mga09.intel.com ([134.134.136.24]:29032 "EHLO mga09.intel.com"
+        Wed, 4 Mar 2020 07:29:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729175AbgCDM32 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:29:28 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 04:29:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
-   d="scan'208";a="274651100"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
-  by fmsmga002.fm.intel.com with ESMTP; 04 Mar 2020 04:29:24 -0800
-Subject: Re: [PATCH V2] mmc: sdhci-msm: Disable CQE during SDHC reset
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
-        ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
- <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <da449444-1878-e387-6ebf-4ddb282a9b71@intel.com>
-Date:   Wed, 4 Mar 2020 14:28:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1729175AbgCDM3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:29:40 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B4612166E;
+        Wed,  4 Mar 2020 12:29:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583324979;
+        bh=q2HpzpEFlt66LCc0CN8paD0dy7D/lMctDByWBOfYWDY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BjmxhOST79gAxpkZ2y78ISWiFHHMkQCZxBDA+ud4HCQ68Y+b75tFMLhkaYHL2jfBr
+         VHYSo3j6UKXJKKlFZA9phX5PbcNbRzloZdDtMTaAsLTRqPNOPFWCFRXvCGQS1xF10a
+         18AJJjq8jgxvrz0xGMnDLH7AWf9ZYazGeLXkVTcg=
+Date:   Wed, 4 Mar 2020 13:29:36 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: [GIT PULL v2] PHY: For 5.6 -rc
+Message-ID: <20200304122936.GA1600752@kroah.com>
+References: <20200304115454.14921-1-kishon@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304115454.14921-1-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/03/20 1:54 pm, Veerabhadrarao Badiganti wrote:
-> When SDHC gets reset (E.g. in suspend path), CQE also gets reset
-> and goes to disable state. But s/w state still points it as CQE
-> is in enabled state. Since s/w and h/w states goes out of sync,
-> it results in s/w request timeout for subsequent CQE requests.
+On Wed, Mar 04, 2020 at 05:24:54PM +0530, Kishon Vijay Abraham I wrote:
+> Hi Greg,
 > 
-> To synchronize CQE s/w and h/w state during SDHC reset,
-> explicitly disable CQE after reset.
+> Please find the updated pull request for 5.6 -rc cycle below. It only
+> adds an additional patch over my previous pull request (I added a new
+> patch since my initial pull request is not merged).
+> 
+> It fixes an issue caused because of adding device_link_add() on platforms
+> which have cyclic dependency between PHY consumer and PHY provider.
+> 
+> It also includes couple of timeout fixes in Motorola and other misc
+> fixes in TI and Broadcom's PHY driver.
+> Please see the tag message for the complete list of changes and let me
+> know if I have to change something.
+> 
+> Thanks
+> Kishon
+> 
+> The following changes since commit bb6d3fb354c5ee8d6bde2d576eb7220ea09862b9:
+> 
+>   Linux 5.6-rc1 (2020-02-09 16:08:48 -0800)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.6-rc_v2
 
-Shouldn't you be calling cqhci_suspend() / cqhci_resume() in the suspend and
-resume paths?
+Pulled and pushed out, thanks.
 
-> 
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> ---
-> Changes since V1:
-> 	- Disable CQE only when SDHC undergoes s/w reset for all.
-> ---
->  drivers/mmc/host/sdhci-msm.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
-> index 53b79ee..75929d3 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -1823,6 +1823,13 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  	pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
->  }
->  
-> +static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
-> +{
-> +	sdhci_reset(host, mask);
-> +	if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
-> +		cqhci_suspend(host->mmc);
-> +}
-> +
->  static const struct sdhci_msm_variant_ops mci_var_ops = {
->  	.msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
->  	.msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
-> @@ -1861,7 +1868,7 @@ static void sdhci_msm_set_regulator_caps(struct sdhci_msm_host *msm_host)
->  MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
->  
->  static const struct sdhci_ops sdhci_msm_ops = {
-> -	.reset = sdhci_reset,
-> +	.reset = sdhci_msm_reset,
->  	.set_clock = sdhci_msm_set_clock,
->  	.get_min_clock = sdhci_msm_get_min_clock,
->  	.get_max_clock = sdhci_msm_get_max_clock,
-> 
-
+greg k-h
