@@ -2,111 +2,118 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C66C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B16C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7261A2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:24:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FQPR4T3f"
+	by mail.kernel.org (Postfix) with ESMTP id 7165D21739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:25:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbgCDPY4 (ORCPT
+        id S1729690AbgCDPZH convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:24:56 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:37252 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728432AbgCDPY4 (ORCPT
+        Wed, 4 Mar 2020 10:25:07 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:50050 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbgCDPZH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:24:56 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a141so2287123wme.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:24:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZmLS9qnO1Q66v/wtUwX9VxbxLnQwytCVRya2k8J6vNI=;
-        b=FQPR4T3fjY4rOCvwbAQ0z8QbhMr1ZjWh/xFw9Lzc6W6+ZG7u3WI8Ah6jcGVr/7iX06
-         PwPe9WEyKHVL3xuyryUBVKXmU47z4QmcSlCbFjOVUp4BD1ILDAbH8mc0KFDN/IyJyIUA
-         UCIVqbT+3CO8S6wCXr7gfGksuTKj7jCzv4fV8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZmLS9qnO1Q66v/wtUwX9VxbxLnQwytCVRya2k8J6vNI=;
-        b=PA3w/+Y2KSDOLtv5rY1J4J7MChX4ZgbAmnkNyb4hYpfpt9+3XRHdxPwqHZdKto2Qpy
-         UZtlfZ089OMF/k94uaMKDZQ7Xh2CtYwUSJsLKsamryX6jIsYHtmsGf9Ui5fmg8Qmw/LI
-         H7mw+WF+sV23Hzyry7B+8SuXx+urHr6IYhN5+oFFbOiFm6mhGaI8y+A72oEogDtyB4TF
-         n52/ehVTj1+bI4CG1Cg0+YFflb2ACpnLwQE/BZ7nVH+oCtorSUUvaBc4aEcjjyTpN0L2
-         qc5zoJYscCJy4ctLS07j9wyWGjrCKxEwuLd5J821yPB1NxeFN2e7+GxZjp6QIkmF0QB7
-         JsOQ==
-X-Gm-Message-State: ANhLgQ1fYoZH/q1YVtS1Lg0TiCNFI2KQz6OstsqsjNnfdCaj+gnvr+GY
-        olROom1nK4wal0WnW4ToTg2HPg==
-X-Google-Smtp-Source: ADFU+vtzSljSP9Rf+4htWw0ktNMsb3VloEd6kKjoSEQOggRPiPdIX37a5amcCVkEUychGquYG0F2wg==
-X-Received: by 2002:a7b:c857:: with SMTP id c23mr4209940wml.68.1583335492265;
-        Wed, 04 Mar 2020 07:24:52 -0800 (PST)
-Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
-        by smtp.gmail.com with ESMTPSA id z10sm4687059wmk.31.2020.03.04.07.24.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 07:24:51 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 4 Mar 2020 16:24:50 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     KP Singh <kpsingh@chromium.org>,
-        linux-security-module@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next v2 2/7] bpf: JIT helpers for fmod_ret progs
-Message-ID: <20200304152450.GA53576@google.com>
-References: <20200304015528.29661-1-kpsingh@chromium.org>
- <20200304015528.29661-3-kpsingh@chromium.org>
- <CAEf4Bzah9CpWJ1vLuy+V1K26Ka1ovKvvAnbRuYBJ1GF-xcQbJQ@mail.gmail.com>
+        Wed, 4 Mar 2020 10:25:07 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 024FOnXA032127, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 024FOnXA032127
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 4 Mar 2020 23:24:49 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 4 Mar 2020 23:24:48 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 4 Mar 2020 23:24:48 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Wed, 4 Mar 2020 23:24:48 +0800
+From:   Hau <hau@realtek.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+CC:     Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Linux Netdev List <netdev@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        Anthony Wong <anthony.wong@canonical.com>,
+        Jason Yen <jason.yen@canonical.com>
+Subject: RE: SFP+ support for 8168fp/8117
+Thread-Topic: SFP+ support for 8168fp/8117
+Thread-Index: AQHVwTo87C9FPgb4q0K7N9j/9Mzg+6fW+ByAgAAXwwCAAE15gIAAfZ0AgECGEQCAAkeigIAECCeAgAQrRCCADDcng4AJ2WCQ
+Date:   Wed, 4 Mar 2020 15:24:48 +0000
+Message-ID: <e10eef58d8fc4b67ac2a73784bf86381@realtek.com>
+References: <2D8F5FFE-3EC3-480B-9D15-23CACE5556DF@canonical.com>
+ <20200102152143.GB1397@lunn.ch>
+ <DC28A43E-4F1A-40B6-84B0-3E79215527C9@canonical.com>
+ <c148fefc-fd56-26a8-9f9b-fbefbaf25050@gmail.com>
+ <02F7CBDE-B877-481C-A5AF-2F4CBF830A2C@canonical.com>
+ <80E9C881-91C8-4F29-B9CE-652F9EE0B018@canonical.com>
+ <995bddbc4f9d48cbb3a289a7e9799f15@realtek.com>
+ <12EA7285-06D7-44D3-B033-4F52A06123CC@canonical.com>
+ <cae39cfbb5174c8884328887cdfb5a89@realtek.com>
+ <9AAC75D4-B04F-49CD-BBB9-11AE3382E4D8@canonical.com>
+ <5A21808E-C9DA-44BF-952B-4A5077B52E9B@canonical.com>
+In-Reply-To: <5A21808E-C9DA-44BF-952B-4A5077B52E9B@canonical.com>
+Accept-Language: zh-TW, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.157]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEf4Bzah9CpWJ1vLuy+V1K26Ka1ovKvvAnbRuYBJ1GF-xcQbJQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-Mar 20:52, Andrii Nakryiko wrote:
-> On Tue, Mar 3, 2020 at 5:56 PM KP Singh <kpsingh@chromium.org> wrote:
+> Hi Hau,
+> 
+> > On Feb 19, 2020, at 22:48, Kai-Heng Feng <kai.heng.feng@canonical.com>
+> wrote:
 > >
-> > From: KP Singh <kpsingh@google.com>
+> > Hi Hau,
 > >
-> > * Split the invoke_bpf program to prepare for special handling of
-> >   fmod_ret programs introduced in a subsequent patch.
-> > * Move the definition of emit_cond_near_jump and emit_nops as they are
-> >   needed for fmod_ret.
-> > * Refactor branch target alignment into its own function
-> >   align16_branch_target.
+> >> On Feb 19, 2020, at 22:22, Hau <hau@realtek.com> wrote:
+> >
+> > [snipped]
+> >
+> >>
+> >> Hi Kai-Heng,
+> >>
+> >> Attached file is r8168 that I have add SFP+ support for rtl8168fp. If
+> possible, please give it a try.
+> >
+> > I've already tested r8168 and it does support SFP+.
+> >
+> > What we are discussing here is to support this chip properly in mainline
+> kernel.
+> >
+> > This is what we've discussed so far:
+> > https://lore.kernel.org/lkml/2D8F5FFE-3EC3-480B-9D15-
+> 23CACE5556DF@canonical.com/
+> 
+> Is there anything you can share so we can support this chip properly in
+> upstream?
+> 
 
-I updated this as well, as we changed it to emit_align.
+Hi Kai-Heng,
 
-- KP
+For adding SFP+ support for rtl8168fp, 
+1.Some power saving features must be disabled, like APDLS/EEE/EEEPLUS...
+2.PHY capability must be set to auto-negation.
 
-> >
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > ---
-> 
-> I trust invoke_bpf_prog logic didn't change, code was just moved around, right?
-> 
-> Acked-by: Andrii Nakryiko <andriin@fb.com>
-> 
-> 
-> >  arch/x86/net/bpf_jit_comp.c | 148 +++++++++++++++++++++---------------
-> >  1 file changed, 85 insertions(+), 63 deletions(-)
-> >
-> 
-> [...]
+I am kind of busy this week. I will try to add support for this chip into upstream next week.
+
+Thanks,
+Hau
+
+> ------Please consider the environment before printing this e-mail.
