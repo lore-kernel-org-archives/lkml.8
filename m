@@ -2,147 +2,152 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A8BCC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F1DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97E721739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F42C2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LikPfLGL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388006AbgCDMDa convert rfc822-to-8bit (ORCPT
+        id S2388030AbgCDMDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:03:30 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:56243 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387801AbgCDMD3 (ORCPT
+        Wed, 4 Mar 2020 07:03:32 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:35835 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387969AbgCDMDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:03:29 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1j9SkE-00046M-B3; Wed, 04 Mar 2020 13:03:22 +0100
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1j9SkB-0006zp-D7; Wed, 04 Mar 2020 13:03:19 +0100
-Message-ID: <a2878b95da2afaeb0eac1a8f2f1991ef5ff9cace.camel@pengutronix.de>
-Subject: Re: [PATCH 25/89] reset: simple: Add reset callback
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Maxime Ripard <maxime@cerno.tech>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>
-Cc:     dri-devel@lists.freedesktop.org,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.com>,
-        Tim Gover <tim.gover@raspberrypi.com>,
-        Phil Elwell <phil@raspberrypi.com>
-Date:   Wed, 04 Mar 2020 13:03:19 +0100
-In-Reply-To: <e7e2c84206f2cc8c0cb36cd734226f73f3331198.1582533919.git-series.maxime@cerno.tech>
-References: <cover.6c896ace9a5a7840e9cec008b553cbb004ca1f91.1582533919.git-series.maxime@cerno.tech>
-         <e7e2c84206f2cc8c0cb36cd734226f73f3331198.1582533919.git-series.maxime@cerno.tech>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 4 Mar 2020 07:03:32 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583323411; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=w8/VI8a0yZGZ+S81+DrlT9/VeEz0sSf8UqnT8L9K+Uw=;
+ b=LikPfLGLJxwMhhjV0fwHTXtIfJVgZTLPiXHufZCFcrZ97yTfMkNQunq5ZRIxPA0VOSlFFimk
+ YKQaExU+lHpqa16PKQ0721ij37oFL7rQHNxBaKrVXQfy/6ZyPV/AtCmJD0ZHMtVrTqEYLx7l
+ 9oUrtji7arGnjj0id3iXjB5IAd8=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5f98f6.7f1ee30c25e0-smtp-out-n03;
+ Wed, 04 Mar 2020 12:03:02 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E17B8C433A2; Wed,  4 Mar 2020 12:03:01 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: rjliao)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8665EC43383;
+        Wed,  4 Mar 2020 12:03:01 +0000 (UTC)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 04 Mar 2020 20:03:01 +0800
+From:   Rocky Liao <rjliao@codeaurora.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
+        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
+        linux-bluetooth-owner@vger.kernel.org
+Subject: Re: [PATCH v1] Bluetooth: hci_qca: Make bt_en and susclk not
+ mandatory for QCA Rome
+In-Reply-To: <20200304085341.GF32540@localhost>
+References: <20200304015429.20615-1-rjliao@codeaurora.org>
+ <20200304085341.GF32540@localhost>
+Message-ID: <fc80e98e2b82ba5b6852252bc57db2e8@codeaurora.org>
+X-Sender: rjliao@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Maxime,
-
-On Mon, 2020-02-24 at 10:06 +0100, Maxime Ripard wrote:
-> The reset-simple code lacks a reset callback that is still pretty easy to
-> implement. The only real thing to consider is the delay needed for a device
-> to be reset, so let's expose that as part of the reset-simple driver data.
->
-> Cc: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Maxime Ripard <maxime@cerno.tech>
-
-This shoulod be done in such a way that simple reset drivers which do
-not set the reset delay continue to return -ENOTSUPP from
-reset_control_reset().
-
-> ---
->  drivers/reset/reset-simple.c       | 21 +++++++++++++++++++++
->  include/linux/reset/reset-simple.h |  4 ++++
->  2 files changed, 25 insertions(+)
+在 2020-03-04 16:53，Johan Hovold 写道：
+> On Wed, Mar 04, 2020 at 09:54:29AM +0800, Rocky Liao wrote:
+>> On some platforms the bt_en pin and susclk are default on and there
+>> is no exposed resource to control them. This patch makes the bt_en
+>> and susclk not mandatory to have BT work. It also will not set the
+>> HCI_QUIRK_NON_PERSISTENT_SETUP and shutdown() callback if bt_en is
+>> not available.
+>> 
+>> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
+>> ---
+>>  drivers/bluetooth/hci_qca.c | 47 
+>> ++++++++++++++++++++-----------------
+>>  1 file changed, 26 insertions(+), 21 deletions(-)
+>> 
+>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+>> index bf436d6e638e..325baa046c3a 100644
+>> --- a/drivers/bluetooth/hci_qca.c
+>> +++ b/drivers/bluetooth/hci_qca.c
+>> @@ -1562,9 +1562,11 @@ static int qca_power_on(struct hci_dev *hdev)
+>>  		ret = qca_wcn3990_init(hu);
+>>  	} else {
+>>  		qcadev = serdev_device_get_drvdata(hu->serdev);
+>> -		gpiod_set_value_cansleep(qcadev->bt_en, 1);
+>> -		/* Controller needs time to bootup. */
+>> -		msleep(150);
+>> +		if (!IS_ERR(qcadev->bt_en)) {
+>> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
+>> +			/* Controller needs time to bootup. */
+>> +			msleep(150);
+>> +		}
+>>  	}
+>> 
+>>  	return ret;
+>> @@ -1750,7 +1752,7 @@ static void qca_power_shutdown(struct hci_uart 
+>> *hu)
+>>  		host_set_baudrate(hu, 2400);
+>>  		qca_send_power_pulse(hu, false);
+>>  		qca_regulator_disable(qcadev);
+>> -	} else {
+>> +	} else if (!IS_ERR(qcadev->bt_en)) {
+>>  		gpiod_set_value_cansleep(qcadev->bt_en, 0);
+>>  	}
+>>  }
+>> @@ -1852,6 +1854,7 @@ static int qca_serdev_probe(struct serdev_device 
+>> *serdev)
+>>  	struct hci_dev *hdev;
+>>  	const struct qca_vreg_data *data;
+>>  	int err;
+>> +	bool power_ctrl_enabled = true;
+>> 
+>>  	qcadev = devm_kzalloc(&serdev->dev, sizeof(*qcadev), GFP_KERNEL);
+>>  	if (!qcadev)
+>> @@ -1901,35 +1904,37 @@ static int qca_serdev_probe(struct 
+>> serdev_device *serdev)
+>>  		qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
+>>  					       GPIOD_OUT_LOW);
 > 
-> diff --git a/drivers/reset/reset-simple.c b/drivers/reset/reset-simple.c
-> index c854aa351640..7a8c56512ae9 100644
-> --- a/drivers/reset/reset-simple.c
-> +++ b/drivers/reset/reset-simple.c
-> @@ -11,6 +11,7 @@
->   * Maxime Ripard <maxime.ripard@free-electrons.com>
->   */
->  
-> +#include <linux/delay.h>
->  #include <linux/device.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
-> @@ -63,6 +64,25 @@ static int reset_simple_deassert(struct reset_controller_dev *rcdev,
->  	return reset_simple_update(rcdev, id, false);
->  }
->  
-> +static int reset_simple_reset(struct reset_controller_dev *rcdev,
-> +			       unsigned long id)
-> +{
-> +	struct reset_simple_data *data = to_reset_simple_data(rcdev);
-> +	int ret;
+> Shouldn't you use devm_gpiod_get_optional()?
+> 
+>>  		if (IS_ERR(qcadev->bt_en)) {
+>> -			dev_err(&serdev->dev, "failed to acquire enable gpio\n");
+>> -			return PTR_ERR(qcadev->bt_en);
+>> +			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
+>> +			power_ctrl_enabled = false;
+> 
+> And bail out on errors, but treat NULL as !port_ctrl_enabled?
+> 
+>>  		}
+>> 
+>>  		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
+> 
+> And devm_clk_get_optional() here.
+> 
+> Etc.
+> 
+> Also does the devicetree binding need to be updated to reflect this
+> change?
+> 
+OK, I will update to use the suggested API.
+The devicetress binding doesn't need to be updated as they are already 
+optional there.
 
-You could just return -ENOTSUPP here if data->reset_ms == 0.
-
-> +	ret = reset_simple_assert(rcdev, id);
-> +	if (ret)
-> +		return ret;
-> +
-> +	mdelay(data->reset_ms);
-
-Have you considered specifying the delay in microseconds instead?
-That would allow to use usleep_range() for shorter delays.
-
-> +	ret = reset_simple_deassert(rcdev, id);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
->  static int reset_simple_status(struct reset_controller_dev *rcdev,
->  			       unsigned long id)
->  {
-> @@ -80,6 +100,7 @@ static int reset_simple_status(struct reset_controller_dev *rcdev,
->  const struct reset_control_ops reset_simple_ops = {
->  	.assert		= reset_simple_assert,
->  	.deassert	= reset_simple_deassert,
-> +	.reset		= reset_simple_reset,
->  	.status		= reset_simple_status,
->  };
->  EXPORT_SYMBOL_GPL(reset_simple_ops);
-> diff --git a/include/linux/reset/reset-simple.h b/include/linux/reset/reset-simple.h
-> index 08ccb25a55e6..a5887f6cbe50 100644
-> --- a/include/linux/reset/reset-simple.h
-> +++ b/include/linux/reset/reset-simple.h
-> @@ -27,6 +27,9 @@
->   * @status_active_low: if true, bits read back as cleared while the reset is
->   *                     asserted. Otherwise, bits read back as set while the
->   *                     reset is asserted.
-> + * @reset_ms: Minimum delay in milliseconds needed that needs to be
-> + *            waited for between an assert and a deassert to reset the
-> + *            device.
-
-If multiple consumers with different delay requirements are connected to
-this reset controllers, this must the largest minimum delay. Could you
-add mention for this in the comment?
-
-regards
-Philipp
+> Johan
