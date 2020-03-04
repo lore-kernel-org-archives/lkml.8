@@ -2,122 +2,103 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07FF7C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6C1C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48CD21744
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:58:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583319522;
-	bh=HkpTmmopcWeiJOUsgTP+pcb5bKUbqsfE8qE/21U6EO0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=kQZ0lIb/kFDJFTu3+QVHgOyCunXsNwQdPxM/IgNoGpFyTSxw9NmJuVtss14k0W8Kg
-	 xlYkokdY6C+TEquUMkKXsGfc0dlIacIgJhYYg2s1GeEXVE8IfZhhnI9M19CoQXcqc1
-	 w48DI98sSFsx+L47Q7F3KMLHQLQ6By34ZjhpsMYM=
+	by mail.kernel.org (Postfix) with ESMTP id 6143421775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:59:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387793AbgCDK6l (ORCPT
+        id S2387850AbgCDK7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:58:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48102 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgCDK6l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:58:41 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5ECA2166E;
-        Wed,  4 Mar 2020 10:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583319520;
-        bh=HkpTmmopcWeiJOUsgTP+pcb5bKUbqsfE8qE/21U6EO0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ognYXJmePYp6yQ4NZn96MFB+MLpGmSQ5o7fC/QRcNKdilISLKMp1t8ioLh5fb34ax
-         /KdpfBRN3D+xH6axDzHuRjrrNsa2oCNrA2cXnkwP2URDtO204FUUnBQEXQjrJLhoho
-         A1Jft/Qcph5Pl4wFIxgaVp6C/HqBoYtd1MtFBJX0=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j9Rjb-009xyH-1n; Wed, 04 Mar 2020 10:58:39 +0000
+        Wed, 4 Mar 2020 05:59:09 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:55391 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387805AbgCDK7I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 05:59:08 -0500
+X-Originating-IP: 176.88.145.204
+Received: from localhost.localdomain (unknown [176.88.145.204])
+        (Authenticated sender: cengiz@kernel.wtf)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 9B91560009;
+        Wed,  4 Mar 2020 10:59:03 +0000 (UTC)
+From:   Cengiz Can <cengiz@kernel.wtf>
+To:     Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cengiz Can <cengiz@kernel.wtf>
+Subject: [PATCH v2] blktrace: fix dereference after null check
+Date:   Wed,  4 Mar 2020 13:58:19 +0300
+Message-Id: <20200304105818.11781-1-cengiz@kernel.wtf>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
 Content-Transfer-Encoding: 8bit
-Date:   Wed, 04 Mar 2020 10:58:38 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     =?UTF-8?Q?=E5=91=A8=E7=90=B0=E6=9D=B0_=28Zhou_Yanjie=29?= 
-        <zhouyanjie@wanyeetech.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        tglx@linutronix.de, jason@lakedaemon.net, sboyd@kernel.org,
-        mturquette@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org,
-        daniel.lezcano@linaro.org, paul@crapouillou.net,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        dongsheng.qiu@ingenic.com
-Subject: Re: [PATCH 4/4] irqchip: Ingenic: Add support for TCU of X1000.
-In-Reply-To: <1582100974-129559-6-git-send-email-zhouyanjie@wanyeetech.com>
-References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1582100974-129559-6-git-send-email-zhouyanjie@wanyeetech.com>
-Message-ID: <cf9434a075ee7efa6430bc39877c416c@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.10
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: zhouyanjie@wanyeetech.com, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, sboyd@kernel.org, mturquette@baylibre.com, mark.rutland@arm.com, robh+dt@kernel.org, daniel.lezcano@linaro.org, paul@crapouillou.net, sernia.zhou@foxmail.com, zhenwenjin@gmail.com, dongsheng.qiu@ingenic.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-19 08:29, 周琰杰 wrote:
-> X1000 has a different TCU containing OST, since X1000, OST has been
-> independent of TCU. This patch is prepare for later OST driver.
+There was a recent change in blktrace.c that added a RCU protection to
+`q->blk_trace` in order to fix a use-after-free issue during access.
 
-You keep on talking about OST (whatever that is), but never deals with 
-it.
-Why don't you just say
+However the change missed an edge case that can lead to dereferencing of
+`bt` pointer even when it's NULL:
 
-"Enable TCU support for Ingenic X1000, which can be supported by
-the existing driver."
+Coverity static analyzer marked this as a FORWARD_NULL issue with CID
+1460458.
 
-as this is what the patch is doing?
+```
+/kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
+1898            ret = 0;
+1899            if (bt == NULL)
+1900                    ret = blk_trace_setup_queue(q, bdev);
+1901
+1902            if (ret == 0) {
+1903                    if (attr == &dev_attr_act_mask)
+>>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
+>>>     Dereferencing null pointer "bt".
+1904                            bt->act_mask = value;
+1905                    else if (attr == &dev_attr_pid)
+1906                            bt->pid = value;
+1907                    else if (attr == &dev_attr_start_lba)
+1908                            bt->start_lba = value;
+1909                    else if (attr == &dev_attr_end_lba)
+```
 
-> 
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
-> ---
->  drivers/irqchip/irq-ingenic-tcu.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/irqchip/irq-ingenic-tcu.c
-> b/drivers/irqchip/irq-ingenic-tcu.c
-> index 6d05cef..7a7222d 100644
-> --- a/drivers/irqchip/irq-ingenic-tcu.c
-> +++ b/drivers/irqchip/irq-ingenic-tcu.c
-> @@ -180,3 +180,4 @@ static int __init ingenic_tcu_irq_init(struct
-> device_node *np,
->  IRQCHIP_DECLARE(jz4740_tcu_irq, "ingenic,jz4740-tcu", 
-> ingenic_tcu_irq_init);
->  IRQCHIP_DECLARE(jz4725b_tcu_irq, "ingenic,jz4725b-tcu", 
-> ingenic_tcu_irq_init);
->  IRQCHIP_DECLARE(jz4770_tcu_irq, "ingenic,jz4770-tcu", 
-> ingenic_tcu_irq_init);
-> +IRQCHIP_DECLARE(x1000_tcu_irq, "ingenic,x1000-tcu", 
-> ingenic_tcu_irq_init);
+Added a reassignment with RCU annotation to fix the issue.
 
-Otherwise,
+Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
 
-Acked-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+---
 
-I expect this to go via the MIPS tree as a series.
+    Patch Changelog
+    * v2: Added RCU annotation to assignment
 
-Thanks,
+ kernel/trace/blktrace.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 4560878f0bac..ca39dc3230cb 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -1896,8 +1896,11 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
+ 	}
+
+ 	ret = 0;
+-	if (bt == NULL)
++	if (bt == NULL) {
+ 		ret = blk_trace_setup_queue(q, bdev);
++		bt = rcu_dereference_protected(q->blk_trace,
++				lockdep_is_held(&q->blk_trace_mutex));
++	}
+
+ 	if (ret == 0) {
+ 		if (attr == &dev_attr_act_mask)
+--
+2.25.1
+
