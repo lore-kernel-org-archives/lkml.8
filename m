@@ -2,366 +2,424 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DB0C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE61DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D95B20732
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:23:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKlgyIPG"
+	by mail.kernel.org (Postfix) with ESMTP id 95A1321744
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387723AbgCDJXs (ORCPT
+        id S1728942AbgCDJZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:23:48 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:42582 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725283AbgCDJXs (ORCPT
+        Wed, 4 Mar 2020 04:25:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38020 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725283AbgCDJZ3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:23:48 -0500
-Received: by mail-pg1-f194.google.com with SMTP id h8so700903pgs.9;
-        Wed, 04 Mar 2020 01:23:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kCFxJfUYhWSlHScD0b8Ytgms54iq7TrDb4qmTym5rpc=;
-        b=EKlgyIPG5qe+6Tj4H3NPk5ThNDqYti3OdkgbMrHt6IGu7+KThw6C2Fo3SfCNSJPD9h
-         RQeWDetI75ViPiSw7x38051k9y/+ci7YhyOfiwXJS4083oxHa9+1eyfhw+bnFxhpoPxf
-         rpyR808meomZ1bp8YYMI9XpM3lg87WMPyxqcXQ2yp84SbxPNFCIXxT8jtRiUVq/94peF
-         FD0gZmIL86lC4ERWKzGkQVVYyjBsX2J9xM31xm9ZDetR85MDxtfAnAXi3cpPWXm3GHg+
-         VR3fbhuxeBjs1n4t/75qAmrOUxdT3cPDROeSfRExt7vzJah5lN/FJ8U2iL1oUeYYRRXs
-         7XIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kCFxJfUYhWSlHScD0b8Ytgms54iq7TrDb4qmTym5rpc=;
-        b=FvDBfBXeqRAaBerTDw3oxKyORr2ewmIFpEApEyxijU1ccRj+Qvy/KtqMFW5S6ZsSAT
-         5QKo3udklhcNsE1t/VaMugxZ5wwo4xzA1cNp1z9tHFAyM+bAxaF+4wKGtNLe7Q/79EZO
-         2slRTJAzaDDa+2tnihHkEmPaBsXeXbyljxrQpHPeznSdnesBF1QoUJIZsIZNyjUpxbZd
-         1578JIhlCaKKKTIYuj/Pv0R8hIJhpTuaSRFfCX9LEJx5SOqTzvoZ7RFCEyaGHEr4g0py
-         HL0bE24vv4z50OxBd5qHEYCoDO8STPuGgaFgvIW4XmblZUkD+BHp+29eF3OOq4Oseju3
-         MnKQ==
-X-Gm-Message-State: ANhLgQ28aEFUupdEZQ5QlUVG2xkJkxcLHpFfPQhGGoW+sqnWo5GOzaBi
-        78b+tSupwB9/9gOLwAJJgX1LxKma
-X-Google-Smtp-Source: ADFU+vscRcAyMwnqSxpJsCi0zWNio4ifacpUPS/zRw2Vjth2TCUjKPpj+ZOwp4PXAN4dJtSOV4WvEw==
-X-Received: by 2002:a63:7e49:: with SMTP id o9mr1843354pgn.80.1583313826216;
-        Wed, 04 Mar 2020 01:23:46 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b21sm28778153pfp.0.2020.03.04.01.23.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 01:23:45 -0800 (PST)
-Subject: Re: [PATCHv2 3/4] watchdog: Add K3 RTI watchdog support
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200302200426.6492-1-t-kristo@ti.com>
- <20200302200426.6492-4-t-kristo@ti.com> <20200303211822.GB28733@roeck-us.net>
- <f167de86-6c76-0e4e-6c61-6e7ca989101d@ti.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-Message-ID: <aed89814-a78b-4a59-7673-bce5de34022d@roeck-us.net>
-Date:   Wed, 4 Mar 2020 01:23:43 -0800
+        Wed, 4 Mar 2020 04:25:29 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0249KuL6076149
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 04:25:28 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfknbr62m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 04:25:28 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Wed, 4 Mar 2020 09:25:25 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 09:25:18 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0249OINY44302696
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 09:24:18 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 169CBAE055;
+        Wed,  4 Mar 2020 09:25:17 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 07C27AE04D;
+        Wed,  4 Mar 2020 09:25:16 +0000 (GMT)
+Received: from pic2.home (unknown [9.145.145.27])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 09:25:15 +0000 (GMT)
+Subject: Re: [PATCH v3 19/27] powerpc/powernv/pmem: Add an IOCTL to report
+ controller statistics
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+ <20200221032720.33893-20-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Wed, 4 Mar 2020 10:25:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <f167de86-6c76-0e4e-6c61-6e7ca989101d@ti.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200221032720.33893-20-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030409-0008-0000-0000-0000035930BC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030409-0009-0000-0000-00004A7A62EF
+Message-Id: <6ee036c7-f4ea-4e42-faad-66a1921553ce@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_01:2020-03-03,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ mlxlogscore=999 lowpriorityscore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 10:57 PM, Tero Kristo wrote:
-> On 03/03/2020 23:18, Guenter Roeck wrote:
->> On Mon, Mar 02, 2020 at 10:04:25PM +0200, Tero Kristo wrote:
->>> Texas Instruments K3 SoCs contain an RTI (Real Time Interrupt) module
->>> which can be used as a watchdog. This IP provides a support for
->>> windowed watchdog mode, in which the watchdog must be petted within
->>> a certain time window. If it is petted either too soon, or too late,
->>> a watchdog error will be triggered.
->>>
->>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
->>> ---
->>> v2:
->>>    * Added better documentation within the driver code
->>>    * Dropped fck handle, instead get the fck rate during probe only
->>>    * Modified the max_hw_heartbeat calculation logic a bit
->>>
->>>   drivers/watchdog/Kconfig   |   8 ++
->>>   drivers/watchdog/Makefile  |   1 +
->>>   drivers/watchdog/rti_wdt.c | 254 +++++++++++++++++++++++++++++++++++++
->>>   3 files changed, 261 insertions(+)
->>>   create mode 100644 drivers/watchdog/rti_wdt.c
->>>
->>> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
->>> index cec868f8db3f..81faf47d44a6 100644
->>> --- a/drivers/watchdog/Kconfig
->>> +++ b/drivers/watchdog/Kconfig
->>> @@ -583,6 +583,14 @@ config DAVINCI_WATCHDOG
->>>         NOTE: once enabled, this timer cannot be disabled.
->>>         Say N if you are unsure.
->>>   +config K3_RTI_WATCHDOG
->>> +    tristate "Texas Instruments K3 RTI watchdog"
->>> +    depends on ARCH_K3 || COMPILE_TEST
->>> +    select WATCHDOG_CORE
->>> +    help
->>> +      Say Y here if you want to include support for the K3 watchdog
->>> +      timer (RTI module) available in the K3 generation of processors.
->>> +
->>>   config ORION_WATCHDOG
->>>       tristate "Orion watchdog"
->>>       depends on ARCH_ORION5X || ARCH_DOVE || MACH_DOVE || ARCH_MVEBU || (COMPILE_TEST && !ARCH_EBSA110)
->>> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
->>> index 2ee352bf3372..6de2e4ceef19 100644
->>> --- a/drivers/watchdog/Makefile
->>> +++ b/drivers/watchdog/Makefile
->>> @@ -57,6 +57,7 @@ obj-$(CONFIG_EP93XX_WATCHDOG) += ep93xx_wdt.o
->>>   obj-$(CONFIG_PNX4008_WATCHDOG) += pnx4008_wdt.o
->>>   obj-$(CONFIG_IOP_WATCHDOG) += iop_wdt.o
->>>   obj-$(CONFIG_DAVINCI_WATCHDOG) += davinci_wdt.o
->>> +obj-$(CONFIG_K3_RTI_WATCHDOG) += rti_wdt.o
->>>   obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
->>>   obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
->>>   obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
->>> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
->>> new file mode 100644
->>> index 000000000000..7a46c40891e2
->>> --- /dev/null
->>> +++ b/drivers/watchdog/rti_wdt.c
->>> @@ -0,0 +1,254 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Watchdog driver for the K3 RTI module
->>> + *
->>> + * (c) Copyright 2019-2020 Texas Instruments Inc.
->>> + * All rights reserved.
->>> + */
->>> +
->>> +#include <linux/clk.h>
->>> +#include <linux/device.h>
->>> +#include <linux/err.h>
->>> +#include <linux/io.h>
->>> +#include <linux/kernel.h>
->>> +#include <linux/mod_devicetable.h>
->>> +#include <linux/module.h>
->>> +#include <linux/moduleparam.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/pm_runtime.h>
->>> +#include <linux/types.h>
->>> +#include <linux/watchdog.h>
->>> +
->>> +#define DEFAULT_HEARTBEAT 60
->>> +
->>> +/* Max heartbeat is calculated at 32kHz source clock */
->>> +#define MAX_HEARTBEAT    1000
->>> +
->>> +/* Timer register set definition */
->>> +#define RTIDWDCTRL    0x90
->>> +#define RTIDWDPRLD    0x94
->>> +#define RTIWDSTATUS    0x98
->>> +#define RTIWDKEY    0x9c
->>> +#define RTIDWDCNTR    0xa0
->>> +#define RTIWWDRXCTRL    0xa4
->>> +#define RTIWWDSIZECTRL    0xa8
->>> +
->>> +#define RTIWWDRX_NMI    0xa
->>> +
->>> +#define RTIWWDSIZE_50P    0x50
->>> +
->>> +#define WDENABLE_KEY    0xa98559da
->>> +
->>> +#define WDKEY_SEQ0        0xe51a
->>> +#define WDKEY_SEQ1        0xa35c
->>> +
->>> +#define WDT_PRELOAD_SHIFT    13
->>> +
->>> +#define WDT_PRELOAD_MAX        0xfff
->>> +
->>> +#define DWDST            BIT(1)
->>> +
->>> +static int heartbeat;
->>> +
->>> +/*
->>> + * struct to hold data for each WDT device
->>> + * @base - base io address of WD device
->>> + * @freq - source clock frequency of WDT
->>> + * @wdd  - hold watchdog device as is in WDT core
->>> + */
->>> +struct rti_wdt_device {
->>> +    void __iomem        *base;
->>> +    unsigned long        freq;
->>> +    struct watchdog_device    wdd;
->>> +};
->>> +
->>> +static int rti_wdt_start(struct watchdog_device *wdd)
->>> +{
->>> +    u32 timer_margin;
->>> +    struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
->>> +
->>> +    /* set timeout period */
->>> +    timer_margin = (u64)wdd->timeout * wdt->freq;
->>> +    timer_margin >>= WDT_PRELOAD_SHIFT;
->>> +    if (timer_margin > WDT_PRELOAD_MAX)
->>> +        timer_margin = WDT_PRELOAD_MAX;
->>> +    writel_relaxed(timer_margin, wdt->base + RTIDWDPRLD);
->>> +
->>> +    /*
->>> +     * RTI only supports a windowed mode, where the watchdog can only
->>> +     * be petted during the open window; not too early or not too late.
->>> +     * The HW configuration options only allow for the open window size
->>> +     * to be 50% or less than that; we obviouly want to configure the open
->>> +     * window as large as possible so we select the 50% option. To avoid
->>> +     * any glitches, we accommodate 5% safety margin also, so we setup
->>> +     * the min_hw_hearbeat at 55% of the timeout period.
->>> +     */
->>> +    wdd->min_hw_heartbeat_ms = 11 * wdd->timeout * 1000 / 20;
->>> +
->>> +    /* Generate NMI when wdt expires */
->>> +    writel_relaxed(RTIWWDRX_NMI, wdt->base + RTIWWDRXCTRL);
->>> +
->>> +    /* Open window size 50%; this is the largest window size available */
->>> +    writel_relaxed(RTIWWDSIZE_50P, wdt->base + RTIWWDSIZECTRL);
->>> +
->>> +    readl_relaxed(wdt->base + RTIWWDSIZECTRL);
->>> +
->>> +    /* enable watchdog */
->>> +    writel_relaxed(WDENABLE_KEY, wdt->base + RTIDWDCTRL);
->>> +    return 0;
->>> +}
->>> +
->>> +static int rti_wdt_ping(struct watchdog_device *wdd)
->>> +{
->>> +    struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
->>> +
->>> +    /* put watchdog in service state */
->>> +    writel_relaxed(WDKEY_SEQ0, wdt->base + RTIWDKEY);
->>> +    /* put watchdog in active state */
->>> +    writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
->>> +
->>> +    return 0;
->>> +}
->>> +
->>> +static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
->>> +{
->>> +    u64 timer_counter;
->>> +    u32 val;
->>> +    struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
->>> +
->>> +    /* if timeout has occurred then return 0 */
->>> +    val = readl_relaxed(wdt->base + RTIWDSTATUS);
->>> +    if (val & DWDST)
->>> +        return 0;
->>> +
->>> +    timer_counter = readl_relaxed(wdt->base + RTIDWDCNTR);
->>> +
->>> +    do_div(timer_counter, wdt->freq);
->>> +
->>> +    return timer_counter;
->>> +}
->>> +
->>> +static const struct watchdog_info rti_wdt_info = {
->>> +    .options = WDIOF_KEEPALIVEPING,
->>> +    .identity = "K3 RTI Watchdog",
->>> +};
->>> +
->>> +static const struct watchdog_ops rti_wdt_ops = {
->>> +    .owner        = THIS_MODULE,
->>> +    .start        = rti_wdt_start,
->>> +    .ping        = rti_wdt_ping,
->>> +    .get_timeleft    = rti_wdt_get_timeleft,
->>> +};
->>> +
->>> +static int rti_wdt_probe(struct platform_device *pdev)
->>> +{
->>> +    int ret = 0;
->>> +    struct device *dev = &pdev->dev;
->>> +    struct resource *wdt_mem;
->>> +    struct watchdog_device *wdd;
->>> +    struct rti_wdt_device *wdt;
->>> +    struct clk *clk;
->>> +
->>> +    wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
->>> +    if (!wdt)
->>> +        return -ENOMEM;
->>> +
->>> +    clk = devm_clk_get(dev, NULL);
->>> +    if (IS_ERR(clk)) {
->>> +        if (PTR_ERR(clk) != -EPROBE_DEFER)
->>> +            dev_err(dev, "failed to get clock\n");
->>> +        return PTR_ERR(clk);
->>> +    }
->>> +
->>> +    wdt->freq = clk_get_rate(clk);
->>> +    if (!wdt->freq) {
->>> +        dev_err(dev, "Failed to get fck rate.\n");
->>> +        return -EINVAL;
->>> +    }
->>> +
->>> +    devm_clk_put(dev, clk);
->>> +
->> Are you sure about this ? Doesn't this mean that the clock may be stopped ?
->> Normally the reason for using devm_ functions during probe is that release
->> functions are called automatically when the device is removed. Calling
->> the release function dorectly is unusual and most of the time wrong.
+
+
+Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> clk_get / clk_put does not enable / disable a clock by itself, this is just used to fetch a clock handle. But you are right, we are never calling clk_enable on it either, because at least the 32kHz clock we are interested in is of type always-on and can never be disabled.
+> The controller can report a number of statistics that are useful
+> in evaluating the performance and reliability of the card.
 > 
-> I can keep the clock handle and call enable/disable on it in the probe/remove if you think that would be neater.
+> This patch exposes this information via an IOCTL.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>   arch/powerpc/platforms/powernv/pmem/ocxl.c | 185 +++++++++++++++++++++
+>   include/uapi/nvdimm/ocxl-pmem.h            |  17 ++
+>   2 files changed, 202 insertions(+)
+> 
+> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> index 2cabafe1fc58..009d4fd29e7d 100644
+> --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
+> @@ -758,6 +758,186 @@ static int ioctl_controller_dump_complete(struct ocxlpmem *ocxlpmem)
+>   				    GLOBAL_MMIO_HCI_CONTROLLER_DUMP_COLLECTED);
+>   }
+>   
+> +/**
+> + * controller_stats_header_parse() - Parse the first 64 bits of the controller stats admin command response
+> + * @ocxlpmem: the device metadata
+> + * @length: out, returns the number of bytes in the response (excluding the 64 bit header)
+> + */
+> +static int controller_stats_header_parse(struct ocxlpmem *ocxlpmem,
+> +	u32 *length)
+> +{
+> +	int rc;
+> +	u64 val;
+> +
+
+
+unexpected empty line
+
+
+> +	u16 data_identifier;
+> +	u32 data_length;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset,
+> +				     OCXL_LITTLE_ENDIAN, &val);
+> +	if (rc)
+> +		return rc;
+> +
+> +	data_identifier = val >> 48;
+> +	data_length = val & 0xFFFFFFFF;
+> +
+> +	if (data_identifier != 0x4353) { // 'CS'
+> +		dev_err(&ocxlpmem->dev,
+> +			"Bad data identifier for controller stats, expected 'CS', got '%-.*s'\n",
+> +			2, (char *)&data_identifier);
+
+
+
+Wow, I'm clueless what that string format looks like :-)
+2 arguments? Did you check the kernel string formatter does what you want?
+You may consider unifying the format though, the error log patch uses a 
+simpler (better?) format for a similar message.
+
+
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	*length = data_length;
+> +	return 0;
+> +}
+> +
+> +static int ioctl_controller_stats(struct ocxlpmem *ocxlpmem,
+> +				  struct ioctl_ocxl_pmem_controller_stats __user *uarg)
+> +{
+> +	struct ioctl_ocxl_pmem_controller_stats args;
+> +	u32 length;
+> +	int rc;
+> +	u64 val;
+> +
+> +	memset(&args, '\0', sizeof(args));
+> +
+> +	mutex_lock(&ocxlpmem->admin_command.lock);
+> +
+> +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_CONTROLLER_STATS);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
+> +				      ocxlpmem->admin_command.request_offset + 0x08,
+> +				      OCXL_LITTLE_ENDIAN, 0);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = admin_command_execute(ocxlpmem);
+> +	if (rc)
+> +		goto out;
+> +
+> +
+> +	rc = admin_command_complete_timeout(ocxlpmem,
+> +					    ADMIN_COMMAND_CONTROLLER_STATS);
+> +	if (rc < 0) {
+> +		dev_warn(&ocxlpmem->dev, "Controller stats timed out\n");
+> +		goto out;
+> +	}
+> +
+> +	rc = admin_response(ocxlpmem);
+> +	if (rc < 0)
+> +		goto out;
+> +	if (rc != STATUS_SUCCESS) {
+> +		warn_status(ocxlpmem,
+> +			    "Unexpected status from controller stats", rc);
+> +		goto out;
+> +	}
+
+
+All those ioctls commands follow the same pattern:
+1. admin_command_request()
+2. optionnaly, set some mmio registers specific to the command
+3. admin_command_execute()
+4. admin_command_complete_timeout()
+5. admin_response()
+
+By swapping 1 and 2, we could then factorize steps 1, 3, 4 and 5 in a 
+function and simplify/shorten the code each time a command is called.
+
+Regarding step 2 (and that's true for all similar patches), a comment 
+about what the mmio tuning does would help and avoid looking up the 
+spec. Looking up the spec during the review is expected, but it will 
+ease reading the code 6 months from now.
+
+
+
+> +
+> +	rc = controller_stats_header_parse(ocxlpmem, &length);
+> +	if (rc)
+> +		goto out;
+> +
+> +	if (length != 0x140)
+> +		warn_status(ocxlpmem,
+> +			    "Unexpected length for controller stats data, expected 0x140, got 0x%x",
+> +			    length);
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x08,
+> +				     OCXL_LITTLE_ENDIAN, &val);
+> +	if (rc)
+> +		goto out;
+> +
+> +	args.reset_count = val >> 32;
+> +	args.reset_uptime = val & 0xFFFFFFFF;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x10,
+> +				     OCXL_LITTLE_ENDIAN, &val);
+> +	if (rc)
+> +		goto out;
+> +
+> +	args.power_on_uptime = val >> 32;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x08,
+ > +				     OCXL_LITTLE_ENDIAN, &args.host_load_count);
+
+
+Those offsets are hard to understand, even with the spec next to me. And 
+it seems that we could harden things a bit:
+each block as a "statistics parameter ID" and the length of the data for 
+that block. We should check that and make sure we're reading what we expect.
+For example, from the spec I'm looking (110d), I would expect the host 
+load count to be at offset 0x10. It's entirely possible I'm misreading 
+it though.
+
+
+
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x10,
+> +				     OCXL_LITTLE_ENDIAN, &args.host_store_count);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x18,
+> +				     OCXL_LITTLE_ENDIAN, &args.media_read_count);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x20,
+> +				     OCXL_LITTLE_ENDIAN, &args.media_write_count);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x28,
+> +				     OCXL_LITTLE_ENDIAN, &args.cache_hit_count);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x30,
+> +				     OCXL_LITTLE_ENDIAN, &args.cache_miss_count);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x38,
+> +				     OCXL_LITTLE_ENDIAN, &args.media_read_latency);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x40,
+> +				     OCXL_LITTLE_ENDIAN, &args.media_write_latency);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x48,
+> +				     OCXL_LITTLE_ENDIAN, &args.cache_read_latency);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
+> +				     ocxlpmem->admin_command.data_offset + 0x08 + 0x40 + 0x50,
+> +				     OCXL_LITTLE_ENDIAN, &args.cache_write_latency);
+> +	if (rc)
+> +		goto out;
+> +
+> +	if (copy_to_user(uarg, &args, sizeof(args))) {
+> +		rc = -EFAULT;
+> +		goto out;
+> +	}
+> +
+> +	rc = admin_response_handled(ocxlpmem);
+> +	if (rc)
+> +		goto out;
+> +
+> +	rc = 0;
+> +	goto out;
+
+
+That may be more of a personal habit, but that final goto disrupts the 
+"good case" flow. And I think it's pretty unusual within the kernel.
+
+
+> +
+> +out:
+> +	mutex_unlock(&ocxlpmem->admin_command.lock);
+> +	return rc;
+> +}
+> +
+>   static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+>   {
+>   	struct ocxlpmem *ocxlpmem = file->private_data;
+> @@ -781,6 +961,11 @@ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
+>   	case IOCTL_OCXL_PMEM_CONTROLLER_DUMP_COMPLETE:
+>   		rc = ioctl_controller_dump_complete(ocxlpmem);
+>   		break;
+> +
+> +	case IOCTL_OCXL_PMEM_CONTROLLER_STATS:
+> +		rc = ioctl_controller_stats(ocxlpmem,
+> +					    (struct ioctl_ocxl_pmem_controller_stats __user *)args);
+> +		break;
+>   	}
+>   
+>   	return rc;
+> diff --git a/include/uapi/nvdimm/ocxl-pmem.h b/include/uapi/nvdimm/ocxl-pmem.h
+> index d4d8512d03f7..add223aa2fdb 100644
+> --- a/include/uapi/nvdimm/ocxl-pmem.h
+> +++ b/include/uapi/nvdimm/ocxl-pmem.h
+> @@ -50,6 +50,22 @@ struct ioctl_ocxl_pmem_controller_dump_data {
+>   	__u64 reserved[8];
+>   };
+>   
+> +struct ioctl_ocxl_pmem_controller_stats {
+> +	__u32 reset_count;
+> +	__u32 reset_uptime; /* seconds */
+> +	__u32 power_on_uptime; /* seconds */
+
+
+Same as before, we're going to have some padding here.
+
+   Fred
+
+
+> +	__u64 host_load_count;
+> +	__u64 host_store_count;
+> +	__u64 media_read_count;
+> +	__u64 media_write_count;
+> +	__u64 cache_hit_count;
+> +	__u64 cache_miss_count;
+> +	__u64 media_read_latency; /* nanoseconds */
+> +	__u64 media_write_latency; /* nanoseconds */
+> +	__u64 cache_read_latency; /* nanoseconds */
+> +	__u64 cache_write_latency; /* nanoseconds */
+> +};
+> +
+>   /* ioctl numbers */
+>   #define OCXL_PMEM_MAGIC 0x5C
+>   /* SCM devices */
+> @@ -57,5 +73,6 @@ struct ioctl_ocxl_pmem_controller_dump_data {
+>   #define IOCTL_OCXL_PMEM_CONTROLLER_DUMP			_IO(OCXL_PMEM_MAGIC, 0x02)
+>   #define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_DATA		_IOWR(OCXL_PMEM_MAGIC, 0x03, struct ioctl_ocxl_pmem_controller_dump_data)
+>   #define IOCTL_OCXL_PMEM_CONTROLLER_DUMP_COMPLETE	_IO(OCXL_PMEM_MAGIC, 0x04)
+> +#define IOCTL_OCXL_PMEM_CONTROLLER_STATS		_IO(OCXL_PMEM_MAGIC, 0x05)
+>   
+>   #endif /* _UAPI_OCXL_SCM_H */
 > 
 
-If it isn't needed to be held, you should use clk_get / clk_put,
-and not the devm_ functions.
-
-Guenter
