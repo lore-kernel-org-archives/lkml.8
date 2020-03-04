@@ -2,93 +2,256 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAFEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4C4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5EEE214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B42215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:11:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eDVUqJlX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728392AbgCDHKa (ORCPT
+        id S1728415AbgCDHLe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:10:30 -0500
-Received: from mga18.intel.com ([134.134.136.126]:11960 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725773AbgCDHKa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:10:30 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 23:10:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,513,1574150400"; 
-   d="scan'208";a="440905257"
-Received: from mtosmanx-mobl.amr.corp.intel.com ([10.249.254.162])
-  by fmsmga006.fm.intel.com with ESMTP; 03 Mar 2020 23:10:25 -0800
-Message-ID: <4e26c715b81fdea7d10e19ca46ffd2645cbe78f9.camel@intel.com>
-Subject: Re: [PATCH] iwlwifi: pcie: restore support for Killer Qu C0 NICs
-From:   Luciano Coelho <luciano.coelho@intel.com>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 04 Mar 2020 09:10:24 +0200
-In-Reply-To: <20200303152925.6BCA8C4479F@smtp.codeaurora.org>
-References: <20191224051639.6904-1-jan.steffens@gmail.com>
-         <20200303152925.6BCA8C4479F@smtp.codeaurora.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-4 
+        Wed, 4 Mar 2020 02:11:34 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38136 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbgCDHLe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 02:11:34 -0500
+Received: by mail-lj1-f195.google.com with SMTP id w1so782195ljh.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 23:11:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=BkShX9uib5LS4O/94TFjeey0LtALuEzZwdV2AGz19E4=;
+        b=eDVUqJlXZaE2wkabJp1K0swqlFrhxl//dn2T+IhnJFYcS8IZ1Ki0YgmMiSHVXDQdl8
+         VLPSO2+hlNliud9dhY3ELWj6AnDn03ezin1XWYrmWsEqMDiVHvKbQaKyZ8T/Drl6Sb8c
+         yU51hUVvrqjOEOwqc2kqS5JLav2cyZZdCgAixsECXQRzNPNQnc8mNbQrjyQw8GUpi65W
+         wPHc/16U30cUcND8uTHeFzTuHFnY6gRtUKMUvg0+BQla/NweFWN2evWvpsGJvbaQT3/b
+         Gl1ur9G7x+H1uxjGmk0qkqgSvJcbB2v4Q9Hr8O28t3mk1xOIHOH6b1xuu4OuGm/GL2sc
+         ghLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=BkShX9uib5LS4O/94TFjeey0LtALuEzZwdV2AGz19E4=;
+        b=RZwKriBXZorCfJ/uqiq+Dwiz5zRjLA60P8MQkkWSX7GNQwpPg+NF85TaMkuWOPag5J
+         bXx7zeu7yDe9HannNqtyvhWgzua0j1L2GhTNqkixkfvZti4SPAEChy5uBSru/dTt3RSj
+         /CzpgxQ9qHuDceIpywnecwuB/FWIN/ahyO2UHWOlvQJMJEecZ++USGaoyYdrjdB+d1SK
+         /+hGOyPLmlzCMIq6bgIIjfPpcsyWOTE2T+k1Gi3sQWn9zblEKF/0BN+5tXSEUcIvcGEG
+         KZnLjFtvI2mtpU27FP3yFbd1cv2/N14zxbhYXSyfnwW+t2DbdZMVGgdf0F1qhbw7U49s
+         YQVA==
+X-Gm-Message-State: ANhLgQ21zLTv8Kw3+fzzlY92DZexcRTTpDqva3kXfS4Cl8BZtL4kreBe
+        bwhfcaEZCh1vxPmQRqM/zFFsfUPy+Q6K/qUqMvIojA==
+X-Google-Smtp-Source: ADFU+vtQc6oT66du5+UtSOsQ0o/1vy03B5D8v3DkYovN7F5ry0wZ1uGfdZc+trrwPfxxSdnTXIjGTcJ366xoLQObM+A=
+X-Received: by 2002:a2e:9008:: with SMTP id h8mr1063593ljg.217.1583305891247;
+ Tue, 03 Mar 2020 23:11:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200303174302.523080016@linuxfoundation.org>
+In-Reply-To: <20200303174302.523080016@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Wed, 4 Mar 2020 12:41:20 +0530
+Message-ID: <CA+G9fYs1FaUUURiMFw_jXxec_Us38WetyrOXpSn92sRtUVCbQA@mail.gmail.com>
+Subject: Re: [PATCH 5.4 000/152] 5.4.24-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-03 at 15:29 +0000, Kalle Valo wrote:
-> "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com> wrote:
-> 
-> > Commit 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from
-> > trans_pcie_alloc to probe") refactored the cfg mangling. Unfortunately,
-> > in this process the lines which picked the right cfg for Killer Qu C0
-> > NICs after C0 detection were lost. These lines were added by commit
-> > b9500577d361 ("iwlwifi: pcie: handle switching killer Qu B0 NICs to
-> > C0").
-> > 
-> > I suspect this is more of the "merge damage" which commit 7cded5658329
-> > ("iwlwifi: pcie: fix merge damage on making QnJ exclusive") talks about.
-> > 
-> > Restore the missing lines so the driver loads the right firmware for
-> > these NICs.
-> > 
-> > Fixes: 809805a820c6 ("iwlwifi: pcie: move some cfg mangling from trans_pcie_alloc to probe")
-> > Signed-off-by: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
-> 
-> As Luca said, this fails to apply to wireless-drivers. Please rebase and
-> resend as v2.
+On Tue, 3 Mar 2020 at 23:22, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.4.24 release.
+> There are 152 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Thu, 05 Mar 2020 17:42:10 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.4.24-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.4.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Hmmm, sorry, I confused things a bit.  I missed the fact that wireless-
-drivers is already at v5.6.
+Results from Linaro=E2=80=99s test farm.
+Regressions detected on x86_64 and i386.
 
-This patch is not needed in v5.6-rc* because another patch has done a
-similar change.  There was some refactoring in this area, so the patch
-that is in v5.6 doesn't apply in v5.5, so Jan's patch has to be sent to
-stable v5.5 and not be applied in wireless-drivers.
+Test failure output:
+CVE-2017-5715: VULN (IBRS+IBPB or retpoline+IBPB+RSB filling, is
+needed to mitigate the vulnerability)
 
-Jan, if you want this to be fixed in v5.5, can you please send it to 
-stable@vger.kernel.org with an explanation of why it has to be there
-even though it's not in the mainline? Or just send it and CC me, so
-I'll reply with an explanation of the issue.
+Test description:
+CVE-2017-5715 branch target injection (Spectre Variant 2)
 
---
-Cheers,
-Luca.
+Impact: Kernel
+Mitigation 1: new opcode via microcode update that should be used by
+up to date compilers to protect the BTB (by flushing indirect branch
+predictors)
+Mitigation 2: introducing "retpoline" into compilers, and recompile
+software/OS with it
+Performance impact of the mitigation: high for mitigation 1, medium
+for mitigation 2, depending on your CPU
 
+ref:
+https://github.com/speed47/spectre-meltdown-checker
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/build/v5.4.23-153=
+-g1254e88b4fc1/testrun/1264789/log
+https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/tests/spectre-mel=
+tdown-checker-test/CVE-2017-5715
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.4.24-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.4.y
+git commit: 1254e88b4fc1470d152f494c3590bb6a33ab33eb
+git describe: v5.4.23-153-g1254e88b4fc1
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
+ld/v5.4.23-153-g1254e88b4fc1
+
+Regressions (compared to build v5.4.23)
+------------------------------------------------------------------------
+
+i386:
+  spectre-meltdown-checker-test:
+    * CVE-2017-5715
+
+x86:
+  spectre-meltdown-checker-test:
+    * CVE-2017-5715
+
+No fixes (compared to build v5.4.23)
+
+Ran 27633 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* linux-log-parser
+* perf
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kvm-unit-tests
+* libhugetlbfs
+* ltp-crypto-tests
+* ltp-cap_bounds-64k-page_size-tests
+* ltp-cap_bounds-kasan-tests
+* ltp-commands-64k-page_size-tests
+* ltp-commands-kasan-tests
+* ltp-containers-64k-page_size-tests
+* ltp-containers-kasan-tests
+* ltp-cpuhotplug-64k-page_size-tests
+* ltp-cpuhotplug-kasan-tests
+* ltp-crypto-64k-page_size-tests
+* ltp-crypto-kasan-tests
+* ltp-cve-64k-page_size-tests
+* ltp-cve-kasan-tests
+* ltp-dio-64k-page_size-tests
+* ltp-dio-kasan-tests
+* ltp-fcntl-locktests-64k-page_size-tests
+* ltp-fcntl-locktests-kasan-tests
+* ltp-filecaps-64k-page_size-tests
+* ltp-filecaps-kasan-tests
+* ltp-fs-64k-page_size-tests
+* ltp-fs-kasan-tests
+* ltp-fs_bind-64k-page_size-tests
+* ltp-fs_bind-kasan-tests
+* ltp-fs_perms_simple-64k-page_size-tests
+* ltp-fs_perms_simple-kasan-tests
+* ltp-fsx-64k-page_size-tests
+* ltp-fsx-kasan-tests
+* ltp-hugetlb-64k-page_size-tests
+* ltp-hugetlb-kasan-tests
+* ltp-io-64k-page_size-tests
+* ltp-io-kasan-tests
+* ltp-ipc-64k-page_size-tests
+* ltp-ipc-kasan-tests
+* ltp-math-64k-page_size-tests
+* ltp-math-kasan-tests
+* ltp-mm-kasan-tests
+* ltp-nptl-64k-page_size-tests
+* ltp-pty-64k-page_size-tests
+* ltp-sched-64k-page_size-tests
+* ltp-sched-kasan-tests
+* ltp-securebits-64k-page_size-tests
+* ltp-syscalls-64k-page_size-tests
+* ltp-syscalls-compat-tests
+* ltp-syscalls-kasan-tests
+* ltp-open-posix-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* ltp-nptl-kasan-tests
+* ltp-pty-kasan-tests
+* ltp-securebits-kasan-tests
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
