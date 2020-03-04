@@ -2,218 +2,102 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F41BAC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6F9C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:33:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C627E20842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:32:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC2E420842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:33:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cs.washington.edu header.i=@cs.washington.edu header.b="M5O7QedO"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Hb/slNju"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387538AbgCDCcg (ORCPT
+        id S2387563AbgCDCdA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:32:36 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:34179 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387411AbgCDCcg (ORCPT
+        Tue, 3 Mar 2020 21:33:00 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:60578 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2387411AbgCDCc7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:32:36 -0500
-Received: by mail-il1-f193.google.com with SMTP id n11so527884ild.1
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 18:32:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cs.washington.edu; s=goo201206;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=n6mkcIQ2CwC1xTtJxH74NN6vQdrLEAX1li3E8fEudI8=;
-        b=M5O7QedO8LmdTilKXhgDjj6pJDYijzuilBu5xyes4ICn+hClPJbwMCqeC/K5g1bE2g
-         egpjdAJsAJmqcxtp4gn85lwUEg+JAOGc94aItnA3aqKydSvbr6rdf4OOqrfi7+KA5TI3
-         F0k1koSGJkFlWVrglQhyYi1JSodyDP31qeDsw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=n6mkcIQ2CwC1xTtJxH74NN6vQdrLEAX1li3E8fEudI8=;
-        b=DuvrDCrI3hU5NgTs6JjLqoT7zOrbA7EjYTN2z8YhMJRhBOQleeOhuVE2xh1iuHxvfI
-         psFy/iUrczNAEqCEPzj/DnJENVTZsD3+HWwsE+PTgoKxZ3uXYbBeWW269vDc0+drNjYL
-         GdAVJQGYkzPVNV6zlddDgL2GrtsjJSmgXWmU2vyUjnJHwKBKgXTxikGKZbNwOCfJ8KlP
-         j7PGp4VdAIeFYftP7mTa2oVX+TBqqA627o4CkKjFsOfNjJsS51LA1N888HzMhb27mOv7
-         Jv6CW9db8hGxfZ4D1QZjIKVXEKBiSAiBx8m0ZrukkSSpgmvAS8lcohVHgUr/gQd7SURA
-         JxpA==
-X-Gm-Message-State: ANhLgQ1ujPt1APWco6YAfTFyOo1+WvHzPvn6tPAzWp7r+PwOo5quZCEe
-        bv/7Yg3LAPZyY97Vbi3KsNQAQV7Dlk4hdFLF2cZNtw==
-X-Google-Smtp-Source: ADFU+vtZz9bK0eR23Fqfg2Flo7dTRJq/q3oOn/yBVOdWo5FSor2dKOCN3ztfEmpM0Yd68erGscs4Sdi+qrx0Fsa208s=
-X-Received: by 2002:a05:6e02:4c2:: with SMTP id f2mr687631ils.126.1583289154825;
- Tue, 03 Mar 2020 18:32:34 -0800 (PST)
-MIME-Version: 1.0
-References: <20200303005035.13814-1-luke.r.nels@gmail.com> <20200303005035.13814-3-luke.r.nels@gmail.com>
- <CAJ+HfNjgwVnxnyCTk5j+JCpxz+zmeEBYbj=_SueR750aAuoz=A@mail.gmail.com>
-In-Reply-To: <CAJ+HfNjgwVnxnyCTk5j+JCpxz+zmeEBYbj=_SueR750aAuoz=A@mail.gmail.com>
-From:   Luke Nelson <lukenels@cs.washington.edu>
-Date:   Tue, 3 Mar 2020 18:32:24 -0800
-Message-ID: <CADasFoBODSbgHHXU+iA-32=oKNs6n0Ff_UDU3063uiyGjx1xXg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 2/4] riscv, bpf: add RV32G eBPF JIT
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
+        Tue, 3 Mar 2020 21:32:59 -0500
+X-UUID: 9a1ed69c69c748128d7770e5bb1f5166-20200304
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=mYLX3IiH72ajlTAiOtL8JHWaOes5nllQiW2Y7ugTO8A=;
+        b=Hb/slNjuHGxwAPkxv1ZQDDjR1MwVJpZTP2ajDZcBGUPN1lViR8MIM7PnyEduWkYR5eQ/qy0N00+1BIBwz6ppXq857XVJbc7PJ6JgdAZvJVVK5gRcOvW1sEHEdgzwBElQaw7CyJI5YsXtZn+h5HRwaQh9cy8YWpiJ4S7feK5WiyI=;
+X-UUID: 9a1ed69c69c748128d7770e5bb1f5166-20200304
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1111508034; Wed, 04 Mar 2020 10:32:52 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 4 Mar 2020 10:31:55 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 4 Mar 2020 10:32:11 +0800
+Message-ID: <1583289170.32049.1.camel@mtksdaap41>
+Subject: Re: [PATCH v4 02/13] mailbox: cmdq: variablize address shift in
+ platform
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Dennis YC Hsieh <dennis-yc.hsieh@mediatek.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
+        <wsd_upstream@mediatek.com>, <dri-devel@lists.freedesktop.org>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        HS Liao <hs.liao@mediatek.com>
+Date:   Wed, 4 Mar 2020 10:32:50 +0800
+In-Reply-To: <1583233125-7827-3-git-send-email-dennis-yc.hsieh@mediatek.com>
+References: <1583233125-7827-1-git-send-email-dennis-yc.hsieh@mediatek.com>
+         <1583233125-7827-3-git-send-email-dennis-yc.hsieh@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bj=C3=B6rn,
+SGksIERlbm5pczoNCg0KT24gVHVlLCAyMDIwLTAzLTAzIGF0IDE4OjU4ICswODAwLCBEZW5uaXMg
+WUMgSHNpZWggd3JvdGU6DQo+IFNvbWUgZ2NlIGhhcmR3YXJlIHNoaWZ0IHBjIGFuZCBlbmQgYWRk
+cmVzcyBpbiByZWdpc3RlciB0byBzdXBwb3J0DQo+IGxhcmdlIGRyYW0gYWRkcmVzc2luZy4NCj4g
+SW1wbGVtZW50IGdjZSBhZGRyZXNzIHNoaWZ0IHdoZW4gd3JpdGUgb3IgcmVhZCBwYyBhbmQgZW5k
+IHJlZ2lzdGVyLg0KPiBBbmQgYWRkIHNoaWZ0IGJpdCBpbiBwbGF0Zm9ybSBkZWZpbml0aW9uLg0K
+PiANCj4gU2lnbmVkLW9mZi1ieTogRGVubmlzIFlDIEhzaWVoIDxkZW5uaXMteWMuaHNpZWhAbWVk
+aWF0ZWsuY29tPg0KPiAtLS0NCj4gIGRyaXZlcnMvbWFpbGJveC9tdGstY21kcS1tYWlsYm94LmMg
+ICAgICAgfCA2MSArKysrKysrKysrKysrKysrKystLS0tLS0NCj4gIGRyaXZlcnMvc29jL21lZGlh
+dGVrL210ay1jbWRxLWhlbHBlci5jICAgfCAgMyArLQ0KPiAgaW5jbHVkZS9saW51eC9tYWlsYm94
+L210ay1jbWRxLW1haWxib3guaCB8ICAyICsNCj4gIDMgZmlsZXMgY2hhbmdlZCwgNTAgaW5zZXJ0
+aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pDQo+IA0KDQpbc25pcF0NCg0KPiAgDQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYyBiL2RyaXZlcnMvc29j
+L21lZGlhdGVrL210ay1jbWRxLWhlbHBlci5jDQo+IGluZGV4IGRlMjBlNmNiYTgzYi4uMmUxYmM1
+MTM1NjliIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxw
+ZXIuYw0KPiArKysgYi9kcml2ZXJzL3NvYy9tZWRpYXRlay9tdGstY21kcS1oZWxwZXIuYw0KPiBA
+QCAtMjkxLDcgKzI5MSw4IEBAIHN0YXRpYyBpbnQgY21kcV9wa3RfZmluYWxpemUoc3RydWN0IGNt
+ZHFfcGt0ICpwa3QpDQo+ICANCj4gIAkvKiBKVU1QIHRvIGVuZCAqLw0KPiAgCWluc3Qub3AgPSBD
+TURRX0NPREVfSlVNUDsNCj4gLQlpbnN0LnZhbHVlID0gQ01EUV9KVU1QX1BBU1M7DQo+ICsJaW5z
+dC52YWx1ZSA9IENNRFFfSlVNUF9QQVNTID4+DQo+ICsJCWNtZHFfbWJveF9zaGlmdCgoKHN0cnVj
+dCBjbWRxX2NsaWVudCAqKXBrdC0+Y2wpLT5jaGFuKTsNCg0KV2h5IG5vdCBqdXN0IGNtZHFfbWJv
+eF9zaGlmdChwa3QtPmNsLT5jaGFuKSA/DQoNClJlZ2FyZHMsDQpDSw0KDQo+ICAJZXJyID0gY21k
+cV9wa3RfYXBwZW5kX2NvbW1hbmQocGt0LCBpbnN0KTsNCj4gIA0KPiAgCXJldHVybiBlcnI7DQo+
+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNtZHEtbWFpbGJveC5oIGIv
+aW5jbHVkZS9saW51eC9tYWlsYm94L210ay1jbWRxLW1haWxib3guaA0KPiBpbmRleCBhNGRjNDVm
+YmVjMGEuLmRmZTViMmViODVjYyAxMDA2NDQNCj4gLS0tIGEvaW5jbHVkZS9saW51eC9tYWlsYm94
+L210ay1jbWRxLW1haWxib3guaA0KPiArKysgYi9pbmNsdWRlL2xpbnV4L21haWxib3gvbXRrLWNt
+ZHEtbWFpbGJveC5oDQo+IEBAIC04OCw0ICs4OCw2IEBAIHN0cnVjdCBjbWRxX3BrdCB7DQo+ICAJ
+dm9pZAkJCSpjbDsNCj4gIH07DQo+ICANCj4gK3U4IGNtZHFfbWJveF9zaGlmdChzdHJ1Y3QgbWJv
+eF9jaGFuICpjaGFuKTsNCj4gKw0KPiAgI2VuZGlmIC8qIF9fTVRLX0NNRFFfTUFJTEJPWF9IX18g
+Ki8NCg0K
 
-Thanks again for the comments, responses below:
-
-On Mon, Mar 2, 2020 at 11:48 PM Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.co=
-m> wrote:
->
-> Which are the tests that fail to JIT, and is that due to div/mod +
-> xadd?
-
-Yes, all of the cases that fail to JIT are because of unsupported
-div/mod or xadd. I'll make that clear in next revision.
-
->
-> > Co-developed-by: Xi Wang <xi.wang@gmail.com>
-> > Signed-off-by: Xi Wang <xi.wang@gmail.com>
-> > Signed-off-by: Luke Nelson <luke.r.nels@gmail.com>
-> > ---
-> >  arch/riscv/Kconfig              |    2 +-
-> >  arch/riscv/net/Makefile         |    7 +-
-> >  arch/riscv/net/bpf_jit_comp32.c | 1466 +++++++++++++++++++++++++++++++
-> >  3 files changed, 1473 insertions(+), 2 deletions(-)
-> >  create mode 100644 arch/riscv/net/bpf_jit_comp32.c
-> [...]
-> > +
-> > +static const s8 *rv32_bpf_get_reg64(const s8 *reg, const s8 *tmp,
-> > +                    struct rv_jit_context *ctx)
->
-> Really a nit, but you're using rv32 as prefix, and also as part of
-> many of the functions (e.g. emit_rv32). Everything is this file is
-> just for RV32, so maybe remove that implicit information from the
-> function name? Just a thought! :-)
-
-I got so used to reading these I never noticed how redundant they
-were :) I'll change the next revision to remove all of the "rv32"s
-in function names.
-
-> > +    case BPF_LSH:
-> > +        if (imm >=3D 32) {
-> > +            emit(rv_slli(hi(rd), lo(rd), imm - 32), ctx);
-> > +            emit(rv_addi(lo(rd), RV_REG_ZERO, 0), ctx);
-> > +        } else if (imm =3D=3D 0) {
-> > +            /* nop */
->
-> Can we get rid of this, and just do if/else if?
-
-imm =3D=3D 0 has been a tricky case for 32-bit JITs; see 6fa632e719ee
-("bpf, x32: Fix bug with ALU64 {LSH, RSH, ARSH} BPF_K shift by 0").
-We wanted to make the imm =3D=3D 0 case explicit and help future readers
-see that this case is handled correctly here.
-
-We could do the following if we really wanted to get rid of the
-check:
-
-if (imm >=3D 32) {
-...
-} else if (imm !=3D 0) {
-...
-}
-/* Do nothing for imm =3D=3D 0. */
-
-Though it's unclear if this is easier to read.
-
-> > +    case BPF_ARSH:
-> > +        if (is_12b_int(imm)) {
-> > +            emit(rv_srai(lo(rd), lo(rd), imm), ctx);
-> > +        } else {
-> > +            emit_imm(RV_REG_T0, imm, ctx);
-> > +            emit(rv_sra(lo(rd), lo(rd), RV_REG_T0), ctx);
-> > +        }
-> > +        break;
->
-> Again nit; I like "early exit" code if possible. Instead of:
->
-> if (bleh) {
->    foo();
-> } else {
->    bar();
-> }
->
-> do:
->
-> if (bleh) {
->    foo()
->    return/break;
-> }
-> bar();
->
-> I find the latter easier to read -- but really a nit, and a matter of
-> style. There are number of places where that could be applied in the
-> file.
-
-I like "early exit" code, too, and agree that it's easier to read
-in general, especially when handling error conditions.
-
-But here we wanted to make it explicit that both branches are
-emitting equivalent instruction sequences (under different paths).
-Structured control flow seems a better fit for this particular
-context.
-
-> At this point of the series, let's introduce the shared code .c-file
-> containing implementation for bpf_int_jit_compile() (with build_body
-> part of that)and bpf_jit_needs_zext(). That will make it easier to
-> catch bugs in both JITs and to avoid code duplication! Also, when
-> adding the stronger invariant suggested by Palmer [1], we only need to
-> do it in one place.
->
-> The pull out refactoring can be a separate commit.
-
-I think the idea of deduplicating bpf_int_jit_compile is good and
-will lead to more maintainable JITs. How does the following proposal
-for v5 sound?
-
-In patch 1 of this series:
-
-- Factor structs and common helpers to bpf_jit.h (just like v4).
-
-- Factor out bpf_int_jit_compile(), bpf_jit_needs_zext(), and
-build_body() to a new file bpf_jit_core.c and tweak the code as in v4.
-
-- Rename emit_insn() and build_{prologue,epilogue}() to bpf_jit_emit_insn()
-and bpf_jit_build_{prologue,epilogue}, since these functions are
-now extern rather than static.
-
-- Rename bpf_jit_comp.c to bpf_jit_comp64.c to be more explicit
-about its contents (as the next patch will add bpf_jit_comp32.c).
-
-Then patch 2 can reuse the new header and won't need to define its
-own bpf_int_jit_compile() etc.
-
-Thanks!
-
-Luke
