@@ -2,106 +2,179 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31037C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728E5C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:12:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B90320838
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:12:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A11C2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:12:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ccjTYSj7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="DubHYOaB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388086AbgCDNMV (ORCPT
+        id S2388124AbgCDNMk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:12:21 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:27290 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729175AbgCDNMV (ORCPT
+        Wed, 4 Mar 2020 08:12:40 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:50584 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388091AbgCDNMk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:12:21 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583327540; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ZwXdsbHaxrkcUsXQf1QG7Fhh4a45XXcmUJXcVDM57ho=; b=ccjTYSj7IxOVvHRefoWOs3ACTe6l+knN9EcOL4FwBxHMu0u8R3MfaI4YZBx3350R0lPYFPIo
- uKmgIMCDRdGTlXiHaF0Rd4VsE/GaNstVEKlKLohA5Jkr2apR8QKHVTms7RKhMDWZPzAFX/B6
- 49yMvH5mXlpBNcXKswjCvXTAP4U=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5fa92c.7f4ace769880-smtp-out-n01;
- Wed, 04 Mar 2020 13:12:12 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id AC190C4479C; Wed,  4 Mar 2020 13:12:12 +0000 (UTC)
-Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D9CFBC43383;
-        Wed,  4 Mar 2020 13:12:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D9CFBC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH] mmc: cqhci: Update cqhci memory ioresource name
-To:     Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, dianders@google.com,
-        mka@chromium.org, Ritesh Harjani <riteshh@codeaurora.org>,
-        Asutosh Das <asutoshd@codeaurora.org>
-References: <1583323250-23596-1-git-send-email-vbadigan@codeaurora.org>
- <e1bd6b82-01d1-ce71-d170-a891a18b8141@intel.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <5d19b5a1-3a1a-9366-fde2-ea0c0ee85dd6@codeaurora.org>
-Date:   Wed, 4 Mar 2020 18:42:06 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 4 Mar 2020 08:12:40 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 024DCdEa075120;
+        Wed, 4 Mar 2020 07:12:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583327559;
+        bh=5xGBvCCNbOxlYfM2cTKcfGoxokVXH8qQTRieJmYkdlg=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=DubHYOaBXGOe56OgUD+HfTAcAgbMAcRmFrTqEGeg3Or0Ad+oKwXhnILlkcYiAsUgX
+         EUCPwA9HajZR39olpcWoh+6Md8snf3mG+Mkth8EZkLMrvnv0uWMvNlmaAAfQeeYH9U
+         yZYTLnSe/OiZIGPgy9IjSFSGxMcjUUakemAcwiBk=
+Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 024DCdSZ005491
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Mar 2020 07:12:39 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE104.ent.ti.com
+ (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
+ 2020 07:12:39 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Mar 2020 07:12:39 -0600
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with SMTP id 024DCdxK092569;
+        Wed, 4 Mar 2020 07:12:39 -0600
+Date:   Wed, 4 Mar 2020 07:17:14 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Tomi Valkeinen <tomi.valkeinen@ti.com>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [Patch 1/1] media: ti-vpe: cal: fix disable_irqs to only the
+ intended target
+Message-ID: <20200304131714.rpykdxhgqxmaxyx5@ti.com>
+References: <20200302135652.9365-1-bparrot@ti.com>
+ <678cb62a-4fdf-3b57-2fe5-699c6bf02b2f@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <e1bd6b82-01d1-ce71-d170-a891a18b8141@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <678cb62a-4fdf-3b57-2fe5-699c6bf02b2f@ti.com>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tomi,
 
-On 3/4/2020 5:53 PM, Adrian Hunter wrote:
-> On 4/03/20 2:00 pm, Veerabhadrarao Badiganti wrote:
->> Update cqhci memory ioresource name from cqhci_mem to cqhci since
->> suffix _mem is redundant.
-> Which is OK only because sdhci-msm is the only caller of cqhci_pltfm_init(),
-> right?  So no one else could be using "cqhci_mem"? Some more explanation is
-> needed here.
+Thanks for the review.
 
-Right, only qcom cqhci solution is making use of it.
+Tomi Valkeinen <tomi.valkeinen@ti.com> wrote on Wed [2020-Mar-04 10:49:55 +0200]:
+> On 02/03/2020 15:56, Benoit Parrot wrote:
+> > disable_irqs() was mistakenly disabling all interrupts when called.
+> > This cause all port stream to stop even if only stopping one of them.
+> > 
+> > Cc: stable <stable@vger.kernel.org>
+> > Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> > ---
+> >   drivers/media/platform/ti-vpe/cal.c | 16 ++++++++--------
+> >   1 file changed, 8 insertions(+), 8 deletions(-)
+> > 
+> > diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+> > index 6e009e479be3..6d4cbb8782ed 100644
+> > --- a/drivers/media/platform/ti-vpe/cal.c
+> > +++ b/drivers/media/platform/ti-vpe/cal.c
+> > @@ -722,16 +722,16 @@ static void enable_irqs(struct cal_ctx *ctx)
+> >   
+> >   static void disable_irqs(struct cal_ctx *ctx)
+> >   {
+> > +	u32 val;
+> > +
+> >   	/* Disable IRQ_WDMA_END 0/1 */
+> > -	reg_write_field(ctx->dev,
+> > -			CAL_HL_IRQENABLE_CLR(2),
+> > -			CAL_HL_IRQ_CLEAR,
+> > -			CAL_HL_IRQ_MASK(ctx->csi2_port));
+> > +	val = 0;
+> > +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
+> > +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), val);
+> >   	/* Disable IRQ_WDMA_START 0/1 */
+> > -	reg_write_field(ctx->dev,
+> > -			CAL_HL_IRQENABLE_CLR(3),
+> > -			CAL_HL_IRQ_CLEAR,
+> > -			CAL_HL_IRQ_MASK(ctx->csi2_port));
+> > +	val = 0;
+> > +	set_field(&val, CAL_HL_IRQ_CLEAR, CAL_HL_IRQ_MASK(ctx->csi2_port));
+> > +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), val);
+> >   	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
+> >   	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
+> >   }
+> > 
+> 
+> I think the above works. But the enable_irqs is broken too, even if it doesn't cause any issues. Both IRQ_SET and IRQ_CLR are not supposed to be "modified" by a read-mod-write operation, but just written to.
+>
 
-I did a grep in dt and find no other vendor is using it.
+Well maybe not consistent now, that disable_irqs has been modified but not
+broken per se.
 
-Sure. Will update commit text.
+> The macros used also make the code very difficult to read. Something like this fixes both irq enable and disable, and makes it readable:
 
->> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
->> ---
->> Corresponding binding change:
->> https://lore.kernel.org/linux-arm-msm/1582545470-11530-1-git-send-email-vbadigan@codeaurora.org/
->> ---
->>   drivers/mmc/host/cqhci.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
->> index e2ea2c4..e24b8ff 100644
->> --- a/drivers/mmc/host/cqhci.c
->> +++ b/drivers/mmc/host/cqhci.c
->> @@ -1077,7 +1077,7 @@ struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev)
->>   
->>   	/* check and setup CMDQ interface */
->>   	cqhci_memres = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> -						   "cqhci_mem");
->> +						   "cqhci");
->>   	if (!cqhci_memres) {
->>   		dev_dbg(&pdev->dev, "CMDQ not supported\n");
->>   		return ERR_PTR(-EINVAL);
->>
+Ah but the mask macro are all consistent with each other, whether that
+create one too many level of abstraction is a different subject. This setup
+was oroginally requested by the maintainer. So I'll "fix" enable_irqs also
+but I'll keep the macro as is.
+
+Benoit
+
+> 
+> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+> index c8b1290c9e2b..660653031a0b 100644
+> --- a/drivers/media/platform/ti-vpe/cal.c
+> +++ b/drivers/media/platform/ti-vpe/cal.c
+> @@ -707,15 +707,9 @@ static void cal_quickdump_regs(struct cal_dev *dev)
+>  static void enable_irqs(struct cal_ctx *ctx)
+>  {
+>  	/* Enable IRQ_WDMA_END 0/1 */
+> -	reg_write_field(ctx->dev,
+> -			CAL_HL_IRQENABLE_SET(2),
+> -			CAL_HL_IRQ_ENABLE,
+> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
+> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(2), 1 << (ctx->csi2_port - 1));
+>  	/* Enable IRQ_WDMA_START 0/1 */
+> -	reg_write_field(ctx->dev,
+> -			CAL_HL_IRQENABLE_SET(3),
+> -			CAL_HL_IRQ_ENABLE,
+> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
+> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_SET(3), 1 << (ctx->csi2_port - 1));
+>  	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
+>  	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0xFF000000);
+>  }
+> @@ -723,15 +717,9 @@ static void enable_irqs(struct cal_ctx *ctx)
+>  static void disable_irqs(struct cal_ctx *ctx)
+>  {
+>  	/* Disable IRQ_WDMA_END 0/1 */
+> -	reg_write_field(ctx->dev,
+> -			CAL_HL_IRQENABLE_CLR(2),
+> -			CAL_HL_IRQ_CLEAR,
+> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
+> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(2), 1 << (ctx->csi2_port - 1));
+>  	/* Disable IRQ_WDMA_START 0/1 */
+> -	reg_write_field(ctx->dev,
+> -			CAL_HL_IRQENABLE_CLR(3),
+> -			CAL_HL_IRQ_CLEAR,
+> -			CAL_HL_IRQ_MASK(ctx->csi2_port));
+> +	reg_write(ctx->dev, CAL_HL_IRQENABLE_CLR(3), 1 << (ctx->csi2_port - 1));
+>  	/* Todo: Add VC_IRQ and CSI2_COMPLEXIO_IRQ handling */
+>  	reg_write(ctx->dev, CAL_CSI2_VC_IRQENABLE(1), 0);
+>  }
+> 
+>  Tomi
+> 
+> -- 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
