@@ -2,138 +2,148 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD51AC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:49:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867B2C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91C8A24654
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:49:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583340562;
-	bh=htZq3MKYG3/FJ8bILu0qqA54TuTZg4n2O0B4bA60sUA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Xe6asqw571mMjzRfEYDlUMIAyBdLSFzRYCi04vb0so5g9QqbjLxzvBEuoJmgH7Tm5
-	 i04w7Vw7KK5ex6kwAuIBBp2QwNpO3I/DKGggI03lDMa9tZsgehXv3xdaLrXerXMVIV
-	 HXxzOLyplSXiGPR8s2ZvrXBWUAFmv0DKHOzRRv5o=
+	by mail.kernel.org (Postfix) with ESMTP id 53C81217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:51:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qB5JXCV/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388282AbgCDQtV (ORCPT
+        id S2388253AbgCDQvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:49:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35754 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388063AbgCDQtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:49:21 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 4 Mar 2020 11:51:17 -0500
+Received: from mail27.static.mailgun.info ([104.130.122.27]:43527 "EHLO
+        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387860AbgCDQvQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:51:16 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583340675; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=eo9hdQRKL5AB9EnJYvisoQiRMqmI+s0cT5VOh7DznOE=; b=qB5JXCV/qFlgikZ4ZPad0iZkfkwUhnq8p72reECQAI3nrYp/O3BJ9cU/DCFmL1v63YEqNSnI
+ i4HcfciDuR9ln+ROmIxjrHS0vbZguJYYrGOrr0sTBlLKCKdqMdOQ1q7BEpEEwJXSHJo1UCP5
+ CX0tMe8Cj1+W8qnVwLlpGW5L1M4=
+X-Mailgun-Sending-Ip: 104.130.122.27
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e5fdc73.7f15090ba570-smtp-out-n03;
+ Wed, 04 Mar 2020 16:50:59 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D9EDFC4479D; Wed,  4 Mar 2020 16:50:59 +0000 (UTC)
+Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D2C2922B48;
-        Wed,  4 Mar 2020 16:49:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583340556;
-        bh=htZq3MKYG3/FJ8bILu0qqA54TuTZg4n2O0B4bA60sUA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QFw/Q1NY4B+y7WTrekje+ZpgNyFzrIcZ7UTABnDsnjgXf0am4nQsbW5ZVxTNNjWld
-         6g3+cMHNGJFGxmjYQ7wuvpNbSuU4C8wJW0QIQn6siOMOjhXevPQyX+4tWUsOTV/oDy
-         NWsKv9WocDxBZSqHQrN8bsD7sTiXcsBN4pte4wXQ=
-Date:   Wed, 4 Mar 2020 17:49:13 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Karel Zak <kzak@redhat.com>
-Cc:     Ian Kent <raven@themaw.net>, Miklos Szeredi <miklos@szeredi.hu>,
-        David Howells <dhowells@redhat.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        James Bottomley <James.Bottomley@hansenpartnership.com>,
-        Steven Whitehouse <swhiteho@redhat.com>,
-        Miklos Szeredi <mszeredi@redhat.com>,
-        viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <christian@brauner.io>,
-        Jann Horn <jannh@google.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 00/17] VFS: Filesystem information and notifications [ver
- #17]
-Message-ID: <20200304164913.GB1763256@kroah.com>
-References: <107666.1582907766@warthog.procyon.org.uk>
- <CAJfpegu0qHBZ7iK=R4ajmmHC4g=Yz56otpKMy5w-y0UxJ1zO+Q@mail.gmail.com>
- <0403cda7345e34c800eec8e2870a1917a8c07e5c.camel@themaw.net>
- <CAJfpegtu6VqhPdcudu79TX3e=_NZaJ+Md3harBGV7Bg_-+fR8Q@mail.gmail.com>
- <1509948.1583226773@warthog.procyon.org.uk>
- <CAJfpegtOwyaWpNfjomRVOt8NKqT94O5n4-LOHTR7YZT9fadVHA@mail.gmail.com>
- <20200303113814.rsqhljkch6tgorpu@ws.net.home>
- <20200303130347.GA2302029@kroah.com>
- <33d900c8061c40f70ba2b9d1855fd6bd1c2b68bb.camel@themaw.net>
- <20200304152241.iaiulvl5xisnuxp6@ws.net.home>
+        (Authenticated sender: vbadigan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 15DE2C43383;
+        Wed,  4 Mar 2020 16:50:56 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 15DE2C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
+Subject: Re: [PATCH V2] mmc: sdhci-msm: Disable CQE during SDHC reset
+To:     Adrian Hunter <adrian.hunter@intel.com>, ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
+ <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
+ <da449444-1878-e387-6ebf-4ddb282a9b71@intel.com>
+ <1430237a-9dc5-f046-1dfe-1d5c09c16ead@codeaurora.org>
+ <3a1783c2-e8bb-f5af-4d3e-f4a45b487f0e@intel.com>
+From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+Message-ID: <0e737f52-767f-05d4-829b-4f76c084062c@codeaurora.org>
+Date:   Wed, 4 Mar 2020 22:20:52 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304152241.iaiulvl5xisnuxp6@ws.net.home>
+In-Reply-To: <3a1783c2-e8bb-f5af-4d3e-f4a45b487f0e@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:22:41PM +0100, Karel Zak wrote:
-> On Wed, Mar 04, 2020 at 10:01:33AM +0800, Ian Kent wrote:
-> > On Tue, 2020-03-03 at 14:03 +0100, Greg Kroah-Hartman wrote:
-> > > Actually, I like this idea (the syscall, not just the unlimited
-> > > beers).
-> > > Maybe this could make a lot of sense, I'll write some actual tests
-> > > for
-> > > it now that syscalls are getting "heavy" again due to CPU vendors
-> > > finally paying the price for their madness...
-> > 
-> > The problem isn't with open->read->close but with the mount info.
-> > changing between reads (ie. seq file read takes and drops the
-> > needed lock between reads at least once).
-> 
-> readfile() is not reaction to mountinfo. 
-> 
-> The motivation is that we have many places with trivial
-> open->read->close for very small text files due to /sys and /proc. The
-> current way how kernel delivers these small strings to userspace seems
-> pretty inefficient if we can do the same by one syscall.
-> 
->     Karel
-> 
-> $ strace -e openat,read,close -c ps aux
-> ...
-> % time     seconds  usecs/call     calls    errors syscall
-> ------ ----------- ----------- --------- --------- ----------------
->  43.32    0.004190           4       987           read
->  31.42    0.003039           3       844         4 openat
->  25.26    0.002443           2       842           close
-> ------ ----------- ----------- --------- --------- ----------------
-> 100.00    0.009672                  2673         4 total
-> 
-> $ strace -e openat,read,close -c lsns
-> ...
-> % time     seconds  usecs/call     calls    errors syscall
-> ------ ----------- ----------- --------- --------- ----------------
->  39.95    0.001567           2       593           openat
->  30.93    0.001213           2       597           close
->  29.12    0.001142           3       365           read
-> ------ ----------- ----------- --------- --------- ----------------
-> 100.00    0.003922                  1555           total
-> 
-> 
-> $ strace -e openat,read,close -c lscpu
-> ...
-> % time     seconds  usecs/call     calls    errors syscall
-> ------ ----------- ----------- --------- --------- ----------------
->  44.67    0.001480           7       189        52 openat
->  34.77    0.001152           6       180           read
->  20.56    0.000681           4       140           close
-> ------ ----------- ----------- --------- --------- ----------------
-> 100.00    0.003313                   509        52 total
 
-As a "real-world" test, would you recommend me converting one of the
-above tools to my implementation of readfile to see how/if it actually
-makes sense, or do you have some other tool you would rather see me try?
+On 3/4/2020 7:40 PM, Adrian Hunter wrote:
+> On 4/03/20 3:10 pm, Veerabhadrarao Badiganti wrote:
+>> Hi Adrian
+>>
+>> On 3/4/2020 5:58 PM, Adrian Hunter wrote:
+>>> On 4/03/20 1:54 pm, Veerabhadrarao Badiganti wrote:
+>>>> When SDHC gets reset (E.g. in suspend path), CQE also gets reset
+>>>> and goes to disable state. But s/w state still points it as CQE
+>>>> is in enabled state. Since s/w and h/w states goes out of sync,
+>>>> it results in s/w request timeout for subsequent CQE requests.
+>>>>
+>>>> To synchronize CQE s/w and h/w state during SDHC reset,
+>>>> explicitly disable CQE after reset.
+>>> Shouldn't you be calling cqhci_suspend() / cqhci_resume() in the suspend and
+>>> resume paths?
+>> This issue is seen during mmc runtime suspend.  I can add it
+>> sdhci_msm_runtime_suspend
+>>
+>> but sdhci_msm runtime delay is aggressive, its 50ms. It may get invoked very
+>> frequently.
+>>
+>> So Im of the opinion that disabling CQE very often from platform runtime
+>> suspend is overkill.
+> It doesn't look like sdhci-msm calls any sdhci.c pm ops, so how does SDHC
+> get reset?
 
-thanks,
+With MMC_CAP_AGGRESSIVE_PM flag enabled, it getting called from 
+mmc_runtime_suspend()
 
-greg k-h
+Below is the call stack()
+
+    sdhci_reset
+   sdhci_do_reset
+   sdhci_init
+   sdhci_set_ios
+   mmc_set_initial_state
+   mmc_power_off
+  _mmc_suspend
+   mmc_runtime_suspend
+
+>>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>>>> ---
+>>>> Changes since V1:
+>>>>      - Disable CQE only when SDHC undergoes s/w reset for all.
+>>>> ---
+>>>>    drivers/mmc/host/sdhci-msm.c | 9 ++++++++-
+>>>>    1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>>>> index 53b79ee..75929d3 100644
+>>>> --- a/drivers/mmc/host/sdhci-msm.c
+>>>> +++ b/drivers/mmc/host/sdhci-msm.c
+>>>> @@ -1823,6 +1823,13 @@ static void sdhci_msm_set_regulator_caps(struct
+>>>> sdhci_msm_host *msm_host)
+>>>>        pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>>>>    }
+>>>>    +static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
+>>>> +{
+>>>> +    sdhci_reset(host, mask);
+>>>> +    if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
+>>>> +        cqhci_suspend(host->mmc);
+>>>> +}
+>>>> +
+>>>>    static const struct sdhci_msm_variant_ops mci_var_ops = {
+>>>>        .msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>>>>        .msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+>>>> @@ -1861,7 +1868,7 @@ static void sdhci_msm_set_regulator_caps(struct
+>>>> sdhci_msm_host *msm_host)
+>>>>    MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
+>>>>      static const struct sdhci_ops sdhci_msm_ops = {
+>>>> -    .reset = sdhci_reset,
+>>>> +    .reset = sdhci_msm_reset,
+>>>>        .set_clock = sdhci_msm_set_clock,
+>>>>        .get_min_clock = sdhci_msm_get_min_clock,
+>>>>        .get_max_clock = sdhci_msm_get_max_clock,
+>>>>
