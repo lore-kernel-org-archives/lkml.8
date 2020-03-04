@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C06C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B95C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFEC24673
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C69B217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583354207;
-	bh=LM+IK6M+L2mwyCbbW6iasnIEVh5wbIXqP0UKLOhyf/0=;
+	s=default; t=1583354211;
+	bh=KHln7xyOG0c/LWpyIWiosDeoEecBHjTHH6YSKb+FXgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hhi3owwmYielfOmhuPSgrz6vvZw897Nh5a5YNIqnjDhfeEqL8BRTZ69xSUF6duIOi
-	 iR4KVPq9hYUZF2pS6wGFzNfuH9nvvocfTl+ezfWEdJuUf72D8QWT16tvhm3498opGi
-	 7futCVwR6Q/2Ep/lbR6YcxKsSJ+/h7ZQeVcZUsms=
+	b=cqGQ/mSCHIt4Tp2hBN0KawMlRQ0fXYpET3zTyaj+q1pU441oh3wtjilqJ0SCghEqm
+	 uNWgHiYwCWONTKnlECqxLl/Es+73RiMcKT3Lcvw7Iex8I7+WgsqGfhnQNad5Nt9U2w
+	 MRGFHiPckw8jWaJpwu2oxv3UBmn0Xq6pyrBIpp/8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388551AbgCDUgq (ORCPT
+        id S2388579AbgCDUgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:36:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36878 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 15:36:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388532AbgCDUgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:36:44 -0500
+        id S2388554AbgCDUgs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:36:48 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5BC224658;
-        Wed,  4 Mar 2020 20:36:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90B4821556;
+        Wed,  4 Mar 2020 20:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583354203;
-        bh=LM+IK6M+L2mwyCbbW6iasnIEVh5wbIXqP0UKLOhyf/0=;
+        s=default; t=1583354207;
+        bh=KHln7xyOG0c/LWpyIWiosDeoEecBHjTHH6YSKb+FXgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ublgWy9BD3ZwWJKrxT24M266isPdhgcyvwql58kzks5dyUOrWS5Ev+62eujQECqFX
-         R2VLXD9rzw2Yc9X3kZ4rkmTwLdr4mipA9Nuku0Z2ayBJqphVfxHHIcYMrE9HXM0e2W
-         k5z/9TJhy0DqdSDHZooI/u8T6Goakzh1RIS0y+Jk=
+        b=f3B3veFM7TrHO30UhFgrGk4rJsdX4mUUeBNQ3qSYqHNCQv3UykM8jKDAJHGyeeEio
+         QfCy3er+YsmRIHwCPZHY54BrQBZkMXqb21hOENUb1cKUUqHIcAlBZB9SF3SULL8pFG
+         DFRLhl5wnz1YSvdfvli6K147BC093uV8yydvf6nM=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1j9ajB-00A59R-6L; Wed, 04 Mar 2020 20:34:49 +0000
+        id 1j9ajE-00A59R-UH; Wed, 04 Mar 2020 20:34:53 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v5 14/23] irqchip/gic-v4.1: Add VSGI allocation/teardown
-Date:   Wed,  4 Mar 2020 20:33:21 +0000
-Message-Id: <20200304203330.4967-15-maz@kernel.org>
+Subject: [PATCH v5 18/23] KVM: arm64: GICv4.1: Add direct injection capability to SGI registers
+Date:   Wed,  4 Mar 2020 20:33:25 +0000
+Message-Id: <20200304203330.4967-19-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200304203330.4967-1-maz@kernel.org>
 References: <20200304203330.4967-1-maz@kernel.org>
@@ -73,124 +73,216 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allocate per-VPE SGIs when initializing the GIC-specific part of the
-VPE data structure.
+Most of the GICv3 emulation code that deals with SGIs now has to be
+aware of the v4.1 capabilities in order to benefit from it.
+
+Add such support, keyed on the interrupt having the hw flag set and
+being a SGI.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- drivers/irqchip/irq-gic-v4.c       | 68 +++++++++++++++++++++++++++++-
- include/linux/irqchip/arm-gic-v4.h |  2 +
- 2 files changed, 69 insertions(+), 1 deletion(-)
+ virt/kvm/arm/vgic/vgic-mmio-v3.c | 15 +++++-
+ virt/kvm/arm/vgic/vgic-mmio.c    | 88 ++++++++++++++++++++++++++++++--
+ 2 files changed, 96 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
-index 117ba6db023d..99b33f60ac63 100644
---- a/drivers/irqchip/irq-gic-v4.c
-+++ b/drivers/irqchip/irq-gic-v4.c
-@@ -92,6 +92,47 @@ static bool has_v4_1(void)
- 	return !!sgi_domain_ops;
+diff --git a/virt/kvm/arm/vgic/vgic-mmio-v3.c b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+index ebc218840fc2..de89da76a379 100644
+--- a/virt/kvm/arm/vgic/vgic-mmio-v3.c
++++ b/virt/kvm/arm/vgic/vgic-mmio-v3.c
+@@ -6,6 +6,7 @@
+ #include <linux/irqchip/arm-gic-v3.h>
+ #include <linux/kvm.h>
+ #include <linux/kvm_host.h>
++#include <linux/interrupt.h>
+ #include <kvm/iodev.h>
+ #include <kvm/arm_vgic.h>
+ 
+@@ -942,8 +943,18 @@ void vgic_v3_dispatch_sgi(struct kvm_vcpu *vcpu, u64 reg, bool allow_group1)
+ 		 * generate interrupts of either group.
+ 		 */
+ 		if (!irq->group || allow_group1) {
+-			irq->pending_latch = true;
+-			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
++			if (!irq->hw) {
++				irq->pending_latch = true;
++				vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
++			} else {
++				/* HW SGI? Ask the GIC to inject it */
++				int err;
++				err = irq_set_irqchip_state(irq->host_irq,
++							    IRQCHIP_STATE_PENDING,
++							    true);
++				WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
++				raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
++			}
+ 		} else {
+ 			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+ 		}
+diff --git a/virt/kvm/arm/vgic/vgic-mmio.c b/virt/kvm/arm/vgic/vgic-mmio.c
+index 97fb2a40e6ba..2199302597fa 100644
+--- a/virt/kvm/arm/vgic/vgic-mmio.c
++++ b/virt/kvm/arm/vgic/vgic-mmio.c
+@@ -5,6 +5,8 @@
+ 
+ #include <linux/bitops.h>
+ #include <linux/bsearch.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
+ #include <linux/kvm.h>
+ #include <linux/kvm_host.h>
+ #include <kvm/iodev.h>
+@@ -59,6 +61,11 @@ unsigned long vgic_mmio_read_group(struct kvm_vcpu *vcpu,
+ 	return value;
  }
  
-+static int its_alloc_vcpu_sgis(struct its_vpe *vpe, int idx)
++static void vgic_update_vsgi(struct vgic_irq *irq)
 +{
-+	char *name;
-+	int sgi_base;
-+
-+	if (!has_v4_1())
-+		return 0;
-+
-+	name = kasprintf(GFP_KERNEL, "GICv4-sgi-%d", task_pid_nr(current));
-+	if (!name)
-+		goto err;
-+
-+	vpe->fwnode = irq_domain_alloc_named_id_fwnode(name, idx);
-+	if (!vpe->fwnode)
-+		goto err;
-+
-+	kfree(name);
-+	name = NULL;
-+
-+	vpe->sgi_domain = irq_domain_create_linear(vpe->fwnode, 16,
-+						   sgi_domain_ops, vpe);
-+	if (!vpe->sgi_domain)
-+		goto err;
-+
-+	sgi_base = __irq_domain_alloc_irqs(vpe->sgi_domain, -1, 16,
-+					       NUMA_NO_NODE, vpe,
-+					       false, NULL);
-+	if (sgi_base <= 0)
-+		goto err;
-+
-+	return 0;
-+
-+err:
-+	if (vpe->sgi_domain)
-+		irq_domain_remove(vpe->sgi_domain);
-+	if (vpe->fwnode)
-+		irq_domain_free_fwnode(vpe->fwnode);
-+	kfree(name);
-+	return -ENOMEM;
++	WARN_ON(its_prop_update_vsgi(irq->host_irq, irq->priority, irq->group));
 +}
 +
- int its_alloc_vcpu_irqs(struct its_vm *vm)
+ void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
+ 			   unsigned int len, unsigned long val)
  {
- 	int vpe_base_irq, i;
-@@ -118,8 +159,13 @@ int its_alloc_vcpu_irqs(struct its_vm *vm)
- 	if (vpe_base_irq <= 0)
- 		goto err;
+@@ -71,7 +78,12 @@ void vgic_mmio_write_group(struct kvm_vcpu *vcpu, gpa_t addr,
  
--	for (i = 0; i < vm->nr_vpes; i++)
-+	for (i = 0; i < vm->nr_vpes; i++) {
-+		int ret;
- 		vm->vpes[i]->irq = vpe_base_irq + i;
-+		ret = its_alloc_vcpu_sgis(vm->vpes[i], i);
-+		if (ret)
-+			goto err;
-+	}
+ 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+ 		irq->group = !!(val & BIT(i));
+-		vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
++		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
++			vgic_update_vsgi(irq);
++			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
++		} else {
++			vgic_queue_irq_unlock(vcpu->kvm, irq, flags);
++		}
  
- 	return 0;
+ 		vgic_put_irq(vcpu->kvm, irq);
+ 	}
+@@ -113,7 +125,21 @@ void vgic_mmio_write_senable(struct kvm_vcpu *vcpu,
+ 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
  
-@@ -132,8 +178,28 @@ int its_alloc_vcpu_irqs(struct its_vm *vm)
- 	return -ENOMEM;
- }
- 
-+static void its_free_sgi_irqs(struct its_vm *vm)
-+{
-+	int i;
+ 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+-		if (vgic_irq_is_mapped_level(irq)) {
++		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
++			if (!irq->enabled) {
++				struct irq_data *data;
 +
-+	if (!has_v4_1())
-+		return;
++				irq->enabled = true;
++				data = &irq_to_desc(irq->host_irq)->irq_data;
++				while (irqd_irq_disabled(data))
++					enable_irq(irq->host_irq);
++			}
 +
-+	for (i = 0; i < vm->nr_vpes; i++) {
-+		unsigned int irq = irq_find_mapping(vm->vpes[i]->sgi_domain, 0);
++			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
++			vgic_put_irq(vcpu->kvm, irq);
 +
-+		if (WARN_ON(!irq))
 +			continue;
++		} else if (vgic_irq_is_mapped_level(irq)) {
+ 			bool was_high = irq->line_level;
+ 
+ 			/*
+@@ -148,6 +174,8 @@ void vgic_mmio_write_cenable(struct kvm_vcpu *vcpu,
+ 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+ 
+ 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
++		if (irq->hw && vgic_irq_is_sgi(irq->intid) && irq->enabled)
++			disable_irq_nosync(irq->host_irq);
+ 
+ 		irq->enabled = false;
+ 
+@@ -167,10 +195,22 @@ unsigned long vgic_mmio_read_pending(struct kvm_vcpu *vcpu,
+ 	for (i = 0; i < len * 8; i++) {
+ 		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, intid + i);
+ 		unsigned long flags;
++		bool val;
+ 
+ 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+-		if (irq_is_pending(irq))
+-			value |= (1U << i);
++		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
++			int err;
 +
-+		irq_domain_free_irqs(irq, 16);
-+		irq_domain_remove(vm->vpes[i]->sgi_domain);
-+		irq_domain_free_fwnode(vm->vpes[i]->fwnode);
-+	}
-+}
++			val = false;
++			err = irq_get_irqchip_state(irq->host_irq,
++						    IRQCHIP_STATE_PENDING,
++						    &val);
++			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
++		} else {
++			val = irq_is_pending(irq);
++		}
 +
- void its_free_vcpu_irqs(struct its_vm *vm)
- {
-+	its_free_sgi_irqs(vm);
- 	irq_domain_free_irqs(vm->vpes[0]->irq, vm->nr_vpes);
- 	irq_domain_remove(vm->domain);
- 	irq_domain_free_fwnode(vm->fwnode);
-diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
-index 8b42d9d9b17e..0bb111b4a504 100644
---- a/include/linux/irqchip/arm-gic-v4.h
-+++ b/include/linux/irqchip/arm-gic-v4.h
-@@ -49,6 +49,8 @@ struct its_vpe {
- 		};
- 		/* GICv4.1 implementations */
- 		struct {
-+			struct fwnode_handle	*fwnode;
-+			struct irq_domain	*sgi_domain;
- 			struct {
- 				u8	priority;
- 				bool	enabled;
++		value |= ((u32)val << i);
+ 		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+ 
+ 		vgic_put_irq(vcpu->kvm, irq);
+@@ -215,6 +255,21 @@ void vgic_mmio_write_spending(struct kvm_vcpu *vcpu,
+ 		}
+ 
+ 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
++
++		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
++			/* HW SGI? Ask the GIC to inject it */
++			int err;
++			err = irq_set_irqchip_state(irq->host_irq,
++						    IRQCHIP_STATE_PENDING,
++						    true);
++			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
++
++			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
++			vgic_put_irq(vcpu->kvm, irq);
++
++			continue;
++		}
++
+ 		if (irq->hw)
+ 			vgic_hw_irq_spending(vcpu, irq, is_uaccess);
+ 		else
+@@ -269,6 +324,20 @@ void vgic_mmio_write_cpending(struct kvm_vcpu *vcpu,
+ 
+ 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+ 
++		if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
++			/* HW SGI? Ask the GIC to clear its pending bit */
++			int err;
++			err = irq_set_irqchip_state(irq->host_irq,
++						    IRQCHIP_STATE_PENDING,
++						    false);
++			WARN_RATELIMIT(err, "IRQ %d", irq->host_irq);
++
++			raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
++			vgic_put_irq(vcpu->kvm, irq);
++
++			continue;
++		}
++
+ 		if (irq->hw)
+ 			vgic_hw_irq_cpending(vcpu, irq, is_uaccess);
+ 		else
+@@ -318,8 +387,15 @@ static void vgic_mmio_change_active(struct kvm_vcpu *vcpu, struct vgic_irq *irq,
+ 
+ 	raw_spin_lock_irqsave(&irq->irq_lock, flags);
+ 
+-	if (irq->hw) {
++	if (irq->hw && !vgic_irq_is_sgi(irq->intid)) {
+ 		vgic_hw_irq_change_active(vcpu, irq, active, !requester_vcpu);
++	} else if (irq->hw && vgic_irq_is_sgi(irq->intid)) {
++		/*
++		 * GICv4.1 VSGI feature doesn't track an active state,
++		 * so let's not kid ourselves, there is nothing we can
++		 * do here.
++		 */
++		irq->active = false;
+ 	} else {
+ 		u32 model = vcpu->kvm->arch.vgic.vgic_model;
+ 		u8 active_source;
+@@ -493,6 +569,8 @@ void vgic_mmio_write_priority(struct kvm_vcpu *vcpu,
+ 		raw_spin_lock_irqsave(&irq->irq_lock, flags);
+ 		/* Narrow the priority range to what we actually support */
+ 		irq->priority = (val >> (i * 8)) & GENMASK(7, 8 - VGIC_PRI_BITS);
++		if (irq->hw && vgic_irq_is_sgi(irq->intid))
++			vgic_update_vsgi(irq);
+ 		raw_spin_unlock_irqrestore(&irq->irq_lock, flags);
+ 
+ 		vgic_put_irq(vcpu->kvm, irq);
 -- 
 2.20.1
 
