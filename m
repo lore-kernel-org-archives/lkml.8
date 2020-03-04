@@ -2,104 +2,253 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D058C3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CE4C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042BD206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:03:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wtdw/bpD"
+	by mail.kernel.org (Postfix) with ESMTP id 04EED20848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:06:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583280371;
+	bh=1ozUNORDROHYuoKp1GjAwkWJ8+4RKmoM944CcRwOrLg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uTjrja9FIbr751+Y424+vyNvHI6c3kH1gqhh2hR236dz8eOijj4Ch9Vd+icKb+m1k
+	 3nXSwmI/R8eAyi6D6DjYVxbOYxtQ039HwHtX4ulqcT/3mSuErb82K11rARuqZYw6KW
+	 bp+jj3Zrpf0Q+ipuBQPAya7sQKyrh3CJRcnChv1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgCDADc (ORCPT
+        id S1728061AbgCDAGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:03:32 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42590 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727604AbgCDADb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:03:31 -0500
-Received: by mail-pg1-f196.google.com with SMTP id h8so72285pgs.9;
-        Tue, 03 Mar 2020 16:03:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Cg+Bk6p3ng/oCqeB9jAP5HpcQ6wBIVVyIyzT0MMNq0k=;
-        b=Wtdw/bpDAHegTWVPqPiInwTRdc+XxDNKZV5OyxUdLlV7JnWYcKCYo5WwcOqZBwoZgR
-         lCMRDanCykEaZjdNDLpO9T5CqO7BcZg7jnRfbK4HKgL0nmUTQbR2CSv9dU3LQrWdftHN
-         Ok2JGkqTvgMzihWyEv4rDsCvtgunV7D2BpPu2+FdHSA61Fo2ozHR7we/hDStKntnGNU3
-         yTaKQw5sIuR7Mb+sPgJue9DY26rhlMPuqGcVxhT3opQ9hKRVyjtmJ3Za+jzdRN06xyaY
-         5raGwMxS83abexPR9tjLNaRRvARn3H7mJcJfNYoQCe0IT9YYvseds7bNeO9X1HksqvWl
-         hFLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Cg+Bk6p3ng/oCqeB9jAP5HpcQ6wBIVVyIyzT0MMNq0k=;
-        b=pkHhtqN1ljR9QQrxQUrQDLnvnDZyfQtO0gCdy1JpjHjVOdKsNhvpuMeAWpg05ImXAS
-         hOHFdB2HTfn1lLI6wGkgAiciYAXpFizqhQ+Z+koarU1Wl3FpDR86/Ae6n4q/49i46JWf
-         VPeDweelFt59hQmtoTF0QPC15+CKPW0hdjS7L+/RxGpjP+FhqwIvICEo0lThUQPgfqNm
-         fh7Awy8vicFbfvvk/W7pyxGkYrcdBO0kL5DmaaznaB522UcBZ/d9Y6bDJg2oi09FT7FG
-         lGNS9PNaqTCFYinPFTR5yKSCdYFFENMuMGZF95WA2Oh5Xx6vBETdgABeC3zzp+xVtciZ
-         or2A==
-X-Gm-Message-State: ANhLgQ0LINO0jpmCgd+kWaHnkPF9YRnx4AisherIovrOSXhodLW1o7XR
-        ceKpHKi4y50cw6JYu4LfllA=
-X-Google-Smtp-Source: ADFU+vvLke/PQpWmYNEZBsbhWp2sSTWm813w2K3TO0HseVYhvp+AY3D8KiClhK8qArj0CeTWoS6W/g==
-X-Received: by 2002:a63:4103:: with SMTP id o3mr5683444pga.199.1583280210838;
-        Tue, 03 Mar 2020 16:03:30 -0800 (PST)
-Received: from ast-mbp ([2620:10d:c090:500::4:a0de])
-        by smtp.gmail.com with ESMTPSA id z22sm4937779pgn.19.2020.03.03.16.03.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Mar 2020 16:03:29 -0800 (PST)
-Date:   Tue, 3 Mar 2020 16:03:27 -0800
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next 4/7] bpf: Attachment verification for
- BPF_MODIFY_RETURN
-Message-ID: <20200304000326.nk7jmkgxazl3umbh@ast-mbp>
-References: <20200303140950.6355-1-kpsingh@chromium.org>
- <20200303140950.6355-5-kpsingh@chromium.org>
- <CAEf4BzaviDB+WGUsg1+aO5GAtkJuQ6aYSiB8VaKL0CoQRPs8Xw@mail.gmail.com>
- <20200303232151.GB17103@chromium.org>
+        Tue, 3 Mar 2020 19:06:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40232 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727604AbgCDAGJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 19:06:09 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0699E206D5;
+        Wed,  4 Mar 2020 00:06:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583280368;
+        bh=1ozUNORDROHYuoKp1GjAwkWJ8+4RKmoM944CcRwOrLg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ECm0hWpQ4Ub7HVWP3jgWDVXNW+8niHjagCLoG0psDBAT+mUUebfDiIfx5vMSpFp1H
+         UubGxPnJ/Qt74RZc19J0LIaGgWjNtnXt3ep5SJXuthS2JJCisxZ/YYK3Sp823Lrj/c
+         YZwav/8Y1pGn9xEqes/UPHNyQMtuZ44BQPw3HZE0=
+Date:   Tue, 3 Mar 2020 16:06:06 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Gilad Ben-Yossef <gilad@benyossef.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ofir Drang <ofir.drang@arm.com>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] crypto: testmgr - sync both RFC4106 IV copies
+Message-ID: <20200304000606.GB89804@sol.localdomain>
+References: <20200303120925.12067-1-gilad@benyossef.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303232151.GB17103@chromium.org>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20200303120925.12067-1-gilad@benyossef.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 12:21:51AM +0100, KP Singh wrote:
+On Tue, Mar 03, 2020 at 02:09:25PM +0200, Gilad Ben-Yossef wrote:
+> RFC4106 AEAD ciphers the AAD is the concatenation of associated
+> authentication data || IV || plaintext or ciphertext but the
+> random AEAD message generation in testmgr extended tests did
+> not obey this requirements producing messages with undefined
+> behaviours. Fix it by syncing the copies if needed.
 > 
-> > > +                       t = btf_type_skip_modifiers(btf, t->type, NULL);
-> > > +                       if (!btf_type_is_int(t)) {
-> > 
-> > Should the size of int be verified here? E.g., if some function
-> > returns u8, is that ok for BPF program to return, say, (1<<30) ?
+> Since this only relevant for developer only extended tests any
+> additional cycles/run time costs are negligible.
 > 
-> Would this work?
+> This fixes extended AEAD test failures with the ccree driver
+> caused by illegal input.
 > 
->        if (size != t->size) {
->                bpf_log(log,
->                        "size accessed = %d should be %d\n",
->                        size, t->size);
->                return false;
->        }
+> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Eric Biggers <ebiggers@kernel.org>
+> ---
+> 
+>  crypto/testmgr.c | 35 ++++++++++++++++++++++++++---------
+>  1 file changed, 26 insertions(+), 9 deletions(-)
+> 
+> diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+> index 88f33c0efb23..379bd1c7dd5b 100644
+> --- a/crypto/testmgr.c
+> +++ b/crypto/testmgr.c
+> @@ -91,10 +91,16 @@ struct aead_test_suite {
+>  	unsigned int einval_allowed : 1;
+>  
+>  	/*
+> -	 * Set if the algorithm intentionally ignores the last 8 bytes of the
+> -	 * AAD buffer during decryption.
+> +	 * Set if the algorithm includes a copy of the IV (last 8 bytes)
+> +	 * in the AAD buffer but does not include it in calculating the ICV
+>  	 */
+> -	unsigned int esp_aad : 1;
+> +	unsigned int skip_aad_iv : 1;
 
-It will cause spurious failures later when llvm optimizes
-if (ret & 0xff) into u8 load.
-I think btf_type_is_int() is enough as-is.
+"Authentication tag" would be easier to understand than "ICV" and would match
+the rest of the code.  "ICV" is an idiosyncrasy used in certain RFCs only.
+
+> +
+> +	/*
+> +	 * Set if the algorithm includes a copy of the IV (last 8 bytes)
+> +	 * in the AAD buffer and does include it when calculating the ICV
+> +	 */
+> +	unsigned int auth_aad_iv : 1;
+>  };
+>  
+>  struct cipher_test_suite {
+> @@ -2167,14 +2173,20 @@ struct aead_extra_tests_ctx {
+>   * here means the full ciphertext including the authentication tag.  The
+>   * authentication tag (and hence also the ciphertext) is assumed to be nonempty.
+>   */
+> -static void mutate_aead_message(struct aead_testvec *vec, bool esp_aad)
+> +static void mutate_aead_message(struct aead_testvec *vec,
+> +				const struct aead_test_suite *suite)
+>  {
+> -	const unsigned int aad_tail_size = esp_aad ? 8 : 0;
+> +	const unsigned int aad_ivsize = 8;
+
+We should use the algorithm's actual IV size instead of hard-coding 8 bytes.
+
+> +	const unsigned int aad_tail_size = suite->skip_aad_iv ? aad_ivsize : 0;
+>  	const unsigned int authsize = vec->clen - vec->plen;
+>  
+>  	if (prandom_u32() % 2 == 0 && vec->alen > aad_tail_size) {
+>  		 /* Mutate the AAD */
+>  		flip_random_bit((u8 *)vec->assoc, vec->alen - aad_tail_size);
+> +		if (suite->auth_aad_iv)
+> +			memcpy((u8 *)vec->iv,
+> +			       (vec->assoc + vec->alen - aad_ivsize),
+> +			       aad_ivsize);
+
+Why sync the IV copies here?  When 'auth_aad_iv', we assume the copy of the IV
+in the AAD (which was just corrupted) is authenticated.  So we already know that
+decryption should fail, regardless of the other IV copy.
+
+Also, the code doesn't currently mutate vec->iv for any AEAD.  So mutating it
+for one specific algorithm is a bit odd.  IMO, it would make more sense to do a
+separate patch later that mutates vec->iv for all AEADs.
+
+>  		if (prandom_u32() % 2 == 0)
+>  			return;
+>  	}
+> @@ -2208,6 +2220,10 @@ static void generate_aead_message(struct aead_request *req,
+>  	/* Generate the AAD. */
+>  	generate_random_bytes((u8 *)vec->assoc, vec->alen);
+>  
+> +	if (suite->auth_aad_iv && (vec->alen > ivsize))
+> +		memcpy(((u8 *)vec->assoc + vec->alen - ivsize), vec->iv,
+> +		       ivsize);
+
+Shouldn't this be >= ivsize, not > ivsize?  And doesn't the IV need to be synced
+in both the skip_aad_iv and auth_aad_iv cases?
+
+There are also unnecessary parentheses here; the memcpy() could be one line.
+
+
+How about the following patch instead?
+
+diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+index ccb3d60729fc..eea56fe8d1e8 100644
+--- a/crypto/testmgr.c
++++ b/crypto/testmgr.c
+@@ -91,10 +91,16 @@ struct aead_test_suite {
+ 	unsigned int einval_allowed : 1;
+ 
+ 	/*
+-	 * Set if the algorithm intentionally ignores the last 8 bytes of the
+-	 * AAD buffer during decryption.
++	 * 'aad_iv' is set if this algorithm requires that the IV be located at
++	 * the end of the AAD buffer, in addition to being given in the normal
++	 * way.  It's implementation-defined which IV copy the algorithm uses.
++	 *
++	 * 'aad_iv_auth' is set if the copy of the IV in the AAD buffer is
++	 * authenticated just like the rest of the AAD, i.e. if decryption with
++	 * the AAD IV bytes corrupted should fail.
+ 	 */
+-	unsigned int esp_aad : 1;
++	unsigned int aad_iv : 1;
++	unsigned int aad_iv_auth : 1;
+ };
+ 
+ struct cipher_test_suite {
+@@ -2167,9 +2173,12 @@ struct aead_extra_tests_ctx {
+  * here means the full ciphertext including the authentication tag.  The
+  * authentication tag (and hence also the ciphertext) is assumed to be nonempty.
+  */
+-static void mutate_aead_message(struct aead_testvec *vec, bool esp_aad)
++static void mutate_aead_message(struct aead_testvec *vec,
++				const struct aead_test_suite *suite,
++				unsigned int ivsize)
+ {
+-	const unsigned int aad_tail_size = esp_aad ? 8 : 0;
++	const unsigned int aad_tail_size =
++		(suite->aad_iv && !suite->aad_iv_auth) ? ivsize : 0;
+ 	const unsigned int authsize = vec->clen - vec->plen;
+ 
+ 	if (prandom_u32() % 2 == 0 && vec->alen > aad_tail_size) {
+@@ -2207,6 +2216,8 @@ static void generate_aead_message(struct aead_request *req,
+ 
+ 	/* Generate the AAD. */
+ 	generate_random_bytes((u8 *)vec->assoc, vec->alen);
++	if (suite->aad_iv && vec->alen >= ivsize)
++		memcpy((u8 *)vec->assoc + vec->alen - ivsize, vec->iv, ivsize);
+ 
+ 	if (inauthentic && prandom_u32() % 2 == 0) {
+ 		/* Generate a random ciphertext. */
+@@ -2242,7 +2253,7 @@ static void generate_aead_message(struct aead_request *req,
+ 		 * Mutate the authentic (ciphertext, AAD) pair to get an
+ 		 * inauthentic one.
+ 		 */
+-		mutate_aead_message(vec, suite->esp_aad);
++		mutate_aead_message(vec, suite, ivsize);
+ 	}
+ 	vec->novrfy = 1;
+ 	if (suite->einval_allowed)
+@@ -5229,7 +5240,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 			.aead = {
+ 				____VECS(aes_gcm_rfc4106_tv_template),
+ 				.einval_allowed = 1,
+-				.esp_aad = 1,
++				.aad_iv = 1,
+ 			}
+ 		}
+ 	}, {
+@@ -5241,7 +5252,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 			.aead = {
+ 				____VECS(aes_ccm_rfc4309_tv_template),
+ 				.einval_allowed = 1,
+-				.esp_aad = 1,
++				.aad_iv = 1,
+ 			}
+ 		}
+ 	}, {
+@@ -5252,6 +5263,8 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 			.aead = {
+ 				____VECS(aes_gcm_rfc4543_tv_template),
+ 				.einval_allowed = 1,
++				.aad_iv = 1,
++				.aad_iv_auth = 1,
+ 			}
+ 		}
+ 	}, {
+@@ -5267,7 +5280,7 @@ static const struct alg_test_desc alg_test_descs[] = {
+ 			.aead = {
+ 				____VECS(rfc7539esp_tv_template),
+ 				.einval_allowed = 1,
+-				.esp_aad = 1,
++				.aad_iv = 1,
+ 			}
+ 		}
+ 	}, {
