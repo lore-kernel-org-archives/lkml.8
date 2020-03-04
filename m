@@ -2,219 +2,792 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E80C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16144C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC3622166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:49:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCC942073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:49:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="aSsRYRkm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IEN2AaeK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbgCDNtB (ORCPT
+        id S1729540AbgCDNtI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:49:01 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:44612 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729460AbgCDNtB (ORCPT
+        Wed, 4 Mar 2020 08:49:08 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39224 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729460AbgCDNtI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:49:01 -0500
-Received: by mail-vk1-f193.google.com with SMTP id x62so550194vkg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:48:59 -0800 (PST)
+        Wed, 4 Mar 2020 08:49:08 -0500
+Received: by mail-qt1-f195.google.com with SMTP id e13so1353092qts.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:49:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=bjIqzNtbLDluldH86tN+A6cKSOXYcpHj7iqgrGX2u9Q=;
-        b=aSsRYRkml7xmSJkdReWG+LtFzO6SXXltkxNfsYYs8jeMD708jVuf1k9ZkSSte1WuHG
-         rYuYZmkxP9ekNsF12Owz3OWcL2Nd1QktjKQjojrgO4Vikc/jLRW7W2tIRzWwaxnW+/1m
-         BpIfhfPHagu2E5rdF8wB766Ci+1Zz8uVuM72JXxWIpxZ7qhpWLXIlof66jaTX1USvmZ8
-         VQ5L2hOmvqtOFStjMcl4skOdrZZtlpY1yxx90ROu9SnDj1AuBkqRjVKBNtRPMDffPFof
-         Xw9rbl7buYnsYnShnDsJfa7gMaYK8Xh3v/SeTyUPV2GufdCh+1OwIxjNg3AlTKXNZJrp
-         HtEg==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=d5J0OeExguFlXknRCS4Jg5VkywF3HsRdwjR7VQlb638=;
+        b=IEN2AaeKtkdmHZyU6fbRT5zJfcFWdTIQE13g/Erykby8z/KJhuY5vrPE4EpO6IRVB4
+         LUI+OHzbj4VCF2XzTSHFLZSqqWpsSUUjjkdT9AW4ihdhsQZmkW/S73/Kb0WjBKJPI+jq
+         /KwWtpLblbZ96I78qTUIGWrZ8abegz5PxnJwepRFxw+gHeDxwkblUqqnWreBgwbyi+VD
+         BT6R0qdfTbIzmBlwJ60hobbXAr5LakyKcgTICjmonHkkmMKYqR2Hka00BJ5CqOsBluOW
+         uypXvx5dlwLOIcgaENR71jFNZ4czpzf21pY36F1lqky3lPLfLC43lj34SbtbXcjIhECA
+         WoZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=bjIqzNtbLDluldH86tN+A6cKSOXYcpHj7iqgrGX2u9Q=;
-        b=LwVGAwg9/DoGuiG2lJLBG7IUSkVA8Dryo7x88FfLHWdAL0GN0hOkLkE13ZWZNrPcUA
-         BokJmueqwNFhkoEQENHlho1G/mdeyU4PsdyQm1PblJujVwqDtSXxoRDj2ESd+ExaFgrI
-         qRPqs2lYHIWWF3O9hMhzpH8QlY4Ox+knh8PMJ3ZjmqznUD2ygz4v0Ewop/IxvP/0QHpU
-         M6VwMg8w6Swrw0sTB7rNdXpBJiwtjwNdYLeNjp7cJOm0IiOQrFv469qU81SG9xr7DgNu
-         Ckdxx6Ub9A52baFTmTeHDOA6T664hvwg3ZFhecW7k+b62or/q43GPgEe6a0tgyun0paj
-         neAw==
-X-Gm-Message-State: ANhLgQ3M1LpLMikfhQF7yJNrRI9OB6VuXN8gPkVv2JV3+v3b6Ka3AtNq
-        r6ezJD75bB8Rvz+zt7vgYAA/jEoZcbdzF1f+pGZut1MXtD8=
-X-Google-Smtp-Source: ADFU+vvoF/S1C8h9A5Im5xw4Vs7/0s0k+y8QNSIVSeSdg+S7j85qxtjIEaRVsjzMAeYPqqLTGrERlOWGKgHn2FWDNGg=
-X-Received: by 2002:a1f:5e17:: with SMTP id s23mr572459vkb.100.1583329738480;
- Wed, 04 Mar 2020 05:48:58 -0800 (PST)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=d5J0OeExguFlXknRCS4Jg5VkywF3HsRdwjR7VQlb638=;
+        b=LSsMrV2bAcNY/i5/CItPpemCRsndPs2CETqyOYzeXtkpqQXZ9knpLaun7qnt2WHKvS
+         34oD5zsCJ19digo1s4YtTKQ7ol8kViuGpGQ//1jO7ZsA9qOPFUxTQeqv9DanYo0J9cQM
+         /ZwC8bKo4G6YIR2nKu5BfcAvTxRo0DAsx0HcpxT8fpHiS6BCVOXEtvFVqxuGDy+UvKA7
+         Y2TdJF2O4606QcbKG2mbPm98HWwcqf7WUbZa0LV8u9Fi/SfxH/tV4IrJmZ2kesRft9ec
+         6tSOufg0zNswYwubBPoBuZkoGrtiF7lCQxLbc9Mwmc7xylp1AawLju3Zpy3GTlJYVn1h
+         Qdrw==
+X-Gm-Message-State: ANhLgQ1BwyqV7MPBiC18Vpgn7YIhNSUwXTEIMlDkYeqbwvWJnv63A94B
+        hwAawfXRTpc7vyuraZ1OlVU=
+X-Google-Smtp-Source: ADFU+vsqsUKyORvc3HZD5TB680R5IMDGyKKvc8pMOhpxuOf0aj1hQ7m9Zxx4ZJuAnyyZ31uYpaFPPw==
+X-Received: by 2002:aed:38c2:: with SMTP id k60mr2367851qte.103.1583329746201;
+        Wed, 04 Mar 2020 05:49:06 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.37.151])
+        by smtp.gmail.com with ESMTPSA id l6sm14127989qti.10.2020.03.04.05.49.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 05:49:05 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id F071D403AD; Wed,  4 Mar 2020 10:49:02 -0300 (-03)
+Date:   Wed, 4 Mar 2020 10:49:02 -0300
+To:     kan.liang@linux.intel.com
+Cc:     jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
+        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
+        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
+        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
+Subject: Re: [PATCH 01/12] perf tools: Add hw_idx in struct branch_stack
+Message-ID: <20200304134902.GB12612@kernel.org>
+References: <20200228163011.19358-1-kan.liang@linux.intel.com>
+ <20200228163011.19358-2-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-References: <20200303120925.12067-1-gilad@benyossef.com> <20200304000606.GB89804@sol.localdomain>
-In-Reply-To: <20200304000606.GB89804@sol.localdomain>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Wed, 4 Mar 2020 15:48:47 +0200
-Message-ID: <CAOtvUMd6Ak3n-ABO1h440BoDASJUvh+-9PwEGFi-WzA=g84kLg@mail.gmail.com>
-Subject: Re: [PATCH v2] crypto: testmgr - sync both RFC4106 IV copies
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200228163011.19358-2-kan.liang@linux.intel.com>
+X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Em Fri, Feb 28, 2020 at 08:30:00AM -0800, kan.liang@linux.intel.com escreveu:
+> From: Kan Liang <kan.liang@linux.intel.com>
+> 
+> The low level index of raw branch records for the most recent branch can
+> be recorded in a sample with PERF_SAMPLE_BRANCH_HW_INDEX
+> branch_sample_type. Extend struct branch_stack to support it.
+> 
+> However, if the PERF_SAMPLE_BRANCH_HW_INDEX is not applied, only nr and
+> entries[] will be output by kernel. The pointer of entries[] could be
+> wrong, since the output format is different with new struct branch_stack.
+> Add a variable no_hw_idx in struct perf_sample to indicate whether the
+> hw_idx is output.
+> Add get_branch_entry() to return corresponding pointer of entries[0].
+ 
+This should be broken up in at least two patches, one that syncs
+tools/include/uapi/linux/perf_event.h with the kernel, and another to do
+what this changeset log message states, I'll do it this time to expedite
+processing of this patchset, please do it that way next time.
 
-On Wed, Mar 4, 2020 at 2:06 AM Eric Biggers <ebiggers@kernel.org> wrote:
->
-> On Tue, Mar 03, 2020 at 02:09:25PM +0200, Gilad Ben-Yossef wrote:
-> > RFC4106 AEAD ciphers the AAD is the concatenation of associated
-> > authentication data || IV || plaintext or ciphertext but the
-> > random AEAD message generation in testmgr extended tests did
-> > not obey this requirements producing messages with undefined
-> > behaviours. Fix it by syncing the copies if needed.
-> >
-> > Since this only relevant for developer only extended tests any
-> > additional cycles/run time costs are negligible.
-> >
-> > This fixes extended AEAD test failures with the ccree driver
-> > caused by illegal input.
-> >
-> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Cc: Eric Biggers <ebiggers@kernel.org>
-> > ---
-> >
-> >  crypto/testmgr.c | 35 ++++++++++++++++++++++++++---------
-> >  1 file changed, 26 insertions(+), 9 deletions(-)
-> >
-> > diff --git a/crypto/testmgr.c b/crypto/testmgr.c
-> > index 88f33c0efb23..379bd1c7dd5b 100644
-> > --- a/crypto/testmgr.c
-> > +++ b/crypto/testmgr.c
-> > @@ -91,10 +91,16 @@ struct aead_test_suite {
-> >       unsigned int einval_allowed : 1;
-> >
-> >       /*
-> > -      * Set if the algorithm intentionally ignores the last 8 bytes of the
-> > -      * AAD buffer during decryption.
-> > +      * Set if the algorithm includes a copy of the IV (last 8 bytes)
-> > +      * in the AAD buffer but does not include it in calculating the ICV
-> >        */
-> > -     unsigned int esp_aad : 1;
-> > +     unsigned int skip_aad_iv : 1;
->
-> "Authentication tag" would be easier to understand than "ICV" and would match
-> the rest of the code.  "ICV" is an idiosyncrasy used in certain RFCs only.
+- Arnaldo
 
-Sure.
+> To make dummy branch sample consistent as new branch sample, add hw_idx
+> in struct dummy_branch_stack for cs-etm and intel-pt.
+> 
+> Apply the new struct branch_stack for synthetic events as well.
+> 
+> Extend test case sample-parsing to support new struct branch_stack.
+> 
+> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> ---
+>  tools/include/uapi/linux/perf_event.h         |  8 ++-
+>  tools/perf/builtin-script.c                   | 70 ++++++++++---------
+>  tools/perf/tests/sample-parsing.c             |  7 +-
+>  tools/perf/util/branch.h                      | 22 ++++++
+>  tools/perf/util/cs-etm.c                      |  1 +
+>  tools/perf/util/event.h                       |  1 +
+>  tools/perf/util/evsel.c                       |  5 ++
+>  tools/perf/util/evsel.h                       |  5 ++
+>  tools/perf/util/hist.c                        |  3 +-
+>  tools/perf/util/intel-pt.c                    |  2 +
+>  tools/perf/util/machine.c                     | 35 +++++-----
+>  .../scripting-engines/trace-event-python.c    | 30 ++++----
+>  tools/perf/util/session.c                     |  8 ++-
+>  tools/perf/util/synthetic-events.c            |  6 +-
+>  14 files changed, 131 insertions(+), 72 deletions(-)
+> 
+> diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
+> index 377d794d3105..397cfd65b3fe 100644
+> --- a/tools/include/uapi/linux/perf_event.h
+> +++ b/tools/include/uapi/linux/perf_event.h
+> @@ -181,6 +181,8 @@ enum perf_branch_sample_type_shift {
+>  
+>  	PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT	= 16, /* save branch type */
+>  
+> +	PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT	= 17, /* save low level index of raw branch records */
+> +
+>  	PERF_SAMPLE_BRANCH_MAX_SHIFT		/* non-ABI */
+>  };
+>  
+> @@ -208,6 +210,8 @@ enum perf_branch_sample_type {
+>  	PERF_SAMPLE_BRANCH_TYPE_SAVE	=
+>  		1U << PERF_SAMPLE_BRANCH_TYPE_SAVE_SHIFT,
+>  
+> +	PERF_SAMPLE_BRANCH_HW_INDEX	= 1U << PERF_SAMPLE_BRANCH_HW_INDEX_SHIFT,
+> +
+>  	PERF_SAMPLE_BRANCH_MAX		= 1U << PERF_SAMPLE_BRANCH_MAX_SHIFT,
+>  };
+>  
+> @@ -853,7 +857,9 @@ enum perf_event_type {
+>  	 *	  char                  data[size];}&& PERF_SAMPLE_RAW
+>  	 *
+>  	 *	{ u64                   nr;
+> -	 *        { u64 from, to, flags } lbr[nr];} && PERF_SAMPLE_BRANCH_STACK
+> +	 *	  { u64	hw_idx; } && PERF_SAMPLE_BRANCH_HW_INDEX
+> +	 *        { u64 from, to, flags } lbr[nr];
+> +	 *      } && PERF_SAMPLE_BRANCH_STACK
+>  	 *
+>  	 * 	{ u64			abi; # enum perf_sample_regs_abi
+>  	 * 	  u64			regs[weight(mask)]; } && PERF_SAMPLE_REGS_USER
+> diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+> index e2406b291c1c..acf3107bbda2 100644
+> --- a/tools/perf/builtin-script.c
+> +++ b/tools/perf/builtin-script.c
+> @@ -735,6 +735,7 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+>  					struct perf_event_attr *attr, FILE *fp)
+>  {
+>  	struct branch_stack *br = sample->branch_stack;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	struct addr_location alf, alt;
+>  	u64 i, from, to;
+>  	int printed = 0;
+> @@ -743,8 +744,8 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+>  		return 0;
+>  
+>  	for (i = 0; i < br->nr; i++) {
+> -		from = br->entries[i].from;
+> -		to   = br->entries[i].to;
+> +		from = entries[i].from;
+> +		to   = entries[i].to;
+>  
+>  		if (PRINT_FIELD(DSO)) {
+>  			memset(&alf, 0, sizeof(alf));
+> @@ -768,10 +769,10 @@ static int perf_sample__fprintf_brstack(struct perf_sample *sample,
+>  		}
+>  
+>  		printed += fprintf(fp, "/%c/%c/%c/%d ",
+> -			mispred_str( br->entries + i),
+> -			br->entries[i].flags.in_tx? 'X' : '-',
+> -			br->entries[i].flags.abort? 'A' : '-',
+> -			br->entries[i].flags.cycles);
+> +			mispred_str(entries + i),
+> +			entries[i].flags.in_tx ? 'X' : '-',
+> +			entries[i].flags.abort ? 'A' : '-',
+> +			entries[i].flags.cycles);
+>  	}
+>  
+>  	return printed;
+> @@ -782,6 +783,7 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+>  					   struct perf_event_attr *attr, FILE *fp)
+>  {
+>  	struct branch_stack *br = sample->branch_stack;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	struct addr_location alf, alt;
+>  	u64 i, from, to;
+>  	int printed = 0;
+> @@ -793,8 +795,8 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+>  
+>  		memset(&alf, 0, sizeof(alf));
+>  		memset(&alt, 0, sizeof(alt));
+> -		from = br->entries[i].from;
+> -		to   = br->entries[i].to;
+> +		from = entries[i].from;
+> +		to   = entries[i].to;
+>  
+>  		thread__find_symbol_fb(thread, sample->cpumode, from, &alf);
+>  		thread__find_symbol_fb(thread, sample->cpumode, to, &alt);
+> @@ -813,10 +815,10 @@ static int perf_sample__fprintf_brstacksym(struct perf_sample *sample,
+>  			printed += fprintf(fp, ")");
+>  		}
+>  		printed += fprintf(fp, "/%c/%c/%c/%d ",
+> -			mispred_str( br->entries + i),
+> -			br->entries[i].flags.in_tx? 'X' : '-',
+> -			br->entries[i].flags.abort? 'A' : '-',
+> -			br->entries[i].flags.cycles);
+> +			mispred_str(entries + i),
+> +			entries[i].flags.in_tx ? 'X' : '-',
+> +			entries[i].flags.abort ? 'A' : '-',
+> +			entries[i].flags.cycles);
+>  	}
+>  
+>  	return printed;
+> @@ -827,6 +829,7 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+>  					   struct perf_event_attr *attr, FILE *fp)
+>  {
+>  	struct branch_stack *br = sample->branch_stack;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	struct addr_location alf, alt;
+>  	u64 i, from, to;
+>  	int printed = 0;
+> @@ -838,8 +841,8 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+>  
+>  		memset(&alf, 0, sizeof(alf));
+>  		memset(&alt, 0, sizeof(alt));
+> -		from = br->entries[i].from;
+> -		to   = br->entries[i].to;
+> +		from = entries[i].from;
+> +		to   = entries[i].to;
+>  
+>  		if (thread__find_map_fb(thread, sample->cpumode, from, &alf) &&
+>  		    !alf.map->dso->adjust_symbols)
+> @@ -862,10 +865,10 @@ static int perf_sample__fprintf_brstackoff(struct perf_sample *sample,
+>  			printed += fprintf(fp, ")");
+>  		}
+>  		printed += fprintf(fp, "/%c/%c/%c/%d ",
+> -			mispred_str(br->entries + i),
+> -			br->entries[i].flags.in_tx ? 'X' : '-',
+> -			br->entries[i].flags.abort ? 'A' : '-',
+> -			br->entries[i].flags.cycles);
+> +			mispred_str(entries + i),
+> +			entries[i].flags.in_tx ? 'X' : '-',
+> +			entries[i].flags.abort ? 'A' : '-',
+> +			entries[i].flags.cycles);
+>  	}
+>  
+>  	return printed;
+> @@ -1053,6 +1056,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  					    struct machine *machine, FILE *fp)
+>  {
+>  	struct branch_stack *br = sample->branch_stack;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	u64 start, end;
+>  	int i, insn, len, nr, ilen, printed = 0;
+>  	struct perf_insn x;
+> @@ -1073,31 +1077,31 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  	printed += fprintf(fp, "%c", '\n');
+>  
+>  	/* Handle first from jump, of which we don't know the entry. */
+> -	len = grab_bb(buffer, br->entries[nr-1].from,
+> -			br->entries[nr-1].from,
+> +	len = grab_bb(buffer, entries[nr-1].from,
+> +			entries[nr-1].from,
+>  			machine, thread, &x.is64bit, &x.cpumode, false);
+>  	if (len > 0) {
+> -		printed += ip__fprintf_sym(br->entries[nr - 1].from, thread,
+> +		printed += ip__fprintf_sym(entries[nr - 1].from, thread,
+>  					   x.cpumode, x.cpu, &lastsym, attr, fp);
+> -		printed += ip__fprintf_jump(br->entries[nr - 1].from, &br->entries[nr - 1],
+> +		printed += ip__fprintf_jump(entries[nr - 1].from, &entries[nr - 1],
+>  					    &x, buffer, len, 0, fp, &total_cycles);
+>  		if (PRINT_FIELD(SRCCODE))
+> -			printed += print_srccode(thread, x.cpumode, br->entries[nr - 1].from);
+> +			printed += print_srccode(thread, x.cpumode, entries[nr - 1].from);
+>  	}
+>  
+>  	/* Print all blocks */
+>  	for (i = nr - 2; i >= 0; i--) {
+> -		if (br->entries[i].from || br->entries[i].to)
+> +		if (entries[i].from || entries[i].to)
+>  			pr_debug("%d: %" PRIx64 "-%" PRIx64 "\n", i,
+> -				 br->entries[i].from,
+> -				 br->entries[i].to);
+> -		start = br->entries[i + 1].to;
+> -		end   = br->entries[i].from;
+> +				 entries[i].from,
+> +				 entries[i].to);
+> +		start = entries[i + 1].to;
+> +		end   = entries[i].from;
+>  
+>  		len = grab_bb(buffer, start, end, machine, thread, &x.is64bit, &x.cpumode, false);
+>  		/* Patch up missing kernel transfers due to ring filters */
+>  		if (len == -ENXIO && i > 0) {
+> -			end = br->entries[--i].from;
+> +			end = entries[--i].from;
+>  			pr_debug("\tpatching up to %" PRIx64 "-%" PRIx64 "\n", start, end);
+>  			len = grab_bb(buffer, start, end, machine, thread, &x.is64bit, &x.cpumode, false);
+>  		}
+> @@ -1110,7 +1114,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  
+>  			printed += ip__fprintf_sym(ip, thread, x.cpumode, x.cpu, &lastsym, attr, fp);
+>  			if (ip == end) {
+> -				printed += ip__fprintf_jump(ip, &br->entries[i], &x, buffer + off, len - off, ++insn, fp,
+> +				printed += ip__fprintf_jump(ip, &entries[i], &x, buffer + off, len - off, ++insn, fp,
+>  							    &total_cycles);
+>  				if (PRINT_FIELD(SRCCODE))
+>  					printed += print_srccode(thread, x.cpumode, ip);
+> @@ -1134,9 +1138,9 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  	 * Hit the branch? In this case we are already done, and the target
+>  	 * has not been executed yet.
+>  	 */
+> -	if (br->entries[0].from == sample->ip)
+> +	if (entries[0].from == sample->ip)
+>  		goto out;
+> -	if (br->entries[0].flags.abort)
+> +	if (entries[0].flags.abort)
+>  		goto out;
+>  
+>  	/*
+> @@ -1147,7 +1151,7 @@ static int perf_sample__fprintf_brstackinsn(struct perf_sample *sample,
+>  	 * between final branch and sample. When this happens just
+>  	 * continue walking after the last TO until we hit a branch.
+>  	 */
+> -	start = br->entries[0].to;
+> +	start = entries[0].to;
+>  	end = sample->ip;
+>  	if (end < start) {
+>  		/* Missing jump. Scan 128 bytes for the next branch */
+> diff --git a/tools/perf/tests/sample-parsing.c b/tools/perf/tests/sample-parsing.c
+> index 2762e1155238..14239e472187 100644
+> --- a/tools/perf/tests/sample-parsing.c
+> +++ b/tools/perf/tests/sample-parsing.c
+> @@ -99,6 +99,7 @@ static bool samples_same(const struct perf_sample *s1,
+>  
+>  	if (type & PERF_SAMPLE_BRANCH_STACK) {
+>  		COMP(branch_stack->nr);
+> +		COMP(branch_stack->hw_idx);
+>  		for (i = 0; i < s1->branch_stack->nr; i++)
+>  			MCOMP(branch_stack->entries[i]);
+>  	}
+> @@ -186,7 +187,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+>  		u64 data[64];
+>  	} branch_stack = {
+>  		/* 1 branch_entry */
+> -		.data = {1, 211, 212, 213},
+> +		.data = {1, -1ULL, 211, 212, 213},
+>  	};
+>  	u64 regs[64];
+>  	const u64 raw_data[] = {0x123456780a0b0c0dULL, 0x1102030405060708ULL};
+> @@ -208,6 +209,7 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+>  		.transaction	= 112,
+>  		.raw_data	= (void *)raw_data,
+>  		.callchain	= &callchain.callchain,
+> +		.no_hw_idx      = false,
+>  		.branch_stack	= &branch_stack.branch_stack,
+>  		.user_regs	= {
+>  			.abi	= PERF_SAMPLE_REGS_ABI_64,
+> @@ -244,6 +246,9 @@ static int do_test(u64 sample_type, u64 sample_regs, u64 read_format)
+>  	if (sample_type & PERF_SAMPLE_REGS_INTR)
+>  		evsel.core.attr.sample_regs_intr = sample_regs;
+>  
+> +	if (sample_type & PERF_SAMPLE_BRANCH_STACK)
+> +		evsel.core.attr.branch_sample_type |= PERF_SAMPLE_BRANCH_HW_INDEX;
+> +
+>  	for (i = 0; i < sizeof(regs); i++)
+>  		*(i + (u8 *)regs) = i & 0xfe;
+>  
+> diff --git a/tools/perf/util/branch.h b/tools/perf/util/branch.h
+> index 88e00d268f6f..7fc9fa0dc361 100644
+> --- a/tools/perf/util/branch.h
+> +++ b/tools/perf/util/branch.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/stddef.h>
+>  #include <linux/perf_event.h>
+>  #include <linux/types.h>
+> +#include "event.h"
+>  
+>  struct branch_flags {
+>  	u64 mispred:1;
+> @@ -39,9 +40,30 @@ struct branch_entry {
+>  
+>  struct branch_stack {
+>  	u64			nr;
+> +	u64			hw_idx;
+>  	struct branch_entry	entries[0];
+>  };
+>  
+> +/*
+> + * The hw_idx is only available when PERF_SAMPLE_BRANCH_HW_INDEX is applied.
+> + * Otherwise, the output format of a sample with branch stack is
+> + * struct branch_stack {
+> + *	u64			nr;
+> + *	struct branch_entry	entries[0];
+> + * }
+> + * Check whether the hw_idx is available,
+> + * and return the corresponding pointer of entries[0].
+> + */
+> +inline struct branch_entry *get_branch_entry(struct perf_sample *sample)
+> +{
+> +	u64 *entry = (u64 *)sample->branch_stack;
+> +
+> +	entry++;
+> +	if (sample->no_hw_idx)
+> +		return (struct branch_entry *)entry;
+> +	return (struct branch_entry *)(++entry);
+> +}
+> +
+>  struct branch_type_stat {
+>  	bool	branch_to;
+>  	u64	counts[PERF_BR_MAX];
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 5471045ebf5c..e697fe1c67b3 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -1202,6 +1202,7 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
+>  	if (etm->synth_opts.last_branch) {
+>  		dummy_bs = (struct dummy_branch_stack){
+>  			.nr = 1,
+> +			.hw_idx = -1ULL,
+>  			.entries = {
+>  				.from = sample.ip,
+>  				.to = sample.addr,
+> diff --git a/tools/perf/util/event.h b/tools/perf/util/event.h
+> index 85223159737c..3cda40a2fafc 100644
+> --- a/tools/perf/util/event.h
+> +++ b/tools/perf/util/event.h
+> @@ -139,6 +139,7 @@ struct perf_sample {
+>  	u16 insn_len;
+>  	u8  cpumode;
+>  	u16 misc;
+> +	bool no_hw_idx;		/* No hw_idx collected in branch_stack */
+>  	char insn[MAX_INSN];
+>  	void *raw_data;
+>  	struct ip_callchain *callchain;
+> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+> index c8dc4450884c..05883a45de5b 100644
+> --- a/tools/perf/util/evsel.c
+> +++ b/tools/perf/util/evsel.c
+> @@ -2169,7 +2169,12 @@ int perf_evsel__parse_sample(struct evsel *evsel, union perf_event *event,
+>  
+>  		if (data->branch_stack->nr > max_branch_nr)
+>  			return -EFAULT;
+> +
+>  		sz = data->branch_stack->nr * sizeof(struct branch_entry);
+> +		if (perf_evsel__has_branch_hw_idx(evsel))
+> +			sz += sizeof(u64);
+> +		else
+> +			data->no_hw_idx = true;
+>  		OVERFLOW_CHECK(array, sz, max_size);
+>  		array = (void *)array + sz;
+>  	}
+> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+> index dc14f4a823cd..99a0cb60c556 100644
+> --- a/tools/perf/util/evsel.h
+> +++ b/tools/perf/util/evsel.h
+> @@ -389,6 +389,11 @@ static inline bool perf_evsel__has_branch_callstack(const struct evsel *evsel)
+>  	return evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_CALL_STACK;
+>  }
+>  
+> +static inline bool perf_evsel__has_branch_hw_idx(const struct evsel *evsel)
+> +{
+> +	return evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX;
+> +}
+> +
+>  static inline bool evsel__has_callchain(const struct evsel *evsel)
+>  {
+>  	return (evsel->core.attr.sample_type & PERF_SAMPLE_CALLCHAIN) != 0;
+> diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+> index ca5a8f4d007e..808ca27bd5cf 100644
+> --- a/tools/perf/util/hist.c
+> +++ b/tools/perf/util/hist.c
+> @@ -2584,9 +2584,10 @@ void hist__account_cycles(struct branch_stack *bs, struct addr_location *al,
+>  			  u64 *total_cycles)
+>  {
+>  	struct branch_info *bi;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  
+>  	/* If we have branch cycles always annotate them. */
+> -	if (bs && bs->nr && bs->entries[0].flags.cycles) {
+> +	if (bs && bs->nr && entries[0].flags.cycles) {
+>  		int i;
+>  
+>  		bi = sample__resolve_bstack(sample, al);
+> diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+> index 33cf8928cf05..23c8289c2472 100644
+> --- a/tools/perf/util/intel-pt.c
+> +++ b/tools/perf/util/intel-pt.c
+> @@ -1295,6 +1295,7 @@ static int intel_pt_synth_branch_sample(struct intel_pt_queue *ptq)
+>  	struct perf_sample sample = { .ip = 0, };
+>  	struct dummy_branch_stack {
+>  		u64			nr;
+> +		u64			hw_idx;
+>  		struct branch_entry	entries;
+>  	} dummy_bs;
+>  
+> @@ -1316,6 +1317,7 @@ static int intel_pt_synth_branch_sample(struct intel_pt_queue *ptq)
+>  	if (pt->synth_opts.last_branch && sort__mode == SORT_MODE__BRANCH) {
+>  		dummy_bs = (struct dummy_branch_stack){
+>  			.nr = 1,
+> +			.hw_idx = -1ULL,
+>  			.entries = {
+>  				.from = sample.ip,
+>  				.to = sample.addr,
+> diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> index c8c5410315e8..62522b76a924 100644
+> --- a/tools/perf/util/machine.c
+> +++ b/tools/perf/util/machine.c
+> @@ -2083,15 +2083,16 @@ struct branch_info *sample__resolve_bstack(struct perf_sample *sample,
+>  {
+>  	unsigned int i;
+>  	const struct branch_stack *bs = sample->branch_stack;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	struct branch_info *bi = calloc(bs->nr, sizeof(struct branch_info));
+>  
+>  	if (!bi)
+>  		return NULL;
+>  
+>  	for (i = 0; i < bs->nr; i++) {
+> -		ip__resolve_ams(al->thread, &bi[i].to, bs->entries[i].to);
+> -		ip__resolve_ams(al->thread, &bi[i].from, bs->entries[i].from);
+> -		bi[i].flags = bs->entries[i].flags;
+> +		ip__resolve_ams(al->thread, &bi[i].to, entries[i].to);
+> +		ip__resolve_ams(al->thread, &bi[i].from, entries[i].from);
+> +		bi[i].flags = entries[i].flags;
+>  	}
+>  	return bi;
+>  }
+> @@ -2187,6 +2188,7 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+>  	/* LBR only affects the user callchain */
+>  	if (i != chain_nr) {
+>  		struct branch_stack *lbr_stack = sample->branch_stack;
+> +		struct branch_entry *entries = get_branch_entry(sample);
+>  		int lbr_nr = lbr_stack->nr, j, k;
+>  		bool branch;
+>  		struct branch_flags *flags;
+> @@ -2212,31 +2214,29 @@ static int resolve_lbr_callchain_sample(struct thread *thread,
+>  					ip = chain->ips[j];
+>  				else if (j > i + 1) {
+>  					k = j - i - 2;
+> -					ip = lbr_stack->entries[k].from;
+> +					ip = entries[k].from;
+>  					branch = true;
+> -					flags = &lbr_stack->entries[k].flags;
+> +					flags = &entries[k].flags;
+>  				} else {
+> -					ip = lbr_stack->entries[0].to;
+> +					ip = entries[0].to;
+>  					branch = true;
+> -					flags = &lbr_stack->entries[0].flags;
+> -					branch_from =
+> -						lbr_stack->entries[0].from;
+> +					flags = &entries[0].flags;
+> +					branch_from = entries[0].from;
+>  				}
+>  			} else {
+>  				if (j < lbr_nr) {
+>  					k = lbr_nr - j - 1;
+> -					ip = lbr_stack->entries[k].from;
+> +					ip = entries[k].from;
+>  					branch = true;
+> -					flags = &lbr_stack->entries[k].flags;
+> +					flags = &entries[k].flags;
+>  				}
+>  				else if (j > lbr_nr)
+>  					ip = chain->ips[i + 1 - (j - lbr_nr)];
+>  				else {
+> -					ip = lbr_stack->entries[0].to;
+> +					ip = entries[0].to;
+>  					branch = true;
+> -					flags = &lbr_stack->entries[0].flags;
+> -					branch_from =
+> -						lbr_stack->entries[0].from;
+> +					flags = &entries[0].flags;
+> +					branch_from = entries[0].from;
+>  				}
+>  			}
+>  
+> @@ -2283,6 +2283,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+>  					    int max_stack)
+>  {
+>  	struct branch_stack *branch = sample->branch_stack;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	struct ip_callchain *chain = sample->callchain;
+>  	int chain_nr = 0;
+>  	u8 cpumode = PERF_RECORD_MISC_USER;
+> @@ -2330,7 +2331,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+>  
+>  		for (i = 0; i < nr; i++) {
+>  			if (callchain_param.order == ORDER_CALLEE) {
+> -				be[i] = branch->entries[i];
+> +				be[i] = entries[i];
+>  
+>  				if (chain == NULL)
+>  					continue;
+> @@ -2349,7 +2350,7 @@ static int thread__resolve_callchain_sample(struct thread *thread,
+>  				    be[i].from >= chain->ips[first_call] - 8)
+>  					first_call++;
+>  			} else
+> -				be[i] = branch->entries[branch->nr - i - 1];
+> +				be[i] = entries[branch->nr - i - 1];
+>  		}
+>  
+>  		memset(iter, 0, sizeof(struct iterations) * nr);
+> diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
+> index 80ca5d0ab7fe..02b6c87c5abe 100644
+> --- a/tools/perf/util/scripting-engines/trace-event-python.c
+> +++ b/tools/perf/util/scripting-engines/trace-event-python.c
+> @@ -464,6 +464,7 @@ static PyObject *python_process_brstack(struct perf_sample *sample,
+>  					struct thread *thread)
+>  {
+>  	struct branch_stack *br = sample->branch_stack;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	PyObject *pylist;
+>  	u64 i;
+>  
+> @@ -484,28 +485,28 @@ static PyObject *python_process_brstack(struct perf_sample *sample,
+>  			Py_FatalError("couldn't create Python dictionary");
+>  
+>  		pydict_set_item_string_decref(pyelem, "from",
+> -		    PyLong_FromUnsignedLongLong(br->entries[i].from));
+> +		    PyLong_FromUnsignedLongLong(entries[i].from));
+>  		pydict_set_item_string_decref(pyelem, "to",
+> -		    PyLong_FromUnsignedLongLong(br->entries[i].to));
+> +		    PyLong_FromUnsignedLongLong(entries[i].to));
+>  		pydict_set_item_string_decref(pyelem, "mispred",
+> -		    PyBool_FromLong(br->entries[i].flags.mispred));
+> +		    PyBool_FromLong(entries[i].flags.mispred));
+>  		pydict_set_item_string_decref(pyelem, "predicted",
+> -		    PyBool_FromLong(br->entries[i].flags.predicted));
+> +		    PyBool_FromLong(entries[i].flags.predicted));
+>  		pydict_set_item_string_decref(pyelem, "in_tx",
+> -		    PyBool_FromLong(br->entries[i].flags.in_tx));
+> +		    PyBool_FromLong(entries[i].flags.in_tx));
+>  		pydict_set_item_string_decref(pyelem, "abort",
+> -		    PyBool_FromLong(br->entries[i].flags.abort));
+> +		    PyBool_FromLong(entries[i].flags.abort));
+>  		pydict_set_item_string_decref(pyelem, "cycles",
+> -		    PyLong_FromUnsignedLongLong(br->entries[i].flags.cycles));
+> +		    PyLong_FromUnsignedLongLong(entries[i].flags.cycles));
+>  
+>  		thread__find_map_fb(thread, sample->cpumode,
+> -				    br->entries[i].from, &al);
+> +				    entries[i].from, &al);
+>  		dsoname = get_dsoname(al.map);
+>  		pydict_set_item_string_decref(pyelem, "from_dsoname",
+>  					      _PyUnicode_FromString(dsoname));
+>  
+>  		thread__find_map_fb(thread, sample->cpumode,
+> -				    br->entries[i].to, &al);
+> +				    entries[i].to, &al);
+>  		dsoname = get_dsoname(al.map);
+>  		pydict_set_item_string_decref(pyelem, "to_dsoname",
+>  					      _PyUnicode_FromString(dsoname));
+> @@ -561,6 +562,7 @@ static PyObject *python_process_brstacksym(struct perf_sample *sample,
+>  					   struct thread *thread)
+>  {
+>  	struct branch_stack *br = sample->branch_stack;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	PyObject *pylist;
+>  	u64 i;
+>  	char bf[512];
+> @@ -581,22 +583,22 @@ static PyObject *python_process_brstacksym(struct perf_sample *sample,
+>  			Py_FatalError("couldn't create Python dictionary");
+>  
+>  		thread__find_symbol_fb(thread, sample->cpumode,
+> -				       br->entries[i].from, &al);
+> +				       entries[i].from, &al);
+>  		get_symoff(al.sym, &al, true, bf, sizeof(bf));
+>  		pydict_set_item_string_decref(pyelem, "from",
+>  					      _PyUnicode_FromString(bf));
+>  
+>  		thread__find_symbol_fb(thread, sample->cpumode,
+> -				       br->entries[i].to, &al);
+> +				       entries[i].to, &al);
+>  		get_symoff(al.sym, &al, true, bf, sizeof(bf));
+>  		pydict_set_item_string_decref(pyelem, "to",
+>  					      _PyUnicode_FromString(bf));
+>  
+> -		get_br_mspred(&br->entries[i].flags, bf, sizeof(bf));
+> +		get_br_mspred(&entries[i].flags, bf, sizeof(bf));
+>  		pydict_set_item_string_decref(pyelem, "pred",
+>  					      _PyUnicode_FromString(bf));
+>  
+> -		if (br->entries[i].flags.in_tx) {
+> +		if (entries[i].flags.in_tx) {
+>  			pydict_set_item_string_decref(pyelem, "in_tx",
+>  					      _PyUnicode_FromString("X"));
+>  		} else {
+> @@ -604,7 +606,7 @@ static PyObject *python_process_brstacksym(struct perf_sample *sample,
+>  					      _PyUnicode_FromString("-"));
+>  		}
+>  
+> -		if (br->entries[i].flags.abort) {
+> +		if (entries[i].flags.abort) {
+>  			pydict_set_item_string_decref(pyelem, "abort",
+>  					      _PyUnicode_FromString("A"));
+>  		} else {
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index d0d7d25b23e3..dab985e3f136 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1007,6 +1007,7 @@ static void callchain__lbr_callstack_printf(struct perf_sample *sample)
+>  {
+>  	struct ip_callchain *callchain = sample->callchain;
+>  	struct branch_stack *lbr_stack = sample->branch_stack;
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	u64 kernel_callchain_nr = callchain->nr;
+>  	unsigned int i;
+>  
+> @@ -1043,10 +1044,10 @@ static void callchain__lbr_callstack_printf(struct perf_sample *sample)
+>  			       i, callchain->ips[i]);
+>  
+>  		printf("..... %2d: %016" PRIx64 "\n",
+> -		       (int)(kernel_callchain_nr), lbr_stack->entries[0].to);
+> +		       (int)(kernel_callchain_nr), entries[0].to);
+>  		for (i = 0; i < lbr_stack->nr; i++)
+>  			printf("..... %2d: %016" PRIx64 "\n",
+> -			       (int)(i + kernel_callchain_nr + 1), lbr_stack->entries[i].from);
+> +			       (int)(i + kernel_callchain_nr + 1), entries[i].from);
+>  	}
+>  }
+>  
+> @@ -1068,6 +1069,7 @@ static void callchain__printf(struct evsel *evsel,
+>  
+>  static void branch_stack__printf(struct perf_sample *sample, bool callstack)
+>  {
+> +	struct branch_entry *entries = get_branch_entry(sample);
+>  	uint64_t i;
+>  
+>  	printf("%s: nr:%" PRIu64 "\n",
+> @@ -1075,7 +1077,7 @@ static void branch_stack__printf(struct perf_sample *sample, bool callstack)
+>  		sample->branch_stack->nr);
+>  
+>  	for (i = 0; i < sample->branch_stack->nr; i++) {
+> -		struct branch_entry *e = &sample->branch_stack->entries[i];
+> +		struct branch_entry *e = &entries[i];
+>  
+>  		if (!callstack) {
+>  			printf("..... %2"PRIu64": %016" PRIx64 " -> %016" PRIx64 " %hu cycles %s%s%s%s %x\n",
+> diff --git a/tools/perf/util/synthetic-events.c b/tools/perf/util/synthetic-events.c
+> index c423298fe62d..dd3e6f43fb86 100644
+> --- a/tools/perf/util/synthetic-events.c
+> +++ b/tools/perf/util/synthetic-events.c
+> @@ -1183,7 +1183,8 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+>  
+>  	if (type & PERF_SAMPLE_BRANCH_STACK) {
+>  		sz = sample->branch_stack->nr * sizeof(struct branch_entry);
+> -		sz += sizeof(u64);
+> +		/* nr, hw_idx */
+> +		sz += 2 * sizeof(u64);
+>  		result += sz;
+>  	}
+>  
+> @@ -1344,7 +1345,8 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type, u64 read_fo
+>  
+>  	if (type & PERF_SAMPLE_BRANCH_STACK) {
+>  		sz = sample->branch_stack->nr * sizeof(struct branch_entry);
+> -		sz += sizeof(u64);
+> +		/* nr, hw_idx */
+> +		sz += 2 * sizeof(u64);
+>  		memcpy(array, sample->branch_stack, sz);
+>  		array = (void *)array + sz;
+>  	}
+> -- 
+> 2.17.1
+> 
 
->
-> > +
-> > +     /*
-> > +      * Set if the algorithm includes a copy of the IV (last 8 bytes)
-> > +      * in the AAD buffer and does include it when calculating the ICV
-> > +      */
-> > +     unsigned int auth_aad_iv : 1;
-> >  };
-> >
-> >  struct cipher_test_suite {
-> > @@ -2167,14 +2173,20 @@ struct aead_extra_tests_ctx {
-> >   * here means the full ciphertext including the authentication tag.  The
-> >   * authentication tag (and hence also the ciphertext) is assumed to be nonempty.
-> >   */
-> > -static void mutate_aead_message(struct aead_testvec *vec, bool esp_aad)
-> > +static void mutate_aead_message(struct aead_testvec *vec,
-> > +                             const struct aead_test_suite *suite)
-> >  {
-> > -     const unsigned int aad_tail_size = esp_aad ? 8 : 0;
-> > +     const unsigned int aad_ivsize = 8;
->
-> We should use the algorithm's actual IV size instead of hard-coding 8 bytes.
+-- 
 
-Yes, I was following the original code example but I agree it would be
-better to pass the IV size.
-
->
-> > +     const unsigned int aad_tail_size = suite->skip_aad_iv ? aad_ivsize : 0;
-> >       const unsigned int authsize = vec->clen - vec->plen;
-> >
-> >       if (prandom_u32() % 2 == 0 && vec->alen > aad_tail_size) {
-> >                /* Mutate the AAD */
-> >               flip_random_bit((u8 *)vec->assoc, vec->alen - aad_tail_size);
-> > +             if (suite->auth_aad_iv)
-> > +                     memcpy((u8 *)vec->iv,
-> > +                            (vec->assoc + vec->alen - aad_ivsize),
-> > +                            aad_ivsize);
->
-> Why sync the IV copies here?  When 'auth_aad_iv', we assume the copy of the IV
-> in the AAD (which was just corrupted) is authenticated.  So we already know that
-> decryption should fail, regardless of the other IV copy.
-
-Nope. We know there needs to be a copy of the IV in the AAD and we know the IV
-should be included in calculating in the authentication tag. We don't know which
-copy of the IV will be used by the implementation.
-
-Case in point - the ccree driver actually currently uses the copy of
-the IV passed via
-req->iv for calculating the IV contribution to the authentication tag,
-not the one in the AAD.
-
-And what happens then if you don't do this copy than is that you get
-an unexpected
-decryption success where the test expects failure, because the driver
-fed the HW the
-none mutated copy of the IV from req->iv and not the mutated copy
-found in the AAD.
-
-> Also, the code doesn't currently mutate vec->iv for any AEAD.  So mutating it
-> for one specific algorithm is a bit odd.  IMO, it would make more sense to do a
-> separate patch later that mutates vec->iv for all AEADs.
-
-That's fine, in that case we should avoid mutating either copies of
-the IV at all
-in the case of RFC 4543 just as we do with RFC 4106 and friends - as
-indeed your patch
-does.
-
-> >               if (prandom_u32() % 2 == 0)
-> >                       return;
-> >       }
-> > @@ -2208,6 +2220,10 @@ static void generate_aead_message(struct aead_request *req,
-> >       /* Generate the AAD. */
-> >       generate_random_bytes((u8 *)vec->assoc, vec->alen);
-> >
-> > +     if (suite->auth_aad_iv && (vec->alen > ivsize))
-> > +             memcpy(((u8 *)vec->assoc + vec->alen - ivsize), vec->iv,
-> > +                    ivsize);
->
-> Shouldn't this be >= ivsize, not > ivsize?
-Indeed.
-
-> And doesn't the IV need to be synced
-> in both the skip_aad_iv and auth_aad_iv cases?
-
-Nope, because in the skip_aad_iv case we never mutate the IV, so no
-point in copying.
-
->
-> There are also unnecessary parentheses here; the memcpy() could be one line.
->
->
-> How about the following patch instead?
-
-Works for me.
-
-Tested-by: Gilad Ben-Yossef <gilad@benyossef.com?
-
-Thanks!
-Gilad
+- Arnaldo
