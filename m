@@ -2,103 +2,305 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B091C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F894C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80642166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZS4i3XB5"
+	by mail.kernel.org (Postfix) with ESMTP id 49A4520866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:54:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbgCDHsv (ORCPT
+        id S1728753AbgCDHyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:48:51 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28367 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727176AbgCDHsv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:48:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583308130;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=VHfVr/tC6mnm30TtswDnaZCgkdF5cd/cEuR4XHAYi4k=;
-        b=ZS4i3XB5kv2K/meeUGmtOB9Bz22zTb3Ar2gAte/8fhDO9+SyVZBMQLmG9tfe+KhwcnmwUl
-        qgot3LxBKoahAaVECoQI+LEyAV5KlyC3iDJJzZIysDgoKW+QRFiAEEYsfT8/aItgoPg8tF
-        P9/bfvnj7ccYvr8KWV8JCMdRSx00Zrg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-fXX0MZD-OeewdNcRAR5oGg-1; Wed, 04 Mar 2020 02:48:48 -0500
-X-MC-Unique: fXX0MZD-OeewdNcRAR5oGg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1483C8018A6;
-        Wed,  4 Mar 2020 07:48:45 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-150.ams2.redhat.com [10.36.116.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EBD0891D6E;
-        Wed,  4 Mar 2020 07:48:41 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 2D00B17506; Wed,  4 Mar 2020 08:48:41 +0100 (CET)
-Date:   Wed, 4 Mar 2020 08:48:41 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     David Stevens <stevensd@chromium.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        virtio-dev@lists.oasis-open.org
-Subject: Re: [PATCH v2 1/4] dma-buf: add support for virtio exported objects
-Message-ID: <20200304074841.gbfzhxorta3pfk4f@sirius.home.kraxel.org>
-References: <20200302121524.7543-1-stevensd@chromium.org>
- <20200302121524.7543-2-stevensd@chromium.org>
+        Wed, 4 Mar 2020 02:54:11 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:11143 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728319AbgCDHyK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 02:54:10 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 2A2BEB725D2ADD41E334;
+        Wed,  4 Mar 2020 15:54:03 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Mar 2020
+ 15:53:56 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <axboe@kernel.dk>, <viro@zeniv.linux.org.uk>
+CC:     <io-uring@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] io_uring: Fix unused function warnings
+Date:   Wed, 4 Mar 2020 15:53:52 +0800
+Message-ID: <20200304075352.31132-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302121524.7543-2-stevensd@chromium.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 09:15:21PM +0900, David Stevens wrote:
-> This change adds a new dma-buf operation that allows dma-bufs to be used
-> by virtio drivers to share exported objects. The new operation allows
-> the importing driver to query the exporting driver for the UUID which
-> identifies the underlying exported object.
-> 
-> Signed-off-by: David Stevens <stevensd@chromium.org>
-> ---
->  drivers/dma-buf/dma-buf.c | 14 ++++++++++++++
->  include/linux/dma-buf.h   | 22 ++++++++++++++++++++++
->  2 files changed, 36 insertions(+)
-> 
-> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> index d4097856c86b..a04632284ec2 100644
-> --- a/drivers/dma-buf/dma-buf.c
-> +++ b/drivers/dma-buf/dma-buf.c
-> @@ -1158,6 +1158,20 @@ void dma_buf_vunmap(struct dma_buf *dmabuf, void *vaddr)
->  }
->  EXPORT_SYMBOL_GPL(dma_buf_vunmap);
->  
-> +#ifdef CONFIG_VIRTIO
-> +int dma_buf_get_uuid(struct dma_buf *dmabuf, uuid_t *uuid)
+If CONFIG_NET is not set, gcc warns:
 
-Hmm, I think I would drop the #ifdef
+fs/io_uring.c:3110:12: warning: io_setup_async_msg defined but not used [-Wunused-function]
+ static int io_setup_async_msg(struct io_kiocb *req,
+            ^~~~~~~~~~~~~~~~~~
 
-cheers,
-  Gerd
+There are many funcions wraped by CONFIG_NET, move them
+together to simplify code, also fix this warning.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/io_uring.c | 98 ++++++++++++++++++++++++++++++++++-------------------------
+ 1 file changed, 57 insertions(+), 41 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index b7c178f9..89cdc6e 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -3420,6 +3420,7 @@ static int io_sync_file_range(struct io_kiocb *req, struct io_kiocb **nxt,
+ 	return 0;
+ }
+ 
++#if defined(CONFIG_NET)
+ static int io_setup_async_msg(struct io_kiocb *req,
+ 			      struct io_async_msghdr *kmsg)
+ {
+@@ -3437,7 +3438,6 @@ static int io_setup_async_msg(struct io_kiocb *req,
+ 
+ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+-#if defined(CONFIG_NET)
+ 	struct io_sr_msg *sr = &req->sr_msg;
+ 	struct io_async_ctx *io = req->io;
+ 	int ret;
+@@ -3463,15 +3463,11 @@ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	if (!ret)
+ 		req->flags |= REQ_F_NEED_CLEANUP;
+ 	return ret;
+-#else
+-	return -EOPNOTSUPP;
+-#endif
+ }
+ 
+ static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		      bool force_nonblock)
+ {
+-#if defined(CONFIG_NET)
+ 	struct io_async_msghdr *kmsg = NULL;
+ 	struct socket *sock;
+ 	int ret;
+@@ -3525,15 +3521,11 @@ static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		req_set_fail_links(req);
+ 	io_put_req_find_next(req, nxt);
+ 	return 0;
+-#else
+-	return -EOPNOTSUPP;
+-#endif
+ }
+ 
+ static int io_send(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		   bool force_nonblock)
+ {
+-#if defined(CONFIG_NET)
+ 	struct socket *sock;
+ 	int ret;
+ 
+@@ -3576,9 +3568,6 @@ static int io_send(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		req_set_fail_links(req);
+ 	io_put_req_find_next(req, nxt);
+ 	return 0;
+-#else
+-	return -EOPNOTSUPP;
+-#endif
+ }
+ 
+ static int __io_recvmsg_copy_hdr(struct io_kiocb *req, struct io_async_ctx *io)
+@@ -3691,7 +3680,6 @@ static struct io_buffer *io_recv_buffer_select(struct io_kiocb *req,
+ static int io_recvmsg_prep(struct io_kiocb *req,
+ 			   const struct io_uring_sqe *sqe)
+ {
+-#if defined(CONFIG_NET)
+ 	struct io_sr_msg *sr = &req->sr_msg;
+ 	struct io_async_ctx *io = req->io;
+ 	int ret;
+@@ -3716,15 +3704,11 @@ static int io_recvmsg_prep(struct io_kiocb *req,
+ 	if (!ret)
+ 		req->flags |= REQ_F_NEED_CLEANUP;
+ 	return ret;
+-#else
+-	return -EOPNOTSUPP;
+-#endif
+ }
+ 
+ static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		      bool force_nonblock)
+ {
+-#if defined(CONFIG_NET)
+ 	struct io_async_msghdr *kmsg = NULL;
+ 	struct socket *sock;
+ 	int ret, cflags = 0;
+@@ -3785,15 +3769,11 @@ static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		req_set_fail_links(req);
+ 	io_put_req_find_next(req, nxt);
+ 	return 0;
+-#else
+-	return -EOPNOTSUPP;
+-#endif
+ }
+ 
+ static int io_recv(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		   bool force_nonblock)
+ {
+-#if defined(CONFIG_NET)
+ 	struct io_buffer *kbuf = NULL;
+ 	struct socket *sock;
+ 	int ret, cflags = 0;
+@@ -3850,15 +3830,10 @@ static int io_recv(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		req_set_fail_links(req);
+ 	io_put_req_find_next(req, nxt);
+ 	return 0;
+-#else
+-	return -EOPNOTSUPP;
+-#endif
+ }
+ 
+-
+ static int io_accept_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+-#if defined(CONFIG_NET)
+ 	struct io_accept *accept = &req->accept;
+ 
+ 	if (unlikely(req->ctx->flags & (IORING_SETUP_IOPOLL|IORING_SETUP_SQPOLL)))
+@@ -3870,12 +3845,8 @@ static int io_accept_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	accept->addr_len = u64_to_user_ptr(READ_ONCE(sqe->addr2));
+ 	accept->flags = READ_ONCE(sqe->accept_flags);
+ 	return 0;
+-#else
+-	return -EOPNOTSUPP;
+-#endif
+ }
+ 
+-#if defined(CONFIG_NET)
+ static int __io_accept(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		       bool force_nonblock)
+ {
+@@ -3910,12 +3881,10 @@ static void io_accept_finish(struct io_wq_work **workptr)
+ 	if (nxt)
+ 		io_wq_assign_next(workptr, nxt);
+ }
+-#endif
+ 
+ static int io_accept(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		     bool force_nonblock)
+ {
+-#if defined(CONFIG_NET)
+ 	int ret;
+ 
+ 	ret = __io_accept(req, nxt, force_nonblock);
+@@ -3924,14 +3893,10 @@ static int io_accept(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		return -EAGAIN;
+ 	}
+ 	return 0;
+-#else
+-	return -EOPNOTSUPP;
+-#endif
+ }
+ 
+ static int io_connect_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ {
+-#if defined(CONFIG_NET)
+ 	struct io_connect *conn = &req->connect;
+ 	struct io_async_ctx *io = req->io;
+ 
+@@ -3948,15 +3913,11 @@ static int io_connect_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 
+ 	return move_addr_to_kernel(conn->addr, conn->addr_len,
+ 					&io->connect.address);
+-#else
+-	return -EOPNOTSUPP;
+-#endif
+ }
+ 
+ static int io_connect(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		      bool force_nonblock)
+ {
+-#if defined(CONFIG_NET)
+ 	struct io_async_ctx __io, *io;
+ 	unsigned file_flags;
+ 	int ret;
+@@ -3994,11 +3955,66 @@ static int io_connect(struct io_kiocb *req, struct io_kiocb **nxt,
+ 	io_cqring_add_event(req, ret);
+ 	io_put_req_find_next(req, nxt);
+ 	return 0;
++}
+ #else
++static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
++{
++	return -EOPNOTSUPP;
++}
++
++static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
++		      bool force_nonblock)
++{
+ 	return -EOPNOTSUPP;
+-#endif
+ }
+ 
++static int io_send(struct io_kiocb *req, struct io_kiocb **nxt,
++		   bool force_nonblock)
++{
++	return -EOPNOTSUPP;
++}
++
++static int io_recvmsg_prep(struct io_kiocb *req,
++			   const struct io_uring_sqe *sqe)
++{
++	return -EOPNOTSUPP;
++}
++
++static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
++		      bool force_nonblock)
++{
++	return -EOPNOTSUPP;
++}
++
++static int io_recv(struct io_kiocb *req, struct io_kiocb **nxt,
++		   bool force_nonblock)
++{
++	return -EOPNOTSUPP;
++}
++
++static int io_accept_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
++{
++	return -EOPNOTSUPP;
++}
++
++static int io_accept(struct io_kiocb *req, struct io_kiocb **nxt,
++		     bool force_nonblock)
++{
++	return -EOPNOTSUPP;
++}
++
++static int io_connect_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
++{
++	return -EOPNOTSUPP;
++}
++
++static int io_connect(struct io_kiocb *req, struct io_kiocb **nxt,
++		      bool force_nonblock)
++{
++	return -EOPNOTSUPP;
++}
++#endif
++
+ struct io_poll_table {
+ 	struct poll_table_struct pt;
+ 	struct io_kiocb *req;
+-- 
+2.7.4
+
 
