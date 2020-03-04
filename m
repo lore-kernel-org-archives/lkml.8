@@ -2,138 +2,144 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864ABC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF693C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A34021739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8719721744
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bz7/VMDY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729394AbgCDLID (ORCPT
+        id S1729468AbgCDLIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:08:03 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:45242 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729286AbgCDLIB (ORCPT
+        Wed, 4 Mar 2020 06:08:11 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:34212 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729283AbgCDLIA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:08:01 -0500
-Received: from 79.184.237.41.ipv4.supernova.orange.pl (79.184.237.41) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
- id 2bd8be21abd0c5ba; Wed, 4 Mar 2020 12:07:58 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     madhuparnabhowmik10@gmail.com
-Cc:     pavel@ucw.cz, len.brown@intel.com, gregkh@linuxfoundation.org,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        joel@joelfernandes.org, frextrite@gmail.com,
-        linux-kernel-mentees@lists.linuxfoundation.org, paulmck@kernel.org
-Subject: Re: [PATCH 1/2] drivers: base: power: main.c: Use built-in RCU list checking
-Date:   Wed, 04 Mar 2020 12:07:58 +0100
-Message-ID: <1643853.WSYDh8IRHD@kreacher>
-In-Reply-To: <20200303194130.24617-1-madhuparnabhowmik10@gmail.com>
-References: <20200303194130.24617-1-madhuparnabhowmik10@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+        Wed, 4 Mar 2020 06:08:00 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024B46vf167257;
+        Wed, 4 Mar 2020 11:07:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2020-01-29;
+ bh=BabazQ5yP//ASrPjsFgmGIuh28CWLBs/R03HwSSNcmU=;
+ b=bz7/VMDYrY9wwas4kpdEkI6DP0kdmz6zQjg+3JR6W3Y92NutFSpqLWKdwwK78y26TUMI
+ 1URPnmKOUJ4Zne2gldyjkOH9pJ36t2KYrb6gglj0edjEXehtjslqIaXqs4d+3JKYaA9S
+ vn28djzQApY5VX8VydTjsHMdrwo9vBvlSBf93+89nWwnNsrxEXh3YRXTYd6QR983W/aK
+ rAviWa6EkNR7f9eDQ5eNlJwn+ZjPuW8PbJM9KDrCCPJBuNdH7w/KJz7l51johhyemNHq
+ Ua+yFimiQ0BCxb1PxAI0YKgD5p0BrWIw/MSrG4NCsRn+axdwLrekZAEYKadXc0vuKh4x bw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yffwqwm7y-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Mar 2020 11:07:53 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024B3TYt027639;
+        Wed, 4 Mar 2020 11:07:52 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2yg1h0nbv0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Mar 2020 11:07:52 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 024B7pDv012708;
+        Wed, 4 Mar 2020 11:07:51 GMT
+Received: from dhcp-10-175-165-222.vpn.oracle.com (/10.175.165.222)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Mar 2020 03:07:50 -0800
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     brendanhiggins@google.com, frowand.list@gmail.com,
+        gregkh@linuxfoundation.org, shuah@kernel.org
+Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org, Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH v6 kunit-next 2/4] kunit: add log test
+Date:   Wed,  4 Mar 2020 11:07:14 +0000
+Message-Id: <1583320036-442-3-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1583320036-442-1-git-send-email-alan.maguire@oracle.com>
+References: <1583320036-442-1-git-send-email-alan.maguire@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=3 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040086
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9549 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=3
+ phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003040086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tuesday, March 3, 2020 8:41:30 PM CET madhuparnabhowmik10@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> 
-> This patch passes the cond argument to list_for_each_entry_rcu()
-> to fix the following false-positive lockdep warnings:
-> (with CONFIG_PROVE_RCU_LIST = y)
-> 
-> [  330.302784] =============================
-> [  330.302789] WARNING: suspicious RCU usage
-> [  330.302796] 5.6.0-rc1+ #5 Not tainted
-> [  330.302801] -----------------------------
-> [  330.302808] drivers/base/power/main.c:326 RCU-list traversed in non-reader section!!
-> 
-> [  330.303303] =============================
-> [  330.303307] WARNING: suspicious RCU usage
-> [  330.303311] 5.6.0-rc1+ #5 Not tainted
-> [  330.303315] -----------------------------
-> [  330.303319] drivers/base/power/main.c:1698 RCU-list traversed in non-reader section!!
-> 
-> [  331.934969] =============================
-> [  331.934971] WARNING: suspicious RCU usage
-> [  331.934973] 5.6.0-rc1+ #5 Not tainted
-> [  331.934975] -----------------------------
-> [  331.934977] drivers/base/power/main.c:1238 RCU-list traversed in non-reader section!!
-> 
-> [  332.467772] WARNING: suspicious RCU usage
-> [  332.467775] 5.6.0-rc1+ #5 Not tainted
-> [  332.467775] -----------------------------
-> [  332.467778] drivers/base/power/main.c:269 RCU-list traversed in non-reader section!!
-> 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
-> ---
->  drivers/base/power/main.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-> index 0e99a760aebd..6d1dee7051eb 100644
-> --- a/drivers/base/power/main.c
-> +++ b/drivers/base/power/main.c
-> @@ -40,6 +40,10 @@
->  
->  typedef int (*pm_callback_t)(struct device *);
->  
-> +#define list_for_each_entry_rcu_locked(pos, head, member) \
-> +	list_for_each_entry_rcu(pos, head, member, \
-> +			device_links_read_lock_held())
-> +
->  /*
->   * The entries in the dpm_list list are in a depth first order, simply
->   * because children are guaranteed to be discovered after parents, and
-> @@ -266,7 +270,7 @@ static void dpm_wait_for_suppliers(struct device *dev, bool async)
->  	 * callbacks freeing the link objects for the links in the list we're
->  	 * walking.
->  	 */
-> -	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
-> +	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
->  		if (READ_ONCE(link->status) != DL_STATE_DORMANT)
->  			dpm_wait(link->supplier, async);
->  
-> @@ -323,7 +327,7 @@ static void dpm_wait_for_consumers(struct device *dev, bool async)
->  	 * continue instead of trying to continue in parallel with its
->  	 * unregistration).
->  	 */
-> -	list_for_each_entry_rcu(link, &dev->links.consumers, s_node)
-> +	list_for_each_entry_rcu_locked(link, &dev->links.consumers, s_node)
->  		if (READ_ONCE(link->status) != DL_STATE_DORMANT)
->  			dpm_wait(link->consumer, async);
->  
-> @@ -1235,7 +1239,7 @@ static void dpm_superior_set_must_resume(struct device *dev)
->  
->  	idx = device_links_read_lock();
->  
-> -	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node)
-> +	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node)
->  		link->supplier->power.must_resume = true;
->  
->  	device_links_read_unlock(idx);
-> @@ -1695,7 +1699,7 @@ static void dpm_clear_superiors_direct_complete(struct device *dev)
->  
->  	idx = device_links_read_lock();
->  
-> -	list_for_each_entry_rcu(link, &dev->links.suppliers, c_node) {
-> +	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
->  		spin_lock_irq(&link->supplier->power.lock);
->  		link->supplier->power.direct_complete = false;
->  		spin_unlock_irq(&link->supplier->power.lock);
-> 
+the logging test ensures multiple strings logged appear in the
+log string associated with the test when CONFIG_KUNIT_DEBUGFS is
+enabled.
 
-Applied along with the [2/2] (with updated changelogs) as 5.7 material.
+Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Reviewed-by: Brendan Higgins <brendanhiggins@google.com>
+---
+ lib/kunit/kunit-test.c | 41 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
-Thanks!
-
-
-
+diff --git a/lib/kunit/kunit-test.c b/lib/kunit/kunit-test.c
+index aceb5bf..359bc26 100644
+--- a/lib/kunit/kunit-test.c
++++ b/lib/kunit/kunit-test.c
+@@ -329,6 +329,45 @@ static void kunit_resource_test_exit(struct kunit *test)
+ 	.exit = kunit_resource_test_exit,
+ 	.test_cases = kunit_resource_test_cases,
+ };
+-kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite);
++
++static void kunit_log_test(struct kunit *test);
++
++static struct kunit_case kunit_log_test_cases[] = {
++	KUNIT_CASE(kunit_log_test),
++	{}
++};
++
++static struct kunit_suite kunit_log_test_suite = {
++	.name = "kunit-log-test",
++	.test_cases = kunit_log_test_cases,
++};
++
++
++static void kunit_log_test(struct kunit *test)
++{
++	struct kunit_suite *suite = &kunit_log_test_suite;
++
++	kunit_log(KERN_INFO, test, "put this in log.");
++	kunit_log(KERN_INFO, test, "this too.");
++	kunit_log(KERN_INFO, suite, "add to suite log.");
++	kunit_log(KERN_INFO, suite, "along with this.");
++
++#ifdef CONFIG_KUNIT_DEBUGFS
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
++				     strstr(test->log, "put this in log."));
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
++				     strstr(test->log, "this too."));
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
++				     strstr(suite->log, "add to suite log."));
++	KUNIT_EXPECT_NOT_ERR_OR_NULL(test,
++				     strstr(suite->log, "along with this."));
++#else
++	KUNIT_EXPECT_PTR_EQ(test, test->log, (char *)NULL);
++	KUNIT_EXPECT_PTR_EQ(test, suite->log, (char *)NULL);
++#endif
++}
++
++kunit_test_suites(&kunit_try_catch_test_suite, &kunit_resource_test_suite,
++		  &kunit_log_test_suite);
+ 
+ MODULE_LICENSE("GPL v2");
+-- 
+1.8.3.1
 
