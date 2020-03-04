@@ -2,72 +2,103 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E108C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F73EC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E882214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14FFD214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:37:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583321849;
+	bh=EnJ48mBqSJNuN4pur5d9rPaOtktt8Bg5LJqlLCktZOo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JTkWOjmvxe+PQizFO5eTSSHJ3svYp+bwiRJWHdlBDIXDtDwueBdRJ0fhIWssbo/aB
+	 +LKf4OCBJtUiiL0WW/D8Bi4BFt7FYfNz+c/LLWIn0jwYUDFlFnXeJTXhfM1RVCO6IQ
+	 XyeVVKH76VU9teN7uo9AEjqbjhXqGjp4kNKGUjHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387971AbgCDLfN (ORCPT
+        id S2387916AbgCDLh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:35:13 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:10722 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726440AbgCDLfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:35:13 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A00CA218892F29E61954;
-        Wed,  4 Mar 2020 19:35:05 +0800 (CST)
-Received: from localhost (10.173.223.234) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Mar 2020
- 19:34:55 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <ak@it-klinger.de>, <jic23@kernel.org>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <pmeerw@pmeerw.net>,
-        <Jonathan.Cameron@huawei.com>
-CC:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] iio: ping: set pa_laser_ping_cfg in of_ping_match
-Date:   Wed, 4 Mar 2020 19:34:23 +0800
-Message-ID: <20200304113423.26920-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.173.223.234]
-X-CFilter-Loop: Reflected
+        Wed, 4 Mar 2020 06:37:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729261AbgCDLh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 06:37:27 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2311920870;
+        Wed,  4 Mar 2020 11:37:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583321847;
+        bh=EnJ48mBqSJNuN4pur5d9rPaOtktt8Bg5LJqlLCktZOo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SwU1LASd5/2lSKALZC7pvGkWl05Sb1JkPB43thx8zoYj9QZX7F8y2aY0ETGeuF6gi
+         nPzVe6rAksGD/PZ5WXe5/JHK9hSXxEi5A6aFfRfFBx4PxPqJHVFJhFyktiREXlnPBp
+         PuZldeM963PVB6sDwEMgnE3NzwiF8xVWx7E2hSLA=
+Date:   Wed, 4 Mar 2020 20:37:22 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>
+Subject: Re: [PATCH v4] Documentation: bootconfig: Update boot configuration
+ documentation
+Message-Id: <20200304203722.8e8699c2a3e0a979aae091b1@kernel.org>
+In-Reply-To: <ad1e9855-4c64-53bd-7da5-f7cdafe78571@infradead.org>
+References: <158322634266.31847.8245359938993378502.stgit@devnote2>
+        <158322635301.31847.15011454479023637649.stgit@devnote2>
+        <ad1e9855-4c64-53bd-7da5-f7cdafe78571@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pa_laser_ping_cfg should be set in of_ping_match
-instead of pa_ping_cfg.
+Hi Randy,
 
-Fixes: 7bb501f49ddb ("iio: ping: add parallax ping sensors")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/iio/proximity/ping.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks for review and good suggestions!
 
-diff --git a/drivers/iio/proximity/ping.c b/drivers/iio/proximity/ping.c
-index 34aff10..12b893c 100644
---- a/drivers/iio/proximity/ping.c
-+++ b/drivers/iio/proximity/ping.c
-@@ -269,7 +269,7 @@ static const struct iio_chan_spec ping_chan_spec[] = {
- 
- static const struct of_device_id of_ping_match[] = {
- 	{ .compatible = "parallax,ping", .data = &pa_ping_cfg},
--	{ .compatible = "parallax,laserping", .data = &pa_ping_cfg},
-+	{ .compatible = "parallax,laserping", .data = &pa_laser_ping_cfg},
- 	{},
- };
- 
+On Tue, 3 Mar 2020 20:55:39 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
+
+> > +Boot Configuration Syntax
+> > +=========================
+> > +
+> > +The boot configuration syntax is a simple structured key-value. Each key
+> > +consists of dot-connected-words, and key and value are connected by ``=``.
+> > +The value has to be terminated by semi-colon (``;``) or newline (``\n``).
+> >  For array value, array entries are separated by comma (``,``). ::
+> 
+>              values,
+> or just
+>    For an array, its entries are separated by
+
+I like this latter one.
+
+[...]
+> > +Tree Structured Key
+> > +-------------------
+> >  
+> > -The boot config file syntax allows user to merge partially same word keys
+> > -by brace. For example::
+> > +The boot configuration syntax allows user to merge same parent key using
+> 
+>                                  allows the user
+> although I am having problems with the rest of that sentence.
+
+What about the following?
+
+User can group identical parent keys together and use braces to list child keys
+under them.
+
+Thank you,
+
 -- 
-2.7.4
-
-
+Masami Hiramatsu <mhiramat@kernel.org>
