@@ -2,111 +2,140 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51C21C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3449C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 155F720637
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ACF120726
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:26:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P4Q+2KJA"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="AJEN3Cit"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387418AbgCDBYM (ORCPT
+        id S2387436AbgCDB0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 20:24:12 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43743 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727725AbgCDBYM (ORCPT
+        Tue, 3 Mar 2020 20:26:08 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46742 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727985AbgCDB0I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 20:24:12 -0500
-Received: by mail-pg1-f193.google.com with SMTP id u12so161194pgb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:24:11 -0800 (PST)
+        Tue, 3 Mar 2020 20:26:08 -0500
+Received: by mail-wr1-f67.google.com with SMTP id j7so288105wrp.13
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:26:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Rt8TtTL2J2teY8pg3mAMBDxFdn/EEgf4y2xMHvWn/v8=;
-        b=P4Q+2KJAFjMZOlZOparRgmdpjak5uoAJFTD5Y90LErx3JpfK0UNQGBOM5TQsh4lxw0
-         vnAjLQe0ENDCo0ZQ5hnkkRawhWxRuF3wImszc6mqaZAUmf32J23Y36c3qL2LATOSc2h2
-         tVfjBltn2QrYuDOibSBHTKVxQDmRfLH3BblY27gzz8VkF8PU1bMMY3k4FqUDkcmeaj0i
-         6J+nMb2iMJxcPnvOlMcFlR69jl/RqmbOoafXTX2H0o6QwLhM6dM9YHoCSaA6FUK7qgHW
-         08QwM9aaL559yyLm5RkZljBckbvwIlaynPPEOZ1GlwrypPVsFAsDcc4ElsCiDKbYgt+y
-         C6mA==
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=jrmU0aUpyeiczxdUe8N4p4XFs4SNd8CWnE3coIhgCAs=;
+        b=AJEN3CitJU/4Z0JTnLw/ey04m43KyIRnf3pgOjFiKT+U6iwItjQytak+e97bRM59WH
+         /0mVfLRbbbWjrEoZdKJ2NorfsJk6k0MxZ+XYdVn3HRYRu8t1OiF+5xjVv5AnRqQTqp7R
+         ztjHJUEORGnsiclnTsjGRYXYq5bRfPhxJq2I0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Rt8TtTL2J2teY8pg3mAMBDxFdn/EEgf4y2xMHvWn/v8=;
-        b=Ozu5kOZGAm2Y+5KTJl1Du5Qzv11ZirPkt7Q14IdbG7mDJHShcyszYYPG/q/ywcTXGx
-         /2zDWMWfber89PBzcEgLL0ujUCZy7hwES3xp0M3l1zyuCJga3LRgWzlIih2GFdbQzT0L
-         VDrvXCmjn/fesYxIs/l7sgPnO9g9f61HufYNUSsoqgBdOINT9GLHqA1kxW3vNB1fD6cb
-         YTR6KDAsgprN0Q9mRtEglyy61KuzHar0jQwsgd8xFhivbIhEtLy3K9tu+7fxHd1Wf6R2
-         8HlzIC6zXxJdVqqrVT+q3Bww7be90V5bFS3EI2sFyLswSisuDHhGbQJiIX5hCJdG7hR0
-         LIfQ==
-X-Gm-Message-State: ANhLgQ2Ej3MlXCK0zUq8QgDTX6nj9Rz8WCqDuo5oSaIlGVTghsg0KecA
-        zL+FrBkIXbtSuHlqBuWJ9SPGBwqUI0M=
-X-Google-Smtp-Source: ADFU+vsn8BpgZ0uD9Kj8MicwFBE3Bv2NWVCEbUXbGCPpouGZIfn6QZU1OP0ZBgg8Au4qQWr8+E19nA==
-X-Received: by 2002:a62:1682:: with SMTP id 124mr550487pfw.107.1583285051211;
-        Tue, 03 Mar 2020 17:24:11 -0800 (PST)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id z13sm26175369pge.29.2020.03.03.17.24.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 03 Mar 2020 17:24:10 -0800 (PST)
-Date:   Wed, 4 Mar 2020 06:54:08 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Finn Thain <fthain@telegraphics.com.au>
-Cc:     linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 06/18] m68k: Replace setup_irq() by request_irq()
-Message-ID: <20200304012408.GA5014@afzalpc>
-References: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
- <00b0bf964278dd0bb3e093283994399ff796cca5.1582471508.git.afzal.mohd.ma@gmail.com>
- <20200229131553.GA4985@afzalpc>
- <alpine.LNX.2.22.394.2003010958170.8@nippy.intranet>
- <20200301010511.GA5195@afzalpc>
- <alpine.LNX.2.22.394.2003011337590.15@nippy.intranet>
- <20200301061327.GA5229@afzalpc>
- <alpine.LNX.2.22.394.2003021717150.8@nippy.intranet>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=jrmU0aUpyeiczxdUe8N4p4XFs4SNd8CWnE3coIhgCAs=;
+        b=UbqzF5W+dE88bX9OIThUa6ahNtbBebRRYDdz1Njc1wlGGRrlMZVZu5wBltGJhJvQ3y
+         VEDObs5IYoW0oaZZePVYS4rp0QcvmlNBrg8lawI2F4XKckvQ/11t5jAK7FYfWKNyCasL
+         ZQLQEzJqDN5J92OpUnz71EEru2rTIaFGg0dmkIVarjp4P6uaQS8kHQJUH/kv1OvttVaw
+         TvOy6hzyuu2J38zzsDpnYHssBWbPFBT5SRl1l/cQ8FYWLKUZ0DVW4bPPa6FXmt0wjtxr
+         RvCQp/tg6cpo69aIruLZqFNSGKVD/6P3+dQFdE0DPTxhIQuiB+7wPH9H4ICjF9MHMj+D
+         3z+g==
+X-Gm-Message-State: ANhLgQ3FvRo9l+gNH8Riu4lAzItKwbLjCNywZlF9V6zjTUkMuKRxdsKx
+        saDV5/19SXLAD5EOhQxvIt+DyQ==
+X-Google-Smtp-Source: ADFU+vtMtYSgZIYl+yREwwcH4jOyLaoAv0iOxtAoJ1Pwlhws2x7ue8V4D25DPLPrqKgrQk6X81VErQ==
+X-Received: by 2002:a5d:4ec4:: with SMTP id s4mr964900wrv.157.1583285164578;
+        Tue, 03 Mar 2020 17:26:04 -0800 (PST)
+Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
+        by smtp.gmail.com with ESMTPSA id j4sm25875474wrr.0.2020.03.03.17.26.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Mar 2020 17:26:04 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Wed, 4 Mar 2020 02:26:02 +0100
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Subject: Re: [PATCH bpf-next 2/7] bpf: JIT helpers for fmod_ret progs
+Message-ID: <20200304012602.GB14634@chromium.org>
+References: <20200303140950.6355-1-kpsingh@chromium.org>
+ <20200303140950.6355-3-kpsingh@chromium.org>
+ <CAEf4BzZJ2E2rmyz7k4F7s=EXPbaAX7XncvUcHukX_FYDWeD7BA@mail.gmail.com>
+ <20200303222812.GA5265@chromium.org>
+ <20200303235604.mdlamwx4z2ws3fzy@ast-mbp>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <alpine.LNX.2.22.394.2003021717150.8@nippy.intranet>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200303235604.mdlamwx4z2ws3fzy@ast-mbp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Finn,
-
-On Mon, Mar 02, 2020 at 05:26:17PM +1100, Finn Thain wrote:
-
-> I had assumed that your intention was to find a consensus so that the 
-> whole tree could be consistently and automatically improved
-
-Yeah, my main goal was to get rid of setup_irq(), other things were
-secondary and proceeded to achieve the removal by hook or crook, but was
-caught red handed :)
-
-> > Sometimes had a feeling as though the changes in this series is akin to 
-> > cutting the foot to fit the shoe ;), but still went ahead as it was 
-> > legacy code, easier & less error prone. But now based on the overall 
-> > feedback, to proceed, i had to change.
+On 03-Mär 15:56, Alexei Starovoitov wrote:
+> On Tue, Mar 03, 2020 at 11:28:12PM +0100, KP Singh wrote:
+> > > > +static void align16_branch_target(u8 **pprog)
+> > > > +{
+> > > > +       u8 *target, *prog = *pprog;
+> > > > +
+> > > > +       target = PTR_ALIGN(prog, 16);
+> > > > +       if (target != prog)
+> > > > +               emit_nops(&prog, target - prog);
+> > > > +       if (target != prog)
+> > > > +               pr_err("calcultion error\n");
+> > > 
+> > > this wasn't in the original code, do you feel like it's more important
+> > > to check this and print error?
+> > > 
+> > > also typo: calculation error, but then it's a bit brief and
+> > > uninformative message. So I don't know, maybe just drop it?
 > > 
+> > Ah, good catch! this is deinitely not intended to be here.
+> > It's a debug artifact and needs to dropped indeed.
 > 
-> Not based on feedback from me I hope -- I have no veto in this case, as 
-> you can see from MAINTAINERS.
+> That spurious pr_err() caught my attention as well.
+> After further analysis there is a bug here.
+> The function is missing last line:
+>         *pprog = prog;
 
-i don't know what to say, i attempted to accomodate the reviews as
-much as possible, some times when opinions are conflicting i had to
-take a call one way or the other, with more importance to maintainer's
-view.
+Great catch! Fixed.
 
-Regards
-afzal
+> Without it the nop insertion is actually not happenning.
+> Nops are being written, but next insns will overwrite them.
+> When I noticed it by code review I applied the patches to my tree
+> and run the tests and, as expected, all tests passed.
+> The existing test_xdp_veth.sh emits the most amount of unaligned
+> branches. Since then I've been thinking whether we could add a test
+> to catch things like this and couldn't come up with a way to test it
+> without burning a lot of code on it. So let's fix it and move on.
+> Could you rename this helper? May be emit_align() and pass 16 into it?
+
+Seems reasonable. Done.
+
+> The code is not branch target specific. It's aligning the start
+> of the next instruction.
+> Also could you add a comment to:
+
+Done. Sending v2 out.
+
+- KP
+
+>         align16_branch_target(&prog);
+>         for (i = 0; i < fmod_ret->nr_progs; i++)
+>                 emit_cond_near_jump(&branches[i], prog, branches[i],
+>                                     X86_JNE);
+>         kfree(branches);
+> to say that the loop is updating prior location to jump to aligned
+> branch target ?
