@@ -2,97 +2,97 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAE3C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A9EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F356421741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 548FB2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:42:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388018AbgCDKmB (ORCPT
+        id S2388038AbgCDKmF convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:42:01 -0500
-Received: from out28-5.mail.aliyun.com ([115.124.28.5]:48265 "EHLO
-        out28-5.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387776AbgCDKmB (ORCPT
+        Wed, 4 Mar 2020 05:42:05 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:35850 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387776AbgCDKmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:42:01 -0500
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.2020651|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.351558-0.00513039-0.643312;DS=CONTINUE|ham_system_inform|0.0595886-0.000272615-0.940139;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=17;RT=17;SR=0;TI=SMTPD_---.Gw1wbHL_1583318513;
-Received: from 192.168.10.227(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.Gw1wbHL_1583318513)
-          by smtp.aliyun-inc.com(10.147.41.121);
-          Wed, 04 Mar 2020 18:41:54 +0800
-Subject: Re: [PATCH 2/4] clk: Ingenic: Add support for TCU of X1000.
-To:     =?UTF-8?B?5ZGo55Cw5p2wIChaaG91IFlhbmppZSk=?= 
-        <zhouyanjie@wanyeetech.com>, linux-mips@vger.kernel.org
-References: <1582100974-129559-1-git-send-email-zhouyanjie@wanyeetech.com>
- <1582100974-129559-4-git-send-email-zhouyanjie@wanyeetech.com>
-Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        devicetree@vger.kernel.org, tglx@linutronix.de, maz@kernel.org,
-        jason@lakedaemon.net, sboyd@kernel.org, mturquette@baylibre.com,
-        mark.rutland@arm.com, robh+dt@kernel.org,
-        daniel.lezcano@linaro.org, paul@crapouillou.net,
-        sernia.zhou@foxmail.com, zhenwenjin@gmail.com,
-        dongsheng.qiu@ingenic.com
-From:   Zhou Yanjie <zhouyanjie@wanyeetech.com>
-Message-ID: <5E5F85F0.5060605@wanyeetech.com>
-Date:   Wed, 4 Mar 2020 18:41:52 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.8.0
+        Wed, 4 Mar 2020 05:42:04 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 024AfhIo005745, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 024AfhIo005745
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 4 Mar 2020 18:41:43 +0800
+Received: from RTEXMB02.realtek.com.tw (172.21.6.95) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 4 Mar 2020 18:41:43 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB02.realtek.com.tw (172.21.6.95) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 4 Mar 2020 18:41:42 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Wed, 4 Mar 2020 18:41:42 +0800
+From:   Tony Chuang <yhchuang@realtek.com>
+To:     "Mancini, Jason" <Jason.Mancini@amd.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: RE: v5.5-rc1 and beyond insta-kills some Comcast wifi routers
+Thread-Topic: v5.5-rc1 and beyond insta-kills some Comcast wifi routers
+Thread-Index: AQHV8eKYmDBcKgCqq0WSUKvXILk0y6g34qhg//+63wCAAIeWUA==
+Date:   Wed, 4 Mar 2020 10:41:42 +0000
+Message-ID: <c185b1f27e4a4b66941b50697dba006c@realtek.com>
+References: <DM6PR12MB4331FD3C4EF86E6AF2B3EBC7E5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
+        <4e2a1fc1-4c14-733d-74e2-750ef1f81bf6@infradead.org>
+ <87h7z4r9p5.fsf@kamboji.qca.qualcomm.com>,<4bd036de86c94545af3e5d92f0920ac2@realtek.com>
+ <DM6PR12MB433132A38F2AA6A5946B75CBE5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
+In-Reply-To: <DM6PR12MB433132A38F2AA6A5946B75CBE5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.68.175]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <1582100974-129559-4-git-send-email-zhouyanjie@wanyeetech.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+> [AMD Official Use Only - Internal Distribution Only]
+> 
+> I tested Kalle's patch.  Laptop connects via 5GHz band by default.  Comcast
+> router still
+> crashed in a hurry.  I blocked (via NM.conf) the 5GHz mac of the router, and
+> rebooted
+> the laptop. Checked that the router was using 2.4 for the laptop.  Still hung
+> the router!
+> 
+> What I've done temporarily is change the unlimited return value from 0 to
+> 4000.
+> Somewhere around 5325 the Comcast router gets cranky/weird, and at 5350
+> it is
+> resetting the wifi stack (without resetting the entire router).
+> 
+> So there's no boot time flag to turn the feature off currently?
+> 
 
-On 2020年02月19日 16:29, 周琰杰 (Zhou Yanjie) wrote:
-> X1000 has a different TCU containing OST, since X1000, OST has been
-> independent of TCU. This patch is prepare for later OST driver.
->
-> Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
+Unfortunately, no, there's no flag to turn off this.
 
-Any review/ack from clock framework subsystem?
+But, from your experiments, if you applied that patch,
+("rtw88: disable TX-AMSDU on 2.4G band") connect to AP on 2.4G, and still crash
+the Comcast AP, then it looks like it's not TX-AMSDU to be blamed.
 
+Assume the return value you mentioned is max_rc_amsdu_len, if you always
+return 1, it will just disable all of the AMSDU process.
+You can try it, and to see if sending AMSDU will crash the router or not.
 
-Thanks and best regards!
-
-> ---
->   drivers/clk/ingenic/tcu.c | 8 ++++++++
->   1 file changed, 8 insertions(+)
->
-> diff --git a/drivers/clk/ingenic/tcu.c b/drivers/clk/ingenic/tcu.c
-> index ad7daa4..8799907 100644
-> --- a/drivers/clk/ingenic/tcu.c
-> +++ b/drivers/clk/ingenic/tcu.c
-> @@ -317,10 +317,17 @@ static const struct ingenic_soc_info jz4770_soc_info = {
->   	.has_tcu_clk = false,
->   };
->   
-> +static const struct ingenic_soc_info x1000_soc_info = {
-> +	.num_channels = 8,
-> +	.has_ost = false, /* X1000 has OST, but it not belong TCU */
-> +	.has_tcu_clk = false,
-> +};
-> +
->   static const struct of_device_id ingenic_tcu_of_match[] __initconst = {
->   	{ .compatible = "ingenic,jz4740-tcu", .data = &jz4740_soc_info, },
->   	{ .compatible = "ingenic,jz4725b-tcu", .data = &jz4725b_soc_info, },
->   	{ .compatible = "ingenic,jz4770-tcu", .data = &jz4770_soc_info, },
-> +	{ .compatible = "ingenic,x1000-tcu", .data = &x1000_soc_info, },
->   	{ /* sentinel */ }
->   };
->   
-> @@ -471,3 +478,4 @@ static void __init ingenic_tcu_init(struct device_node *np)
->   CLK_OF_DECLARE_DRIVER(jz4740_cgu, "ingenic,jz4740-tcu", ingenic_tcu_init);
->   CLK_OF_DECLARE_DRIVER(jz4725b_cgu, "ingenic,jz4725b-tcu", ingenic_tcu_init);
->   CLK_OF_DECLARE_DRIVER(jz4770_cgu, "ingenic,jz4770-tcu", ingenic_tcu_init);
-> +CLK_OF_DECLARE_DRIVER(x1000_cgu, "ingenic,x1000-tcu", ingenic_tcu_init);
-
+Yen-Hsuan
