@@ -2,80 +2,63 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D36DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F066EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:10:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1290020866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583363373;
-	bh=lzYSK+MEuk72nMhzqBd5bNzw6N8PHF0L/J1HXFibw0Q=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=SJCpAeoifsRFgYUsbLRVQHOC0WSDfW5RvqcLrVIN6CLmCn9sByGsNC+73w+hL2Dxe
-	 vyjnjOxFHr6alJbz3GA7oA4jfw46DXDXZKNBOHvOj+kpnl09xO4q8JhQcGUQruq9W8
-	 1W/aqsPxqvhqe93QiI1r9wX5PJ8iIDrsl2yy2y7M=
+	by mail.kernel.org (Postfix) with ESMTP id C9D9B20866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tw5PI4uR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388526AbgCDXJb (ORCPT
+        id S2388529AbgCDXKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 18:09:31 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:38783 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388407AbgCDXJb (ORCPT
+        Wed, 4 Mar 2020 18:10:54 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43904 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388400AbgCDXKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 18:09:31 -0500
-Received: by mail-io1-f67.google.com with SMTP id s24so4352090iog.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:09:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LO4sFnLO2wiKWhH2CPGBBj7RnEjSWuWu+5bPaWGne3A=;
-        b=GRUxsx43gpC2xVKP9oFcjdHOtdsoBEiZVqdYpYccGdnPmwDJ5vaIAUlkJkYEwM2cn9
-         4iBt9rhv3B5SnI7cZpBxkf8bnsueotIEG7J6JKz6nkQSN7xuo7MqW2KmYc47CwuDZdqq
-         UTfnBjMjiUEv9mQcXNkWTEDhbTK9axnU9qTYw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LO4sFnLO2wiKWhH2CPGBBj7RnEjSWuWu+5bPaWGne3A=;
-        b=PFbKYyO9Q66bpFh2p++RyI4GK/qRUxyGi4gDLjBfrQE3LsGZtn+5F4dYbNz8maOz8s
-         MOdNEh3ubkJV/JibWwKayH35D7RrIxvd9BNuQ/DvY49oYqwC5LpzHhxuPLvLBHsNFYgu
-         6dQQtci08EzQyU8wuvnlYqMvazOq4Sfd+2NGi65Z+zaI33ixj8l5I3qH+4YcC03d4k+i
-         PztwQBXrNHwHnlYv+IFeMiwShqjRVXeOp7PrAWVD+eG+s8Wnkz0mpQAAoIkRyLe3/P3S
-         9edX2xUQg8QkKR0dGiMPpXN7xdr8EwpTcXceJTVdW0ehW2ln1TY5F7Dk+WhaWyXe6oAl
-         g7TA==
-X-Gm-Message-State: ANhLgQ1OYTeBGAaQeHvn4Gdr6Vqj9eiUB6AqYmt+smh29REwOlCcTBXW
-        FN8Kxg60bt1bMWw8iTRgPKa8aQ==
-X-Google-Smtp-Source: ADFU+vtyCpv8ORr2dtmq5bQJdqqW/cgZJGtUiAs4EcPOweiSbguRMZiA3Ga6HVFtBYEgjjU6+sp9Vg==
-X-Received: by 2002:a5d:814a:: with SMTP id f10mr3969167ioo.7.1583363370669;
-        Wed, 04 Mar 2020 15:09:30 -0800 (PST)
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id s3sm8163040ild.7.2020.03.04.15.09.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 15:09:30 -0800 (PST)
-Subject: Re: [PATCH 0/4] Kselftest integration into Kernel CI - Part 1
-To:     shuah@kernel.org, keescook@chromium.org, luto@amacapital.net,
-        wad@chromium.org, daniel@iogearbox.net, kafai@fb.com, yhs@fb.com,
-        andriin@fb.com, gregkh@linuxfoundation.org, tglx@linutronix.de
-Cc:     khilman@baylibre.com, mpe@ellerman.id.au,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        "skh >> Shuah Khan" <skhan@linuxfoundation.org>
-References: <cover.1583358715.git.skhan@linuxfoundation.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-Message-ID: <408294cd-5c54-d8c2-1dce-7224699670fe@linuxfoundation.org>
-Date:   Wed, 4 Mar 2020 16:09:28 -0700
+        Wed, 4 Mar 2020 18:10:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=wrwrHXw+LNOFZFFMg/FDeMJ6lH0Xav8TTsXnysaRhrg=; b=tw5PI4uR1ew0T6GT3etvcIkt+p
+        +0P2jwaX6zsPoCndUQbxsG+QjnaokBqJWLoEEWdijEHx+9dOsWDEVEErTXnfe0qA1Y9QhRdU0XZ/S
+        qZIEVABVFOALiLdk6tLcO5jROd/WNi75N0iWSebavnHrXc99rpy90XIuY0L01YHhtryDivK96iWNx
+        6wPXyPw7jazYFat2epMU79nM8khDVBmZKzgjh0S/vwwl88V5xDiZNA68vZm7jyTJTniateEn9ZKvj
+        G7EGdpU0I9DAec1y/4EwvI/Sa4FuofkuW2kTRsnVyfaGUUB5xDMKL6hjLKQHfJAKW4e1mCbUAINyL
+        LVloTZCQ==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9dAB-0005vr-1w; Wed, 04 Mar 2020 23:10:51 +0000
+Subject: Re: [PATCH v3 7/7] Documentation: Add kunit_shutdown to
+ kernel-parameters.txt
+To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
+        richard@nod.at, anton.ivanov@cambridgegreys.com, arnd@arndb.de,
+        keescook@chromium.org, skhan@linuxfoundation.org,
+        alan.maguire@oracle.com, yzaikin@google.com, davidgow@google.com,
+        akpm@linux-foundation.org, rppt@linux.ibm.com,
+        frowand.list@gmail.com
+Cc:     gregkh@linuxfoundation.org, sboyd@kernel.org, logang@deltatee.com,
+        mcgrof@kernel.org, linux-um@lists.infradead.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+References: <20200228012036.15682-1-brendanhiggins@google.com>
+ <20200228012036.15682-8-brendanhiggins@google.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <22704191-ce7e-cac7-f7a0-1db822b20d84@infradead.org>
+Date:   Wed, 4 Mar 2020 15:10:49 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <cover.1583358715.git.skhan@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200228012036.15682-8-brendanhiggins@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,18 +66,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 3:13 PM, Shuah Khan wrote:
-> This patch series consists of first round of fixes to integrate
-> Kselftest into Kernel CI.
+On 2/27/20 5:20 PM, Brendan Higgins wrote:
+> Add kunit_shutdown, an option to specify that the kernel shutsdown after
+> running KUnit tests, to the kernel-parameters.txt documentation.
 > 
-> You can find full list of problems in my announcement I sent out
-> last week:
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+
+Hi Brendan,
+
+To be consistent with other parameters in this file:
+
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> https://lkml.org/lkml/2020/2/27/2221
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index dbc22d6846275..6ad63e98916f9 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -2099,6 +2099,14 @@
+>  			0: force disabled
+>  			1: force enabled
+>  
+> +	kunit_shutdown	[KERNEL UNIT TESTING FRAMEWORK] Shutdown kernel after
 
-Here is the lore link:
+that line should have an '=' sign after the param name:
+	kunit_shutdown=
 
-https://lore.kernel.org/lkml/3b3dc707-7ae7-955b-69fe-b9abe9ae26c5@linuxfoundation.org/
+> +			running built-in tests. Tests configured as modules will
+> +			not be run.
+> +			Default:	(flag not present) don't shutdown
+> +			poweroff:	poweroff the kernel after running tests
+> +			halt:		halt the kernel after running tests
+> +			reboot:		reboot the kernel after running tests
+> +
+>  	kvm.ignore_msrs=[KVM] Ignore guest accesses to unhandled MSRs.
+>  			Default is 0 (don't ignore, but inject #GP)
+>  
+> 
 
-thanks,
--- Shuah
+thanks.
+-- 
+~Randy
+
