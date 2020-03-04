@@ -2,98 +2,139 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0076C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:39:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2360EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:40:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7461206D5
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:39:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F08C1206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:40:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="YOR70frZ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qEwXCsIR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbgCDIjb (ORCPT
+        id S2387661AbgCDIkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:39:31 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46967 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728946AbgCDIj3 (ORCPT
+        Wed, 4 Mar 2020 03:40:07 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:54714 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387396AbgCDIkG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:39:29 -0500
-Received: by mail-oi1-f195.google.com with SMTP id a22so1247915oid.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:39:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z/X0UovT4DE7O4vko2XBAkSIwy+JqphUDS53Lj39Gf8=;
-        b=YOR70frZUhrhwBN3fad57kF8tT2fIXif5ULTtPDhRJ7rO+Byhs+5kROA5eaEVK8hKV
-         5qY+GNFsbIlmtCy49oPdAcoHJl03BT3SzPWBtSf0/boOlTvtoAlBmBBUgfU8GQgLMGL/
-         /zixN0sDPnUHuPNEB6LfRZOsrR7q2fFcdVtvk=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z/X0UovT4DE7O4vko2XBAkSIwy+JqphUDS53Lj39Gf8=;
-        b=ZLTtz62MJMP0zeEtcpQHLlv+M5Q3XAx1uZh0C+nMa+W/zY/O9XqbJ6c/IZly1ODvKC
-         2DLyhw3DdeyN7XH6TwS+r0v7Aqka7KfZYa1s9gJgLY7WcAlqy3+ODBrdN7KGvPanAjrz
-         mqRmt/FGi9dLyTXQDlnxznTTAB+5DDjo4X4K8t3eXXtkGpV0pLN9XkDyyVSgG6FEek3d
-         0v2oM3TfkBd8bZN297XXk3Pkq8LH1ZV0srHCUNqcQ85yMl0ap78Sert9pB7iEmepHyhB
-         8nEAHTnOlsh5dfF0I9y845RMmauPfYdhzILHb35xnlU/KMH2SrbtmXpM0ltQLjiRglC1
-         +KUg==
-X-Gm-Message-State: ANhLgQ1RZYgcCmeiLZ0cTWb6KnTdl+/r/fgWHmoCyBeZamHA+teQGbNJ
-        ojMIOXBVGPlqA7V0Geny7UaihM4Jdj3pYslMA6YSLQ==
-X-Google-Smtp-Source: ADFU+vtoZ8+1Zm7KA6Uyx6vtB0DyfWaSmrmraBfYE72PaCJ0Y8a0K5KaZAJlzK/bCc4jOHppkANa/k941ZvJkcFJHDw=
-X-Received: by 2002:aca:b60a:: with SMTP id g10mr970157oif.102.1583311168743;
- Wed, 04 Mar 2020 00:39:28 -0800 (PST)
+        Wed, 4 Mar 2020 03:40:06 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0248e52t078499;
+        Wed, 4 Mar 2020 02:40:06 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583311206;
+        bh=Nor6UwICB71c/cHX1FmjRqlYHp+LS5fnin9yQh6uyuY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=qEwXCsIRoB9KIBCIJRCBpDuRDH9Pez31eTXr8hdfpz3swDjdQLKEoKSai9UirTlMK
+         ZYC0aBmA+ayMNoMrf4/xn3H2siDz5f1lsLuXXF24+sOcc5I3vzEIkL78l6oCvPw9Ql
+         +sBdABj3x0gB38+mAcDd/RRbcEoFaY0jKWXoh8Vg=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0248e5ks078118
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Mar 2020 02:40:05 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
+ 2020 02:40:05 -0600
+Received: from localhost.localdomain (10.64.41.19) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Mar 2020 02:40:05 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 0248e3F9058305;
+        Wed, 4 Mar 2020 02:40:04 -0600
+Subject: Re: [Patch] media: ti-vpe: cal: fix a kernel oops when unloading
+ module
+To:     Benoit Parrot <bparrot@ti.com>, Hans Verkuil <hverkuil@xs4all.nl>
+CC:     <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20200303172629.21339-1-bparrot@ti.com>
+From:   Tomi Valkeinen <tomi.valkeinen@ti.com>
+Message-ID: <4010c13f-6a32-f3c3-5b6d-62a4e3782c64@ti.com>
+Date:   Wed, 4 Mar 2020 10:40:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200228115344.17742-1-lmb@cloudflare.com> <20200228115344.17742-2-lmb@cloudflare.com>
- <5e5e955a27139_60e72b06ba14c5bc67@john-XPS-13-9370.notmuch>
-In-Reply-To: <5e5e955a27139_60e72b06ba14c5bc67@john-XPS-13-9370.notmuch>
-From:   Lorenz Bauer <lmb@cloudflare.com>
-Date:   Wed, 4 Mar 2020 09:39:17 +0100
-Message-ID: <CACAyw98oHs0CTR0k+JwZgM6maT__j5OvgsoVUGMMHx_4jW_OuA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 1/9] bpf: sockmap: only check ULP for TCP sockets
-To:     John Fastabend <john.fastabend@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200303172629.21339-1-bparrot@ti.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 at 18:35, John Fastabend <john.fastabend@gmail.com> wrote:
->
-> > diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
-> > index 112765bd146d..54a9a3e36b29 100644
-> > --- a/include/linux/skmsg.h
-> > +++ b/include/linux/skmsg.h
-> > @@ -360,7 +360,13 @@ static inline void sk_psock_restore_proto(struct sock *sk,
-> >                                         struct sk_psock *psock)
-> >  {
-> >       sk->sk_prot->unhash = psock->saved_unhash;
-> > -     tcp_update_ulp(sk, psock->sk_proto, psock->saved_write_space);
-> > +     if (inet_sk(sk)->is_icsk) {
->
-> use sock_map_sk_has_ulp() here as well and then drop the !icsk->icsk_ulp_ops
-> case in tcp_update_ulp()?
+On 03/03/2020 19:26, Benoit Parrot wrote:
+> After the switch to use v4l2_async_notifier_add_subdev() and
+> v4l2_async_notifier_cleanup(), unloading the ti_cal module would casue a
+> kernel oops.
+> 
+> This was root cause to the fact that v4l2_async_notifier_cleanup() tries
+> to kfree the asd pointer passed into v4l2_async_notifier_add_subdev().
+> 
+> In our case the asd reference was from a statically allocated struct.
+> So in effect v4l2_async_notifier_cleanup() was trying to free a pointer
+> that was not kalloc.
+> 
+> So here we switch to using a kzalloc struct instead of a static one.
+> 
+> Fixes: d079f94c9046 ("media: platform: Switch to v4l2_async_notifier_add_subdev")
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Benoit Parrot <bparrot@ti.com>
+> ---
+>   drivers/media/platform/ti-vpe/cal.c | 7 ++++---
+>   1 file changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
+> index 6d4cbb8782ed..18fe2cb9dd17 100644
+> --- a/drivers/media/platform/ti-vpe/cal.c
+> +++ b/drivers/media/platform/ti-vpe/cal.c
+> @@ -372,8 +372,6 @@ struct cal_ctx {
+>   	struct v4l2_subdev	*sensor;
+>   	struct v4l2_fwnode_endpoint	endpoint;
+>   
+> -	struct v4l2_async_subdev asd;
+> -
+>   	struct v4l2_fh		fh;
+>   	struct cal_dev		*dev;
+>   	struct cc_data		*cc;
+> @@ -2032,7 +2030,6 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+>   
+>   	parent = pdev->dev.of_node;
+>   
+> -	asd = &ctx->asd;
+>   	endpoint = &ctx->endpoint;
+>   
+>   	ep_node = NULL;
+> @@ -2040,6 +2037,10 @@ static int of_cal_create_instance(struct cal_ctx *ctx, int inst)
+>   	sensor_node = NULL;
+>   	ret = -EINVAL;
+>   
+> +	asd = kzalloc(sizeof(*asd), GFP_KERNEL);
+> +	if (!asd)
+> +		goto cleanup_exit;
+> +
+>   	ctx_dbg(3, ctx, "Scanning Port node for csi2 port: %d\n", inst);
+>   	for (index = 0; index < CAL_NUM_CSI2_PORTS; index++) {
+>   		port = of_get_next_port(parent, port);
+> 
 
-This requires moving sock_map_sk_has_ulp to the header, which seemed like the
-incorrect place. How about adding bool inet_csk_has_ulp(sk) to
-inet_connection_sock.h?
+Thanks, this fixes the crash for me.
+
+It does look a bit odd that something is allocated with kzalloc, and then it's freed somewhere 
+inside v4l2_async_notifier_cleanup, though. But if that's how it supposed to be used, looks fine to me.
+
+Reviewed-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+
+  Tomi
 
 -- 
-Lorenz Bauer  |  Systems Engineer
-6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
-
-www.cloudflare.com
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
