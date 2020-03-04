@@ -2,112 +2,82 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947CDC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ABCC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:55:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A55120728
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:55:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ia6LFwn0"
+	by mail.kernel.org (Postfix) with ESMTP id ADD0020728
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:55:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387491AbgCDBzC (ORCPT
+        id S2387520AbgCDBzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 20:55:02 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:36968 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387406AbgCDBzC (ORCPT
+        Tue, 3 Mar 2020 20:55:21 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:38238 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387406AbgCDBzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 20:55:02 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b8so279797plx.4;
-        Tue, 03 Mar 2020 17:55:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=KHKOkzT6FKCHf5W6DLoCVwvsWrrT80ew9b3fr7GlCe4=;
-        b=Ia6LFwn0NZWO//0aW9+5FpHgym5/uDmqHXPLBi8/HgKFKh0ssrTiGZw3aXdLohkcY/
-         Ol8so0/doI0LZRj0OtX9Wv0QJ+BASsBVvTZvF1VhxJvA1C1qsoLhy23dk+PKz78SoEI3
-         L3ldcJFo/AyzEFrmoTL6nk7viS1gPUtZgXzqCyjpI8nHhcGBIk8RFSXAyvU19Vwkyqac
-         /TZOk+/itTlA673RT8LZmSxmHwMiCcHGTJbpJKTAxVYCu1Gl+r+2dUXnvp9fCrfGix2O
-         js0PHOOoQlOoj3Kly3Rb1jINzxDpaZPG8/r2IOFsw7wKMMoyG0bbQzGSpBlkimFoHqFl
-         Dlyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KHKOkzT6FKCHf5W6DLoCVwvsWrrT80ew9b3fr7GlCe4=;
-        b=PCdIMH7r+Jb6W2JZTeO0Z5G9Tkv6B6tca8LKlmhTd4wXGgRFTUpwlXqRzaHEBzj9DP
-         OTe5HNDdPTM+0GEnQROYptA3qy/7RZOaeDH4qFv1IOS/6x54Fo5fFF6kHpqMo2uGCoyO
-         xKECm4bST4QNQu2ljw0YIi9b9b/8/jWLVrt9LG3aCk7oafFn14t/W2UlOc58wgkAY/a8
-         DZJ/Ce1mAaYnJrKlZ35+DODPKsM+E2T2ey5Htyf5AJKTFoajX23Vco/RbCuCQ1bx4z83
-         9vgsQ+8g1B90eRRDpytG+9/ceY/ZPmsTw8hWkuxOQbohixIgDbB9lbgF7VlSeMs3O+6M
-         qYUg==
-X-Gm-Message-State: ANhLgQ16WcDiJl2GkfMVK/qDGsWim4C5Bpq5fvnEoP2eI7S813PF/kpm
-        KYHjtURH2TPQUGBNuema++E=
-X-Google-Smtp-Source: ADFU+vsn4O9prDyrAgjQDSFlDhDtMu35YiyfSMcvd4UbRmsCHBFAdzVOJuhd5F2hqVg73XWlR4QwaQ==
-X-Received: by 2002:a17:90b:30c2:: with SMTP id hi2mr501364pjb.7.1583286900749;
-        Tue, 03 Mar 2020 17:55:00 -0800 (PST)
-Received: from localhost.localdomain.localdomain ([103.90.76.242])
-        by smtp.gmail.com with ESMTPSA id t11sm424224pjo.21.2020.03.03.17.54.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 03 Mar 2020 17:55:00 -0800 (PST)
-From:   Lidong Jiang <jianglidong@gmail.com>
-To:     davem@davemloft.net
-Cc:     ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org,
-        john.fastabend@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jianglidong3@jd.com
-Subject: [PATCH] veth: ignore peer tx_dropped when counting local rx_dropped
-Date:   Wed,  4 Mar 2020 09:49:29 +0800
-Message-Id: <1583286569-144923-1-git-send-email-jianglidong@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 3 Mar 2020 20:55:21 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 90AF515AD9731;
+        Tue,  3 Mar 2020 17:55:18 -0800 (PST)
+Date:   Tue, 03 Mar 2020 17:55:17 -0800 (PST)
+Message-Id: <20200303.175517.2166029762450403219.davem@davemloft.net>
+To:     leon@kernel.org
+Cc:     kuba@kernel.org, leonro@mellanox.com, ajit.khaparde@broadcom.com,
+        aelior@marvell.com, bcm-kernel-feedback-list@broadcom.com,
+        leedom@chelsio.com, benve@cisco.com, claudiu.manoil@nxp.com,
+        kda@linux-powerpc.org, dchickles@marvell.com, opendmb@gmail.com,
+        fmanlunas@marvell.com, f.fainelli@gmail.com, fugang.duan@nxp.com,
+        _govind@gmx.com, GR-everest-linux-l2@marvell.com,
+        GR-Linux-NIC-Dev@marvell.com, ulli.kroll@googlemail.com,
+        hsweeten@visionengravers.com, linus.walleij@linaro.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        leoyang.li@nxp.com, madalin.bucur@nxp.com,
+        michael.chan@broadcom.com, netdev@vger.kernel.org,
+        pantelis.antoniou@gmail.com, pkaustub@cisco.com,
+        prashant@broadcom.com, rvatsavayi@caviumnetworks.com,
+        rmody@marvell.com, rrichter@marvell.com, sburla@marvell.com,
+        sathya.perla@broadcom.com, siva.kallam@broadcom.com,
+        somnath.kotur@broadcom.com, sriharsha.basavapatna@broadcom.com,
+        skalluru@marvell.com, sgoutham@marvell.com, vishal@chelsio.com
+Subject: Re: [PATCH net-next 00/23] Clean driver, module and FW versions
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200301144457.119795-1-leon@kernel.org>
+References: <20200301144457.119795-1-leon@kernel.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 03 Mar 2020 17:55:20 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiang Lidong <jianglidong3@jd.com>
+From: Leon Romanovsky <leon@kernel.org>
+Date: Sun,  1 Mar 2020 16:44:33 +0200
 
-When local NET_RX backlog is full due to traffic overrun,
-peer veth tx_dropped counter increases. At that time, list
-local veth stats, rx_dropped has double value of peer
-tx_dropped, even bigger than transmit packets by peer.
+> From: Leon Romanovsky <leonro@mellanox.com>
+> 
+> Hi,
+> 
+> This is second batch of the series which removes various static versions
+> in favour of globaly defined Linux kernel version.
+> 
+> The first part with better cover letter can be found here
+> https://lore.kernel.org/lkml/20200224085311.460338-1-leon@kernel.org
+> 
+> The code is based on
+> 68e2c37690b0 ("Merge branch 'hsr-several-code-cleanup-for-hsr-module'")
+> 
+> and WIP branch is
+> https://git.kernel.org/pub/scm/linux/kernel/git/leon/linux-rdma.git/log/?h=ethtool
 
-In NET_RX softirq process, if any packet drop case happens,
-it increases dev's rx_dropped counter and returns NET_RX_DROP.
-
-At veth tx side, it records any error returned from peer netif_rx
-into local dev tx_dropped counter.
-
-In veth get stats process, it puts local dev rx_dropped and
-peer dev tx_dropped into together as local rx_drpped value.
-So that it shows double value of real dropped packets number in
-this case.
-
-This patch ignores peer tx_dropped when counting local rx_dropped,
-since peer tx_dropped is duplicated to local rx_dropped at most cases.
-
-Signed-off-by: Jiang Lidong <jianglidong3@jd.com>
----
- drivers/net/veth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/veth.c b/drivers/net/veth.c
-index a552df3..bad9e03 100644
---- a/drivers/net/veth.c
-+++ b/drivers/net/veth.c
-@@ -328,7 +328,7 @@ static void veth_get_stats64(struct net_device *dev,
- 	rcu_read_lock();
- 	peer = rcu_dereference(priv->peer);
- 	if (peer) {
--		tot->rx_dropped += veth_stats_tx(peer, &packets, &bytes);
-+		veth_stats_tx(peer, &packets, &bytes);
- 		tot->rx_bytes += bytes;
- 		tot->rx_packets += packets;
- 
--- 
-1.8.3.1
-
+Series applied, thanks.
