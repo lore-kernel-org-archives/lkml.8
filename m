@@ -2,89 +2,101 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB22C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:36:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0298C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46EC12166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583347016;
-	bh=Q5zcdnLn8aFwGuFTh/7DkOTC8NTckx4eSzDvY5E0y1E=;
-	h=Date:From:To:Cc:Subject:Reply-To:List-ID:From;
-	b=UeLfeB5HzI+C9KlWC1ez1ku74VstwW/z7TXHG1M+ZRUj0g4HN/K+vjRKTlgTNueue
-	 nQORFRgXEG2fQbkdlCHnITAB6zTfqHsM8q1QIikCG5BrE2OUJuZp28etOqIl8ZWuRW
-	 ajGQS5vCKSe7KucGZNRg6tLiY8D+PRejzaSrIdgw=
+	by mail.kernel.org (Postfix) with ESMTP id 7D19C21775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:37:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730185AbgCDSgz (ORCPT
+        id S1730222AbgCDShC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:36:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59086 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730167AbgCDSgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:36:55 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A164920866;
-        Wed,  4 Mar 2020 18:36:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583347014;
-        bh=Q5zcdnLn8aFwGuFTh/7DkOTC8NTckx4eSzDvY5E0y1E=;
-        h=Date:From:To:Cc:Subject:Reply-To:From;
-        b=JYWYXyHbGO/ncCPzgBkUUpnpRqfBeqCVjch7d8VxsH0SW8CVnm2AsGQBp9GrQMAZh
-         182YlsgWwKCaR/1pMuiu1HzWBb9TXYbQUJqj11/pj1k9qkGSYtj/E65zUDFjDiR8K7
-         8a+pB2yya/d2xJb3a+7CgGkZaoBNKVPGgIi4+cCY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 715BC3522731; Wed,  4 Mar 2020 10:36:54 -0800 (PST)
-Date:   Wed, 4 Mar 2020 10:36:54 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc:     chris@chris-wilson.co.uk, joe@perches.com, hch@infradead.org,
-        mripard@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
-        torvalds@linux-foundation.org, mingo@kernel.org, kernel-team@fb.com
-Subject: [PATCH] Make drm_dp_mst_dsc_aux_for_port() safe for old compilers
-Message-ID: <20200304183654.GA9011@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
+        Wed, 4 Mar 2020 13:37:02 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41627 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730167AbgCDShB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:37:01 -0500
+Received: by mail-qt1-f195.google.com with SMTP id l21so2142137qtr.8;
+        Wed, 04 Mar 2020 10:37:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=t72VC5FU9skZvPoRXT4JDlpkMHlun4zsQXYH+X7/xVY=;
+        b=UC5KPX1gkAlUUPc2kuYqJ0+ltoF1px5EcNyw3DMaGx8n+BcTrVlCa3LG8V4y7sZzOd
+         c2FsojccE2PuGcxgJ/1TBLWcoD+HfX+CC8AZftjDkN3WW1pze0DHVZXcSkhYGMtjgjSE
+         5dmvkQAl6C1mOf2AQM3CslGr4AoIPzJPTq8L9gxbFcWnhW96sJGQXjGOZZHdybnoJL/x
+         wSzczQq6SUHVmPlaIC5YQriShuTFhKIGLUTLMnJ4dbhaRirV+A2euJcOxWWILhcvbqKm
+         vJ8GSA5exkg6KLsCat9nspe13+y1gPlhOb5gsMPM+f6qtcg3z3HL/uk5hwWjotTFd/7P
+         hS7g==
+X-Gm-Message-State: ANhLgQ3bm+fpC84Lf28pnMw+l//Iiy9ADxqa6CZDXJjoTi9qX5RA4W+A
+        KoPlKcUepAMvXrIol93Fl2g=
+X-Google-Smtp-Source: ADFU+vtG2/eGWH/ozxp6G3g7sKoqbi4VumUirf3Q9c83tQ/1/xaaXQiZ/cKgv2yL/wCM/5lU0YSa7Q==
+X-Received: by 2002:ac8:7a9a:: with SMTP id x26mr3721562qtr.137.1583347020632;
+        Wed, 04 Mar 2020 10:37:00 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id g2sm14156230qkb.27.2020.03.04.10.36.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 10:37:00 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] efi/x86: Move mixed-mode thunk to efi/libstub
+Date:   Wed,  4 Mar 2020 13:36:59 -0500
+Message-Id: <20200304183659.257828-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Older compilers either want two extra pairs of curly braces around the
-initializer for local variable "desc", or they want a single pair of
-curly braces with nothing inside.  Current Linux-kernel practice favors
-the latter, so this commit makes it so.
+Commit c2d0b470154c ("efi/libstub/x86: Incorporate eboot.c into
+libstub") moved all the callers of the mixed-mode thunk into
+efi/libstub, so move the thunk itself as well for completeness.
 
-This is a fix for a regression introduced into v5.6-rc1.
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+---
+ arch/x86/boot/compressed/Makefile                                | 1 -
+ drivers/firmware/efi/libstub/Makefile                            | 1 +
+ .../firmware/efi/libstub/x86_64-thunk.S                          | 0
+ 3 files changed, 1 insertion(+), 1 deletion(-)
+ rename arch/x86/boot/compressed/efi_thunk_64.S => drivers/firmware/efi/libstub/x86_64-thunk.S (100%)
 
-Fixes: 5b03f9d86880 ("drm/dp_mst: Add new quirk for Synaptics MST hubs")
-Suggested-by: Chris Wilson <chris@chris-wilson.co.uk>
-Suggested-by: Joe Perches <joe@perches.com>
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index 20cdaf3..b123f60 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -5396,7 +5396,7 @@ struct drm_dp_aux *drm_dp_mst_dsc_aux_for_port(struct drm_dp_mst_port *port)
- {
- 	struct drm_dp_mst_port *immediate_upstream_port;
- 	struct drm_dp_mst_port *fec_port;
--	struct drm_dp_desc desc = { 0 };
-+	struct drm_dp_desc desc = { };
- 	u8 endpoint_fec;
- 	u8 endpoint_dsc;
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index e51879bdc51c..047004d39a55 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -88,7 +88,6 @@ endif
+ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
  
+ vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+-vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
+ 
+ # The compressed kernel is built with -fPIC/-fPIE so that a boot loader
+ # can place it anywhere in memory and it will still run. However, since
+diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
+index 4d6246c6f651..85b66e5e5d1f 100644
+--- a/drivers/firmware/efi/libstub/Makefile
++++ b/drivers/firmware/efi/libstub/Makefile
+@@ -55,6 +55,7 @@ lib-$(CONFIG_EFI_ARMSTUB)	+= arm-stub.o fdt.o string.o \
+ lib-$(CONFIG_ARM)		+= arm32-stub.o
+ lib-$(CONFIG_ARM64)		+= arm64-stub.o
+ lib-$(CONFIG_X86)		+= x86-stub.o
++lib-$(CONFIG_EFI_MIXED)		+= x86_64-thunk.o
+ CFLAGS_arm32-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+ CFLAGS_arm64-stub.o		:= -DTEXT_OFFSET=$(TEXT_OFFSET)
+ 
+diff --git a/arch/x86/boot/compressed/efi_thunk_64.S b/drivers/firmware/efi/libstub/x86_64-thunk.S
+similarity index 100%
+rename from arch/x86/boot/compressed/efi_thunk_64.S
+rename to drivers/firmware/efi/libstub/x86_64-thunk.S
+-- 
+2.24.1
+
