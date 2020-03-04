@@ -2,475 +2,144 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6811C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BEF5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4142146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4712146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dJnHsegr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KWzUi9zG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730116AbgCDSdM (ORCPT
+        id S1730126AbgCDSek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:33:12 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37181 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729947AbgCDSdM (ORCPT
+        Wed, 4 Mar 2020 13:34:40 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39962 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgCDSek (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:33:12 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p14so1386544pfn.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:33:09 -0800 (PST)
+        Wed, 4 Mar 2020 13:34:40 -0500
+Received: by mail-pg1-f195.google.com with SMTP id t24so1389116pgj.7
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:34:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u3YqaJ3L9b7jzj6C0YrPN1PZuWLC2AZi+2/Rl0xPvj4=;
-        b=dJnHsegrYNXV7A36NJG0V6YIxQp+9/zn6nuRsFN2BuWIUhvOPxeN3k8exOoX8NkGDQ
-         7yw6gA0TrYVKT9GA/QgnMYatthSyjhH2KKRnWf0ulY5R60fkW9YGlOo+QboYsvkdW/7S
-         hBJ8v35AO7jlKTLyHuSuylnRmo34BQEBxbM+E4Z+1GQSuFvBrkJff48k/a8yhb+1YHLs
-         uZBxZ/XXRm1Yk/lX7LYtN1PEAUkIRrZsYGFpb2pcF25l7xk/CttfMWGkBqyptz8msDnN
-         dtHBs6ZkwiRyoHWL0EXEumJMs7JYrcAbhclu1wO/kVi2TJ4BxfWQNQRQKunwqaz/CQmB
-         IMlA==
+         :content-disposition:in-reply-to;
+        bh=0gU/ydvoeF3FI4Xw1IIpa4KUATDx4gtHUDSOYCOmG0M=;
+        b=KWzUi9zGawgvgRT3WYGVcOgm2MbTkdl3pN2n1WC8zTG5SM4dYhYQPJdQakjL1gafUG
+         zDSGSz2bXd7ozCcEbAfrJ0x5P7VlGE4wOIsFIwBjXqcAmtmlNpr6aAHWA6tHgYADi6Xk
+         omLj2Jp0VeSWP2usvRiZwB5S0st+Jd4iPcWLk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u3YqaJ3L9b7jzj6C0YrPN1PZuWLC2AZi+2/Rl0xPvj4=;
-        b=X6EW19nGIhKjshE71sTCCwdtsSv779QQLQZ6Loc31uPqW+Huqjs3jwaE7bNuCfBYTe
-         7Ad+Tdx5VVqDRS6YPE3Kw43Fcgrbyzy9oswjo0YmLMs5UU5RDWHWyywM+M9SsPzTDChk
-         2UMGnUdkaD0skBouTOtzQfGyXuUX3lm7qt3sDhGg+pXF6eb0kMU5OOZpBadkHfLB/8yd
-         Jfi4H7xaW0ZP2jJNqY9w8VspgX8iyNMEudR935MIE4TH7/XQvyFA7UMao7jbwU/nTLb9
-         jXMPWJGc9/AvkOuEYY9r+PvLa2NkDtxPbbf8m1lUX+jk4ag7lxuICQZ3oUm4DaJpwIBt
-         ijUg==
-X-Gm-Message-State: ANhLgQ3di3YgIGp/ItEExjhpRZR2NkUmjzlk1/3zj2MsmaxVpFI1VcW+
-        7zwPDd9Cf3VTyCZCvAPn2WVmGg==
-X-Google-Smtp-Source: ADFU+vtsIu5LcYQTUxCfa+mndGJ5GnOY2zGXKRe5wUNG4rrwTv7+kt8nn7Q73zpegZuDxqo0N1BzMQ==
-X-Received: by 2002:aa7:8ec2:: with SMTP id b2mr3946223pfr.28.1583346788485;
-        Wed, 04 Mar 2020 10:33:08 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id k11sm3501235pje.36.2020.03.04.10.33.07
+         :mime-version:content-disposition:in-reply-to;
+        bh=0gU/ydvoeF3FI4Xw1IIpa4KUATDx4gtHUDSOYCOmG0M=;
+        b=uhSL31lKj+qD7tUtuknYO9qeObvCq3OsVyQV9Cq0NtqItzNbUbdgXGpNvAd/9457RE
+         giVASuVPKoPpzt6tCPRw0UOhQqU6PcyDASEp6PGDNPKGs1q4X1tTVftCXgu9MV75/URz
+         V8D/ruBNGEyiy0sU7RrRxg5LCkfhYNgQPnGUHdqx3bkVDKnGSIFuxezs62nguZXPPCUk
+         d0jnHQYt3uJh2ki948CEpa4xj0jQ+8dYhS63+Wh+zRClv3N4JU46KcRgEv5kBh/vP5Ch
+         /s0qWjHynspNoy4TZyS/m0SfZ5H+53jhOYgdGy+GtCL/mpc/EMJ+2KClYHbTtwi/xJPX
+         aLwg==
+X-Gm-Message-State: ANhLgQ3kiMbqkY75ryw0rdI6bXwirVLlfSFNfONFsu46+W22ObT4wbG0
+        bnVfUpwBAGrvkY9tFKEQx/wGdw==
+X-Google-Smtp-Source: ADFU+vv27iSAb+4oCoK+xIGaMZcuVgt4tBM7DzSSZNsajzkGnFKC9x+DO1KUY+bUOAPt9ojivLNa7A==
+X-Received: by 2002:a62:ae17:: with SMTP id q23mr3855198pff.239.1583346877981;
+        Wed, 04 Mar 2020 10:34:37 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b21sm30443381pfp.0.2020.03.04.10.34.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 10:33:07 -0800 (PST)
-Date:   Wed, 4 Mar 2020 11:33:06 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, afd@ti.com, s-anna@ti.com,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv7 10/15] remoteproc/omap: Request a timer(s) for
- remoteproc usage
-Message-ID: <20200304183306.GI8197@xps15>
-References: <20200221101936.16833-1-t-kristo@ti.com>
- <20200221101936.16833-11-t-kristo@ti.com>
+        Wed, 04 Mar 2020 10:34:36 -0800 (PST)
+Date:   Wed, 4 Mar 2020 10:34:35 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     pmladek@suse.com, rostedt@goodmis.org,
+        sergey.senozhatsky@gmail.com, andriy.shevchenko@linux.intel.com,
+        linux@rasmusvillemoes.dk, linux-kernel@vger.kernel.org,
+        Scott Wood <oss@buserror.net>,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Axtens <dja@axtens.net>
+Subject: Re: [PATCH] vfsprintf: only hash addresses in security environment
+Message-ID: <202003041022.26AF0178@keescook>
+References: <20200304124707.22650-1-yanaijie@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221101936.16833-11-t-kristo@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200304124707.22650-1-yanaijie@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 12:19:31PM +0200, Tero Kristo wrote:
-> From: Suman Anna <s-anna@ti.com>
+On Wed, Mar 04, 2020 at 08:47:07PM +0800, Jason Yan wrote:
+> When I am implementing KASLR for powerpc, Scott Wood argued that format
+> specifier "%p" always hashes the addresses that people do not have a
+> choice to shut it down: https://patchwork.kernel.org/cover/11367547/
 > 
-> The remote processors in OMAP4+ SoCs are equipped with internal
-> timers, like the internal SysTick timer in a Cortex M3/M4 NVIC or
-> the CTM timer within Unicache in IPU & DSP. However, these timers
-> are gated when the processor subsystem clock is gated, making
-> them rather difficult to use as OS tick sources. They will not
-> be able to wakeup the processor from any processor-sleep induced
-> clock-gating states.
+> It's true that if in a debug environment or security is not concerned,
+> such as KASLR is absent or kptr_restrict = 0,  there is no way to shut
+> the hashing down except changing the code and build the kernel again
+> to use a different format specifier like "%px". And when we want to
+> turn to security environment, the format specifier has to be changed
+> back and rebuild the kernel.
 > 
-> This can be avoided by using an external timer as the tick source,
-> which can be controlled independently by the OMAP remoteproc
-> driver code, but still allowing the processor subsystem clock to
-> be auto-gated when the remoteproc cores are idle.
-> 
-> This patch adds the support for OMAP remote processors to request
-> timer(s) to be used by the remoteproc. The timers are enabled and
-> disabled in line with the enabling/disabling of the remoteproc.
-> The timer data is not mandatory if the advanced device management
-> features are not required.
-> 
-> The core timer functionality is provided by the OMAP DMTimer
-> clocksource driver, which does not export any API. The logic is
-> implemented through the timer device's platform data ops. The OMAP
-> remoteproc driver mainly requires ops to request/free a dmtimer,
-> and to start/stop a timer. The split ops helps in controlling the
-> timer state without having to request and release a timer everytime
-> it needs to use the timer.
-> 
-> NOTE: If the gptimer is already in use by the time IPU and/or
-> DSP are loaded, the processors will fail to boot.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> As KASLR is available on most popular platforms and enabled by default,
+> print the raw value of address while KASLR is absent and kptr_restrict
+> is zero. Those who concerns about security must have KASLR enabled or
+> kptr_restrict set properly.
 
-Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Sorry, but no: %p censoring is there to stem the flood of endless pointer
+leaks into logs, sysfs, proc, etc. These are used for attacks to build
+reliable kernel memory targets, regardless of KASLR. (KASLR can be
+bypassed with all kinds of sampling methods, side-channels, etc.)
 
+Linus has rejected past suggestions to provide a flag for it[1],
+wanting %p to stay unconditionally censored.
+
+-Kees
+
+[1] https://lore.kernel.org/lkml/CA+55aFwieC1-nAs+NFq9RTwaR8ef9hWa4MjNBWL41F-8wM49eA@mail.gmail.com/
+
+> 
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: "Tobin C . Harding" <tobin@kernel.org>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Daniel Axtens <dja@axtens.net>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 > ---
-> v7:
->   - some minor kerneldoc updates.
+>  lib/vsprintf.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
 > 
->  drivers/remoteproc/omap_remoteproc.c | 280 ++++++++++++++++++++++++++-
->  1 file changed, 279 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> index 5d6f32974aa3..b44b470d570b 100644
-> --- a/drivers/remoteproc/omap_remoteproc.c
-> +++ b/drivers/remoteproc/omap_remoteproc.c
-> @@ -26,6 +26,9 @@
->  #include <linux/regmap.h>
->  #include <linux/mfd/syscon.h>
->  #include <linux/reset.h>
-> +#include <clocksource/timer-ti-dm.h>
-> +
-> +#include <linux/platform_data/dmtimer-omap.h>
->  
->  #include "omap_remoteproc.h"
->  #include "remoteproc_internal.h"
-> @@ -57,6 +60,16 @@ struct omap_rproc_mem {
->  	size_t size;
->  };
->  
-> +/**
-> + * struct omap_rproc_timer - data structure for a timer used by a omap rproc
-> + * @odt: timer pointer
-> + * @timer_ops: OMAP dmtimer ops for @odt timer
-> + */
-> +struct omap_rproc_timer {
-> +	struct omap_dm_timer *odt;
-> +	const struct omap_dm_timer_ops *timer_ops;
-> +};
-> +
->  /**
->   * struct omap_rproc - omap remote processor state
->   * @mbox: mailbox channel handle
-> @@ -64,6 +77,8 @@ struct omap_rproc_mem {
->   * @boot_data: boot data structure for setting processor boot address
->   * @mem: internal memory regions data
->   * @num_mems: number of internal memory regions
-> + * @num_timers: number of rproc timer(s)
-> + * @timers: timer(s) info used by rproc
->   * @rproc: rproc handle
->   * @reset: reset handle
->   */
-> @@ -73,6 +88,8 @@ struct omap_rproc {
->  	struct omap_rproc_boot_data *boot_data;
->  	struct omap_rproc_mem *mem;
->  	int num_mems;
-> +	int num_timers;
-> +	struct omap_rproc_timer *timers;
->  	struct rproc *rproc;
->  	struct reset_control *reset;
->  };
-> @@ -97,6 +114,231 @@ struct omap_rproc_dev_data {
->  	const struct omap_rproc_mem_data *mems;
->  };
->  
-> +/**
-> + * omap_rproc_request_timer() - request a timer for a remoteproc
-> + * @dev: device requesting the timer
-> + * @np: device node pointer to the desired timer
-> + * @timer: handle to a struct omap_rproc_timer to return the timer handle
-> + *
-> + * This helper function is used primarily to request a timer associated with
-> + * a remoteproc. The returned handle is stored in the .odt field of the
-> + * @timer structure passed in, and is used to invoke other timer specific
-> + * ops (like starting a timer either during device initialization or during
-> + * a resume operation, or for stopping/freeing a timer).
-> + *
-> + * Return: 0 on success, otherwise an appropriate failure
-> + */
-> +static int omap_rproc_request_timer(struct device *dev, struct device_node *np,
-> +				    struct omap_rproc_timer *timer)
-> +{
-> +	int ret;
-> +
-> +	timer->odt = timer->timer_ops->request_by_node(np);
-> +	if (!timer->odt) {
-> +		dev_err(dev, "request for timer node %p failed\n", np);
-> +		return -EBUSY;
-> +	}
-> +
-> +	ret = timer->timer_ops->set_source(timer->odt, OMAP_TIMER_SRC_SYS_CLK);
-> +	if (ret) {
-> +		dev_err(dev, "error setting OMAP_TIMER_SRC_SYS_CLK as source for timer node %p\n",
-> +			np);
-> +		timer->timer_ops->free(timer->odt);
-> +		return ret;
-> +	}
-> +
-> +	/* clean counter, remoteproc code will set the value */
-> +	timer->timer_ops->set_load(timer->odt, 0, 0);
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * omap_rproc_start_timer() - start a timer for a remoteproc
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This helper function is used to start a timer associated with a remoteproc,
-> + * obtained using the request_timer ops. The helper function needs to be
-> + * invoked by the driver to start the timer (during device initialization)
-> + * or to just resume the timer.
-> + *
-> + * Return: 0 on success, otherwise a failure as returned by DMTimer ops
-> + */
-> +static inline int omap_rproc_start_timer(struct omap_rproc_timer *timer)
-> +{
-> +	return timer->timer_ops->start(timer->odt);
-> +}
-> +
-> +/**
-> + * omap_rproc_stop_timer() - stop a timer for a remoteproc
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This helper function is used to disable a timer associated with a
-> + * remoteproc, and needs to be called either during a device shutdown
-> + * or suspend operation. The separate helper function allows the driver
-> + * to just stop a timer without having to release the timer during a
-> + * suspend operation.
-> + *
-> + * Return: 0 on success, otherwise a failure as returned by DMTimer ops
-> + */
-> +static inline int omap_rproc_stop_timer(struct omap_rproc_timer *timer)
-> +{
-> +	return timer->timer_ops->stop(timer->odt);
-> +}
-> +
-> +/**
-> + * omap_rproc_release_timer() - release a timer for a remoteproc
-> + * @timer: handle to a OMAP rproc timer
-> + *
-> + * This helper function is used primarily to release a timer associated
-> + * with a remoteproc. The dmtimer will be available for other clients to
-> + * use once released.
-> + *
-> + * Return: 0 on success, otherwise a failure as returned by DMTimer ops
-> + */
-> +static inline int omap_rproc_release_timer(struct omap_rproc_timer *timer)
-> +{
-> +	return timer->timer_ops->free(timer->odt);
-> +}
-> +
-> +/**
-> + * omap_rproc_enable_timers() - enable the timers for a remoteproc
-> + * @rproc: handle of a remote processor
-> + * @configure: boolean flag used to acquire and configure the timer handle
-> + *
-> + * This function is used primarily to enable the timers associated with
-> + * a remoteproc. The configure flag is provided to allow the driver to
-> + * to either acquire and start a timer (during device initialization) or
-> + * to just start a timer (during a resume operation).
-> + *
-> + * Return: 0 on success, otherwise an appropriate failure
-> + */
-> +static int omap_rproc_enable_timers(struct rproc *rproc, bool configure)
-> +{
-> +	int i;
-> +	int ret = 0;
-> +	struct platform_device *tpdev;
-> +	struct dmtimer_platform_data *tpdata;
-> +	const struct omap_dm_timer_ops *timer_ops;
-> +	struct omap_rproc *oproc = rproc->priv;
-> +	struct omap_rproc_timer *timers = oproc->timers;
-> +	struct device *dev = rproc->dev.parent;
-> +	struct device_node *np = NULL;
-> +
-> +	if (!oproc->num_timers)
-> +		return 0;
-> +
-> +	if (!configure)
-> +		goto start_timers;
-> +
-> +	for (i = 0; i < oproc->num_timers; i++) {
-> +		np = of_parse_phandle(dev->of_node, "ti,timers", i);
-> +		if (!np) {
-> +			ret = -ENXIO;
-> +			dev_err(dev, "device node lookup for timer at index %d failed: %d\n",
-> +				i, ret);
-> +			goto free_timers;
-> +		}
-> +
-> +		tpdev = of_find_device_by_node(np);
-> +		if (!tpdev) {
-> +			ret = -ENODEV;
-> +			dev_err(dev, "could not get timer platform device\n");
-> +			goto put_node;
-> +		}
-> +
-> +		tpdata = dev_get_platdata(&tpdev->dev);
-> +		put_device(&tpdev->dev);
-> +		if (!tpdata) {
-> +			ret = -EINVAL;
-> +			dev_err(dev, "dmtimer pdata structure NULL\n");
-> +			goto put_node;
-> +		}
-> +
-> +		timer_ops = tpdata->timer_ops;
-> +		if (!timer_ops || !timer_ops->request_by_node ||
-> +		    !timer_ops->set_source || !timer_ops->set_load ||
-> +		    !timer_ops->free || !timer_ops->start ||
-> +		    !timer_ops->stop) {
-> +			ret = -EINVAL;
-> +			dev_err(dev, "device does not have required timer ops\n");
-> +			goto put_node;
-> +		}
-> +
-> +		timers[i].timer_ops = timer_ops;
-> +		ret = omap_rproc_request_timer(dev, np, &timers[i]);
-> +		if (ret) {
-> +			dev_err(dev, "request for timer %p failed: %d\n", np,
-> +				ret);
-> +			goto put_node;
-> +		}
-> +		of_node_put(np);
-> +	}
-> +
-> +start_timers:
-> +	for (i = 0; i < oproc->num_timers; i++) {
-> +		ret = omap_rproc_start_timer(&timers[i]);
-> +		if (ret) {
-> +			dev_err(dev, "start timer %p failed failed: %d\n", np,
-> +				ret);
-> +			break;
-> +		}
-> +	}
-> +	if (ret) {
-> +		while (i >= 0) {
-> +			omap_rproc_stop_timer(&timers[i]);
-> +			i--;
-> +		}
-> +		goto put_node;
-> +	}
-> +	return 0;
-> +
-> +put_node:
-> +	if (configure)
-> +		of_node_put(np);
-> +free_timers:
-> +	while (i--) {
-> +		omap_rproc_release_timer(&timers[i]);
-> +		timers[i].odt = NULL;
-> +		timers[i].timer_ops = NULL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * omap_rproc_disable_timers() - disable the timers for a remoteproc
-> + * @rproc: handle of a remote processor
-> + * @configure: boolean flag used to release the timer handle
-> + *
-> + * This function is used primarily to disable the timers associated with
-> + * a remoteproc. The configure flag is provided to allow the driver to
-> + * to either stop and release a timer (during device shutdown) or to just
-> + * stop a timer (during a suspend operation).
-> + *
-> + * Return: 0 on success or no timers
-> + */
-> +static int omap_rproc_disable_timers(struct rproc *rproc, bool configure)
-> +{
-> +	int i;
-> +	struct omap_rproc *oproc = rproc->priv;
-> +	struct omap_rproc_timer *timers = oproc->timers;
-> +
-> +	if (!oproc->num_timers)
-> +		return 0;
-> +
-> +	for (i = 0; i < oproc->num_timers; i++) {
-> +		omap_rproc_stop_timer(&timers[i]);
-> +		if (configure) {
-> +			omap_rproc_release_timer(&timers[i]);
-> +			timers[i].odt = NULL;
-> +			timers[i].timer_ops = NULL;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * omap_rproc_mbox_callback() - inbound mailbox message handler
->   * @client: mailbox client pointer used for requesting the mailbox channel
-> @@ -234,14 +476,22 @@ static int omap_rproc_start(struct rproc *rproc)
->  		goto put_mbox;
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 7c488a1ce318..f74131b152a1 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -2253,8 +2253,15 @@ char *pointer(const char *fmt, char *buf, char *end, void *ptr,
+>  		return err_ptr(buf, end, ptr, spec);
 >  	}
 >  
-> +	ret = omap_rproc_enable_timers(rproc, true);
-> +	if (ret) {
-> +		dev_err(dev, "omap_rproc_enable_timers failed: %d\n", ret);
-> +		goto put_mbox;
-> +	}
-> +
->  	ret = reset_control_deassert(oproc->reset);
->  	if (ret) {
->  		dev_err(dev, "reset control deassert failed: %d\n", ret);
-> -		goto put_mbox;
-> +		goto disable_timers;
->  	}
->  
->  	return 0;
->  
-> +disable_timers:
-> +	omap_rproc_disable_timers(rproc, true);
->  put_mbox:
->  	mbox_free_channel(oproc->mbox);
->  	return ret;
-> @@ -257,6 +507,10 @@ static int omap_rproc_stop(struct rproc *rproc)
->  	if (ret)
->  		return ret;
->  
-> +	ret = omap_rproc_disable_timers(rproc, true);
-> +	if (ret)
-> +		return ret;
-> +
->  	mbox_free_channel(oproc->mbox);
->  
->  	return 0;
-> @@ -526,6 +780,30 @@ static int omap_rproc_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto free_rproc;
->  
+> -	/* default is to _not_ leak addresses, hash before printing */
+> -	return ptr_to_id(buf, end, ptr, spec);
 > +	/*
-> +	 * Timer nodes are directly used in client nodes as phandles, so
-> +	 * retrieve the count using appropriate size
+> +	 * In security environment, while kaslr is enabled or kptr_restrict is
+> +	 * not zero, hash before printing so that addresses will not be
+> +	 * leaked. And if not in a security environment, print the raw value
 > +	 */
-> +	oproc->num_timers = of_count_phandle_with_args(np, "ti,timers", NULL);
-> +	if (oproc->num_timers <= 0) {
-> +		dev_dbg(&pdev->dev, "device does not have timers, status = %d\n",
-> +			oproc->num_timers);
-> +		oproc->num_timers = 0;
-> +	}
-> +
-> +	if (oproc->num_timers) {
-> +		oproc->timers = devm_kcalloc(&pdev->dev, oproc->num_timers,
-> +					     sizeof(*oproc->timers),
-> +					     GFP_KERNEL);
-> +		if (!oproc->timers) {
-> +			ret = -ENOMEM;
-> +			goto free_rproc;
-> +		}
-> +
-> +		dev_dbg(&pdev->dev, "device has %d tick timers\n",
-> +			oproc->num_timers);
-> +	}
-> +
->  	ret = of_reserved_mem_device_init(&pdev->dev);
->  	if (ret) {
->  		dev_warn(&pdev->dev, "device does not have specific CMA pool.\n");
+> +	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) || kptr_restrict)
+> +		return ptr_to_id(buf, end, ptr, spec);
+> +	else
+> +		return pointer_string(buf, end, ptr, spec);
+>  }
+>  
+>  /*
 > -- 
-> 2.17.1
+> 2.17.2
 > 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
+-- 
+Kees Cook
