@@ -2,197 +2,287 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 904ABC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98462C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6360820CC7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ED93214DB
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 03:38:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YPEuteTr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BwOATE78"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387701AbgCDDfi (ORCPT
+        id S2387702AbgCDDiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 22:35:38 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42328 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387644AbgCDDfh (ORCPT
+        Tue, 3 Mar 2020 22:38:00 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46814 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387488AbgCDDh7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 22:35:37 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583292936; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=VPX3a9LCupJ35BN0U2GtWqoO28bTvTPURVjAj6k8B0o=; b=YPEuteTr94yDDwunrsjj46DABpcsiauZv5o4Sw0w+zKHb10WhydIMU1NmjbJxHcFgqWiOjok
- 1zwS3IHP4msi/JWQA3jKpMn6vsgrPvv4QY89y6WW0BICxIuWZIvwr206e4ct/8ltpUcaXgpU
- tGQYUVj5huUID9/Q6G4jHf/9lEM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5f21ff.7fe9c0657e30-smtp-out-n02;
- Wed, 04 Mar 2020 03:35:27 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 98BB7C4479F; Wed,  4 Mar 2020 03:35:27 +0000 (UTC)
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AF16CC43383;
-        Wed,  4 Mar 2020 03:35:22 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AF16CC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v1 2/2] clk: qcom: dispcc: Remove support of
- disp_cc_mdss_rscc_ahb_clk
-To:     Matthias Kaehlcke <mka@chromium.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>, robh@kernel.org,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, Doug Anderson <dianders@chromium.org>
-References: <1581423236-21341-1-git-send-email-tdas@codeaurora.org>
- <1581423236-21341-2-git-send-email-tdas@codeaurora.org>
- <20200303201629.GP24720@google.com>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <f0529793-c51d-4baf-5217-173c552f4cbe@codeaurora.org>
-Date:   Wed, 4 Mar 2020 09:05:20 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200303201629.GP24720@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Tue, 3 Mar 2020 22:37:59 -0500
+Received: by mail-pl1-f195.google.com with SMTP id w12so219810pll.13;
+        Tue, 03 Mar 2020 19:37:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=oPj1/0rT7Md1Gue88lTMInwpdQSYf3PU3c+RNK/VLOM=;
+        b=BwOATE784iILokw6e3P2XjBrzSJrXyMW0EMWn6rzRO83MdeAeI2VJVk/tNnT2RE4ab
+         nOIoJOtgsLcTvFFaBIFCUibmqR8xVQhVLKrxknAzozPGl2H0IiHnYDJVO3paDk743wZS
+         MR4xqTlwLC4CUcJ/zFKL9Lu0fclGf3eyjb5YxDdTpFQ14i1FyajA1TyzvowifabnyHbY
+         EGI4X8qo2tBUIzcRO001pzjRjdy+ImMMns+yqd5Qq6eHRY6cAO0RpYlUHWbBlLMcbLLk
+         QmaXGCSeM3jHy+TtDfepiba6zME6bk6YYEUhSbtgw7+Tk7j59pShevB455t05cZdNRKC
+         qbnQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=oPj1/0rT7Md1Gue88lTMInwpdQSYf3PU3c+RNK/VLOM=;
+        b=rgYyEe6LFVPvJNB4RI5yXKSPHfNo4beW19Lmp2732GAA2isOMFf9/GFcYlFDCY2ezZ
+         fUYbSGIGvukZ9pC3m98Z1dAoUXiy72d3V3fQM4wV86YTREIlk12cPAXe6tTGhHqkNQ4I
+         OUw0yjBIlvunByQkf2LRmKgOweS2RBS9J1aHCoJ5QQ0B5ttkb621Hubjx9cujrbes9uZ
+         ZD4561IJgkc6wlmXJwMM+tzzxQYI/Fg9iMIlEt9L2X1Ovsc3G1FvY+GsQkAG136fF9Be
+         HQ6fnn2f1d5N8c8C/64hpB6n/17pIilHy+OZ5kyRuaNFpnLz7DaBFIsmifCsMBLCU6H2
+         AZdA==
+X-Gm-Message-State: ANhLgQ3mEjUWupn/Y6guTYcFwZ/Oece38W1aJCzB7hVkeb3ZR5UAPZke
+        kLaHPJyOwudMFq7hBr7ZXuNuknsb
+X-Google-Smtp-Source: ADFU+vtJ8WnnoQEUIx7OYvuNNP1j1UD+SWUfkkxGRZEubj7rXBMvrjnvClZth982Wgo2SR/d5S4oJw==
+X-Received: by 2002:a17:902:8c98:: with SMTP id t24mr1103515plo.51.1583293076890;
+        Tue, 03 Mar 2020 19:37:56 -0800 (PST)
+Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id a71sm10789835pfa.117.2020.03.03.19.37.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 03 Mar 2020 19:37:56 -0800 (PST)
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+To:     johan@kernel.org
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org, peter_hong@fintek.com.tw,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+Subject: [PATCH V4 1/1] USB: serial: f81232: Add generator for F81534A
+Date:   Wed,  4 Mar 2020 11:37:51 +0800
+Message-Id: <20200304033751.8662-1-hpeter+linux_kernel@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The Fintek F81534A series is contains 1 HUB / 1 GPIO device / n UARTs,
+but the UART is default disable and need enabled by GPIO device(2c42/16F8).
 
+When F81534A plug to host, we can only see 1 HUB & 1 GPIO device and we
+write 0x8fff to GPIO device register F81534A_CTRL_CMD_ENABLE_PORT(116h)
+to enable all available serial ports.
 
-On 3/4/2020 1:46 AM, Matthias Kaehlcke wrote:
-> On Tue, Feb 11, 2020 at 05:43:56PM +0530, Taniya Das wrote:
->> The disp_cc_mdss_rscc_ahb_clk is default enabled from hardware and thus
->> does not require to be marked CRITICAL. This which would allow the RCG to
->> be turned OFF when the display turns OFF and not blocking XO.
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>   drivers/clk/qcom/dispcc-sc7180.c | 19 -------------------
->>   1 file changed, 19 deletions(-)
->>
->> diff --git a/drivers/clk/qcom/dispcc-sc7180.c b/drivers/clk/qcom/dispcc-sc7180.c
->> index dd7af41..0a5d395 100644
->> --- a/drivers/clk/qcom/dispcc-sc7180.c
->> +++ b/drivers/clk/qcom/dispcc-sc7180.c
->> @@ -592,24 +592,6 @@ static struct clk_branch disp_cc_mdss_rot_clk = {
->>   	},
->>   };
->>
->> -static struct clk_branch disp_cc_mdss_rscc_ahb_clk = {
->> -	.halt_reg = 0x400c,
->> -	.halt_check = BRANCH_HALT,
->> -	.clkr = {
->> -		.enable_reg = 0x400c,
->> -		.enable_mask = BIT(0),
->> -		.hw.init = &(struct clk_init_data){
->> -			.name = "disp_cc_mdss_rscc_ahb_clk",
->> -			.parent_data = &(const struct clk_parent_data){
->> -				.hw = &disp_cc_mdss_ahb_clk_src.clkr.hw,
->> -			},
->> -			.num_parents = 1,
->> -			.flags = CLK_IS_CRITICAL | CLK_SET_RATE_PARENT,
->> -			.ops = &clk_branch2_ops,
->> -		},
->> -	},
->> -};
->> -
->>   static struct clk_branch disp_cc_mdss_rscc_vsync_clk = {
->>   	.halt_reg = 0x4008,
->>   	.halt_check = BRANCH_HALT,
->> @@ -687,7 +669,6 @@ static struct clk_regmap *disp_cc_sc7180_clocks[] = {
->>   	[DISP_CC_MDSS_PCLK0_CLK_SRC] = &disp_cc_mdss_pclk0_clk_src.clkr,
->>   	[DISP_CC_MDSS_ROT_CLK] = &disp_cc_mdss_rot_clk.clkr,
->>   	[DISP_CC_MDSS_ROT_CLK_SRC] = &disp_cc_mdss_rot_clk_src.clkr,
->> -	[DISP_CC_MDSS_RSCC_AHB_CLK] = &disp_cc_mdss_rscc_ahb_clk.clkr,
->>   	[DISP_CC_MDSS_RSCC_VSYNC_CLK] = &disp_cc_mdss_rscc_vsync_clk.clkr,
->>   	[DISP_CC_MDSS_VSYNC_CLK] = &disp_cc_mdss_vsync_clk.clkr,
->>   	[DISP_CC_MDSS_VSYNC_CLK_SRC] = &disp_cc_mdss_vsync_clk_src.clkr,
-> 
-> We found that this change leads to a panic at boot time on SC7180 devices
-> without display configuration (e.g. the SC7180 IDP with the current DT):
-> 
-> [    2.412820] SError Interrupt on CPU6, code 0xbe000411 -- SError
-> [    2.412822] CPU: 6 PID: 1 Comm: swapper/0 Tainted: G S                5.4.22 #103
-> [    2.412822] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
-> [    2.412823] pstate: 20c00089 (nzCv daIf +PAN +UAO)
-> [    2.412823] pc : regmap_mmio_read32le+0x28/0x40
-> [    2.412823] lr : regmap_mmio_read+0x44/0x6c
-> [    2.412824] sp : ffffffc01005ba90
-> [    2.412824] x29: ffffffc01005ba90 x28: 0000000000000000
-> [    2.412825] x27: 0000000000000000 x26: 0000000000000000
-> [    2.412826] x25: 0000000000000000 x24: ffffffd1f4aed018
-> [    2.412827] x23: ffffffd1f4c12148 x22: ffffff8177a6c800
-> [    2.412827] x21: 0000000000002048 x20: ffffff8177489e00
-> [    2.412828] x19: 0000000000002048 x18: 000000004a746f4b
-> [    2.412829] x17: 00000000d0e09034 x16: 000000005079b450
-> [    2.412830] x15: 000000003e3bf7ed x14: 0000000000007fff
-> [    2.412830] x13: ffffff8177309b40 x12: 0000000000000000
-> [    2.412831] x11: 0000000000000000 x10: 0000000000000000
-> [    2.412831] x9 : 0000000000000001 x8 : ffffffc011c02048
-> [    2.412832] x7 : aaaaaaaaaaaaaaaa x6 : 0000000000000000
-> [    2.412833] x5 : 0000000000000000 x4 : 0000000000000000
-> [    2.412834] x3 : 0000000000000000 x2 : ffffffc01005bb84
-> [    2.412834] x1 : 0000000000002048 x0 : 0000000080000000
-> [    2.412835] Kernel panic - not syncing: Asynchronous SError Interrupt
-> [    2.412836] CPU: 6 PID: 1 Comm: swapper/0 Tainted: G S                5.4.22 #103
-> [    2.412836] Hardware name: Qualcomm Technologies, Inc. SC7180 IDP (DT)
-> [    2.412836] Call trace:
-> [    2.412837]  dump_backtrace+0x0/0x150
-> [    2.412837]  show_stack+0x20/0x2c
-> [    2.412837]  dump_stack+0xa0/0xd8
-> [    2.412838]  panic+0x158/0x360
-> [    2.412838]  panic+0x0/0x360
-> [    2.412838]  arm64_serror_panic+0x78/0x84
-> [    2.412839]  do_serror+0x110/0x118
-> [    2.412839]  el1_error+0x84/0xf8
-> [    2.412839]  regmap_mmio_read32le+0x28/0x40
-> [    2.412840]  regmap_mmio_read+0x44/0x6c
-> [    2.412840]  _regmap_bus_reg_read+0x34/0x44
-> [    2.412841]  _regmap_read+0x88/0x164
-> [    2.412841]  regmap_read+0x54/0x78
-> [    2.412841]  clk_is_enabled_regmap+0x3c/0x8c
-> [    2.412842]  clk_core_is_enabled+0x68/0xac
-> [    2.412842]  clk_disable_unused_subtree+0x90/0x22c
-> [    2.412843]  clk_disable_unused_subtree+0x34/0x22c
-> [    2.412843]  clk_disable_unused+0x74/0x108
-> [    2.412843]  do_one_initcall+0x13c/0x2c8
-> [    2.412844]  do_initcall_level+0x144/0x16c
-> [    2.412844]  do_basic_setup+0x30/0x48
-> [    2.412844]  kernel_init_freeable+0xc4/0x140
-> [    2.412845]  kernel_init+0x14/0x100
-> [    2.412845]  ret_from_fork+0x10/0x18
-> [    2.412858] SMP: stopping secondary CPUs
-> [    2.412859] Kernel Offset: 0x11e3a00000 from 0xffffffc010000000
-> [    2.412859] PHYS_OFFSET: 0xffffffe780000000
-> [    2.412860] CPU features: 0x0006,2a80aa18
-> [    2.412860] Memory Limit: none
-> 
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+---
+Changelog:
+v4:
+	1. Remove unused define.
+	2. Remove usb_translate_errors() in f81534a_ctrl_set_register()
+	   with short transfer.
+	3. Replace dev_warn() with dev_err() in f81534a_ctrl_enable_all_ports()
+	4. Disable & remove all usb serial port device when disconnect().
 
-Hi Matthias,
+v3:
+	1. Modify some define with prefix F81534A_CTRL_.
+	2. Use kmemdup() in f81534a_ctrl_set_register().
+	3. Not accpet with short transfers in f81534a_ctrl_set_register().
+	4. Add comment in f81534a_ctrl_enable_all_ports() to describe magic
+	   constants.
+	5. Remove non-need usb_get_dev()/usb_put_dev().
+	6. Add F81534A_CTRL_ID in MODULE_DEVICE_TABLE().
 
-The display device node is not present and we encounter this crash, 
-would it be possible to add ALWAYS_ON for the MDSS GDSC and give it a try.
+v2:
+	1: Simplify the generator behavior.
+	2: Change multiply MODULE_DEVICE_TABLE() to 1 only.
 
+ drivers/usb/serial/f81232.c | 131 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 130 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
+index d27876e64e9d..de625587c957 100644
+--- a/drivers/usb/serial/f81232.c
++++ b/drivers/usb/serial/f81232.c
+@@ -36,6 +36,9 @@
+ 	{ USB_DEVICE(0x2c42, 0x1635) },	/* 8 port UART device */ \
+ 	{ USB_DEVICE(0x2c42, 0x1636) }	/* 12 port UART device */
+ 
++#define F81534A_CTRL_ID		\
++	{ USB_DEVICE(0x2c42, 0x16f8) }	/* Global control device */
++
+ static const struct usb_device_id f81232_id_table[] = {
+ 	F81232_ID,
+ 	{ }					/* Terminating entry */
+@@ -46,9 +49,15 @@ static const struct usb_device_id f81534a_id_table[] = {
+ 	{ }					/* Terminating entry */
+ };
+ 
++static const struct usb_device_id f81534a_ctrl_id_table[] = {
++	F81534A_CTRL_ID,
++	{ }					/* Terminating entry */
++};
++
+ static const struct usb_device_id combined_id_table[] = {
+ 	F81232_ID,
+ 	F81534A_SERIES_ID,
++	F81534A_CTRL_ID,
+ 	{ }					/* Terminating entry */
+ };
+ MODULE_DEVICE_TABLE(usb, combined_id_table);
+@@ -61,6 +70,7 @@ MODULE_DEVICE_TABLE(usb, combined_id_table);
+ #define F81232_REGISTER_REQUEST		0xa0
+ #define F81232_GET_REGISTER		0xc0
+ #define F81232_SET_REGISTER		0x40
++#define F81534A_ACCESS_REG_RETRY	2
+ 
+ #define SERIAL_BASE_ADDRESS		0x0120
+ #define RECEIVE_BUFFER_REGISTER		(0x00 + SERIAL_BASE_ADDRESS)
+@@ -101,6 +111,9 @@ MODULE_DEVICE_TABLE(usb, combined_id_table);
+ #define F81534A_GPIO_MODE1_OUTPUT	BIT(1)
+ #define F81534A_GPIO_MODE0_OUTPUT	BIT(0)
+ 
++#define F81534A_CTRL_CMD_ENABLE_PORT	0x116
++
++
+ struct f81232_private {
+ 	struct mutex lock;
+ 	u8 modem_control;
+@@ -848,6 +861,88 @@ static void f81232_lsr_worker(struct work_struct *work)
+ 		dev_warn(&port->dev, "read LSR failed: %d\n", status);
+ }
+ 
++static int f81534a_ctrl_set_register(struct usb_device *dev, u16 reg, u16 size,
++					void *val)
++{
++	int retry = F81534A_ACCESS_REG_RETRY;
++	int status;
++	u8 *tmp;
++
++	tmp = kmemdup(val, size, GFP_KERNEL);
++	if (!tmp)
++		return -ENOMEM;
++
++	while (retry--) {
++		status = usb_control_msg(dev,
++					usb_sndctrlpipe(dev, 0),
++					F81232_REGISTER_REQUEST,
++					F81232_SET_REGISTER,
++					reg,
++					0,
++					tmp,
++					size,
++					USB_CTRL_SET_TIMEOUT);
++		if (status != size) {
++			status = -EIO;
++			continue;
++		}
++
++		status = 0;
++		break;
++	}
++
++	if (status) {
++		dev_err(&dev->dev, "set ctrl reg: %x, failed status: %d\n",
++				reg, status);
++	}
++
++	kfree(tmp);
++	return status;
++}
++
++static int f81534a_ctrl_enable_all_ports(struct usb_interface *intf, bool en)
++{
++	struct usb_device *dev = interface_to_usbdev(intf);
++	unsigned char enable[2] = {0};
++	int status;
++
++	/*
++	 * Enable all available serial ports, define as following:
++	 * bit 15	: Reset behavior (when HUB got soft reset)
++	 *			0: maintain all serial port enabled state.
++	 *			1: disable all serial port.
++	 * bit 0~11	: Serial port enable bit.
++	 */
++	if (en) {
++		enable[0] = 0xff;
++		enable[1] = 0x8f;
++	}
++
++	status = f81534a_ctrl_set_register(dev, F81534A_CTRL_CMD_ENABLE_PORT,
++			sizeof(enable), enable);
++	if (status)
++		dev_err(&dev->dev, "failed to enable ports: %d\n", status);
++
++	return status;
++}
++
++static int f81534a_ctrl_probe(struct usb_interface *intf,
++				const struct usb_device_id *id)
++{
++
++	return f81534a_ctrl_enable_all_ports(intf, true);
++}
++
++static void f81534a_ctrl_disconnect(struct usb_interface *intf)
++{
++	f81534a_ctrl_enable_all_ports(intf, false);
++}
++
++static int f81534a_ctrl_resume(struct usb_interface *intf)
++{
++	return f81534a_ctrl_enable_all_ports(intf, true);
++}
++
+ static int f81232_port_probe(struct usb_serial_port *port)
+ {
+ 	struct f81232_private *priv;
+@@ -975,7 +1070,41 @@ static struct usb_serial_driver * const serial_drivers[] = {
+ 	NULL,
+ };
+ 
+-module_usb_serial_driver(serial_drivers, combined_id_table);
++static struct usb_driver f81534a_ctrl_driver = {
++	.name =		"f81534a_ctrl",
++	.id_table =	f81534a_ctrl_id_table,
++	.probe =	f81534a_ctrl_probe,
++	.disconnect =	f81534a_ctrl_disconnect,
++	.resume =	f81534a_ctrl_resume,
++};
++
++static int __init f81232_init(void)
++{
++	int status;
++
++	status = usb_register_driver(&f81534a_ctrl_driver, THIS_MODULE,
++			KBUILD_MODNAME);
++	if (status)
++		return status;
++
++	status = usb_serial_register_drivers(serial_drivers, KBUILD_MODNAME,
++			combined_id_table);
++	if (status) {
++		usb_deregister(&f81534a_ctrl_driver);
++		return status;
++	}
++
++	return 0;
++}
++
++static void __exit f81232_exit(void)
++{
++	usb_serial_deregister_drivers(serial_drivers);
++	usb_deregister(&f81534a_ctrl_driver);
++}
++
++module_init(f81232_init);
++module_exit(f81232_exit);
+ 
+ MODULE_DESCRIPTION("Fintek F81232/532A/534A/535/536 USB to serial driver");
+ MODULE_AUTHOR("Greg Kroah-Hartman <gregkh@linuxfoundation.org>");
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+2.17.1
 
---
