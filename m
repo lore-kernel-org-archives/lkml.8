@@ -2,65 +2,119 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB51C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17D2EC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:02:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E5F20705
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4EFD20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:02:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N03l14Qp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388309AbgCDVBM (ORCPT
+        id S2388332AbgCDVCl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:01:12 -0500
-Received: from ms.lwn.net ([45.79.88.28]:47252 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgCDVBM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:01:12 -0500
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 8AFF97F5;
-        Wed,  4 Mar 2020 21:01:11 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 14:01:10 -0700
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Wed, 4 Mar 2020 16:02:41 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46294 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgCDVCk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 16:02:40 -0500
+Received: by mail-wr1-f68.google.com with SMTP id j7so4213947wrp.13;
+        Wed, 04 Mar 2020 13:02:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=NEFs2MX2HBD3Da9qWclQMksmz31HvstBlw6pDvT6iSQ=;
+        b=N03l14QpofeCXOwJXLkIy6ov4cbP2By/AZf3fm3ywZ6osNrkAw/edkSKoGg26BFgIy
+         emyg2CUWOcV8Y7R+NMmBc2dM92cup7X7A0jZynmJmdo+u0RWfWAXNo7z5edQhFisQU4v
+         ppzjdSYyO4ShpZ0h9ZwzGI/QnG8d9JX6+8mtdW+TQpzlVDcMrCZ4OEo/+fGrcmWWNj56
+         2hx4NJH1gFXQjDMPmpXuSk3uS/1gxHlm+m/GIWVVQ6KY/vgJ6faOvbFMKfDSaGvxF41b
+         7fzisDinYlS33G15O+ocNM4RnWnq5E0m8vpdw1OdDMXV1f1v/Bs2N/Y8fmu78/wuxZaB
+         ynxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=NEFs2MX2HBD3Da9qWclQMksmz31HvstBlw6pDvT6iSQ=;
+        b=Ib8IrDBoEKJ0gJrDVjKaCklvQCZ+9Yn5YJzpU6LjQYE7FQvPUXmt0qxVMZr2t9m275
+         ZeDw1KVg6x6+zHGyhjcqvoJQSh3YysSabliIyyUZL6TF9FKmaTt+kKMmeN9upeclC/UV
+         0GV5tw7ixMK3gDIW7N8+iSHf0d3mNrxMHMnFscmfaiEXY4lg1kzNxVLNtueZ8GZje1Kh
+         7KQyPlc42y+HH2obtUSgcSyr7s5VmvGEr7qfA8SuAz6csnqvL5RwRiAosMzMte/eMofu
+         Y7UmtL4peJv1ThS2Hfcyd7r9wqAn3c0xuXWqiM39+YwEH4KD41IeD4GXfMElYDqRtYnf
+         i2VQ==
+X-Gm-Message-State: ANhLgQ0XU2v06G0LklOwZatXG/GB4HKB12CBAZapt0SPsOxMBy8UnhBV
+        j9RFSwKi2Igp+NOLcJNMHKg=
+X-Google-Smtp-Source: ADFU+vt7GyKW2cIsrJdFhVMvmrn9ud46HhYHOhye8TeFKkHP5sDs31FglV7g0UQQ0Uj6nor53IgKaw==
+X-Received: by 2002:adf:de12:: with SMTP id b18mr5776099wrm.268.1583355757945;
+        Wed, 04 Mar 2020 13:02:37 -0800 (PST)
+Received: from felia ([2001:16b8:2d16:4100:5c62:5f:595c:f76d])
+        by smtp.gmail.com with ESMTPSA id j20sm6100249wmj.46.2020.03.04.13.02.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 13:02:37 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Wed, 4 Mar 2020 22:02:35 +0100 (CET)
+X-X-Sender: lukas@felia
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+cc:     Jonathan Corbet <corbet@lwn.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
         linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
-Message-ID: <20200304140110.1951004f@lwn.net>
-In-Reply-To: <alpine.DEB.2.21.2003042145340.2698@felia>
-References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
-        <20200304131035.731a3947@lwn.net>
-        <alpine.DEB.2.21.2003042145340.2698@felia>
-Organization: LWN.net
+In-Reply-To: <20200304212846.0c79c6da@coco.lan>
+Message-ID: <alpine.DEB.2.21.2003042151430.2698@felia>
+References: <20200304072950.10532-1-lukas.bulwahn@gmail.com> <20200304131035.731a3947@lwn.net> <20200304212846.0c79c6da@coco.lan>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 21:50:39 +0100 (CET)
-Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
 
+
+On Wed, 4 Mar 2020, Mauro Carvalho Chehab wrote:
+
+> Em Wed, 4 Mar 2020 13:10:35 -0700
+> Jonathan Corbet <corbet@lwn.net> escreveu:
+> 
+> > 
+> > Sigh, I need to work a MAINTAINERS check into my workflow...
+> > 
 > > Thanks for fixing these, but ... what tree did you generate the patch
 > > against?  I doesn't come close to applying to docs-next.
-> >  
 > 
-> My patch was based on next-20200303, probably too much noise on 
-> MAINTAINERS, such that it does not apply cleanly on docs-next.
-> If you want, I can send a patch that fits to docs-next. Anyway, merging 
-> will be similarly difficult later :(
+> I'm starting to suspect that maybe the best workflow would be to just 
+> apply the patches at docs-next keeping links broken, and then run
+> ./scripts/documentation-file-ref-check --fix by the end of a merge
+> window, addressing such breakages.
+> 
+> There are usually lots of churn outside the merge window.
+>
 
-Merge conflicts in MAINTAINERS are almost always trivial to resolve -
-Stephen won't mind :)
+Agree, it is probably the simplest solution to get such things fixed at 
+the end of the merge window; there are many of such 'automatic' fixes (and 
+scripts that generate them). It just needs somebody to convince Linus to
+have a trusted end-of-merge-window clean-up team to provide a final pull 
+request on Sunday afternoon to fix all those minor points.
+ 
+> Another alternative would be to split the MAINTAINERS file on a
+> per-subsystem basis. If I remember well, someone proposed this once at
+> LKML. I vaguely remember that there were even a patch (or RFC)
+> adding support for such thing for get_maintainers.pl.
+> 
 
-Thanks,
+I would also support that idea. In the meantime, I am looking into the 
+effort to identify and fix these issues when they are submitted to the 
+mailing list. It is not the simplest solution, but at least a solution 
+that I can try to work on individually at first.
 
-jon
+Lukas
