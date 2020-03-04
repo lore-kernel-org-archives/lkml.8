@@ -2,92 +2,98 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1130EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 138D1C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEB4E20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9C8620870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vgLyJXOZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1STWgSZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgCDSsJ (ORCPT
+        id S1730146AbgCDSup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:48:09 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45660 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729600AbgCDSsI (ORCPT
+        Wed, 4 Mar 2020 13:50:45 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:34629 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729600AbgCDSup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:48:08 -0500
-Received: by mail-qk1-f196.google.com with SMTP id z12so2675412qkg.12;
-        Wed, 04 Mar 2020 10:48:06 -0800 (PST)
+        Wed, 4 Mar 2020 13:50:45 -0500
+Received: by mail-qv1-f68.google.com with SMTP id o18so1273697qvf.1;
+        Wed, 04 Mar 2020 10:50:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=NE5tobHQQ2/3ErluiyeeeZc0smcvyLLr1pL5i5navJs=;
-        b=vgLyJXOZMYFDxEDTurLuSy02/JBbnhPP3GdGoQvQ6RqU0ZHMg+8P9f4HAowXJVsydN
-         Q9sGvGFIvUWQfv4RcYMSmemJiHBcVjWbmy1xaIN/TsRAIUPvWHMAWAyPBL0FypeEKeE0
-         HrGOetNNySYDAOIA5hrarBVoSvHx6QvM6nSjW/W+uhsRmRWymmmahAZIkexD1pkYMLpv
-         OWDW8wOFdbyWTDlKHU02wDL5Dz0LUCd5LhADqcJa0+Eb7VS0bop3i+uqLszWWJNrNowO
-         IXloVTfneCihFhuvnNa3BbAU2LPPQ1C7vEDiyP2dsmS3nYAlRSrq63f/9nulE2q+Yd3Z
-         oGaA==
+        bh=tuKeD8w66KIDzJ6/Silhroq3Yhej0TOjlxLZqNMh/QM=;
+        b=K1STWgSZRij5Bsdjl9V2EgJs+J4iSVnfdNGfBDMF3VM4W1yBesmPlhQBeCIAEPoAIG
+         UKdX5a5JpcF1I0AwopypkUDjo2YD1SdgU3aj+54kL1E0T0y+jwAf+RIprktg2kdRlYet
+         +VZkbdPAHsJzlYHJ7dZX7TgJ+pJKfSgjH4ejwDfBOEHMQMK4PBSBDZBV2RqTwu+v5yRk
+         l1QxwcdJAT2wGgHSsgzhrLrgA7K9vtpGGKe+oRm+smgX5PjaItVnANiJD/MAssgGZOen
+         syKJx9ycWoI6Io4rfbz74u0LITlLoAVSNdtnP6c4Unxj5fWFH/Wn0fb0m2KCLlvR3Oj4
+         EErQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NE5tobHQQ2/3ErluiyeeeZc0smcvyLLr1pL5i5navJs=;
-        b=GiL5bUxjQyH+znMXZU/d61QtiZzJWhx8QiD0gogy0ZAwEVivlW2WkWICF/CSoVTddg
-         7awxigqrkLg5b5HePhdpQSKm8FJN/+bh+NU1of9PPr8DY9J87JkCCWa83wCh1mZTOOna
-         pHQ/0hAvLfkb6LnMQGlHlkIu4tQFWxWm3jLEzWOJfgkhuZq9XDqwOFaZL3JbB4gjXv/9
-         k56PA2GH5KtLCQ5AkwihCZAkXPYWjy36ly317FiEHj+6FR9gKx5jE9ZkN1BcHd+yF16L
-         0ivK+bYfH/yVrSzLuj94JCkLzdaun2kb1o2xPr8/S8YULSQI0WBgmmbZCG7hYNgVZh37
-         D7KQ==
-X-Gm-Message-State: ANhLgQ2oQUcki7oBAZ+Sa8FbFYoGdH2lDhC+pE2H7W6MJjQJDEAWV5Uy
-        wZOT4pIB3w1oEHq+IiTM0ZM=
-X-Google-Smtp-Source: ADFU+vuH4bJG0CwNuNhdTWeMa+5zAxWQkTX0eTiU/hoMSeXX9hvN4i3hPiQx+etl4r9fKWvStXAGCg==
-X-Received: by 2002:a37:688f:: with SMTP id d137mr4225697qkc.54.1583347686447;
-        Wed, 04 Mar 2020 10:48:06 -0800 (PST)
+        bh=tuKeD8w66KIDzJ6/Silhroq3Yhej0TOjlxLZqNMh/QM=;
+        b=HCf0+ww7O8wtnA/6cLGQ0Kkko6SzIqsKD5sRUIU5AVgZgLssaUvPusi3C3LdSi/peg
+         6ydHbgkILldtcz3JtzU/F7agXPctBH2uJyGN4792YwgehXGJHoQsgMGNzFVqaxZ8LFim
+         BiukQonzZ88z27w3hSQXFs4sA4qhNNpa36gJZB3FvuFyqtSEKqXBDcx6l7mF7ti6jgJ3
+         U8Ttd2OradKMVXL5GbLQtC3WXNrkNcpOnrj86JCF+k9dWYYuRf9U3Y9Sq2xFtPDMDD4m
+         C3xb6V0ufMPkutyhZhy3yWvC4vofZMsvusZl7oVVaAuXeq3J6323RXm50/iZUOvVN276
+         U24A==
+X-Gm-Message-State: ANhLgQ1xbZ+q+wZTH+3DFemKylKihue/o36W/OrTsd6LGaAHi/Ame+Rq
+        Q5m5mR3kvj4LEhjY9t6MFs8=
+X-Google-Smtp-Source: ADFU+vvcHTTpUmq/oVhZPERdJnhVc0CitiLhAmu8LJV5u9LJLmOoWzbIy7cua1LZX3gHfG90YayF/Q==
+X-Received: by 2002:a05:6214:1933:: with SMTP id es19mr3223597qvb.14.1583347844236;
+        Wed, 04 Mar 2020 10:50:44 -0800 (PST)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id v21sm11821508qto.97.2020.03.04.10.48.05
+        by smtp.gmail.com with ESMTPSA id 202sm14061573qkg.132.2020.03.04.10.50.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 10:48:06 -0800 (PST)
+        Wed, 04 Mar 2020 10:50:44 -0800 (PST)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Wed, 4 Mar 2020 13:48:04 -0500
+Date:   Wed, 4 Mar 2020 13:50:42 -0500
 To:     Ard Biesheuvel <ardb@kernel.org>
 Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-efi <linux-efi@vger.kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         the arch/x86 maintainers <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] efi/x86: Move mixed-mode thunk to efi/libstub
-Message-ID: <20200304184804.GA263581@rani.riverdale.lan>
-References: <20200304183659.257828-1-nivedita@alum.mit.edu>
- <CAKv+Gu_Bc5WYG_D7cM_fPi8rV65ouEre8uYUck0FCxN9FSUopw@mail.gmail.com>
+Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in
+ populate_pud
+Message-ID: <20200304185042.GA281042@rani.riverdale.lan>
+References: <20200303205445.3965393-1-nivedita@alum.mit.edu>
+ <20200303205445.3965393-2-nivedita@alum.mit.edu>
+ <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
+ <20200304154908.GB998825@rani.riverdale.lan>
+ <CAKv+Gu-Xo2zj9_N+K8FrpBstgU57GZvWO-pDr4tRAODhsYzW-A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_Bc5WYG_D7cM_fPi8rV65ouEre8uYUck0FCxN9FSUopw@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-Xo2zj9_N+K8FrpBstgU57GZvWO-pDr4tRAODhsYzW-A@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 07:39:23PM +0100, Ard Biesheuvel wrote:
-> On Wed, 4 Mar 2020 at 19:37, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > Commit c2d0b470154c ("efi/libstub/x86: Incorporate eboot.c into
-> > libstub") moved all the callers of the mixed-mode thunk into
-> > efi/libstub, so move the thunk itself as well for completeness.
-> >
-> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+On Wed, Mar 04, 2020 at 07:44:50PM +0100, Ard Biesheuvel wrote:
 > 
-> Thanks for the patch, but I'd prefer to leave the .S pieces under arch/
-> (unless there's some benefit I'm not seeing)
-> 
+> I've tried a couple of different ways, but I can't seem to get my
+> memory map organized in the way that will trigger the error.
 
-Ok. I can't think of any objective benefit.
+What does yours look like? efi_merge_regions doesn't merge everything
+that will eventually be mapped the same way, so if there are some
+non-conventional memory regions scattered over the address space, it
+might be breaking up the mappings to the point where this doesn't
+trigger.
