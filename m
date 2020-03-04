@@ -2,106 +2,105 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 253B7C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C4AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:50:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0356A21556
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:50:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B13E21741
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:50:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b6XelXIL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729302AbgCDUuI (ORCPT
+        id S1729892AbgCDUuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:50:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728482AbgCDUuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:50:07 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7112320828;
-        Wed,  4 Mar 2020 20:50:06 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 15:50:04 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Seth Forshee <seth.forshee@canonical.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Shuah Khan <shuah@kernel.org>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Use printf instead of echo in kprobe
- syntax error tests
-Message-ID: <20200304155004.7dd033a3@gandalf.local.home>
-In-Reply-To: <20200304161435.23019-1-seth.forshee@canonical.com>
-References: <20200304161435.23019-1-seth.forshee@canonical.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 4 Mar 2020 15:50:50 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34699 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728482AbgCDUut (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:50:49 -0500
+Received: by mail-ed1-f67.google.com with SMTP id c21so2455896edt.1;
+        Wed, 04 Mar 2020 12:50:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=zt0RLm7OTdsp3yOD+OCYiUKlYSum620aC9kq/4VQu2c=;
+        b=b6XelXILrfVo4hOq8Bxsv/Ld0eB3+mY3MTj88ek+YrPTQGEUfBk/ETftrELd4JEMFF
+         S4zkxC+lWlrYJzpv5jTaTixOGpneRoR4kxzY762Uw1basiuicdGEtHL3VuPxw7h0fV2O
+         qqhR49z9mT3VgNmtaYbKvgY2g4MmdmEPwliE/nXBNoTwpd19yy6d8SmvrUZo1ERnqdV6
+         VbMszUyDOxEuAcpH8X/GCH+jvFAgPyBOlF7QrJrVtkFA/Tpe5IXp/WqlYzpn6s6D58bF
+         /USdzLTL07HyT8o2zDHmwkHm8IS9s29ypYAITTvjWmwxRIbpTJkQP7LTkOyyrar7P8hn
+         jXHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=zt0RLm7OTdsp3yOD+OCYiUKlYSum620aC9kq/4VQu2c=;
+        b=ebfvW469mA6/kz+KFRt1iTQ75A0CiCXdPgdvzlawdVvLUshftIoohhwLB61iPWR5RY
+         AsmOYajkd3CFh8Bn9QXJcfQXSeA5OnuyK2Tkw8zzcSVw+z9UHoFFi/y8W3NaKs8jzLmA
+         +ojO+LeCl9SXhrPu6yttlP3KsjlsGBSmUKT5sUiN6AvMJ9YsFTfTkhR8HJXjrIYVWp3r
+         J+YOdvpFg94FfM+1dpnJHEp+ZAVf8k3lq3neEgiJJ6/mmzT6KqmSLuEKUywrmryx7Zfd
+         QaGWQXLcmqyziP7602WIUOX3wI0ZGJQx7csXsxKaWIUo6DCJ3fciE8DSP9PzOIdNoNxx
+         20DA==
+X-Gm-Message-State: ANhLgQ0jfxC7H+JQhBgd1nexZEnnEVEnwkH1ZeOrJd5pfgLHOHWphMWf
+        fZc8XMZjb3tOfobid9HuZLg=
+X-Google-Smtp-Source: ADFU+vsa8BpqTZFAAWs88Do5WrkxCwKcJwPQ4lgHcetbGp8wCV2tilCvbDjuH441aG9SvMa7IFQxHA==
+X-Received: by 2002:aa7:c54a:: with SMTP id s10mr4665670edr.345.1583355047588;
+        Wed, 04 Mar 2020 12:50:47 -0800 (PST)
+Received: from felia ([2001:16b8:2d16:4100:5c62:5f:595c:f76d])
+        by smtp.gmail.com with ESMTPSA id q3sm1384115eju.88.2020.03.04.12.50.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 12:50:46 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Wed, 4 Mar 2020 21:50:39 +0100 (CET)
+X-X-Sender: lukas@felia
+To:     Jonathan Corbet <corbet@lwn.net>
+cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
+In-Reply-To: <20200304131035.731a3947@lwn.net>
+Message-ID: <alpine.DEB.2.21.2003042145340.2698@felia>
+References: <20200304072950.10532-1-lukas.bulwahn@gmail.com> <20200304131035.731a3947@lwn.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  4 Mar 2020 10:14:35 -0600
-Seth Forshee <seth.forshee@canonical.com> wrote:
-
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-> @@ -37,7 +37,7 @@ fi
->  
->  check_error 'p vfs_read ^$none_var'	# BAD_VAR
->  
-> -check_error 'p vfs_read ^%none_reg'	# BAD_REG_NAME
-> +check_error 'p vfs_read ^%%none_reg'	# BAD_REG_NAME
->  check_error 'p vfs_read ^@12345678abcde'	# BAD_MEM_ADDR
->  check_error 'p vfs_read ^@+10'		# FILE_ON_KPROBE
->  
-> @@ -80,7 +80,7 @@ check_error 'p vfs_read arg1=^'			# NO_ARG_BODY
->  # instruction boundary check is valid on x86 (at this moment)
->  case $(uname -m) in
->    x86_64|i[3456]86)
-> -    echo 'p vfs_read' > kprobe_events
-> +    printf 'p vfs_read' > kprobe_events
->      if grep -q FTRACE ../kprobes/list ; then
->  	check_error 'p ^vfs_read+3'		# BAD_INSN_BNDRY (only if function-tracer is enabled)
->      fi
-> @@ -89,13 +89,13 @@ esac
->  
->  # multiprobe errors
->  if grep -q "Create/append/" README && grep -q "imm-value" README; then
-> -echo 'p:kprobes/testevent _do_fork' > kprobe_events
-> +printf 'p:kprobes/testevent _do_fork' > kprobe_events
->  check_error '^r:kprobes/testevent do_exit'	# DIFF_PROBE_TYPE
-> -echo 'p:kprobes/testevent _do_fork abcd=\1' > kprobe_events
-> -check_error 'p:kprobes/testevent _do_fork ^bcd=\1'	# DIFF_ARG_TYPE
-> -check_error 'p:kprobes/testevent _do_fork ^abcd=\1:u8'	# DIFF_ARG_TYPE
-> -check_error 'p:kprobes/testevent _do_fork ^abcd=\"foo"'	# DIFF_ARG_TYPE
-> -check_error '^p:kprobes/testevent _do_fork abcd=\1'	# SAME_PROBE
-> +printf 'p:kprobes/testevent _do_fork abcd=\\1' > kprobe_events
-> +check_error 'p:kprobes/testevent _do_fork ^bcd=\\1'	# DIFF_ARG_TYPE
-> +check_error 'p:kprobes/testevent _do_fork ^abcd=\\1:u8'	# DIFF_ARG_TYPE
-> +check_error 'p:kprobes/testevent _do_fork ^abcd=\\"foo"'# DIFF_ARG_TYPE
-> +check_error '^p:kprobes/testevent _do_fork abcd=\\1'	# SAME_PROBE
->  fi
->  
->  exit 0
 
 
-This change causes my tests to fail:
+On Wed, 4 Mar 2020, Jonathan Corbet wrote:
 
-++ echo 'Test command: p vfs_read arg1="abcd'
-Test command: p vfs_read arg1="abcd
-++ echo
-++ grep 'trace_kprobe: error:' -A 3 error_log
-[61913.240093] trace_kprobe: error: Invalid fetch argument
-  Command: p vfs_read arg1="abcd
-                           ^
-+++ tail -n 1 error_log
-+++ wc -c
-++ N=29
-+++ expr 13 + 21
-++ test 34 -eq 29
+> On Wed,  4 Mar 2020 08:29:50 +0100
+> Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> > Jonathan, pick pick this patch for doc-next.
+> 
+> Sigh, I need to work a MAINTAINERS check into my workflow...
+>
 
+I getting closer to have zero warnings on the MAINTAINER file matches and 
+then, I would set up a bot following the mailing lists to warn when anyone
+sends a patch that potentially introduces such warning.
+ 
+> Thanks for fixing these, but ... what tree did you generate the patch
+> against?  I doesn't come close to applying to docs-next.
+>
 
--- Steve
+My patch was based on next-20200303, probably too much noise on 
+MAINTAINERS, such that it does not apply cleanly on docs-next.
+If you want, I can send a patch that fits to docs-next. Anyway, merging 
+will be similarly difficult later :(
+
+Lukas
