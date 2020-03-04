@@ -2,102 +2,92 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC66CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8085DC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:25:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83BF42146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:24:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Mia0eqxi"
+	by mail.kernel.org (Postfix) with ESMTP id 5012A21775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:25:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583346342;
+	bh=YbxSKTj+LYP9ob1/gIRYSwkiErAazg4kjCl0Ex3B0LE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Axlv6snnNsLweSMSJo+mOZt79gYGvYN3tPQEkBcXUGt6qYDym+BRoQcEzQNrISIjk
+	 bZIAu4XsxGSFCqy1QnJArO0GwXpntGE9oLNcrt3xrm4Ed6GHOcj4q6OlHgoJU60+Np
+	 3yFrrmnfOfA0RN7Nw836JFFoNNUVagT3lLGC279M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730140AbgCDSYP (ORCPT
+        id S2388181AbgCDSZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:24:15 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:43793 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgCDSYO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:24:14 -0500
-Received: by mail-qk1-f195.google.com with SMTP id q18so2594967qki.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:24:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7uGKfMEoQma2YTmYindpAJZ+6Dd9e8pZRREodN0XilM=;
-        b=Mia0eqxiqiZ+f66hq7l6dJh58ejISZYPQsbp5h2zfh7vp/vvIx56r1xShga41jPdFM
-         e087spTKJZixh1I+cmplDpNzi7uP35TRbI1WyoV55iFHQD4y3aa6Uo2Qu0p2vZwEm2oU
-         BRwcjvdDuzGLgSRxdxHfjKtJb+I2IfhjPZsOtLFRERV44TCfb8vgRINjDujDhZCBL1Mq
-         8YVUWjbZl7bQOQtQy8+7vDn0tuTUhfGryD1aZ7KDHPo2Aenypv0LbCQ5WMge9hDq26G5
-         nheK73Rsky6AO2srjk5QIAx2fj2tGoYcKvDjnWOBiJIX4MtqPoKvSOkAsok1NVDRiJdf
-         Y6Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7uGKfMEoQma2YTmYindpAJZ+6Dd9e8pZRREodN0XilM=;
-        b=HIlMk1K7+OdLcYz2iOe8UVbKHyRQPoGPQkc7ETOXFKw+ZfEvYHWk5l2xQ5+OLpa2Fu
-         XHXKMsfGKAvIc8L3BAXVbsQgfSquvd+wh/8ax2EuZ1RqylfseySolTLOkskTp55Apu6j
-         ivrwxEUNdqY1y7iwPBS7kHbypTFNUE6TV7l6FMFnXTcbtdpreGPNE9O5vNKAy5FL6wcW
-         Y5h8+JzqXAxj9EXNVUCI3EgZzs2IHuPh27mryvqM2Ba8xrBmANJQgZCa4dGxmkFQdAE0
-         zBiir00SqKsUQetl6n75h/BMDiDWqpOxUVHZR1WHrEgClegqqzc+X0LhKjmhixZfK9Wb
-         Vgvg==
-X-Gm-Message-State: ANhLgQ2YXrzPmGRiywmcDHce/FGPNKJNz+ykFARPbumC6dsbFJ4/BQ6R
-        +350ExpkOiW0cDOSRAbXSnxrFA==
-X-Google-Smtp-Source: ADFU+vtRodrQGutbTEE2PU9HNmEC1IZAyA11ZBYfVhgiKLz7nf/pB721n80U6tbbZtje9FYX/xbyrw==
-X-Received: by 2002:a05:620a:2012:: with SMTP id c18mr3760545qka.242.1583346252226;
-        Wed, 04 Mar 2020 10:24:12 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id 133sm14361291qkh.109.2020.03.04.10.24.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Mar 2020 10:24:11 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j9Ygl-0000KJ-CH; Wed, 04 Mar 2020 14:24:11 -0400
-Date:   Wed, 4 Mar 2020 14:24:11 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <bmt@zurich.ibm.com>
-Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        netdev@vger.kernel.org, parav@mellanox.com,
-        syzkaller-bugs@googlegroups.com, willy@infradead.org
-Subject: Re: [PATCH for-rc] RDMA/siw: Fix passive connection establishment
-Message-ID: <20200304182411.GA1201@ziepe.ca>
-References: <20200228173534.26815-1-bmt@zurich.ibm.com>
+        Wed, 4 Mar 2020 13:25:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55220 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728168AbgCDSZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:25:41 -0500
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5EC822166E;
+        Wed,  4 Mar 2020 18:25:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583346340;
+        bh=YbxSKTj+LYP9ob1/gIRYSwkiErAazg4kjCl0Ex3B0LE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PVZv48kmmWr7ZkljfCQwnXQ0tlHKmi6HnRX122KFBjjZ+IyRyTU7qhRvV26Dvk/pM
+         KkmsYWYbI+6uPUKxyj9Ax1OtdLu3inphUPfSvxloMv/ywt2kqjno13Db+PkqWdOeo8
+         ITN70bObTvRwqI/1hAc8kPZBXCitxnt8mcOUzXAA=
+Received: by mail-qt1-f179.google.com with SMTP id r6so2102567qtt.9;
+        Wed, 04 Mar 2020 10:25:40 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2JS2x4nRwupxhBMgDlkpesDTF1GgPMA77BzDi9ZP3cnRwfXRcX
+        7vn2F21EYwDQMfqo3sDlOSnn7ED4n0t+jMrOkw==
+X-Google-Smtp-Source: ADFU+vvSKC5FiWZMLwOH/etNBdGnVzaAeXHbZ2Rkz1S9aEp4YeqS83ONsARP9M3LH/0+8SclIoKFCdXkwGzuX7Q/W90=
+X-Received: by 2002:ac8:124d:: with SMTP id g13mr3696997qtj.224.1583346339495;
+ Wed, 04 Mar 2020 10:25:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200228173534.26815-1-bmt@zurich.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <cover.1583135507.git.mchehab+huawei@kernel.org> <b7c582284fbca91a7431ff14689ab1be2c6fc410.1583135507.git.mchehab+huawei@kernel.org>
+In-Reply-To: <b7c582284fbca91a7431ff14689ab1be2c6fc410.1583135507.git.mchehab+huawei@kernel.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 4 Mar 2020 12:25:28 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+qEA16aGAaVnwX6QAPGnCWqnx_6WNuRb0erVAA3rvYSA@mail.gmail.com>
+Message-ID: <CAL_Jsq+qEA16aGAaVnwX6QAPGnCWqnx_6WNuRb0erVAA3rvYSA@mail.gmail.com>
+Subject: Re: [PATCH v2 04/12] docs: dt: convert booting-without-of.txt to ReST format
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 28, 2020 at 06:35:34PM +0100, Bernard Metzler wrote:
-> Holding the rtnl_lock while iterating a devices interface
-> address list potentially causes deadlocks with the
-> cma_netdev_callback. While this was implemented to
-> limit the scope of a wildcard listen to addresses
-> of the current device only, a better solution limits
-> the scope of the socket to the device. This completely
-> avoiding locking, and also results in significant code
-> simplification.
-> 
-> Reported-by: syzbot+55de90ab5f44172b0c90@syzkaller.appspotmail.com
-> Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
-> Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
+On Mon, Mar 2, 2020 at 1:59 AM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> - Add a SPDX header;
+> - Use copyright symbol;
+> - Adjust document title;
+> - Adjust document and section titles;
+> - Some whitespace fixes and new line breaks;
+> - Mark literal blocks as such;
+> - Add table markups;
+> - Add it to devicetree/index.rst.
+
+Let's skip this doc. It's been on my todo to remove it. It's pretty
+stale and 15 years old. Much of this document is now covered by what's
+in the DT spec. There's a few pieces that aren't which we need to find
+new homes for.
+
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 > ---
->  drivers/infiniband/sw/siw/siw_cm.c | 137 +++++++----------------------
->  1 file changed, 31 insertions(+), 106 deletions(-)
-
-Applied to for-next, the possibility of hitting the locking inversion
-found by syzkaller is really remote as you'd have to run siw on top of
-bond and then do horrible things to the bond.
-
-Jason
+>  Documentation/arm/booting.rst                 |   2 +-
+>  ...-without-of.txt => booting-without-of.rst} | 299 ++++++++++--------
+>  Documentation/devicetree/index.rst            |   1 +
+>  Documentation/translations/zh_CN/arm/Booting  |   2 +-
+>  4 files changed, 169 insertions(+), 135 deletions(-)
+>  rename Documentation/devicetree/{booting-without-of.txt => booting-without-of.rst} (90%)
