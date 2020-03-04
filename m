@@ -2,192 +2,244 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AF1C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:28:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1FDAC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2D920870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:28:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35CA20732
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:29:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="U3q6SAyF"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NRwhYCNq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387644AbgCDJ2g (ORCPT
+        id S1729036AbgCDJ3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:28:36 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44303 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727734AbgCDJ2f (ORCPT
+        Wed, 4 Mar 2020 04:29:54 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:51252 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727734AbgCDJ3y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:28:35 -0500
-Received: by mail-wr1-f67.google.com with SMTP id n7so1431742wrt.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 01:28:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PmkN7hwvga6b6nOJQkMBtxiaPHT0wTUKDIjYfaC+JlM=;
-        b=U3q6SAyFqLf4Ao4HllGS0rh74FAspGy70EFJTGwl30cFX4qr7GptUbd6oixMq3aQP5
-         GfYItarRtIR2dUNC+CKHTGErork+p07vAbyS0+87mVNilGGD9HoiCuLKD853DLbxuEVz
-         wNIPvYGZ+v3I1Y6udMoyUnPB1EAdsyTr2Drf3hc0//ssXuGDNXrCVPji7nkGHjpqYwrA
-         xdNuZRdZ+m3i6ooVq1nWnRXOg2hBwqGBmEmHQYsLAoe4ggZyWdAEF1A8aGoW9KEHjjPj
-         qLhY+b6+8uRTmKcpkvVPO+ZAMt2l22FBoaAmhuWsga1j94RpWy7RJ7Kgb/SJNvuPFbom
-         dJSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PmkN7hwvga6b6nOJQkMBtxiaPHT0wTUKDIjYfaC+JlM=;
-        b=Na37cDC+mUIMbzZEgw9OpWDxUwV0QOY1rM3wYDBSvcy9pXW5tYe6yHSnNcJizW7IWY
-         ghSXqrd1VYmjb+z2vW6OI+rCZ1imhvlF7KVQSWcv1NbSgtqy1l2FgAMSEwI0QMlQj3P8
-         fS38JK47vvLMUAxJIy0V3ZSKh3+LOynESCMKWvNlCZ2JgRqkosY4vA6gGQcxQoUA5X++
-         /GwIa1qkv9TDrSIpUklPj8Ml27OTbogVw/3DJaizlU6TQQ1YUqrniq/bsIDSaJioT5Ul
-         2GvhyWRoS4xK+ZjkJOggWRpUMFHSUjfZomNbltv/gnimIQ+b3f1SPj5oxMivMc1AggkK
-         wIjg==
-X-Gm-Message-State: ANhLgQ32VkmoPw0I5IVNpHcaYOfxUbCy+UwVWlUEM+dihl8sJ5C7hkVT
-        f1svqlH2fNNDuittrFPNtSrmb58aWGqfUzel5mUNYA==
-X-Google-Smtp-Source: ADFU+vuRtpT1Fbqvbqe6uQOMsu6klsPxlZN6iHsxNNno25qCgaGRqkmaJ9braaycRuZ6meSYuHo1QofgWXHqKyjhpgI=
-X-Received: by 2002:adf:ffc4:: with SMTP id x4mr3245947wrs.306.1583314113705;
- Wed, 04 Mar 2020 01:28:33 -0800 (PST)
+        Wed, 4 Mar 2020 04:29:54 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0249TjrZ089014;
+        Wed, 4 Mar 2020 03:29:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583314185;
+        bh=e4PeKRutmxnsEKHu3OypTkMAaV/T5qt4QEtP5s9vREY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NRwhYCNqFvnyVPvKcBbdSJ4y9Do84BhAPnsMR6jbwPeQnDU8yGH+b/oun+IpeBj2X
+         5eL2geZEQ9ZtIHFY4ok0Zs/4qX7iXRYK3zGVTSUUQlIl8yPA3xjnxLxD17yC6KyD57
+         5jvdRlix0BTsyJIb1f2rM4fJeTlS0YaEIHlLPMcE=
+Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0249Tjn1002490;
+        Wed, 4 Mar 2020 03:29:45 -0600
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
+ 2020 03:29:44 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Mar 2020 03:29:44 -0600
+Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0249TfK1079733;
+        Wed, 4 Mar 2020 03:29:42 -0600
+Subject: Re: [PATCH v1] usb:gadget: Fix issue with config_ep_by_speed
+ function.
+To:     Pawel Laszczak <pawell@cadence.com>,
+        Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+        Jayshri Dajiram Pawar <jpawar@cadence.com>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "balbi@kernel.org" <balbi@kernel.org>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jbergsagel@ti.com" <jbergsagel@ti.com>,
+        "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>,
+        "peter.chen@nxp.com" <peter.chen@nxp.com>,
+        Rahul Kumar <kurahul@cadence.com>,
+        Sanket Parmar <sparmar@cadence.com>
+References: <1581502748-22464-1-git-send-email-jpawar@cadence.com>
+ <c722e1c3-7aee-11a6-295f-fb183c611300@synopsys.com>
+ <BYAPR07MB47098648C28E5E4BB9B78DCADD150@BYAPR07MB4709.namprd07.prod.outlook.com>
+ <7ef4b9c5-8694-4d8e-2866-95ec11546bec@synopsys.com>
+ <BYAPR07MB47093444129A8EEB734F4F2EDD150@BYAPR07MB4709.namprd07.prod.outlook.com>
+From:   Roger Quadros <rogerq@ti.com>
+Message-ID: <d00da996-1254-87c4-8c58-3ca76561f398@ti.com>
+Date:   Wed, 4 Mar 2020 11:29:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200303163228.52741-1-john.stultz@linaro.org>
-In-Reply-To: <20200303163228.52741-1-john.stultz@linaro.org>
-From:   Xinliang Liu <xinliang.liu@linaro.org>
-Date:   Wed, 4 Mar 2020 17:28:18 +0800
-Message-ID: <CAKoKPbzUKUtpKVAYKMe4vYi70T33aeN74Q6oR8Ngw70CJ3t96Q@mail.gmail.com>
-Subject: Re: [PATCH] drm: kirin: Revert "Fix for hikey620 display offset problem"
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Rongrong Zou <zourongrong@gmail.com>,
-        Xinwei Kong <kong.kongxinwei@hisilicon.com>,
-        Chen Feng <puck.chen@hisilicon.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <BYAPR07MB47093444129A8EEB734F4F2EDD150@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 00:32, John Stultz <john.stultz@linaro.org> wrote:
->
-> This reverts commit ff57c6513820efe945b61863cf4a51b79f18b592.
->
-> With the commit ff57c6513820 ("drm: kirin: Fix for hikey620
-> display offset problem") we added support for handling LDI
-> overflows by resetting the hardware.
->
-> However, its been observed that when we do hit the LDI overflow
-> condition, the irq seems to be screaming, and we do nothing but
-> stream:
->   [drm:ade_irq_handler [kirin_drm]] *ERROR* LDI underflow!
-> over and over to the screen
->
-> I've tried a few appraoches to avoid this, but none has yet
-> been successful and the cure here is worse then the original
-> disease, so revert this for now.
+Hi Pawel,
 
-Sorry to hear that. Then it seems such underflow errors can't be
-recovered via reset.
-Anyway, for this patch
-Acked-by: Xinliang Liu <z.liuxinliang@hisilicon.com>
+On 14/02/2020 21:55, Pawel Laszczak wrote:
+>>
+>> Pawel Laszczak wrote:
+>>> Hi,
+>>>
+>>>> Hi,
+>>>>
+>>>> Jayshri Pawar wrote:
+>>>>> This patch adds additional parameter alt to config_ep_by_speed function.
+>>>>> This additional parameter allows to improve this function and
+>>>>> find proper usb_ss_ep_comp_descriptor.
+>>>>>
+>>>>> Problem has appeared during testing f_tcm (BOT/UAS) driver function.
+>>>>>
+>>>>> f_tcm function for SS use array of headers for both  BOT/UAS alternate
+>>>>> setting:
+>>>>>
+>>>>> static struct usb_descriptor_header *uasp_ss_function_desc[] = {
+>>>>>            (struct usb_descriptor_header *) &bot_intf_desc,
+>>>>>            (struct usb_descriptor_header *) &bot_uasp_ss_bi_desc,
+>>>>>            (struct usb_descriptor_header *) &bot_bi_ep_comp_desc,
+>>>>>            (struct usb_descriptor_header *) &bot_uasp_ss_bo_desc,
+>>>>>            (struct usb_descriptor_header *) &bot_bo_ep_comp_desc,
+>>>>>
+>>>>>            (struct usb_descriptor_header *) &uasp_intf_desc,
+>>>>>            (struct usb_descriptor_header *) &bot_uasp_ss_bi_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_bi_ep_comp_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_bi_pipe_desc,
+>>>>>            (struct usb_descriptor_header *) &bot_uasp_ss_bo_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_bo_ep_comp_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_bo_pipe_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_ss_status_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_status_in_ep_comp_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_status_pipe_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_ss_cmd_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_cmd_comp_desc,
+>>>>>            (struct usb_descriptor_header *) &uasp_cmd_pipe_desc,
+>>>>>            NULL,
+>>>>> };
+>>>>>
+>>>>> The first 5 descriptors are associated with BOT alternate setting,
+>>>>> and others are associated  with UAS.
+>>>>>
+>>>>> During handling UAS alternate setting f_tcm drivr invokes
+>>>>> config_ep_by_speed and this function sets incorrect companion endpoint
+>>>>> descriptor in usb_ep object.
+>>>>>
+>>>>> Instead setting ep->comp_desc to uasp_bi_ep_comp_desc function in this
+>>>>> case set ep->comp_desc to bot_uasp_ss_bi_desc.
+>>>>>
+>>>>> This is due to the fact that it search endpoint based on endpoint
+>>>>> address:
+>>>>>
+>>>>>            for_each_ep_desc(speed_desc, d_spd) {
+>>>>>                    chosen_desc = (struct usb_endpoint_descriptor *)*d_spd;
+>>>>>                    if (chosen_desc->bEndpoitAddress == _ep->address)
+>>>>>                            goto ep_found;
+>>>>>            }
+>>>>>
+>>>>> And in result it uses the descriptor from BOT alternate setting
+>>>>> instead UAS.
+>>>>>
+>>>>> Finally, it causes that controller driver during enabling endpoints
+>>>>> detect that just enabled endpoint for bot.
+>>>>>
+>>>>> Signed-off-by: Jayshri Pawar <jpawar@cadence.com>
+>>>>> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+>>>>> ---
+>>>>>     drivers/usb/gadget/composite.c               | 46 ++++++++++++++------
+>>>>>     drivers/usb/gadget/function/f_acm.c          |  7 +--
+>>>>>     drivers/usb/gadget/function/f_ecm.c          |  7 +--
+>>>>>     drivers/usb/gadget/function/f_eem.c          |  4 +-
+>>>>>     drivers/usb/gadget/function/f_fs.c           |  3 +-
+>>>>>     drivers/usb/gadget/function/f_hid.c          |  4 +-
+>>>>>     drivers/usb/gadget/function/f_loopback.c     |  2 +-
+>>>>>     drivers/usb/gadget/function/f_mass_storage.c |  5 ++-
+>>>>>     drivers/usb/gadget/function/f_midi.c         |  2 +-
+>>>>>     drivers/usb/gadget/function/f_ncm.c          |  7 +--
+>>>>>     drivers/usb/gadget/function/f_obex.c         |  4 +-
+>>>>>     drivers/usb/gadget/function/f_phonet.c       |  4 +-
+>>>>>     drivers/usb/gadget/function/f_rndis.c        |  7 +--
+>>>>>     drivers/usb/gadget/function/f_serial.c       |  4 +-
+>>>>>     drivers/usb/gadget/function/f_sourcesink.c   | 11 +++--
+>>>>>     drivers/usb/gadget/function/f_subset.c       |  4 +-
+>>>>>     drivers/usb/gadget/function/f_tcm.c          | 36 +++++++--------
+>>>>>     drivers/usb/gadget/function/f_uac1_legacy.c  |  2 +-
+>>>>>     drivers/usb/gadget/function/f_uvc.c          |  5 ++-
+>>>>>     drivers/usb/gadget/function/u_audio.c        |  4 +-
+>>>>>     include/linux/usb/composite.h                |  2 +-
+>>>>>     21 files changed, 99 insertions(+), 71 deletions(-)
+>>>>>
+>>>> I think we should create a new function and keep the old
+>>>> config_ep_by_speed() for default alt-setting (e.i. have
+>>>> config_ep_by_speed calls the new function with default alt-setting 0).
+>>>> This way, we can keep compatibility with old function drivers and
+>>>> minimize changes. At least that's what we did.
+>>>>
+>>> I don't think we need the separate function.
+>>> If we set last parameter alt=0 then this function will work in the same way as old one.
+>>>
+>>
+>> I wasn't talking about that. This patch modifies the
+>> config_ep_by_speed() parameters, which requires to make a change to
+>> every function driver of the kernel, and all in a single patch. This
+>> makes it difficult to backport this fix. The only function driver that
+>> you really need this fix for is f_tcm because of the stream eps right?
+>>
+>> You could just add a function like
+>>
+>>     int config_ep_by_speed_and_alt(struct usb_gadget *g, struct
+>>     usb_function *f, unsigned int alt, struct usb_ep *_ep);
+>>
+>>
+>> Then redefine config_ep_by_speed() to use it
+>>
+>>     int config_ep_by_speed(struct usb_gadget *g,
+>>                            struct usb_function *f,
+>>                            struct usb_ep *_ep)
+>>     {
+>>             return config_ep_by_speed_and_alt(g, f, 0, _ep);
+>>     }
+>>
+>> This way, 1) you can split this patch, 2) you only need to make a fix to
+>> f_tcm, 3) this fix can be backported much easier.
+>>
+>> Anyways, this is just a suggestion. It's up to the maintainers to decide.
+> 
+> Thanks for clarification, now I got it. In my opinion, both solution has pros and cons
+> 1. Original patch.
+> cons: introduce many change in many files
+> pros:  we have only single API function - simpler Gadget Subsystem API
+> 
+> 2. using config_ep_by_speed_and_alt
+> cons: minimal impact to other files.
+> pros: introduce the new API function which in fact could be  omitted.
+> 
 
-And applied to drm-misc .
+I would vote for 2.
 
--xinliang
+> It's only my personal opinion :) .
+> 
+> Felipe and Greg what is you opinion ?
+> 
+> Best Regards,
+> Pawel
+> 
+>>
+>> BR,
+>> Thinh
+> 
 
->
-> Cc: Xinliang Liu <xinliang.liu@linaro.org>
-> Cc: Rongrong Zou <zourongrong@gmail.com>
-> Cc: Xinwei Kong <kong.kongxinwei@hisilicon.com>
-> Cc: Chen Feng <puck.chen@hisilicon.com>
-> Cc: Sam Ravnborg <sam@ravnborg.org>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: dri-devel <dri-devel@lists.freedesktop.org>
-> Fixes: ff57c6513820 ("drm: kirin: Fix for hikey620 display offset problem")
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-> ---
->  .../gpu/drm/hisilicon/kirin/kirin_ade_reg.h   |  1 -
->  .../gpu/drm/hisilicon/kirin/kirin_drm_ade.c   | 20 -------------------
->  2 files changed, 21 deletions(-)
->
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-> index 0da860200410..e2ac09894a6d 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_ade_reg.h
-> @@ -83,7 +83,6 @@
->  #define VSIZE_OFST                     20
->  #define LDI_INT_EN                     0x741C
->  #define FRAME_END_INT_EN_OFST          1
-> -#define UNDERFLOW_INT_EN_OFST          2
->  #define LDI_CTRL                       0x7420
->  #define BPP_OFST                       3
->  #define DATA_GATE_EN                   BIT(2)
-> diff --git a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> index 73cd28a6ea07..86000127d4ee 100644
-> --- a/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> +++ b/drivers/gpu/drm/hisilicon/kirin/kirin_drm_ade.c
-> @@ -46,7 +46,6 @@ struct ade_hw_ctx {
->         struct clk *media_noc_clk;
->         struct clk *ade_pix_clk;
->         struct reset_control *reset;
-> -       struct work_struct display_reset_wq;
->         bool power_on;
->         int irq;
->
-> @@ -136,7 +135,6 @@ static void ade_init(struct ade_hw_ctx *ctx)
->          */
->         ade_update_bits(base + ADE_CTRL, FRM_END_START_OFST,
->                         FRM_END_START_MASK, REG_EFFECTIVE_IN_ADEEN_FRMEND);
-> -       ade_update_bits(base + LDI_INT_EN, UNDERFLOW_INT_EN_OFST, MASK(1), 1);
->  }
->
->  static bool ade_crtc_mode_fixup(struct drm_crtc *crtc,
-> @@ -304,17 +302,6 @@ static void ade_crtc_disable_vblank(struct drm_crtc *crtc)
->                         MASK(1), 0);
->  }
->
-> -static void drm_underflow_wq(struct work_struct *work)
-> -{
-> -       struct ade_hw_ctx *ctx = container_of(work, struct ade_hw_ctx,
-> -                                             display_reset_wq);
-> -       struct drm_device *drm_dev = ctx->crtc->dev;
-> -       struct drm_atomic_state *state;
-> -
-> -       state = drm_atomic_helper_suspend(drm_dev);
-> -       drm_atomic_helper_resume(drm_dev, state);
-> -}
-> -
->  static irqreturn_t ade_irq_handler(int irq, void *data)
->  {
->         struct ade_hw_ctx *ctx = data;
-> @@ -331,12 +318,6 @@ static irqreturn_t ade_irq_handler(int irq, void *data)
->                                 MASK(1), 1);
->                 drm_crtc_handle_vblank(crtc);
->         }
-> -       if (status & BIT(UNDERFLOW_INT_EN_OFST)) {
-> -               ade_update_bits(base + LDI_INT_CLR, UNDERFLOW_INT_EN_OFST,
-> -                               MASK(1), 1);
-> -               DRM_ERROR("LDI underflow!");
-> -               schedule_work(&ctx->display_reset_wq);
-> -       }
->
->         return IRQ_HANDLED;
->  }
-> @@ -919,7 +900,6 @@ static void *ade_hw_ctx_alloc(struct platform_device *pdev,
->         if (ret)
->                 return ERR_PTR(-EIO);
->
-> -       INIT_WORK(&ctx->display_reset_wq, drm_underflow_wq);
->         ctx->crtc = crtc;
->
->         return ctx;
-> --
-> 2.17.1
->
+-- 
+
+cheers,
+-roger
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
