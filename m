@@ -6,487 +6,342 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C34C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4B7C3F2C6
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2016B20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9963D20842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387603AbgCDCYi (ORCPT
+        id S2387615AbgCDCZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:24:38 -0500
-Received: from mga01.intel.com ([192.55.52.88]:22877 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387400AbgCDCYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:24:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 18:24:36 -0800
-X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="287202660"
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 18:24:36 -0800
-Subject: [PATCH v4 5/5] libnvdimm/region: Introduce an 'align' attribute
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jeff Moyer <jmoyer@redhat.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jeff Moyer <jmoyer@redhat.com>, vishal.l.verma@intel.com,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Tue, 03 Mar 2020 18:08:30 -0800
-Message-ID: <158328771060.2223916.5449156100834597166.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <158328768294.2223916.16551505954326988623.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <158328768294.2223916.16551505954326988623.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-3-g996c
+        Tue, 3 Mar 2020 21:25:02 -0500
+Received: from aclms1.advantech.com.tw ([61.58.41.199]:14714 "EHLO
+        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387398AbgCDCZC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 21:25:02 -0500
+Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Tddb17c849aac14014bd38@ACLMS1.advantech.com.tw>;
+ Wed, 4 Mar 2020 10:25:00 +0800
+Received: from mail-ot1-f54.google.com (209.85.210.54) by
+ taipei08.ADVANTECH.CORP (172.20.0.235) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 4 Mar 2020 10:24:58 +0800
+Received: by mail-ot1-f54.google.com with SMTP id v10so553234otp.2;
+        Tue, 03 Mar 2020 18:24:58 -0800 (PST)
+X-Gm-Message-State: ANhLgQ3ZKRdDso39NwAdDWogTiCyYViHevXLcixvvkPKzTvNu/pIaQMU
+        WuJNwA0aEwGrFkqZleP74Hw1wC4jklMlS5c/a0A=
+X-Google-Smtp-Source: ADFU+vtlctne6blA9aClNHENbOQS87DU627SIWKVMpXL/ES4k0iVY79mTOru/gpzy93PcT4YOBKIO3zR/ZND0igtghE=
+X-Received: by 2002:a9d:282:: with SMTP id 2mr680006otl.178.1583288696558;
+ Tue, 03 Mar 2020 18:24:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From:   Andrea Ho <andrea.ho@advantech.com.tw>
+Date:   Wed, 4 Mar 2020 10:24:30 +0800
+X-Gmail-Original-Message-ID: <CAGBRx8PzDmugZALw_rnKKv7ut0XVCgn5-sOD=+t-WM0Um84Vpg@mail.gmail.com>
+Message-ID: <CAGBRx8PzDmugZALw_rnKKv7ut0XVCgn5-sOD=+t-WM0Um84Vpg@mail.gmail.com>
+Subject: [V3,1/1] Input/misc: add support for Advantech software defined button
+To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Originating-IP: [209.85.210.54]
+X-ClientProxiedBy: taipei08.ADVANTECH.CORP (172.20.0.235) To
+ taipei08.ADVANTECH.CORP (172.20.0.235)
+X-StopIT: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The align attribute applies an alignment constraint for namespace
-creation in a region. Whereas the 'align' attribute of a namespace
-applied alignment padding via an info block, the 'align' attribute
-applies alignment constraints to the free space allocation.
+From: "Andrea.Ho" <Andrea.Ho@advantech.com.tw>
 
-The default for 'align' is the maximum known memremap_compat_align()
-across all archs (16MiB from PowerPC at time of writing) multiplied by
-the number of interleave ways if there is blk-aliasing. The minimum is
-PAGE_SIZE and allows for the creation of cross-arch incompatible
-namespaces, just as previous kernels allowed, but the expectation is
-cross-arch and mode-independent compatibility by default.
+Advantech sw_button is a ACPI event trigger button.
 
-The regression risk with this change is limited to cases that were
-dependent on the ability to create unaligned namespaces, *and* for some
-reason are unable to opt-out of aligned namespaces by writing to
-'regionX/align'. If such a scenario arises the default can be flipped
-from opt-out to opt-in of compat-aligned namespace creation, but that is
-a last resort. The kernel will otherwise continue to support existing
-defined misaligned namespaces.
+With this driver, we can report KEY_EVENT on the
+Advantech Tabletop Network Appliances products and it has been
+tested in FWA1112VC.
 
-Unfortunately this change needs to touch several parts of the
-implementation at once:
+Add the software define button support to report EV_REP key_event
+(BTN_TRIGGER_HAPPY) by pressing button that cloud be get on user
+interface and trigger the customized actions.
 
-- region/available_size: expand busy extents to current align
-- region/max_available_extent: expand busy extents to current align
-- namespace/size: trim free space to current align
+Signed-off-by: Andrea.Ho <Andrea.Ho@advantech.com.tw>
 
-...to keep the free space accounting conforming to the dynamic align
-setting.
-
-Reported-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Reported-by: Jeff Moyer <jmoyer@redhat.com>
-Reviewed-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
-Link: https://lore.kernel.org/r/158041478371.3889308.14542630147672668068.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+v2:
+        - remove fix-patch in patch
+        - fix build WARNING on format string.
+        - using linux kernel sort function
+v3:
+        - remove X86 dependency
+        - License only for GPL 2.0 and remove redundancy paragraphs
+        - remove version and prefix
+        - remove printk message
+        - remove double click and long press event check
+        - remove MODULE_PARAM
 ---
- drivers/nvdimm/dimm_devs.c      |   86 +++++++++++++++++++++++----
- drivers/nvdimm/namespace_devs.c |    9 ++-
- drivers/nvdimm/nd.h             |    1 
- drivers/nvdimm/region_devs.c    |  122 ++++++++++++++++++++++++++++++++++++---
- 4 files changed, 192 insertions(+), 26 deletions(-)
+ MAINTAINERS                       |   5 +
+ drivers/input/misc/Kconfig        |  11 ++
+ drivers/input/misc/Makefile       |   2 +-
+ drivers/input/misc/adv_swbutton.c | 207 ++++++++++++++++++++++++++++++
+ 4 files changed, 224 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/input/misc/adv_swbutton.c
 
-diff --git a/drivers/nvdimm/dimm_devs.c b/drivers/nvdimm/dimm_devs.c
-index 39a61a514746..b7b77e8d9027 100644
---- a/drivers/nvdimm/dimm_devs.c
-+++ b/drivers/nvdimm/dimm_devs.c
-@@ -563,6 +563,21 @@ int nvdimm_security_freeze(struct nvdimm *nvdimm)
- 	return rc;
- }
- 
-+static unsigned long dpa_align(struct nd_region *nd_region)
-+{
-+	struct device *dev = &nd_region->dev;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8982c6e013b3..821c5cacf553 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -543,6 +543,11 @@ S: Maintained
+ F:     Documentation/scsi/advansys.txt
+ F:     drivers/scsi/advansys.c
+
++ADVANTECH SWBTN DRIVER
++M:     Andrea Ho <Andrea.Ho@advantech.com.tw>
++S:     Maintained
++F:     drivers/input/misc/adv_swbutton.c
 +
-+	if (dev_WARN_ONCE(dev, !is_nvdimm_bus_locked(dev),
-+				"bus lock required for capacity provision\n"))
-+		return 0;
-+	if (dev_WARN_ONCE(dev, !nd_region->ndr_mappings || nd_region->align
-+				% nd_region->ndr_mappings,
-+				"invalid region align %#lx mappings: %d\n",
-+				nd_region->align, nd_region->ndr_mappings))
-+		return 0;
-+	return nd_region->align / nd_region->ndr_mappings;
-+}
+ ADXL34X THREE-AXIS DIGITAL ACCELEROMETER DRIVER (ADXL345/ADXL346)
+ M:     Michael Hennerich <michael.hennerich@analog.com>
+ W:     http://wiki.analog.com/ADXL345
+diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+index 7e2e658d551c..b49a0fad60b0 100644
+--- a/drivers/input/misc/Kconfig
++++ b/drivers/input/misc/Kconfig
+@@ -879,4 +879,15 @@ config INPUT_STPMIC1_ONKEY
+          To compile this driver as a module, choose M here: the
+          module will be called stpmic1_onkey.
+
++config INPUT_ADV_SWBUTTON
++        tristate "Advantech ACPI Software button Driver"
++        depends on ACPI
++        help
++          Say Y here to enable support for Advantech software defined
++          button feature. More information can be fount at
++          <http://www.advantech.com.tw/products/>
 +
- int alias_dpa_busy(struct device *dev, void *data)
- {
- 	resource_size_t map_end, blk_start, new;
-@@ -571,6 +586,7 @@ int alias_dpa_busy(struct device *dev, void *data)
- 	struct nd_region *nd_region;
- 	struct nvdimm_drvdata *ndd;
- 	struct resource *res;
-+	unsigned long align;
- 	int i;
- 
- 	if (!is_memory(dev))
-@@ -608,13 +624,21 @@ int alias_dpa_busy(struct device *dev, void *data)
- 	 * Find the free dpa from the end of the last pmem allocation to
- 	 * the end of the interleave-set mapping.
- 	 */
-+	align = dpa_align(nd_region);
-+	if (!align)
-+		return 0;
++          To compile this driver as a module, choose M here. The module will
++          be called adv_swbutton.
 +
- 	for_each_dpa_resource(ndd, res) {
-+		resource_size_t start, end;
-+
- 		if (strncmp(res->name, "pmem", 4) != 0)
- 			continue;
--		if ((res->start >= blk_start && res->start < map_end)
--				|| (res->end >= blk_start
--					&& res->end <= map_end)) {
--			new = max(blk_start, min(map_end + 1, res->end + 1));
-+
-+		start = ALIGN_DOWN(res->start, align);
-+		end = ALIGN(res->end + 1, align) - 1;
-+		if ((start >= blk_start && start < map_end)
-+				|| (end >= blk_start && end <= map_end)) {
-+			new = max(blk_start, min(map_end, end) + 1);
- 			if (new != blk_start) {
- 				blk_start = new;
- 				goto retry;
-@@ -654,6 +678,7 @@ resource_size_t nd_blk_available_dpa(struct nd_region *nd_region)
- 		.res = NULL,
- 	};
- 	struct resource *res;
-+	unsigned long align;
- 
- 	if (!ndd)
- 		return 0;
-@@ -661,10 +686,20 @@ resource_size_t nd_blk_available_dpa(struct nd_region *nd_region)
- 	device_for_each_child(&nvdimm_bus->dev, &info, alias_dpa_busy);
- 
- 	/* now account for busy blk allocations in unaliased dpa */
-+	align = dpa_align(nd_region);
-+	if (!align)
-+		return 0;
- 	for_each_dpa_resource(ndd, res) {
-+		resource_size_t start, end, size;
-+
- 		if (strncmp(res->name, "blk", 3) != 0)
- 			continue;
--		info.available -= resource_size(res);
-+		start = ALIGN_DOWN(res->start, align);
-+		end = ALIGN(res->end + 1, align) - 1;
-+		size = end - start + 1;
-+		if (size >= info.available)
-+			return 0;
-+		info.available -= size;
- 	}
- 
- 	return info.available;
-@@ -683,19 +718,31 @@ resource_size_t nd_pmem_max_contiguous_dpa(struct nd_region *nd_region,
- 	struct nvdimm_bus *nvdimm_bus;
- 	resource_size_t max = 0;
- 	struct resource *res;
-+	unsigned long align;
- 
- 	/* if a dimm is disabled the available capacity is zero */
- 	if (!ndd)
- 		return 0;
- 
-+	align = dpa_align(nd_region);
-+	if (!align)
-+		return 0;
-+
- 	nvdimm_bus = walk_to_nvdimm_bus(ndd->dev);
- 	if (__reserve_free_pmem(&nd_region->dev, nd_mapping->nvdimm))
- 		return 0;
- 	for_each_dpa_resource(ndd, res) {
-+		resource_size_t start, end;
-+
- 		if (strcmp(res->name, "pmem-reserve") != 0)
- 			continue;
--		if (resource_size(res) > max)
--			max = resource_size(res);
-+		/* trim free space relative to current alignment setting */
-+		start = ALIGN(res->start, align);
-+		end = ALIGN_DOWN(res->end + 1, align) - 1;
-+		if (end < start)
-+			continue;
-+		if (end - start + 1 > max)
-+			max = end - start + 1;
- 	}
- 	release_free_pmem(nvdimm_bus, nd_mapping);
- 	return max;
-@@ -723,24 +770,33 @@ resource_size_t nd_pmem_available_dpa(struct nd_region *nd_region,
- 	struct nvdimm_drvdata *ndd = to_ndd(nd_mapping);
- 	struct resource *res;
- 	const char *reason;
-+	unsigned long align;
- 
- 	if (!ndd)
- 		return 0;
- 
-+	align = dpa_align(nd_region);
-+	if (!align)
-+		return 0;
-+
- 	map_start = nd_mapping->start;
- 	map_end = map_start + nd_mapping->size - 1;
- 	blk_start = max(map_start, map_end + 1 - *overlap);
- 	for_each_dpa_resource(ndd, res) {
--		if (res->start >= map_start && res->start < map_end) {
-+		resource_size_t start, end;
-+
-+		start = ALIGN_DOWN(res->start, align);
-+		end = ALIGN(res->end + 1, align) - 1;
-+		if (start >= map_start && start < map_end) {
- 			if (strncmp(res->name, "blk", 3) == 0)
- 				blk_start = min(blk_start,
--						max(map_start, res->start));
--			else if (res->end > map_end) {
-+						max(map_start, start));
-+			else if (end > map_end) {
- 				reason = "misaligned to iset";
- 				goto err;
- 			} else
--				busy += resource_size(res);
--		} else if (res->end >= map_start && res->end <= map_end) {
-+				busy += end - start + 1;
-+		} else if (end >= map_start && end <= map_end) {
- 			if (strncmp(res->name, "blk", 3) == 0) {
- 				/*
- 				 * If a BLK allocation overlaps the start of
-@@ -749,8 +805,8 @@ resource_size_t nd_pmem_available_dpa(struct nd_region *nd_region,
- 				 */
- 				blk_start = map_start;
- 			} else
--				busy += resource_size(res);
--		} else if (map_start > res->start && map_start < res->end) {
-+				busy += end - start + 1;
-+		} else if (map_start > start && map_start < end) {
- 			/* total eclipse of the mapping */
- 			busy += nd_mapping->size;
- 			blk_start = map_start;
-@@ -760,7 +816,7 @@ resource_size_t nd_pmem_available_dpa(struct nd_region *nd_region,
- 	*overlap = map_end + 1 - blk_start;
- 	available = blk_start - map_start;
- 	if (busy < available)
--		return available - busy;
-+		return ALIGN_DOWN(available - busy, align);
- 	return 0;
- 
-  err:
-diff --git a/drivers/nvdimm/namespace_devs.c b/drivers/nvdimm/namespace_devs.c
-index 01f6c22f0d1a..ae155e860fdc 100644
---- a/drivers/nvdimm/namespace_devs.c
-+++ b/drivers/nvdimm/namespace_devs.c
-@@ -542,6 +542,11 @@ static void space_valid(struct nd_region *nd_region, struct nvdimm_drvdata *ndd,
- {
- 	bool is_reserve = strcmp(label_id->id, "pmem-reserve") == 0;
- 	bool is_pmem = strncmp(label_id->id, "pmem", 4) == 0;
-+	unsigned long align;
-+
-+	align = nd_region->align / nd_region->ndr_mappings;
-+	valid->start = ALIGN(valid->start, align);
-+	valid->end = ALIGN_DOWN(valid->end + 1, align) - 1;
- 
- 	if (valid->start >= valid->end)
- 		goto invalid;
-@@ -981,10 +986,10 @@ static ssize_t __size_store(struct device *dev, unsigned long long val)
- 		return -ENXIO;
- 	}
- 
--	div_u64_rem(val, PAGE_SIZE * nd_region->ndr_mappings, &remainder);
-+	div_u64_rem(val, nd_region->align, &remainder);
- 	if (remainder) {
- 		dev_dbg(dev, "%llu is not %ldK aligned\n", val,
--				(PAGE_SIZE * nd_region->ndr_mappings) / SZ_1K);
-+				nd_region->align / SZ_1K);
- 		return -EINVAL;
- 	}
- 
-diff --git a/drivers/nvdimm/nd.h b/drivers/nvdimm/nd.h
-index ca39abe29c7c..c4d69c1cce55 100644
---- a/drivers/nvdimm/nd.h
-+++ b/drivers/nvdimm/nd.h
-@@ -146,6 +146,7 @@ struct nd_region {
- 	struct device *btt_seed;
- 	struct device *pfn_seed;
- 	struct device *dax_seed;
-+	unsigned long align;
- 	u16 ndr_mappings;
- 	u64 ndr_size;
- 	u64 ndr_start;
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index a5fc6e4c56ff..bf239e783940 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -216,21 +216,25 @@ int nd_region_to_nstype(struct nd_region *nd_region)
- }
- EXPORT_SYMBOL(nd_region_to_nstype);
- 
--static ssize_t size_show(struct device *dev,
--		struct device_attribute *attr, char *buf)
-+static unsigned long long region_size(struct nd_region *nd_region)
- {
--	struct nd_region *nd_region = to_nd_region(dev);
--	unsigned long long size = 0;
+ endif
+diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+index 8fd187f314bd..a5ceb98f18f6 100644
+--- a/drivers/input/misc/Makefile
++++ b/drivers/input/misc/Makefile
+@@ -85,4 +85,4 @@ obj-$(CONFIG_INPUT_WM831X_ON)         += wm831x-on.o
+ obj-$(CONFIG_INPUT_XEN_KBDDEV_FRONTEND)        += xen-kbdfront.o
+ obj-$(CONFIG_INPUT_YEALINK)            += yealink.o
+ obj-$(CONFIG_INPUT_IDEAPAD_SLIDEBAR)   += ideapad_slidebar.o
 -
--	if (is_memory(dev)) {
--		size = nd_region->ndr_size;
-+	if (is_memory(&nd_region->dev)) {
-+		return nd_region->ndr_size;
- 	} else if (nd_region->ndr_mappings == 1) {
- 		struct nd_mapping *nd_mapping = &nd_region->mapping[0];
- 
--		size = nd_mapping->size;
-+		return nd_mapping->size;
- 	}
- 
--	return sprintf(buf, "%llu\n", size);
-+	return 0;
-+}
-+
-+static ssize_t size_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct nd_region *nd_region = to_nd_region(dev);
-+
-+	return sprintf(buf, "%llu\n", region_size(nd_region));
- }
- static DEVICE_ATTR_RO(size);
- 
-@@ -529,6 +533,55 @@ static ssize_t read_only_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(read_only);
- 
-+static ssize_t align_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct nd_region *nd_region = to_nd_region(dev);
-+
-+	return sprintf(buf, "%#lx\n", nd_region->align);
-+}
-+
-+static ssize_t align_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t len)
-+{
-+	struct nd_region *nd_region = to_nd_region(dev);
-+	unsigned long val, dpa;
-+	u32 remainder;
-+	int rc;
-+
-+	rc = kstrtoul(buf, 0, &val);
-+	if (rc)
-+		return rc;
-+
-+	if (!nd_region->ndr_mappings)
-+		return -ENXIO;
-+
-+	/*
-+	 * Ensure space-align is evenly divisible by the region
-+	 * interleave-width because the kernel typically has no facility
-+	 * to determine which DIMM(s), dimm-physical-addresses, would
-+	 * contribute to the tail capacity in system-physical-address
-+	 * space for the namespace.
-+	 */
-+	dpa = val;
-+	remainder = do_div(dpa, nd_region->ndr_mappings);
-+	if (!is_power_of_2(dpa) || dpa < PAGE_SIZE
-+			|| val > region_size(nd_region) || remainder)
-+		return -EINVAL;
-+
-+	/*
-+	 * Given that space allocation consults this value multiple
-+	 * times ensure it does not change for the duration of the
-+	 * allocation.
-+	 */
-+	nvdimm_bus_lock(dev);
-+	nd_region->align = val;
-+	nvdimm_bus_unlock(dev);
-+
-+	return len;
-+}
-+static DEVICE_ATTR_RW(align);
-+
- static ssize_t region_badblocks_show(struct device *dev,
- 		struct device_attribute *attr, char *buf)
- {
-@@ -571,6 +624,7 @@ static DEVICE_ATTR_RO(persistence_domain);
- 
- static struct attribute *nd_region_attributes[] = {
- 	&dev_attr_size.attr,
-+	&dev_attr_align.attr,
- 	&dev_attr_nstype.attr,
- 	&dev_attr_mappings.attr,
- 	&dev_attr_btt_seed.attr,
-@@ -626,6 +680,19 @@ static umode_t region_visible(struct kobject *kobj, struct attribute *a, int n)
- 		return a->mode;
- 	}
- 
-+	if (a == &dev_attr_align.attr) {
-+		int i;
-+
-+		for (i = 0; i < nd_region->ndr_mappings; i++) {
-+			struct nd_mapping *nd_mapping = &nd_region->mapping[i];
-+			struct nvdimm *nvdimm = nd_mapping->nvdimm;
-+
-+			if (test_bit(NDD_LABELING, &nvdimm->flags))
-+				return a->mode;
-+		}
-+		return 0;
-+	}
-+
- 	if (a != &dev_attr_set_cookie.attr
- 			&& a != &dev_attr_available_size.attr)
- 		return a->mode;
-@@ -935,6 +1002,42 @@ void nd_region_release_lane(struct nd_region *nd_region, unsigned int lane)
- }
- EXPORT_SYMBOL(nd_region_release_lane);
- 
++obj-$(CONFIG_INPUT_ADV_SWBUTTON)    += adv_swbutton.o
+diff --git a/drivers/input/misc/adv_swbutton.c
+b/drivers/input/misc/adv_swbutton.c
+new file mode 100644
+index 000000000000..ef237f9c4f52
+--- /dev/null
++++ b/drivers/input/misc/adv_swbutton.c
+@@ -0,0 +1,207 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * PowerPC requires this alignment for memremap_pages(). All other archs
-+ * should be ok with SUBSECTION_SIZE (see memremap_compat_align()).
++ *  adv_swbutton.c - Software Button Interface Driver.
++ *
++ *  (C) Copyright 2020 Advantech Corporation, Inc
++ *
 + */
-+#define MEMREMAP_COMPAT_ALIGN_MAX SZ_16M
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/version.h>
++#include <linux/types.h>
++#include <linux/proc_fs.h>
++#include <linux/seq_file.h>
++#include <linux/input.h>
++#include <linux/slab.h>
++#include <linux/acpi.h>
++#include <linux/ktime.h>
++#include <linux/moduleparam.h>
++#include <acpi/button.h>
++#include <acpi/acpi_bus.h>
++#include <acpi/acpi_drivers.h>
 +
-+static unsigned long default_align(struct nd_region *nd_region)
++#define ACPI_BUTTON_CLASS                   "button"
++#define ACPI_BUTTON_FILE_INFO               "info"
++#define ACPI_BUTTON_FILE_STATE              "state"
++#define ACPI_BUTTON_TYPE_UNKNOWN            0x00
++
++#define ACPI_BUTTON_SUBCLASS_SOFTWARE       "software"
++#define ACPI_BUTTON_HID_SWBTN               "AHC0310"
++#define ACPI_BUTTON_DEVICE_NAME_SOFTWARE    "Software Button"
++#define ACPI_BUTTON_TYPE_SOFTWARE           0x07
++
++#define ACPI_BUTTON_NOTIFY_SWBTN_RELEASE    0x86
++#define ACPI_BUTTON_NOTIFY_SWBTN_PRESSED    0x85
++
++#define SOFTWARE_BUTTON                     BTN_TRIGGER_HAPPY
++
++#define _COMPONENT                          ACPI_BUTTON_COMPONENT
++
++ACPI_MODULE_NAME("swbutton");
++
++MODULE_AUTHOR("Andrea Ho");
++MODULE_DESCRIPTION("Advantech ACPI SW Button Driver");
++MODULE_LICENSE("GPL");
++
++static const struct acpi_device_id button_device_ids[] = {
++       {ACPI_BUTTON_HID_SWBTN, 0},
++       {"", 0},
++};
++MODULE_DEVICE_TABLE(acpi, button_device_ids);
++
++static int acpi_button_add(struct acpi_device *device);
++static int acpi_button_remove(struct acpi_device *device);
++static void acpi_button_notify(struct acpi_device *device, u32 event);
++
++static struct acpi_driver acpi_button_driver = {
++       .name = ACPI_BUTTON_DEVICE_NAME_SOFTWARE,
++       .class = ACPI_BUTTON_CLASS,
++       .owner = THIS_MODULE,
++       .ids = button_device_ids,
++       .ops = {
++               .add = acpi_button_add,
++               .remove = acpi_button_remove,
++               .notify = acpi_button_notify,
++       },
++};
++
++struct acpi_button {
++       unsigned int type;
++       struct input_dev *input;
++       char phys[32];
++       bool pressed;
++};
++
++/*-------------------------------------------------------------------------
++ *                               Driver Interface
++ *--------------------------------------------------------------------------
++ */
++static void acpi_button_notify(struct acpi_device *device, u32 event)
 +{
-+	unsigned long align, per_mapping;
-+	int i, mappings;
-+	u32 remainder;
++       struct acpi_button *button = acpi_driver_data(device);
++       struct input_dev *input;
 +
-+	if (is_nd_blk(&nd_region->dev))
-+		align = PAGE_SIZE;
-+	else
-+		align = MEMREMAP_COMPAT_ALIGN_MAX;
++       int keycode, BTN_KEYCODE = SOFTWARE_BUTTON;
 +
-+	for (i = 0; i < nd_region->ndr_mappings; i++) {
-+		struct nd_mapping *nd_mapping = &nd_region->mapping[i];
-+		struct nvdimm *nvdimm = nd_mapping->nvdimm;
++       switch (event) {
++       case ACPI_BUTTON_NOTIFY_SWBTN_RELEASE:
++               input = button->input;
 +
-+		if (test_bit(NDD_ALIASING, &nvdimm->flags)) {
-+			align = MEMREMAP_COMPAT_ALIGN_MAX;
-+			break;
-+		}
-+	}
++               if (!button->pressed)
++                       return;
 +
-+	mappings = max_t(u16, 1, nd_region->ndr_mappings);
-+	per_mapping = align;
-+	remainder = do_div(per_mapping, mappings);
-+	if (remainder)
-+		align *= mappings;
++               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
++                               BTN_KEYCODE : KEY_UNKNOWN;
 +
-+	return align;
++               button->pressed = false;
++
++               input_report_key(input, keycode, 0);
++               input_sync(input);
++       break;
++       case ACPI_BUTTON_NOTIFY_SWBTN_PRESSED:
++               input = button->input;
++               button->pressed = true;
++
++               keycode = test_bit(BTN_KEYCODE, input->keybit) ?
++                           BTN_KEYCODE : KEY_UNKNOWN;
++
++               input_report_key(input, keycode, 1);
++               input_sync(input);
++       break;
++       default:
++               ACPI_DEBUG_PRINT((ACPI_DB_INFO,
++                                 "Unsupported event [0x%x]\n", event));
++       break;
++       }
 +}
 +
- static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 		struct nd_region_desc *ndr_desc,
- 		const struct device_type *dev_type, const char *caller)
-@@ -1039,6 +1142,7 @@ static struct nd_region *nd_region_create(struct nvdimm_bus *nvdimm_bus,
- 	dev->of_node = ndr_desc->of_node;
- 	nd_region->ndr_size = resource_size(ndr_desc->res);
- 	nd_region->ndr_start = ndr_desc->res->start;
-+	nd_region->align = default_align(nd_region);
- 	if (ndr_desc->flush)
- 		nd_region->flush = ndr_desc->flush;
- 	else
-
++static int __init acpi_button_init(void)
++{
++       return acpi_bus_register_driver(&acpi_button_driver);
++}
++
++static void __exit acpi_button_exit(void)
++{
++       acpi_bus_unregister_driver(&acpi_button_driver);
++}
++
++static int acpi_button_add(struct acpi_device *device)
++{
++       struct acpi_button *button;
++       struct input_dev *input;
++       const char *hid = acpi_device_hid(device);
++       char *name, *class;
++       int error;
++
++       button = kzalloc(sizeof(struct acpi_button), GFP_KERNEL);
++       if (!button)
++               return -ENOMEM;
++
++       device->driver_data = button;
++
++       button->input = input_allocate_device();
++       input = button->input;
++       if (!input) {
++               error = -ENOMEM;
++               goto err_free_button;
++       }
++
++       name = acpi_device_name(device);
++       class = acpi_device_class(device);
++
++       if (!strcmp(hid, ACPI_BUTTON_HID_SWBTN)) {
++               button->type = ACPI_BUTTON_TYPE_SOFTWARE;
++               button->pressed = false;
++               strcpy(name, ACPI_BUTTON_DEVICE_NAME_SOFTWARE);
++               sprintf(class, "%s/%s", ACPI_BUTTON_CLASS,
++                       ACPI_BUTTON_SUBCLASS_SOFTWARE);
++       } else {
++               error = -ENODEV;
++               goto err_free_input;
++       }
++
++       snprintf(button->phys, sizeof(button->phys), "%s/button/input0", hid);
++
++       input->name = name;
++       input->phys = button->phys;
++       input->id.bustype = BUS_HOST;
++       input->id.product = button->type;
++       input->dev.parent = &device->dev;
++
++       switch (button->type) {
++       case ACPI_BUTTON_TYPE_SOFTWARE:
++               set_bit(EV_KEY, input->evbit);
++               set_bit(EV_REP, input->evbit);
++
++               input_set_capability(input, EV_KEY, SOFTWARE_BUTTON);
++       break;
++       }
++
++       input_set_drvdata(input, device);
++       error = input_register_device(input);
++       if (error)
++               goto err_free_input;
++
++       device_init_wakeup(&device->dev, true);
++
++       return 0;
++
++err_free_input:
++       input_free_device(input);
++err_free_button:
++       kfree(button);
++       return error;
++}
++
++static int acpi_button_remove(struct acpi_device *device)
++{
++       struct acpi_button *button = acpi_driver_data(device);
++
++       input_unregister_device(button->input);
++       kfree(button);
++       return 0;
++}
++
++module_init(acpi_button_init);
++module_exit(acpi_button_exit);
+--
+2.17.1
