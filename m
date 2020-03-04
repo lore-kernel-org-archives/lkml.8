@@ -2,294 +2,154 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4178C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B4AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9102166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476DC20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:59:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t45nxzry"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387783AbgCDI5a (ORCPT
+        id S1728907AbgCDI7u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:57:30 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46289 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728779AbgCDI52 (ORCPT
+        Wed, 4 Mar 2020 03:59:50 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42409 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbgCDI7u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:57:28 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j9PqH-0007Ax-I3; Wed, 04 Mar 2020 09:57:25 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id CEF5F1C21B0;
-        Wed,  4 Mar 2020 09:57:24 +0100 (CET)
-Date:   Wed, 04 Mar 2020 08:57:24 -0000
-From:   "tip-bot2 for Eric W. Biederman" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] posix-cpu-timers: Store a reference to a pid not a task
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <87wo86tz6d.fsf@x220.int.ebiederm.org>
-References: <87wo86tz6d.fsf@x220.int.ebiederm.org>
+        Wed, 4 Mar 2020 03:59:50 -0500
+Received: by mail-qk1-f193.google.com with SMTP id e11so828431qkg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:59:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P+jMmXTSo2fxNXWVyhqtxpkECUUfyLXXJQ/Qq+zHIkU=;
+        b=t45nxzry3NYgFSXkHivggCrJt7bt2CcezPmRDwxMHGIc8qHfUb8/0oDGtuHDytFuBI
+         GZDUm6cLW/IXa2iCWYtWErpLSYB01MFLFN/Sx3rLsYvlDKaKRzgq7rXS1mgjs0Qn6871
+         bNC8g8Hm9MmokS0ZEC5WjERxWjqI9hUWHqFsgEPHmA+xM+isntCNgEC0q4oisRd/DEHt
+         4s/e+T3iHOMH4B2fz2Y8iYTD7fBE+QHLT1VoeG6ybnJvI9iBga5jXmzlx06zmTtqQFNd
+         A5UlvBUA8T7ZBAVUynyi+hQKOjH0/PAoqm6i0SEOnh3Alyshwz5eXs+qLASlfCividwM
+         JYig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P+jMmXTSo2fxNXWVyhqtxpkECUUfyLXXJQ/Qq+zHIkU=;
+        b=Lax5WA4WNzZbWPoW0Ak2V4lgHt9YMkSYvQmOMLWz3h+oaOQBTVNRqGOk+u4KaoerMQ
+         ym5eZurvX4gu7n8sSfxO/+1KUAhGynEk+E5YB0GOIJpUzfZporrIEOFOdl/bqXph7WHd
+         ahj0yM0ZpOilv+3qY5ebx4L0VrOYTtlagUEBTsRGkk5OUVRkj/dlw2M33bLNEkhSrnC+
+         hLkDWKyMlJ+aj1ymBn26iB0FzDOOV0S5POEYf2WH6J9kLfT8sYpSiX64L4OSqk+OPeZq
+         VYfo0BchyJw1E/AIBm532q6s+fjfZLsYmo5MP8x8bu0OeztsKxYMk/0RkjULNLPj3y8D
+         QAoA==
+X-Gm-Message-State: ANhLgQ0c+W3kMUW7we7glzGFah81jxwwXNkI88All8ok53s5xUAs47ml
+        V9GtYVxM80rsaOeY0iwSxGHhjwhI73OK1uwmOgrYeg==
+X-Google-Smtp-Source: ADFU+vst6DLKw48grfAaGDLlzabH/C9a8znxSeS/sQBCw/7iv9QIGoVWNaQIg5Rcw226PV2XkpsGdRS+76ycnyAVhQY=
+X-Received: by 2002:ae9:e003:: with SMTP id m3mr2003769qkk.250.1583312389274;
+ Wed, 04 Mar 2020 00:59:49 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <158331224448.28353.17742299109137799963.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <000000000000dd909105a002ebe6@google.com> <CACT4Y+ZyhwEsuGK9aJZ=4vXJ_AfHqFn6n5d58H_5E_-o9qHRWA@mail.gmail.com>
+ <96b956f4-62cb-83e6-38c2-ca698a862282@moonlit-rail.com>
+In-Reply-To: <96b956f4-62cb-83e6-38c2-ca698a862282@moonlit-rail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 4 Mar 2020 09:59:38 +0100
+Message-ID: <CACT4Y+b_U6YKujEk9X=NHX45KkL93dLsyu5gS44PpEDi94qS0w@mail.gmail.com>
+Subject: Re: INFO: rcu detected stall in sys_keyctl
+To:     Kris Karas <linux-1993@moonlit-rail.com>
+Cc:     syzbot <syzbot+0c5c2dbf76930df91489@syzkaller.appspotmail.com>,
+        David Miller <davem@davemloft.net>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eric Biggers <ebiggers@kernel.org>, allison@lohutok.net
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+On Wed, Mar 4, 2020 at 9:41 AM Kris Karas <linux-1993@moonlit-rail.com> wrote:
+>
+> Resending this to all the original CCs per suggestion of Dmitry.
+> I'm not a member of linux-crypto, no idea if it will bounce; in any
+> case, the OOPS I saw does not appear to be crypto related.
+>
+> Dmitry Vyukov wrote:
+> > syzbot wrote:
+> >> Call Trace:
+> >>   <IRQ>
+> >>   __dump_stack lib/dump_stack.c:77 [inline]
+> >>   dump_stack+0x197/0x210 lib/dump_stack.c:118
+> >>   nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
+> >>   nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
+> >>   arch_trigger_cpumask_backtrace+0x14/0x20
+> >> arch/x86/kernel/apic/hw_nmi.c:38
+> >>   trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
+> >>   rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
+> >>   print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
+> >>   check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
+> >>   rcu_pending kernel/rcu/tree.c:3030 [inline]
+> >>   rcu_sched_clock_irq.cold+0x51a/0xc37 kernel/rcu/tree.c:2276
+> >>   update_process_times+0x2d/0x70 kernel/time/timer.c:1726
+> >>   tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:171
+> >>   tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1314
+> >>   __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
+> >>   __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1579
+> >>   hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1641
+> >>   local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1119 [inline]
+> >>   smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1144
+> >>   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
+> >>   </IRQ>
+> >>
+> > +lib/mpi maintainers
+> >
+> > I wonder if this can also be triggered by remote actors (tls, wifi,
+> > usb, etc).
+> >
+>
+> This looks somewhat similar to an OOPS + rcu stall I reported earlier in
+> reply to Greg KH's announcement of 5.5.7:
+>
+>      rcu: INFO: rcu_sched self-detected stall on CPU
+>      rcu:    14-....: (20999 ticks this GP)
+> idle=216/1/0x4000000000000002 softirq=454/454 fqs=5250
+>              (t=21004 jiffies g=-755 q=1327)
+>      NMI backtrace for cpu 14
+>      CPU: 14 PID: 520 Comm: pidof Tainted: G      D           5.5.7 #1
+>      Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./X470
+> Taichi, BIOS P3.50 07/18/2019
+>      Call Trace:
+>       <IRQ>
+>       dump_stack+0x50/0x70
+>       nmi_cpu_backtrace.cold+0x14/0x53
+>       ? lapic_can_unplug_cpu.cold+0x44/0x44
+>       nmi_trigger_cpumask_backtrace+0x7b/0x88
+>       rcu_dump_cpu_stacks+0x7b/0xa9
+>       rcu_sched_clock_irq.cold+0x152/0x39b
+>       update_process_times+0x1f/0x50
+>       tick_sched_timer+0x40/0x90
+>       ? tick_sched_do_timer+0x50/0x50
+>       __hrtimer_run_queues+0xdd/0x180
+>       hrtimer_interrupt+0x108/0x230
+>       smp_apic_timer_interrupt+0x53/0xa0
+>       apic_timer_interrupt+0xf/0x20
+>       </IRQ>
+>
+> I don't have a reproducer for it, either.  It showed up in 5.5.7 (but
+> might be from earlier as it reproduces so infrequently).
 
-Commit-ID:     55e8c8eb2c7b6bf30e99423ccfe7ca032f498f59
-Gitweb:        https://git.kernel.org/tip/55e8c8eb2c7b6bf30e99423ccfe7ca032f498f59
-Author:        Eric W. Biederman <ebiederm@xmission.com>
-AuthorDate:    Fri, 28 Feb 2020 11:11:06 -06:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 04 Mar 2020 09:54:55 +01:00
+Hi Kris,
 
-posix-cpu-timers: Store a reference to a pid not a task
-
-posix cpu timers do not handle the death of a process well.
-
-This is most clearly seen when a multi-threaded process calls exec from a
-thread that is not the leader of the thread group.  The posix cpu timer code
-continues to pin the old thread group leader and is unable to find the
-siglock from there.
-
-This results in posix_cpu_timer_del being unable to delete a timer,
-posix_cpu_timer_set being unable to set a timer.  Further to compensate for
-the problems in posix_cpu_timer_del on a multi-threaded exec all timers
-that point at the multi-threaded task are stopped.
-
-The code for the timers fundamentally needs to check if the target
-process/thread is alive.  This needs an extra level of indirection. This
-level of indirection is already available in struct pid.
-
-So replace cpu.task with cpu.pid to get the needed extra layer of
-indirection.
-
-In addition to handling things more cleanly this reduces the amount of
-memory a timer can pin when a process exits and then is reaped from
-a task_struct to the vastly smaller struct pid.
-
-Fixes: e0a70217107e ("posix-cpu-timers: workaround to suppress the problems with mt exec")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/87wo86tz6d.fsf@x220.int.ebiederm.org
-
----
- include/linux/posix-timers.h   |  2 +-
- kernel/time/posix-cpu-timers.c | 73 ++++++++++++++++++++++++---------
- 2 files changed, 56 insertions(+), 19 deletions(-)
-
-diff --git a/include/linux/posix-timers.h b/include/linux/posix-timers.h
-index 3d10c84..e3f0f85 100644
---- a/include/linux/posix-timers.h
-+++ b/include/linux/posix-timers.h
-@@ -69,7 +69,7 @@ static inline int clockid_to_fd(const clockid_t clk)
- struct cpu_timer {
- 	struct timerqueue_node	node;
- 	struct timerqueue_head	*head;
--	struct task_struct	*task;
-+	struct pid		*pid;
- 	struct list_head	elist;
- 	int			firing;
- };
-diff --git a/kernel/time/posix-cpu-timers.c b/kernel/time/posix-cpu-timers.c
-index ef936c5..6df468a 100644
---- a/kernel/time/posix-cpu-timers.c
-+++ b/kernel/time/posix-cpu-timers.c
-@@ -118,6 +118,16 @@ static inline int validate_clock_permissions(const clockid_t clock)
- 	return __get_task_for_clock(clock, false, false) ? 0 : -EINVAL;
- }
- 
-+static inline enum pid_type cpu_timer_pid_type(struct k_itimer *timer)
-+{
-+	return CPUCLOCK_PERTHREAD(timer->it_clock) ? PIDTYPE_PID : PIDTYPE_TGID;
-+}
-+
-+static inline struct task_struct *cpu_timer_task_rcu(struct k_itimer *timer)
-+{
-+	return pid_task(timer->it.cpu.pid, cpu_timer_pid_type(timer));
-+}
-+
- /*
-  * Update expiry time from increment, and increase overrun count,
-  * given the current clock sample.
-@@ -391,7 +401,12 @@ static int posix_cpu_timer_create(struct k_itimer *new_timer)
- 
- 	new_timer->kclock = &clock_posix_cpu;
- 	timerqueue_init(&new_timer->it.cpu.node);
--	new_timer->it.cpu.task = p;
-+	new_timer->it.cpu.pid = get_task_pid(p, cpu_timer_pid_type(new_timer));
-+	/*
-+	 * get_task_for_clock() took a reference on @p. Drop it as the timer
-+	 * holds a reference on the pid of @p.
-+	 */
-+	put_task_struct(p);
- 	return 0;
- }
- 
-@@ -404,13 +419,15 @@ static int posix_cpu_timer_create(struct k_itimer *new_timer)
- static int posix_cpu_timer_del(struct k_itimer *timer)
- {
- 	struct cpu_timer *ctmr = &timer->it.cpu;
--	struct task_struct *p = ctmr->task;
- 	struct sighand_struct *sighand;
-+	struct task_struct *p;
- 	unsigned long flags;
- 	int ret = 0;
- 
--	if (WARN_ON_ONCE(!p))
--		return -EINVAL;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p)
-+		goto out;
- 
- 	/*
- 	 * Protect against sighand release/switch in exit/exec and process/
-@@ -432,8 +449,10 @@ static int posix_cpu_timer_del(struct k_itimer *timer)
- 		unlock_task_sighand(p, &flags);
- 	}
- 
-+out:
-+	rcu_read_unlock();
- 	if (!ret)
--		put_task_struct(p);
-+		put_pid(ctmr->pid);
- 
- 	return ret;
- }
-@@ -561,13 +580,21 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
- 	u64 old_expires, new_expires, old_incr, val;
- 	struct cpu_timer *ctmr = &timer->it.cpu;
--	struct task_struct *p = ctmr->task;
- 	struct sighand_struct *sighand;
-+	struct task_struct *p;
- 	unsigned long flags;
- 	int ret = 0;
- 
--	if (WARN_ON_ONCE(!p))
--		return -EINVAL;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p) {
-+		/*
-+		 * If p has just been reaped, we can no
-+		 * longer get any information about it at all.
-+		 */
-+		rcu_read_unlock();
-+		return -ESRCH;
-+	}
- 
- 	/*
- 	 * Use the to_ktime conversion because that clamps the maximum
-@@ -584,8 +611,10 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 	 * If p has just been reaped, we can no
- 	 * longer get any information about it at all.
- 	 */
--	if (unlikely(sighand == NULL))
-+	if (unlikely(sighand == NULL)) {
-+		rcu_read_unlock();
- 		return -ESRCH;
-+	}
- 
- 	/*
- 	 * Disarm any old timer after extracting its expiry time.
-@@ -690,6 +719,7 @@ static int posix_cpu_timer_set(struct k_itimer *timer, int timer_flags,
- 
- 	ret = 0;
-  out:
-+	rcu_read_unlock();
- 	if (old)
- 		old->it_interval = ns_to_timespec64(old_incr);
- 
-@@ -701,10 +731,12 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
- 	struct cpu_timer *ctmr = &timer->it.cpu;
- 	u64 now, expires = cpu_timer_getexpires(ctmr);
--	struct task_struct *p = ctmr->task;
-+	struct task_struct *p;
- 
--	if (WARN_ON_ONCE(!p))
--		return;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p)
-+		goto out;
- 
- 	/*
- 	 * Easy part: convert the reload time.
-@@ -712,7 +744,7 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
- 	itp->it_interval = ktime_to_timespec64(timer->it_interval);
- 
- 	if (!expires)
--		return;
-+		goto out;
- 
- 	/*
- 	 * Sample the clock to take the difference with the expiry time.
-@@ -732,6 +764,8 @@ static void posix_cpu_timer_get(struct k_itimer *timer, struct itimerspec64 *itp
- 		itp->it_value.tv_nsec = 1;
- 		itp->it_value.tv_sec = 0;
- 	}
-+out:
-+	rcu_read_unlock();
- }
- 
- #define MAX_COLLECTED	20
-@@ -952,14 +986,15 @@ static void check_process_timers(struct task_struct *tsk,
- static void posix_cpu_timer_rearm(struct k_itimer *timer)
- {
- 	clockid_t clkid = CPUCLOCK_WHICH(timer->it_clock);
--	struct cpu_timer *ctmr = &timer->it.cpu;
--	struct task_struct *p = ctmr->task;
-+	struct task_struct *p;
- 	struct sighand_struct *sighand;
- 	unsigned long flags;
- 	u64 now;
- 
--	if (WARN_ON_ONCE(!p))
--		return;
-+	rcu_read_lock();
-+	p = cpu_timer_task_rcu(timer);
-+	if (!p)
-+		goto out;
- 
- 	/*
- 	 * Fetch the current sample and update the timer's expiry time.
-@@ -974,13 +1009,15 @@ static void posix_cpu_timer_rearm(struct k_itimer *timer)
- 	/* Protect timer list r/w in arm_timer() */
- 	sighand = lock_task_sighand(p, &flags);
- 	if (unlikely(sighand == NULL))
--		return;
-+		goto out;
- 
- 	/*
- 	 * Now re-arm for the new expiry time.
- 	 */
- 	arm_timer(timer, p);
- 	unlock_task_sighand(p, &flags);
-+out:
-+	rcu_read_unlock();
- }
- 
- /**
+What follows after this stack? That's the most interesting part. The
+part that you showed is common for all stalls and does not mean much,
+besides the fact that there is a stall. These can well be very
+different stalls in different parts of kernel.
