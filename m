@@ -2,67 +2,72 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5690C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C87C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE17121741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D57C021741
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:14:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="iPqLt7CU"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="elTxoKyu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387963AbgCDKOH (ORCPT
+        id S2387884AbgCDKNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:14:07 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34382 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387900AbgCDKN5 (ORCPT
+        Wed, 4 Mar 2020 05:13:54 -0500
+Received: from mail-lf1-f54.google.com ([209.85.167.54]:39118 "EHLO
+        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387817AbgCDKNu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:13:57 -0500
-Received: by mail-lf1-f68.google.com with SMTP id w27so1033948lfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:13:55 -0800 (PST)
+        Wed, 4 Mar 2020 05:13:50 -0500
+Received: by mail-lf1-f54.google.com with SMTP id n30so1018177lfh.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:13:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloudflare.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=olVifyTMleE2iedo0uCkocgafSknigkP2OP2Ek8xo9Y=;
-        b=iPqLt7CUHivuNV8QujDV0W6QulaQWe6wT9uZYQ5ZKRMJDmO8MQGos3/IzH+Krr8TzL
-         V1nEmvK5FFV62gRr6+sRztw3JaEsNXJHEpcLHkOLZPkC877v4r1Qx/J/EsqMr2kDeaIJ
-         7RQpEjKYkaijGth3oAl+LoIx5x2nAxyaiWqE0=
+        bh=0JG4vRN2U1vBjajCliJupAy0Xm38EfZHPBvH9KwfXgk=;
+        b=elTxoKyu7RkdVLYq8DExwAcOXjjfFBZEbcj6vrF5UpngljtRqGrZ7ebgasBZPsdubp
+         zuovFtYIe0rEhyusnKUocgzt3WlrXT9ZeqK8YMpldRtrMSXiw8t9Hir0CdQkbdyOFnYw
+         I7z3lQfWSwm41cFGvT8VytXTt1vcuzNp4ypXQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=olVifyTMleE2iedo0uCkocgafSknigkP2OP2Ek8xo9Y=;
-        b=i/ZJuJ6+HgiFeqzmfPFGYQlV/UndNlnT3DInlDjs+eKwj7h/Ab+obVzU1oZIHyIjtk
-         Lss8LehB/OBTrGM4Ugm3Hw+b1FE5np/dLSlwc3vjSFtVHPU1U6mTG6VZJiNNPlJHll/V
-         19IKFkNWXJNLGr4spZOcwIFyWA9jsP3ugrcVCOpuOrBAjNDpg6ylvtTx+zoaAs8nLVtf
-         gTOZwFVm5cKrEIg7j4np+Z5NqfS3dd0U8Qh96A2RfgV1Ej/WgiJvop1O7AdG1AlhmV6Y
-         sdxvQ8cI0iJyjJ3//jnURfP/Jih8dsp/3OOEqgD8SAy+t2tKgzH+uFUu/atkKFy8tL07
-         fAdw==
-X-Gm-Message-State: ANhLgQ2i6AuW/Kwej3niUylIYNmRNaVVWx4z6trp/n78RKFVYlBGUyUU
-        927ytSjQv9Y3Y3rTIX2MRSH7vw==
-X-Google-Smtp-Source: ADFU+vsuEdVRpVHa3R4OMO85FbKQo1R+1kABMKY1D8/UloF2u7KmlAOlqXrDgoY2Yx6iLysg/Te0XQ==
-X-Received: by 2002:ac2:5dd3:: with SMTP id x19mr940358lfq.168.1583316835115;
-        Wed, 04 Mar 2020 02:13:55 -0800 (PST)
+        bh=0JG4vRN2U1vBjajCliJupAy0Xm38EfZHPBvH9KwfXgk=;
+        b=iNr885Ts4TLOXJjUCV4jFa1/IiBa+6ULmI56ulKG5DQnpO+WWhePHW9NfBB7vsDO4G
+         6Ll0aevZ/5AaeMV6w0s48qdjxdx6BCcco0TfFbLMYhFUkaLV71kf6+mXMhvBj8P6aRZU
+         6B0LUhzi4/vC587BWwzSOTJCsnhVNXUKh8a7JjvwbPa4Pstr9XNFEJtOV8edx7zi1ikA
+         SIITB7zbjJsdh+/KIFQgFRJOC3drqNRzf+/xEt+5zMlngZdzK9ISQmYj7AC3UurvTlUb
+         5sMArtN1LXGDR4Dx33WDAV0+grDdHw+XVG8uzWT9w7gqAqMcGvPi/sZRagzaHBZ1bS/q
+         EIOQ==
+X-Gm-Message-State: ANhLgQ3c465UzYiiqbrpxdU7TacVnyc8NpK9NDc9viuCPUUrd252peUQ
+        zQu61F69JfKuI861xpJu8NBL1A==
+X-Google-Smtp-Source: ADFU+vtOHKTMDKLBdW063ze8vJHAb6ivzE/JIjJvB1eGckwN1kulKZrWnFhZaB0IdtDF9F6BE/XHCQ==
+X-Received: by 2002:a19:760b:: with SMTP id c11mr982899lff.140.1583316828295;
+        Wed, 04 Mar 2020 02:13:48 -0800 (PST)
 Received: from localhost.localdomain ([176.221.114.230])
-        by smtp.gmail.com with ESMTPSA id l7sm341777lfk.65.2020.03.04.02.13.53
+        by smtp.gmail.com with ESMTPSA id l7sm341777lfk.65.2020.03.04.02.13.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 02:13:54 -0800 (PST)
+        Wed, 04 Mar 2020 02:13:47 -0800 (PST)
 From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     john.fastabend@gmail.com, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
-        linux-kselftest@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH bpf-next v3 11/12] selftests: bpf: enable UDP sockmap reuseport tests
-Date:   Wed,  4 Mar 2020 11:13:16 +0100
-Message-Id: <20200304101318.5225-12-lmb@cloudflare.com>
+To:     john.fastabend@gmail.com, "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        Lorenz Bauer <lmb@cloudflare.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Cc:     kernel-team@cloudflare.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH bpf-next v3 07/12] bpf: add sockmap hooks for UDP sockets
+Date:   Wed,  4 Mar 2020 11:13:12 +0100
+Message-Id: <20200304101318.5225-8-lmb@cloudflare.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200304101318.5225-1-lmb@cloudflare.com>
 References: <20200304101318.5225-1-lmb@cloudflare.com>
@@ -73,31 +78,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove the guard that disables UDP tests now that sockmap
-has support for them.
+Add basic psock hooks for UDP sockets. This allows adding and
+removing sockets, as well as automatic removal on unhash and close.
 
 Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Signed-off-by: Jakub Sitnicki <jakub@cloudflare.com>
 ---
- tools/testing/selftests/bpf/prog_tests/select_reuseport.c | 6 ------
- 1 file changed, 6 deletions(-)
+ MAINTAINERS        |  1 +
+ include/net/udp.h  |  5 +++++
+ net/ipv4/Makefile  |  1 +
+ net/ipv4/udp_bpf.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 60 insertions(+)
+ create mode 100644 net/ipv4/udp_bpf.c
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c b/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-index a1dd13b34d4b..821b4146b7b6 100644
---- a/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-+++ b/tools/testing/selftests/bpf/prog_tests/select_reuseport.c
-@@ -805,12 +805,6 @@ static void test_config(int sotype, sa_family_t family, bool inany)
- 	char s[MAX_TEST_NAME];
- 	const struct test *t;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8f27f40d22bb..b2fae56dca9f 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9359,6 +9359,7 @@ F:	include/linux/skmsg.h
+ F:	net/core/skmsg.c
+ F:	net/core/sock_map.c
+ F:	net/ipv4/tcp_bpf.c
++F:	net/ipv4/udp_bpf.c
  
--	/* SOCKMAP/SOCKHASH don't support UDP yet */
--	if (sotype == SOCK_DGRAM &&
--	    (inner_map_type == BPF_MAP_TYPE_SOCKMAP ||
--	     inner_map_type == BPF_MAP_TYPE_SOCKHASH))
--		return;
--
- 	for (t = tests; t < tests + ARRAY_SIZE(tests); t++) {
- 		if (t->need_sotype && t->need_sotype != sotype)
- 			continue; /* test not compatible with socket type */
+ LANTIQ / INTEL Ethernet drivers
+ M:	Hauke Mehrtens <hauke@hauke-m.de>
+diff --git a/include/net/udp.h b/include/net/udp.h
+index e55d5f765807..a8fa6c0c6ded 100644
+--- a/include/net/udp.h
++++ b/include/net/udp.h
+@@ -503,4 +503,9 @@ static inline struct sk_buff *udp_rcv_segment(struct sock *sk,
+ 	return segs;
+ }
+ 
++#ifdef CONFIG_BPF_STREAM_PARSER
++struct sk_psock;
++struct proto *udp_bpf_get_proto(struct sock *sk, struct sk_psock *psock);
++#endif /* BPF_STREAM_PARSER */
++
+ #endif	/* _UDP_H */
+diff --git a/net/ipv4/Makefile b/net/ipv4/Makefile
+index 9d97bace13c8..9e1a186a3671 100644
+--- a/net/ipv4/Makefile
++++ b/net/ipv4/Makefile
+@@ -61,6 +61,7 @@ obj-$(CONFIG_TCP_CONG_LP) += tcp_lp.o
+ obj-$(CONFIG_TCP_CONG_YEAH) += tcp_yeah.o
+ obj-$(CONFIG_TCP_CONG_ILLINOIS) += tcp_illinois.o
+ obj-$(CONFIG_NET_SOCK_MSG) += tcp_bpf.o
++obj-$(CONFIG_BPF_STREAM_PARSER) += udp_bpf.o
+ obj-$(CONFIG_NETLABEL) += cipso_ipv4.o
+ 
+ obj-$(CONFIG_XFRM) += xfrm4_policy.o xfrm4_state.o xfrm4_input.o \
+diff --git a/net/ipv4/udp_bpf.c b/net/ipv4/udp_bpf.c
+new file mode 100644
+index 000000000000..eddd973e6575
+--- /dev/null
++++ b/net/ipv4/udp_bpf.c
+@@ -0,0 +1,53 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2020 Cloudflare Ltd https://cloudflare.com */
++
++#include <linux/skmsg.h>
++#include <net/sock.h>
++#include <net/udp.h>
++
++enum {
++	UDP_BPF_IPV4,
++	UDP_BPF_IPV6,
++	UDP_BPF_NUM_PROTS,
++};
++
++static struct proto *udpv6_prot_saved __read_mostly;
++static DEFINE_SPINLOCK(udpv6_prot_lock);
++static struct proto udp_bpf_prots[UDP_BPF_NUM_PROTS];
++
++static void udp_bpf_rebuild_protos(struct proto *prot, const struct proto *base)
++{
++	*prot        = *base;
++	prot->unhash = sock_map_unhash;
++	prot->close  = sock_map_close;
++}
++
++static void udp_bpf_check_v6_needs_rebuild(struct sock *sk, struct proto *ops)
++{
++	if (sk->sk_family == AF_INET6 &&
++	    unlikely(ops != smp_load_acquire(&udpv6_prot_saved))) {
++		spin_lock_bh(&udpv6_prot_lock);
++		if (likely(ops != udpv6_prot_saved)) {
++			udp_bpf_rebuild_protos(&udp_bpf_prots[UDP_BPF_IPV6], ops);
++			smp_store_release(&udpv6_prot_saved, ops);
++		}
++		spin_unlock_bh(&udpv6_prot_lock);
++	}
++}
++
++static int __init udp_bpf_v4_build_proto(void)
++{
++	udp_bpf_rebuild_protos(&udp_bpf_prots[UDP_BPF_IPV4], &udp_prot);
++	return 0;
++}
++core_initcall(udp_bpf_v4_build_proto);
++
++struct proto *udp_bpf_get_proto(struct sock *sk, struct sk_psock *psock)
++{
++	int family = sk->sk_family == AF_INET ? UDP_BPF_IPV4 : UDP_BPF_IPV6;
++
++	if (!psock->sk_proto)
++		udp_bpf_check_v6_needs_rebuild(sk, READ_ONCE(sk->sk_prot));
++
++	return &udp_bpf_prots[family];
++}
 -- 
 2.20.1
 
