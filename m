@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FFFC3F2D7
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0BEC3F2CE
 	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF64E24679
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E2D82468E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:34:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583354083;
-	bh=Y2twFTizyQFJpwdfCf8dMfeH0eDUliV8ynLpzQaEOOk=;
+	s=default; t=1583354084;
+	bh=Tz+qlhssv2+nN74Y7O0MzwwUUooji/chtUBsmkWV7vs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T+bcCHs2LWmOMqiIsLQLIAdy+EL9GYMfiF5tTzZnjmh6NiDF25XsYlZyUR81EitFu
-	 QXhrTMEJCGNie20LopwoHWgvzTsdM2ODSQipOWecS52t77QoaI7z8gv9IwfkaWXkRM
-	 ecgKo+f6w81zqN2fP6UDOMp0stuiovELDvUjWyYI=
+	b=imyhHdfqsJSFdTp4zUejvDyrxMqv/C8HSsedxM0EJ2YyNgrBaLWA19zbFPrfktHgw
+	 pIUeb6hJp2mkwjrzqxkzlrXqocsUWyRNAKV3ifY6hISCK4Qd5xRwyldRqzbZHt1lAr
+	 e0UylLVgRe/KlAiX9MPMrn3IjPW0+TsSWQgCuqY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388260AbgCDUem (ORCPT
+        id S2388329AbgCDUen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:34:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34684 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 15:34:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728614AbgCDUel (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:34:41 -0500
+        id S2387996AbgCDUem (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:34:42 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0603221739;
-        Wed,  4 Mar 2020 20:34:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 582C0217F4;
+        Wed,  4 Mar 2020 20:34:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583354080;
-        bh=Y2twFTizyQFJpwdfCf8dMfeH0eDUliV8ynLpzQaEOOk=;
+        s=default; t=1583354081;
+        bh=Tz+qlhssv2+nN74Y7O0MzwwUUooji/chtUBsmkWV7vs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jQCm6u6ov3clu11Tpu16iB6eud04xmTb6leQX144II07jFu3DMu0Me3FtIK5jXu7e
-         3PETV2VDmeHwvWD81tKWYH+lk6l5WOalBRrKooNXFHJGif0P7RZama9SbhEuTerZqX
-         8yTJywqonD9skfAKpFvISmAMttMnquqvUgSfaNTM=
+        b=N6Pm2ipko/uN1jCcYVvUbwzVZD4c+tBo5mmKh63NCQsh1ECtScUPllUk0DGpnh+rh
+         CvpeKChEOxgTiolaDq5p4CsW4dD/aQtbRJReXC1B2ZcAKAhT+IvtYlUmU4u5pvne/V
+         vZAfgMgF9UNAIPVFLY55g4syRxA3/Yjp0rKfOZdg=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1j9aj0-00A59R-51; Wed, 04 Mar 2020 20:34:38 +0000
+        id 1j9aj1-00A59R-Lf; Wed, 04 Mar 2020 20:34:39 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v5 01/23] irqchip/gic-v3: Use SGIs without active state if offered
-Date:   Wed,  4 Mar 2020 20:33:08 +0000
-Message-Id: <20200304203330.4967-2-maz@kernel.org>
+Subject: [PATCH v5 03/23] irqchip/gic-v4.1: Ensure mutual exclusion between vPE affinity change and RD access
+Date:   Wed,  4 Mar 2020 20:33:10 +0000
+Message-Id: <20200304203330.4967-4-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200304203330.4967-1-maz@kernel.org>
 References: <20200304203330.4967-1-maz@kernel.org>
@@ -73,83 +73,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To allow the direct injection of SGIs into a guest, the GICv4.1
-architecture has to sacrifice the Active state so that SGIs look
-a lot like LPIs (they are injected by the same mechanism).
+Before GICv4.1, all operations would be serialized with the affinity
+changes by virtue of using the same ITS command queue. With v4.1, things
+change, as invalidations (and a number of other operations) are issued
+using the redistributor MMIO frame.
 
-In order not to break existing software, the architecture gives
-offers guests OSs the choice: SGIs with or without an active
-state. It is the hypervisors duty to honor the guest's choice.
+We must thus make sure that these redistributor accesses cannot race
+against aginst the affinity change, or we may end-up talking to the
+wrong redistributor.
 
-For this, the architecture offers a discovery bit indicating whether
-the GIC supports GICv4.1 SGIs (GICD_TYPER2.nASSGIcap), and another
-bit indicating whether the guest wants Active-less SGIs or not
-(controlled by GICD_CTLR.nASSGIreq).
-
-A hypervisor not supporting GICv4.1 SGIs would leave nASSGIcap
-clear, and a guest not knowing about GICv4.1 SGIs (or definitely
-wanting an Active state) would leave nASSGIreq clear (both being
-thankfully backward compatible with older revisions of the GIC).
-
-Since Linux is perfectly happy without an active state on SGIs,
-inform the hypervisor that we'll use that if offered.
+To ensure this, we expand the irq_to_cpuid() helper to take a spinlock
+when the LPI is mapped to a vLPI (a new per-VPE lock) on each operation
+that requires mutual exclusion.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 ---
- drivers/irqchip/irq-gic-v3.c       | 10 ++++++++--
- include/linux/irqchip/arm-gic-v3.h |  2 ++
- 2 files changed, 10 insertions(+), 2 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c   | 56 +++++++++++++++++++++++++-----
+ include/linux/irqchip/arm-gic-v4.h |  5 +++
+ 2 files changed, 53 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/irqchip/irq-gic-v3.c b/drivers/irqchip/irq-gic-v3.c
-index cd76435c4a31..73e87e176d76 100644
---- a/drivers/irqchip/irq-gic-v3.c
-+++ b/drivers/irqchip/irq-gic-v3.c
-@@ -724,6 +724,7 @@ static void __init gic_dist_init(void)
- 	unsigned int i;
- 	u64 affinity;
- 	void __iomem *base = gic_data.dist_base;
-+	u32 val;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index da883a691028..1af713990123 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -239,15 +239,41 @@ static struct its_vlpi_map *get_vlpi_map(struct irq_data *d)
+ 	return NULL;
+ }
  
- 	/* Disable the distributor */
- 	writel_relaxed(0, base + GICD_CTLR);
-@@ -756,9 +757,14 @@ static void __init gic_dist_init(void)
- 	/* Now do the common stuff, and wait for the distributor to drain */
- 	gic_dist_config(base, GIC_LINE_NR, gic_dist_wait_for_rwp);
- 
-+	val = GICD_CTLR_ARE_NS | GICD_CTLR_ENABLE_G1A | GICD_CTLR_ENABLE_G1;
-+	if (gic_data.rdists.gicd_typer2 & GICD_TYPER2_nASSGIcap) {
-+		pr_info("Enabling SGIs without active state\n");
-+		val |= GICD_CTLR_nASSGIreq;
-+	}
+-static int irq_to_cpuid(struct irq_data *d)
++static int vpe_to_cpuid_lock(struct its_vpe *vpe, unsigned long *flags)
++{
++	raw_spin_lock_irqsave(&vpe->vpe_lock, *flags);
++	return vpe->col_idx;
++}
 +
- 	/* Enable distributor with ARE, Group1 */
--	writel_relaxed(GICD_CTLR_ARE_NS | GICD_CTLR_ENABLE_G1A | GICD_CTLR_ENABLE_G1,
--		       base + GICD_CTLR);
-+	writel_relaxed(val, base + GICD_CTLR);
++static void vpe_to_cpuid_unlock(struct its_vpe *vpe, unsigned long flags)
++{
++	raw_spin_unlock_irqrestore(&vpe->vpe_lock, flags);
++}
++
++static int irq_to_cpuid_lock(struct irq_data *d, unsigned long *flags)
+ {
+-	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+ 	struct its_vlpi_map *map = get_vlpi_map(d);
++	int cpu;
+ 
+-	if (map)
+-		return map->vpe->col_idx;
++	if (map) {
++		cpu = vpe_to_cpuid_lock(map->vpe, flags);
++	} else {
++		/* Physical LPIs are already locked via the irq_desc lock */
++		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
++		cpu = its_dev->event_map.col_map[its_get_event_id(d)];
++		/* Keep GCC quiet... */
++		*flags = 0;
++	}
+ 
+-	return its_dev->event_map.col_map[its_get_event_id(d)];
++	return cpu;
++}
++
++static void irq_to_cpuid_unlock(struct irq_data *d, unsigned long flags)
++{
++	struct its_vlpi_map *map = get_vlpi_map(d);
++
++	if (map)
++		vpe_to_cpuid_unlock(map->vpe, flags);
+ }
+ 
+ static struct its_collection *valid_col(struct its_collection *col)
+@@ -1329,7 +1355,9 @@ static void direct_lpi_inv(struct irq_data *d)
+ {
+ 	struct its_vlpi_map *map = get_vlpi_map(d);
+ 	void __iomem *rdbase;
++	unsigned long flags;
+ 	u64 val;
++	int cpu;
+ 
+ 	if (map) {
+ 		struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+@@ -1344,10 +1372,12 @@ static void direct_lpi_inv(struct irq_data *d)
+ 	}
+ 
+ 	/* Target the redistributor this LPI is currently routed to */
+-	rdbase = per_cpu_ptr(gic_rdists->rdist, irq_to_cpuid(d))->rd_base;
++	cpu = irq_to_cpuid_lock(d, &flags);
++	rdbase = per_cpu_ptr(gic_rdists->rdist, cpu)->rd_base;
+ 	gic_write_lpir(val, rdbase + GICR_INVLPIR);
+ 
+ 	wait_for_syncr(rdbase);
++	irq_to_cpuid_unlock(d, flags);
+ }
+ 
+ static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
+@@ -3486,17 +3516,25 @@ static int its_vpe_set_affinity(struct irq_data *d,
+ {
+ 	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
+ 	int from, cpu = cpumask_first(mask_val);
++	unsigned long flags;
  
  	/*
- 	 * Set all global interrupts to the boot CPU only. ARE must be
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 83439bfb6c5b..c29a02678a6f 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -57,6 +57,7 @@
- #define GICD_SPENDSGIR			0x0F20
+ 	 * Changing affinity is mega expensive, so let's be as lazy as
+ 	 * we can and only do it if we really have to. Also, if mapped
+ 	 * into the proxy device, we need to move the doorbell
+ 	 * interrupt to its new location.
++	 *
++	 * Another thing is that changing the affinity of a vPE affects
++	 * *other interrupts* such as all the vLPIs that are routed to
++	 * this vPE. This means that the irq_desc lock is not enough to
++	 * protect us, and that we must ensure nobody samples vpe->col_idx
++	 * during the update, hence the lock below which must also be
++	 * taken on any vLPI handling path that evaluates vpe->col_idx.
+ 	 */
+-	if (vpe->col_idx == cpu)
++	from = vpe_to_cpuid_lock(vpe, &flags);
++	if (from == cpu)
+ 		goto out;
  
- #define GICD_CTLR_RWP			(1U << 31)
-+#define GICD_CTLR_nASSGIreq		(1U << 8)
- #define GICD_CTLR_DS			(1U << 6)
- #define GICD_CTLR_ARE_NS		(1U << 4)
- #define GICD_CTLR_ENABLE_G1A		(1U << 1)
-@@ -90,6 +91,7 @@
- #define GICD_TYPER_ESPIS(typer)						\
- 	(((typer) & GICD_TYPER_ESPI) ? GICD_TYPER_SPIS((typer) >> 27) : 0)
+-	from = vpe->col_idx;
+ 	vpe->col_idx = cpu;
  
-+#define GICD_TYPER2_nASSGIcap		(1U << 8)
- #define GICD_TYPER2_VIL			(1U << 7)
- #define GICD_TYPER2_VID			GENMASK(4, 0)
+ 	/*
+@@ -3512,6 +3550,7 @@ static int its_vpe_set_affinity(struct irq_data *d,
  
+ out:
+ 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
++	vpe_to_cpuid_unlock(vpe, flags);
+ 
+ 	return IRQ_SET_MASK_OK_DONE;
+ }
+@@ -3855,6 +3894,7 @@ static int its_vpe_init(struct its_vpe *vpe)
+ 		return -ENOMEM;
+ 	}
+ 
++	raw_spin_lock_init(&vpe->vpe_lock);
+ 	vpe->vpe_id = vpe_id;
+ 	vpe->vpt_page = vpt_page;
+ 	if (gic_rdists->has_rvpeid)
+diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+index d9c34968467a..439963f4c66a 100644
+--- a/include/linux/irqchip/arm-gic-v4.h
++++ b/include/linux/irqchip/arm-gic-v4.h
+@@ -53,6 +53,11 @@ struct its_vpe {
+ 		};
+ 	};
+ 
++	/*
++	 * Ensures mutual exclusion between affinity setting of the
++	 * vPE and vLPI operations using vpe->col_idx.
++	 */
++	raw_spinlock_t		vpe_lock;
+ 	/*
+ 	 * This collection ID is used to indirect the target
+ 	 * redistributor for this VPE. The ID itself isn't involved in
 -- 
 2.20.1
 
