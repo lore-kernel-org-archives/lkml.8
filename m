@@ -2,201 +2,303 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E814C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436F6C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76C0021744
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06B7E214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:28:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yz9OKL/+"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="beUw6o/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbgCDI2s (ORCPT
+        id S1728885AbgCDI2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:28:48 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50464 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgCDI2s (ORCPT
+        Wed, 4 Mar 2020 03:28:51 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:44951 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725271AbgCDI2t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:28:48 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0248SW0c007548;
-        Wed, 4 Mar 2020 02:28:32 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583310512;
-        bh=oH7grBEwPdlI3HY7/tKeeO0ogpT5E6PPUFVW6ggJMBU=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=yz9OKL/+iTlwBnpWqcF2OL9DVUlzbIDrGIkJ82X52343j9Q/7M2FrSTMvlaqkQ/aV
-         YnQST8WdlRWVK19gC/qVaINENxyxX5SG9UeU1I3Ao7YSL3Qw5pCzyUHrfLMfBW0UGD
-         kO10y7SLV21NuHRmUCMMy2iLGfGA2NLzU+9NXhU4=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0248SWWi063029
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 02:28:32 -0600
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 02:28:31 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 02:28:31 -0600
-Received: from [192.168.2.14] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0248SSpV099893;
-        Wed, 4 Mar 2020 02:28:29 -0600
-Subject: Re: dma_mask limited to 32-bits with OF platform device
-To:     Rob Herring <robh+dt@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-CC:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?Q?P=c3=a9ter_Ujfalusi?= <peter.ujfalusi@ti.com>,
-        Murali Karicheri <m-karicheri2@ti.com>,
-        "Nori, Sekhar" <nsekhar@ti.com>, "Anna, Suman" <s-anna@ti.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishanth Menon <nm@ti.com>,
-        "hdegoede@redhat.com" <hdegoede@redhat.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-References: <c1c75923-3094-d3fc-fe8e-ee44f17b1a0a@ti.com>
- <3a91f306-f544-a63c-dfe2-7eae7b32bcca@arm.com>
- <56314192-f3c6-70c5-6b9a-3d580311c326@ti.com>
- <9bd83815-6f54-2efb-9398-42064f73ab1c@arm.com>
- <20200217132133.GA27134@lst.de> <b3c56884-128e-a7e1-2e09-0e8de3c3512d@ti.com>
- <CAL_JsqLxECRKWG3SoORADtZ-gVbqCHyx9mhGzrCPO+X=--w8AQ@mail.gmail.com>
- <15d0ac5f-4919-5852-cd95-93c24d8bdbb9@ti.com>
- <827fa19d-1990-16bc-33f5-fc82ac0d4a8a@arm.com>
- <3d8ea578-2ecb-1126-3bf0-2dc695687245@ti.com>
- <e898cf0a-6f52-8550-c73e-b78bc413bcc7@ti.com>
- <98db4748-63cb-79db-50c3-a6a37d624eaa@arm.com>
- <CAL_Jsq+zx5qkv1DZdj1p2HHz5siYZwv6WGLe1F7xw9b019UWbQ@mail.gmail.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <c753a232-403d-6ed2-89fd-09476c887391@ti.com>
-Date:   Wed, 4 Mar 2020 10:28:28 +0200
+        Wed, 4 Mar 2020 03:28:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583310527;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=iM90KWHCrZtY434AYIgytahk5bPcLm+aLGZHxb30Od4=;
+        b=beUw6o/FvqV2ssAL5Ls/FinK4+EY6Jsop3d058QMLG0pD2diE0XMOtjn0sAG6QJZu4leO1
+        Y1yfWHqjUFdRoY1bL0lxtt6mia8ARygqhU8jTmcRfyq7EkIN/Ed9FnKNBID3gxNaZVuhig
+        RYrgTeSndj8QUhDrfPUu/hNLmvuxO+M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-462-kAwmCsZ-Mum0Pr097-3eTw-1; Wed, 04 Mar 2020 03:28:44 -0500
+X-MC-Unique: kAwmCsZ-Mum0Pr097-3eTw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3F91F107ACC9;
+        Wed,  4 Mar 2020 08:28:42 +0000 (UTC)
+Received: from [10.36.117.195] (ovpn-117-195.ams2.redhat.com [10.36.117.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ADCD37387A;
+        Wed,  4 Mar 2020 08:28:38 +0000 (UTC)
+Subject: Re: [PATCH -V2] mm: Add PageLayzyFree() helper functions for
+ MADV_FREE
+To:     "Huang, Ying" <ying.huang@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        Zi Yan <ziy@nvidia.com>, Michal Hocko <mhocko@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Minchan Kim <minchan@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Hugh Dickins <hughd@google.com>
+References: <20200304081732.563536-1-ying.huang@intel.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <d7dcb472-76fa-9d8b-513a-793a7ab8580d@redhat.com>
+Date:   Wed, 4 Mar 2020 09:28:37 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <CAL_Jsq+zx5qkv1DZdj1p2HHz5siYZwv6WGLe1F7xw9b019UWbQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+In-Reply-To: <20200304081732.563536-1-ying.huang@intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 04.03.20 09:17, Huang, Ying wrote:
+> From: Huang Ying <ying.huang@intel.com>
+>=20
+> Now PageSwapBacked() is used as the helper function to check whether
+> pages have been freed lazily via MADV_FREE.  This isn't very obvious.
+> So Dave suggested to add PageLazyFree() family helper functions to
+> improve the code readability.
+>=20
+> Signed-off-by: "Huang, Ying" <ying.huang@intel.com>
+> Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Mel Gorman <mgorman@suse.de>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
+> Cc: Zi Yan <ziy@nvidia.com>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Minchan Kim <minchan@kernel.org>
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Hugh Dickins <hughd@google.com>
+> ---
+>=20
+> Changelog:
+>=20
+> v2:
+>=20
+> - Avoid code bloat via removing VM_BUG_ON_PAGE(), which doesn't exist
+>   in the original code.  Now there is no any text/data/bss size
+>   change.
+>=20
+> - Fix one wrong replacement in try_to_unmap_one().
+> ---
+>  include/linux/page-flags.h | 25 +++++++++++++++++++++++++
+>  mm/rmap.c                  |  4 ++--
+>  mm/swap.c                  | 11 +++--------
+>  mm/vmscan.c                |  7 +++----
+>  4 files changed, 33 insertions(+), 14 deletions(-)
+>=20
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 49c2697046b9..192b593750d3 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -498,6 +498,31 @@ static __always_inline int PageKsm(struct page *pa=
+ge)
+>  TESTPAGEFLAG_FALSE(Ksm)
+>  #endif
+> =20
+> +/*
+> + * For pages freed lazily via MADV_FREE.  lazyfree pages are clean
+> + * anonymous pages.  They have SwapBacked flag cleared to distinguish
+> + * with normal anonymous pages
 
-On 03/03/2020 21:26, Rob Herring wrote:
-> On Tue, Mar 3, 2020 at 8:06 AM Robin Murphy <robin.murphy@arm.com> wrote:
->>
->> On 03/03/2020 8:27 am, Roger Quadros wrote:
->> [...]
->>>> With the patch (in the end). dev->bus_dma_limit is still set to 0 and
->>>> so is not being used.
->>>>
->>>> from of_dma_configure()
->>>>           ret = of_dma_get_range(np, &dma_addr, &paddr, &size);
->>>> ...
->>>>           /* ...but only set bus limit if we found valid dma-ranges
->>>> earlier */
->>>>           if (!ret)
->>>>                   dev->bus_dma_limit = end;
->>>>
->>>> There is no other place bus_dma_limit is set. Looks like every device
->>>> should inherit that
->>>> from it's parent right?
->>>
->>> Any ideas how to expect this to work?
->>
->> Is of_dma_get_range() actually succeeding, or is it tripping up on some
->> aspect of the DT (in which case there should be errors in the log)?
->>
+"They don't have PG_swapbacked set, to distinguish them from normal
+anonymous pages." ?
 
-of_dma_get_range() was failing but no errors in the log.
+> + */
+> +static __always_inline int __PageLazyFree(struct page *page)
+> +{
+> +	return !PageSwapBacked(page);
+> +}
+> +
+> +static __always_inline int PageLazyFree(struct page *page)
+> +{
+> +	return PageAnon(page) && __PageLazyFree(page);
+> +}
+> +
+> +static __always_inline void SetPageLazyFree(struct page *page)
+> +{
+> +	ClearPageSwapBacked(page);
+> +}
+> +
+> +static __always_inline void ClearPageLazyFree(struct page *page)
+> +{
+> +	SetPageSwapBacked(page);
+> +}
+> +
+>  u64 stable_page_flags(struct page *page);
+> =20
+>  static inline int PageUptodate(struct page *page)
+> diff --git a/mm/rmap.c b/mm/rmap.c
+> index 1c02adaa233e..6ec96c8e7826 100644
+> --- a/mm/rmap.c
+> +++ b/mm/rmap.c
+> @@ -1609,7 +1609,7 @@ static bool try_to_unmap_one(struct page *page, s=
+truct vm_area_struct *vma,
+>  			}
+> =20
+>  			/* MADV_FREE page check */
+> -			if (!PageSwapBacked(page)) {
+> +			if (__PageLazyFree(page)) {
+>  				if (!PageDirty(page)) {
+>  					/* Invalidate as we cleared the pte */
+>  					mmu_notifier_invalidate_range(mm,
+> @@ -1623,7 +1623,7 @@ static bool try_to_unmap_one(struct page *page, s=
+truct vm_area_struct *vma,
+>  				 * discarded. Remap the page to page table.
+>  				 */
+>  				set_pte_at(mm, address, pvmw.pte, pteval);
+> -				SetPageSwapBacked(page);
+> +				ClearPageLazyFree(page);
+>  				ret =3D false;
+>  				page_vma_mapped_walk_done(&pvmw);
+>  				break;
+> diff --git a/mm/swap.c b/mm/swap.c
+> index c1d3ca80ea10..d83f2cd4cdb8 100644
+> --- a/mm/swap.c
+> +++ b/mm/swap.c
+> @@ -563,7 +563,7 @@ static void lru_deactivate_fn(struct page *page, st=
+ruct lruvec *lruvec,
+>  static void lru_lazyfree_fn(struct page *page, struct lruvec *lruvec,
+>  			    void *arg)
+>  {
+> -	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
+> +	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
 
->> Looking again at the fragment below, are you sure it's correct? It
->> appears to me like it might actually be defining a 1-byte-long DMA
->> range, which indeed I wouldn't really expect to work.
-> 
-> Indeed, though it took me a minute to see why.
-> 
->>
->> Robin.
->>
->>>>
->>>> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
->>>> index 64a0f90f5b52..5418c31d4da7 100644
->>>> --- a/arch/arm/boot/dts/dra7.dtsi
->>>> +++ b/arch/arm/boot/dts/dra7.dtsi
->>>> @@ -680,15 +680,22 @@
->>>>            };
->>>>
->>>>            /* OCP2SCP3 */
->>>> -        sata: sata@4a141100 {
->>>> -            compatible = "snps,dwc-ahci";
->>>> -            reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
-> 
-> Based on this, the parent address size is 1 cell...
-> 
->>>> -            interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->>>> -            phys = <&sata_phy>;
->>>> -            phy-names = "sata-phy";
->>>> -            clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->>>> -            ti,hwmods = "sata";
->>>> -            ports-implemented = <0x1>;
->>>> +        sata_aux_bus {
->>>> +            #address-cells = <2>;
->>>> +            #size-cells = <2>;
->>>> +            compatible = "simple-bus";
->>>> +            ranges = <0x0 0x0 0x4a140000 0x0 0x1200>;
->>>> +            dma-ranges = <0x0 0x0 0x0 0x0 0x1 0x00000000>;
-> 
-> So this is:
-> child addr: 0x0 0x0
-> parent addr: 0x0
-> size: 0x0 0x1
+See my comment below
 
-Good catch.
-So I fixed it to
+>  	    !PageSwapCache(page) && !PageUnevictable(page)) {
+>  		bool active =3D PageActive(page);
+> =20
+> @@ -571,12 +571,7 @@ static void lru_lazyfree_fn(struct page *page, str=
+uct lruvec *lruvec,
+>  				       LRU_INACTIVE_ANON + active);
+>  		ClearPageActive(page);
+>  		ClearPageReferenced(page);
+> -		/*
+> -		 * lazyfree pages are clean anonymous pages. They have
+> -		 * SwapBacked flag cleared to distinguish normal anonymous
+> -		 * pages
+> -		 */
+> -		ClearPageSwapBacked(page);
+> +		SetPageLazyFree(page);
+>  		add_page_to_lru_list(page, lruvec, LRU_INACTIVE_FILE);
+> =20
+>  		__count_vm_events(PGLAZYFREE, hpage_nr_pages(page));
+> @@ -678,7 +673,7 @@ void deactivate_page(struct page *page)
+>   */
+>  void mark_page_lazyfree(struct page *page)
+>  {
+> -	if (PageLRU(page) && PageAnon(page) && PageSwapBacked(page) &&
+> +	if (PageLRU(page) && PageAnon(page) && !__PageLazyFree(page) &&
 
-	dma-ranges = <0x0 0x0 0x0 0x1 0x00000000>;
+See my comment below.
 
-And now it works :).
-Thanks!
+>  	    !PageSwapCache(page) && !PageUnevictable(page)) {
+>  		struct pagevec *pvec =3D &get_cpu_var(lru_lazyfree_pvecs);
+> =20
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index eca49a1c2f68..40bb41ada2d2 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1043,8 +1043,7 @@ static void page_check_dirty_writeback(struct pag=
+e *page,
+>  	 * Anonymous pages are not handled by flushers and must be written
+>  	 * from reclaim context. Do not stall reclaim based on them
+>  	 */
+> -	if (!page_is_file_cache(page) ||
+> -	    (PageAnon(page) && !PageSwapBacked(page))) {
+> +	if (!page_is_file_cache(page) || PageLazyFree(page)) {
+>  		*dirty =3D false;
+>  		*writeback =3D false;
+>  		return;
+> @@ -1235,7 +1234,7 @@ static unsigned long shrink_page_list(struct list=
+_head *page_list,
+>  		 * Try to allocate it some swap space here.
+>  		 * Lazyfree page could be freed directly
+>  		 */
+> -		if (PageAnon(page) && PageSwapBacked(page)) {
+> +		if (PageAnon(page) && !__PageLazyFree(page)) {
 
-> 
-> The last cell is just ignored I guess if you aren't seeing any errors.
-> We check this in dtc for ranges, but not dma-ranges. So I'm fixing
-> that.
+I don't think this chunk makes this code easier to understand. I'd just
+keep this as is. IOW, I prefer PageSwapBacked() over !__PageLazyFree().
 
-Great!
 
-> 
->>>> +            sata: sata@4a141100 {
->>>> +                compatible = "snps,dwc-ahci";
->>>> +                reg = <0x0 0x0 0x0 0x1100>, <0x0 0x1100 0x0 0x7>;
->>>> +                interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
->>>> +                phys = <&sata_phy>;
->>>> +                phy-names = "sata-phy";
->>>> +                clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
->>>> +                ti,hwmods = "sata";
->>>> +                ports-implemented = <0x1>;
->>>> +            };
->>>>            };
->>>>
->>>>            /* OCP2SCP1 */
->>>>
->>>
+In general, I don't think this patch really improves the situation ...
+it's only a handful of places where this change slightly makes the code
+easier to understand. And there, only slightly ... I'd prefer better
+comments instead (e.g., in PageAnon()), documenting what it means for a
+anon page to either have PageSwapBacked() set or not.
 
--- 
-cheers,
--roger
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+--=20
+Thanks,
+
+David / dhildenb
+
