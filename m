@@ -2,169 +2,98 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1790FC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0076C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5FA521775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:39:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7461206D5
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:39:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="YOR70frZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728983AbgCDIj3 (ORCPT
+        id S1729032AbgCDIjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:39:29 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:54938 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728642AbgCDIj2 (ORCPT
+        Wed, 4 Mar 2020 03:39:31 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46967 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728946AbgCDIj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:39:28 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0248cpPd032256;
-        Wed, 4 Mar 2020 03:39:25 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2yfnrannqf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Mar 2020 03:39:25 -0500
-Received: from ASHBMBX9.ad.analog.com (ashbmbx9.ad.analog.com [10.64.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 0248dOTc040184
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Wed, 4 Mar 2020 03:39:24 -0500
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 4 Mar 2020 03:39:23 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 4 Mar 2020 03:39:23 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Wed, 4 Mar 2020 03:39:23 -0500
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 0248dJYr021800;
-        Wed, 4 Mar 2020 03:39:21 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <jic23@kernel.org>, <eugen.hristev@microchip.com>,
-        <ludovic.desroches@microchip.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH v2 2/2] iio: at91-sama5d2_adc: adjust iio_triggered_buffer_{predisable,postenable} positions
-Date:   Wed, 4 Mar 2020 10:42:19 +0200
-Message-ID: <20200304084219.20810-2-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200304084219.20810-1-alexandru.ardelean@analog.com>
-References: <20200304084219.20810-1-alexandru.ardelean@analog.com>
+        Wed, 4 Mar 2020 03:39:29 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a22so1247915oid.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:39:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=z/X0UovT4DE7O4vko2XBAkSIwy+JqphUDS53Lj39Gf8=;
+        b=YOR70frZUhrhwBN3fad57kF8tT2fIXif5ULTtPDhRJ7rO+Byhs+5kROA5eaEVK8hKV
+         5qY+GNFsbIlmtCy49oPdAcoHJl03BT3SzPWBtSf0/boOlTvtoAlBmBBUgfU8GQgLMGL/
+         /zixN0sDPnUHuPNEB6LfRZOsrR7q2fFcdVtvk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=z/X0UovT4DE7O4vko2XBAkSIwy+JqphUDS53Lj39Gf8=;
+        b=ZLTtz62MJMP0zeEtcpQHLlv+M5Q3XAx1uZh0C+nMa+W/zY/O9XqbJ6c/IZly1ODvKC
+         2DLyhw3DdeyN7XH6TwS+r0v7Aqka7KfZYa1s9gJgLY7WcAlqy3+ODBrdN7KGvPanAjrz
+         mqRmt/FGi9dLyTXQDlnxznTTAB+5DDjo4X4K8t3eXXtkGpV0pLN9XkDyyVSgG6FEek3d
+         0v2oM3TfkBd8bZN297XXk3Pkq8LH1ZV0srHCUNqcQ85yMl0ap78Sert9pB7iEmepHyhB
+         8nEAHTnOlsh5dfF0I9y845RMmauPfYdhzILHb35xnlU/KMH2SrbtmXpM0ltQLjiRglC1
+         +KUg==
+X-Gm-Message-State: ANhLgQ1RZYgcCmeiLZ0cTWb6KnTdl+/r/fgWHmoCyBeZamHA+teQGbNJ
+        ojMIOXBVGPlqA7V0Geny7UaihM4Jdj3pYslMA6YSLQ==
+X-Google-Smtp-Source: ADFU+vtoZ8+1Zm7KA6Uyx6vtB0DyfWaSmrmraBfYE72PaCJ0Y8a0K5KaZAJlzK/bCc4jOHppkANa/k941ZvJkcFJHDw=
+X-Received: by 2002:aca:b60a:: with SMTP id g10mr970157oif.102.1583311168743;
+ Wed, 04 Mar 2020 00:39:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_01:2020-03-03,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- adultscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- malwarescore=0 clxscore=1015 spamscore=0 phishscore=0 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040067
+References: <20200228115344.17742-1-lmb@cloudflare.com> <20200228115344.17742-2-lmb@cloudflare.com>
+ <5e5e955a27139_60e72b06ba14c5bc67@john-XPS-13-9370.notmuch>
+In-Reply-To: <5e5e955a27139_60e72b06ba14c5bc67@john-XPS-13-9370.notmuch>
+From:   Lorenz Bauer <lmb@cloudflare.com>
+Date:   Wed, 4 Mar 2020 09:39:17 +0100
+Message-ID: <CACAyw98oHs0CTR0k+JwZgM6maT__j5OvgsoVUGMMHx_4jW_OuA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 1/9] bpf: sockmap: only check ULP for TCP sockets
+To:     John Fastabend <john.fastabend@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Sitnicki <jakub@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The iio_triggered_buffer_{predisable,postenable} functions attach/detach
-poll functions.
+On Tue, 3 Mar 2020 at 18:35, John Fastabend <john.fastabend@gmail.com> wrote:
+>
+> > diff --git a/include/linux/skmsg.h b/include/linux/skmsg.h
+> > index 112765bd146d..54a9a3e36b29 100644
+> > --- a/include/linux/skmsg.h
+> > +++ b/include/linux/skmsg.h
+> > @@ -360,7 +360,13 @@ static inline void sk_psock_restore_proto(struct sock *sk,
+> >                                         struct sk_psock *psock)
+> >  {
+> >       sk->sk_prot->unhash = psock->saved_unhash;
+> > -     tcp_update_ulp(sk, psock->sk_proto, psock->saved_write_space);
+> > +     if (inet_sk(sk)->is_icsk) {
+>
+> use sock_map_sk_has_ulp() here as well and then drop the !icsk->icsk_ulp_ops
+> case in tcp_update_ulp()?
 
-In most cases the iio_triggered_buffer_postenable() should be called first
-to attach the poll function, and then the driver can init the data to be
-triggered.
-In this case it's the other way around: the DMA code should be initialized
-before the attaching the poll function and the reverse should be done when
-un-initializing.
+This requires moving sock_map_sk_has_ulp to the header, which seemed like the
+incorrect place. How about adding bool inet_csk_has_ulp(sk) to
+inet_connection_sock.h?
 
-To make things easier when removing the iio_triggered_buffer_postenable() &
-iio_triggered_buffer_predisable() functions from the IIO core API, the DMA
-code has been moved into preenable() for init, and postdisable() for
-uninit.
-
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/iio/adc/at91-sama5d2_adc.c | 32 ++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/iio/adc/at91-sama5d2_adc.c b/drivers/iio/adc/at91-sama5d2_adc.c
-index f2a74c47c768..2e01073d401d 100644
---- a/drivers/iio/adc/at91-sama5d2_adc.c
-+++ b/drivers/iio/adc/at91-sama5d2_adc.c
-@@ -882,7 +882,7 @@ static bool at91_adc_current_chan_is_touch(struct iio_dev *indio_dev)
- 			       AT91_SAMA5D2_MAX_CHAN_IDX + 1);
- }
- 
--static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
-+static int at91_adc_buffer_preenable(struct iio_dev *indio_dev)
- {
- 	int ret;
- 	struct at91_adc_state *st = iio_priv(indio_dev);
-@@ -902,13 +902,20 @@ static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
- 		return ret;
- 	}
- 
-+	return 0;
-+}
-+
-+static int at91_adc_buffer_postenable(struct iio_dev *indio_dev)
-+{
-+	if (at91_adc_current_chan_is_touch(indio_dev))
-+		return 0;
-+
- 	return iio_triggered_buffer_postenable(indio_dev);
- }
- 
--static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
-+static int at91_adc_buffer_postdisable(struct iio_dev *indio_dev)
- {
- 	struct at91_adc_state *st = iio_priv(indio_dev);
--	int ret;
- 	u8 bit;
- 
- 	/* check if we are disabling triggered buffer or the touchscreen */
-@@ -919,13 +926,8 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
- 	if (!(indio_dev->currentmode & INDIO_ALL_TRIGGERED_MODES))
- 		return -EINVAL;
- 
--	/* continue with the triggered buffer */
--	ret = iio_triggered_buffer_predisable(indio_dev);
--	if (ret < 0)
--		dev_err(&indio_dev->dev, "buffer predisable failed\n");
--
- 	if (!st->dma_st.dma_chan)
--		return ret;
-+		return 0;
- 
- 	/* if we are using DMA we must clear registers and end DMA */
- 	dmaengine_terminate_sync(st->dma_st.dma_chan);
-@@ -952,10 +954,20 @@ static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
- 
- 	/* read overflow register to clear possible overflow status */
- 	at91_adc_readl(st, AT91_SAMA5D2_OVER);
--	return ret;
-+	return 0;
-+}
-+
-+static int at91_adc_buffer_predisable(struct iio_dev *indio_dev)
-+{
-+	if (at91_adc_current_chan_is_touch(indio_dev))
-+		return 0;
-+
-+	return iio_triggered_buffer_predisable(indio_dev);
- }
- 
- static const struct iio_buffer_setup_ops at91_buffer_setup_ops = {
-+	.preenable = &at91_adc_buffer_preenable,
-+	.postdisable = &at91_adc_buffer_postdisable,
- 	.postenable = &at91_adc_buffer_postenable,
- 	.predisable = &at91_adc_buffer_predisable,
- };
 -- 
-2.20.1
+Lorenz Bauer  |  Systems Engineer
+6th Floor, County Hall/The Riverside Building, SE1 7PB, UK
 
+www.cloudflare.com
