@@ -7,43 +7,43 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0A3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C06C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DAF21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADFEC24673
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583354205;
-	bh=UA2EJhJ9qhxldAsKSkyx/y87EvRgFN4/kWezr3S1WVc=;
+	s=default; t=1583354207;
+	bh=LM+IK6M+L2mwyCbbW6iasnIEVh5wbIXqP0UKLOhyf/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cpyL0qm5EU/ZFEnZ7xVtV1evk0eULdJGNRMv8vFiUT4XnPm+8msQNVPOD2N5WCudX
-	 J7OKy26AB9WAoIVcuGYvBSP8uMWyV7MNoSFmf/h+HZEKiMaDbLYt7m/ejhIwtrNB/h
-	 85vD2fXfFenM0/UI/k/XcBCRsHF4uo5cwma04s8U=
+	b=Hhi3owwmYielfOmhuPSgrz6vvZw897Nh5a5YNIqnjDhfeEqL8BRTZ69xSUF6duIOi
+	 iR4KVPq9hYUZF2pS6wGFzNfuH9nvvocfTl+ezfWEdJuUf72D8QWT16tvhm3498opGi
+	 7futCVwR6Q/2Ep/lbR6YcxKsSJ+/h7ZQeVcZUsms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388537AbgCDUgo (ORCPT
+        id S2388551AbgCDUgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:36:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36780 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 15:36:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388518AbgCDUgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:36:42 -0500
+        id S2388532AbgCDUgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:36:44 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C7A217F4;
-        Wed,  4 Mar 2020 20:36:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5BC224658;
+        Wed,  4 Mar 2020 20:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583354201;
-        bh=UA2EJhJ9qhxldAsKSkyx/y87EvRgFN4/kWezr3S1WVc=;
+        s=default; t=1583354203;
+        bh=LM+IK6M+L2mwyCbbW6iasnIEVh5wbIXqP0UKLOhyf/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BsIfeXJ3L18wF9II8BsCzkdWK/EciMgm5A3ZkWigYiAwEn6ObyKezCl0XrbAIXFoL
-         OkQ34skIvzhclK1SkT/XnGVyWaOwJXrbdJwon4/bBSIHqpk4V3snKRBIw9qLCr5SDT
-         KOEE/piGaf6jNYUy5l96CR/qwxaaCKMTG/f2sFdk=
+        b=ublgWy9BD3ZwWJKrxT24M266isPdhgcyvwql58kzks5dyUOrWS5Ev+62eujQECqFX
+         R2VLXD9rzw2Yc9X3kZ4rkmTwLdr4mipA9Nuku0Z2ayBJqphVfxHHIcYMrE9HXM0e2W
+         k5z/9TJhy0DqdSDHZooI/u8T6Goakzh1RIS0y+Jk=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1j9ajI-00A59R-3o; Wed, 04 Mar 2020 20:34:56 +0000
+        id 1j9ajB-00A59R-6L; Wed, 04 Mar 2020 20:34:49 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v5 22/23] KVM: arm64: GICv4.1: Allow non-trapping WFI when using HW SGIs
-Date:   Wed,  4 Mar 2020 20:33:29 +0000
-Message-Id: <20200304203330.4967-23-maz@kernel.org>
+Subject: [PATCH v5 14/23] irqchip/gic-v4.1: Add VSGI allocation/teardown
+Date:   Wed,  4 Mar 2020 20:33:21 +0000
+Message-Id: <20200304203330.4967-15-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200304203330.4967-1-maz@kernel.org>
 References: <20200304203330.4967-1-maz@kernel.org>
@@ -73,30 +73,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just like for VLPIs, it is beneficial to avoid trapping on WFI when the
-vcpu is using the GICv4.1 SGIs.
-
-Add such a check to vcpu_clear_wfx_traps().
+Allocate per-VPE SGIs when initializing the GIC-specific part of the
+VPE data structure.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- arch/arm64/include/asm/kvm_emulate.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/irqchip/irq-gic-v4.c       | 68 +++++++++++++++++++++++++++++-
+ include/linux/irqchip/arm-gic-v4.h |  2 +
+ 2 files changed, 69 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/include/asm/kvm_emulate.h b/arch/arm64/include/asm/kvm_emulate.h
-index f658dda12364..a30b4eec7cb4 100644
---- a/arch/arm64/include/asm/kvm_emulate.h
-+++ b/arch/arm64/include/asm/kvm_emulate.h
-@@ -89,7 +89,8 @@ static inline unsigned long *vcpu_hcr(struct kvm_vcpu *vcpu)
- static inline void vcpu_clear_wfx_traps(struct kvm_vcpu *vcpu)
+diff --git a/drivers/irqchip/irq-gic-v4.c b/drivers/irqchip/irq-gic-v4.c
+index 117ba6db023d..99b33f60ac63 100644
+--- a/drivers/irqchip/irq-gic-v4.c
++++ b/drivers/irqchip/irq-gic-v4.c
+@@ -92,6 +92,47 @@ static bool has_v4_1(void)
+ 	return !!sgi_domain_ops;
+ }
+ 
++static int its_alloc_vcpu_sgis(struct its_vpe *vpe, int idx)
++{
++	char *name;
++	int sgi_base;
++
++	if (!has_v4_1())
++		return 0;
++
++	name = kasprintf(GFP_KERNEL, "GICv4-sgi-%d", task_pid_nr(current));
++	if (!name)
++		goto err;
++
++	vpe->fwnode = irq_domain_alloc_named_id_fwnode(name, idx);
++	if (!vpe->fwnode)
++		goto err;
++
++	kfree(name);
++	name = NULL;
++
++	vpe->sgi_domain = irq_domain_create_linear(vpe->fwnode, 16,
++						   sgi_domain_ops, vpe);
++	if (!vpe->sgi_domain)
++		goto err;
++
++	sgi_base = __irq_domain_alloc_irqs(vpe->sgi_domain, -1, 16,
++					       NUMA_NO_NODE, vpe,
++					       false, NULL);
++	if (sgi_base <= 0)
++		goto err;
++
++	return 0;
++
++err:
++	if (vpe->sgi_domain)
++		irq_domain_remove(vpe->sgi_domain);
++	if (vpe->fwnode)
++		irq_domain_free_fwnode(vpe->fwnode);
++	kfree(name);
++	return -ENOMEM;
++}
++
+ int its_alloc_vcpu_irqs(struct its_vm *vm)
  {
- 	vcpu->arch.hcr_el2 &= ~HCR_TWE;
--	if (atomic_read(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vlpi_count))
-+	if (atomic_read(&vcpu->arch.vgic_cpu.vgic_v3.its_vpe.vlpi_count) ||
-+	    vcpu->kvm->arch.vgic.nassgireq)
- 		vcpu->arch.hcr_el2 &= ~HCR_TWI;
- 	else
- 		vcpu->arch.hcr_el2 |= HCR_TWI;
+ 	int vpe_base_irq, i;
+@@ -118,8 +159,13 @@ int its_alloc_vcpu_irqs(struct its_vm *vm)
+ 	if (vpe_base_irq <= 0)
+ 		goto err;
+ 
+-	for (i = 0; i < vm->nr_vpes; i++)
++	for (i = 0; i < vm->nr_vpes; i++) {
++		int ret;
+ 		vm->vpes[i]->irq = vpe_base_irq + i;
++		ret = its_alloc_vcpu_sgis(vm->vpes[i], i);
++		if (ret)
++			goto err;
++	}
+ 
+ 	return 0;
+ 
+@@ -132,8 +178,28 @@ int its_alloc_vcpu_irqs(struct its_vm *vm)
+ 	return -ENOMEM;
+ }
+ 
++static void its_free_sgi_irqs(struct its_vm *vm)
++{
++	int i;
++
++	if (!has_v4_1())
++		return;
++
++	for (i = 0; i < vm->nr_vpes; i++) {
++		unsigned int irq = irq_find_mapping(vm->vpes[i]->sgi_domain, 0);
++
++		if (WARN_ON(!irq))
++			continue;
++
++		irq_domain_free_irqs(irq, 16);
++		irq_domain_remove(vm->vpes[i]->sgi_domain);
++		irq_domain_free_fwnode(vm->vpes[i]->fwnode);
++	}
++}
++
+ void its_free_vcpu_irqs(struct its_vm *vm)
+ {
++	its_free_sgi_irqs(vm);
+ 	irq_domain_free_irqs(vm->vpes[0]->irq, vm->nr_vpes);
+ 	irq_domain_remove(vm->domain);
+ 	irq_domain_free_fwnode(vm->fwnode);
+diff --git a/include/linux/irqchip/arm-gic-v4.h b/include/linux/irqchip/arm-gic-v4.h
+index 8b42d9d9b17e..0bb111b4a504 100644
+--- a/include/linux/irqchip/arm-gic-v4.h
++++ b/include/linux/irqchip/arm-gic-v4.h
+@@ -49,6 +49,8 @@ struct its_vpe {
+ 		};
+ 		/* GICv4.1 implementations */
+ 		struct {
++			struct fwnode_handle	*fwnode;
++			struct irq_domain	*sgi_domain;
+ 			struct {
+ 				u8	priority;
+ 				bool	enabled;
 -- 
 2.20.1
 
