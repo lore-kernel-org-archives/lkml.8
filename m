@@ -2,68 +2,68 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2EDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F962C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44EEE20716
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FC52084E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:02:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4SVbPYS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QHiaPdts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388512AbgCDWCD (ORCPT
+        id S2388428AbgCDWCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:02:03 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55887 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388483AbgCDWCB (ORCPT
+        Wed, 4 Mar 2020 17:02:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39337 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388511AbgCDWCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:02:01 -0500
-Received: by mail-wm1-f66.google.com with SMTP id 6so3981242wmi.5;
-        Wed, 04 Mar 2020 14:02:00 -0800 (PST)
+        Wed, 4 Mar 2020 17:02:04 -0500
+Received: by mail-wr1-f66.google.com with SMTP id y17so4445263wrn.6;
+        Wed, 04 Mar 2020 14:02:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=7usjeEtnLelRZFqfBWE5WZWkvf+bS5tSXzwRcAo6Mj8=;
-        b=J4SVbPYSzmVam37DjyguQpOymuECa5BijnCH9xLTjm92LsrT3Bqp9T59mK4qpqEmpv
-         NFipA1l0LfQhwwWZO8TNynkv4OeU18HB4lAi5DtMesOGeTxc9anMMw2+4TqyaV19XCv+
-         lRAKsQDzrkSZUJQPTbn25mll9LiIU9vKUySc0T7UcBuIDeQ1BrJ6hlLNumuXbFyDSpfO
-         zlPKrAKhlVrZV4EuQIOvxvO+XiBU/wVv7kst3v6wO4tXsEGUYzC0SZPCQIgwWVpPQZon
-         Rz5IFpVnSlbWMpoRFrINm/AmQvLUzagy395sQvEQjMy3a9XJjPAysaIDbQhfg1lEaq3o
-         nz/A==
+        bh=xfCmZZGWdAB18EV+HiQNuzu6AWSdRAq3sYA6QBfmn3E=;
+        b=QHiaPdtsX+y/kEtYgLixbatRagaO0m0P10Z/1bdpoPEj5B0oNkuF7Q8CuPtX+o0Tg+
+         qFPwdzO7IaAjQ7uSpdidPJimOZ625RwMxX7WBta9i5Po/YOgM+xZafcJHPsjPV8PNUUG
+         a3jpOEPYEmLa29ZH3dG4SgfT9B8pI+9u5O93HkCpXzhvGsCTl6RYGHQ9+K/uYPRjFWWk
+         43q6ja0UFNVJhnTcxAYPtdL88/BdM1Kmpkm97Vs4pXTUTXGSlsaTNHF0IYfUelf6KvIV
+         NkuX5dzdibCPd771wEY0zFyEA2wWfG9D6p1OfxDjTXzV8PHdYA8IrX74HpwIVuSfCv53
+         JAGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=7usjeEtnLelRZFqfBWE5WZWkvf+bS5tSXzwRcAo6Mj8=;
-        b=KRgkzD45FSBnOymw91q5C7n+/Y6RdX2Ii5HH4VrmKX+JCN/zMXDzt4Rj+dAbkcdAJb
-         ctliom3/pZ+iXHTpIjBrNrcDzCptAYYJNNoXJpT5+4b+6lCkyXxtgW+MK75uyK7Wt2yq
-         n0/UVB1xoAp9SOAEGHkHSCpFoeqlJq9y0p0ui5dL4d5X/WZpveK3A5l6oQctc4Cwm25Y
-         6vwe8w5vPvtTMM4Tnc9XqZCYhS6RYuQvQLnfsIetJNIypKpfJbQcRmbixl713EyOKspx
-         AQ3yuoBBSbvM7VLU8Z4uZTEDDWiUwiOVybz2UL9p7ZwrEycW//cQGkkMqE/OA5lp1pZH
-         IG5A==
-X-Gm-Message-State: ANhLgQ113RLmoCU3UviFpf9btiOa6RGZRuzi9Yg27CTA9b7qVjOyYu5A
-        cxTT5XAuytrBHxkz6nMWfAw=
-X-Google-Smtp-Source: ADFU+vs6REbQIkGOj+OTlmaB4siXuM1v/v23pW3AjDLVW6ldBzqWTtmjYTqUJXJ912bqGN/BwDSPng==
-X-Received: by 2002:a1c:4805:: with SMTP id v5mr5575917wma.80.1583359320233;
-        Wed, 04 Mar 2020 14:02:00 -0800 (PST)
+        bh=xfCmZZGWdAB18EV+HiQNuzu6AWSdRAq3sYA6QBfmn3E=;
+        b=LmOEOqJq9y77ePbwTfzotkf/DyHUp4hDk5DE6KfUqmvwMFFlxxFo3fnLLA1X4l8xtX
+         PMozYt42pm1rckIJ6QiNtDy8dgIq/SLXcUqG7rHK/TQbsV7MK8z087dGIo5cFUlEU4lr
+         ABYRZUPUSlZgMlSvGpZGYg7L0MXpsDjPkua8SjofcNVAVrp3LtvtolH5MZNGMwc9fizc
+         ZVU4oAEik87E5vZ1y2rWtyDYzjKbkQK2h4NPwXnrOzfWpY6M/2M4VBm7bFfJCSEBsggF
+         uVL+6IoCBJHFoeJvkjjDrq9V2ZSqnCODu7wNp1pPweIDplg5CLHz4YtVWlJ61XqljWc+
+         Y9zQ==
+X-Gm-Message-State: ANhLgQ0PJFkA1AOjvndL232+89FaXkIMr3IzAswsj2VQQiloOWLpjF7M
+        tL7QYgfEdimH9mIlBJuTpYE=
+X-Google-Smtp-Source: ADFU+vvwX8MKXSjG6S/QDFTJ12SY3coIxwrF5XciysvLRS4IA4+Bru2auK//T4CG/Aj5/6vcs33VEw==
+X-Received: by 2002:adf:a285:: with SMTP id s5mr6401530wra.118.1583359322372;
+        Wed, 04 Mar 2020 14:02:02 -0800 (PST)
 Received: from localhost.localdomain ([79.115.60.40])
-        by smtp.gmail.com with ESMTPSA id z2sm36776402wrq.95.2020.03.04.14.01.59
+        by smtp.gmail.com with ESMTPSA id z2sm36776402wrq.95.2020.03.04.14.02.01
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 14:01:59 -0800 (PST)
+        Wed, 04 Mar 2020 14:02:01 -0800 (PST)
 From:   Vladimir Oltean <olteanv@gmail.com>
 To:     broonie@kernel.org
 Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
         eha@deif.com, angelo@sysam.it, andrew.smirnov@gmail.com,
         gustavo@embeddedor.com, weic@nvidia.com, mhosny@nvidia.com
-Subject: [PATCH 05/12] spi: spi-fsl-dspi: Rename fifo_{read,write} and {tx,cmd}_fifo_write
-Date:   Thu,  5 Mar 2020 00:00:37 +0200
-Message-Id: <20200304220044.11193-6-olteanv@gmail.com>
+Subject: [PATCH 07/12] spi: Do spi_take_timestamp_pre for as many times as necessary
+Date:   Thu,  5 Mar 2020 00:00:39 +0200
+Message-Id: <20200304220044.11193-8-olteanv@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200304220044.11193-1-olteanv@gmail.com>
 References: <20200304220044.11193-1-olteanv@gmail.com>
@@ -74,93 +74,100 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Vladimir Oltean <vladimir.oltean@nxp.com>
 
-These function names are very generic and it is easy to get confused.
-Rename them after the hardware register that they are accessing.
+When dealing with a SPI controller driver that is sending more than 1
+byte at once (or the entire buffer at once), and the SPI peripheral
+driver has requested timestamping for a byte in the middle of the
+buffer, we find that spi_take_timestamp_pre never records a "pre"
+timestamp.
+
+This happens because the function currently expects to be called with
+the "progress" argument >= to what the peripheral has requested to be
+timestamped. But clearly there are cases when that isn't going to fly.
+
+And since we can't change the past when we realize that the opportunity
+to take a "pre" timestamp has just passed and there isn't going to be
+another one, the approach taken is to keep recording the "pre" timestamp
+on each call, overwriting the previously recorded one until the "post"
+timestamp is also taken.
 
 Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
- drivers/spi/spi-fsl-dspi.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/spi/spi.c       | 19 +++++++------------
+ include/linux/spi/spi.h |  3 +--
+ 2 files changed, 8 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
-index a8077d4903c7..f37090ad7ad1 100644
---- a/drivers/spi/spi-fsl-dspi.c
-+++ b/drivers/spi/spi-fsl-dspi.c
-@@ -601,12 +601,12 @@ static void ns_delay_scale(char *psc, char *sc, int delay_ns,
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index a8495fd3bb47..22baf204a09d 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1515,17 +1515,15 @@ void spi_take_timestamp_pre(struct spi_controller *ctlr,
+ 	if (!xfer->ptp_sts)
+ 		return;
+ 
+-	if (xfer->timestamped_pre)
++	if (xfer->timestamped)
+ 		return;
+ 
+-	if (progress < xfer->ptp_sts_word_pre)
++	if (progress > xfer->ptp_sts_word_pre)
+ 		return;
+ 
+ 	/* Capture the resolution of the timestamp */
+ 	xfer->ptp_sts_word_pre = progress;
+ 
+-	xfer->timestamped_pre = true;
+-
+ 	if (irqs_off) {
+ 		local_irq_save(ctlr->irq_flags);
+ 		preempt_disable();
+@@ -1554,7 +1552,7 @@ void spi_take_timestamp_post(struct spi_controller *ctlr,
+ 	if (!xfer->ptp_sts)
+ 		return;
+ 
+-	if (xfer->timestamped_post)
++	if (xfer->timestamped)
+ 		return;
+ 
+ 	if (progress < xfer->ptp_sts_word_post)
+@@ -1570,7 +1568,7 @@ void spi_take_timestamp_post(struct spi_controller *ctlr,
+ 	/* Capture the resolution of the timestamp */
+ 	xfer->ptp_sts_word_post = progress;
+ 
+-	xfer->timestamped_post = true;
++	xfer->timestamped = true;
+ }
+ EXPORT_SYMBOL_GPL(spi_take_timestamp_post);
+ 
+@@ -1675,12 +1673,9 @@ void spi_finalize_current_message(struct spi_controller *ctlr)
+ 		}
  	}
- }
  
--static void fifo_write(struct fsl_dspi *dspi)
-+static void dspi_pushr_write(struct fsl_dspi *dspi)
- {
- 	regmap_write(dspi->regmap, SPI_PUSHR, dspi_pop_tx_pushr(dspi));
- }
+-	if (unlikely(ctlr->ptp_sts_supported)) {
+-		list_for_each_entry(xfer, &mesg->transfers, transfer_list) {
+-			WARN_ON_ONCE(xfer->ptp_sts && !xfer->timestamped_pre);
+-			WARN_ON_ONCE(xfer->ptp_sts && !xfer->timestamped_post);
+-		}
+-	}
++	if (unlikely(ctlr->ptp_sts_supported))
++		list_for_each_entry(xfer, &mesg->transfers, transfer_list)
++			WARN_ON_ONCE(xfer->ptp_sts && !xfer->timestamped);
  
--static void cmd_fifo_write(struct fsl_dspi *dspi)
-+static void dspi_pushr_cmd_write(struct fsl_dspi *dspi)
- {
- 	u16 cmd = dspi->tx_cmd;
+ 	spi_unmap_msg(ctlr, mesg);
  
-@@ -615,7 +615,7 @@ static void cmd_fifo_write(struct fsl_dspi *dspi)
- 	regmap_write(dspi->regmap_pushr, PUSHR_CMD, cmd);
- }
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 600e3793303e..87105272879b 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -933,8 +933,7 @@ struct spi_transfer {
  
--static void tx_fifo_write(struct fsl_dspi *dspi, u16 txdata)
-+static void dspi_pushr_txdata_write(struct fsl_dspi *dspi, u16 txdata)
- {
- 	regmap_write(dspi->regmap_pushr, PUSHR_TX, txdata);
- }
-@@ -631,18 +631,18 @@ static void dspi_tcfq_write(struct fsl_dspi *dspi)
- 		 */
- 		u32 data = dspi_pop_tx(dspi);
+ 	struct ptp_system_timestamp *ptp_sts;
  
--		cmd_fifo_write(dspi);
--		tx_fifo_write(dspi, data & 0xFFFF);
--		tx_fifo_write(dspi, data >> 16);
-+		dspi_pushr_cmd_write(dspi);
-+		dspi_pushr_txdata_write(dspi, data & 0xFFFF);
-+		dspi_pushr_txdata_write(dspi, data >> 16);
- 	} else {
- 		/* Write one entry to both TX FIFO and CMD FIFO
- 		 * simultaneously.
- 		 */
--		fifo_write(dspi);
-+		dspi_pushr_write(dspi);
- 	}
- }
+-	bool		timestamped_pre;
+-	bool		timestamped_post;
++	bool		timestamped;
  
--static u32 fifo_read(struct fsl_dspi *dspi)
-+static u32 dspi_popr_read(struct fsl_dspi *dspi)
- {
- 	u32 rxdata = 0;
- 
-@@ -652,7 +652,7 @@ static u32 fifo_read(struct fsl_dspi *dspi)
- 
- static void dspi_tcfq_read(struct fsl_dspi *dspi)
- {
--	dspi_push_rx(dspi, fifo_read(dspi));
-+	dspi_push_rx(dspi, dspi_popr_read(dspi));
- }
- 
- static void dspi_eoq_write(struct fsl_dspi *dspi)
-@@ -670,7 +670,7 @@ static void dspi_eoq_write(struct fsl_dspi *dspi)
- 		if (fifo_size == (dspi->devtype_data->fifo_size - 1))
- 			dspi->tx_cmd |= SPI_PUSHR_CMD_CTCNT;
- 		/* Write combined TX FIFO and CMD FIFO entry */
--		fifo_write(dspi);
-+		dspi_pushr_write(dspi);
- 	}
- }
- 
-@@ -680,7 +680,7 @@ static void dspi_eoq_read(struct fsl_dspi *dspi)
- 
- 	/* Read one FIFO entry and push to rx buffer */
- 	while ((dspi->rx < dspi->rx_end) && fifo_size--)
--		dspi_push_rx(dspi, fifo_read(dspi));
-+		dspi_push_rx(dspi, dspi_popr_read(dspi));
- }
- 
- static int dspi_rxtx(struct fsl_dspi *dspi)
+ 	struct list_head transfer_list;
+ };
 -- 
 2.17.1
 
