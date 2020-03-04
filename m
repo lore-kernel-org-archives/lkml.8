@@ -2,103 +2,77 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D6C1C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D4F6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6143421775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0178922522
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387850AbgCDK7J (ORCPT
+        id S2387936AbgCDLAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:59:09 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:55391 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387805AbgCDK7I (ORCPT
+        Wed, 4 Mar 2020 06:00:22 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:48581 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387841AbgCDLAV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:59:08 -0500
-X-Originating-IP: 176.88.145.204
-Received: from localhost.localdomain (unknown [176.88.145.204])
-        (Authenticated sender: cengiz@kernel.wtf)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 9B91560009;
-        Wed,  4 Mar 2020 10:59:03 +0000 (UTC)
-From:   Cengiz Can <cengiz@kernel.wtf>
-To:     Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cengiz Can <cengiz@kernel.wtf>
-Subject: [PATCH v2] blktrace: fix dereference after null check
-Date:   Wed,  4 Mar 2020 13:58:19 +0300
-Message-Id: <20200304105818.11781-1-cengiz@kernel.wtf>
-X-Mailer: git-send-email 2.25.1
+        Wed, 4 Mar 2020 06:00:21 -0500
+Received: from 79.184.237.41.ipv4.supernova.orange.pl (79.184.237.41) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id 17beebadd5720644; Wed, 4 Mar 2020 12:00:19 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     boqun.feng@gmail.com, linux-kernel@vger.kernel.org,
+        Len Brown <lenb@kernel.org>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH 22/30] ACPI: OSL: Add missing annotation for acpi_os_acquire_lock()
+Date:   Wed, 04 Mar 2020 12:00:19 +0100
+Message-ID: <6715482.taCdthcxpl@kreacher>
+In-Reply-To: <20200223231711.157699-23-jbi.octave@gmail.com>
+References: <20200223231711.157699-23-jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was a recent change in blktrace.c that added a RCU protection to
-`q->blk_trace` in order to fix a use-after-free issue during access.
+On Monday, February 24, 2020 12:17:03 AM CET Jules Irenge wrote:
+> Sparse reports a warning at acpi_os_acquire_lock()
+> 
+> warning: context imbalance in acpi_os_acquire_lock() - unexpected unlock
+> 
+> The root cause is the missing annotation at acpi_os_acquire_lock()
+> Add the missing annotation __acquires(lockp)
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> ---
+>  drivers/acpi/osl.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+> index 41168c027a5a..7094abc5ffc6 100644
+> --- a/drivers/acpi/osl.c
+> +++ b/drivers/acpi/osl.c
+> @@ -1598,6 +1598,7 @@ void acpi_os_delete_lock(acpi_spinlock handle)
+>   */
+>  
+>  acpi_cpu_flags acpi_os_acquire_lock(acpi_spinlock lockp)
+> +	__acquires(lockp)
+>  {
+>  	acpi_cpu_flags flags;
+>  	spin_lock_irqsave(lockp, flags);
+> 
 
-However the change missed an edge case that can lead to dereferencing of
-`bt` pointer even when it's NULL:
+Merged with the [23/30] and applied with modified subject and changelog as
+5.7 material.
 
-Coverity static analyzer marked this as a FORWARD_NULL issue with CID
-1460458.
+Thanks!
 
-```
-/kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
-1898            ret = 0;
-1899            if (bt == NULL)
-1900                    ret = blk_trace_setup_queue(q, bdev);
-1901
-1902            if (ret == 0) {
-1903                    if (attr == &dev_attr_act_mask)
->>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
->>>     Dereferencing null pointer "bt".
-1904                            bt->act_mask = value;
-1905                    else if (attr == &dev_attr_pid)
-1906                            bt->pid = value;
-1907                    else if (attr == &dev_attr_start_lba)
-1908                            bt->start_lba = value;
-1909                    else if (attr == &dev_attr_end_lba)
-```
 
-Added a reassignment with RCU annotation to fix the issue.
 
-Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
-
-Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
----
-
-    Patch Changelog
-    * v2: Added RCU annotation to assignment
-
- kernel/trace/blktrace.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 4560878f0bac..ca39dc3230cb 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -1896,8 +1896,11 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
- 	}
-
- 	ret = 0;
--	if (bt == NULL)
-+	if (bt == NULL) {
- 		ret = blk_trace_setup_queue(q, bdev);
-+		bt = rcu_dereference_protected(q->blk_trace,
-+				lockdep_is_held(&q->blk_trace_mutex));
-+	}
-
- 	if (ret == 0) {
- 		if (attr == &dev_attr_act_mask)
---
-2.25.1
 
