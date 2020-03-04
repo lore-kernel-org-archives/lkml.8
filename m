@@ -2,91 +2,164 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49DF3C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67320C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:05:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20B9D20866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:03:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D71020842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:05:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="R/IUNLCc"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V4FgB3DI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388378AbgCDVDd (ORCPT
+        id S1729267AbgCDVFW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:03:33 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42513 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388335AbgCDVDc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:03:32 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48XmZB3Jpzz9sPK;
-        Thu,  5 Mar 2020 08:03:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583355810;
-        bh=5Mq2Vg24FYBNc7J/XQOn8Ph6KKq8r/hE+o9gyq5RNSY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=R/IUNLCcFfVC2RcrQHLGbLdvBxSLu1rCQUopk0EAav2vygLDLEWlpTssgF1+m5zWs
-         OMvtxNWV8UhDDiKx5p2tHzngJsW7Cux2XR4R2ePvR0fD+HDHo/jQleLco6MAoA4BCD
-         VW7jIxQ94/ULssn7zonjQITvIHdOHrLP88IA/gX/JHXtRvqS/e0d6pOZty6b6f7dqp
-         sxrxZYmwdHlPtJ6YUj8joFCJRPxE7C+x4zneGIKIXkuhOABR8ePPI54epT3Mv1bm3+
-         XRpsKOYiwJBAU21xe2jgewwoG1Or5ILcTsb0Q+HNe2S9vqULxyxqebHCf3AqmXPs/p
-         Hgqy0+N+dEwqw==
-Date:   Thu, 5 Mar 2020 08:03:28 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Wei Liu <wei.liu@kernel.org>
-Subject: linux-next: Signed-off-by missing for commit in the hyperv tree
-Message-ID: <20200305080328.6057e006@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/xUbj52=/Gy5my.NDArHtlwm";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Wed, 4 Mar 2020 16:05:22 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:48154 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbgCDVFV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 16:05:21 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024KwBVI031961;
+        Wed, 4 Mar 2020 21:05:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=durUIH9nl11hlJYfROfWjX3IyST0g9f4WzIcjysdPBw=;
+ b=V4FgB3DId1elpFDmnrLyVa9jxp0vFh1BnmIKfLnt3zh0Qc9CQ+1qDf/N5xhzJMgx3e2K
+ EthmboMw5VvqSYyiHQl0ljHYBsiPggTMLg674A3z1rOCF8k2+yRQxyK+w9tOX1qLL4Jg
+ iNF6jhkkkU/qvkPV99rlPtcSOQx3XE/A0+6SHzTbP6U9oU6GgVWGNDnVCYqTTNiSMfRG
+ 94Q4KabFV08+UpwZhiWhazEhTbmC99Li73mtR3Zf+XFCsYxjDKx1BVxZld27fPgIzvwc
+ WjyUuAAyBbOVOum+yxVZMj4bU597koQLykFjzeAuKx9BZdkyv3D1Z3bdi1AYW2sC5oVf Og== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2yffwr0yd2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Mar 2020 21:05:12 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 024Kv7BJ172542;
+        Wed, 4 Mar 2020 21:05:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 2yg1h1prht-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 04 Mar 2020 21:05:11 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 024L55hS019510;
+        Wed, 4 Mar 2020 21:05:08 GMT
+Received: from anon-dhcp-153.1015granger.net (/68.61.232.219)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 04 Mar 2020 13:05:05 -0800
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH] nfsd: Fix build error
+From:   Chuck Lever <chuck.lever@oracle.com>
+In-Reply-To: <20200304200609.GA26924@fieldses.org>
+Date:   Wed, 4 Mar 2020 16:05:03 -0500
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <9592D8FB-C758-4B52-962B-B04A00627A43@oracle.com>
+References: <20200304131803.46560-1-yuehaibing@huawei.com>
+ <BC0E3531-B282-4C04-9540-C39C6F4A1A5D@oracle.com>
+ <20200304200609.GA26924@fieldses.org>
+To:     Bruce Fields <bfields@fieldses.org>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9550 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 malwarescore=0 mlxlogscore=999 mlxscore=0 suspectscore=0
+ phishscore=0 clxscore=1015 bulkscore=0 adultscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2003040136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/xUbj52=/Gy5my.NDArHtlwm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Commits
+> On Mar 4, 2020, at 3:06 PM, Bruce Fields <bfields@fieldses.org> wrote:
+> 
+> On Wed, Mar 04, 2020 at 01:00:12PM -0500, Chuck Lever wrote:
+>> Hi-
+>> 
+>>> On Mar 4, 2020, at 8:18 AM, YueHaibing <yuehaibing@huawei.com> wrote:
+>>> 
+>>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_copy':
+>>> nfs4proc.c:(.text+0x23b7): undefined reference to `nfs42_ssc_close'
+>>> fs/nfsd/nfs4proc.o: In function `nfsd4_copy':
+>>> nfs4proc.c:(.text+0x5d2a): undefined reference to `nfs_sb_deactive'
+>>> fs/nfsd/nfs4proc.o: In function `nfsd4_do_async_copy':
+>>> nfs4proc.c:(.text+0x61d5): undefined reference to `nfs42_ssc_open'
+>>> nfs4proc.c:(.text+0x6389): undefined reference to `nfs_sb_deactive'
+>>> 
+>>> Add dependency to NFSD_V4_2_INTER_SSC to fix this.
+>>> 
+>>> Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
+>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>> ---
+>>> fs/nfsd/Kconfig | 1 +
+>>> 1 file changed, 1 insertion(+)
+>>> 
+>>> diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+>>> index f368f32..fc587a5 100644
+>>> --- a/fs/nfsd/Kconfig
+>>> +++ b/fs/nfsd/Kconfig
+>>> @@ -136,6 +136,7 @@ config NFSD_FLEXFILELAYOUT
+>>> 
+>>> config NFSD_V4_2_INTER_SSC
+>>> 	bool "NFSv4.2 inter server to server COPY"
+>>> +	depends on !(NFSD=y && NFS_FS=m)
+>> 
+>> The new dependency is not especially clear to me; more explanation
+>> in the patch description about the cause of the build failure
+>> would definitely be helpful.
+>> 
+>> NFSD_V4 can't be set unless NFSD is also set.
+>> 
+>> NFS_V4_2 can't be set unless NFS_V4_1 is also set, and that cannot
+>> be set unless NFS_FS is also set.
+>> 
+>> So what's really going on here?
+> 
+> I don't understand that "depends" either.
+> 
+> The fundamental problem, though, is that nfsd is calling nfs code
+> directly.
+> 
+> Which I noticed in earlier review and then forgot to follow up on,
+> sorry.
+> 
+> So either we:
+> 
+> 	- let nfsd depend on nfs, fix up Kconfig to reflect the fact, or
+> 	- write some code so nfsd can load nfs and find those symbols at
+> 	  runtime if it needs to do a copy.
 
-  40d1d2d6e89e ("HID: hyperv: NULL check before some freeing functions is n=
-ot needed.")
-  1ff9f3ae8459 ("Hyper-V: Drop Sasha Levin from the Hyper-V maintainers")
+Another practical option would be to create a copy of these functions in
+the server's SSC code. At least nfs_sb_deactive() is not large.
 
-are missing a Signed-off-by from their committer.
+Not clear if nfs42_ssc_open/close are even used on the client. Maybe they
+could be moved to the server?
 
-BTW: Should I have a different differetn contact for the hyperv tree, now?
+> The latter's certainly doable, but it'd be simplest to do the former.
+> Are there actually a lot of people who want nfsd but not nfs?  Does that
+> cause a real problem for anyone?
+> 
+> --b.
 
---=20
-Cheers,
-Stephen Rothwell
+--
+Chuck Lever
 
---Sig_/xUbj52=/Gy5my.NDArHtlwm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5gF6AACgkQAVBC80lX
-0GxlBgf/YzTTKGCNSj5FXjN4Y/lkPb2crA5mKlLzWK9g0U78xPuICyA8yfeE6mQr
-PauTywMbqKkA0nYHmO/dVEVL50/8F6ZrOLbnx0X+ssLTPtC8nNU9AxMIEIZ0GIJ5
-9zxQyrBfmNdNoI9GnG0AmtuRIfEmuoT5jS5KOoSuefLzalLrCKTokHJpRKGnogan
-OaUoL0aH76D4vm0XCAJECqX6TrdeIBwbNOwufPHJFkPddlT0PgjpraKBnBvkDeu8
-IGilgMGO1xkRz0DD5tDxB0WOO7znckcdwEISFOfmqrV0dQkvPC5zHiBY4b33oIK0
-dpMfzkDLE6waYwjXdM4KnMu9QgV8qQ==
-=zgWz
------END PGP SIGNATURE-----
-
---Sig_/xUbj52=/Gy5my.NDArHtlwm--
