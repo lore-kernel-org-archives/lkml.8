@@ -2,121 +2,112 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A410C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32472C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:37:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D4C02166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1424820848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:37:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbgCDMfV (ORCPT
+        id S2388045AbgCDMg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:35:21 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62760 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729386AbgCDMfV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:35:21 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024CWneD033698
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 07:35:19 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfknbwvxc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:35:19 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 4 Mar 2020 12:35:17 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Mar 2020 12:35:13 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024CZBJP38928546
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Mar 2020 12:35:11 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8565711C052;
-        Wed,  4 Mar 2020 12:35:11 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C57811C054;
-        Wed,  4 Mar 2020 12:35:10 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.200.112])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Mar 2020 12:35:10 +0000 (GMT)
-Subject: Re: [PATCH v2] ima: add a new CONFIG for loading arch-specific
- policies
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-efi@vger.kernel.org, linux-s390@vger.kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 04 Mar 2020 07:35:09 -0500
-In-Reply-To: <1583307813.3907.4.camel@HansenPartnership.com>
-References: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
-         <1583307813.3907.4.camel@HansenPartnership.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030412-0016-0000-0000-000002ED176D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030412-0017-0000-0000-0000335064A5
-Message-Id: <1583325309.6264.23.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_03:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- mlxlogscore=976 lowpriorityscore=0 priorityscore=1501 bulkscore=0
- adultscore=0 suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040096
+        Wed, 4 Mar 2020 07:36:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:33774 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388005AbgCDMg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:36:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E353731B;
+        Wed,  4 Mar 2020 04:36:57 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0CDB3F6C4;
+        Wed,  4 Mar 2020 04:36:56 -0800 (PST)
+Subject: Re: [PATCH v2] iommu/dma: Fix MSI reservation allocation
+To:     Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Eric Auger <eric.auger@redhat.com>, Joerg Roedel <jroedel@suse.de>,
+        Will Deacon <will@kernel.org>, stable@vger.kernel.org
+References: <20200304111117.3540-1-maz@kernel.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <35a91284-619e-398a-decc-2e3879702335@arm.com>
+Date:   Wed, 4 Mar 2020 12:36:54 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200304111117.3540-1-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-03-03 at 23:43 -0800, James Bottomley wrote:
-> On Tue, 2020-03-03 at 21:33 -0500, Nayna Jain wrote:
-
-> > diff --git a/security/integrity/ima/Kconfig
-> > b/security/integrity/ima/Kconfig
-> > index 3f3ee4e2eb0d..d17972aa413a 100644
-> > --- a/security/integrity/ima/Kconfig
-> > +++ b/security/integrity/ima/Kconfig
-> > @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
-> >  	depends on IMA_MEASURE_ASYMMETRIC_KEYS
-> >  	depends on SYSTEM_TRUSTED_KEYRING
-> >  	default y
-> > +
-> > +config IMA_SECURE_AND_OR_TRUSTED_BOOT
-> > +	bool
-> > +	depends on IMA
-> > +	depends on IMA_ARCH_POLICY
-> > +	default n
+On 04/03/2020 11:11 am, Marc Zyngier wrote:
+> The way cookie_init_hw_msi_region() allocates the iommu_dma_msi_page
+> structures doesn't match the way iommu_put_dma_cookie() frees them.
 > 
-> You can't do this: a symbol designed to be selected can't depend on
-> other symbols because Kconfig doesn't see the dependencies during
-> select.  We even have a doc for this now:
+> The former performs a single allocation of all the required structures,
+> while the latter tries to free them one at a time. It doesn't quite
+> work for the main use case (the GICv3 ITS where the range is 64kB)
+> when the base granule size is 4kB.
 > 
-> Documentation/kbuild/Kconfig.select-break
+> This leads to a nice slab corruption on teardown, which is easily
+> observable by simply creating a VF on a SRIOV-capable device, and
+> tearing it down immediately (no need to even make use of it).
+> Fortunately, this only affects systems where the ITS isn't translated
+> by the SMMU, which are both rare and non-standard.
+> 
+> Fix it by allocating iommu_dma_msi_page structures one at a time.
 
-The document is discussing a circular dependency, where C selects B.
- IMA_SECURE_AND_OR_TRUSTED_BOOT is not selecting anything, but is
-being selected.  All of the Kconfig's are now dependent on
-IMA_ARCH_POLICY being enabled before selecting
-IMA_SECURE_AND_OR_TRUSTED_BOOT.
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
 
-As Ard pointed out, both IMA and IMA_ARCH_POLICY are not needed, as
-IMA_ARCH_POLICY is already dependent on IMA.
-
-Mimi
-
+> Fixes: 7c1b058c8b5a3 ("iommu/dma: Handle IOMMU API reserved regions")
+> Signed-off-by: Marc Zyngier <maz@kernel.org>
+> Reviewed-by: Eric Auger <eric.auger@redhat.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Joerg Roedel <jroedel@suse.de>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: stable@vger.kernel.org
+> ---
+> * From v1:
+>    - Got rid of the superfluous error handling (Robin)
+>    - Clarified that it only affects a very small set of systems
+>    - Added Eric's RB (which I assume still stands)
+> 
+>   drivers/iommu/dma-iommu.c | 16 ++++++++--------
+>   1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index a2e96a5fd9a7..ba128d1cdaee 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -177,15 +177,15 @@ static int cookie_init_hw_msi_region(struct iommu_dma_cookie *cookie,
+>   	start -= iova_offset(iovad, start);
+>   	num_pages = iova_align(iovad, end - start) >> iova_shift(iovad);
+>   
+> -	msi_page = kcalloc(num_pages, sizeof(*msi_page), GFP_KERNEL);
+> -	if (!msi_page)
+> -		return -ENOMEM;
+> -
+>   	for (i = 0; i < num_pages; i++) {
+> -		msi_page[i].phys = start;
+> -		msi_page[i].iova = start;
+> -		INIT_LIST_HEAD(&msi_page[i].list);
+> -		list_add(&msi_page[i].list, &cookie->msi_page_list);
+> +		msi_page = kmalloc(sizeof(*msi_page), GFP_KERNEL);
+> +		if (!msi_page)
+> +			return -ENOMEM;
+> +
+> +		msi_page->phys = start;
+> +		msi_page->iova = start;
+> +		INIT_LIST_HEAD(&msi_page->list);
+> +		list_add(&msi_page->list, &cookie->msi_page_list);
+>   		start += iovad->granule;
+>   	}
+>   
+> 
