@@ -2,210 +2,107 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46C0C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1EF3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:27:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDA9217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:27:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=eikelenboom.it header.i=@eikelenboom.it header.b="AMA1lnlA"
+	by mail.kernel.org (Postfix) with ESMTP id D164B2465D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:27:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730032AbgCDS1E (ORCPT
+        id S1730129AbgCDS1K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:27:04 -0500
-Received: from server.eikelenboom.it ([91.121.65.215]:50906 "EHLO
-        server.eikelenboom.it" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbgCDS1E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:27:04 -0500
-X-Greylist: delayed 2057 seconds by postgrey-1.27 at vger.kernel.org; Wed, 04 Mar 2020 13:27:03 EST
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=eikelenboom.it; s=20180706; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Cc:Subject:From:To:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=gzQiiigLCleiSq7lWeJDv/mT/pnoR9WuOHKMazC0gqQ=; b=AMA1lnlAPgzq7h7W1kiTXRFqFr
-        yHOKut2fjSUn13QZuL0kx87q/BHBNrMQoHCgTcDk8xBkbsJDtdQgpflhrNRDAhL9kiWhIhVyqpHG7
-        51JQgWcFkNK8kuvN3W9XNYQxowarI2k3skwsLX5FgEtNg0FEjLolQ+SPlGPAMKWhl6H0=;
-Received: from [77.168.80.73] (port=44400 helo=[172.16.1.50])
-        by server.eikelenboom.it with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <linux@eikelenboom.it>)
-        id 1j9YEG-0001nP-Rt; Wed, 04 Mar 2020 18:54:44 +0100
-To:     Juergen Gross <jgross@suse.com>
-From:   Sander Eikelenboom <linux@eikelenboom.it>
-Subject: xen boot PVH guest with linux 5.6.0-rc4-ish kernel: general
- protection fault, RIP: 0010:__pv_queued_spin_lock_slowpath
-Cc:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <d323139d-97ef-0c76-8ec6-a669f5b0ba2d@eikelenboom.it>
-Date:   Wed, 4 Mar 2020 18:52:37 +0100
+        Wed, 4 Mar 2020 13:27:10 -0500
+Received: from mga09.intel.com ([134.134.136.24]:10510 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730055AbgCDS1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:27:09 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 10:27:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
+   d="scan'208";a="244022830"
+Received: from ray.jf.intel.com (HELO [10.7.201.139]) ([10.7.201.139])
+  by orsmga006.jf.intel.com with ESMTP; 04 Mar 2020 10:27:08 -0800
+Subject: Re: x2apic_wrmsr_fence vs. Intel manual
+To:     Jan Kiszka <jan.kiszka@siemens.com>, x86 <x86@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <783add60-f6c7-c8c6-b369-42e5ebfbf8c9@siemens.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <602968e1-c1e4-0980-effa-e9c40b82c8c8@intel.com>
+Date:   Wed, 4 Mar 2020 10:27:08 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <783add60-f6c7-c8c6-b369-42e5ebfbf8c9@siemens.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Juergen,
+On 3/2/20 8:11 AM, Jan Kiszka wrote:
+> The former dates back to ce4e240c279a, but that commit does not mention 
+> why lfence is not needed. Did the manual read differently back then? Or 
+> why are we safe? To my reading of lfence, it also has a certain 
+> instruction serializing effect that mfence does not have.
 
-Just tested a 5.6.0-rc4'ish kernel (8b614cb8f1dcac8ca77cf4dd85f46ef3055f8238, so it includes the xen fixes from x86 trees).
-Xen is the latest xen-unstable, dom0 kernel is 5.5.7.
+I asked around Intel about this.
 
-During boot of the PVH guest I got the splat below.
-With a 5.5.7 kernel the guest boots fine.
+The old "SFENCE, or MFENCE" recommendation was deemed insufficient
+because it has no impact on the ordering of WRMSR since it is not a
+"load or store instruction".  LFENCE's instruction-ordering semantic is
+needed because it ensures later ordering of all instructions, not just
+loads and stores.
 
---
-Sander
-
-
-[    1.921031] general protection fault, probably for non-canonical address 0x344a3feab7bf8: 0000 [#1] SMP NOPTI
-[    1.921090] CPU: 1 PID: 1686 Comm: systemd-udevd Tainted: G        W         5.6.0-rc4-20200304-doflr-mac80211debug+ #1
-[    1.921134] RIP: 0010:__pv_queued_spin_lock_slowpath+0x195/0x2a0
-[    1.921160] Code: c4 c1 ea 12 4c 8d 6d 14 41 be 01 00 00 00 41 83 e4 03 8d 42 ff 49 c1 e4 05 48 98 49 81 c4 80 c3 02 00 4c 03 24 c5 20 89 b7 82 <49> 89 2c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
-[    1.921229] RSP: 0018:ffffc90000213958 EFLAGS: 00010002
-[    1.921249] RAX: 000000000000327f RBX: ffff888005ce00e0 RCX: 0000000000000001
-[    1.921278] RDX: 0000000000003280 RSI: 0000000000000000 RDI: 0000000000000000
-[    1.921307] RBP: ffff88801f52c380 R08: 00000000fffea95e R09: ffff8880192d0c80
-[    1.921335] R10: ffff8880192d0cb8 R11: ffffc90000213b01 R12: 000344a3feab7bf8
-[    1.921365] R13: ffff88801f52c394 R14: 0000000000000001 R15: 0000000000080000
-[    1.921402] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
-[    1.921438] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.921461] CR2: 00007fffaae16ec8 CR3: 0000000004b04000 CR4: 00000000000006e0
-[    1.921608] Call Trace:
-[    1.921628]  ? ktime_get+0x31/0x90
-[    1.921646]  _raw_spin_lock_irqsave+0x2b/0x30
-[    1.921669]  blkif_queue_rq+0x6e/0x7c0
-[    1.921685]  ? wait_woken+0x80/0x80
-[    1.921701]  ? xen_clocksource_get_cycles+0x11/0x20
-[    1.921720]  ? ktime_get+0x31/0x90
-[    1.921737]  ? blk_mq_get_request+0x195/0x3b0
-[    1.921757]  ? blk_account_io_start+0xd4/0x150
-[    1.921776]  __blk_mq_try_issue_directly+0x10e/0x1c0
-[    1.921798]  blk_mq_request_issue_directly+0x43/0xe0
-[    1.921819]  blk_mq_try_issue_list_directly+0x3c/0xb0
-[    1.921840]  blk_mq_sched_insert_requests+0xa0/0xf0
-[    1.921860]  blk_mq_flush_plug_list+0x122/0x1e0
-[    1.921879]  blk_flush_plug_list+0xc1/0xf0
-[    1.921897]  blk_finish_plug+0x1c/0x29
-[    1.921914]  read_pages+0x7a/0x140
-[    1.921931]  __do_page_cache_readahead+0x188/0x1a0
-[    1.921952]  force_page_cache_readahead+0x8b/0xf0
-[    1.921972]  generic_file_read_iter+0x7e1/0xae0
-[    1.921993]  ? mem_cgroup_throttle_swaprate+0x1f/0x145
-[    1.922014]  ? _copy_to_user+0x26/0x30
-[    1.922031]  ? cp_new_stat+0x127/0x160
-[    1.922048]  new_sync_read+0x10f/0x1a0
-[    1.922064]  vfs_read+0x8c/0x140
-[    1.922081]  ksys_read+0x54/0xd0
-[    1.922098]  do_syscall_64+0x49/0x130
-[    1.922114]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[    1.922138] RIP: 0033:0x7f771df43461
-[    1.922154] Code: fe ff ff 50 48 8d 3d fe d0 09 00 e8 e9 03 02 00 66 0f 1f 84 00 00 00 00 00 48 8d 05 99 62 0d 00 8b 00 85 c0 75 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 57 c3 66 0f 1f 44 00 00 41 54 49 89 d4 55 48
-[    1.922225] RSP: 002b:00007fffaae1a0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
-[    1.922255] RAX: ffffffffffffffda RBX: 000055d4cca138f0 RCX: 00007f771df43461
-[    1.922284] RDX: 0000000000000040 RSI: 000055d4cca164f8 RDI: 000000000000000c
-[    1.922313] RBP: 000055d4cca13940 R08: 000055d4cca164d0 R09: 0000000000000005
-[    1.922342] R10: 000055d4cc9fe010 R11: 0000000000000246 R12: 000000013fff0000
-[    1.922370] R13: 0000000000000040 R14: 000055d4cca164e8 R15: 000055d4cca164d0
-[    1.922398] Modules linked in:
-[    1.922415] ---[ end trace baa27c3655b1ea59 ]---
-[    1.922435] RIP: 0010:__pv_queued_spin_lock_slowpath+0x195/0x2a0
-[    1.922459] Code: c4 c1 ea 12 4c 8d 6d 14 41 be 01 00 00 00 41 83 e4 03 8d 42 ff 49 c1 e4 05 48 98 49 81 c4 80 c3 02 00 4c 03 24 c5 20 89 b7 82 <49> 89 2c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
-[    1.922526] RSP: 0018:ffffc90000213958 EFLAGS: 00010002
-[    1.922545] RAX: 000000000000327f RBX: ffff888005ce00e0 RCX: 0000000000000001
-[    1.922574] RDX: 0000000000003280 RSI: 0000000000000000 RDI: 0000000000000000
-[    1.924268] RBP: ffff88801f52c380 R08: 00000000fffea95e R09: ffff8880192d0c80
-[    1.924302] R10: ffff8880192d0cb8 R11: ffffc90000213b01 R12: 000344a3feab7bf8
-[    1.924333] R13: ffff88801f52c394 R14: 0000000000000001 R15: 0000000000080000
-[    1.924377] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
-[    1.924409] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    1.924434] CR2: 00007fffaae16ec8 CR3: 0000000004b04000 CR4: 00000000000006e0
-[    1.924967] BUG: unable to handle page fault for address: 000000000013fff8
-[    1.924999] #PF: supervisor write access in kernel mode
-[    1.925020] #PF: error_code(0x0002) - not-present page
-[    1.925042] PGD 0 P4D 0 
-[    1.925056] Oops: 0002 [#2] SMP NOPTI
-[    1.925073] CPU: 1 PID: 1686 Comm: systemd-udevd Tainted: G      D W         5.6.0-rc4-20200304-doflr-mac80211debug+ #1
-[    1.925128] RIP: 0010:blk_flush_plug_list+0x67/0xf0
-[    1.925149] Code: 48 89 e5 48 89 2c 24 48 89 6c 24 08 48 8b 43 10 49 39 c4 74 5c 48 8b 43 10 49 39 c4 74 23 48 8b 4b 10 48 8b 53 18 48 8b 04 24 <48> 89 69 08 48 89 0c 24 48 89 02 48 89 50 08 4c 89 63 10 4c 89 63
-[    2.013559] RSP: 0018:ffffc90000213b30 EFLAGS: 00010286
-[    2.013583] RAX: ffffc90000213b30 RBX: ffffc90000213c30 RCX: 000000000013fff0
-[    2.013615] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffffc90000213c30
-[    2.013643] RBP: ffffc90000213b30 R08: 0000000000000000 R09: ffffc90000213ba0
-[    2.013673] R10: ffffffffffffffff R11: 000000000013ffff R12: ffffc90000213c40
-[    2.013701] R13: 0000000000000001 R14: dead000000000122 R15: dead000000000100
-[    2.013740] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
-[    2.013771] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.013794] CR2: 000000000013fff8 CR3: 0000000002c24000 CR4: 00000000000006e0
-[    2.013824] Call Trace:
-[    2.013844]  io_schedule_prepare+0x37/0x40
-[    2.013863]  io_schedule+0x6/0x30
-[    2.013880]  __lock_page+0x11d/0x1e0
-[    2.013898]  ? file_fdatawait_range+0x20/0x20
-[    2.013919]  truncate_inode_pages_range+0x412/0x750
-[    2.013939]  ? find_get_pages_range_tag+0x7d/0x2f0
-[    2.013960]  ? __switch_to_asm+0x34/0x70
-[    2.013975]  ? __switch_to_asm+0x40/0x70
-[    2.013994]  ? __switch_to_asm+0x34/0x70
-[    2.014013]  ? pagevec_lookup_range_tag+0x1f/0x30
-[    2.014086]  ? __filemap_fdatawait_range+0x68/0xe0
-[    2.014112]  ? locks_remove_flock+0xa7/0xb0
-[    2.014129]  ? __filemap_fdatawrite_range+0xdf/0x100
-[    2.014154]  ? cpumask_next_and+0x19/0x20
-[    2.014172]  ? smp_call_function_many_cond+0x24d/0x2a0
-[    2.014192]  ? __brelse+0x20/0x20
-[    2.014207]  ? __ia32_sys_fsconfig+0x430/0x430
-[    2.014226]  ? __brelse+0x20/0x20
-[    2.014243]  ? on_each_cpu_cond_mask+0x3e/0x80
-[    2.014263]  __blkdev_put+0x6f/0x1d0
-[    2.014280]  blkdev_close+0x1c/0x20
-[    2.014295]  __fput+0xb1/0x240
-[    2.014311]  task_work_run+0x85/0xa0
-[    2.014328]  do_exit+0x39b/0xa80
-[    2.014343]  ? ksys_read+0x54/0xd0
-[    2.014359]  rewind_stack_do_exit+0x17/0x20
-[    2.014375] Modules linked in:
-[    2.014391] CR2: 000000000013fff8
-[    2.014407] ---[ end trace baa27c3655b1ea5a ]---
-[    2.014430] RIP: 0010:__pv_queued_spin_lock_slowpath+0x195/0x2a0
-[    2.014458] Code: c4 c1 ea 12 4c 8d 6d 14 41 be 01 00 00 00 41 83 e4 03 8d 42 ff 49 c1 e4 05 48 98 49 81 c4 80 c3 02 00 4c 03 24 c5 20 89 b7 82 <49> 89 2c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
-[    2.014531] RSP: 0018:ffffc90000213958 EFLAGS: 00010002
-[    2.014550] RAX: 000000000000327f RBX: ffff888005ce00e0 RCX: 0000000000000001
-[    2.014578] RDX: 0000000000003280 RSI: 0000000000000000 RDI: 0000000000000000
-[    2.014605] RBP: ffff88801f52c380 R08: 00000000fffea95e R09: ffff8880192d0c80
-[    2.014632] R10: ffff8880192d0cb8 R11: ffffc90000213b01 R12: 000344a3feab7bf8
-[    2.014660] R13: ffff88801f52c394 R14: 0000000000000001 R15: 0000000000080000
-[    2.014700] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
-[    2.014728] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.014751] CR2: 000000000013fff8 CR3: 0000000002c24000 CR4: 00000000000006e0
-[    2.014782] ------------[ cut here ]------------
-[    2.014802] WARNING: CPU: 1 PID: 1686 at kernel/exit.c:719 do_exit+0x4a/0xa80
-[    2.014830] Modules linked in:
-[    2.014854] CPU: 1 PID: 1686 Comm: systemd-udevd Tainted: G      D W         5.6.0-rc4-20200304-doflr-mac80211debug+ #1
-[    2.014888] RIP: 0010:do_exit+0x4a/0xa80
-[    2.014902] Code: 04 25 28 00 00 00 48 89 44 24 30 31 c0 e8 fe 3e 06 00 48 8b 83 a8 06 00 00 48 85 c0 74 0e 48 8b 10 48 39 d0 0f 84 1c 02 00 00 <0f> 0b 65 44 8b 2d b4 03 f1 7e 41 81 e5 00 ff 1f 00 44 89 6c 24 0c
-[    2.215014] RSP: 0018:ffffc90000213ee8 EFLAGS: 00010086
-[    2.215041] RAX: ffffc90000213c30 RBX: ffff888005cdec00 RCX: 0000000000000000
-[    2.215071] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff82c72340
-[    2.215099] RBP: 0000000000000009 R08: 0000000000000228 R09: 0000000000000000
-[    2.215128] R10: 000000000000000a R11: ffffc90000213862 R12: 0000000000000009
-[    2.215158] R13: ffff888005cdec00 R14: 0000000000000046 R15: 0000000000000000
-[    2.215200] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
-[    2.215230] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.215273] CR2: 000000000013fff8 CR3: 0000000002c24000 CR4: 00000000000006e0
-[    2.215305] Call Trace:
-[    2.215326]  ? ksys_read+0x54/0xd0
-[    2.215348]  rewind_stack_do_exit+0x17/0x20
-[    2.215366] ---[ end trace baa27c3655b1ea5b ]---
-[    2.215386] Fixing recursive fault but reboot is needed!
-[    2.215414] BUG: unable to handle page fault for address: ffffffff82045e50
+Jan, do you think you're seeing a bug resulting from WRMSR ordering?
