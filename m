@@ -2,84 +2,174 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9717C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE78C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 902CC2073D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A41EE20838
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:52:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbgCDNuy (ORCPT
+        id S1729562AbgCDNwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:50:54 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:39418 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729462AbgCDNuy (ORCPT
+        Wed, 4 Mar 2020 08:52:50 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:33658 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728767AbgCDNwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:50:54 -0500
-Received: by mail-ed1-f68.google.com with SMTP id m13so2388478edb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:50:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=nUOxF6a7YWDCkJQKwMw5WU/iZ3kgnizQnBTCbTp/G3M=;
-        b=MyiSU1JbjFjGSORVkRc8md7Tcvg9L+XkIdhImVKAjKPplj0Kb10arXNNMZpcPmLCsD
-         A5jkThUaTIOl8LnC077eUjRIWDnGVtcuSrWOz55t08viRAdi5LWkJ93qhb7GrCpSHqgn
-         2HjCf0S53zsx0RvZtvGLWNeERc6II/Ik7odzWQgGH/c6RaS2AVl49+fUuSnC+BthV0jn
-         mmDSJADTBY1BrsBsum3OyFv5OAdqCsHcKz1xemS4+d6FWFBppLcrpIkgKiMsKtovs1E4
-         SztbE1r6oUxnVyzF9hT3UPdpOgVU916GfZSUGi5cqMpU/YYwXA60zzPkm+4UVO30Uyz+
-         n0Aw==
-X-Gm-Message-State: ANhLgQ3AcZwJpDMJwCBWE4MKrXN5FpFZYmhafhfyBHCv0QPSRGH2GcsO
-        J7UR8cORELYMrbnqw22qqHTwPewlDztPJg==
-X-Google-Smtp-Source: ADFU+vvRs/8m17ncgBqBdzTJujYabyOfUGbiS2SlE8/I+XAXVPuKXJJGhzqox4bFzMMW7oq6yMBaTA==
-X-Received: by 2002:a50:8a62:: with SMTP id i89mr2863379edi.173.1583329852681;
-        Wed, 04 Mar 2020 05:50:52 -0800 (PST)
-Received: from a483e7b01a66.ant.amazon.com (54-240-197-232.amazon.com. [54.240.197.232])
-        by smtp.gmail.com with ESMTPSA id s10sm714333ejr.2.2020.03.04.05.50.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 05:50:52 -0800 (PST)
-Subject: Re: [PATCH v3 2/2] xenbus: req->err should be updated before
- req->state
-To:     Dongli Zhang <dongli.zhang@oracle.com>,
-        xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org
-Cc:     boris.ostrovsky@oracle.com, jgross@suse.com,
-        sstabellini@kernel.org, joe.jin@oracle.com
-References: <20200303221423.21962-1-dongli.zhang@oracle.com>
- <20200303221423.21962-2-dongli.zhang@oracle.com>
-From:   Julien Grall <julien@xen.org>
-Message-ID: <3bc030fb-340e-434d-60a2-a54bce097680@xen.org>
-Date:   Wed, 4 Mar 2020 13:50:51 +0000
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        Wed, 4 Mar 2020 08:52:50 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024Do7Q2013346;
+        Wed, 4 Mar 2020 08:52:48 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52bar4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 08:52:48 -0500
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 024DqkLe022266
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 4 Mar 2020 08:52:47 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 4 Mar 2020 05:52:45 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Wed, 4 Mar 2020 05:52:45 -0800
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 024Dqg9q005240;
+        Wed, 4 Mar 2020 08:52:43 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH] iio: dac: Kconfig: sort symbols alphabetically
+Date:   Wed, 4 Mar 2020 15:55:44 +0200
+Message-ID: <20200304135544.2538-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200303221423.21962-2-dongli.zhang@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+While adding a new device, I noticed these aren't sorted alphabetically [as
+in the Makefile], which messed my head-up.
+This change sorts the devices alphabetically in the drivers/iio/dac/Kconfig
+file as well.
 
-On 03/03/2020 22:14, Dongli Zhang wrote:
-> This patch adds the barrier to guarantee that req->err is always updated
-> before req->state.
-> 
-> Otherwise, read_reply() would not return ERR_PTR(req->err) but
-> req->body, when process_writes()->xb_write() is failed.
-> 
-> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
-
-Reviewed-by: Julien Grall <jgrall@amazon.com>
-
-Cheers,
-
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
-Julien Grall
+ drivers/iio/dac/Kconfig | 62 ++++++++++++++++++++---------------------
+ 1 file changed, 31 insertions(+), 31 deletions(-)
+
+diff --git a/drivers/iio/dac/Kconfig b/drivers/iio/dac/Kconfig
+index 63916a6142ec..93744011b63f 100644
+--- a/drivers/iio/dac/Kconfig
++++ b/drivers/iio/dac/Kconfig
+@@ -121,27 +121,6 @@ config AD5624R_SPI
+ 	  Say yes here to build support for Analog Devices AD5624R, AD5644R and
+ 	  AD5664R converters (DAC). This driver uses the common SPI interface.
+ 
+-config LTC1660
+-	tristate "Linear Technology LTC1660/LTC1665 DAC SPI driver"
+-	depends on SPI
+-	help
+-	  Say yes here to build support for Linear Technology
+-	  LTC1660 and LTC1665 Digital to Analog Converters.
+-
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called ltc1660.
+-
+-config LTC2632
+-	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
+-	depends on SPI
+-	help
+-	  Say yes here to build support for Linear Technology
+-	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
+-	  LTC2636-8 converters (DAC).
+-
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called ltc2632.
+-
+ config AD5686
+ 	tristate
+ 
+@@ -240,16 +219,6 @@ config AD7303
+ 	  To compile this driver as module choose M here: the module will be called
+ 	  ad7303.
+ 
+-config CIO_DAC
+-	tristate "Measurement Computing CIO-DAC IIO driver"
+-	depends on X86 && (ISA_BUS || PC104)
+-	select ISA_BUS_API
+-	help
+-	  Say yes here to build support for the Measurement Computing CIO-DAC
+-	  analog output device family (CIO-DAC16, CIO-DAC08, PC104-DAC06). The
+-	  base port addresses for the devices may be configured via the base
+-	  array module parameter.
+-
+ config AD8801
+ 	tristate "Analog Devices AD8801/AD8803 DAC driver"
+ 	depends on SPI_MASTER
+@@ -260,6 +229,16 @@ config AD8801
+ 	  To compile this driver as a module choose M here: the module will be called
+ 	  ad8801.
+ 
++config CIO_DAC
++	tristate "Measurement Computing CIO-DAC IIO driver"
++	depends on X86 && (ISA_BUS || PC104)
++	select ISA_BUS_API
++	help
++	  Say yes here to build support for the Measurement Computing CIO-DAC
++	  analog output device family (CIO-DAC16, CIO-DAC08, PC104-DAC06). The
++	  base port addresses for the devices may be configured via the base
++	  array module parameter.
++
+ config DPOT_DAC
+ 	tristate "DAC emulation using a DPOT"
+ 	depends on OF
+@@ -289,6 +268,27 @@ config LPC18XX_DAC
+ 	  To compile this driver as a module, choose M here: the module will be
+ 	  called lpc18xx_dac.
+ 
++config LTC1660
++	tristate "Linear Technology LTC1660/LTC1665 DAC SPI driver"
++	depends on SPI
++	help
++	  Say yes here to build support for Linear Technology
++	  LTC1660 and LTC1665 Digital to Analog Converters.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called ltc1660.
++
++config LTC2632
++	tristate "Linear Technology LTC2632-12/10/8 and LTC2636-12/10/8 DAC spi driver"
++	depends on SPI
++	help
++	  Say yes here to build support for Linear Technology
++	  LTC2632-12, LTC2632-10, LTC2632-8, LTC2636-12, LTC2636-10 and
++	  LTC2636-8 converters (DAC).
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called ltc2632.
++
+ config M62332
+ 	tristate "Mitsubishi M62332 DAC driver"
+ 	depends on I2C
+-- 
+2.20.1
+
