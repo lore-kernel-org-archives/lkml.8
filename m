@@ -2,139 +2,308 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15D2C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3179C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8990422522
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MRJAXSTn"
+	by mail.kernel.org (Postfix) with ESMTP id A523B2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbgCDQag (ORCPT
+        id S2388061AbgCDQbI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:30:36 -0500
-Received: from mail-wr1-f50.google.com ([209.85.221.50]:33685 "EHLO
-        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726694AbgCDQag (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:30:36 -0500
-Received: by mail-wr1-f50.google.com with SMTP id x7so3202270wrr.0
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:30:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YhB88TIgmNlGh4QV3oKo77OJ9RLyveUHZ47zGdAxc9U=;
-        b=MRJAXSTneB6L1oif6lUKqMEw4K0Q3pFQ0uKmoBsFQ0GYWu6u+FgxyGhueH5tJhCYBh
-         Cvb4+RCpc3Yh/cNUSyvaytm/yROBp/WaoweknPrWGWMxRk8bE6Hb1zUHzAkQtckOq7p5
-         e6f1HULqcir5WbPAigHnf0lTr1yC+7RcrrdvVWsz4gPPMTrVl8ZfNguLThq5tVFkUmR8
-         VJc6z9jpwZydt3aCpgb/QYw02j7gA4ObuS35pyT+G997n4vsjhoCCCVT12WO98hbQYW/
-         wyx6CB521uP/7CCk/WK8h4Kftmi2oDGw/grGeg0fkhvjgfwuAdI7saqmBoOF5F0FcFmX
-         Xm5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YhB88TIgmNlGh4QV3oKo77OJ9RLyveUHZ47zGdAxc9U=;
-        b=khah1gGkCmiEYNf/kEyXt1oGQgs3zsfyQwAOW5uj+5j0aBlnkU4jaFML85ZEYoS/g6
-         diiHwJfp5L66E6yp217CI5zyv3ulPVHMukCtWba7IMj7u5E8ufEv3s3jIkNuoyK11qgj
-         iDj7dyZP2fz7LkzktXqmLSC3VHQ1KPKMz+9big37Btl4Qlz1AHzOOlrgmBGcD7foCZ0J
-         ofsYx+r1HyKVkFj65OfbGut2fsV35W137sidiFNtipU+ubzWBYjOnawyqwf+hMLGPVF8
-         2aNjfuSDsS52XitaIfYgoEn+LTEzqwga+WS3wD3E3thkOOX/LJwGeHzWlMk2AxcikyHS
-         KPgg==
-X-Gm-Message-State: ANhLgQ39XLNhcErQWVHHsKMyjWUVaGXQ/bZyTzyq8F3LF5ixvfA1Ku/g
-        4gnPdDy11tuYKjT4vDVmy8KIYA==
-X-Google-Smtp-Source: ADFU+vsZIb09OZJmrrBgfgh7XZoULYAmsF3FqidGTz9tBE79VJ5ZUG4vk429Jf3B8yAH4aqv9jxinQ==
-X-Received: by 2002:adf:b641:: with SMTP id i1mr1584455wre.18.1583339433801;
-        Wed, 04 Mar 2020 08:30:33 -0800 (PST)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id k2sm8685864wrn.57.2020.03.04.08.30.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Mar 2020 08:30:33 -0800 (PST)
-Subject: Re: [v5, 3/3] arm64: dts: sc7180: Add interconnect provider DT nodes
-To:     Odelu Kukatla <okukatla@codeaurora.org>, bjorn.andersson@linaro.org
-Cc:     daidavid1@codeaurora.org, evgreen@google.com,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sboyd@kernel.org,
-        ilina@codeaurora.org, seansw@qti.qualcomm.com, elder@linaro.org,
-        linux-pm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-References: <1583241493-21212-1-git-send-email-okukatla@codeaurora.org>
- <1583241493-21212-4-git-send-email-okukatla@codeaurora.org>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- mQINBFjTuRcBEACyAOVzghvyN19Sa/Nit4LPBWkICi5W20p6bwiZvdjhtuh50H5q4ktyxJtp
- 1+s8dMSa/j58hAWhrc2SNL3fttOCo+MM1bQWwe8uMBQJP4swgXf5ZUYkSssQlXxGKqBSbWLB
- uFHOOBTzaQBaNgsdXo+mQ1h8UCgM0zQOmbs2ort8aHnH2i65oLs5/Xgv/Qivde/FcFtvEFaL
- 0TZ7odM67u+M32VetH5nBVPESmnEDjRBPw/DOPhFBPXtal53ZFiiRr6Bm1qKVu3dOEYXHHDt
- nF13gB+vBZ6x5pjl02NUEucSHQiuCc2Aaavo6xnuBc3lnd4z/xk6GLBqFP3P/eJ56eJv4d0B
- 0LLgQ7c1T3fU4/5NDRRCnyk6HJ5+HSxD4KVuluj0jnXW4CKzFkKaTxOp7jE6ZD/9Sh74DM8v
- etN8uwDjtYsM07I3Szlh/I+iThxe/4zVtUQsvgXjwuoOOBWWc4m4KKg+W4zm8bSCqrd1DUgL
- f67WiEZgvN7tPXEzi84zT1PiUOM98dOnmREIamSpKOKFereIrKX2IcnZn8jyycE12zMkk+Sc
- ASMfXhfywB0tXRNmzsywdxQFcJ6jblPNxscnGMh2VlY2rezmqJdcK4G4Lprkc0jOHotV/6oJ
- mj9h95Ouvbq5TDHx+ERn8uytPygDBR67kNHs18LkvrEex/Z1cQARAQABtChHZW9yZ2kgRGph
- a292IDxnZW9yZ2kuZGpha292QGxpbmFyby5vcmc+iQI+BBMBAgAoBQJY07kXAhsDBQkHhM4A
- BgsJCAcDAgYVCAIJCgsEFgIDAQIeAQIXgAAKCRCyi/eZcnWWUuvsD/4miikUeAO6fU2Xy3fT
- l7RUCeb2Uuh1/nxYoE1vtXcow6SyAvIVTD32kHXucJJfYy2zFzptWpvD6Sa0Sc58qe4iLY4j
- M54ugOYK7XeRKkQHFqqR2T3g/toVG1BOLS2atooXEU+8OFbpLkBXbIdItqJ1M1SEw8YgKmmr
- JlLAaKMq3hMb5bDQx9erq7PqEKOB/Va0nNu17IL58q+Q5Om7S1x54Oj6LiG/9kNOxQTklOQZ
- t61oW1Ewjbl325fW0/Lk0QzmfLCrmGXXiedFEMRLCJbVImXVKdIt/Ubk6SAAUrA5dFVNBzm2
- L8r+HxJcfDeEpdOZJzuwRyFnH96u1Xz+7X2V26zMU6Wl2+lhvr2Tj7spxjppR+nuFiybQq7k
- MIwyEF0mb75RLhW33sdGStCZ/nBsXIGAUS7OBj+a5fm47vQKv6ekg60oRTHWysFSJm1mlRyq
- exhI6GwUo5GM/vE36rIPSJFRRgkt6nynoba/1c4VXxfhok2rkP0x3CApJ5RimbvITTnINY0o
- CU6f1ng1I0A1UTi2YcLjFq/gmCdOHExT4huywfu1DDf0p1xDyPA1FJaii/gJ32bBP3zK53hM
- dj5S7miqN7F6ZpvGSGXgahQzkGyYpBR5pda0m0k8drV2IQn+0W8Qwh4XZ6/YdfI81+xyFlXc
- CJjljqsMCJW6PdgEH7kCDQRY07kXARAAvupGd4Jdd8zRRiF+jMpv6ZGz8L55Di1fl1YRth6m
- lIxYTLwGf0/p0oDLIRldKswena3fbWh5bbTMkJmRiOQ/hffhPSNSyyh+WQeLY2kzl6geiHxD
- zbw37e2hd3rWAEfVFEXOLnmenaUeJFyhA3Wd8OLdRMuoV+RaLhNfeHctiEn1YGy2gLCq4VNb
- 4Wj5hEzABGO7+LZ14hdw3hJIEGKtQC65Jh/vTayGD+qdwedhINnIqslk9tCQ33a+jPrCjXLW
- X29rcgqigzsLHH7iVHWA9R5Aq7pCy5hSFsl4NBn1uV6UHlyOBUuiHBDVwTIAUnZ4S8EQiwgv
- WQxEkXEWLM850V+G6R593yZndTr3yydPgYv0xEDACd6GcNLR/x8mawmHKzNmnRJoOh6Rkfw2
- fSiVGesGo83+iYq0NZASrXHAjWgtZXO1YwjW9gCQ2jYu9RGuQM8zIPY1VDpQ6wJtjO/KaOLm
- NehSR2R6tgBJK7XD9it79LdbPKDKoFSqxaAvXwWgXBj0Oz+Y0BqfClnAbxx3kYlSwfPHDFYc
- R/ppSgnbR5j0Rjz/N6Lua3S42MDhQGoTlVkgAi1btbdV3qpFE6jglJsJUDlqnEnwf03EgjdJ
- 6KEh0z57lyVcy5F/EUKfTAMZweBnkPo+BF2LBYn3Qd+CS6haZAWaG7vzVJu4W/mPQzsAEQEA
- AYkCJQQYAQIADwUCWNO5FwIbDAUJB4TOAAAKCRCyi/eZcnWWUhlHD/0VE/2x6lKh2FGP+QHH
- UTKmiiwtMurYKJsSJlQx0T+j/1f+zYkY3MDX+gXa0d0xb4eFv8WNlEjkcpSPFr+pQ7CiAI33
- 99kAVMQEip/MwoTYvM9NXSMTpyRJ/asnLeqa0WU6l6Z9mQ41lLzPFBAJ21/ddT4xeBDv0dxM
- GqaH2C6bSnJkhSfSja9OxBe+F6LIAZgCFzlogbmSWmUdLBg+sh3K6aiBDAdZPUMvGHzHK3fj
- gHK4GqGCFK76bFrHQYgiBOrcR4GDklj4Gk9osIfdXIAkBvRGw8zg1zzUYwMYk+A6v40gBn00
- OOB13qJe9zyKpReWMAhg7BYPBKIm/qSr82aIQc4+FlDX2Ot6T/4tGUDr9MAHaBKFtVyIqXBO
- xOf0vQEokkUGRKWBE0uA3zFVRfLiT6NUjDQ0vdphTnsdA7h01MliZLQ2lLL2Mt5lsqU+6sup
- Tfql1omgEpjnFsPsyFebzcKGbdEr6vySGa3Cof+miX06hQXKe99a5+eHNhtZJcMAIO89wZmj
- 7ayYJIXFqjl/X0KBcCbiAl4vbdBw1bqFnO4zd1lMXKVoa29UHqby4MPbQhjWNVv9kqp8A39+
- E9xw890l1xdERkjVKX6IEJu2hf7X3MMl9tOjBK6MvdOUxvh1bNNmXh7OlBL1MpJYY/ydIm3B
- KEmKjLDvB0pePJkdTw==
-Message-ID: <87da985b-19b4-e7f9-50ab-f8178e055041@linaro.org>
-Date:   Wed, 4 Mar 2020 18:30:31 +0200
+        Wed, 4 Mar 2020 11:31:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:36876 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726764AbgCDQbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:31:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7ACCD31B;
+        Wed,  4 Mar 2020 08:31:07 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CEA223F6CF;
+        Wed,  4 Mar 2020 08:31:05 -0800 (PST)
+Date:   Wed, 4 Mar 2020 16:31:03 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Alex Belits <abelits@marvell.com>
+Cc:     "frederic@kernel.org" <frederic@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Prasun Kapoor <pkapoor@marvell.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "linux-mm@vger.kernel.org" <linux-mm@vger.kernel.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        will@kernel.org, catalin.marinas@arm.com
+Subject: Re: [PATCH 06/12] task_isolation: arch/arm64: enable task isolation
+ functionality
+Message-ID: <20200304163103.GJ3575@lakrids.cambridge.arm.com>
+References: <4473787e1b6bc3cc226067e8d122092a678b63de.camel@marvell.com>
+ <ef365b5754ffc07980ed1df6ac8531a8ff590a17.camel@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <1583241493-21212-4-git-send-email-okukatla@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ef365b5754ffc07980ed1df6ac8531a8ff590a17.camel@marvell.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/3/20 15:18, Odelu Kukatla wrote:
-> Add the DT nodes for the network-on-chip interconnect buses found
-> on sc7180-based platforms.
+Hi Alex,
+
+For patches affecting arm64, please CC LAKML and the arm64 maintainers
+(Will and Catalin). I've Cc'd the maintainers here.
+
+On Wed, Mar 04, 2020 at 04:10:28PM +0000, Alex Belits wrote:
+> From: Chris Metcalf <cmetcalf@mellanox.com>
 > 
-> Signed-off-by: Odelu Kukatla <okukatla@codeaurora.org>
+> In do_notify_resume(), call task_isolation_start() for
+> TIF_TASK_ISOLATION tasks. Add _TIF_TASK_ISOLATION to _TIF_WORK_MASK,
+> and define a local NOTIFY_RESUME_LOOP_FLAGS to check in the loop,
+> since we don't clear _TIF_TASK_ISOLATION in the loop.
+> 
+> We tweak syscall_trace_enter() slightly to carry the "flags"
+> value from current_thread_info()->flags for each of the tests,
+> rather than doing a volatile read from memory for each one. This
+> avoids a small overhead for each test, and in particular avoids
+> that overhead for TIF_NOHZ when TASK_ISOLATION is not enabled.
 
-Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
+Stale commit message?
 
-The ack is also valid for v4 of the same patch, just in case it's preferred.
+Looking at the patch below, this doesn't seem to be the case; it just
+calls test_thread_flag(TIF_TASK_ISOLATION).
+
+> 
+> We instrument the smp_send_reschedule() routine so that it checks for
+> isolated tasks and generates a suitable warning if needed.
+> 
+> Finally, report on page faults in task-isolation processes in
+> do_page_faults().
+> 
+> Signed-off-by: Alex Belits <abelits@marvell.com>
+
+The From line says this was from Chris Metcalf, but he's missing from
+the Sign-off chain here, which isn't right.
+
+> ---
+>  arch/arm64/Kconfig                   |  1 +
+>  arch/arm64/include/asm/thread_info.h |  5 ++++-
+>  arch/arm64/kernel/ptrace.c           | 10 ++++++++++
+>  arch/arm64/kernel/signal.c           | 13 ++++++++++++-
+>  arch/arm64/kernel/smp.c              |  7 +++++++
+>  arch/arm64/mm/fault.c                |  5 +++++
+>  6 files changed, 39 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 0b30e884e088..93b6aabc8be9 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -129,6 +129,7 @@ config ARM64
+>  	select HAVE_ARCH_PREL32_RELOCATIONS
+>  	select HAVE_ARCH_SECCOMP_FILTER
+>  	select HAVE_ARCH_STACKLEAK
+> +	select HAVE_ARCH_TASK_ISOLATION
+>  	select HAVE_ARCH_THREAD_STRUCT_WHITELIST
+>  	select HAVE_ARCH_TRACEHOOK
+>  	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
+> diff --git a/arch/arm64/include/asm/thread_info.h b/arch/arm64/include/asm/thread_info.h
+> index f0cec4160136..7563098eb5b2 100644
+> --- a/arch/arm64/include/asm/thread_info.h
+> +++ b/arch/arm64/include/asm/thread_info.h
+> @@ -63,6 +63,7 @@ void arch_release_task_struct(struct task_struct *tsk);
+>  #define TIF_FOREIGN_FPSTATE	3	/* CPU's FP state is not current's */
+>  #define TIF_UPROBE		4	/* uprobe breakpoint or singlestep */
+>  #define TIF_FSCHECK		5	/* Check FS is USER_DS on return */
+> +#define TIF_TASK_ISOLATION	6
+>  #define TIF_NOHZ		7
+>  #define TIF_SYSCALL_TRACE	8	/* syscall trace active */
+>  #define TIF_SYSCALL_AUDIT	9	/* syscall auditing */
+> @@ -83,6 +84,7 @@ void arch_release_task_struct(struct task_struct *tsk);
+>  #define _TIF_NEED_RESCHED	(1 << TIF_NEED_RESCHED)
+>  #define _TIF_NOTIFY_RESUME	(1 << TIF_NOTIFY_RESUME)
+>  #define _TIF_FOREIGN_FPSTATE	(1 << TIF_FOREIGN_FPSTATE)
+> +#define _TIF_TASK_ISOLATION	(1 << TIF_TASK_ISOLATION)
+>  #define _TIF_NOHZ		(1 << TIF_NOHZ)
+>  #define _TIF_SYSCALL_TRACE	(1 << TIF_SYSCALL_TRACE)
+>  #define _TIF_SYSCALL_AUDIT	(1 << TIF_SYSCALL_AUDIT)
+> @@ -96,7 +98,8 @@ void arch_release_task_struct(struct task_struct *tsk);
+>  
+>  #define _TIF_WORK_MASK		(_TIF_NEED_RESCHED | _TIF_SIGPENDING | \
+>  				 _TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
+> -				 _TIF_UPROBE | _TIF_FSCHECK)
+> +				 _TIF_UPROBE | _TIF_FSCHECK | \
+> +				 _TIF_TASK_ISOLATION)
+>  
+>  #define _TIF_SYSCALL_WORK	(_TIF_SYSCALL_TRACE | _TIF_SYSCALL_AUDIT | \
+>  				 _TIF_SYSCALL_TRACEPOINT | _TIF_SECCOMP | \
+> diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+> index cd6e5fa48b9c..b35b9b0c594c 100644
+> --- a/arch/arm64/kernel/ptrace.c
+> +++ b/arch/arm64/kernel/ptrace.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/regset.h>
+>  #include <linux/tracehook.h>
+>  #include <linux/elf.h>
+> +#include <linux/isolation.h>
+>  
+>  #include <asm/compat.h>
+>  #include <asm/cpufeature.h>
+> @@ -1836,6 +1837,15 @@ int syscall_trace_enter(struct pt_regs *regs)
+>  			return -1;
+>  	}
+>  
+> +	/*
+> +	 * In task isolation mode, we may prevent the syscall from
+> +	 * running, and if so we also deliver a signal to the process.
+> +	 */
+> +	if (test_thread_flag(TIF_TASK_ISOLATION)) {
+> +		if (task_isolation_syscall(regs->syscallno) == -1)
+> +			return -1;
+> +	}
+
+As above, this doesn't match the commit message.
+
+AFAICT, task_isolation_syscall() always returns either 0 or -1, which
+isn't great as an API. I see secure_computing() seems to do the same,
+and it'd be nice to clean that up to either be a real erro code or a
+boolean.
+
+> +
+>  	/* Do the secure computing after ptrace; failures should be fast. */
+>  	if (secure_computing() == -1)
+>  		return -1;
+> diff --git a/arch/arm64/kernel/signal.c b/arch/arm64/kernel/signal.c
+> index 339882db5a91..d488c91a4877 100644
+> --- a/arch/arm64/kernel/signal.c
+> +++ b/arch/arm64/kernel/signal.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/tracehook.h>
+>  #include <linux/ratelimit.h>
+>  #include <linux/syscalls.h>
+> +#include <linux/isolation.h>
+>  
+>  #include <asm/daifflags.h>
+>  #include <asm/debug-monitors.h>
+> @@ -898,6 +899,11 @@ static void do_signal(struct pt_regs *regs)
+>  	restore_saved_sigmask();
+>  }
+>  
+> +#define NOTIFY_RESUME_LOOP_FLAGS \
+> +	(_TIF_NEED_RESCHED | _TIF_SIGPENDING | \
+> +	_TIF_NOTIFY_RESUME | _TIF_FOREIGN_FPSTATE | \
+> +	_TIF_UPROBE | _TIF_FSCHECK)
+> +
+>  asmlinkage void do_notify_resume(struct pt_regs *regs,
+>  				 unsigned long thread_flags)
+>  {
+> @@ -908,6 +914,8 @@ asmlinkage void do_notify_resume(struct pt_regs *regs,
+>  	 */
+>  	trace_hardirqs_off();
+>  
+> +	task_isolation_check_run_cleanup();
+> +
+>  	do {
+>  		/* Check valid user FS if needed */
+>  		addr_limit_user_check();
+> @@ -938,7 +946,10 @@ asmlinkage void do_notify_resume(struct pt_regs *regs,
+>  
+>  		local_daif_mask();
+>  		thread_flags = READ_ONCE(current_thread_info()->flags);
+> -	} while (thread_flags & _TIF_WORK_MASK);
+> +	} while (thread_flags & NOTIFY_RESUME_LOOP_FLAGS);
+> +
+> +	if (thread_flags & _TIF_TASK_ISOLATION)
+> +		task_isolation_start();
+>  }
+>  
+>  unsigned long __ro_after_init signal_minsigstksz;
+> diff --git a/arch/arm64/kernel/smp.c b/arch/arm64/kernel/smp.c
+> index d4ed9a19d8fe..00f0f77adea0 100644
+> --- a/arch/arm64/kernel/smp.c
+> +++ b/arch/arm64/kernel/smp.c
+> @@ -32,6 +32,7 @@
+>  #include <linux/irq_work.h>
+>  #include <linux/kexec.h>
+>  #include <linux/kvm_host.h>
+> +#include <linux/isolation.h>
+>  
+>  #include <asm/alternative.h>
+>  #include <asm/atomic.h>
+> @@ -818,6 +819,7 @@ void arch_send_call_function_single_ipi(int cpu)
+>  #ifdef CONFIG_ARM64_ACPI_PARKING_PROTOCOL
+>  void arch_send_wakeup_ipi_mask(const struct cpumask *mask)
+>  {
+> +	task_isolation_remote_cpumask(mask, "wakeup IPI");
+>  	smp_cross_call(mask, IPI_WAKEUP);
+>  }
+>  #endif
+> @@ -886,6 +888,9 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+>  		__inc_irq_stat(cpu, ipi_irqs[ipinr]);
+>  	}
+>  
+> +	task_isolation_interrupt("IPI type %d (%s)", ipinr,
+> +				 ipinr < NR_IPI ? ipi_types[ipinr] : "unknown");
+> +
+
+Are these tracing hooks?
+
+Surely they aren't necessary for functional correctness?
+
+>  	switch (ipinr) {
+>  	case IPI_RESCHEDULE:
+>  		scheduler_ipi();
+> @@ -948,12 +953,14 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+>  
+>  void smp_send_reschedule(int cpu)
+>  {
+> +	task_isolation_remote(cpu, "reschedule IPI");
+>  	smp_cross_call(cpumask_of(cpu), IPI_RESCHEDULE);
+>  }
+>  
+>  #ifdef CONFIG_GENERIC_CLOCKEVENTS_BROADCAST
+>  void tick_broadcast(const struct cpumask *mask)
+>  {
+> +	task_isolation_remote_cpumask(mask, "timer IPI");
+>  	smp_cross_call(mask, IPI_TIMER);
+>  }
+>  #endif
+> diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+> index 85566d32958f..fc4b42c81c4f 100644
+> --- a/arch/arm64/mm/fault.c
+> +++ b/arch/arm64/mm/fault.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/perf_event.h>
+>  #include <linux/preempt.h>
+>  #include <linux/hugetlb.h>
+> +#include <linux/isolation.h>
+>  
+>  #include <asm/acpi.h>
+>  #include <asm/bug.h>
+> @@ -543,6 +544,10 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+>  	 */
+>  	if (likely(!(fault & (VM_FAULT_ERROR | VM_FAULT_BADMAP |
+>  			      VM_FAULT_BADACCESS)))) {
+> +		/* No signal was generated, but notify task-isolation tasks. */
+> +		if (user_mode(regs))
+> +			task_isolation_interrupt("page fault at %#lx", addr);
+> +
+
+We check user_mode(regs) much earlier in this function to set
+FAULT_FLAG_USER. Is there some reason this cannot live there?
+
+Also, this seems to be a tracing hook -- is this necessary?
 
 Thanks,
-Georgi
+Mark.
+
+>  		/*
+>  		 * Major/minor page fault accounting is only done
+>  		 * once. If we go through a retry, it is extremely
+> -- 
+> 2.20.1
+> 
