@@ -2,318 +2,116 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B23DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 618ADC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B752072A
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:59:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 373C72166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:59:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i/xtpsps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388054AbgCDM7g (ORCPT
+        id S2388077AbgCDM7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:59:36 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:49461 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729175AbgCDM7f (ORCPT
+        Wed, 4 Mar 2020 07:59:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46824 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2388060AbgCDM7v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:59:35 -0500
-Received: from localhost (unknown [82.66.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id AE2A1200007;
-        Wed,  4 Mar 2020 12:59:22 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 14:08:11 +0100
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Yue Wang <yue.wang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v6 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-Message-ID: <20200304130811.GP2248@voidbox>
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200123232943.10229-7-repk@triplefau.lt>
- <14627e42-4894-6674-4911-3205ea8f5e55@ti.com>
+        Wed, 4 Mar 2020 07:59:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583326790;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=hhdoWtYJUAFB+5isvchTA1I3gIKalNxasPf308iYp70=;
+        b=i/xtpsps/sca3H1Ea8xLpIN/CElpZ/R1nXFMX+zgWSfOC9a0m2tVLxIC0s0Ojv2zcdqxTv
+        ef32+Lmsu6c6yNUIxcAH9rlRbXFMPnW3SBkz+A16rmre3RXAYwO2K4lQbK0qEP3YfM9aRl
+        kXGcPhe6PGq5NYAkNUUxfuTk1DOEF2k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-369-AScE1ydWP0Waxce9yLkZhQ-1; Wed, 04 Mar 2020 07:59:47 -0500
+X-MC-Unique: AScE1ydWP0Waxce9yLkZhQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F24471B18BC0;
+        Wed,  4 Mar 2020 12:59:45 +0000 (UTC)
+Received: from sandy.ghostprotocols.net (ovpn-112-38.phx2.redhat.com [10.3.112.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B61215DA60;
+        Wed,  4 Mar 2020 12:59:43 +0000 (UTC)
+Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
+        id 7EE1B121; Wed,  4 Mar 2020 09:59:40 -0300 (BRT)
+Date:   Wed, 4 Mar 2020 09:59:40 -0300
+From:   Arnaldo Carvalho de Melo <acme@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>
+Subject: Re: [PATCH] tools lib traceevent: Remove extra '\n' in
+ print_event_time()
+Message-ID: <20200304125940.GA6498@redhat.com>
+References: <20200303231852.6ab6882f@oasis.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <14627e42-4894-6674-4911-3205ea8f5e55@ti.com>
+In-Reply-To: <20200303231852.6ab6882f@oasis.local.home>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.5.20 (2009-12-10)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:31:24PM +0530, Kishon Vijay Abraham I wrote:
+Em Tue, Mar 03, 2020 at 11:18:52PM -0500, Steven Rostedt escreveu:
 > 
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 > 
-> On 24/01/20 4:59 am, Remi Pommarel wrote:
-> > This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
-> > This will allow to mutualize code in pci-meson.c between AXG and G12A
-> > SoC.
-> > 
-> > This PHY also uses and chains an analog PHY, which on AXG platform
-> > is needed to have reliable PCIe communication.
-> 
-> Is the analog PHY an independent block and can be used with other PHYs?
+> If the precesion of print_event_time() is zero or greater than the
 
-It is documented as a separate block yes, but I think it is unlikely
-that it will be used with other PHYs than the PCIe or the MIPI one of
-the AXG SoC.
+precision, right?
 
-Thanks,
-Remi
+Thanks, applied.
 
+- Arnaldo
+
+> timestamp, it uses a different format. But that format had an extra new line
+> at the end, and caused the output to not look right:
 > 
-> For the patch itself
-> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+> cpus=2
+>            sleep-3946  [001]111264306005
+> : function:             inotify_inode_queue_event
+>            sleep-3946  [001]111264307158
+> : function:             __fsnotify_parent
+>            sleep-3946  [001]111264307637
+> : function:             inotify_dentry_parent_queue_event
+>            sleep-3946  [001]111264307989
+> : function:             fsnotify
+>            sleep-3946  [001]111264308401
+> : function:             audit_syscall_exit
 > 
-> Thanks
-> Kishon
-> > 
-> > Signed-off-by: Remi Pommarel <repk@triplefau.lt>
-> > ---
-> >  drivers/phy/amlogic/Kconfig              |  11 ++
-> >  drivers/phy/amlogic/Makefile             |   1 +
-> >  drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
-> >  3 files changed, 204 insertions(+)
-> >  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
-> > 
-> > diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
-> > index 8c9cf2403591..71801e30d601 100644
-> > --- a/drivers/phy/amlogic/Kconfig
-> > +++ b/drivers/phy/amlogic/Kconfig
-> > @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
-> >  	  in Meson G12A SoCs.
-> >  	  If unsure, say N.
-> >  
-> > +config PHY_MESON_AXG_PCIE
-> > +	tristate "Meson AXG PCIE PHY driver"
-> > +	default ARCH_MESON
-> > +	depends on OF && (ARCH_MESON || COMPILE_TEST)
-> > +	select GENERIC_PHY
-> > +	select REGMAP_MMIO
-> > +	help
-> > +	  Enable this to support the Meson MIPI + PCIE PHY found
-> > +	  in Meson AXG SoCs.
-> > +	  If unsure, say N.
-> > +
-> >  config PHY_MESON_AXG_MIPI_PCIE_ANALOG
-> >  	tristate "Meson AXG MIPI + PCIE analog PHY driver"
-> >  	default ARCH_MESON
-> > diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
-> > index 0aecf92d796a..e2baa133f7af 100644
-> > --- a/drivers/phy/amlogic/Makefile
-> > +++ b/drivers/phy/amlogic/Makefile
-> > @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
-> >  obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
-> >  obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
-> >  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
-> > +obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
-> >  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
-> > diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> > new file mode 100644
-> > index 000000000000..377ed0dcd0d9
-> > --- /dev/null
-> > +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
-> > @@ -0,0 +1,192 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Amlogic AXG PCIE PHY driver
-> > + *
-> > + * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
-> > + */
-> > +#include <linux/module.h>
-> > +#include <linux/phy/phy.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/reset.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/bitfield.h>
-> > +#include <dt-bindings/phy/phy.h>
-> > +
-> > +#define MESON_PCIE_REG0 0x00
-> > +#define		MESON_PCIE_COMMON_CLK	BIT(4)
-> > +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
-> > +#define		MESON_PCIE_CLK		BIT(1)
-> > +#define		MESON_PCIE_POWERDOWN	BIT(0)
-> > +
-> > +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
-> > +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
-> > +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
-> > +					 MESON_PCIE_COMMON_REF_CLK)
-> > +#define MESON_PCIE_RESET_DELAY		500
-> > +
-> > +struct phy_axg_pcie_priv {
-> > +	struct phy *phy;
-> > +	struct phy *analog;
-> > +	struct regmap *regmap;
-> > +	struct reset_control *reset;
-> > +};
-> > +
-> > +static const struct regmap_config phy_axg_pcie_regmap_conf = {
-> > +	.reg_bits = 8,
-> > +	.val_bits = 32,
-> > +	.reg_stride = 4,
-> > +	.max_register = MESON_PCIE_REG0,
-> > +};
-> > +
-> > +static int phy_axg_pcie_power_on(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = phy_power_on(priv->analog);
-> > +	if (ret != 0)
-> > +		return ret;
-> > +
-> > +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
-> > +			   MESON_PCIE_POWERDOWN, 0);
-> > +	return 0;
-> > +}
-> > +
-> > +static int phy_axg_pcie_power_off(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = phy_power_off(priv->analog);
-> > +	if (ret != 0)
-> > +		return ret;
-> > +
-> > +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
-> > +			   MESON_PCIE_POWERDOWN, 1);
-> > +	return 0;
-> > +}
-> > +
-> > +static int phy_axg_pcie_init(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = phy_init(priv->analog);
-> > +	if (ret != 0)
-> > +		return ret;
-> > +
-> > +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
-> > +	return reset_control_reset(priv->reset);
-> > +}
-> > +
-> > +static int phy_axg_pcie_exit(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret;
-> > +
-> > +	ret = phy_exit(priv->analog);
-> > +	if (ret != 0)
-> > +		return ret;
-> > +
-> > +	return reset_control_reset(priv->reset);
-> > +}
-> > +
-> > +static int phy_axg_pcie_reset(struct phy *phy)
-> > +{
-> > +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
-> > +	int ret = 0;
-> > +
-> > +	ret = phy_reset(priv->analog);
-> > +	if (ret != 0)
-> > +		goto out;
-> > +
-> > +	ret = reset_control_assert(priv->reset);
-> > +	if (ret != 0)
-> > +		goto out;
-> > +	udelay(MESON_PCIE_RESET_DELAY);
-> > +
-> > +	ret = reset_control_deassert(priv->reset);
-> > +	if (ret != 0)
-> > +		goto out;
-> > +	udelay(MESON_PCIE_RESET_DELAY);
-> > +
-> > +out:
-> > +	return ret;
-> > +}
-> > +
-> > +static const struct phy_ops phy_axg_pcie_ops = {
-> > +	.init = phy_axg_pcie_init,
-> > +	.exit = phy_axg_pcie_exit,
-> > +	.power_on = phy_axg_pcie_power_on,
-> > +	.power_off = phy_axg_pcie_power_off,
-> > +	.reset = phy_axg_pcie_reset,
-> > +	.owner = THIS_MODULE,
-> > +};
-> > +
-> > +static int phy_axg_pcie_probe(struct platform_device *pdev)
-> > +{
-> > +	struct phy_provider *pphy;
-> > +	struct device *dev = &pdev->dev;
-> > +	struct phy_axg_pcie_priv *priv;
-> > +	struct device_node *np = dev->of_node;
-> > +	struct resource *res;
-> > +	void __iomem *base;
-> > +	int ret;
-> > +
-> > +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
-> > +	if (IS_ERR(priv->phy)) {
-> > +		ret = PTR_ERR(priv->phy);
-> > +		if (ret != -EPROBE_DEFER)
-> > +			dev_err(dev, "failed to create PHY\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	base = devm_ioremap_resource(dev, res);
-> > +	if (IS_ERR(base))
-> > +		return PTR_ERR(base);
-> > +
-> > +	priv->regmap = devm_regmap_init_mmio(dev, base,
-> > +					     &phy_axg_pcie_regmap_conf);
-> > +	if (IS_ERR(priv->regmap))
-> > +		return PTR_ERR(priv->regmap);
-> > +
-> > +	priv->reset = devm_reset_control_array_get(dev, false, false);
-> > +	if (IS_ERR(priv->reset))
-> > +		return PTR_ERR(priv->reset);
-> > +
-> > +	priv->analog = devm_phy_get(dev, "analog");
-> > +	if (IS_ERR(priv->analog))
-> > +		return PTR_ERR(priv->analog);
-> > +
-> > +	phy_set_drvdata(priv->phy, priv);
-> > +	dev_set_drvdata(dev, priv);
-> > +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> > +
-> > +	return PTR_ERR_OR_ZERO(pphy);
-> > +}
-> > +
-> > +static const struct of_device_id phy_axg_pcie_of_match[] = {
-> > +	{
-> > +		.compatible = "amlogic,axg-pcie-phy",
-> > +	},
-> > +	{ },
-> > +};
-> > +MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
-> > +
-> > +static struct platform_driver phy_axg_pcie_driver = {
-> > +	.probe = phy_axg_pcie_probe,
-> > +	.driver = {
-> > +		.name = "phy-axg-pcie",
-> > +		.of_match_table = phy_axg_pcie_of_match,
-> > +	},
-> > +};
-> > +module_platform_driver(phy_axg_pcie_driver);
-> > +
-> > +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
-> > +MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
-> > +MODULE_LICENSE("GPL v2");
-> > 
+> Fixes: 38847db9740a ("libtraceevent, perf tools: Changes in tep_print_event_* APIs")
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> ---
+>  tools/lib/traceevent/event-parse.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
+> index beaa8b8c08ff..e1bd2a93c6db 100644
+> --- a/tools/lib/traceevent/event-parse.c
+> +++ b/tools/lib/traceevent/event-parse.c
+> @@ -5541,7 +5541,7 @@ static void print_event_time(struct tep_handle *tep, struct trace_seq *s,
+>  	if (p10 > 1 && p10 < time)
+>  		trace_seq_printf(s, "%5llu.%0*llu", time / p10, prec, time % p10);
+>  	else
+> -		trace_seq_printf(s, "%12llu\n", time);
+> +		trace_seq_printf(s, "%12llu", time);
+>  }
+>  
+>  struct print_event_type {
+> -- 
+> 2.20.1
+
