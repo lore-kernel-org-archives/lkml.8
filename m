@@ -2,101 +2,97 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DF4C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12D9C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E34520866
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F4820866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bPwA8DVq"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Yz3sfhkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgCDIBb (ORCPT
+        id S1728530AbgCDICw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:01:31 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41550 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725271AbgCDIBb (ORCPT
+        Wed, 4 Mar 2020 03:02:52 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:37981 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726137AbgCDICw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:01:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583308890;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=zRcprHlNKHf2Y4uTuJshwgaM2L8IjHdUUjSNLW2L6Ws=;
-        b=bPwA8DVqIel19xIFS+Lv+tYYa3kWiC8Wg2rvyRBuIAevGcB24yAEQvFpIawPMFgIiCxccu
-        BBqYLyxBz3HrNIkqegElhvCZBIJWsso/oxCfMeiaAwYG3ckzaoJfZstUXCjGNSqxvIJGGT
-        ofIhqOAxfQyHVSkDefKbIaZh1H/OA7w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-76-7VMskJu9NeKxqy4Gs6rfng-1; Wed, 04 Mar 2020 03:01:26 -0500
-X-MC-Unique: 7VMskJu9NeKxqy4Gs6rfng-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8551801E5C;
-        Wed,  4 Mar 2020 08:01:23 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-150.ams2.redhat.com [10.36.116.150])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B825D1BC6D;
-        Wed,  4 Mar 2020 08:01:20 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 0266617506; Wed,  4 Mar 2020 09:01:20 +0100 (CET)
-Date:   Wed, 4 Mar 2020 09:01:19 +0100
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     David Stevens <stevensd@chromium.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        virtualization@lists.linux-foundation.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org,
-        virtio-dev@lists.oasis-open.org
-Subject: Re: [PATCH v2 4/4] drm/virtio: Support virtgpu exported resources
-Message-ID: <20200304080119.i55opxkhk4kdt4hp@sirius.home.kraxel.org>
-References: <20200302121524.7543-1-stevensd@chromium.org>
- <20200302121524.7543-5-stevensd@chromium.org>
+        Wed, 4 Mar 2020 03:02:52 -0500
+Received: by mail-lj1-f194.google.com with SMTP id w1so928101ljh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:02:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=NJwXQHOGfBvRfP8VBWg2bX3dJRR6Y/FuTLO1IQfTw1A=;
+        b=Yz3sfhkQCsVRs2839qs1BfeyedHx2siPjrgeKySlIDpScCfojGKQCbXYvL39Fq3EYM
+         HHQGJyPEuUTpxzf4IuJCTMQa8C2Gn3y1ANBqWZ4zlVXkkyoLFVlRGvWQ4LTj6mBNrHZU
+         xOeDs9VQ4NyQhxwcungr9jQGvvJVT8rKEv72BnR3jOkYDQ9WzJY+wTzkBVKqf/lOyb/s
+         lgZxU6z9GXgYBYPL5KJ2XcjhqcSfqSiyHtUFMLmLiCexiiZWysJzBYl6FpHvkJsQ1Z7r
+         RQMUwPw8LxBzH/6ihsNX+3J1/vHGjtrOmbgn19h1VGvkNQrp+VNCRy1vb1zxbUV4G283
+         XUYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=NJwXQHOGfBvRfP8VBWg2bX3dJRR6Y/FuTLO1IQfTw1A=;
+        b=Pw3sfp1x7gXHWxK0yXa2CiAhZ5uBhmsekyOmTbz8i5/c26THZUNMD2PBrPc8jNFh6V
+         a4V2ZPZRpsjgrQR4THKa2LanHCJOzDzpzvv6KFUFE//Ws6IsiQob4tnD1e0KIMDm14sC
+         KG/7gZ024gSLhyRGFuWOQk5LYn0fT1jyN7IPCi7O4Ijn3g2cE9TVrGuvAIXBV9nqVy0O
+         eWby9QaebG7x3w78Rz+jfweQu1B/xmpAefP2jPJ3arwGt3vrKd030NvkFf7PQClOGF3M
+         wMrvFfoW4aVck4zoCwemOEC3FSSCcw+4rTX6s0WIS5Rf0CblEc6kZtLe8RyWNunt9/vk
+         or6Q==
+X-Gm-Message-State: ANhLgQ18cu6YWJ99TIVzRlyADILNvREKUm9RLdD+0MwqqBYvi4IM5eyg
+        2P3M4CJON5gz9KE74kmxBAfuLA==
+X-Google-Smtp-Source: ADFU+vvkwU/GzcL4pLeLhMMhkTpWZOVBAFzfm69VarafgvEVC8sWssS6tTWvQlMWM188Qc550cKVCQ==
+X-Received: by 2002:a2e:8015:: with SMTP id j21mr1215994ljg.194.1583308970222;
+        Wed, 04 Mar 2020 00:02:50 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id s21sm15487953lfb.27.2020.03.04.00.02.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 00:02:49 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 7F01F100FE1; Wed,  4 Mar 2020 11:02:48 +0300 (+03)
+Date:   Wed, 4 Mar 2020 11:02:48 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Alex Shi <alex.shi@linux.alibaba.com>
+Cc:     cgroups@vger.kernel.org, akpm@linux-foundation.org,
+        mgorman@techsingularity.net, tj@kernel.org, hughd@google.com,
+        khlebnikov@yandex-team.ru, daniel.m.jordan@oracle.com,
+        yang.shi@linux.alibaba.com, willy@infradead.org,
+        hannes@cmpxchg.org, lkp@intel.com,
+        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 06/20] mm/thp: narrow lru locking
+Message-ID: <20200304080248.wuj3vqlz46ehhptg@box>
+References: <1583146830-169516-1-git-send-email-alex.shi@linux.alibaba.com>
+ <1583146830-169516-7-git-send-email-alex.shi@linux.alibaba.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200302121524.7543-5-stevensd@chromium.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <1583146830-169516-7-git-send-email-alex.shi@linux.alibaba.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi,
-
-> +	if (vgdev->has_resource_assign_uuid) {
-> +		spin_lock(&vgdev->resource_export_lock);
-> +		if (bo->uuid_state == UUID_NOT_INITIALIZED) {
-> +			bo->uuid_state = UUID_INITIALIZING;
-> +			needs_init = true;
-> +		}
-> +		spin_unlock(&vgdev->resource_export_lock);
+On Mon, Mar 02, 2020 at 07:00:16PM +0800, Alex Shi wrote:
+> @@ -2564,6 +2565,9 @@ static void __split_huge_page(struct page *page, struct list_head *list,
+>  		xa_lock(&swap_cache->i_pages);
+>  	}
+>  
+> +	/* Lru list would be changed, don't care head's LRU bit. */
+> +	spin_lock_irqsave(&pgdat->lru_lock, flags);
 > +
-> +		if (needs_init) {
-> +			ret = virtio_gpu_cmd_resource_assign_uuid(vgdev, bo);
+>  	for (i = HPAGE_PMD_NR - 1; i >= 1; i--) {
+>  		__split_huge_page_tail(head, i, lruvec, list);
+>  		/* Some pages can be beyond i_size: drop them from page cache */
 
-You can submit a fenced command, then wait on the fence here.  Removes
-the need for UUID_INITIALIZING.
+You change locking order WRT i_pages lock. Is it safe?
 
-Also note that this function will be called only once, on the first
-export.  When exporting the same object again drm will simply reuse
-the existing dmabuf.  You can drop UUID_NOT_INITIALIZED and needs_init.
-
-So you are left with only two uuid_state states.  You could turn uuid
-into a pointer, so it gets only allocated when needed.  Also uuid ==
-NULL can be used for "uuid not available" then.
-
-cheers,
-  Gerd
-
+-- 
+ Kirill A. Shutemov
