@@ -2,71 +2,115 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6746C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF7CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D7B21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC7F21741
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388052AbgCDMdE (ORCPT
+        id S1729377AbgCDMe3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:33:04 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44966 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387776AbgCDMdE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:33:04 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 7AE1EB2BB;
-        Wed,  4 Mar 2020 12:33:02 +0000 (UTC)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     jpoimboe@redhat.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de
-Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org, x86@kernel.org,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH] x86/unwind/orc: Do not skip the first frame unless explicitly asked for
-Date:   Wed,  4 Mar 2020 13:32:59 +0100
-Message-Id: <20200304123259.32199-1-mbenes@suse.cz>
-X-Mailer: git-send-email 2.25.1
+        Wed, 4 Mar 2020 07:34:29 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36461 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728953AbgCDMe3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:34:29 -0500
+Received: by mail-ed1-f67.google.com with SMTP id a13so2123920edh.3;
+        Wed, 04 Mar 2020 04:34:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=L3VdjSXkTyf2Ulpvm4N7Ob3rPnJ0K39EKBP/xv4PbHc=;
+        b=IA1zfGPz7S9vIBa7nbtWEQlIGBAG7XL16ciNO5XGdee7eVS08iNXmp2yYYipkoh+xw
+         aOvBiBT6exnzk9D/9Q32CWIz6TYB9U1woy9sSVav335Z+6qicMDIWU35OQwsc7G0LOra
+         5GvJ8MyCO5nbKXOBPhzlygK8/ZK9/ifgfw/5h/NdllZcZONsmnPRSwtSf3+u6z9csYBl
+         Ch8HNp13Zeow46s9C7TZOV9f6Vdu8Xt0SQpEPaI2joEV0554o385PLVPL31XudYbeFru
+         tAjFToEUZmvOdEPQCGJvGzDAq+tAiXA1NLWFUMfTBFxpuSaxGvjCPzb4D9dZSbAtEepv
+         U7ZA==
+X-Gm-Message-State: ANhLgQ24P4PgJwf5UIlfYDw0dNimYg+2jdhmHijgp+K0JQ2ot1KVViaS
+        gYVGk6Q7A+C0utsHZKDwjTENwe9I7hY=
+X-Google-Smtp-Source: ADFU+vv50mDo4l3Kc0rYdycGnAtW+wggeAzaet+CMAL47vcSbiWYE6Wq57QEBV4BSDPVpy+lmocZJw==
+X-Received: by 2002:a17:906:8284:: with SMTP id h4mr2223306ejx.224.1583325266504;
+        Wed, 04 Mar 2020 04:34:26 -0800 (PST)
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
+        by smtp.gmail.com with ESMTPSA id ss15sm1193132ejb.10.2020.03.04.04.34.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 04:34:26 -0800 (PST)
+Received: by mail-wr1-f42.google.com with SMTP id x7so2215380wrr.0;
+        Wed, 04 Mar 2020 04:34:25 -0800 (PST)
+X-Received: by 2002:adf:9c93:: with SMTP id d19mr4101231wre.64.1583325265577;
+ Wed, 04 Mar 2020 04:34:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200304113452.10201-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20200304113452.10201-1-lukas.bulwahn@gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Wed, 4 Mar 2020 20:34:14 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66sJ42yaLwHubrOvCNBQQ4sJ1HXYpVmf86oW-sp7bCqGA@mail.gmail.com>
+Message-ID: <CAGb2v66sJ42yaLwHubrOvCNBQQ4sJ1HXYpVmf86oW-sp7bCqGA@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: update ALLWINNER CPUFREQ DRIVER entry
+To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Rob Herring <robh@kernel.org>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ORC unwinder can currently skip the first frame even if a user does not
-ask for it. If both regs and first_frame parameters of unwind_start()
-are set to NULL, state->sp and first_frame are later initialized to the
-same value for an inactive task. Given there is "less than or equal to"
-comparison used at the end of __unwind_start() for skipping stack frames,
-the first frame is always skipped in this case.
+On Wed, Mar 4, 2020 at 7:35 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+>
+> Commit b30d8cf5e171 ("dt-bindings: opp: Convert Allwinner H6 OPP to a
+> schema") converted in Documentation/devicetree/bindings/opp/ the file
+> sun50i-nvmem-cpufreq.txt to allwinner,sun50i-h6-operating-points.yaml.
+>
+> Since then, ./scripts/get_maintainer.pl --self-test complains:
+>
+>   warning: no file matches \
+>   F: Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+>
+> Adjust the file pattern and while at it, add the two maintainers mentioned
+> in the yaml file to the ALLWINNER CPUFREQ DRIVER entry.
+>
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> ---
+> Maxime, Chen-Yu, Yangtao, please ack.
+> Rob, please pick this patch.
+>
+>  MAINTAINERS | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6158a143a13e..8e5ed8737966 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -691,9 +691,11 @@ F: drivers/staging/media/allegro-dvt/
+>
+>  ALLWINNER CPUFREQ DRIVER
+>  M:     Yangtao Li <tiny.windzz@gmail.com>
+> +M:     Chen-Yu Tsai <wens@csie.org>
+> +M:     Maxime Ripard <mripard@kernel.org>
 
-Drop the equal part of the comparison and make it equivalent to the
-frame pointer unwinder.
+There's no need to add us. The Allwinner entry already covers this under sun*i.
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
----
- arch/x86/kernel/unwind_orc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ChenYu
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index e9cc182aa97e..8452518cc20a 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -651,7 +651,7 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 	/* Otherwise, skip ahead to the user-specified starting frame: */
- 	while (!unwind_done(state) &&
- 	       (!on_stack(&state->stack_info, first_frame, sizeof(long)) ||
--			state->sp <= (unsigned long)first_frame))
-+			state->sp < (unsigned long)first_frame))
- 		unwind_next_frame(state);
- 
- 	return;
--- 
-2.25.1
-
+>  L:     linux-pm@vger.kernel.org
+>  S:     Maintained
+> -F:     Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
+> +F:     Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
+>  F:     drivers/cpufreq/sun50i-cpufreq-nvmem.c
+>
+>  ALLWINNER CRYPTO DRIVERS
+> --
+> 2.17.1
+>
