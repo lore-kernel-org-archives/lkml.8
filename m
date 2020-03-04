@@ -2,130 +2,275 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12BC0C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:27:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91040C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0F91217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62066217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:32:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g1He9zWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbgCDR1y (ORCPT
+        id S1729841AbgCDRcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:27:54 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:44578 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726561AbgCDR1x (ORCPT
+        Wed, 4 Mar 2020 12:32:12 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34078 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726748AbgCDRcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:27:53 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 28B561C0321; Wed,  4 Mar 2020 18:27:52 +0100 (CET)
-Date:   Wed, 4 Mar 2020 18:27:36 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Peter Chen <peter.chen@nxp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 60/87] usb: charger: assign specific number for enum
- value
-Message-ID: <20200304172736.GC2367@duo.ucw.cz>
-References: <20200303174349.075101355@linuxfoundation.org>
- <20200303174355.750234821@linuxfoundation.org>
+        Wed, 4 Mar 2020 12:32:12 -0500
+Received: by mail-pg1-f194.google.com with SMTP id t3so1318704pgn.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:32:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=XxZlqqlCmIcmcwRPZy44+g7+kuroIm3/xUjzgcqkWoY=;
+        b=g1He9zWVV3d2m4PLkXHEuRaahqoX7savFamz+P+aPqs/KA4r/UV4MXPf++NkC2PI3l
+         LFH90aM6cVN0QhN7+GjOBFGlR81xLViGqbk4eWEVHawnd55aMluley5ANrLXJd6R2N4W
+         fjemSV18pHaRc/E6ad3qgx7O1PUnpxAYYkYHfQ9CnLRYGtSiZ6RHrsQr1DzY4A6yLnFT
+         LmqOm7q9bFEC5Lp5dPse7e89aBCC35D7xal6zpK7yKsfrIvgKrORPMxHaqIQ3mz2jYuz
+         UYbBo44BIXXAiHUkiSeTc93cGPxDYhvJ0oE1nI0UqWBxmFyV+jWW/ahi7IJKokIQx9gD
+         CaIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=XxZlqqlCmIcmcwRPZy44+g7+kuroIm3/xUjzgcqkWoY=;
+        b=APgRUJ2z4XqfB8I/9tkn+kKCYp4wHShHhz0cSRvKn1a6bXGKxxolgpXxVU1VBDZYrv
+         Zm5uRLF9DEuUftMKYuk63hyiJR1nyZorkAWtQoqpP2PO50h//sC3ibfLJGkOpC1tiqKc
+         AqjIQ7lQakCA1hr9nJjM0ZxqrBbcSWC253DN+nZcTk8W8MT1d8GD9XORhw7R4qS3yTxz
+         7cK/2Fd9qSrKoWE9DXfRNQo9aLHb0aqN99o4pTgZSWzryHu69mWPCfpFthY0csf6y8kC
+         0VFThigoNTFj0m15bz1Q5llF1XmLd3V4Ao3w/45s8Xjkl0w79cDmD0rzoiBX3YUk/ZpR
+         RFjA==
+X-Gm-Message-State: ANhLgQ1VHInelnDFULyPvkrwl5zROk9is0Xbo2Dja2tGANNNvVnbBq61
+        mdlLstrRz38v6HcN0NmieKChVg==
+X-Google-Smtp-Source: ADFU+vsZzuIuPXq3pjPPTjcxEyOl1G7dvC2hJV+qL6QN0e5k4mr6yTmIBA/Mll8oR/YikpRkYonPzw==
+X-Received: by 2002:a63:309:: with SMTP id 9mr3489772pgd.193.1583343130281;
+        Wed, 04 Mar 2020 09:32:10 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id b3sm29688555pft.73.2020.03.04.09.32.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 09:32:09 -0800 (PST)
+Date:   Wed, 4 Mar 2020 10:32:07 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-remoteproc@vger.kernel.org, afd@ti.com, s-anna@ti.com,
+        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCHv7 04/15] remoteproc/omap: Add support to parse internal
+ memories from DT
+Message-ID: <20200304173207.GC8197@xps15>
+References: <20200221101936.16833-1-t-kristo@ti.com>
+ <20200221101936.16833-5-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="32u276st3Jlj2kUU"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303174355.750234821@linuxfoundation.org>
+In-Reply-To: <20200221101936.16833-5-t-kristo@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---32u276st3Jlj2kUU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue 2020-03-03 18:43:51, Greg Kroah-Hartman wrote:
-> From: Peter Chen <peter.chen@nxp.com>
->=20
-> commit ca4b43c14cd88d28cfc6467d2fa075aad6818f1d upstream.
->=20
-> To work properly on every architectures and compilers, the enum value
-> needs to be specific numbers.
-
-All compilers are expected to handle this in the same way, as this is
-in C standard. This patch is not neccessary, and should not be in mainline,
-either.
-
-http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1124.pdf
-
-6.7.2.2 Enumeration specifiers
-Syntax
-=2E..
-3 The identifiers in an enumerator list are declared as constants that have=
- type int and
-may appear wherever such are permitted.107) An enumerator with =3D defines =
-its
-enumeration constant as the value of the constant expression. If the first =
-enumerator has
-no =3D, the value of its enumeration constant is 0. Each subsequent enumera=
-tor with no =3D
-defines its enumeration constant as the value of the constant expression ob=
-tained by
-adding 1 to the value of the previous enumeration constant. (The use of enu=
-merators with
-=3D may produce enumeration constants with values that duplicate other valu=
-es in the same
-enumeration.) The enumerators of an enumeration are also known as its membe=
-rs.
-
-Best regards,
-								Pavel
-
->  enum usb_charger_type {
-> -	UNKNOWN_TYPE,
-> -	SDP_TYPE,
-> -	DCP_TYPE,
-> -	CDP_TYPE,
-> -	ACA_TYPE,
-> +	UNKNOWN_TYPE =3D 0,
-> +	SDP_TYPE =3D 1,
-> +	DCP_TYPE =3D 2,
-> +	CDP_TYPE =3D 3,
-> +	ACA_TYPE =3D 4,
+On Fri, Feb 21, 2020 at 12:19:25PM +0200, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> The OMAP remoteproc driver has been enhanced to parse and store
+> the kernel mappings for different internal RAM memories that may
+> be present within each remote processor IP subsystem. Different
+> devices have varying memories present on current SoCs. The current
+> support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
+> DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
+> L2 RAM memories.
+> 
+> IPUs are expected to have the L2RAM at a fixed device address of
+> 0x20000000, based on the current limitations on Attribute MMU
+> configurations.
+> 
+> NOTE:
+> The current logic doesn't handle the parsing of memories for DRA7
+> remoteproc devices, and will be added alongside the DRA7 support.
+> 
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> [t-kristo: converted to parse mem names / device addresses from pdata]
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  drivers/remoteproc/omap_remoteproc.c | 89 ++++++++++++++++++++++++++++
+>  1 file changed, 89 insertions(+)
+> 
+> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
+> index 64b559caadff..4f92b069f5d0 100644
+> --- a/drivers/remoteproc/omap_remoteproc.c
+> +++ b/drivers/remoteproc/omap_remoteproc.c
+> @@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
+>  	unsigned int boot_reg;
 >  };
-> =20
->  /* USB charger state */
->  enum usb_charger_state {
-> -	USB_CHARGER_DEFAULT,
-> -	USB_CHARGER_PRESENT,
-> -	USB_CHARGER_ABSENT,
-> +	USB_CHARGER_DEFAULT =3D 0,
-> +	USB_CHARGER_PRESENT =3D 1,
-> +	USB_CHARGER_ABSENT =3D 2,
+>  
+> +/**
+> + * struct omap_rproc_mem - internal memory structure
+> + * @cpu_addr: MPU virtual address of the memory region
+> + * @bus_addr: bus address used to access the memory region
+> + * @dev_addr: device address of the memory region from DSP view
+> + * @size: size of the memory region
+> + */
+> +struct omap_rproc_mem {
+> +	void __iomem *cpu_addr;
+> +	phys_addr_t bus_addr;
+> +	u32 dev_addr;
+> +	size_t size;
+> +};
+> +
+>  /**
+>   * struct omap_rproc - omap remote processor state
+>   * @mbox: mailbox channel handle
+>   * @client: mailbox client to request the mailbox channel
+>   * @boot_data: boot data structure for setting processor boot address
+> + * @mem: internal memory regions data
+> + * @num_mems: number of internal memory regions
+>   * @rproc: rproc handle
+>   * @reset: reset handle
+>   */
+> @@ -51,16 +67,30 @@ struct omap_rproc {
+>  	struct mbox_chan *mbox;
+>  	struct mbox_client client;
+>  	struct omap_rproc_boot_data *boot_data;
+> +	struct omap_rproc_mem *mem;
+> +	int num_mems;
+>  	struct rproc *rproc;
+>  	struct reset_control *reset;
 >  };
-> =20
->  #endif /* _UAPI__LINUX_USB_CHARGER_H */
->=20
+>  
+> +/**
+> + * struct omap_rproc_mem_data - memory definitions for an omap remote processor
+> + * @name: name for this memory entry
+> + * @dev_addr: device address for the memory entry
+> + */
+> +struct omap_rproc_mem_data {
+> +	const char *name;
+> +	const u32 dev_addr;
+> +};
+> +
+>  /**
+>   * struct omap_rproc_dev_data - device data for the omap remote processor
+>   * @device_name: device name of the remote processor
+> + * @mems: memory definitions for this remote processor
+>   */
+>  struct omap_rproc_dev_data {
+>  	const char *device_name;
+> +	const struct omap_rproc_mem_data *mems;
+>  };
+>  
+>  /**
+> @@ -223,12 +253,18 @@ static const struct rproc_ops omap_rproc_ops = {
+>  	.kick		= omap_rproc_kick,
+>  };
+>  
+> +static const struct omap_rproc_mem_data ipu_mems[] = {
+> +	{ .name = "l2ram", .dev_addr = 0x20000000 },
+> +	{ },
+> +};
+> +
+>  static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
+>  	.device_name	= "dsp",
+>  };
+>  
+>  static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
+>  	.device_name	= "ipu",
+> +	.mems		= ipu_mems,
+>  };
+>  
+>  static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+> @@ -237,6 +273,7 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
+>  
+>  static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
+>  	.device_name	= "ipu",
+> +	.mems		= ipu_mems,
+>  };
+>  
+>  static const struct of_device_id omap_rproc_of_match[] = {
+> @@ -311,6 +348,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
+>  	return 0;
+>  }
+>  
+> +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
+> +					       struct rproc *rproc)
+> +{
+> +	struct omap_rproc *oproc = rproc->priv;
+> +	struct device *dev = &pdev->dev;
+> +	const struct omap_rproc_dev_data *data;
+> +	struct resource *res;
+> +	int num_mems;
+> +	int i;
+> +
+> +	data = of_device_get_match_data(&pdev->dev);
+> +	if (!data)
+> +		return -ENODEV;
+> +
+> +	if (!data->mems)
+> +		return 0;
+> +
+> +	for (num_mems = 0; data->mems[num_mems].name; num_mems++)
+> +		;
 
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
+Please use of_property_count_elems_of_size() as it was done in omap_hwmod.c [1]
 
---32u276st3Jlj2kUU
-Content-Type: application/pgp-signature; name="signature.asc"
+[1]. https://elixir.bootlin.com/linux/v5.6-rc4/source/arch/arm/mach-omap2/omap_hwmod.c#L717
 
------BEGIN PGP SIGNATURE-----
+With the above:
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXl/lCAAKCRAw5/Bqldv6
-8sHeAJ9tJGXlsIh9klP4VfoBN25aD/3XhACfbsT37Ww/GjwtxlnneGkE48RrJWw=
-=+4hz
------END PGP SIGNATURE-----
+Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
---32u276st3Jlj2kUU--
+
+> +
+> +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
+> +				  GFP_KERNEL);
+> +	if (!oproc->mem)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < num_mems; i++) {
+> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
+> +						   data->mems[i].name);
+> +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
+> +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
+> +			dev_err(dev, "failed to parse and map %s memory\n",
+> +				data->mems[i].name);
+> +			return PTR_ERR(oproc->mem[i].cpu_addr);
+> +		}
+> +		oproc->mem[i].bus_addr = res->start;
+> +		oproc->mem[i].dev_addr = data->mems[i].dev_addr;
+> +		oproc->mem[i].size = resource_size(res);
+> +
+> +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %pK da 0x%x\n",
+> +			data->mems[i].name, &oproc->mem[i].bus_addr,
+> +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
+> +			oproc->mem[i].dev_addr);
+> +	}
+> +	oproc->num_mems = num_mems;
+> +
+> +	return 0;
+> +}
+> +
+>  static int omap_rproc_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+> @@ -350,6 +435,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
+>  	/* All existing OMAP IPU and DSP processors have an MMU */
+>  	rproc->has_iommu = true;
+>  
+> +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
+> +	if (ret)
+> +		goto free_rproc;
+> +
+>  	ret = omap_rproc_get_boot_data(pdev, rproc);
+>  	if (ret)
+>  		goto free_rproc;
+> -- 
+> 2.17.1
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
