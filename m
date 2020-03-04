@@ -2,100 +2,113 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F1AC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF16C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE0622146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KPNpz7cv"
+	by mail.kernel.org (Postfix) with ESMTP id EED22215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725882AbgCDFPC (ORCPT
+        id S1725974AbgCDFRP convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 00:15:02 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:35603 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgCDFPC (ORCPT
+        Wed, 4 Mar 2020 00:17:15 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:43985 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725283AbgCDFRP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 00:15:02 -0500
-Received: by mail-qv1-f67.google.com with SMTP id u10so266473qvi.2;
-        Tue, 03 Mar 2020 21:15:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AW1It91eB41MJO8tcBMXkpdl3fk8Ujf8yzHplhBGqgE=;
-        b=KPNpz7cvO23TdqYA/PVi4Bl5I351QFJV4eyXzQmEmMtC/AyQ+OduXCd3sHguKmPKKU
-         LxYp/fPEB5OTW3c31Hb4u2BI3vLUSIIGgspwGCnXB3EfLHZxqGG79XUVBhKgc8zo40Wa
-         IrjyPFvv8rGzOluGbd+tD+J6PRXXX+Ylg+VfJ64PPif0ZiA8IkMQfzxwDHMzsSDlh98F
-         v0w5IN66vUtdYAKFR9LOfEwiksV8tnFxiTg+du+/5Fq3F+iQBHzM8BwEMjiLWZ3wfkgn
-         fbrl4uzw2W+/ohzZsvqv1cESwFa3Z4VMVRxOycGn0eoaPxFReAqrVo7/SSNvV02CSswS
-         H8iQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AW1It91eB41MJO8tcBMXkpdl3fk8Ujf8yzHplhBGqgE=;
-        b=Vc2ADQdVoGJf0HIpglOmMS6+G6SyAgJhdibxWv5ld5h1wMbGbWBzLbPX5kjONNFqW+
-         ZBSNfwHxUX5Vb6vUwz/VXGhJu4E9EVIUvzx5fc6rKCn9EKV8vSVaVSoO07okCEhA3Gxg
-         1dcgcAmLR5RO1uQluN4qsx+tIj9PEL0gKJL5SYusjy3fVCHk3kb2n6zRGQn6+W/UlGuh
-         wL2spZzM5PRg2Lg/OT0lcwtbPVxdNqgYrKTo5PGciEhmmf7HzrRMJmqBMgu5nWruUYLl
-         w5hevchcRsVdTaH8bY0w9Mn4QnhCSuwx7JAz0nC/z5RLakvSoKy7aalXRFLOUZ7jkBW7
-         WoIQ==
-X-Gm-Message-State: ANhLgQ14hBGovBcT5bJWr24gOUVRHlQ2OJpf7wi/cjo+HFJQNtvP9aad
-        Xpw9OuRWSl3n7VNjG4g1OXshQmeh+cx0MOuINLo=
-X-Google-Smtp-Source: ADFU+vvcesLjPCKTVi0KVX1E1u9L/QZwr7MaTk66Ir/3c0pEeCN2wK4si//1F9ccw4rlIxoqa9prYeUJTg4o2+mt9Ek=
-X-Received: by 2002:a05:6214:8cb:: with SMTP id da11mr733937qvb.228.1583298901139;
- Tue, 03 Mar 2020 21:15:01 -0800 (PST)
+        Wed, 4 Mar 2020 00:17:15 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 0245GcJ7015193, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 0245GcJ7015193
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 4 Mar 2020 13:16:38 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 4 Mar 2020 13:16:38 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB03.realtek.com.tw (172.21.6.96) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Wed, 4 Mar 2020 13:16:37 +0800
+Received: from RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999]) by
+ RTEXMB04.realtek.com.tw ([fe80::d9c5:a079:495e:b999%6]) with mapi id
+ 15.01.1779.005; Wed, 4 Mar 2020 13:16:37 +0800
+From:   Tony Chuang <yhchuang@realtek.com>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+CC:     "Mancini, Jason" <Jason.Mancini@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>
+Subject: RE: v5.5-rc1 and beyond insta-kills some Comcast wifi routers
+Thread-Topic: v5.5-rc1 and beyond insta-kills some Comcast wifi routers
+Thread-Index: AQHV8eKYmDBcKgCqq0WSUKvXILk0y6g34qhg
+Date:   Wed, 4 Mar 2020 05:16:37 +0000
+Message-ID: <4bd036de86c94545af3e5d92f0920ac2@realtek.com>
+References: <DM6PR12MB4331FD3C4EF86E6AF2B3EBC7E5E50@DM6PR12MB4331.namprd12.prod.outlook.com>
+        <4e2a1fc1-4c14-733d-74e2-750ef1f81bf6@infradead.org>
+ <87h7z4r9p5.fsf@kamboji.qca.qualcomm.com>
+In-Reply-To: <87h7z4r9p5.fsf@kamboji.qca.qualcomm.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.68.175]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-References: <20200304015528.29661-1-kpsingh@chromium.org> <20200304015528.29661-7-kpsingh@chromium.org>
-In-Reply-To: <20200304015528.29661-7-kpsingh@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Tue, 3 Mar 2020 21:14:50 -0800
-Message-ID: <CAEf4Bzbg8TZVfctYQCe+d9kkUaJPU-Vnso-BWeOu=VecnikPJQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v2 6/7] bpf: Add test ops for BPF_PROG_TYPE_TRACING
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     linux-security-module@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 5:56 PM KP Singh <kpsingh@chromium.org> wrote:
->
-> From: KP Singh <kpsingh@google.com>
->
-> The current fexit and fentry tests rely on a different program to
-> exercise the functions they attach to. Instead of doing this, implement
-> the test operations for tracing which will also be used for
-> BPF_MODIFY_RETURN in a subsequent patch.
->
-> Also, clean up the fexit test to use the generated skeleton.
->
-> Signed-off-by: KP Singh <kpsingh@google.com>
-> ---
+Kalle Valo <kvalo@codeaurora.org> writes:
+> 
+> Randy Dunlap <rdunlap@infradead.org> writes:
+> 
+> > [add netdev mailing list + 2 patch signers]
+> 
+> Adding also linux-wireless. It's always best to send questions about any
+> wireless issues to linux-wireless
+> 
+> > On 3/3/20 7:34 PM, Mancini, Jason wrote:
+> >> [I can't seem to access the linux-net ml per kernel.org faq, apology
+> >> in advance.]
+> >>
+> >> This change, which I think first appeared for v5.5-rc1, basically
+> >> within seconds, knocks out our [apparently buggy] Comcast wifi for
+> >> about 2-3 minutes.  Is there a boot option (or similar) where I can
+> >> achieve prior kernel behavior?  Otherwise I am stuck on kernel 5.4
+> >> (or Win10) it seems, or forever compiling custom kernels for my
+> >> choice of distribution [as I don't have physical access to the router
+> >> in question.]
+> >> Thanks!
+> >> Jason
+> >>
+> >> ================
+> >>
+> >> 127eef1d46f80056fe9f18406c6eab38778d8a06 is the first bad commit
+> >> commit 127eef1d46f80056fe9f18406c6eab38778d8a06
+> >> Author: Yan-Hsuan Chuang <yhchuang@realtek.com>
+> >> Date:   Wed Oct 2 14:35:23 2019 +0800
+> 
+> Can you try if this fixes it:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers-next.gi
+> t/commit/?id=74c3d72cc13401f9eb3e3c712855e9f8f2d2682b
+> 
 
-Acked-by: Andrii Nakryiko <andriin@fb.com>
+Kalle is providing the right possible patch to fix it.
 
->  include/linux/bpf.h                           | 10 +++
->  kernel/trace/bpf_trace.c                      |  1 +
->  net/bpf/test_run.c                            | 37 +++++++---
->  .../selftests/bpf/prog_tests/fentry_fexit.c   | 12 +---
->  .../selftests/bpf/prog_tests/fentry_test.c    | 14 ++--
->  .../selftests/bpf/prog_tests/fexit_test.c     | 69 ++++++-------------
->  6 files changed, 67 insertions(+), 76 deletions(-)
->
+The first bad commit you found, that causes this issue, introduced TX-AMSDU.
+But we found that enabling TX-AMSDU on 2.4G band is not working while
+connecting to some APs. So, you can try if the patch provided by Kalle works.
+(I hope so). Otherwise, you can enable the kernel log debug mask by:
+echo 0xffffffff > /sys/module/rtw88/parameters/debug_mask.
+And collect the log to see if there's anything wrong.
 
-[...]
+Yen-Hsuan
