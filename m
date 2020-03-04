@@ -2,329 +2,190 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA35C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11ABCC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87F5021D56
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D574721D56
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583342504;
-	bh=JGYuhMvD3vRAF7mr6AMtAFFeUW69MZz9ct4vKKYFOLg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Df54H8vENf2Zf7LO38mfA0qHVEdon2j1PcnO8Mma5il6nwhBAaKfDv+sKOcpN+tjQ
-	 FdQjPGZmy4QI2lSg5bGpZ7Pw5JOFnPZ22Tt8I2Z8l7K2R5HfC/OsosQxCxsBJk/CCF
-	 6z4Sfwc5C11tozFaZnWqNpeaCBUOAv+9HSvspGig=
+	s=default; t=1583342549;
+	bh=3CPV+AsSdS5WdEO5Ob/fxquNaWSN/KrsHEiHs0jjZvw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kHKb9VIa5e18/m0N84zGqOfgkStWecpYXyGd9+6GPoGP0UCxptQEbBPLpdS/BfdQm
+	 hawIgjgMpVp7+d057Pf6OmYOwyt662GTb9nVY4Y1Aj1dIiN+S7QCPCGpCHqtPuZJ8s
+	 kB4UNR2aTXLB/VUYQlq0sEYd16CkZYHc3LszCLnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729792AbgCDRVn (ORCPT
+        id S1729937AbgCDRW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:21:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46970 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 12:22:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbgCDRVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:21:43 -0500
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726748AbgCDRW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 12:22:28 -0500
+Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6783524658
-        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 17:21:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F0D424654;
+        Wed,  4 Mar 2020 17:22:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583342501;
-        bh=JGYuhMvD3vRAF7mr6AMtAFFeUW69MZz9ct4vKKYFOLg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CynZrDF+QIEJQeClku8f4V8WbWY2IpQY+p0u1/oP6PfHw6NFeWZ9bHqHeHlkd6vhQ
-         HEB/2fGkJZKeih1hrWt2b5Pl49QKrOQUYG11gu/zpPZVirMo0DAp3nxi+gT6QwP1wh
-         FXNuZjz/nNLF6fl8L8FQU9/avd46fNOMQf4mzCkU=
-Received: by mail-wr1-f46.google.com with SMTP id v11so1444292wrm.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:21:41 -0800 (PST)
-X-Gm-Message-State: ANhLgQ24hzMsBVgi2q2hLda0DYr7AfrGSRS4fcmVqmszWWT+sqLgPDWY
-        bgqqmV3i2bCZVJpS4anOA26W2WpmfGQFnp7G6T0mHA==
-X-Google-Smtp-Source: ADFU+vtEcBzLi3ygUjekNiT+vyNKO03tdiFM4H8bmtuR9z7HfMivRVCDlxcmAqIP36SsnjhEjKxlxvg+Y+vreXN2lIk=
-X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr5170540wrw.252.1583342499798;
- Wed, 04 Mar 2020 09:21:39 -0800 (PST)
+        s=default; t=1583342547;
+        bh=3CPV+AsSdS5WdEO5Ob/fxquNaWSN/KrsHEiHs0jjZvw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KZmGdI1lM65i4Af/w+Zj502oECNTgmrJ6NenC+brcuNvJFNY5Eqeyxpn7nk8OYgwf
+         0bZHo3E/zytCTAXfneKSrfkP5TF/FrfZVz5Wuih6wFibGWmsX3vAinpmSd8R31WOfR
+         D86ehJv6lr7Xq9sY+AqkE4QF8VXxumBH7w6+0eEo=
+Date:   Wed, 4 Mar 2020 18:22:23 +0100
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Matthias Maennich <maennich@google.com>,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] modpost: move the namespace field in Module.symvers last
+Message-ID: <20200304172221.GB14910@linux-8ccs>
+References: <20200304170345.21218-1-jeyu@kernel.org>
 MIME-Version: 1.0
-References: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
- <20200304154936.24206-1-vdronov@redhat.com> <CAKv+Gu_WFL24dGPakcPgGW3MayYx1qND9HxL87vods7h4LyZJw@mail.gmail.com>
- <1638562976.13095767.1583342296275.JavaMail.zimbra@redhat.com>
-In-Reply-To: <1638562976.13095767.1583342296275.JavaMail.zimbra@redhat.com>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 4 Mar 2020 18:21:28 +0100
-X-Gmail-Original-Message-ID: <CAKv+Gu_dz2UfZbX0gdegFRk1XFWgsmaX2SkFAhoBjfbwBDU36Q@mail.gmail.com>
-Message-ID: <CAKv+Gu_dz2UfZbX0gdegFRk1XFWgsmaX2SkFAhoBjfbwBDU36Q@mail.gmail.com>
-Subject: Re: [PATCH v2] efi: fix a race and a buffer overflow while reading
- efivars via sysfs
-To:     Vladis Dronov <vdronov@redhat.com>
-Cc:     joeyli <jlee@suse.com>, linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200304170345.21218-1-jeyu@kernel.org>
+X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 18:18, Vladis Dronov <vdronov@redhat.com> wrote:
++++ Jessica Yu [04/03/20 18:03 +0100]:
+>In order to preserve backwards compatability with kmod tools, we have to
+>move the namespace field in Module.symvers last, as the depmod -e -E
+>option looks at the first three fields in Module.symvers to check symbol
+>versions (and it's expected they stay in the original order of crc,
+>symbol, module).
 >
-> Hello, Ard, Joye, all,
->
-> ----- Original Message -----
-> > From: "Ard Biesheuvel" <ardb@kernel.org>
-> > To: "Vladis Dronov" <vdronov@redhat.com>
-> > Cc: "linux-efi" <linux-efi@vger.kernel.org>, "joeyli" <jlee@suse.com>, "Linux Kernel Mailing List"
-> > <linux-kernel@vger.kernel.org>
-> > Sent: Wednesday, March 4, 2020 4:57:16 PM
-> > Subject: Re: [PATCH v2] efi: fix a race and a buffer overflow while reading efivars via sysfs
-> >
-> > On Wed, 4 Mar 2020 at 16:50, Vladis Dronov <vdronov@redhat.com> wrote:
-> > >
-> > > There is a race and a buffer overflow corrupting a kernel memory while
-> > > reading an efi variable with a size more than 1024 bytes via the older
-> > > sysfs method. This happens because accessing struct efi_variable in
-> > > efivar_{attr,size,data}_read() and friends is not protected from
-> > > a concurrent access leading to a kernel memory corruption and, at best,
-> > > to a crash. The race scenario is the following:
-> > >
-> > > CPU0:                                CPU1:
-> > > efivar_attr_read()
-> > >   var->DataSize = 1024;
-> > >   efivar_entry_get(... &var->DataSize)
-> > >     down_interruptible(&efivars_lock)
-> > >                                      efivar_attr_read() // same efi var
-> > >                                        var->DataSize = 1024;
-> > >                                        efivar_entry_get(... &var->DataSize)
-> > >                                          down_interruptible(&efivars_lock)
-> > >     virt_efi_get_variable()
-> > >     // returns EFI_BUFFER_TOO_SMALL but
-> > >     // var->DataSize is set to a real
-> > >     // var size more than 1024 bytes
-> > >     up(&efivars_lock)
-> > >                                          virt_efi_get_variable()
-> > >                                          // called with var->DataSize set
-> > >                                          // to a real var size, returns
-> > >                                          // successfully and overwrites
-> > >                                          // a 1024-bytes kernel buffer
-> > >                                          up(&efivars_lock)
-> > >
-> > > This can be reproduced by concurrent reading of an efi variable which size
-> > > is more than 1024 bytes:
-> > >
-> > > ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
-> > > cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
-> > >
-> > > Fix this by using a local variable for a var's data buffer size so it
-> > > does not get overwritten. Also add a sanity check to efivar_store_raw().
-> > >
-> > > Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
-> > > Signed-off-by: Vladis Dronov <vdronov@redhat.com>
->
-> AFAIU, you can modify suggested patches, could you please, add a link here
-> so further reader has a reference (I forgot to do it myself):
->
-> Link: https://lore.kernel.org/linux-efi/20200303085528.27658-1-vdronov@redhat.com/T/#u
->
-> > > ---
-> > >  drivers/firmware/efi/efi-pstore.c |  2 +-
-> > >  drivers/firmware/efi/efivars.c    | 32 ++++++++++++++++++++++---------
-> > >  drivers/firmware/efi/vars.c       |  2 +-
-> > >  3 files changed, 25 insertions(+), 11 deletions(-)
-> > >
-> > > diff --git a/drivers/firmware/efi/efi-pstore.c
-> > > b/drivers/firmware/efi/efi-pstore.c
-> > > index 9ea13e8d12ec..e4767a7ce973 100644
-> > > --- a/drivers/firmware/efi/efi-pstore.c
-> > > +++ b/drivers/firmware/efi/efi-pstore.c
-> > > @@ -161,7 +161,7 @@ static int efi_pstore_scan_sysfs_exit(struct
-> > > efivar_entry *pos,
-> > >   *
-> > >   * @record: pstore record to pass to callback
-> > >   *
-> > > - * You MUST call efivar_enter_iter_begin() before this function, and
-> > > + * You MUST call efivar_entry_iter_begin() before this function, and
-> > >   * efivar_entry_iter_end() afterwards.
-> > >   *
-> > >   */
-> >
-> > This hunk can be dropped now, I guess
->
-> I surely do not have much experience in writing upstream patches. But I saw people
-> doing small fixes like this one, say, commit 589b7289 ("While we are here, the previous
-> line has some trailing whitespace; clean that up as well"). This is a small mistype
-> and I just wanted to fix it and did not wanted to allocate a whole commit for that.
-> I believe a bigger commit is an acceptable place to fix mistypes.
->
-> AFAIU, a maintainer can modify suggested patches, so please, feel free to drop this
-> hunk, if you feel this is a right thing.
->
+>Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
+>Cc: stable@vger.kernel.org
+>Signed-off-by: Jessica Yu <jeyu@kernel.org>
 
-I am not going to perform surgery on your patches. Please drop this
-hunk (and the one at the end) in the next version.
+First, I apologize for not having caught this mistake earlier. I still
+have questions about the Module.symvers format, please see below.
 
+>---
+> Documentation/kbuild/modules.rst |  4 ++--
+> scripts/export_report.pl         |  2 +-
+> scripts/mod/modpost.c            | 24 ++++++++++++------------
+> 3 files changed, 15 insertions(+), 15 deletions(-)
+>
+>diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
+>index 69fa48ee93d6..e0b45a257f21 100644
+>--- a/Documentation/kbuild/modules.rst
+>+++ b/Documentation/kbuild/modules.rst
+>@@ -470,9 +470,9 @@ build.
+>
+> 	The syntax of the Module.symvers file is::
+>
+>-	<CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
+>+	<CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
+>
+>-	0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
+>+	0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
+>
+> 	The fields are separated by tabs and values may be empty (e.g.
+> 	if no namespace is defined for an exported symbol).
+>diff --git a/scripts/export_report.pl b/scripts/export_report.pl
+>index 548330e8c4e7..feb3d5542a62 100755
+>--- a/scripts/export_report.pl
+>+++ b/scripts/export_report.pl
+>@@ -94,7 +94,7 @@ if (defined $opt{'o'}) {
+> #
+> while ( <$module_symvers> ) {
+> 	chomp;
+>-	my (undef, $symbol, $namespace, $module, $gpl) = split('\t');
+>+	my (undef, $symbol, $module, $gpl, $namespace) = split('\t');
+> 	$SYMBOL { $symbol } =  [ $module , "0" , $symbol, $gpl];
+> }
+> close($module_symvers);
+>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>index 7edfdb2f4497..6ab235354f36 100644
+>--- a/scripts/mod/modpost.c
+>+++ b/scripts/mod/modpost.c
+>@@ -2427,7 +2427,7 @@ static void write_if_changed(struct buffer *b, const char *fname)
+> }
+>
+> /* parse Module.symvers file. line format:
+>- * 0x12345678<tab>symbol<tab>module[[<tab>export]<tab>something]
+>+ * 0x12345678<tab>symbol<tab>module<tab>export<tab>namespace
 
-> > > diff --git a/drivers/firmware/efi/efivars.c
-> > > b/drivers/firmware/efi/efivars.c
-> > > index 7576450c8254..16a617f9c5cf 100644
-> > > --- a/drivers/firmware/efi/efivars.c
-> > > +++ b/drivers/firmware/efi/efivars.c
-> > > @@ -83,13 +83,16 @@ static ssize_t
-> > >  efivar_attr_read(struct efivar_entry *entry, char *buf)
-> > >  {
-> > >         struct efi_variable *var = &entry->var;
-> > > +       unsigned long size = sizeof(var->Data);
-> > >         char *str = buf;
-> > > +       int ret;
-> > >
-> > >         if (!entry || !buf)
-> > >                 return -EINVAL;
-> > >
-> > > -       var->DataSize = 1024;
-> > > -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize,
-> > > var->Data))
-> > > +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-> > > +       var->DataSize = size;
-> >
-> > For my understanding, could you explain why we do the assignment here?
-> > Does var->DataSize matter in this case? Can it deviate from 1024?
->
-> Yes, the other code expects var->DataSize to be set to a real size of a var
-> after efivar_entry_get() call. For example, efivar_show_raw():
->
->     compat->DataSize = var->DataSize;
->
-> and efivar_data_read():
->
->     memcpy(buf, var->Data, var->DataSize);
->     return var->DataSize;
->
-> Yes, we can change the code to use size here, but this will make struct efi_variable
-> *var inconsistent (name, guid, data, attr set properly, but not size). It feels so
-> incorrect to leave this struct inconsistent. I'm not sure that code which calls
-> efivar_{attr,size,data}_read()/efivar_show_raw() is not using this struct's ->DataSize
-> field later.
->
+So, this comment was a source of confusion for me and Matthias I
+think. It suggests that the export field is optional, and that even
+following the export field there may also be "something" else,
+whatever that is.
 
-OK, that makes sense.
+I suspect that there were historical reasons behind that comment that
+are no longer accurate. We have been unconditionally printing the
+export type since 2.6.18 (commit bd5cbcedf44), which is over a decade
+ago now. And let me explain the read_dump() changes...
 
-> > > +       if (ret)
-> > >                 return -EIO;
-> > >
-> > >         if (var->Attributes & EFI_VARIABLE_NON_VOLATILE)
-> > > @@ -116,13 +119,16 @@ static ssize_t
-> > >  efivar_size_read(struct efivar_entry *entry, char *buf)
-> > >  {
-> > >         struct efi_variable *var = &entry->var;
-> > > +       unsigned long size = sizeof(var->Data);
-> > >         char *str = buf;
-> > > +       int ret;
-> > >
-> > >         if (!entry || !buf)
-> > >                 return -EINVAL;
-> > >
-> > > -       var->DataSize = 1024;
-> > > -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize,
-> > > var->Data))
-> > > +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-> > > +       var->DataSize = size;
-> > > +       if (ret)
-> > >                 return -EIO;
-> > >
-> > >         str += sprintf(str, "0x%lx\n", var->DataSize);
-> > > @@ -133,12 +139,15 @@ static ssize_t
-> > >  efivar_data_read(struct efivar_entry *entry, char *buf)
-> > >  {
-> > >         struct efi_variable *var = &entry->var;
-> > > +       unsigned long size = sizeof(var->Data);
-> > > +       int ret;
-> > >
-> > >         if (!entry || !buf)
-> > >                 return -EINVAL;
-> > >
-> > > -       var->DataSize = 1024;
-> > > -       if (efivar_entry_get(entry, &var->Attributes, &var->DataSize,
-> > > var->Data))
-> > > +       ret = efivar_entry_get(entry, &var->Attributes, &size, var->Data);
-> > > +       var->DataSize = size;
-> > > +       if (ret)
-> > >                 return -EIO;
-> > >
-> > >         memcpy(buf, var->Data, var->DataSize);
-> > > @@ -199,6 +208,9 @@ efivar_store_raw(struct efivar_entry *entry, const char
-> > > *buf, size_t count)
-> > >         u8 *data;
-> > >         int err;
-> > >
-> > > +       if (!entry || !buf)
-> > > +               return -EINVAL;
-> > > +
-> >
-> > So what are we sanity checking here? When might this occur? Does it
-> > need to be in the same patch?
+>  **/
+> static void read_dump(const char *fname, unsigned int kernel)
+> {
+>@@ -2440,7 +2440,7 @@ static void read_dump(const char *fname, unsigned int kernel)
+> 		return;
 >
-> efivar_{attr,size,data}_read()/efivar_show_raw() has this check, I believe
-> it is reasonable to add it here too. In case entry or buf happen to be NULL
-> it will lead to a NULL-deref later:
->
->     compat = (struct compat_efi_variable *)buf;
->     memcpy(compat->VariableName, var->VariableName, EFI_VAR_NAME_LEN);
->
-> I see this as more-or-less related and too small for a whole separate commit.
-> Please, feel free to drop this hunk, if you believe this is not correct. Would
-> you like me to send a separate patch adding the check above in this case?
->
+> 	while ((line = get_next_line(&pos, file, size))) {
+>-		char *symname, *namespace, *modname, *d, *export, *end;
+>+		char *symname, *namespace, *modname, *d, *export;
+> 		unsigned int crc;
+> 		struct module *mod;
+> 		struct symbol *s;
+>@@ -2448,16 +2448,16 @@ static void read_dump(const char *fname, unsigned int kernel)
+> 		if (!(symname = strchr(line, '\t')))
+> 			goto fail;
+> 		*symname++ = '\0';
+>-		if (!(namespace = strchr(symname, '\t')))
+>-			goto fail;
+>-		*namespace++ = '\0';
+>-		if (!(modname = strchr(namespace, '\t')))
+>+		if (!(modname = strchr(symname, '\t')))
+> 			goto fail;
+> 		*modname++ = '\0';
+>-		if ((export = strchr(modname, '\t')) != NULL)
+>-			*export++ = '\0';
+>-		if (export && ((end = strchr(export, '\t')) != NULL))
+>-			*end = '\0';
 
-Yes, please. Make it a two-piece series with a cover letter.
+I believe the original read_dump() code treated the export field here
+as optional, to support pre <= 2.6.18 Module.symvers (which does not
+have the export type field). But I don't believe we have to support
+this case anymore, right? It's ages ago. So I cleaned up this area,
+made each field non-optional (but empty string "" for namespace is
+allowed), and updated the comment.
 
-
-> > >         if (in_compat_syscall()) {
-> > >                 struct compat_efi_variable *compat;
-> > >
-> > > @@ -250,14 +262,16 @@ efivar_show_raw(struct efivar_entry *entry, char
-> > > *buf)
-> > >  {
-> > >         struct efi_variable *var = &entry->var;
-> > >         struct compat_efi_variable *compat;
-> > > +       unsigned long datasize = sizeof(var->Data);
-> > >         size_t size;
-> > > +       int ret;
-> > >
-> > >         if (!entry || !buf)
-> > >                 return 0;
-> > >
-> > > -       var->DataSize = 1024;
-> > > -       if (efivar_entry_get(entry, &entry->var.Attributes,
-> > > -                            &entry->var.DataSize, entry->var.Data))
-> > > +       ret = efivar_entry_get(entry, &var->Attributes, &datasize,
-> > > var->Data);
-> > > +       var->DataSize = size;
-> > > +       if (ret)
-> > >                 return -EIO;
-> > >
-> > >         if (in_compat_syscall()) {
-> > > diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
-> > > index 436d1776bc7b..5f2a4d162795 100644
-> > > --- a/drivers/firmware/efi/vars.c
-> > > +++ b/drivers/firmware/efi/vars.c
-> > > @@ -1071,7 +1071,7 @@ EXPORT_SYMBOL_GPL(efivar_entry_iter_end);
-> > >   * entry on the list. It is safe for @func to remove entries in the
-> > >   * list via efivar_entry_delete().
-> > >   *
-> > > - * You MUST call efivar_enter_iter_begin() before this function, and
-> > > + * You MUST call efivar_entry_iter_begin() before this function, and
-> > >   * efivar_entry_iter_end() afterwards.
-> > >   *
-> > >   * It is possible to begin iteration from an arbitrary entry within
-> >
-> > We can drop this.
-
-... or make it a 3 piece series if you *really* want to clean up the
-whitespace :-)
-
-> >
-> > > --
-> > > 2.20.1
->
-> Best regards,
-> Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
+>+		if (!(export = strchr(modname, '\t')))
+>+			goto fail;
+>+		*export++ = '\0';
+>+		if (!(namespace = strchr(export, '\t')))
+>+			goto fail;
+>+		*namespace++ = '\0';
+>+
+> 		crc = strtoul(line, &d, 16);
+> 		if (*symname == '\0' || *modname == '\0' || *d != '\0')
+> 			goto fail;
+>@@ -2508,9 +2508,9 @@ static void write_dump(const char *fname)
+> 				namespace = symbol->namespace;
+> 				buf_printf(&buf, "0x%08x\t%s\t%s\t%s\t%s\n",
+> 					   symbol->crc, symbol->name,
+>-					   namespace ? namespace : "",
+> 					   symbol->module->name,
+>-					   export_str(symbol->export));
+>+					   export_str(symbol->export),
+>+					   namespace ? namespace : "");
+> 			}
+> 			symbol = symbol->next;
+> 		}
+>-- 
+>2.16.4
 >
