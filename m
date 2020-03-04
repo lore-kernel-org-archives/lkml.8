@@ -2,96 +2,170 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MALFORMED_FREEMAIL,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D02A5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:54:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC7FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A86BF21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifTB9k2S"
+	by mail.kernel.org (Postfix) with ESMTP id 758402166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:54:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583319293;
+	bh=V4Zb3bev+zrC9R1/l842ahaviM//qj9VZXYUU198J5w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gI2tvl06MzNan3i1RIrh3sczsQPRNY08OzSvXig3iXvh2bXgZxzPFvj4tKgpJVwxA
+	 ygxZUP+xGFExPAWuo2J1FfimZF1A+kQQ3oH28iZYthBTsbEIbTJGvT93LaX59fLPmy
+	 dJxbnwVCLVldXYeJwjQgmPQaTl/MBDwUxLoNiuLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387888AbgCDKyP (ORCPT
+        id S2387885AbgCDKyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:54:15 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:42765 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387488AbgCDKyP (ORCPT
+        Wed, 4 Mar 2020 05:54:52 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51816 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgCDKyw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:54:15 -0500
-Received: by mail-ed1-f68.google.com with SMTP id n18so1751139edw.9;
-        Wed, 04 Mar 2020 02:54:14 -0800 (PST)
+        Wed, 4 Mar 2020 05:54:52 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a132so1502905wme.1;
+        Wed, 04 Mar 2020 02:54:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=8QzbFRA6IiNqJw3VB0sSGW2728BIelU6Zm/h4QWjC/w=;
-        b=ifTB9k2SIikX0bXRmoJBSygY26Cjc/b/hJVS57tW6GKkPrISn9kSGbIL4IN9JuqyxD
-         bBjfXiVCqlThb50ciVclbQS1FK0UNQ+tyrNed7yR9YWM2UR6NdER+UsZEk2utYiUrKSc
-         Bzk9KD55Izv+ey7gCz8bBv3Po9SDD/Vzafn2pHgZw6aZM0kGXZutz6O1BF8XEy6g912v
-         J6MCSay7vyXL/1IVGiOtkrQXU8OxGfNjcMHQQGc98vvxJ6fT9Hc9xaQQ4/cWC3oQ5u6Y
-         hhjpjzrov8DCakHO/5M7S55ct20LvTKO3z2PRPc9sG3g8WjEjWjeKmfEnvi/URTXVmpy
-         o9Ew==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8rmY1Cgbu7GCf2pLsT+xJoQZFTm6BivpCPBHgYME8v4=;
+        b=rchZECzqxPvk79cvZvqm2MKoWBzSxr4OA0LKVr6cpCtsRSS4Co1VkPvNc0gCmkCHDg
+         hTRlJ2WVX/MXl42NGruim7bwqM9vdsd9w26hRVb3sMj2selVGFfIJogPRVlNyLl2zvQ0
+         ep2QkwJdDzsZK9dQ0Q+OAvt88/lbGGJlGlsh60wysl8x9/bRr80GTHBIPs04iZX1fRqp
+         9ak2MQF2KqufCHJEXKbU+I2fO6k2XbuHEuz7pIOOvvjYX1m4bHGhw5ra5bJ1MtamRBHs
+         +lL0CUXz+h6VCs4z3MWg+9GUsAXdFnGQMWGp3XmH0vfuvpaQUoXAj/ERCuSBhJ4EJ30d
+         oAnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=8QzbFRA6IiNqJw3VB0sSGW2728BIelU6Zm/h4QWjC/w=;
-        b=jYjm8IsC8zcid4B+d85NDGKi4TfxhM0Lyo6P4NOfH7L8w0xKjyoHX+iolbbOL5fDum
-         etMBvyznuRfOMnKseQWfz2KaJOH2E7xPKLVSdbFQ/L0unCVhinOV8gAdPicswZqW9Oa6
-         estFP0qRj55mt0s9IEdO9XY1dCQ2uy45gi+11UTJOXOlRmdTtLq9ZQf0iphcfLSxlx5U
-         1jb6+Rff1W8bjnPmwSmO4DnkYdGD/H2Ehg831tMNP3CsVUIRDOF5Tdt4mLDIx/+3mwXO
-         8mvYg+9AlOQRex/yTdY9xgZ5Cho9K7zByyNKZh2bW8frXUpqm27flQEju7exfbd/lBAj
-         cV6g==
-X-Gm-Message-State: ANhLgQ3xf2igBIyfx0w6wZpuuybssn3FKZrzQhArt2fNTMECkJe1MH1Y
-        zkk4s5f/dT1VLDMJfPpgVGA=
-X-Google-Smtp-Source: ADFU+vvlTrDBpWeylkN1foJZYPynGXH45f0hE15eWSEP2mWXW9xtOm4h8Y9mGhvXCjW7PhUWOCCmeQ==
-X-Received: by 2002:a05:6402:b85:: with SMTP id cf5mr1996726edb.27.1583319253470;
-        Wed, 04 Mar 2020 02:54:13 -0800 (PST)
-Received: from felia ([2001:16b8:2d16:4100:3093:39f0:d3ca:23c6])
-        by smtp.gmail.com with ESMTPSA id u5sm856485edy.61.2020.03.04.02.54.12
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8rmY1Cgbu7GCf2pLsT+xJoQZFTm6BivpCPBHgYME8v4=;
+        b=YS5I8nov7K2K+Zw2VQp5vIxY8bXZgveyEstknwq2bhJPLY35msE/5fOzVaqgAgmSse
+         BOhocLjMK5W51RMHBGvE0hwGrNMbUE3fQwDKwgEQ46Edrjxjvs4Blc5Rvy5Xntx763i0
+         zathXkR+XaXm34EkU1zaQy5VtjemFs+INJJJBYTC2IgRY7O3lcSG08VzSoDJK+WcFznE
+         4RhN0+zjP36vzKRUpHUKcaYXJbLc1FetANHzgHnIIZ6hQeROd1h3niZBjXy2vr/QLw8/
+         N6PU+gAKdbFRPtEfmMuas9LCyhrwTWkq4EL6eOl0ZJWkzAt9VzBqJ27qRT1B8WSOWifr
+         h2NA==
+X-Gm-Message-State: ANhLgQ2c/ils2jj7KJm5gFegBr1rVxenUHGA8KyZYN2mulm40sDoC+oh
+        LVCyB9BiqTXpYqs5ojAeLA8=
+X-Google-Smtp-Source: ADFU+vvXPdn3hZXOuf8x7OTTq8bUjfQiSDjvF41LCp3qPX0lpZ7LvNPdfLTDYINlWJp08i4pOZgxhA==
+X-Received: by 2002:a05:600c:24b:: with SMTP id 11mr3071983wmj.1.1583319289494;
+        Wed, 04 Mar 2020 02:54:49 -0800 (PST)
+Received: from gmail.com (54033286.catv.pool.telekom.hu. [84.3.50.134])
+        by smtp.gmail.com with ESMTPSA id 2sm1804272wrf.79.2020.03.04.02.54.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 02:54:12 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
-Date:   Wed, 4 Mar 2020 11:54:04 +0100 (CET)
-X-X-Sender: lukas@felia
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Joe Perches <joe@perches.com>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
-In-Reply-To: <20200304085905.6b71fe8c@coco.lan>
-Message-ID: <alpine.DEB.2.21.2003041152030.6023@felia>
-References: <20200304072950.10532-1-lukas.bulwahn@gmail.com> <20200304085905.6b71fe8c@coco.lan>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 04 Mar 2020 02:54:48 -0800 (PST)
+Date:   Wed, 4 Mar 2020 11:54:46 +0100
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>
+Subject: Re: [GIT PULL] perf/urgent fixes
+Message-ID: <20200304105446.GA105264@gmail.com>
+References: <20200303194827.6461-1-acme@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303194827.6461-1-acme@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+* Arnaldo Carvalho de Melo <acme@kernel.org> wrote:
 
-On Wed, 4 Mar 2020, Mauro Carvalho Chehab wrote:
+> Hi Ingo/Thomas,
+> 
+> 	Please consider pulling, mostly from mostly valid complaints by
+> the most recent gcc version in my container farm,
+> 
+> Best regards,
+> 
+> - Arnaldo
+> 
+> Test results at the end of this message, as usual.
+> 
+> The following changes since commit e0560ba6d92f06dbe13e9d11c921a60c07ea6fcc:
+> 
+>   perf annotate: Fix segfault with source toggle (2020-02-27 11:47:23 -0300)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/acme/linux.git tags/perf-urgent-for-mingo-5.6-20200303
+> 
+> for you to fetch changes up to b5c0951860ba98cfe1936b5c0739450875d51451:
+> 
+>   perf symbols: Don't try to find a vmlinux file when looking for kernel modules (2020-03-03 16:20:01 -0300)
+> 
+> ----------------------------------------------------------------
+> perf/urgent fixes:
+> 
+> perf symbols:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Don't try to find a vmlinux file when looking for kernel modules,
+>     fixing symbol resolution in systems with compressed kernel modules.
+> 
+> perf env:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Do not return pointers to local variables, fixing valid warning from
+>     gcc 10 for corner case that stops the build due to -Werror.
+> 
+> perf tests:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Make global variable static in the bp_account entry to fix build
+>     with gcc 10.
+> 
+> perf parse-events:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Use asprintf() instead of strncpy() to read tracepoint files, addressing
+>     compiler warning that stops the build as we use -Werror.
+> 
+> perf bench:
+> 
+>   Arnaldo Carvalho de Melo:
+> 
+>   - Share some global variables to fix build with gcc 10.
+> 
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> ----------------------------------------------------------------
+> Arnaldo Carvalho de Melo (5):
+>       perf tests bp_account: Make global variable static
+>       perf env: Do not return pointers to local variables
+>       perf parse-events: Use asprintf() instead of strncpy() to read tracepoint files
+>       perf bench: Share some global variables to fix build with gcc 10
+>       perf symbols: Don't try to find a vmlinux file when looking for kernel modules
+> 
+>  tools/perf/bench/bench.h         |  4 ++++
+>  tools/perf/bench/epoll-ctl.c     |  7 +++----
+>  tools/perf/bench/epoll-wait.c    | 11 +++++------
+>  tools/perf/bench/futex-hash.c    | 12 ++++++------
+>  tools/perf/bench/futex-lock-pi.c | 11 +++++------
+>  tools/perf/tests/bp_account.c    |  2 +-
+>  tools/perf/util/env.c            |  4 ++--
+>  tools/perf/util/parse-events.c   | 10 ++--------
+>  tools/perf/util/symbol.c         | 13 ++++++-------
+>  9 files changed, 34 insertions(+), 40 deletions(-)
 
-> 
-> Btw, those can easily be fixed with:
-> 
-> 	./scripts/documentation-file-ref-check --fix
-> 
-> I had already a similar patch to this one already on my tree, intending
-> to submit later today. You were faster than me on that ;-)
-> 
+Pulled, thanks a lot Arnaldo!
 
-Thanks for the hint. It is always good to know about the various check and 
-clean-up scripts.
-
-Lukas
+	Ingo
