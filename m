@@ -2,148 +2,152 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CC5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2999C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3737720870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:44:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FSyk0RND"
+	by mail.kernel.org (Postfix) with ESMTP id 9692724658
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583347505;
+	bh=Xrw/0ZXS8o5llP7/hWRgBB1gg32aOCivmOH4N2PPq28=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=WBu5Yia7Hgsh1wiSu0yOb2zCWZ9ObnN/AnvhHvDCF+kEnhD62dGN8+TMAU5NkY+Js
+	 2AHpi2z2BkieeaGctWDZCv+tg27VMzZRiqsZYw7w9xolQfstqzi8JCV0cCyHcl9hNR
+	 Iz4hlMHjpDc7OcKEB345pALkV55hmZEizY3I7xfw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbgCDSop (ORCPT
+        id S2388215AbgCDSpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:44:45 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:56032 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729965AbgCDSoo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:44:44 -0500
-Received: by mail-wm1-f65.google.com with SMTP id 6so3361594wmi.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:44:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=McYCjFd7DNHcc98fHYBjU5qExu0x6OSshDp3fc3A0zc=;
-        b=FSyk0RNDcJgmtsUCb5U3SP0sB3JM7GBEhNfl/HKWYonQ92L1E5AgCodzJTjDIS0lZQ
-         iDTBH/Ozz1R+wL1OEZaX7dDMKzwjND4A7r4AJsxeYy5UxbF8rDU0yri2C0fraZbVLFGp
-         2EPwzUp9CcVrzBsGO7IE+y/kEbmZcKMUJznNo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=McYCjFd7DNHcc98fHYBjU5qExu0x6OSshDp3fc3A0zc=;
-        b=EmNdSBEh+h5fuuMl9MtpQgE8eukZT540wM3lhfDsroDe9fnj+66QYNm9hidnYhf8iG
-         u21eZPmeE40xf93vRX1UMOJjU0XjOXF0PfTaFYcmfRUpWA3sJJdx7axx1/zZ2Le6XxXP
-         +2nZU5oS3QjNsa/j6EU++1YewZsv02h2/B3Yo7cYu5DaNjCsL8x0tVSan/2H4VRK2D1g
-         9HpheN5sZ3HYcHwJVedlThWtRSHqfDqkW2+VzB5VyH2paruoZ/XL7zAz1dd4MdPXT2M4
-         5bJENn3ih6bAGOzb/+KQpgp1U8QBn0nFZEZRXET64dlITglyJYlWxcIgZt/uiaEjH8gy
-         QBwA==
-X-Gm-Message-State: ANhLgQ3pSLZYIb4WO4kGtFgq62g7l0M7IeMZSNgIcExmqbv1bsHZiKu9
-        az049YwZmSYcSb9jGDwbePnoXg==
-X-Google-Smtp-Source: ADFU+vvZqJ7orqfIUz6zCACqQsDhFoNWWvxIGDk+ionaaED7Zge9hIRJH3EBO1ViFWFT9WeNMdMwMg==
-X-Received: by 2002:a05:600c:249:: with SMTP id 9mr4786974wmj.186.1583347483522;
-        Wed, 04 Mar 2020 10:44:43 -0800 (PST)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id d63sm5340119wmd.44.2020.03.04.10.44.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 10:44:42 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 4 Mar 2020 19:44:41 +0100
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next v3 1/7] bpf: Refactor trampoline update code
-Message-ID: <20200304184441.GA25392@chromium.org>
-References: <20200304154747.23506-1-kpsingh@chromium.org>
- <20200304154747.23506-2-kpsingh@chromium.org>
- <cb54c137-6d8e-b4e5-bd17-e0a05368c3eb@iogearbox.net>
+        Wed, 4 Mar 2020 13:45:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730021AbgCDSpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:45:04 -0500
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 422F624679
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 18:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583347503;
+        bh=Xrw/0ZXS8o5llP7/hWRgBB1gg32aOCivmOH4N2PPq28=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=evFc4Gy2bN812x4sk2r8Pn9zAtdOD5nizsdGRFGnPPQJjIT3Giw+WApSBY2sg4RQj
+         iTqf7tJ5u5IGF0EXEAMZNb1VAIz5xMM6HzAydQcZPNoCREgPFvBNUAcWYJTqD+wqzD
+         sux5tvloTufAOp3GDV77PXiGSd4cbGPBEygtj4qA=
+Received: by mail-wr1-f41.google.com with SMTP id t11so3753782wrw.5
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:45:03 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2GOQ+urtkrV42gSkYaPD2ro2mNlG4c7R62xufKuOns6vNshCc8
+        7dxriseACfJUVFhChUomCsmkxJ89E7c5OuduJc2/EA==
+X-Google-Smtp-Source: ADFU+vtlsxwoHrm1OQRutaVl5g00tzjaOFt5JVahFb3l/ibOgX3f8Wh4bQByjMpAPzr6IyStGc/YxKeZy0zjhVlBpC0=
+X-Received: by 2002:a05:6000:110b:: with SMTP id z11mr5480355wrw.252.1583347501553;
+ Wed, 04 Mar 2020 10:45:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <cb54c137-6d8e-b4e5-bd17-e0a05368c3eb@iogearbox.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200303205445.3965393-1-nivedita@alum.mit.edu>
+ <20200303205445.3965393-2-nivedita@alum.mit.edu> <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
+ <20200304154908.GB998825@rani.riverdale.lan>
+In-Reply-To: <20200304154908.GB998825@rani.riverdale.lan>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 4 Mar 2020 19:44:50 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu-Xo2zj9_N+K8FrpBstgU57GZvWO-pDr4tRAODhsYzW-A@mail.gmail.com>
+Message-ID: <CAKv+Gu-Xo2zj9_N+K8FrpBstgU57GZvWO-pDr4tRAODhsYzW-A@mail.gmail.com>
+Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in populate_pud
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-Mär 19:37, Daniel Borkmann wrote:
-> On 3/4/20 4:47 PM, KP Singh wrote:
-> > From: KP Singh <kpsingh@google.com>
-> > 
-> > As we need to introduce a third type of attachment for trampolines, the
-> > flattened signature of arch_prepare_bpf_trampoline gets even more
-> > complicated.
-> > 
-> > Refactor the prog and count argument to arch_prepare_bpf_trampoline to
-> > use bpf_tramp_progs to simplify the addition and accounting for new
-> > attachment types.
-> > 
-> > Signed-off-by: KP Singh <kpsingh@google.com>
-> > Acked-by: Andrii Nakryiko <andriin@fb.com>
-> 
-> [...]
-> > diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
-> > index c498f0fffb40..9f7e0328a644 100644
-> > --- a/kernel/bpf/bpf_struct_ops.c
-> > +++ b/kernel/bpf/bpf_struct_ops.c
-> > @@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
-> >   	struct bpf_struct_ops_value *uvalue, *kvalue;
-> >   	const struct btf_member *member;
-> >   	const struct btf_type *t = st_ops->type;
-> > +	struct bpf_tramp_progs *tprogs = NULL;
-> >   	void *udata, *kdata;
-> >   	int prog_fd, err = 0;
-> >   	void *image;
-> > @@ -425,10 +426,18 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
-> >   			goto reset_unlock;
-> >   		}
-> > +		tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(*tprogs), GFP_KERNEL);
-> > +		if (!tprogs) {
-> > +			err = -ENOMEM;
-> > +			goto reset_unlock;
-> > +		}
-> > +
-> 
-> Looking over the code again, I'm quite certain that here's a memleak
-> since the kcalloc() is done in the for_each_member() loop in the ops
-> update but then going out of scope and in the exit path we only kfree
-> the last tprogs.
+On Wed, 4 Mar 2020 at 16:49, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> On Wed, Mar 04, 2020 at 09:17:44AM +0100, Ard Biesheuvel wrote:
+> > On Tue, 3 Mar 2020 at 21:54, Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> > >
+> > > Commit d367cef0a7f0 ("x86/mm/pat: Fix boot crash when 1GB pages are not
+> > > supported by the CPU") added checking for CPU support for 1G pages
+> > > before using them.
+> > >
+> > > However, when support is not present, nothing is done to map the
+> > > intermediate 1G regions and we go directly to the code that normally
+> > > maps the remainder after 1G mappings have been done. This code can only
+> > > handle mappings that fit inside a single PUD entry, but there is no
+> > > check, and it instead silently produces a corrupted mapping to the end
+> > > of the PUD entry, and no mapping beyond it, but still returns success.
+> > >
+> > > This bug is encountered on EFI machines in mixed mode (32-bit firmware
+> > > with 64-bit kernel), with RAM beyond 2G. The EFI support code
+> > > direct-maps all the RAM, so a memory range from below 1G to above 2G
+> > > triggers the bug and results in no mapping above 2G, and an incorrect
+> > > mapping in the 1G-2G range. If the kernel resides in the 1G-2G range, a
+> > > firmware call does not return correctly, and if it resides above 2G, we
+> > > end up passing addresses that are not mapped in the EFI pagetable.
+> > >
+> > > Fix this by mapping the 1G regions using 2M pages when 1G page support
+> > > is not available.
+> > >
+> > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> >
+> > I was trying to test these patches, and while they seem fine from a
+> > regression point of view, I can't seem to reproduce this issue and
+> > make it go away again by applying this patch.
+> >
+> > Do you have any detailed instructions how to reproduce this?
+> >
+>
+> The steps I'm following are
+> - build x86_64 defconfig + enable EFI_PGT_DUMP (to show the incorrect
+>   pagetable)
+> - run (QEMU is 4.2.0)
+> $ qemu-system-x86_64 -cpu Haswell -pflash qemu/OVMF_32.fd -m 3072 -nographic \
+>   -kernel kernel64/arch/x86/boot/bzImage -append "earlyprintk=ttyS0,keep efi=debug nokaslr"
+>
+> The EFI memory map I get is (abbreviated to regions of interest):
+> ...
+> [    0.253991] efi: mem10: [Conventional Memory|   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x00000000053e7000-0x000000003fffbfff] (940MB)
+> [    0.254424] efi: mem11: [Loader Data        |   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x000000003fffc000-0x000000003fffffff] (0MB)
+> [    0.254991] efi: mem12: [Conventional Memory|   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000040000000-0x00000000bbf77fff] (1983MB)
+> ...
+>
+> The pagetable this produces is (abbreviated again):
+> ...
+> [    0.272980] 0x0000000003400000-0x0000000004800000          20M     ro         PSE         x  pmd
+> [    0.273327] 0x0000000004800000-0x0000000005200000          10M     RW         PSE         NX pmd
+> [    0.273987] 0x0000000005200000-0x0000000005400000           2M     RW                     NX pte
+> [    0.274343] 0x0000000005400000-0x000000003fe00000         938M     RW         PSE         NX pmd
+> [    0.274725] 0x000000003fe00000-0x0000000040000000           2M     RW                     NX pte
+> [    0.275066] 0x0000000040000000-0x0000000080000000           1G     RW         PSE         NX pmd
+> [    0.275437] 0x0000000080000000-0x00000000bbe00000         958M                               pmd
+> ...
+>
+> Note how 0x80000000-0xbbe00000 range is unmapped in the resulting
+> pagetable. The dump doesn't show physical addresses, but the
+> 0x40000000-0x80000000 range is incorrectly mapped as well, as the loop
+> in populate_pmd would just go over that virtual address range twice.
+>
+>         while (end - start >= PMD_SIZE) {
+>                 ...
+>                 pmd = pmd_offset(pud, start);
+>
+>                 set_pmd(pmd, pmd_mkhuge(pfn_pmd(cpa->pfn,
+>                                         canon_pgprot(pmd_pgprot))));
+>
+>                 start     += PMD_SIZE;
+>                 cpa->pfn  += PMD_SIZE >> PAGE_SHIFT;
+>                 cur_pages += PMD_SIZE >> PAGE_SHIFT;
+>         }
 
-You're right, nice catch. Fixing it.
-
-- KP
-
-> 
-> > +		tprogs[BPF_TRAMP_FENTRY].progs[0] = prog;
-> > +		tprogs[BPF_TRAMP_FENTRY].nr_progs = 1;
-> >   		err = arch_prepare_bpf_trampoline(image,
-> >   						  st_map->image + PAGE_SIZE,
-> >   						  &st_ops->func_models[i], 0,
-> > -						  &prog, 1, NULL, 0, NULL);
-> > +						  tprogs, NULL);
-> >   		if (err < 0)
-> >   			goto reset_unlock;
-> > @@ -469,6 +478,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
-> >   	memset(uvalue, 0, map->value_size);
-> >   	memset(kvalue, 0, map->value_size);
-> >   unlock:
-> > +	kfree(tprogs);
-> >   	mutex_unlock(&st_map->lock);
-> >   	return err;
-> >   }
+I've tried a couple of different ways, but I can't seem to get my
+memory map organized in the way that will trigger the error.
