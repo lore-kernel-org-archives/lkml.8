@@ -2,621 +2,200 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06FCC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07259C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE50321556
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:55:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583351737;
-	bh=1ePJ0v0kWDJw+37eQnhUxFEupa6YFhyERaNWfe40SHk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Eh0q9GWroqC3Tlq+fVWDzOdko2DhC9Ou1l75RLc3nz66Yo95GcYubv1ypzBqQJVzJ
-	 48Ig8APdlKKc4RRLj+bWau1uCAaCJbZPXMgcEe+3pvEVhaSelJghjRLtGgnnwriScH
-	 V/ee3wS4DzxWQ2MPosZOay4dHC9ldn1iXmH3TKBw=
+	by mail.kernel.org (Postfix) with ESMTP id BFBE021556
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:57:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GFqTqR9e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387929AbgCDTzg (ORCPT
+        id S1729557AbgCDT5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:55:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53348 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727835AbgCDTzg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:55:36 -0500
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BE1A24677;
-        Wed,  4 Mar 2020 19:55:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583351735;
-        bh=1ePJ0v0kWDJw+37eQnhUxFEupa6YFhyERaNWfe40SHk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=x7p83E95zhnmUTY9GigoZG57UOg2nd/VW73TzPkYlg9tEWpzOlIMELjzllLJoK/wo
-         APHMbwrk56V4wvWVB6YizpNPdmvXq+73wtvgeD4I5I9MPp6ea4BJEMWidbX8N6q0md
-         6bGnLPt9omch4dtry80ziIVPrzww4C0rZRvhDd5c=
-Received: by mail-qv1-f54.google.com with SMTP id p3so1369627qvq.0;
-        Wed, 04 Mar 2020 11:55:35 -0800 (PST)
-X-Gm-Message-State: ANhLgQ1bTmSCPZf5nIKEnz25geTyD7B/HivXk8Kd/Ij/yu1UUUyPjRd7
-        utDnthixpQfTdyJotV6NdgXqblvq68wlT+rPHQ==
-X-Google-Smtp-Source: ADFU+vuIjehUM/gtF2KpVhwEIGdjqpusrSY+JR3Q/ZrdzMDOr3V5TcQyoAG4hhCash4cdpTEnt/D2ZLCEBaYq77oBXk=
-X-Received: by 2002:ad4:45e3:: with SMTP id q3mr3345501qvu.135.1583351734041;
- Wed, 04 Mar 2020 11:55:34 -0800 (PST)
+        Wed, 4 Mar 2020 14:57:01 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54293 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728955AbgCDT5A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 14:57:00 -0500
+Received: by mail-wm1-f65.google.com with SMTP id i9so3587180wml.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:56:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=tNtlWS8kwVg67m+x+oB4w/yTZ5zeRm/MtWMbNvLsueA=;
+        b=GFqTqR9ebB36YpKvw79ZlEDujCxufURaEz33heKN3rUwgF5K0/1kphs5OoZJakXq3v
+         rfAFhyw2bOl6ElqbHdsG0aatiauZMwu4Fi3N7X6gvkfHVwkk5PDS/+YDMLrJtxdVwz4e
+         DmtyBqsTgvIhwDRsjueatT7vmoP9sMnkbUiMyPXOl6mqmWDkvdbq0ge6h8W3Ca3/MLHH
+         yF1jIEu2T+I8Jqm0txuuICfyvQb8PPIV2xCvdcUpiK3IHjH9mjcEPPlOb2UcmbFDVa/G
+         LGviqc/wpdLmGOaEn9W8WJu71YntEJfHkgPT1S2b465qRxa+bdHeCZgPVtTF+jAC0OS0
+         uZLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tNtlWS8kwVg67m+x+oB4w/yTZ5zeRm/MtWMbNvLsueA=;
+        b=gl7aCBoljiRboR/wiiNHRUaBhxQDrwtq6/d9oUVbEuexYQigviFrqd1cPFmW+MqlWk
+         c8BPGk1322Niqa4herM5OmZDcG1Tgy6optNrQzIK30i3E+PRI5c80Zjj0KQVLLZBdSBH
+         gi1mDGVxJ+ArpHoVbWON9Elg+OkX3fljHm4z27sQWI3IVl8nBLKscv8ghoDmAevoPOJH
+         fwqNDJZrFqKoXM/c5PcS6PDUYI273/nkQPzWEWD71ZYQ6A6mSMk+p0sa8eLGTDaTcVFE
+         gz2GetwMVueqd3CdZCvEI/HxmxPpeob61zENSO4auMxSy55vIRjlQswdJUj4fF73S3MS
+         /C9g==
+X-Gm-Message-State: ANhLgQ2r0E74unYjnU2UJMUfak4+HLvjnvnbjJIoko0G6765EvYs87lZ
+        yxOTySBDuKXD1S5F6mH3SPYpVk+ZoXk=
+X-Google-Smtp-Source: ADFU+vs/+jn1aIAnj75KYFeE/8naTXfVQRz7ZZ18DTAjfkAR/2yH99QCF4627fUO3xeyamOyRWJ38g==
+X-Received: by 2002:a1c:660a:: with SMTP id a10mr4958726wmc.142.1583351816751;
+        Wed, 04 Mar 2020 11:56:56 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:10d8:56c2:f55d:11e3? ([2a01:e34:ed2f:f020:10d8:56c2:f55d:11e3])
+        by smtp.googlemail.com with ESMTPSA id v7sm34148032wrm.49.2020.03.04.11.56.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 11:56:56 -0800 (PST)
+Subject: Re: [PATCH v1] clocksource: Avoid creating dead devices
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20200111052125.238212-1-saravanak@google.com>
+ <f9f3afa0-f0a7-6cff-2e57-e4e448a81a90@linaro.org>
+ <CAGETcx_VV+NUALO=9PS5id7Jz0yLjG=T4FsC=J4PjuQ-rGcd9A@mail.gmail.com>
+ <CAGETcx_Y7TroxBGsD0ssG8X+iZawoMVnqVPbEOJwR2Wmv=0Kxw@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <814e5b06-dde9-f59a-735a-39d7e41efc67@linaro.org>
+Date:   Wed, 4 Mar 2020 20:56:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200304174942.124070-1-pmalani@chromium.org>
-In-Reply-To: <20200304174942.124070-1-pmalani@chromium.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 4 Mar 2020 13:55:22 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ5d5GmMFi1A3JN33PfD37auCLL-gSPh1NgEoNMAS0uAg@mail.gmail.com>
-Message-ID: <CAL_JsqJ5d5GmMFi1A3JN33PfD37auCLL-gSPh1NgEoNMAS0uAg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Convert usb-connector to YAML format.
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     devicetree@vger.kernel.org, Benson Leung <bleung@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        "open list:USB SUBSYSTEM" <linux-usb@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAGETcx_Y7TroxBGsD0ssG8X+iZawoMVnqVPbEOJwR2Wmv=0Kxw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 11:50 AM Prashant Malani <pmalani@chromium.org> wrote:
->
-> Convert the usb-connector.txt bindings file to YAML format. This allows
-> it to be used in dt_bindings_check verification. This patch was
-> born out of a patch series for the addition of a Type C connector
-> class port driver[1].
->
-> An attempt has been made to maintain the same documentation text and
-> example structure as was in the .txt file, but wherever needed
-> modifications have been made to satisfy dt_bindings_check.
->
-> Also, update all references to usb-connector.txt to now use
-> usb-connector.yaml.
->
-> [1]: https://lkml.org/lkml/2020/2/19/1232
->
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> ---
->  .../connector/samsung,usb-connector-11pin.txt |   2 +-
->  .../bindings/connector/usb-connector.txt      | 135 ------------
->  .../bindings/connector/usb-connector.yaml     | 193 ++++++++++++++++++
->  .../devicetree/bindings/usb/fcs,fusb302.txt   |   2 +-
->  .../devicetree/bindings/usb/generic.txt       |   2 +-
->  .../devicetree/bindings/usb/mediatek,mtu3.txt |   2 +-
->  .../devicetree/bindings/usb/mediatek,musb.txt |   2 +-
->  .../bindings/usb/richtek,rt1711h.txt          |   2 +-
->  .../devicetree/bindings/usb/ti,hd3ss3220.txt  |   2 +-
->  .../devicetree/bindings/usb/typec-tcpci.txt   |   2 +-
->  .../devicetree/bindings/usb/usb-conn-gpio.txt |   4 +-
->  11 files changed, 203 insertions(+), 145 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/connector/usb-connector.txt
->  create mode 100644 Documentation/devicetree/bindings/connector/usb-connector.yaml
->
-> diff --git a/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt b/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt
-> index 22256e295a7a1..3dd8961154abf 100644
-> --- a/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt
-> +++ b/Documentation/devicetree/bindings/connector/samsung,usb-connector-11pin.txt
-> @@ -19,7 +19,7 @@ Required nodes:
->      0: High Speed (HS),
->      3: Mobile High-Definition Link (MHL), specific to 11-pin Samsung micro-USB.
->
-> -[1]: bindings/connector/usb-connector.txt
-> +[1]: bindings/connector/usb-connector.yaml
->
->  Example
->  -------
-> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.txt b/Documentation/devicetree/bindings/connector/usb-connector.txt
-> deleted file mode 100644
-> index 88578ac1a8a76..0000000000000
-> --- a/Documentation/devicetree/bindings/connector/usb-connector.txt
-> +++ /dev/null
-> @@ -1,135 +0,0 @@
-> -USB Connector
-> -=============
-> -
-> -A USB connector node represents a physical USB connector. It should be
-> -a child of a USB interface controller.
-> -
-> -Required properties:
-> -- compatible: describes type of the connector, must be one of:
-> -    "usb-a-connector",
-> -    "usb-b-connector",
-> -    "usb-c-connector".
-> -
-> -Optional properties:
-> -- label: symbolic name for the connector,
-> -- type: size of the connector, should be specified in case of USB-A, USB-B
-> -  non-fullsize connectors: "mini", "micro".
-> -- self-powered: Set this property if the usb device that has its own power
-> -  source.
-> -
-> -Optional properties for usb-b-connector:
-> -- id-gpios: an input gpio for USB ID pin.
-> -- vbus-gpios: an input gpio for USB VBUS pin, used to detect presence of
-> -  VBUS 5V.
-> -  see gpio/gpio.txt.
-> -- vbus-supply: a phandle to the regulator for USB VBUS if needed when host
-> -  mode or dual role mode is supported.
-> -  Particularly, if use an output GPIO to control a VBUS regulator, should
-> -  model it as a regulator.
-> -  see regulator/fixed-regulator.yaml
-> -- pinctrl-names : a pinctrl state named "default" is optional
-> -- pinctrl-0 : pin control group
-> -  see pinctrl/pinctrl-bindings.txt
-> -
-> -Optional properties for usb-c-connector:
-> -- power-role: should be one of "source", "sink" or "dual"(DRP) if typec
-> -  connector has power support.
-> -- try-power-role: preferred power role if "dual"(DRP) can support Try.SNK
-> -  or Try.SRC, should be "sink" for Try.SNK or "source" for Try.SRC.
-> -- data-role: should be one of "host", "device", "dual"(DRD) if typec
-> -  connector supports USB data.
-> -
-> -Required properties for usb-c-connector with power delivery support:
-> -- source-pdos: An array of u32 with each entry providing supported power
-> -  source data object(PDO), the detailed bit definitions of PDO can be found
-> -  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
-> -  Source_Capabilities Message, the order of each entry(PDO) should follow
-> -  the PD spec chapter 6.4.1. Required for power source and power dual role.
-> -  User can specify the source PDO array via PDO_FIXED/BATT/VAR/PPS_APDO()
-> -  defined in dt-bindings/usb/pd.h.
-> -- sink-pdos: An array of u32 with each entry providing supported power
-> -  sink data object(PDO), the detailed bit definitions of PDO can be found
-> -  in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
-> -  Sink Capabilities Message, the order of each entry(PDO) should follow
-> -  the PD spec chapter 6.4.1. Required for power sink and power dual role.
-> -  User can specify the sink PDO array via PDO_FIXED/BATT/VAR/PPS_APDO() defined
-> -  in dt-bindings/usb/pd.h.
-> -- op-sink-microwatt: Sink required operating power in microwatt, if source
-> -  can't offer the power, Capability Mismatch is set. Required for power
-> -  sink and power dual role.
-> -
-> -Required nodes:
-> -- any data bus to the connector should be modeled using the OF graph bindings
-> -  specified in bindings/graph.txt, unless the bus is between parent node and
-> -  the connector. Since single connector can have multiple data buses every bus
-> -  has assigned OF graph port number as follows:
-> -    0: High Speed (HS), present in all connectors,
-> -    1: Super Speed (SS), present in SS capable connectors,
-> -    2: Sideband use (SBU), present in USB-C.
-> -
-> -Examples
-> ---------
-> -
-> -1. Micro-USB connector with HS lines routed via controller (MUIC):
-> -
-> -muic-max77843@66 {
-> -       ...
-> -       usb_con: connector {
-> -               compatible = "usb-b-connector";
-> -               label = "micro-USB";
-> -               type = "micro";
-> -       };
-> -};
-> -
-> -2. USB-C connector attached to CC controller (s2mm005), HS lines routed
-> -to companion PMIC (max77865), SS lines to USB3 PHY and SBU to DisplayPort.
-> -DisplayPort video lines are routed to the connector via SS mux in USB3 PHY.
-> -
-> -ccic: s2mm005@33 {
-> -       ...
-> -       usb_con: connector {
-> -               compatible = "usb-c-connector";
-> -               label = "USB-C";
-> -
-> -               ports {
-> -                       #address-cells = <1>;
-> -                       #size-cells = <0>;
-> -
-> -                       port@0 {
-> -                               reg = <0>;
-> -                               usb_con_hs: endpoint {
-> -                                       remote-endpoint = <&max77865_usbc_hs>;
-> -                               };
-> -                       };
-> -                       port@1 {
-> -                               reg = <1>;
-> -                               usb_con_ss: endpoint {
-> -                                       remote-endpoint = <&usbdrd_phy_ss>;
-> -                               };
-> -                       };
-> -                       port@2 {
-> -                               reg = <2>;
-> -                               usb_con_sbu: endpoint {
-> -                                       remote-endpoint = <&dp_aux>;
-> -                               };
-> -                       };
-> -               };
-> -       };
-> -};
-> -
-> -3. USB-C connector attached to a typec port controller(ptn5110), which has
-> -power delivery support and enables drp.
-> -
-> -typec: ptn5110@50 {
-> -       ...
-> -       usb_con: connector {
-> -               compatible = "usb-c-connector";
-> -               label = "USB-C";
-> -               power-role = "dual";
-> -               try-power-role = "sink";
-> -               source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
-> -               sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
-> -                            PDO_VAR(5000, 12000, 2000)>;
-> -               op-sink-microwatt = <10000000>;
-> -       };
-> -};
-> diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> new file mode 100644
-> index 0000000000000..f0fac9bd63364
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
-> @@ -0,0 +1,193 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/connector/usb-connector.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: USB Connector
-> +
-> +maintainers:
-> +  - linux-usb@vger.kernel.org
-> +
-> +description:
-> +  A USB connector node represents a physical USB connector. It should be a child
-> +  of a USB interface controller.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - usb-a-connector
-> +      - usb-b-connector
-> +      - usb-c-connector
-> +
-> +  label:
-> +    description: Symbolic name for the connector.
-> +
-> +  type:
-> +    description: Size of the connector, should be specified in case of USB-A,
-> +      USB-B non-fullsize connectors.
-> +    enum:
-> +      - mini
-> +      - micro
+On 04/03/2020 20:30, Saravana Kannan wrote:
+> On Thu, Feb 27, 2020 at 1:22 PM Saravana Kannan <saravanak@google.com> wrote:
+>>
+>> On Thu, Feb 27, 2020 at 1:06 AM Daniel Lezcano
+>> <daniel.lezcano@linaro.org> wrote:
+>>>
+>>> On 11/01/2020 06:21, Saravana Kannan wrote:
+>>>> Timer initialization is done during early boot way before the driver
+>>>> core starts processing devices and drivers. Timers initialized during
+>>>> this early boot period don't really need or use a struct device.
+>>>>
+>>>> However, for timers represented as device tree nodes, the struct devices
+>>>> are still created and sit around unused and wasting memory. This change
+>>>> avoid this by marking the device tree nodes as "populated" if the
+>>>> corresponding timer is successfully initialized.
 
-Needs a type reference.
+TBH, I'm missing the rational with the explanation and the code. Can you
+elaborate or rephrase it?
 
-> +
-> +  self-powered:
-> +    description: Set this property if the USB device has its own power source.
 
-type: boolean
+>>>> Signed-off-by: Saravana Kannan <saravanak@google.com>
+>>>> ---
+>>>>  drivers/clocksource/timer-probe.c | 2 ++
+>>>>  1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/drivers/clocksource/timer-probe.c b/drivers/clocksource/timer-probe.c
+>>>> index ee9574da53c0..a10f28d750a9 100644
+>>>> --- a/drivers/clocksource/timer-probe.c
+>>>> +++ b/drivers/clocksource/timer-probe.c
+>>>> @@ -27,8 +27,10 @@ void __init timer_probe(void)
+>>>>
+>>>>               init_func_ret = match->data;
+>>>>
+>>>> +             of_node_set_flag(np, OF_POPULATED);
+>>>>               ret = init_func_ret(np);
+>>>>               if (ret) {
+>>>> +                     of_node_clear_flag(np, OF_POPULATED);
+>>>
+>>> Isn't it in conflict with:
+>>>
+>>> drivers/clocksource/ingenic-timer.c
+>>>
+>>> ?
+>>
+>> No, it won't interfere with that driver because:
+>> 1. This flag is getting set only if the driver already registered a
+>> timer init function using TIMER_OF_DECLARE.
+>> 2. And if the function fails, we clear the flag.
+>>
+>> So in the case of ingenic-timer, the device will still be there and be
+>> probed by the driver.
+> 
+> Daniel, friendly reminder. Or do you have a patchworks link too that I
+> can keep an eye on?
 
-> +
-> +  # The following are optional properties for "usb-b-connector".
-> +  id-gpios:
-> +    description: An input gpio for USB ID pin.
 
-maxItems: 1
 
-> +
-> +  vbus-gpios:
-> +    description: An input gpio for USB VBus pin, used to detect presence of
-> +      VBUS 5V. See gpio/gpio.txt.
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-maxItems: 1
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
-> +
-> +  vbus-supply:
-> +    description: A phandle to the regulator for USB VBUS if needed when host
-> +      mode or dual role mode is supported.
-> +      Particularly, if use an output GPIO to control a VBUS regulator, should
-> +      model it as a regulator. See regulator/fixed-regulator.yaml
-> +
-> +  pinctrl-names:
-> +    description: A pinctrl state named "default" is optional.
-> +
-> +  pinctrl-0:
-> +    description: Pin control group. See pinctrl/pinctrl-bindings.txt
-
-pinctrl properties get added automatically, so you can drop these 2.
-
-> +
-> +  # The following are optional properties for "usb-c-connector".
-> +  power-role:
-> +    description: Determines the power role that the Type C connector will
-> +      support.
-> +    contains:
-> +      source:
-> +        description: Connector is a power source.
-> +      sink:
-> +        description: Connector is a power sink.
-> +      dual:
-> +        description: Connector is a Dual Role Port (DRP).
-
-Not valid json-schema. Should be like this:
-
-power-role:
-  allOf:
-    - $ref: /schemas/types.yaml#definitions/string
-  enum:
-    - source
-    - sink
-    - dual
-
-> +
-> +  try-power-role:
-> +    description: Preferred power role.
-> +    contains:
-> +      sink:
-> +        description: Try.SNK is preferred power role.
-> +      source:
-> +        description: Try.SRC is preferred power role.
-> +      dual:
-> +        description: DRP can support Try.SNK or Try.SRC.
-
-Same here.
-
-> +
-> +  data-role:
-> +    description: Data role if Type C connector supports USB data.
-> +    contains:
-> +      host:
-> +        description: Connector is a host.
-> +      device:
-> +        description: Connector is a device.
-> +      dual:
-> +        description: Connector is Dual Role Device (DRD).
-
-Similar here.
-
-> +
-> +  # The following are optional properties for "usb-c-connector" with power
-> +  # delivery support.
-> +  source-pdos:
-> +    description: An array of u32 with each entry providing supported power
-> +      source data object(PDO), the detailed bit definitions of PDO can be found
-> +      in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
-> +      Source_Capabilities Message, the order of each entry(PDO) should follow
-> +      the PD spec chapter 6.4.1. Required for power source and power dual role.
-> +      User can specify the source PDO array via PDO_FIXED/BATT/VAR/PPS_APDO()
-> +      defined in dt-bindings/usb/pd.h.
-> +    minItems: 1
-> +    maxItems: 7
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +
-> +
-> +  sink-pdos:
-> +    description: An array of u32 with each entry providing supported power sink
-> +      data object(PDO), the detailed bit definitions of PDO can be found in
-> +      "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
-> +      Sink Capabilities Message, the order of each entry(PDO) should follow the
-> +      PD spec chapter 6.4.1. Required for power sink and power dual role. User
-> +      can specify the sink PDO array via PDO_FIXED/BATT/VAR/PPS_APDO() defined
-> +      in dt-bindings/usb/pd.h.
-> +    minItems: 1
-> +    maxItems: 7
-> +    allOf:
-> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +
-> +  op-sink-microwatt:
-> +    description: Sink required operating power in microwatt, if source can't
-> +      offer the power, Capability Mismatch is set. Required for power sink and
-> +      power dual role.
-> +
-> +# Any data bus to the connector should be modeled using the OF graph bindings
-> +# specified in bindings/graph.txt, unless the bus is between parent node and
-> +# the connector. Since single connector can have multiple data buses every bus
-> +# has assigned OF graph port number as follows:
-> +# 0: High Speed (HS), present in all connectors,
-> +# 1: Super Speed (SS), present in SS capable connectors,
-> +# 2: Sideband use (SBU), present in USB-C.
-
-You need something like this:
-
-ports:
-  type: object
-  properties:
-    port@0:
-      type: object
-      description: High Speed (HS), present in all connectors
-    ...
-  required:
-    - port@0
-
-> +required:
-> +  - compatible
-> +
-> +examples:
-> +  # Micro-USB connector with HS lines routed via controller (MUIC).
-> +  - |+
-> +    muic-max77843@66 {
-> +      usb_con1: connector {
-> +        compatible = "usb-b-connector";
-> +        label = "micro-USB";
-> +        type = "micro";
-> +      };
-> +    };
-> +
-> +  # USB-C connector attached to CC controller (s2mm005), HS lines routed
-> +  # to companion PMIC (max77865), SS lines to USB3 PHY and SBU to DisplayPort.
-> +  # DisplayPort video lines are routed to the connector via SS mux in USB3 PHY.
-> +  - |+
-> +    ccic: s2mm005@33 {
-> +      usb_con2: connector {
-> +        compatible = "usb-c-connector";
-> +        label = "USB-C";
-> +
-> +        ports {
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          port@0 {
-> +            reg = <0>;
-> +            usb_con_hs: endpoint {
-> +              remote-endpoint = <&max77865_usbc_hs>;
-> +            };
-> +          };
-> +          port@1 {
-> +            reg = <1>;
-> +            usb_con_ss: endpoint {
-> +            remote-endpoint = <&usbdrd_phy_ss>;
-> +            };
-> +          };
-> +          port@2 {
-> +            reg = <2>;
-> +            usb_con_sbu: endpoint {
-> +            remote-endpoint = <&dp_aux>;
-> +            };
-> +          };
-> +        };
-> +      };
-> +    };
-> +
-> +  # USB-C connector attached to a typec port controller(ptn5110), which has
-> +  # power delivery support and enables drp.
-> +  - |+
-> +    #include <dt-bindings/usb/pd.h>
-> +    typec: ptn5110@50 {
-> +      usb_con3: connector {
-> +        compatible = "usb-c-connector";
-> +        label = "USB-C";
-> +        power-role = "dual";
-> +        try-power-role = "sink";
-> +        source-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)>;
-> +        sink-pdos = <PDO_FIXED(5000, 2000, PDO_FIXED_USB_COMM)
-> +                     PDO_VAR(5000, 12000, 2000)>;
-> +        op-sink-microwatt = <10000000>;
-> +      };
-> +    };
-> diff --git a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-> index ba2e32d500c02..60e4654297af7 100644
-> --- a/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-> +++ b/Documentation/devicetree/bindings/usb/fcs,fusb302.txt
-> @@ -9,7 +9,7 @@ Required sub-node:
->  - connector : The "usb-c-connector" attached to the FUSB302 IC. The bindings
->    of the connector node are specified in:
->
-> -       Documentation/devicetree/bindings/connector/usb-connector.txt
-> +       Documentation/devicetree/bindings/connector/usb-connector.yaml
->
->
->  Example:
-> diff --git a/Documentation/devicetree/bindings/usb/generic.txt b/Documentation/devicetree/bindings/usb/generic.txt
-> index e6790d2a4da9b..474e74c06522d 100644
-> --- a/Documentation/devicetree/bindings/usb/generic.txt
-> +++ b/Documentation/devicetree/bindings/usb/generic.txt
-> @@ -34,7 +34,7 @@ Optional properties:
->   - usb-role-switch: boolean, indicates that the device is capable of assigning
->                         the USB data role (USB host or USB device) for a given
->                         USB connector, such as Type-C, Type-B(micro).
-> -                       see connector/usb-connector.txt.
-> +                       see connector/usb-connector.yaml.
->
->  This is an attribute to a USB controller such as:
->
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> index e0ae6096f7ac8..a82ca438aec1f 100644
-> --- a/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,mtu3.txt
-> @@ -34,7 +34,7 @@ Optional properties:
->         dual-role mode.
->         it's considered valid for compatibility reasons, not allowed for
->         new bindings, and put into a usb-connector node.
-> -       see connector/usb-connector.txt.
-> +       see connector/usb-connector.yaml.
->   - pinctrl-names : a pinctrl state named "default" is optional, and need be
->         defined if auto drd switch is enabled, that means the property dr_mode
->         is set as "otg", and meanwhile the property "mediatek,enable-manual-drd"
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> index 2b8a87c90d9ea..5eedb02965622 100644
-> --- a/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> @@ -23,7 +23,7 @@ Optional properties:
->                       MTCMOS
->
->  Required child nodes:
-> - usb connector node as defined in bindings/connector/usb-connector.txt
-> + usb connector node as defined in bindings/connector/usb-connector.yaml
->  Optional properties:
->   - id-gpios        : input GPIO for USB ID pin.
->   - vbus-gpios      : input GPIO for USB VBUS pin.
-> diff --git a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
-> index e3fc57e605ed6..6f8115db2ea9b 100644
-> --- a/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
-> +++ b/Documentation/devicetree/bindings/usb/richtek,rt1711h.txt
-> @@ -9,7 +9,7 @@ Required properties:
->  Required sub-node:
->  - connector: The "usb-c-connector" attached to the tcpci chip, the bindings
->    of connector node are specified in
-> -  Documentation/devicetree/bindings/connector/usb-connector.txt
-> +  Documentation/devicetree/bindings/connector/usb-connector.yaml
->
->  Example :
->  rt1711h@4e {
-> diff --git a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-> index 25780e945b154..2bd21b22ce95b 100644
-> --- a/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-> +++ b/Documentation/devicetree/bindings/usb/ti,hd3ss3220.txt
-> @@ -9,7 +9,7 @@ Required sub-node:
->   - connector: The "usb-c-connector" attached to the hd3ss3220 chip. The
->     bindings of the connector node are specified in:
->
-> -       Documentation/devicetree/bindings/connector/usb-connector.txt
-> +       Documentation/devicetree/bindings/connector/usb-connector.yaml
->
->  Example:
->  hd3ss3220@47 {
-> diff --git a/Documentation/devicetree/bindings/usb/typec-tcpci.txt b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
-> index 0dd1469e73180..2082522b1c326 100644
-> --- a/Documentation/devicetree/bindings/usb/typec-tcpci.txt
-> +++ b/Documentation/devicetree/bindings/usb/typec-tcpci.txt
-> @@ -13,7 +13,7 @@ Required properties:
->  Required sub-node:
->  - connector: The "usb-c-connector" attached to the tcpci chip, the bindings
->    of connector node are specified in
-> -  Documentation/devicetree/bindings/connector/usb-connector.txt
-> +  Documentation/devicetree/bindings/connector/usb-connector.yaml
->
->  Example:
->
-> diff --git a/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-> index 3d05ae56cb0dc..ec80641208a53 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-conn-gpio.txt
-> @@ -8,11 +8,11 @@ Required properties:
->  - compatible : should include "gpio-usb-b-connector" and "usb-b-connector".
->  - id-gpios, vbus-gpios : input gpios, either one of them must be present,
->         and both can be present as well.
-> -       see connector/usb-connector.txt
-> +       see connector/usb-connector.yaml
->
->  Optional properties:
->  - vbus-supply : can be present if needed when supports dual role mode.
-> -       see connector/usb-connector.txt
-> +       see connector/usb-connector.yaml
->
->  - Sub-nodes:
->         - port : can be present.
-> --
-> 2.25.0.265.gbab2e86ba0-goog
->
