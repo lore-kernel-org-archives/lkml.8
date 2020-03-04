@@ -2,94 +2,100 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F51C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A851C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763E120848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:19:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583335197;
-	bh=je8tPnydze2QJm0S9OXSeYj7zI/Hug4h3RxcJaMT+oA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=D2AhGDNYtSV3hqJ2suNQ/v1TTuWcdC6BPgyXS2HtrkZZ3jvd5f5iXm5FL0XppVmqq
-	 mozGc89m/px5+BHhZTIi1Ful5eFULY2jsvqRVviW+YoF0pAE0V1rrADZXc60LwtdqE
-	 jQSJfpH0N0a4VmuvUcYFAfia0UA+kSD/1Xyvozfw=
+	by mail.kernel.org (Postfix) with ESMTP id 3F81A2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729632AbgCDPT4 (ORCPT
+        id S1729635AbgCDPVq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:19:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbgCDPT4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:19:56 -0500
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF00020848;
-        Wed,  4 Mar 2020 15:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583335195;
-        bh=je8tPnydze2QJm0S9OXSeYj7zI/Hug4h3RxcJaMT+oA=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=gPhmMur2fts/HYB7wL0f19b1lSPBPoEtR43qAT6+4Lb2oH3rUnv1BODfuEMwIMZRZ
-         siv8Zs7tKh4kO5REFiAFZsTSoLwyFBZKdzn1/CgfCoEYW94Rmm18kQrdqRCsZOq+iX
-         iOg/mP2XaSPvt0piHSMUyoR4/LJquW/mPPsbM3NY=
-Received: by mail-qk1-f174.google.com with SMTP id p62so1964923qkb.0;
-        Wed, 04 Mar 2020 07:19:55 -0800 (PST)
-X-Gm-Message-State: ANhLgQ0uOHOuTmjJ5Bpke2X7A42M+AF8fBcV0dWNG3a6ix7VkthLDLjT
-        xd630Drtr4YhmwNZzO/w4N5yF9Y2x++pNoqRuw==
-X-Google-Smtp-Source: ADFU+vuR0h6EdKTSVQErVvrih+gw6uB8EuJe4uEVCTXvTm2XksE1TMQ6vJGet8PXkAQ0dKd/eFgIT4INjk+HiXTsIdI=
-X-Received: by 2002:a05:620a:12a3:: with SMTP id x3mr3528546qki.254.1583335194936;
- Wed, 04 Mar 2020 07:19:54 -0800 (PST)
+        Wed, 4 Mar 2020 10:21:46 -0500
+Received: from shelob.surriel.com ([96.67.55.147]:56722 "EHLO
+        shelob.surriel.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727024AbgCDPVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:21:46 -0500
+Received: from imladris.surriel.com ([96.67.55.152])
+        by shelob.surriel.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <riel@shelob.surriel.com>)
+        id 1j9Vpx-00068C-VJ; Wed, 04 Mar 2020 10:21:29 -0500
+Message-ID: <221dab45ed46405b707825455086855665ead7cc.camel@surriel.com>
+Subject: Re: [RFC v4 2/7] mm/damon: Account age of target regions
+From:   Rik van Riel <riel@surriel.com>
+To:     SeongJae Park <sjpark@amazon.com>, akpm@linux-foundation.org
+Cc:     SeongJae Park <sjpark@amazon.de>, aarcange@redhat.com,
+        acme@kernel.org, alexander.shishkin@linux.intel.com,
+        amit@kernel.org, brendan.d.gregg@gmail.com,
+        brendanhiggins@google.com, cai@lca.pw, colin.king@canonical.com,
+        corbet@lwn.net, dwmw@amazon.com, jolsa@redhat.com,
+        kirill@shutemov.name, mark.rutland@arm.com, mgorman@suse.de,
+        minchan@kernel.org, mingo@redhat.com, namhyung@kernel.org,
+        peterz@infradead.org, rdunlap@infradead.org, rientjes@google.com,
+        rostedt@goodmis.org, shuah@kernel.org, sj38.park@gmail.com,
+        vbabka@suse.cz, vdavydov.dev@gmail.com, yang.shi@linux.alibaba.com,
+        ying.huang@intel.com, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 04 Mar 2020 10:21:29 -0500
+In-Reply-To: <20200303121406.20954-3-sjpark@amazon.com>
+References: <20200303121406.20954-1-sjpark@amazon.com>
+         <20200303121406.20954-3-sjpark@amazon.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-eGmSQoRR+kwATEvB5H6o"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-References: <20200304032038.14424-1-masahiroy@kernel.org> <20200304032038.14424-3-masahiroy@kernel.org>
- <20200304055520.GA28911@ravnborg.org>
-In-Reply-To: <20200304055520.GA28911@ravnborg.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 4 Mar 2020 09:19:43 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqLA7yq8rnVhM210sLt788yeu2xxFd94Fe0K_CGZw-mqSA@mail.gmail.com>
-Message-ID: <CAL_JsqLA7yq8rnVhM210sLt788yeu2xxFd94Fe0K_CGZw-mqSA@mail.gmail.com>
-Subject: Re: [PATCH 2/3] kbuild: allow to run dt_binding_check and dtbs_check
- in a single command
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>, devicetree@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 11:55 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Masahiro
->
-> Thanks for the nice improvements to the dt infrastructure.
->
-> Stealing a thread here..
->
-> >  It is also possible to run checks with a single schema file by setting the
-> >  ``DT_SCHEMA_FILES`` variable to a specific schema file.
-> Would it be simple to enable the use of dirs for DT_SCHEMA_FILES?
 
-I did name that with the intent of supporting more than one file.
+--=-eGmSQoRR+kwATEvB5H6o
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> So I for example could do:
->
-> make dt_bindings_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/display/panel/
+On Tue, 2020-03-03 at 13:14 +0100, SeongJae Park wrote:
+> From: SeongJae Park <sjpark@amazon.de>
 
-Does this work?:
+> --- a/mm/damon.c
+> +++ b/mm/damon.c
+> @@ -87,6 +87,10 @@ static struct damon_region
+> *damon_new_region(struct damon_ctx *ctx,
+>  	ret->sampling_addr =3D damon_rand(ctx, vm_start, vm_end);
+>  	INIT_LIST_HEAD(&ret->list);
+> =20
+> +	ret->age =3D 0;
+> +	ret->last_vm_start =3D vm_start;
+> +	ret->last_vm_end =3D vm_end;
 
-make dt_bindings_check DT_SCHEMA_FILES="$(find
-Documentation/devicetree/bindings/display/panel/ -name '*.yaml' |
-xargs)"
+Wait, what tree is this supposed to apply against?
 
-Rob
+I see no mm/damon.c file in current Linus upstream.
+
+--=20
+All Rights Reversed.
+
+--=-eGmSQoRR+kwATEvB5H6o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAl5fx3kACgkQznnekoTE
+3oNdIQf+Jf9rcxWzut0/wdOMrnEpQsvag0DtVQ/TWi1ncSthQUXiwIX3WPPLGbsr
+FR1OInV5p9OHU1pNZVCXy2PWRiXOEDwiYrBoaGkl5u2hThi8jqGaqJH39yX29JLR
+OC+UAJ1WqPhhk4AenjZoHH3E7Vxd4K1m2z8VBETeU/TP1le1hl3CxPbNmyOMBxTU
+3TE8vmJ+vRJGqVZFZictlSs4K0jKL+Px8cUxbK8qk7DdI1ulpq/i+CxzMHzMYVki
+plb+kn3zVjLpJshoSH6qaNimk2XO02/0zzm7nNjiM5jm7IXomQRNQ/4PuIWyudgp
+L++pTRBaHsq2fJoxo+vMGWAnwAhNVw==
+=LokE
+-----END PGP SIGNATURE-----
+
+--=-eGmSQoRR+kwATEvB5H6o--
+
