@@ -2,263 +2,159 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAF3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC61EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15B42214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:14:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="E5i5pswg"
+	by mail.kernel.org (Postfix) with ESMTP id 8175B20709
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387803AbgCDLOZ (ORCPT
+        id S2387872AbgCDLP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:14:25 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46290 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726137AbgCDLOZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:14:25 -0500
-Received: by mail-wr1-f66.google.com with SMTP id j7so1858541wrp.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 03:14:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=ytJyZne6tZeakYNWCLvFS4U17Dxs6Z9j14ft6YAqs1Y=;
-        b=E5i5pswg8Xz0wg1+iNVXwEiKmUyrezTIOvhxCawnzSfY7oSbglTIWwQ0fgct0doFOi
-         mX+7kSfBVuPVFpPEzCEhDEhh8GRrgD7j3tcFB/LdMVYLhvEBIouIGY6Njh19ca9EDkKJ
-         d6Bd79K4jVPC5eHh9WqltbZ+JYvFwDPe7mnhnLO9oUS9ucehEhKqGvMgvjO8pPBRtD+h
-         NPNWOeh7FQ0sF2/HHfhwoNJwe0fRGCRfjz15HiKDhYbDBI/pBxD8kUJgL6hDMuqW+kKH
-         dldnc7ZSthkpYEydmwGC1M4kEc8foQKPUPsF/QFx2DA77PKyWN6EHOgatRhJAneAzk2e
-         SsiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=ytJyZne6tZeakYNWCLvFS4U17Dxs6Z9j14ft6YAqs1Y=;
-        b=fLC21giaaD/hwbVG8uQIcXIjTygebTYyGXWtOVeK2h1dr6BM+4Vw/rz4j4VcHUoLHH
-         FeE9JZWzIElDe3rfQ67wvNa362FvX9pxYnKWZ3/Df+1zeKuMywFfTcw24cDAaUa5OZT8
-         0ND5n2dvxcEGBQRPbPsNMe1XfTb26gqkHWPFrHh9me3kNs+SDXjn4UJlLVjzt0Y80mSO
-         khfFG2CKUXYFq38qJVxe0Mbi1BsaxCU7HxMr5nZM6rs9onPTNij4Wt7vBI+Y1C56S1o2
-         kmrzQD2V2mK4dWI+fz3elN0NYh9fNxSNVwVL0lKPKMLbNuA+VtOJSE5daAtrQYnSPvPR
-         2t2A==
-X-Gm-Message-State: ANhLgQ0JNzt3dUkYj9YPQijsZB9N08XgJlZ9LFSXFgrF4hm62/FT3Ivq
-        HrfMMhVn7VEsYvdTtD87ip09Xw==
-X-Google-Smtp-Source: ADFU+vttUA1RjZh+6g6P/+H5oxlXGPf7GeFqGD016HHhrN0Eg/GSxV29/Z9pASyta+tTx4cC2FeNiA==
-X-Received: by 2002:a5d:4f12:: with SMTP id c18mr3597686wru.329.1583320463015;
-        Wed, 04 Mar 2020 03:14:23 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id 133sm3877459wmd.5.2020.03.04.03.14.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 03:14:22 -0800 (PST)
-Date:   Wed, 4 Mar 2020 11:14:22 +0000
-From:   Matthias Maennich <maennich@google.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Joe Perches <joe@perches.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] modpost: rework and consolidate logging interface
-Message-ID: <20200304111422.GA66900@google.com>
-References: <20200226142608.19499-1-jeyu@kernel.org>
- <CAK7LNAQZAgobbTTTpLKNActYCYP7UdVgdE-Oz+pvvRxsxd_uaw@mail.gmail.com>
- <20200303145736.GA16460@linux-8ccs>
+        Wed, 4 Mar 2020 06:15:26 -0500
+Received: from mga02.intel.com ([134.134.136.20]:35703 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387762AbgCDLP0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 06:15:26 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Mar 2020 03:15:25 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,514,1574150400"; 
+   d="scan'208";a="263571586"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Mar 2020 03:15:21 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Mel Gorman <mgorman@suse.de>, David Hildenbrand <david@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
+References: <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
+        <871rqf850z.fsf@yhuang-dev.intel.com> <20200228094954.GB3772@suse.de>
+        <87h7z76lwf.fsf@yhuang-dev.intel.com> <20200302151607.GC3772@suse.de>
+        <87zhcy5hoj.fsf@yhuang-dev.intel.com>
+        <20200303080945.GX4380@dhcp22.suse.cz>
+        <87o8td4yf9.fsf@yhuang-dev.intel.com>
+        <20200303085805.GB4380@dhcp22.suse.cz>
+        <87ftep4pzy.fsf@yhuang-dev.intel.com>
+        <20200304095802.GE16139@dhcp22.suse.cz>
+Date:   Wed, 04 Mar 2020 19:15:20 +0800
+In-Reply-To: <20200304095802.GE16139@dhcp22.suse.cz> (Michal Hocko's message
+        of "Wed, 4 Mar 2020 10:58:02 +0100")
+Message-ID: <87blpc2wxj.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200303145736.GA16460@linux-8ccs>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 03:57:36PM +0100, Jessica Yu wrote:
->+++ Masahiro Yamada [03/03/20 23:42 +0900]:
->>On Wed, Feb 26, 2020 at 11:26 PM Jessica Yu <jeyu@kernel.org> wrote:
->>>
->>>Rework modpost's logging interface by consolidating merror(), warn(),
->>>and fatal() to use a single function, modpost_log(). Introduce different
->>>logging levels (WARN, ERROR, FATAL) as well as a conditional warn
->>>(warn_unless()). The conditional warn is useful in determining whether
->>>to use merror() or warn() based on a condition. This reduces code
->>>duplication overall.
->>>
->>>Signed-off-by: Jessica Yu <jeyu@kernel.org>
->>>---
->>>v2:
->>>  - modpost_log: initialize level to ""
->>>  - remove parens () from case labels
->>>
->>> scripts/mod/modpost.c | 69 +++++++++++++++++++++++----------------------------
->>> scripts/mod/modpost.h | 22 +++++++++++++---
->>> 2 files changed, 50 insertions(+), 41 deletions(-)
->>>
->>>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
->>>index 7edfdb2f4497..3201a2ac5cc4 100644
->>>--- a/scripts/mod/modpost.c
->>>+++ b/scripts/mod/modpost.c
->>>@@ -51,41 +51,37 @@ enum export {
->>>
->>> #define MODULE_NAME_LEN (64 - sizeof(Elf_Addr))
->>>
->>>-#define PRINTF __attribute__ ((format (printf, 1, 2)))
->>>+#define PRINTF __attribute__ ((format (printf, 2, 3)))
->>>
->>>-PRINTF void fatal(const char *fmt, ...)
->>>+PRINTF void modpost_log(enum loglevel loglevel, const char *fmt, ...)
->>> {
->>>+       char *level = "";
->>
->>
->>You can add 'const'.
->>
->>
->>         const char *level = "";
->>
->>
->>
->>>        va_list arglist;
->>>
->>>-       fprintf(stderr, "FATAL: ");
->>>-
->>>-       va_start(arglist, fmt);
->>>-       vfprintf(stderr, fmt, arglist);
->>>-       va_end(arglist);
->>>-
->>>-       exit(1);
->>>-}
->>>-
->>>-PRINTF void warn(const char *fmt, ...)
->>>-{
->>>-       va_list arglist;
->>>+       switch(loglevel) {
->>>+       case LOG_WARN:
->>>+               level = "WARNING: ";
->>>+               break;
->>>+       case LOG_ERROR:
->>>+               level = "ERROR: ";
->>>+               break;
->>>+       case LOG_FATAL:
->>>+               level = "FATAL: ";
->>>+               break;
->>>+       default: /* invalid loglevel, ignore */
->>>+               break;
->>>+       }
->>>
->>>-       fprintf(stderr, "WARNING: ");
->>>+       fprintf(stderr, level);
->>
->>
->>
->>If I apply this patch, I see this warning:
->>
->>scripts/mod/modpost.c: In function ‘modpost_log’:
->>scripts/mod/modpost.c:77:2: warning: format not a string literal and
->>no format arguments [-Wformat-security]
->> fprintf(stderr, level);
->> ^~~~~~~
->>
->>
->>Please write like this:
->>
->>
->>    fprintf(stderr, "%s", level);
->>
->>
->>
->>
->>Or, you can delete 'level', then write
->>string literals directly in fprintf().
->>
->>
->>switch(loglevel) {
->>case LOG_WARN:
->>       fprintf(stderr, "WARNING: ");
->>       break;
->>case LOG_ERROR:
->>       fprintf(stderr, "ERROR: ");
->>       break;
->>case LOG_FATAL:
->>       fprintf(stderr, "FATAL: ");
->>       break;
->>}
->>
->>
->>
->>
->>>+       fprintf(stderr, "modpost: ");
->>>
->>>        va_start(arglist, fmt);
->>>        vfprintf(stderr, fmt, arglist);
->>>        va_end(arglist);
->>>-}
->>>
->>
->><snip>
->>
->>>diff --git a/scripts/mod/modpost.h b/scripts/mod/modpost.h
->>>index 64a82d2d85f6..631d07714f7a 100644
->>>--- a/scripts/mod/modpost.h
->>>+++ b/scripts/mod/modpost.h
->>>@@ -198,6 +198,22 @@ void *grab_file(const char *filename, unsigned long *size);
->>> char* get_next_line(unsigned long *pos, void *file, unsigned long size);
->>> void release_file(void *file, unsigned long size);
->>>
->>>-void fatal(const char *fmt, ...);
->>>-void warn(const char *fmt, ...);
->>>-void merror(const char *fmt, ...);
->>>+enum loglevel {
->>>+       LOG_WARN,
->>>+       LOG_ERROR,
->>>+       LOG_FATAL
->>>+};
->>>+
->>>+void modpost_log(enum loglevel loglevel, const char *fmt, ...);
->>>+
->>>+#define warn(fmt, args...)     modpost_log(LOG_WARN, fmt, ##args)
->>>+#define merror(fmt, args...)   modpost_log(LOG_ERROR, fmt, ##args)
+Michal Hocko <mhocko@kernel.org> writes:
 
-The only thing that bothered me a bit was the inconsistent naming with
-'merror'. I know `error` is reserved, but refactoring this whole code
-(thanks for that!) seems like a code opportunity to clean this up. (Or
-is it just me?)
-
-Cheers,
-Matthias
-
->>>+#define fatal(fmt, args...)    modpost_log(LOG_FATAL, fmt, ##args)
->>>+/* Warn unless condition is true, then use merror() */
->>>+#define warn_unless(condition, fmt, args...)   \
->>>+do {                                           \
->>>+       if (condition)                          \
->>>+               merror(fmt, ##args);            \
->>>+       else                                    \
->>>+               warn(fmt, ##args);              \
->>>+} while (0)
->>
->>
->>Hmm, warn_unless() is not intuitive naming...
->>
->>You could use modpost_log() directly in C code,
->>what do you think?
->>
->>
->>           modpost_log(allow_missing_ns_imports ? LOG_WARN : LOG_ERROR,
->>                       "module %s uses symbol %s from namespace %s,
->>but does not import it.\n",
->>                       basename, exp->name, exp->namespace);
+> On Tue 03-03-20 19:49:53, Huang, Ying wrote:
+>> Michal Hocko <mhocko@kernel.org> writes:
+>> 
+>> > On Tue 03-03-20 16:47:54, Huang, Ying wrote:
+>> >> Michal Hocko <mhocko@kernel.org> writes:
+>> >> 
+>> >> > On Tue 03-03-20 09:51:56, Huang, Ying wrote:
+>> >> >> Mel Gorman <mgorman@suse.de> writes:
+>> >> >> > On Mon, Mar 02, 2020 at 07:23:12PM +0800, Huang, Ying wrote:
+>> >> >> >> If some applications cannot tolerate the latency incurred by the memory
+>> >> >> >> allocation and zeroing.  Then we cannot discard instead of migrate
+>> >> >> >> always.  While in some situations, less memory pressure can help.  So
+>> >> >> >> it's better to let the administrator and the application choose the
+>> >> >> >> right behavior in the specific situation?
+>> >> >> >> 
+>> >> >> >
+>> >> >> > Is there an application you have in mind that benefits from discarding
+>> >> >> > MADV_FREE pages instead of migrating them?
+>> >> >> >
+>> >> >> > Allowing the administrator or application to tune this would be very
+>> >> >> > problematic. An application would require an update to the system call
+>> >> >> > to take advantage of it and then detect if the running kernel supports
+>> >> >> > it. An administrator would have to detect that MADV_FREE pages are being
+>> >> >> > prematurely discarded leading to a slowdown and that is hard to detect.
+>> >> >> > It could be inferred from monitoring compaction stats and checking
+>> >> >> > if compaction activity is correlated with higher minor faults in the
+>> >> >> > target application. Proving the correlation would require using the perf
+>> >> >> > software event PERF_COUNT_SW_PAGE_FAULTS_MIN and matching the addresses
+>> >> >> > to MADV_FREE regions that were freed prematurely. That is not an obvious
+>> >> >> > debugging step to take when an application detects latency spikes.
+>> >> >> >
+>> >> >> > Now, you could add a counter specifically for MADV_FREE pages freed for
+>> >> >> > reasons other than memory pressure and hope the administrator knows about
+>> >> >> > the counter and what it means. That type of knowledge could take a long
+>> >> >> > time to spread so it's really very important that there is evidence of
+>> >> >> > an application that suffers due to the current MADV_FREE and migration
+>> >> >> > behaviour.
+>> >> >> 
+>> >> >> OK.  I understand that this patchset isn't a universal win, so we need
+>> >> >> some way to justify it.  I will try to find some application for that.
+>> >> >> 
+>> >> >> Another thought, as proposed by David Hildenbrand, it's may be a
+>> >> >> universal win to discard clean MADV_FREE pages when migrating if there are
+>> >> >> already memory pressure on the target node.  For example, if the free
+>> >> >> memory on the target node is lower than high watermark?
+>> >> >
+>> >> > This is already happening because if the target node is short on memory
+>> >> > it will start to reclaim and if MADV_FREE pages are at the tail of
+>> >> > inactive file LRU list then they will be dropped. Please note how that
+>> >> > follows proper aging and doesn't introduce any special casing. Really
+>> >> > MADV_FREE is an inactive cache for anonymous memory and we treat it like
+>> >> > inactive page cache. This is not carved in stone of course but it really
+>> >> > requires very good justification to change.
+>> >> 
+>> >> If my understanding were correct, the newly migrated clean MADV_FREE
+>> >> pages will be put at the head of inactive file LRU list instead of the
+>> >> tail.  So it's possible that some useful file cache pages will be
+>> >> reclaimed.
+>> >
+>> > This is the case also when you migrate other pages, right? We simply
+>> > cannot preserve the aging.
+>> 
+>> So you consider the priority of the clean MADV_FREE pages is same as
+>> that of page cache pages?
 >
->Yeah, I wasn't sure if I should expose modpost_log() and call it
->directly, so I wrapped it in warn_unless(). But I think it's not a big
->deal, so I'll just change it to a direct call. Thank you for the review!
+> This is how MADV_FREE has been implemented, yes. See f7ad2a6cb9f7 ("mm:
+> move MADV_FREE pages into LRU_INACTIVE_FILE list") for the
+> justification.
+
+Thanks for information.  It's really helpful!
+
+>> Because the penalty difference is so large, I
+>> think it may be a good idea to always put clean MADV_FREE pages at the
+>> tail of the inactive file LRU list?
 >
->Jessica
+> You are again making assumptions without giving any actual real
+> examples. Reconstructing MADV_FREE pages cost can differ a lot.
+
+In which situation the cost to reconstruct MADV_FREE pages can be higher
+than the cost to allocate file cache page and read from disk?  Heavy
+contention on mmap_sem?
+
+> This really depends on the specific usecase. Moving pages to the tail
+> of LRU would make them the primary candidate for the reclaim with a
+> strange LIFO semantic. Adding them to the head might be not the
+> universal win but it will at least provide a reasonable FIFO
+> semantic. I also find it much more easier to reason about MADV_FREE as
+> an inactive cache.
+
+Yes.  FIFO is more reasonable than LIFO.
+
+Best Regards,
+Huang, Ying
