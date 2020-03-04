@@ -2,124 +2,123 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AB0BC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E1AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A8AB20CC7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E281820674
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 00:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgCDA3K (ORCPT
+        id S1728358AbgCDAdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 19:29:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:54252 "EHLO foss.arm.com"
+        Tue, 3 Mar 2020 19:33:14 -0500
+Received: from mga06.intel.com ([134.134.136.31]:1425 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727762AbgCDA3K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 19:29:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 605DE30E;
-        Tue,  3 Mar 2020 16:29:09 -0800 (PST)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.198.53])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EF9173F6CF;
-        Tue,  3 Mar 2020 16:29:08 -0800 (PST)
-Date:   Wed, 4 Mar 2020 00:29:07 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     James Morse <james.morse@arm.com>
-Cc:     catalin.marinas@arm.com, will@kernel.org, mark.rutland@arm.com,
-        maz@kernel.org, suzuki.poulose@arm.com, sudeep.holla@arm.com,
-        lukasz.luba@arm.com, valentin.schneider@arm.com,
-        dietmar.eggemann@arm.com, rjw@rjwysocki.net,
-        pkondeti@codeaurora.org, peterz@infradead.org, mingo@redhat.com,
-        vincent.guittot@linaro.org, viresh.kumar@linaro.org,
-        linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Steve Capper <steve.capper@arm.com>
-Subject: Re: [PATCH v5 2/7] arm64: trap to EL1 accesses to AMU counters from
- EL0
-Message-ID: <20200304002907.GB29652@arm.com>
-References: <20200226132947.29738-1-ionela.voinescu@arm.com>
- <20200226132947.29738-3-ionela.voinescu@arm.com>
- <206c1a87-12aa-a4d4-8fc3-0b03c6125897@arm.com>
+        id S1728032AbgCDAdN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 19:33:13 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 16:33:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
+   d="scan'208";a="258566718"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.23])
+  by orsmga002.jf.intel.com with ESMTP; 03 Mar 2020 16:33:09 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Mel Gorman <mgorman@suse.de>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, Zi Yan <ziy@nvidia.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Alexander Duyck <alexander.duyck@gmail.com>
+Subject: Re: [RFC 0/3] mm: Discard lazily freed pages when migrating
+References: <20200228033819.3857058-1-ying.huang@intel.com>
+        <20200228034248.GE29971@bombadil.infradead.org>
+        <87a7538977.fsf@yhuang-dev.intel.com>
+        <edae2736-3239-0bdc-499c-560fc234c974@redhat.com>
+        <871rqf850z.fsf@yhuang-dev.intel.com> <20200228094954.GB3772@suse.de>
+        <87h7z76lwf.fsf@yhuang-dev.intel.com> <20200302151607.GC3772@suse.de>
+        <87zhcy5hoj.fsf@yhuang-dev.intel.com> <20200303130241.GE3772@suse.de>
+Date:   Wed, 04 Mar 2020 08:33:08 +0800
+In-Reply-To: <20200303130241.GE3772@suse.de> (Mel Gorman's message of "Tue, 3
+        Mar 2020 13:02:41 +0000")
+Message-ID: <874kv53qnv.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <206c1a87-12aa-a4d4-8fc3-0b03c6125897@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi James,
+Mel Gorman <mgorman@suse.de> writes:
 
-On Friday 28 Feb 2020 at 16:44:53 (+0000), James Morse wrote:
-> Hi Ionela,
-> 
-> On 26/02/2020 13:29, Ionela Voinescu wrote:
-> > The activity monitors extension is an optional extension introduced
-> > by the ARMv8.4 CPU architecture. In order to access the activity
-> > monitors counters safely, if desired, the kernel should detect the
-> > presence of the extension through the feature register, and mediate
-> > the access.
-> > 
-> > Therefore, disable direct accesses to activity monitors counters
-> > from EL0 (userspace) and trap them to EL1 (kernel).
-> > 
-> > To be noted that the ARM64_AMU_EXTN kernel config and the disable_amu
-> > kernel parameter do not have an effect on this code. Given that the
-> > amuserenr_el0 resets to an UNKNOWN value, setting the trap of EL0
-> > accesses to EL1 is always attempted for safety and security
-> > considerations.
-> 
-> > diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
-> > index aafed6902411..7103027b4e64 100644
-> > --- a/arch/arm64/mm/proc.S
-> > +++ b/arch/arm64/mm/proc.S
-> 
-> > @@ -131,6 +131,7 @@ alternative_endif
-> >  	ubfx	x11, x11, #1, #1
-> >  	msr	oslar_el1, x11
-> >  	reset_pmuserenr_el0 x0			// Disable PMU access from EL0
-> > +	reset_amuserenr_el0 x0			// Disable AMU access from EL0
-> >  
-> >  alternative_if ARM64_HAS_RAS_EXTN
-> >  	msr_s	SYS_DISR_EL1, xzr
-> 
-> (This above hunk is in: cpu_do_resume, and this next one is __cpu_setup,)
-> 
-> > @@ -423,6 +424,8 @@ SYM_FUNC_START(__cpu_setup)
-> >  	isb					// Unmask debug exceptions now,
-> >  	enable_dbg				// since this is per-cpu
-> >  	reset_pmuserenr_el0 x0			// Disable PMU access from EL0
-> > +	reset_amuserenr_el0 x0			// Disable AMU access from EL0
-> 
-> I think you only need this in __cpu_setup. The entry-point from cpu-idle calls:
-> | cpu_resume
-> | ->__cpu_setup
-> | -->reset_amuserenr_el0
-> | ->_cpu_resume
-> | -->cpu_do_resume
-> | --->reset_amuserenr_el0
-> 
-> (Which means the PMU reset call is redundant too).
-> 
+> On Tue, Mar 03, 2020 at 09:51:56AM +0800, Huang, Ying wrote:
+>> Mel Gorman <mgorman@suse.de> writes:
+>> > On Mon, Mar 02, 2020 at 07:23:12PM +0800, Huang, Ying wrote:
+>> >> If some applications cannot tolerate the latency incurred by the memory
+>> >> allocation and zeroing.  Then we cannot discard instead of migrate
+>> >> always.  While in some situations, less memory pressure can help.  So
+>> >> it's better to let the administrator and the application choose the
+>> >> right behavior in the specific situation?
+>> >> 
+>> >
+>> > Is there an application you have in mind that benefits from discarding
+>> > MADV_FREE pages instead of migrating them?
+>> >
+>> > Allowing the administrator or application to tune this would be very
+>> > problematic. An application would require an update to the system call
+>> > to take advantage of it and then detect if the running kernel supports
+>> > it. An administrator would have to detect that MADV_FREE pages are being
+>> > prematurely discarded leading to a slowdown and that is hard to detect.
+>> > It could be inferred from monitoring compaction stats and checking
+>> > if compaction activity is correlated with higher minor faults in the
+>> > target application. Proving the correlation would require using the perf
+>> > software event PERF_COUNT_SW_PAGE_FAULTS_MIN and matching the addresses
+>> > to MADV_FREE regions that were freed prematurely. That is not an obvious
+>> > debugging step to take when an application detects latency spikes.
+>> >
+>> > Now, you could add a counter specifically for MADV_FREE pages freed for
+>> > reasons other than memory pressure and hope the administrator knows about
+>> > the counter and what it means. That type of knowledge could take a long
+>> > time to spread so it's really very important that there is evidence of
+>> > an application that suffers due to the current MADV_FREE and migration
+>> > behaviour.
+>> 
+>> OK.  I understand that this patchset isn't a universal win, so we need
+>> some way to justify it.  I will try to find some application for that.
+>> 
+>> Another thought, as proposed by David Hildenbrand, it's may be a
+>> universal win to discard clean MADV_FREE pages when migrating if there are
+>> already memory pressure on the target node.  For example, if the free
+>> memory on the target node is lower than high watermark?
+>> 
+>
+> That is an extremely specific corner case that is not likely to occur.
+> NUMA balancing is not going to migrate a MADV_FREE page under these
+> circumstances as a write cancels MADV_FREE is read attempt will probably
+> fail to allocate a destination page in alloc_misplaced_dst_page so the
+> data gets lost instead of remaining remote. sys_movepages is a possibility
+> but the circumstances of an application delibertly trying to migrate to
+> a loaded node is low. Compaction never migrates cross-node so the state
+> of a remote node under pressure do not matter.
+>
+> Once again, there needs to be a reasonable use case to be able to
+> meaningfully balance between the benefits and risks of changing the
+> MADV_FREE semantics.
 
-Thanks, that seems to be so. I'll submit a separate fix for both amu
-and pmu, if you don't mind, after this set, so it will be a specific
-cleanup patch.
+OK.  Will try to find some workloads for this.
 
-> Its harmless, and needs cleaning up already, so regardless:
-> Reviewed-by: James Morse <james.morse@arm.com>
-> 
-
-Thank you very much for the review,
-Ionela.
-
-> 
-> 
-> Thanks,
-> 
-> James
+Best Regards,
+Huang, Ying
