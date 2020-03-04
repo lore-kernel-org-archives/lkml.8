@@ -2,92 +2,297 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8085DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E349C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5012A21775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEECA217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583346342;
-	bh=YbxSKTj+LYP9ob1/gIRYSwkiErAazg4kjCl0Ex3B0LE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Axlv6snnNsLweSMSJo+mOZt79gYGvYN3tPQEkBcXUGt6qYDym+BRoQcEzQNrISIjk
-	 bZIAu4XsxGSFCqy1QnJArO0GwXpntGE9oLNcrt3xrm4Ed6GHOcj4q6OlHgoJU60+Np
-	 3yFrrmnfOfA0RN7Nw836JFFoNNUVagT3lLGC279M=
+	s=default; t=1583346399;
+	bh=zSl6hTPq0kY0xIpADM91hM7MUiHWTmv7ooiQ3+D+2Gc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GlUqOku0t/wpkJBljrondZRS8Gh7libL1s71R+4RViFPhDH39ZYXut1xzWFL3c9ZW
+	 QQehn9+8mcydQZBbncegjr451RDDRyr+bm0a1dXNrj7UIAtgleIzaR1v7nNPMLbdDT
+	 1341KA8meMAY3+DXDHij9B11u7BediytCaR5NKpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388181AbgCDSZl (ORCPT
+        id S2388250AbgCDS0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:25:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55220 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 13:26:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728168AbgCDSZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:25:41 -0500
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2388042AbgCDS0h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:26:37 -0500
+Received: from localhost (unknown [104.132.1.66])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EC822166E;
-        Wed,  4 Mar 2020 18:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 604B021775;
+        Wed,  4 Mar 2020 18:26:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583346340;
-        bh=YbxSKTj+LYP9ob1/gIRYSwkiErAazg4kjCl0Ex3B0LE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PVZv48kmmWr7ZkljfCQwnXQ0tlHKmi6HnRX122KFBjjZ+IyRyTU7qhRvV26Dvk/pM
-         KkmsYWYbI+6uPUKxyj9Ax1OtdLu3inphUPfSvxloMv/ywt2kqjno13Db+PkqWdOeo8
-         ITN70bObTvRwqI/1hAc8kPZBXCitxnt8mcOUzXAA=
-Received: by mail-qt1-f179.google.com with SMTP id r6so2102567qtt.9;
-        Wed, 04 Mar 2020 10:25:40 -0800 (PST)
-X-Gm-Message-State: ANhLgQ2JS2x4nRwupxhBMgDlkpesDTF1GgPMA77BzDi9ZP3cnRwfXRcX
-        7vn2F21EYwDQMfqo3sDlOSnn7ED4n0t+jMrOkw==
-X-Google-Smtp-Source: ADFU+vvSKC5FiWZMLwOH/etNBdGnVzaAeXHbZ2Rkz1S9aEp4YeqS83ONsARP9M3LH/0+8SclIoKFCdXkwGzuX7Q/W90=
-X-Received: by 2002:ac8:124d:: with SMTP id g13mr3696997qtj.224.1583346339495;
- Wed, 04 Mar 2020 10:25:39 -0800 (PST)
+        s=default; t=1583346396;
+        bh=zSl6hTPq0kY0xIpADM91hM7MUiHWTmv7ooiQ3+D+2Gc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YFWD+srHM6VWJqDynhbTE6/7/Z7Wv/PxKhbTifAmnTEgywmgKgR226zFT/I8SnWjL
+         19KXny5On2aXeVZh1gL4+wwJtlUwdzvs6Wit7/KoACh+j/WsoyVRRge5OrrH9n+0AU
+         39MZ6S9g8eUA9ul6nGM902A44cTjk5kp2rsE6YFg=
+Date:   Wed, 4 Mar 2020 10:26:35 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org
+Subject: Re: [PATCH v2] f2fs: introduce F2FS_IOC_RELEASE_COMPRESS_BLOCKS
+Message-ID: <20200304182635.GA87370@google.com>
+References: <20200227112621.126505-1-yuchao0@huawei.com>
+ <20200227183052.GA55284@google.com>
+ <8cb4552e-e6a2-e57b-1baa-40171e53e120@huawei.com>
 MIME-Version: 1.0
-References: <cover.1583135507.git.mchehab+huawei@kernel.org> <b7c582284fbca91a7431ff14689ab1be2c6fc410.1583135507.git.mchehab+huawei@kernel.org>
-In-Reply-To: <b7c582284fbca91a7431ff14689ab1be2c6fc410.1583135507.git.mchehab+huawei@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 4 Mar 2020 12:25:28 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+qEA16aGAaVnwX6QAPGnCWqnx_6WNuRb0erVAA3rvYSA@mail.gmail.com>
-Message-ID: <CAL_Jsq+qEA16aGAaVnwX6QAPGnCWqnx_6WNuRb0erVAA3rvYSA@mail.gmail.com>
-Subject: Re: [PATCH v2 04/12] docs: dt: convert booting-without-of.txt to ReST format
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Harry Wei <harryxiyou@gmail.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8cb4552e-e6a2-e57b-1baa-40171e53e120@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 2, 2020 at 1:59 AM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> - Add a SPDX header;
-> - Use copyright symbol;
-> - Adjust document title;
-> - Adjust document and section titles;
-> - Some whitespace fixes and new line breaks;
-> - Mark literal blocks as such;
-> - Add table markups;
-> - Add it to devicetree/index.rst.
+On 02/28, Chao Yu wrote:
+> On 2020/2/28 2:30, Jaegeuk Kim wrote:
+> > On 02/27, Chao Yu wrote:
+> >> There are still reserved blocks on compressed inode, this patch
+> >> introduce a new ioctl to help release reserved blocks back to
+> >> filesystem, so that userspace can reuse those freed space.
+> > 
+> > Hmm, once we release the blocks, what happens if we remove the immutable
+> > bit back?
+> 
+> Oh, if we allow to overwrite on compress file, i_blocks and real physical blocks
+> usage may be inconsistent?
+> 
+> So if we need to support above scenario, should we add another ioctl interface
+> to rollback all compress inode status:
+> - add reserved blocks in dnode blocks
+> - increase i_compr_blocks, i_blocks, total_valid_block_count
+> - remove immutable
 
-Let's skip this doc. It's been on my todo to remove it. It's pretty
-stale and 15 years old. Much of this document is now covered by what's
-in the DT spec. There's a few pieces that aren't which we need to find
-new homes for.
+I think that'd be doable.
 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  Documentation/arm/booting.rst                 |   2 +-
->  ...-without-of.txt => booting-without-of.rst} | 299 ++++++++++--------
->  Documentation/devicetree/index.rst            |   1 +
->  Documentation/translations/zh_CN/arm/Booting  |   2 +-
->  4 files changed, 169 insertions(+), 135 deletions(-)
->  rename Documentation/devicetree/{booting-without-of.txt => booting-without-of.rst} (90%)
+> 
+> Thanks,
+> 
+> > 
+> >>
+> >> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+> >> ---
+> >> v2:
+> >> - set inode as immutable in ioctl.
+> >>  fs/f2fs/f2fs.h |   6 +++
+> >>  fs/f2fs/file.c | 136 ++++++++++++++++++++++++++++++++++++++++++++++++-
+> >>  2 files changed, 141 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> >> index 23b93a116c73..4a02edc2454b 100644
+> >> --- a/fs/f2fs/f2fs.h
+> >> +++ b/fs/f2fs/f2fs.h
+> >> @@ -427,6 +427,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
+> >>  #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
+> >>  #define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
+> >>  #define F2FS_IOC_GET_COMPRESS_BLOCKS	_IOR(F2FS_IOCTL_MAGIC, 17, __u64)
+> >> +#define F2FS_IOC_RELEASE_COMPRESS_BLOCKS				\
+> >> +					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
+> >>  
+> >>  #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
+> >>  #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
+> >> @@ -3956,6 +3958,10 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
+> >>  {
+> >>  	int diff = F2FS_I(inode)->i_cluster_size - blocks;
+> >>  
+> >> +	/* don't update i_compr_blocks if saved blocks were released */
+> >> +	if (!add && !F2FS_I(inode)->i_compr_blocks)
+> >> +		return;
+> >> +
+> >>  	if (add) {
+> >>  		F2FS_I(inode)->i_compr_blocks += diff;
+> >>  		stat_add_compr_blocks(inode, diff);
+> >> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> >> index 37c1147eb244..b8f01ee9d698 100644
+> >> --- a/fs/f2fs/file.c
+> >> +++ b/fs/f2fs/file.c
+> >> @@ -550,6 +550,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+> >>  	bool compressed_cluster = false;
+> >>  	int cluster_index = 0, valid_blocks = 0;
+> >>  	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+> >> +	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
+> >>  
+> >>  	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
+> >>  		base = get_extra_isize(dn->inode);
+> >> @@ -588,7 +589,9 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
+> >>  			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
+> >>  
+> >>  		f2fs_invalidate_blocks(sbi, blkaddr);
+> >> -		nr_free++;
+> >> +
+> >> +		if (released && blkaddr != COMPRESS_ADDR)
+> >> +			nr_free++;
+> >>  	}
+> >>  
+> >>  	if (compressed_cluster)
+> >> @@ -3403,6 +3406,134 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
+> >>  	return put_user(blocks, (u64 __user *)arg);
+> >>  }
+> >>  
+> >> +static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
+> >> +{
+> >> +	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
+> >> +	unsigned int released_blocks = 0;
+> >> +	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
+> >> +
+> >> +	while (count) {
+> >> +		int compr_blocks = 0;
+> >> +		block_t blkaddr = f2fs_data_blkaddr(dn);
+> >> +		int i;
+> >> +
+> >> +		if (blkaddr != COMPRESS_ADDR) {
+> >> +			dn->ofs_in_node += cluster_size;
+> >> +			goto next;
+> >> +		}
+> >> +
+> >> +		for (i = 0; i < cluster_size; i++, dn->ofs_in_node++) {
+> >> +			blkaddr = f2fs_data_blkaddr(dn);
+> >> +
+> >> +			if (__is_valid_data_blkaddr(blkaddr)) {
+> >> +				compr_blocks++;
+> >> +				if (unlikely(!f2fs_is_valid_blkaddr(sbi, blkaddr,
+> >> +							DATA_GENERIC_ENHANCE)))
+> >> +					return -EFSCORRUPTED;
+> >> +			}
+> >> +
+> >> +			if (blkaddr != NEW_ADDR)
+> >> +				continue;
+> >> +
+> >> +			dn->data_blkaddr = NULL_ADDR;
+> >> +			f2fs_set_data_blkaddr(dn);
+> >> +		}
+> >> +
+> >> +		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
+> >> +		dec_valid_block_count(sbi, dn->inode,
+> >> +					cluster_size - compr_blocks);
+> >> +
+> >> +		released_blocks += cluster_size - compr_blocks;
+> >> +next:
+> >> +		count -= cluster_size;
+> >> +	}
+> >> +
+> >> +	return released_blocks;
+> >> +}
+> >> +
+> >> +static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
+> >> +{
+> >> +	struct inode *inode = file_inode(filp);
+> >> +	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
+> >> +	pgoff_t page_idx = 0, last_idx;
+> >> +	unsigned int released_blocks = 0;
+> >> +	int ret;
+> >> +
+> >> +	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
+> >> +		return -EOPNOTSUPP;
+> >> +
+> >> +	if (!f2fs_compressed_file(inode))
+> >> +		return -EINVAL;
+> >> +
+> >> +	if (f2fs_readonly(sbi->sb))
+> >> +		return -EROFS;
+> >> +
+> >> +	ret = mnt_want_write_file(filp);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	if (!F2FS_I(inode)->i_compr_blocks)
+> >> +		goto out;
+> >> +
+> >> +	f2fs_balance_fs(F2FS_I_SB(inode), true);
+> >> +
+> >> +	inode_lock(inode);
+> >> +
+> >> +	if (!IS_IMMUTABLE(inode)) {
+> >> +		F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
+> >> +		f2fs_set_inode_flags(inode);
+> >> +		inode->i_ctime = current_time(inode);
+> >> +		f2fs_mark_inode_dirty_sync(inode, true);
+> >> +	}
+> >> +
+> >> +	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> >> +	down_write(&F2FS_I(inode)->i_mmap_sem);
+> >> +
+> >> +	last_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
+> >> +
+> >> +	while (page_idx < last_idx) {
+> >> +		struct dnode_of_data dn;
+> >> +		pgoff_t end_offset, count;
+> >> +
+> >> +		set_new_dnode(&dn, inode, NULL, NULL, 0);
+> >> +		ret = f2fs_get_dnode_of_data(&dn, page_idx, LOOKUP_NODE);
+> >> +		if (ret) {
+> >> +			if (ret == -ENOENT) {
+> >> +				page_idx = f2fs_get_next_page_offset(&dn,
+> >> +								page_idx);
+> >> +				ret = 0;
+> >> +				continue;
+> >> +			}
+> >> +			break;
+> >> +		}
+> >> +
+> >> +		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
+> >> +		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
+> >> +
+> >> +		ret = release_compress_blocks(&dn, count);
+> >> +
+> >> +		f2fs_put_dnode(&dn);
+> >> +
+> >> +		if (ret < 0)
+> >> +			break;
+> >> +
+> >> +		page_idx += count;
+> >> +		released_blocks += ret;
+> >> +	}
+> >> +
+> >> +	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
+> >> +	up_write(&F2FS_I(inode)->i_mmap_sem);
+> >> +
+> >> +	inode_unlock(inode);
+> >> +out:
+> >> +	mnt_drop_write_file(filp);
+> >> +
+> >> +	if (!ret)
+> >> +		ret = put_user(released_blocks, (u64 __user *)arg);
+> >> +
+> >> +	return ret;
+> >> +}
+> >> +
+> >>  long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> >>  {
+> >>  	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
+> >> @@ -3483,6 +3614,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+> >>  		return f2fs_set_volume_name(filp, arg);
+> >>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+> >>  		return f2fs_get_compress_blocks(filp, arg);
+> >> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+> >> +		return f2fs_release_compress_blocks(filp, arg);
+> >>  	default:
+> >>  		return -ENOTTY;
+> >>  	}
+> >> @@ -3643,6 +3776,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+> >>  	case F2FS_IOC_GET_VOLUME_NAME:
+> >>  	case F2FS_IOC_SET_VOLUME_NAME:
+> >>  	case F2FS_IOC_GET_COMPRESS_BLOCKS:
+> >> +	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
+> >>  		break;
+> >>  	default:
+> >>  		return -ENOIOCTLCMD;
+> >> -- 
+> >> 2.18.0.rc1
+> > .
+> > 
