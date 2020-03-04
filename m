@@ -2,108 +2,106 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7245C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7B9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C05EE21775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="qUya1I+I"
+	by mail.kernel.org (Postfix) with ESMTP id 3274C20848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 11:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729235AbgCDL30 (ORCPT
+        id S2387841AbgCDLdB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 06:29:26 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:43796 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729118AbgCDL30 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 06:29:26 -0500
-Received: by mail-qk1-f193.google.com with SMTP id q18so1161584qki.10
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 03:29:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Jx+iSwpjH1MMUgtvqiqrwQ2sYugCQ9UmLyXay35eB1Q=;
-        b=qUya1I+ID7bIC0Bkj4Q0zp0EdHdSdO6ykJWvMXw4HKDFjWyXV8ds3Bs9MArm+vdQdc
-         RpunjqglWR6mGJe2Lv7g9advYS1SvRo9LA3gCW5QqI/AMIgsHiHRUFAsdYeij2rtzyTk
-         sNSh4wHESGW+6lSzw7OKW4psbfNeqxjoimBZufpM/BoHmrYBRoQNs3Xc2GtPgWnsfXPf
-         igl3aC/5VPWbzpP3KfCNQ0wpC8Mh4VlwHq19u+9gw6f3Ulw8FCMZG8YCqNbscon2aj4Z
-         WYfZ5PGzedI3tG7vyVtTX+unDExTi5VMHoWYOeG+xlDzhECpmkCqkM7aufo6LUVMsIwj
-         NApA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Jx+iSwpjH1MMUgtvqiqrwQ2sYugCQ9UmLyXay35eB1Q=;
-        b=qRt2WmcNZxfcRzZAjOLC4RoBCghWq6AN1BRNLACAQVWXMuhg2EcPp5XK7NOcXGNyT0
-         jNzaKff9PAiVuRyJFO4EJ3O3EHe+0LMV/YPEK1oBb+k03i+3b9me3+Yaum1hlMPUVTzY
-         TTa+VPkBIcOs2m9/F3o9/ucm4hR3D3omNszRS+LqoDY85djl8PuzqoNp7QiDWhuK4JVm
-         hnLaj5ChF4+fTz0bZ9gUVvKQE7R9WfVBWoidJI+hWHvPA2LoAE7VPN7aG3Chvp/ICUCg
-         gDT+IXDSYzkOgnmS5G9HcTyN/JxUx4oyMhzoCA/IjnS7EWtui/sCl0k2JH6yIkI68bx1
-         9N6Q==
-X-Gm-Message-State: ANhLgQ2qdVLw4RPfV3P8hd6urvxp381yz8kXssXHflfJitFLWRfGUbp9
-        uFrOHKLiNg9O9qnIn6xLQSiQQA==
-X-Google-Smtp-Source: ADFU+vsraAELUldtqJkt+JLHLEkp9XWZWryntOEccYsrwg70reKk2W+439zfYVSLClVswo3lxz5LLw==
-X-Received: by 2002:a37:6115:: with SMTP id v21mr2464683qkb.105.1583321365177;
-        Wed, 04 Mar 2020 03:29:25 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u48sm85943qtc.79.2020.03.04.03.29.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 03:29:24 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page table helpers
-Date:   Wed, 4 Mar 2020 06:29:23 -0500
-Message-Id: <11F41980-97CF-411F-8120-41287DC1A382@lca.pw>
-References: <c022e863-0807-fab1-cd41-3c320381f448@c-s.fr>
-Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org, linux-riscv@lists.infradead.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-In-Reply-To: <c022e863-0807-fab1-cd41-3c320381f448@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-X-Mailer: iPhone Mail (17D50)
+        Wed, 4 Mar 2020 06:33:01 -0500
+Received: from vps-vb.mhejs.net ([37.28.154.113]:57462 "EHLO vps-vb.mhejs.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729256AbgCDLdA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 06:33:00 -0500
+Received: from MUA
+        by vps-vb.mhejs.net with esmtps (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.92.3)
+        (envelope-from <mail@maciej.szmigiero.name>)
+        id 1j9SGj-0000pl-Un; Wed, 04 Mar 2020 12:32:53 +0100
+From:   "Maciej S. Szmigiero" <mail@maciej.szmigiero.name>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>, kvm@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] cpuidle-haltpoll: allow force loading on hosts without the REALTIME hint
+Date:   Wed,  4 Mar 2020 12:32:48 +0100
+Message-Id: <20200304113248.1143057-1-mail@maciej.szmigiero.name>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Maciej S. Szmigiero" <maciej.szmigiero@oracle.com>
 
+Before commit 1328edca4a14 ("cpuidle-haltpoll: Enable kvm guest polling
+when dedicated physical CPUs are available") the cpuidle-haltpoll driver
+could also be used in scenarios when the host does not advertise the
+KVM_HINTS_REALTIME hint.
 
-> On Mar 4, 2020, at 1:49 AM, Christophe Leroy <christophe.leroy@c-s.fr> wro=
-te:
->=20
-> AFAIU, you are not taking an interrupt here. You are stuck in the pte_upda=
-te(), most likely due to nested locks. Try with LOCKDEP ?
+While the behavior introduced by the aforementioned commit makes sense as
+the default there are cases where the old behavior is desired, for example,
+when other kernel changes triggered by presence by this hint are unwanted,
+for some workloads where the latency benefit from polling overweights the
+loss from idle CPU capacity that otherwise would be available, or just when
+running under older Qemu versions that lack this hint.
 
-Not exactly sure what did you mean here, but the kernel has all lockdep enab=
-led and did not flag anything here.=
+Let's provide a typical "force" module parameter that allows restoring the
+old behavior.
+
+Signed-off-by: Maciej S. Szmigiero <maciej.szmigiero@oracle.com>
+---
+ drivers/cpuidle/cpuidle-haltpoll.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+Changes from v1:
+Make the module parameter description more general, don't unnecessarily
+break a line in haltpoll_init().
+
+diff --git a/drivers/cpuidle/cpuidle-haltpoll.c b/drivers/cpuidle/cpuidle-haltpoll.c
+index b0ce9bc78113..db124bc1ca2c 100644
+--- a/drivers/cpuidle/cpuidle-haltpoll.c
++++ b/drivers/cpuidle/cpuidle-haltpoll.c
+@@ -18,6 +18,10 @@
+ #include <linux/kvm_para.h>
+ #include <linux/cpuidle_haltpoll.h>
+ 
++static bool force __read_mostly;
++module_param(force, bool, 0444);
++MODULE_PARM_DESC(force, "Load unconditionally");
++
+ static struct cpuidle_device __percpu *haltpoll_cpuidle_devices;
+ static enum cpuhp_state haltpoll_hp_state;
+ 
+@@ -90,6 +94,11 @@ static void haltpoll_uninit(void)
+ 	haltpoll_cpuidle_devices = NULL;
+ }
+ 
++static bool haltpool_want(void)
++{
++	return kvm_para_has_hint(KVM_HINTS_REALTIME) || force;
++}
++
+ static int __init haltpoll_init(void)
+ {
+ 	int ret;
+@@ -101,8 +110,7 @@ static int __init haltpoll_init(void)
+ 
+ 	cpuidle_poll_state_init(drv);
+ 
+-	if (!kvm_para_available() ||
+-		!kvm_para_has_hint(KVM_HINTS_REALTIME))
++	if (!kvm_para_available() || !haltpool_want())
+ 		return -ENODEV;
+ 
+ 	ret = cpuidle_register_driver(drv);
