@@ -2,399 +2,117 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1980BC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F463C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4E2D20828
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:06:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sQSUKjVr"
+	by mail.kernel.org (Postfix) with ESMTP id 67BF620848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:14:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583360048;
+	bh=L+PmTnojJEfdHrn+v1Qfp4HJ6oT+DETDCMkAqiA6GDo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SC1nHbWzz5r3SZazcdeRR1unEnXAjWjlGyIUGzA/LNgoX4rTfmrCaCfrSJ7oaFJJ5
+	 eclCtFtSOK4pQaTTG27J2T89J+Yc3YVBW/l3SnQenCX9urh9Mw2abdvvVrsY/M+KRl
+	 wKlZ7iuubB26Y2aI3m4zy4hYc7yS9xx0Isot0EXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbgCDWGw (ORCPT
+        id S2388437AbgCDWOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:06:52 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:39071 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727528AbgCDWGw (ORCPT
+        Wed, 4 Mar 2020 17:14:06 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:43456 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388389AbgCDWOG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:06:52 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j20so1247871pll.6;
-        Wed, 04 Mar 2020 14:06:51 -0800 (PST)
+        Wed, 4 Mar 2020 17:14:06 -0500
+Received: by mail-io1-f66.google.com with SMTP id n21so4184923ioo.10
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 14:14:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=a67KR+mQwGXKiG5xl3Mg7JRZjtzreqqjYwawM0USZNU=;
-        b=sQSUKjVrMmgEJiapiP4qy15zIPgA26elizA3W3Ja/ODza8s0ZqiRy+uUiKTQVxCegQ
-         JCddMTX0nB+3j/0WxEiUKusdqHcye1b5Dvd1hVF8n9Nm2Y8EY0f7mPzJ847OjEXgLkH/
-         RFp20H0Fppxs0DEhrNZlB4qMdd//0oTXeyfecgqKmokniTHVwZxGYZVsNKs+2cUewic9
-         SO9NwLYRCjGDlWzZh9Y+qnvj2/xM2Rnbllkmc8mllsAIuVtvoyKMmi4hu4JZedRw32vy
-         4Jl6bi/Bg06xCvFmvCYEa0ByT6/ITGvPEw8g0nX/AtiXVQ6g9m0sVpnd/btRo9FmkufD
-         IaoQ==
+        d=linuxfoundation.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5RZnySPr2P+YN4LWk4hB1TPPuvNEvChvRV3l/kgeEwU=;
+        b=PD9GxB+apE6cVObJRfsp5PWD0Cc8EUWjgheljvrVaHsQrwpzXyquxRPPow9txiSNwW
+         sKESrBfxYVCgiMdliBnJdX7ycHA7Bs4M1W0hgJpzP+3N2FYRTi2nw2trTR8PSflwYOiG
+         Oa7Fa3aBsGMCYqI9o2PM7ISkI5DyqA3CEme2c=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a67KR+mQwGXKiG5xl3Mg7JRZjtzreqqjYwawM0USZNU=;
-        b=VCmwI1sKrgY0YYPXLuRQueDvup9qTeThdedGbnDRxAt8hKIXG32DrsCfsDOlo4LDXK
-         Zt7+zq1ZmzMZXVOoESqE9L9BWn/cgHZ0s9VyBwCqnH+B2eOGV+pAsjnFSdSBJl9Kt2bz
-         ON04hqJW6xwVOjCzAmeZ5hzfPc9NGb9Z0+ofWdTcBp+0Y/pd8QQwJEany4XHX4DXE7Hh
-         aSJFyJbNzaIflbyqeu2SeaRU9Xk3GnR6lNPS7Lq6bT9h+Ju4oKYwRNsCGBjjkOIOQU9R
-         Rs4biy2HEpd2jIyNMFWVt/3C+Q7fB67iXR/whMlrkFp653QP2PCYvv0xcgXJ3UgTAHcg
-         MmvA==
-X-Gm-Message-State: ANhLgQ1uQUgYZY0Mjs7CQ8J6Cu2LzBHjBV4dKL2HVNsoIOj2m+1NLSDV
-        0P/dc94GGNaGHyftIjuANfPdGami
-X-Google-Smtp-Source: ADFU+vuDcMgi7fWTUjpw8hQbmNOgcBzFt4F/W+3jPAEyL+EZh6m9//zcMsgHV4n/gtVLq/HC6w9xkg==
-X-Received: by 2002:a17:90a:eac9:: with SMTP id ev9mr4954032pjb.80.1583359611229;
-        Wed, 04 Mar 2020 14:06:51 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b4sm30468782pfd.18.2020.03.04.14.06.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Mar 2020 14:06:49 -0800 (PST)
-Date:   Wed, 4 Mar 2020 14:06:48 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCHv3 3/4] watchdog: Add K3 RTI watchdog support
-Message-ID: <20200304220648.GA31640@roeck-us.net>
-References: <aed89814-a78b-4a59-7673-bce5de34022d@roeck-us.net>
- <20200304104214.8625-1-t-kristo@ti.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5RZnySPr2P+YN4LWk4hB1TPPuvNEvChvRV3l/kgeEwU=;
+        b=Tl8ABxj5BF4IOB+tH33X3VZDwC6bYT3icTDE62o+bCA9pEtucewbCZJ3HO+pIKpQAi
+         iBaQXFj0Qj5g+1ajk//KP14kLfuPG9D3pXM094EjMZeJ81PCk7lrdydlly6kMWHHan1A
+         aA3YqRL6GDMUZ6W7e6jDaTfMw++ZC20vP73j0nNMjOG3XJVHGL5hQ5l4jWTYCtijR8u6
+         XWIx2FHuGckdcizcZqvnuZUkYLYasUwc97nv0EOBV3Ep7/4XWbfsuwPnqmDpTOX7dH1O
+         Ki83uTSFNy5qWuSJs0e19v/8iSiE/aWxkfZtpk7bVwmhIi9W3mCW0DgszSg/SttGWzgP
+         Z65A==
+X-Gm-Message-State: ANhLgQ1LpKaUq0FoFqBdxHPtRBSiZ8DksyNjPt4Ow3Njh+ioSax1AdgJ
+        io8HcX1uVqSvFXkJnqqcNtCnDA==
+X-Google-Smtp-Source: ADFU+vvbVUBntaUuM+BR9AtlDvcRMDW37o/tSJ1CxI9aA+ZUljxG1XOijk2DoUbaKr8ANC+GyheLRQ==
+X-Received: by 2002:a6b:6007:: with SMTP id r7mr4147160iog.223.1583360042621;
+        Wed, 04 Mar 2020 14:14:02 -0800 (PST)
+Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id g12sm6850409iom.5.2020.03.04.14.14.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 14:14:01 -0800 (PST)
+From:   Shuah Khan <skhan@linuxfoundation.org>
+To:     shuah@kernel.org, keescook@chromium.org, luto@amacapital.net,
+        wad@chromium.org, daniel@iogearbox.net, kafai@fb.com, yhs@fb.com,
+        andriin@fb.com, gregkh@linuxfoundation.org, tglx@linutronix.de
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, khilman@baylibre.com,
+        mpe@ellerman.id.au, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: [PATCH 0/4] Kselftest integration into Kernel CI - Part 1
+Date:   Wed,  4 Mar 2020 15:13:31 -0700
+Message-Id: <cover.1583358715.git.skhan@linuxfoundation.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200304104214.8625-1-t-kristo@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 12:42:14PM +0200, Tero Kristo wrote:
-> Texas Instruments K3 SoCs contain an RTI (Real Time Interrupt) module
-> which can be used as a watchdog. This IP provides a support for
-> windowed watchdog mode, in which the watchdog must be petted within
-> a certain time window. If it is petted either too soon, or too late,
-> a watchdog error will be triggered.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+This patch series consists of first round of fixes to integrate
+Kselftest into Kernel CI.
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+You can find full list of problems in my announcement I sent out
+last week:
 
-> ---
-> v3:
->   * changed to use clk_get/put instead of devm_* versions of this
-> 
-> v2:
->   * Added better documentation within the driver code
->   * Dropped fck handle, instead get the fck rate during probe only
->   * Modified the max_hw_heartbeat calculation logic a bit
-> 
->  drivers/watchdog/Kconfig   |   8 ++
->  drivers/watchdog/Makefile  |   1 +
->  drivers/watchdog/rti_wdt.c | 255 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 261 insertions(+)
->  create mode 100644 drivers/watchdog/rti_wdt.c
-> 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index cec868f8db3f..81faf47d44a6 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -583,6 +583,14 @@ config DAVINCI_WATCHDOG
->  	  NOTE: once enabled, this timer cannot be disabled.
->  	  Say N if you are unsure.
->  
-> +config K3_RTI_WATCHDOG
-> +	tristate "Texas Instruments K3 RTI watchdog"
-> +	depends on ARCH_K3 || COMPILE_TEST
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Say Y here if you want to include support for the K3 watchdog
-> +	  timer (RTI module) available in the K3 generation of processors.
-> +
->  config ORION_WATCHDOG
->  	tristate "Orion watchdog"
->  	depends on ARCH_ORION5X || ARCH_DOVE || MACH_DOVE || ARCH_MVEBU || (COMPILE_TEST && !ARCH_EBSA110)
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index 2ee352bf3372..6de2e4ceef19 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -57,6 +57,7 @@ obj-$(CONFIG_EP93XX_WATCHDOG) += ep93xx_wdt.o
->  obj-$(CONFIG_PNX4008_WATCHDOG) += pnx4008_wdt.o
->  obj-$(CONFIG_IOP_WATCHDOG) += iop_wdt.o
->  obj-$(CONFIG_DAVINCI_WATCHDOG) += davinci_wdt.o
-> +obj-$(CONFIG_K3_RTI_WATCHDOG) += rti_wdt.o
->  obj-$(CONFIG_ORION_WATCHDOG) += orion_wdt.o
->  obj-$(CONFIG_SUNXI_WATCHDOG) += sunxi_wdt.o
->  obj-$(CONFIG_RN5T618_WATCHDOG) += rn5t618_wdt.o
-> diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
-> new file mode 100644
-> index 000000000000..7a46c40891e2
-> --- /dev/null
-> +++ b/drivers/watchdog/rti_wdt.c
-> @@ -0,0 +1,255 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Watchdog driver for the K3 RTI module
-> + *
-> + * (c) Copyright 2019-2020 Texas Instruments Inc.
-> + * All rights reserved.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/moduleparam.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/types.h>
-> +#include <linux/watchdog.h>
-> +
-> +#define DEFAULT_HEARTBEAT 60
-> +
-> +/* Max heartbeat is calculated at 32kHz source clock */
-> +#define MAX_HEARTBEAT	1000
-> +
-> +/* Timer register set definition */
-> +#define RTIDWDCTRL	0x90
-> +#define RTIDWDPRLD	0x94
-> +#define RTIWDSTATUS	0x98
-> +#define RTIWDKEY	0x9c
-> +#define RTIDWDCNTR	0xa0
-> +#define RTIWWDRXCTRL	0xa4
-> +#define RTIWWDSIZECTRL	0xa8
-> +
-> +#define RTIWWDRX_NMI	0xa
-> +
-> +#define RTIWWDSIZE_50P	0x50
-> +
-> +#define WDENABLE_KEY	0xa98559da
-> +
-> +#define WDKEY_SEQ0		0xe51a
-> +#define WDKEY_SEQ1		0xa35c
-> +
-> +#define WDT_PRELOAD_SHIFT	13
-> +
-> +#define WDT_PRELOAD_MAX		0xfff
-> +
-> +#define DWDST			BIT(1)
-> +
-> +static int heartbeat;
-> +
-> +/*
-> + * struct to hold data for each WDT device
-> + * @base - base io address of WD device
-> + * @freq - source clock frequency of WDT
-> + * @wdd  - hold watchdog device as is in WDT core
-> + */
-> +struct rti_wdt_device {
-> +	void __iomem		*base;
-> +	unsigned long		freq;
-> +	struct watchdog_device	wdd;
-> +};
-> +
-> +static int rti_wdt_start(struct watchdog_device *wdd)
-> +{
-> +	u32 timer_margin;
-> +	struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	/* set timeout period */
-> +	timer_margin = (u64)wdd->timeout * wdt->freq;
-> +	timer_margin >>= WDT_PRELOAD_SHIFT;
-> +	if (timer_margin > WDT_PRELOAD_MAX)
-> +		timer_margin = WDT_PRELOAD_MAX;
-> +	writel_relaxed(timer_margin, wdt->base + RTIDWDPRLD);
-> +
-> +	/*
-> +	 * RTI only supports a windowed mode, where the watchdog can only
-> +	 * be petted during the open window; not too early or not too late.
-> +	 * The HW configuration options only allow for the open window size
-> +	 * to be 50% or less than that; we obviouly want to configure the open
-> +	 * window as large as possible so we select the 50% option. To avoid
-> +	 * any glitches, we accommodate 5% safety margin also, so we setup
-> +	 * the min_hw_hearbeat at 55% of the timeout period.
-> +	 */
-> +	wdd->min_hw_heartbeat_ms = 11 * wdd->timeout * 1000 / 20;
-> +
-> +	/* Generate NMI when wdt expires */
-> +	writel_relaxed(RTIWWDRX_NMI, wdt->base + RTIWWDRXCTRL);
-> +
-> +	/* Open window size 50%; this is the largest window size available */
-> +	writel_relaxed(RTIWWDSIZE_50P, wdt->base + RTIWWDSIZECTRL);
-> +
-> +	readl_relaxed(wdt->base + RTIWWDSIZECTRL);
-> +
-> +	/* enable watchdog */
-> +	writel_relaxed(WDENABLE_KEY, wdt->base + RTIDWDCTRL);
-> +	return 0;
-> +}
-> +
-> +static int rti_wdt_ping(struct watchdog_device *wdd)
-> +{
-> +	struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	/* put watchdog in service state */
-> +	writel_relaxed(WDKEY_SEQ0, wdt->base + RTIWDKEY);
-> +	/* put watchdog in active state */
-> +	writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
-> +
-> +	return 0;
-> +}
-> +
-> +static unsigned int rti_wdt_get_timeleft(struct watchdog_device *wdd)
-> +{
-> +	u64 timer_counter;
-> +	u32 val;
-> +	struct rti_wdt_device *wdt = watchdog_get_drvdata(wdd);
-> +
-> +	/* if timeout has occurred then return 0 */
-> +	val = readl_relaxed(wdt->base + RTIWDSTATUS);
-> +	if (val & DWDST)
-> +		return 0;
-> +
-> +	timer_counter = readl_relaxed(wdt->base + RTIDWDCNTR);
-> +
-> +	do_div(timer_counter, wdt->freq);
-> +
-> +	return timer_counter;
-> +}
-> +
-> +static const struct watchdog_info rti_wdt_info = {
-> +	.options = WDIOF_KEEPALIVEPING,
-> +	.identity = "K3 RTI Watchdog",
-> +};
-> +
-> +static const struct watchdog_ops rti_wdt_ops = {
-> +	.owner		= THIS_MODULE,
-> +	.start		= rti_wdt_start,
-> +	.ping		= rti_wdt_ping,
-> +	.get_timeleft	= rti_wdt_get_timeleft,
-> +};
-> +
-> +static int rti_wdt_probe(struct platform_device *pdev)
-> +{
-> +	int ret = 0;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *wdt_mem;
-> +	struct watchdog_device *wdd;
-> +	struct rti_wdt_device *wdt;
-> +	struct clk *clk;
-> +
-> +	wdt = devm_kzalloc(dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-> +	clk = clk_get(dev, NULL);
-> +	if (IS_ERR(clk)) {
-> +		if (PTR_ERR(clk) != -EPROBE_DEFER)
-> +			dev_err(dev, "failed to get clock\n");
-> +		return PTR_ERR(clk);
-> +	}
-> +
-> +	wdt->freq = clk_get_rate(clk);
-> +
-> +	clk_put(clk);
-> +
-> +	if (!wdt->freq) {
-> +		dev_err(dev, "Failed to get fck rate.\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	pm_runtime_enable(dev);
-> +	ret = pm_runtime_get_sync(dev);
-> +	if (ret) {
-> +		if (ret != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "runtime pm failed\n");
-> +		return ret;
-> +	}
-> +
-> +	platform_set_drvdata(pdev, wdt);
-> +
-> +	wdd = &wdt->wdd;
-> +	wdd->info = &rti_wdt_info;
-> +	wdd->ops = &rti_wdt_ops;
-> +	wdd->min_timeout = 1;
-> +	wdd->max_hw_heartbeat_ms = (WDT_PRELOAD_MAX << WDT_PRELOAD_SHIFT) /
-> +		wdt->freq * 1000;
-> +	wdd->timeout = DEFAULT_HEARTBEAT;
-> +	wdd->parent = dev;
-> +
-> +	watchdog_init_timeout(wdd, heartbeat, dev);
-> +
-> +	watchdog_set_drvdata(wdd, wdt);
-> +	watchdog_set_nowayout(wdd, 1);
-> +	watchdog_set_restart_priority(wdd, 128);
-> +
-> +	wdt_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	wdt->base = devm_ioremap_resource(dev, wdt_mem);
-> +	if (IS_ERR(wdt->base)) {
-> +		ret = PTR_ERR(wdt->base);
-> +		goto err_iomap;
-> +	}
-> +
-> +	ret = watchdog_register_device(wdd);
-> +	if (ret) {
-> +		dev_err(dev, "cannot register watchdog device\n");
-> +		goto err_iomap;
-> +	}
-> +
-> +	return 0;
-> +
-> +err_iomap:
-> +	pm_runtime_put_sync(&pdev->dev);
-> +
-> +	return ret;
-> +}
-> +
-> +static int rti_wdt_remove(struct platform_device *pdev)
-> +{
-> +	struct rti_wdt_device *wdt = platform_get_drvdata(pdev);
-> +
-> +	watchdog_unregister_device(&wdt->wdd);
-> +	pm_runtime_put(&pdev->dev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id rti_wdt_of_match[] = {
-> +	{ .compatible = "ti,rti-wdt", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, rti_wdt_of_match);
-> +
-> +static struct platform_driver rti_wdt_driver = {
-> +	.driver = {
-> +		.name = "rti-wdt",
-> +		.of_match_table = rti_wdt_of_match,
-> +	},
-> +	.probe = rti_wdt_probe,
-> +	.remove = rti_wdt_remove,
-> +};
-> +
-> +module_platform_driver(rti_wdt_driver);
-> +
-> +MODULE_AUTHOR("Tero Kristo <t-kristo@ti.com>");
-> +MODULE_DESCRIPTION("K3 RTI Watchdog Driver");
-> +
-> +module_param(heartbeat, int, 0);
-> +MODULE_PARM_DESC(heartbeat,
-> +		 "Watchdog heartbeat period in seconds from 1 to "
-> +		 __MODULE_STRING(MAX_HEARTBEAT) ", default "
-> +		 __MODULE_STRING(DEFAULT_HEARTBEAT));
-> +
-> +MODULE_LICENSE("GPL");
-> +MODULE_ALIAS("platform:rti-wdt");
-> -- 
-> 2.17.1
-> 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+https://lkml.org/lkml/2020/2/27/2221
+
+These fixes to android and seccomp tests address relocatable support.
+However, they will still leave the source directory dirty.
+
+android test does headers_install in source directory. This is an easier
+problem to fix. seccomp on the other hand builds fixdep scripts under
+scripts/basic and installs headers in the source directory. It is linked
+to solving bpf relocatable build issue which I haven't given it a lot of
+thought for now.
+
+There is no dependency on source directory for run-time which is what
+we want.
+
+I will apply these kernelci topic branch for testing 
+git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git
+
+Shuah Khan (4):
+  selftests: Fix kselftest O=objdir build from cluttering top level
+    objdir
+  selftests: Fix seccomp to support relocatable build (O=objdir)
+  selftests: android: ion: Fix ionmap_test compile error
+  selftests: android: Fix custom install from skipping test progs
+
+ tools/testing/selftests/Makefile             |  4 ++--
+ tools/testing/selftests/android/Makefile     |  2 +-
+ tools/testing/selftests/android/ion/Makefile |  2 +-
+ tools/testing/selftests/seccomp/Makefile     | 16 +++-------------
+ 4 files changed, 7 insertions(+), 17 deletions(-)
+
+-- 
+2.20.1
+
