@@ -2,152 +2,111 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F1DC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D52C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F42C2146E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C49120848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:07:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="LikPfLGL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoFgc9EY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388030AbgCDMDc (ORCPT
+        id S1729345AbgCDMHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:03:32 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:35835 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387969AbgCDMDc (ORCPT
+        Wed, 4 Mar 2020 07:07:24 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:53668 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgCDMHX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:03:32 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583323411; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=w8/VI8a0yZGZ+S81+DrlT9/VeEz0sSf8UqnT8L9K+Uw=;
- b=LikPfLGLJxwMhhjV0fwHTXtIfJVgZTLPiXHufZCFcrZ97yTfMkNQunq5ZRIxPA0VOSlFFimk
- YKQaExU+lHpqa16PKQ0721ij37oFL7rQHNxBaKrVXQfy/6ZyPV/AtCmJD0ZHMtVrTqEYLx7l
- 9oUrtji7arGnjj0id3iXjB5IAd8=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e5f98f6.7f1ee30c25e0-smtp-out-n03;
- Wed, 04 Mar 2020 12:03:02 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E17B8C433A2; Wed,  4 Mar 2020 12:03:01 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: rjliao)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8665EC43383;
-        Wed,  4 Mar 2020 12:03:01 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 04 Mar 2020 20:03:01 +0800
-From:   Rocky Liao <rjliao@codeaurora.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, bgodavar@codeaurora.org,
-        c-hbandi@codeaurora.org, hemantg@codeaurora.org, mka@chromium.org,
-        linux-bluetooth-owner@vger.kernel.org
-Subject: Re: [PATCH v1] Bluetooth: hci_qca: Make bt_en and susclk not
- mandatory for QCA Rome
-In-Reply-To: <20200304085341.GF32540@localhost>
-References: <20200304015429.20615-1-rjliao@codeaurora.org>
- <20200304085341.GF32540@localhost>
-Message-ID: <fc80e98e2b82ba5b6852252bc57db2e8@codeaurora.org>
-X-Sender: rjliao@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Wed, 4 Mar 2020 07:07:23 -0500
+Received: by mail-wm1-f66.google.com with SMTP id g134so1776003wme.3;
+        Wed, 04 Mar 2020 04:07:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=myVXMYFX2X/qFZZm2xeEMnLsYe1/6jCcOyrKkOqzPDw=;
+        b=RoFgc9EYaJKBf1aB1IsygPxKb4ptdXvkuI/fe+HFyJ+YGDbsS/jbGRIbMzy+YfoeW9
+         KmZNAFgtTleKiIUhlmvPABHtFX3g/a0/m0h665SvZ51d7YDI5Lw/uT9SoStPXkEGSK4q
+         V0PhnnTM1Cmg3OoQb0XbUYCL3GknBMajIslcuCTPsO1TJBlnkLUgc79gmDnzQ83rwJF6
+         Sb7UVMkoy7VsTNXHM39B/Rr5ygFKPmobnLVyTHAB8LmOS3YOVWWTMw8eaGyEB6J1Ilxp
+         E3VKN5Olxi20GUwgBtoKfgGgDfpPZd4baDEp6repdRw2GCkAzUT/2H8U2lOC8MIj83qQ
+         ePAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=myVXMYFX2X/qFZZm2xeEMnLsYe1/6jCcOyrKkOqzPDw=;
+        b=o8ng05lbi4jbLWWp87d3vcIr2DBhw5/MUH3l3Zv11mOAuaW4i9YzLgfpTJj6XSTHJE
+         QguAXdIvMYSfbaVoi6+g1BeH2JwtR9X8/MISwXEKYlKvkSH3cYblzuas0rkWDfOrpueB
+         sUcoCPHaYziqEYSZJJmeyEu20xst70B53o7+LZzHwV3inIrlIUzQPlqSGm347W3TvPKq
+         ofzYDmF+oRqmUgsyDUoXIxI8zCf1Hj1nEG6a35FgWcfd+GYxW6P9ylq1Fw/07GJIx+2e
+         wQWKWBfZIIOx2PIXWanqo8Z2nCO0Wf4KqOX7jWcdnyOXvS3YdcCBWcjyfc49jKSmABGq
+         UvzQ==
+X-Gm-Message-State: ANhLgQ22XRqRDmLNKvMSpKvyf0M7yJ5jeJbvu4Xi80vkzvC93QlVSAHy
+        rK7MWu1CknxO/dOWz2IiyiY=
+X-Google-Smtp-Source: ADFU+vsLvouiMTzcVlXfgCXVqwVxFQI+p2PE0dPIx/YTYl4CzKad7DsO4l3zlagL0leqIqigsIv9Ew==
+X-Received: by 2002:a05:600c:2281:: with SMTP id 1mr3362110wmf.120.1583323641513;
+        Wed, 04 Mar 2020 04:07:21 -0800 (PST)
+Received: from felia.fritz.box ([2001:16b8:2d16:4100:3093:39f0:d3ca:23c6])
+        by smtp.gmail.com with ESMTPSA id c26sm3811993wmb.8.2020.03.04.04.07.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 04:07:20 -0800 (PST)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+To:     =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        Sebastian Duda <sebastian.duda@fau.de>,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Subject: [PATCH] MAINTAINERS: adjust to reservation.h renaming
+Date:   Wed,  4 Mar 2020 13:07:11 +0100
+Message-Id: <20200304120711.12117-1-lukas.bulwahn@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-在 2020-03-04 16:53，Johan Hovold 写道：
-> On Wed, Mar 04, 2020 at 09:54:29AM +0800, Rocky Liao wrote:
->> On some platforms the bt_en pin and susclk are default on and there
->> is no exposed resource to control them. This patch makes the bt_en
->> and susclk not mandatory to have BT work. It also will not set the
->> HCI_QUIRK_NON_PERSISTENT_SETUP and shutdown() callback if bt_en is
->> not available.
->> 
->> Signed-off-by: Rocky Liao <rjliao@codeaurora.org>
->> ---
->>  drivers/bluetooth/hci_qca.c | 47 
->> ++++++++++++++++++++-----------------
->>  1 file changed, 26 insertions(+), 21 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
->> index bf436d6e638e..325baa046c3a 100644
->> --- a/drivers/bluetooth/hci_qca.c
->> +++ b/drivers/bluetooth/hci_qca.c
->> @@ -1562,9 +1562,11 @@ static int qca_power_on(struct hci_dev *hdev)
->>  		ret = qca_wcn3990_init(hu);
->>  	} else {
->>  		qcadev = serdev_device_get_drvdata(hu->serdev);
->> -		gpiod_set_value_cansleep(qcadev->bt_en, 1);
->> -		/* Controller needs time to bootup. */
->> -		msleep(150);
->> +		if (!IS_ERR(qcadev->bt_en)) {
->> +			gpiod_set_value_cansleep(qcadev->bt_en, 1);
->> +			/* Controller needs time to bootup. */
->> +			msleep(150);
->> +		}
->>  	}
->> 
->>  	return ret;
->> @@ -1750,7 +1752,7 @@ static void qca_power_shutdown(struct hci_uart 
->> *hu)
->>  		host_set_baudrate(hu, 2400);
->>  		qca_send_power_pulse(hu, false);
->>  		qca_regulator_disable(qcadev);
->> -	} else {
->> +	} else if (!IS_ERR(qcadev->bt_en)) {
->>  		gpiod_set_value_cansleep(qcadev->bt_en, 0);
->>  	}
->>  }
->> @@ -1852,6 +1854,7 @@ static int qca_serdev_probe(struct serdev_device 
->> *serdev)
->>  	struct hci_dev *hdev;
->>  	const struct qca_vreg_data *data;
->>  	int err;
->> +	bool power_ctrl_enabled = true;
->> 
->>  	qcadev = devm_kzalloc(&serdev->dev, sizeof(*qcadev), GFP_KERNEL);
->>  	if (!qcadev)
->> @@ -1901,35 +1904,37 @@ static int qca_serdev_probe(struct 
->> serdev_device *serdev)
->>  		qcadev->bt_en = devm_gpiod_get(&serdev->dev, "enable",
->>  					       GPIOD_OUT_LOW);
-> 
-> Shouldn't you use devm_gpiod_get_optional()?
-> 
->>  		if (IS_ERR(qcadev->bt_en)) {
->> -			dev_err(&serdev->dev, "failed to acquire enable gpio\n");
->> -			return PTR_ERR(qcadev->bt_en);
->> +			dev_warn(&serdev->dev, "failed to acquire enable gpio\n");
->> +			power_ctrl_enabled = false;
-> 
-> And bail out on errors, but treat NULL as !port_ctrl_enabled?
-> 
->>  		}
->> 
->>  		qcadev->susclk = devm_clk_get(&serdev->dev, NULL);
-> 
-> And devm_clk_get_optional() here.
-> 
-> Etc.
-> 
-> Also does the devicetree binding need to be updated to reflect this
-> change?
-> 
-OK, I will update to use the suggested API.
-The devicetress binding doesn't need to be updated as they are already 
-optional there.
+Commit 52791eeec1d9 ("dma-buf: rename reservation_object to dma_resv")
+renamed include/linux/reservation.h to include/linux/dma-resv.h, but
+missed the reference in the MAINTAINERS entry.
 
-> Johan
+Since then, ./scripts/get_maintainer.pl --self-test complains:
+
+  warning: no file matches F: include/linux/reservation.h
+
+Adjust the DMA BUFFER SHARING FRAMEWORK entry in MAINTAINERS.
+
+Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
+Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+---
+Christian, please pick this patch.
+applies cleanly on current master and next-20200303
+
+ MAINTAINERS | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 6158a143a13e..3d6cb2789c9e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5022,7 +5022,7 @@ L:	dri-devel@lists.freedesktop.org
+ L:	linaro-mm-sig@lists.linaro.org (moderated for non-subscribers)
+ F:	drivers/dma-buf/
+ F:	include/linux/dma-buf*
+-F:	include/linux/reservation.h
++F:	include/linux/dma-resv.h
+ F:	include/linux/*fence.h
+ F:	Documentation/driver-api/dma-buf.rst
+ K:	dma_(buf|fence|resv)
+-- 
+2.17.1
+
