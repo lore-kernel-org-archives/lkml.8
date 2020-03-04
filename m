@@ -2,117 +2,133 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3629EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AF3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:14:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0344820732
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:13:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hhaZOm6E"
+	by mail.kernel.org (Postfix) with ESMTP id 901112146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:14:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583356459;
+	bh=qWstThEPisjkoufeUGKImiiH/cu9kG08/ODouMKhUow=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TrzZngNAadAgfg/t62gveqZ6Y2yGKO7rOKzEQfkgIfg/QqTb7qV2s1sbjaVSU6Fau
+	 786bIRvWJ/TGZMj/cpop1VTB6ekHEnBQwREEvUs3vj0ib59UyllSUAQ1sWclgt1jre
+	 9ZRB6f0kgLhH/B/Rv83TNSnKB5ZZnwc4VhB2ez+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388295AbgCDVNJ (ORCPT
+        id S2388302AbgCDVOS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:13:09 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33366 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgCDVNI (ORCPT
+        Wed, 4 Mar 2020 16:14:18 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34754 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgCDVOS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:13:08 -0500
-Received: by mail-ed1-f67.google.com with SMTP id c62so4042696edf.0;
-        Wed, 04 Mar 2020 13:13:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=dCW1rcJ9YTWBdWzukHsXIprcdho8wqp30teVzoaXut8=;
-        b=hhaZOm6Es2C55CAvBU+VYbagW2+NeHvOsx/3IIP2rRB+gbhRF98csxzI4b8Kf/imnN
-         nbNQYRgyqg19wKk6Djpd1Sr1gHKz093YwwYsfUKZl4TNHgfapKvszqKKtJ9IbSqmzSV9
-         M6EDOL3PO4dm+2Qi5uo6c7qhvu9bQLPQ5NI/N8ZvERWU61nxOLrtN4dlXuXt825WyqJh
-         +BHzU/SLm1PfSH8RYqmudG78JksBElE316aVzGBm+uBT4UaEb6CIVtbChFUmRs2J+aMs
-         m3H+UV4rnJdNdtrlaN6BRDWmeGBeBf7vQ3rEcKKZDS21xu3gK5BAvoDvtKDVsze15BwE
-         K9dQ==
+        Wed, 4 Mar 2020 16:14:18 -0500
+Received: by mail-ot1-f65.google.com with SMTP id j16so3544810otl.1;
+        Wed, 04 Mar 2020 13:14:17 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dCW1rcJ9YTWBdWzukHsXIprcdho8wqp30teVzoaXut8=;
-        b=jHo+WLd6FR41v8h4FSYXvfr5tjYos+8Rz0e7UNOfti/1vYMmaVs5rk2DFbZ1HvqzYJ
-         06XkvGSo/qr2xDRnMmB39lWH2ESWvvOuINO90mTVv5XEgHaampkWIdFwma80fCRjdevD
-         GPElCdN82VOvHi5aUBObvwOHxpuusurgqMH6ELYtKC794QmScjXEwpzqEtK4CRhOB4wq
-         OD4rE+ueqzsELcS+QkhiNXgDmdnOP1mx46qcBRDdEPhX7w3FmObFIzc7IjmyaBmNCP8U
-         1sl4owj1kLirHK4lANuVlaqEZWLYrU+6/gpDnvnHtzS/mK3hEI+EjFMXp+P5HZx218Y9
-         IWUg==
-X-Gm-Message-State: ANhLgQ2tw1W1JJ0MhsJtatnmsER4dLFOfeLQNYf50L9rqgigv76bfbEi
-        nDHf5zhiIrSr0RWKpkyRyJo=
-X-Google-Smtp-Source: ADFU+vtmldY3b7mOyJ02OLZ/ej4YOW/EaU4qKPRgCjxwGYhH2vdgob5TcGv3OcYMps2GuAzzT9Ambw==
-X-Received: by 2002:aa7:df94:: with SMTP id b20mr1744181edy.84.1583356386605;
-        Wed, 04 Mar 2020 13:13:06 -0800 (PST)
-Received: from felia.fritz.box ([2001:16b8:2d16:4100:5c62:5f:595c:f76d])
-        by smtp.gmail.com with ESMTPSA id j21sm1005332edt.32.2020.03.04.13.13.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 13:13:06 -0800 (PST)
-From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
-To:     Sumit Garg <sumit.garg@linaro.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Mimi Zohar <zohar@linux.ibm.com>
-Cc:     linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Subject: [PATCH v2] MAINTAINERS: adjust to trusted keys subsystem creation
-Date:   Wed,  4 Mar 2020 22:12:54 +0100
-Message-Id: <20200304211254.5127-1-lukas.bulwahn@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JLQZ2G1Xjci6M9Tdj0KmF35kuRwhcReJ8Bh0Us9PzUc=;
+        b=CqK/TyqU9m7Ex6bN8OKK8owMDs2BuSv8dUOy70L5GNcmZw3ecmbD7UuV2wFgfhschL
+         QGQROMpIUj6SiJyKbqkeVuZGxzTtpDL2hpLR3RgL5rGLTMJGuQEk44/WEsm2D7dIUPAJ
+         XppQs7UCoxqAmLvTD9rH5Oa8aPhJ4NgogvG7w+xdvLBsMoXrMTqM4XA4Iyk2RHjmgWoO
+         PYv3BhLTFgKNeQFZ/IFutkY+DEZ+IWhYWVTmZoEsAOvyP7gWj9hzQUqWqh6EmlEoqiq3
+         BmXlQy/dPzfETVj4pFGIdZvt4pBf9lMhyDNKp3qH09NH7BTGVfSgRX7stQHv1MTIEzL9
+         LVXQ==
+X-Gm-Message-State: ANhLgQ2SpszchG0psh5aksgTuAyWQRNPYKnq9XnkCCrwccXFGbE82c2D
+        hqJLGd2rcKe9Ps1zKCeDISBHKL+TZoNgBoy6jtoEJz2P
+X-Google-Smtp-Source: ADFU+vsO2OteMecxFWmOO5z9/LBDPBK1mmNYWFu+lKjiP3PM6glg8i8Fx9E51YzIPILiDF6bsax+ZdIN8NNKcaHFzAQ=
+X-Received: by 2002:a9d:7653:: with SMTP id o19mr3801182otl.118.1583356457362;
+ Wed, 04 Mar 2020 13:14:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20200227013411.1.Ica3bb9fa898499d94e0b0a2bfa08ec46c89d84fa@changeid>
+ <20200303170948.1.I108734f38ade020c3e5da825839dca11d2a2ff87@changeid>
+ <CAJZ5v0j+bx5fh1wv738MNoui_SaZ-c21rDnZkWOqi_GCVg5stQ@mail.gmail.com> <F8C6368A-1537-482B-8FE5-350A18D936A8@intel.com>
+In-Reply-To: <F8C6368A-1537-482B-8FE5-350A18D936A8@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 4 Mar 2020 22:14:06 +0100
+Message-ID: <CAJZ5v0iBMiGKeFXRTLkR8oFQbdCJq0TnhpFZkMBK4gF0VNjumA@mail.gmail.com>
+Subject: Re: [PATCH v3] intel_idle: Add Comet Lake support
+To:     "Pan, Harry" <harry.pan@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Harry Pan <gs0622@gmail.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys subsystem")
-renamed trusted.h to trusted_tpm.h in include/keys/, and moved trusted.c
-to trusted-keys/trusted_tpm1.c in security/keys/.
+On Wed, Mar 4, 2020 at 12:57 PM Pan, Harry <harry.pan@intel.com> wrote:
+>
+> Hi Rafael,
+>
+> Yes, I skipped it considering to align CML-U V0 and A0 stepping w/ the same table; I sent v4 for your review.
 
-Since then, ./scripts/get_maintainer.pl --self-test complains:
+Skipping that flag is risky, because it may cause some C-states to be
+enabled on systems where they have not been validated (e.g. systems
+shipping with other OSes which only use _CST C-states).  There were
+problems related to that in the past which is one of the reasons for
+adding _CST support to intel_idle.  use_acpi should be set for all new
+platforms going forward as a rule.
 
-  warning: no file matches F: security/keys/trusted.c
-  warning: no file matches F: include/keys/trusted.h
+> In the other hand, I am proposing using _CST as long term plan in CrOS dev teams.
 
-Rectify the KEYS-TRUSTED entry in MAINTAINERS now and ensure that all
-files in security/keys/ are identified as part of KEYS-TRUSTED.
+That I obviously agree with. :-)
 
-Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
----
-Changes to v1:
-- use a global pattern for matching the whole security/keys/ directory.
-Sumit, please ack.
-James or Jarkko, please pick this patch v2.
 
- MAINTAINERS | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5c755e03ddee..7f11ac752b91 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9276,8 +9276,8 @@ L:	keyrings@vger.kernel.org
- S:	Supported
- F:	Documentation/security/keys/trusted-encrypted.rst
- F:	include/keys/trusted-type.h
--F:	security/keys/trusted.c
--F:	include/keys/trusted.h
-+F:	include/keys/trusted_tpm.h
-+F:	security/keys/trusted-keys/
- 
- KEYS/KEYRINGS
- M:	David Howells <dhowells@redhat.com>
--- 
-2.17.1
-
+> > On Mar 4, 2020, at 17:53, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > ﻿On Tue, Mar 3, 2020 at 10:10 AM Harry Pan <harry.pan@intel.com> wrote:
+> >>
+> >> Add a general C-state table in order to support Comet Lake.
+> >>
+> >> Signed-off-by: Harry Pan <harry.pan@intel.com>
+> >>
+> >> ---
+> >>
+> >> drivers/idle/intel_idle.c | 7 +++++++
+> >> 1 file changed, 7 insertions(+)
+> >>
+> >> diff --git a/drivers/idle/intel_idle.c b/drivers/idle/intel_idle.c
+> >> index d55606608ac8..05bce595fafe 100644
+> >> --- a/drivers/idle/intel_idle.c
+> >> +++ b/drivers/idle/intel_idle.c
+> >> @@ -1067,6 +1067,11 @@ static const struct idle_cpu idle_cpu_dnv = {
+> >>        .use_acpi = true,
+> >> };
+> >>
+> >> +static const struct idle_cpu idle_cpu_cml = {
+> >> +       .state_table = skl_cstates,
+> >> +       .disable_promotion_to_c1e = true,
+> >
+> > .use_acpi = true,
+> >
+> > missing?  Otherwise you can just use idle_cpu_skl as is, can't you?
+> >
+> >> +};
+> >> +
+> >> static const struct x86_cpu_id intel_idle_ids[] __initconst = {
+> >>        INTEL_CPU_FAM6(NEHALEM_EP,              idle_cpu_nhx),
+> >>        INTEL_CPU_FAM6(NEHALEM,                 idle_cpu_nehalem),
+> >> @@ -1105,6 +1110,8 @@ static const struct x86_cpu_id intel_idle_ids[] __initconst = {
+> >>        INTEL_CPU_FAM6(ATOM_GOLDMONT_PLUS,      idle_cpu_bxt),
+> >>        INTEL_CPU_FAM6(ATOM_GOLDMONT_D,         idle_cpu_dnv),
+> >>        INTEL_CPU_FAM6(ATOM_TREMONT_D,          idle_cpu_dnv),
+> >> +       INTEL_CPU_FAM6(COMETLAKE_L,             idle_cpu_cml),
+> >> +       INTEL_CPU_FAM6(COMETLAKE,               idle_cpu_cml),
+> >>        {}
+> >> };
+> >>
+> >> --
+> >> 2.24.1
+> >>
