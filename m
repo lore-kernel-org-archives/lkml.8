@@ -2,84 +2,86 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0940DC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6929C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:45:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48FC215A4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:44:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583336658;
-	bh=z1VXR49TU2jEisQHdemESEry9T1v6Xn80PnEDn16EB8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EJVFpUpBxBOWNODYLRjWNAcyWQWaxsB+GcQHYBajVEkdiMBJA8BVgkwGcxjo/976w
-	 SipWJ/IIgZoK9ruUwqlKwkKU3ZA/v1VY1aftdZMfwx7Byz1qiJiQ19LRPyTBdQ2722
-	 0PZtgYb5Hj3CGd2nhEZHapb3SY1486oW6iOzO7OU=
+	by mail.kernel.org (Postfix) with ESMTP id BEE97215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:45:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GtymdUEo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbgCDPoR (ORCPT
+        id S1729693AbgCDPpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:44:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbgCDPoR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:44:17 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 4 Mar 2020 10:45:20 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:60910 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729538AbgCDPpU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:45:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583336718;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qCLVGTRxnbfjjeCTr0ddYoiLTCcPK4JAZKp83eU87BU=;
+        b=GtymdUEo+HJhDlta0BKTDfN7S4rY5HVjZcSpwR9kwWctdMoxNwjbg0hQW1EYlWlop4dWrk
+        17xWrIJUTltee2jo9DW6nuvGmqtnB0BggaeE2CTfLHUqVs+3oDFrfXgLwBDmJE6PwINJtF
+        q3PLrqXS2VJF8HcERm3oTh0KwFSHXm0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-122-ObxcWQTKPraYzzAA2DDGeQ-1; Wed, 04 Mar 2020 10:45:17 -0500
+X-MC-Unique: ObxcWQTKPraYzzAA2DDGeQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24C5D2166E;
-        Wed,  4 Mar 2020 15:44:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583336655;
-        bh=z1VXR49TU2jEisQHdemESEry9T1v6Xn80PnEDn16EB8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=TPbKJ1BeOt1vDP21LVx3cpaqIiQ5ufldGudnjxJ9cRaoRe/9YBXARjwUJR/Brdcnk
-         /rRwqvmOZ1VPO9wHc8y4Yl2aKKt2WupbgVlZMSqmmVJdPwsH8/CDAwINWcFR4yJB3R
-         0MbeqdrE4mBN8i9/58bxjeS0vuSuBkdwJGFKBdao=
-Date:   Wed, 4 Mar 2020 16:44:12 +0100
-From:   "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-To:     "Stahl, Manuel" <manuel.stahl@iis-extern.fraunhofer.de>
-Cc:     "stephen@networkplumber.org" <stephen@networkplumber.org>,
-        "hjk@linutronix.de" <hjk@linutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "sojkam1@fel.cvut.cz" <sojkam1@fel.cvut.cz>
-Subject: Re: [PATCH 2/2] uio: Prefer MSI(X) interrupts in PCI drivers
-Message-ID: <20200304154412.GA1761004@kroah.com>
-References: <1507296707.2915.14.camel@iis-extern.fraunhofer.de>
- <1507296804.2915.16.camel@iis-extern.fraunhofer.de>
- <20171006134550.GA1626@kroah.com>
- <1507297826.2915.18.camel@iis-extern.fraunhofer.de>
- <20171006075700.587a5e22@xeon-e3>
- <20171020125044.GA8634@kroah.com>
- <1508504312.3128.23.camel@iis-extern.fraunhofer.de>
- <9ba3cdd6d330486a91cb5c376f012b5b963c4eae.camel@iis-extern.fraunhofer.de>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F847800053;
+        Wed,  4 Mar 2020 15:45:16 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 437375DA2C;
+        Wed,  4 Mar 2020 15:45:16 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 339A28174D;
+        Wed,  4 Mar 2020 15:45:16 +0000 (UTC)
+Date:   Wed, 4 Mar 2020 10:45:16 -0500 (EST)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Message-ID: <925307051.13073500.1583336716147.JavaMail.zimbra@redhat.com>
+In-Reply-To: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
+References: <20200303085528.27658-1-vdronov@redhat.com> <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
+Subject: Re: [PATCH] efi: fix a race and a buffer overflow while reading
+ efivars via sysfs
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ba3cdd6d330486a91cb5c376f012b5b963c4eae.camel@iis-extern.fraunhofer.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.204.205, 10.4.195.6]
+Thread-Topic: fix a race and a buffer overflow while reading efivars via sysfs
+Thread-Index: dewbhvzFQPAb58gKxgYvGl/QeO33kQ==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 03:19:55PM +0000, Stahl, Manuel wrote:
-> Hi Greg,
-> 
-> so somehow this discussion stopped without any instructions how to proceed.
+Hello, Ard,
 
-What is "this discussion"?
+> Wouldn't it be easier to pass a var_data_size stack variable into
+> efivar_entry_get(), and only update the value in 'var' if it is <=
+> 1024?
 
-> I think this kind of driver helps every FPGA developer to interface
-> his design via PCIe to a Linux PC.
-> So if there is any chance to get this code merged, I'm glad to rebase
-> this onto the latest kernel release.
+I have prepared a v2 patch with an approach you suggest and will send it
+out shortly. It indeed simpler and fixes only the overflow bug mentioned.
 
-Please rebase and resubmit, it's a patch from 2 1/2 years ago, not much
-I can even remember about patch sets sent last week...
+Could you, please, review it and if you like it, probably, accept it?
+In case I've implemented your idea incorrectly, could you, please,
+correct me?
 
-thanks,
+Best regards,
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
 
-greg k-h
