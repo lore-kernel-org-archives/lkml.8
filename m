@@ -2,138 +2,137 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8FCC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E600C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D360214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36DE42166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583309407;
+	bh=1YrwTCj3XBWbFrhCAMXtkFQ1x10evEuvmD/owQ7q17A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JnO0qxHMNyRMLIaj1hBQ1JRwIZ2FC0ZFuOmarg8tLVSydAQx4MhnE5KUBqRkoqkn3
+	 ldEufKV/mKzdGW76O/0UsdIrQD9hSr6OyFVSE/vBQdvouG1ShACeOUZgDJWILlrjc7
+	 06+Ezol58R+WargtORs99Y9GRdRhqxHgmeZikJxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728483AbgCDIIM (ORCPT
+        id S1728721AbgCDIKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:08:12 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:36133 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725271AbgCDIIL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:08:11 -0500
-Received: by mail-io1-f69.google.com with SMTP id 24so945202ioz.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:08:11 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=QWihqIbI3h2cwVYItSSsgDU+DanrmjhYM/cRBn7sMYM=;
-        b=BX+axW7wVDmR5nelFXh79UNkMXiSTkIHrrsRm4PFI9g3v/lOt0wFbVEOiph/y1pJtz
-         WhK13PGSQ47hzk2hipuQiqkfAtOtabgCgTUMCeWrb2nROeiWpwHt4XhZq21cCFu7cs66
-         /HDex/Sw/XtyDO/3gdZMdk2FG6zVJmBmgF2wIQVG1jwmtKLN32xOnYqq3GizvHMA8kfz
-         aY15JRpVQ9J1RnGKmAvWcOgrJk4GJVoxCok3UgXVUXLfsPM5zBZFgCBnLbs7xicPaiLD
-         dxzI4RZIIy9e2aLQHac9xwD07T80dIFohfk1z7wgeusW7Lw+GpE2tDShWkyvvspw9t7P
-         T+gA==
-X-Gm-Message-State: ANhLgQ1cXZN6SNvA5X/96C711KpddVQNVE+z0kTo8C81h82BmHnZ/C3T
-        olg4CJbPMl4h+c24T/ofbSL74d9JjAsyWau+Oa+HpsmJHgqq
-X-Google-Smtp-Source: ADFU+vuO5aJSyB0F3WMNwd9r/kxM2JQMSL8AbibBvCOWRnOfCodaF/8419p9BH+fF/DNjT+h/zRr0l5nq4MoEGP/MnVGS+lg5YZP
+        Wed, 4 Mar 2020 03:10:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726957AbgCDIKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 03:10:05 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 164502166E;
+        Wed,  4 Mar 2020 08:10:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583309403;
+        bh=1YrwTCj3XBWbFrhCAMXtkFQ1x10evEuvmD/owQ7q17A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D4PdvpzxhaRLCz25gwPPpfHUHtEjNdHB+jSF/ktZlEQVqWSuei9rdcT0NQo1GP+Mt
+         z4kEYk+KJpIywFAoh1bPhwOro3DuRvOzCbO2PxDDPS6gTfMdWRSYEMCfN9QsWd3V9o
+         jsDKVAH6G3bfWXwGLHPh8txEFcNoItskBrA9L4uM=
+Date:   Wed, 4 Mar 2020 09:10:01 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Oliver Upton <oupton@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 111/176] KVM: nVMX: Emulate MTF when performing
+ instruction emulation
+Message-ID: <20200304081001.GB1401372@kroah.com>
+References: <20200303174304.593872177@linuxfoundation.org>
+ <20200303174317.670749078@linuxfoundation.org>
+ <8780cf08-374b-da06-0047-0fe8eeec0113@redhat.com>
+ <CAOQ_QsjG32KrG6hVMaMenUYk1+Z+jhcCsGOk=t9i+-9oZRGWeA@mail.gmail.com>
 MIME-Version: 1.0
-X-Received: by 2002:a02:a516:: with SMTP id e22mr1642125jam.116.1583309291096;
- Wed, 04 Mar 2020 00:08:11 -0800 (PST)
-Date:   Wed, 04 Mar 2020 00:08:11 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000dd909105a002ebe6@google.com>
-Subject: INFO: rcu detected stall in sys_keyctl
-From:   syzbot <syzbot+0c5c2dbf76930df91489@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ_QsjG32KrG6hVMaMenUYk1+Z+jhcCsGOk=t9i+-9oZRGWeA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Mar 03, 2020 at 11:39:35PM -0800, Oliver Upton wrote:
+> On Tue, Mar 3, 2020 at 11:23 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+> >
+> > On 03/03/20 18:42, Greg Kroah-Hartman wrote:
+> > > From: Oliver Upton <oupton@google.com>
+> > >
+> > > commit 5ef8acbdd687c9d72582e2c05c0b9756efb37863 upstream.
+> > >
+> > > Since commit 5f3d45e7f282 ("kvm/x86: add support for
+> > > MONITOR_TRAP_FLAG"), KVM has allowed an L1 guest to use the monitor trap
+> > > flag processor-based execution control for its L2 guest. KVM simply
+> > > forwards any MTF VM-exits to the L1 guest, which works for normal
+> > > instruction execution.
+> > >
+> > > However, when KVM needs to emulate an instruction on the behalf of an L2
+> > > guest, the monitor trap flag is not emulated. Add the necessary logic to
+> > > kvm_skip_emulated_instruction() to synthesize an MTF VM-exit to L1 upon
+> > > instruction emulation for L2.
+> > >
+> > > Fixes: 5f3d45e7f282 ("kvm/x86: add support for MONITOR_TRAP_FLAG")
+> > > Signed-off-by: Oliver Upton <oupton@google.com>
+> > > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >
+> > Why is this included in a stable release?  It was part of a series of
+> > four patches and the prerequisites as far as I can see are not part of 5.5.
+> 
+> It looks like these commits were already picked from upstream:
+> 
+> 684c0422da71 ("KVM: nVMX: Handle pending #DB when injecting INIT VM-exit")
+> 307f1cfa2696 ("KVM: x86: Mask off reserved bit from #DB exception payload")
+> 
+> Which were bug fixes in their own right and were sensible for
+> backporting (though I didn't cc stable if I'm not mistaken).
+> 
+> but not:
+> 
+> a06230b62b89 ("KVM: x86: Deliver exception payload on KVM_GET_VCPU_EVENTS")
+> 
+> which this patch absolutely depends on.
+> 
+> Otherwise, I'll defer discussions regarding the suitability of this
+> patch for stable to Paolo.
 
-syzbot found the following crash on:
+I picked this patch up solely because of the Fixes: tag showed that this
+ommit resolved something from a previous commit.  The interdependancies
+were not obvious, especially as it all seemed to build just fine here.
 
-HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15257ba1e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-dashboard link: https://syzkaller.appspot.com/bug?extid=0c5c2dbf76930df91489
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > I have already said half a dozen times that I don't want any of the
+> > autopick stuff for KVM.  Is a Fixes tag sufficient to get patches into
+> > stable now?
 
-Unfortunately, I don't have any reproducer for this crash yet.
+Yes, it can happen that a Fixes tag does cause a patch to get into
+stable because I look out for that.  I do that because a number of
+maintainers/developers only put that tag in there, and also to catch
+patches for when we backport stuff and then need to take a fix for that
+backport (not the case here though).
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+0c5c2dbf76930df91489@syzkaller.appspotmail.com
+I'll be glad to just put KVM into the "never apply any patches to
+stable unless you explicitly mark it as such", but the sad fact is that
+many recent KVM fixes for reported CVEs never had any "Cc: stable@vger"
+markings.  They only had "Fixes:" tags and so I have had to dig them out
+of the tree and backport them myself in order to resolve those very
+public issues.
 
-rcu: INFO: rcu_preempt self-detected stall on CPU
-rcu: 	0-....: (1 GPs behind) idle=576/1/0x4000000000000002 softirq=55718/56054 fqs=5235 
-	(t=10500 jiffies g=63445 q=1523)
-NMI backtrace for cpu 0
-CPU: 0 PID: 18804 Comm: syz-executor.4 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
- arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
- trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
- rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
- print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
- check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
- rcu_pending kernel/rcu/tree.c:3030 [inline]
- rcu_sched_clock_irq.cold+0x51a/0xc37 kernel/rcu/tree.c:2276
- update_process_times+0x2d/0x70 kernel/time/timer.c:1726
- tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:171
- tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1314
- __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
- __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1579
- hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1641
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1119 [inline]
- smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1144
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:__sanitizer_cov_trace_const_cmp4+0x16/0x20 kernel/kcov.c:276
-Code: 48 89 e5 48 8b 4d 08 e8 d8 fe ff ff 5d c3 66 0f 1f 44 00 00 55 89 f2 89 fe bf 05 00 00 00 48 89 e5 48 8b 4d 08 e8 ba fe ff ff <5d> c3 0f 1f 84 00 00 00 00 00 55 48 89 f2 48 89 fe bf 07 00 00 00
-RSP: 0018:ffffc900053877d8 EFLAGS: 00000297 ORIG_RAX: ffffffffffffff13
-RAX: 0000000000000002 RBX: 584279fc973b765a RCX: ffffffff83b71a81
-RDX: 00000000ffffff75 RSI: 0000000000000000 RDI: 0000000000000005
-RBP: ffffc900053877d8 R08: ffff888041a265c0 R09: 0000000000000092
-R10: ffffed1015d0707b R11: ffff8880ae8383db R12: ffff88809eb56398
-R13: 000000003ab2c4e4 R14: 1b0d4377a72d08f5 R15: 00000000ffffff75
- mpihelp_submul_1+0x161/0x1a0 lib/mpi/generic_mpih-mul3.c:45
- mpihelp_divrem+0x1ce/0x1360 lib/mpi/mpih-div.c:209
- mpi_powm+0xffb/0x1d20 lib/mpi/mpi-pow.c:205
- _compute_val crypto/dh.c:39 [inline]
- dh_compute_value+0x373/0x610 crypto/dh.c:178
- crypto_kpp_generate_public_key include/crypto/kpp.h:315 [inline]
- __keyctl_dh_compute+0x9ae/0x1470 security/keys/dh.c:367
- keyctl_dh_compute+0xcf/0x12d security/keys/dh.c:422
- __do_sys_keyctl security/keys/keyctl.c:1818 [inline]
- __se_sys_keyctl security/keys/keyctl.c:1714 [inline]
- __x64_sys_keyctl+0x159/0x470 security/keys/keyctl.c:1714
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45c479
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f872a51fc78 EFLAGS: 00000246 ORIG_RAX: 00000000000000fa
-RAX: ffffffffffffffda RBX: 00007f872a5206d4 RCX: 000000000045c479
-RDX: 0000000020002700 RSI: 0000000020000400 RDI: 0000000000000017
-RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
-R10: 00000000ffffff84 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 00000000000006fa R14: 00000000004c9883 R15: 000000000076bfcc
+So can I ask that you always properly tag things for stable?  If so, I
+will be glad to ignore Fixes: tags for KVM patches in the future.
 
+I'll go drop this patch as well.  Note, there are other KVM patches in
+this release cycle also, can someone verify that I did not overreach for
+them as well?
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+thanks,
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+greg k-h
