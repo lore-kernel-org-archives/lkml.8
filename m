@@ -2,137 +2,93 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E600C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81607C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DE42166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583309407;
-	bh=1YrwTCj3XBWbFrhCAMXtkFQ1x10evEuvmD/owQ7q17A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JnO0qxHMNyRMLIaj1hBQ1JRwIZ2FC0ZFuOmarg8tLVSydAQx4MhnE5KUBqRkoqkn3
-	 ldEufKV/mKzdGW76O/0UsdIrQD9hSr6OyFVSE/vBQdvouG1ShACeOUZgDJWILlrjc7
-	 06+Ezol58R+WargtORs99Y9GRdRhqxHgmeZikJxE=
+	by mail.kernel.org (Postfix) with ESMTP id 50B712166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="u6FbvwLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728721AbgCDIKG (ORCPT
+        id S1728886AbgCDIK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:10:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50044 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726957AbgCDIKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:10:05 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 164502166E;
-        Wed,  4 Mar 2020 08:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583309403;
-        bh=1YrwTCj3XBWbFrhCAMXtkFQ1x10evEuvmD/owQ7q17A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D4PdvpzxhaRLCz25gwPPpfHUHtEjNdHB+jSF/ktZlEQVqWSuei9rdcT0NQo1GP+Mt
-         z4kEYk+KJpIywFAoh1bPhwOro3DuRvOzCbO2PxDDPS6gTfMdWRSYEMCfN9QsWd3V9o
-         jsDKVAH6G3bfWXwGLHPh8txEFcNoItskBrA9L4uM=
-Date:   Wed, 4 Mar 2020 09:10:01 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oliver Upton <oupton@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 111/176] KVM: nVMX: Emulate MTF when performing
- instruction emulation
-Message-ID: <20200304081001.GB1401372@kroah.com>
-References: <20200303174304.593872177@linuxfoundation.org>
- <20200303174317.670749078@linuxfoundation.org>
- <8780cf08-374b-da06-0047-0fe8eeec0113@redhat.com>
- <CAOQ_QsjG32KrG6hVMaMenUYk1+Z+jhcCsGOk=t9i+-9oZRGWeA@mail.gmail.com>
+        Wed, 4 Mar 2020 03:10:28 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:18098 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728387AbgCDIK1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 03:10:27 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02487rv0032631;
+        Wed, 4 Mar 2020 09:10:10 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Ic1C52dxdRVd8hopKHFmxL20NCwaptXElaVaPhP+rUE=;
+ b=u6FbvwLMTti9eJsDBmKkvCAdcWlQHcVPaTZQa1CAlCVWbdVsR8z3WQm8rWX5mGHprAzY
+ UDheNAzsQerzo9oF26Gt0wPFywt8/XZ8BjXzsvcrApxtZmqQmPxK/jrIIe3XEcf9hYsH
+ /i38IKdL5CbjyNHVzaPQgSH4yxBwz7SQB82pKilAtkB+Ci+iO1L3echhIDpDBHE1Btur
+ 39xwg/rAuASlDHFKre50CDyR4vzHZqNqEtT1DFyp4gfiWDOBlQk1+ovqlN/ksAsZk/Og
+ lO+89gvrrYTulefBJICTaWWZliGQqVRxot335MocEGI9kCJh0jP5BxNKQXMJswScNrMS lg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2yfem0ybx2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 09:10:10 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 01392100038;
+        Wed,  4 Mar 2020 09:10:05 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id DF0AC21FE85;
+        Wed,  4 Mar 2020 09:10:05 +0100 (CET)
+Received: from localhost (10.75.127.44) by SFHDAG6NODE1.st.com (10.75.127.16)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 4 Mar 2020 09:10:05
+ +0100
+From:   Yann Gautier <yann.gautier@st.com>
+To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     Yann Gautier <yann.gautier@st.com>
+Subject: [PATCH 0/3] Update SDMMC nodes on STM32MP1 boards 
+Date:   Wed, 4 Mar 2020 09:09:53 +0100
+Message-ID: <20200304080956.7699-1-yann.gautier@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ_QsjG32KrG6hVMaMenUYk1+Z+jhcCsGOk=t9i+-9oZRGWeA@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG2NODE2.st.com (10.75.127.5) To SFHDAG6NODE1.st.com
+ (10.75.127.16)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_01:2020-03-03,2020-03-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 03, 2020 at 11:39:35PM -0800, Oliver Upton wrote:
-> On Tue, Mar 3, 2020 at 11:23 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
-> >
-> > On 03/03/20 18:42, Greg Kroah-Hartman wrote:
-> > > From: Oliver Upton <oupton@google.com>
-> > >
-> > > commit 5ef8acbdd687c9d72582e2c05c0b9756efb37863 upstream.
-> > >
-> > > Since commit 5f3d45e7f282 ("kvm/x86: add support for
-> > > MONITOR_TRAP_FLAG"), KVM has allowed an L1 guest to use the monitor trap
-> > > flag processor-based execution control for its L2 guest. KVM simply
-> > > forwards any MTF VM-exits to the L1 guest, which works for normal
-> > > instruction execution.
-> > >
-> > > However, when KVM needs to emulate an instruction on the behalf of an L2
-> > > guest, the monitor trap flag is not emulated. Add the necessary logic to
-> > > kvm_skip_emulated_instruction() to synthesize an MTF VM-exit to L1 upon
-> > > instruction emulation for L2.
-> > >
-> > > Fixes: 5f3d45e7f282 ("kvm/x86: add support for MONITOR_TRAP_FLAG")
-> > > Signed-off-by: Oliver Upton <oupton@google.com>
-> > > Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > Why is this included in a stable release?  It was part of a series of
-> > four patches and the prerequisites as far as I can see are not part of 5.5.
-> 
-> It looks like these commits were already picked from upstream:
-> 
-> 684c0422da71 ("KVM: nVMX: Handle pending #DB when injecting INIT VM-exit")
-> 307f1cfa2696 ("KVM: x86: Mask off reserved bit from #DB exception payload")
-> 
-> Which were bug fixes in their own right and were sensible for
-> backporting (though I didn't cc stable if I'm not mistaken).
-> 
-> but not:
-> 
-> a06230b62b89 ("KVM: x86: Deliver exception payload on KVM_GET_VCPU_EVENTS")
-> 
-> which this patch absolutely depends on.
-> 
-> Otherwise, I'll defer discussions regarding the suitability of this
-> patch for stable to Paolo.
+This patchset updates the sdmmc nodes for STM32MP1.
+For SD cards nodes, the cd-gpio property is used instead of broken-cd,
+and the disable-wp property is added.
+The last patch corrects the vqmmc regulator for eMMC on ED1/EV1 boards.
 
-I picked this patch up solely because of the Fixes: tag showed that this
-ommit resolved something from a previous commit.  The interdependancies
-were not obvious, especially as it all seemed to build just fine here.
+Yann Gautier (3):
+  ARM:dts: stm32: add cd-gpios properties for SD-cards on STM32MP1
+    boards
+  ARM: dts: stm32: add disable-wp property for SD-card on STM32MP1
+    boards
+  ARM: dts: stm32: use correct vqmmc regu for eMMC on stm32mp1 ED1/EV1
+    boards
 
-> > I have already said half a dozen times that I don't want any of the
-> > autopick stuff for KVM.  Is a Fixes tag sufficient to get patches into
-> > stable now?
+ arch/arm/boot/dts/stm32mp157a-avenger96.dts | 3 ++-
+ arch/arm/boot/dts/stm32mp157c-ed1.dts       | 5 +++--
+ arch/arm/boot/dts/stm32mp15xx-dkx.dtsi      | 3 ++-
+ 3 files changed, 7 insertions(+), 4 deletions(-)
 
-Yes, it can happen that a Fixes tag does cause a patch to get into
-stable because I look out for that.  I do that because a number of
-maintainers/developers only put that tag in there, and also to catch
-patches for when we backport stuff and then need to take a fix for that
-backport (not the case here though).
+-- 
+2.17.1
 
-I'll be glad to just put KVM into the "never apply any patches to
-stable unless you explicitly mark it as such", but the sad fact is that
-many recent KVM fixes for reported CVEs never had any "Cc: stable@vger"
-markings.  They only had "Fixes:" tags and so I have had to dig them out
-of the tree and backport them myself in order to resolve those very
-public issues.
-
-So can I ask that you always properly tag things for stable?  If so, I
-will be glad to ignore Fixes: tags for KVM patches in the future.
-
-I'll go drop this patch as well.  Note, there are other KVM patches in
-this release cycle also, can someone verify that I did not overreach for
-them as well?
-
-thanks,
-
-greg k-h
