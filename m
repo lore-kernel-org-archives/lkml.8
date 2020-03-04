@@ -2,95 +2,98 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCE1C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F362FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:56:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35E0820838
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C69382166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:56:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oG5B0bbZ"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="AkyYdyS8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729584AbgCDNyG (ORCPT
+        id S1729494AbgCDN4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:54:06 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:54070 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726413AbgCDNyF (ORCPT
+        Wed, 4 Mar 2020 08:56:51 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:36863 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729334AbgCDN4v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:54:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=x7QxWeQIS4QmKxDASEYVZavWooJQqeQFhHog8X1BkfA=; b=oG5B0bbZM/UCZziL+BKY3IdPW/
-        BjJi6lZfeHj8rJ58DlWVG1XXOWQUKB+Qj1OB5wDu1gEVe+ebjwPo0Idq/IKgs+5KWUn/ldoEKAxt9
-        v0gH6m40CEe6lV42BBXk1iswmJHFzjz6u3dz8WJeVniKKAw4EZe4/dK5G8ojNgQcf5bFV7HPTocMz
-        FRHhWy3lLlOb4yiDPjwEdlUOmcfervjPiwKOo/hNT1/kJeAIOraz7R90MEtexL0+nrwDPIsroABBw
-        a8+6MIDkfZ3pw9he6gXBhkSvxzO/X3d6MjWQdVMLhALgQIs7r6ernzxbx8a/z44s7fjXse1gy8YF+
-        meEZ4UQQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9UTC-0000HA-SQ; Wed, 04 Mar 2020 13:53:55 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 767C630066E;
-        Wed,  4 Mar 2020 14:51:53 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DF7D423D4FA1C; Wed,  4 Mar 2020 14:53:51 +0100 (CET)
-Date:   Wed, 4 Mar 2020 14:53:51 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     syzbot <syzbot+3daecb3e8271380aeb51@syzkaller.appspotmail.com>
-Cc:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        andriin@fb.com, ast@kernel.org, bpf@vger.kernel.org,
-        daniel@iogearbox.net, jolsa@redhat.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com, yhs@fb.com
-Subject: Re: WARNING: locking bug in __perf_event_task_sched_in
-Message-ID: <20200304135351.GN2596@hirez.programming.kicks-ass.net>
-References: <0000000000005c967305a006d54d@google.com>
+        Wed, 4 Mar 2020 08:56:51 -0500
+Received: by mail-qv1-f65.google.com with SMTP id r15so798207qve.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:56:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Rhip11nFmECovpT8lVmLzpPD3W/d2rlBg3mYVPTEngc=;
+        b=AkyYdyS8nPkSQXKZ597tNqH6yb1SpRkXmJHVHxqVbM5fXqWPTLgiXZJ3zXtK4pSVAZ
+         UPFlP20GJMn3HxihX5oIqnYZ6IaPCfYm950jychfRYSv+PwRaJxWif7QD3xgm7qWa2Uy
+         uFJAxC4d73bNdcNwBOEOZl3RARtwcJAZEoUOcoh4DAzF/4yzM3GXSs18t08pn79cVE8M
+         QsAeQmvhfW4jVZqcn5YI3kB41XAlQdDW6cF7b5WZCOqrAI0r+aHMrqZfuimI6zrmPqg8
+         E5KtDlY1q+Y+kBRM42S2u73yhX0o+fyzcqOcnnghBDoQIN60UyIvb7Rn6O+dlg2yr0dn
+         g3TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Rhip11nFmECovpT8lVmLzpPD3W/d2rlBg3mYVPTEngc=;
+        b=FaoYyGc5gzAdk60F/0CQpzPi6lJU6CnTulOs4nU9dXF+a3Dz59mQKE/1hrwJhJi0ga
+         GiS8lThy1r9CpcPsdnMj6ewFNYgh8dVLCy21HPcqpeIhz5Xs7ut8Z0jt3T+lRNNb3vHL
+         GyGtE+6tbVR9xXEj5qhqjY5hCgDzN5SsbxsNW9dyDcqP7LJ2WGDy8GKdQx61gicny3d6
+         IfcnvQnh/REA1cRRUMM/lPSwqStNjMlH8g8YuqyEhMER9cQqnN0xrn71B53oEDxrAn1M
+         MO+o6Kj5JqQ1Tvu6PTg6DWncUUTy0nme52d+MSaNN/fLkYUX8GbLBsI6mepKOMDtrXqB
+         uoaA==
+X-Gm-Message-State: ANhLgQ0y542txgm3bnAG//edxFgY0w0jZVFKf8rqTyQdyxcCfDbLGwwI
+        w0yJqLS0Hhqm53Jp+duiEEr4Zg==
+X-Google-Smtp-Source: ADFU+vtecS5RrQ+sxl8h3ySuGL8wlLaGGPNxYxgbTg1P8ayAf6WqAVpCIwyGNMIOM2Za30TvZrOI1w==
+X-Received: by 2002:ad4:58b3:: with SMTP id ea19mr2220940qvb.80.1583330210441;
+        Wed, 04 Mar 2020 05:56:50 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id a6sm12453365qkn.104.2020.03.04.05.56.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 04 Mar 2020 05:56:49 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j9UW1-0008CZ-3g; Wed, 04 Mar 2020 09:56:49 -0400
+Date:   Wed, 4 Mar 2020 09:56:49 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     syzbot <syzbot+2b10b240fbbed30f10fb@syzkaller.appspotmail.com>
+Cc:     chuck.lever@oracle.com, dledford@redhat.com, leon@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
+        parav@mellanox.com, syzkaller-bugs@googlegroups.com,
+        willy@infradead.org
+Subject: Re: BUG: corrupted list in cma_listen_on_dev
+Message-ID: <20200304135649.GE31668@ziepe.ca>
+References: <00000000000020c5d205a001c308@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0000000000005c967305a006d54d@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <00000000000020c5d205a001c308@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 04:48:13AM -0800, syzbot wrote:
+On Tue, Mar 03, 2020 at 10:45:12PM -0800, syzbot wrote:
 > Hello,
 > 
 > syzbot found the following crash on:
 > 
-> HEAD commit:    f8788d86 Linux 5.6-rc3
+> HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
 > git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=13bcd8f9e00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=11123e65e00000
 > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d2e033af114153f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3daecb3e8271380aeb51
+> dashboard link: https://syzkaller.appspot.com/bug?extid=2b10b240fbbed30f10fb
 > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> 
-> Unfortunately, I don't have any reproducer for this crash yet.
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10d3b329e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=16291291e00000
 > 
 > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+3daecb3e8271380aeb51@syzkaller.appspotmail.com
-> 
-> ------------[ cut here ]------------
-> DEBUG_LOCKS_WARN_ON(1)
-> WARNING: CPU: 0 PID: 22488 at kernel/locking/lockdep.c:167 hlock_class kernel/locking/lockdep.c:167 [inline]
-> WARNING: CPU: 0 PID: 22488 at kernel/locking/lockdep.c:167 __lock_acquire+0x18b8/0x1bc0 kernel/locking/lockdep.c:3950
+> Reported-by: syzbot+2b10b240fbbed30f10fb@syzkaller.appspotmail.com
 
-Something went sideways bad, could be you've overflowed lockdep_depth.
-For some reason the check:
-
-	if (unlikely(curr->lockdep_depth >= MAX_LOCK_DEPTH))
-
-is rather late.. Dunno, most times I've hit lockdep errors like this,
-something else was screwy and we're just the ones to trip over it.
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma.git for-next
