@@ -2,68 +2,117 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F721C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E9C2C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B6A62073D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:10:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BC821739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:11:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583309492;
+	bh=w96FJLfkzr8JilQIZUTQAJsDJd9ZgFl/LK4eeVwZFIY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JoC7ha81zqG8vPo5QjirXYo44cXQV+83wgUKnjEUQTTSn5I8yPQj0Y/KU9mdiZ9+h
+	 Sbr8rUEKCGeO2gEbKg9ZL/J7Eo7vEKVTt0GCJ8xK/UDXq2vENvHpvX00u4/EEFe+rj
+	 k9RHQFrWwS7cqod+/0ZcSa8gROdwcIc5ypcBt/T8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729076AbgCDIKv (ORCPT
+        id S1728760AbgCDILb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:10:51 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:47787 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729023AbgCDIKu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:10:50 -0500
-Received: from [217.110.231.98] (helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j9P77-00008i-MD; Wed, 04 Mar 2020 08:10:45 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Lijun Ou <oulijun@huawei.com>, Wei Hu <xavier.huwei@huawei.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] RDMA/hns: fix spelling mistake "attatch" -> "attach"
-Date:   Wed,  4 Mar 2020 09:10:45 +0100
-Message-Id: <20200304081045.81164-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.0
+        Wed, 4 Mar 2020 03:11:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725283AbgCDILb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 03:11:31 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F408D2166E;
+        Wed,  4 Mar 2020 08:11:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583309490;
+        bh=w96FJLfkzr8JilQIZUTQAJsDJd9ZgFl/LK4eeVwZFIY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VpaaCSJNRBLV4noydn2vaZqPfOkRg9eImCQLX78lOgC/PB2YrIn6tTQs5pjsq58CB
+         yuWT5s1dG/arCGfmap8JKAR8gI+6f+YAGKeWwvvCAB+UXk584sRcVHhbwMI+SYe3Km
+         9AN0M7OdMyb30UDfPOsxlqzBpQHMKhw1ZXnmrxyg=
+Date:   Wed, 4 Mar 2020 09:11:28 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH 5.5 000/176] 5.5.8-stable review
+Message-ID: <20200304081128.GC1401372@kroah.com>
+References: <20200303174304.593872177@linuxfoundation.org>
+ <CA+G9fYtNKXBOQKE_AD6qLoRo4TeaBYOc9Ce3kBxdLap1av4v=Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYtNKXBOQKE_AD6qLoRo4TeaBYOc9Ce3kBxdLap1av4v=Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Wed, Mar 04, 2020 at 12:43:42PM +0530, Naresh Kamboju wrote:
+> On Tue, 3 Mar 2020 at 23:16, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.5.8 release.
+> > There are 176 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Thu, 05 Mar 2020 17:42:06 +0000.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.8-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+> 
+> Results from Linaro’s test farm.
+> Regressions detected on x86_64 and i386.
+> 
+> Test failure output:
+> CVE-2017-5715: VULN (IBRS+IBPB or retpoline+IBPB+RSB filling, is
+> needed to mitigate the vulnerability)
+> 
+> Test description:
+> CVE-2017-5715 branch target injection (Spectre Variant 2)
+> 
+> Impact: Kernel
+> Mitigation 1: new opcode via microcode update that should be used by
+> up to date compilers to protect the BTB (by flushing indirect branch
+> predictors)
+> Mitigation 2: introducing "retpoline" into compilers, and recompile
+> software/OS with it
+> Performance impact of the mitigation: high for mitigation 1, medium
+> for mitigation 2, depending on your CPU
 
-There is a spelling mistake in an error message. Fix it.
+So these are regressions or just new tests?
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/infiniband/hw/hns/hns_roce_qp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If regressions, can you do 'git bisect' to find the offending commit?
 
-diff --git a/drivers/infiniband/hw/hns/hns_roce_qp.c b/drivers/infiniband/hw/hns/hns_roce_qp.c
-index 2a7535534ea8..bddae625f447 100644
---- a/drivers/infiniband/hw/hns/hns_roce_qp.c
-+++ b/drivers/infiniband/hw/hns/hns_roce_qp.c
-@@ -812,7 +812,7 @@ static int map_wqe_buf(struct hns_roce_dev *hr_dev, struct hns_roce_qp *hr_qp,
- 	ret = hns_roce_mtr_attach(hr_dev, &hr_qp->mtr, buf_list, hr_qp->regions,
- 				  region_count);
- 	if (ret)
--		ibdev_err(ibdev, "Failed to attatch WQE's mtr\n");
-+		ibdev_err(ibdev, "Failed to attach WQE's mtr\n");
- 
- 	goto done;
- 
--- 
-2.25.0
+Also, are you sure you have an updated microcode on these machines and a
+proper compiler for retpoline?
 
+thanks,
+
+greg k-h
