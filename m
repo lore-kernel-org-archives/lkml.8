@@ -2,113 +2,104 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F2BCC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7853DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAECE21739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CF9321739
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583338576;
-	bh=5b+K82CUnfrW/6WQimAd8HNrMVzMfD2pSGzyAiEGsDA=;
+	s=default; t=1583338582;
+	bh=tFnASVwC/AD5vPcslLAnK7U3RQmxrq8Wh+8hlr+ScJg=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ee6wuef1L1Uf0+aw8k73wTDM4P/wfxHJdHN346Gp5V0f42tVY/BHE6L6FVfYNWq4M
-	 f60pU5381HTPlU8FBnKaXvEf2alDDAxQNw30SwD1bzw5fRWKIB9iBfv3OF+9pcQf/H
-	 daDrh7Lyey/okVcrv3fO7gDWfPZW2IlYFTKwFEUc=
+	b=cYBEGwpRFfBlQh92rWeki+Z92niBq8yoeujO6MqZ+3QhnpsoAP7w8yTH/3L2mkyXR
+	 +q+lZMI2skGUrADHukkS5HvivrlJWweYlyaXJp0hXkK11LISMzWkrvTHPqnboI+bjE
+	 uQJB9oc+idlnhFYn33YtlLP1ovS8aR6QVDamBCxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388212AbgCDQQP (ORCPT
+        id S2388229AbgCDQQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:16:15 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:42673 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgCDQQO (ORCPT
+        Wed, 4 Mar 2020 11:16:21 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44622 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgCDQQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:16:14 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l12so2616162oil.9;
-        Wed, 04 Mar 2020 08:16:12 -0800 (PST)
+        Wed, 4 Mar 2020 11:16:21 -0500
+Received: by mail-qk1-f196.google.com with SMTP id f198so2137986qke.11;
+        Wed, 04 Mar 2020 08:16:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OEItHJAQEWgalgushQTyB6lGoSgH6c+Ihc2zlQhimRs=;
+        b=iJ1CkyFBT9pLUqQUYEJHfFfgobiSXkCa+gyEfu/r3m/nYu56CBIc7Cmo/JYsEAaGZY
+         ba9/Ekd3G41hhc/4iiI/n4g0XusrQmPo+SxgGdUWZy2n9lx3I9ZXwkx04MCXqzlU4ka4
+         XQHuzeA39YDcvWJiFXA2ci723xtXQ+zb3+/5mqPAJQrnnNpL65UjmYc0eGLJFkyswMVj
+         eGdu2sd9zNi0KhNe0VuHjb9/dXmpJL6hL7oBxOgexpS/3Wq25Y6+IvFJuEHpnJ/DjeZH
+         7JnJGAE1EWOs+MNiyDYfg9aT3r/JGukHN6Em5A24jD3em2tJ2bHSloYD9bSjubUo6ZlB
+         D5fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GhAsniKvYUMptrJyDO+p1c/FdpaCICij3vPs9vpAABc=;
-        b=AM/n4YR00J/Wy1i49Km/cUAwb+B0QZnL2VFTA2dq2ZpNR8oRTzr16Ursul74awi/a6
-         6ilnUfUmh9XyF3aO6ydFSZv0P4tfvb9cWlr/BGF8YrW/BsjaTomBl4nMhm/mWZlSfsuq
-         Y1ZznhItVa5nrzSwP+6E5oHVDOa5mjY1tTTLpTDs8N8jfmA4Y1v4L1YLnydYIpRQtId/
-         R254ipFeUijAknWmM0snIiJn/hV16qgv74bi8+4tlPmn7O08W0aD7vAZpM5/U8z9FwPZ
-         AjebC5mQcXI2XHgv77Jiaa8y+1xeNK6mI4o7flrhZQPodbEixf99Q/MyvXl1JNKl3g1o
-         UJew==
-X-Gm-Message-State: ANhLgQ1TLz5Glzy8oVAZqS7z5pIYgt3X0r9blZsHkFMj0LLMy4jVygQ7
-        nezqOtilgFTiaEdpyQZTxg==
-X-Google-Smtp-Source: ADFU+vscMM6br/Xn3C+U6tfhoqQLV4NMo3JZu/sSuSbhBxEB3/oNdCr4+Z6EvzgPb0uWjeursQTGaw==
-X-Received: by 2002:aca:4f8e:: with SMTP id d136mr2309174oib.77.1583338572096;
-        Wed, 04 Mar 2020 08:16:12 -0800 (PST)
-Received: from rob-hp-laptop (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s83sm8891708oif.33.2020.03.04.08.16.10
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=OEItHJAQEWgalgushQTyB6lGoSgH6c+Ihc2zlQhimRs=;
+        b=i89f/sG8iBkckCtUHMVaSGNlzvkW5zcS+E97MIPOnmDyuKWQ/A5GI7tJ3BdkKfXJH6
+         zYWwK1dVGCfFbUiiLSHTj5bYZR/w36Mti3ksOb/VbdEfXT6zxF0+IeiZLDTObehUsrdL
+         HYiua9bS8ibEKWlFHBMTyM3ssv8RtZ1m8DzJuGEYXeWtZI41Sk0rMkKG5K2nb9/AAfjQ
+         nZ2zsM/QJwSd1KelXlxv/HK5esBMAtzDtByu/4Flt1Z1iZihSEdnjZvqfRzd8x3OpPe+
+         Rnbo5hhIrlauJbonFYSpxwXIzawrTjHRhN60LER4RIUxdKW8YSAhPOOREVoAXAgiWm7M
+         3AbA==
+X-Gm-Message-State: ANhLgQ1HiHj4AbwAItOrkkwHTJLQRPBwAqXjekyhZWSVSmaqkDY1EPAo
+        0VA3SB3GjsgqHbD233xZJp4=
+X-Google-Smtp-Source: ADFU+vvjS5Q+6TpvZEpQtf1e0+PPHAHCq43eI83KlbwBgh1HexC8reJg9uIMN+Y3Hx3wovDAvkpg6A==
+X-Received: by 2002:a05:620a:691:: with SMTP id f17mr3593366qkh.342.1583338579447;
+        Wed, 04 Mar 2020 08:16:19 -0800 (PST)
+Received: from localhost ([71.172.127.161])
+        by smtp.gmail.com with ESMTPSA id o16sm1363436qkm.68.2020.03.04.08.16.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 08:16:11 -0800 (PST)
-Received: (nullmailer pid 26946 invoked by uid 1000);
-        Wed, 04 Mar 2020 16:16:10 -0000
-Date:   Wed, 4 Mar 2020 10:16:10 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     rentao.bupt@gmail.com
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org,
-        taoren@fb.com, Tao Ren <rentao.bupt@gmail.com>
-Subject: Re: [PATCH v7 7/7] dt-bindings: usb: add documentation for aspeed
- usb-vhub
-Message-ID: <20200304161610.GA26873@bogus>
-References: <20200303062336.7361-1-rentao.bupt@gmail.com>
- <20200303062336.7361-8-rentao.bupt@gmail.com>
+        Wed, 04 Mar 2020 08:16:18 -0800 (PST)
+Date:   Wed, 4 Mar 2020 11:16:17 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     lizefan@huawei.com, hannes@cmpxchg.org, cgroups@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cgroup: fix psi_show() crash on 32bit ino archs
+Message-ID: <20200304161617.GD189690@mtj.thefacebook.com>
+References: <20200224030007.3990-1-cai@lca.pw>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200303062336.7361-8-rentao.bupt@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200224030007.3990-1-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  2 Mar 2020 22:23:36 -0800, rentao.bupt@gmail.com wrote:
-> From: Tao Ren <rentao.bupt@gmail.com>
+On Sun, Feb 23, 2020 at 10:00:07PM -0500, Qian Cai wrote:
+> Similar to the commit d7495343228f ("cgroup: fix incorrect
+> WARN_ON_ONCE() in cgroup_setup_root()"), cgroup_id(root_cgrp) does not
+> equal to 1 on 32bit ino archs which triggers all sorts of issues with
+> psi_show() on s390x. For example,
 > 
-> Add device tree binding documentation for the Aspeed USB 2.0 Virtual HUb
-> Controller.
+>  BUG: KASAN: slab-out-of-bounds in collect_percpu_times+0x2d0/
+>  Read of size 4 at addr 000000001e0ce000 by task read_all/3667
+>  collect_percpu_times+0x2d0/0x798
+>  psi_show+0x7c/0x2a8
+>  seq_read+0x2ac/0x830
+>  vfs_read+0x92/0x150
+>  ksys_read+0xe2/0x188
+>  system_call+0xd8/0x2b4
 > 
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
-> ---
->  Changes in v7:
->    - updated to dual license.
->    - removed description for "reg" and "clocks" properties.
->    - Added constraints (minimum/maximum/default) for vendor specific
->      properties.
->  Changes in v6:
->    - added 2 required properties into example and passed "make
->      dt_binding_check".
->  Changes in v5:
->    - updated maintainer to Ben.
->    - refined patch description per Joel's suggestion.
->  No change in v2/v3/v4:
->    - the patch is added to the patch series since v4.
+> Fix it by using cgroup_ino().
 > 
->  .../bindings/usb/aspeed,usb-vhub.yaml         | 77 +++++++++++++++++++
->  1 file changed, 77 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/aspeed,usb-vhub.yaml
-> 
+> Fixes: 743210386c03 ("cgroup: use cgrp->kn->id as the cgroup ID")
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to cgroup/for-5.6-fixes.
+
+Thanks.
+
+-- 
+tejun
