@@ -2,119 +2,156 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076EDC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4216C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:27:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA0B620828
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:26:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C206520828
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 21:27:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388406AbgCDV0Z (ORCPT
+        id S2388360AbgCDV1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 16:26:25 -0500
-Received: from smtprelay0215.hostedemail.com ([216.40.44.215]:45176 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388364AbgCDV0Y (ORCPT
+        Wed, 4 Mar 2020 16:27:41 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:42315 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387762AbgCDV1l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 16:26:24 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 0BF45100E7B42;
-        Wed,  4 Mar 2020 21:26:23 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: top47_1a6fca43cfd3c
-X-Filterd-Recvd-Size: 3754
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf18.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  4 Mar 2020 21:26:21 +0000 (UTC)
-Message-ID: <ed040dd417d578e1ab4491d116c6ac1431142385.camel@perches.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
-From:   Joe Perches <joe@perches.com>
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Cc:     Lukas Bulwahn <lukas.bulwahn@gmail.com>, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 04 Mar 2020 13:24:48 -0800
-In-Reply-To: <20200304212846.0c79c6da@coco.lan>
-References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
-         <20200304131035.731a3947@lwn.net> <20200304212846.0c79c6da@coco.lan>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 4 Mar 2020 16:27:41 -0500
+X-Originating-IP: 90.76.143.236
+Received: from localhost (lfbn-tou-1-1075-236.w90-76.abo.wanadoo.fr [90.76.143.236])
+        (Authenticated sender: antoine.tenart@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 1C0AE60002;
+        Wed,  4 Mar 2020 21:27:38 +0000 (UTC)
+Date:   Wed, 4 Mar 2020 22:27:37 +0100
+From:   Antoine Tenart <antoine.tenart@bootlin.com>
+To:     Hanna Hawa <hhhawa@amazon.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, tsahee@annapurnalabs.com,
+        antoine.tenart@bootlin.com, mchehab+samsung@kernel.org,
+        davem@davemloft.net, gregkh@linuxfoundation.org,
+        Jonathan.Cameron@huawei.com, tglx@linutronix.de,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, dwmw@amazon.co.uk,
+        benh@amazon.com, ronenk@amazon.com, talel@amazon.com,
+        jonnyc@amazon.com, hanochu@amazon.com, eitan@amazon.com
+Subject: Re: [PATCH v4 6/6] arm64: dts: amazon: add Amazon's Annapurna Labs
+ Alpine v3 support
+Message-ID: <20200304212737.GN3179@kwain>
+References: <20200225112926.16518-1-hhhawa@amazon.com>
+ <20200225112926.16518-7-hhhawa@amazon.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200225112926.16518-7-hhhawa@amazon.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2020-03-04 at 21:28 +0100, Mauro Carvalho Chehab wrote:
-> Em Wed, 4 Mar 2020 13:10:35 -0700
-> Jonathan Corbet <corbet@lwn.net> escreveu:
-> 
-> > On Wed,  4 Mar 2020 08:29:50 +0100
-> > Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> > 
-> > > Mauro's patch series <cover.1581955849.git.mchehab+huawei@kernel.org>
-> > > ("[PATCH 00/44] Manually convert filesystem FS documents to ReST")
-> > > converts many Documentation/filesystems/ files to ReST.
-> > > 
-> > > Since then, ./scripts/get_maintainer.pl --self-test complains with 27
-> > > warnings on Documentation/filesystems/ of this kind:
-> > > 
-> > >   warning: no file matches F: Documentation/filesystems/...
-> > > 
-> > > Adjust MAINTAINERS entries to all files converted from .txt to .rst in the
-> > > patch series and address the 27 warnings.
-> > > 
-> > > Link: https://lore.kernel.org/linux-erofs/cover.1581955849.git.mchehab+huawei@kernel.org
-> > > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > > ---
-> > > Mauro, please ack.
-> > > Jonathan, pick pick this patch for doc-next.  
-> > 
-> > Sigh, I need to work a MAINTAINERS check into my workflow...
-> > 
-> > Thanks for fixing these, but ... what tree did you generate the patch
-> > against?  I doesn't come close to applying to docs-next.
-> 
-> I'm starting to suspect that maybe the best workflow would be to just 
-> apply the patches at docs-next keeping links broken, and then run
-> ./scripts/documentation-file-ref-check --fix by the end of a merge
-> window, addressing such breakages.
+Hello,
 
-I'm not sure at all that that script will always do the
-right thing with MAINTAINERS, but it seems to work OK
-except for some renames where a .txt file was directly
-renamed to a .rst file in the same directory where there
-was a similarly named file in a different directory.
+Sorry, I'm a bit late to the party...
 
-Likely the direct rename of a filename extension from
-.txt to .rst should always be applied by the script.
+On Tue, Feb 25, 2020 at 01:29:26PM +0200, Hanna Hawa wrote:
+> diff --git a/arch/arm64/boot/dts/amazon/alpine-v3.dtsi b/arch/arm64/boot/dts/amazon/alpine-v3.dtsi
+> +     arch-timer {                                                    
 
-Anyway, for -next as of today:
+Please use 'timer' instead.
 
-$ git diff --shortstat
- 64 files changed, 116 insertions(+), 116 deletions(-)
+> +             compatible = "arm,armv8-timer";                         
+> +             interrupts = <GIC_PPI 0xd IRQ_TYPE_LEVEL_LOW>,          
+> +                          <GIC_PPI 0xe IRQ_TYPE_LEVEL_LOW>,          
+> +                          <GIC_PPI 0xb IRQ_TYPE_LEVEL_LOW>,          
+> +                          <GIC_PPI 0xa IRQ_TYPE_LEVEL_LOW>;          
+> +     };
 
-> There are usually lots of churn outside the merge window.
-> 
-> Another alternative would be to split the MAINTAINERS file on a
-> per-subsystem basis. If I remember well, someone proposed this once at
-> LKML. I vaguely remember that there were even a patch (or RFC)
-> adding support for such thing for get_maintainers.pl.
+> +		gic: interrupt-controller@f0000000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <0>;
 
-Yeah.  get_maintainer.pl does work if the MAINTAINERS
-file is split up a few different ways.
+No need for this.
 
-There was also a tool to do the MAINTAINERS split.
-https://lore.kernel.org/patchwork/patch/817857/
+> +			interrupt-controller;
+> +			reg = <0x0 0xf0800000 0 0x10000>,
+> +			      <0x0 0xf0a00000 0 0x200000>,
+> +			      <0x0 0xf0000000 0 0x2000>,
+> +			      <0x0 0xf0010000 0 0x1000>,
+> +			      <0x0 0xf0020000 0 0x2000>;
 
-I doubt that would matter at all given today's tools and
-the general mechanisms of maintainers renaming files and
-not running checkpatch in the first place.
+Please add comments here, see alpine-v2.dtsi (or other dtsi in
+arch/arm64).
 
+> +			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+> +
+> +		msix: msix@fbe00000 {
+> +			compatible = "al,alpine-msix";
+> +			reg = <0x0 0xfbe00000 0x0 0x100000>;
+> +			interrupt-controller;
+> +			msi-controller;
+> +			al,msi-base-spi = <160>;
+> +			al,msi-num-spis = <800>;
+> +			interrupt-parent = <&gic>;
+> +		};
+> +
+> +		uart0: serial@fd883000 {
 
+Looking at the Alpine v2 dtsi, this node was put in an io-fabric bus. It
+seems to me the Alpine v3 dtsi is very similar. Would it apply as well?
+
+> +			compatible = "ns16550a";
+> +			reg = <0x0 0xfd883000 0x0 0x1000>;
+> +			clock-frequency = <0>;
+
+Is the frequency set to 0 on purpose? Or is it set by a firmware at boot
+time (if so please add a comment)?
+
+> +			interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+
+Since you're enabling this node explicitly in the dts, you can set it to
+disabled by default.
+
+> +		};
+> +
+> +		pcie@fbd00000 {
+
+Please order the nodes in increasing order.
+
+> +			compatible = "pci-host-ecam-generic";
+> +			device_type = "pci";
+> +			#size-cells = <2>;
+> +			#address-cells = <3>;
+> +			#interrupt-cells = <1>;
+> +			reg = <0x0 0xfbd00000 0x0 0x100000>;
+> +			interrupt-map-mask = <0xf800 0 0 7>;
+> +			/* 8 x legacy interrupts for SATA only */
+> +			interrupt-map = <0x4000 0 0 1 &gic 0 57 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x4800 0 0 1 &gic 0 58 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x5000 0 0 1 &gic 0 59 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x5800 0 0 1 &gic 0 60 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x6000 0 0 1 &gic 0 61 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x6800 0 0 1 &gic 0 62 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x7000 0 0 1 &gic 0 63 IRQ_TYPE_LEVEL_HIGH>,
+> +					<0x7800 0 0 1 &gic 0 64 IRQ_TYPE_LEVEL_HIGH>;
+> +			ranges = <0x02000000 0x0 0xfe000000 0x0 0xfe000000 0x0 0x1000000>;
+> +			bus-range = <0x00 0x00>;
+> +			msi-parent = <&msix>;
+> +		};
+> +	};
+> +};
+
+The rest of the series looks good.
+
+Thanks!
+Antoine
+
+-- 
+Antoine Ténart, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
