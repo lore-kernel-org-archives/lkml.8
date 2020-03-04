@@ -2,253 +2,75 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5EC5C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6820BC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:05:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8DD21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:01:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C8A720870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:05:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgCDPBv (ORCPT
+        id S1728848AbgCDPFX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:01:51 -0500
-Received: from foss.arm.com ([217.140.110.172]:35468 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726661AbgCDPBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:01:51 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2B86231B;
-        Wed,  4 Mar 2020 07:01:50 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD8FF3F6CF;
-        Wed,  4 Mar 2020 07:01:48 -0800 (PST)
-Date:   Wed, 4 Mar 2020 15:01:46 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "open list:SCHEDULER" <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH] sched: fair: Use the earliest break even
-Message-ID: <20200304150145.agekdwrpvvamttk6@e107158-lin.cambridge.arm.com>
-References: <20200304114844.17700-1-daniel.lezcano@linaro.org>
+        Wed, 4 Mar 2020 10:05:23 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:34772 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727835AbgCDPFX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:05:23 -0500
+Received: (qmail 1622 invoked by uid 2102); 4 Mar 2020 10:05:22 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 4 Mar 2020 10:05:22 -0500
+Date:   Wed, 4 Mar 2020 10:05:21 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Tony Fischetti <tony.fischetti@gmail.com>
+cc:     linux-usb@vger.kernel.org, <linux-kernel@vger.kernel.org>
+Subject: Re: Trouble adding QUIRK_ALWAYS_POLL to quirky USB mouse
+In-Reply-To: <CAOMV6SWp3UgY+4AThCLeYmAk2gmh5m0UhG7+=ujPvKFsUdjU-A@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.2003041002440.1509-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200304114844.17700-1-daniel.lezcano@linaro.org>
-User-Agent: NeoMutt/20171215
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel
+On Tue, 3 Mar 2020, Tony Fischetti wrote:
 
-Adding Rafael to CC as I think he might be interested in this too.
-
-On 03/04/20 12:48, Daniel Lezcano wrote:
-> In the idle CPU selection process occuring in the slow path via the
-> find_idlest_group_cpu() function, we pick up in priority an idle CPU
-> with the shallowest idle state otherwise we fall back to the least
-> loaded CPU.
+> Hi all,
 > 
-> In order to be more energy efficient but without impacting the
-> performances, let's use another criteria: the break even deadline.
-
-What is the break even deadline?
-
+> I have a lenovo pixart mouse (vendorId: 0x17ef, productId: 0x608d)
+> that's afflicted with the apparently common problem of disconnecting
+> and re-connecting every minute, each time incrementing the device
+> number
 > 
-> At idle time, when we store the idle state the CPU is entering in, we
-> compute the next deadline where the CPU could be woken up without
-> spending more energy to sleep.
-
-I think that's its definition, but could do with more explanation.
-
-So the break even deadline is the time window during which we can abort the CPU
-while entering its shallowest idle state?
-
-So if we have 2 cpus entering the shallowest idle state, we pick the one that
-has a faster abort? And the energy saving comes from the fact we avoided
-unnecessary sleep-just-to-wakeup-immediately cycle?
-
+> I tried to apply a patch very much like the one in this commit with
+> the identical problem: dcf768b0ac868630e7bdb6f2f1c9fe72788012fa
+> The particular patch I applied appears at the end of this email (not
+> meant to be submitted/applied, just as a reference)
 > 
-> At the selection process, we use the shallowest CPU but in addition we
-> choose the one with the minimal break even deadline instead of relying
-> on the idle_timestamp. When the CPU is idle, the timestamp has less
-> meaning because the CPU could have wake up and sleep again several times
-> without exiting the idle loop. In this case the break even deadline is
-> more relevant as it increases the probability of choosing a CPU which
-> reached its break even.
+> The problem is that when I apply the patch and boot the new kernel,
+> the quirk appears not to have been registered (it doesn't appear in
+> /sys/module/usbhid/parameters/quirks)
+> It is only when I add the kernel boot parameter
+> usbhid.quirks=0x17ef:0x608d:0x00000400 that it appears to be working
 > 
-> Tested on a synquacer 24 cores, 6 sched domains:
-> 
-> sched/perf and messaging does not show a performance regression. Ran
-> 10 times schbench and adrestia.
-> 
-> with break-even deadline:
-> -------------------------
-> schbench *99.0th        : 14844.8
-> adrestia / periodic     : 57.95
-> adrestia / single       : 49.3
-> 
-> Without break-even deadline:
-> ----------------------------
-> schbench / *99.0th      : 15017.6
-> adrestia / periodic     : 57
-> adrestia / single       : 55.4
+> Anyone have any ideas on how to fix this? I'd like to submit a patch
+> fixing this issue once I get it sorted out
 
-Lower is better or worse? The numbers might be popular and maybe I should have
-known them, but adding some explanation will always help.
+If you have usbhid loaded as a module instead of built into the kernel, 
+then it probably is getting loaded from the initramfs.  If you didn't 
+rebuild the initramfs image after creating the new kernel, you would 
+end up loading the original module without the new quirk entry.
 
-Do you have any energy measurement on the impact of this patch?
+It's easy enough to test this.  After booting, do:
 
-> 
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  kernel/sched/fair.c  | 18 ++++++++++++++++--
->  kernel/sched/idle.c  |  9 ++++++++-
->  kernel/sched/sched.h | 20 ++++++++++++++++++++
->  3 files changed, 44 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index fcc968669aea..520c5e822fdd 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5793,6 +5793,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
->  {
->  	unsigned long load, min_load = ULONG_MAX;
->  	unsigned int min_exit_latency = UINT_MAX;
-> +	s64 min_break_even = S64_MAX;
->  	u64 latest_idle_timestamp = 0;
->  	int least_loaded_cpu = this_cpu;
->  	int shallowest_idle_cpu = -1;
-> @@ -5810,6 +5811,8 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
->  		if (available_idle_cpu(i)) {
->  			struct rq *rq = cpu_rq(i);
->  			struct cpuidle_state *idle = idle_get_state(rq);
-> +			s64 break_even = idle_get_break_even(rq);
-> +			
->  			if (idle && idle->exit_latency < min_exit_latency) {
->  				/*
->  				 * We give priority to a CPU whose idle state
-> @@ -5817,10 +5820,21 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
->  				 * of any idle timestamp.
->  				 */
->  				min_exit_latency = idle->exit_latency;
-> +				min_break_even = break_even;
->  				latest_idle_timestamp = rq->idle_stamp;
->  				shallowest_idle_cpu = i;
-> -			} else if ((!idle || idle->exit_latency == min_exit_latency) &&
-> -				   rq->idle_stamp > latest_idle_timestamp) {
-> +			} else if ((idle && idle->exit_latency == min_exit_latency) &&
-> +				   break_even < min_break_even) {
-> +				/*
-> +				 * We give priority to the shallowest
-> +				 * idle states with the minimal break
-> +				 * even deadline to decrease the
-> +				 * probability to choose a CPU which
-> +				 * did not reach its break even yet
-> +				 */
-> +				min_break_even = break_even;
-> +				shallowest_idle_cpu = i;
-> +			} else if (!idle && rq->idle_stamp > latest_idle_timestamp) {
+	rmmod usbhid ; modprobe usbhid
 
-Shouldn't you retain the original if condition here? You omitted the 2nd part
-of this check compared to the original condition
+and see if the quirk entry then shows up in sysfs.
 
-	(!idle || >>>idle->exit_latency == min_exit_latency<<<)
+Alan Stern
 
->  				/*
->  				 * If equal or no active idle state, then
->  				 * the most recently idled CPU might have
-> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
-> index b743bf38f08f..189cd51cd474 100644
-> --- a/kernel/sched/idle.c
-> +++ b/kernel/sched/idle.c
-> @@ -19,7 +19,14 @@ extern char __cpuidle_text_start[], __cpuidle_text_end[];
->   */
->  void sched_idle_set_state(struct cpuidle_state *idle_state)
->  {
-> -	idle_set_state(this_rq(), idle_state);
-> +	struct rq *rq = this_rq();
-> +	ktime_t kt;
-> +
-> +	if (likely(idle_state)) {
-> +		kt = ktime_add_ns(ktime_get(), idle_state->exit_latency_ns);
-> +		idle_set_state(rq, idle_state);
-
-This changes the behavior of the function.
-
-There's a call to sched_idle_set_state(NULL), so with this it'd be a NOP.
-
-Is this intentional?
-
-Don't you need to reset the break_even value if idle_state is NULL too?
-
-
-Thanks
-
---
-Qais Yousef
-
-> +		idle_set_break_even(rq, ktime_to_ns(kt));
-> +	}
->  }
->  
->  static int __read_mostly cpu_idle_force_poll;
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index 2a0caf394dd4..abf2d2e73575 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -1015,6 +1015,7 @@ struct rq {
->  #ifdef CONFIG_CPU_IDLE
->  	/* Must be inspected within a rcu lock section */
->  	struct cpuidle_state	*idle_state;
-> +	s64			break_even;
->  #endif
->  };
->  
-> @@ -1850,6 +1851,16 @@ static inline struct cpuidle_state *idle_get_state(struct rq *rq)
->  
->  	return rq->idle_state;
->  }
-> +
-> +static inline void idle_set_break_even(struct rq *rq, s64 break_even)
-> +{
-> +	rq->break_even = break_even;
-> +}
-> +
-> +static inline s64 idle_get_break_even(struct rq *rq)
-> +{
-> +	return rq->break_even;
-> +}
->  #else
->  static inline void idle_set_state(struct rq *rq,
->  				  struct cpuidle_state *idle_state)
-> @@ -1860,6 +1871,15 @@ static inline struct cpuidle_state *idle_get_state(struct rq *rq)
->  {
->  	return NULL;
->  }
-> +
-> +static inline void idle_set_break_even(struct rq *rq, s64 break_even)
-> +{
-> +}
-> +
-> +static inline s64 idle_get_break_even(struct rq *rq)
-> +{
-> +	return 0;
-> +}
->  #endif
->  
->  extern void schedule_idle(void);
-> -- 
-> 2.17.1
-> 
