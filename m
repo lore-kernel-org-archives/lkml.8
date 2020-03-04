@@ -2,135 +2,113 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE51C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:31:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86B8C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F74214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:31:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="psI7HBiX"
+	by mail.kernel.org (Postfix) with ESMTP id C67A3207FD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728628AbgCDHbm (ORCPT
+        id S1728442AbgCDHiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:31:42 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:33495 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727734AbgCDHbm (ORCPT
+        Wed, 4 Mar 2020 02:38:16 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:50984 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725283AbgCDHiP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:31:42 -0500
-Received: by mail-qk1-f195.google.com with SMTP id p62so691260qkb.0;
-        Tue, 03 Mar 2020 23:31:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qkMWJliOasS6m7G9zTsL6mGdu7EBIcNevaHOgfItqMY=;
-        b=psI7HBiXBCiFAgJ/vpaFL2NAsyMefHvUJxo3v8Gtgz6+L22ohbGLARsGYkkY+5IgKV
-         Ch5RCV0PUEpKl7/BKY1zZBUD5swgetFRWpkEH5vKYqyBon+5pxZdyNepB2PGJKDa6qf1
-         lLACbVhFZWZM0JsidP6bg5WFp8SHPCjVU/9S0cuFae9/8NzYgbxG0Yf7TTOBj1lSmaR9
-         Qv460EDDFpmN8dhm93vARd5jI8jEe7oUKCI7RGfhVfpflEv8/aA+TuCSIT0wg5srgoEK
-         WIGTQI4T9VlUsirDQsKEIz3KbnjmZnnLb4b4n3I5a4yZaz0a7XigkEQRvKAV17ee6qYe
-         i+Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qkMWJliOasS6m7G9zTsL6mGdu7EBIcNevaHOgfItqMY=;
-        b=BF80fkqqeolQ7gEVW6E2BVv2Xm1TrkqCO4RPQiOeE7866HQWPvdLZitkecUZcfxAyL
-         Zg+HYLxQ3WbeX4/dMhh6YuG01DJ8gTGPLi/3C+TGvq0znXjO9BbUW30Gkp74nTeRhcyI
-         qLsHdobxyx6muErvNmW1asJIc8ICAaqsOm7CU2lPL8cmM6912tOTfpFAWV2EU7iabk0q
-         b8N7iS+eHQlNXyUWqeZc9310+LSmbYG4ZJFlAUKFGnY9KFucFlgSAi2C6O8xsDufnXsF
-         9xQVjuS9G8q8/DOeNByr8Bt9pEnBMaRTIs6NvUXn6CyqFwmlrZZwTFcDq9ydFkHTqxvb
-         bnaA==
-X-Gm-Message-State: ANhLgQ2js59A+QLUxU9YRSfizz6olhjDdYNb0ttSSLWH88bvZVQMv+/+
-        EYUa2D8JVaPGCjykqTLhB7+r+1/BeXyexmqegb4=
-X-Google-Smtp-Source: ADFU+vtmFe8ms+kUvpLPs106J8DquTipJEGnoqmpInk431AayhopE039Qccw/oubaPH5rPz3vZGzsIOHE2sF8sFKaBY=
-X-Received: by 2002:a37:8046:: with SMTP id b67mr1685972qkd.218.1583307100884;
- Tue, 03 Mar 2020 23:31:40 -0800 (PST)
+        Wed, 4 Mar 2020 02:38:15 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0247UHhu022850;
+        Wed, 4 Mar 2020 02:37:56 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52a68a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 04 Mar 2020 02:37:56 -0500
+Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 0247bs2r025995
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Wed, 4 Mar 2020 02:37:55 -0500
+Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
+ SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 3 Mar 2020 23:37:53 -0800
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Tue, 3 Mar 2020 23:37:37 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Tue, 3 Mar 2020 23:37:53 -0800
+Received: from analog.ad.analog.com ([10.48.65.180])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 0247bnxa014676;
+        Wed, 4 Mar 2020 02:37:49 -0500
+From:   Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+To:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <gregkh@linuxfoundation.org>, <simon@nikanor.nu>,
+        <chandra627@gmail.com>
+CC:     <gneukum1@gmail.com>, <dan.carpenter@oracle.com>,
+        <fabian.krueger@fau.de>, <michael.scheiderer@fau.de>,
+        Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+Subject: [PATCH v2] staging: kpc2000: kpc2000_spi: Use new structure for SPI transfer delays
+Date:   Wed, 4 Mar 2020 09:37:46 +0200
+Message-ID: <20200304073746.19664-1-sergiu.cuciurean@analog.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200227144643.23195-1-sergiu.cuciurean@analog.com>
+References: <20200227144643.23195-1-sergiu.cuciurean@analog.com>
 MIME-Version: 1.0
-References: <20200303005035.13814-1-luke.r.nels@gmail.com> <20200303005035.13814-3-luke.r.nels@gmail.com>
- <CAJ+HfNjgwVnxnyCTk5j+JCpxz+zmeEBYbj=_SueR750aAuoz=A@mail.gmail.com>
- <CADasFoBODSbgHHXU+iA-32=oKNs6n0Ff_UDU3063uiyGjx1xXg@mail.gmail.com>
- <CAJ+HfNhOp_Rbcqer0K=mZ8h+uswYSv4hSa3wCTdjjxH26HUTCw@mail.gmail.com> <CADasFoA3JN7PkvnVAmFZOFeDo2WgWzViankpwwRRWcjebSx+DQ@mail.gmail.com>
-In-Reply-To: <CADasFoA3JN7PkvnVAmFZOFeDo2WgWzViankpwwRRWcjebSx+DQ@mail.gmail.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Wed, 4 Mar 2020 08:31:29 +0100
-Message-ID: <CAJ+HfNjkMe2kM3V+jytmSbwoN6wnBXGGTknsEeS7EV314eG+Dg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 2/4] riscv, bpf: add RV32G eBPF JIT
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_01:2020-03-03,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 08:24, Luke Nelson <lukenels@cs.washington.edu> wrote:
->
-> > I like that, but keep the first patch as a refactoring patch only, and
-> > then in a *new* patch 2 you add the rv32 specific code (sltu and
-> > pseudo instructions + the xlen preprocessor check + copyright-things
-> > ;-)).  Patch 3 will be the old patch 2. Wdyt?
->
-> Thanks! I'll make sure that patch 1 is for renaming bpf_jit_comp.c
-> and factoring code out. Do you think it's reasonable to add the
-> RV32-specific code to the header in the same patch that adds the
-> RV32 JIT implementation (patch 2)? It might make sense to commit
-> them together.
->
-> The full plan for v5 would be:
->
-> Patch 1
->
-> - Refactor existing code to bpf_jit.h and bpf_jit_core.c
->   + Including the minor modifications to build_body() and
->   bpf_int_jit_compile() (These are unrelated to RV32 and we could
->   forego these tweaks).
->   + Also making emit_insn and build_{prologue,epilogue} non-static
->   and renaming them to be prefixed with "bpf_jit_".
-> - Rename bpf_jit_comp.c to bpf_jit_comp64.c
->
-> Patch 2
->
-> - Add the RV32 BPF JIT implementation to bpf_jit_comp32.c and
-> RV32-specific changes to bpf_jit.h.
->
-> Patch 3
->
-> - Update documentation.
->
-> Patch 4
->
-> - Update MAINTAINERS.
->
-> Thanks again,
->
+In a recent change to the SPI subsystem in commit <bebcfd272df6>
+("spi: introduce `delay` field for `spi_transfer` +
+spi_transfer_delay_exec()"), a new `delay` struct was added
+to replace the `delay_usecs`. This change replaces the current
+`delay_usecs` with `delay` for this driver.
 
-Perfect! Thank you!
+The `spi_transfer_delay_exec()` function [in the SPI framework] makes sure
+that both `delay_usecs` & `delay` are used (in this order to preserve
+backwards compatibility).
 
+Signed-off-by: Sergiu Cuciurean <sergiu.cuciurean@analog.com>
+---
 
-> Luke
+Changelog v1->v2:
+*Removed footnote from the commit description
+*Convert the delay in nano seconds. In this way, the delay is executed no
+matter what unit it is described by.
+
+ drivers/staging/kpc2000/kpc2000_spi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/staging/kpc2000/kpc2000_spi.c b/drivers/staging/kpc2000/kpc2000_spi.c
+index 1c360daa703d..44017d523da5 100644
+--- a/drivers/staging/kpc2000/kpc2000_spi.c
++++ b/drivers/staging/kpc2000/kpc2000_spi.c
+@@ -386,8 +386,8 @@ kp_spi_transfer_one_message(struct spi_master *master, struct spi_message *m)
+ 			}
+ 		}
+ 
+-		if (transfer->delay_usecs)
+-			udelay(transfer->delay_usecs);
++		if (transfer->delay.value)
++			ndelay(spi_delay_to_ns(&transfer->delay, transfer));
+ 	}
+ 
+ 	/* de-assert chip select to end the sequence */
+-- 
+2.17.1
+
