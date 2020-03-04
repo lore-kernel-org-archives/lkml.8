@@ -2,111 +2,122 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DE2C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE447C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:12:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B99320848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:10:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="iPlIPmCg"
+	by mail.kernel.org (Postfix) with ESMTP id A726E20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:12:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbgCDKK5 (ORCPT
+        id S1729241AbgCDKMv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:10:57 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:51935 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbgCDKK4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:10:56 -0500
-Received: from [IPv6:2601:646:8600:3281:d841:929b:f37:3a31] ([IPv6:2601:646:8600:3281:d841:929b:f37:3a31])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 024AAZQc311953
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-        Wed, 4 Mar 2020 02:10:38 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 024AAZQc311953
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2020022001; t=1583316638;
-        bh=c7JAi1VlSKPPzJ5Tyh0qCJzeKbXKmYAvZ7n163Neqv4=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=iPlIPmCgk+q9AqXQuGU1Ne5GrRRYgzMxOsSienrKJi4avOWTvi1nVZl2Uzea2quY/
-         7ZgB4oFPQM3M/qHL+4EaBZB5D2toljgmT+YaIhyO+I8qA3IiCC4eGR4QWPD6NynVkl
-         PyNNusTks1jPeOSADA1BFMGuTzIdkXcuN8gwxn/fg9Cs+ybuXVcIZFnrR6J0KJA1bx
-         Wip1QbfPCQ31sEWmzVnlCqXUTGm3G7YEaO0E4shdZMichts0BSZSEtPFNAF9E5tQRH
-         sRjVMBjdTzII1psNWgP2boxOzpMTfkHWUX8Du9NWcTZ4Hi5Y6u5SrS+jR+nTlq62/F
-         frE66rXl65kmA==
-Date:   Wed, 04 Mar 2020 02:10:29 -0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20200304100437.GM2596@hirez.programming.kicks-ass.net>
-References: <20200303204144.GA9913@avx2> <9947D7CB-B9CD-47E0-BC5E-C7FC3A81FC7B@zytor.com> <20200304100437.GM2596@hirez.programming.kicks-ass.net>
+        Wed, 4 Mar 2020 05:12:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:59588 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728387AbgCDKMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 05:12:51 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC46B30E;
+        Wed,  4 Mar 2020 02:12:50 -0800 (PST)
+Received: from [10.1.195.32] (e112269-lin.cambridge.arm.com [10.1.195.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 037CD3F534;
+        Wed,  4 Mar 2020 02:12:47 -0800 (PST)
+Subject: Re: [PATCH V14 1/2] arm64/mm: Hold memory hotplug lock while walking
+ for kernel page table dump
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        Catalin Marinas <Catalin.Marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "rppt@linux.ibm.com" <rppt@linux.ibm.com>
+Cc:     Mark Rutland <Mark.Rutland@arm.com>,
+        "david@redhat.com" <david@redhat.com>, "cai@lca.pw" <cai@lca.pw>,
+        "logang@deltatee.com" <logang@deltatee.com>,
+        "arunks@codeaurora.org" <arunks@codeaurora.org>,
+        "mgorman@techsingularity.net" <mgorman@techsingularity.net>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        Ard Biesheuvel <Ard.Biesheuvel@arm.com>,
+        Steve Capper <Steve.Capper@arm.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        Valentin Schneider <Valentin.Schneider@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        Suzuki Poulose <Suzuki.Poulose@arm.com>,
+        "ira.weiny@intel.com" <ira.weiny@intel.com>,
+        "dan.j.williams@intel.com" <dan.j.williams@intel.com>
+References: <1583296123-18546-1-git-send-email-anshuman.khandual@arm.com>
+ <1583296123-18546-2-git-send-email-anshuman.khandual@arm.com>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <91e4cbd0-0f1d-30c6-2796-d2fb91ba6720@arm.com>
+Date:   Wed, 4 Mar 2020 10:12:46 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] x86/acpi: make "asmlinkage" part first thing in the function definition
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Alexey Dobriyan <adobriyan@gmail.com>, rjw@rjwysocki.net,
-        lenb@kernel.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, luto@kernel.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org
-From:   hpa@zytor.com
-Message-ID: <E88DA201-307C-4F47-A931-13C3894D2E8F@zytor.com>
+In-Reply-To: <1583296123-18546-2-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On March 4, 2020 2:04:38 AM PST, Peter Zijlstra <peterz@infradead=2Eorg> wr=
-ote:
->On Wed, Mar 04, 2020 at 12:54:09AM -0800, hpa@zytor=2Ecom wrote:
->> On March 3, 2020 12:41:44 PM PST, Alexey Dobriyan
-><adobriyan@gmail=2Ecom> wrote:
->> >g++ insists that function declaration must start with extern "C"
->> >(which asmlinkage expands to)=2E
->> >
->> >gcc doesn't care=2E
->> >
->> >Signed-off-by: _Z6Alexeyv <adobriyan@gmail=2Ecom>
->> >---
->> >
->> > arch/x86/kernel/acpi/sleep=2Ec |    2 +-
->> > arch/x86/kernel/acpi/sleep=2Eh |    2 +-
->> > 2 files changed, 2 insertions(+), 2 deletions(-)
->> >
->> >--- a/arch/x86/kernel/acpi/sleep=2Ec
->> >+++ b/arch/x86/kernel/acpi/sleep=2Ec
->> >@@ -43,7 +43,7 @@ unsigned long acpi_get_wakeup_address(void)
->> >  *
->> >  * Wrapper around acpi_enter_sleep_state() to be called by
->assmebly=2E
->> >  */
->> >-acpi_status asmlinkage __visible x86_acpi_enter_sleep_state(u8
->state)
->> >+asmlinkage acpi_status __visible x86_acpi_enter_sleep_state(u8
->state)
->> > {
->> > 	return acpi_enter_sleep_state(state);
->> > }
->> >--- a/arch/x86/kernel/acpi/sleep=2Eh
->> >+++ b/arch/x86/kernel/acpi/sleep=2Eh
->> >@@ -19,4 +19,4 @@ extern void do_suspend_lowlevel(void);
->> >=20
->> > extern int x86_acpi_suspend_lowlevel(void);
->> >=20
->> >-acpi_status asmlinkage x86_acpi_enter_sleep_state(u8 state);
->> >+asmlinkage acpi_status x86_acpi_enter_sleep_state(u8 state);
->>=20
->> Are you building the kernel with C++?!
->
->He is :-) IIRC he's got a whole bunch of patches that removes all the
->C++ keywords from the kernel=2E
+On 04/03/2020 04:28, Anshuman Khandual wrote:
+> The arm64 page table dump code can race with concurrent modification of the
+> kernel page tables. When a leaf entries are modified concurrently, the dump
+> code may log stale or inconsistent information for a VA range, but this is
+> otherwise not harmful.
+> 
+> When intermediate levels of table are freed, the dump code will continue to
+> use memory which has been freed and potentially reallocated for another
+> purpose. In such cases, the dump code may dereference bogus addresses,
+> leading to a number of potential problems.
+> 
+> Intermediate levels of table may by freed during memory hot-remove,
+> which will be enabled by a subsequent patch. To avoid racing with
+> this, take the memory hotplug lock when walking the kernel page table.
+> 
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
-I'm genuinely curious: I have heard it says that gcc is something like 10x=
- slower in C++ mode even for what is otherwise basically C code (i=2Ee=2E n=
-o templates etc=2E)
+Reviewed-by: Steven Price <steven.price@arm.com>
 
-Does that match observations?
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Thanks,
+
+Steve
+
+> ---
+>  arch/arm64/mm/ptdump_debugfs.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/arch/arm64/mm/ptdump_debugfs.c b/arch/arm64/mm/ptdump_debugfs.c
+> index 1f2eae3e988b..d29d722ec3ec 100644
+> --- a/arch/arm64/mm/ptdump_debugfs.c
+> +++ b/arch/arm64/mm/ptdump_debugfs.c
+> @@ -1,5 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>  #include <linux/debugfs.h>
+> +#include <linux/memory_hotplug.h>
+>  #include <linux/seq_file.h>
+>  
+>  #include <asm/ptdump.h>
+> @@ -7,7 +8,10 @@
+>  static int ptdump_show(struct seq_file *m, void *v)
+>  {
+>  	struct ptdump_info *info = m->private;
+> +
+> +	get_online_mems();
+>  	ptdump_walk(m, info);
+> +	put_online_mems();
+>  	return 0;
+>  }
+>  DEFINE_SHOW_ATTRIBUTE(ptdump);
+> 
+
