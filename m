@@ -2,105 +2,302 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB80C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:06:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D38BC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8C0F2084E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:06:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE8720870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:09:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="G9pkHkvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387761AbgCDUGK (ORCPT
+        id S1728946AbgCDUJx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:06:10 -0500
-Received: from fieldses.org ([173.255.197.46]:39064 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726440AbgCDUGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:06:10 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 283731C19; Wed,  4 Mar 2020 15:06:09 -0500 (EST)
-Date:   Wed, 4 Mar 2020 15:06:09 -0500
-From:   Bruce Fields <bfields@fieldses.org>
-To:     Chuck Lever <chuck.lever@oracle.com>
-Cc:     YueHaibing <yuehaibing@huawei.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Linux NFS Mailing List <linux-nfs@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nfsd: Fix build error
-Message-ID: <20200304200609.GA26924@fieldses.org>
-References: <20200304131803.46560-1-yuehaibing@huawei.com>
- <BC0E3531-B282-4C04-9540-C39C6F4A1A5D@oracle.com>
+        Wed, 4 Mar 2020 15:09:53 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:28640 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727528AbgCDUJx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:09:53 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1583352592; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=/RCgoyhHvf5S+/RouyAbpWlCuHMv+v5tq6A3J7daPyw=; b=G9pkHkvwyTxuoL0uxB5FtO+bZv7ja/+TIev/0rOlrtufEi1n8AVmYq2O9fffovisEjxyKoX2
+ N9QM9Gd6XyVSe0+PuuhL/A67BX3FQlJdTqZivwMOL35HSIF/5MqYGnv6McVlbRClOms3TfhC
+ MMXY9avrq83rPKUGJ8nQg59W0s0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e600b07.7ffa0b0d23e8-smtp-out-n02;
+ Wed, 04 Mar 2020 20:09:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 59104C447A0; Wed,  4 Mar 2020 20:09:42 +0000 (UTC)
+Received: from blr-ubuntu-87.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sibis)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 07CE1C4479D;
+        Wed,  4 Mar 2020 20:09:37 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 07CE1C4479D
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sibis@codeaurora.org
+From:   Sibi Sankar <sibis@codeaurora.org>
+To:     bjorn.andersson@linaro.org, srinivas.kandagatla@linaro.org
+Cc:     agross@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        tsoni@codeaurora.org, vnkgutta@codeaurora.org,
+        Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v6 3/3] soc: qcom: apr: Add avs/audio tracking functionality
+Date:   Thu,  5 Mar 2020 01:39:11 +0530
+Message-Id: <20200304200911.15415-4-sibis@codeaurora.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200304200911.15415-1-sibis@codeaurora.org>
+References: <20200304200911.15415-1-sibis@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BC0E3531-B282-4C04-9540-C39C6F4A1A5D@oracle.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 01:00:12PM -0500, Chuck Lever wrote:
-> Hi-
-> 
-> > On Mar 4, 2020, at 8:18 AM, YueHaibing <yuehaibing@huawei.com> wrote:
-> > 
-> > fs/nfsd/nfs4proc.o: In function `nfsd4_do_copy':
-> > nfs4proc.c:(.text+0x23b7): undefined reference to `nfs42_ssc_close'
-> > fs/nfsd/nfs4proc.o: In function `nfsd4_copy':
-> > nfs4proc.c:(.text+0x5d2a): undefined reference to `nfs_sb_deactive'
-> > fs/nfsd/nfs4proc.o: In function `nfsd4_do_async_copy':
-> > nfs4proc.c:(.text+0x61d5): undefined reference to `nfs42_ssc_open'
-> > nfs4proc.c:(.text+0x6389): undefined reference to `nfs_sb_deactive'
-> > 
-> > Add dependency to NFSD_V4_2_INTER_SSC to fix this.
-> > 
-> > Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
-> > Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> > ---
-> > fs/nfsd/Kconfig | 1 +
-> > 1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
-> > index f368f32..fc587a5 100644
-> > --- a/fs/nfsd/Kconfig
-> > +++ b/fs/nfsd/Kconfig
-> > @@ -136,6 +136,7 @@ config NFSD_FLEXFILELAYOUT
-> > 
-> > config NFSD_V4_2_INTER_SSC
-> > 	bool "NFSv4.2 inter server to server COPY"
-> > +	depends on !(NFSD=y && NFS_FS=m)
-> 
-> The new dependency is not especially clear to me; more explanation
-> in the patch description about the cause of the build failure
-> would definitely be helpful.
-> 
-> NFSD_V4 can't be set unless NFSD is also set.
-> 
-> NFS_V4_2 can't be set unless NFS_V4_1 is also set, and that cannot
-> be set unless NFS_FS is also set.
-> 
-> So what's really going on here?
+Use PDR helper functions to track the protection domains that the apr
+services are dependent upon on SDM845 SoC, specifically the "avs/audio"
+service running on ADSP Q6.
 
-I don't understand that "depends" either.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
 
-The fundamental problem, though, is that nfsd is calling nfs code
-directly.
+V6:
+ * No change
 
-Which I noticed in earlier review and then forgot to follow up on,
-sorry.
+V5:
+ * Picked up Bjorn's R-b
 
-So either we:
+ drivers/soc/qcom/Kconfig     |   1 +
+ drivers/soc/qcom/apr.c       | 123 ++++++++++++++++++++++++++++++++---
+ include/linux/soc/qcom/apr.h |   1 +
+ 3 files changed, 116 insertions(+), 9 deletions(-)
 
-	- let nfsd depend on nfs, fix up Kconfig to reflect the fact, or
-	- write some code so nfsd can load nfs and find those symbols at
-	  runtime if it needs to do a copy.
-
-The latter's certainly doable, but it'd be simplest to do the former.
-Are there actually a lot of people who want nfsd but not nfs?  Does that
-cause a real problem for anyone?
-
---b.
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index 945609005cedd..e2c364d86a838 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -201,6 +201,7 @@ config QCOM_APR
+ 	tristate "Qualcomm APR Bus (Asynchronous Packet Router)"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+ 	depends on RPMSG
++	select QCOM_PDR_HELPERS
+ 	help
+ 	  Enable APR IPC protocol support between
+ 	  application processor and QDSP6. APR is
+diff --git a/drivers/soc/qcom/apr.c b/drivers/soc/qcom/apr.c
+index 4fcc32420c474..1f35b097c6356 100644
+--- a/drivers/soc/qcom/apr.c
++++ b/drivers/soc/qcom/apr.c
+@@ -11,6 +11,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/of_device.h>
+ #include <linux/soc/qcom/apr.h>
++#include <linux/soc/qcom/pdr.h>
+ #include <linux/rpmsg.h>
+ #include <linux/of.h>
+ 
+@@ -21,6 +22,7 @@ struct apr {
+ 	spinlock_t rx_lock;
+ 	struct idr svcs_idr;
+ 	int dest_domain_id;
++	struct pdr_handle *pdr;
+ 	struct workqueue_struct *rxwq;
+ 	struct work_struct rx_work;
+ 	struct list_head rx_list;
+@@ -289,6 +291,9 @@ static int apr_add_device(struct device *dev, struct device_node *np,
+ 		  id->svc_id + 1, GFP_ATOMIC);
+ 	spin_unlock(&apr->svcs_lock);
+ 
++	of_property_read_string_index(np, "qcom,protection-domain",
++				      1, &adev->service_path);
++
+ 	dev_info(dev, "Adding APR dev: %s\n", dev_name(&adev->dev));
+ 
+ 	ret = device_register(&adev->dev);
+@@ -300,14 +305,75 @@ static int apr_add_device(struct device *dev, struct device_node *np,
+ 	return ret;
+ }
+ 
+-static void of_register_apr_devices(struct device *dev)
++static int of_apr_add_pd_lookups(struct device *dev)
++{
++	const char *service_name, *service_path;
++	struct apr *apr = dev_get_drvdata(dev);
++	struct device_node *node;
++	struct pdr_service *pds;
++	int ret;
++
++	for_each_child_of_node(dev->of_node, node) {
++		ret = of_property_read_string_index(node, "qcom,protection-domain",
++						    0, &service_name);
++		if (ret < 0)
++			continue;
++
++		ret = of_property_read_string_index(node, "qcom,protection-domain",
++						    1, &service_path);
++		if (ret < 0) {
++			dev_err(dev, "pdr service path missing: %d\n", ret);
++			return ret;
++		}
++
++		pds = pdr_add_lookup(apr->pdr, service_name, service_path);
++		if (IS_ERR(pds) && PTR_ERR(pds) != -EALREADY) {
++			dev_err(dev, "pdr add lookup failed: %d\n", ret);
++			return PTR_ERR(pds);
++		}
++	}
++
++	return 0;
++}
++
++static void of_register_apr_devices(struct device *dev, const char *svc_path)
+ {
+ 	struct apr *apr = dev_get_drvdata(dev);
+ 	struct device_node *node;
++	const char *service_path;
++	int ret;
+ 
+ 	for_each_child_of_node(dev->of_node, node) {
+ 		struct apr_device_id id = { {0} };
+ 
++		/*
++		 * This function is called with svc_path NULL during
++		 * apr_probe(), in which case we register any apr devices
++		 * without a qcom,protection-domain specified.
++		 *
++		 * Then as the protection domains becomes available
++		 * (if applicable) this function is again called, but with
++		 * svc_path representing the service becoming available. In
++		 * this case we register any apr devices with a matching
++		 * qcom,protection-domain.
++		 */
++
++		ret = of_property_read_string_index(node, "qcom,protection-domain",
++						    1, &service_path);
++		if (svc_path) {
++			/* skip APR services that are PD independent */
++			if (ret)
++				continue;
++
++			/* skip APR services whose PD paths don't match */
++			if (strcmp(service_path, svc_path))
++				continue;
++		} else {
++			/* skip APR services whose PD lookups are registered */
++			if (ret == 0)
++				continue;
++		}
++
+ 		if (of_property_read_u32(node, "reg", &id.svc_id))
+ 			continue;
+ 
+@@ -318,6 +384,34 @@ static void of_register_apr_devices(struct device *dev)
+ 	}
+ }
+ 
++static int apr_remove_device(struct device *dev, void *svc_path)
++{
++	struct apr_device *adev = to_apr_device(dev);
++
++	if (svc_path && adev->service_path) {
++		if (!strcmp(adev->service_path, (char *)svc_path))
++			device_unregister(&adev->dev);
++	} else {
++		device_unregister(&adev->dev);
++	}
++
++	return 0;
++}
++
++static void apr_pd_status(int state, char *svc_path, void *priv)
++{
++	struct apr *apr = (struct apr *)priv;
++
++	switch (state) {
++	case SERVREG_SERVICE_STATE_UP:
++		of_register_apr_devices(apr->dev, svc_path);
++		break;
++	case SERVREG_SERVICE_STATE_DOWN:
++		device_for_each_child(apr->dev, svc_path, apr_remove_device);
++		break;
++	}
++}
++
+ static int apr_probe(struct rpmsg_device *rpdev)
+ {
+ 	struct device *dev = &rpdev->dev;
+@@ -343,28 +437,39 @@ static int apr_probe(struct rpmsg_device *rpdev)
+ 		return -ENOMEM;
+ 	}
+ 	INIT_WORK(&apr->rx_work, apr_rxwq);
++
++	apr->pdr = pdr_handle_alloc(apr_pd_status, apr);
++	if (IS_ERR(apr->pdr)) {
++		dev_err(dev, "Failed to init PDR handle\n");
++		ret = PTR_ERR(apr->pdr);
++		goto destroy_wq;
++	}
++
+ 	INIT_LIST_HEAD(&apr->rx_list);
+ 	spin_lock_init(&apr->rx_lock);
+ 	spin_lock_init(&apr->svcs_lock);
+ 	idr_init(&apr->svcs_idr);
+-	of_register_apr_devices(dev);
+-
+-	return 0;
+-}
+ 
+-static int apr_remove_device(struct device *dev, void *null)
+-{
+-	struct apr_device *adev = to_apr_device(dev);
++	ret = of_apr_add_pd_lookups(dev);
++	if (ret)
++		goto handle_release;
+ 
+-	device_unregister(&adev->dev);
++	of_register_apr_devices(dev, NULL);
+ 
+ 	return 0;
++
++handle_release:
++	pdr_handle_release(apr->pdr);
++destroy_wq:
++	destroy_workqueue(apr->rxwq);
++	return ret;
+ }
+ 
+ static void apr_remove(struct rpmsg_device *rpdev)
+ {
+ 	struct apr *apr = dev_get_drvdata(&rpdev->dev);
+ 
++	pdr_handle_release(apr->pdr);
+ 	device_for_each_child(&rpdev->dev, NULL, apr_remove_device);
+ 	flush_workqueue(apr->rxwq);
+ 	destroy_workqueue(apr->rxwq);
+diff --git a/include/linux/soc/qcom/apr.h b/include/linux/soc/qcom/apr.h
+index c5d52e2cb275f..7f0bc3cf4d610 100644
+--- a/include/linux/soc/qcom/apr.h
++++ b/include/linux/soc/qcom/apr.h
+@@ -85,6 +85,7 @@ struct apr_device {
+ 	uint16_t	domain_id;
+ 	uint32_t	version;
+ 	char name[APR_NAME_SIZE];
++	const char *service_path;
+ 	spinlock_t	lock;
+ 	struct list_head node;
+ };
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
