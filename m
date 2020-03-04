@@ -2,115 +2,121 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF7CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A410C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FC7F21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4C02166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:35:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgCDMe3 (ORCPT
+        id S1729438AbgCDMfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:34:29 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:36461 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728953AbgCDMe3 (ORCPT
+        Wed, 4 Mar 2020 07:35:21 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62760 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729386AbgCDMfV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:34:29 -0500
-Received: by mail-ed1-f67.google.com with SMTP id a13so2123920edh.3;
-        Wed, 04 Mar 2020 04:34:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L3VdjSXkTyf2Ulpvm4N7Ob3rPnJ0K39EKBP/xv4PbHc=;
-        b=IA1zfGPz7S9vIBa7nbtWEQlIGBAG7XL16ciNO5XGdee7eVS08iNXmp2yYYipkoh+xw
-         aOvBiBT6exnzk9D/9Q32CWIz6TYB9U1woy9sSVav335Z+6qicMDIWU35OQwsc7G0LOra
-         5GvJ8MyCO5nbKXOBPhzlygK8/ZK9/ifgfw/5h/NdllZcZONsmnPRSwtSf3+u6z9csYBl
-         Ch8HNp13Zeow46s9C7TZOV9f6Vdu8Xt0SQpEPaI2joEV0554o385PLVPL31XudYbeFru
-         tAjFToEUZmvOdEPQCGJvGzDAq+tAiXA1NLWFUMfTBFxpuSaxGvjCPzb4D9dZSbAtEepv
-         U7ZA==
-X-Gm-Message-State: ANhLgQ24P4PgJwf5UIlfYDw0dNimYg+2jdhmHijgp+K0JQ2ot1KVViaS
-        gYVGk6Q7A+C0utsHZKDwjTENwe9I7hY=
-X-Google-Smtp-Source: ADFU+vv50mDo4l3Kc0rYdycGnAtW+wggeAzaet+CMAL47vcSbiWYE6Wq57QEBV4BSDPVpy+lmocZJw==
-X-Received: by 2002:a17:906:8284:: with SMTP id h4mr2223306ejx.224.1583325266504;
-        Wed, 04 Mar 2020 04:34:26 -0800 (PST)
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com. [209.85.221.42])
-        by smtp.gmail.com with ESMTPSA id ss15sm1193132ejb.10.2020.03.04.04.34.25
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 04:34:26 -0800 (PST)
-Received: by mail-wr1-f42.google.com with SMTP id x7so2215380wrr.0;
-        Wed, 04 Mar 2020 04:34:25 -0800 (PST)
-X-Received: by 2002:adf:9c93:: with SMTP id d19mr4101231wre.64.1583325265577;
- Wed, 04 Mar 2020 04:34:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20200304113452.10201-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20200304113452.10201-1-lukas.bulwahn@gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Wed, 4 Mar 2020 20:34:14 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66sJ42yaLwHubrOvCNBQQ4sJ1HXYpVmf86oW-sp7bCqGA@mail.gmail.com>
-Message-ID: <CAGb2v66sJ42yaLwHubrOvCNBQQ4sJ1HXYpVmf86oW-sp7bCqGA@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: update ALLWINNER CPUFREQ DRIVER entry
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Yangtao Li <tiny.windzz@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Rob Herring <robh@kernel.org>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Wed, 4 Mar 2020 07:35:21 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024CWneD033698
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 07:35:19 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfknbwvxc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 07:35:19 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 4 Mar 2020 12:35:17 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 12:35:13 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024CZBJP38928546
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 12:35:11 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8565711C052;
+        Wed,  4 Mar 2020 12:35:11 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C57811C054;
+        Wed,  4 Mar 2020 12:35:10 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.200.112])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 12:35:10 +0000 (GMT)
+Subject: Re: [PATCH v2] ima: add a new CONFIG for loading arch-specific
+ policies
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-efi@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 04 Mar 2020 07:35:09 -0500
+In-Reply-To: <1583307813.3907.4.camel@HansenPartnership.com>
+References: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
+         <1583307813.3907.4.camel@HansenPartnership.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030412-0016-0000-0000-000002ED176D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030412-0017-0000-0000-0000335064A5
+Message-Id: <1583325309.6264.23.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_03:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
+ mlxlogscore=976 lowpriorityscore=0 priorityscore=1501 bulkscore=0
+ adultscore=0 suspectscore=0 clxscore=1015 mlxscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 7:35 PM Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
->
-> Commit b30d8cf5e171 ("dt-bindings: opp: Convert Allwinner H6 OPP to a
-> schema") converted in Documentation/devicetree/bindings/opp/ the file
-> sun50i-nvmem-cpufreq.txt to allwinner,sun50i-h6-operating-points.yaml.
->
-> Since then, ./scripts/get_maintainer.pl --self-test complains:
->
->   warning: no file matches \
->   F: Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
->
-> Adjust the file pattern and while at it, add the two maintainers mentioned
-> in the yaml file to the ALLWINNER CPUFREQ DRIVER entry.
->
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> ---
-> Maxime, Chen-Yu, Yangtao, please ack.
-> Rob, please pick this patch.
->
->  MAINTAINERS | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6158a143a13e..8e5ed8737966 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -691,9 +691,11 @@ F: drivers/staging/media/allegro-dvt/
->
->  ALLWINNER CPUFREQ DRIVER
->  M:     Yangtao Li <tiny.windzz@gmail.com>
-> +M:     Chen-Yu Tsai <wens@csie.org>
-> +M:     Maxime Ripard <mripard@kernel.org>
+On Tue, 2020-03-03 at 23:43 -0800, James Bottomley wrote:
+> On Tue, 2020-03-03 at 21:33 -0500, Nayna Jain wrote:
 
-There's no need to add us. The Allwinner entry already covers this under sun*i.
+> > diff --git a/security/integrity/ima/Kconfig
+> > b/security/integrity/ima/Kconfig
+> > index 3f3ee4e2eb0d..d17972aa413a 100644
+> > --- a/security/integrity/ima/Kconfig
+> > +++ b/security/integrity/ima/Kconfig
+> > @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+> >  	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+> >  	depends on SYSTEM_TRUSTED_KEYRING
+> >  	default y
+> > +
+> > +config IMA_SECURE_AND_OR_TRUSTED_BOOT
+> > +	bool
+> > +	depends on IMA
+> > +	depends on IMA_ARCH_POLICY
+> > +	default n
+> 
+> You can't do this: a symbol designed to be selected can't depend on
+> other symbols because Kconfig doesn't see the dependencies during
+> select.  We even have a doc for this now:
+> 
+> Documentation/kbuild/Kconfig.select-break
 
-ChenYu
+The document is discussing a circular dependency, where C selects B.
+ IMA_SECURE_AND_OR_TRUSTED_BOOT is not selecting anything, but is
+being selected.  All of the Kconfig's are now dependent on
+IMA_ARCH_POLICY being enabled before selecting
+IMA_SECURE_AND_OR_TRUSTED_BOOT.
 
->  L:     linux-pm@vger.kernel.org
->  S:     Maintained
-> -F:     Documentation/devicetree/bindings/opp/sun50i-nvmem-cpufreq.txt
-> +F:     Documentation/devicetree/bindings/opp/allwinner,sun50i-h6-operating-points.yaml
->  F:     drivers/cpufreq/sun50i-cpufreq-nvmem.c
->
->  ALLWINNER CRYPTO DRIVERS
-> --
-> 2.17.1
->
+As Ard pointed out, both IMA and IMA_ARCH_POLICY are not needed, as
+IMA_ARCH_POLICY is already dependent on IMA.
+
+Mimi
+
