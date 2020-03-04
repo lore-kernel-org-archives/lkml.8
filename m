@@ -2,503 +2,202 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C59BBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C44C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94C082166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:22:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2129E21741
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 15:22:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729687AbgCDPWG (ORCPT
+        id S1729701AbgCDPWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 10:22:06 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60432 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726440AbgCDPWF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 10:22:05 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024FLnOW037939
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 10:22:04 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yhyxqwx4y-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:22:03 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Wed, 4 Mar 2020 15:22:00 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Mar 2020 15:21:53 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024FLpLC47710386
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Mar 2020 15:21:51 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 805F6AE051;
-        Wed,  4 Mar 2020 15:21:51 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 703C3AE045;
-        Wed,  4 Mar 2020 15:21:50 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.145.27])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Mar 2020 15:21:50 +0000 (GMT)
-Subject: Re: [PATCH v3 23/27] powerpc/powernv/pmem: Add debug IOCTLs
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20200221032720.33893-1-alastair@au1.ibm.com>
- <20200221032720.33893-24-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Wed, 4 Mar 2020 16:21:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Wed, 4 Mar 2020 10:22:35 -0500
+Received: from foss.arm.com ([217.140.110.172]:35686 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726440AbgCDPWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 10:22:35 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D12C54B2;
+        Wed,  4 Mar 2020 07:22:34 -0800 (PST)
+Received: from e113632-lin (e113632-lin.cambridge.arm.com [10.1.194.46])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C7073F6CF;
+        Wed,  4 Mar 2020 07:22:33 -0800 (PST)
+References: <20200304114844.17700-1-daniel.lezcano@linaro.org>
+User-agent: mu4e 0.9.17; emacs 26.3
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        "open list\:SCHEDULER" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] sched: fair: Use the earliest break even
+In-reply-to: <20200304114844.17700-1-daniel.lezcano@linaro.org>
+Date:   Wed, 04 Mar 2020 15:22:17 +0000
+Message-ID: <jhjimjk16xi.mognet@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200221032720.33893-24-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030415-0028-0000-0000-000003E0DDD3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030415-0029-0000-0000-000024A60F7B
-Message-Id: <7e0e3b71-d70c-1dee-b630-0c33596b7223@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- malwarescore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1015 impostorscore=0 adultscore=0
- suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040114
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+On Wed, Mar 04 2020, Daniel Lezcano wrote:
+> In the idle CPU selection process occuring in the slow path via the
+> find_idlest_group_cpu() function, we pick up in priority an idle CPU
+> with the shallowest idle state otherwise we fall back to the least
+> loaded CPU.
+>
+> In order to be more energy efficient but without impacting the
+> performances, let's use another criteria: the break even deadline.
+>
+> At idle time, when we store the idle state the CPU is entering in, we
+> compute the next deadline where the CPU could be woken up without
+> spending more energy to sleep.
+>
+> At the selection process, we use the shallowest CPU but in addition we
+> choose the one with the minimal break even deadline instead of relying
+> on the idle_timestamp. When the CPU is idle, the timestamp has less
+> meaning because the CPU could have wake up and sleep again several times
+> without exiting the idle loop. In this case the break even deadline is
+> more relevant as it increases the probability of choosing a CPU which
+> reached its break even.
+>
 
-Le 21/02/2020 à 04:27, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> These IOCTLs provide low level access to the card to aid in debugging
-> controller/FPGA firmware.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->   arch/powerpc/platforms/powernv/pmem/Kconfig |   6 +
->   arch/powerpc/platforms/powernv/pmem/ocxl.c  | 249 ++++++++++++++++++++
->   include/uapi/nvdimm/ocxl-pmem.h             |  32 +++
->   3 files changed, 287 insertions(+)
-> 
-> diff --git a/arch/powerpc/platforms/powernv/pmem/Kconfig b/arch/powerpc/platforms/powernv/pmem/Kconfig
-> index c5d927520920..3f44429d70c9 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/Kconfig
-> +++ b/arch/powerpc/platforms/powernv/pmem/Kconfig
-> @@ -12,4 +12,10 @@ config OCXL_PMEM
->   
->   	  Select N if unsure.
->   
-> +config OCXL_PMEM_DEBUG
-> +	bool "OpenCAPI Persistent Memory debugging"
-> +	depends on OCXL_PMEM
-> +	help
-> +	  Enables low level IOCTLs for OpenCAPI Persistent Memory firmware development
-> +
->   endif
-> diff --git a/arch/powerpc/platforms/powernv/pmem/ocxl.c b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> index e01f6f9fc180..d4ce5e9e0521 100644
-> --- a/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> +++ b/arch/powerpc/platforms/powernv/pmem/ocxl.c
-> @@ -1050,6 +1050,235 @@ int req_controller_health_perf(struct ocxlpmem *ocxlpmem)
->   				      GLOBAL_MMIO_HCI_REQ_HEALTH_PERF);
->   }
->   
-> +#ifdef CONFIG_OCXL_PMEM_DEBUG
-> +/**
-> + * enable_fwdebug() - Enable FW debug on the controller
-> + * @ocxlpmem: the device metadata
-> + * Return: 0 on success, negative on failure
-> + */
-> +static int enable_fwdebug(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCI,
-> +				      OCXL_LITTLE_ENDIAN,
-> +				      GLOBAL_MMIO_HCI_FW_DEBUG);
-> +}
-> +
-> +/**
-> + * disable_fwdebug() - Disable FW debug on the controller
-> + * @ocxlpmem: the device metadata
-> + * Return: 0 on success, negative on failure
-> + */
-> +static int disable_fwdebug(const struct ocxlpmem *ocxlpmem)
-> +{
-> +	return ocxl_global_mmio_set64(ocxlpmem->ocxl_afu, GLOBAL_MMIO_HCIC,
-> +				      OCXL_LITTLE_ENDIAN,
-> +				      GLOBAL_MMIO_HCI_FW_DEBUG);
-> +}
-> +
-> +static int ioctl_fwdebug(struct ocxlpmem *ocxlpmem,
-> +			     struct ioctl_ocxl_pmem_fwdebug __user *uarg)
-> +{
-> +	struct ioctl_ocxl_pmem_fwdebug args;
-> +	u64 val;
-> +	int i;
-> +	int rc;
-> +
-> +	if (copy_from_user(&args, uarg, sizeof(args)))
-> +		return -EFAULT;
-> +
-> +	// Buffer size must be a multiple of 8
-> +	if ((args.buf_size & 0x07))
-> +		return -EINVAL;
-> +
-> +	if (args.buf_size > ocxlpmem->admin_command.data_size)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&ocxlpmem->admin_command.lock);
-> +
-> +	rc = enable_fwdebug(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_FW_DEBUG);
-> +	if (rc)
-> +		goto out;
-> +
-> +	// Write DebugAction & FunctionCode
-> +	val = ((u64)args.debug_action << 56) | ((u64)args.function_code << 40);
-> +
-> +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> +				      ocxlpmem->admin_command.request_offset + 0x08,
-> +				      OCXL_LITTLE_ENDIAN, val);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> +				      ocxlpmem->admin_command.request_offset + 0x10,
-> +				      OCXL_LITTLE_ENDIAN, args.debug_parameter_1);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> +				      ocxlpmem->admin_command.request_offset + 0x18,
-> +				      OCXL_LITTLE_ENDIAN, args.debug_parameter_2);
-> +	if (rc)
-> +		goto out;
-> +
-> +	for (i = 0x20; i < 0x38; i += 0x08)
-> +		rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> +					      ocxlpmem->admin_command.request_offset + i,
-> +					      OCXL_LITTLE_ENDIAN, 0);
-> +	if (rc)
-> +		goto out;
+Ok so we still favour smallest exit latency, but if we have to pick
+among several CPUs with the same exit latency, we can use the break
+even. I'll want to test this on stuff, but I like the overall idea.
 
-
-rc is the for loop body. The rc test is not.
-
-
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index fcc968669aea..520c5e822fdd 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5793,6 +5793,7 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+>  {
+>       unsigned long load, min_load = ULONG_MAX;
+>       unsigned int min_exit_latency = UINT_MAX;
+> +	s64 min_break_even = S64_MAX;
+>       u64 latest_idle_timestamp = 0;
+>       int least_loaded_cpu = this_cpu;
+>       int shallowest_idle_cpu = -1;
+> @@ -5810,6 +5811,8 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+>               if (available_idle_cpu(i)) {
+>                       struct rq *rq = cpu_rq(i);
+>                       struct cpuidle_state *idle = idle_get_state(rq);
+> +			s64 break_even = idle_get_break_even(rq);
 > +
+
+Nit: there's tabs in that line break.
+
+>                       if (idle && idle->exit_latency < min_exit_latency) {
+>                               /*
+>                                * We give priority to a CPU whose idle state
+> @@ -5817,10 +5820,21 @@ find_idlest_group_cpu(struct sched_group *group, struct task_struct *p, int this
+>                                * of any idle timestamp.
+>                                */
+>                               min_exit_latency = idle->exit_latency;
+> +				min_break_even = break_even;
+>                               latest_idle_timestamp = rq->idle_stamp;
+>                               shallowest_idle_cpu = i;
+> -			} else if ((!idle || idle->exit_latency == min_exit_latency) &&
+> -				   rq->idle_stamp > latest_idle_timestamp) {
+> +			} else if ((idle && idle->exit_latency == min_exit_latency) &&
+> +				   break_even < min_break_even) {
+> +				/*
+> +				 * We give priority to the shallowest
+> +				 * idle states with the minimal break
+> +				 * even deadline to decrease the
+> +				 * probability to choose a CPU which
+> +				 * did not reach its break even yet
+> +				 */
+> +				min_break_even = break_even;
+> +				shallowest_idle_cpu = i;
+> +			} else if (!idle && rq->idle_stamp > latest_idle_timestamp) {
+>                               /*
+>                                * If equal or no active idle state, then
+>                                * the most recently idled CPU might have
+
+That comment will need to be changed as well, that condition now only
+catters to the !idle case.
+
+With that said, that comment actually raises a valid point: picking
+recently idled CPUs might give us warmer cache. So by using the break
+even stat, we can end up picking CPUs with colder caches (have been
+idling for longer) than the current logic would. I suppose more testing
+will tell us where we stand.
+
+> diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+> index b743bf38f08f..189cd51cd474 100644
+> --- a/kernel/sched/idle.c
+> +++ b/kernel/sched/idle.c
+> @@ -19,7 +19,14 @@ extern char __cpuidle_text_start[], __cpuidle_text_end[];
+>   */
+>  void sched_idle_set_state(struct cpuidle_state *idle_state)
+>  {
+> -	idle_set_state(this_rq(), idle_state);
+> +	struct rq *rq = this_rq();
+> +	ktime_t kt;
 > +
-> +	// Populate admin command buffer
-> +	if (args.buf_size) {
-> +		for (i = 0; i < args.buf_size; i += sizeof(u64)) {
-> +			u64 val;
-> +
-> +			if (copy_from_user(&val, &args.buf[i], sizeof(u64)))
-> +				return -EFAULT;
+> +	if (likely(idle_state)) {
 
+Doesn't this break things? e.g. calling this with NULL?
 
-need to get rc and goto out because of the mutex
+> +		kt = ktime_add_ns(ktime_get(), idle_state->exit_latency_ns);
 
+ISTR there were objections to using ktime stuff in the scheduler, but I
+can't remember anything specific. If we only call into it when actually
+entering an idle state (and not when we're exiting one), I suppose that
+would be fine?
 
-> +
-> +			rc = ocxl_global_mmio_write64(ocxlpmem->ocxl_afu,
-> +						      ocxlpmem->admin_command.data_offset + i,
-> +						      OCXL_HOST_ENDIAN, val);
-> +			if (rc)
-> +				goto out;
-> +		}
+> +		idle_set_state(rq, idle_state);
+> +		idle_set_break_even(rq, ktime_to_ns(kt));
 > +	}
+>  }
+>
+>  static int __read_mostly cpu_idle_force_poll;
+> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> index 2a0caf394dd4..abf2d2e73575 100644
+> --- a/kernel/sched/sched.h
+> +++ b/kernel/sched/sched.h
+> @@ -1015,6 +1015,7 @@ struct rq {
+>  #ifdef CONFIG_CPU_IDLE
+>       /* Must be inspected within a rcu lock section */
+>       struct cpuidle_state	*idle_state;
+> +	s64			break_even;
+
+Why signed? This should be purely positive, right?
+
+>  #endif
+>  };
+>
+> @@ -1850,6 +1851,16 @@ static inline struct cpuidle_state *idle_get_state(struct rq *rq)
+>
+>       return rq->idle_state;
+>  }
 > +
-> +	rc = admin_command_execute(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_complete_timeout(ocxlpmem,
-> +					    ocxlpmem->timeouts[ADMIN_COMMAND_FW_DEBUG]);
-> +	if (rc < 0)
-> +		goto out;
-> +
-> +	rc = admin_response(ocxlpmem);
-> +	if (rc < 0)
-> +		goto out;
-> +	if (rc != STATUS_SUCCESS) {
-> +		warn_status(ocxlpmem, "Unexpected status from FW Debug", rc);
-> +		goto out;
-> +	}
-> +
-> +	if (args.buf_size) {
-> +		for (i = 0; i < args.buf_size; i += sizeof(u64)) {
-> +			u64 val;
-> +
-> +			rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu,
-> +						     ocxlpmem->admin_command.data_offset + i,
-> +						     OCXL_HOST_ENDIAN, &val);
-> +			if (rc)
-> +				goto out;
-> +
-> +			if (copy_to_user(&args.buf[i], &val, sizeof(u64))) {
-> +				rc = -EFAULT;
-> +				goto out;
-> +			}
-> +		}
-> +	}
-> +
-> +	rc = admin_response_handled(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = disable_fwdebug(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +out:
-> +	mutex_unlock(&ocxlpmem->admin_command.lock);
-> +	return rc;
-> +}
-> +
-> +static int ioctl_shutdown(struct ocxlpmem *ocxlpmem)
+> +static inline void idle_set_break_even(struct rq *rq, s64 break_even)
 > +{
-> +	int rc;
-> +
-> +	mutex_lock(&ocxlpmem->admin_command.lock);
-> +
-> +	rc = admin_command_request(ocxlpmem, ADMIN_COMMAND_SHUTDOWN);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_execute(ocxlpmem);
-> +	if (rc)
-> +		goto out;
-> +
-> +	rc = admin_command_complete_timeout(ocxlpmem, ADMIN_COMMAND_SHUTDOWN);
-> +	if (rc < 0) {
-> +		dev_warn(&ocxlpmem->dev, "Shutdown timed out\n");
-> +		goto out;
-> +	}
-> +
-> +	rc = 0;
-> +	goto out;
-
-
-We can remove that goto.
-
-No admin_response_handled()? Is that shutting down the full adapter and 
-we have nobody to talk to? What happens next?
-
-
-> +
-> +out:
-> +	mutex_unlock(&ocxlpmem->admin_command.lock);
-> +	return rc;
+> +	rq->break_even = break_even;
 > +}
 > +
-> +static int ioctl_mmio_write(struct ocxlpmem *ocxlpmem,
-> +				struct ioctl_ocxl_pmem_mmio __user *uarg)
+> +static inline s64 idle_get_break_even(struct rq *rq)
 > +{
-> +	struct scm_ioctl_mmio args;
-> +
-> +	if (copy_from_user(&args, uarg, sizeof(args)))
-> +		return -EFAULT;
-> +
-> +	return ocxl_global_mmio_write64(ocxlpmem->ocxl_afu, args.address,
-> +					OCXL_LITTLE_ENDIAN, args.val);
-> +}
-> +
-> +static int ioctl_mmio_read(struct ocxlpmem *ocxlpmem,
-> +				     struct ioctl_ocxl_pmem_mmio __user *uarg)
-> +{
-> +	struct ioctl_ocxl_pmem_mmio args;
-> +	int rc;
-> +
-> +	if (copy_from_user(&args, uarg, sizeof(args)))
-> +		return -EFAULT;
-> +
-> +	rc = ocxl_global_mmio_read64(ocxlpmem->ocxl_afu, args.address,
-> +				     OCXL_LITTLE_ENDIAN, &args.val);
-> +	if (rc)
-> +		return rc;
-> +
-> +	if (copy_to_user(uarg, &args, sizeof(args)))
-> +		return -EFAULT;
-> +
-> +	return 0;
-> +}
-> +#else /* CONFIG_OCXL_PMEM_DEBUG */
-> +static int ioctl_fwdebug(struct ocxlpmem *ocxlpmem,
-> +			     struct ioctl_ocxl_pmem_fwdebug __user *uarg)
-> +{
-> +	return -EPERM;
-> +}
-> +
-> +static int ioctl_shutdown(struct ocxlpmem *ocxlpmem)
-> +{
-> +	return -EPERM;
-> +}
-> +
-> +static int ioctl_mmio_write(struct ocxlpmem *ocxlpmem,
-> +				struct ioctl_ocxl_pmem_mmio __user *uarg)
-> +{
-> +	return -EPERM;
-> +}
-> +
-> +static int ioctl_mmio_read(struct ocxlpmem *ocxlpmem,
-> +			       struct ioctl_ocxl_pmem_mmio __user *uarg)
-> +{
-> +	return -EPERM;
+> +	return rq->break_even;
 > +}
 
+I'm not super familiar with the callsites for setting idle states,
+what's the locking situation there? Do we have any rq lock?
 
-The 'else' clause could be dropped, the ioctls will return EINVAL, which 
-is fine, I think.
+In find_idlest_group_cpu() we're in a read-side RCU section, so the
+idle_state is protected (speaking of which, why isn't idle_get_state()
+using rcu_dereference()?), but that's doesn't cover the break even.
 
-
-
-> +#endif /* CONFIG_OCXL_PMEM_DEBUG */
-> +
->   static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
->   {
->   	struct ocxlpmem *ocxlpmem = file->private_data;
-> @@ -1091,6 +1320,26 @@ static long file_ioctl(struct file *file, unsigned int cmd, unsigned long args)
->   	case IOCTL_OCXL_PMEM_REQUEST_HEALTH:
->   		rc = req_controller_health_perf(ocxlpmem);
->   		break;
-> +
-> +	case IOCTL_OCXL_PMEM_FWDEBUG:
-> +		rc = ioctl_fwdebug(ocxlpmem,
-> +				   (struct ioctl_ocxl_pmem_fwdebug __user *)args);
-> +		break;
-> +
-> +	case IOCTL_OCXL_PMEM_SHUTDOWN:
-> +		rc = ioctl_shutdown(ocxlpmem);
-> +		break;
-> +
-> +	case IOCTL_OCXL_PMEM_MMIO_WRITE:
-> +		rc = ioctl_mmio_write(ocxlpmem,
-> +				      (struct ioctl_ocxl_pmem_mmio __user *)args);
-> +		break;
-> +
-> +	case IOCTL_OCXL_PMEM_MMIO_READ:
-> +		rc = ioctl_mmio_read(ocxlpmem,
-> +				     (struct ioctl_ocxl_pmem_mmio __user *)args);
-> +		break;
-> +
->   	}
->   
->   	return rc;
-> diff --git a/include/uapi/nvdimm/ocxl-pmem.h b/include/uapi/nvdimm/ocxl-pmem.h
-> index 0d03abb44001..e20a4f8be82a 100644
-> --- a/include/uapi/nvdimm/ocxl-pmem.h
-> +++ b/include/uapi/nvdimm/ocxl-pmem.h
-> @@ -6,6 +6,28 @@
->   #include <linux/types.h>
->   #include <linux/ioctl.h>
->   
-> +enum ocxlpmem_fwdebug_action {
-> +	OCXL_PMEM_FWDEBUG_READ_CONTROLLER_MEMORY = 0x01,
-> +	OCXL_PMEM_FWDEBUG_WRITE_CONTROLLER_MEMORY = 0x02,
-> +	OCXL_PMEM_FWDEBUG_ENABLE_FUNCTION = 0x03,
-> +	OCXL_PMEM_FWDEBUG_DISABLE_FUNCTION = 0x04,
-> +	OCXL_PMEM_FWDEBUG_GET_PEL = 0x05, // Retrieve Persistent Error Log
-> +};
-> +
-> +struct ioctl_ocxl_pmem_buffer_info {
-> +	__u32	admin_command_buffer_size; // out
-> +	__u32	near_storage_buffer_size; // out
-> +};
-> +
-> +struct ioctl_ocxl_pmem_fwdebug { // All args are inputs
-> +	enum ocxlpmem_fwdebug_action debug_action;
-
-
-More kernel ABI problems. My interpretation of the "enumeration 
-specifiers" section of C99 is that we can't rely on the size of the enum.
-
-
-> +	__u16 function_code;
-> +	__u16 buf_size; // Size of optional data buffer
-> +	__u64 debug_parameter_1;
-> +	__u64 debug_parameter_2;
-> +	__u8 *buf; // Pointer to optional in/out data buffer
-> +};
-> +
->   #define OCXL_PMEM_ERROR_LOG_ACTION_RESET	(1 << (32-32))
->   #define OCXL_PMEM_ERROR_LOG_ACTION_CHKFW	(1 << (53-32))
->   #define OCXL_PMEM_ERROR_LOG_ACTION_REPLACE	(1 << (54-32))
-> @@ -66,6 +88,11 @@ struct ioctl_ocxl_pmem_controller_stats {
->   	__u64 cache_write_latency; /* nanoseconds */
->   };
->   
-> +struct ioctl_ocxl_pmem_mmio {
-> +	__u64 address; /* Offset in global MMIO space */
-> +	__u64 val; /* value to write/was read */
-> +};
-
-
-Can we group all the debug data structures together in the header file, 
-with a comment indicating that they may not be available in the kernel, 
-depending on the config?
-
-   Fred
-
-
-> +
->   struct ioctl_ocxl_pmem_eventfd {
->   	__s32 eventfd;
->   	__u32 reserved;
-> @@ -92,4 +119,9 @@ struct ioctl_ocxl_pmem_eventfd {
->   #define IOCTL_OCXL_PMEM_EVENT_CHECK			_IOR(OCXL_PMEM_MAGIC, 0x07, __u64)
->   #define IOCTL_OCXL_PMEM_REQUEST_HEALTH			_IO(OCXL_PMEM_MAGIC, 0x08)
->   
-> +#define IOCTL_OCXL_PMEM_FWDEBUG		_IOWR(OCXL_PMEM_MAGIC, 0xf0, struct ioctl_ocxl_pmem_fwdebug)
-> +#define IOCTL_OCXL_PMEM_MMIO_WRITE	_IOW(OCXL_PMEM_MAGIC, 0xf1, struct ioctl_ocxl_pmem_mmio)
-> +#define IOCTL_OCXL_PMEM_MMIO_READ	_IOWR(OCXL_PMEM_MAGIC, 0xf2, struct ioctl_ocxl_pmem_mmio)
-> +#define IOCTL_OCXL_PMEM_SHUTDOWN	_IO(OCXL_PMEM_MAGIC, 0xf3)
-> +
->   #endif /* _UAPI_OCXL_SCM_H */
-> 
-
+IIUC at the very least we may want to give them the READ/WRITE_ONCE()
+treatment.
