@@ -2,260 +2,101 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8897DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:36:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59C6C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:37:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5912C2084E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:36:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9F472084E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:37:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H9MaIJ4M"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EAtJLQO/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388545AbgCDWgg (ORCPT
+        id S2388546AbgCDWhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:36:36 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42819 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388529AbgCDWgf (ORCPT
+        Wed, 4 Mar 2020 17:37:02 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33886 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388337AbgCDWhC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:36:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583361393;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=k0zrfOs4JuymdtRCnr7U9xphdhpEK889s02AHeFJ8k4=;
-        b=H9MaIJ4MjAI4KLaUGooQySpFX0ZCQ4vvr5o1NJNsH4w93OlrDbyeJm5b+krR6Rfc5WEIc7
-        jkidwvep9QzTFErWDBxzYnhSoPUfBtZcx/I6LWcssAKVuQlE+IzEzxkPCBpshqkIC3jtA+
-        41XxWHhLXMdhWoon0L8BmmWmSBlOe/Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-479-0oXYgCd2MnyXZ_A8bEPi7w-1; Wed, 04 Mar 2020 17:36:30 -0500
-X-MC-Unique: 0oXYgCd2MnyXZ_A8bEPi7w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2EEEC107BA99;
-        Wed,  4 Mar 2020 22:36:28 +0000 (UTC)
-Received: from Ruby.bss.redhat.com (dhcp-10-20-1-196.bss.redhat.com [10.20.1.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E779C60BE0;
-        Wed,  4 Mar 2020 22:36:26 +0000 (UTC)
-From:   Lyude Paul <lyude@redhat.com>
-To:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org
-Cc:     Mikita Lipski <mikita.lipski@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sean Paul <seanpaul@google.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] drm/dp_mst: Rewrite and fix bandwidth limit checks
-Date:   Wed,  4 Mar 2020 17:36:13 -0500
-Message-Id: <20200304223614.312023-4-lyude@redhat.com>
-In-Reply-To: <20200304223614.312023-1-lyude@redhat.com>
-References: <20200304223614.312023-1-lyude@redhat.com>
+        Wed, 4 Mar 2020 17:37:02 -0500
+Received: by mail-pf1-f194.google.com with SMTP id y21so1719711pfp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 14:37:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VOHGjPwLEYzJ+NqPhTxXCzJYmftKGLSSp5cAtNLCFMU=;
+        b=EAtJLQO/uI42Fek4uQmblnQJLffzrG9Ebiq37Cb1UGIUgfWykLmw1kfB7wjHV/cJO4
+         2FUC/RJMJMvnbUpjIqNxadfBZQ1nF8dAUCDYZPnf4++UHHa+gp5G92941Qd6fc1fvXXv
+         NrOLS85QX48s9NmoAgcaPM9FeA3vd1zq6mAoM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VOHGjPwLEYzJ+NqPhTxXCzJYmftKGLSSp5cAtNLCFMU=;
+        b=fHtQiOmpqJuHmp51gvTeM6oDjFhH1U5Ex1LMA1K2QfzFIevlyHPe8Eoa7bL4DAGcNR
+         5vkt2pQ35b0kwVNlcPRT0rqq81nY0hiyD6MFg5cL2PMqinXY5I6KcvaO2Qtdx7dAoCD5
+         wzEsnnlu6EembNW/ur5JMalT9pOsMZKIFT8PcZnJC/yyi8YLwwlyawJ4grxUmY8BHSUx
+         qujEJnawrXcUw46b7KKkaweVnBYFYRyIuhYHW5HvcHpZ7YEtnJScvch/wZy7x/N0Cnw/
+         AMD4e3ysWv+kXygM2rwe4v5NBbivOIYZZmvcRfOim6bynytipnunoStsDzkCW6s4HBrc
+         9REA==
+X-Gm-Message-State: ANhLgQ0V7oMF89RvlQbhEx6wEbpGCO1/jLsPiWO8HMy0SggbI9Cyfo8n
+        VQ+YF+1Fa5PRRNOHb48wIAky+oAFZx0=
+X-Google-Smtp-Source: ADFU+vuJoRxLlv+ejqD00BykMbxlvzIi4uD50iFg3ZLBaKHAupLn1/8YQyAxfhPrcxeNEjh0i4TJqQ==
+X-Received: by 2002:a63:4752:: with SMTP id w18mr4343082pgk.379.1583361421234;
+        Wed, 04 Mar 2020 14:37:01 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a7sm3646560pjo.11.2020.03.04.14.36.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 14:37:00 -0800 (PST)
+Date:   Wed, 4 Mar 2020 14:36:59 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Scott Wood <oss@buserror.net>
+Cc:     Jason Yan <yanaijie@huawei.com>, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        linux-kernel@vger.kernel.org,
+        "Tobin C . Harding" <tobin@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Daniel Axtens <dja@axtens.net>
+Subject: Re: [PATCH v3 0/6] implement KASLR for powerpc/fsl_booke/64
+Message-ID: <202003041433.5E2AAC5@keescook>
+References: <20200304124707.22650-1-yanaijie@huawei.com>
+ <202003041022.26AF0178@keescook>
+ <b5854fd867982527c107138d52a61010079d2321.camel@buserror.net>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b5854fd867982527c107138d52a61010079d2321.camel@buserror.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sigh, this is mostly my fault for not giving commit cd82d82cbc04
-("drm/dp_mst: Add branch bandwidth validation to MST atomic check")
-enough scrutiny during review. The way we're checking bandwidth
-limitations here is mostly wrong.
+On Wed, Mar 04, 2020 at 03:11:39PM -0600, Scott Wood wrote:
+> In any case, this came up now due to a question about what to use when
+> printing crash dumps.  PowerPC currently prints stack and return addresses
+> with %lx (in addition to %pS in the latter case) and someone proposed
 
-First things first, we need to follow the locking conventions for MST.
-Whenever traversing downwards (upwards is always safe) in the topology,
-we need to hold &mgr->lock to prevent the topology from changing under
-us. We don't currently do that when performing bandwidth limit checks.
+Right -- I think other archs moved entirely to %pS and just removed %lx
+and %p uses.
 
-Next we need to figure out the actual PBN limit for the primary MSTB.
-Here we actually want to use the highest available_pbn value we can find
-on each level of the topology, then make sure that the combined sum of
-allocated PBN on each port of the branch device doesn't exceed that
-amount. Currently, we just loop through each level of the topology and
-use the last non-zero PBN we find.
+> converting them to %p and/or removing them altogether.  Is there a consensus
+> on whether crash dumps need to be sanitized of this stuff as well?  It seems
+> like you'd have the addresses in the register dump as well (please don't take
+> that away too...).  Maybe crash dumps would be a less problematic place to
+> make the hashing conditional (i.e. less likely to break something in userspace
+> that wasn't expecting a hash)?
 
-Once we've done that, we then want to traverse down each branch device
-we find in the topology with at least one downstream port that has PBN
-allocated in our atomic state, and repeat the whole process on each
-level of the topology as we travel down. While doing this, we need to
-take care to avoid attempting to traverse down end devices. We don't
-currently do this, although I'm not actually sure whether or not this
-broke anything before.
+Actual _crash_ dumps print all kinds of stuff, even the KASLR offset,
+but for generic stack traces, it's been mainly %pS, with things like
+registers using %lx.
 
-Since there's a bit too many issues here to try to fix one by one, and
-the drm_dp_mst_atomic_check_bw_limit() code is not entirely clear on all
-of these pain points anyway, let's just take the easy way out and
-rewrite the whole function. Additionally, we also add a kernel warning
-if we find that any ports we performed bandwidth limit checks on didn't
-actually have available_pbn populated - as this is always a bug in the
-MST helpers.
+I defer to Linus, obviously. I just wanted to repeat what he'd said
+before.
 
-This should fix regressions seen on nouveau, i915 and amdgpu where we
-erroneously reject atomic states that should fit within bandwidth
-limitations.
-
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to MST =
-atomic check")
-Cc: Mikita Lipski <mikita.lipski@amd.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>
-Cc: Sean Paul <seanpaul@google.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
----
- drivers/gpu/drm/drm_dp_mst_topology.c | 101 ++++++++++++++++++++------
- 1 file changed, 78 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_=
-dp_mst_topology.c
-index 7b0ff0cff954..87dc7c92d339 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -4853,41 +4853,90 @@ static bool drm_dp_mst_port_downstream_of_branch(=
-struct drm_dp_mst_port *port,
- 	return false;
- }
-=20
--static inline
--int drm_dp_mst_atomic_check_bw_limit(struct drm_dp_mst_branch *branch,
--				     struct drm_dp_mst_topology_state *mst_state)
-+static int
-+drm_dp_mst_atomic_check_bw_limit(struct drm_dp_mst_branch *branch,
-+				 struct drm_dp_mst_topology_state *mst_state)
- {
- 	struct drm_dp_mst_port *port;
- 	struct drm_dp_vcpi_allocation *vcpi;
--	int pbn_limit =3D 0, pbn_used =3D 0;
-+	int pbn_limit =3D 0, pbn_used =3D 0, ret;
-=20
--	list_for_each_entry(port, &branch->ports, next) {
--		if (port->mstb)
--			if (drm_dp_mst_atomic_check_bw_limit(port->mstb, mst_state))
--				return -ENOSPC;
-+	if (branch->port_parent)
-+		DRM_DEBUG_ATOMIC("[MSTB:%p] [MST PORT:%p] checking [MSTB:%p]\n",
-+				 branch->port_parent->parent,
-+				 branch->port_parent, branch);
-+	else
-+		DRM_DEBUG_ATOMIC("Checking [MSTB:%p]\n", branch);
-=20
--		if (port->available_pbn > 0)
-+	list_for_each_entry(port, &branch->ports, next) {
-+		/* Since each port shares a link, the highest PBN we find
-+		 * should be assumed to be the limit for this branch device
-+		 */
-+		if (pbn_limit < port->available_pbn)
- 			pbn_limit =3D port->available_pbn;
--	}
--	DRM_DEBUG_ATOMIC("[MST BRANCH:%p] branch has %d PBN available\n",
--			 branch, pbn_limit);
-=20
--	list_for_each_entry(vcpi, &mst_state->vcpis, next) {
--		if (!vcpi->pbn)
-+		if (port->pdt =3D=3D DP_PEER_DEVICE_NONE)
- 			continue;
-=20
--		if (drm_dp_mst_port_downstream_of_branch(vcpi->port, branch))
--			pbn_used +=3D vcpi->pbn;
-+		if (drm_dp_mst_is_end_device(port->pdt, port->mcs)) {
-+			list_for_each_entry(vcpi, &mst_state->vcpis, next) {
-+				if (vcpi->port !=3D port)
-+					continue;
-+				if (!vcpi->pbn)
-+					break;
-+
-+				/* This should never happen, as it means we
-+				 * tried to set a mode before querying the
-+				 * available_pbn
-+				 */
-+				if (WARN_ON(!port->available_pbn))
-+					return -EINVAL;
-+
-+				if (vcpi->pbn > port->available_pbn) {
-+					DRM_DEBUG_ATOMIC("[MSTB:%p] [MST PORT:%p] %d exceeds available PBN =
-of %d\n",
-+							 branch, port,
-+							 vcpi->pbn,
-+							 port->available_pbn);
-+					return -ENOSPC;
-+				}
-+
-+				DRM_DEBUG_ATOMIC("[MSTB:%p] [MST PORT:%p] using %d PBN\n",
-+						 branch, port, vcpi->pbn);
-+				pbn_used +=3D vcpi->pbn;
-+				break;
-+			}
-+		} else {
-+			list_for_each_entry(vcpi, &mst_state->vcpis, next) {
-+				if (!vcpi->pbn ||
-+				    !drm_dp_mst_port_downstream_of_branch(vcpi->port,
-+									  port->mstb))
-+					continue;
-+
-+				ret =3D drm_dp_mst_atomic_check_bw_limit(port->mstb,
-+								       mst_state);
-+				if (ret < 0)
-+					return ret;
-+
-+				pbn_used +=3D ret;
-+				break;
-+			}
-+		}
- 	}
--	DRM_DEBUG_ATOMIC("[MST BRANCH:%p] branch used %d PBN\n",
--			 branch, pbn_used);
-+	if (!pbn_used)
-+		return 0;
-+
-+	DRM_DEBUG_ATOMIC("[MSTB:%p] has total available PBN of %d\n",
-+			 branch, pbn_limit);
-=20
- 	if (pbn_used > pbn_limit) {
--		DRM_DEBUG_ATOMIC("[MST BRANCH:%p] No available bandwidth\n",
--				 branch);
-+		DRM_DEBUG_ATOMIC("[MSTB:%p] Not enough bandwidth (need: %d)\n",
-+				 branch, pbn_used);
- 		return -ENOSPC;
- 	}
--	return 0;
-+
-+	DRM_DEBUG_ATOMIC("[MSTB:%p] using %d PBN\n", branch, pbn_used);
-+
-+	return pbn_used;
- }
-=20
- static inline int
-@@ -5085,9 +5134,15 @@ int drm_dp_mst_atomic_check(struct drm_atomic_stat=
-e *state)
- 		ret =3D drm_dp_mst_atomic_check_vcpi_alloc_limit(mgr, mst_state);
- 		if (ret)
- 			break;
--		ret =3D drm_dp_mst_atomic_check_bw_limit(mgr->mst_primary, mst_state);
--		if (ret)
-+
-+		mutex_lock(&mgr->lock);
-+		ret =3D drm_dp_mst_atomic_check_bw_limit(mgr->mst_primary,
-+						       mst_state);
-+		mutex_unlock(&mgr->lock);
-+		if (ret < 0)
- 			break;
-+		else
-+			ret =3D 0;
- 	}
-=20
- 	return ret;
---=20
-2.24.1
-
+-- 
+Kees Cook
