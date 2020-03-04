@@ -6,91 +6,140 @@ X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26258C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:25:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9AF4C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C6620842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:25:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95863215A4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgCDFZu (ORCPT
+        id S1725903AbgCDFdX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 00:25:50 -0500
-Received: from out02.mta.xmission.com ([166.70.13.232]:39158 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbgCDFZu (ORCPT
+        Wed, 4 Mar 2020 00:33:23 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14776 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725795AbgCDFdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 00:25:50 -0500
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j9MXV-0007tb-6m; Tue, 03 Mar 2020 22:25:49 -0700
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1j9MXU-0001BC-FT; Tue, 03 Mar 2020 22:25:49 -0700
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200223011154.GY23230@ZenIV.linux.org.uk>
-        <20200301215125.GA873525@ZenIV.linux.org.uk>
-        <CAHk-=wh1Q=H-YstHZRKfEw2McUBX2_TfTc=+5N-iH8DSGz44Qg@mail.gmail.com>
-        <20200302003926.GM23230@ZenIV.linux.org.uk>
-        <87o8tdgfu8.fsf@x220.int.ebiederm.org>
-        <20200304002434.GO23230@ZenIV.linux.org.uk>
-Date:   Tue, 03 Mar 2020 23:23:39 -0600
-In-Reply-To: <20200304002434.GO23230@ZenIV.linux.org.uk> (Al Viro's message of
-        "Wed, 4 Mar 2020 00:24:34 +0000")
-Message-ID: <87wo80g0bo.fsf@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 4 Mar 2020 00:33:22 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0245UTgK033342
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 00:33:21 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yj4q0jt3q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:33:21 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Wed, 4 Mar 2020 05:33:18 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 05:33:11 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0245XAH923986300
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 05:33:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9136A4054;
+        Wed,  4 Mar 2020 05:33:10 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5598EA405B;
+        Wed,  4 Mar 2020 05:33:10 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 05:33:10 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 75423A023A;
+        Wed,  4 Mar 2020 16:33:05 +1100 (AEDT)
+Subject: Re: [PATCH v3 03/27] powerpc: Map & release OpenCAPI LPC memory
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        =?ISO-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kurz <groug@kaod.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+Date:   Wed, 04 Mar 2020 16:33:09 +1100
+In-Reply-To: <33ff636c-6b85-ed0d-275b-3e8697b5316f@linux.ibm.com>
+References: <20200221032720.33893-1-alastair@au1.ibm.com>
+         <20200221032720.33893-4-alastair@au1.ibm.com>
+         <33ff636c-6b85-ed0d-275b-3e8697b5316f@linux.ibm.com>
+Organization: IBM Australia
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1j9MXU-0001BC-FT;;;mid=<87wo80g0bo.fsf@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/UTv8fSOWm0P3BimXgYvHzkz1l3lFMik8=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: Re: [RFC][PATCHSET] sanitized pathwalk machinery (v3)
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030405-0012-0000-0000-0000038CF7DB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030405-0013-0000-0000-000021C9B0CB
+Message-Id: <c44b323e66baab9ed176a78c02293b3a83fc72ea.camel@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_08:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 adultscore=0 bulkscore=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 malwarescore=0 priorityscore=1501 spamscore=0 mlxlogscore=611
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Al Viro <viro@zeniv.linux.org.uk> writes:
+On Tue, 2020-03-03 at 17:10 +1100, Andrew Donnellan wrote:
+> On 21/2/20 2:26 pm, Alastair D'Silva wrote:> +#ifdef 
+> CONFIG_MEMORY_HOTPLUG_SPARSE
+> > +u64 pnv_ocxl_platform_lpc_setup(struct pci_dev *pdev, u64 size)
+> > +{
+> > +	struct pci_controller *hose = pci_bus_to_host(pdev->bus);
+> > +	struct pnv_phb *phb = hose->private_data;
+> > +	u32 bdfn = pci_dev_id(pdev);
+> > +	__be64 base_addr_be64;
+> > +	u64 base_addr;
+> > +	int rc;
+> > +
+> > +	rc = opal_npu_mem_alloc(phb->opal_id, bdfn, size,
+> > &base_addr_be64);
+> 
+> Sparse warning:
+> 
+> https://openpower.xyz/job/snowpatch/job/snowpatch-linux-sparse/15776//artifact/linux/report.txt
+> 
+> I think in patch 1 we need to change a uint64_t to a __be64.
+> 
 
-> On Tue, Mar 03, 2020 at 05:48:31PM -0600, Eric W. Biederman wrote:
->
->> > I hope it gets serious beating, though - it touches pretty much every
->> > codepath in pathname resolution.  Is there any way to sic the bots on
->> > a branch, short of "push it into -next and wait for screams"?
->> 
->> Last I looked pushing a branch to kernel.org was enough for the
->> kbuild bots.  Sending patches to LKML is also enough for those bots.
->> 
->> I don't know if that kind of bot is what you need testing your code.
->
-> Build bots are generally nice, but in this case... pretty much all of
-> the changes are in fs/namei.c, which is not all that sensitive to
-> config/architecture/whatnot.  Sure, something like "is audit enabled?"
-> may affect the build problems, but not much beyond that.
->
-> What was that Intel-run(?) bot that posts "such-and-such metrics has
-> 42% regression on such-and-such commit" from time to time?
-> <checks>
-> Subject: [locking/qspinlock] 7b6da71157: unixbench.score 8.4% improvement
-> seems to be the latest of that sort,
-> From: kernel test robot <rong.a.chen@intel.com>
->
-> Not sure how much of pathwalk-heavy loads is covered by profiling
-> bots of that sort, unfortunately... ;-/
+Ok, thanks
 
-Do the xfs-tests cover that sort of thing?
-The emphasis is stress testing the filesystem not the VFS but there is a
-lot of overlap between the two.
-
-Eric
+-- 
+Alastair D'Silva
+Open Source Developer
+Linux Technology Centre, IBM Australia
+mob: 0423 762 819
 
