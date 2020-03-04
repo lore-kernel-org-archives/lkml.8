@@ -3,87 +3,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A9DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:18:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A372AC3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:22:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4943D20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1C12146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 10:22:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qvCQbIM8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oBPRt+y4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729223AbgCDKSm (ORCPT
+        id S2387758AbgCDKWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 05:18:42 -0500
-Received: from mail-vk1-f193.google.com ([209.85.221.193]:44404 "EHLO
-        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728916AbgCDKSl (ORCPT
+        Wed, 4 Mar 2020 05:22:01 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37773 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728301AbgCDKWA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 05:18:41 -0500
-Received: by mail-vk1-f193.google.com with SMTP id x62so383762vkg.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 02:18:41 -0800 (PST)
+        Wed, 4 Mar 2020 05:22:00 -0500
+Received: by mail-pg1-f193.google.com with SMTP id z12so783242pgl.4;
+        Wed, 04 Mar 2020 02:21:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=ryX1DRtLYtnzOLBN2SFLNUQtTwzLIdm+5Qluhd2PgCc=;
-        b=qvCQbIM8kf9q/8f1t/hUVsUlD43NnuWvBQVKa4PTh4Acfy31W2AO1PG+00Jvd2mOGx
-         b05ydmJff9n49CdPpWmhwSEWwbDKnY6n2xjTnxLrl2KLNGuXm9HUte9L/NiXolPPn65s
-         kY788/7OGFAg91Wiihy1AH3iYFwnvdN490T4wbPoPCaAAhTbWUflPyJsd5HUHbg0sE/q
-         YKzCRcJ0BDz8jj3tevy/nBesggEKoqNwB/Oi5nH4lRUxwcuByVA4xjd0eMvZiIEzzYiX
-         wt9XdyiD/f9yTRoREY7syhpWshVoSJApGw+1bcBbum6LRyhfCOYVFItIC/WdTE0UhKIo
-         ytZg==
+        bh=I473f1xOp0xcoMWJcjpZgjb3E6lfpmms9lzoIFvnCxw=;
+        b=oBPRt+y4oU6gnbNSeAk4XBIEVcAjxjMq228H+/Kf1FVzxqZPtbXDx2lA2jlKcj/biY
+         fG/RGMGcmrEFCg9dDC7ty3/HE0WtyL19YMCDaBKexJvIsCgBtG6nDkvJMeA0UcAa4Yat
+         mlT8AjN/Ihe6sSztMgQILbSACeIXn0r4gKZbjjQxtn4uKXukNLwGp2cIHOB4tQMWi1O8
+         /q5EcQTNJfhWWrmLgM+tfHSDgF1zxInkynQDfYwyiI+Jfuv7S9MpK/hMrxKPsooH7ES9
+         l9OR5F3KSOAuQxuGccvg9gZxHVJspJxKWvjARF6aTmNR/nHxtUUSX8a1rY+uIlnzblVe
+         cqPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ryX1DRtLYtnzOLBN2SFLNUQtTwzLIdm+5Qluhd2PgCc=;
-        b=p6XTJWzownk0R6W5ZzKkbPCpjkPB3DcWMxAGo6fhofdH3u1q6ujftYY0ImqbwtKhWN
-         nl0PhGCebtpRwbAOMRQFYtxFv587GDP9YblQfp22+V4/htLgjHdBflcNVGDNy7/Y3CO8
-         UrsFmZT8MIpC0JljY1cqSkwxPqe+frnfO145DA0qx+klIZM0V1cabOgdJsKd2vJR4MPt
-         dXi4CyIRJARl2ZpeemsJrrDJSNOBaLHC8ef0gYbXgpxx54/KNOzdqr18R4ygsHj56/A9
-         Kkf3HJOIDCxHLH6B5vazhyYKvQ95+1/kB7sp1/Q6vzck8k1EQXVe+TQD1mzNk4cupX3z
-         N+EQ==
-X-Gm-Message-State: ANhLgQ0zsC7n1IO+fNvX3ZP3+NH0uMdGbU/Xgp9nw7m+5pp6oO9sKLGb
-        CmKPQmQW9KyCW9GQvt4ekkQUqtqC8lwnVkqfYytAoQ==
-X-Google-Smtp-Source: ADFU+vvgyfCeA1iESRh+uSvyL4km4xLxOq/P7xi7S1vlH+BzHyo/zzptTv1jVsivUyjNn8tKH9/RBEbSVQkthGwC+uI=
-X-Received: by 2002:a1f:2c08:: with SMTP id s8mr907196vks.53.1583317120689;
- Wed, 04 Mar 2020 02:18:40 -0800 (PST)
+        bh=I473f1xOp0xcoMWJcjpZgjb3E6lfpmms9lzoIFvnCxw=;
+        b=fUEtRry1qYUgZs85mLdAYrvubdHB0IIn8QzYg6dpNBUwUbrJmUToB4ZyO71YBwrRN+
+         XPssowdYO8Wg9JX8Yev3O+bVpNWg/1QUUsNcZND1Utj0PuLg49KEQHCZd03DnuLaQH5E
+         92+Jd1KpPkd86oK+6SqBZKNUNCIe6ooze3IBItGCFAZENHKq65U95wRtogm8JBDXS7tj
+         9Rm/JePM06TJKwHVsf94ZRpR2AGpQ7AFSGyMwxtb3h3CbGBx181h2IAqQA2Al97TBWFR
+         Hsu3/oH25ZnH029TCkRHPk02aZtyQbBPRyuhY67RKwm0Jae89HtTHZwKP2tDXueEDFF+
+         kn7g==
+X-Gm-Message-State: ANhLgQ3ehtei3+V3io1rU/JTr74OGF9mouixGPBE+iFDv+3nnXm3XAg+
+        vMsvdI8QwnC9QdGakd3Z7tKeBiWC5d0WfDELtSM=
+X-Google-Smtp-Source: ADFU+vsSfrM9BQwFeyP+XfNzdF7yaI72ARkLmWTSOk+5nI1rJvvwH2iEy8/o/nVhEv9EKoIYE2/Tn2seuagHTt0BorI=
+X-Received: by 2002:a63:1246:: with SMTP id 6mr1947203pgs.4.1583317319277;
+ Wed, 04 Mar 2020 02:21:59 -0800 (PST)
 MIME-Version: 1.0
-References: <CA+G9fYuqAQfhzF2BzHr7vMHx68bo8-jT+ob_F3eHQ3=oFjgYdg@mail.gmail.com>
- <CAPDyKFqqhxC-pmV_j8PLY-D=AbqCAbiipAAHXLpJ4N_BiYYOFw@mail.gmail.com>
- <CA+G9fYugQuAERqp3VXUFG-3QxXoF8bz7OSMh6WGSZcrGkbfDSQ@mail.gmail.com>
- <CAPDyKFo-vEO7zN_F+NqcKtnKmAo_deOZx3gYNiks3yTAQAjv-Q@mail.gmail.com>
- <a602a27a-b960-ce56-c541-3b4b95f5dce2@nvidia.com> <CAPDyKFrXQgtHa4gLaKUi_F0rs4FMBai3Y_+TcHZR_zpkb0B4QQ@mail.gmail.com>
- <6523119a-50ac-973a-d1cd-ab1569259411@nvidia.com> <f960aa98-5508-36fd-166d-7f41c7d85154@nvidia.com>
- <CAPDyKFokE6x0mn+v5B9=so-SyrdTn0JBU8Mrp3Zdu6kSaCie2g@mail.gmail.com>
- <0963b60f-15e7-4bc6-10df-6fc8003e4d42@nvidia.com> <CAPDyKFq5NoeHEBK3sv3yOSD2+pm9FueH1gaTyPq0j7GLfa6vnA@mail.gmail.com>
- <34fd84d7-387b-b6f3-7fb3-aa490909e205@ti.com> <CAPDyKFrrO4noYqdxWL9Y8Nx75LopbDudKGMotkGbGcAF1oq==w@mail.gmail.com>
- <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com>
-In-Reply-To: <5e9b5646-bd48-e55b-54ee-1c2c41fc9218@nvidia.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Wed, 4 Mar 2020 11:18:04 +0100
-Message-ID: <CAPDyKFqpNo_4OePBR1KnJNO=kR8XEqbcsEd=icSceSdDH+Rk1Q@mail.gmail.com>
-Subject: Re: LKFT: arm x15: mmc1: cache flush error -110
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Jens Axboe <axboe@kernel.dk>,
+References: <20200303005035.13814-1-luke.r.nels@gmail.com> <20200303005035.13814-5-luke.r.nels@gmail.com>
+ <20200303100228.GJ1224808@smile.fi.intel.com> <CADasFoCq7S2KRYg+ghAKt1e+hELzEMJaNH74sGdjM7E=z3KcnQ@mail.gmail.com>
+In-Reply-To: <CADasFoCq7S2KRYg+ghAKt1e+hELzEMJaNH74sGdjM7E=z3KcnQ@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 4 Mar 2020 12:21:51 +0200
+Message-ID: <CAHp75VezOTk4kURAkS6OQqPjdiYsPE292ix+WHAPvs8vGpCfGg@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v4 4/4] MAINTAINERS: Add entry for RV32G BPF JIT
+To:     Luke Nelson <lukenels@cs.washington.edu>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
         Alexei Starovoitov <ast@kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Faiz Abbas <faiz_abbas@ti.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Kishon <kishon@ti.com>
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        Xi Wang <xi.wang@gmail.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Linux Documentation List <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -91,134 +91,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[...]
+On Wed, Mar 4, 2020 at 4:34 AM Luke Nelson <lukenels@cs.washington.edu> wro=
+te:
+> On Tue, Mar 3, 2020 at 2:02 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > > -BPF JIT for RISC-V (RV64G)
+> > > +BPF JIT for 32-bit RISC-V (RV32G)
+> > > +M:   Luke Nelson <luke.r.nels@gmail.com>
+> > > +M:   Xi Wang <xi.wang@gmail.com>
+> > > +L:   bpf@vger.kernel.org
+> > > +S:   Maintained
+> > > +F:   arch/riscv/net/
+> > > +X:   arch/riscv/net/bpf_jit_comp.c
+> > > +
+> > > +BPF JIT for 64-bit RISC-V (RV64G)
+> > >  M:   Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+> > > -L:   netdev@vger.kernel.org
+> > > +L:   bpf@vger.kernel.org
+> > >  S:   Maintained
+> > >  F:   arch/riscv/net/
+> > > +X:   arch/riscv/net/bpf_jit_comp32.c
+> >
+> > Obviously this breaks an order. Please, fix.
+> > Hint: run parse-maintainers.pl after the change.
 
+> Thanks for the comment!
 >
-> So, from my side, me and Anders Roxell, have been collaborating on
-> testing the behaviour on a TI Beagleboard x15 (remotely with limited
-> debug options), which is using the sdhci-omap variant. I am trying to
-> get hold of an Nvidia jetson-TX2, but not found one yet. These are the
-> conclusions from the observed behaviour on the Beagleboard for the
-> CMD6 cache flush command.
->
-> First, the reported host->max_busy_timeout is 2581 (ms) for the
-> sdhci-omap driver in this configuration.
->
-> 1. As we all know by now, the cache flush command (CMD6) fails with
-> -110 currently. This is when MMC_CACHE_FLUSH_TIMEOUT_MS is set to 30 *
-> 1000 (30s), which means __mmc_switch() drops the MMC_RSP_BUSY flag
-> from the command.
->
-> 2. Changing the MMC_CACHE_FLUSH_TIMEOUT_MS to 2000 (2s), means that
-> the MMC_RSP_BUSY flag becomes set by __mmc_switch, because of the
-> timeout_ms parameter is less than max_busy_timeout (2000 <  2581).
-> Then everything works fine.
->
-> 3. Updating the code to again use 30s as the
-> MMC_CACHE_FLUSH_TIMEOUT_MS, but instead forcing the MMC_RSP_BUSY to be
-> set, even when the timeout_ms becomes greater than max_busy_timeout.
-> This also works fine.
->
-> Clearly this indicates a problem that I think needs to be addressed in
-> the sdhci driver. However, of course I can revert the three discussed
-> patches to fix the problem, but that would only hide the issues and I
-> am sure we would then get back to this issue, sooner or later.
->
-> To fix the problem in the sdhci driver, I would appreciate if someone
-> from TI and Nvidia can step in to help, as I don't have the HW on my
-> desk.
->
-> Comments or other ideas of how to move forward?
+> I'll change the entry names in v5 to be "BPF JIT for RISC-V (32-bit)"
+> and "BPF JIT for RISC-V (64-bit)", similar to the x86 JIT entries.
+> This will pass parse-maintainers.pl and the entries are still in
+> order.
 
-[...]
+Thank you!
 
-> Hi Ulf,
->
-> I could repro during suspend on Jetson TX1/TX2 as when it does mmc flush =
-cache.
-
-Okay, great.
-
->
->
-> Timeout I see is for switch status CMD13 after sending CMD6 as device sid=
-e CMD6 is still inflight while host sends CMD13 as we are using R1 response=
- type with timeout_ms changes to 30s.
->
->
->
-> Earlier we used timeout_ms of 0 for CMD6 flush cache, and with it uses R1=
-B response type and host will wait for busy state followed by response from=
- device for CMD6 and then data lines go High.
->
->
->
-> Now with timeout_ms changed to 30s, we use R1 response and SW waits for b=
-usy by checking for DAT0 line to go High.
-
-If I understand correctly, because of the timeout now set to 30s,
-MMC_RSP_BUSY becomes disabled in __mmc_switch() for your case in
-sdhci-tegra as well?
-
-In other words, mmc_poll_for_busy() is being called, which in your
-case means the ->card_busy() host ops (set to sdhci_card_busy() in
-your case) will be invoked to wait for the card to stop signal busy on
-DAT0.
-
-This indicates to me, that the ->card_busy() ops returns zero to
-inform that the card is *not* busy, even if the card actually signals
-busy? Is that correct?
-
->
->
->
-> With R1B type, host design after sending command at end of completion aft=
-er end bit waits for 2 cycles for data line to go low (busy state from devi=
-ce) and waits for response cycles after which data lines will go back high =
-and then we issue switch status CMD13.
->
->
->
-> With R1 type, host after sending command and at end of completion after e=
-nd bit, DATA lines will go high immediately as its R1 type and switch statu=
-s CMD13 gets issued but by this time it looks like CMD6 on device side is s=
-till in flight for sending status and data.
-
-So, yes, using R1 instead of R1B triggers a different behaviour, but
-according to the eMMC spec it's perfectly allowed to issue a CMD13
-even if the card signals busy on DAT0. The CMD13 is not using the DATA
-lines, so this should work.
-
-If I understand correctly, your driver (and controller?) has issues
-with coping with this scenario. Is it something that can be fixed?
-
->
->
-> 30s timeout is the wait time for data0 line to go high and mmc_busy_statu=
-s will return success right away with R1 response type and SW sends switch =
-status CMD13 but during that time on device side looks like still processin=
-g CMD6 as we are not waiting for enough time when we use R1 response type.
-
-Right, as stated above, isn't sdhci_card_busy() working for your case?
-Can we fix it?
-
->
->
->
->
-> Actually we always use R1B with CMD6 as per spec.
-
-I fully agree that R1B is preferable, but it's not against the spec to
-send CMD13 to poll for busy.
-
-Moreover, we need to cope with the scenario when the host has
-specified a maximum timeout that isn't sufficiently long enough for
-the requested operation. Do you have another proposal for how to
-manage this, but disabling MMC_RSP_BUSY?
-
-Let's assume you driver would get a R1B for the CMD6 (we force it),
-then what timeout would the driver be using if we would set
-cmd.busy_timeout to 30ms?
-
-Kind regards
-Uffe
+--=20
+With Best Regards,
+Andy Shevchenko
