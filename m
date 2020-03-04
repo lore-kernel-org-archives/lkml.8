@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 189FBC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D07C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:39:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19352073D
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:39:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3D932073D
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 02:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbgCDCjR (ORCPT
+        id S2387698AbgCDCjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 21:39:17 -0500
-Received: from mga07.intel.com ([134.134.136.100]:56583 "EHLO mga07.intel.com"
+        Tue, 3 Mar 2020 21:39:15 -0500
+Received: from mga12.intel.com ([192.55.52.136]:44652 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387656AbgCDCjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 21:39:11 -0500
+        id S2387626AbgCDCjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 3 Mar 2020 21:39:08 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 18:39:07 -0800
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Mar 2020 18:39:07 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,511,1574150400"; 
-   d="scan'208";a="233866917"
+   d="scan'208";a="233866902"
 Received: from skuppusw-desk.jf.intel.com ([10.7.201.16])
   by orsmga008.jf.intel.com with ESMTP; 03 Mar 2020 18:39:06 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v17 10/12] PCI/DPC: Export DPC error recovery functions
-Date:   Tue,  3 Mar 2020 18:36:33 -0800
-Message-Id: <ac8816d4d41d0894720660f9b51dbeac0842869d.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v17 05/12] PCI: portdrv: remove reset_link member from pcie_port_service_driver
+Date:   Tue,  3 Mar 2020 18:36:28 -0800
+Message-Id: <13d4866abf46f034f706f255287258cda99fadb4.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 References: <cover.1583286655.git.sathyanarayanan.kuppuswamy@linux.intel.com>
@@ -47,76 +47,59 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-This is a preparatory patch for adding EDR support.
-
-As per the Downstream Port Containment Related Enhancements ECN to the
-PCI Firmware Specification r3.2, sec 4.5.1, table 4-6, If DPC is
-controlled by firmware, firmware is responsible for initializing
-Downstream Port Containment Extended Capability Structures per firmware
-policy. Further, the OS is permitted to read or write DPC Control and
-Status registers of a port while processing an Error Disconnect Recover
-notification from firmware on that port.
-
-To add EDR support we need to re-use DPC error handling functions. So
-add necessary interfaces.
+reset_link member in struct pcie_port_service_driver was
+mainly added to let pcie_do_recovery() trigger the driver
+specific reset_link() on PCIe fatal errors. But after
+modifying the pcie_do_recovery() function to accept reset_link
+callback as function parameter, we no longer have need to use
+or set reset_link in struct pcie_port_service_driver. So remove
+it.
 
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 ---
- drivers/pci/pci.h      |  2 ++
- drivers/pci/pcie/dpc.c | 12 +++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
+ drivers/pci/pcie/aer.c     | 1 -
+ drivers/pci/pcie/dpc.c     | 1 -
+ drivers/pci/pcie/portdrv.h | 3 ---
+ 3 files changed, 5 deletions(-)
 
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index c239e6dd2542..a475192c553a 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -449,6 +449,8 @@ void aer_print_error(struct pci_dev *dev, struct aer_err_info *info);
- void pci_save_dpc_state(struct pci_dev *dev);
- void pci_restore_dpc_state(struct pci_dev *dev);
- void pci_dpc_init(struct pci_dev *pdev);
-+void dpc_process_error(struct pci_dev *pdev);
-+pci_ers_result_t dpc_reset_link(struct pci_dev *pdev);
- #else
- static inline void pci_save_dpc_state(struct pci_dev *dev) {}
- static inline void pci_restore_dpc_state(struct pci_dev *dev) {}
+diff --git a/drivers/pci/pcie/aer.c b/drivers/pci/pcie/aer.c
+index 1235eca0a2e6..c0540c3761dc 100644
+--- a/drivers/pci/pcie/aer.c
++++ b/drivers/pci/pcie/aer.c
+@@ -1500,7 +1500,6 @@ static struct pcie_port_service_driver aerdriver = {
+ 
+ 	.probe		= aer_probe,
+ 	.remove		= aer_remove,
+-	.reset_link	= aer_root_reset,
+ };
+ 
+ /**
 diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
-index ad011d6b22c5..72bfb58918e1 100644
+index 114358d62ddf..1ae5d94944eb 100644
 --- a/drivers/pci/pcie/dpc.c
 +++ b/drivers/pci/pcie/dpc.c
-@@ -89,7 +89,7 @@ static int dpc_wait_rp_inactive(struct pci_dev *pdev)
- 	return 0;
- }
+@@ -313,7 +313,6 @@ static struct pcie_port_service_driver dpcdriver = {
+ 	.service	= PCIE_PORT_SERVICE_DPC,
+ 	.probe		= dpc_probe,
+ 	.remove		= dpc_remove,
+-	.reset_link	= dpc_reset_link,
+ };
  
--static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
-+pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
- {
- 	u16 cap;
+ int __init pcie_dpc_init(void)
+diff --git a/drivers/pci/pcie/portdrv.h b/drivers/pci/pcie/portdrv.h
+index c5da165ce016..64b5e081cdb2 100644
+--- a/drivers/pci/pcie/portdrv.h
++++ b/drivers/pci/pcie/portdrv.h
+@@ -92,9 +92,6 @@ struct pcie_port_service_driver {
+ 	/* Device driver may resume normal operations */
+ 	void (*error_resume)(struct pci_dev *dev);
  
-@@ -193,9 +193,8 @@ static int dpc_get_aer_uncorrect_severity(struct pci_dev *dev,
- 	return 1;
- }
+-	/* Link Reset Capability - AER service driver specific */
+-	pci_ers_result_t (*reset_link)(struct pci_dev *dev);
+-
+ 	int port_type;  /* Type of the port this driver can handle */
+ 	u32 service;    /* Port service this device represents */
  
--static irqreturn_t dpc_handler(int irq, void *context)
-+void dpc_process_error(struct pci_dev *pdev)
- {
--	struct pci_dev *pdev = context;
- 	u16 cap = pdev->dpc_cap, status, source, reason, ext_reason;
- 	struct aer_err_info info;
- 
-@@ -225,6 +224,13 @@ static irqreturn_t dpc_handler(int irq, void *context)
- 		pci_cleanup_aer_uncorrect_error_status(pdev);
- 		pci_aer_clear_fatal_status(pdev);
- 	}
-+}
-+
-+static irqreturn_t dpc_handler(int irq, void *context)
-+{
-+	struct pci_dev *pdev = context;
-+
-+	dpc_process_error(pdev);
- 
- 	/* We configure DPC so it only triggers on ERR_FATAL */
- 	pcie_do_recovery(pdev, pci_channel_io_frozen, dpc_reset_link);
 -- 
 2.25.1
 
