@@ -2,122 +2,62 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E63C1C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E76C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C796920848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0D8F20848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 22:15:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388443AbgCDWOj (ORCPT
+        id S2388474AbgCDWPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 17:14:39 -0500
-Received: from smtp03.smtpout.orange.fr ([80.12.242.125]:36925 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388338AbgCDWOi (ORCPT
+        Wed, 4 Mar 2020 17:15:49 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:46732 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387931AbgCDWPt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 17:14:38 -0500
-Received: from [192.168.42.210] ([93.22.132.175])
-        by mwinf5d06 with ME
-        id ANEZ2200C3nCjhH03NEZnp; Wed, 04 Mar 2020 23:14:34 +0100
-X-ME-Helo: [192.168.42.210]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Wed, 04 Mar 2020 23:14:34 +0100
-X-ME-IP: 93.22.132.175
-Subject: Re: AW: [PATCH 5.5 110/176] MIPS: VPE: Fix a double free and a memory
- leak in release_vpe()
-To:     Walter Harms <wharms@bfs.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Paul Burton <paulburton@kernel.org>,
-        "ralf@linux-mips.org" <ralf@linux-mips.org>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
-References: <20200303174304.593872177@linuxfoundation.org>
- <20200303174317.555620066@linuxfoundation.org>
- <adf1859b4dcc497285ebbda017ece22d@bfs.de>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <33446ca8-0ace-e081-47fa-ceddf7fe80df@wanadoo.fr>
-Date:   Wed, 4 Mar 2020 23:14:30 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <adf1859b4dcc497285ebbda017ece22d@bfs.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 4 Mar 2020 17:15:49 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C1A7E15AD71B2;
+        Wed,  4 Mar 2020 14:15:47 -0800 (PST)
+Date:   Wed, 04 Mar 2020 14:15:47 -0800 (PST)
+Message-Id: <20200304.141547.1905642444413562833.davem@davemloft.net>
+To:     elder@linaro.org
+Cc:     arnd@arndb.de, bjorn.andersson@linaro.org, agross@kernel.org,
+        johannes@sipsolutions.net, dcbw@redhat.com, evgreen@google.com,
+        ejcaruso@google.com, syadagir@codeaurora.org,
+        cpratapa@codeaurora.org, subashab@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, ohad@wizery.com,
+        sidgup@codeaurora.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/17] net: introduce Qualcomm IPA driver (UPDATED)
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200228224204.17746-1-elder@linaro.org>
+References: <20200228224204.17746-1-elder@linaro.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 04 Mar 2020 14:15:48 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 04/03/2020 à 22:28, Walter Harms a écrit :
-> ________________________________________
-> Von: kernel-janitors-owner@vger.kernel.org <kernel-janitors-owner@vger.kernel.org> im Auftrag von Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Gesendet: Dienstag, 3. März 2020 18:42
-> An: linux-kernel@vger.kernel.org
-> Cc: Greg Kroah-Hartman; stable@vger.kernel.org; Christophe JAILLET; Paul Burton; ralf@linux-mips.org; linux-mips@vger.kernel.org; kernel-janitors@vger.kernel.org
-> Betreff: [PATCH 5.5 110/176] MIPS: VPE: Fix a double free and a memory leak in release_vpe()
->
-> From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
->
-> commit bef8e2dfceed6daeb6ca3e8d33f9c9d43b926580 upstream.
->
-> Pointer on the memory allocated by 'alloc_progmem()' is stored in
-> 'v->load_addr'. So this is this memory that should be freed by
-> 'release_progmem()'.
->
-> 'release_progmem()' is only a call to 'kfree()'.
->
-> With the current code, there is both a double free and a memory leak.
-> Fix it by passing the correct pointer to 'release_progmem()'.
->
-> Fixes: e01402b115ccc ("More AP / SP bits for the 34K, the Malta bits and things. Still wants")
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> Signed-off-by: Paul Burton <paulburton@kernel.org>
-> Cc: ralf@linux-mips.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kernel-janitors@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->
-> ---
->   arch/mips/kernel/vpe.c |    2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> --- a/arch/mips/kernel/vpe.c
-> +++ b/arch/mips/kernel/vpe.c
-> @@ -134,7 +134,7 @@ void release_vpe(struct vpe *v)
->   {
->          list_del(&v->list);
->          if (v->load_addr)
-> -               release_progmem(v);
-> +               release_progmem(v->load_addr);
->          kfree(v);
->   }
->
->
-> since release_progmem() is kfree() it is also possible to drop "if (v->load_addr)"
->
-> jm2c
->
-> re,
->   wh
+From: Alex Elder <elder@linaro.org>
+Date: Fri, 28 Feb 2020 16:41:47 -0600
 
-Agreed.
+> This series presents the driver for the Qualcomm IP Accelerator (IPA).
 
-My patch had the following comment after the patch description:
----
-The 'if (v->load_addr)' looks also redundant, but, well, the code is old
-and I feel lazy tonight to send another patch for only that.
----
+This doesn't apply cleanly to the net-next tree if that's where you want
+this applied, can you respin?
 
-git log shows nearly no update since end of 2015, so I kept my proposal 
-as minimal :)
-
-CJ
-
+Thanks.
