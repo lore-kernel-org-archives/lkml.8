@@ -2,190 +2,166 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A5C0C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB80C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:54:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36CE21775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FBB2084E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:54:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXC6Q+wQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388130AbgCDSyH (ORCPT
+        id S2388293AbgCDSy6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:54:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37202 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbgCDSyH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:54:07 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C52B2084E;
-        Wed,  4 Mar 2020 18:54:05 +0000 (UTC)
-Date:   Wed, 4 Mar 2020 13:54:04 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] sched/rt: cpupri_find: Implement fallback
- mechanism for !fit case
-Message-ID: <20200304135404.146c56eb@gandalf.local.home>
-In-Reply-To: <20200304173925.43xq4wztummxgs3x@e107158-lin.cambridge.arm.com>
-References: <20200302132721.8353-1-qais.yousef@arm.com>
-        <20200302132721.8353-2-qais.yousef@arm.com>
-        <20200304112739.7b99677e@gandalf.local.home>
-        <20200304173925.43xq4wztummxgs3x@e107158-lin.cambridge.arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 4 Mar 2020 13:54:58 -0500
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:39675 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388171AbgCDSy5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:54:57 -0500
+Received: by mail-yw1-f66.google.com with SMTP id x184so3031898ywd.6;
+        Wed, 04 Mar 2020 10:54:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=khe1MUx9PqquZu/NWJr8F4YAjRSU8XFMfxkg7Szqw/k=;
+        b=CXC6Q+wQoWl9wdexagm2bOq8/V59xE/9ozzxW9zmIVQ0RGQsNuQEKbrpCH42mpqvFy
+         7kSkHgvYHXRDPIf/dtqJ+Th3TlUvtgFAoQa0w9rUBD+Ee+JoiVWIXdJV+doY2czXesHC
+         U9oaT3wUA7i+FAdsCni7JjPUV72lTbe/rt1Nv90Ydjk46HplEbFsoohjLUzUsx/9NEFK
+         bBQqhsqEnH3yKkf6qClO2USwptJxcKjvgJlcaI6oivMZCBgMtpPFrb4z9XbncxQXy/Wy
+         HYhi3JWBofcBSbrb3Z4FMATE3+LSI3DVwpSurs5Na3ucpegQ37Gpcv5mi22pVuWsxZvw
+         PWXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=khe1MUx9PqquZu/NWJr8F4YAjRSU8XFMfxkg7Szqw/k=;
+        b=eU6EOWkwXGA46Emq4viyQWaD/esZ2JpK6Xbg+X0WhUxWILtwkx5wrD02uvIDUlUQrV
+         iIXtmAwwxWzQU0GDg5yrjsSm+rLtyDznzOhYY3jIbZfr64yx1Wj0FsbQ/1400QHlpBF6
+         MFC6HY6JXUcqlH/6WVum3jjWaTsn7w4sGrBMHhEeWCA/PXXNDdJjbYT0VxDSZgkBPZUz
+         Z5vdsgb5QD6zzvnCwCSTXc02Iri/SHPGenPJ6clXYpL6rvu+EoYqPXbamADQeSVYFxxi
+         GdaQ6Or6ulJCgUQaL89Vx9eyw3C8fHG2DWrXdyO2hMLYLgJlAwKsBpU/870TvVEWf5Fb
+         KdOg==
+X-Gm-Message-State: ANhLgQ1iLJ8Vo0U16cp54tlWR40SZc+b0G/FuXHnvMtlKLZssv6+rUh1
+        M2TZ+htBV5UwGHNLWLGNb3E=
+X-Google-Smtp-Source: ADFU+vtGhaed+fgDnjuY/gvhz/ZwNlUnLqo2QG+7+exC1UluwOtASdfgvs7Q2WNuuZrvbHuvEH91Ig==
+X-Received: by 2002:a81:98d7:: with SMTP id p206mr4447043ywg.376.1583348096390;
+        Wed, 04 Mar 2020 10:54:56 -0800 (PST)
+Received: from [192.168.1.46] (c-73-88-245-53.hsd1.tn.comcast.net. [73.88.245.53])
+        by smtp.gmail.com with ESMTPSA id z126sm645374ywb.49.2020.03.04.10.54.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 04 Mar 2020 10:54:56 -0800 (PST)
+Subject: Re: [PATCH v6 kunit-next 0/4] kunit: add debugfs representation to
+ show results
+To:     Alan Maguire <alan.maguire@oracle.com>, brendanhiggins@google.com,
+        gregkh@linuxfoundation.org, shuah@kernel.org
+Cc:     corbet@lwn.net, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-doc@vger.kernel.org
+References: <1583320036-442-1-git-send-email-alan.maguire@oracle.com>
+From:   Frank Rowand <frowand.list@gmail.com>
+Message-ID: <86d45ff4-1f3b-d22f-08ad-b02bdb60cee2@gmail.com>
+Date:   Wed, 4 Mar 2020 12:54:55 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1583320036-442-1-git-send-email-alan.maguire@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 17:39:26 +0000
-Qais Yousef <qais.yousef@arm.com> wrote:
+Hi Alan,
 
-> > > +	/*
-> > > +	 * If we failed to find a fitting lowest_mask, make sure we fall back
-> > > +	 * to the last known unfitting lowest_mask.
-> > > +	 *
-> > > +	 * Note that the map of the recorded idx might have changed since then,
-> > > +	 * so we must ensure to do the full dance to make sure that level still
-> > > +	 * holds a valid lowest_mask.
-> > > +	 *
-> > > +	 * As per above, the map could have been concurrently emptied while we
-> > > +	 * were busy searching for a fitting lowest_mask at the other priority
-> > > +	 * levels.
-> > > +	 *
-> > > +	 * This rule favours honouring priority over fitting the task in the
-> > > +	 * correct CPU (Capacity Awareness being the only user now).
-> > > +	 * The idea is that if a higher priority task can run, then it should
-> > > +	 * run even if this ends up being on unfitting CPU.
-> > > +	 *
-> > > +	 * The cost of this trade-off is not entirely clear and will probably
-> > > +	 * be good for some workloads and bad for others.
-> > > +	 *
-> > > +	 * The main idea here is that if some CPUs were overcommitted, we try
-> > > +	 * to spread which is what the scheduler traditionally did. Sys admins
-> > > +	 * must do proper RT planning to avoid overloading the system if they
-> > > +	 * really care.
-> > > +	 */
-> > > +	if (best_unfit_idx != -1)
-> > > +		return __cpupri_find(cp, p, lowest_mask, best_unfit_idx);  
-> > 
-> > Hmm, this only checks the one index, which can change and then we miss
-> > everything. I think we can do better. What about this:  
+On 3/4/20 5:07 AM, Alan Maguire wrote:
+> When kunit tests are run on native (i.e. non-UML) environments, the results
+> of test execution are often intermixed with dmesg output.  This patch
+> series attempts to solve this by providing a debugfs representation
+> of the results of the last test run, available as
 > 
-> Hmm. I see 2 issues with this approach:
+> /sys/kernel/debug/kunit/<testsuite>/results
 > 
-> > 
-> > 
-> >         for (idx = 0; idx < task_pri; idx++) {
-> > 		int found = -1;
-> > 
-> >                 if (!__cpupri_find(cp, p, lowest_mask, idx))
-> >                         continue;  
+> Changes since v5:
 > 
-> 1.
-> 
-> __cpupri_find() could update the lowest_mask at the next iteration, so the
-> fallback wouldn't be the lowest level, right?
+> - replaced undefined behaviour use of snprintf(buf, ..., buf) in kunit_log()
+>   with a function to append string to existing log (Frank, patch 1)
+> - added clarification on log size limitations to documentation
+>   (Frank, patch 4)
 
-Hmm, you may be right.
+Thanks for all the changes throughout the versions.
+
+Reviewed-by: Frank Rowand <frank.rowand@sony.com>
+
+-Frank
 
 > 
-> > 
-> >                 if (!lowest_mask || !fitness_fn)
-> >                         return 1;
-> > 
-> > 		/* Make sure we have one fit CPU before clearing */
-> > 		for_each_cpu(cpu, lowest_mask) {
-> > 			if (fitness_fn(p, cpu)) {
-> > 				found = cpu;
-> > 				break;
-> > 			}
-> > 		}
-> > 
-> > 		if (found == -1)
-> > 			continue;  
+> Changes since v4:
 > 
-> 2.
+> - added suite-level log expectations to kunit log test (Brendan, patch 2)
+> - added log expectations (of it being NULL) for case where
+>   CONFIG_KUNIT_DEBUGFS=n to kunit log test (patch 2)
+> - added patch 3 which replaces subtest tab indentation with 4 space
+>   indentation as per TAP 14 spec (Frank, patch 3)
 > 
-> If we fix 1, then assuming found == -1 for all level, we'll still have the
-> problem that the mask is stale.
+> Changes since v3:
 > 
-> We can do a full scan again as Tao was suggestion, the 2nd one without any
-> fitness check that is. But isn't this expensive?
-
-I was hoping to try to avoid that, but it's not that expensive and will
-probably seldom happen. Perhaps we should run some test cases and trace the
-results to see how often that can happen.
-
+> - added CONFIG_KUNIT_DEBUGFS to support conditional compilation of debugfs
+>   representation, including string logging (Frank, patch 1)
+> - removed unneeded NULL check for test_case in
+>   kunit_suite_for_each_test_case() (Frank, patch 1)
+> - added kunit log test to verify logging multiple strings works
+>   (Frank, patch 2)
+> - rephrased description of results file (Frank, patch 3)
 > 
-> We risk the mask being stale anyway directly after selecting it. Or a priority
-> level might become the lowest level just after we dismissed it.
-
-Sure, but that's still a better effort.
-
+> Changes since v2:
 > 
-> So our best effort could end up lying even if we do the right thing (TM).
+> - updated kunit_status2str() to kunit_status_to_string() and made it
+>   static inline in include/kunit/test.h (Brendan)
+> - added log string to struct kunit_suite and kunit_case, with log
+>   pointer in struct kunit pointing at the case log.  This allows us
+>   to collect kunit_[err|info|warning]() messages at the same time
+>   as we printk() them.  This solves for the most part the sharing
+>   of log messages between test execution and debugfs since we
+>   just print the suite log (which contains the test suite preamble)
+>   and the individual test logs.  The only exception is the suite-level
+>   status, which we cannot store in the suite log as it would mean
+>   we'd print the suite and its status prior to the suite's results.
+>   (Brendan, patch 1)
+> - dropped debugfs-based kunit run patch for now so as not to cause
+>   problems with tests currently under development (Brendan)
+> - fixed doc issues with code block (Brendan, patch 3)
 > 
-> > 
-> >                 /* Ensure the capacity of the CPUs fit the task */
-> >                 for_each_cpu(cpu, lowest_mask) {
-> >                         if (cpu < found || !fitness_fn(p, cpu))
-> >                                 cpumask_clear_cpu(cpu, lowest_mask);
-> >                 }
-> > 
-> >                 return 1;
-> >         }
-> > 
-> > This way, if nothing fits we return the untouched lowest_mask, and only
-> > clear the lowest_mask bits if we found a fitness cpu.  
+> Changes since v1:
+>  - trimmed unneeded include files in lib/kunit/debugfs.c (Greg)
+>  - renamed global debugfs functions to be prefixed with kunit_ (Greg)
+>  - removed error checking for debugfs operations (Greg)
 > 
-> Because of 1, I think the lowest mask will not be the true lowest mask, no?
-> Please correct me if I missed something.
-
-No, I think you are correct.
-
+> Alan Maguire (4):
+>   kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display
+>   kunit: add log test
+>   kunit: subtests should be indented 4 spaces according to TAP
+>   kunit: update documentation to describe debugfs representation
 > 
-> There's another 'major' problem that I need to bring your attention to,
-> find_lowest_rq() always returns the first CPU in the mask.
+>  Documentation/dev-tools/kunit/usage.rst |  14 +++
+>  include/kunit/test.h                    |  59 +++++++++++--
+>  lib/kunit/Kconfig                       |   8 ++
+>  lib/kunit/Makefile                      |   4 +
+>  lib/kunit/assert.c                      |  79 ++++++++---------
+>  lib/kunit/debugfs.c                     | 116 +++++++++++++++++++++++++
+>  lib/kunit/debugfs.h                     |  30 +++++++
+>  lib/kunit/kunit-test.c                  |  45 +++++++++-
+>  lib/kunit/test.c                        | 147 +++++++++++++++++++++++++-------
+>  9 files changed, 421 insertions(+), 81 deletions(-)
+>  create mode 100644 lib/kunit/debugfs.c
+>  create mode 100644 lib/kunit/debugfs.h
 > 
-> See discussion below for more details
-> 
-> 	https://lore.kernel.org/lkml/20200219140243.wfljmupcrwm2jelo@e107158-lin/
-> 
-> In my test because multiple tasks wakeup together they all end up going to CPU1
-> (the first fitting CPU in the mask), then just to be pushed back again. Not
-> necessarily to where they were running before.
-> 
-> Not sure if there are other situations where this could happen.
-> 
-> If we fix this problem then we can help reduce the effect of this raciness in
-> find_lowest_rq(), and end up with less ping-ponging if tasks happen to
-> wakeup/sleep at the wrong time during the scan.
-
-Hmm, I wonder if there's a fast way of getting the next CPU from the
-current cpu the task is on. Perhaps that will help in the ping ponging.
-
--- Steve
-
-> 
-> Or maybe there is a way to eliminate all these races with the current design?
-> 
-> Thanks
-> 
-> --
-> Qais Yousef
 
