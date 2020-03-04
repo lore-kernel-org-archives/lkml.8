@@ -2,101 +2,130 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD5EC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:28:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2776C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1614E21775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:28:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="ZEDoJ0Ax"
+	by mail.kernel.org (Postfix) with ESMTP id 97F1121775
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:29:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583346553;
+	bh=B+cQ4/aW/thQ8NZTM8FXjSeLhbYgNROzJ+lgs+70Uis=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=EpgVFm3haGAJDsgT55GSRljR78fH81kktfRIbWCEveSHPtWFtciCsv2g4Zd1amGwD
+	 t/axpUog8tEmJvwT2wMJtszxgA92+/OKSGggLRVhVbdBO/ZjYtK9NEyvvyT1FLeha9
+	 I9x+5TVajsQFzX5/x+ZPi0sfDsZkXtpRpTNKZ6/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388257AbgCDS2B (ORCPT
+        id S1730107AbgCDS3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:28:01 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36877 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729965AbgCDS17 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:27:59 -0500
-Received: by mail-qt1-f195.google.com with SMTP id j34so2131447qtk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:27:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6284/+o4WmhRyX/T6Efu7f/wEiL5h9oXcdek5YCPMl0=;
-        b=ZEDoJ0AxZRxKND2ZzOi6Q65C/cHyDa/Fd6mMJzIgN5aluss8TGyYD0JlBups8DESMQ
-         y1koDsk24eHi27dVklM6z3J+t56V82lLAoOs7wqP87AiSEXXkgg2wGUEmbJ5wFi2zlxa
-         iuo8oJ9FJ1iX1Syl3XC9qTrJteSja3Nn4NboxjxzltDjaNM41s0mofINkSNgg2dIb6gL
-         fEfRxbKyfvKXX9Py0SPAKO3EMC3/gMFIpEH0OrC104Yq8i6aDDiUg/Pwoy8uHazSFfdV
-         wSG4xd3x6MkIqR4/x4NA7c889RMT2ahBPgJK4Y1Nti8Ya686nZgXQxcMYFSuzn47xmLs
-         nqpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6284/+o4WmhRyX/T6Efu7f/wEiL5h9oXcdek5YCPMl0=;
-        b=Lr+7YjN85vos1AGSpbpfY0qhHvSrPMRG1x6Csjv/euMmsEoeSdV/TUNTtL4bWM0KjL
-         5kTMnhlU/znih0QGY6/y4nF5DFlWpcA0GpgZ4kZMA7avzrpRdINVcXdYl6EcYoDqT7si
-         4nGTJ72L4JWFov/5hHSSGCXGl3qTyQ/XolzNupFrSByB7E2dec8O9MunKx2J52b+1l2+
-         LelTqqXWcP5WUWfkbg9XxlyTU69/wzA5OH6e0UB6cWKg91FVZ6czZScRp8pmNwKaP0qY
-         t3L+J2q9XYQvAdzPhmls0/2mVOE08abcrYi41alnbVGNUt0So277wV10QkwIp06wDa5f
-         y+IQ==
-X-Gm-Message-State: ANhLgQ1dswod2Zem9TBy4/V3EcDv7eY08AZyd4h/KlAASsuQO8JoxNDT
-        8oCBFmiJ8ihvRZOIubgeGfqjQVmk4QvkCA==
-X-Google-Smtp-Source: ADFU+vvEkMluDNtLHvb9wYibY0YTfmMFpvTnVCT10Y9vc5W/pf6esvo4cSwgKkO7QmQavPGJiAzECw==
-X-Received: by 2002:aed:308a:: with SMTP id 10mr3738127qtf.221.1583346476833;
-        Wed, 04 Mar 2020 10:27:56 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
-        by smtp.gmail.com with ESMTPSA id n8sm14500789qkn.49.2020.03.04.10.27.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 04 Mar 2020 10:27:56 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1j9YkN-0001xY-QW; Wed, 04 Mar 2020 14:27:55 -0400
-Date:   Wed, 4 Mar 2020 14:27:55 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Bernard Metzler <bmt@zurich.ibm.com>
-Cc:     dledford@redhat.com, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [Patch for-rc v2] RDMA/siw: Fix failure handling during device
- creation
-Message-ID: <20200304182755.GA7428@ziepe.ca>
-References: <20200302155814.9896-1-bmt@zurich.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200302155814.9896-1-bmt@zurich.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 4 Mar 2020 13:29:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:38278 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725795AbgCDS3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 13:29:12 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9401E31B;
+        Wed,  4 Mar 2020 10:29:11 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 161153F6C4;
+        Wed,  4 Mar 2020 10:29:10 -0800 (PST)
+Date:   Wed, 04 Mar 2020 18:29:09 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: spi-fsl-dspi: Add specific compatibles for all Layerscape SoCs" to the spi tree
+In-Reply-To:  <20200302001958.11105-2-olteanv@gmail.com>
+Message-Id:  <applied-20200302001958.11105-2-olteanv@gmail.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Mar 02, 2020 at 04:58:14PM +0100, Bernard Metzler wrote:
-> A failing call to ib_device_set_netdev() during device creation
-> caused system crash due to xa_destroy of uninitialized xarray
-> hit by device deallocation. Fixed by moving xarray initialization
-> before potential device deallocation.
-> 
-> Fixes: bdcf26bf9b3a (rdma/siw: network and RDMA core interface)
-> Reported-by: syzbot+2e80962bedd9559fe0b3@syzkaller.appspotmail.com
-> Signed-off-by: Bernard Metzler <bmt@zurich.ibm.com>
-> ---
-> v1 -> v2:
-> - Fix here only potential system crash during failing device
->   creation, but not missing correct error propagation.
-> 
->  drivers/infiniband/sw/siw/siw_main.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+The patch
 
-Applied to for-rc
+   spi: spi-fsl-dspi: Add specific compatibles for all Layerscape SoCs
+
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
 Thanks,
-Jason
+Mark
+
+From 50b62071deab48c1a69c471f9a7d0c8ff9ef23eb Mon Sep 17 00:00:00 2001
+From: Vladimir Oltean <vladimir.oltean@nxp.com>
+Date: Mon, 2 Mar 2020 02:19:53 +0200
+Subject: [PATCH] spi: spi-fsl-dspi: Add specific compatibles for all
+ Layerscape SoCs
+
+Make the second compatible string optional for LS1012A, LS1088A and
+LS2080A. Old versions of the spi-fsl-dspi.c driver still need to probe
+on the old, generic compatible string for these controllers (such as
+"fsl,ls1021a-v1.0-dspi") which provides less functionality.
+
+Document the device tree bindings for LS1043A and LS1046A, whose
+bindings are already in use in fsl-ls1043a.dtsi and fsl-ls1046a.dtsi.
+
+Introduce new compatible strings for LS1028A and LX2160A. There will be
+no second compatible string for these.
+
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Message-Id: <20200302001958.11105-2-olteanv@gmail.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../devicetree/bindings/spi/spi-fsl-dspi.txt    | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
+index 162e024b95a0..99b94cfe1623 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-dspi.txt
+@@ -1,12 +1,17 @@
+ ARM Freescale DSPI controller
+ 
+ Required properties:
+-- compatible : "fsl,vf610-dspi", "fsl,ls1021a-v1.0-dspi",
+-		"fsl,ls2085a-dspi"
+-		or
+-		"fsl,ls2080a-dspi" followed by "fsl,ls2085a-dspi"
+-		"fsl,ls1012a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
+-		"fsl,ls1088a-dspi" followed by "fsl,ls1021a-v1.0-dspi"
++- compatible : must be one of:
++	"fsl,vf610-dspi",
++	"fsl,ls1021a-v1.0-dspi",
++	"fsl,ls1012a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
++	"fsl,ls1028a-dspi",
++	"fsl,ls1043a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
++	"fsl,ls1046a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
++	"fsl,ls1088a-dspi" (optionally followed by "fsl,ls1021a-v1.0-dspi"),
++	"fsl,ls2080a-dspi" (optionally followed by "fsl,ls2085a-dspi"),
++	"fsl,ls2085a-dspi",
++	"fsl,lx2160a-dspi",
+ - reg : Offset and length of the register set for the device
+ - interrupts : Should contain SPI controller interrupt
+ - clocks: from common clock binding: handle to dspi clock.
+-- 
+2.20.1
+
