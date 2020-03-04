@@ -2,258 +2,176 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAAEC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96C3C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0756214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:13:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WQOJLzMD"
+	by mail.kernel.org (Postfix) with ESMTP id 974BC214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 07:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583306102;
+	bh=y/uI56ETxOiF6to8G8JqcU7y5zIAtMZUIPSNK75yQaA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=sBq858kblZA2LShwysxJ1nkAIL83q3Z03nlhvG/+IUmW4Xh/zkRkxJ1rXsp8zF6GE
+	 QU4/bd0EUUWA5rjUJpcN3RHdUAHjI5xbCzSxUL9h+68FZfjWjuXiBVZW79/jYNghe8
+	 pvMh0KvfMfgyXU4qL1nAEljOeNCkfotBvQVnHRhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbgCDHN4 (ORCPT
+        id S1728447AbgCDHPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 02:13:56 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:36317 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725797AbgCDHN4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 02:13:56 -0500
-Received: by mail-lf1-f68.google.com with SMTP id s1so606805lfd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 23:13:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=UXIPANIIzS72BLZ6PwQZTF4f2nVTT+4EeBrm+Bhq4LA=;
-        b=WQOJLzMDZ7KAS8DRBxiAjaOw0NsOs2r6OKYoiRbi5e/ev5ttmnHsIpiP+r4XXIUPNN
-         4mkyITqOpUxLvIW+FWrmezRasiaO+5pgJXSJVwCV6T5juEiyfPckNsrHTNJ+qswJCLCz
-         Uj0ARyblY6s5PBDsBBlAaXmtSGa5aVHxQk9cLqiQ9pAkC22n7VQjk1BFfy8GoS8LUyt1
-         p92/j6tV+z76u99YoVCi9uY3bVx2lEXb7FOJgXsjChYzIcJPNz0esahIidWVYqvA4MCQ
-         5JJiJGCeeBajJaa3sjjgRp25y9XB2QmZuAMHjMhRn7fLoBbnEiEwe/Z4LXNjPm8dJL+t
-         8XhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UXIPANIIzS72BLZ6PwQZTF4f2nVTT+4EeBrm+Bhq4LA=;
-        b=s5hMNJ1qwiwsR6SQnMC6EUsraAp00y71vgpa2xA0VSdlcLqfd0cTJsr+qRuqze9d3o
-         fs34D3/h+208FI7h7Q3G9Ke1YUV7ecSca9+M9L6vcxcW2hJI9IBDOoQBbVlrgzanRGGw
-         89AGbmG/qPMRf6DBPp7zZKdvEv716regub+ANWr0VOKcxqwYmVn3/Xi18bawcyNBOZrQ
-         bqT25Tz92luj4NPr93SrtAZLdM+OEJtZB+k/qRJwrlqMSxsAi6F1XBoOibLNLj6w16tx
-         oUmpvgEVmZR6GM25caRI/ER3ax+8ME/jai+LZN2tKVfXFiR73BDy/lJ3hlcTRSxWzJju
-         otjg==
-X-Gm-Message-State: ANhLgQ2cuBpteO936rxABRMBJ3df/jEqSGvN4+QY6gqjhT8C7oYTHgWS
-        m+cg/Lr0lcQx19625lpy//rLuYisJQ6q/P2rgl//CX2aTtVw8pEO
-X-Google-Smtp-Source: ADFU+vtrS5lpAcD9SCSNGEAeOESpVpWFFgXLz6V2QndSOryvlZIeUTyAUVmb/0wLWR5iXrNz+V+yY8NMpAovfnROZuo=
-X-Received: by 2002:a19:c215:: with SMTP id l21mr1130654lfc.95.1583306033384;
- Tue, 03 Mar 2020 23:13:53 -0800 (PST)
+        Wed, 4 Mar 2020 02:15:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728301AbgCDHPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 02:15:00 -0500
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3DFB21741
+        for <linux-kernel@vger.kernel.org>; Wed,  4 Mar 2020 07:14:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583306100;
+        bh=y/uI56ETxOiF6to8G8JqcU7y5zIAtMZUIPSNK75yQaA=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=frLZ0cOjqoDMu/nKrqwr5M/2S0Lg54WCLE57WKjKfgOG4t8G2LcgVlMX8j6p634LX
+         dnYDdohb3/f5iLpotWSgwS1JYAQxqB7eXsDCFLauTYZ55KdQM2AIrhB9CCbO6CK+mc
+         uMtxUrMe7/de//Ec3ztgKeH/3lwWnQtU2/xq+juY=
+Received: by mail-wr1-f52.google.com with SMTP id z11so981294wro.9
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 23:14:59 -0800 (PST)
+X-Gm-Message-State: ANhLgQ29AyMlaOqna+QBXcLFGBr2Fbu4tsUfqWDDBFZzmDfiDX5OxhbQ
+        cI5dVg4fzac+/pwvV4L3ZfHUHjxY7epYnl99lP2SQQ==
+X-Google-Smtp-Source: ADFU+vsGlLQvbg2b4VyvIhLZsuwvT9bOKvkSVXVxtjdU8xD0muWLXxDg79EArj7HfEYPCjiH5EOmTfKn41X99UZ6YzE=
+X-Received: by 2002:adf:f84a:: with SMTP id d10mr2585836wrq.208.1583306093565;
+ Tue, 03 Mar 2020 23:14:53 -0800 (PST)
 MIME-Version: 1.0
-References: <20200303174304.593872177@linuxfoundation.org>
-In-Reply-To: <20200303174304.593872177@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 4 Mar 2020 12:43:42 +0530
-Message-ID: <CA+G9fYtNKXBOQKE_AD6qLoRo4TeaBYOc9Ce3kBxdLap1av4v=Q@mail.gmail.com>
-Subject: Re: [PATCH 5.5 000/176] 5.5.8-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
+References: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
+In-Reply-To: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Wed, 4 Mar 2020 08:14:42 +0100
+X-Gmail-Original-Message-ID: <CAKv+Gu831SRo+Di6WgKTex40TcOVqNQAdeNLtfQpPdgnvrxucw@mail.gmail.com>
+Message-ID: <CAKv+Gu831SRo+Di6WgKTex40TcOVqNQAdeNLtfQpPdgnvrxucw@mail.gmail.com>
+Subject: Re: [PATCH v2] ima: add a new CONFIG for loading arch-specific policies
+To:     Nayna Jain <nayna@linux.ibm.com>
+Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 3 Mar 2020 at 23:16, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Wed, 4 Mar 2020 at 03:34, Nayna Jain <nayna@linux.ibm.com> wrote:
 >
-> This is the start of the stable review cycle for the 5.5.8 release.
-> There are 176 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> Every time a new architecture defines the IMA architecture specific
+> functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+> include file needs to be updated. To avoid this "noise", this patch
+> defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+> the different architectures to select it.
 >
-> Responses should be made by Thu, 05 Mar 2020 17:42:06 +0000.
-> Anything received after that time might be too late.
+> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Philipp Rudo <prudo@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+
+for the x86 bits, but I'm not an x86 maintainer. Also, you may need to
+split this if you want to permit arch maintainers to pick up their
+parts individually.
+
+
+> ---
+> v2:
+> * Fixed the issue identified by Mimi. Thanks Mimi, Ard, Heiko and Michael for
+> discussing the fix.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.5.8-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.5.y
-> and the diffstat can be found below.
+>  arch/powerpc/Kconfig           | 1 +
+>  arch/s390/Kconfig              | 1 +
+>  arch/x86/Kconfig               | 1 +
+>  include/linux/ima.h            | 3 +--
+>  security/integrity/ima/Kconfig | 9 +++++++++
+>  5 files changed, 13 insertions(+), 2 deletions(-)
 >
-> thanks,
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 497b7d0b2d7e..a5cfde432983 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -979,6 +979,7 @@ config PPC_SECURE_BOOT
+>         bool
+>         depends on PPC_POWERNV
+>         depends on IMA_ARCH_POLICY
+> +       select IMA_SECURE_AND_OR_TRUSTED_BOOT
+>         help
+>           Systems with firmware secure boot enabled need to define security
+>           policies to extend secure boot to the OS. This config allows a user
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 8abe77536d9d..4a502fbcb800 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -195,6 +195,7 @@ config S390
+>         select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+>         select SWIOTLB
+>         select GENERIC_ALLOCATOR
+> +       select IMA_SECURE_AND_OR_TRUSTED_BOOT if IMA_ARCH_POLICY
 >
-> greg k-h
 >
+>  config SCHED_OMIT_FRAME_POINTER
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index beea77046f9b..7f5bfaf0cbd2 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -230,6 +230,7 @@ config X86
+>         select VIRT_TO_BUS
+>         select X86_FEATURE_NAMES                if PROC_FS
+>         select PROC_PID_ARCH_STATUS             if PROC_FS
+> +       select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
+>
+>  config INSTRUCTION_DECODER
+>         def_bool y
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 1659217e9b60..aefe758f4466 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+>  #endif
+>
+> -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+> -       || defined(CONFIG_PPC_SECURE_BOOT)
+> +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+>  extern bool arch_ima_get_secureboot(void);
+>  extern const char * const *arch_get_ima_policy(void);
+>  #else
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> index 3f3ee4e2eb0d..d17972aa413a 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+>         depends on IMA_MEASURE_ASYMMETRIC_KEYS
+>         depends on SYSTEM_TRUSTED_KEYRING
+>         default y
+> +
+> +config IMA_SECURE_AND_OR_TRUSTED_BOOT
+> +       bool
+> +       depends on IMA
+> +       depends on IMA_ARCH_POLICY
 
-Results from Linaro=E2=80=99s test farm.
-Regressions detected on x86_64 and i386.
+Doesn't the latter already depend on the former?
 
-Test failure output:
-CVE-2017-5715: VULN (IBRS+IBPB or retpoline+IBPB+RSB filling, is
-needed to mitigate the vulnerability)
-
-Test description:
-CVE-2017-5715 branch target injection (Spectre Variant 2)
-
-Impact: Kernel
-Mitigation 1: new opcode via microcode update that should be used by
-up to date compilers to protect the BTB (by flushing indirect branch
-predictors)
-Mitigation 2: introducing "retpoline" into compilers, and recompile
-software/OS with it
-Performance impact of the mitigation: high for mitigation 1, medium
-for mitigation 2, depending on your CPU
-
-ref:
-https://github.com/speed47/spectre-meltdown-checker
-https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/tests/spectre-mel=
-tdown-checker-test/CVE-2017-5715
-https://lkft.validation.linaro.org/scheduler/job/1264643#L21206
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.5.8-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.5.y
-git commit: 3517b32c0774341d492140b2be08c4bf6d1a833e
-git describe: v5.5.7-177-g3517b32c0774
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.5-oe/bui=
-ld/v5.5.7-177-g3517b32c0774
-
-Regressions (compared to build v5.5.7)
-------------------------------------------------------------------------
-
-i386:
-  spectre-meltdown-checker-test:
-    * CVE-2017-5715
-
-x86:
-  spectre-meltdown-checker-test:
-    * CVE-2017-5715
-
-No fixes (compared to build v5.5.7)
-
-Ran 25662 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* linux-log-parser
-* perf
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-fcntl-locktests-tests
-* ltp-fs-tests
-* ltp-ipc-tests
-* ltp-sched-tests
-* network-basic-tests
-* kvm-unit-tests
-* libhugetlbfs
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-m[
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-cap_bounds-64k-page_size-tests
-* ltp-cap_bounds-kasan-tests
-* ltp-commands-64k-page_size-tests
-* ltp-commands-kasan-tests
-* ltp-containers-64k-page_size-tests
-* ltp-containers-kasan-tests
-* ltp-cpuhotplug-64k-page_size-tests
-* ltp-cpuhotplug-kasan-tests
-* ltp-crypto-64k-page_size-tests
-* ltp-crypto-kasan-tests
-* ltp-cve-64k-page_size-tests
-* ltp-cve-kasan-tests
-* ltp-dio-64k-page_size-tests
-* ltp-dio-kasan-tests
-* ltp-fcntl-locktests-64k-page_size-tests
-* ltp-fcntl-locktests-kasan-tests
-* ltp-filecaps-64k-page_size-tests
-* ltp-filecaps-kasan-tests
-* ltp-fs-64k-page_size-tests
-* ltp-fs-kasan-tests
-* ltp-fs_bind-64k-page_size-tests
-* ltp-fs_bind-kasan-tests
-* ltp-fs_perms_simple-64k-page_size-tests
-* ltp-fs_perms_simple-kasan-tests
-* ltp-fsx-64k-page_size-tests
-* ltp-fsx-kasan-tests
-* ltp-hugetlb-64k-page_size-tests
-* ltp-hugetlb-kasan-tests
-* ltp-io-64k-page_size-tests
-* ltp-io-kasan-tests
-* ltp-ipc-64k-page_size-tests
-* ltp-ipc-kasan-tests
-* ltp-math-64k-page_size-tests
-* ltp-math-kasan-tests
-* ltp-math-tests
-* ltp-mm-64k-page_size-tests
-* ltp-mm-kasan-tests
-* ltp-nptl-64k-page_size-tests
-* ltp-nptl-kasan-tests
-* ltp-pty-64k-page_size-tests
-* ltp-pty-kasan-tests
-* ltp-sched-64k-page_size-tests
-* ltp-sched-kasan-tests
-* ltp-securebits-64k-page_size-tests
-* ltp-securebits-kasan-tests
-* ltp-syscalls-64k-page_size-tests
-* ltp-syscalls-compat-tests
-* ltp-syscalls-kasan-tests
-* ltp-open-posix-tests
-* ssuite
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> +       default n
+> +       help
+> +          This option is selected by architectures to enable secure and/or
+> +          trusted boot based on IMA runtime policies.
+> --
+> 2.13.6
+>
