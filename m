@@ -2,122 +2,115 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80890C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD2AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52FBD24654
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:39:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JWmmsvlv"
+	by mail.kernel.org (Postfix) with ESMTP id DB3132146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:40:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583354442;
+	bh=AW+dm1zFyTWQ8FkDWciZrD814+ylxfvHPYpqV1MDjqI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GE3n0SK1xsW45YbxlNLyaVAx0EdQDGQFjc9kwYz5T5yByOsoiiWoyfdaPp50DzSUt
+	 neMhhYdQprrTu8SWnrXPoEPPQweKd3fbd++qWkB5L2sXHG0Tt+GXrujyzvc8Rv+WkE
+	 8qmXkbvFzrCUnOpkKGCEluEOaroA+5JlkQG2q/lQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729198AbgCDUj4 (ORCPT
+        id S2388024AbgCDUkl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:39:56 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46313 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727137AbgCDUjz (ORCPT
+        Wed, 4 Mar 2020 15:40:41 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36311 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgCDUkl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:39:55 -0500
-Received: by mail-pg1-f193.google.com with SMTP id y30so1528745pga.13
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 12:39:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=wNgtMzd+gzlBfLnh+JlMLwQ7VKkmR77B7QNl9jJRgI8=;
-        b=JWmmsvlvaY1+Xsw8BMsiCecCaQ4C6vdTOgVcJbr16hxEsxKVvuVwmJF73Dg4cwtDrf
-         V9iU+A0JOxLHP5L9HO6eHO8pu2LTPKSJScrKnX81yOqMuW1niTm8mGzyyZmEYnKqyYaL
-         r//ADjUDdTtGj0GzxlvtVuacqu6ZeK4qcvuEiMiheL4nkpHyJ8uGxznOo7ZvaMtXvPsU
-         4V7JGtKe5Gcl4Ow+qJpPF5ZMh3pYXFhXEnO8nwIyshZXY7rCzvQHSECjnI05bhci0Egz
-         M4Daq/CBEiVT/mLECdhfvtGdfVNXTX7CqqMgweWmbvsI7tn2aHvYhjIQcf9YMRPP1JSD
-         mfaA==
+        Wed, 4 Mar 2020 15:40:41 -0500
+Received: by mail-qt1-f195.google.com with SMTP id t13so2468944qto.3;
+        Wed, 04 Mar 2020 12:40:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=wNgtMzd+gzlBfLnh+JlMLwQ7VKkmR77B7QNl9jJRgI8=;
-        b=Q+NvhXFfgJtjz03wKZixi+UxjEOtWhnOYa7zqgIzxGwtccw4koJSPixFPz2UXYYeIr
-         jbvYYUs5pYM4Zev/ZA3iLub11SIi1Qg5cyH5FUSgkGJtJhSfWfBxpg2qN8bO10OLYji2
-         c0C41P4HbcpH8p2+S3nXvisPfXH2D66Vmmn/wZMoGxuKrh1allP+2zW68927O8/mj8Jp
-         T99FUyyPydr2c4fD5lDsbGFd3pxxIrq+15dsJMxZxClzVcXd5aNLMFwuUwGlBRfyo8ma
-         iYSUOiIRIGJU9wqQpOI4LQlES9IFV+LN46pJlU5qQpsa69aXiJn+AUjQyCrKoC/29hpz
-         dC6g==
-X-Gm-Message-State: ANhLgQ2CwG+6Xp2RIV2pXm0Z1aTkPeGXqs9chrIPgTDyC3asXgk6JinF
-        +KAo/wY1oE6G93gRb6o85FNB4A==
-X-Google-Smtp-Source: ADFU+vtdNfS/21YQBCu3RzuP8szM7y2EJjTVf2/6DbhY7+hK9OOE3GcBbqDmMsZNViPQRtxGytPoTA==
-X-Received: by 2002:a63:565e:: with SMTP id g30mr4080275pgm.206.1583354394350;
-        Wed, 04 Mar 2020 12:39:54 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id g16sm29970389pgb.54.2020.03.04.12.39.53
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kMvb3FkHGy6+3PCd0iRkhP59AmRHfZvsaM4V6wsp0VQ=;
+        b=PzoObFoUEkJu99rFUbzKr5EBKJfe+QkFu5d6qGwbv4QP/Y9FDeUg8hydo/LvFKi3wp
+         DfYxH3xYDddGVuz1TRUGwObqIjJ/6Kyn3eLGtJjXel+n10O0VL/iIPUkL4NoSc86ShJX
+         oTGlDenzEiluPneam+kq7CwG3HKqce6ZghNSZJUFRErP2zuSMGBCAr6T1vx58V725m3h
+         V8wwTqymF3vMg+0kdDayxaLofqjlxhfAs490xlVURVEn6yXlHuOXE3womY7ynF97eK6f
+         Tg6JBO7pSjHQRGY5UkG0sEEIiflJV4ELXgxBhEaffSaibraRD8T/XJAJB1OMJIANQj4x
+         KDTw==
+X-Gm-Message-State: ANhLgQ0W8pTQpHM06rL2mp9/ag7tbaF6RL0EEHW2/WjAxX4TKMJ815k9
+        L5eWG1fnBeXpyswZwzgiLkQ=
+X-Google-Smtp-Source: ADFU+vv/02CvfBCd0uCY7PmzoOMaiUvA+1v27ESLdQ7l4yc5et4cC1jpvow21omkNqgrShpqtJrwIg==
+X-Received: by 2002:ac8:47cf:: with SMTP id d15mr4163094qtr.17.1583354439493;
+        Wed, 04 Mar 2020 12:40:39 -0800 (PST)
+Received: from dennisz-mbp ([2620:10d:c091:500::2:8091])
+        by smtp.gmail.com with ESMTPSA id v82sm14655116qka.51.2020.03.04.12.40.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 12:39:53 -0800 (PST)
-Date:   Wed, 4 Mar 2020 12:39:52 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Wed, 04 Mar 2020 12:40:28 -0800 (PST)
+Date:   Wed, 4 Mar 2020 15:40:26 -0500
+From:   Dennis Zhou <dennis@kernel.org>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-doc@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Vijayanand Jitta <vjitta@codeaurora.org>
-Subject: Re: SLUB: sysfs lets root force slab order below required minimum,
- causing memory corruption
-In-Reply-To: <beb7abda-2648-aae7-31c5-51da6f02380a@suse.cz>
-Message-ID: <alpine.DEB.2.21.2003041231020.260792@chino.kir.corp.google.com>
-References: <CAG48ez31PP--h6_FzVyfJ4H86QYczAFPdxtJHUEEan+7VJETAQ@mail.gmail.com> <alpine.DEB.2.21.2003031724400.77561@chino.kir.corp.google.com> <202003031820.7A0C4FF302@keescook> <beb7abda-2648-aae7-31c5-51da6f02380a@suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        linux-kernel@vger.kernel.org, Dennis Zhou <dennis@kernel.org>
+Subject: Re: [PATCH 2/2] include/bitmap.h: add new functions to documentation
+Message-ID: <20200304204026.GA55400@dennisz-mbp>
+References: <20200304140920.6109-1-wsa+renesas@sang-engineering.com>
+ <20200304140920.6109-3-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200304140920.6109-3-wsa+renesas@sang-engineering.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020, Vlastimil Babka wrote:
+Hi Wolfram,
 
-> > Seems reasonable!
-> > 
-> > For the race concerns, should this logic just make sure the resulting
-> > order can never shrink? Or does it need much stronger atomicity?
+On Wed, Mar 04, 2020 at 03:09:20PM +0100, Wolfram Sang wrote:
+> I found these functions only by chance although I was looking exactly
+> for something like them. So, add them to the list of functions to make
+> them more visible.
 > 
-> If order grows, I think we also need to recalculate the random sequence for
-> freelist randomization [1]. I expect that would be rather problematic with
-> parallel allocations/freeing going on.
+> Fixes: e837dfde15a4 ("bitmap: genericize percpu bitmap region iterators")
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> Cc: Dennis Zhou <dennis@kernel.org>
+> ---
+>  include/linux/bitmap.h | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> As was also noted, the any_slab_objects(s) checks are racy - might return false
-> and immediately some other CPU can allocate some.
+> diff --git a/include/linux/bitmap.h b/include/linux/bitmap.h
+> index 804600f7dc35..71ba0ffaa22a 100644
+> --- a/include/linux/bitmap.h
+> +++ b/include/linux/bitmap.h
+> @@ -51,6 +51,12 @@
+>   *  bitmap_clear(dst, pos, nbits)               Clear specified bit area
+>   *  bitmap_find_next_zero_area(buf, len, pos, n, mask)  Find bit free area
+>   *  bitmap_find_next_zero_area_off(buf, len, pos, n, mask, mask_off)  as above
+> + *  bitmap_next_clear_region(map, &start, &end, nbits)  Find next cleared region
+> + *  bitmap_next_set_region(map, &start, &end, nbits)  Find next set region
+> + *  bitmap_for_each_clear_region(map, rs, re, start, end)
+> + *  						Iterate over all cleared regions
+> + *  bitmap_for_each_set_region(map, rs, re, start, end)
+> + *  						Iterate over all set regions
+>   *  bitmap_shift_right(dst, src, n, nbits)      *dst = *src >> n
+>   *  bitmap_shift_left(dst, src, n, nbits)       *dst = *src << n
+>   *  bitmap_cut(dst, src, first, n, nbits)       Cut n bits from first, copy rest
+> -- 
+> 2.20.1
 > 
-> I wonder if this race window could be fixed at all without introducing extra
-> locking in the fast path? Which means it's probably not worth the trouble of
-> having these runtime knobs. How about making the files read-only (if not remove
-> completely). Vijayanand described a use case in [2], shouldn't it be possible to
-> implement that scenario (all caches have debugging enabled except zram cache)
-> with kernel parameters only?
-> 
 
-I'm not sure how dependent the CONFIG_SLUB_DEBUG users are on being able 
-to modify these are runtime (they've been around for 12+ years) but I 
-agree that it seems particularly dangerous.
+Ah thanks. That was a miss not adding the documentation. I can pick
+these up unless Andrew would rather run them through his tree. I have a
+few other miscellaneous documentation cleanups for percpu I need to run
+anyway.
 
-I think they can be fixed by freezing allocations and frees for the 
-particular kmem_cache on all cpus which would add the additional 
-conditional in the fastpath and that's going to be required in the very 
-small minority of cases where an admin actually wants to change these.
+Acked-by: Dennis Zhou <dennis@kernel.org>
 
-The slub_debug kernel command line options are already pretty 
-comprehensive as described by Documentation/vm/slub.rst.  I *think* these 
-tunables were primarily introduced for kernel debugging and not general 
-purpose, perhaps with the exception of "order".
-
-So I think we may be able to fix "order" with a combination of my patch as 
-well as a fix to the freelist randomization and that the others should 
-likely be made read only.
+Thanks,
+Dennis
