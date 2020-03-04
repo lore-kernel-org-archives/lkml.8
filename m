@@ -2,111 +2,254 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB37C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 235FFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A76821556
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E642B21556
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:02:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="1Wc4HeZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgCDUB7 (ORCPT
+        id S2387863AbgCDUCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:01:59 -0500
-Received: from foss.arm.com ([217.140.110.172]:39010 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726561AbgCDUB6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:01:58 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1700A1FB;
-        Wed,  4 Mar 2020 12:01:58 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7D8F3F6C4;
-        Wed,  4 Mar 2020 12:01:56 -0800 (PST)
-Date:   Wed, 4 Mar 2020 20:01:54 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] sched/rt: cpupri_find: Implement fallback
- mechanism for !fit case
-Message-ID: <20200304200153.c4e2p7qnko54pejt@e107158-lin.cambridge.arm.com>
-References: <20200302132721.8353-1-qais.yousef@arm.com>
- <20200302132721.8353-2-qais.yousef@arm.com>
- <20200304112739.7b99677e@gandalf.local.home>
- <20200304173925.43xq4wztummxgs3x@e107158-lin.cambridge.arm.com>
- <20200304135404.146c56eb@gandalf.local.home>
+        Wed, 4 Mar 2020 15:02:46 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:33396 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726561AbgCDUCp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:02:45 -0500
+Received: by mail-lf1-f65.google.com with SMTP id c20so2570568lfb.0
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 12:02:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=gxoQKbsayfVFXHX91j+mdW7L4rcB6FGPFdU2B8ezKfU=;
+        b=1Wc4HeZ1edYjK032vrWpL4oW9WRckeZiy+m0GH583jiMluC5EAaNhXgl+e2So4j86S
+         wm9SzcVE4YmcPJS/fr0lMIDUtbVqVgxl+yGOM1AWtwuQwjvoHimaGYKpyw985iVFdLWQ
+         s7IeHfh2SnFKNR4YNNPVsfdWoFNXXFOzP6I/pwXfygyp6G8gaf9OcuUydPyGVYcFt57M
+         qt1Ci2rdEHcK5TTvF/KXm3E7QM/0tGyJ8kIMdbf7TdZr7SbtZEaHzBzR7OTosIk6ri8e
+         sb1V3R/bm2CV4L0tYePtYcC2+8IwyPl/43+6vLv8jWp2+J13WEE72RNi3X9aDJG+gMsT
+         kh4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=gxoQKbsayfVFXHX91j+mdW7L4rcB6FGPFdU2B8ezKfU=;
+        b=Z2wEtlEM22QoZ+IlVeVI70yUUzmpofuy+qyBlfaQ47fe8h6jJfg5yyhvBOM91BEzyg
+         Dvf4WkLp4xkU58NlHWwDEAkiYVp3ESXDYorAT0SVkCMxJuJ5bUxBp00SIJPYxmn7WhPf
+         gBQfammGIZXkxq2QhIf+GqwSelc97ZP/OQKz6lsoXXYYPpZWk+dmdfrdYnj9S9P25Twh
+         9wErnX00aZfMBisNeQRNfZ9TIiXGIo/bhXPHCTY8Lma98Ykxae7NVWFMbAHuQRs5yqd+
+         8SdtiKn/oK57Uo1jwa+urHJiml1vnClwT5Y0UEp1XJAnOUmKYJfvgLhj65me1DiTboui
+         NQ2w==
+X-Gm-Message-State: ANhLgQ0jp7DvwI/AOCSIUKhxypCzzV0x6GTD4fB6mn+xrriAYijXVrt8
+        VYtku5XBIP9rDkuI7AQxeMZZZA==
+X-Google-Smtp-Source: ADFU+vveswO6fbrv3UXlduVlspna6IVmXsEC4rAfPEDyBucRFuBo4RQV28gRc8M7ecEwsvWlsxBqcw==
+X-Received: by 2002:a19:ed08:: with SMTP id y8mr3003287lfy.56.1583352161463;
+        Wed, 04 Mar 2020 12:02:41 -0800 (PST)
+Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
+        by smtp.gmail.com with ESMTPSA id d9sm14115625lfm.16.2020.03.04.12.02.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 12:02:40 -0800 (PST)
+Date:   Wed, 4 Mar 2020 21:02:39 +0100
+From:   "niklas.soderlund@ragnatech.se" <niklas.soderlund@ragnatech.se>
+To:     "Rodin, Michael (Ferchau; ADITG/ESM1)" <mrodin@de.adit-jv.com>
+Cc:     "mchehab@kernel.org" <mchehab@kernel.org>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Friedrich, Eugen (ADITG/ESM1)" <efriedrich@de.adit-jv.com>,
+        "Rosca, Eugeniu (ADITG/ESM1)" <erosca@de.adit-jv.com>,
+        "Udipi, Suresh (Wipro; LEADER ; ADITJ/SWG)" 
+        <external.sudipi@jp.adit-jv.com>,
+        "akiyama@nds-osk.co.jp" <akiyama@nds-osk.co.jp>,
+        Jacopo Mondi <jacopo@jmondi.org>
+Subject: Re: [PATCH] [RFC] media: rcar-vin: don't wait for stop state on
+ clock lane during start of CSI2
+Message-ID: <20200304200239.GB1791497@oden.dyn.berto.se>
+References: <1582026251-21047-1-git-send-email-mrodin@de.adit-jv.com>
+ <20200219172456.hyo2aksvubxpoqrn@uno.localdomain>
+ <AC35D0CFBC66A84AAA9DF4334B52828D136F94C7@HI2EXCH01.adit-jv.com>
+ <20200226164040.rzd3hqqzosqe2sar@uno.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200304135404.146c56eb@gandalf.local.home>
-User-Agent: NeoMutt/20171215
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200226164040.rzd3hqqzosqe2sar@uno.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/20 13:54, Steven Rostedt wrote:
-> > If we fix 1, then assuming found == -1 for all level, we'll still have the
-> > problem that the mask is stale.
-> > 
-> > We can do a full scan again as Tao was suggestion, the 2nd one without any
-> > fitness check that is. But isn't this expensive?
+Hi Michael,
+
+Thanks for your patch.
+
+On 2020-02-26 17:40:40 +0100, Jacopo Mondi wrote:
+> Hello Michael,
 > 
-> I was hoping to try to avoid that, but it's not that expensive and will
-> probably seldom happen. Perhaps we should run some test cases and trace the
-> results to see how often that can happen.
+> On Mon, Feb 24, 2020 at 02:13:08PM +0000, Rodin, Michael (Ferchau; ADITG/ESM1) wrote:
+> > > On Tue, Feb 18, 2020 at 12:44:11PM +0100, Michael Rodin wrote:
+> > > > The chapter 7.1 "D-PHY Physical Layer Option" of the CSI2
+> > > > specification states that non-continuous clock behavior is optional,
+> > > > i.e. the Clock Lane can remain in high-speed mode between the transmission
+> > > of data packets.
+> > > > Therefore waiting for the stop state (LP-11) on the Clock Lane is
+> > > > wrong and will cause timeouts when a CSI2 transmitter with continuous
+> > > > clock behavior is attached to R-Car CSI2 receiver. So wait only for
+> > > > the stop state on the Data Lanes.
+> > >
+> > > Am I wrong or the desired behaviour should depend on the presence of the
+> > > clock-noncontinuous property in the CSI-2 input endpoint ?
+> > > If clock-noncontinuous is set, then wait for the clock lane to enter stop state
+> > > too, if not just wait for the data lanes to stop.
+> > >
+> > > If this is correct, it will also require a change to the bindings and that's the
+> > > tricky part. So far the CSI-2 receiver behaved as the clock-noncontinuous
+> > > property was set (wait for both data and clock
+> > > lanes) and older dtb should continue to work under this assumption. If you
+> > > want to support devices with continuous clock then you have to require the
+> > > clock-noncontinuous property to be explicitly set to false, and assume it's true
+> > > if not specified. BUT clock-noncontinuous is a boolean property, whose value
+> > > depends on it's presence only. So I fear we need to add a 'clock-continuous'
+> > > flag to video-interfaces.txt, parse it in the CSI-2 receiver driver, and then ignore
+> > > the clock lane stop state if and only if said property is specified.
+> > >
+> > > Does this make sense ?
+> > >
+> >
+> > Hello Jacopo,
+> >
+> >  - First of all I am not so sure whether I am interpreting the CSI2 spec correctly,
+> >    this is also the reason why I marked my patch as [RFC]. So MAYBE waiting for LP-11
+> >    on the clock lane IS correct at this point in rcar-csi2 and the issue is somewhere else
+> >    and your suggestion was based on my wrong assumption. Is it possible?
 > 
-> > 
-> > We risk the mask being stale anyway directly after selecting it. Or a priority
-> > level might become the lowest level just after we dismissed it.
+> What I read there confirms what you said
 > 
-> Sure, but that's still a better effort.
-
-Okay let me run some quick tests and send an updated series if it doesn't
-return something suspicious.
-
-Are you happy with the rest of the series then?
-
-> > There's another 'major' problem that I need to bring your attention to,
-> > find_lowest_rq() always returns the first CPU in the mask.
-> > 
-> > See discussion below for more details
-> > 
-> > 	https://lore.kernel.org/lkml/20200219140243.wfljmupcrwm2jelo@e107158-lin/
-> > 
-> > In my test because multiple tasks wakeup together they all end up going to CPU1
-> > (the first fitting CPU in the mask), then just to be pushed back again. Not
-> > necessarily to where they were running before.
-> > 
-> > Not sure if there are other situations where this could happen.
-> > 
-> > If we fix this problem then we can help reduce the effect of this raciness in
-> > find_lowest_rq(), and end up with less ping-ponging if tasks happen to
-> > wakeup/sleep at the wrong time during the scan.
+> For continuous clock behavior the Clock Lane remains in high-speed mode generating active clock signals
+> between the transmission of data packets.
+> For non-continuous clock behavior the Clock Lane enters the LP-11 state between the transmission of data
+> packets.
 > 
-> Hmm, I wonder if there's a fast way of getting the next CPU from the
-> current cpu the task is on. Perhaps that will help in the ping ponging.
+> and indeed non-continuous is optional.
+> 
+> However, the documented rcar-csi2 PHY start procedure prescribes to
+> check for the clock stop state as well, so it is totally plausible the
+> receiver requires the clock lane to be in stop state to properly
+> intialize. IMX6 does the same, according to imx6-mipi-csi2.c and the
+> documentation of the csi2_enable() function there.
+> 
+> Some sensors force clock lane in stop state at power-up to help
+> receivers detect LP-11 state, just as an example...
+> 
+> But I think we're a bit mixing two issues here though. non-continous clock
+> mode allows clock lane to enter low-power state during frame blanking
+> (the LPS state in the CSI-2 specs). This feature as said, is optional,
+> as during LPS only data lanes are required to transition to LP-11, as
+> it is the initial and final phase of the SoT/EoT procedure as defined
+> by the DPHY specs, which delimits an high-speed transmission burst.
+> 
+> What your patch is doing is modifying the condition for the CSI-2 RX
+> to properly detect a phy start condition, which I think depends mostly
+> on the receiver requirements...
+> 
+> I have missed one thing: do you have a faulty sensor that with this
+> patch applied works as intended ?
+> 
+> >  - The presence of the "clock-noncontinuous" property is parsed by the V4L2 fwnode library,
+> >    which sets either V4L2_MBUS_CSI2_CONTINUOUS_CLOCK or V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK.
+> >    I could not find any upstream CSI2 receiver driver, which reads these flags. Would be rcar-csi2
+> >    the first driver which reads this property (of a transmitter) at the receiver side?
+> 
+> non-continous is optional, so it's totally plausible.
 
-I think there's for_each_cpu_wrap() or some variant of it that allows to start
-from a random place.
+I think that if we are to do anything here we should operate based on 
+V4L2_MBUS_CSI2_{NON,}CONTINUOUS_CLOCK in rcar-csi2. What setup do you 
+have that require this patch? As pointed out by Jacopo the R-Car CSI-2 
+documentation specifically states the LP-11 should be checked for the 
+clocklane as well as data lanes.
 
-This won't help if there's a single cpu in the mask. Or when
-nr_waking_tasks > nr_cpus_in_lowest_rq. Still an improvement over the current
-behavior nonetheless.
+Another problem already pointed out by Jacopo is that the existing 
+behavior needs to stay the same if no property is specified in DT. This 
+is because we have a bunch of existing DTS files where no 
+clock-noncontinuous is not specified.
 
-The other option is maybe to mark that cpu unavailable once selected so the
-next search can't return it. But when do you mark it available back again?
+> 
+> >  - Sorry, but I don't understand your concerns about compatibility to old device trees.
+> >    If "clock-noncontinuous" exists at the CSI2 transmitter side, it is assumed to be
+> >    true (since as you mentioned, all boolean properties are true if present) and we
+> >    would wait for LP-11 on clock lane in rcar-csi2 and older dtbs would continue to
+> >    work correctly. If this property is not present in a CSI2 transmitter node of an older
+> >    dtb although this transmitter has this property, then this is a wrong device tree
+> >    configuration. So the suggested new "clock-continuous" property would be a workaround
+> >    for supporting incorrect device trees. Should we maintain backwards compatibility in this case?
+> 
+> I'm not concerned on the CSI-2 transmitter node, but older DTB
+> describing the rcar csi-2 receiver. If one loads a dtb that had no
+> noncontinous clock property  as it was'implied' and suddenly the
+> driver acts as you have to specify the property to enable that feature
+> otherwise it assumes 'continuous', we then have troubles, as dt
+> bindings are an ABI and older DTBs should continue to work as they
+> used to. That's why, as you cannot set noncontiuous=false, I suggested
+> a counterpart with continous, to make that feature enabled optionally.
+> 
+> Anyway, scratch that, I think we really should decouple the 'phy start
+> up procedure' issue from the 'clock continuos/noncontinuos' one.
+> 
+> Are you having issue detecting a clock stop state on your sensor ?
+> Does the sensor have a way to set the clock lane to stop state (eg.
+> forcing non-continous mode) at power up ?
+> 
+> Thanks
+>    j
+> 
+> >  - Even if we should maintain backwards compatibility to incorrectly configured device trees
+> >    (i.e. "clock-noncontinuous" is not specified for CSI2 transmitters with non-continuous clock behavior),
+> >    it is possibly not an issue in this particular case because we don't have to wait for
+> >    LP-11 on clock lanes at all since the non-continuous clock behavior is optional according
+> >    to the chapter 7.1 of the CSI2 specification. So from my understanding a CSI2 receiver
+> >    which supports only continuous clock behavior would work with both kinds of clock
+> >    behavior at the transmitter side. On the other side a CSI2 receiver which supports only
+> >    non-continuous clock behavior (which is currently the behavior implemented in rcar-csi2.c)
+> >    can not receive anything from a transmitter with continuous clock behavior and would violate CSI2 spec.
+> >
+> > >
+> > > >
+> > > > Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
+> > > > ---
+> > > >  drivers/media/platform/rcar-vin/rcar-csi2.c | 3 +--
+> > > >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > > b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > > index faa9fb2..6d1992a 100644
+> > > > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > > @@ -416,8 +416,7 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
+> > > >  	for (timeout = 0; timeout <= 20; timeout++) {
+> > > >  		const u32 lane_mask = (1 << priv->lanes) - 1;
+> > > >
+> > > > -		if ((rcsi2_read(priv, PHCLM_REG) & PHCLM_STOPSTATECKL)
+> > > &&
+> > > > -		    (rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
+> > > > +		if ((rcsi2_read(priv, PHDLM_REG) & lane_mask) == lane_mask)
+> > > >  			return 0;
+> > > >
+> > > >  		usleep_range(1000, 2000);
+> > > > --
+> > > > 2.7.4
+> > > >
 
-Thanks
 
---
-Qais Yousef
+
+-- 
+Regards,
+Niklas Söderlund
