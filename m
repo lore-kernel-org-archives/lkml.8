@@ -2,71 +2,76 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EA0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF05C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03AA621739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4920B20838
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388176AbgCDNRJ (ORCPT
+        id S2388166AbgCDNSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 08:17:09 -0500
-Received: from mx2.suse.de ([195.135.220.15]:46286 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388094AbgCDNRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 08:17:08 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id D2757AFF0;
-        Wed,  4 Mar 2020 13:17:06 +0000 (UTC)
-Subject: Re: SLUB: sysfs lets root force slab order below required minimum,
- causing memory corruption
-To:     Jann Horn <jannh@google.com>, Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux-MM <linux-mm@kvack.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>
-References: <CAG48ez31PP--h6_FzVyfJ4H86QYczAFPdxtJHUEEan+7VJETAQ@mail.gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <fa479222-5b7a-6f9a-aab0-4e3a8873e3c3@suse.cz>
-Date:   Wed, 4 Mar 2020 14:17:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 4 Mar 2020 08:18:22 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39114 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387776AbgCDNSW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 08:18:22 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E2B5A618B0A5219B2B4F;
+        Wed,  4 Mar 2020 21:18:14 +0800 (CST)
+Received: from localhost (10.173.223.234) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 4 Mar 2020
+ 21:18:06 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <bfields@fieldses.org>, <chuck.lever@oracle.com>,
+        <kolga@netapp.com>
+CC:     <linux-nfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] nfsd: Fix build error
+Date:   Wed, 4 Mar 2020 21:18:03 +0800
+Message-ID: <20200304131803.46560-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <CAG48ez31PP--h6_FzVyfJ4H86QYczAFPdxtJHUEEan+7VJETAQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.173.223.234]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 1:23 AM, Jann Horn wrote:
-> Hi!
-> 
-> FYI, I noticed that if you do something like the following as root,
-> the system blows up pretty quickly with error messages about stuff
-> like corrupt freelist pointers because SLUB actually allows root to
-> force a page order that is smaller than what is required to store a
-> single object:
-> 
->     echo 0 > /sys/kernel/slab/task_struct/order
-> 
-> The other SLUB debugging options, like red_zone, also look kind of
-> suspicious with regards to races (either racing with other writes to
-> the SLUB debugging options, or with object allocations).
+fs/nfsd/nfs4proc.o: In function `nfsd4_do_copy':
+nfs4proc.c:(.text+0x23b7): undefined reference to `nfs42_ssc_close'
+fs/nfsd/nfs4proc.o: In function `nfsd4_copy':
+nfs4proc.c:(.text+0x5d2a): undefined reference to `nfs_sb_deactive'
+fs/nfsd/nfs4proc.o: In function `nfsd4_do_async_copy':
+nfs4proc.c:(.text+0x61d5): undefined reference to `nfs42_ssc_open'
+nfs4proc.c:(.text+0x6389): undefined reference to `nfs_sb_deactive'
 
-Yeah I also wondered last week that there seems to be no sychronization with
-alloc/free activity. Increasing order is AFAICS also dangerous with freelist
-randomization:
+Add dependency to NFSD_V4_2_INTER_SSC to fix this.
 
-https://lore.kernel.org/linux-mm/d3acc069-a5c6-f40a-f95c-b546664bc4ee@suse.cz/
+Fixes: ce0887ac96d3 ("NFSD add nfs4 inter ssc to nfsd4_copy")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ fs/nfsd/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/fs/nfsd/Kconfig b/fs/nfsd/Kconfig
+index f368f32..fc587a5 100644
+--- a/fs/nfsd/Kconfig
++++ b/fs/nfsd/Kconfig
+@@ -136,6 +136,7 @@ config NFSD_FLEXFILELAYOUT
+ 
+ config NFSD_V4_2_INTER_SSC
+ 	bool "NFSv4.2 inter server to server COPY"
++	depends on !(NFSD=y && NFS_FS=m)
+ 	depends on NFSD_V4 && NFS_V4_1 && NFS_V4_2
+ 	help
+ 	  This option enables support for NFSv4.2 inter server to
+-- 
+2.7.4
+
+
