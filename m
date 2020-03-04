@@ -2,207 +2,145 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4053C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A50D6C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92C4E2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:59:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3852166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 05:59:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P+GFoCJA"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="QMTuLltf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbgCDF7a (ORCPT
+        id S1728179AbgCDF7x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 00:59:30 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:38808 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725776AbgCDF7a (ORCPT
+        Wed, 4 Mar 2020 00:59:53 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38490 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgCDF7x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 00:59:30 -0500
-Received: by mail-qk1-f195.google.com with SMTP id j7so258477qkd.5;
-        Tue, 03 Mar 2020 21:59:29 -0800 (PST)
+        Wed, 4 Mar 2020 00:59:53 -0500
+Received: by mail-lf1-f66.google.com with SMTP id x22so459844lff.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 21:59:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=broadcom.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1lsTGiKn6oHoT5mTkEzaNQeGDmYRHT45EUorz4TmpOc=;
-        b=P+GFoCJAoKq3kAujQuBLX4vLpvGiToWarwyt3I7yMT0ETN7SZRei0g4q4AEM8fpOCK
-         vof7NPoTFevjAaCDDf/SbV27a2geaTAmtKyojHhp4lYyDScNLf91yCnvp+3ImOQHEqYX
-         RiIswSOTBHbTfmt+F89PSOXpZ+FGMDvCdwYMfWXCc25xkge9SqweZstLIYKfXEvfDgRn
-         Wu/ouC4ASS4qkL3jX6YMT5JE5AEfVUW8BDNdjIWBAaefsUp6iSJfYrhQoJV1A1XfVw+a
-         s2vctFbM/kZly5xFmfvV2sdYjgHZ2PBrxaCfSplrsUBGAJ0h7LhSWPAUxgp74GTevSTl
-         u6KQ==
+         :cc;
+        bh=8yOktjIgVtQ+DxYaitW0rtjAH3g7r6cgxIGLvI0hfKc=;
+        b=QMTuLltflpz8krzhzZvU/ySvNdJM9N55orENO2/SPexZXiDlLnDMEED0/Bk1ycYWMN
+         wDu6T4rZAaq3xHA6j8mJe+Td8UZuIiSueaE2wLYxkNFugQHnxzwmRgzx4Ap0MndqZSs4
+         neTszAjSL81tpO1v0Wp9ERLGx+E4USTPNkxXg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1lsTGiKn6oHoT5mTkEzaNQeGDmYRHT45EUorz4TmpOc=;
-        b=KBrM+ubgPHVbIuIqkJHwxPq4bRXwra9K3KONXJZOPEV69KWXpdtk28al6BvmlcJYka
-         sC0nKdy5ffWUJbjqxyugC03OyJo4DCYfxscvrSaZBam7YoW8netiuT4uPKGWTT8pz6fF
-         ek0NMWOXQYWliJ2mmv0ezw/dQJHm/EQWDuVm4kBEtax+lv6MfjyM0HKOXZWS/KbloTHn
-         NEretaif/6dD/htJVwv+G6X0i240pZleO1kKMfbP5pViuRXwUXlRNTrN5K2/c7cqyry8
-         0+Ftt8b891T30cA3KYHJ4xJT04dNWtJAI9+ZsZhzDHZQn80laGmMxG3VZxCxl32gL0ou
-         ERtA==
-X-Gm-Message-State: ANhLgQ2oc6aqEmbPyyzb4bIW1pWh1ccK/dTHJLk5hxGcq3UMvZg+OCHZ
-        kEoRXIBKVvPNgee1xaeglZk5RCcr8j1Bwj6lug8=
-X-Google-Smtp-Source: ADFU+vvzFwXZwkUfPFvyenDYfCpLXs8aBxMU7CBoL9eL5+OpXsJ8GkHHPAIqTbsH0wSim2TF+aHnCH5ySY3UVRmJk2M=
-X-Received: by 2002:a05:620a:a0d:: with SMTP id i13mr1467376qka.333.1583301568862;
- Tue, 03 Mar 2020 21:59:28 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=8yOktjIgVtQ+DxYaitW0rtjAH3g7r6cgxIGLvI0hfKc=;
+        b=YI5REfq0sEtmSPNjUM57E5pbYMQ99/FNgkD/pZ9Yarj+yv0XowAG1rwI4gGWpuceWi
+         nujDsaYbw8BDKWYxdbgyPuVbYZ4Y6QG46nSPVNZQGDTI9Uy3dKomzPtNU3408iXsVgxB
+         Dq0ZTycljLtJWv1C1iDDnH5gfyY4ML85iyg3jvgy6NLyWcOL+WeHe7U6s+bwE8YdiXdb
+         knZAyD5EHZ9Qn+jjXYwY5KaWZ5YLpOxVHOXg3Y5sdOcfE2JOQjs+FkOEYVKBbhsc3mC5
+         6VMczO8lG2FRP6OfoJ7951hpqeHICBGtZ//ALTD+VqMR0P9Vx/LNAO/NuhRnK95vhtFZ
+         nqtg==
+X-Gm-Message-State: ANhLgQ0uzkpxKasrJGxtht15PYDkbKEFcaVPw3nxJ3pgSt+4Xr+GmP+f
+        MJmIdyDd9UxIViaFchyjzUWRwft3QTKyvf5xK5Cw3g==
+X-Google-Smtp-Source: ADFU+vtbiMef3xxO69hZHkp7sN6KQEVtnL3v7zemrbv3HPuhI4anNYJg6MV0MWMSd47obWuucJo6f6zcAoAQV/Oz6zs=
+X-Received: by 2002:ac2:4948:: with SMTP id o8mr949362lfi.201.1583301590650;
+ Tue, 03 Mar 2020 21:59:50 -0800 (PST)
 MIME-Version: 1.0
-References: <20200303005035.13814-1-luke.r.nels@gmail.com> <20200303005035.13814-3-luke.r.nels@gmail.com>
- <CAJ+HfNjgwVnxnyCTk5j+JCpxz+zmeEBYbj=_SueR750aAuoz=A@mail.gmail.com> <CADasFoBODSbgHHXU+iA-32=oKNs6n0Ff_UDU3063uiyGjx1xXg@mail.gmail.com>
-In-Reply-To: <CADasFoBODSbgHHXU+iA-32=oKNs6n0Ff_UDU3063uiyGjx1xXg@mail.gmail.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Wed, 4 Mar 2020 06:59:17 +0100
-Message-ID: <CAJ+HfNhOp_Rbcqer0K=mZ8h+uswYSv4hSa3wCTdjjxH26HUTCw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 2/4] riscv, bpf: add RV32G eBPF JIT
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
+References: <20200228084842.18691-1-rayagonda.kokatanur@broadcom.com>
+ <CAL_JsqLXvVnVq0Mc1d0WMLNjURbHe9T3bKNb+5D6Nz3iyTK8GA@mail.gmail.com> <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com>
+In-Reply-To: <CAHO=5PFuercRYBzupd-Zb3q8v3sQWGT2ySXodG9S5NVj7Ta+1Q@mail.gmail.com>
+From:   Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+Date:   Wed, 4 Mar 2020 11:29:39 +0530
+Message-ID: <CAHO=5PHEE4C9rArembX3cJP_eQ1KGS6gPj6POYtQhZ=Pp8po+A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] scripts: dtc: mask flags bit when check i2c addr
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <bcm-kernel-feedback-list@broadcom.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 4 Mar 2020 at 03:32, Luke Nelson <lukenels@cs.washington.edu> wrote=
-:
+On Tue, Mar 3, 2020 at 10:26 AM Rayagonda Kokatanur
+<rayagonda.kokatanur@broadcom.com> wrote:
 >
-[...]
->
-> > > +    case BPF_LSH:
-> > > +        if (imm >=3D 32) {
-> > > +            emit(rv_slli(hi(rd), lo(rd), imm - 32), ctx);
-> > > +            emit(rv_addi(lo(rd), RV_REG_ZERO, 0), ctx);
-> > > +        } else if (imm =3D=3D 0) {
-> > > +            /* nop */
+> On Fri, Feb 28, 2020 at 7:20 PM Rob Herring <robh+dt@kernel.org> wrote:
 > >
-> > Can we get rid of this, and just do if/else if?
->
-> imm =3D=3D 0 has been a tricky case for 32-bit JITs; see 6fa632e719ee
-> ("bpf, x32: Fix bug with ALU64 {LSH, RSH, ARSH} BPF_K shift by 0").
-> We wanted to make the imm =3D=3D 0 case explicit and help future readers
-> see that this case is handled correctly here.
->
-> We could do the following if we really wanted to get rid of the
-> check:
->
-> if (imm >=3D 32) {
-> ...
-> } else if (imm !=3D 0) {
-> ...
-> }
-> /* Do nothing for imm =3D=3D 0. */
->
-> Though it's unclear if this is easier to read.
->
-
-Thanks for clearing that up. *I* prefer the latter, but that's really
-up to you! Keep the current one, if you prefer that! :-)
-
-> > > +    case BPF_ARSH:
-> > > +        if (is_12b_int(imm)) {
-> > > +            emit(rv_srai(lo(rd), lo(rd), imm), ctx);
-> > > +        } else {
-> > > +            emit_imm(RV_REG_T0, imm, ctx);
-> > > +            emit(rv_sra(lo(rd), lo(rd), RV_REG_T0), ctx);
-> > > +        }
-> > > +        break;
+> > On Fri, Feb 28, 2020 at 2:48 AM Rayagonda Kokatanur
+> > <rayagonda.kokatanur@broadcom.com> wrote:
+> > >
+> > > Generally i2c addr should not be greater than 10-bit. The highest 2 bits
+> > > are used for I2C_TEN_BIT_ADDRESS and I2C_OWN_SLAVE_ADDRESS. Need to mask
+> > > these flags if check slave addr valid.
+> > >
+> > > Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> > > ---
+> > >  scripts/dtc/Makefile | 2 +-
+> > >  scripts/dtc/checks.c | 5 +++++
+> > >  2 files changed, 6 insertions(+), 1 deletion(-)
 > >
-> > Again nit; I like "early exit" code if possible. Instead of:
+> > dtc changes must be submitted against upstream dtc.
+>
+> Please let me know link to clone the upstream dtc branch.
 > >
-> > if (bleh) {
-> >    foo();
-> > } else {
-> >    bar();
-> > }
 > >
-> > do:
+> > > diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
+> > > index 3acbb410904c..c5e8d6a9e73c 100644
+> > > --- a/scripts/dtc/Makefile
+> > > +++ b/scripts/dtc/Makefile
+> > > @@ -9,7 +9,7 @@ dtc-objs        := dtc.o flattree.o fstree.o data.o livetree.o treesource.o \
+> > >  dtc-objs       += dtc-lexer.lex.o dtc-parser.tab.o
+> > >
+> > >  # Source files need to get at the userspace version of libfdt_env.h to compile
+> > > -HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt
+> > > +HOST_EXTRACFLAGS := -I $(srctree)/$(src)/libfdt -I$(srctree)/tools/include
+> > >
+> > >  ifeq ($(shell pkg-config --exists yaml-0.1 2>/dev/null && echo yes),)
+> > >  ifneq ($(CHECK_DTBS),)
+> > > diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+> > > index 756f0fa9203f..17c9ed4137b5 100644
+> > > --- a/scripts/dtc/checks.c
+> > > +++ b/scripts/dtc/checks.c
+> > > @@ -3,6 +3,7 @@
+> > >   * (C) Copyright David Gibson <dwg@au1.ibm.com>, IBM Corporation.  2007.
+> > >   */
+> > >
+> > > +#include <linux/bits.h>
 > >
-> > if (bleh) {
-> >    foo()
-> >    return/break;
-> > }
-> > bar();
+> > Not a UAPI header not that that would be much better as dtc also builds on Mac.
 > >
-> > I find the latter easier to read -- but really a nit, and a matter of
-> > style. There are number of places where that could be applied in the
-> > file.
->
-> I like "early exit" code, too, and agree that it's easier to read
-> in general, especially when handling error conditions.
->
-> But here we wanted to make it explicit that both branches are
-> emitting equivalent instruction sequences (under different paths).
-> Structured control flow seems a better fit for this particular
-> context.
->
-
-Ok!
-
-> > At this point of the series, let's introduce the shared code .c-file
-> > containing implementation for bpf_int_jit_compile() (with build_body
-> > part of that)and bpf_jit_needs_zext(). That will make it easier to
-> > catch bugs in both JITs and to avoid code duplication! Also, when
-> > adding the stronger invariant suggested by Palmer [1], we only need to
-> > do it in one place.
+> > >  #include "dtc.h"
+> > >  #include "srcpos.h"
+> > >
+> > > @@ -17,6 +18,9 @@
+> > >  #define TRACE(c, fmt, ...)     do { } while (0)
+> > >  #endif
+> > >
+> > > +#define I2C_TEN_BIT_ADDRESS    BIT(31)
+> > > +#define I2C_OWN_SLAVE_ADDRESS  BIT(30)
+> > > +
+> > >  enum checkstatus {
+> > >         UNCHECKED = 0,
+> > >         PREREQ,
+> > > @@ -1048,6 +1052,7 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+> > >
+> > >         for (len = prop->val.len; len > 0; len -= 4) {
+> > >                 reg = fdt32_to_cpu(*(cells++));
+> > > +               reg &= ~(I2C_OWN_SLAVE_ADDRESS | I2C_TEN_BIT_ADDRESS);
 > >
-> > The pull out refactoring can be a separate commit.
->
-> I think the idea of deduplicating bpf_int_jit_compile is good and
-> will lead to more maintainable JITs. How does the following proposal
-> for v5 sound?
->
-> In patch 1 of this series:
->
-> - Factor structs and common helpers to bpf_jit.h (just like v4).
->
-> - Factor out bpf_int_jit_compile(), bpf_jit_needs_zext(), and
-> build_body() to a new file bpf_jit_core.c and tweak the code as in v4.
->
-> - Rename emit_insn() and build_{prologue,epilogue}() to bpf_jit_emit_insn=
-()
-> and bpf_jit_build_{prologue,epilogue}, since these functions are
-> now extern rather than static.
->
-> - Rename bpf_jit_comp.c to bpf_jit_comp64.c to be more explicit
-> about its contents (as the next patch will add bpf_jit_comp32.c).
->
-> Then patch 2 can reuse the new header and won't need to define its
-> own bpf_int_jit_compile() etc.
->
+> > I'd just mask the top byte so we don't have to update on the next flag we add.
+> Do you mean something like this, shown below ?
+> reg &= 0xFFFF_FC000;
 
-I like that, but keep the first patch as a refactoring patch only, and
-then in a *new* patch 2 you add the rv32 specific code (sltu and
-pseudo instructions + the xlen preprocessor check + copyright-things
-;-)).  Patch 3 will be the old patch 2. Wdyt?
+Hi Rob, waiting for your answer.
 
-Thanks for working on this!
-Bj=C3=B6rn
-
-> Thanks!
 >
-> Luke
+> >
+> > Rob
