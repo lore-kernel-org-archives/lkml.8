@@ -7,208 +7,115 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07403C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:55:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD614C3F2D9
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:57:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C966720842
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8179720842
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:57:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="tOkMJEqC"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Jrd8sZi8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388339AbgCDUzU (ORCPT
+        id S2388178AbgCDU5H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:55:20 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45013 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388280AbgCDUzU (ORCPT
+        Wed, 4 Mar 2020 15:57:07 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36549 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728926AbgCDU5H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:55:20 -0500
-Received: by mail-lj1-f196.google.com with SMTP id a10so3576244ljp.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 12:55:18 -0800 (PST)
+        Wed, 4 Mar 2020 15:57:07 -0500
+Received: by mail-oi1-f195.google.com with SMTP id t24so3597732oij.3
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 12:57:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=N8TMoVnGizDGjD4F+oBcA8gM1V3wB7c/2Mybba8wb0M=;
-        b=tOkMJEqCwb18LfVUT8bCabUDthEP/rfNZr/z/EUZfIKF6gCJ5031XaOtiydhCJjwhF
-         NdJwlOOQr7CQ4/lap7BYu5U4cQmsWI219S8uL0KMsYJ+Gvap3V2CoCwyIk+klfmTMal1
-         AQTL8BXPwhUv36T4Z6U+HI1rHHRQAj0n4DUJ3UxuDvIDVKctGeOQKzhCDdyQLz4q9iv/
-         dIRI0UHxVwuRaxx8yPdJ8a++afV3hhVUk6GG6bp1rJDPydaQTNfWb6LYhvMngtWHamDW
-         rjWWUaG1zDDcwmXlRSw3jAfzkvFDdb4buppmA2OW1NVA0eC89R1DFEL+M2qPZ2AvaQ7z
-         pb0w==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NeXW7YNWKtPM2qhkPxW/kiKtKjk7UpmXN4m91WTJNCM=;
+        b=Jrd8sZi8FK4jANBFdzU+UpRWAbAAy7EQjaFH7cCT7k1bLXlDXEqYwWTvoy3XqwXx9N
+         oje8H4L7MQFhh/bZTgymvv2Pm37WnJid2buYJA06o01S3aAmAE8SEIX9iecggKE4D5CE
+         61KhXhqzn6oIfP2TyxecT/+zPVW/hkGof5elxwtp5/Z+NXZpjf7XRFXWQl6Mu6GIZoOt
+         3f4+ZqUK0FE9Egdunl86lWrAB4VPqJuYmuCSW0UKbBKN4yNFCOOzR4iO+QBmSS1MIDz0
+         6PS4VpG3X07nTssv+skbDbHfMb1PQmdi4QqJ5NUXJoDp2a2BbU134cApL9tz3ODL8TiU
+         FUMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=N8TMoVnGizDGjD4F+oBcA8gM1V3wB7c/2Mybba8wb0M=;
-        b=BkXDGnGOhAjIwH2fjMBL0opEI9WEFxZ/mcJ7MdRpZYOxgogZSiKjbiqaAt4vJLaBhy
-         XhOCCXSq12+3Aiuu8tqSKX9ZDtd1TMyovwDOrwnaybW2fKbXmX/lsYesZaFn1+/m/BVR
-         sItFIXElupUvfhGrwmOb/TblQKwzhxRmSESJOa6hUgyAgdnE0RKRd0DakHu4qRUhAKjl
-         xUHjS/Kx1ldEJGFdV31dpWWE6L9jAyQ14SldiHrxIrmqqJjUarqsE+Vnis6kt0kMdTXV
-         pU5/oPgPSFM1L+R70UJQeQJ6evue+gWebHnns6yYWHyncUohYnDjWGIPpgxJZMFYjOuy
-         MKmw==
-X-Gm-Message-State: ANhLgQ3VT5zVGpLP69nkvGhtXmBn1yevPzB7DYpiJ5bd145UTtd+b3nT
-        FXm6IM+Z18HgNyySN0gQ7eScjg==
-X-Google-Smtp-Source: ADFU+vvGT8h9y5D5IP2yuhAd5w4BRZjij5dQKsXZveJYJfXMfBouDMsJyUJyTrGN7XomFrl9MAxJGA==
-X-Received: by 2002:a2e:8250:: with SMTP id j16mr3024159ljh.274.1583355317967;
-        Wed, 04 Mar 2020 12:55:17 -0800 (PST)
-Received: from localhost (h-200-138.A463.priv.bahnhof.se. [176.10.200.138])
-        by smtp.gmail.com with ESMTPSA id f19sm3794523ljc.37.2020.03.04.12.55.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 12:55:17 -0800 (PST)
-Date:   Wed, 4 Mar 2020 21:55:16 +0100
-From:   Niklas <niklas.soderlund@ragnatech.se>
-To:     Lad Prabhakar <prabhakar.csengg@gmail.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: Re: [PATCH 2/2] media: rcar-vin: Add support for SRGGB8_1X8
-Message-ID: <20200304205516.GD1791497@oden.dyn.berto.se>
-References: <20200228165011.17898-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20200228165011.17898-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NeXW7YNWKtPM2qhkPxW/kiKtKjk7UpmXN4m91WTJNCM=;
+        b=Kh9VPWdWmziCZBdcKFll8fwTszErfW+BT6sNt37KYZULmJq4zAwNHohX1gjGIUZuaE
+         w+rcApLhh96uQBwf3hCFs0e2//dtrf42g1JN2Fg65rkOh80HLVStA1Jp3d3x7dGnWvj/
+         2Ofynh9RkrtIEhDUQUu2jE/5ADra1uFF+n9bSkkPxrR8v9seNtLex4zDwDK9Iebmq861
+         LZ5J5tOhYnH/dIme7jl7xRL1Od+zWlEKULkVudJlFL5gN389s+/D6T5jfqgoG+MZYjww
+         5TyltCcvUswWQWy5zzgUOIvRen87Wt4TaELRH69mzM9y8JQ50t2pi+FygPZOlu+opYVf
+         1/EA==
+X-Gm-Message-State: ANhLgQ0+jxJValrrHpRVuzTTHm3a9dp3k26POHQgh3tOrbEUoQBC9an9
+        N3Rgz00I5/gGugkgR+TbUsNLcEm4P5X7flCk0dwfkA==
+X-Google-Smtp-Source: ADFU+vtFbEv31ANDFs0/4N9Z/l6H9sqYzjPTVswiZTAKAsgysts9zHxyIRsH1as4Wq2QvfA+x1ko0P0794u+WWSSnqw=
+X-Received: by 2002:aca:ed58:: with SMTP id l85mr1490175oih.70.1583355426008;
+ Wed, 04 Mar 2020 12:57:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200228165011.17898-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20200223165724.23816-1-mcroce@redhat.com>
+In-Reply-To: <20200223165724.23816-1-mcroce@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 4 Mar 2020 12:56:54 -0800
+Message-ID: <CAPcyv4ijKqVhHixsp42kZL4p7uReJ67p3XoPyw5ojM-ZsOOUOg@mail.gmail.com>
+Subject: Re: [PATCH] block: refactor duplicated macros
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     linux-block@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-bcache@vger.kernel.org,
+        linux-raid <linux-raid@vger.kernel.org>,
+        linux-mmc@vger.kernel.org,
+        xen-devel <xen-devel@lists.xenproject.org>,
+        linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Anna Schumaker <anna.schumaker@netapp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lad,
-
-Thanks for your work.
-
-On 2020-02-28 16:50:11 +0000, Lad Prabhakar wrote:
-> Most of the RZ/G2x boards can support capturing frames in SRGGB8_1X8
-> format, add support for this with a runtime check that the running
-> hardware supports it.
-
-Where is the runtime check for supported hardware? Also out of curiosity 
-which boars can't support SRGGB and what setup are you using to test 
-SRGGB capture?
-
-> 
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Sun, Feb 23, 2020 at 9:04 AM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
+> several times in different flavours across the whole tree.
+> Define them just once in a common header.
+>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 > ---
->  drivers/media/platform/rcar-vin/rcar-core.c |  1 +
->  drivers/media/platform/rcar-vin/rcar-csi2.c |  1 +
->  drivers/media/platform/rcar-vin/rcar-dma.c  | 14 ++++++++++++--
->  drivers/media/platform/rcar-vin/rcar-v4l2.c |  4 ++++
+>  block/blk-lib.c                  |  2 +-
+>  drivers/block/brd.c              |  3 ---
+>  drivers/block/null_blk_main.c    |  4 ----
+>  drivers/block/zram/zram_drv.c    |  8 ++++----
+>  drivers/block/zram/zram_drv.h    |  2 --
+>  drivers/dax/super.c              |  2 +-
 
-This patch shall be split in two. One which touches rcar-csi2.c and one 
-for the other files as they are two different drivers.
+For the dax change:
 
->  4 files changed, 18 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-core.c b/drivers/media/platform/rcar-vin/rcar-core.c
-> index 7440c8965d27..76daf2fe5bcd 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-core.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-core.c
-> @@ -469,6 +469,7 @@ static int rvin_parallel_subdevice_attach(struct rvin_dev *vin,
->  		case MEDIA_BUS_FMT_UYVY8_2X8:
->  		case MEDIA_BUS_FMT_UYVY10_2X10:
->  		case MEDIA_BUS_FMT_RGB888_1X24:
-> +		case MEDIA_BUS_FMT_SRGGB8_1X8:
->  			vin->mbus_code = code.code;
->  			vin_dbg(vin, "Found media bus format for %s: %d\n",
->  				subdev->name, vin->mbus_code);
-> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> index 5b04e4768eb1..97e4886f63f0 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> @@ -320,6 +320,7 @@ static const struct rcar_csi2_format rcar_csi2_formats[] = {
->  	{ .code = MEDIA_BUS_FMT_YUYV8_1X16,	.datatype = 0x1e, .bpp = 16 },
->  	{ .code = MEDIA_BUS_FMT_UYVY8_2X8,	.datatype = 0x1e, .bpp = 16 },
->  	{ .code = MEDIA_BUS_FMT_YUYV10_2X10,	.datatype = 0x1e, .bpp = 20 },
-> +	{ .code = MEDIA_BUS_FMT_SRGGB8_1X8,     .datatype = 0x2a, .bpp = 8 },
->  };
->  
->  static const struct rcar_csi2_format *rcsi2_code_to_fmt(unsigned int code)
-> diff --git a/drivers/media/platform/rcar-vin/rcar-dma.c b/drivers/media/platform/rcar-vin/rcar-dma.c
-> index 1a30cd036371..63709b4bbf7a 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-dma.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-dma.c
-> @@ -85,6 +85,7 @@
->  #define VNMC_INF_YUV8_BT601	(1 << 16)
->  #define VNMC_INF_YUV10_BT656	(2 << 16)
->  #define VNMC_INF_YUV10_BT601	(3 << 16)
-> +#define VNMC_INF_RAW8		(4 << 16)
->  #define VNMC_INF_YUV16		(5 << 16)
->  #define VNMC_INF_RGB888		(6 << 16)
->  #define VNMC_VUP		(1 << 10)
-> @@ -587,13 +588,15 @@ void rvin_crop_scale_comp(struct rvin_dev *vin)
->  	rvin_write(vin, vin->crop.top, VNSLPRC_REG);
->  	rvin_write(vin, vin->crop.top + vin->crop.height - 1, VNELPRC_REG);
->  
-> -
->  	/* TODO: Add support for the UDS scaler. */
->  	if (vin->info->model != RCAR_GEN3)
->  		rvin_crop_scale_comp_gen2(vin);
->  
->  	fmt = rvin_format_from_pixel(vin, vin->format.pixelformat);
-> -	stride = vin->format.bytesperline / fmt->bpp;
-> +	if (vin->format.pixelformat == V4L2_PIX_FMT_SRGGB8)
-> +		stride = ALIGN(vin->format.bytesperline / 2, 0x10);
-> +	else
-> +		stride = vin->format.bytesperline / fmt->bpp;
+Acked-by: Dan Williams <dan.j.williams@intel.com>
 
-This does not look right, you should to move this logic into 
-rvin_format_bytesperline().
+However...
 
->  	rvin_write(vin, stride, VNIS_REG);
->  }
->  
-> @@ -676,6 +679,9 @@ static int rvin_setup(struct rvin_dev *vin)
->  
->  		input_is_yuv = true;
->  		break;
-> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
-> +		vnmc |= VNMC_INF_RAW8;
-> +		break;
->  	default:
->  		break;
->  	}
-> @@ -737,6 +743,9 @@ static int rvin_setup(struct rvin_dev *vin)
->  	case V4L2_PIX_FMT_ABGR32:
->  		dmr = VNDMR_A8BIT(vin->alpha) | VNDMR_EXRGB | VNDMR_DTMD_ARGB;
->  		break;
-> +	case V4L2_PIX_FMT_SRGGB8:
-> +		dmr = 0;
-> +		break;
->  	default:
->  		vin_err(vin, "Invalid pixelformat (0x%x)\n",
->  			vin->format.pixelformat);
-> @@ -1110,6 +1119,7 @@ static int rvin_mc_validate_format(struct rvin_dev *vin, struct v4l2_subdev *sd,
->  	case MEDIA_BUS_FMT_UYVY8_2X8:
->  	case MEDIA_BUS_FMT_UYVY10_2X10:
->  	case MEDIA_BUS_FMT_RGB888_1X24:
-> +	case MEDIA_BUS_FMT_SRGGB8_1X8:
->  		vin->mbus_code = fmt.format.code;
->  		break;
->  	default:
-> diff --git a/drivers/media/platform/rcar-vin/rcar-v4l2.c b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> index b12b3f88836a..d56cf85ba065 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-v4l2.c
-> @@ -66,6 +66,10 @@ static const struct rvin_video_format rvin_formats[] = {
->  		.fourcc			= V4L2_PIX_FMT_ABGR32,
->  		.bpp			= 4,
->  	},
-> +	{
-> +		.fourcc			= V4L2_PIX_FMT_SRGGB8,
-> +		.bpp			= 1,
-> +	},
->  };
->  
->  const struct rvin_video_format *rvin_format_from_pixel(struct rvin_dev *vin,
-> -- 
-> 2.20.1
-> 
+[..]
+>  include/linux/blkdev.h           |  4 ++++
+[..]
+> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
+> index 053ea4b51988..b3c9be6906a0 100644
+> --- a/include/linux/blkdev.h
+> +++ b/include/linux/blkdev.h
+> @@ -910,6 +910,10 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
+>  #define SECTOR_SIZE (1 << SECTOR_SHIFT)
+>  #endif
+>
+> +#define PAGE_SECTORS_SHIFT     (PAGE_SHIFT - SECTOR_SHIFT)
+> +#define PAGE_SECTORS           (1 << PAGE_SECTORS_SHIFT)
+> +#define SECTOR_MASK            (PAGE_SECTORS - 1)
+> +
 
--- 
-Regards,
-Niklas Söderlund
+...I think SECTOR_MASK is misnamed given it considers pages, and
+should probably match the polarity of PAGE_MASK, i.e.
+
+#define PAGE_SECTORS_MASK            (~(PAGE_SECTORS - 1))
