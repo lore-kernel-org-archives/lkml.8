@@ -2,154 +2,132 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76B4AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:59:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7462EC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:00:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 476DC20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 08:59:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D34520870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:00:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t45nxzry"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EZ0jXAZC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbgCDI7u (ORCPT
+        id S1728987AbgCDJA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 03:59:50 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42409 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbgCDI7u (ORCPT
+        Wed, 4 Mar 2020 04:00:58 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:44212 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbgCDJA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 03:59:50 -0500
-Received: by mail-qk1-f193.google.com with SMTP id e11so828431qkg.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 00:59:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P+jMmXTSo2fxNXWVyhqtxpkECUUfyLXXJQ/Qq+zHIkU=;
-        b=t45nxzry3NYgFSXkHivggCrJt7bt2CcezPmRDwxMHGIc8qHfUb8/0oDGtuHDytFuBI
-         GZDUm6cLW/IXa2iCWYtWErpLSYB01MFLFN/Sx3rLsYvlDKaKRzgq7rXS1mgjs0Qn6871
-         bNC8g8Hm9MmokS0ZEC5WjERxWjqI9hUWHqFsgEPHmA+xM+isntCNgEC0q4oisRd/DEHt
-         4s/e+T3iHOMH4B2fz2Y8iYTD7fBE+QHLT1VoeG6ybnJvI9iBga5jXmzlx06zmTtqQFNd
-         A5UlvBUA8T7ZBAVUynyi+hQKOjH0/PAoqm6i0SEOnh3Alyshwz5eXs+qLASlfCividwM
-         JYig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P+jMmXTSo2fxNXWVyhqtxpkECUUfyLXXJQ/Qq+zHIkU=;
-        b=Lax5WA4WNzZbWPoW0Ak2V4lgHt9YMkSYvQmOMLWz3h+oaOQBTVNRqGOk+u4KaoerMQ
-         ym5eZurvX4gu7n8sSfxO/+1KUAhGynEk+E5YB0GOIJpUzfZporrIEOFOdl/bqXph7WHd
-         ahj0yM0ZpOilv+3qY5ebx4L0VrOYTtlagUEBTsRGkk5OUVRkj/dlw2M33bLNEkhSrnC+
-         hLkDWKyMlJ+aj1ymBn26iB0FzDOOV0S5POEYf2WH6J9kLfT8sYpSiX64L4OSqk+OPeZq
-         VYfo0BchyJw1E/AIBm532q6s+fjfZLsYmo5MP8x8bu0OeztsKxYMk/0RkjULNLPj3y8D
-         QAoA==
-X-Gm-Message-State: ANhLgQ0c+W3kMUW7we7glzGFah81jxwwXNkI88All8ok53s5xUAs47ml
-        V9GtYVxM80rsaOeY0iwSxGHhjwhI73OK1uwmOgrYeg==
-X-Google-Smtp-Source: ADFU+vst6DLKw48grfAaGDLlzabH/C9a8znxSeS/sQBCw/7iv9QIGoVWNaQIg5Rcw226PV2XkpsGdRS+76ycnyAVhQY=
-X-Received: by 2002:ae9:e003:: with SMTP id m3mr2003769qkk.250.1583312389274;
- Wed, 04 Mar 2020 00:59:49 -0800 (PST)
+        Wed, 4 Mar 2020 04:00:57 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02490k32090738;
+        Wed, 4 Mar 2020 03:00:46 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1583312447;
+        bh=ha9OQnDcooAmHEgCcB9O6rbxK86frAqOmsgVJJ3RY+E=;
+        h=From:To:CC:Subject:Date;
+        b=EZ0jXAZCXO4y5aS1mftire1uwF1aP/rNpADio3gg6IYo11C3tJkqKyRKbwq4xj6tB
+         vkhAiAAZPeQT7bd6PIx8FDbT3wL7QVHsaD/ENqGv7zlkmRIFKcPQ7B0QNwP7dFpW68
+         uBVVPc0KZaTNwNCzSp3RglAAQSLfkC54VdhSgcrk=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02490kSf126521
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 4 Mar 2020 03:00:46 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
+ 2020 03:00:46 -0600
+Received: from localhost.localdomain (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 4 Mar 2020 03:00:46 -0600
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02490hm9093867;
+        Wed, 4 Mar 2020 03:00:43 -0600
+From:   Roger Quadros <rogerq@ti.com>
+To:     <tony@atomide.com>
+CC:     <yan-liu@ti.com>, <linux-omap@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Roger Quadros <rogerq@ti.com>, Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
+Date:   Wed, 4 Mar 2020 11:00:31 +0200
+Message-ID: <20200304090031.30360-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <000000000000dd909105a002ebe6@google.com> <CACT4Y+ZyhwEsuGK9aJZ=4vXJ_AfHqFn6n5d58H_5E_-o9qHRWA@mail.gmail.com>
- <96b956f4-62cb-83e6-38c2-ca698a862282@moonlit-rail.com>
-In-Reply-To: <96b956f4-62cb-83e6-38c2-ca698a862282@moonlit-rail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 4 Mar 2020 09:59:38 +0100
-Message-ID: <CACT4Y+b_U6YKujEk9X=NHX45KkL93dLsyu5gS44PpEDi94qS0w@mail.gmail.com>
-Subject: Re: INFO: rcu detected stall in sys_keyctl
-To:     Kris Karas <linux-1993@moonlit-rail.com>
-Cc:     syzbot <syzbot+0c5c2dbf76930df91489@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Eric Biggers <ebiggers@kernel.org>, allison@lohutok.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 9:41 AM Kris Karas <linux-1993@moonlit-rail.com> wrote:
->
-> Resending this to all the original CCs per suggestion of Dmitry.
-> I'm not a member of linux-crypto, no idea if it will bounce; in any
-> case, the OOPS I saw does not appear to be crypto related.
->
-> Dmitry Vyukov wrote:
-> > syzbot wrote:
-> >> Call Trace:
-> >>   <IRQ>
-> >>   __dump_stack lib/dump_stack.c:77 [inline]
-> >>   dump_stack+0x197/0x210 lib/dump_stack.c:118
-> >>   nmi_cpu_backtrace.cold+0x70/0xb2 lib/nmi_backtrace.c:101
-> >>   nmi_trigger_cpumask_backtrace+0x23b/0x28b lib/nmi_backtrace.c:62
-> >>   arch_trigger_cpumask_backtrace+0x14/0x20
-> >> arch/x86/kernel/apic/hw_nmi.c:38
-> >>   trigger_single_cpu_backtrace include/linux/nmi.h:164 [inline]
-> >>   rcu_dump_cpu_stacks+0x183/0x1cf kernel/rcu/tree_stall.h:254
-> >>   print_cpu_stall kernel/rcu/tree_stall.h:475 [inline]
-> >>   check_cpu_stall kernel/rcu/tree_stall.h:549 [inline]
-> >>   rcu_pending kernel/rcu/tree.c:3030 [inline]
-> >>   rcu_sched_clock_irq.cold+0x51a/0xc37 kernel/rcu/tree.c:2276
-> >>   update_process_times+0x2d/0x70 kernel/time/timer.c:1726
-> >>   tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:171
-> >>   tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1314
-> >>   __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
-> >>   __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1579
-> >>   hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1641
-> >>   local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1119 [inline]
-> >>   smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1144
-> >>   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
-> >>   </IRQ>
-> >>
-> > +lib/mpi maintainers
-> >
-> > I wonder if this can also be triggered by remote actors (tls, wifi,
-> > usb, etc).
-> >
->
-> This looks somewhat similar to an OOPS + rcu stall I reported earlier in
-> reply to Greg KH's announcement of 5.5.7:
->
->      rcu: INFO: rcu_sched self-detected stall on CPU
->      rcu:    14-....: (20999 ticks this GP)
-> idle=216/1/0x4000000000000002 softirq=454/454 fqs=5250
->              (t=21004 jiffies g=-755 q=1327)
->      NMI backtrace for cpu 14
->      CPU: 14 PID: 520 Comm: pidof Tainted: G      D           5.5.7 #1
->      Hardware name: To Be Filled By O.E.M. To Be Filled By O.E.M./X470
-> Taichi, BIOS P3.50 07/18/2019
->      Call Trace:
->       <IRQ>
->       dump_stack+0x50/0x70
->       nmi_cpu_backtrace.cold+0x14/0x53
->       ? lapic_can_unplug_cpu.cold+0x44/0x44
->       nmi_trigger_cpumask_backtrace+0x7b/0x88
->       rcu_dump_cpu_stacks+0x7b/0xa9
->       rcu_sched_clock_irq.cold+0x152/0x39b
->       update_process_times+0x1f/0x50
->       tick_sched_timer+0x40/0x90
->       ? tick_sched_do_timer+0x50/0x50
->       __hrtimer_run_queues+0xdd/0x180
->       hrtimer_interrupt+0x108/0x230
->       smp_apic_timer_interrupt+0x53/0xa0
->       apic_timer_interrupt+0xf/0x20
->       </IRQ>
->
-> I don't have a reproducer for it, either.  It showed up in 5.5.7 (but
-> might be from earlier as it reproduces so infrequently).
+Even though the TRM says that SATA IP has 36 address bits
+wired in the SoC, we see bus errors whenever any address
+greater than 32-bit is given to the controller.
 
-Hi Kris,
+This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
 
-What follows after this stack? That's the most interesting part. The
-part that you showed is common for all stalls and does not mean much,
-besides the fact that there is a stall. These can well be very
-different stalls in different parts of kernel.
+As a workaround we limit the DMA address range to 32-bits
+for SATA.
+
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Reported-by: Yan Liu <yan-liu@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+
+NOTE: Currently ARM dma-mapping code doesn't account for devices
+bus_dma_limit. This is fixed in [1].
+
+[1] https://lkml.org/lkml/2020/2/18/712
+
+ arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index d78b684e7fca..895462c22d1c 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -642,15 +642,22 @@
+ 		};
+ 
+ 		/* OCP2SCP3 */
+-		sata: sata@4a141100 {
+-			compatible = "snps,dwc-ahci";
+-			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+-			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
+-			phys = <&sata_phy>;
+-			phy-names = "sata-phy";
+-			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
+-			ti,hwmods = "sata";
+-			ports-implemented = <0x1>;
++		sata_aux_bus {
++			#address-cells = <1>;
++			#size-cells = <2>;
++			compatible = "simple-bus";
++			ranges = <0x0 0x4a140000 0x0 0x1200>;
++			dma-ranges = <0x0 0x0 0x1 0x00000000>;
++			sata: sata@4a141100 {
++				compatible = "snps,dwc-ahci";
++				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
++				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
++				phys = <&sata_phy>;
++				phy-names = "sata-phy";
++				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
++				ti,hwmods = "sata";
++				ports-implemented = <0x1>;
++			};
+ 		};
+ 
+ 		/* OCP2SCP1 */
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
