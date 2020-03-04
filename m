@@ -2,132 +2,369 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7462EC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9ECC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D34520870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC8A20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 09:03:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="EZ0jXAZC"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="RIC2eWxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbgCDJA6 (ORCPT
+        id S2387703AbgCDJDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 04:00:58 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44212 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbgCDJA5 (ORCPT
+        Wed, 4 Mar 2020 04:03:00 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:22464 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728387AbgCDJC7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 04:00:57 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 02490k32090738;
-        Wed, 4 Mar 2020 03:00:46 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583312447;
-        bh=ha9OQnDcooAmHEgCcB9O6rbxK86frAqOmsgVJJ3RY+E=;
-        h=From:To:CC:Subject:Date;
-        b=EZ0jXAZCXO4y5aS1mftire1uwF1aP/rNpADio3gg6IYo11C3tJkqKyRKbwq4xj6tB
-         vkhAiAAZPeQT7bd6PIx8FDbT3wL7QVHsaD/ENqGv7zlkmRIFKcPQ7B0QNwP7dFpW68
-         uBVVPc0KZaTNwNCzSp3RglAAQSLfkC54VdhSgcrk=
-Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 02490kSf126521
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 4 Mar 2020 03:00:46 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 4 Mar
- 2020 03:00:46 -0600
-Received: from localhost.localdomain (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 4 Mar 2020 03:00:46 -0600
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by localhost.localdomain (8.15.2/8.15.2) with ESMTP id 02490hm9093867;
-        Wed, 4 Mar 2020 03:00:43 -0600
-From:   Roger Quadros <rogerq@ti.com>
-To:     <tony@atomide.com>
-CC:     <yan-liu@ti.com>, <linux-omap@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH] dra7: sata: Fix SATA with CONFIG_ARM_LPAE enabled
-Date:   Wed, 4 Mar 2020 11:00:31 +0200
-Message-ID: <20200304090031.30360-1-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 04:02:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1583312577; x=1614848577;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=BA4m7L1LECU+J45nPqE2l1Mr7zZe4HRMGvcMSW/WS50=;
+  b=RIC2eWxTxco9KXdmASqBH8ECHwLjXry9Z3RxZA+x107SDyMcICA67iZq
+   febvG78hGo/uvnzWSoyJiJ8BCbxaMx/zQIePIP9J6o+rm7FeRps75jjUW
+   /fx8SakkljaUS50tQndWqGiug4byIKhrX/Ge37wQh+81fXO7ESaG3PxRe
+   Q=;
+IronPort-SDR: ZzG8Ng+h5vGHh4VP8srpdcxVJF2kretCZ+eJjOcMnhC5IkZQMdnI7rcHoweizv6j0+cARWoFyu
+ ZlKg7UoXRpkA==
+X-IronPort-AV: E=Sophos;i="5.70,513,1574121600"; 
+   d="scan'208";a="30488186"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 04 Mar 2020 09:02:55 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-4e24fd92.us-west-2.amazon.com (Postfix) with ESMTPS id D896AA226A;
+        Wed,  4 Mar 2020 09:02:49 +0000 (UTC)
+Received: from EX13D08UEB004.ant.amazon.com (10.43.60.142) by
+ EX13MTAUEB002.ant.amazon.com (10.43.60.12) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Wed, 4 Mar 2020 09:02:49 +0000
+Received: from EX13MTAUEB002.ant.amazon.com (10.43.60.12) by
+ EX13D08UEB004.ant.amazon.com (10.43.60.142) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Wed, 4 Mar 2020 09:02:48 +0000
+Received: from [192.168.0.42] (10.1.212.24) by mail-relay.amazon.com
+ (10.43.60.234) with Microsoft SMTP Server (TLS) id 15.0.1367.3 via Frontend
+ Transport; Wed, 4 Mar 2020 09:02:45 +0000
+Subject: Re: [PATCH v9 1/3] edac: Add support for Amazon's Annapurna Labs L1
+ EDAC
+To:     Borislav Petkov <bp@alien8.de>
+CC:     <mchehab@kernel.org>, <tony.luck@intel.com>, <james.morse@arm.com>,
+        <rrichter@marvell.com>, <robh+dt@kernel.org>,
+        <frowand.list@gmail.com>, <davem@davemloft.net>,
+        <gregkh@linuxfoundation.org>, <Jonathan.Cameron@huawei.com>,
+        <arnd@arndb.de>, <linux-kernel@vger.kernel.org>,
+        <linux-edac@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <dwmw@amazon.co.uk>, <benh@amazon.com>, <ronenk@amazon.com>,
+        <talel@amazon.com>, <jonnyc@amazon.com>, <hanochu@amazon.com>,
+        <barakw@amazon.com>
+References: <20200129195016.956-1-hhhawa@amazon.com>
+ <20200129195016.956-2-hhhawa@amazon.com> <20200225185211.GB5457@zn.tnic>
+From:   "Hawa, Hanna" <hhhawa@amazon.com>
+Message-ID: <270c7bad-0d68-4496-c83f-f491c38b4992@amazon.com>
+Date:   Wed, 4 Mar 2020 11:02:43 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20200225185211.GB5457@zn.tnic>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even though the TRM says that SATA IP has 36 address bits
-wired in the SoC, we see bus errors whenever any address
-greater than 32-bit is given to the controller.
 
-This happens on dra7-EVM with 4G of RAM with CONFIG_ARM_LPAE=y.
+On 2/25/2020 8:52 PM, Borislav Petkov wrote:
+> On Wed, Jan 29, 2020 at 09:50:14PM +0200, Hanna Hawa wrote:
+> 
+>> Adds support for Amazon's Annapurna Labs L1 EDAC driver to detect and
+>> report L1 errors.
+> 
+> You don't add support for a driver - you either add a driver or you add
+> support for HW...
+> 
+>> diff --git a/drivers/edac/al_l1_edac.c b/drivers/edac/al_l1_edac.c
+>> new file mode 100644
+>> index 000000000000..723b35b18f5b
+>> --- /dev/null
+>> +++ b/drivers/edac/al_l1_edac.c
+>> @@ -0,0 +1,207 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+>> + */
+>> +
+>> +#include <asm/sysreg.h>
+>> +#include <linux/bitfield.h>
+>> +#include <linux/of.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/smp.h>
+> 
+> asm/ includes go after linux/ includes.
 
-As a workaround we limit the DMA address range to 32-bits
-for SATA.
+Will be fixed
 
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Reported-by: Yan Liu <yan-liu@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
+> 
+>> +
+>> +#include "edac_device.h"
+>> +#include "edac_module.h"
+>> +
+>> +#define DRV_NAME				"al_l1_edac"
+>> +
+>> +/* Same bit assignments of CPUMERRSR_EL1 in ARM CA57/CA72 */
+>> +#define ARM_CA57_CPUMERRSR_EL1			sys_reg(3, 1, 15, 2, 2)
+>> +#define ARM_CA57_CPUMERRSR_RAM_ID		GENMASK(30, 24)
+>> +#define  ARM_CA57_L1_I_TAG_RAM			0x00
+>> +#define  ARM_CA57_L1_I_DATA_RAM			0x01
+>> +#define  ARM_CA57_L1_D_TAG_RAM			0x08
+>> +#define  ARM_CA57_L1_D_DATA_RAM			0x09
+>> +#define  ARM_CA57_L2_TLB_RAM			0x18
+>> +#define ARM_CA57_CPUMERRSR_VALID		BIT(31)
+>> +#define ARM_CA57_CPUMERRSR_REPEAT		GENMASK_ULL(39, 32)
+>> +#define ARM_CA57_CPUMERRSR_OTHER		GENMASK_ULL(47, 40)
+>> +#define ARM_CA57_CPUMERRSR_FATAL		BIT_ULL(63)
+>> +
+>> +#define AL_L1_EDAC_MSG_MAX			256
+>> +
+>> +static void al_l1_edac_cpumerrsr_read_status(void *arg)
+> 
+> This is a static function so you don't really need a function prefix of
+> "al_l1_edac_". Use those chars to make its name more descriptive. Ditto
+> for the rest of the static functions in that file.
 
-NOTE: Currently ARM dma-mapping code doesn't account for devices
-bus_dma_limit. This is fixed in [1].
+Will be fixed.
 
-[1] https://lkml.org/lkml/2020/2/18/712
+> 
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev = arg;
+>> +	int cpu, space, count;
+>> +	u32 ramid, repeat, other, fatal;
+>> +	u64 val;
+>> +	char msg[AL_L1_EDAC_MSG_MAX];
+>> +	char *p;
+>> +	spinlock_t *lock;
+> 
+> Please sort function local variables declaration in a reverse christmas
+> tree order:
+> 
+> 	<type A> longest_variable_name;
+> 	<type B> shorter_var_name;
+> 	<type C> even_shorter;
+> 	<type D> i;
 
- arch/arm/boot/dts/dra7.dtsi | 25 ++++++++++++++++---------
- 1 file changed, 16 insertions(+), 9 deletions(-)
+Will be fixed
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index d78b684e7fca..895462c22d1c 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -642,15 +642,22 @@
- 		};
- 
- 		/* OCP2SCP3 */
--		sata: sata@4a141100 {
--			compatible = "snps,dwc-ahci";
--			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
--			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
--			phys = <&sata_phy>;
--			phy-names = "sata-phy";
--			clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
--			ti,hwmods = "sata";
--			ports-implemented = <0x1>;
-+		sata_aux_bus {
-+			#address-cells = <1>;
-+			#size-cells = <2>;
-+			compatible = "simple-bus";
-+			ranges = <0x0 0x4a140000 0x0 0x1200>;
-+			dma-ranges = <0x0 0x0 0x1 0x00000000>;
-+			sata: sata@4a141100 {
-+				compatible = "snps,dwc-ahci";
-+				reg = <0x0 0x0 0x1100>, <0x1100 0x0 0x7>;
-+				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+				phys = <&sata_phy>;
-+				phy-names = "sata-phy";
-+				clocks = <&l3init_clkctrl DRA7_L3INIT_SATA_CLKCTRL 8>;
-+				ti,hwmods = "sata";
-+				ports-implemented = <0x1>;
-+			};
- 		};
- 
- 		/* OCP2SCP1 */
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 
+>> +
+>> +	val = read_sysreg_s(ARM_CA57_CPUMERRSR_EL1);
+>> +	if (!(FIELD_GET(ARM_CA57_CPUMERRSR_VALID, val)))
+>> +		return;
+>> +
+>> +	write_sysreg_s(0, ARM_CA57_CPUMERRSR_EL1);
+>> +
+>> +	cpu = smp_processor_id();
+>> +	ramid = FIELD_GET(ARM_CA57_CPUMERRSR_RAM_ID, val);
+>> +	repeat = FIELD_GET(ARM_CA57_CPUMERRSR_REPEAT, val);
+>> +	other = FIELD_GET(ARM_CA57_CPUMERRSR_OTHER, val);
+>> +	fatal = FIELD_GET(ARM_CA57_CPUMERRSR_FATAL, val);
+>> +
+>> +	space = sizeof(msg);
+>> +	p = msg;
+>> +	count = scnprintf(p, space, "CPU%d L1 %serror detected", cpu,
+>> +			  (fatal) ? "Fatal " : "");
+>> +	p += count;
+>> +	space -= count;
+>> +
+>> +	switch (ramid) {
+>> +	case ARM_CA57_L1_I_TAG_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L1-I Tag RAM'");
+>> +		break;
+>> +	case ARM_CA57_L1_I_DATA_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L1-I Data RAM'");
+>> +		break;
+>> +	case ARM_CA57_L1_D_TAG_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L1-D Tag RAM'");
+>> +		break;
+>> +	case ARM_CA57_L1_D_DATA_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L1-D Data RAM'");
+>> +		break;
+>> +	case ARM_CA57_L2_TLB_RAM:
+>> +		count = scnprintf(p, space, " RAMID='L2 TLB RAM'");
+>> +		break;
+>> +	default:
+>> +		count = scnprintf(p, space, " RAMID='unknown'");
+>> +		break;
+>> +	}
+>> +
+>> +	p += count;
+>> +	space -= count;
+>> +	count = scnprintf(p, space,
+>> +			  " repeat=%d, other=%d (CPUMERRSR_EL1=0x%llx)",
+>> +			  repeat, other, val);
+>> +
+>> +	lock = edac_dev->pvt_info;
+> 
+> That sure looks funky - why not use a proper private struct like the
+> rest of the drivers?
 
+Then the structure will include single variable..
+
+> 
+>> +	spin_lock(lock);
+>> +	if (fatal)
+>> +		edac_device_handle_ue_count(edac_dev, repeat, 0, 0, msg);
+>> +	else
+>> +		edac_device_handle_ce_count(edac_dev, repeat, 0, 0, msg);
+>> +	spin_unlock(lock);
+>> +}
+>> +
+>> +static void al_l1_edac_check(struct edac_device_ctl_info *edac_dev)
+>> +{
+>> +	on_each_cpu(al_l1_edac_cpumerrsr_read_status, edac_dev, 1);
+>> +}
+>> +
+>> +static int al_l1_edac_probe(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev;
+>> +	struct device *dev = &pdev->dev;
+>> +	spinlock_t *lock;
+>> +	int ret;
+>> +
+>> +	edac_dev = edac_device_alloc_ctl_info(sizeof(*lock), DRV_NAME, 1, "L",
+>> +					      1, 1, NULL, 0,
+>> +					      edac_device_alloc_index());
+>> +	if (!edac_dev)
+>> +		return -ENOMEM;
+>> +
+>> +	edac_dev->edac_check = al_l1_edac_check;
+>> +	edac_dev->dev = dev;
+>> +	edac_dev->mod_name = DRV_NAME;
+>> +	edac_dev->dev_name = dev_name(dev);
+>> +	edac_dev->ctl_name = "L1_cache";
+>> +	platform_set_drvdata(pdev, edac_dev);
+>> +	lock = edac_dev->pvt_info;
+>> +
+>> +	spin_lock_init(lock);
+>> +
+>> +	ret = edac_device_add_device(edac_dev);
+>> +	if (ret) {
+>> +		dev_err(dev, "Failed to add L1 edac device (%d)\n", ret);
+>> +		edac_device_free_ctl_info(edac_dev);
+>> +		return ret;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int al_l1_edac_remove(struct platform_device *pdev)
+>> +{
+>> +	struct edac_device_ctl_info *edac_dev = platform_get_drvdata(pdev);
+>> +
+>> +	edac_device_del_device(edac_dev->dev);
+>> +	edac_device_free_ctl_info(edac_dev);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id al_l1_edac_of_match[] = {
+>> +	/*
+>> +	 * "al,alpine-v2", and "amazon,al-alpine-v3" are machine compatible
+>> +	 * strings which have Cortex-A57/A72 configured with this support,
+>> +	 * and access to CPUMERRSR_EL1 register is enabled in firmware.
+>> +	 */
+>> +	{ .compatible = "al,alpine-v2" },
+> 
+> Err, checkpatch says:
+> 
+> WARNING: DT compatible string "al,alpine-v2" appears un-documented -- check ./Documentation/devicetree/bindings/
+> #236: FILE: drivers/edac/al_l1_edac.c:151:
+> +       { .compatible = "al,alpine-v2" },
+> 
+> 
+> Do you need a devicetree addition? I usually get such with the ARM EDAC
+> drivers...
+
+There is missing documentation for alpine-v2, there is an open patches 
+to add this missing doc. [1]
+
+[1]: https://lkml.org/lkml/2020/2/25/362
+
+> 
+>> +	{ .compatible = "amazon,al-alpine-v3" },
+>> +	{}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, al_l1_edac_of_match);
+>> +
+>> +static struct platform_driver al_l1_edac_driver = {
+>> +	.probe = al_l1_edac_probe,
+>> +	.remove = al_l1_edac_remove,
+>> +	.driver = {
+>> +		.name = DRV_NAME,
+>> +	},
+>> +};
+>> +
+>> +static struct platform_device *edac_l1_device;
+> 
+> Please move to the top of the file.
+
+Ack.
+
+> 
+>> +
+>> +static int __init al_l1_init(void)
+>> +{
+>> +	struct device_node *root;
+>> +	int ret;
+>> +
+>> +	root = of_find_node_by_path("/");
+>> +	if (!root) {
+>> +		pr_debug("Can't find root node!\n");
+>> +		return 0;
+>> +	}
+>> +
+>> +	if (!of_match_node(al_l1_edac_of_match, root))
+>> +		return 0;
+>> +
+>> +	ret = platform_driver_register(&al_l1_edac_driver);
+>> +	if (ret) {
+>> +		pr_err("Failed to register %s (%d)\n", DRV_NAME, ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	edac_l1_device = platform_device_register_simple(DRV_NAME, -1, NULL, 0);
+>> +	if (IS_ERR(edac_l1_device)) {
+>> +		pr_err("Failed to register EDAC AL L1 platform device\n");
+> 
+> 		platform_driver_unregister() ?
+
+Ack
+
+> 
+>> +		return PTR_ERR(edac_l1_device);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static void __exit al_l1_exit(void)
+>> +{
+>> +	platform_device_unregister(edac_l1_device);
+>> +	platform_driver_unregister(&al_l1_edac_driver);
+>> +}
+>> +
+>> +late_initcall(al_l1_init);
+> 
+> Why not module_init() ?
+
+Will be fixed.
+
+Thanks,
+Hanna
+> 
