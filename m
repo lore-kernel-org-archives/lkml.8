@@ -2,159 +2,89 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE5AC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285B0C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5630E20870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F22FC20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eymAGfuN"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="sruLBKDX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbgCDSsD (ORCPT
+        id S1730260AbgCDSsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:48:03 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:36774 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729600AbgCDSsC (ORCPT
+        Wed, 4 Mar 2020 13:48:07 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:42373 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729600AbgCDSsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:48:02 -0500
-Received: by mail-qt1-f194.google.com with SMTP id t13so2187818qto.3;
-        Wed, 04 Mar 2020 10:48:02 -0800 (PST)
+        Wed, 4 Mar 2020 13:48:06 -0500
+Received: by mail-il1-f194.google.com with SMTP id x2so2708624ila.9
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:48:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=15In9YVKQ2pHnhm9j0jbBoey+4goOkNMMZ6tPTLuAzo=;
-        b=eymAGfuNnH6CVQK5GO4lho+oipqQOkC49ZIvGmk3/QF3p82lWtXEvjm30QoxSaDYr4
-         +obg4AE9PJxqJI3IIPeHWCRNe6HlUVoyMNOuIBvBCEc8n/SbLsqOJKC3LghYmogzBfVb
-         xGNZ9T2loSur3Lc5NOAHWrsTGffxowBGp91ZfKefUYkgSKAjzfF9yzC357RNJ4ogQh8B
-         GzuLLUM+aqfq/yeTGspD09AUE4Sf+PX8idMhG6eZcrdzoiF47eUzZ0h5RkqyOprx8VQi
-         aqOR+rhIMgIS1Qg+9SzbIcDC3F7L27Y8B52KKenaKRxHi4Yh/Rr6thLTCzJ6RUlQS1Kr
-         35Lw==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=S9W7e0eEucLRc1ffg2OOLPtWfKH/j6fIgfCoT9zkmQ4=;
+        b=sruLBKDXI+8Re66Y+pWX8pNUETxHXEbhvy5dnTtswbvWs5f5SR9ZMgjcV+MVofdwr4
+         gg1Ju2kOUjY/nPmXMSVmqkWPj5FGdh7PApD6CKl+lkoUtYVmrrgnJQQVv///uq4KOHAT
+         Xgd5tSc7aXzPQxIleSo8JgEQ594fi0l4XuCUwuiD5rBTPeyy3eg7E9u/w49YqJR+kp+C
+         0TAUTXW+Bq/tq56HcXrlOzF5lTs0WVcOhyxOI7EHlsa2dQbZDrMN36EQCzyL4PkV9GF5
+         chkQjw0uKaBgcIRpMKYUsTvwM4BVn8qts5lJEuLQoa+O1y7SBQS0wExrI6wJXChvJemH
+         OvhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=15In9YVKQ2pHnhm9j0jbBoey+4goOkNMMZ6tPTLuAzo=;
-        b=CV0YnRkE13OGmxGDqhxzu5g2HGSbJzZtoRk30r2ZtZKK6K/ldnil75G0KaAC5XYWoE
-         ETu3Kut4R97+mLygMqSO7fv6jskj4LYkehumxY+14ATmIOGDuC24FbnnJ0N7QXwSbEJq
-         /dOfF53ldZbN0VcCUElWYVqBdWm12KinpEdqwhv6QnRhn+lWQA31Auyv/5qAMt0wlke+
-         zjP5VbUCHHJE7GjyDnARqOuSgnwSG9aPZeHNfVapW6KfWjXw0eAuK9RP9lZsUHTVg4to
-         +VI2SK4w8OZ+7GOAF1o2oqpC1DVF9LXvQBN8TLQa9gZX2TBdJXX5+yZ5OeAIrChw88N1
-         AJMA==
-X-Gm-Message-State: ANhLgQ1KaSftX80TZaKSQY5xtEmIw2oZPZ+UKv2DcPXIdUThutHEm0MY
-        CnNsR0nkuHJKmzKA84/9JqeGcV7SATYC5BnYp0I=
-X-Google-Smtp-Source: ADFU+vvzvuM/4z5OiYfYDR7O85wCTvENuORqBUvdXXXn8wovxobhaxU6YvN1G/m+LtaL09Da1fAc5wmYho8NHovfGl8=
-X-Received: by 2002:ac8:4d4b:: with SMTP id x11mr3650581qtv.171.1583347681515;
- Wed, 04 Mar 2020 10:48:01 -0800 (PST)
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=S9W7e0eEucLRc1ffg2OOLPtWfKH/j6fIgfCoT9zkmQ4=;
+        b=nAsdFPRPdz8srCUPQE5jjdDHVGmT4pwkrKaBHgFP/Nr9rnBsu285HDWXDZ5c4D9NKX
+         MzTnT0KmZzYginHWWNtsFmJzdMfjemaTgt7BHMdgqf27HGd9kGNsHCZq1E7NyW3snsyX
+         EU3oxxlE1G8dfNc6DSs6gTNIvhKLYCJyT7tgCBZNLEP+aC0ppqg9+RyMfz9aZB6C5MWO
+         r/zG5QHg/tFYZAqKnxszaf7ebO9tfBmAqjvErVAnzWlDS+cAWmHbyJe4L1/nKYgYIOrp
+         2AJq/GZQjORNTi7VQ//m756mfhsTkCIqndHf6Q4kqlPRifVUhlzU055TkFFshwJcALkz
+         Pj+Q==
+X-Gm-Message-State: ANhLgQ2imItXUHXZsDyH/BrkSf7uhnLf5+Xd3WaHq8Rhg67GBOR0h5d/
+        OuJtuAZCMZfE6eFxbcc3biLHuRbF3ns=
+X-Google-Smtp-Source: ADFU+vuZeP7g1drPgTEgVEd4czUpvJueOeRQ2BqyKlM1IT4mE7yQ2PMNjMvQCiGedR/5pUsb+nBRtw==
+X-Received: by 2002:a92:d782:: with SMTP id d2mr4233240iln.42.1583347684414;
+        Wed, 04 Mar 2020 10:48:04 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c12sm9381900ile.12.2020.03.04.10.48.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 04 Mar 2020 10:48:03 -0800 (PST)
+Subject: Re: [PATCH 0/4] io-wq/io_uring locking optimisation
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1583314087.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <9aeadaac-b225-7988-cd43-d0db565961e6@kernel.dk>
+Date:   Wed, 4 Mar 2020 11:48:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200304154747.23506-1-kpsingh@chromium.org> <20200304154747.23506-2-kpsingh@chromium.org>
- <cb54c137-6d8e-b4e5-bd17-e0a05368c3eb@iogearbox.net> <20200304184441.GA25392@chromium.org>
-In-Reply-To: <20200304184441.GA25392@chromium.org>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Wed, 4 Mar 2020 10:47:50 -0800
-Message-ID: <CAEf4Bza4y_H+Avry=OdQ=j6Ey-niTYLafKUwicVeutmQ3X5g=g@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v3 1/7] bpf: Refactor trampoline update code
-To:     KP Singh <kpsingh@chromium.org>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        linux-security-module@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <cover.1583314087.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 10:44 AM KP Singh <kpsingh@chromium.org> wrote:
->
-> On 04-M=C3=A4r 19:37, Daniel Borkmann wrote:
-> > On 3/4/20 4:47 PM, KP Singh wrote:
-> > > From: KP Singh <kpsingh@google.com>
-> > >
-> > > As we need to introduce a third type of attachment for trampolines, t=
-he
-> > > flattened signature of arch_prepare_bpf_trampoline gets even more
-> > > complicated.
-> > >
-> > > Refactor the prog and count argument to arch_prepare_bpf_trampoline t=
-o
-> > > use bpf_tramp_progs to simplify the addition and accounting for new
-> > > attachment types.
-> > >
-> > > Signed-off-by: KP Singh <kpsingh@google.com>
-> > > Acked-by: Andrii Nakryiko <andriin@fb.com>
-> >
-> > [...]
-> > > diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.=
-c
-> > > index c498f0fffb40..9f7e0328a644 100644
-> > > --- a/kernel/bpf/bpf_struct_ops.c
-> > > +++ b/kernel/bpf/bpf_struct_ops.c
-> > > @@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct =
-bpf_map *map, void *key,
-> > >     struct bpf_struct_ops_value *uvalue, *kvalue;
-> > >     const struct btf_member *member;
-> > >     const struct btf_type *t =3D st_ops->type;
-> > > +   struct bpf_tramp_progs *tprogs =3D NULL;
-> > >     void *udata, *kdata;
-> > >     int prog_fd, err =3D 0;
-> > >     void *image;
-> > > @@ -425,10 +426,18 @@ static int bpf_struct_ops_map_update_elem(struc=
-t bpf_map *map, void *key,
-> > >                     goto reset_unlock;
-> > >             }
-> > > +           tprogs =3D kcalloc(BPF_TRAMP_MAX, sizeof(*tprogs), GFP_KE=
-RNEL);
-> > > +           if (!tprogs) {
-> > > +                   err =3D -ENOMEM;
-> > > +                   goto reset_unlock;
-> > > +           }
-> > > +
-> >
-> > Looking over the code again, I'm quite certain that here's a memleak
-> > since the kcalloc() is done in the for_each_member() loop in the ops
-> > update but then going out of scope and in the exit path we only kfree
-> > the last tprogs.
->
-> You're right, nice catch. Fixing it.
+On 3/4/20 6:14 AM, Pavel Begunkov wrote:
+> [1-3] are shedding excessive locking of @wqe's and @worker's spinlocks
+> from io_worker_handle_work().
+> 
+> [4] removes an extra pair of refcount get/put by making former io_put_work()
+> to own the submission reference. It also changes io-wq get/put API
+> and renames io_put_work() into io_free_work() to reflect it.
 
-There is probably no need to do many allocations as well, just one
-outside of the loop and reuse?
+LGTM, and tests out fine so far - applied, thanks.
 
->
-> - KP
->
-> >
-> > > +           tprogs[BPF_TRAMP_FENTRY].progs[0] =3D prog;
-> > > +           tprogs[BPF_TRAMP_FENTRY].nr_progs =3D 1;
-> > >             err =3D arch_prepare_bpf_trampoline(image,
-> > >                                               st_map->image + PAGE_SI=
-ZE,
-> > >                                               &st_ops->func_models[i]=
-, 0,
-> > > -                                             &prog, 1, NULL, 0, NULL=
-);
-> > > +                                             tprogs, NULL);
-> > >             if (err < 0)
-> > >                     goto reset_unlock;
-> > > @@ -469,6 +478,7 @@ static int bpf_struct_ops_map_update_elem(struct =
-bpf_map *map, void *key,
-> > >     memset(uvalue, 0, map->value_size);
-> > >     memset(kvalue, 0, map->value_size);
-> > >   unlock:
-> > > +   kfree(tprogs);
-> > >     mutex_unlock(&st_map->lock);
-> > >     return err;
-> > >   }
+-- 
+Jens Axboe
+
