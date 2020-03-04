@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58158C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5237BC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3076821741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1922146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 20:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583354201;
-	bh=rp58rtyBCVcxxp0yK/hufdOfzhWH82mm7VxiWuXubSY=;
+	s=default; t=1583354203;
+	bh=FUJpoSbHjQOCLsMJclmjToiLjlEFsimNaSCwFeQkIrY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJkkKf5C7rAGJew+XRrwKfu0SBj5lBVjxgNAbj9e+Lx5kllkYGJGWKRN05V7wuxvo
-	 eXBHE5Snrh4ztT4yiA3FlYuDjxTu274fXwA9fWuW9NN6WpBBCXCR5vCv/kfWPRSTj0
-	 yj2d7Q3FdwN6XetJngDPqQgfvbmJ2RJMhQIRTfTo=
+	b=wumF/LXO5z6qb2IqPyk6g415DrQCYP0PgqchVX3WG+lsoVHk+JyN1O1q0Jss7Udhk
+	 o6p+75eHP2CfFcyBRVKvSzKygNclMR/fhpDE8NExpH0/51FJD2l9YvJFbxNx/Sk57B
+	 Y0E0lt7kvCDbEoMBIGzV/lyjrxXUwmbUUSqi6z5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388510AbgCDUgk (ORCPT
+        id S2388525AbgCDUgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 15:36:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36634 "EHLO mail.kernel.org"
+        Wed, 4 Mar 2020 15:36:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36712 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388499AbgCDUgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 15:36:38 -0500
+        id S2388504AbgCDUgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 15:36:40 -0500
 Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 755AB24673;
-        Wed,  4 Mar 2020 20:36:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 540EC21556;
+        Wed,  4 Mar 2020 20:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583354197;
-        bh=rp58rtyBCVcxxp0yK/hufdOfzhWH82mm7VxiWuXubSY=;
+        s=default; t=1583354199;
+        bh=FUJpoSbHjQOCLsMJclmjToiLjlEFsimNaSCwFeQkIrY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eC5mUTmWkWHzNtqQ955wjfLWiQ3OvgZwFCcYeU1AaABOm5Xd+P6wDjKNGg2v3YZhF
-         sU65VfG3B2KoST3vf3st5hwpAXYSOD37o4+Dw+60bc86jivspqRW2Wi9LheA9agNwq
-         JawxHMrhp9+ffFTCqvpPTkbypI+7Zr7+0SBQawF0=
+        b=HCiBvg0CZ/ks/xA+7vpaSmwbz7zQtcTIt0EENnqMHaJmY5cP7B1lVg2SdnYLl/Get
+         QzLHWVXyLC486+uD+umXTzn9xPP6fvS9ZRMes4xAb6nTSgXmGEvnEU7Izkibs08zHa
+         vefG3KTaDt44wyB0BQt/FKWJio+sC3OFpRC6Wm8A=
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <maz@kernel.org>)
-        id 1j9aj7-00A59R-I6; Wed, 04 Mar 2020 20:34:45 +0000
+        id 1j9ajF-00A59R-Ls; Wed, 04 Mar 2020 20:34:53 +0000
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
         kvm@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -56,9 +56,9 @@ Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         James Morse <james.morse@arm.com>,
         Julien Thierry <julien.thierry.kdev@gmail.com>,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v5 10/23] irqchip/gic-v4.1: Plumb mask/unmask SGI callbacks
-Date:   Wed,  4 Mar 2020 20:33:17 +0000
-Message-Id: <20200304203330.4967-11-maz@kernel.org>
+Subject: [PATCH v5 19/23] KVM: arm64: GICv4.1: Allow SGIs to switch between HW and SW interrupts
+Date:   Wed,  4 Mar 2020 20:33:26 +0000
+Message-Id: <20200304203330.4967-20-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200304203330.4967-1-maz@kernel.org>
 References: <20200304203330.4967-1-maz@kernel.org>
@@ -73,51 +73,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement mask/unmask for virtual SGIs by calling into the
-configuration helper.
+In order to let a guest buy in the new, active-less SGIs, we
+need to be able to switch between the two modes.
+
+Handle this by stopping all guest activity, transfer the state
+from one mode to the other, and resume the guest. Nothing calls
+this code so far, but a later patch will plug it into the MMIO
+emulation.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ include/kvm/arm_vgic.h      |  3 ++
+ virt/kvm/arm/vgic/vgic-v4.c | 94 +++++++++++++++++++++++++++++++++++++
+ virt/kvm/arm/vgic/vgic.h    |  1 +
+ 3 files changed, 98 insertions(+)
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index e0db3f906f87..c93f178914ee 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -3939,6 +3939,22 @@ static void its_configure_sgi(struct irq_data *d, bool clear)
- 	its_send_single_vcommand(find_4_1_its(), its_build_vsgi_cmd, &desc);
+diff --git a/include/kvm/arm_vgic.h b/include/kvm/arm_vgic.h
+index 63457908c9c4..69f4164d6477 100644
+--- a/include/kvm/arm_vgic.h
++++ b/include/kvm/arm_vgic.h
+@@ -231,6 +231,9 @@ struct vgic_dist {
+ 	/* distributor enabled */
+ 	bool			enabled;
+ 
++	/* Wants SGIs without active state */
++	bool			nassgireq;
++
+ 	struct vgic_irq		*spis;
+ 
+ 	struct vgic_io_device	dist_iodev;
+diff --git a/virt/kvm/arm/vgic/vgic-v4.c b/virt/kvm/arm/vgic/vgic-v4.c
+index c2fcde104ea2..a65dc1c85363 100644
+--- a/virt/kvm/arm/vgic/vgic-v4.c
++++ b/virt/kvm/arm/vgic/vgic-v4.c
+@@ -97,6 +97,100 @@ static irqreturn_t vgic_v4_doorbell_handler(int irq, void *info)
+ 	return IRQ_HANDLED;
  }
  
-+static void its_sgi_mask_irq(struct irq_data *d)
++static void vgic_v4_sync_sgi_config(struct its_vpe *vpe, struct vgic_irq *irq)
 +{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
-+
-+	vpe->sgi_config[d->hwirq].enabled = false;
-+	its_configure_sgi(d, false);
++	vpe->sgi_config[irq->intid].enabled	= irq->enabled;
++	vpe->sgi_config[irq->intid].group 	= irq->group;
++	vpe->sgi_config[irq->intid].priority	= irq->priority;
 +}
 +
-+static void its_sgi_unmask_irq(struct irq_data *d)
++static void vgic_v4_enable_vsgis(struct kvm_vcpu *vcpu)
 +{
-+	struct its_vpe *vpe = irq_data_get_irq_chip_data(d);
++	struct its_vpe *vpe = &vcpu->arch.vgic_cpu.vgic_v3.its_vpe;
++	int i;
 +
-+	vpe->sgi_config[d->hwirq].enabled = true;
-+	its_configure_sgi(d, false);
++	/*
++	 * With GICv4.1, every virtual SGI can be directly injected. So
++	 * let's pretend that they are HW interrupts, tied to a host
++	 * IRQ. The SGI code will do its magic.
++	 */
++	for (i = 0; i < VGIC_NR_SGIS; i++) {
++		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
++		struct irq_desc *desc;
++		int ret;
++
++		if (irq->hw) {
++			vgic_put_irq(vcpu->kvm, irq);
++			continue;
++		}
++
++		irq->hw = true;
++		irq->host_irq = irq_find_mapping(vpe->sgi_domain, i);
++
++		/* Transfer the full irq state to the vPE */
++		vgic_v4_sync_sgi_config(vpe, irq);
++		desc = irq_to_desc(irq->host_irq);
++		ret = irq_domain_activate_irq(irq_desc_get_irq_data(desc),
++					      false);
++		if (!WARN_ON(ret)) {
++			/* Transfer pending state */
++			ret = irq_set_irqchip_state(irq->host_irq,
++						    IRQCHIP_STATE_PENDING,
++						    irq->pending_latch);
++			WARN_ON(ret);
++			irq->pending_latch = false;
++		}
++
++		vgic_put_irq(vcpu->kvm, irq);
++	}
 +}
 +
- static int its_sgi_set_affinity(struct irq_data *d,
- 				const struct cpumask *mask_val,
- 				bool force)
-@@ -3948,6 +3964,8 @@ static int its_sgi_set_affinity(struct irq_data *d,
++static void vgic_v4_disable_vsgis(struct kvm_vcpu *vcpu)
++{
++	int i;
++
++	for (i = 0; i < VGIC_NR_SGIS; i++) {
++		struct vgic_irq *irq = vgic_get_irq(vcpu->kvm, vcpu, i);
++		struct irq_desc *desc;
++		int ret;
++
++		if (!irq->hw) {
++			vgic_put_irq(vcpu->kvm, irq);
++			continue;
++		}
++
++		irq->hw = false;
++		ret = irq_get_irqchip_state(irq->host_irq,
++					    IRQCHIP_STATE_PENDING,
++					    &irq->pending_latch);
++		WARN_ON(ret);
++
++		desc = irq_to_desc(irq->host_irq);
++		irq_domain_deactivate_irq(irq_desc_get_irq_data(desc));
++
++		vgic_put_irq(vcpu->kvm, irq);
++	}
++}
++
++/* Must be called with the kvm lock held */
++void vgic_v4_configure_vsgis(struct kvm *kvm)
++{
++	struct vgic_dist *dist = &kvm->arch.vgic;
++	struct kvm_vcpu *vcpu;
++	int i;
++
++	kvm_arm_halt_guest(kvm);
++
++	kvm_for_each_vcpu(i, vcpu, kvm) {
++		if (dist->nassgireq)
++			vgic_v4_enable_vsgis(vcpu);
++		else
++			vgic_v4_disable_vsgis(vcpu);
++	}
++
++	kvm_arm_resume_guest(kvm);
++}
++
+ /**
+  * vgic_v4_init - Initialize the GICv4 data structures
+  * @kvm:	Pointer to the VM being initialized
+diff --git a/virt/kvm/arm/vgic/vgic.h b/virt/kvm/arm/vgic/vgic.h
+index c7fefd6b1c80..769e4802645e 100644
+--- a/virt/kvm/arm/vgic/vgic.h
++++ b/virt/kvm/arm/vgic/vgic.h
+@@ -316,5 +316,6 @@ void vgic_its_invalidate_cache(struct kvm *kvm);
+ bool vgic_supports_direct_msis(struct kvm *kvm);
+ int vgic_v4_init(struct kvm *kvm);
+ void vgic_v4_teardown(struct kvm *kvm);
++void vgic_v4_configure_vsgis(struct kvm *kvm);
  
- static struct irq_chip its_sgi_irq_chip = {
- 	.name			= "GICv4.1-sgi",
-+	.irq_mask		= its_sgi_mask_irq,
-+	.irq_unmask		= its_sgi_unmask_irq,
- 	.irq_set_affinity	= its_sgi_set_affinity,
- };
- 
+ #endif
 -- 
 2.20.1
 
