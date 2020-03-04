@@ -2,157 +2,127 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 492B3C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA1BC3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B8A2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:50:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5678321556
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:51:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="OD+9dxjA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="f7Km3cQ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387869AbgCDTuN (ORCPT
+        id S2387787AbgCDTvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:50:13 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:27738 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728946AbgCDTuM (ORCPT
+        Wed, 4 Mar 2020 14:51:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:37302 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728278AbgCDTvx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:50:12 -0500
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024Jk8K9024747
-        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 11:50:11 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=zBd+5qaL3qCpMGDjmFLdwfve7IIb8GrWrTDOOZQAm1o=;
- b=OD+9dxjAszOVJAKEAHqFl5ws+jBOYe2g195UCbw2bPSpTkzs6EmmQISeR1R92rT5YRyl
- LRU03bd53091itcJ1s3NTjuQSG/NaPN4CTZw4jlxmzmE5U3id0y5CDdLuBo+KCCpYWvM
- IfvBE0k8ksQXOUa4dQibIPrH1PuDyABTm/o= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2yjggj0u82-9
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:50:11 -0800
-Received: from intmgw001.41.prn1.facebook.com (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:82::d) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Wed, 4 Mar 2020 11:50:07 -0800
-Received: by devvm4439.prn2.facebook.com (Postfix, from userid 111017)
-        id 1C713FEBAC0A; Wed,  4 Mar 2020 11:50:03 -0800 (PST)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm4439.prn2.facebook.com
-To:     Josef Bacik <josef@toxicpanda.com>, Chris Mason <clm@fb.com>,
-        David Sterba <dsterba@suse.com>
-CC:     <linux-btrfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-team@fb.com>, Rik van Riel <riel@surriel.com>,
-        Roman Gushchin <guro@fb.com>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH] btrfs: implement migratepage callback
-Date:   Wed, 4 Mar 2020 11:50:02 -0800
-Message-ID: <20200304195002.3854765-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Wed, 4 Mar 2020 14:51:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583351512;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Ra5c/deVBpeBf2yDXKORW+EsDATadMRlpq+nR2VPF8g=;
+        b=f7Km3cQ4pSUxDVHnTLDDaZnsxzdewnva77C8oYyCSuOzc2QU1HpgUWEneuhZEIOeXsxG6r
+        vcd7hVehNpjQwSfuVlvAUKB8aTCU1bsQRGgCjLtPmmMn/Xj4EKZox8ea6TSOu8DN93u8rz
+        JXhbM1EOPpBbgw/Z6iPCnKYgY+GNQyk=
+Received: from mail-io1-f69.google.com (mail-io1-f69.google.com
+ [209.85.166.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-268-eO15Aqt7PheaMdwqoMKLEw-1; Wed, 04 Mar 2020 14:51:51 -0500
+X-MC-Unique: eO15Aqt7PheaMdwqoMKLEw-1
+Received: by mail-io1-f69.google.com with SMTP id h2so1226283iow.18
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:51:51 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ra5c/deVBpeBf2yDXKORW+EsDATadMRlpq+nR2VPF8g=;
+        b=N6Ay0nDi/nANd6A8leDpnI2NFN1wDBIk6gQ4nRjcnElfbJQfN0A267WKleFl1yX0no
+         prXisakzZ60WhPGikqCuLXVdP5sJI9ZGcWuJj+b6WYtg7aLz0pLzr56dKqyxafl0vY5o
+         xDwhH230V9A+9IRsy+ZJXIzCuqp5RKQdVsqiU1qIMo4HXDr5N9HXnfTuTSotPEDgfYOg
+         A39m2ePr28eIZFDljCi5SChLf+IczdwS27z7jnH+Iu1Nc/QMh+c/V559BCUed0Ab3qmr
+         d6Vu/fGtDTAf/PEIC1fRQMHQ6H3Z789aOIJIQZ8OMJRsx/eWCYgKATVrDG5jORbugLeZ
+         cFrg==
+X-Gm-Message-State: ANhLgQ2Vfq+poDIM51Tgvp0dLfa8f58ui2KGt9W1M6aYPx+qI0OMQSX5
+        8kfMf3HQhYa6VZx2NkLmJjtoD2iE5rsabrxOIlTTwaPGDAyHBGfIwvbA7AaYAwi6M03KD2gLC+u
+        2aZPKyodcqJByMH6UViZLFtTeX6wYSsBNPenfmy9i
+X-Received: by 2002:a02:86:: with SMTP id 128mr4197972jaa.3.1583351510744;
+        Wed, 04 Mar 2020 11:51:50 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vuy4R3WkHiT3ty4P0Jvz03EvpoMWk78M0iocJAbdZEkBb/I6Emb6ZcdDRdLsaS/8iLbqomC7mabXhiUazbqKOw=
+X-Received: by 2002:a02:86:: with SMTP id 128mr4197956jaa.3.1583351510519;
+ Wed, 04 Mar 2020 11:51:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-04_08:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 phishscore=0
- impostorscore=0 adultscore=0 spamscore=0 suspectscore=0 clxscore=1015
- bulkscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=756
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040129
-X-FB-Internal: deliver
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com> <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
+In-Reply-To: <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
+From:   Nathaniel McCallum <npmccallum@redhat.com>
+Date:   Wed, 4 Mar 2020 14:51:39 -0500
+Message-ID: <CAOASepNLGDGZ=9Rx5Pne5oK7QdQ0deonrSsdUKRsv0fzZtx1Eg@mail.gmail.com>
+Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        linux-kselftest@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently btrfs doesn't provide a migratepage callback. It means that
-fallback_migrate_page()	is used to migrate btrfs pages.
+On Tue, Mar 3, 2020 at 6:39 PM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+> diff --git a/tools/testing/selftests/x86/sgx/sgx_call.S b/tools/testing/selftests/x86/sgx/sgx_call.S
+> new file mode 100644
+> index 000000000000..ca4c7893f9d9
+> --- /dev/null
+> +++ b/tools/testing/selftests/x86/sgx/sgx_call.S
+> @@ -0,0 +1,23 @@
+> +/* SPDX-License-Identifier: (GPL-2.0 OR BSD-3-Clause) */
+> +/**
+> +* Copyright(c) 2016-18 Intel Corporation.
+> +*/
+> +
+> +       .text
+> +
+> +       .macro ENCLU
+> +       .byte 0x0f, 0x01, 0xd7
+> +       .endm
+> +
+> +       .text
+> +
+> +       .global sgx_call_eenter
+> +sgx_call_eenter:
+> +       push    %rbx
+> +       mov     $0x02, %rax
+> +       mov     %rdx, %rbx
+> +       lea     sgx_async_exit(%rip), %rcx
+> +sgx_async_exit:
+> +       ENCLU
+> +       pop     %rbx
+> +       ret
 
-fallback_migrate_page() cannot move dirty pages, instead it tries to
-flush them (in sync mode) or just fails (in async mode).
+You need to push and pop all the callee-saved registers here since the
+enclave zeros them. This code works today by accident. A future
+compiler may emit different register allocation which will cause this
+to break.
 
-In the sync mode pages which are scheduled to be processed by
-btrfs_writepage_fixup_worker() can't be effectively flushed by the
-migration code, because there is no established way to wait for the
-completion of the delayed work.
-
-It all leads to page migration failures.
-
-To fix it the patch implements a btrs-specific migratepage callback,
-which is similar to iomap_migrate_page() used by some other fs, except
-it does take care of the PagePrivate2 flag which is used for data
-ordering purposes.
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Reviewed-by: Chris Mason <clm@fb.com>
----
- fs/btrfs/inode.c | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 7735ce6127c3..f23230b3cbda 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -28,6 +28,7 @@
- #include <linux/magic.h>
- #include <linux/iversion.h>
- #include <linux/swap.h>
-+#include <linux/migrate.h>
- #include <linux/sched/mm.h>
- #include <asm/unaligned.h>
- #include "misc.h"
-@@ -8323,6 +8324,37 @@ static int btrfs_releasepage(struct page *page, gfp_t gfp_flags)
- 	return __btrfs_releasepage(page, gfp_flags);
- }
- 
-+static int btrfs_migratepage(struct address_space *mapping,
-+			     struct page *newpage, struct page *page,
-+			     enum migrate_mode mode)
-+{
-+	int ret;
-+
-+	ret = migrate_page_move_mapping(mapping, newpage, page, 0);
-+	if (ret != MIGRATEPAGE_SUCCESS)
-+		return ret;
-+
-+	if (page_has_private(page)) {
-+		ClearPagePrivate(page);
-+		get_page(newpage);
-+		set_page_private(newpage, page_private(page));
-+		set_page_private(page, 0);
-+		put_page(page);
-+		SetPagePrivate(newpage);
-+	}
-+
-+	if (PagePrivate2(page)) {
-+		ClearPagePrivate2(page);
-+		SetPagePrivate2(newpage);
-+	}
-+
-+	if (mode != MIGRATE_SYNC_NO_COPY)
-+		migrate_page_copy(newpage, page);
-+	else
-+		migrate_page_states(newpage, page);
-+	return MIGRATEPAGE_SUCCESS;
-+}
-+
- static void btrfs_invalidatepage(struct page *page, unsigned int offset,
- 				 unsigned int length)
- {
-@@ -10525,6 +10557,7 @@ static const struct address_space_operations btrfs_aops = {
- 	.direct_IO	= btrfs_direct_IO,
- 	.invalidatepage = btrfs_invalidatepage,
- 	.releasepage	= btrfs_releasepage,
-+	.migratepage	= btrfs_migratepage,
- 	.set_page_dirty	= btrfs_set_page_dirty,
- 	.error_remove_page = generic_error_remove_page,
- 	.swap_activate	= btrfs_swap_activate,
--- 
-2.24.1
+We might consider making it part of the Linux enclave ABI that the
+enclave has to save and restore these registers. This would have a
+slight performance advantage in a critical code-path compared to
+zeroing and then restoring them. But the VDSO code will need to know
+what the expectation is.
 
