@@ -2,116 +2,183 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 618ADC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60693C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:00:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373C72166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C1C920870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 13:00:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i/xtpsps"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SjfdFlS3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388077AbgCDM7w (ORCPT
+        id S2388092AbgCDNAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:59:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46824 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388060AbgCDM7v (ORCPT
+        Wed, 4 Mar 2020 08:00:08 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:37473 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388060AbgCDNAH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:59:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583326790;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=hhdoWtYJUAFB+5isvchTA1I3gIKalNxasPf308iYp70=;
-        b=i/xtpsps/sca3H1Ea8xLpIN/CElpZ/R1nXFMX+zgWSfOC9a0m2tVLxIC0s0Ojv2zcdqxTv
-        ef32+Lmsu6c6yNUIxcAH9rlRbXFMPnW3SBkz+A16rmre3RXAYwO2K4lQbK0qEP3YfM9aRl
-        kXGcPhe6PGq5NYAkNUUxfuTk1DOEF2k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-369-AScE1ydWP0Waxce9yLkZhQ-1; Wed, 04 Mar 2020 07:59:47 -0500
-X-MC-Unique: AScE1ydWP0Waxce9yLkZhQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F24471B18BC0;
-        Wed,  4 Mar 2020 12:59:45 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-38.phx2.redhat.com [10.3.112.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B61215DA60;
-        Wed,  4 Mar 2020 12:59:43 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 7EE1B121; Wed,  4 Mar 2020 09:59:40 -0300 (BRT)
-Date:   Wed, 4 Mar 2020 09:59:40 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Jiri Olsa <jolsa@redhat.com>
-Subject: Re: [PATCH] tools lib traceevent: Remove extra '\n' in
- print_event_time()
-Message-ID: <20200304125940.GA6498@redhat.com>
-References: <20200303231852.6ab6882f@oasis.local.home>
+        Wed, 4 Mar 2020 08:00:07 -0500
+Received: by mail-qv1-f65.google.com with SMTP id c19so716920qvv.4
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 05:00:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Beu3qvFTUH06Rlm0/R7E/eA87SF87SDv5KPlGbUEFUY=;
+        b=SjfdFlS3wO55dVhIbilav3RQtVBWgW91Cnb/+8n7jkIY3LxEaXZNW4wSRZ1w0P+Y2Z
+         m2wcVG3v4ccrUcE2gOaZ9eeheXa1jOFC15/2rUmkBSsjvSz5A70/65MZ8+07ABoV8gmL
+         lUJOwfGxVQgX8ZwatFqrgLAj0QQ4QVNzVsKWc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Beu3qvFTUH06Rlm0/R7E/eA87SF87SDv5KPlGbUEFUY=;
+        b=btj/eIFVNg4r3QzmJBWwH96RS6mNbscI5Oi1VolJjt7bq3B2Ar9oQMEIkzfRiYiIuz
+         F7gW4pS2rBWMegaqxwB/YBD3LxWo5ziuT6qKhaU1biegcvG35FhlO/nBY+dF1JVYvMfJ
+         9yd283aOfWkVoQYrpd1hZ3gQoK2TzQH2mhKgdz5zcYacM/BqG+KE9IFCNF5rAtaXWq03
+         I8azpOwwc9XYYiS3EsFLsIeb1uMwj69UXzI1WIQsTZpGLzK1TQ236l4UdBRukG+9onoi
+         9xAfqFiacWP0DVfoDtdoegPXz1c/6tGk/zOhl4630G8aHvw+YW6C182sq5K7O9WfGqyG
+         VDVw==
+X-Gm-Message-State: ANhLgQ3peP9XF9BZAtRk2AvfOwLdGGqwNvyOjyKuBPMIjwxbVVD+DuyY
+        ZbXBaTsxWax6hGkjkcq9E23vrPLiI9D2BA/YZxHJaQ==
+X-Google-Smtp-Source: ADFU+vvAPd9eUBLgxOcz8KO1mdbkjC+PQUvSPfxQ3LEaj+3mlGdcvGhxsv7PsukxnD5IbwUM3xFfAimQpPOT+wKAGoo=
+X-Received: by 2002:a05:6214:1750:: with SMTP id dc16mr1985308qvb.47.1583326806377;
+ Wed, 04 Mar 2020 05:00:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200303231852.6ab6882f@oasis.local.home>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <1580730044-30501-1-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1580730044-30501-5-git-send-email-hsin-hsiung.wang@mediatek.com>
+ <1580748607.31376.3.camel@mtksdaap41> <1581911502.20099.13.camel@mhfsdcap03>
+In-Reply-To: <1581911502.20099.13.camel@mhfsdcap03>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Wed, 4 Mar 2020 20:59:55 +0800
+Message-ID: <CANMq1KDTHcFV8Gue1PuOWkWXL20z_-j58u8JpwbBm_wUvLeqSg@mail.gmail.com>
+Subject: Re: [PATCH v8 4/5] rtc: mt6397: Add support for the MediaTek MT6358 RTC
+To:     Ran Bi <ran.bi@mediatek.com>
+Cc:     Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Josef Friedl <josef.friedl@speed.at>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Frank Wunderlich <frank-w@public-files.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Richard Fontana <rfontana@redhat.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Eddie Huang <eddie.huang@mediatek.com>,
+        linux-rtc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Mar 03, 2020 at 11:18:52PM -0500, Steven Rostedt escreveu:
-> 
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> 
-> If the precesion of print_event_time() is zero or greater than the
+Hi,
 
-precision, right?
+On Mon, Feb 17, 2020 at 11:52 AM Ran Bi <ran.bi@mediatek.com> wrote:
+>
+> On Tue, 2020-02-04 at 00:50 +0800, Yingjoe Chen wrote:
+> > > diff --git a/include/linux/mfd/mt6397/rtc.h b/include/linux/mfd/mt6397/rtc.h
+> > > index f84b916..fffe34a 100644
+> > > --- a/include/linux/mfd/mt6397/rtc.h
+> > > +++ b/include/linux/mfd/mt6397/rtc.h
+> > > @@ -18,7 +18,8 @@
+> > >  #define RTC_BBPU_CBUSY         BIT(6)
+> > >  #define RTC_BBPU_KEY            (0x43 << 8)
+> > >
+> > > -#define RTC_WRTGR              0x003c
+> > > +#define RTC_WRTGR_MT6358       0x3a
+> > > +#define RTC_WRTGR_MT6397       0x3c
+> > >
+> > >  #define RTC_IRQ_STA            0x0002
+> > >  #define RTC_IRQ_STA_AL         BIT(0)
+> > > @@ -57,6 +58,10 @@
+> > >  #define MTK_RTC_POLL_DELAY_US  10
+> > >  #define MTK_RTC_POLL_TIMEOUT   (jiffies_to_usecs(HZ))
+> > >
+> > > +struct mtk_rtc_data {
+> > > +   u32                     wrtgr;
+> > > +};
+> > > +
+> > >  struct mt6397_rtc {
+> > >     struct device           *dev;
+> > >     struct rtc_device       *rtc_dev;
+> > > @@ -66,6 +71,15 @@ struct mt6397_rtc {
+> > >     struct regmap           *regmap;
+> > >     int                     irq;
+> > >     u32                     addr_base;
+> > > +   const struct mtk_rtc_data *data;
+> > > +};
+> > > +
+> > > +static const struct mtk_rtc_data mt6358_rtc_data = {
+> > > +   .wrtgr = RTC_WRTGR_MT6358,
+> > > +};
+> > > +
+> > > +static const struct mtk_rtc_data mt6397_rtc_data = {
+> > > +   .wrtgr = RTC_WRTGR_MT6397,
+> > >  };
+> >
+> > Hi,
+> >
+> > Putting these in header file doesn't looks right to me.
+> > Who need this? can you move them back to rtc-mt6397.c?
+> > Joe.C
+> >
+>
+> This could also effect kernel/drivers/power/reset/mt6323-poweroff.c
+> which using same region of RTC registers.
+> There are 2 ways of modification:
+> 1. kernel/drivers/rtc/rtc-mt6397.c implement do_pwroff function and
+> export to mt6323-poweroff.c
+> 2. Just modify mt6323-poweroff.c file to compatible this patch. I mean
+> using RTC_WRTGR_MT6397 to replace RTC_WRTGR. Or modify mt6323-poweroff.c
+> like rtc-mt6397.c
 
-Thanks, applied.
+Oh, I see, so basically both rtc-mt6397.c and mt6323-poweroff.c need
+to know at what offset RTC_WRTGR actually is. Correct?
 
-- Arnaldo
+Is there any plan to have mt6323-poweroff.c support any of the other
+PMICs (not just MT6323?)?
 
-> timestamp, it uses a different format. But that format had an extra new line
-> at the end, and caused the output to not look right:
-> 
-> cpus=2
->            sleep-3946  [001]111264306005
-> : function:             inotify_inode_queue_event
->            sleep-3946  [001]111264307158
-> : function:             __fsnotify_parent
->            sleep-3946  [001]111264307637
-> : function:             inotify_dentry_parent_queue_event
->            sleep-3946  [001]111264307989
-> : function:             fsnotify
->            sleep-3946  [001]111264308401
-> : function:             audit_syscall_exit
-> 
-> Fixes: 38847db9740a ("libtraceevent, perf tools: Changes in tep_print_event_* APIs")
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  tools/lib/traceevent/event-parse.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-> index beaa8b8c08ff..e1bd2a93c6db 100644
-> --- a/tools/lib/traceevent/event-parse.c
-> +++ b/tools/lib/traceevent/event-parse.c
-> @@ -5541,7 +5541,7 @@ static void print_event_time(struct tep_handle *tep, struct trace_seq *s,
->  	if (p10 > 1 && p10 < time)
->  		trace_seq_printf(s, "%5llu.%0*llu", time / p10, prec, time % p10);
->  	else
-> -		trace_seq_printf(s, "%12llu\n", time);
-> +		trace_seq_printf(s, "%12llu", time);
->  }
->  
->  struct print_event_type {
-> -- 
-> 2.20.1
+a. If not, I'd just add:
+#define RTC_WRTGR_MT6323 RTC_WRTGR_MT6397
+in rtc.h, for added clarity, use that in mt6323-poweroff.c
+(s/RTC_WRTGR/RTC_WRTGR_MT6323/), and be done with it.
 
+Actually, even if there's a plan, you can go ahead with this simpler
+solution for now, and fix later when the issue comes up.
+
+b. If you ever want to support multiple PMICs with mt6323-poweroff.c,
+you'd need that offset for 2 different sub-devices under the same mfd,
+so the matching logic belongs in the main mfd device, not in
+rtc/poweroff driver.
+
+So I'd move the matching logic in drivers/mfd/mt6397-core.c, and add
+rtc_wrtgr offset (or a full _data structure) to `struct mt6397_chip`,
+or, probably better, add a IORESOURCE_REG to the matching resources to
+specify the offset (that's what drivers/mfd/88pm860x-core.c seems to
+be doing, for example).
+
+And then mt6323-poweroff.c should probably be renamed to mt6397-poweroff.c.
+
+(actually, looking at this, I'm even questioning if mt6323-poweroff.c
+should even exist, and if you should just fold it into rtc-mt6397.c?
+Since they use the same registers?)
+
+Hope this makes sense?
+
+Best,
