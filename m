@@ -2,161 +2,117 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B04BBC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 992E5C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9378E21741
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7107E2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 14:49:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583333345;
+	bh=QFXby2p5LzoUoPyUUr+TPdMPjD5Y2lyN+ISp9f/PB+k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WBugnF3YHJUeM0Y6RJKPkqzVWmNWe8JMyOnxKoK5mgggT13fbXb/7Lfrqp4eqVhRg
+	 uTcVzT1kHNH0TT0Tc6fV759qgRPMlW2SahYHwUUHD0ABR0jvNzJs2RL1GuZlFJcxmO
+	 Yq8Mhu69H/2h1zjZjH4GnynxySb2O8Yr6wAdVQPM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728303AbgCDOrr (ORCPT
+        id S1728496AbgCDOtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 09:47:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58874 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725795AbgCDOrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 09:47:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BB493B01F;
-        Wed,  4 Mar 2020 14:47:44 +0000 (UTC)
-Subject: Re: [RFC PATCH] mm: Micro-optimisation: Save two branches on hot -
- page allocation path
-To:     mateusznosek0@gmail.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     akpm@linux-foundation.org, Mel Gorman <mgorman@suse.de>
-References: <20200304142230.8753-1-mateusznosek0@gmail.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <d582336f-6beb-df5e-ddda-b090ea21707b@suse.cz>
-Date:   Wed, 4 Mar 2020 15:47:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Wed, 4 Mar 2020 09:49:04 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44212 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725795AbgCDOtD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 09:49:03 -0500
+Received: by mail-wr1-f66.google.com with SMTP id n7so2703209wrt.11;
+        Wed, 04 Mar 2020 06:49:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ahY/ktb/Tn6dne+Gv/s9FpNDYukQ7zmj9C6Dhcf5KwI=;
+        b=pnw0vb8Neu/VV2Uh6Kp0+J8K7lx2KjGDD0eKfbj5H75lQGWGQGkfTZSj34z4XNCuXa
+         rxOA0cu1SO+VGCahWQ0cV1/ZeSL6V2cHsbh3DedzClmZVwUSTFM+7Vw1PUCSlzlRcafu
+         j82wk2vhSq8a8ZKA5KNL/t7SyXwSK/MOID6SL/aNqBgIh1uhfaD/vVoar9094sKb/2Zg
+         L9UGl48T71vK3mGOIqVC0V8dq1W7elRF8KETlDNS6bofGnW7O9XVchb/DH/VYIRNWHoD
+         bwhXOgqDEMC46BTtHycOoGnmuWmhGvSbeboi9twYSfNrx+JMpnSYMMKY8KghIjOUiDP/
+         tlnw==
+X-Gm-Message-State: ANhLgQ1Z3u39Y57/8jTDu+NltTvgo1dzaaLnb1d3nPSDeeU0/EPeiGAM
+        9IKVTGBfDkgTcu1qZXzH3EM=
+X-Google-Smtp-Source: ADFU+vtWTzfJYdWlQ8luVZD6y6cDm7sEDV5/bdS4EZV7rh1uOrQaH6mvrGnueAEamGKgKQwpL8CJ6g==
+X-Received: by 2002:adf:9cc7:: with SMTP id h7mr4317475wre.369.1583333341820;
+        Wed, 04 Mar 2020 06:49:01 -0800 (PST)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id b18sm40168570wrm.86.2020.03.04.06.49.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 06:49:01 -0800 (PST)
+Date:   Wed, 4 Mar 2020 14:48:58 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Cc:     Lucas Tanure <tanure@linux.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>, linux-hyperv@vger.kernel.org,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, Wei Liu <wei.liu@kernel.org>
+Subject: Re: [PATCH] HID: hyperv: NULL check before some freeing functions is
+ not needed.
+Message-ID: <20200304144858.xc6ekcvbzrhbggsc@debian>
+References: <20200229173007.61838-1-tanure@linux.com>
+ <CAO-hwJJDv=LnOQDbgWwg2sOccM9Tt-h=082Coi0aYdwG-CG-Kg@mail.gmail.com>
+ <20200302120951.fhdafzl5xtnmjrls@debian>
 MIME-Version: 1.0
-In-Reply-To: <20200304142230.8753-1-mateusznosek0@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200302120951.fhdafzl5xtnmjrls@debian>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's CC Mel.
-
-On 3/4/20 3:22 PM, mateusznosek0@gmail.com wrote:
-> From: Mateusz Nosek <mateusznosek0@gmail.com>
+On Mon, Mar 02, 2020 at 12:09:51PM +0000, Wei Liu wrote:
+> Hi Benjamin
 > 
-> This patch makes ALLOC_KSWAPD
-> equal to __GFP_KSWAPD_RACLAIM (cast to 'int').
+> On Mon, Mar 02, 2020 at 11:16:30AM +0100, Benjamin Tissoires wrote:
+> > On Sat, Feb 29, 2020 at 6:30 PM Lucas Tanure <tanure@linux.com> wrote:
+> > >
+> > > Fix below warnings reported by coccicheck:
+> > > drivers/hid/hid-hyperv.c:197:2-7: WARNING: NULL check before some freeing functions is not needed.
+> > > drivers/hid/hid-hyperv.c:211:2-7: WARNING: NULL check before some freeing functions is not needed.
+> > >
+> > > Signed-off-by: Lucas Tanure <tanure@linux.com>
+> > > ---
+> > 
+> > Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> > 
+> > Sasha, do you prefer taking this through your tree or through the HID
+> > one. I don't think we have much scheduled for hyperv, so it's up to
+> > you.
 > 
-> Thanks to that code like:
-> ```if (gfp_mask & __GFP_KSWAPD_RECLAIM)
-> 		alloc_flags |= ALLOC_KSWAPD;```
-> can be changed to:
-> ```alloc_flags |= (__force int) (gfp_mask &__GFP_KSWAPD_RECLAIM);```
-> Thanks to this one branch less is generated in the assembly.
+> Sasha stepped down as a hyperv maintainer a few days back. I will be
+> taking over maintenance of the hyperv tree.
 > 
-> In case of ALLOC_KSWAPD flag two branches are saved,
-> first one in code that always executes in the beggining of page allocation
-> and the second one in loop in page allocator slowpath.
+> The problem is at the moment I haven't got write access to the
+> repository hosted on git.kernel.org. That's something I will need to
+> sort out as soon as possible.
 > 
-> Signed-off-by: Mateusz Nosek <mateusznosek0@gmail.com>
+> In the meantime, it would be great if you can pick up this patch so that
+> it doesn't get lost while I sort out access on my side.
 
-I think it's fine and in line with similar optimisations done by Mel in the past.
+Hi Benjamin
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+I got access to the Hyper-V tree. I will be picking this patch up since
+I haven't got a confirmation from your side.
 
-Some nits below.
+Wei.
 
-> ---
->  mm/internal.h   |  2 +-
->  mm/page_alloc.c | 23 +++++++++++++++--------
->  2 files changed, 16 insertions(+), 9 deletions(-)
 > 
-> diff --git a/mm/internal.h b/mm/internal.h
-> index 86372d164476..7fb724977743 100644
-> --- a/mm/internal.h
-> +++ b/mm/internal.h
-> @@ -535,7 +535,7 @@ unsigned long reclaim_clean_pages_from_list(struct zone *zone,
->  #else
->  #define ALLOC_NOFRAGMENT	  0x0
->  #endif
-> -#define ALLOC_KSWAPD		0x200 /* allow waking of kswapd */
-> +#define ALLOC_KSWAPD		0x800 /* allow waking of kswapd */
-
-Add a comment that the value has to match the GFP flag?
-
->  
->  enum ttu_flags;
->  struct tlbflush_unmap_batch;
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 79e950d76ffc..73afd883eab5 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -3609,10 +3609,14 @@ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
->  static inline unsigned int
->  alloc_flags_nofragment(struct zone *zone, gfp_t gfp_mask)
->  {
-> -	unsigned int alloc_flags = 0;
-> +	unsigned int alloc_flags;
->  
-> -	if (gfp_mask & __GFP_KSWAPD_RECLAIM)
-> -		alloc_flags |= ALLOC_KSWAPD;
-> +	/*
-> +	 * __GFP_KSWAPD_RECLAIM is assumed to be the same as ALLOC_KSWAPD
-> +	 * to save a branch.
-> +	 */
-> +	BUILD_BUG_ON(__GFP_KSWAPD_RECLAIM != (__force gfp_t) ALLOC_KSWAPD);
-
-I think one BUILD_BUG_ON is enough...
-
-> +	alloc_flags = (__force int) (gfp_mask & __GFP_KSWAPD_RECLAIM);
->  
->  #ifdef CONFIG_ZONE_DMA32
->  	if (!zone)
-> @@ -4248,8 +4252,13 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
->  {
->  	unsigned int alloc_flags = ALLOC_WMARK_MIN | ALLOC_CPUSET;
->  
-> -	/* __GFP_HIGH is assumed to be the same as ALLOC_HIGH to save a branch. */
-> +	/*
-> +	 * __GFP_HIGH is assumed to be the same as ALLOC_HIGH
-> +	 * and __GFP_KSWAPD_RECLAIM is assumed to be the same as ALLOC_KSWAPD
-> +	 * to save two branches.
-> +	 */
->  	BUILD_BUG_ON(__GFP_HIGH != (__force gfp_t) ALLOC_HIGH);
-> +	BUILD_BUG_ON(__GFP_KSWAPD_RECLAIM != (__force gfp_t) ALLOC_KSWAPD);
-
-... and this would be the better one of the two.
-
-Thanks.
-
->  
->  	/*
->  	 * The caller may dip into page reserves a bit more if the caller
-> @@ -4257,7 +4266,8 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
->  	 * policy or is asking for __GFP_HIGH memory.  GFP_ATOMIC requests will
->  	 * set both ALLOC_HARDER (__GFP_ATOMIC) and ALLOC_HIGH (__GFP_HIGH).
->  	 */
-> -	alloc_flags |= (__force int) (gfp_mask & __GFP_HIGH);
-> +	alloc_flags |= (__force int)
-> +		(gfp_mask & (__GFP_HIGH | __GFP_KSWAPD_RECLAIM));
->  
->  	if (gfp_mask & __GFP_ATOMIC) {
->  		/*
-> @@ -4274,9 +4284,6 @@ gfp_to_alloc_flags(gfp_t gfp_mask)
->  	} else if (unlikely(rt_task(current)) && !in_interrupt())
->  		alloc_flags |= ALLOC_HARDER;
->  
-> -	if (gfp_mask & __GFP_KSWAPD_RECLAIM)
-> -		alloc_flags |= ALLOC_KSWAPD;
-> -
->  #ifdef CONFIG_CMA
->  	if (gfpflags_to_migratetype(gfp_mask) == MIGRATE_MOVABLE)
->  		alloc_flags |= ALLOC_CMA;
-> 
-
+> Thanks,
+> Wei.
