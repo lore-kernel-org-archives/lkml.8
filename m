@@ -2,166 +2,141 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715EDC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6847C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:10:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4918821775
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EE8F2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 19:10:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="g1F21Jna"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TAIlV8aN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729410AbgCDTI7 (ORCPT
+        id S2387706AbgCDTK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 14:08:59 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41286 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726440AbgCDTI7 (ORCPT
+        Wed, 4 Mar 2020 14:10:57 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:41898 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726440AbgCDTK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 14:08:59 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v4so3835194wrs.8
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 11:08:58 -0800 (PST)
+        Wed, 4 Mar 2020 14:10:56 -0500
+Received: by mail-qk1-f195.google.com with SMTP id b5so2765351qkh.8;
+        Wed, 04 Mar 2020 11:10:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=3SS4fekyQGzGk+bEcZn0ToSHy9OyXafStxdmWHS/l5c=;
-        b=g1F21JnaXgZ/b+fqRbHrmibZXuy6uq7quiVcj8o9bY3mtdTjKW3DwnytkGBBhsYcBz
-         uurPUDZheKBecYlKZ3hwqF8Cb18i0zHW+C8J92SS+gHJqjOdtmI/z5qi78VIzgn5ovdf
-         OctW/J68R2IVHrpLo6q3sEsBevRAWmSywJ3Vw=
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nM1dA0CwnvAM+gebairRIvq9J2g7Xu9WpCogn31XPBo=;
+        b=TAIlV8aNIDDYyO3ACIaObRlbYK3dBnJamRbkfvCJbacLxiZgD7T6PhJrwsOM/t+BJ3
+         pPWQVc2vDWHmcy+DS3TCkwxR+VnZAwBU9KoRg2adXHYZhWIlu1he3j6pukRHDnbKveGV
+         WhRW6QUl3vlCIM2AN7JkH9xdtJuahL0JrtLGc3rOa4/UykNbHqYvj2639Jk7f6NzsBSk
+         cgD3EdIWOeGy9DsqMhAmqK/iYgJJ092oG4XT24lb/VPaR0ItDN51TeqD0d/XGH+0ip05
+         lbndHnePSLHZVULLe27S1rUALeGOx1+U7kdqri+VEnnGYXt5FnNLHhu+Eanxp0Wcfi6N
+         7KpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=3SS4fekyQGzGk+bEcZn0ToSHy9OyXafStxdmWHS/l5c=;
-        b=ob0SBCgs5Q2SiGeMFF4kLQDVnxs5nfr4dIrQ8ZlWj2Gl2NNAV2lvMA+UHIMV7J2z74
-         DasW16iNv+mt711d1hOYPdN/xuUwtsmAPmiaKULDSrQHSms79UyWOuYn/cowYMebOXzY
-         HjUJ6Bhc+taBxadEtIkLK0I0oL7Uuwy1SEf3x1WhyzxRovof9IL54BZI5zVci3hTiBah
-         Hn3EpC7yKk3mv5AIFAxyclX82DXd65cxYSV4kdm6tmCc9kGWPPl+5Xylav1eipJwJHD1
-         4iB1xrluwvskDWsWoOnCAdK7hUuLn5f2eC3VcmWa25fQuPm9GH+OMba3s+2UkY7hY14z
-         dxxw==
-X-Gm-Message-State: ANhLgQ0zH7RX8MxshiiS604NEq5AgAZsxE0LX5IhTG4vSGzUs1Wvtqf+
-        Z/QBIBrd/IaQD6ObRZ6fHJutSQ==
-X-Google-Smtp-Source: ADFU+vvQX/rymjiQTTfmrRp8pXMzu+YTmiwg5naE9OKjaOSx1gH5F4Y92Cp+WVSUK0MJ9+BB0OphxQ==
-X-Received: by 2002:adf:b189:: with SMTP id q9mr4679569wra.169.1583348937825;
-        Wed, 04 Mar 2020 11:08:57 -0800 (PST)
-Received: from chromium.org (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id j14sm41257638wrn.32.2020.03.04.11.08.56
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nM1dA0CwnvAM+gebairRIvq9J2g7Xu9WpCogn31XPBo=;
+        b=ryrasN/sjNGeKQ+HG2XGxOVvuzTkkGtIds9m7Yp03CWkW+3cFGKZ0n16/pnOsvLF5W
+         8P8mXUJeNbwA0CH4y4HzrOgVjjlnwgoPlDBJRW4dK7aW1bFYNuGTCZAydrAyfhyVcB3U
+         ZIV1u2+YxIkkcRVMZ8bK3/JKR/cEQUlRYJDaBeh7G5QHC+Yzo3HSUgsLLzQpqDMT2n4T
+         3eMy7T734350JPfi0iDas9uJaBG30VYzwHaPgr5xtfQ0d4iNdpmfxiiLuCKllFTa3YEO
+         kDN99Cmh9Gs/iqSf9zUEo8cjAKkUrJX/38UJZQ4J2QMkiV2fITDPXDFsoMkcwUzl9mXE
+         WzoQ==
+X-Gm-Message-State: ANhLgQ3g6qC6fsOkBdZZmGUlePIAUJLkpA4Sdfqo0TKX4uUEzo99oJfV
+        G+kMFlvdgzJdKL2eVYmZ4tU=
+X-Google-Smtp-Source: ADFU+vufyb826SsxzvUtT1EsUhRKy/q1n1dOTjmZJPqrU5E86YpX38WayTTGOVMur15k1YgmK6OeSQ==
+X-Received: by 2002:a05:620a:5f8:: with SMTP id z24mr4396267qkg.203.1583349055725;
+        Wed, 04 Mar 2020 11:10:55 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 89sm14483809qth.3.2020.03.04.11.10.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 11:08:57 -0800 (PST)
-From:   KP Singh <kpsingh@chromium.org>
-X-Google-Original-From: KP Singh <kpsingh>
-Date:   Wed, 4 Mar 2020 20:08:55 +0100
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        linux-security-module@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
-        Florent Revest <revest@chromium.org>,
-        Brendan Jackman <jackmanb@chromium.org>
-Subject: Re: [PATCH bpf-next v3 1/7] bpf: Refactor trampoline update code
-Message-ID: <20200304190855.GA31073@chromium.org>
-References: <20200304154747.23506-1-kpsingh@chromium.org>
- <20200304154747.23506-2-kpsingh@chromium.org>
- <cb54c137-6d8e-b4e5-bd17-e0a05368c3eb@iogearbox.net>
- <20200304184441.GA25392@chromium.org>
- <CAEf4Bza4y_H+Avry=OdQ=j6Ey-niTYLafKUwicVeutmQ3X5g=g@mail.gmail.com>
+        Wed, 04 Mar 2020 11:10:55 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Wed, 4 Mar 2020 14:10:53 -0500
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] x86/mm/pat: Handle no-GBPAGES case correctly in
+ populate_pud
+Message-ID: <20200304191053.GA291311@rani.riverdale.lan>
+References: <20200303205445.3965393-1-nivedita@alum.mit.edu>
+ <20200303205445.3965393-2-nivedita@alum.mit.edu>
+ <CAKv+Gu_LmntqGjkakR0-SFSCR+JF+CFeKyc=5qzOdpn4wTvKhw@mail.gmail.com>
+ <20200304154908.GB998825@rani.riverdale.lan>
+ <CAKv+Gu-Xo2zj9_N+K8FrpBstgU57GZvWO-pDr4tRAODhsYzW-A@mail.gmail.com>
+ <20200304185042.GA281042@rani.riverdale.lan>
+ <CAKv+Gu-6YoJMLbR8UUsBeRPzk7r_4aKBprqay2kf6cKMPwsHgQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4Bza4y_H+Avry=OdQ=j6Ey-niTYLafKUwicVeutmQ3X5g=g@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-6YoJMLbR8UUsBeRPzk7r_4aKBprqay2kf6cKMPwsHgQ@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04-Mär 10:47, Andrii Nakryiko wrote:
-> On Wed, Mar 4, 2020 at 10:44 AM KP Singh <kpsingh@chromium.org> wrote:
+On Wed, Mar 04, 2020 at 08:04:04PM +0100, Ard Biesheuvel wrote:
+> On Wed, 4 Mar 2020 at 19:50, Arvind Sankar <nivedita@alum.mit.edu> wrote:
 > >
-> > On 04-Mär 19:37, Daniel Borkmann wrote:
-> > > On 3/4/20 4:47 PM, KP Singh wrote:
-> > > > From: KP Singh <kpsingh@google.com>
-> > > >
-> > > > As we need to introduce a third type of attachment for trampolines, the
-> > > > flattened signature of arch_prepare_bpf_trampoline gets even more
-> > > > complicated.
-> > > >
-> > > > Refactor the prog and count argument to arch_prepare_bpf_trampoline to
-> > > > use bpf_tramp_progs to simplify the addition and accounting for new
-> > > > attachment types.
-> > > >
-> > > > Signed-off-by: KP Singh <kpsingh@google.com>
-> > > > Acked-by: Andrii Nakryiko <andriin@fb.com>
+> > On Wed, Mar 04, 2020 at 07:44:50PM +0100, Ard Biesheuvel wrote:
 > > >
-> > > [...]
-> > > > diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.c
-> > > > index c498f0fffb40..9f7e0328a644 100644
-> > > > --- a/kernel/bpf/bpf_struct_ops.c
-> > > > +++ b/kernel/bpf/bpf_struct_ops.c
-> > > > @@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
-> > > >     struct bpf_struct_ops_value *uvalue, *kvalue;
-> > > >     const struct btf_member *member;
-> > > >     const struct btf_type *t = st_ops->type;
-> > > > +   struct bpf_tramp_progs *tprogs = NULL;
-> > > >     void *udata, *kdata;
-> > > >     int prog_fd, err = 0;
-> > > >     void *image;
-> > > > @@ -425,10 +426,18 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
-> > > >                     goto reset_unlock;
-> > > >             }
-> > > > +           tprogs = kcalloc(BPF_TRAMP_MAX, sizeof(*tprogs), GFP_KERNEL);
-> > > > +           if (!tprogs) {
-> > > > +                   err = -ENOMEM;
-> > > > +                   goto reset_unlock;
-> > > > +           }
-> > > > +
-> > >
-> > > Looking over the code again, I'm quite certain that here's a memleak
-> > > since the kcalloc() is done in the for_each_member() loop in the ops
-> > > update but then going out of scope and in the exit path we only kfree
-> > > the last tprogs.
+> > > I've tried a couple of different ways, but I can't seem to get my
+> > > memory map organized in the way that will trigger the error.
 > >
-> > You're right, nice catch. Fixing it.
+> > What does yours look like? efi_merge_regions doesn't merge everything
+> > that will eventually be mapped the same way, so if there are some
+> > non-conventional memory regions scattered over the address space, it
+> > might be breaking up the mappings to the point where this doesn't
+> > trigger.
 > 
-> There is probably no need to do many allocations as well, just one
-> outside of the loop and reuse?
-
-Yeah moved it out of the loop and before we grab the mutex, returning
-an -ENOMEM directly.
-
-Thanks for noticing this. Sending v4 now.
-
-- KP
-
+> I have a region
 > 
-> >
-> > - KP
-> >
-> > >
-> > > > +           tprogs[BPF_TRAMP_FENTRY].progs[0] = prog;
-> > > > +           tprogs[BPF_TRAMP_FENTRY].nr_progs = 1;
-> > > >             err = arch_prepare_bpf_trampoline(image,
-> > > >                                               st_map->image + PAGE_SIZE,
-> > > >                                               &st_ops->func_models[i], 0,
-> > > > -                                             &prog, 1, NULL, 0, NULL);
-> > > > +                                             tprogs, NULL);
-> > > >             if (err < 0)
-> > > >                     goto reset_unlock;
-> > > > @@ -469,6 +478,7 @@ static int bpf_struct_ops_map_update_elem(struct bpf_map *map, void *key,
-> > > >     memset(uvalue, 0, map->value_size);
-> > > >     memset(kvalue, 0, map->value_size);
-> > > >   unlock:
-> > > > +   kfree(tprogs);
-> > > >     mutex_unlock(&st_map->lock);
-> > > >     return err;
-> > > >   }
+> [    0.000000] efi: mem07: [Conventional Memory|   |  |  |  |  |  |  |
+>  |   |WB|WT|WC|UC] range=[0x0000000001400000-0x00000000b9855fff]
+> (2948MB)
+> 
+> which gets covered correctly
+> 
+> [    0.401766] 0x0000000000a00000-0x0000000040000000        1014M
+> RW         PSE         NX pmd
+> [    0.403436] 0x0000000040000000-0x0000000080000000           1G
+> RW         PSE         NX pud
+> [    0.404645] 0x0000000080000000-0x00000000b9800000         920M
+> RW         PSE         NX pmd
+> [    0.405844] 0x00000000b9800000-0x00000000b9a00000           2M
+> RW                     NX pte
+> [    0.407436] 0x00000000b9a00000-0x00000000baa00000          16M
+> ro         PSE         x  pmd
+> [    0.408591] 0x00000000baa00000-0x00000000bbe00000          20M
+> RW         PSE         NX pmd
+> [    0.409751] 0x00000000bbe00000-0x00000000bc000000           2M
+> RW                     NX pte
+> [    0.410821] 0x00000000bc000000-0x00000000be600000          38M
+> RW         PSE         NX pmd
+> 
+> However, the fact that you can provide a case where it does fail
+> should be sufficient justification for taking this patch. I was just
+> trying to give more than a regression-tested-by
+
+No, this case is exactly one that should break. But I think you're
+running on a processor model that _does_ support GB pages, as shown by
+the "pud" mapping there for the 1G-2G range.
+
+At least for my version of qemu, -cpu Haswell does not enable the
+pdpe1gb feature. Which cpu did you specify?
+
+Thanks.
