@@ -2,60 +2,81 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A048DC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B4ACC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:19:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A23D20848
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:15:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="lAgXXPlC"
+	by mail.kernel.org (Postfix) with ESMTP id CAACE20848
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 12:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387875AbgCDMP6 (ORCPT
+        id S2387953AbgCDMTq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 07:15:58 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:48204 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgCDMP6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 07:15:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=9BC75AUsCEMb6NVpGmioIBgwHtqsLwEozGF2RRogEWY=; b=lAgXXPlCT1UfHNmS1L3Zc3HKTX
-        w6X50fEZCH+5nViGjJfLIcc8vBvtW8Ay4kmibSfTln0Dmcu7okVj7jYwr4BCSUoclctVejRR1GMuX
-        BKC7YmX235NhVQtGHHDzVflLM4E6rAosnmMiKHjwAQOxnOxO3o9TrAVJWv4f1mObwzUVkRwPgeja2
-        0HcP28vimTXKJmHXi1gML+uvTCkxcrRAFq7j3Ho60+HTIWuquHNdcU3oXRqFM1VimthsyY4L3SIPY
-        Af1LPmFajJ0V73g20CxNx2njQ5RsdS3sHvW9qD2gS6F0Wsp3cy3LHfZF9F9W/tYIZWgjf6WAM34KX
-        RI06OicA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9SwJ-0001cL-1S; Wed, 04 Mar 2020 12:15:51 +0000
-Date:   Wed, 4 Mar 2020 04:15:50 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Xianting Tian <xianting_tian@126.com>
-Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/filemap.c: clear page error before actual read
-Message-ID: <20200304121550.GD29971@bombadil.infradead.org>
-References: <1583318844-22971-1-git-send-email-xianting_tian@126.com>
+        Wed, 4 Mar 2020 07:19:46 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:10723 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729118AbgCDMTq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 07:19:46 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BB74A70B5BC42A7D5B3D;
+        Wed,  4 Mar 2020 20:19:38 +0800 (CST)
+Received: from euler.huawei.com (10.175.104.193) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 4 Mar 2020 20:19:30 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <nbd@nbd.name>, <lorenzo.bianconi83@gmail.com>,
+        <ryder.lee@mediatek.com>, <linux-wireless@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <chenwandun@huawei.com>
+Subject: [PATCH] mt76: remove variable 'val' set but not used
+Date:   Wed, 4 Mar 2020 20:34:11 +0800
+Message-ID: <20200304123411.33499-1-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583318844-22971-1-git-send-email-xianting_tian@126.com>
+Content-Type: text/plain
+X-Originating-IP: [10.175.104.193]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 05:47:24AM -0500, Xianting Tian wrote:
-> With the patch, mount operation trigger the calling of
-> ClearPageError(page) before the actual read, the page has no error
-> if no additional page error happen when I/O done.
-> 
-> Signed-off-by: Xianting Tian <xianting_tian@126.com>
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Reviewed-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+drivers/net/wireless/mediatek/mt76/mt76x0/phy.c: In function mt76x0_phy_rf_init:
+drivers/net/wireless/mediatek/mt76/mt76x0/phy.c:1158:5: warning: variable val set but not used [-Wunused-but-set-variable]
+
+Fixes: 10de7a8b4ab9 ("mt76x0: phy files")
+Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+---
+ drivers/net/wireless/mediatek/mt76/mt76x0/phy.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c b/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
+index b56397c05218..09f34deb6ba1 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
++++ b/drivers/net/wireless/mediatek/mt76/mt76x0/phy.c
+@@ -1155,7 +1155,6 @@ static void mt76x0_rf_patch_reg_array(struct mt76x02_dev *dev,
+ static void mt76x0_phy_rf_init(struct mt76x02_dev *dev)
+ {
+ 	int i;
+-	u8 val;
+ 
+ 	mt76x0_rf_patch_reg_array(dev, mt76x0_rf_central_tab,
+ 				  ARRAY_SIZE(mt76x0_rf_central_tab));
+@@ -1188,7 +1187,7 @@ static void mt76x0_phy_rf_init(struct mt76x02_dev *dev)
+ 	 */
+ 	mt76x0_rf_wr(dev, MT_RF(0, 22),
+ 		     min_t(u8, dev->cal.rx.freq_offset, 0xbf));
+-	val = mt76x0_rf_rr(dev, MT_RF(0, 22));
++	mt76x0_rf_rr(dev, MT_RF(0, 22));
+ 
+ 	/* Reset procedure DAC during power-up:
+ 	 * - set B0.R73<7>
+-- 
+2.17.1
+
