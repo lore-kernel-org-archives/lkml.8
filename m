@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C0CC3F2C6
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71969C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DBE208C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC8220828
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 01:55:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="diuQQZmq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Qj2MnbGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387599AbgCDBzm (ORCPT
+        id S2387604AbgCDBzq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 3 Mar 2020 20:55:42 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36016 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387542AbgCDBzk (ORCPT
+        Tue, 3 Mar 2020 20:55:46 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40248 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387583AbgCDBzm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 3 Mar 2020 20:55:40 -0500
-Received: by mail-wr1-f68.google.com with SMTP id j16so384357wrt.3
-        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:55:38 -0800 (PST)
+        Tue, 3 Mar 2020 20:55:42 -0500
+Received: by mail-wm1-f66.google.com with SMTP id e26so146593wme.5
+        for <linux-kernel@vger.kernel.org>; Tue, 03 Mar 2020 17:55:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=K9JrqM5JMzXTlFc3C0mZ4CTndNQP6FjfUaUaduiowfI=;
-        b=diuQQZmqGutFF9yhxCtKf9QTJWaOTI1F5SANhhOYMxFXY28OvkPb4PCQLSPthgE2gX
-         XmiiOEDzYlelGdMj+nMk/GD0J1Im/w50pZLAjE4Q+QI6IgfgFaxh3fd4fwX/romsAYTY
-         BFPWtRwdkzGtE7fOdCdR76N4fmSUyDtArxC5U=
+        bh=LFwEDFxwFXmUVLWHUZGmwB/3Av3jfmxGtvvX+N4FdrI=;
+        b=Qj2MnbGGaVof30dTj27lh/GZBYLE3PIXTsAxY968A4WBF2LCnLGMHNx5w536mCOBWJ
+         kWzWp+sIQJ0HY2sfzs6Gv0oivqxnZ48PvtYlJSfAqI0rLyefi4arTvONE9v+n/Wmrnzl
+         54vExE7YOctQs++jGd+knO1HDUin25BmGNJWI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=K9JrqM5JMzXTlFc3C0mZ4CTndNQP6FjfUaUaduiowfI=;
-        b=N0TrGA+oF/DU7KH36Cvm2rovBDVVg01jkoM4f5YaB+7kVcssmdX//Cp6JYG5HofChL
-         w+ftozPJmtknkIKwfDKQYw8SRZix/COxVwwBmDr8+GfbQtvkH1cZPDr0Rz+/jVMviC82
-         3FYJYHYI+5CdRCQOj93ih0zPMHSbAFGsfn2EzOxRpErUPajicojCit/+ChES6kXxczE8
-         hG3+EvzGsdNNV6Jg36nf7l/0D46N8I17WE0RGfPndzH/rCUV4bEjYK2CN9ZKI2FhFWCm
-         PbJKYgdeH6Aa9dXaO53dnWXStXb3/2BLJ6wsey/y585iJyJGUe7bXX09lpUmPwGA4/qD
-         8o1g==
-X-Gm-Message-State: ANhLgQ0qhMhdzL4L0uzb5CljgxUPMaCsil2tDooXcKW46ABrKHZhfesl
-        CXmICDNtpL+/4aGmlDZfepiES+dbsS8=
-X-Google-Smtp-Source: ADFU+vvvaV3INdHEpxq1XBYwebg2D0dWz8iv8e0zS2eb69xEAEF5Lyq/lRSSUL98fhGoBIbi6C1NWw==
-X-Received: by 2002:adf:a512:: with SMTP id i18mr1026875wrb.61.1583286937985;
-        Tue, 03 Mar 2020 17:55:37 -0800 (PST)
+        bh=LFwEDFxwFXmUVLWHUZGmwB/3Av3jfmxGtvvX+N4FdrI=;
+        b=tI3nR20MU1gwhACF6chqzIZsTqfUHw/BM3PJpGVgzy5aEUQOYUeWmTMwiBxhV4GBis
+         BZ40No9Q+sVvlKsCxGh58+9UsRjsSV0dT0Vb6DL4mIWY5SxtHQGieP+Nv/cdPA8oKa8R
+         XhxVjDNXQcujxE7z4Vj+GeljH6n9Ot3BIQKk8aYlGJbEDqwwfkBmCO20CK/kE0Gc0srs
+         g0wdtHISyy1hhbGvgiN36NtaChw4VPUbd3nND8z0F4SFnsH7GlfMIOATgSlwu5idDsm5
+         KaFiwHmmdLyRDQ+FPJ54r/fJbc+42J1KR+vV1AbqpQgkpUx+l0qnASsuF97RT69puucP
+         DJOg==
+X-Gm-Message-State: ANhLgQ0gpp5Rzw405YO73LPQhQZe9BTKg68kLuG4Ye8OoIrkZW3/DUjG
+        ZdJX5+1Q1kE+h9OO/Fhg3UEeIA==
+X-Google-Smtp-Source: ADFU+vtP1w+hxhEvIU1HHqb6T0eu+C852+A3z482LZmcNH4X4lYJTf3fu9OeA25zRoU99Q/fgMWESQ==
+X-Received: by 2002:a1c:9dcb:: with SMTP id g194mr623325wme.114.1583286940417;
+        Tue, 03 Mar 2020 17:55:40 -0800 (PST)
 Received: from kpsingh-kernel.localdomain (77-56-209-237.dclient.hispeed.ch. [77.56.209.237])
-        by smtp.gmail.com with ESMTPSA id a184sm1475444wmf.29.2020.03.03.17.55.37
+        by smtp.gmail.com with ESMTPSA id a184sm1475444wmf.29.2020.03.03.17.55.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Mar 2020 17:55:37 -0800 (PST)
+        Tue, 03 Mar 2020 17:55:39 -0800 (PST)
 From:   KP Singh <kpsingh@chromium.org>
 To:     linux-security-module@vger.kernel.org,
         linux-kernel@vger.kernel.org, bpf@vger.kernel.org
@@ -61,9 +61,9 @@ Cc:     Alexei Starovoitov <ast@kernel.org>,
         Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
         Florent Revest <revest@chromium.org>,
         Brendan Jackman <jackmanb@chromium.org>
-Subject: [PATCH bpf-next v2 2/7] bpf: JIT helpers for fmod_ret progs
-Date:   Wed,  4 Mar 2020 02:55:23 +0100
-Message-Id: <20200304015528.29661-3-kpsingh@chromium.org>
+Subject: [PATCH bpf-next v2 4/7] bpf: Attachment verification for BPF_MODIFY_RETURN
+Date:   Wed,  4 Mar 2020 02:55:25 +0100
+Message-Id: <20200304015528.29661-5-kpsingh@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200304015528.29661-1-kpsingh@chromium.org>
 References: <20200304015528.29661-1-kpsingh@chromium.org>
@@ -76,204 +76,121 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: KP Singh <kpsingh@google.com>
 
-* Split the invoke_bpf program to prepare for special handling of
-  fmod_ret programs introduced in a subsequent patch.
-* Move the definition of emit_cond_near_jump and emit_nops as they are
-  needed for fmod_ret.
-* Refactor branch target alignment into its own function
-  align16_branch_target.
+- Allow BPF_MODIFY_RETURN attachment only to functions that are:
+
+    * Whitelisted by for error injection i.e. by checking
+      within_error_injection_list. Similar disucssions happened for the
+      bpf_overrie_return helper.
+
+    * security hooks, this is expected to be cleaned up with the LSM
+      changes after the KRSI patches introduce the LSM_HOOK macro:
+
+        https://lore.kernel.org/bpf/20200220175250.10795-1-kpsingh@chromium.org/
+
+- The attachment is currently limited to functions that return an int.
+  This can be extended later other types (e.g. PTR).
 
 Signed-off-by: KP Singh <kpsingh@google.com>
 ---
- arch/x86/net/bpf_jit_comp.c | 148 +++++++++++++++++++++---------------
- 1 file changed, 85 insertions(+), 63 deletions(-)
+ kernel/bpf/btf.c      | 28 ++++++++++++++++++++--------
+ kernel/bpf/verifier.c | 31 +++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index 15c7d28bc05c..d6349e930b06 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -1361,35 +1361,95 @@ static void restore_regs(const struct btf_func_model *m, u8 **prog, int nr_args,
- 			 -(stack_size - i * 8));
- }
- 
-+static int invoke_bpf_prog(const struct btf_func_model *m, u8 **pprog,
-+			   struct bpf_prog *p, int stack_size)
-+{
-+	u8 *prog = *pprog;
-+	int cnt = 0;
-+
-+	if (emit_call(&prog, __bpf_prog_enter, prog))
-+		return -EINVAL;
-+	/* remember prog start time returned by __bpf_prog_enter */
-+	emit_mov_reg(&prog, true, BPF_REG_6, BPF_REG_0);
-+
-+	/* arg1: lea rdi, [rbp - stack_size] */
-+	EMIT4(0x48, 0x8D, 0x7D, -stack_size);
-+	/* arg2: progs[i]->insnsi for interpreter */
-+	if (!p->jited)
-+		emit_mov_imm64(&prog, BPF_REG_2,
-+			       (long) p->insnsi >> 32,
-+			       (u32) (long) p->insnsi);
-+	/* call JITed bpf program or interpreter */
-+	if (emit_call(&prog, p->bpf_func, prog))
-+		return -EINVAL;
-+
-+	/* arg1: mov rdi, progs[i] */
-+	emit_mov_imm64(&prog, BPF_REG_1, (long) p >> 32,
-+		       (u32) (long) p);
-+	/* arg2: mov rsi, rbx <- start time in nsec */
-+	emit_mov_reg(&prog, true, BPF_REG_2, BPF_REG_6);
-+	if (emit_call(&prog, __bpf_prog_exit, prog))
-+		return -EINVAL;
-+
-+	*pprog = prog;
-+	return 0;
-+}
-+
-+static void emit_nops(u8 **pprog, unsigned int len)
-+{
-+	unsigned int i, noplen;
-+	u8 *prog = *pprog;
-+	int cnt = 0;
-+
-+	while (len > 0) {
-+		noplen = len;
-+
-+		if (noplen > ASM_NOP_MAX)
-+			noplen = ASM_NOP_MAX;
-+
-+		for (i = 0; i < noplen; i++)
-+			EMIT1(ideal_nops[noplen][i]);
-+		len -= noplen;
-+	}
-+
-+	*pprog = prog;
-+}
-+
-+static void emit_align(u8 **pprog, u32 align)
-+{
-+	u8 *target, *prog = *pprog;
-+
-+	target = PTR_ALIGN(prog, align);
-+	if (target != prog)
-+		emit_nops(&prog, target - prog);
-+
-+	*pprog = prog;
-+}
-+
-+static int emit_cond_near_jump(u8 **pprog, void *func, void *ip, u8 jmp_cond)
-+{
-+	u8 *prog = *pprog;
-+	int cnt = 0;
-+	s64 offset;
-+
-+	offset = func - (ip + 2 + 4);
-+	if (!is_simm32(offset)) {
-+		pr_err("Target %p is out of range\n", func);
-+		return -EINVAL;
-+	}
-+	EMIT2_off32(0x0F, jmp_cond + 0x10, offset);
-+	*pprog = prog;
-+	return 0;
-+}
-+
- static int invoke_bpf(const struct btf_func_model *m, u8 **pprog,
- 		      struct bpf_tramp_progs *tp, int stack_size)
- {
-+	int i;
- 	u8 *prog = *pprog;
--	int cnt = 0, i;
- 
- 	for (i = 0; i < tp->nr_progs; i++) {
--		if (emit_call(&prog, __bpf_prog_enter, prog))
--			return -EINVAL;
--		/* remember prog start time returned by __bpf_prog_enter */
--		emit_mov_reg(&prog, true, BPF_REG_6, BPF_REG_0);
--
--		/* arg1: lea rdi, [rbp - stack_size] */
--		EMIT4(0x48, 0x8D, 0x7D, -stack_size);
--		/* arg2: progs[i]->insnsi for interpreter */
--		if (!tp->progs[i]->jited)
--			emit_mov_imm64(&prog, BPF_REG_2,
--				       (long) tp->progs[i]->insnsi >> 32,
--				       (u32) (long) tp->progs[i]->insnsi);
--		/* call JITed bpf program or interpreter */
--		if (emit_call(&prog, tp->progs[i]->bpf_func, prog))
--			return -EINVAL;
--
--		/* arg1: mov rdi, progs[i] */
--		emit_mov_imm64(&prog, BPF_REG_1, (long) tp->progs[i] >> 32,
--			       (u32) (long) tp->progs[i]);
--		/* arg2: mov rsi, rbx <- start time in nsec */
--		emit_mov_reg(&prog, true, BPF_REG_2, BPF_REG_6);
--		if (emit_call(&prog, __bpf_prog_exit, prog))
-+		if (invoke_bpf_prog(m, &prog, tp->progs[i], stack_size))
- 			return -EINVAL;
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 30841fb8b3c0..50080add2ab9 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -3710,14 +3710,26 @@ bool btf_ctx_access(int off, int size, enum bpf_access_type type,
+ 		nr_args--;
  	}
- 	*pprog = prog;
-@@ -1531,42 +1591,6 @@ int arch_prepare_bpf_trampoline(void *image, void *image_end,
- 	return prog - (u8 *)image;
+ 
+-	if ((prog->expected_attach_type == BPF_TRACE_FEXIT ||
+-	     prog->expected_attach_type == BPF_MODIFY_RETURN) &&
+-	    arg == nr_args) {
+-		if (!t)
+-			/* Default prog with 5 args. 6th arg is retval. */
+-			return true;
+-		/* function return type */
+-		t = btf_type_by_id(btf, t->type);
++	if (arg == nr_args) {
++		if (prog->expected_attach_type == BPF_TRACE_FEXIT) {
++			if (!t)
++				return true;
++			t = btf_type_by_id(btf, t->type);
++		} else if (prog->expected_attach_type == BPF_MODIFY_RETURN) {
++			/* For now the BPF_MODIFY_RETURN can only be attached to
++			 * functions that return an int.
++			 */
++			if (!t)
++				return false;
++
++			t = btf_type_skip_modifiers(btf, t->type, NULL);
++			if (!btf_type_is_int(t)) {
++				bpf_log(log,
++					"ret type %s not allowed for fmod_ret\n",
++					btf_kind_str[BTF_INFO_KIND(t->info)]);
++				return false;
++			}
++		}
+ 	} else if (arg >= nr_args) {
+ 		bpf_log(log, "func '%s' doesn't have %d-th argument\n",
+ 			tname, arg + 1);
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index 2460c8e6b5be..ae32517d4ccd 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -19,6 +19,7 @@
+ #include <linux/sort.h>
+ #include <linux/perf_event.h>
+ #include <linux/ctype.h>
++#include <linux/error-injection.h>
+ 
+ #include "disasm.h"
+ 
+@@ -9800,6 +9801,33 @@ static int check_struct_ops_btf_id(struct bpf_verifier_env *env)
+ 
+ 	return 0;
  }
++#define SECURITY_PREFIX "security_"
++
++static int check_attach_modify_return(struct bpf_verifier_env *env)
++{
++	struct bpf_prog *prog = env->prog;
++	unsigned long addr = (unsigned long) prog->aux->trampoline->func.addr;
++
++	if (within_error_injection_list(addr))
++		return 0;
++
++	/* This is expected to be cleaned up in the future with the KRSI effort
++	 * introducing the LSM_HOOK macro for cleaning up lsm_hooks.h.
++	 */
++	if (!strncmp(SECURITY_PREFIX, prog->aux->attach_func_name,
++		     sizeof(SECURITY_PREFIX) - 1)) {
++
++		if (!capable(CAP_MAC_ADMIN))
++			return -EPERM;
++
++		return 0;
++	}
++
++	verbose(env, "fmod_ret attach_btf_id %u (%s) is not modifiable\n",
++		prog->aux->attach_btf_id, prog->aux->attach_func_name);
++
++	return -EINVAL;
++}
  
--static int emit_cond_near_jump(u8 **pprog, void *func, void *ip, u8 jmp_cond)
--{
--	u8 *prog = *pprog;
--	int cnt = 0;
--	s64 offset;
--
--	offset = func - (ip + 2 + 4);
--	if (!is_simm32(offset)) {
--		pr_err("Target %p is out of range\n", func);
--		return -EINVAL;
--	}
--	EMIT2_off32(0x0F, jmp_cond + 0x10, offset);
--	*pprog = prog;
--	return 0;
--}
--
--static void emit_nops(u8 **pprog, unsigned int len)
--{
--	unsigned int i, noplen;
--	u8 *prog = *pprog;
--	int cnt = 0;
--
--	while (len > 0) {
--		noplen = len;
--
--		if (noplen > ASM_NOP_MAX)
--			noplen = ASM_NOP_MAX;
--
--		for (i = 0; i < noplen; i++)
--			EMIT1(ideal_nops[noplen][i]);
--		len -= noplen;
--	}
--
--	*pprog = prog;
--}
--
- static int emit_fallback_jump(u8 **pprog)
+ static int check_attach_btf_id(struct bpf_verifier_env *env)
  {
- 	u8 *prog = *pprog;
-@@ -1589,7 +1613,7 @@ static int emit_fallback_jump(u8 **pprog)
- 
- static int emit_bpf_dispatcher(u8 **pprog, int a, int b, s64 *progs)
- {
--	u8 *jg_reloc, *jg_target, *prog = *pprog;
-+	u8 *jg_reloc, *prog = *pprog;
- 	int pivot, err, jg_bytes = 1, cnt = 0;
- 	s64 jg_offset;
- 
-@@ -1644,9 +1668,7 @@ static int emit_bpf_dispatcher(u8 **pprog, int a, int b, s64 *progs)
- 	 * Coding Rule 11: All branch targets should be 16-byte
- 	 * aligned.
- 	 */
--	jg_target = PTR_ALIGN(prog, 16);
--	if (jg_target != prog)
--		emit_nops(&prog, jg_target - prog);
-+	emit_align(&prog, 16);
- 	jg_offset = prog - jg_reloc;
- 	emit_code(jg_reloc - jg_bytes, jg_offset, jg_bytes);
- 
+@@ -10000,6 +10028,9 @@ static int check_attach_btf_id(struct bpf_verifier_env *env)
+ 		}
+ 		tr->func.addr = (void *)addr;
+ 		prog->aux->trampoline = tr;
++
++		if (prog->expected_attach_type == BPF_MODIFY_RETURN)
++			ret = check_attach_modify_return(env);
+ out:
+ 		mutex_unlock(&tr->mutex);
+ 		if (ret)
 -- 
 2.20.1
 
