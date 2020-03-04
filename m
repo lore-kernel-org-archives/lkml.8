@@ -5,235 +5,148 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCEAC3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:48:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9742C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:49:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F929217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:48:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D812217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 17:49:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N9D+7aqj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RmilMONI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730051AbgCDRsb (ORCPT
+        id S1730073AbgCDRtA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 12:48:31 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42766 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730026AbgCDRsb (ORCPT
+        Wed, 4 Mar 2020 12:49:00 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39463 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbgCDRs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 12:48:31 -0500
-Received: by mail-pf1-f194.google.com with SMTP id f5so1312301pfk.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:48:30 -0800 (PST)
+        Wed, 4 Mar 2020 12:48:59 -0500
+Received: by mail-pg1-f193.google.com with SMTP id s2so1328407pgv.6
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 09:48:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Klm/gkugAZBInebtG/UbZEqoUEq+E4EHAWBVa5BsR88=;
-        b=N9D+7aqjeuqrhULxHFuo0njvU779IDQ5vYLMBRWjiNsefh9Pp0rhzeZZP+9OXOCSd7
-         j3wjTyTCMtLHnT+WBrnaUCo7ltxToS4ZxEUk1y69gA5jwyaHE3+oha13Lb5jH4NxOtMD
-         9jMEq5oG8QGhs57rGrihfbQ+3Ql/sqiKElrsVnD+99H1pL13lkwUFKADglxu/WfVgNOI
-         Lkb/vIKMM3CRKcnkfhRTfG9huJ9R6xgq7Y9+JCZ9HXxxrdNA/u+5WW68CASQUqNggEKK
-         uGKkzGIhJt18BbYupgzBFGbtw4JzkiLU8RIsXvUMP2n5ldQOaIYSHWTXl8g37xX7xr69
-         NHBg==
+        bh=rbVdOqdLtvL6BAjB45nh8iw0l22p38/imiSMDTNUS1g=;
+        b=RmilMONIsWX5ITGHh/3Tz0BXxVTpJdfnbUH6z4TsuRn/17NBt+MvQoLd5buS1yOzUB
+         nkeJ7CFPtOhoNTRVbK9hwVHktFeafsOz6QkdmS717th+puCwcPR6bqz8e/Cdst2nwVnY
+         hbWoZziMH/zj7th1OSiCWAPA36t7dHUC2e/SSERdKVNmMeB8r/7HP2Ws6hnmI3f0G5ns
+         SGnuMyWia11GEv4g0Fc+8FXIcE6ubkJLJnpOkZp9lJ++OJz0tPA61fuUPn79XHBtHQLE
+         sVAigcD4F+628Wyct34PMr1uU5ByLCwgtoTM2QNSZKivmkGzTMJffZ6x9aVkt1a1LAKD
+         mEeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Klm/gkugAZBInebtG/UbZEqoUEq+E4EHAWBVa5BsR88=;
-        b=XhU4l0TdeDkVNpBuGGQmjjE5ENfTChiX5zX1Lxqb3j2gQ9bBTLqNZXyrnEnE22cIc/
-         T0VaSL8iOo4dGrwf4iPq2iwGkEqV7v9BzS30oSP1SJ3GnOQGbuLJweNBOu6HaKobSvWQ
-         1gGebJVjrCm5l15SVdhywZahhBHO8ntuMJeFAC/kCiRxKQYIXGU34tAXtlrkIUoTeVyM
-         wPYEcN4mb0Sjel5dJpuzKVpqiLuelbdXRsjSOGKtXVrR9JM25cH4mU6M9cvPXB7U0L5K
-         aJ6iRCfu+kgUUne0VPLio1IAyAT0p36kfY1xyk9i/rPKj2ca/BsmqWAl0yKemNbKRkte
-         VcPA==
-X-Gm-Message-State: ANhLgQ2+O2kfTffoYAZzFTR8Oyf2+A+Q4uuC125bMh83cWTnOUfBTlN+
-        eI1QnFEZ3rz48JoIB0HZ4EkVuw==
-X-Google-Smtp-Source: ADFU+vt7dxnlxzDsH0s7sppqFbTW0GfjdrD9B9JKQkoZT3StQ/9JSFa/FvHR8ZStm38O4sUj82cLfg==
-X-Received: by 2002:a62:154d:: with SMTP id 74mr1836149pfv.92.1583344109940;
-        Wed, 04 Mar 2020 09:48:29 -0800 (PST)
+        bh=rbVdOqdLtvL6BAjB45nh8iw0l22p38/imiSMDTNUS1g=;
+        b=SR9l4nbnPjmowJfuJ/pvrbdyiWmU0hGHuaD8NMhuqKfU0a33QBISgmccTZdl9WLqnw
+         /nIm5B8N8lzUioQ/opwd/pnuZu1+i7M6WMhb4eCzEIHSGrhWG9MMYOKUKdktF4EGwvdE
+         XBmX24pVhQM++FFRNfBQvSlKvZypSlqWYOOahaghTvwJ5SZWUpn8uCTnoiqvH92HfvST
+         ySkzySZKrasq27+vP1aXKFkgiDSBo45XskFSpkRgXdvD7cSRpb9FI99ZldLcVZXzPitL
+         9NZmifk2J+TWHIyMAjhsqpodjTo8GOuL5Crxmz8sj88Q0RClzBLtT8Qdo3UsBqupnyoi
+         mGFA==
+X-Gm-Message-State: ANhLgQ3UXH29Oz+1EcPFKN+rTgmGNKGNMbFQAPTF3VbUUJi2YhGgC8vF
+        bgxgI2xK8ma48zQQdJ2EZc0PNA==
+X-Google-Smtp-Source: ADFU+vtQk1N88Lqfci1AwA7ASz3zTHYO2ALb0KW4ABIckdRB45gMq7yc209oZ5jZ+JaAPbD9Ywz+1g==
+X-Received: by 2002:a62:25c3:: with SMTP id l186mr4167416pfl.52.1583344138873;
+        Wed, 04 Mar 2020 09:48:58 -0800 (PST)
 Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id q21sm30322579pff.105.2020.03.04.09.48.28
+        by smtp.gmail.com with ESMTPSA id k16sm2844987pfh.127.2020.03.04.09.48.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 09:48:29 -0800 (PST)
-Date:   Wed, 4 Mar 2020 10:48:27 -0700
+        Wed, 04 Mar 2020 09:48:58 -0800 (PST)
+Date:   Wed, 4 Mar 2020 10:48:56 -0700
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     Tero Kristo <t-kristo@ti.com>
 Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
         linux-remoteproc@vger.kernel.org, afd@ti.com, s-anna@ti.com,
         linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv7 07/15] remoteproc/omap: Add support for DRA7xx remote
- processors
-Message-ID: <20200304174827.GF8197@xps15>
+Subject: Re: [PATCHv7 08/15] remoteproc/omap: Remove the platform_data header
+Message-ID: <20200304174856.GG8197@xps15>
 References: <20200221101936.16833-1-t-kristo@ti.com>
- <20200221101936.16833-8-t-kristo@ti.com>
+ <20200221101936.16833-9-t-kristo@ti.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200221101936.16833-8-t-kristo@ti.com>
+In-Reply-To: <20200221101936.16833-9-t-kristo@ti.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 12:19:28PM +0200, Tero Kristo wrote:
-> From: Suman Anna <s-anna@ti.com>
+On Fri, Feb 21, 2020 at 12:19:29PM +0200, Tero Kristo wrote:
+> The platform data header for OMAP remoteproc is no longer used for
+> anything post ti-sysc and DT conversion, so just remove it completely.
 > 
-> DRA7xx/AM57xx SoCs have two IPU and up to two DSP processor subsystems
-> for offloading different computation algorithms. The IPU processor
-> subsystem contains dual-core ARM Cortex-M4 processors, and is very
-> similar to those on OMAP5. The DSP processor subsystem is based on
-> the TI's standard TMS320C66x DSP CorePac core.
-> 
-> Support has been added to the OMAP remoteproc driver through new
-> DRA7xx specific compatibles for properly probing and booting all
-> the different processor subsystem instances on DRA7xx/AM57xx
-> SoCs - IPU1, IPU2, DSP1 & DSP2. A build dependency with SOC_DRA7XX
-> is added to enable the driver to be built in DRA7xx-only configuration.
-> 
-> The DSP boot address programming needed enhancement for DRA7xx as the
-> boot register fields are different on DRA7 compared to OMAP4 and OMAP5
-> SoCs. The register on DRA7xx contains additional fields within the
-> register and the boot address bit-field is right-shifted by 10 bits.
-> The internal memory parsing logic has also been updated to compute
-> the device addresses for the L2 RAM for DSP devices using relative
-> addressing logic, and to parse two additional RAMs at L1 level - L1P
-> and L1D. This allows the remoteproc driver to support loading into
-> these regions for a small subset of firmware images requiring as
-> such. The most common usage would be to use the L1 programmable
-> RAMs as L1 Caches.
-> 
-> The firmware lookup logic also has to be adjusted for DRA7xx as
-> there are (can be) more than one instance of both the IPU and DSP
-> remote processors for the first time in OMAP4+ SoCs.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> [t-kristo@ti.com: moved address translation quirks to pdata]
 > Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> ---
->  drivers/remoteproc/Kconfig           |  2 +-
->  drivers/remoteproc/omap_remoteproc.c | 38 +++++++++++++++++++++++++++-
->  2 files changed, 38 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
-> index de3862c15fcc..b52abc2268cc 100644
-> --- a/drivers/remoteproc/Kconfig
-> +++ b/drivers/remoteproc/Kconfig
-> @@ -35,7 +35,7 @@ config MTK_SCP
->  
->  config OMAP_REMOTEPROC
->  	tristate "OMAP remoteproc support"
-> -	depends on ARCH_OMAP4 || SOC_OMAP5
-> +	depends on ARCH_OMAP4 || SOC_OMAP5 || SOC_DRA7XX
->  	depends on OMAP_IOMMU
->  	select MAILBOX
->  	select OMAP2PLUS_MBOX
-> diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> index 872cd0df342b..8c3dc0edae95 100644
-> --- a/drivers/remoteproc/omap_remoteproc.c
-> +++ b/drivers/remoteproc/omap_remoteproc.c
-> @@ -34,10 +34,13 @@
->   * struct omap_rproc_boot_data - boot data structure for the DSP omap rprocs
->   * @syscon: regmap handle for the system control configuration module
->   * @boot_reg: boot register offset within the @syscon regmap
-> + * @boot_reg_shift: bit-field shift required for the boot address value in
-> + *		    @boot_reg
->   */
->  struct omap_rproc_boot_data {
->  	struct regmap *syscon;
->  	unsigned int boot_reg;
-> +	unsigned int boot_reg_shift;
->  };
->  
->  /**
-> @@ -161,6 +164,8 @@ static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
->  	struct omap_rproc *oproc = rproc->priv;
->  	struct omap_rproc_boot_data *bdata = oproc->boot_data;
->  	u32 offset = bdata->boot_reg;
-> +	u32 value;
-> +	u32 mask;
->  
->  	if (rproc->bootaddr & (SZ_1K - 1)) {
->  		dev_err(dev, "invalid boot address 0x%x, must be aligned on a 1KB boundary\n",
-> @@ -168,7 +173,10 @@ static int omap_rproc_write_dsp_boot_addr(struct rproc *rproc)
->  		return -EINVAL;
->  	}
->  
-> -	regmap_write(bdata->syscon, offset, rproc->bootaddr);
-> +	value = rproc->bootaddr >> bdata->boot_reg_shift;
-> +	mask = ~(SZ_1K - 1) >> bdata->boot_reg_shift;
-> +
-> +	regmap_update_bits(bdata->syscon, offset, mask, value);
-
-Please handle the return value.  We can either do it now or in 3 months when
-someone with an automated tools sends a patch.  Besides, omap_rproc_start() is
-already expecting an error from omap_rproc_write_dsp_boot_addr() so it's even
-easier.
-
-With the above:
+> Acked-by: Suman Anna <s-anna@ti.com>
 
 Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 
->  
->  	return 0;
->  }
-> @@ -299,6 +307,13 @@ static const struct omap_rproc_mem_data ipu_mems[] = {
->  	{ },
->  };
->  
-> +static const struct omap_rproc_mem_data dra7_dsp_mems[] = {
-> +	{ .name = "l2ram", .dev_addr = 0x800000 },
-> +	{ .name = "l1pram", .dev_addr = 0xe00000 },
-> +	{ .name = "l1dram", .dev_addr = 0xf00000 },
-> +	{ },
-> +};
-> +
->  static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
->  	.device_name	= "dsp",
->  };
-> @@ -317,6 +332,16 @@ static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
->  	.mems		= ipu_mems,
->  };
->  
-> +static const struct omap_rproc_dev_data dra7_dsp_dev_data = {
-> +	.device_name	= "dsp",
-> +	.mems		= dra7_dsp_mems,
-> +};
-> +
-> +static const struct omap_rproc_dev_data dra7_ipu_dev_data = {
-> +	.device_name	= "ipu",
-> +	.mems		= ipu_mems,
-> +};
-> +
->  static const struct of_device_id omap_rproc_of_match[] = {
->  	{
->  		.compatible     = "ti,omap4-dsp",
-> @@ -334,6 +359,14 @@ static const struct of_device_id omap_rproc_of_match[] = {
->  		.compatible     = "ti,omap5-ipu",
->  		.data           = &omap5_ipu_dev_data,
->  	},
-> +	{
-> +		.compatible     = "ti,dra7-dsp",
-> +		.data           = &dra7_dsp_dev_data,
-> +	},
-> +	{
-> +		.compatible     = "ti,dra7-ipu",
-> +		.data           = &dra7_ipu_dev_data,
-> +	},
->  	{
->  		/* end */
->  	},
-> @@ -386,6 +419,9 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
->  		return -EINVAL;
->  	}
->  
-> +	of_property_read_u32_index(np, "ti,bootreg", 2,
-> +				   &oproc->boot_data->boot_reg_shift);
-> +
->  	return 0;
->  }
->  
+> ---
+>  include/linux/platform_data/remoteproc-omap.h | 51 -------------------
+>  1 file changed, 51 deletions(-)
+>  delete mode 100644 include/linux/platform_data/remoteproc-omap.h
+> 
+> diff --git a/include/linux/platform_data/remoteproc-omap.h b/include/linux/platform_data/remoteproc-omap.h
+> deleted file mode 100644
+> index 7e3a16097672..000000000000
+> --- a/include/linux/platform_data/remoteproc-omap.h
+> +++ /dev/null
+> @@ -1,51 +0,0 @@
+> -/* SPDX-License-Identifier: GPL-2.0-only */
+> -/*
+> - * Remote Processor - omap-specific bits
+> - *
+> - * Copyright (C) 2011 Texas Instruments, Inc.
+> - * Copyright (C) 2011 Google, Inc.
+> - */
+> -
+> -#ifndef _PLAT_REMOTEPROC_H
+> -#define _PLAT_REMOTEPROC_H
+> -
+> -struct rproc_ops;
+> -struct platform_device;
+> -
+> -/*
+> - * struct omap_rproc_pdata - omap remoteproc's platform data
+> - * @name: the remoteproc's name
+> - * @oh_name: omap hwmod device
+> - * @oh_name_opt: optional, secondary omap hwmod device
+> - * @firmware: name of firmware file to load
+> - * @mbox_name: name of omap mailbox device to use with this rproc
+> - * @ops: start/stop rproc handlers
+> - * @device_enable: omap-specific handler for enabling a device
+> - * @device_shutdown: omap-specific handler for shutting down a device
+> - * @set_bootaddr: omap-specific handler for setting the rproc boot address
+> - */
+> -struct omap_rproc_pdata {
+> -	const char *name;
+> -	const char *oh_name;
+> -	const char *oh_name_opt;
+> -	const char *firmware;
+> -	const char *mbox_name;
+> -	const struct rproc_ops *ops;
+> -	int (*device_enable)(struct platform_device *pdev);
+> -	int (*device_shutdown)(struct platform_device *pdev);
+> -	void (*set_bootaddr)(u32);
+> -};
+> -
+> -#if defined(CONFIG_OMAP_REMOTEPROC) || defined(CONFIG_OMAP_REMOTEPROC_MODULE)
+> -
+> -void __init omap_rproc_reserve_cma(void);
+> -
+> -#else
+> -
+> -static inline void __init omap_rproc_reserve_cma(void)
+> -{
+> -}
+> -
+> -#endif
+> -
+> -#endif /* _PLAT_REMOTEPROC_H */
 > -- 
 > 2.17.1
 > 
