@@ -2,135 +2,86 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A173BC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:25:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C99EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:25:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 795F8207FD
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:25:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="STXEfFko"
+	by mail.kernel.org (Postfix) with ESMTP id 6618220866
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 23:25:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388568AbgCDXZR (ORCPT
+        id S2388586AbgCDXZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 18:25:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42841 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2388412AbgCDXZQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 18:25:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583364314;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=p8juafuY9nBxbQdXTOkQQGLh3mRvbcDsJuPyMUd6LN0=;
-        b=STXEfFkooG2xzETDunDOLyL95ZsWSxibSRKSv8xISCbm/VAo/CBCFAJ1fGxsi/Lkq0sIi6
-        bMCYti5nBj/U51JbgpcOebLh7xHEYRKAxmvkny3UCiHFhDSkX55yHOlhVgTOMwpHmtolvI
-        BQ44X6Th6YPEjo6kTY8XrD2nsP7Obio=
-Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
- [209.85.208.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-bukvfzVQPjKJuX_JPW5kog-1; Wed, 04 Mar 2020 18:25:13 -0500
-X-MC-Unique: bukvfzVQPjKJuX_JPW5kog-1
-Received: by mail-ed1-f70.google.com with SMTP id r30so2836325edi.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 15:25:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=p8juafuY9nBxbQdXTOkQQGLh3mRvbcDsJuPyMUd6LN0=;
-        b=Ga3se2aFxgu32FAM/4WFAJM3Z7PfuK7LbtzYH1xfzLnSXSOHuyUULOMnzGDTz0vgJ1
-         W5h8CQythv/COskp4j8QlGL1+W8WQQaJ10vDjiwg8Jy97Yq9HPM9bx+SZHwOBHPydCzn
-         bcNUS8yYzQW6obD1tvivuAa2jMRkC4jQgaX69ry3v7w2NZw4YYnoiyQhCippMEMfR1Bv
-         AipP71tYpQyUW8e0t+24H5TSPSixoXKnWf08goOMtuNMfvYHM7S1BM489jrCdaH3Mqez
-         /OHClSfx+pV2zCE4He/sY8Z3B6yMs2mBjgk0fz1n588xi9/wMW49yltRNo3SDccTWQlF
-         rn9A==
-X-Gm-Message-State: ANhLgQ3SlgDNduMsO3fTL/PT7pPaBGYdqGxaDUyukUhZNW1Z9uF/Ynv0
-        BFY0i09m1qM8tq6JCtibpA0CGYF5IKD3fXHtK0Os1g+iM7rzjxvfzWqY3Y9AXtFIpc8YnE4HOA5
-        R4eee5CObd9NT4K1SBsXX1NQ33s6Z2iWJA8xQ/3KN
-X-Received: by 2002:aa7:cac4:: with SMTP id l4mr5308674edt.367.1583364311868;
-        Wed, 04 Mar 2020 15:25:11 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vtRn9VC83shY8XHTDzRhsN1U3qcWCfB7uMojQH5bbSmIYgKzcRcKNB9bk5ZyS5m8JegYhUQLyH/6undXUq6ODg=
-X-Received: by 2002:aa7:cac4:: with SMTP id l4mr5308663edt.367.1583364311594;
- Wed, 04 Mar 2020 15:25:11 -0800 (PST)
+        Wed, 4 Mar 2020 18:25:35 -0500
+Received: from mailoutvs4.siol.net ([185.57.226.195]:47879 "EHLO mail.siol.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388476AbgCDXZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 18:25:34 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 48B575235DD;
+        Thu,  5 Mar 2020 00:25:32 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id EXGg_K0T1SsA; Thu,  5 Mar 2020 00:25:32 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id F060252273A;
+        Thu,  5 Mar 2020 00:25:31 +0100 (CET)
+Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: 031275009)
+        by mail.siol.net (Postfix) with ESMTPSA id 749F35235DD;
+        Thu,  5 Mar 2020 00:25:29 +0100 (CET)
+From:   Jernej Skrabec <jernej.skrabec@siol.net>
+To:     a.hajda@samsung.com, narmstrong@baylibre.com
+Cc:     Laurent.pinchart@ideasonboard.com, jonas@kwiboo.se,
+        jernej.skrabec@siol.net, airlied@linux.ie, daniel@ffwll.ch,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] drm/bridge: dw-hdmi: Various updates
+Date:   Thu,  5 Mar 2020 00:25:08 +0100
+Message-Id: <20200304232512.51616-1-jernej.skrabec@siol.net>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20200223165724.23816-1-mcroce@redhat.com> <CAPcyv4ijKqVhHixsp42kZL4p7uReJ67p3XoPyw5ojM-ZsOOUOg@mail.gmail.com>
-In-Reply-To: <CAPcyv4ijKqVhHixsp42kZL4p7uReJ67p3XoPyw5ojM-ZsOOUOg@mail.gmail.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Thu, 5 Mar 2020 00:24:35 +0100
-Message-ID: <CAGnkfhxAHctB9MHD0LzSk8uh4tEoF-hw+iwYAEdfeY_=g3NT2A@mail.gmail.com>
-Subject: Re: [PATCH] block: refactor duplicated macros
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-bcache@vger.kernel.org,
-        linux-raid <linux-raid@vger.kernel.org>,
-        linux-mmc@vger.kernel.org,
-        xen-devel <xen-devel@lists.xenproject.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-nfs@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Anna Schumaker <anna.schumaker@netapp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 9:57 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Sun, Feb 23, 2020 at 9:04 AM Matteo Croce <mcroce@redhat.com> wrote:
-> >
-> > The macros PAGE_SECTORS, PAGE_SECTORS_SHIFT and SECTOR_MASK are defined
-> > several times in different flavours across the whole tree.
-> > Define them just once in a common header.
-> >
-> > Signed-off-by: Matteo Croce <mcroce@redhat.com>
-> > ---
-> >  block/blk-lib.c                  |  2 +-
-> >  drivers/block/brd.c              |  3 ---
-> >  drivers/block/null_blk_main.c    |  4 ----
-> >  drivers/block/zram/zram_drv.c    |  8 ++++----
-> >  drivers/block/zram/zram_drv.h    |  2 --
-> >  drivers/dax/super.c              |  2 +-
->
-> For the dax change:
->
-> Acked-by: Dan Williams <dan.j.williams@intel.com>
->
-> However...
->
-> [..]
-> >  include/linux/blkdev.h           |  4 ++++
-> [..]
-> > diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> > index 053ea4b51988..b3c9be6906a0 100644
-> > --- a/include/linux/blkdev.h
-> > +++ b/include/linux/blkdev.h
-> > @@ -910,6 +910,10 @@ static inline struct request_queue *bdev_get_queue(struct block_device *bdev)
-> >  #define SECTOR_SIZE (1 << SECTOR_SHIFT)
-> >  #endif
-> >
-> > +#define PAGE_SECTORS_SHIFT     (PAGE_SHIFT - SECTOR_SHIFT)
-> > +#define PAGE_SECTORS           (1 << PAGE_SECTORS_SHIFT)
-> > +#define SECTOR_MASK            (PAGE_SECTORS - 1)
-> > +
->
-> ...I think SECTOR_MASK is misnamed given it considers pages, and
-> should probably match the polarity of PAGE_MASK, i.e.
->
-> #define PAGE_SECTORS_MASK            (~(PAGE_SECTORS - 1))
->
+This series fixes multiple issues I found out.
+Patch 1 fixes reporting colorimetry in AVI frame.
+Patch 2 sets scan mode to underscan which is in line with most other
+hdmi drivers.
+Patch 3 aligns RGB quantization to CEA 861 standard.
+Patch 4 reworks is_color_space_conversion(). Now it checks only if
+color space conversion is required. Patch adds separate function for
+checking if any kind of conversion is required.
 
-Makes sense. I just kept the same value as in drivers/block/null_blk_main.c
+Please take a look.
 
--- 
-Matteo Croce
-per aspera ad upstream
+Best regards,
+Jernej
+
+Changes from v2:
+- added tags
+- replaced patch 2 with patch 4
+- renamed rgb conversion matrix and make hex lowercase
+- move logic for checking if rgb full to limited range conversion is
+  needed to is_color_space_conversion()
+- reworked logic for csc matrix selection
+
+Jernej Skrabec (3):
+  drm/bridge: dw-hdmi: fix AVI frame colorimetry
+  drm/bridge: dw-hdmi: Add support for RGB limited range
+  drm/bridge: dw-hdmi: rework csc related functions
+
+Jonas Karlman (1):
+  drm/bridge: dw-hdmi: do not force "none" scan mode
+
+ drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 132 ++++++++++++++--------
+ 1 file changed, 88 insertions(+), 44 deletions(-)
+
+--=20
+2.25.1
 
