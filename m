@@ -2,177 +2,159 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EF5C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:47:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE5AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:48:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B5320870
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:47:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5630E20870
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 18:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EDtBMEGX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eymAGfuN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730191AbgCDSrZ (ORCPT
+        id S1730221AbgCDSsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 13:47:25 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42732 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730021AbgCDSrZ (ORCPT
+        Wed, 4 Mar 2020 13:48:03 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36774 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729600AbgCDSsC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 13:47:25 -0500
-Received: by mail-pl1-f195.google.com with SMTP id u3so1396859plr.9
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 10:47:23 -0800 (PST)
+        Wed, 4 Mar 2020 13:48:02 -0500
+Received: by mail-qt1-f194.google.com with SMTP id t13so2187818qto.3;
+        Wed, 04 Mar 2020 10:48:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=from:to:cc:subject:references:date:in-reply-to:message-id
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=v7k2LSY5o0a0mFl+RRVR7ik9N89blp340TgtHce0C/0=;
-        b=EDtBMEGXyVh0fIWTILCelMI+gdPujV1YVwkkUtxmZXRCnRubtsvKd6W3PNh0hXlBwM
-         2zIvf/aoR8Fcav/eW6vzWXmFscf92ZP9exyXOSLvYmjwawdYhLwZCggQeDE0U3Iv/H3T
-         iD+uU2T0YXZ8TogJ+cDGBM1MY4TYgLpW0O5pSsy6y/O7ALQsOaI3080XQh5C5aFLoSrO
-         PzzpyL/0QnlUWq1IbM5lVTwDyTbY2LRUD9GIbuK9hdYG8RnlL4SRqhcgCoi9jxvotSCX
-         RXqeCWcAlxKXdkNW3mga27kZNWE69uvcV5w8B6sHugRXmT9yJ6opYplI4dAqd1zgJ9dc
-         wfYg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=15In9YVKQ2pHnhm9j0jbBoey+4goOkNMMZ6tPTLuAzo=;
+        b=eymAGfuNnH6CVQK5GO4lho+oipqQOkC49ZIvGmk3/QF3p82lWtXEvjm30QoxSaDYr4
+         +obg4AE9PJxqJI3IIPeHWCRNe6HlUVoyMNOuIBvBCEc8n/SbLsqOJKC3LghYmogzBfVb
+         xGNZ9T2loSur3Lc5NOAHWrsTGffxowBGp91ZfKefUYkgSKAjzfF9yzC357RNJ4ogQh8B
+         GzuLLUM+aqfq/yeTGspD09AUE4Sf+PX8idMhG6eZcrdzoiF47eUzZ0h5RkqyOprx8VQi
+         aqOR+rhIMgIS1Qg+9SzbIcDC3F7L27Y8B52KKenaKRxHi4Yh/Rr6thLTCzJ6RUlQS1Kr
+         35Lw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:references:date:in-reply-to
-         :message-id:user-agent:mime-version:content-transfer-encoding;
-        bh=v7k2LSY5o0a0mFl+RRVR7ik9N89blp340TgtHce0C/0=;
-        b=dmDm7+05ZW9K3ZFQWt75K9g3cs4CVa6ra4jrfrMmBJqCSNWjaawpwYkpqHpWeEWLnk
-         2UUR+rjdege1H+3IDEvK9QfPZwIfYgiCrEkyJpijfhQlYzWoR3Qp6nmwV17tBnXgEBGP
-         f8E6csbUQJivkoVHhTHvDmorOpeqV2sUQoM9Vud58l3nohROsGaFdKPA1AjgbsrdExTP
-         WTnGiywOVe2AXYGjc8l5YnrBBDty5UmY2iIV5qq0lcjrUNt11+Z1hJNr6JIICYYgoyR6
-         KrCxK8xcJJw0mvlS9S3ojU5v+XV0cVmOMnY/oY23tMU8k0Ms3xBv88vzkb1guh2WKcz+
-         U/jQ==
-X-Gm-Message-State: ANhLgQ0kz7HVY6kEkFE+4Cr0X1Ro6OMm5lBsQXGj9qKi6zSbHFsPdhHl
-        31C+dEPh85cvXHxSz40VN88tC2EpFtpqYQ==
-X-Google-Smtp-Source: ADFU+vs3HTTV9cA9wqFbN1eGeQT6xv4ysbaCuLl9iA4ak9z3V9hlR77q+D3bB1ifwxhcp90vGAWimA==
-X-Received: by 2002:a17:90a:fa06:: with SMTP id cm6mr4479428pjb.109.1583347641851;
-        Wed, 04 Mar 2020 10:47:21 -0800 (PST)
-Received: from bsegall-linux.svl.corp.google.com.localhost ([2620:15c:2cd:202:39d7:98b3:2536:e93f])
-        by smtp.gmail.com with ESMTPSA id f8sm28873667pfn.2.2020.03.04.10.47.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 10:47:20 -0800 (PST)
-From:   bsegall@google.com
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     =?utf-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        "open list\:SCHEDULER" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] sched: fix the nonsense shares when load of cfs_rq is too, small
-References: <44fa1cee-08db-e4ab-e5ab-08d6fbd421d7@linux.alibaba.com>
-        <20200303195245.GF2596@hirez.programming.kicks-ass.net>
-Date:   Wed, 04 Mar 2020 10:47:12 -0800
-In-Reply-To: <20200303195245.GF2596@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Tue, 3 Mar 2020 20:52:45 +0100")
-Message-ID: <xm26o8tc3qkv.fsf@bsegall-linux.svl.corp.google.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.3 (gnu/linux)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=15In9YVKQ2pHnhm9j0jbBoey+4goOkNMMZ6tPTLuAzo=;
+        b=CV0YnRkE13OGmxGDqhxzu5g2HGSbJzZtoRk30r2ZtZKK6K/ldnil75G0KaAC5XYWoE
+         ETu3Kut4R97+mLygMqSO7fv6jskj4LYkehumxY+14ATmIOGDuC24FbnnJ0N7QXwSbEJq
+         /dOfF53ldZbN0VcCUElWYVqBdWm12KinpEdqwhv6QnRhn+lWQA31Auyv/5qAMt0wlke+
+         zjP5VbUCHHJE7GjyDnARqOuSgnwSG9aPZeHNfVapW6KfWjXw0eAuK9RP9lZsUHTVg4to
+         +VI2SK4w8OZ+7GOAF1o2oqpC1DVF9LXvQBN8TLQa9gZX2TBdJXX5+yZ5OeAIrChw88N1
+         AJMA==
+X-Gm-Message-State: ANhLgQ1KaSftX80TZaKSQY5xtEmIw2oZPZ+UKv2DcPXIdUThutHEm0MY
+        CnNsR0nkuHJKmzKA84/9JqeGcV7SATYC5BnYp0I=
+X-Google-Smtp-Source: ADFU+vvzvuM/4z5OiYfYDR7O85wCTvENuORqBUvdXXXn8wovxobhaxU6YvN1G/m+LtaL09Da1fAc5wmYho8NHovfGl8=
+X-Received: by 2002:ac8:4d4b:: with SMTP id x11mr3650581qtv.171.1583347681515;
+ Wed, 04 Mar 2020 10:48:01 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20200304154747.23506-1-kpsingh@chromium.org> <20200304154747.23506-2-kpsingh@chromium.org>
+ <cb54c137-6d8e-b4e5-bd17-e0a05368c3eb@iogearbox.net> <20200304184441.GA25392@chromium.org>
+In-Reply-To: <20200304184441.GA25392@chromium.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 4 Mar 2020 10:47:50 -0800
+Message-ID: <CAEf4Bza4y_H+Avry=OdQ=j6Ey-niTYLafKUwicVeutmQ3X5g=g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v3 1/7] bpf: Refactor trampoline update code
+To:     KP Singh <kpsingh@chromium.org>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        linux-security-module@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-
-> On Tue, Mar 03, 2020 at 10:17:03PM +0800, =E7=8E=8B=E8=B4=87 wrote:
->> During our testing, we found a case that shares no longer
->> working correctly, the cgroup topology is like:
->>=20
->>   /sys/fs/cgroup/cpu/A		(shares=3D102400)
->>   /sys/fs/cgroup/cpu/A/B	(shares=3D2)
->>   /sys/fs/cgroup/cpu/A/B/C	(shares=3D1024)
->>=20
->>   /sys/fs/cgroup/cpu/D		(shares=3D1024)
->>   /sys/fs/cgroup/cpu/D/E	(shares=3D1024)
->>   /sys/fs/cgroup/cpu/D/E/F	(shares=3D1024)
->>=20
->> The same benchmark is running in group C & F, no other tasks are
->> running, the benchmark is capable to consumed all the CPUs.
->>=20
->> We suppose the group C will win more CPU resources since it could
->> enjoy all the shares of group A, but it's F who wins much more.
->>=20
->> The reason is because we have group B with shares as 2, which make
->> the group A 'cfs_rq->load.weight' very small.
->>=20
->> And in calc_group_shares() we calculate shares as:
->>=20
->>   load =3D max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_av=
-g);
->>   shares =3D (tg_shares * load) / tg_weight;
->>=20
->> Since the 'cfs_rq->load.weight' is too small, the load become 0
->> in here, although 'tg_shares' is 102400, shares of the se which
->> stand for group A on root cfs_rq become 2.
+On Wed, Mar 4, 2020 at 10:44 AM KP Singh <kpsingh@chromium.org> wrote:
 >
-> Argh, because A->cfs_rq.load.weight is B->se.load.weight which is
-> B->shares/nr_cpus.
+> On 04-M=C3=A4r 19:37, Daniel Borkmann wrote:
+> > On 3/4/20 4:47 PM, KP Singh wrote:
+> > > From: KP Singh <kpsingh@google.com>
+> > >
+> > > As we need to introduce a third type of attachment for trampolines, t=
+he
+> > > flattened signature of arch_prepare_bpf_trampoline gets even more
+> > > complicated.
+> > >
+> > > Refactor the prog and count argument to arch_prepare_bpf_trampoline t=
+o
+> > > use bpf_tramp_progs to simplify the addition and accounting for new
+> > > attachment types.
+> > >
+> > > Signed-off-by: KP Singh <kpsingh@google.com>
+> > > Acked-by: Andrii Nakryiko <andriin@fb.com>
+> >
+> > [...]
+> > > diff --git a/kernel/bpf/bpf_struct_ops.c b/kernel/bpf/bpf_struct_ops.=
+c
+> > > index c498f0fffb40..9f7e0328a644 100644
+> > > --- a/kernel/bpf/bpf_struct_ops.c
+> > > +++ b/kernel/bpf/bpf_struct_ops.c
+> > > @@ -320,6 +320,7 @@ static int bpf_struct_ops_map_update_elem(struct =
+bpf_map *map, void *key,
+> > >     struct bpf_struct_ops_value *uvalue, *kvalue;
+> > >     const struct btf_member *member;
+> > >     const struct btf_type *t =3D st_ops->type;
+> > > +   struct bpf_tramp_progs *tprogs =3D NULL;
+> > >     void *udata, *kdata;
+> > >     int prog_fd, err =3D 0;
+> > >     void *image;
+> > > @@ -425,10 +426,18 @@ static int bpf_struct_ops_map_update_elem(struc=
+t bpf_map *map, void *key,
+> > >                     goto reset_unlock;
+> > >             }
+> > > +           tprogs =3D kcalloc(BPF_TRAMP_MAX, sizeof(*tprogs), GFP_KE=
+RNEL);
+> > > +           if (!tprogs) {
+> > > +                   err =3D -ENOMEM;
+> > > +                   goto reset_unlock;
+> > > +           }
+> > > +
+> >
+> > Looking over the code again, I'm quite certain that here's a memleak
+> > since the kcalloc() is done in the for_each_member() loop in the ops
+> > update but then going out of scope and in the exit path we only kfree
+> > the last tprogs.
 >
->> While the se of D on root cfs_rq is far more bigger than 2, so it
->> wins the battle.
->>=20
->> This patch add a check on the zero load and make it as MIN_SHARES
->> to fix the nonsense shares, after applied the group C wins as
->> expected.
->>=20
->> Signed-off-by: Michael Wang <yun.wang@linux.alibaba.com>
->> ---
->>  kernel/sched/fair.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>=20
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 84594f8aeaf8..53d705f75fa4 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -3182,6 +3182,8 @@ static long calc_group_shares(struct cfs_rq *cfs_r=
-q)
->>  	tg_shares =3D READ_ONCE(tg->shares);
->>=20
->>  	load =3D max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load_av=
-g);
->> +	if (!load && cfs_rq->load.weight)
->> +		load =3D MIN_SHARES;
->>=20
->>  	tg_weight =3D atomic_long_read(&tg->load_avg);
+> You're right, nice catch. Fixing it.
+
+There is probably no need to do many allocations as well, just one
+outside of the loop and reuse?
+
 >
-> Yeah, I suppose that'll do. Hurmph, wants a comment though.
+> - KP
 >
-> But that has me looking at other users of scale_load_down(), and doesn't
-> at least update_tg_cfs_load() suffer the same problem?
-
-I think instead we should probably scale_load_down(tg_shares) and
-scale_load(load_avg). tg_shares is always a scaled integer, so just
-moving the source of the scaling in the multiply should do the job.
-
-ie
-
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index fcc968669aea..6d7a9d72d742 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -3179,9 +3179,9 @@ static long calc_group_shares(struct cfs_rq *cfs_rq)
-        long tg_weight, tg_shares, load, shares;
-        struct task_group *tg =3D cfs_rq->tg;
-=20
--       tg_shares =3D READ_ONCE(tg->shares);
-+       tg_shares =3D scale_load_down(READ_ONCE(tg->shares));
-=20
--       load =3D max(scale_load_down(cfs_rq->load.weight), cfs_rq->avg.load=
-_avg);
-+       load =3D max(cfs_rq->load.weight, scale_load(cfs_rq->avg.load_avg));
-=20
-        tg_weight =3D atomic_long_read(&tg->load_avg);
-=20
-
-
-
+> >
+> > > +           tprogs[BPF_TRAMP_FENTRY].progs[0] =3D prog;
+> > > +           tprogs[BPF_TRAMP_FENTRY].nr_progs =3D 1;
+> > >             err =3D arch_prepare_bpf_trampoline(image,
+> > >                                               st_map->image + PAGE_SI=
+ZE,
+> > >                                               &st_ops->func_models[i]=
+, 0,
+> > > -                                             &prog, 1, NULL, 0, NULL=
+);
+> > > +                                             tprogs, NULL);
+> > >             if (err < 0)
+> > >                     goto reset_unlock;
+> > > @@ -469,6 +478,7 @@ static int bpf_struct_ops_map_update_elem(struct =
+bpf_map *map, void *key,
+> > >     memset(uvalue, 0, map->value_size);
+> > >     memset(kvalue, 0, map->value_size);
+> > >   unlock:
+> > > +   kfree(tprogs);
+> > >     mutex_unlock(&st_map->lock);
+> > >     return err;
+> > >   }
