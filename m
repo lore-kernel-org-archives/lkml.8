@@ -2,118 +2,119 @@ Return-Path: <SRS0=idZ5=4V=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F679C3F2CE
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC465C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:24:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FE321739
-	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:24:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ltaenl3T"
+	by mail.kernel.org (Postfix) with ESMTP id A2D1C2146E
+	for <linux-kernel@archiver.kernel.org>; Wed,  4 Mar 2020 16:24:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388122AbgCDQYH (ORCPT
+        id S2388252AbgCDQYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 11:24:07 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35725 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728278AbgCDQYG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 11:24:06 -0500
-Received: by mail-ed1-f66.google.com with SMTP id cq8so2302155edb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 08:24:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cRSqqyVQcgkFGQEI4WVpqxDQwCK2dLecE852C4OPnck=;
-        b=ltaenl3Tu/Uh7cHCpFacONDPzzzqQrkNujMvp58M14/XfVcwRWa9kwro+hgX741c1H
-         cHnCwykPCAHfAWZmq+NsVrSJt60Ar5l8PBnPxMnYF4ldkMKjpzHC/rCTzyZ2/Y5h88kv
-         bqoO8m4mB+MtaoMBxxJ11DliaahtilK++IfG/BJkK+EQc+WHQeVm17p/OveeUZkNSqe0
-         fnvHDULD6vm31OuojQziBWWptXNAKl2Gm5Mmg7LKGLg1WqqMaCjgpG9u/AHjjImliWi0
-         gRKjn5q0WJI87Pj4LSzwHtJiNzyN3Axe7z4laTFODANHwTiIBlLYDY4JA7bRQl9r+IBc
-         f4PQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cRSqqyVQcgkFGQEI4WVpqxDQwCK2dLecE852C4OPnck=;
-        b=EsPDXQXVVhGqi5PZsViwW/8JxkoUeyKr40CX4CWr3k6ZnMkeH5T3fhB3OTUaRNbyPg
-         Zl96lG2+3uq0ltgzJqtK/tL9sG9JIPC/xmZ7/dXTrOXMpR2s4JXuPLRtof+QvkfVgAiP
-         3gHfQF9zI3P6ZQpIaCWOiNni0b7tJzxDTe8oTvamuw/1a4uQkBLGON9aCiOOUwxBY/dD
-         9A/HuUTF2pcpZNIMA5jorYGCpGPb7Z1kIDsEp3XMMMzxGacChSRj9hdyhtbsVmFXyq5Y
-         NKLRn6aLcza33JlQCpX6NyMDA1aJh//1cPA7BfYAHV8FMw4SyGt6KC5E+MVHfiiHuDc7
-         MdTg==
-X-Gm-Message-State: ANhLgQ0RCwLvY5/okcAhZU+es2sxNxx+97QkLq/qh+cbvO+qEbrA4wFY
-        tjXufuksJQvyOWVhzLjXZEkgGw==
-X-Google-Smtp-Source: ADFU+vuKkH6eC/TyjKp82VgLkReuX6Vu6bromPkvOyS874kNDx2MU23u3kTtssmvRyNsQaYULSffiA==
-X-Received: by 2002:a17:906:604c:: with SMTP id p12mr3231175ejj.202.1583339044755;
-        Wed, 04 Mar 2020 08:24:04 -0800 (PST)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id a40sm1535657edf.90.2020.03.04.08.24.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 08:24:03 -0800 (PST)
-Subject: Re: [PATCH v7 07/18] dt-bindings: usb: dwc3: Add a gpio-usb-connector
- example
-To:     Rob Herring <robh@kernel.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-References: <20200303171159.246992-1-bryan.odonoghue@linaro.org>
- <20200303171159.246992-8-bryan.odonoghue@linaro.org>
- <20200304145756.GA17484@bogus>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <1072c2cb-5b09-1725-4246-f19ef3899e4e@linaro.org>
-Date:   Wed, 4 Mar 2020 16:24:17 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200304145756.GA17484@bogus>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 4 Mar 2020 11:24:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42266 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729906AbgCDQYM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 11:24:12 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 491F7B4C4;
+        Wed,  4 Mar 2020 16:24:10 +0000 (UTC)
+Received: by unicorn.suse.cz (Postfix, from userid 1000)
+        id EB08DE037F; Wed,  4 Mar 2020 17:24:09 +0100 (CET)
+Message-Id: <7096f67e03509800c4e7011a93f4911c5cba5a67.1583337972.git.mkubecek@suse.cz>
+In-Reply-To: <cover.1583337972.git.mkubecek@suse.cz>
+References: <cover.1583337972.git.mkubecek@suse.cz>
+From:   Michal Kubecek <mkubecek@suse.cz>
+Subject: [PATCH net-next 3/5] tun: drop useless debugging statements
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+Date:   Wed,  4 Mar 2020 17:24:09 +0100 (CET)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/03/2020 14:57, Rob Herring wrote:
-> On Tue,  3 Mar 2020 17:11:48 +0000, Bryan O'Donoghue wrote:
->> A USB connector should be a child node of the USB controller
->> connector/usb-connector.txt. This patch adds an example of how to do this
->> to the dwc3 binding descriptions.
->>
->> It is necessary to declare a connector as a child-node of a USB controller
->> for role-switching to work, so this example should be helpful to others
->> implementing that.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: linux-usb@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Acked-by: Felipe Balbi <balbi@kernel.org>
->> Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
->> ---
->>   Documentation/devicetree/bindings/usb/dwc3.txt | 8 ++++++++
->>   1 file changed, 8 insertions(+)
->>
-> 
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
-> 
-> If a tag was not added on purpose, please state why and what changed.
-> 
+Some of the tun_debug() statements only inform us about entering
+a function which can be easily achieved with ftrace or kprobe. As
+tun_debug() is no-op unless TUN_DEBUG is set which requires editing the
+source and recompiling, setting up ftrace or kprobe is easier. Drop these
+debug statements.
 
-Yep apologies I forgot to add your
+Also drop the tun_debug() statement informing about SIOCSIFHWADDR ioctl.
+We can monitor these through rtnetlink and it makes little sense to log
+address changes through ioctl but not changes through rtnetlink. Moreover,
+this tun_debug() is called even if the actual address change fails which
+makes it even less useful.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Michal Kubecek <mkubecek@suse.cz>
+---
+ drivers/net/tun.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-when posting this one
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index 59290ef07497..15ae2050ab5b 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -473,8 +473,6 @@ static void tun_flow_cleanup(struct timer_list *t)
+ 	unsigned long count = 0;
+ 	int i;
+ 
+-	tun_debug(KERN_INFO, tun, "tun_flow_cleanup\n");
+-
+ 	spin_lock(&tun->lock);
+ 	for (i = 0; i < TUN_NUM_FLOW_ENTRIES; i++) {
+ 		struct tun_flow_entry *e;
+@@ -1420,8 +1418,6 @@ static __poll_t tun_chr_poll(struct file *file, poll_table *wait)
+ 
+ 	sk = tfile->socket.sk;
+ 
+-	tun_debug(KERN_INFO, tun, "tun_chr_poll\n");
+-
+ 	poll_wait(file, sk_sleep(sk), wait);
+ 
+ 	if (!ptr_ring_empty(&tfile->tx_ring))
+@@ -2192,8 +2188,6 @@ static ssize_t tun_do_read(struct tun_struct *tun, struct tun_file *tfile,
+ 	ssize_t ret;
+ 	int err;
+ 
+-	tun_debug(KERN_INFO, tun, "tun_do_read\n");
+-
+ 	if (!iov_iter_count(to)) {
+ 		tun_ptr_free(ptr);
+ 		return 0;
+@@ -2838,8 +2832,6 @@ static int tun_set_iff(struct net *net, struct file *file, struct ifreq *ifr)
+ 
+ 	netif_carrier_on(tun->dev);
+ 
+-	tun_debug(KERN_INFO, tun, "tun_set_iff\n");
+-
+ 	/* Make sure persistent devices do not get stuck in
+ 	 * xoff state.
+ 	 */
+@@ -2870,8 +2862,6 @@ static int tun_set_iff(struct net *net, struct file *file, struct ifreq *ifr)
+ 
+ static void tun_get_iff(struct tun_struct *tun, struct ifreq *ifr)
+ {
+-	tun_debug(KERN_INFO, tun, "tun_get_iff\n");
+-
+ 	strcpy(ifr->ifr_name, tun->dev->name);
+ 
+ 	ifr->ifr_flags = tun_flags(tun);
+@@ -3206,9 +3196,6 @@ static long __tun_chr_ioctl(struct file *file, unsigned int cmd,
+ 
+ 	case SIOCSIFHWADDR:
+ 		/* Set hw address */
+-		tun_debug(KERN_DEBUG, tun, "set hw address: %pM\n",
+-			  ifr.ifr_hwaddr.sa_data);
+-
+ 		ret = dev_set_mac_address(tun->dev, &ifr.ifr_hwaddr, NULL);
+ 		break;
+ 
+-- 
+2.25.1
+
