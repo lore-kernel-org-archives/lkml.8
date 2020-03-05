@@ -2,94 +2,85 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25C8C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E7CC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C49F2207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:07:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vJegXxrf"
+	by mail.kernel.org (Postfix) with ESMTP id 1E9C5207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:12:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCERHs (ORCPT
+        id S1726079AbgCERMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:07:48 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:10965 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726368AbgCERHs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:07:48 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583428067; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=pRNvHxX80n8wBj2lKTDP98u1doAk5pcKRHB2R9qvWTg=; b=vJegXxrfNp/xxk49Ls2o+wn8yUm9mFj1rro3nyxjaw7v2HtA3LndbPLlO3jePLKyYNnCywzf
- LjA1zdFYLfyxOWRflyyujw2BOO+Ra6K9vuSeSJcHfYZrmKnCbCOSsnlEKoF5dPZSio1rd8QL
- JigXnGDlc+wSMldwo60Grjb0aQo=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e6131d2.7f63685e0810-smtp-out-n03;
- Thu, 05 Mar 2020 17:07:30 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 3F016C433A2; Thu,  5 Mar 2020 17:07:30 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4B4B9C447A0;
-        Thu,  5 Mar 2020 17:07:26 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4B4B9C447A0
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v12 4/4] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new data
-Date:   Thu,  5 Mar 2020 22:37:03 +0530
-Message-Id: <1583428023-19559-5-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583428023-19559-1-git-send-email-mkshah@codeaurora.org>
-References: <1583428023-19559-1-git-send-email-mkshah@codeaurora.org>
+        Thu, 5 Mar 2020 12:12:05 -0500
+Received: from mga05.intel.com ([192.55.52.43]:19713 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbgCERME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:12:04 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 09:12:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="264040974"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Mar 2020 09:12:04 -0800
+Date:   Thu, 5 Mar 2020 09:12:04 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pu Wen <puwen@hygon.cn>
+Subject: Re: [PATCH v2 0/7] KVM: x86: CPUID emulation and tracing fixes
+Message-ID: <20200305171204.GI11500@linux.intel.com>
+References: <20200305013437.8578-1-sean.j.christopherson@intel.com>
+ <6071310f-dd4b-6a6d-5578-7b6f72a9b1be@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6071310f-dd4b-6a6d-5578-7b6f72a9b1be@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TCSes have previously programmed data when rpmh_flush is called.
-This can cause old data to trigger along with newly flushed.
+On Thu, Mar 05, 2020 at 05:42:59PM +0100, Paolo Bonzini wrote:
+> On 05/03/20 02:34, Sean Christopherson wrote:
+> > 
+> > In theory, everything up to the refactoring is non-controversial, i.e. we
+> > can bikeshed the refactoring without delaying the bug fixes.
+> 
+> Even the refactoring itself is much less controversial.  I queued
+> everything, there's always time to unqueue.
 
-Fix this by cleaning SLEEP and WAKE TCSes before new data is flushed.
+Looks like the build-time assertions don't play nice with older versions of
+gcc :-(
 
-Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/soc/qcom/rpmh.c | 5 +++++
- 1 file changed, 5 insertions(+)
+config: x86_64-randconfig-s2-20200305 (attached as .config)
+compiler: gcc-4.9 (Debian 4.9.2-10+deb8u1) 4.9.2
+reproduce:
+        # save the attached .config to linux build tree
+        make ARCH=x86_64 
 
-diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-index 1951f6a..63364ce 100644
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -472,6 +472,11 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
- 		return 0;
- 	}
- 
-+	/* Invalidate the TCSes first to avoid stale data */
-+	do {
-+		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
-+	} while (ret == -EAGAIN);
-+
- 	/* First flush the cached batch requests */
- 	ret = flush_batch(ctrlr);
- 	if (ret)
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+All error/warnings (new ones prefixed by >>):
+
+   In file included from include/linux/export.h:43:0,
+                    from include/linux/linkage.h:7,
+                    from include/linux/preempt.h:10,
+                    from include/linux/hardirq.h:5,
+                    from include/linux/kvm_host.h:7,
+                    from arch/x86/kvm/emulate.c:21:
+   arch/x86/kvm/emulate.c: In function 'em_cpuid':
+>> include/linux/compiler.h:350:38: error: call to '__compiletime_assert_3957' declared with attribute error: BUILD_BUG_ON failed: X86EMUL_CPUID_VENDOR_AuthenticAMD_ebx != *(u32 *)"Auth" || X86EMUL_CPUID_VENDOR_AuthenticAMD_edx != *(u32 *)"enti" || X86EMUL_CPUID_VENDOR_AuthenticAMD_ecx != *(u32 *)"cAMD"
+     _compiletime_assert(condition, msg, __compiletime_assert_, __LINE__)
+
