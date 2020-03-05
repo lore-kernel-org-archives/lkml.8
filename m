@@ -2,94 +2,122 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A46C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10076C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C155208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:48:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC9F62073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wlIYARPp"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOIeizyG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgCELsX (ORCPT
+        id S1727406AbgCELtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:48:23 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:55351 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727112AbgCELsX (ORCPT
+        Thu, 5 Mar 2020 06:49:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:57040 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726874AbgCELta (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:48:23 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583408902; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=pRNvHxX80n8wBj2lKTDP98u1doAk5pcKRHB2R9qvWTg=; b=wlIYARPpNNjZkNifScbbF88gdV9yBDVMZ1MwYCoypNHUlEOdICQwJrzVqcZOZfZmpW8rMuHb
- WBzT8Xgu2yX0Xgvu5IE1HV6hMBQRo6mhCgL4ZAW2k+qDDI2oQRoHvmB5rW0UXOSOOEX2kn9k
- n410W/h4KAe9TGUmIiN8rd3ZNvE=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e60e6fe.7fd756479ca8-smtp-out-n01;
- Thu, 05 Mar 2020 11:48:14 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B2064C447A5; Thu,  5 Mar 2020 11:48:13 +0000 (UTC)
-Received: from mkshah-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2EE5CC433A2;
-        Thu,  5 Mar 2020 11:48:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2EE5CC433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-From:   Maulik Shah <mkshah@codeaurora.org>
-To:     swboyd@chromium.org, mka@chromium.org, evgreen@chromium.org,
-        bjorn.andersson@linaro.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        agross@kernel.org, dianders@chromium.org, rnayak@codeaurora.org,
-        ilina@codeaurora.org, lsrao@codeaurora.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: [PATCH v11 4/4] soc: qcom: rpmh: Invalidate SLEEP and WAKE TCSes before flushing new data
-Date:   Thu,  5 Mar 2020 17:17:36 +0530
-Message-Id: <1583408856-1120-5-git-send-email-mkshah@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583408856-1120-1-git-send-email-mkshah@codeaurora.org>
-References: <1583408856-1120-1-git-send-email-mkshah@codeaurora.org>
+        Thu, 5 Mar 2020 06:49:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583408970;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jjEqvtB2T3AtCQceC0s+9bXMXtVod456eAE+2om8cIk=;
+        b=SOIeizyGvYWj68f4RSRcZb/HaxrU+Ik5AX5PlpS4FCuhl2skEbCDm3QJPsrEyOuxKcKEk/
+        4pUjQCR9rA4kBJslGlSJ9/6XDdXZcK5Fw8yDJknKsaFiM5Lc01otBM+lqPoFZx5udmn+Ju
+        FHN/U/sMusFni08Vk7hi/DtJu5dZid4=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-214-ngi2RAUtPYe8VXkTWGKpDg-1; Thu, 05 Mar 2020 06:49:28 -0500
+X-MC-Unique: ngi2RAUtPYe8VXkTWGKpDg-1
+Received: by mail-wr1-f69.google.com with SMTP id z16so2188041wrm.15
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 03:49:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jjEqvtB2T3AtCQceC0s+9bXMXtVod456eAE+2om8cIk=;
+        b=hTWSvfDBLkgh1o0uddBljrOqaFfTnUB1GD5HbzjTjNTtY+njLjAA03VcW4dKEBzlqc
+         1RnTbInUQrmeWEN1AEPLVkt7G9weIxO/8RdmjHseQd2p0197ZUz81ZvTuicrFgqEovMB
+         0+3xNMptsubEUtYcl8lk73xIXAdo6vbZlCzmRL9WINWUDz+vogMyVQfK7iCHWRbF/uab
+         +kwvKt7TrK+P4Z4LCtAWamgrnj/sFA+jbvxbpNSqm2D+YYJd4AtvGVKbt+a0kTtzH2Ox
+         6yktnGL2HI1a8NJBj5d+bXDg4ow/i0latD5D9qg4LiWsIQYNAoVuzGoDhjuSgUtg22sT
+         moWw==
+X-Gm-Message-State: ANhLgQ2Oe6soz/4RCtHclqb76mIYevYeYLpOvvoIh714Xz70sPtCq6yT
+        81Ekr6aQDvrQoiXknwIpTSYkUFMsVV/JNd2NXlzp9wrHG+R2tasIsH5pocV2ZJhJC64SKKAWwzS
+        5FE4pbxaQCmi++Nnz0Y5GvkoL
+X-Received: by 2002:a5d:4f03:: with SMTP id c3mr9700616wru.336.1583408966553;
+        Thu, 05 Mar 2020 03:49:26 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvWp4hDVBVG1qtAYBSlwG0TuP+swcJOdAhM8+FTa0BbErmeYy/trLgrnVFpjM/xmz56FptGfA==
+X-Received: by 2002:a5d:4f03:: with SMTP id c3mr9700595wru.336.1583408966345;
+        Thu, 05 Mar 2020 03:49:26 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
+        by smtp.gmail.com with ESMTPSA id n3sm9523174wmc.27.2020.03.05.03.49.25
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 03:49:25 -0800 (PST)
+Subject: Re: [PATCH] KVM: VMX: Use wrapper macro
+ ~RMODE_GUEST_OWNED_EFLAGS_BITS directly
+To:     linmiaohe <linmiaohe@huawei.com>, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
+References: <1583375731-18219-1-git-send-email-linmiaohe@huawei.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <f5aaab6f-8111-8d12-754f-027989fd4b06@redhat.com>
+Date:   Thu, 5 Mar 2020 12:49:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <1583375731-18219-1-git-send-email-linmiaohe@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TCSes have previously programmed data when rpmh_flush is called.
-This can cause old data to trigger along with newly flushed.
+On 05/03/20 03:35, linmiaohe wrote:
+> (X86_EFLAGS_IOPL | X86_EFLAGS_VM) indicates the eflag bits that can not be
+> owned by realmode guest, i.e. ~RMODE_GUEST_OWNED_EFLAGS_BITS.
 
-Fix this by cleaning SLEEP and WAKE TCSes before new data is flushed.
+... but ~RMODE_GUEST_OWNED_EFLAGS_BITS is the bits that are owned by the
+host; they could be 0 or 1 and that's why the code was using
+X86_EFLAGS_IOPL | X86_EFLAGS_VM.
 
-Fixes: 600513dfeef3 ("drivers: qcom: rpmh: cache sleep/wake state requests")
-Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
----
- drivers/soc/qcom/rpmh.c | 5 +++++
- 1 file changed, 5 insertions(+)
+I understand where ~RMODE_GUEST_OWNED_EFLAGS_BITS is better than
+X86_EFLAGS_IOPL | X86_EFLAGS_VM, but I cannot think of a way to express
+it that is the best of both worlds.
 
-diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
-index 1951f6a..63364ce 100644
---- a/drivers/soc/qcom/rpmh.c
-+++ b/drivers/soc/qcom/rpmh.c
-@@ -472,6 +472,11 @@ int rpmh_flush(struct rpmh_ctrlr *ctrlr)
- 		return 0;
- 	}
- 
-+	/* Invalidate the TCSes first to avoid stale data */
-+	do {
-+		ret = rpmh_rsc_invalidate(ctrlr_to_drv(ctrlr));
-+	} while (ret == -EAGAIN);
-+
- 	/* First flush the cached batch requests */
- 	ret = flush_batch(ctrlr);
- 	if (ret)
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Paolo
+
+ Use wrapper
+> macro directly to make it clear and also improve readability.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 743b81642ce2..9571f8dea016 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1466,7 +1466,7 @@ void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
+>  	vmx->rflags = rflags;
+>  	if (vmx->rmode.vm86_active) {
+>  		vmx->rmode.save_rflags = rflags;
+> -		rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
+> +		rflags |= ~RMODE_GUEST_OWNED_EFLAGS_BITS;
+>  	}
+>  	vmcs_writel(GUEST_RFLAGS, rflags);
+
