@@ -2,103 +2,111 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506A0C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A421C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 238F520848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:58:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V12JsjHT"
+	by mail.kernel.org (Postfix) with ESMTP id 2334C2072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583423947;
+	bh=OLPBLmwItKvaH4nVrV6rzwzGbuXn1dcCfQrCGq9tg5g=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=AA/aHaeyDKxOjf74enC+G8BlDmi4/ipaRo6YeHKP1H+XLAHRK7LUdmXPkL1OyCYD4
+	 1F24l0zXeEMZyBTs8fcUJoKehOvVbx8uhXcUK1idABZabJwI9GXQaL776DIRyQO213
+	 Q/0AVaj88OQ25C/dVzaW7kdq0SGQgThRouYMrV8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726275AbgCEP6k (ORCPT
+        id S1727064AbgCEP7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:58:40 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29948 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726143AbgCEP6j (ORCPT
+        Thu, 5 Mar 2020 10:59:06 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:35307 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbgCEP7F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:58:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583423919;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vcmbPSG7Ns1BCQM6qMZvbDUeuBY81aAMlv0waXN9f5o=;
-        b=V12JsjHTImEGtUWIvsWV9HLWkNDzBEKSGyTp82xGobfleUqg149FBO/KyA+MWks4nVlzj8
-        V0wDetNxi2fmDjDucbXxigscxiUbEtowV2YB2gTguESik5KLjXsX+D7xAZLj0RGl0idpT/
-        9TVy38AU7yIcCA8Ywgyml+UOfN64ToE=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-317-PIHivq34MQeIWEw2WWR3zQ-1; Thu, 05 Mar 2020 10:58:37 -0500
-X-MC-Unique: PIHivq34MQeIWEw2WWR3zQ-1
-Received: by mail-wm1-f71.google.com with SMTP id d129so2259628wmd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:58:37 -0800 (PST)
+        Thu, 5 Mar 2020 10:59:05 -0500
+Received: by mail-wr1-f66.google.com with SMTP id r7so7685737wro.2;
+        Thu, 05 Mar 2020 07:59:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=vcmbPSG7Ns1BCQM6qMZvbDUeuBY81aAMlv0waXN9f5o=;
-        b=RtG3y3j92+nDH4S7eLy+dtLvO6HfIU/mIlPrbawOcXwJzZkUB1wGS2Z9Ly7I5WOaAu
-         n3Z6LXYkAZwgHNd2Qwufw6S+wxpgbs6umUuatSt8zTIyXAKxqUmG5qcboOT84zlN/1nN
-         fWE/xXXKEwm907GUqBlSm1bJH1jPJUDDPbKJTjMngqwg7KIQpCsrJHNBXgN81yw9bm2X
-         uT9e8g53HZpXzrQSGFWWTmzTSYBbc8zStCYhI1c2rp0cETwz9+5+jk+6yuqb4iGJq4lK
-         jFJl8ey8x87KjALkexF7srTqBrasMzcJWtiYtwlO+0EvAo9bqp+tkzUauDuIwZ3ehwOm
-         UJfA==
-X-Gm-Message-State: ANhLgQ3JIREiLLyFfN30koiok7Nti6jGdX7Id0V4emgdjSEsA+N8/6Zz
-        5qE3Wi94G3CRurdIkzQc/IbgPWk8Y52nZouTZVgepUQr6g+ny6tF+8gkh2gUuI8AIdQ6UN8w0LL
-        J3tIKsfexQLElE694bGxefu6m
-X-Received: by 2002:a5d:630a:: with SMTP id i10mr10613139wru.273.1583423916362;
-        Thu, 05 Mar 2020 07:58:36 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vs2tnnfpQubkBdyyW38Ps48EoLmLBMqtqEn0LHkSSBuz/+LpaZRPiwmvos+UYZioFDdZJfdLg==
-X-Received: by 2002:a5d:630a:: with SMTP id i10mr10613126wru.273.1583423916167;
-        Thu, 05 Mar 2020 07:58:36 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id d203sm9339731wmd.37.2020.03.05.07.58.35
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=aCB9L1TCzoGV2wPRhB/5CLpoAqtfcOA7EFraTWxgd74=;
+        b=cqGlS1xk7wG0NnLLcjcuNia/wPD/dnf24mXs/sLI6jPUC9sTUEK4xUiJrtdGm1k53s
+         BrI43owyJlBG4F0A9J/7YKfRMBqT7atv6xN6RkA1QUU4MdfCvGg8G2+1NYCB9paT2AtS
+         srO6t25Ffjt8N3N0wyZd7/l20k+j2vdJ6jOYHpA1UZXKjxR0+ucRwhqgWSsSZm3ZWpKh
+         ZN9ShH0gabqZaVCZuqZFxrqcF7DYPCAqfez+Ij8Ghyr6femvl/Xvrv24/ZCQYGivhP76
+         B2aRW91+zQeyNysegH6VCL+P9vFA/k5aBB6f00iK+Tus9p+m8k881o+ExJQvvKXwJW42
+         UshQ==
+X-Gm-Message-State: ANhLgQ1x3HPWuoXlJ9e8VSeFrkJnUa2GYrJGq1eJ3hE2J4t1sVXOo3Bn
+        ESn9A2DrnBEpluTq4uDY0yQ=
+X-Google-Smtp-Source: ADFU+vvMwTPvKadCAFBemUxuFtpBthjV2ZtzZjzNC6JbbgqinjgxbqNSGThIPS/v5DHroI6F6JDlCg==
+X-Received: by 2002:a5d:5290:: with SMTP id c16mr2345631wrv.235.1583423944306;
+        Thu, 05 Mar 2020 07:59:04 -0800 (PST)
+Received: from debian (41.142.6.51.dyn.plus.net. [51.6.142.41])
+        by smtp.gmail.com with ESMTPSA id p15sm9453994wma.40.2020.03.05.07.59.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 07:58:35 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] KVM: x86: VMX: rename 'kvm_area' to 'vmxon_region'
-In-Reply-To: <20200305153623.GA11500@linux.intel.com>
-References: <20200305100123.1013667-1-vkuznets@redhat.com> <20200305100123.1013667-2-vkuznets@redhat.com> <20200305153623.GA11500@linux.intel.com>
-Date:   Thu, 05 Mar 2020 16:58:35 +0100
-Message-ID: <875zfig5ec.fsf@vitty.brq.redhat.com>
+        Thu, 05 Mar 2020 07:59:03 -0800 (PST)
+Date:   Thu, 5 Mar 2020 15:59:02 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Wei Liu <wei.liu@kernel.org>, kys@microsoft.com,
+        sthemmin@microsoft.com, linux-kernel@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, mikelley@microsoft.com,
+        sashal@kernel.org, haiyangz@microsoft.com
+Subject: [GIT PULL] Hyper-V commits for 5.6-rc
+Message-ID: <20200305155901.xmstcqwutrb6s7pi@debian>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> writes:
+Hi Linus,
 
-> Super nit: can I convince you to use "KVM: VMX:" instead of "KVM: x86: VMX:"?
->
->   $ glo | grep -e "KVM: x86: nVMX" -e "KVM: x86: VMX:" | wc -l
->   8
->   $ glo | grep -e "KVM: nVMX" -e "KVM: VMX:" | wc -l
->   1032
->
-> I'm very conditioned to scan for "KVM: *VMX:", e.g. I was about to complain
-> that this used the wrong scope :-)   And in the event that Intel adds a new
-> technology I'd like to be able to use "KVM: Intel:" and "KVM: ***X:"
-> instead of "KVM: x86: Intel:" and "KVM: x86: Intel: ***X:" for code that is
-> common to Intel versus specific to a technology.
+Sasha Levin recently stepped down as the Hyper-V tree maintainer and I
+(along with Haiyang Zhang) will be responsible for sending Hyper-V
+patches to you.
 
-What if someone else adds VMX instead? :-)
+This is mostly a "dry-run" attempt to sort out any wrinkles on my end.
+If I have done something stupid, let me know.
 
-Point taken, will use 'KVM: VMX:' in the future (and I'm in no way
-object to changing this in the queue if it's not too late).
+Please pull from the signed tag below.
 
--- 
-Vitaly
+The following changes since commit 98d54f81e36ba3bf92172791eba5ca5bd813989b:
 
+  Linux 5.6-rc4 (2020-03-01 16:38:46 -0600)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git
+tags/hyperv-fixes-signed
+
+for you to fetch changes up to 5313b2a58ef02e2b077d7ae8088043609e3155b0:
+
+  HID: hyperv: NULL check before some freeing functions is not needed.
+(2020-03-05 14:17:11 +0000)
+
+----------------------------------------------------------------
+- Update MAINTAINERS file for Hyper-V.
+- One cleanup patch for Hyper-V HID driver.
+
+----------------------------------------------------------------
+Lucas Tanure (1):
+      HID: hyperv: NULL check before some freeing functions is not needed.
+
+Sasha Levin (1):
+      Hyper-V: Drop Sasha Levin from the Hyper-V maintainers
+
+Wei Liu (1):
+      Hyper-V: add myself as a maintainer
+
+ MAINTAINERS              | 2 +-
+ drivers/hid/hid-hyperv.c | 6 ++----
+ 2 files changed, 3 insertions(+), 5 deletions(-)
