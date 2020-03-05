@@ -2,145 +2,137 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D085C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6029EC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE0A2072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:58:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D962072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bp/oVG+8"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Q5g8rYEb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgCET65 (ORCPT
+        id S1726179AbgCEUBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 14:58:57 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59450 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726111AbgCET65 (ORCPT
+        Thu, 5 Mar 2020 15:01:18 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45082 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726049AbgCEUBR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 14:58:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583438335;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=sjNlsKr8cYuTWQZFPGpix1p72ETxPzBpElmBC4ikTQ0=;
-        b=Bp/oVG+8Eo+GTLSyPMmCJcMuYFFxCILitXfd/rHDOdPDJ37LtVhqmOc+IvtMm7jUC6I+kP
-        tMbR5st1pHin0hKcq1MbgP85Kuw//g+Z/PneDGi01gpGNqcTNx3L+weDshFP58K3TwBT1v
-        AUqt3vTaozbk0kCnWxkYfsUC61cR0qM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-89-F9cq20IJMQyPoxTd_jUKlw-1; Thu, 05 Mar 2020 14:58:50 -0500
-X-MC-Unique: F9cq20IJMQyPoxTd_jUKlw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AB3F8017CC;
-        Thu,  5 Mar 2020 19:58:47 +0000 (UTC)
-Received: from sandy.ghostprotocols.net (ovpn-112-13.phx2.redhat.com [10.3.112.13])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AE4110016EB;
-        Thu,  5 Mar 2020 19:58:46 +0000 (UTC)
-Received: by sandy.ghostprotocols.net (Postfix, from userid 1000)
-        id 6C41A121; Thu,  5 Mar 2020 16:58:43 -0300 (BRT)
-Date:   Thu, 5 Mar 2020 16:58:43 -0300
-From:   Arnaldo Carvalho de Melo <acme@redhat.com>
-To:     zhe.he@windriver.com
-Cc:     Andi Kleen <ak@linux.intel.com>, jolsa@kernel.org, meyerk@hpe.com,
-        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
-        acme@kernel.org
-Subject: Re: [PATCH] perf: Fix crash due to null pointer dereference when
- iterating cpu map
-Message-ID: <20200305195843.GA7262@redhat.com>
-References: <1583405239-352868-1-git-send-email-zhe.he@windriver.com>
- <20200305152755.GA6958@redhat.com>
- <20200305183206.GA1454533@tassilo.jf.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305183206.GA1454533@tassilo.jf.intel.com>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.5.20 (2009-12-10)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Thu, 5 Mar 2020 15:01:17 -0500
+Received: by mail-qt1-f195.google.com with SMTP id a4so5121450qto.12
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 12:01:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=EtvUYpx/Z6jkOZvIKTGZ1YcNxmsRMa5tAVsSg5EuMhY=;
+        b=Q5g8rYEbooZCweqZN9vq52DV5MrDA80j55ts6X0pDZ5lQA7onJ4ZLCWhc1Ih5wtCZn
+         bDB9MUgEAa4hLg2LgEvy3EN3aBTsbXRTYXG5+b6DxpzxbCoZEtqESFI6uPAxr0h7Ok5Z
+         ZDi2D8FmgdAPKe4MJHMGZP2fBtt9d9ZQoeFUes3aj/+EIscyYpBwFB+sZmx5Tjun42eb
+         hUPY7LkUcH0cAIiAcSvecVxXJerpkQY26TU2F3Ck4RyJg50ydFcNnAG5Xkeye628LHDQ
+         eACQJjlGaMUXaL2fOMqECgtEKRq9fI4SdQbtsf7neiVrjGBah0jSzkSoVgPgYSGyXuzz
+         3lPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=EtvUYpx/Z6jkOZvIKTGZ1YcNxmsRMa5tAVsSg5EuMhY=;
+        b=g6VPfYj7OCO7jwwz6zRzXfCV7eYON4Xq6QNmnbv+aozGmm+4iNUzMKDkjagrppRCeI
+         vesPQWB7EBH/cwQF07ZEJ9EhOf3uhd3K8kWH9a4kABUI21SM+PbBEvUiiLF8S0MynVdK
+         EHOZtTFF5xXdd0GbfflhGUjQyoqibexORYWdNM2m5ev85QrZNt6XMx9CwyyvtavS2bTD
+         DTleEB3pFtXCxqjZutTBch7AadUcm4arQEFVcgA2/FEO7bzRuWUg+L1aib89GvJzn8+2
+         uPKuKGeSN9+mfTeE8EldFzhnu3lhUB2vATJnVlumC0ii8hB8H5xqAn4dT/41Z07XajzV
+         ZUQA==
+X-Gm-Message-State: ANhLgQ3YTqpIpu74lHpueOKtufCovQuaexbRdy6c94qmaJc1VBSaIn00
+        mduLGS7ZPNc6Y+l+0eev+beqMw==
+X-Google-Smtp-Source: ADFU+vs2fX0fSX8HT8ldaRkDqTnvkbe+A+L8CQ9JvxGCaw+F/gPTk0fICGkAht0UcmGT1kh4f+zKTA==
+X-Received: by 2002:ac8:4cd1:: with SMTP id l17mr362984qtv.165.1583438476608;
+        Thu, 05 Mar 2020 12:01:16 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id w21sm17576346qth.17.2020.03.05.12.01.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Mar 2020 12:01:15 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     jroedel@suse.de
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] iommu/vt-d: fix RCU-list bugs in intel_iommu_init
+Date:   Thu,  5 Mar 2020 15:00:46 -0500
+Message-Id: <1583438446-9959-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 05, 2020 at 10:32:06AM -0800, Andi Kleen escreveu:
-> On Thu, Mar 05, 2020 at 12:27:55PM -0300, Arnaldo Carvalho de Melo wrote:
-> > Em Thu, Mar 05, 2020 at 06:47:19PM +0800, zhe.he@windriver.com escreveu:
-> > > From: He Zhe <zhe.he@windriver.com>
-> > > 
-> > > NULL pointer may be passed to perf_cpu_map__cpu and then cause the
-> > > following crash.
-> > > 
-> > > perf ftrace -G start_kernel ls
-> > > failed to set tracing filters
-> > > [  208.710716] perf[341]: segfault at 4 ip 00000000567c7c98
-> > >                sp 00000000ff937ae0 error 4 in perf[56630000+1b2000]
-> > > [  208.724778] Code: fc ff ff e8 aa 9b 01 00 8d b4 26 00 00 00 00 8d
-> > >                      76 00 55 89 e5 83 ec 18 65 8b 0d 14 00 00 00 89
-> > >                      4d f4 31 c9 8b 45 08 8b9
-> > > Segmentation fault
-> > 
-> > I'm not being able to repro this here, what is the tree you are using?
-> 
-> I believe that's the same bug that Jann Horn reported recently for perf trace.
-> I thought the patch for that went in.
+There are several places traverse RCU-list without holding any lock in
+intel_iommu_init(). Fix them by acquiring dmar_global_lock.
 
-Ok, Zhe, that patch is at the end of this message, and it is in:
+ WARNING: suspicious RCU usage
+ -----------------------------
+ drivers/iommu/intel-iommu.c:5216 RCU-list traversed in non-reader section!!
 
-[acme@five perf]$ git tag --contains cb71f7d43ece3d5a4f400f510c61b2ec7c9ce9a1 | grep ^v
-v5.6-rc1
-v5.6-rc2
-v5.6-rc3
-v5.6-rc4
-[acme@five perf]$
+ other info that might help us debug this:
 
-Can you try with that?
+ rcu_scheduler_active = 2, debug_locks = 1
+ no locks held by swapper/0/1.
 
-- Arnaldo
+ Call Trace:
+  dump_stack+0xa0/0xea
+  lockdep_rcu_suspicious+0x102/0x10b
+  intel_iommu_init+0x947/0xb13
+  pci_iommu_init+0x26/0x62
+  do_one_initcall+0xfe/0x500
+  kernel_init_freeable+0x45a/0x4f8
+  kernel_init+0x11/0x139
+  ret_from_fork+0x3a/0x50
+ DMAR: Intel(R) Virtualization Technology for Directed I/O
 
-commit cb71f7d43ece3d5a4f400f510c61b2ec7c9ce9a1
-Author: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri Jan 10 16:15:37 2020 +0100
+Fixes: d8190dc63886 ("iommu/vt-d: Enable DMA remapping after rmrr mapped")
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ drivers/iommu/intel-iommu.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-    libperf: Setup initial evlist::all_cpus value
-    
-    Jann Horn reported crash in perf ftrace because evlist::all_cpus isn't
-    initialized if there's evlist without events, which is the case for perf
-    ftrace.
-    
-    Adding initial initialization of evlist::all_cpus from given cpus,
-    regardless of events in the evlist.
-    
-    Fixes: 7736627b865d ("perf stat: Use affinity for closing file descriptors")
-    Reported-by: Jann Horn <jannh@google.com>
-    Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-    Acked-by: Andi Kleen <ak@linux.intel.com>
-    Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-    Cc: Michael Petlan <mpetlan@redhat.com>
-    Cc: Namhyung Kim <namhyung@kernel.org>
-    Cc: Peter Zijlstra <peterz@infradead.org>
-    Link: http://lore.kernel.org/lkml/20200110151537.153012-1-jolsa@kernel.org
-    Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-
-diff --git a/tools/lib/perf/evlist.c b/tools/lib/perf/evlist.c
-index ae9e65aa2491..5b9f2ca50591 100644
---- a/tools/lib/perf/evlist.c
-+++ b/tools/lib/perf/evlist.c
-@@ -164,6 +164,9 @@ void perf_evlist__set_maps(struct perf_evlist *evlist,
- 		evlist->threads = perf_thread_map__get(threads);
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 6fa6de2b6ad5..bc138ceb07bc 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -5193,6 +5193,7 @@ int __init intel_iommu_init(void)
+ 
+ 	init_iommu_pm_ops();
+ 
++	down_read(&dmar_global_lock);
+ 	for_each_active_iommu(iommu, drhd) {
+ 		iommu_device_sysfs_add(&iommu->iommu, NULL,
+ 				       intel_iommu_groups,
+@@ -5200,6 +5201,7 @@ int __init intel_iommu_init(void)
+ 		iommu_device_set_ops(&iommu->iommu, &intel_iommu_ops);
+ 		iommu_device_register(&iommu->iommu);
  	}
++	up_read(&dmar_global_lock);
  
-+	if (!evlist->all_cpus && cpus)
-+		evlist->all_cpus = perf_cpu_map__get(cpus);
+ 	bus_set_iommu(&pci_bus_type, &intel_iommu_ops);
+ 	if (si_domain && !hw_pass_through)
+@@ -5210,7 +5212,6 @@ int __init intel_iommu_init(void)
+ 	down_read(&dmar_global_lock);
+ 	if (probe_acpi_namespace_devices())
+ 		pr_warn("ACPI name space devices didn't probe correctly\n");
+-	up_read(&dmar_global_lock);
+ 
+ 	/* Finally, we enable the DMA remapping hardware. */
+ 	for_each_iommu(iommu, drhd) {
+@@ -5219,6 +5220,8 @@ int __init intel_iommu_init(void)
+ 
+ 		iommu_disable_protect_mem_regions(iommu);
+ 	}
++	up_read(&dmar_global_lock);
 +
- 	perf_evlist__propagate_maps(evlist);
- }
+ 	pr_info("Intel(R) Virtualization Technology for Directed I/O\n");
  
+ 	intel_iommu_enabled = 1;
+-- 
+1.8.3.1
 
