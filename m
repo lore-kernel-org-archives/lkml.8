@@ -2,92 +2,146 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED35C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:22:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA533C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEBC9207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:22:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GcAAzWY1"
+	by mail.kernel.org (Postfix) with ESMTP id 8425C20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:23:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbgCEQWr (ORCPT
+        id S1726751AbgCEQXN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:22:47 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34988 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726080AbgCEQWq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:22:46 -0500
-Received: by mail-wm1-f66.google.com with SMTP id m3so6411707wmi.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:22:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=cEvgQVZavtTsnR3H4wayPtk/nZQ+Zm47QLXTHSzN7fo=;
-        b=GcAAzWY1RcrrmwdnC52Rlub3aR8//mgYvQ9FmOS++fuNEZoR8Rlkaj/Z1BRuuybFA0
-         uMHBNEOfUefPRil4g2NixlSsSkl8in3cEnm9Mc1ocdM/8SFn2GNnB/QfmtaelLsczEt0
-         XY/4MAu0ZTNZZCjzbYc0+4sWwqTPwaWT2A2xE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cEvgQVZavtTsnR3H4wayPtk/nZQ+Zm47QLXTHSzN7fo=;
-        b=QDN4arZWx2ODRwjxq9bluZAaidSZTNODHa79H98akOUQBJZtwnoShUqIJLn9uP58uu
-         9/tYTPCeFknBJvAPNxStIw7UsjdRW1LBlkckA/5mTenBatckEEqhZzP5lYLjq+m2cqcR
-         HrEJg1Ev7E9pERwRR+Sv8C1k8MED3oVqCPguP971/4MyW5LM9tBCJLxBSJKG5oIMqhop
-         HLGkIGZ/g6CgGVrIIHndN6bDUoyfvOsREoFKTjUC3hXGRpcduErIc1pn8a/Uc9xPDXMJ
-         WP1G3ckvTjshzxgiiZPESIx7Hjhzr5O7dmOGUj0EXADUGw8RiF+SGBZJgydpt89hFkgP
-         F3lw==
-X-Gm-Message-State: ANhLgQ0sZedUwpoZFmebUvKEa9VL5A1RNBIGA726t2PzWQxEeoOaBa0L
-        ZEcyCzigEYM7VYZv4jV53XwMZ90N7NtRiQL6yGRP5Q==
-X-Google-Smtp-Source: ADFU+vvBj+1xJThqxd5rF87Tunq26QxaCiqKxwYjHudkZ0a9XD8NqOyNXEkTlJ26vyLocVjmpuu2PlqvdYuTfnFNgbU=
-X-Received: by 2002:a1c:2504:: with SMTP id l4mr10601800wml.72.1583425364775;
- Thu, 05 Mar 2020 08:22:44 -0800 (PST)
+        Thu, 5 Mar 2020 11:23:13 -0500
+Received: from mga02.intel.com ([134.134.136.20]:44356 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbgCEQXN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 11:23:13 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 08:23:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="264022562"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Mar 2020 08:23:11 -0800
+Date:   Thu, 5 Mar 2020 08:23:11 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
+        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/8] x86/split_lock: Ensure
+ X86_FEATURE_SPLIT_LOCK_DETECT means the existence of feature
+Message-ID: <20200305162311.GG11500@linux.intel.com>
+References: <20200206070412.17400-1-xiaoyao.li@intel.com>
+ <20200206070412.17400-3-xiaoyao.li@intel.com>
+ <20200303185524.GQ1439@linux.intel.com>
+ <20200303194134.GW1439@linux.intel.com>
+ <ab2a83e1-8ae4-b471-1968-7f6baaac602e@intel.com>
 MIME-Version: 1.0
-References: <20200305175528.5b3ccc09@canb.auug.org.au> <715919f5-e256-fbd1-44ff-8934bda78a71@infradead.org>
- <CAADnVQ+TYiVu+Ksstj4LmYa=+UPwbv-dv-tscRaKn_0FcpstBg@mail.gmail.com>
-In-Reply-To: <CAADnVQ+TYiVu+Ksstj4LmYa=+UPwbv-dv-tscRaKn_0FcpstBg@mail.gmail.com>
-From:   KP Singh <kpsingh@chromium.org>
-Date:   Thu, 5 Mar 2020 17:22:34 +0100
-Message-ID: <CACYkzJ4ks6VgxeGpJApvqJdx6Q-8PZwk-r=q4ySWsDBDy1jp+g@mail.gmail.com>
-Subject: Re: linux-next: Tree for Mar 5 (bpf_trace)
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ab2a83e1-8ae4-b471-1968-7f6baaac602e@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 5, 2020 at 5:18 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Thu, Mar 5, 2020 at 8:13 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+On Wed, Mar 04, 2020 at 09:49:14AM +0800, Xiaoyao Li wrote:
+> On 3/4/2020 3:41 AM, Sean Christopherson wrote:
+> >On Tue, Mar 03, 2020 at 10:55:24AM -0800, Sean Christopherson wrote:
+> >>On Thu, Feb 06, 2020 at 03:04:06PM +0800, Xiaoyao Li wrote:
+> >>>When flag X86_FEATURE_SPLIT_LOCK_DETECT is set, it should ensure the
+> >>>existence of MSR_TEST_CTRL and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit.
+> >>
+> >>The changelog confused me a bit.  "When flag X86_FEATURE_SPLIT_LOCK_DETECT
+> >>is set" makes it sound like the logic is being applied after the feature
+> >>bit is set.  Maybe something like:
+> >>
+> >>```
+> >>Verify MSR_TEST_CTRL.SPLIT_LOCK_DETECT can be toggled via WRMSR prior to
+> >>setting the SPLIT_LOCK_DETECT feature bit so that runtime consumers,
+> >>e.g. KVM, don't need to worry about WRMSR failure.
+> >>```
+> >>
+> >>>Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+> >>>---
+> >>>  arch/x86/kernel/cpu/intel.c | 41 +++++++++++++++++++++----------------
+> >>>  1 file changed, 23 insertions(+), 18 deletions(-)
+> >>>
+> >>>diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> >>>index 2b3874a96bd4..49535ed81c22 100644
+> >>>--- a/arch/x86/kernel/cpu/intel.c
+> >>>+++ b/arch/x86/kernel/cpu/intel.c
+> >>>@@ -702,7 +702,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+> >>>  	if (tsx_ctrl_state == TSX_CTRL_DISABLE)
+> >>>  		tsx_disable();
+> >>>-	split_lock_init();
+> >>>+	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT))
+> >>>+		split_lock_init();
+> >>>  }
+> >>>  #ifdef CONFIG_X86_32
+> >>>@@ -986,9 +987,26 @@ static inline bool match_option(const char *arg, int arglen, const char *opt)
+> >>>  static void __init split_lock_setup(void)
+> >>>  {
+> >>>+	u64 test_ctrl_val;
+> >>>  	char arg[20];
+> >>>  	int i, ret;
+> >>>+	/*
+> >>>+	 * Use the "safe" versions of rdmsr/wrmsr here to ensure MSR_TEST_CTRL
+> >>>+	 * and MSR_TEST_CTRL.SPLIT_LOCK_DETECT bit do exist. Because there may
+> >>>+	 * be glitches in virtualization that leave a guest with an incorrect
+> >>>+	 * view of real h/w capabilities.
+> >>>+	 */
+> >>>+	if (rdmsrl_safe(MSR_TEST_CTRL, &test_ctrl_val))
+> >>>+		return;
+> >>>+
+> >>>+	if (wrmsrl_safe(MSR_TEST_CTRL,
+> >>>+			test_ctrl_val | MSR_TEST_CTRL_SPLIT_LOCK_DETECT))
+> >>>+		return;
+> >>>+
+> >>>+	if (wrmsrl_safe(MSR_TEST_CTRL, test_ctrl_val))
+> >>>+		return;a
+> >>
+> >>Probing the MSR should be skipped if SLD is disabled in sld_options, i.e.
+> >>move this code (and setup_force_cpu_cap() etc...) down below the
+> >>match_option() logic.  The above would temporarily enable SLD even if the
+> >>admin has explicitly disabled it, e.g. makes the kernel param useless for
+> >>turning off the feature due to bugs.
 > >
-> > On 3/4/20 10:55 PM, Stephen Rothwell wrote:
-> > > Hi all,
-> > >
-> > > Changes since 20200304:
-> > >
+> >Hmm, but this prevents KVM from exposing SLD to a guest when it's off in
+> >the kernel, which would be a useful debug/testing scenario.
 > >
-> > on i386:
-> >
-> > ld: kernel/trace/bpf_trace.o:(.rodata+0x38): undefined reference to `bpf_prog_test_run_tracing'
->
-> KP,
-> Please take a look.
+> >Maybe add another SLD state to forcefully disable SLD?  That way the admin
+> >can turn of SLD in the host kernel but still allow KVM to expose it to its
+> >guests.  E.g.
+> 
+> I don't think we need do this.
+> 
+> IMO, this a the bug of split_lock_init(), which assume the initial value of
+> MSR_TEST_CTRL is zero, at least bit SPLIT_LOCK of which is zero.
+> This is problem, it's possible that BIOS has set this bit.
 
-Sure. Taking a look.
+Hmm, yeah, that's a bug.  But it's a separate bug.
+ 
+> split_lock_setup() here, is to check if the feature really exists. So
+> probing MSR_TEST_CTRL and bit MSR_TEST_CTRL_SPLIT_LOCK_DETECT here. If there
+> all exist, setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT) to indicate
+> feature does exist.
+> Only when feature exists, there is a need to parse the command line config
+> of split_lock_detect.
 
-- KP
+Toggling SPLIT_LOCK before checking the kernel param is bad behavior, e.g.
+if someone has broken silicon that causes explosions if SPLIT_LOCK=1.  The
+behavior is especially bad because cpu_set_core_cap_bits() enumerates split
+lock detection using FMS, i.e. clearcpuid to kill CORE_CAPABILITIES
+wouldn't work either.
