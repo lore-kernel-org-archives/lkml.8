@@ -2,190 +2,262 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89981C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:39:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF276C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EE5F208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EFE120870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583444389;
-	bh=khAjJ61F7SrEaxmXnzUzLpC+tKXgp6djp6p6ki1r96c=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=ugUpTTYf3xou9i2eQwgBTJR+y9GXmCKHMRg1iEc7PQHAzcvQci5ybBHig3X6tdNXV
-	 ifo/1zBUUzYBTN9zwji4ydShp//dEygu6qUd63flBnYvaPooKFsROQ3QcjZZotS0Y5
-	 XwupJPmB+oWG35M4+lVNLPlsoTH5j4ZXiSBV6S9E=
+	s=default; t=1583444433;
+	bh=2TbDtdzQLVrZkBATqyMst6WKIUAWhg4hkW93/u9hnxw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oaaZoSVIRnJV49FYY4Ok+xvUgRtQeo2AXw7vqpsJA1NThGf7FgXe1KSG5RrOOsct0
+	 4nb9294v+9SWFzlV8vMeSbAK0wJlAfclQBtWh8OoYrNAaMZwnA/f2I/iRiJ0ZhY7hj
+	 oUmcmAfgt1M31TTcyder4le4nhEWIvkGnofIlv8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgCEVjs (ORCPT
+        id S1726273AbgCEVkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:39:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40770 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 16:40:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726087AbgCEVjr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:39:47 -0500
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725991AbgCEVkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 16:40:32 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E4DC2072A;
-        Thu,  5 Mar 2020 21:39:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E207217F4;
+        Thu,  5 Mar 2020 21:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583444386;
-        bh=khAjJ61F7SrEaxmXnzUzLpC+tKXgp6djp6p6ki1r96c=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=OWQL3/8Pxmp/wQsQVqWqJBxYuat1ZMHqlQVrVKykbGZX+bO2TlMFADNIpOkDPavSd
-         MlkfiGIJ1ywvGQ2C5v04/cwJZWqDovxlr2SaDLaUf0d6fyCYX4lrfkov0keYTdG+Wz
-         O8i2H0cVm5xwU8gjwVi/dNfec4EkeGWyH5HkhoeQ=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 69FDC3522806; Thu,  5 Mar 2020 13:39:46 -0800 (PST)
-Date:   Thu, 5 Mar 2020 13:39:46 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Qian Cai <cai@lca.pw>, elver@google.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] lib: disable KCSAN for XArray
-Message-ID: <20200305213946.GL2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200304031551.1326-1-cai@lca.pw>
- <20200304033329.GZ29971@bombadil.infradead.org>
- <20200304040515.GX2935@paulmck-ThinkPad-P72>
- <20200304043356.GC29971@bombadil.infradead.org>
- <20200304141021.GY2935@paulmck-ThinkPad-P72>
- <20200305151831.GM29971@bombadil.infradead.org>
+        s=default; t=1583444430;
+        bh=2TbDtdzQLVrZkBATqyMst6WKIUAWhg4hkW93/u9hnxw=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jwmBRSLZS6+pu3brX7GBPDp8uiFUnw3oAp8b+jRAPpnnUNj9UDUx8NRgW/8lw0DLo
+         4KTbl6wQVU/UIkiO7pHPSb5gK1YuqwOC6xtTLVX1JI4ZAUtf88ErmZIaC6wJXs3SpG
+         VoLBCKdodtLm4bH4OcKzJSPAaF/xK8XzSD0DKSRY=
+Received: by mail-qt1-f177.google.com with SMTP id e20so246353qto.5;
+        Thu, 05 Mar 2020 13:40:30 -0800 (PST)
+X-Gm-Message-State: ANhLgQ28hK/b7e1yg2iih4GXSMbJaO1J2YfZe78vxeedE+6boLPFA3k1
+        MzbUxV4zmHSLAg65PfXgzDtYuzK52T14nV36qA==
+X-Google-Smtp-Source: ADFU+vsM3Zz2YnwpidfFVp0E2ZVb1W7rDIBPO7Klgy7wRQmho3zKSSTbk7Gr8mOWfUebGtfkIeXgsLh1WpiWKutdx9Y=
+X-Received: by 2002:aed:3461:: with SMTP id w88mr223503qtd.143.1583444429367;
+ Thu, 05 Mar 2020 13:40:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305151831.GM29971@bombadil.infradead.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200305030135.210675-1-pmalani@chromium.org> <158344320452.25912.4758137777863945655@swboyd.mtv.corp.google.com>
+In-Reply-To: <158344320452.25912.4758137777863945655@swboyd.mtv.corp.google.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 5 Mar 2020 15:40:18 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ3UVG=pVqZyju1qis_Y3dVT6swLEAkK=Myi331Pomvyg@mail.gmail.com>
+Message-ID: <CAL_JsqJ3UVG=pVqZyju1qis_Y3dVT6swLEAkK=Myi331Pomvyg@mail.gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: Convert usb-connector to YAML format.
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Prashant Malani <pmalani@chromium.org>, devicetree@vger.kernel.org,
+        Benson Leung <bleung@chromium.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "Bryan O'Donoghue" <bryan.odonoghue@linaro.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 07:18:31AM -0800, Matthew Wilcox wrote:
-> On Wed, Mar 04, 2020 at 06:10:21AM -0800, Paul E. McKenney wrote:
-> > On Tue, Mar 03, 2020 at 08:33:56PM -0800, Matthew Wilcox wrote:
-> > > On Tue, Mar 03, 2020 at 08:05:15PM -0800, Paul E. McKenney wrote:
-> > > > On Tue, Mar 03, 2020 at 07:33:29PM -0800, Matthew Wilcox wrote:
-> > > > > On Tue, Mar 03, 2020 at 10:15:51PM -0500, Qian Cai wrote:
-> > > > > > Functions like xas_find_marked(), xas_set_mark(), and xas_clear_mark()
-> > > > > > could happen concurrently result in data races, but those operate only
-> > > > > > on a single bit that are pretty much harmless. For example,
-> > > > > 
-> > > > > Those aren't data races.  The writes are protected by a spinlock and the
-> > > > > reads by the RCU read lock.  If the tool can't handle RCU protection,
-> > > > > it's not going to be much use.
-> > > > 
-> > > > Would KCSAN's ASSERT_EXCLUSIVE_BITS() help here?
-> > > 
-> > > I'm quite lost in the sea of new macros that have been added to help
-> > > with KCSAN.  It doesn't help that they're in -next somewhere that I
-> > > can't find, and not in mainline yet.  Is there documentation somewhere?
-> > 
-> > Yes, there is documentation.  In -next somewhere.  :-/
-> 
-> Looking at the documentation link that Marco kindly provided, I don't
-> think ASSERT_EXCLUSIVE_BITS is the correct annotation to make.  The bits
-> in question are being accessed in parallel, it's just that we're willing
-> to accept a certain degree of inaccuracy.
-> 
-> > > struct xa_node {
-> > >         unsigned char   shift;          /* Bits remaining in each slot */
-> > >         unsigned char   offset;         /* Slot offset in parent */
-> > >         unsigned char   count;          /* Total entry count */
-> > >         unsigned char   nr_values;      /* Value entry count */
-> > >         struct xa_node __rcu *parent;   /* NULL at top of tree */
-> > >         struct xarray   *array;         /* The array we belong to */
-> > >         union {
-> > >                 struct list_head private_list;  /* For tree user */
-> > >                 struct rcu_head rcu_head;       /* Used when freeing node */
-> > >         };
-> > >         void __rcu      *slots[XA_CHUNK_SIZE];
-> > >         union {
-> > >                 unsigned long   tags[XA_MAX_MARKS][XA_MARK_LONGS];
-> > >                 unsigned long   marks[XA_MAX_MARKS][XA_MARK_LONGS];
-> > >         };
-> > > };
-> > > 
-> > > 'slots' may be modified with the xa_lock
-> > > held, and simultaneously read by an RCU reader.  Ditto 'tags'/'marks'.
-> > 
-> > KCSAN expects that accesses to the ->parent field should be marked.
-> > But if ->parent is always accessed via things like rcu_dereference()
-> > and rcu_assign_pointer() (guessing based on the __rcu), then KCSAN
-> > won't complain.
-> [...]
-> > The situation with ->slots is the same as that for ->parent.
-> > 
-> > KCSAN expects accesses to the ->tags[] and ->marks[] arrays to be marked.
-> > However, the default configuration of KCSAN asks only that the reads
-> > be marked.  (Within RCU, I instead configure KCSAN so that it asks that
-> > both be marked, but it is of course your choice within your code.)
-> > 
-> > > The RCU readers are prepared for what they see to be inconsistent --
-> > > a fact of life when dealing with RCU!  So in a sense, yes, there is a
-> > > race there.  But it's a known, accepted race, and that acceptance is
-> > > indicated by the fact that the RCU lock is held.  Does there need to be
-> > > more annotation here?  Or is there an un-noticed bug that the tool is
-> > > legitimately pointing out?
-> > 
-> > The answer to both questions is "maybe", depending on the code using
-> > the values read.  Yes, it would be nice if KCSAN could figure out the
-> > difference, but there are limits to what a tool can do.  And things
-> > are sometimes no-obvious, for example:
-> 
-> I require the following properties from this array of bits:
-> 
->  - If a bit was set before and after the modification, it must be seen to
->    be set.
->  - If a bit was clear before and after the modification, it must be seen to
->    be clear.
->  - If a bit is modified, it may be seen as set or clear.
-> 
-> I have found three locations where we use the ->marks array:
-> 
-> 1.
->                         unsigned long data = *addr & (~0UL << offset);
->                         if (data)
->                                 return __ffs(data);
-> 
-> 2.
->         return find_next_bit(addr, XA_CHUNK_SIZE, offset);
-> 3.
->         return test_bit(offset, node_marks(node, mark));
-> 
-> The modifications -- all done with the spinlock held -- use the non-atomic
-> bitops:
->         return __test_and_set_bit(offset, node_marks(node, mark));
->         return __test_and_clear_bit(offset, node_marks(node, mark));
->         bitmap_fill(node_marks(node, mark), XA_CHUNK_SIZE);
-> (that last one doesn't really count -- it's done prior to placing the node
-> in the tree)
-> 
-> The first read seems straightforward; I can place a READ_ONCE around
-> *addr.  The second & third reads are rather less straightforward.
-> find_next_bit() and test_bit() are common code and use plain loads today.
+On Thu, Mar 5, 2020 at 3:20 PM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Prashant Malani (2020-03-04 19:01:30)
+> > diff --git a/Documentation/devicetree/bindings/connector/usb-connector.yaml b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> > new file mode 100644
+> > index 0000000000000..b386e2880405c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/connector/usb-connector.yaml
+> > @@ -0,0 +1,203 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/connector/usb-connector.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: USB Connector
+> > +
+> > +maintainers:
+> > +  - linux-usb@vger.kernel.org
+> > +
+> > +description:
+> > +  A USB connector node represents a physical USB connector. It should be a child
+> > +  of a USB interface controller.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - usb-a-connector
+> > +      - usb-b-connector
+> > +      - usb-c-connector
+> > +
+> > +  label:
+> > +    description: Symbolic name for the connector.
+> > +
+> > +  type:
+> > +    description: Size of the connector, should be specified in case of USB-A,
+> > +      USB-B non-fullsize connectors.
+>
+> Maybe "should be specified in case of non-fullsize 'usb-a-connector' or
+> 'usb-b-connector' compatible connectors"?
+>
+> > +    $ref: /schemas/types.yaml#definitions/string
+> > +    enum:
+> > +      - mini
+> > +      - micro
+> > +
+> > +  self-powered:
+> > +    description: Set this property if the USB device has its own power source.
+> > +    type: boolean
+> > +
+> > +  # The following are optional properties for "usb-b-connector".
+> > +  id-gpios:
+> > +    description: An input gpio for USB ID pin.
+> > +    maxItems: 1
+> > +
+> > +  vbus-gpios:
+> > +    description: An input gpio for USB VBus pin, used to detect presence of
+> > +      VBUS 5V. See gpio/gpio.txt.
+>
+> Can this be written as bindings/gpio/gpio.txt?
 
-Yes, those last two are a bit annoying, aren't they?  I guess the first
-thing would be placing READ_ONCE() inside them, and if that results in
-regressions, have an alternative API for concurrent access?
+Or just drop the reference so we don't have to fix it later.
 
-> > Your mileage may vary, of course.  For one thing, your actuarial
-> > statistics are quite likley significantly more favorable than are mine.
-> > Not that mine are at all bad, particularly by the standards of a century
-> > or two ago.  ;-)
-> 
-> I don't know ... my preferred form of exercise takes me into the
-> harm's way of cars, so while I've significantly lowered my risk of
-> dying of cardiovascular disease, I'm much more likely to be killed by
-> an inattentive human being!  Bring on our robot cars ...
+> > +    maxItems: 1
+> > +
+> > +  vbus-supply:
+> > +    description: A phandle to the regulator for USB VBUS if needed when host
+> > +      mode or dual role mode is supported.
+> > +      Particularly, if use an output GPIO to control a VBUS regulator, should
+> > +      model it as a regulator. See regulator/fixed-regulator.yaml
+>
+> And bindings/regulator/fixed-regulator.yaml? The idea is to
+> disambiguate from kernel Documentation/ directory.
+>
+> > +
+> > +  # The following are optional properties for "usb-c-connector".
+>
+> Is there a way to constrain the binding so that this can't be put in a
+> connector that doesn't have the usb-c-connector compatible string?
 
-I did my 40 years using that mode of transport.  But my reflexes are
-no longer up to the task.  So I have no advice for you on that one!
-Other than to question your trust in robot cars whose code was produced
-by human developers!  ;-)
+Yes, with if/then and setting excluded properties to 'false'.
+Personally, I don't think it is worth the messiness. I'm not too
+worried if folks put in properties that are going to be ignored.
 
-							Thanx, Paul
+Rob
+
+> > +  power-role:
+> > +    description: Determines the power role that the Type C connector will
+> > +      support. "dual" refers to Dual Role Port (DRP).
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#definitions/string
+> > +    enum:
+> > +      - source
+> > +      - sink
+> > +      - dual
+> > +
+> > +  try-power-role:
+> > +    description: Preferred power role.
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#definitions/string
+> > +    enum:
+> > +     - source
+> > +     - sink
+> > +     - dual
+> > +
+> > +  data-role:
+> > +    description: Data role if Type C connector supports USB data. "dual" refers
+> > +      Dual Role Device (DRD).
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#definitions/string
+> > +    enum:
+> > +      - host
+> > +      - device
+> > +      - dual
+>
+> Is there a way to maintain a description for each possible string
+> property? Then we could move the last sentence in the description above
+> to be attached to '- dual' here.
+>
+> > +
+> > +  # The following are optional properties for "usb-c-connector" with power
+> > +  # delivery support.
+> > +  source-pdos:
+> > +    description: An array of u32 with each entry providing supported power
+> > +      source data object(PDO), the detailed bit definitions of PDO can be found
+> > +      in "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.2
+> > +      Source_Capabilities Message, the order of each entry(PDO) should follow
+> > +      the PD spec chapter 6.4.1. Required for power source and power dual role.
+> > +      User can specify the source PDO array via PDO_FIXED/BATT/VAR/PPS_APDO()
+> > +      defined in dt-bindings/usb/pd.h.
+> > +    minItems: 1
+> > +    maxItems: 7
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +
+> > +  sink-pdos:
+> > +    description: An array of u32 with each entry providing supported power sink
+> > +      data object(PDO), the detailed bit definitions of PDO can be found in
+> > +      "Universal Serial Bus Power Delivery Specification" chapter 6.4.1.3
+> > +      Sink Capabilities Message, the order of each entry(PDO) should follow the
+> > +      PD spec chapter 6.4.1. Required for power sink and power dual role. User
+> > +      can specify the sink PDO array via PDO_FIXED/BATT/VAR/PPS_APDO() defined
+> > +      in dt-bindings/usb/pd.h.
+> > +    minItems: 1
+> > +    maxItems: 7
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> > +
+> > +  op-sink-microwatt:
+> > +    description: Sink required operating power in microwatt, if source can't
+> > +      offer the power, Capability Mismatch is set. Required for power sink and
+> > +      power dual role.
+> > +
+> > +  ports:
+> > +    description: OF graph bindings (specified in bindings/graph.txt) that model
+> > +      any data bus to the connector unless the bus is between parent node and
+> > +      the connector. Since a single connector can have multiple data buses every
+> > +      bus has assigned OF graph port number as described below.
+>
+> has an assigned?
+>
+> > +    type: object
+> > +    properties:
+> > +      port@0:
+> > +        type: object
+> > +        description: High Speed (HS), present in all connectors.
+> > +
+> > +      port@1:
+> > +        type: object
+> > +        description: Super Speed (SS), present in SS capable connectors.
+> > +
+> > +      port@2:
+> > +        type: object
+> > +        description: Sideband Use (SBU), present in USB-C.
+>
+> Likewise, is it possible to constrain this to only usb-c-connector
+> compatible string based bindings? And if so, does it become required for
+> that compatible string?
+
+Not required as alternate modes are not required. (BTW, it should
+probably be clarified this is supposed to be the alternate mode
+connection of which SBU is part of).
+
+Rob
