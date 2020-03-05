@@ -2,87 +2,80 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A147CC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A81DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7718B208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:05:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59F3D2072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:06:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbgCEKFM (ORCPT
+        id S1727023AbgCEKGM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:05:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:46648 "EHLO foss.arm.com"
+        Thu, 5 Mar 2020 05:06:12 -0500
+Received: from mga05.intel.com ([192.55.52.43]:50767 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbgCEKFM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:05:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C89F331B;
-        Thu,  5 Mar 2020 02:05:11 -0800 (PST)
-Received: from [10.37.12.115] (unknown [10.37.12.115])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73E993F6C4;
-        Thu,  5 Mar 2020 02:05:07 -0800 (PST)
-Subject: Re: [PATCH] drm/exynos: Fix memory leak and release IOMMU mapping
- structures
-To:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Cc:     inki.dae@samsung.com, jy0922.shim@samsung.com,
-        sw0312.kim@samsung.com, kyungmin.park@samsung.com,
-        airlied@linux.ie, daniel@ffwll.ch, kgene@kernel.org,
-        krzk@kernel.org, b.zolnierkie@samsung.com, a.hajda@samsung.com,
-        Dietmar.Eggemann@arm.com
-References: <CGME20200304220106eucas1p232aae5af79945664c4586930a9412eda@eucas1p2.samsung.com>
- <20200304220022.8003-1-lukasz.luba@arm.com>
- <684ef9fb-eafb-22d3-40c1-50f596211d85@samsung.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-Message-ID: <1044756c-39cf-9fea-4338-40e5a68349a9@arm.com>
-Date:   Thu, 5 Mar 2020 10:05:03 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725946AbgCEKGL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 05:06:11 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 02:06:11 -0800
+X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
+   d="scan'208";a="229647700"
+Received: from bennur-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.38.13])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 02:06:01 -0800
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Rajat Jain <rajatja@google.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Imre Deak <imre.deak@intel.com>,
+        =?utf-8?Q?Jo?= =?utf-8?Q?s=C3=A9?= Roberto de Souza 
+        <jose.souza@intel.com>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        gregkh@linuxfoundation.org, mathewk@google.com,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
+        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
+        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
+        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
+        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
+        Tomoki Maruichi <maruichit@lenovo.com>
+Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
+Subject: Re: [PATCH v6 1/3] intel_acpi: Rename drm_dev local variable to dev
+In-Reply-To: <20200305011943.214146-1-rajatja@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200305011943.214146-1-rajatja@google.com>
+Date:   Thu, 05 Mar 2020 12:06:01 +0200
+Message-ID: <87h7z3nmk6.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <684ef9fb-eafb-22d3-40c1-50f596211d85@samsung.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marek,
+On Wed, 04 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
+> Change the struct drm_device * local variable from drm_dev to dev
+> per the feedback received here:
+> https://lkml.org/lkml/2020/1/24/1143
 
-On 3/5/20 7:07 AM, Marek Szyprowski wrote:
-> Hi Lukasz,
-> 
-> On 04.03.2020 23:00, Lukasz Luba wrote:
->> There is a memory leak which left some objects not freed. The reference
->> counter of mapping: 'mapping->kref' was 2 when calling
->> arm_iommu_detach_device(), so the release_iommu_mapping() won't be called.
->> Since the old mapping structure is not going to be used any more (because
->> it is detached and new one attached), call arm_iommu_release_mapping()
->> to trigger cleanup.
-> 
-> This will break IOMMU support in Exynos DRM if deferred probe happens.
-> Here is a proper fix:
+I don't know what's up with the two identical (or similar) threads here,
+but I replied in the thread starting at [1]. Please let's keep the
+discussion there.
 
-I forgot about the deferred probe.
+BR,
+Jani.
 
-> 
-> https://patchwork.kernel.org/patch/11415715/
-> 
-> The mapping initially created by DMA-mapping framework should be
-> attached back when Exynos DRM releases the subdev device.
-> 
+[1] http://patchwork.freedesktop.org/patch/msgid/20200305012338.219746-2-rajatja@google.com
 
-Indeed, as you responded in that thread with the example, there is
-more dependencies and attaching back the old mapping will work.
-
-I am going add my reviewed-by to your patch.
-
-Regards,
-Lukasz
+-- 
+Jani Nikula, Intel Open Source Graphics Center
