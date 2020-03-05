@@ -2,82 +2,88 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5DFC3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E54FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:44:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 575082073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB38C2073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 19:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="fjeRQagf"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W/k4ramE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgCETmm (ORCPT
+        id S1726036AbgCEToz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 14:42:42 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37714 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbgCETml (ORCPT
+        Thu, 5 Mar 2020 14:44:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:47573 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725938AbgCEToz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 14:42:41 -0500
-Received: by mail-qt1-f193.google.com with SMTP id j34so5099491qtk.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 11:42:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=w9aoQTL/UgB1vjS1g1BNCEFf726wH1IBTlgPdnlXI/U=;
-        b=fjeRQagfXdDHJ9tX9UzUCHDLIRYnroBruHmgIET5qMJijpIVvgC0ui4ms8zm4UzETx
-         qp3y6SeLtxy4vuSto/2bfD5iqzG09QLY+omDnutMsTl9P42zubJINW1U3+uygzUfqRcX
-         rCBsRIoX7fr5DnA0zv4f0LKuY6LRaVQLxey8rncYou16dO6d8X1zdniHR/7BuER9ibfr
-         FjTz/WmRRZnhn2FLNpaFU1yD2E8pulQoGO4ZRwXe8XnU11dUJoenN/h+dYZpVj+JiVmr
-         fNLWNPv4kBYbx0VaGKTo6HoMSO8wsLZcmMJeM4fKUd4CmKNI6XMBOe3gWXCc6yoNH5KY
-         wdYQ==
+        Thu, 5 Mar 2020 14:44:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583437493;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lqSWwZ6DsapB8lrNL+jBy6XB4zsOmjjEG2eb8VnPGNQ=;
+        b=W/k4ramEclo7hsLwXlfH9ZSqhaqmk2p/6n0PmiY6ZOdInOGWBSMD3FC9p8wYiFdxrsj/v6
+        VhfWTumje0i53YxsqvlJv3sNwF0TgxwSNUQE5RvbywMArvHEinapE/hbngs0SMAWX+TBbX
+        0ixINeByr64yYbRKkBKHzgwZJXI4x6c=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-418--bpBaEsWMVeWMqEN-FCAQw-1; Thu, 05 Mar 2020 14:44:49 -0500
+X-MC-Unique: -bpBaEsWMVeWMqEN-FCAQw-1
+Received: by mail-qk1-f198.google.com with SMTP id q123so4592217qkb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 11:44:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=w9aoQTL/UgB1vjS1g1BNCEFf726wH1IBTlgPdnlXI/U=;
-        b=hQS8jfx10kjkBwRbUbhtmcYSzrnaesakiL21nuxAZ19MWf4u+4vyMYRPjft60Uo+Tg
-         CFBOaNoVq1ToF6QQw1kdxRnxHBkt4gRg9yfm7mD4NGxwyc0UfXpWp6kNx0hxvqZMHTFi
-         rM8FwkA6GB6j72C+rLZfoVbDmyWXiZ4X7bQ/C8jdVaskqYYi8lA/oAe2HCuffUSKcG6X
-         915kPeFSG9z3QJ/vrWJajBVnhl9PDznaRkPkX/53y7PdOpUPp5DPzZRzOmTJrKb/LLA7
-         oZkTIx7VbYzAoXZVp/ejROXyz+fLMJGrOKGb1427pQB+VacZZB7izUDEpLfKYHRrQL0n
-         pAoA==
-X-Gm-Message-State: ANhLgQ11GoI3YBmRyXV422ZPrIvjeWnfN5YoEbn4HnCAQy4PwVh2N8NY
-        u75Ssi3madRNy3B3VYy1z7bvyQ==
-X-Google-Smtp-Source: ADFU+vvWoq0qrg/FJ5my9DoTUbwc8qrtj5pyQOQnMQmrnKcEjOkZ19Er1lI2KcCU/OZ1arc+wQFMBg==
-X-Received: by 2002:ac8:530b:: with SMTP id t11mr274730qtn.277.1583437359636;
-        Thu, 05 Mar 2020 11:42:39 -0800 (PST)
-Received: from nicolas-tpx395.localdomain ([2610:98:8005::527])
-        by smtp.gmail.com with ESMTPSA id o16sm16335143qke.35.2020.03.05.11.42.37
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=lqSWwZ6DsapB8lrNL+jBy6XB4zsOmjjEG2eb8VnPGNQ=;
+        b=iBMaCcr+DEFZuD4dEDELKHKAvwriMxZm8BN4osATrV+HN2FIzhd6qC0p7NnIxoqxUj
+         alJoyylom3FY1dRWL/lSEkE/RO6DOaTIQWn3Ivwj6ZzgD7daIOZUskFvXmIegfQJaW+j
+         ZRbX2in8/0fGscUq4cJmli/S2ExSXymQtwAAwX050iKycDQaxoqJ/d3px7HHfMt1Bd7g
+         17dVbe5SAyWnHmPgQJCNu1D/s5tyPtWqFoJkCFlOiUm8sr7TSNuFk5TB0LiiyT97RNGQ
+         UvXK+4sKxsFtU7DEQSBNLWV/hjeIj5wpLuvLrQ0o2lJPc7R/L04AzqDSCT1OFzzOWqE/
+         kRbA==
+X-Gm-Message-State: ANhLgQ1rdVqsb/XWQEZH/gMBbZPIN/TodQ+a7P0Lj2wMre3WKAmDV4cp
+        SdPndxJi7au6tADJ97IJgCnIv6uRyGiL3vul3vdR4Cpnj/fQisu1WrfIxucgBAn0TXLTHpUM9P4
+        LLDeBGU2+658fOIgvVOZwtOoW
+X-Received: by 2002:a37:af02:: with SMTP id y2mr9658500qke.73.1583437489482;
+        Thu, 05 Mar 2020 11:44:49 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvOSVjsk/292akdGchAAJ12xFsVlNHzlHYiTU5k1qsXWdSiHdmbtMzH3qYs0XwaYQ9ZW96Cgw==
+X-Received: by 2002:a37:af02:: with SMTP id y2mr9658465qke.73.1583437489081;
+        Thu, 05 Mar 2020 11:44:49 -0800 (PST)
+Received: from dhcp-10-20-1-196.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id h28sm10282281qkk.59.2020.03.05.11.44.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 11:42:38 -0800 (PST)
-Message-ID: <c7a88abfaf00c00a5c4c4239d1d9c7b348bc052e.camel@ndufresne.ca>
-Subject: Re: [PATCH v6 2/6] media: v4l2-core: Add helpers to build the H264
- P/B0/B1 reflists
-From:   Nicolas Dufresne <nicolas@ndufresne.ca>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Tomasz Figa <tfiga@chromium.org>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Sakari Ailus <sakari.ailus@iki.fi>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Date:   Thu, 05 Mar 2020 14:42:34 -0500
-In-Reply-To: <20200302154426.5fb09f91@collabora.com>
-References: <20200220163016.21708-1-ezequiel@collabora.com>
-         <20200220163016.21708-3-ezequiel@collabora.com>
-         <20200302142433.0ad1b383@coco.lan> <20200302154426.5fb09f91@collabora.com>
+        Thu, 05 Mar 2020 11:44:48 -0800 (PST)
+Message-ID: <1d67c05ace278fd0f7de31a560ac5ebafdb04eca.camel@redhat.com>
+Subject: Re: [PATCH 2/3] drm/dp_mst: Don't show connectors as connected
+ before probing available PBN
+From:   Lyude Paul <lyude@redhat.com>
+To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, Sean Paul <seanpaul@google.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>
+Date:   Thu, 05 Mar 2020 14:44:43 -0500
+In-Reply-To: <efe5fc9895eaab47200e813280873894c0f98c8b.camel@redhat.com>
+References: <20200304223614.312023-1-lyude@redhat.com>
+         <20200304223614.312023-3-lyude@redhat.com>
+         <20200305131119.GJ13686@intel.com>
+         <73f52c392431cd21a80a118dd2fd1986e2c535df.camel@redhat.com>
+         <20200305182942.GP13686@intel.com>
+         <efe5fc9895eaab47200e813280873894c0f98c8b.camel@redhat.com>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
@@ -87,191 +93,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le lundi 02 mars 2020 à 15:44 +0100, Boris Brezillon a écrit :
-> On Mon, 2 Mar 2020 14:24:33 +0100
-> Mauro Carvalho Chehab <mchehab+huawei@kernel.org> wrote:
+On Thu, 2020-03-05 at 13:52 -0500, Lyude Paul wrote:
+> On Thu, 2020-03-05 at 20:29 +0200, Ville Syrjälä wrote:
+> > On Thu, Mar 05, 2020 at 01:13:36PM -0500, Lyude Paul wrote:
+> > > On Thu, 2020-03-05 at 15:11 +0200, Ville Syrjälä wrote:
+> > > > On Wed, Mar 04, 2020 at 05:36:12PM -0500, Lyude Paul wrote:
+> > > > > It's next to impossible for us to do connector probing on topologies
+> > > > > without occasionally racing with userspace, since creating a
+> > > > > connector
+> > > > > itself causes a hotplug event which we have to send before probing
+> > > > > the
+> > > > > available PBN of a connector. Even if we didn't have this hotplug
+> > > > > event
+> > > > > sent, there's still always a chance that userspace started probing
+> > > > > connectors before we finished probing the topology.
+> > > > > 
+> > > > > This can be a problem when validating a new MST state since the
+> > > > > connector will be shown as connected briefly, but without any
+> > > > > available
+> > > > > PBN - causing any atomic state which would enable said connector to
+> > > > > fail
+> > > > > with -ENOSPC. So, let's simply workaround this by telling userspace
+> > > > > new
+> > > > > MST connectors are disconnected until we've finished probing their
+> > > > > PBN.
+> > > > > Since we always send a hotplug event at the end of the link address
+> > > > > probing process, userspace will still know to reprobe the connector
+> > > > > when
+> > > > > we're ready.
+> > > > > 
+> > > > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > > > Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to
+> > > > > MST
+> > > > > atomic check")
+> > > > > Cc: Mikita Lipski <mikita.lipski@amd.com>
+> > > > > Cc: Alex Deucher <alexander.deucher@amd.com>
+> > > > > Cc: Sean Paul <seanpaul@google.com>
+> > > > > Cc: Hans de Goede <hdegoede@redhat.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/drm_dp_mst_topology.c | 13 +++++++++++++
+> > > > >  1 file changed, 13 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > index 207eef08d12c..7b0ff0cff954 100644
+> > > > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > > @@ -4033,6 +4033,19 @@ drm_dp_mst_detect_port(struct drm_connector
+> > > > > *connector,
+> > > > >  			ret = connector_status_connected;
+> > > > >  		break;
+> > > > >  	}
+> > > > > +
+> > > > > +	/* We don't want to tell userspace the port is actually
+> > > > > plugged into
+> > > > > +	 * anything until we've finished probing it's available_pbn,
+> > > > > otherwise
+> > > > 
+> > > > "its"
+> > > > 
+> > > > Why is the connector even registered before we've finished the probe?
+> > > > 
+> > > Oops, I'm not sure how I did this by accident but the explanation I gave
+> > > in
+> > > the commit message was uh, completely wrong. I must have forgotten that
+> > > I
+> > > made
+> > > sure we didn't expose connectors before probing their PBN back when I
+> > > started
+> > > my MST cleanup....
+> > > 
+> > > So: despite what I said before it's not actually when new connectors are
+> > > created, it's when downstream hotplugs happen which means that the
+> > > conenctor's
+> > > always going to be there before we probe the available_pbn.
+> > 
+> > Not sure I understand. You're saying this is going to change for already
+> > existing connectors when something else gets plugged in, and either we
+> > zero it out during the probe or it always was zero to begin with for
+> > whatever reason?
 > 
-> > Em Thu, 20 Feb 2020 13:30:12 -0300
-> > Ezequiel Garcia <ezequiel@collabora.com> escreveu:
-> > 
-> > > From: Boris Brezillon <boris.brezillon@collabora.com>
-> > > 
-> > > Building those list is a standard procedure described in section
-> > > '8.2.4 Decoding process for reference picture lists construction' of
-> > > the H264 specification.
-> > > 
-> > > We already have 2 drivers needing the same logic (hantro and rkvdec) and
-> > > I suspect we will soon have more.
-> > > 
-> > > Let's provide generic helpers to create those lists.
-> > > 
-> > > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
-> > > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> > > ---
-> > >  drivers/media/v4l2-core/Kconfig     |   4 +
-> > >  drivers/media/v4l2-core/Makefile    |   1 +
-> > >  drivers/media/v4l2-core/v4l2-h264.c | 258 ++++++++++++++++++++++++++++
-> > >  include/media/v4l2-h264.h           |  85 +++++++++
-> > >  4 files changed, 348 insertions(+)
-> > >  create mode 100644 drivers/media/v4l2-core/v4l2-h264.c
-> > >  create mode 100644 include/media/v4l2-h264.h
-> > > 
-> > > diff --git a/drivers/media/v4l2-core/Kconfig b/drivers/media/v4l2-
-> > > core/Kconfig
-> > > index 39e3fb30ba0b..8a4ccfbca8cf 100644
-> > > --- a/drivers/media/v4l2-core/Kconfig
-> > > +++ b/drivers/media/v4l2-core/Kconfig
-> > > @@ -45,6 +45,10 @@ config VIDEO_PCI_SKELETON
-> > >  config VIDEO_TUNER
-> > >  	tristate
-> > >  
-> > > +# Used by drivers that need v4l2-h264.ko
-> > > +config V4L2_H264
-> > > +	tristate
-> > > +
-> > >  # Used by drivers that need v4l2-mem2mem.ko
-> > >  config V4L2_MEM2MEM_DEV
-> > >  	tristate
-> > > diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-
-> > > core/Makefile
-> > > index 786bd1ec4d1b..c5c53e0941ad 100644
-> > > --- a/drivers/media/v4l2-core/Makefile
-> > > +++ b/drivers/media/v4l2-core/Makefile
-> > > @@ -21,6 +21,7 @@ obj-$(CONFIG_VIDEO_V4L2) += v4l2-dv-timings.o
-> > >  obj-$(CONFIG_VIDEO_TUNER) += tuner.o
-> > >  
-> > >  obj-$(CONFIG_V4L2_MEM2MEM_DEV) += v4l2-mem2mem.o
-> > > +obj-$(CONFIG_V4L2_H264) += v4l2-h264.o
-> > >  
-> > >  obj-$(CONFIG_V4L2_FLASH_LED_CLASS) += v4l2-flash-led-class.o
-> > >  
-> > > diff --git a/drivers/media/v4l2-core/v4l2-h264.c b/drivers/media/v4l2-
-> > > core/v4l2-h264.c
-> > > new file mode 100644
-> > > index 000000000000..4f68c27ec7fd
-> > > --- /dev/null
-> > > +++ b/drivers/media/v4l2-core/v4l2-h264.c
-> > > @@ -0,0 +1,258 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * V4L2 H264 helpers.
-> > > + *
-> > > + * Copyright (C) 2019 Collabora, Ltd.
-> > > + *
-> > > + * Author: Boris Brezillon <boris.brezillon@collabora.com>
-> > > + */
-> > > +
-> > > +#include <linux/module.h>
-> > > +#include <linux/sort.h>
-> > > +
-> > > +#include <media/v4l2-h264.h>
-> > > +
-> > > +/**
-> > > + * v4l2_h264_init_reflist_builder() - Initialize a P/B0/B1 reference list
-> > > + *				      builder
-> > > + *
-> > > + * @b: the builder context to initialize
-> > > + * @dec_params: decode parameters control
-> > > + * @slice_params: first slice parameters control
-> > > + * @sps: SPS control
-> > > + * @dpb: DPB to use when creating the reference list
-> > > + */
-> > > +void
-> > > +v4l2_h264_init_reflist_builder(struct v4l2_h264_reflist_builder *b,
-> > > +		const struct v4l2_ctrl_h264_decode_params *dec_params,
-> > > +		const struct v4l2_ctrl_h264_slice_params *slice_params,
-> > > +		const struct v4l2_ctrl_h264_sps *sps,
-> > > +		const struct v4l2_h264_dpb_entry *dpb)  
-> > 
-> > The prototype here is not nice...
-> > 
-> > > +{
-> > > +	int cur_frame_num, max_frame_num;
-> > > +	unsigned int i;
-> > > +
-> > > +	max_frame_num = 1 << (sps->log2_max_frame_num_minus4 + 4);
-> > > +	cur_frame_num = slice_params->frame_num;
-> > > +
-> > > +	memset(b, 0, sizeof(*b));
-> > > +	if (!(slice_params->flags & V4L2_H264_SLICE_FLAG_FIELD_PIC))
-> > > +		b->cur_pic_order_count = min(dec_params->bottom_field_order_cnt,
-> > > +					     dec_params->top_field_order_cnt);
-> > > +	else if (slice_params->flags & V4L2_H264_SLICE_FLAG_BOTTOM_FIELD)
-> > > +		b->cur_pic_order_count = dec_params->bottom_field_order_cnt;
-> > > +	else
-> > > +		b->cur_pic_order_count = dec_params->top_field_order_cnt;
-> > > +
-> > > +	for (i = 0; i < 16; i++) {
-> > > +		u32 pic_order_count;
-> > > +
-> > > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_ACTIVE))
-> > > +			continue;
-> > > +
-> > > +		b->refs[i].pic_num = dpb[i].pic_num;  
-> > 
-> > ... as you're expecting a fixed number of elements at DPB array, and using
-> > a magic number (16) inside the for loop.
+> So: you just made me realize that I'm not actually sure whether there's any
+> point to us clearing port->available_pbn here since the available_pbn (at
+> least the value that we cache on initial link address probing for bandwidth
+> constraint checking) shouldn't actually change on a port just because of a
+> hotplug. I bet this is probably causing more problems on it's own as well,
+> since reprobing the available_pbn might actually give us a value that
+> reflects
+> allocations on other ports that are already in place.
 > 
-> I used to have a '#define V4L2_H264_NUM_DPB_ENTRIES 16' but have been
-> told that this is an arbitrary limitation (the spec does not explicitly
-> limit the DPB size, even if all the HW we've seen seem to limit it to
-> 16). Maybe we can pass the DPB array size as an argument so it stays
-> HW-specific.
-
-it's formalized in A.31 h), to quote it:
-
-max_dec_frame_buffering <= MaxDpbFrames, where MaxDpbFrames is equal to
-
-  Min( MaxDpbMbs / ( PicWidthInMbs * FrameHeightInMbs ), 16 )
-
-So a DPB larger then this is not an H.24 DPB.
+> So: I think what I'm going to do instead is make it so that we never clear
+> port->available_pbn; mainly to make things less complicated during
+> suspend/resume, since we want to make sure there's always some sort of PBN
+> value populated even during the middle of reprobing the link address on
+> resume. That way we don't have to pretend that it's ever disconnected
+> either.
+> Will send a respin in a bit.
+Wait, nope, I believe I am the fool here - _supposedly_ available bw is
+supposed to reflect the smallest link rate that occurs in a patch to a branch
+device. I think, me and sean paul are looking at this a bit more closely. I
+think I might need to do some more playing around with my hubs to make sure
+this value is actually what we think it is because unfortunately the spec is
+pretty vague on this from what I can tell :( 
 
 > 
-> > > +
-> > > +		/*
-> > > +		 * Handle frame_num wraparound as described in section
-> > > +		 * '8.2.4.1 Decoding process for picture numbers' of the spec.
-> > > +		 * TODO: This logic will have to be adjusted when we start
-> > > +		 * supporting interlaced content.
-> > > +		 */
-> > > +		if (dpb[i].frame_num > cur_frame_num)
-> > > +			b->refs[i].frame_num = (int)dpb[i].frame_num -
-> > > +					       max_frame_num;
-> > > +		else
-> > > +			b->refs[i].frame_num = dpb[i].frame_num;
-> > > +
-> > > +		if (!(dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_FIELD))
-> > > +			pic_order_count = min(dpb[i].top_field_order_cnt,
-> > > +					      dpb[i].bottom_field_order_cnt);
-> > > +		else if (dpb[i].flags & V4L2_H264_DPB_ENTRY_FLAG_BOTTOM_FIELD)
-> > > +			pic_order_count = dpb[i].bottom_field_order_cnt;
-> > > +		else
-> > > +			pic_order_count = dpb[i].top_field_order_cnt;
-> > > +
-> > > +		b->refs[i].pic_order_count = pic_order_count;
-> > > +		b->unordered_reflist[b->num_valid] = i;
-> > > +		b->num_valid++;
-> > > +	}
-> > > +
-> > > +	for (i = b->num_valid; i < ARRAY_SIZE(b->unordered_reflist); i++)
-> > > +		b->unordered_reflist[i] = i;
-> > > +}
-> > > +EXPORT_SYMBOL_GPL(v4l2_h264_init_reflist_builder);
-> > > +
-> > > +static int v4l2_h264_p_ref_list_cmp(const void *ptra, const void *ptrb,
-> > > +				    const void *data)
-> > > +{
-> > > +	const struct v4l2_h264_reflist_builder *builder = data;
-> > > +	u8 idxa, idxb;
-> > > +
-> > > +	idxa = *((u8 *)ptra);
-> > > +	idxb = *((u8 *)ptrb);
-> > > +
-> > > +	if (builder->refs[idxa].longterm != builder->refs[idxb].longterm) {  
-> > 
-> > Where do you ensure that idxa and idxb won't be bigger than NUM_DPB_ENTRIES?
-> 
-> If it does that means something went wrong in the init func. I can add
-> a WARN_ON() and bail out if you want, but I can't return an error here
-> (that's not what the caller of the callback expects).
+> > > I did just notice
+> > > though that we send a hotplug on connection status notifications even
+> > > before
+> > > we've finished the PBN probe, so I might be able to improve on that as
+> > > well.
+> > > We still definitely want to report the connector as disconnected before
+> > > we
+> > > have the available PBN though, in case another probe was already going
+> > > before
+> > > we got the connection status notification.
+> > > 
+> > > I'll make sure to fixup the explanation in the commit message on the
+> > > next
+> > > respin
+> > > 
+> > > > > +	 * userspace will see racy atomic check failures
+> > > > > +	 *
+> > > > > +	 * Since we always send a hotplug at the end of probing
+> > > > > topology
+> > > > > +	 * state, we can just let userspace reprobe this connector
+> > > > > later.
+> > > > > +	 */
+> > > > > +	if (ret == connector_status_connected && !port-
+> > > > > >available_pbn) 
+> > > > > {
+> > > > > +		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] not ready yet (PBN
+> > > > > not
+> > > > > probed)\n",
+> > > > > +			      connector->base.id, connector->name);
+> > > > > +		ret = connector_status_disconnected;
+> > > > > +	}
+> > > > >  out:
+> > > > >  	drm_dp_mst_topology_put_port(port);
+> > > > >  	return ret;
+> > > > > -- 
+> > > > > 2.24.1
+> > > > > 
+> > > > > _______________________________________________
+> > > > > dri-devel mailing list
+> > > > > dri-devel@lists.freedesktop.org
+> > > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > -- 
+> > > Cheers,
+> > > 	Lyude Paul (she/her)
+> > > 	Associate Software Engineer at Red Hat
+-- 
+Cheers,
+	Lyude Paul (she/her)
+	Associate Software Engineer at Red Hat
 
