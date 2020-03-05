@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA9AC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3F2FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C2B120870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D11207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428656;
-	bh=UM1Y+E0WVc8eyIeZY8r6UZ4M0zumB9c8yTTQwXQYXHQ=;
+	s=default; t=1583428671;
+	bh=hM7fyA5DA5hZEW3ARzBK5410/eV42ZPwygmb1d01Q2M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RSvH0u3kX40JnSf7oayPl9sCHBc4nPGSwFXSkWvVxnBJgWOEbw6EdYR/2qxKi8U+f
-	 7gnRdlX/7YPvQ5O7/rtH5WWETp35lXBMnt5BUbCqQM9J2yeShaNY3Znw7SMxmXerqA
-	 VfXekKlWfcGJwE93XbzpbpjfCCCEn2WODNBdOaEE=
+	b=i6N9+UMUV5BrPgWfHHTyuMlVSjcl9ig36+76sXkdPv9RnuVjwIEu9EfflQlO9MjJ8
+	 zcwxPIfgR+kz3lRnG32ySAitl2U+AjUHdYnwReYmD3aPd8L+tpjn8s1LfHw5n1UjLm
+	 k/EE/L15QfmwRhniDwBaw5W3uunz/NqGZZcpPhs8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728153AbgCERRf (ORCPT
+        id S1728247AbgCERPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:17:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42834 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:15:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728304AbgCERPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:15:55 -0500
+        id S1728107AbgCERPc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E66FA21744;
-        Thu,  5 Mar 2020 17:15:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62B2F2146E;
+        Thu,  5 Mar 2020 17:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428554;
-        bh=UM1Y+E0WVc8eyIeZY8r6UZ4M0zumB9c8yTTQwXQYXHQ=;
+        s=default; t=1583428532;
+        bh=hM7fyA5DA5hZEW3ARzBK5410/eV42ZPwygmb1d01Q2M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qX0lBFZVU75p34QSVS+XFB8FE9vUdgT1kC/TumogWhCL7a2TiEIAB2ZlYkp3Zb8j5
-         pihbs+pGkjEiCfRVM3X5SOIZBrgwUFPxGuzJ8QbmJKDwNte3Mx7WbLOtIlxnJhmTsM
-         zNtyJ3Ki3L1/04dVgpV/2Zgs1BnPF9kOmx0UMjwE=
+        b=Bc2PKl1I5ucZgP90EfKORlEQgzOzWVOeJSqjMQEI+YMnzyhPbMmgwjNIqM/Qw4gQP
+         JF2hwKjhKwQHUPVMZcQ1f6WqTykzrM4LsSHC3Z8DnkJQjhLwZZIMVimdb1txOTGPHZ
+         dSf5pbw4mKcbwvHTzn1TgWcvAmHWb0c+zvK6klsI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniele Palmas <dnlplm@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+Cc:     =?UTF-8?q?Eugenio=20P=C3=A9rez?= <eperezma@redhat.com>,
+        syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com,
+        "Michael S . Tsirkin" <mst@redhat.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 11/19] net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
-Date:   Thu,  5 Mar 2020 12:15:32 -0500
-Message-Id: <20200305171540.30250-11-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 12/31] vhost: Check docket sk_family instead of call getname
+Date:   Thu,  5 Mar 2020 12:14:56 -0500
+Message-Id: <20200305171516.30028-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171540.30250-1-sashal@kernel.org>
-References: <20200305171540.30250-1-sashal@kernel.org>
+In-Reply-To: <20200305171516.30028-1-sashal@kernel.org>
+References: <20200305171516.30028-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -62,45 +63,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Eugenio Pérez <eperezma@redhat.com>
 
-[ Upstream commit eae7172f8141eb98e64e6e81acc9e9d5b2add127 ]
+[ Upstream commit 42d84c8490f9f0931786f1623191fcab397c3d64 ]
 
-usbnet creates network interfaces with min_mtu = 0 and
-max_mtu = ETH_MAX_MTU.
+Doing so, we save one call to get data we already have in the struct.
 
-These values are not modified by qmi_wwan when the network interface
-is created initially, allowing, for example, to set mtu greater than 1500.
+Also, since there is no guarantee that getname use sockaddr_ll
+parameter beyond its size, we add a little bit of security here.
+It should do not do beyond MAX_ADDR_LEN, but syzbot found that
+ax25_getname writes more (72 bytes, the size of full_sockaddr_ax25,
+versus 20 + 32 bytes of sockaddr_ll + MAX_ADDR_LEN in syzbot repro).
 
-When a raw_ip switch is done (raw_ip set to 'Y', then set to 'N') the mtu
-values for the network interface are set through ether_setup, with
-min_mtu = ETH_MIN_MTU and max_mtu = ETH_DATA_LEN, not allowing anymore to
-set mtu greater than 1500 (error: mtu greater than device maximum).
-
-The patch restores the original min/max mtu values set by usbnet after a
-raw_ip switch.
-
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
+Fixes: 3a4d5c94e9593 ("vhost_net: a kernel-level virtio server")
+Reported-by: syzbot+f2a62d07a5198c819c7b@syzkaller.appspotmail.com
+Signed-off-by: Eugenio Pérez <eperezma@redhat.com>
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/qmi_wwan.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/vhost/net.c | 10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index db70d4c5778a6..1f76998db44e4 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -275,6 +275,9 @@ static void qmi_wwan_netdev_setup(struct net_device *net)
- 		netdev_dbg(net, "mode: raw IP\n");
- 	} else if (!net->header_ops) { /* don't bother if already set */
- 		ether_setup(net);
-+		/* Restoring min/max mtu values set originally by usbnet */
-+		net->min_mtu = 0;
-+		net->max_mtu = ETH_MAX_MTU;
- 		clear_bit(EVENT_NO_IP_ALIGN, &dev->flags);
- 		netdev_dbg(net, "mode: Ethernet\n");
+diff --git a/drivers/vhost/net.c b/drivers/vhost/net.c
+index 124356dc39e14..88c8c158ec25c 100644
+--- a/drivers/vhost/net.c
++++ b/drivers/vhost/net.c
+@@ -1187,10 +1187,6 @@ static int vhost_net_release(struct inode *inode, struct file *f)
+ 
+ static struct socket *get_raw_socket(int fd)
+ {
+-	struct {
+-		struct sockaddr_ll sa;
+-		char  buf[MAX_ADDR_LEN];
+-	} uaddr;
+ 	int r;
+ 	struct socket *sock = sockfd_lookup(fd, &r);
+ 
+@@ -1203,11 +1199,7 @@ static struct socket *get_raw_socket(int fd)
+ 		goto err;
+ 	}
+ 
+-	r = sock->ops->getname(sock, (struct sockaddr *)&uaddr.sa, 0);
+-	if (r < 0)
+-		goto err;
+-
+-	if (uaddr.sa.sll_family != AF_PACKET) {
++	if (sock->sk->sk_family != AF_PACKET) {
+ 		r = -EPFNOSUPPORT;
+ 		goto err;
  	}
 -- 
 2.20.1
