@@ -2,83 +2,76 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3078C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF264C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6332208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1F8E20801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:59:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726243AbgCEU5f (ORCPT
+        id S1726179AbgCEU70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:57:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57994 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 15:59:26 -0500
+Received: from viti.kaiser.cx ([85.214.81.225]:43258 "EHLO viti.kaiser.cx"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbgCEU5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:57:35 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E6C520801;
-        Thu,  5 Mar 2020 20:57:34 +0000 (UTC)
-Date:   Thu, 5 Mar 2020 15:57:32 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>, linux-doc@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [v5] Documentation: bootconfig: Update boot configuration
- documentation
-Message-ID: <20200305155732.402291fb@gandalf.local.home>
-In-Reply-To: <536b1932-33a4-020e-de4e-28c338d2737f@web.de>
-References: <158339065180.26602.26457588086834858.stgit@devnote2>
-        <158339066140.26602.7533299987467005089.stgit@devnote2>
-        <ef820445-25c5-a312-57d4-25ff3b4d08cf@infradead.org>
-        <3fb124a6-07d2-7a40-8981-07561aeb3c1e@web.de>
-        <f823204d-dcd1-2159-a525-02f15562e1af@infradead.org>
-        <29c599ef-991d-a253-9f27-5999fb55b228@web.de>
-        <997f73af-dc6c-bc8b-12ba-69270ee4b95d@infradead.org>
-        <dbef7b77-945a-585e-12fe-b5e30eb1a6bc@web.de>
-        <e20f52a0-e522-c2cf-17a4-384a1f3308bc@infradead.org>
-        <ecaffba3-fccd-32ee-763a-a2ec84a65148@web.de>
-        <a6a216ce-8e41-ca35-bd65-25bcacde1d28@infradead.org>
-        <ac1c953b-fa5d-818d-5232-19a28f52f556@web.de>
-        <20200305142632.1ed2726d@gandalf.local.home>
-        <536b1932-33a4-020e-de4e-28c338d2737f@web.de>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726080AbgCEU70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 15:59:26 -0500
+Received: from 250.57.4.146.static.wline.lns.sme.cust.swisscom.ch ([146.4.57.250] helo=martin-debian-2.paytec.ch)
+        by viti.kaiser.cx with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <martin@kaiser.cx>)
+        id 1j9xaN-0000e9-3L; Thu, 05 Mar 2020 21:59:15 +0100
+From:   Martin Kaiser <martin@kaiser.cx>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>
+Cc:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Martin Kaiser <martin@kaiser.cx>
+Subject: [PATCH v2 0/5] imx-rngc - several small fixes
+Date:   Thu,  5 Mar 2020 21:58:19 +0100
+Message-Id: <20200305205824.4371-1-martin@kaiser.cx>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200128110102.11522-1-martin@kaiser.cx>
+References: <20200128110102.11522-1-martin@kaiser.cx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Mar 2020 21:26:40 +0100
-Markus Elfring <Markus.Elfring@web.de> wrote:
+This is a set of small fixes for the imx-rngc driver.
 
-> >>> Masami seems to be responsive.  
-> >>
-> >> The involved contributors show different response delays, don't they?  
-> >
-> > Of course! Masami is in Japan, and is probably sleeping right now.  
-> 
-> I am not so concerned about the global distribution of contributors.
-> 
-> 
-> > That's what happens when you work in a global environment.  
-> 
-> I am used to this fact for years.
-> 
-> I became more concerned about information which was not directly provided
-> in patch change logs (according to my software development expectations).
-> 
+I tried to clarify the approach for masking/unmasking the interrupt from
+the rngc.
 
-Well, the information added was enough for my own software development
-expectations, and that's all I care about.
+The rngc should be set to auto-seed mode, where it creates a new seed
+when required.
 
--- Steve
+In the probe function, we should check that the rng type is supported by
+this driver.
+
+Thanks for reviewing the patches,
+
+   Martin
+
+changes in v2:
+- remove the contentious devres patch
+- add PrasannaKumar's tags
+
+Martin Kaiser (5):
+  hwrng: imx-rngc - fix an error path
+  hwrng: imx-rngc - use automatic seeding
+  hwrng: imx-rngc - (trivial) simplify error prints
+  hwrng: imx-rngc - check the rng type
+  hwrng: imx-rngc - simplify interrupt mask/unmask
+
+ drivers/char/hw_random/imx-rngc.c | 85 +++++++++++++++++++++++++------
+ 1 file changed, 69 insertions(+), 16 deletions(-)
+
+-- 
+2.20.1
 
