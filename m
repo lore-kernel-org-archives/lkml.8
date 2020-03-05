@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB089C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B75C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B35C7208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC53F21739
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428486;
-	bh=aTdpUfC9CqY/wB251UlTwSnnH+oYCQX5mXBrUSe7RY0=;
+	s=default; t=1583428489;
+	bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zobBbPW3FeI35Lbsss0mxyg9KED3AVI336kBYTWkTDac6VIBBePDXngj+m5Wn7mJn
-	 +LAtWri3RQdn1YOYmyxjMxUr+d6Iy06Bz5qamEg/37BKMaHJY0fVc64MPPOKcrfZcG
-	 REd0RU9+/FwgWU/V7NT+wolK/sb36XsAuQrtwQac=
+	b=J8e+FtA+nhbBWyuXU1tnsMu3ey6qI/ghKdIvtlXMk0ObwMJGkQYs7eUZ/p8z0K8kN
+	 mibv7kbWSuBaXe3jyxHrWbr003rh8GjpwTeirk0Y7uDM/gOJ5xwkcmvxzxcncodSTO
+	 FZkD7Za1o0cNiLCY/Cy+zPkBaONjlg1BDDVfyKts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbgCEROp (ORCPT
+        id S1727816AbgCEROt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:14:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40676 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:14:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40734 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725977AbgCEROb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:31 -0500
+        id S1726273AbgCEROc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:32 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D319621739;
-        Thu,  5 Mar 2020 17:14:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A6BC21744;
+        Thu,  5 Mar 2020 17:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428470;
-        bh=aTdpUfC9CqY/wB251UlTwSnnH+oYCQX5mXBrUSe7RY0=;
+        s=default; t=1583428471;
+        bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E/QmWYthf+1g71e7SFwDVITcuGtx6jopsmB0d3xhjIkY0UjA3tA8OUTcupzoaZBCB
-         WQXpJXXmt3cUwOVTjt1HkRlpVkcbKOI0BI0lZv9VefE0a63Bf2+fWHab6UL7Iwr+IN
-         WJGLU9a22lPx1Pa7ufk2Y4LWk4fyyRBL9geyz7Gw=
+        b=TjtMonUBqkUQuEQjeZ0z4pazc6on071fXRqYpG+N6UBi1Zm0CzLDneHs+Nc+vGvFj
+         tPbp0P0joz/jvDhYRKhW+Ze+qD/yJCFUZAw2FGERP7MJCSEgJnSAeYtrZPxhuKoXSn
+         eVpsyrrVWiEFjk8zp5bXQwsm0HpmIv+ah8oqvy3o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 08/58] ACPI: watchdog: Set default timeout in probe
-Date:   Thu,  5 Mar 2020 12:13:29 -0500
-Message-Id: <20200305171420.29595-8-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 09/58] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
+Date:   Thu,  5 Mar 2020 12:13:30 -0500
+Message-Id: <20200305171420.29595-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
 References: <20200305171420.29595-1-sashal@kernel.org>
@@ -60,66 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit cabe17d0173ab04bd3f87b8199ae75f43f1ea473 ]
+[ Upstream commit be0aba826c4a6ba5929def1962a90d6127871969 ]
 
-If the BIOS default timeout for the watchdog is too small userspace may
-not have enough time to configure new timeout after opening the device
-before the system is already reset. For this reason program default
-timeout of 30 seconds in the driver probe and allow userspace to change
-this from command line or through module parameter (wdat_wdt.timeout).
+The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
+descriptors, so it has to be added to the override list.
 
-Reported-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+BugLink: https://bugs.launchpad.net/bugs/1858299
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/wdat_wdt.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/watchdog/wdat_wdt.c b/drivers/watchdog/wdat_wdt.c
-index e7cf41aa26c3b..697b04ffee97c 100644
---- a/drivers/watchdog/wdat_wdt.c
-+++ b/drivers/watchdog/wdat_wdt.c
-@@ -54,6 +54,13 @@ module_param(nowayout, bool, 0);
- MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
- 		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
- 
-+#define WDAT_DEFAULT_TIMEOUT	30
-+
-+static int timeout = WDAT_DEFAULT_TIMEOUT;
-+module_param(timeout, int, 0);
-+MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
-+		 __MODULE_STRING(WDAT_DEFAULT_TIMEOUT) ")");
-+
- static int wdat_wdt_read(struct wdat_wdt *wdat,
- 	 const struct wdat_instruction *instr, u32 *value)
- {
-@@ -438,6 +445,22 @@ static int wdat_wdt_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, wdat);
- 
-+	/*
-+	 * Set initial timeout so that userspace has time to configure the
-+	 * watchdog properly after it has opened the device. In some cases
-+	 * the BIOS default is too short and causes immediate reboot.
-+	 */
-+	if (timeout * 1000 < wdat->wdd.min_hw_heartbeat_ms ||
-+	    timeout * 1000 > wdat->wdd.max_hw_heartbeat_ms) {
-+		dev_warn(dev, "Invalid timeout %d given, using %d\n",
-+			 timeout, WDAT_DEFAULT_TIMEOUT);
-+		timeout = WDAT_DEFAULT_TIMEOUT;
-+	}
-+
-+	ret = wdat_wdt_set_timeout(&wdat->wdd, timeout);
-+	if (ret)
-+		return ret;
-+
- 	watchdog_set_nowayout(&wdat->wdd, nowayout);
- 	return devm_watchdog_register_device(dev, &wdat->wdd);
- }
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index d31ea82b84c17..a66f08041a1aa 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Trekstor SURFBOOK E11B",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{
+ 		.ident = "Direkt-Tek DTLAPY116-2",
+ 		.matches = {
 -- 
 2.20.1
 
