@@ -2,157 +2,132 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5203AC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB324C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2570F2073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DD02073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:50:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="RXYy55z5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="fyQCDPNs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727097AbgCEKtq (ORCPT
+        id S1727228AbgCEKuG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:49:46 -0500
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:40111 "EHLO
-        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgCEKtp (ORCPT
+        Thu, 5 Mar 2020 05:50:06 -0500
+Received: from gateway34.websitewelcome.com ([192.185.148.142]:24925 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725816AbgCEKuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:49:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1583405385;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=fiq5TS2rlNJ42Y85HoM0ccjXqRxqSGHUjMll3s1okX8=;
-  b=RXYy55z5cA6dZo1zPtzrbqPZKPoCh6u2t7EbDfBJzoRnKNKqtphpPegb
-   Gj2n0pfNqJacdKBsFD6hrYM0XcWh73iPZDlhbFtnqBSVUvzZDXP8Avg6R
-   J2FjvLzUNQDanE7kyYS1QXs8AgQmL1cH5KuUIi0yYegfWccwdDuTIClTz
-   0=;
-Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=roger.pau@citrix.com; spf=Pass smtp.mailfrom=roger.pau@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  roger.pau@citrix.com) identity=pra; client-ip=162.221.158.21;
-  receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
-  roger.pau@citrix.com designates 162.221.158.21 as permitted
-  sender) identity=mailfrom; client-ip=162.221.158.21;
-  receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="roger.pau@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="roger.pau@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: iO84YcsxxS335XjMZn+9MjGhNsbK+YU+eCuQfCy4OEwl49wy+VHz976hS/9bOaohiwTjSrivnO
- x3TfegmAg/7LogMve+gRCSAg+BG0Emc27M6MVGXQAWC6bVPlhU4NnJfpNGO82JGPZW5IFLtKzx
- 3jV3y7PA+z1QZuPwup0i0yZpHKHNKqkOPFAYV47AHDo8PZoQ/CZmMTQHpqMip//8P9os3BAmk+
- hIOnXJ0iVA6feNh2XdiceeL2Yf/FF9FnoC+F1X21XKfRKSZrmSIbnjsvdAGyQ+Y8Fjq8Y7vfyy
- 4zo=
-X-SBRS: 2.7
-X-MesageID: 13795980
-X-Ironport-Server: esa5.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,517,1574139600"; 
-   d="scan'208";a="13795980"
-Date:   Thu, 5 Mar 2020 11:49:35 +0100
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Juergen Gross <jgross@suse.com>
-CC:     <xen-devel@lists.xenproject.org>, <linux-block@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: Re: [PATCH] xen/blkfront: fix ring info addressing
-Message-ID: <20200305104935.GU24458@Air-de-Roger.citrite.net>
-References: <20200305100331.16790-1-jgross@suse.com>
+        Thu, 5 Mar 2020 05:50:06 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id B8FF92B2C55
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Mar 2020 04:50:03 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9o4pjPpH3Sl8q9o4pj2IEv; Thu, 05 Mar 2020 04:50:03 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Jugb5LVg8mFca90YkJDM5+QeWSDDP8jv8ZoLZGi2tQk=; b=fyQCDPNsuCw6k+WxIMaPPP4leb
+        7l1Nz0bH4kub4AkCs87UpqzkevQYEMH+f2hnlm2AVjrLtRJ+XAz0RMZEtn2rExj9zSH2UBM+Ec+w0
+        0KMNhgH25n7RtAOoEpe3zuLaCYf8j5f8c5eOUnhAmCjcxKn1y/gwju/lGlo7e622Lrwz3a199ZH8p
+        4BK5XJDxm596Mow3aIXsleBpy3FAU+bMdebDWiz5evyLoomLlWRVFsftjPfs0+ETHR8eWwYG4vOKc
+        3E6E/9x904yADz4B2a0nSbUustpehD9zc1mMFQgU2tHDCZp1EG9gR5KOZJmsA75MgoQFTI7SfTWJ9
+        OxpMQrbg==;
+Received: from [201.166.169.220] (port=15208 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j9o4m-003e9d-GQ; Thu, 05 Mar 2020 04:50:01 -0600
+Date:   Thu, 5 Mar 2020 04:53:06 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] drm/gma500/intel_bios.h: Replace zero-length array
+ with flexible-array member
+Message-ID: <20200305105306.GA18788@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200305100331.16790-1-jgross@suse.com>
-X-ClientProxiedBy: AMSPEX02CAS01.citrite.net (10.69.22.112) To
- AMSPEX02CL01.citrite.net (10.69.22.125)
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.169.220
+X-Source-L: No
+X-Exim-ID: 1j9o4m-003e9d-GQ
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.169.220]:15208
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 13
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 11:03:31AM +0100, Juergen Gross wrote:
-> Commit 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to
-> actual use case") made struct blkfront_ring_info size dynamic. This is
-> fine when running with only one queue, but with multiple queues the
-> addressing of the single queues has to be adapted as the structs are
-> allocated in an array.
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-Thanks, and sorry for not catching this during review.
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-> 
-> Fixes: 0265d6e8ddb890 ("xen/blkfront: limit allocated memory size to actual use case")
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> ---
->  drivers/block/xen-blkfront.c | 82 ++++++++++++++++++++++++--------------------
->  1 file changed, 45 insertions(+), 37 deletions(-)
-> 
-> diff --git a/drivers/block/xen-blkfront.c b/drivers/block/xen-blkfront.c
-> index e2ad6bba2281..a8d4a3838e5d 100644
-> --- a/drivers/block/xen-blkfront.c
-> +++ b/drivers/block/xen-blkfront.c
-> @@ -213,6 +213,7 @@ struct blkfront_info
->  	struct blk_mq_tag_set tag_set;
->  	struct blkfront_ring_info *rinfo;
->  	unsigned int nr_rings;
-> +	unsigned int rinfo_size;
->  	/* Save uncomplete reqs and bios for migration. */
->  	struct list_head requests;
->  	struct bio_list bio_list;
-> @@ -259,6 +260,21 @@ static int blkfront_setup_indirect(struct blkfront_ring_info *rinfo);
->  static void blkfront_gather_backend_features(struct blkfront_info *info);
->  static int negotiate_mq(struct blkfront_info *info);
->  
-> +#define rinfo_ptr(rinfo, off) \
-> +	(struct blkfront_ring_info *)((unsigned long)(rinfo) + (off))
-                                      ^ void * would seem more natural IMO.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-Also if you use void * you don't need the extra (struct
-blkfront_ring_info *) cast I think?
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-I however think this macro is kind of weird, since it's just doing an
-addition. I would rather have that calculation in get_rinfo and code
-for_each_rinfo on top of that.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-I agree this might be a question of taste, so I'm not going to insist
-but that would reduce the number of helpers from 3 to 2.
+This issue was found with the help of Coccinelle.
 
-> +
-> +#define for_each_rinfo(info, rinfo, idx)				\
-> +	for (rinfo = info->rinfo, idx = 0;				\
-> +	     idx < info->nr_rings;					\
-> +	     idx++, rinfo = rinfo_ptr(rinfo, info->rinfo_size))
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-I think the above is missing proper parentheses around macro
-parameters.
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/gpu/drm/gma500/intel_bios.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> +
-> +static struct blkfront_ring_info *get_rinfo(struct blkfront_info *info,
-> +					    unsigned int i)
+diff --git a/drivers/gpu/drm/gma500/intel_bios.h b/drivers/gpu/drm/gma500/intel_bios.h
+index a1f9ce9465a5..0e6facf21e33 100644
+--- a/drivers/gpu/drm/gma500/intel_bios.h
++++ b/drivers/gpu/drm/gma500/intel_bios.h
+@@ -227,7 +227,7 @@ struct bdb_general_definitions {
+ 	 * number = (block_size - sizeof(bdb_general_definitions))/
+ 	 *	     sizeof(child_device_config);
+ 	 */
+-	struct child_device_config devices[0];
++	struct child_device_config devices[];
+ };
+ 
+ struct bdb_lvds_options {
+-- 
+2.25.0
 
-inline attribute might be appropriate here.
-
-Thanks, Roger.
