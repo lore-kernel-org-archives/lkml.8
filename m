@@ -2,47 +2,57 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C75C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:21:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE8DC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 317B820637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:21:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D93F20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:21:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YyEqUw71"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726674AbgCEQVK (ORCPT
+        id S1726846AbgCEQVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:21:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:50780 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgCEQVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:21:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 44C6630E;
-        Thu,  5 Mar 2020 08:21:09 -0800 (PST)
-Received: from [10.37.12.159] (unknown [10.37.12.159])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F15DD3F534;
-        Thu,  5 Mar 2020 08:21:07 -0800 (PST)
-Subject: Re: [PATCH] mm: Make mem_cgroup_id_get_many dependent on MMU and
- MEMCG_SWAP
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200304142348.48167-1-vincenzo.frascino@arm.com>
- <20200304165336.GO16139@dhcp22.suse.cz>
- <8c489836-b824-184e-7cfe-25e55ab73000@arm.com>
- <20200305160929.GA1166@cmpxchg.org>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <a3e7f3a7-dee4-c05e-2d75-65a0d30e6401@arm.com>
-Date:   Thu, 5 Mar 2020 16:21:28 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 5 Mar 2020 11:21:40 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:42644 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbgCEQVk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 11:21:40 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=L2uspJRoRT7neik2N4DuFrl2a9BrSt+K4IAqB69JQoQ=; b=YyEqUw71nfTPEi/pxrkuKiaAMn
+        HCj9nByw3Wl4yBSwdL2Z4N+wGVcYed4qI4k+xImn/3Ry2m7oUmCUJKY9WqeJHL3Y9E08v4jPJwEms
+        YuVNy1kkZlUlufPDkn5aLL+W9Nyt4O236p/vZWfYSJ5WVioxVPNsFR44c9Uik5stQld0sgnKevaYh
+        qbv+przaabbXasIGFlPyLPiL3wrTUdbxMPwHJDAmssLyyhQbylS7wXwU4ncfIa4i8cFsn1qobf6sM
+        e3XtHn6KJ4tln2qX6IVU1yHZr9gWTn5S3ZfOFYXFwfvrZeQvfVEIeFpUBqCrvsrkrej6ukuXDBexX
+        Lom2Q1fg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9tFj-0008OD-EO; Thu, 05 Mar 2020 16:21:39 +0000
+Subject: Re: [PATCH] spi: Remove CONFIG_ prefix from Kconfig select
+To:     John Garry <john.garry@huawei.com>, Joe Perches <joe@perches.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>
+References: <f8ac6b32a29b9a05b58a7e58ffe8b780642abbf1.camel@perches.com>
+ <e265e7df-fd8c-691f-389a-c0e0e377ed9e@huawei.com>
+ <84f8504924380fc6380216d03d28a2285e3d106e.camel@perches.com>
+ <55edba5c-78d6-12e2-eff6-f16c204badee@huawei.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <15ad3c68-4e67-0c92-a0e1-c62861673561@infradead.org>
+Date:   Thu, 5 Mar 2020 08:21:38 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200305160929.GA1166@cmpxchg.org>
+In-Reply-To: <55edba5c-78d6-12e2-eff6-f16c204badee@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -51,57 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Johannes,
-
-On 3/5/20 4:09 PM, Johannes Weiner wrote:
-> On Thu, Mar 05, 2020 at 09:49:23AM +0000, Vincenzo Frascino wrote:
->> Hi Michal,
->>
->> On 3/4/20 4:53 PM, Michal Hocko wrote:
->>> On Wed 04-03-20 14:23:48, Vincenzo Frascino wrote:
->>>> mem_cgroup_id_get_many() is currently used only when MMU or MEMCG_SWAP
->>>> configuration options are enabled. Having them disabled triggers the
->>>> following warning at compile time:
+On 3/5/20 8:20 AM, John Garry wrote:
+> On 05/03/2020 16:01, Joe Perches wrote:
+>> On Thu, 2020-03-05 at 15:53 +0000, John Garry wrote:
+>>> On 05/03/2020 15:15, Joe Perches wrote:
+>>>> commit a2ca53b52e00 ("spi: Add HiSilicon v3xx SPI NOR flash
+>>>> controller driver") likely inadvertently used a select statement
+>>>> with a CONFIG_ prefix, remove the prefix.
 >>>>
->>>> linux/mm/memcontrol.c:4797:13: warning: ‘mem_cgroup_id_get_many’ defined
->>>> but not used [-Wunused-function]
->>>>  static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned
->>>>  int n)
->>>>
->>>> Make mem_cgroup_id_get_many() dependent on MMU and MEMCG_SWAP to address
->>>> the issue.
+>>>> Signed-off-by: Joe Perches <joe@perches.com>
 >>>
->>> A similar patch has been proposed recently
->>> http://lkml.kernel.org/r/87fthjh2ib.wl-kuninori.morimoto.gx@renesas.com.
->>> The conclusion was that the warning is not really worth adding code.
->>>
+>>> It's a pity checkpatch can't pick this stuff up...
 >>
->> Thank you for pointing this out, I was not aware of it. I understand that you
->> are against "#ifdeffery" in this case, but isn't it the case of adding at least
->> __maybe_unused? This would prevent people from reporting it over and over again
->> and you to have to push them back :) Let me know what do you think, in case I am
->> happy to change my patch accordingly.
+>> You are free to write a rule and submit a patch.
+>>
 > 
-> I would ack a patch that adds __maybe_unused.
+> I'm not opposed to the idea...
 > 
-> This is a tiny function. If we keep it around a few releases after
-> removing the last user, it costs us absolutely nothing. Eventually
-> somebody will notice and send a patch to remove it. No big deal.
+>> The grammar is pretty hard to verify from a patch
+>> fragment though.
+>>
+>> There are 2 existing nominal false positives.
+>>
+>> $ git grep 'select\b.*\bCONFIG_' -- '*/Kconfig*'
+>> drivers/edac/Kconfig:     select CONFIG_ACPI_NFIT.
+>> drivers/edac/Kconfig:     select CONFIG_ACPI_NFIT.
 > 
-> There is, however, real cost in keeping bogus warnings around and
-> telling people to ignore them. It's actively lowering the
-> signal-to-noise ratio and normalizing warnings to developers. That's
-> the kind of thing that will actually hide problems in the kernel.
+> Ah, that's in the help text. I guess that those can be ignored simply based on the indentation.
 > 
-> We know that the function can be unused in certain scenarios. It's
-> silly to let the compiler continue to warn about it. That's exactly
-> what __maybe_unused is for, so let's use it here.
+> I also see these:
 > 
+> drivers/i2c/busses/Kconfig:       to also select CONFIG_TYPEC_FUSB302=m.
+> drivers/platform/chrome/Kconfig:        select CONFIG_MFD_CROS_EC_DEV
+> 
+> The 2nd looks like it's incorrect.
 
-I agree with what you are saying. I am going to change my patch accordingly.
+Yes, we just got a patch for that one today.
 
-Thank you.
+> 
+> And then also:
+> $ git grep 'depends on\b.*\bCONFIG_' -- '*/Kconfig*'
+> samples/Kconfig:        depends on CONFIG_ANDROID_BINDERFS
+> 
+> Thanks,
+> John
+
 
 -- 
-Regards,
-Vincenzo
+~Randy
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
