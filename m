@@ -2,125 +2,189 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40219C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF82C3F2D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198532073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1400D2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgCENLY (ORCPT
+        id S1726234AbgCENL1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:11:24 -0500
-Received: from mga01.intel.com ([192.55.52.88]:64782 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgCENLY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:11:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 05:11:24 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="259178067"
-Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
-  by orsmga002.jf.intel.com with SMTP; 05 Mar 2020 05:11:19 -0800
-Received: by stinkbox (sSMTP sendmail emulation); Thu, 05 Mar 2020 15:11:19 +0200
-Date:   Thu, 5 Mar 2020 15:11:19 +0200
-From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
-To:     Lyude Paul <lyude@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        nouveau@lists.freedesktop.org, Sean Paul <seanpaul@google.com>,
-        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Mikita Lipski <mikita.lipski@amd.com>
-Subject: Re: [PATCH 2/3] drm/dp_mst: Don't show connectors as connected
- before probing available PBN
-Message-ID: <20200305131119.GJ13686@intel.com>
-References: <20200304223614.312023-1-lyude@redhat.com>
- <20200304223614.312023-3-lyude@redhat.com>
+        Thu, 5 Mar 2020 08:11:27 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:10432 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725912AbgCENL0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 08:11:26 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025CoJ5R022348;
+        Thu, 5 Mar 2020 08:11:13 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52f466-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Mar 2020 08:11:12 -0500
+Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 025DBBfi041796
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 5 Mar 2020 08:11:11 -0500
+Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by ASHBMBX8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 5 Mar 2020
+ 08:11:10 -0500
+Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 5 Mar 2020 08:11:10 -0500
+Received: from saturn.ad.analog.com ([10.48.65.112])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 025DB789029497;
+        Thu, 5 Mar 2020 08:11:07 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <dmitry.torokhov@gmail.com>, <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v4 1/4] Input: adp5589: Add default platform data
+Date:   Thu, 5 Mar 2020 15:14:02 +0200
+Message-ID: <20200305131405.6598-1-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200304223614.312023-3-lyude@redhat.com>
-X-Patchwork-Hint: comment
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-05_03:2020-03-05,2020-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1011 adultscore=0
+ impostorscore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 05:36:12PM -0500, Lyude Paul wrote:
-> It's next to impossible for us to do connector probing on topologies
-> without occasionally racing with userspace, since creating a connector
-> itself causes a hotplug event which we have to send before probing the
-> available PBN of a connector. Even if we didn't have this hotplug event
-> sent, there's still always a chance that userspace started probing
-> connectors before we finished probing the topology.
-> 
-> This can be a problem when validating a new MST state since the
-> connector will be shown as connected briefly, but without any available
-> PBN - causing any atomic state which would enable said connector to fail
-> with -ENOSPC. So, let's simply workaround this by telling userspace new
-> MST connectors are disconnected until we've finished probing their PBN.
-> Since we always send a hotplug event at the end of the link address
-> probing process, userspace will still know to reprobe the connector when
-> we're ready.
-> 
-> Signed-off-by: Lyude Paul <lyude@redhat.com>
-> Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to MST atomic check")
-> Cc: Mikita Lipski <mikita.lipski@amd.com>
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Cc: Sean Paul <seanpaul@google.com>
-> Cc: Hans de Goede <hdegoede@redhat.com>
-> ---
->  drivers/gpu/drm/drm_dp_mst_topology.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-> index 207eef08d12c..7b0ff0cff954 100644
-> --- a/drivers/gpu/drm/drm_dp_mst_topology.c
-> +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-> @@ -4033,6 +4033,19 @@ drm_dp_mst_detect_port(struct drm_connector *connector,
->  			ret = connector_status_connected;
->  		break;
->  	}
-> +
-> +	/* We don't want to tell userspace the port is actually plugged into
-> +	 * anything until we've finished probing it's available_pbn, otherwise
+From: Lars-Peter Clausen <lars@metafoo.de>
 
-"its"
+If no platform data is supplied use a dummy platform data that configures
+the device in GPIO only mode. This change adds a adp5589_kpad_pdata_get()
+helper that returns the default platform-data. This can be later extended
+to load configuration from device-trees or ACPI.
 
-Why is the connector even registered before we've finished the probe?
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+---
 
-> +	 * userspace will see racy atomic check failures
-> +	 *
-> +	 * Since we always send a hotplug at the end of probing topology
-> +	 * state, we can just let userspace reprobe this connector later.
-> +	 */
-> +	if (ret == connector_status_connected && !port->available_pbn) {
-> +		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] not ready yet (PBN not probed)\n",
-> +			      connector->base.id, connector->name);
-> +		ret = connector_status_disconnected;
-> +	}
->  out:
->  	drm_dp_mst_topology_put_port(port);
->  	return ret;
-> -- 
-> 2.24.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Changelog v3 -> v4:
+* Fixed smatch warnings about potential leak being created; resulted in 2
+  more patches:
+  - Input: adp5589: unify ret & error variables
+  - Input: adp5589: fix possible memleak of 'kpad'
 
+Changelog v2 -> v3:
+* fix `-Wpointer-to-int-cast` warnings for patch `input: adp5589: Add basic
+  devicetree support` ; warnings shows up on 64 bit ARCHs
+
+Changelog v1 -> v2:
+* adjusted patch `input: adp5589: Add default platform data` by
+  introducting a `adp5589_kpad_pdata_get()` helper, which returns the
+  platform-data; the previos patch was based on an older version of the
+  kernel from the ADI kernel-tree; the driver was sync-ed with the upstream
+  version
+
+ drivers/input/keyboard/adp5589-keys.c | 36 +++++++++++++++++++--------
+ 1 file changed, 26 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/input/keyboard/adp5589-keys.c b/drivers/input/keyboard/adp5589-keys.c
+index e7d58e7f0257..c6a801bcdf90 100644
+--- a/drivers/input/keyboard/adp5589-keys.c
++++ b/drivers/input/keyboard/adp5589-keys.c
+@@ -369,6 +369,25 @@ static const struct adp_constants const_adp5585 = {
+ 	.reg			= adp5585_reg,
+ };
+ 
++static const struct adp5589_gpio_platform_data adp5589_default_gpio_pdata = {
++	.gpio_start = -1,
++};
++
++static const struct adp5589_kpad_platform_data adp5589_default_pdata = {
++	.gpio_data = &adp5589_default_gpio_pdata,
++};
++
++static const struct adp5589_kpad_platform_data *adp5589_kpad_pdata_get(
++	struct device *dev)
++{
++	const struct adp5589_kpad_platform_data *pdata = dev_get_platdata(dev);
++
++	if (!pdata)
++		pdata = &adp5589_default_pdata;
++
++	return pdata;
++}
++
+ static int adp5589_read(struct i2c_client *client, u8 reg)
+ {
+ 	int ret = i2c_smbus_read_byte_data(client, reg);
+@@ -498,7 +517,8 @@ static int adp5589_build_gpiomap(struct adp5589_kpad *kpad,
+ static int adp5589_gpio_add(struct adp5589_kpad *kpad)
+ {
+ 	struct device *dev = &kpad->client->dev;
+-	const struct adp5589_kpad_platform_data *pdata = dev_get_platdata(dev);
++	const struct adp5589_kpad_platform_data *pdata =
++		adp5589_kpad_pdata_get(dev);
+ 	const struct adp5589_gpio_platform_data *gpio_data = pdata->gpio_data;
+ 	int i, error;
+ 
+@@ -553,7 +573,8 @@ static int adp5589_gpio_add(struct adp5589_kpad *kpad)
+ static void adp5589_gpio_remove(struct adp5589_kpad *kpad)
+ {
+ 	struct device *dev = &kpad->client->dev;
+-	const struct adp5589_kpad_platform_data *pdata = dev_get_platdata(dev);
++	const struct adp5589_kpad_platform_data *pdata =
++		adp5589_kpad_pdata_get(dev);
+ 	const struct adp5589_gpio_platform_data *gpio_data = pdata->gpio_data;
+ 	int error;
+ 
+@@ -656,7 +677,7 @@ static int adp5589_setup(struct adp5589_kpad *kpad)
+ {
+ 	struct i2c_client *client = kpad->client;
+ 	const struct adp5589_kpad_platform_data *pdata =
+-		dev_get_platdata(&client->dev);
++		adp5589_kpad_pdata_get(&client->dev);
+ 	u8 (*reg) (u8) = kpad->var->reg;
+ 	unsigned char evt_mode1 = 0, evt_mode2 = 0, evt_mode3 = 0;
+ 	unsigned char pull_mask = 0;
+@@ -861,7 +882,7 @@ static int adp5589_keypad_add(struct adp5589_kpad *kpad, unsigned int revid)
+ {
+ 	struct i2c_client *client = kpad->client;
+ 	const struct adp5589_kpad_platform_data *pdata =
+-		dev_get_platdata(&client->dev);
++		adp5589_kpad_pdata_get(&client->dev);
+ 	struct input_dev *input;
+ 	unsigned int i;
+ 	int error;
+@@ -992,7 +1013,7 @@ static int adp5589_probe(struct i2c_client *client,
+ {
+ 	struct adp5589_kpad *kpad;
+ 	const struct adp5589_kpad_platform_data *pdata =
+-		dev_get_platdata(&client->dev);
++		adp5589_kpad_pdata_get(&client->dev);
+ 	unsigned int revid;
+ 	int error, ret;
+ 
+@@ -1002,11 +1023,6 @@ static int adp5589_probe(struct i2c_client *client,
+ 		return -EIO;
+ 	}
+ 
+-	if (!pdata) {
+-		dev_err(&client->dev, "no platform data?\n");
+-		return -EINVAL;
+-	}
+-
+ 	kpad = kzalloc(sizeof(*kpad), GFP_KERNEL);
+ 	if (!kpad)
+ 		return -ENOMEM;
 -- 
-Ville Syrjälä
-Intel
+2.20.1
+
