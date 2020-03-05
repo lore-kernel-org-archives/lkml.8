@@ -2,269 +2,113 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E534C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49C93C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23B9620870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D3D3206E6
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 22:30:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AAq6QJXI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IFy+937e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCEWaF (ORCPT
+        id S1726400AbgCEWal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 17:30:05 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3237 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgCEWaF (ORCPT
+        Thu, 5 Mar 2020 17:30:41 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:38421 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbgCEWak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 17:30:05 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e617d420001>; Thu, 05 Mar 2020 14:29:22 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 05 Mar 2020 14:30:04 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 05 Mar 2020 14:30:04 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 5 Mar
- 2020 22:30:03 +0000
-Subject: Re: [PATCH v3 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>,
-        <jack@suse.cz>, <kirill@shutemov.name>
-CC:     <borntraeger@de.ibm.com>, <david@redhat.com>,
-        <aarcange@redhat.com>, <linux-mm@kvack.org>,
-        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
-        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        Will Deacon <will@kernel.org>
-References: <20200304130655.462517-1-imbrenda@linux.ibm.com>
- <20200304130655.462517-3-imbrenda@linux.ibm.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <f58b6839-5233-5ccf-1f1d-60b3b8aaf417@nvidia.com>
-Date:   Thu, 5 Mar 2020 14:30:03 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 17:30:40 -0500
+Received: by mail-oi1-f195.google.com with SMTP id x75so551330oix.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 14:30:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8cuWr9b9CX0abyzsrEF2iLgokkUE78xXPZ0J1M4ESfQ=;
+        b=IFy+937eI4j0qwYYIm2/HqbQ0ojz3WfSPHXbnaLd8zs186jr87wmtBkbNOV6HkaYoQ
+         RK9ldIDWO9omjsSgJaSWKI01OsLVPLuBKJTe4tTxTshpu3ADwgrEm647/AP6jE1a7U0H
+         ZjwSTJNBQHO/d5fwmNETUvpu0oXhLVwevh1wWt0+SnqNJIXRdSXIyOGZyNgpPEW6nCN1
+         1vt7ebzxZ0S7FxXf/jfBXO6GVx52qe8NeFmJQzQxp7ARCJUNQ1zIecwuIQkZTnMZBvPL
+         YQoQv4x7Jyb0gDys3rQeVp29hXUluZGudDBHwcXn1dpm2rL/X0CjVNVtNhpJZiQl4vLr
+         4w4Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8cuWr9b9CX0abyzsrEF2iLgokkUE78xXPZ0J1M4ESfQ=;
+        b=Tqv8+piG8Jkr+QI3hPdcJRAWKO5OzlhgIWieC+9smFkPmrjWZ7uZyFQi+6fWIARXk/
+         EIlVevFFwNBSq0AOoi5QkQLhXmB4VUzeNSEQGQLmMDe9SO18kslGss4Idc+jvnzKCIU/
+         Q9OaNd+qQNLv5mFQlug5U9MR5UgXVpkrRLU8GoNlSIwb41NSWc9WcEaO/FJ4ywMWras0
+         KXk0dd2C2HMUt70lAQ3au3coje0zd5ATgeKe6hN2eOIr4ROKiQPVZ4M0B991MxwCdkzd
+         3NRg3A6L37adNFhEOW1ENOawcLuq8yqQOXctt49KZ+G71/owBOWVNj59tGqhv6rjXjz6
+         6pwA==
+X-Gm-Message-State: ANhLgQ2G1eJM+ym4nELtqzKrnD8LLY9qDSDBzQ9m9Lt2KO48VzBQKrAT
+        NXbcn2RP1mTwMyaS9L5Kxd6g8cBmYw2Xro1ui4fRNA==
+X-Google-Smtp-Source: ADFU+vt+vEjyDebjV5gCEwNADQBMIuwSVs6AqfMgXkuYWAviR+7r0nFGLmYtQTI3ml3F0wCFiNMhvyoMnoFaFDviZdc=
+X-Received: by 2002:aca:d954:: with SMTP id q81mr480833oig.157.1583447439793;
+ Thu, 05 Mar 2020 14:30:39 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200304130655.462517-3-imbrenda@linux.ibm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583447362; bh=AIy2F0cXJ6vERrZGXDyU4ocJ5/9VuGMIm2jFeH0zjLU=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=AAq6QJXIsjboZ/XB07RxXDRGm5iG+3TzRkSS7LAYrsQMUZXHbrR8PgbK0uhKdMVQq
-         c/BjYVCVwNfY0gGGWH7GclhFlaw0CPg+WeFFXWgFB2fYoG8If0fH3eL8uiC9tBfV7E
-         +uTz9fGnxPZVG/49xXQ8aPaO0n6kFuPYry23/BrY9KT2E0CvNFvsK1qr/kbLmIu99z
-         bfskLayB2MtSXEDL3LGAi+M9h50IJs1z+0wWqkmHN0yCrxTE9kgsPFJgceOjg/9pII
-         fPw5iHdg+VlGfC/KBkmyFmjxfHGEwhQ+QH+wHWRcaYqP3nn+6YoUDjK8jO47/7kgGM
-         lLtLDZKfB4JJw==
+References: <20200305220657.46800-1-jannh@google.com> <20200305171344.1f35d971@gandalf.local.home>
+In-Reply-To: <20200305171344.1f35d971@gandalf.local.home>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 5 Mar 2020 23:30:13 +0100
+Message-ID: <CAG48ez0UGBot8xe10pWW_bFTyFOhmQaMVpBJjEmtfM4CqdcF5w@mail.gmail.com>
+Subject: Re: [PATCH v2] exit: Move preemption fixup up, move blocking
+ operations down
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        kernel list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/4/20 5:06 AM, Claudio Imbrenda wrote:
-> With the introduction of protected KVM guests on s390 there is now a
-> concept of inaccessible pages. These pages need to be made accessible
-> before the host can access them.
-> 
-> While cpu accesses will trigger a fault that can be resolved, I/O
-> accesses will just fail.  We need to add a callback into architecture
-> code for places that will do I/O, namely when writeback is started or
-> when a page reference is taken.
-> 
-> This is not only to enable paging, file backing etc, it is also
-> necessary to protect the host against a malicious user space.  For
-> example a bad QEMU could simply start direct I/O on such protected
-> memory.  We do not want userspace to be able to trigger I/O errors and
-> thus the logic is "whenever somebody accesses that page (gup) or does
-> I/O, make sure that this page can be accessed".  When the guest tries
-> to access that page we will wait in the page fault handler for
-> writeback to have finished and for the page_ref to be the expected
-> value.
-> 
-> On s390x the function is not supposed to fail, so it is ok to use a
-> WARN_ON on failure. If we ever need some more finegrained handling
-> we can tackle this when we know the details.
-> 
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> Acked-by: Will Deacon <will@kernel.org>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  include/linux/gfp.h |  6 ++++++
->  mm/gup.c            | 30 +++++++++++++++++++++++++++---
->  mm/page-writeback.c |  5 +++++
->  3 files changed, 38 insertions(+), 3 deletions(-)
-> 
-> diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-> index e5b817cb86e7..be2754841369 100644
-> --- a/include/linux/gfp.h
-> +++ b/include/linux/gfp.h
-> @@ -485,6 +485,12 @@ static inline void arch_free_page(struct page *page, int order) { }
->  #ifndef HAVE_ARCH_ALLOC_PAGE
->  static inline void arch_alloc_page(struct page *page, int order) { }
->  #endif
-> +#ifndef HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
-> +static inline int arch_make_page_accessible(struct page *page)
-> +{
-> +	return 0;
-> +}
-> +#endif
->  
->  struct page *
->  __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 81a95fbe9901..d0c4c6f336bb 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -413,6 +413,7 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  	struct page *page;
->  	spinlock_t *ptl;
->  	pte_t *ptep, pte;
-> +	int ret;
->  
->  	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
->  	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
-> @@ -471,8 +472,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  		if (is_zero_pfn(pte_pfn(pte))) {
->  			page = pte_page(pte);
->  		} else {
-> -			int ret;
-> -
->  			ret = follow_pfn_pte(vma, address, ptep, flags);
->  			page = ERR_PTR(ret);
->  			goto out;
-> @@ -480,7 +479,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  	}
->  
->  	if (flags & FOLL_SPLIT && PageTransCompound(page)) {
-> -		int ret;
->  		get_page(page);
->  		pte_unmap_unlock(ptep, ptl);
->  		lock_page(page);
-> @@ -497,6 +495,19 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
->  		page = ERR_PTR(-ENOMEM);
->  		goto out;
->  	}
-> +	/*
-> +	 * We need to make the page accessible if and only if we are going
-> +	 * to access its content (the FOLL_PIN case).  Please see
-> +	 * Documentation/core-api/pin_user_pages.rst for details.
-> +	 */
-> +	if (flags & FOLL_PIN) {
-> +		ret = arch_make_page_accessible(page);
-> +		if (ret) {
-> +			unpin_user_page(page);
-> +			page = ERR_PTR(ret);
-> +			goto out;
-> +		}
-> +	}
->  	if (flags & FOLL_TOUCH) {
->  		if ((flags & FOLL_WRITE) &&
->  		    !pte_dirty(pte) && !PageDirty(page))
-> @@ -2162,6 +2173,19 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
->  
->  		VM_BUG_ON_PAGE(compound_head(page) != head, page);
->  
-> +		/*
-> +		 * We need to make the page accessible if and only if we are
-> +		 * going to access its content (the FOLL_PIN case).  Please
-> +		 * see Documentation/core-api/pin_user_pages.rst for
-> +		 * details.
-> +		 */
-> +		if (flags & FOLL_PIN) {
-> +			ret = arch_make_page_accessible(page);
-> +			if (ret) {
-> +				unpin_user_page(page);
-> +				goto pte_unmap;
-> +			}
-> +		}
->  		SetPageReferenced(page);
->  		pages[*nr] = page;
->  		(*nr)++;
-> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-> index ab5a3cee8ad3..8384be5a2758 100644
-> --- a/mm/page-writeback.c
-> +++ b/mm/page-writeback.c
-> @@ -2807,6 +2807,11 @@ int __test_set_page_writeback(struct page *page, bool keep_write)
->  		inc_zone_page_state(page, NR_ZONE_WRITE_PENDING);
->  	}
->  	unlock_page_memcg(page);
-> +	/*
-> +	 * If writeback has been triggered on a page that cannot be made
-> +	 * accessible, it is too late.
-> +	 */
-> +	WARN_ON(arch_make_page_accessible(page));
+On Thu, Mar 5, 2020 at 11:13 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Thu,  5 Mar 2020 23:06:57 +0100
+> Jann Horn <jannh@google.com> wrote:
+>
+> > With CONFIG_DEBUG_ATOMIC_SLEEP=y and CONFIG_CGROUPS=y, kernel oopses in
+> > non-preemptible context look untidy; after the main oops, the kernel prints
+> > a "sleeping function called from invalid context" report because
+> > exit_signals() -> cgroup_threadgroup_change_begin() -> percpu_down_read()
+> > can sleep, and that happens before the preempt_count_set(PREEMPT_ENABLED)
+> > fixup.
+> >
+> > It looks like the same thing applies to profile_task_exit() and
+> > kcov_task_exit().
+> >
+> > Fix it by moving the preemption fixup up and the calls to
+> > profile_task_exit() and kcov_task_exit() down.
+[...]
+> > +     if (unlikely(in_atomic())) {
+> > +             pr_info("note: %s[%d] exited with preempt_count %d\n",
+> > +                     current->comm, task_pid_nr(current),
+> > +                     preempt_count());
+>
+> This should be more than a pr_info. It should also probably state the
+> "Dazed and confused, best to reboot" message.
+>
+> Because if something crashed in a non preempt section, it may likely be
+> holding a lock that it will never release, causing a soon to be deadlock!
 
-Hi,
+I didn't write that code, I'm just moving it around. :P But I guess if
+you want, I can change it in the same patch... something like this on
+top? Does that look reasonable?
 
-Sorry for not commenting on this earlier. After looking at this a bit, I think a tiny 
-tweak would be helpful, because:
-
-a) WARN_ON() is a big problem for per-page issues, because, like ants, pages are prone to
-   show up in large groups. And a warning and backtrace for each such page can easily
-   bring a system to a crawl.
-
-b) Based on your explanation of how this works, what your situation really seems to call
-   for is the standard "crash hard in DEBUG builds, in order to keep developers out of
-   trouble, but continue on in non-DEBUG builds".
-
-So maybe you'd be better protected with this instead:
-
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index ab5a3cee8ad3..b7f3d0766a5f 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -2764,7 +2764,7 @@ int test_clear_page_writeback(struct page *page)
- int __test_set_page_writeback(struct page *page, bool keep_write)
- {
-        struct address_space *mapping = page_mapping(page);
--       int ret;
-+       int ret, access_ret;
- 
-        lock_page_memcg(page);
-        if (mapping && mapping_use_writeback_tags(mapping)) {
-@@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page *page, bool keep_write)
-                inc_zone_page_state(page, NR_ZONE_WRITE_PENDING);
-        }
-        unlock_page_memcg(page);
-+       access_ret = arch_make_page_accessible(page);
-+       /*
-+        * If writeback has been triggered on a page that cannot be made
-+        * accessible, it is too late to recover here.
-+        */
-+       VM_BUG_ON_PAGE(access_ret != 0, page);
-+
-        return ret;
- 
- }
-
-Assuming that's acceptable, you can add:
-
-      Reviewed-by: John Hubbard <jhubbard@nvidia.com>
-
-to the updated patch.  
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
->  	return ret;
->  
->  }
-> 
+        if (unlikely(in_atomic())) {
+-               pr_info("note: %s[%d] exited with preempt_count %d\n",
++               pr_emerg("note: %s[%d] exited with preempt_count %d,
+system might deadlock, please reboot\n",
+                        current->comm, task_pid_nr(current),
+                        preempt_count());
+                preempt_count_set(PREEMPT_ENABLED);
