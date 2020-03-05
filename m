@@ -2,159 +2,86 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB15C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC13C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217BE20716
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:16:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="uvMsy2gF"
+	by mail.kernel.org (Postfix) with ESMTP id A27A22073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:16:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583396193;
+	bh=c6yReIxkts6SbvOg1bilMFLCyn6ntyWCTvP+5Lc9Fjc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FfAmp8oxA5ITbpo+mQiG8+8FCUCGhxpC7p4LumNQw4xQeL+jVKmE/knY55lkjs/cr
+	 u2kBqoq09YNEXtNzxpwxaKHSyyhMJBtPiTxl5RgDV01GeOmpIYaGZTBPgATZiw2TVY
+	 v+KJc92hwtlCxITH/zKCeSLrrwNrErf2GGlkXVOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726128AbgCEIQA (ORCPT
+        id S1726181AbgCEIQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:16:00 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41717 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbgCEIQA (ORCPT
+        Thu, 5 Mar 2020 03:16:33 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:39593 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbgCEIQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:16:00 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v4so5816547wrs.8
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 00:15:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
-         :mime-version;
-        bh=59ResbYkgYYtyGS3yqL1pe7i5n25xfvpTn1SJGZoQcc=;
-        b=uvMsy2gFIQJuGwPQY4jTQZfM443hyAsMpQsWvt61TsBrrNb5+brqKR7fyXH16dpcUG
-         NKHn+FHej/vn1kTGDZAOiT3te05ZccNq2vpP9gefTXD4I8jUaaSMpDCA+puh6P7ugPyN
-         Mq7CTRQp8ON7UQ8wyQBrxWkNHSBgn0GUrhEMx1wbzjnVma9BXBHRHMUXZ0u2P0xEa8lJ
-         DaG2SUbfh2TZLAYPQNjz3QPd8SSGcSHivVrvmeFzY2wnQcFZQVrX8n1b+M7K41fDnb2V
-         eqa2HBw0fdA4F/n4kWCqTVQAxYnxfMrF2BbKv5TCUD4Ge+NID+Dhpu/0B5cPIlHVEg20
-         VWgw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=59ResbYkgYYtyGS3yqL1pe7i5n25xfvpTn1SJGZoQcc=;
-        b=LHPML/ETqankU4Q5r/aAQ+93bUc49GISUe5Xl8PTU7ZGacjdvat2/hGUXfD80WOmVC
-         wwozEbZaRkWk9WqvKAVWnD1eatanGP0nbCvCD7AuWPBrEttfkHLsXmI8Yf9zjQEG0zpf
-         smFd0deHFB5Bsry6I6BseWxJHHvlAtbpi1wkaGxURIQqCyHD7mPhPC2uge/OklRphuhi
-         RHBkS9Wd87FnWjS6sRQcKAs1fPObj/OU7jdXvuelFk8RZH3RZukoNsV0NiaiyrZo0IaB
-         TuKvEHseC8yUx7gs27js1IAFs82Uo5MFQbsb+EPt/3WAwAcZnvkq+JtZct5+ISgQK35A
-         dx3g==
-X-Gm-Message-State: ANhLgQ2IPYip6lbxHDyF08UJs+IeVDaX3628gHbvreDJDkdFElHIuFj2
-        gaQ3yUOrK8lF+74jt3HJ3ONfjg==
-X-Google-Smtp-Source: ADFU+vuuoKy23fJWsGIKanNj5vBpIUf8a+/Rb9mL+rPcSl7wR8cgvC2houSQAoG3kJh7HFjBsXemgw==
-X-Received: by 2002:adf:f70f:: with SMTP id r15mr8903620wrp.269.1583396158372;
-        Thu, 05 Mar 2020 00:15:58 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id c2sm8220616wma.39.2020.03.05.00.15.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 00:15:57 -0800 (PST)
-References: <1582991214-85209-1-git-send-email-christianshewitt@gmail.com> <1582991214-85209-3-git-send-email-christianshewitt@gmail.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: meson-g12a-tanix-tx5max: add initial device tree
-In-reply-to: <1582991214-85209-3-git-send-email-christianshewitt@gmail.com>
-Date:   Thu, 05 Mar 2020 09:15:56 +0100
-Message-ID: <1jh7z3cj43.fsf@starbuckisacylon.baylibre.com>
+        Thu, 5 Mar 2020 03:16:32 -0500
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 0258GLN6012313;
+        Thu, 5 Mar 2020 17:16:22 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 0258GLN6012313
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1583396182;
+        bh=nhkaOm7d8PtRUHOn9qwBHZvSSFuzC0pWUZP2QZo5Id0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2H6yGxxWQVhOGrbh3sL7pWcYt0eyo5MCTlIey4kOClBCanuCm/8H2aApT9ROkmFpO
+         +UgKlVEJlAZ8p/d+pZmQ/RW4iQkZOw3JSnzptRnE0ihHU1lUTJYZF6W7CyuDwToWMr
+         +HzwIJUMOImaEcDRO+y/mRRQ/Wso8l0QH1oAo8YRtpcUyUfb4dxkvrkKsqQUHmL5XW
+         Dhv22CBZ+gWHAoPecXxWrr4u9dc2yR7SHRtrTyl3YjK9RBJLWDpbrniKYNhz/oUI9s
+         K4kUASFz2+fsx/9XW16CAlFftSz8BN9BBcOHVPUGzEfqu8+jSqJu+gQaS4oH+UM9AF
+         DvnFAMkbnZsIg==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id 8so904310uar.3;
+        Thu, 05 Mar 2020 00:16:21 -0800 (PST)
+X-Gm-Message-State: ANhLgQ2jSQNqO45V+WB4p6ZaVV1taXsVVjfzlfZkwiP4LY71oMrhNWW6
+        Wptv9DMDF/eFBiGOjG3n+ngOSdFYgq/morPeD5c=
+X-Google-Smtp-Source: ADFU+vt7c2j4DWNsnnWYd+6NhbZYkJnGCbhuMI8wsKZIm2g70mMKlexStnM3ny8FX18fCJhGkZ/m6z2JogCB2xrbGbY=
+X-Received: by 2002:ab0:3485:: with SMTP id c5mr3724348uar.109.1583396180792;
+ Thu, 05 Mar 2020 00:16:20 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20200305055047.6097-1-masahiroy@kernel.org> <CAKv+Gu8KfZZ_v-kUq=vwd+8MfhiOCpTG_AYA06bAuq7G-=c+WQ@mail.gmail.com>
+ <CAK7LNATwBALmPjZiY6teac3FcA_BFsBVzwf5cqbVNCZSqGrHJg@mail.gmail.com> <CAKv+Gu-7GYj5fJjOMRQQiKhA+PYeHYcwcG6sVx5O0Pj2Ufd2rg@mail.gmail.com>
+In-Reply-To: <CAKv+Gu-7GYj5fJjOMRQQiKhA+PYeHYcwcG6sVx5O0Pj2Ufd2rg@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Thu, 5 Mar 2020 17:15:44 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARL=mj3HuhjuRhZyNvcqVPYaQYN_x+71khX=6YJE-Bsng@mail.gmail.com>
+Message-ID: <CAK7LNARL=mj3HuhjuRhZyNvcqVPYaQYN_x+71khX=6YJE-Bsng@mail.gmail.com>
+Subject: Re: [PATCH] efi/libstub: avoid linking libstub/lib-ksyms.o into vmlinux
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Ard,
 
-On Sat 29 Feb 2020 at 16:46, Christian Hewitt <christianshewitt@gmail.com> wrote:
 
-> The Oranth Tanix TX5 Max is based on the Amlogic U200 reference design
-> using the S905X2 chipset. Hardware specification:
+On Thu, Mar 5, 2020 at 4:47 PM Ard Biesheuvel <ardb@kernel.org> wrote:
 >
-> - 4GB LPDDR4 RAM
-> - 32GB eMMC storage
-> - 10/100/1000 Base-T Ethernet using External RGMII PHY
-> - 802.11 a/b/g/b/ac + BT 4.1 sdio wireless
-> - HDMI 2.0 (4k@60p) video
-> - Composite video + 2-channel audio output on 3.5mm jack
-> - S/PDIF audio output
-> - 1x USB 3.0
-> - 1x USB 2.0
-> - 1x micro SD card slot
+> If you agree, no need to resend, I'll fix it up when applying
 >
-> The device tree is based on the higher-spec X96 Max box device.
 
-Would you mind pointing out the differences ?
-Maybe I missed something, but do we really this dts ?
-Can't this device directly use the x96 dt, or the u200 ?
 
-All these boards, for which we don't have any documentation, add up 
+I agree.
+Please fix it up.
 
->
-> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
-> ---
->  arch/arm64/boot/dts/amlogic/Makefile               |   1 +
->  .../boot/dts/amlogic/meson-g12a-tanix-tx5max.dts   | 481 +++++++++++++++++++++
->  2 files changed, 482 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-tanix-tx5max.dts
->
-> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
-> index eef0045..a1db803 100644
-> --- a/arch/arm64/boot/dts/amlogic/Makefile
-> +++ b/arch/arm64/boot/dts/amlogic/Makefile
-> @@ -1,6 +1,7 @@
->  # SPDX-License-Identifier: GPL-2.0
->  dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
-> +dtb-$(CONFIG_ARCH_MESON) += meson-g12a-tanix-tx5max.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
->  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-tanix-tx5max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-tanix-tx5max.dts
-> new file mode 100644
-> index 0000000..c3ef0ee
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-tanix-tx5max.dts
-> @@ -0,0 +1,481 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2018 BayLibre SAS. All rights reserved.
-> + */
-> +
-> +/dts-v1/;
+Thanks.
 
-[...]
-
-> +&spdifout_b {
-> +	status = "okay";
-> +};
-
-Why do you need this ?
-This producer is dedicated to HDMI controller which does not support it
-ATM. Also it is not even used in your sound card
-
-Same goes for the x96 BTW.
-
-> +
-> +&tdmif_b {
-> +	status = "okay";
-> +};
-> +
-> +&tdmout_b {
-> +	status = "okay";
-> +};
-> +
-> +&tohdmitx {
-> +	status = "okay";
-> +};
-
+-- 
+Best Regards
+Masahiro Yamada
