@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B5EC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF65C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA14620848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E69F120848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583429056;
-	bh=Myet+OUMfpjkM+ThPePJlaV0an6jHRhSsTs8Gakel20=;
+	s=default; t=1583429063;
+	bh=zgVtazVFwI+Yfj0ahILa+kVWFdUeQ9jA7UBi5RO0ug4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tazyxdTy/2fybsSxoB7zBZlfZyxvkARlZDqZLIaT2FDd/lHFsENcR/8bzkAK4BGv5
-	 hlWpGR+fzonTRw3IkdXA/DuwK6F3PaEiKeBuYxvN1ttvrr+Sy0bTIkEIeT6kC++23o
-	 p7XpOq67cU2rEaaLhTLIJdqVEK9Rha6UvlY6WSjM=
+	b=iFuj2/lhjDd4h8oFdrb58fsxO33yyAtMbVzhvqeL3oeUXHUjJwvxkYIySz4fNLOiB
+	 sr+qKLkA/B6nCj9kZZq0oeAB7Xa4fBv05B8Z4RX/DzLPCYOq1eBAHQ1ZBlf4QB1aoZ
+	 XyW8dco8C/0gP7XCZFMY60sHp6w913xn/SWvmImc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgCERYO (ORCPT
+        id S1728070AbgCERYV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:24:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38738 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:24:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726436AbgCERNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:20 -0500
+        id S1725938AbgCERNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADF1220848;
-        Thu,  5 Mar 2020 17:13:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAB4321556;
+        Thu,  5 Mar 2020 17:13:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428399;
-        bh=Myet+OUMfpjkM+ThPePJlaV0an6jHRhSsTs8Gakel20=;
+        s=default; t=1583428396;
+        bh=zgVtazVFwI+Yfj0ahILa+kVWFdUeQ9jA7UBi5RO0ug4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pKg9dx2Q+rAPr25vyhkwmMW43tx0w9JfOs1zon5iP3qJIywiMAdZoYki5r+l+n8GW
-         3lXed1amo30FKdM+pqeDaz+fYcmikotDrt2UluSRwK6vbmfpfdp6NozbsRxCO7QClQ
-         vWybXqgxjXp6kEE3aHkYoHUpry7y+cJ9df5etgQY=
+        b=SHlex3ej1XWF8CIn0/aH8VNMlaAWCKK16s9I4YWNUfQ07F0kkHGLsZghcjQ9b2VKu
+         A1E5P5011ynAPZYyt/wOZ+kIFQauXC2gltnLQAXIY1d2Br1/PritkDnUXa/0Ooudos
+         RXfTVsLjcR5nG+tCK2+AWfEsIJeoDyidxvNQ3oug=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Sasha Levin <sashal@kernel.org>, linux-i2c@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 07/67] i2c: altera: Fix potential integer overflow
-Date:   Thu,  5 Mar 2020 12:12:08 -0500
-Message-Id: <20200305171309.29118-7-sashal@kernel.org>
+Cc:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
+        syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
+        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 05/67] HID: hiddev: Fix race in in hiddev_disconnect()
+Date:   Thu,  5 Mar 2020 12:12:06 -0500
+Message-Id: <20200305171309.29118-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -61,40 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>
 
-[ Upstream commit 54498e8070e19e74498a72c7331348143e7e1f8c ]
+[ Upstream commit 5c02c447eaeda29d3da121a2e17b97ccaf579b51 ]
 
-Factor out 100 from the equation and do 32-bit arithmetic (3 * clk_mhz / 10)
-instead of 64-bit.
+Syzbot reports that "hiddev" is used after it's free in hiddev_disconnect().
+The hiddev_disconnect() function sets "hiddev->exist = 0;" so
+hiddev_release() can free it as soon as we drop the "existancelock"
+lock.  This patch moves the mutex_unlock(&hiddev->existancelock) until
+after we have finished using it.
 
-Notice that clk_mhz is MHz, so the multiplication will never wrap 32 bits
-and there is no need for div_u64().
-
-Addresses-Coverity: 1458369 ("Unintentional integer overflow")
-Fixes: 0560ad576268 ("i2c: altera: Add Altera I2C Controller driver")
-Suggested-by: David Laight <David.Laight@ACULAB.COM>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Thor Thayer <thor.thayer@linux.intel.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Reported-by: syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com
+Fixes: 7f77897ef2b6 ("HID: hiddev: fix potential use-after-free")
+Suggested-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-altera.c | 2 +-
+ drivers/hid/usbhid/hiddev.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-altera.c b/drivers/i2c/busses/i2c-altera.c
-index 5255d3755411b..1de23b4f3809c 100644
---- a/drivers/i2c/busses/i2c-altera.c
-+++ b/drivers/i2c/busses/i2c-altera.c
-@@ -171,7 +171,7 @@ static void altr_i2c_init(struct altr_i2c_dev *idev)
- 	/* SCL Low Time */
- 	writel(t_low, idev->base + ALTR_I2C_SCL_LOW);
- 	/* SDA Hold Time, 300ns */
--	writel(div_u64(300 * clk_mhz, 1000), idev->base + ALTR_I2C_SDA_HOLD);
-+	writel(3 * clk_mhz / 10, idev->base + ALTR_I2C_SDA_HOLD);
+diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
+index a970b809d778c..4140dea693e90 100644
+--- a/drivers/hid/usbhid/hiddev.c
++++ b/drivers/hid/usbhid/hiddev.c
+@@ -932,9 +932,9 @@ void hiddev_disconnect(struct hid_device *hid)
+ 	hiddev->exist = 0;
  
- 	/* Mask all master interrupt bits */
- 	altr_i2c_int_enable(idev, ALTR_I2C_ALL_IRQ, false);
+ 	if (hiddev->open) {
+-		mutex_unlock(&hiddev->existancelock);
+ 		hid_hw_close(hiddev->hid);
+ 		wake_up_interruptible(&hiddev->wait);
++		mutex_unlock(&hiddev->existancelock);
+ 	} else {
+ 		mutex_unlock(&hiddev->existancelock);
+ 		kfree(hiddev);
 -- 
 2.20.1
 
