@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 444EBC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E047C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCCC207FD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED9B020870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428429;
-	bh=DG/2VcvrtWmbrzXX3esW4l5TyuRQ5xV/c/O73MTYuVY=;
+	s=default; t=1583428436;
+	bh=3IeweYz10iLPB5x/FxuKK3ushj7/AQrBPdxWYnpyJ3c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gTYJFTqGI+V80uMGwNjz78cuLB3TyHrUXoBKXVnPp5YAxFwT3ib98YEAkN5cE/3Jf
-	 QJnIeWGrwss8NoxiadedSy0VPVp9k9KBld99sIIxJoXYHtqIiGdK5xBgut6RJSqzz1
-	 zliFJUSboHoerpxnwy/DRwTCYKie1sBGhZasSChg=
+	b=RilIyA8zB5GDP2BJ72JvGM2uhCz0nwlyDJ4IeK27eRgAgxdamRvpByE+TKdEM+LOr
+	 RCN/jNTw5rn4wdGBdY6j1Md3d97RuA8S/76k2hprInXSJFK6enCdrQG3JGQ6ax+G5n
+	 4DXb2eFdkRxe82ofxuLqTYWhuZCtrINfOA4jVvyw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbgCERNr (ORCPT
+        id S1727459AbgCERNz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:13:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39394 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:13:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727359AbgCERNp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:45 -0500
+        id S1727408AbgCERNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:50 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 342EE20870;
-        Thu,  5 Mar 2020 17:13:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE7EF21556;
+        Thu,  5 Mar 2020 17:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428425;
-        bh=DG/2VcvrtWmbrzXX3esW4l5TyuRQ5xV/c/O73MTYuVY=;
+        s=default; t=1583428429;
+        bh=3IeweYz10iLPB5x/FxuKK3ushj7/AQrBPdxWYnpyJ3c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CZTkTiJyVCBzFMp92TJKKBFpSCho8AsJd1VzHs+xRuWMrupVrKL7wkZO3uQUzVSGD
-         YZxI8pTq47wubRi4dAdd8HGCOQ23b27ECJcuQ5NEepto8bNqfVSTHk0RmMaJpWngpO
-         YbxlkkHRZKgUcOO4Vw70XjkKktz9WkR2lnAN2eVE=
+        b=uZHtR0y4QBYCgCjdEy0G20yZqNbDOJvDxypflvWF/BItqtv/FRBFT21wyh9qLcfNH
+         rK3dxe+Re5sHhjpf2gXiPa8+MjHBQF/O5eUSx1xBvdG8YUZ/4mLFAICSG98MQyHLAj
+         hHoGjfKBlRualXBd1K1I4FXL5+0XAykKo3MyNgEA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Andrei Otcheretianski <andrei.otcheretianski@intel.com>,
-        Johannes Berg <johannes.berg@intel.com>,
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com,
         Sasha Levin <sashal@kernel.org>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 26/67] mac80211: Remove a redundant mutex unlock
-Date:   Thu,  5 Mar 2020 12:12:27 -0500
-Message-Id: <20200305171309.29118-26-sashal@kernel.org>
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 29/67] netfilter: ipset: Fix forceadd evaluation path
+Date:   Thu,  5 Mar 2020 12:12:30 -0500
+Message-Id: <20200305171309.29118-29-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -60,50 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
+From: Jozsef Kadlecsik <kadlec@netfilter.org>
 
-[ Upstream commit 0daa63ed4c6c4302790ce67b7a90c0997ceb7514 ]
+[ Upstream commit 8af1c6fbd9239877998c7f5a591cb2c88d41fb66 ]
 
-The below-mentioned commit changed the code to unlock *inside*
-the function, but previously the unlock was *outside*. It failed
-to remove the outer unlock, however, leading to double unlock.
+When the forceadd option is enabled, the hash:* types should find and replace
+the first entry in the bucket with the new one if there are no reuseable
+(deleted or timed out) entries. However, the position index was just not set
+to zero and remained the invalid -1 if there were no reuseable entries.
 
-Fix this.
-
-Fixes: 33483a6b88e4 ("mac80211: fix missing unlock on error in ieee80211_mark_sta_auth()")
-Signed-off-by: Andrei Otcheretianski <andrei.otcheretianski@intel.com>
-Link: https://lore.kernel.org/r/20200221104719.cce4741cf6eb.I671567b185c8a4c2409377e483fd149ce590f56d@changeid
-[rewrite commit message to better explain what happened]
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reported-by: syzbot+6a86565c74ebe30aea18@syzkaller.appspotmail.com
+Fixes: 23c42a403a9c ("netfilter: ipset: Introduction of new commands and protocol version 7")
+Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/mac80211/mlme.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ net/netfilter/ipset/ip_set_hash_gen.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/mac80211/mlme.c b/net/mac80211/mlme.c
-index e041af2f021ad..88d7a692a9658 100644
---- a/net/mac80211/mlme.c
-+++ b/net/mac80211/mlme.c
-@@ -2959,7 +2959,7 @@ static void ieee80211_rx_mgmt_auth(struct ieee80211_sub_if_data *sdata,
- 	    (auth_transaction == 2 &&
- 	     ifmgd->auth_data->expected_transaction == 2)) {
- 		if (!ieee80211_mark_sta_auth(sdata, bssid))
--			goto out_err;
-+			return; /* ignore frame -- wait for timeout */
- 	} else if (ifmgd->auth_data->algorithm == WLAN_AUTH_SAE &&
- 		   auth_transaction == 2) {
- 		sdata_info(sdata, "SAE peer confirmed\n");
-@@ -2967,10 +2967,6 @@ static void ieee80211_rx_mgmt_auth(struct ieee80211_sub_if_data *sdata,
+diff --git a/net/netfilter/ipset/ip_set_hash_gen.h b/net/netfilter/ipset/ip_set_hash_gen.h
+index 71e93eac08319..e52d7b7597a0d 100644
+--- a/net/netfilter/ipset/ip_set_hash_gen.h
++++ b/net/netfilter/ipset/ip_set_hash_gen.h
+@@ -931,6 +931,8 @@ mtype_add(struct ip_set *set, void *value, const struct ip_set_ext *ext,
+ 		}
  	}
- 
- 	cfg80211_rx_mlme_mgmt(sdata->dev, (u8 *)mgmt, len);
--	return;
-- out_err:
--	mutex_unlock(&sdata->local->sta_mtx);
--	/* ignore frame -- wait for timeout */
- }
- 
- #define case_WLAN(type) \
+ 	if (reuse || forceadd) {
++		if (j == -1)
++			j = 0;
+ 		data = ahash_data(n, j, set->dsize);
+ 		if (!deleted) {
+ #ifdef IP_SET_HASH_WITH_NETS
 -- 
 2.20.1
 
