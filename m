@@ -2,145 +2,95 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58074C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:44:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76248C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C26B2073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:44:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 536042073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgCEKoa (ORCPT
+        id S1727002AbgCEKqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:44:30 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45842 "EHLO mx2.suse.de"
+        Thu, 5 Mar 2020 05:46:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:47014 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbgCEKo3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:44:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id BEF25B239;
-        Thu,  5 Mar 2020 10:44:26 +0000 (UTC)
-Message-ID: <f2ec22160ac86aec8d252ade7d6eb8789777cc42.camel@suse.de>
-Subject: Re: [PATCH] ARM: dts: bcm283x: Use firmware PM driver for V3D
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Stefan Wahren <stefan.wahren@i2se.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Eric Anholt <eric@anholt.net>
-Cc:     devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        wahrenst@gmx.net
-Date:   Thu, 05 Mar 2020 11:44:23 +0100
-In-Reply-To: <d3d40174-9c08-f42f-e088-08e23c2dc029@i2se.com>
-References: <20200303173217.3987-1-nsaenzjulienne@suse.de>
-         <736f0c59-352b-03b2-f77f-bfc22171b3fb@i2se.com>
-         <03fcb1e2bc7f3ff389b6dfbf3964e159a93ae835.camel@suse.de>
-         <d3d40174-9c08-f42f-e088-08e23c2dc029@i2se.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-1e/ycMxHHlpwCahVXF7n"
-User-Agent: Evolution 3.34.4 
+        id S1725912AbgCEKqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 05:46:01 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0F47731B;
+        Thu,  5 Mar 2020 02:46:01 -0800 (PST)
+Received: from [192.168.1.161] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 09CC03F6C4;
+        Thu,  5 Mar 2020 02:45:59 -0800 (PST)
+Subject: Re: [PATCH] mm: Make mem_cgroup_id_get_many dependent on MMU and
+ MEMCG_SWAP
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200304142348.48167-1-vincenzo.frascino@arm.com>
+ <20200304165336.GO16139@dhcp22.suse.cz>
+ <8c489836-b824-184e-7cfe-25e55ab73000@arm.com>
+ <20200305100023.GR16139@dhcp22.suse.cz>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <acf13158-40a3-4027-f36a-25d24efe3242@arm.com>
+Date:   Thu, 5 Mar 2020 10:46:21 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20200305100023.GR16139@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Michal,
 
---=-1e/ycMxHHlpwCahVXF7n
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 3/5/20 10:00 AM, Michal Hocko wrote:
+> On Thu 05-03-20 09:49:23, Vincenzo Frascino wrote:
+>> Hi Michal,
+>>
+>> On 3/4/20 4:53 PM, Michal Hocko wrote:
+>>> On Wed 04-03-20 14:23:48, Vincenzo Frascino wrote:
+>>>> mem_cgroup_id_get_many() is currently used only when MMU or MEMCG_SWAP
+>>>> configuration options are enabled. Having them disabled triggers the
+>>>> following warning at compile time:
+>>>>
+>>>> linux/mm/memcontrol.c:4797:13: warning: ‘mem_cgroup_id_get_many’ defined
+>>>> but not used [-Wunused-function]
+>>>>  static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned
+>>>>  int n)
+>>>>
+>>>> Make mem_cgroup_id_get_many() dependent on MMU and MEMCG_SWAP to address
+>>>> the issue.
+>>>
+>>> A similar patch has been proposed recently
+>>> http://lkml.kernel.org/r/87fthjh2ib.wl-kuninori.morimoto.gx@renesas.com.
+>>> The conclusion was that the warning is not really worth adding code.
+>>>
+>>
+>> Thank you for pointing this out, I was not aware of it. I understand that you
+>> are against "#ifdeffery" in this case, but isn't it the case of adding at least
+>> __maybe_unused? This would prevent people from reporting it over and over again
+>> and you to have to push them back :) Let me know what do you think, in case I am
+>> happy to change my patch accordingly.
+> 
+> We have discussed __maybe_unused in the email thread as well. I am not a
+> great fan of that as mentioed there.
+> 
 
-Hi Stefan,
+I am aware of this. I was just exploring if there was a possibility of
+addressing the warning, since if we leave all the warnings in scenarios like
+randconfig can cause confusion in between real and non real issues.
+Is there anything we can do?
 
-On Tue, 2020-03-03 at 20:24 +0100, Stefan Wahren wrote:
-> > > > Note: I tested this on RPi3b, RPi3a+ and RPi2b.
-> > > as i already wrote this prevent X to start on current Raspbian on my
-> > > Raspberry Pi 3A+ (multi_v7_defconfig, no u-boot). We must be careful =
-here.
-> > >=20
-> > > I will take a look at the debug UART. Maybe there are more helpful
-> > > information.
-> > It seems we're seeing different things, I tested this on raspbian
-> > (multi_v7_defconfig) and on arm64. I'll try again from scratch tomorrow=
-.
->=20
-> My modifications to the Raspbian image (from 13.2.2020) are little:
->=20
-> - specify devicetree to config.txt
-> - change console to ttyS1 and remove "silent" in cmdline.txt
-> - rename all original kernel7*.img
-> - copy dtb and kernel7.img to boot partition
-> - copy kernel modules to root partition
-
-Would you mind retesting with the latest linux-next? I validated an image b=
-ased
-on 5.6.0-rc4-next-20200305-00001-g285a7a64cd56 and a fresh raspbian downloa=
-d on
-RPi3a+ without X issues.
-
-> The debug UART works fine, maybe the dmesg gives us a hint:
-
-[...]
-
-> [    8.451520] vc4_hdmi 3f902000.hdmi: vc4-hdmi-hifi <-> 3f902000.hdmi
-> mapping ok
-> [    8.451541] vc4_hdmi 3f902000.hdmi: ASoC: no DMI vendor name!
-> [    8.465617] vc4-drm soc:gpu: bound 3f902000.hdmi (ops vc4_hdmi_ops
-> [vc4])
-> [    8.466033] vc4-drm soc:gpu: bound 3f806000.vec (ops vc4_vec_ops [vc4]=
-)
-> [    8.466159] vc4-drm soc:gpu: bound 3f004000.txp (ops vc4_txp_ops [vc4]=
-)
-> [    8.466292] vc4-drm soc:gpu: bound 3f400000.hvs (ops vc4_hvs_ops [vc4]=
-)
-> [    8.466649] vc4-drm soc:gpu: bound 3f206000.pixelvalve (ops
-> vc4_crtc_ops [vc4])
-> [    8.466889] vc4-drm soc:gpu: bound 3f207000.pixelvalve (ops
-> vc4_crtc_ops [vc4])
-> [    8.467154] vc4-drm soc:gpu: bound 3f807000.pixelvalve (ops
-> vc4_crtc_ops [vc4])
-> [    8.467262] vc4-drm soc:gpu: bound 3fc00000.v3d (ops vc4_v3d_ops [vc4]=
-)
-> [    8.467272] checking generic (1e330000 8ca000) vs hw (0 ffffffff)
-> [    8.467278] fb0: switching to vc4drmfb from simple
-> [    8.473639] Console: switching to colour dummy device 80x30
-> [    8.473714] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013)=
-.
-> [    8.473718] [drm] Driver supports precise vblank timestamp query.
-> [    8.476777] [drm] Initialized vc4 0.0.0 20140616 for soc:gpu on minor =
-0
-> [    8.534359] Console: switching to colour frame buffer device 90x30
-> [    8.550245] vc4-drm soc:gpu: fb0: vc4drmfb frame buffer device
-
-I get the exact same results as you here.
-
+-- 
 Regards,
-Nicolas
-
-
---=-1e/ycMxHHlpwCahVXF7n
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl5g2AcACgkQlfZmHno8
-x/4IlQgApYGk9IyBIGZXZU7cjQ4U0IGcYwkZZIy8r4vLrNLOKHCg8uEZpLk8Kvim
-wux9hWhjqbuYV1Q7/MEgioV+IUv4mkKOZxZodXy8/cf8Zq8mPV3FgY6hX2IlVXdt
-CkSlN4cth5Kq35oQm+W6NNWAdOQTabix30MRbfZ4sL8JAoL12DBdt1DQpMkEN2az
-zsxwZDV5LBe655F75XcBBCnWnrSQWeAZySsBtwsJidSqfepsdiVSAlYonoD+4tiW
-a05qYn+C51jrnxQqMtkfuFxfz8q5Kjd+zS8Mb9lhAqtS7mVPM1XMlJd401+fYdq4
-RMUXbtQ0juTl/b7yJowqjUiacvGwWg==
-=Rxs/
------END PGP SIGNATURE-----
-
---=-1e/ycMxHHlpwCahVXF7n--
-
+Vincenzo
