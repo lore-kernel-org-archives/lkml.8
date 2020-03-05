@@ -2,158 +2,241 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63948C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53B52C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC4F208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:59:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AQfv63NY"
+	by mail.kernel.org (Postfix) with ESMTP id 2A9C72166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727357AbgCEJ7q (ORCPT
+        id S1727385AbgCEJ7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:59:46 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:38248 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgCEJ7p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:59:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=/JtrFN+p8a3QC10s77+QKXamNutI63FbL9mQ/tVqXtE=; b=AQfv63NYpHw2aIOP1taIlPNfSi
-        EvrF/Trq9jXMvnhjumleeMn6ICJcj9JMNmlOpjUJqEWdFXkfeD/vadK32d9AIt0f7rmKAc3hJoT+1
-        KyYG4XTDPkT9tR6DTyDa07LQcgHB5uXpPOZ4LoqS9IGNHD3owFIeignrZlFTs5AMVEvMLU6aeYvNG
-        MO4KYve2jCoVJd2w6dRDaPbKMG+AOXcONTfYNve6dgm+oMgQ2U9VQfmgy0fYPDfl13idVYnRVI03g
-        XFLK0R83bqXmElw8rrJMbF97zOzwZ9nzpBPSUGafNWDwMN1hOC1a0CcJsqt9Y0TZsIhQyWkDbG+a1
-        XBMc5URg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9nGY-00011M-Sr; Thu, 05 Mar 2020 09:58:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 49762303DA3;
-        Thu,  5 Mar 2020 10:56:04 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2A95423D4FA17; Thu,  5 Mar 2020 10:58:03 +0100 (CET)
-Date:   Thu, 5 Mar 2020 10:58:03 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     cl@rock-chips.com
-Cc:     heiko@sntech.de, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        akpm@linux-foundation.org, tglx@linutronix.de, mpe@ellerman.id.au,
-        surenb@google.com, ben.dooks@codethink.co.uk,
-        anshuman.khandual@arm.com, catalin.marinas@arm.com,
-        will@kernel.org, keescook@chromium.org, luto@amacapital.net,
-        wad@chromium.org, mark.rutland@arm.com, geert+renesas@glider.be,
-        george_davis@mentor.com, sudeep.holla@arm.com,
-        linux@armlinux.org.uk, gregkh@linuxfoundation.org, info@metux.net,
-        kstewart@linuxfoundation.org, allison@lohutok.net,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        huangtao@rock-chips.com
-Subject: Re: [PATCH v1 1/1] sched/fair: do not preempt current task if it is
- going to call schedule()
-Message-ID: <20200305095803.GW2596@hirez.programming.kicks-ass.net>
-References: <20200305081611.29323-1-cl@rock-chips.com>
- <20200305081611.29323-2-cl@rock-chips.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305081611.29323-2-cl@rock-chips.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 5 Mar 2020 04:59:51 -0500
+Received: from mga01.intel.com ([192.55.52.88]:51102 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726874AbgCEJ7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 04:59:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 01:59:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
+   d="scan'208";a="234366630"
+Received: from snr.bj.intel.com ([10.240.193.90])
+  by orsmga008.jf.intel.com with ESMTP; 05 Mar 2020 01:59:42 -0800
+From:   Luwei Kang <luwei.kang@intel.com>
+To:     x86@kernel.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, hpa@zytor.com, pbonzini@redhat.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        pawan.kumar.gupta@linux.intel.com, ak@linux.intel.com,
+        thomas.lendacky@amd.com, fenghua.yu@intel.com,
+        kan.liang@linux.intel.com, like.xu@linux.intel.com,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: [PATCH v1 08/11] KVM: x86/pmu: PEBS MSRs emulation
+Date:   Fri,  6 Mar 2020 01:57:02 +0800
+Message-Id: <1583431025-19802-9-git-send-email-luwei.kang@intel.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
+References: <1583431025-19802-1-git-send-email-luwei.kang@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 04:16:11PM +0800, cl@rock-chips.com wrote:
-> From: Liang Chen <cl@rock-chips.com>
-> 
-> when we create a kthread with ktrhead_create_on_cpu(),the child thread
-> entry is ktread.c:ktrhead() which will be preempted by the parent after
-> call complete(done) while schedule() is not called yet,then the parent
-> will call wait_task_inactive(child) but the child is still on the runqueue,
-> so the parent will schedule_hrtimeout() for 1 jiffy,it will waste a lot of
-> time,especially on startup.
-> 
->   parent                             child
-> ktrhead_create_on_cpu()
->   wait_fo_completion(&done) -----> ktread.c:ktrhead()
->                              |----- complete(done);--wakeup and preempted by parent
->  kthread_bind() <------------|  |-> schedule();--dequeue here
->   wait_task_inactive(child)     |
->    schedule_hrtimeout(1 jiffy) -|
-> 
-> So we hope the child just wakeup parent but not preempted by parent, and the
-> child is going to call schedule() soon,then the parent will not call
-> schedule_hrtimeout(1 jiffy) as the child is already dequeue.
-> 
-> The same issue for ktrhead_park()&&kthread_parkme().
-> This patch can save 120ms on rk312x startup with CONFIG_HZ=300.
+This patch implement the PEBS MSRs emulation in KVM, include
+IA32_PEBS_ENABLE and IA32_DS_AREA.
 
-> diff --git a/kernel/kthread.c b/kernel/kthread.c
-> index b262f47046ca..8a4e4c9cdc22 100644
-> --- a/kernel/kthread.c
-> +++ b/kernel/kthread.c
-> @@ -199,8 +199,10 @@ static void __kthread_parkme(struct kthread *self)
->  		if (!test_bit(KTHREAD_SHOULD_PARK, &self->flags))
->  			break;
->  
-> +		set_tsk_going_to_sched(current);
->  		complete(&self->parked);
->  		schedule();
-> +		clear_tsk_going_to_sched(current);
->  	}
->  	__set_current_state(TASK_RUNNING);
->  }
-> @@ -245,8 +247,10 @@ static int kthread(void *_create)
->  	/* OK, tell user we're spawned, wait for stop or wakeup */
->  	__set_current_state(TASK_UNINTERRUPTIBLE);
->  	create->result = current;
-> +	set_tsk_going_to_sched(current);
->  	complete(done);
->  	schedule();
-> +	clear_tsk_going_to_sched(current);
->  
->  	ret = -EINTR;
->  	if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
+The IA32_DS_AREA register will be added into the MSR-load list when PEBS is
+enabled in KVM guest that to make the guest's DS value can be loaded to the
+real HW before VM-entry, and will be removed when PEBS is disabled.
 
-Were you looking for this? I think it does the same without having
-fallen from the ugly tree...
+Originally-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Luwei Kang <luwei.kang@intel.com>
+Co-developed-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ arch/x86/include/asm/kvm_host.h |  4 ++++
+ arch/x86/kvm/vmx/pmu_intel.c    | 45 +++++++++++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.c          |  4 ++--
+ arch/x86/kvm/vmx/vmx.h          |  4 ++++
+ arch/x86/kvm/x86.c              |  7 +++++++
+ 5 files changed, 62 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kthread.c b/kernel/kthread.c
-index b262f47046ca..62699ff414f4 100644
---- a/kernel/kthread.c
-+++ b/kernel/kthread.c
-@@ -199,8 +199,10 @@ static void __kthread_parkme(struct kthread *self)
- 		if (!test_bit(KTHREAD_SHOULD_PARK, &self->flags))
- 			break;
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 033d9f9..33b990b 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -479,6 +479,8 @@ struct kvm_pmu {
+ 	u64 global_ovf_ctrl_mask;
+ 	u64 reserved_bits;
+ 	u64 pebs_enable;
++	u64 pebs_enable_mask;
++	u64 ds_area;
+ 	u8 version;
+ 	struct kvm_pmc gp_counters[INTEL_PMC_MAX_GENERIC];
+ 	struct kvm_pmc fixed_counters[INTEL_PMC_MAX_FIXED];
+@@ -493,6 +495,8 @@ struct kvm_pmu {
+ 	 */
+ 	bool need_cleanup;
  
-+		preempt_disable()
- 		complete(&self->parked);
--		schedule();
-+		schedule_preempt_disabled();
-+		preempt_enable();
- 	}
- 	__set_current_state(TASK_RUNNING);
++	bool has_pebs_via_ds;
++
+ 	/*
+ 	 * The total number of programmed perf_events and it helps to avoid
+ 	 * redundant check before cleanup if guest don't use vPMU at all.
+diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
+index a67bd34..227589a 100644
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -67,6 +67,21 @@ static void global_ctrl_changed(struct kvm_pmu *pmu, u64 data)
+ 		reprogram_counter(pmu, bit);
  }
-@@ -245,8 +247,10 @@ static int kthread(void *_create)
- 	/* OK, tell user we're spawned, wait for stop or wakeup */
- 	__set_current_state(TASK_UNINTERRUPTIBLE);
- 	create->result = current;
-+	preempt_disable()
- 	complete(done);
--	schedule();
-+	schedule_preempt_disabled();
-+	preempt_enable();
  
- 	ret = -EINTR;
- 	if (!test_bit(KTHREAD_SHOULD_STOP, &self->flags)) {
++static void pebs_enable_changed(struct kvm_pmu *pmu, u64 data)
++{
++	struct vcpu_vmx *vmx = to_vmx(pmu_to_vcpu(pmu));
++	u64 host_ds_area;
++
++	if (data) {
++		rdmsrl_safe(MSR_IA32_DS_AREA, &host_ds_area);
++		add_atomic_switch_msr(vmx, MSR_IA32_DS_AREA,
++			pmu->ds_area, host_ds_area, false);
++	} else
++		clear_atomic_switch_msr(vmx, MSR_IA32_DS_AREA);
++
++	pmu->pebs_enable = data;
++}
++
+ static unsigned intel_find_arch_event(struct kvm_pmu *pmu,
+ 				      u8 event_select,
+ 				      u8 unit_mask)
+@@ -163,6 +178,10 @@ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
+ 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+ 		ret = pmu->version > 1;
+ 		break;
++	case MSR_IA32_DS_AREA:
++	case MSR_IA32_PEBS_ENABLE:
++		ret = pmu->has_pebs_via_ds;
++		break;
+ 	default:
+ 		ret = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0) ||
+ 			get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0) ||
+@@ -219,6 +238,12 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
+ 	case MSR_CORE_PERF_GLOBAL_OVF_CTRL:
+ 		*data = pmu->global_ovf_ctrl;
+ 		return 0;
++	case MSR_IA32_PEBS_ENABLE:
++		*data = pmu->pebs_enable;
++		return 0;
++	case MSR_IA32_DS_AREA:
++		*data = pmu->ds_area;
++		return 0;
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+ 			u64 val = pmc_read_counter(pmc);
+@@ -275,6 +300,17 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 			return 0;
+ 		}
+ 		break;
++	case MSR_IA32_PEBS_ENABLE:
++		if (pmu->pebs_enable == data)
++			return 0;
++		if (!(data & pmu->pebs_enable_mask)) {
++			pebs_enable_changed(pmu, data);
++			return 0;
++		}
++		break;
++	case MSR_IA32_DS_AREA:
++		pmu->ds_area = data;
++		return 0;
+ 	default:
+ 		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
+ 			if (!msr_info->host_initiated)
+@@ -351,6 +387,15 @@ static void intel_pmu_refresh(struct kvm_vcpu *vcpu)
+ 		pmu->global_ovf_ctrl_mask &=
+ 				~MSR_CORE_PERF_GLOBAL_OVF_CTRL_TRACE_TOPA_PMI;
+ 
++	entry = kvm_find_cpuid_entry(vcpu, 1, 0);
++	if (entry && (entry->ecx & X86_FEATURE_DTES64) &&
++		     (entry->ecx & X86_FEATURE_PDCM) &&
++		     (entry->edx & X86_FEATURE_DS) &&
++		      intel_is_pebs_via_ds_supported()) {
++		pmu->has_pebs_via_ds = 1;
++		pmu->pebs_enable_mask = ~pmu->global_ctrl;
++	}
++
+ 	entry = kvm_find_cpuid_entry(vcpu, 7, 0);
+ 	if (entry &&
+ 	    (boot_cpu_has(X86_FEATURE_HLE) || boot_cpu_has(X86_FEATURE_RTM)) &&
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index cef7089..c6d9a87 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -864,7 +864,7 @@ int vmx_find_msr_index(struct vmx_msrs *m, u32 msr)
+ 	return -ENOENT;
+ }
+ 
+-static void clear_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr)
++void clear_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr)
+ {
+ 	int i;
+ 	struct msr_autoload *m = &vmx->msr_autoload;
+@@ -916,7 +916,7 @@ static void add_atomic_switch_msr_special(struct vcpu_vmx *vmx,
+ 	vm_exit_controls_setbit(vmx, exit);
+ }
+ 
+-static void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
++void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
+ 				  u64 guest_val, u64 host_val, bool entry_only)
+ {
+ 	int i, j = 0;
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index e64da06..ea899e7 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -536,4 +536,8 @@ static inline bool vmx_has_waitpkg(struct vcpu_vmx *vmx)
+ 
+ void dump_vmcs(void);
+ 
++extern void clear_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr);
++extern void add_atomic_switch_msr(struct vcpu_vmx *vmx, unsigned msr,
++			u64 guest_val, u64 host_val, bool entry_only);
++
+ #endif /* __KVM_X86_VMX_H */
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 5de2006..7a23406 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1193,6 +1193,7 @@ bool kvm_rdpmc(struct kvm_vcpu *vcpu)
+ 	MSR_ARCH_PERFMON_EVENTSEL0 + 12, MSR_ARCH_PERFMON_EVENTSEL0 + 13,
+ 	MSR_ARCH_PERFMON_EVENTSEL0 + 14, MSR_ARCH_PERFMON_EVENTSEL0 + 15,
+ 	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
++	MSR_IA32_PEBS_ENABLE, MSR_IA32_DS_AREA,
+ };
+ 
+ static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_all)];
+@@ -5263,6 +5264,12 @@ static void kvm_init_msr_list(void)
+ 			if (!kvm_x86_ops->rdtscp_supported())
+ 				continue;
+ 			break;
++		case MSR_IA32_PEBS_ENABLE:
++		case MSR_IA32_DS_AREA:
++			if (!kvm_x86_ops->pmu_ops ||
++			    !kvm_x86_ops->pmu_ops->is_pebs_via_ds_supported())
++				continue;
++			break;
+ 		case MSR_IA32_RTIT_CTL:
+ 		case MSR_IA32_RTIT_STATUS:
+ 			if (!kvm_x86_ops->pt_supported())
+-- 
+1.8.3.1
+
