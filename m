@@ -2,298 +2,359 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11B36C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4715C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B5B20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:56:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B8lYWiNy"
+	by mail.kernel.org (Postfix) with ESMTP id BA97020637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726317AbgCEQ4o (ORCPT
+        id S1726094AbgCEQ6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:56:44 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:52264 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgCEQ4o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:56:44 -0500
-Received: by mail-pj1-f67.google.com with SMTP id lt1so2732962pjb.2
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:56:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=wOM663e6tPW5QDzsdb/4PQaIBOB4nIZgcTdiLJSmYxE=;
-        b=B8lYWiNyTh+0U4oEPOM2iojW/8UltRk3FuN/aA6unZG5Tshk8sOrt03FvNCABAmAyo
-         bLMlJDJmtbkdVX6jO5Qjh0cKrhi7/vQdtuJ9wYdYLuCqR07EoC1bhZOoFfEFWYBnd3P6
-         kE1nANxcF4JOxF3OVrUCx0bObqHsvv3h1Nd68dzltdb6uwRMRlB6f6K0MpyO9JlBM7z3
-         coyWjCHkpSAgMx/u1YJ4UEvS4mGgOHiKS6aAEc/L8n+3Rfu0l7vYcGM0OmMmuJdtpn04
-         Fyrf2Wy9y8UzegexuoPVyFTBR+wbf9jK7/c5OZA6mSD8FGy0u7OQQGmiDKqPpAq7eGlP
-         EjVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wOM663e6tPW5QDzsdb/4PQaIBOB4nIZgcTdiLJSmYxE=;
-        b=CANWzHnsIUYtjv3H4fs8fOl266yewYRMvqBJOL3Iiot/KPJZiLQJ+UX0myvk1isYMS
-         NFxn4USUp9iF3DRO2lYJsllsxAdsQZI9a2bIRBpZdcEJRKZnsnijZmNqLsmGDwh7f4n6
-         I3vIqsLhODdHVcwi+vC/YexemXWKWuohJekTKP+o4HWBE8qUDYgcIJjtJSQzI6wdSJ5l
-         Iqh2k/fIWxuGISSBwLm9gG9ibmp8cQ5NqqNMjpaSaRyCdTHpftA0Wp1XsK5YlpihePjT
-         7R4Fmiv9ycNQmPLGakL5kbnKZrFAyXMwEQksI7/Dz/XqGskuD8YZbsIq7VjQNAA2SDvy
-         9Feg==
-X-Gm-Message-State: ANhLgQ071L6Dp0XAzmuUW5vR+KV7aWdkkafHqZ4KbDCEuOEbe8gLykUW
-        SrNT0aZkipNa4EplyXMt6/0Ysw==
-X-Google-Smtp-Source: ADFU+vveWr5LkPLK1D0uDeoOeWaDU1uM69WRyQKC6hFxZYC7SDsRbs57fCAlkrqBO3m+j5xy8jQSXA==
-X-Received: by 2002:a17:90a:fc88:: with SMTP id ci8mr9770803pjb.193.1583427401607;
-        Thu, 05 Mar 2020 08:56:41 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id l62sm19029891pgd.82.2020.03.05.08.56.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 08:56:41 -0800 (PST)
-Date:   Thu, 5 Mar 2020 09:56:39 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
-        linux-remoteproc@vger.kernel.org, afd@ti.com, s-anna@ti.com,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org
-Subject: Re: [PATCHv7 04/15] remoteproc/omap: Add support to parse internal
- memories from DT
-Message-ID: <20200305165639.GA13914@xps15>
-References: <20200221101936.16833-1-t-kristo@ti.com>
- <20200221101936.16833-5-t-kristo@ti.com>
- <20200304173207.GC8197@xps15>
- <12cfb0db-f86e-3cd8-5010-d96daa91c184@ti.com>
+        Thu, 5 Mar 2020 11:58:01 -0500
+Received: from mga02.intel.com ([134.134.136.20]:47489 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725989AbgCEQ6B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 11:58:01 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 08:58:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="352395418"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 05 Mar 2020 08:57:54 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Thu, 05 Mar 2020 18:57:52 +0200
+Date:   Thu, 5 Mar 2020 18:57:52 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Prashant Malani <pmalani@chromium.org>,
+        linux-kernel@vger.kernel.org, enric.balletbo@collabora.com,
+        bleung@chromium.org, devicetree@vger.kernel.org,
+        Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/4] dt-bindings: Add cros-ec Type C port driver
+Message-ID: <20200305165752.GB68079@kuha.fi.intel.com>
+References: <20200220003102.204480-1-pmalani@chromium.org>
+ <20200220003102.204480-2-pmalani@chromium.org>
+ <158279287307.177367.4599344664477592900@swboyd.mtv.corp.google.com>
+ <20200227163825.GB18240@kuha.fi.intel.com>
+ <158284127336.4688.623067902277673206@swboyd.mtv.corp.google.com>
+ <20200228162400.GA27904@kuha.fi.intel.com>
+ <158293703400.112031.11453499974796783579@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <12cfb0db-f86e-3cd8-5010-d96daa91c184@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <158293703400.112031.11453499974796783579@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 04, 2020 at 09:08:07PM +0200, Tero Kristo wrote:
-> On 04/03/2020 19:32, Mathieu Poirier wrote:
-> > On Fri, Feb 21, 2020 at 12:19:25PM +0200, Tero Kristo wrote:
-> > > From: Suman Anna <s-anna@ti.com>
+On Fri, Feb 28, 2020 at 04:43:54PM -0800, Stephen Boyd wrote:
+> Quoting Heikki Krogerus (2020-02-28 08:24:00)
+> > On Thu, Feb 27, 2020 at 02:07:53PM -0800, Stephen Boyd wrote:
+> > > Quoting Heikki Krogerus (2020-02-27 08:38:25)
+> > > > No.
+> > > > 
+> > > > The above follows the usb-connector bindings, so it is correct:
+> > > > Documentation/devicetree/bindings/connector/usb-connector.txt
+> > > > 
+> > > > So the connector is always a child of the "CC controller" with the USB
+> > > > Type-C connectors, which in this case is the EC (from operating systems
+> > > > perspective). The "CC controller" controls connectors, and it doesn't
+> > > > actually do anything else. So placing the connectors under the
+> > > > "connector controller" is also logically correct.
 > > > 
-> > > The OMAP remoteproc driver has been enhanced to parse and store
-> > > the kernel mappings for different internal RAM memories that may
-> > > be present within each remote processor IP subsystem. Different
-> > > devices have varying memories present on current SoCs. The current
-> > > support handles the L2RAM for all IPU devices on OMAP4+ SoCs. The
-> > > DSPs on OMAP4/OMAP5 only have Unicaches and do not have any L1 or
-> > > L2 RAM memories.
+> > > Ah ok I see. The graph binding is for describing the data path, not the
+> > > control path. Makes sense. 
 > > > 
-> > > IPUs are expected to have the L2RAM at a fixed device address of
-> > > 0x20000000, based on the current limitations on Attribute MMU
-> > > configurations.
+> > > > 
+> > > > > Yes, the connector is intimately involved with the EC here, but I would
+> > > > > think that we would have an OF graph connection from the USB controller
+> > > > > on the SoC to the USB connector, traversing through anything that may be
+> > > > > in that path, such as a USB hub. Maybe the connector node itself can
+> > > > > point to the EC type-c controller with some property like
+> > > > 
+> > > > I think your idea here is that there should be only a single node for
+> > > > each connector that is then linked with every component that it is
+> > > > physically connected to (right?), but please note that that is not
+> > > > enough. Every component attached to the connector must have its own
+> > > > child node that represents the "port" that is physically connected to
+> > > > the USB Type-C connector.
+> > > > 
+> > > > So for example, the USB controller nodes have child nodes for every
+> > > > USB2 port as well as for every USB3 port. Similarly, the GPU
+> > > > controllers have child node for every DisplayPort, etc. And I believe
+> > > > that is already how it has been done in DT (and also in ACPI).
 > > > 
-> > > NOTE:
-> > > The current logic doesn't handle the parsing of memories for DRA7
-> > > remoteproc devices, and will be added alongside the DRA7 support.
-> > > 
-> > > Signed-off-by: Suman Anna <s-anna@ti.com>
-> > > [t-kristo: converted to parse mem names / device addresses from pdata]
-> > > Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> > > ---
-> > >   drivers/remoteproc/omap_remoteproc.c | 89 ++++++++++++++++++++++++++++
-> > >   1 file changed, 89 insertions(+)
-> > > 
-> > > diff --git a/drivers/remoteproc/omap_remoteproc.c b/drivers/remoteproc/omap_remoteproc.c
-> > > index 64b559caadff..4f92b069f5d0 100644
-> > > --- a/drivers/remoteproc/omap_remoteproc.c
-> > > +++ b/drivers/remoteproc/omap_remoteproc.c
-> > > @@ -39,11 +39,27 @@ struct omap_rproc_boot_data {
-> > >   	unsigned int boot_reg;
-> > >   };
-> > > +/**
-> > > + * struct omap_rproc_mem - internal memory structure
-> > > + * @cpu_addr: MPU virtual address of the memory region
-> > > + * @bus_addr: bus address used to access the memory region
-> > > + * @dev_addr: device address of the memory region from DSP view
-> > > + * @size: size of the memory region
-> > > + */
-> > > +struct omap_rproc_mem {
-> > > +	void __iomem *cpu_addr;
-> > > +	phys_addr_t bus_addr;
-> > > +	u32 dev_addr;
-> > > +	size_t size;
-> > > +};
-> > > +
-> > >   /**
-> > >    * struct omap_rproc - omap remote processor state
-> > >    * @mbox: mailbox channel handle
-> > >    * @client: mailbox client to request the mailbox channel
-> > >    * @boot_data: boot data structure for setting processor boot address
-> > > + * @mem: internal memory regions data
-> > > + * @num_mems: number of internal memory regions
-> > >    * @rproc: rproc handle
-> > >    * @reset: reset handle
-> > >    */
-> > > @@ -51,16 +67,30 @@ struct omap_rproc {
-> > >   	struct mbox_chan *mbox;
-> > >   	struct mbox_client client;
-> > >   	struct omap_rproc_boot_data *boot_data;
-> > > +	struct omap_rproc_mem *mem;
-> > > +	int num_mems;
-> > >   	struct rproc *rproc;
-> > >   	struct reset_control *reset;
-> > >   };
-> > > +/**
-> > > + * struct omap_rproc_mem_data - memory definitions for an omap remote processor
-> > > + * @name: name for this memory entry
-> > > + * @dev_addr: device address for the memory entry
-> > > + */
-> > > +struct omap_rproc_mem_data {
-> > > +	const char *name;
-> > > +	const u32 dev_addr;
-> > > +};
-> > > +
-> > >   /**
-> > >    * struct omap_rproc_dev_data - device data for the omap remote processor
-> > >    * @device_name: device name of the remote processor
-> > > + * @mems: memory definitions for this remote processor
-> > >    */
-> > >   struct omap_rproc_dev_data {
-> > >   	const char *device_name;
-> > > +	const struct omap_rproc_mem_data *mems;
-> > >   };
-> > >   /**
-> > > @@ -223,12 +253,18 @@ static const struct rproc_ops omap_rproc_ops = {
-> > >   	.kick		= omap_rproc_kick,
-> > >   };
-> > > +static const struct omap_rproc_mem_data ipu_mems[] = {
-> > > +	{ .name = "l2ram", .dev_addr = 0x20000000 },
-> > > +	{ },
-> > > +};
-> > > +
-> > >   static const struct omap_rproc_dev_data omap4_dsp_dev_data = {
-> > >   	.device_name	= "dsp",
-> > >   };
-> > >   static const struct omap_rproc_dev_data omap4_ipu_dev_data = {
-> > >   	.device_name	= "ipu",
-> > > +	.mems		= ipu_mems,
-> > >   };
-> > >   static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
-> > > @@ -237,6 +273,7 @@ static const struct omap_rproc_dev_data omap5_dsp_dev_data = {
-> > >   static const struct omap_rproc_dev_data omap5_ipu_dev_data = {
-> > >   	.device_name	= "ipu",
-> > > +	.mems		= ipu_mems,
-> > >   };
-> > >   static const struct of_device_id omap_rproc_of_match[] = {
-> > > @@ -311,6 +348,54 @@ static int omap_rproc_get_boot_data(struct platform_device *pdev,
-> > >   	return 0;
-> > >   }
-> > > +static int omap_rproc_of_get_internal_memories(struct platform_device *pdev,
-> > > +					       struct rproc *rproc)
-> > > +{
-> > > +	struct omap_rproc *oproc = rproc->priv;
-> > > +	struct device *dev = &pdev->dev;
-> > > +	const struct omap_rproc_dev_data *data;
-> > > +	struct resource *res;
-> > > +	int num_mems;
-> > > +	int i;
-> > > +
-> > > +	data = of_device_get_match_data(&pdev->dev);
-> > > +	if (!data)
-> > > +		return -ENODEV;
-> > > +
-> > > +	if (!data->mems)
-> > > +		return 0;
-> > > +
-> > > +	for (num_mems = 0; data->mems[num_mems].name; num_mems++)
-> > > +		;
+> > > It looks like perhaps you're conflating ports in USB spec with the OF
+> > > graph port? I want there to be one node per type-c connector that I can
+> > > physically see on the device. Is that not sufficient?
 > > 
-> > Please use of_property_count_elems_of_size() as it was done in omap_hwmod.c [1]
+> > It is. We don't need more than one node that represents the physical
+> > connector (and we should not have more than one node for that). And
+> > actually, I was not mixing the OF graph ports and USB ports... I
+> > think I should be talking about PHY instead of "port". That is
+> > probable more clear.
+> > 
+> > My point is that every PHY that is connected to a Type-C connector
+> > must still be represented with its own node in devicetree and ACPI. So
+> > there still needs to be a node for the USB2 PHY, USB3 PHY, DisplayPort
+> > PHY, etc., on top of the connector node. I got the picture that you
+> > are proposing that we don't need those PHY nodes anymore since we have
+> > the connector nodes, but maybe I misunderstood?
 > 
-> There is reason why it was not done like that here. We want to make sure all
-> the memories required for the remoteproc are in place, missing any one of
-> them is a fatal error as you see in the code few lines below (my comment.)
+> Alright. Maybe a full example will help. See below. I think I understand
+> how it's supposed to look.
 > 
 > > 
-> > [1]. https://elixir.bootlin.com/linux/v5.6-rc4/source/arch/arm/mach-omap2/omap_hwmod.c#L717
+> > > Are there any examples of the type-c connector in DT? I see some
+> > > NXP/Freescale boards and one Renesas board so far. Maybe there are other
+> > > discussions I can read up on?
+> > > 
+> > > > 
+> > > > Those "port" nodes then just need to be linked with the "connector"
+> > > > node. I think for that the idea was to use OF graph, but I'm really
+> > > > sceptical about that. The problem is that with the USB Type-C
+> > > > connectors we have to be able to identify the connections, i.e. which
+> > > > endpoint is the USB2 port, which is the DisplayPort and so on, and OF
+> > > > graph does not give any means to do that on its own. We will have to
+> > > > rely on separate device properties in order to do the identification.
+> > > > Currently it is not documented anywhere which property should be used
+> > > > for that.
+> > > 
+> > > I hope that this patch series can document this.
 > > 
-> > With the above:
-> > 
-> > Acked-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-> > 
-> > 
-> > > +
-> > > +	oproc->mem = devm_kcalloc(dev, num_mems, sizeof(*oproc->mem),
-> > > +				  GFP_KERNEL);
-> > > +	if (!oproc->mem)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	for (i = 0; i < num_mems; i++) {
-> > > +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
-> > > +						   data->mems[i].name);
-> > > +		oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
-> > > +		if (IS_ERR(oproc->mem[i].cpu_addr)) {
-> > > +			dev_err(dev, "failed to parse and map %s memory\n",
-> > > +				data->mems[i].name);
-> > > +			return PTR_ERR(oproc->mem[i].cpu_addr);
-> > > +		}
+> > Well, we do need that to be documented, but do we really need to block
+> > this series because of that? This driver does not depend on OF graph
+> > yet.
 > 
-> We check here that all the memories required are defined for the remoteproc.
-> If we use of_property_count_elems_of_size, we only get the number of
-> memories defined in DT.
+> I don't know. I think this binding patch will go for another round so
+> maybe it's blocked in other ways?
 
-To make sure all memories are accounted for use data->mem[] in the loop:
+Let me put it this way: Since the code in this series does not utilize
+the connection description, it actually should _not_ propose the
+binding for it. The connection description is out side the scope of
+the series.
 
+The connection description is still far from being clear in any case.
 
-        num_mems = of_property_count_elems_of_size();
-        oproc->mem = devm_kcalloc();
-
-        for (i = 0; data->mem[i]; i++) {
-                res = platform_get_resource_byname(pdev, IORESOURCES_MEM,
-                                                   data->mems[i].name);
-                oproc->mem[i].cpu_addr = devm_ioremap_resource(dev, res);
-                ...
-                ...
-        }  
-
+> > > Why can't that work by having multiple OF graph ports for USB2 port,
+> > > DisplayPort, USB3 port, etc? The data path goes to the connector and
+> > > we can attach more information to each port node to describe what
+> > > type of endpoint is there like a DisplayPort capable type-c
+> > > connector for example.
+> > 
+> > The PHY nodes we must still always have. So the OF graph will always
+> > describe the connection between the PHY and the connector, and the
+> > connection between the PHY and the controller must be described
+> > separately.
 > 
-> -Tero
+> Got it.
 > 
-> > > +		oproc->mem[i].bus_addr = res->start;
-> > > +		oproc->mem[i].dev_addr = data->mems[i].dev_addr;
-> > > +		oproc->mem[i].size = resource_size(res);
-> > > +
-> > > +		dev_dbg(dev, "memory %8s: bus addr %pa size 0x%x va %pK da 0x%x\n",
-> > > +			data->mems[i].name, &oproc->mem[i].bus_addr,
-> > > +			oproc->mem[i].size, oproc->mem[i].cpu_addr,
-> > > +			oproc->mem[i].dev_addr);
-> > > +	}
-> > > +	oproc->num_mems = num_mems;
-> > > +
-> > > +	return 0;
-> > > +}
-> > > +
-> > >   static int omap_rproc_probe(struct platform_device *pdev)
-> > >   {
-> > >   	struct device_node *np = pdev->dev.of_node;
-> > > @@ -350,6 +435,10 @@ static int omap_rproc_probe(struct platform_device *pdev)
-> > >   	/* All existing OMAP IPU and DSP processors have an MMU */
-> > >   	rproc->has_iommu = true;
-> > > +	ret = omap_rproc_of_get_internal_memories(pdev, rproc);
-> > > +	if (ret)
-> > > +		goto free_rproc;
-> > > +
-> > >   	ret = omap_rproc_get_boot_data(pdev, rproc);
-> > >   	if (ret)
-> > >   		goto free_rproc;
-> > > -- 
-> > > 2.17.1
-> > > 
-> > > --
+> Here's the same example that hopefully shows how all this stuff can
+> work. I've added more nonsense to try and make it as complicated as
+> possible.
+
+You are not suggesting anything for the identification problem below,
+so how do we know where does an endpoint actually go to in the code?
+
+But could you actually please first explain what exactly is the
+benefit from using OF graph with with the USB Type-C connector? Why
+not just use good old phandles, i.e. device properties that return
+reference to a node? With those the device property name by itself is
+the identifier.
+
+>  / {
 > 
-> --
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> 	// Expand single usb2/usb3 from SoC to 4 port hub
+>         usb-hub {
+> 		compatible = "vendor,usb-hub-4-port";
+> 		usb-vid = <0xaaad>;
+> 		usb-pid = <0xffed>;
+> 		vdd-supply = <&pp3300_usb>;
+> 		reset-gpios = <&gpio_controller 50 GPIO_ACTIVE_LOW>;
+> 
+> 		ports { 
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 
+> 			port@0 {
+> 				reg = <0>;
+> 				usb2_hub0: endpoint0 {
+> 					remote-endpoint = <&left_typec2>;
+> 				};
+> 
+> 				usb3_hub0: endpoint1 {
+> 					remote-endpoint = <&left_typec3>;
+> 				};
+> 			};
+
+Note. USB2 and USB3 are separate ports.
+
+> 			port@1 {
+> 				reg = <1>;
+> 				usb2_hub1: endpoint0 {
+> 					remote-endpoint = <&right_typec2>;
+> 				};
+> 
+> 				usb3_hub1: endpoint1 {
+> 					remote-endpoint = <&right_typec3>;
+> 				};
+> 			};
+> 
+> 			port@2 {
+> 				reg = <2>;
+> 				usb2_hub2: endpoint0 {
+> 					remote-endpoint = <&left_typea2>;
+> 				};
+> 				usb3_hub2: endpoint1 {
+> 					remote-endpoint = <&left_typea3>;
+> 				};
+> 			};
+> 
+> 			port@3 {
+> 				reg = <3>;
+> 				usb2_hub3: endpoint0 {
+> 					// Not connected
+> 				};
+> 				usb3_hub3: endpoint1 {
+> 					// Not connected
+> 				};
+> 			};
+> 
+> 			port@4 {
+> 				reg = <4>;
+> 				usb2_hub_in: endpoint0 {
+> 					remote-endpoint = <&usb2_phy_out>;
+> 				};
+> 				usb3_hub_in: endpoint1 {
+> 					remote-endpoint = <&usb3_phy_out>;
+> 				};
+> 			};
+> 		};
+> 	};
+
+I don't still see any kind of independent device nodes for the USB
+ports? Is the idea to only have the OF graph "ports" to represent the
+physical USB ports?
+
+It was clearly a mistake to talk about PHY, but in any case...
+
+All the physical ports really need to have their own device nodes. If
+we are to use OF graph, then a OF graph "port" is an interface to a
+physical USB port, DisplayPort, Thunderbolt 3 port, whatever port,
+that then has an endpoint to the connector. OF graph ports are
+generic, and they can not represent physical points on the hardware,
+while the USB, DP, whatever ports are specific and represent the
+physical points on the hardware.
+
+So basically, the OF graph describes the connection (the interconnect)
+between the physical ports on the components and the connector, but it
+does _not_ describe the connectors nor the physical ports themselves.
+
+That is the only way I see this ever working. Otherwise you don't have
+a clear place where to put for example device nodes describing
+integrated USB devices, or even a clear way to describe port specific
+properties.
+
+> 	// Maybe this should go under EC node too if EC controls it
+> 	// somehow?
+> 	connector {
+> 		compatible = "usb-a-connector";
+> 		label = "type-A-left"
+> 
+> 		ports {
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 			port@0 {
+> 				reg = <0>;
+> 				left_typea2: endpoint0 {
+> 					remote-endpoint = <&usb2_hub2>;
+> 				};
+> 				left_typea3: endpoint1 {
+> 					remote-endpoint = <&usb3_hub2>;
+> 				};
+> 			};
+> 
+> 	};
+
+Is this actually necessary? You will never associate the connector in
+this case with a real device entry (struct device), so why define the
+node at all?
+
+The node will give you the connector type, but since (AFAIK) that
+information is not used anywhere in case of Type-A, why bother?
+
+> 	// Steer DP to either left or right type-c port
+> 	mux {
+> 		compatible = "vendor,dp-mux";
+> 		// Inactive: port 0
+> 		// Active: port 1
+> 		mux-gpios = <&gpio_controller 23 GPIO_ACTIVE_HIGH>;
+> 
+> 		ports {
+> 			#address-cells = <1>;
+> 			#size-cells = <0>;
+> 			port@0 {
+> 				reg = <0>;
+> 				mux_dp_0: endpoint {
+> 					remote-endpoint = <&right_typec_dp>;
+> 				};
+> 			};
+> 
+> 			port@1 {
+> 				reg = <1>;
+> 				mux_dp_1: endpoint {
+> 					remote-endpoint = <&left_typec_dp>;
+> 				};
+> 			};
+> 
+> 			port@2 {
+> 				reg = <1>;
+> 				mux_dp_in: endpoint {
+> 					remote-endpoint = <&dp_phy_out>;
+> 				};
+> 			};
+> 		};
+> 	};
+
+If you use the mux between the DP and the connector, then you actually
+should do the same with the USB ports as well. They will after all go
+trough the same mux, right?
+
+But using the mux in the middle even with the DP is problematic. We
+will simply not always have a mux to control. Therefore our plan was
+to always describe the connections directly from the connector to
+whatever location they ultimately go to without the mux in the middle.
+The mux will have its connection described in the connector node, but
+in parallel.
+
+I'll skip the rest if it's OK. I think at this point we really need an
+explanation to the question: why do we have to use OF graph with the
+USB Type-C connectors at all?
+
+The identification problem has to be solved if it is to be used in any
+case, but in the end, what value does OF graph add? Right now it looks
+like something that just adds unnecessary complexity.
+
+I'm sure that it is useful when it is possible to predict where the
+endpoints actually go. For example with the cameras, every endpoint
+an image processor has is most likely a sensor. But the USB Type-C
+connectors can go anywhere (I guess even to the image processor).
+
+With USB Type-C connector, the good old reference properties would
+simply be superior.
+
+
+thanks,
+
+-- 
+heikki
