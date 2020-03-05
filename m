@@ -2,201 +2,395 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85365C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B51DC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C7D20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:06:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED4272072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="VpeQ8+C5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r60dpSbI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726591AbgCENGd (ORCPT
+        id S1726184AbgCENIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:06:33 -0500
-Received: from mail-mw2nam12on2062.outbound.protection.outlook.com ([40.107.244.62]:41889
-        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725912AbgCENGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:06:32 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DQ9+XoNLZ6yu5Whnnw4Ut2bYgzHsLSOAOiAmfM48276EKNqJ5gEQYQJx5zcu9BBPAAVd6nWbB+Of5iFlPoEucpHvQAFo+4hV/Ce/SBOF5r6ebLGkxs9EpYGwAt9e6fCpy1Fc+9UTAoyFr8Aq55IJR0MMDJLP+COx1rXfxexhIK9YpkRd+5dBJGDPHzf3BnLTXPRRkCgbfBz7N6pq3QEU+RyCcZd4x6GblTAgyOS1F2238hCUN2emslHl5g/gdPQxaZDOsF9mSJixb8J+jdqE+rwd8ECAuKeuz9dGGOK9XCziugdPG1BGbecKRrWrS+Vxm0k6456eBmJDQp/2fo7fJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yqNL9FcGGcb/dfMzEIXU6J9BccTobLaTuWOTPyaNml8=;
- b=fzLjKfl0D+RGY7YBzMwap4KgrvF3foiWdL1IjjqTTawdOTZ3CVjnvdKe8Sxy0tC+JUbDLafzawAN59AG7WYTr6GPRVLCaY8/stfMorZ04hRmTDVZQmkNAArzrV5Z+CLvuqBlVjLYGPm7SH99FbVJxgndicJ4s0td8Z8T2eQLok5Ee8SsclnIYgtOU8jPAVwsr1jWCa2CYmYtJkjnVMsUnJMWRUwT/U65gqFh585DNsONhciGktqiUppTbcINURCQ2dQpSKicGmStQwZfBEOij5f7Q7nIRomyroKg0AIyVOPttzt7bHrRnjRMPpZNk8eHdhyoTrgXXfLUZaMxSxNTwA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Thu, 5 Mar 2020 08:08:51 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:53410 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgCENIv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 08:08:51 -0500
+Received: by mail-pj1-f68.google.com with SMTP id cx7so2480626pjb.3;
+        Thu, 05 Mar 2020 05:08:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=yqNL9FcGGcb/dfMzEIXU6J9BccTobLaTuWOTPyaNml8=;
- b=VpeQ8+C5MLZwaAJBHYWcQy/oD2SsRDgc2GkyfTCvpG+39Xs7ZCcPtPv68KO5VuWidPzKnQgY3CLzcHa68D2lGJgMV+eOpPutoapwc/BXW+6KXbmpyTfXAUt4Z82Y5VlWHHzN3EhEUPaWsHsAsqCa//WEb3o8OgBR6wqQhTlvqbA=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com (2603:10b6:3:10c::22)
- by DM5PR12MB2550.namprd12.prod.outlook.com (2603:10b6:4:b8::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16; Thu, 5 Mar
- 2020 13:06:27 +0000
-Received: from DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92]) by DM5PR12MB1705.namprd12.prod.outlook.com
- ([fe80::d40e:7339:8605:bc92%11]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
- 13:06:27 +0000
-Subject: Re: [PATCH] RFC: dma-buf: Add an API for importing and exporting sync
- files
-To:     Jason Ekstrand <jason@jlekstrand.net>
-Cc:     Bas Nieuwenhuizen <bas@basnieuwenhuizen.nl>,
-        Dave Airlie <airlied@redhat.com>,
-        Jesse Hall <jessehall@google.com>,
-        James Jones <jajones@nvidia.com>,
-        Daniel Stone <daniels@collabora.com>,
-        =?UTF-8?Q?Kristian_H=c3=b8gsberg?= <hoegsberg@google.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Chenbo Feng <fengc@google.com>,
-        Greg Hackmann <ghackmann@google.com>,
-        linux-media@vger.kernel.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>, linaro-mm-sig@lists.linaro.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-References: <20200225235856.975366-1-jason@jlekstrand.net>
- <8066d8b2-dd6a-10ef-a7bb-2c18a0661912@amd.com>
- <20200226100523.GQ2363188@phenom.ffwll.local>
- <CAOFGe94O66HL212aXqhi9tdYqw---Xm-fwNSV4pxHyPmpSGpbg@mail.gmail.com>
- <CAP+8YyEUz29fXDW5kO_0ZG6c849=TuFWCK8ynT3LuM+Tn+rMzw@mail.gmail.com>
- <810a26e7-4294-a615-b7ee-18148ac70641@amd.com>
- <CAOFGe96namyeQXTvdrduM+=wkJuoWWx34CxcsJHS3fcCaKDadw@mail.gmail.com>
- <21aeacc0-f3ae-c5dd-66df-4d2f3d73f73e@amd.com>
- <CAOFGe95Gx=kX=sxwhx1FYmXQuPtGAKwt2V5YodQBwJXujE3WwA@mail.gmail.com>
- <CAOFGe97XSxgzCViOH=2+B2_d5P3vGifKmvAw-JrzRQbbRMRbcg@mail.gmail.com>
-From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <6fb8becf-9e6b-f59e-9c22-2b20069241a7@amd.com>
-Date:   Thu, 5 Mar 2020 14:06:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-In-Reply-To: <CAOFGe97XSxgzCViOH=2+B2_d5P3vGifKmvAw-JrzRQbbRMRbcg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-ClientProxiedBy: AM4PR0202CA0010.eurprd02.prod.outlook.com
- (2603:10a6:200:89::20) To DM5PR12MB1705.namprd12.prod.outlook.com
- (2603:10b6:3:10c::22)
-MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM4PR0202CA0010.eurprd02.prod.outlook.com (2603:10a6:200:89::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.16 via Frontend Transport; Thu, 5 Mar 2020 13:06:21 +0000
-X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 314297da-1ef0-4e62-97ed-08d7c1060376
-X-MS-TrafficTypeDiagnostic: DM5PR12MB2550:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB2550F6011FC5C25ABE3D75B983E20@DM5PR12MB2550.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
-X-Forefront-PRVS: 03333C607F
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(189003)(199004)(478600001)(2906002)(4326008)(66946007)(66556008)(66476007)(6666004)(5660300002)(2616005)(8676002)(81166006)(8936002)(81156014)(66574012)(6916009)(31686004)(186003)(16526019)(7416002)(6486002)(316002)(54906003)(36756003)(86362001)(53546011)(52116002)(31696002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB2550;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 1FyNnT5cwA/0hzlkj12jmaxP8X+YHX4Rd0rSPpy1EJQ8gF13lcHR0nXM+3nPfahAMOqG3eg1iek6JMdEJMeVeqSINI0oOdNUM0VWOEPMR7Q3YklTsE5gBV/PW+jIeJ2zg+Et2foec79KsFPu2k1N7qIG48iQtgTAt0bU4IgV1hdS+VA6rJj7UaGHwJqLa0jMLKxMaoxf8JESxiq8rK7rKGXlBRfFKcfA2jluX6Wfw1dKO2hpak6j94SX9R/aBiipCDviMUU4143psO30/pigxNGWFt3aV+DZdsipueP29WAUsr2f87xvWEA0SpvLaWptMvt8DIK7s/fDb3q7pAL2cCr+8w/8xVBOJYWP1HE8u572WkeiPcNYQtK2ConWVnE4tdpaWiVWJA6EWWJ/P8enoASULuIjPZxmsFJQ0py08WA6XmWeA2/nxPeMXJKw29Sl
-X-MS-Exchange-AntiSpam-MessageData: 9OZ3sY85iSFvOkCuFSWTCdyWrPiaeD2YKjSIYP8i5j2674oVtWoRK8Aur47FSZ8CLZkf9/jI5K7pvTim8nO28xypNOZXVeMpqLjBAMNGoDXtTFZfPC0PSOOyWXwxSNtwteekiUnlSGdyvpCqnXF2b8xiTXfCrQ40Yedt2iDp1Hi5tpR9qlyn9xQoWbyzRb4A/TnsdkSPFLhe/5Vlo+zAXQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 314297da-1ef0-4e62-97ed-08d7c1060376
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 13:06:27.0351
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TfLsGbjvKvZSvjf2EtAujJCw8Ei8TtWpANtCIwGKRj4zcce0iZWsgba208VU088S
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2550
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bVBnRKTWMAoJt8jksXDWM1oJP/8GMBvpEQFwQVtFuIY=;
+        b=r60dpSbIkHMLtxKIhm+8VCcgW+WOqWPdnuFOaD9pUBjD6hZQTwzEkjKPOlhPBHrNsP
+         Mo5y5hTGDuBFAq+AugItAfU+ColTSq53EK5Khq5gJorimNZXxqc4xpthFDzRle8lHaRf
+         VQAe1cepgdQy6DHiocLrHJJpna4EeG/IMqKMxoQUmDYr8gThkFMptzji+rXJ32svmt9A
+         Q0iRtULEdCog1g0aJnu4da7qnTq/xlKv2Xf3HRmiu5FGLBpLaaeHqAAnHwlzVbsJpOHm
+         6ApVQECG4gipJ+MbVcSW+hFG7Bs9z13ZYg/rqhbT0VhZdn4oRJXKWqjHVkQx0F+1+QJz
+         /FJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bVBnRKTWMAoJt8jksXDWM1oJP/8GMBvpEQFwQVtFuIY=;
+        b=JM2p1PQbYtUGSnNYOKaDetOf5fAcQ7gS+dD1rkI/19Nkl1Vkt5odiBAgAUxtvxgCxn
+         WrLBE3O3qtlvZV50gyYIf2B5P+ozbZzSKLjcYneSqe8yy3b2OI32TGOD3RVjKt1iDwEW
+         nbsh2C0bfY1ThjdyO88vQP2RiBL71cW2ytYwkVfE1OMPwa0Khpn3V7RCwqn3eEiLiRsF
+         g3wJDgDlO3bAgwY+Dvn9Sjd58tjt1vqZCDmIkiA9QuCNadG4gqtffK3vQm7jX1KRS8Km
+         eIUqrEkrxExPMgB2PQZw9kh+QQahnAEskCsK3piInO/quOXvkuNH40RTOUkA4NUabWAp
+         l7ww==
+X-Gm-Message-State: ANhLgQ0hkP7jM4SuLLzu/7OZ/OjgZodvJhKfWIk5ivpJjNAnZl8qstEb
+        B/pF/cUBQOoxbQ1umRS7CuXrMXIq
+X-Google-Smtp-Source: ADFU+vuS+lQbEoY484SdLMg0+EJFwX19PU7CwNQfP73a9xhYjj7XMFk85KfOdsFKvynPKc+y8/Akog==
+X-Received: by 2002:a17:90a:d793:: with SMTP id z19mr8486239pju.40.1583413728753;
+        Thu, 05 Mar 2020 05:08:48 -0800 (PST)
+Received: from localhost.localdomain ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id x18sm20683829pfo.148.2020.03.05.05.08.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 05:08:48 -0800 (PST)
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     afzal mohammed <afzal.mohd.ma@gmail.com>,
+        Richard Henderson <rth@twiddle.net>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Matt Turner <mattst88@gmail.com>
+Subject: [PATCH v4] alpha: Replace setup_irq() by request_irq()
+Date:   Thu,  5 Mar 2020 18:38:41 +0530
+Message-Id: <20200305130843.17989-1-afzal.mohd.ma@gmail.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200304005209.5636-1-afzal.mohd.ma@gmail.com>
+References: <20200304005209.5636-1-afzal.mohd.ma@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 04.03.20 um 17:41 schrieb Jason Ekstrand:
-> On Wed, Mar 4, 2020 at 10:27 AM Jason Ekstrand <jason@jlekstrand.net> wrote:
->> On Wed, Mar 4, 2020 at 2:34 AM Christian König <christian.koenig@amd.com> wrote:
->>> Am 03.03.20 um 20:10 schrieb Jason Ekstrand:
->>>> On Thu, Feb 27, 2020 at 2:28 AM Christian König
->>>> <christian.koenig@amd.com> wrote:
->>>> [SNIP]
->>> For reference see what dance is necessary in the dma_fence_chain_release
->>> function to avoid that:
->>>>          /* Manually unlink the chain as much as possible to avoid
->>>> recursion
->>>>           * and potential stack overflow.
->>>>           */
->>>>          while ((prev = rcu_dereference_protected(chain->prev, true))) {
->>> ....
->>>
->>> It took me quite a while to figure out how to do this without causing
->>> issues. But I don't see how this would be possible for dma_fence_array.
->> Ah, I see the issue now!  It hadn't even occurred to me that userspace
->> could use this to build up an infinite recursion chain.  That's nasty!
+request_irq() is preferred over setup_irq(). Invocations of setup_irq()
+occur after memory allocators are ready.
 
-Yeah, when I first stumbled over it it was like why the heck is my code 
-crashing in an interrupt handler?
+Per tglx[1], setup_irq() existed in olden days when allocators were not
+ready by the time early interrupts were initialized.
 
-Realizing that this is stack corruption because of the long chain we 
-constructed was quite an enlightenment.
+Hence replace setup_irq() by request_irq().
 
-And then it took me even longer to fix it :)
+[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
 
->>   I'll give this some more thought and see if can come up with
->> something clever.
->>
->> Here's one thought:  We could make dma_fence_array automatically
->> collapse any arrays it references and instead directly reference their
->> fences.  This way, no matter how much the client chains things, they
->> will never get more than one dma_fence_array.  Of course, the
->> difficulty here (answering my own question) comes if they ping-pong
->> back-and-forth between something which constructs a dma_fence_array
->> and something which constructs a dma_fence_chain to get
->> array-of-chain-of-array-of-chain-of-...  More thought needed.
+Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
+---
+Hi alpha maintainers,
 
-Condensing the fences into a larger array can certainly work, yes.
+if okay w/ this change, please consider taking it thr' your tree, else please
+let me know.
 
-> Answering my own questions again...  I think the
-> array-of-chain-of-array case is also solvable.
->
-> For array-of-chain, we can simply add all unsignaled dma_fences in the
-> chain to the array.  The array won't signal until all of them have
-> which is exactly the same behavior as if we'd added the chain itself.
+Regards
+afzal
 
-Yeah, that should work. Probably best to implement something like a 
-cursor to walk all fences in the data structure.
+Link to v3, v2 & v1,
+[v3] https://lkml.kernel.org/r/20200304005209.5636-1-afzal.mohd.ma@gmail.com
+[v2] https://lkml.kernel.org/r/cover.1582471508.git.afzal.mohd.ma@gmail.com
+[v1] https://lkml.kernel.org/r/cover.1581478323.git.afzal.mohd.ma@gmail.com
 
-> For chain-of-array, we can add all unsignaled dma_fences in the array
-> to the same point in the chain.  There may be some fiddling with the
-> chain numbering required here but I think we can get it so the chain
-> won't signal until everything in the array has signaled and we get the
-> same behavior as if we'd added the dma_fence_array to the chain.
+v4:
+ * Fix build error @ init_rtc_irq arg
+v3:
+ * Split out from tree wide series, as Thomas suggested to get it thr'
+	respective maintainers
+ * Modify pr_err displayed in case of error
+ * Re-arrange code & choose pr_err args as required to improve readability
+ * Remove irrelevant parts from commit message & improve
+ 
+v2:
+ * Replace pr_err("request_irq() on %s failed" by
+           pr_err("%s: request_irq() failed"
+ * Commit message massage
 
-Well as far as I can see this won't work because it would break the 
-semantics of the timeline sync.
+ arch/alpha/kernel/irq_alpha.c     | 29 +++++------------------------
+ arch/alpha/kernel/irq_i8259.c     |  8 ++------
+ arch/alpha/kernel/irq_impl.h      |  7 +------
+ arch/alpha/kernel/irq_pyxis.c     |  3 ++-
+ arch/alpha/kernel/sys_alcor.c     |  3 ++-
+ arch/alpha/kernel/sys_cabriolet.c |  3 ++-
+ arch/alpha/kernel/sys_eb64p.c     |  3 ++-
+ arch/alpha/kernel/sys_marvel.c    |  2 +-
+ arch/alpha/kernel/sys_miata.c     |  6 ++++--
+ arch/alpha/kernel/sys_ruffian.c   |  3 ++-
+ arch/alpha/kernel/sys_rx164.c     |  3 ++-
+ arch/alpha/kernel/sys_sx164.c     |  3 ++-
+ arch/alpha/kernel/sys_wildfire.c  |  7 ++-----
+ arch/alpha/kernel/time.c          |  6 ++----
+ 14 files changed, 31 insertions(+), 55 deletions(-)
 
-But I think I know a different way which should work: A dma_fence_chain 
-can still contain a dma_fence_array, only the other way around is 
-forbidden. Then we create the cursor functionality in such a way that it 
-allows us to deep dive into the data structure and return all containing 
-fences one by one.
-
-I can prototype that if you want, shouldn't be more than a few hours of 
-hacking anyway.
-
-Regards,
-Christian.
-
->
-> In both cases, we end up with either a single array or a single and
-> destruction doesn't require recursion.  Thoughts?
->
-> --Jason
+diff --git a/arch/alpha/kernel/irq_alpha.c b/arch/alpha/kernel/irq_alpha.c
+index da3e10d5f7fe..d17e44c99df9 100644
+--- a/arch/alpha/kernel/irq_alpha.c
++++ b/arch/alpha/kernel/irq_alpha.c
+@@ -213,32 +213,13 @@ process_mcheck_info(unsigned long vector, unsigned long la_ptr,
+  * The special RTC interrupt type.  The interrupt itself was
+  * processed by PALcode, and comes in via entInt vector 1.
+  */
+-
+-struct irqaction timer_irqaction = {
+-	.handler	= rtc_timer_interrupt,
+-	.name		= "timer",
+-};
+-
+ void __init
+-init_rtc_irq(void)
++init_rtc_irq(irq_handler_t handler)
+ {
+ 	irq_set_chip_and_handler_name(RTC_IRQ, &dummy_irq_chip,
+ 				      handle_percpu_irq, "RTC");
+-	setup_irq(RTC_IRQ, &timer_irqaction);
++	if (!handler)
++		handler = rtc_timer_interrupt;
++	if (request_irq(RTC_IRQ, handler, 0, "timer", NULL))
++		pr_err("Failed to register timer interrupt\n");
+ }
+-
+-/* Dummy irqactions.  */
+-struct irqaction isa_cascade_irqaction = {
+-	.handler	= no_action,
+-	.name		= "isa-cascade"
+-};
+-
+-struct irqaction timer_cascade_irqaction = {
+-	.handler	= no_action,
+-	.name		= "timer-cascade"
+-};
+-
+-struct irqaction halt_switch_irqaction = {
+-	.handler	= no_action,
+-	.name		= "halt-switch"
+-};
+diff --git a/arch/alpha/kernel/irq_i8259.c b/arch/alpha/kernel/irq_i8259.c
+index 5d54c076a8ae..1dcf0d9038fd 100644
+--- a/arch/alpha/kernel/irq_i8259.c
++++ b/arch/alpha/kernel/irq_i8259.c
+@@ -82,11 +82,6 @@ struct irq_chip i8259a_irq_type = {
+ void __init
+ init_i8259a_irqs(void)
+ {
+-	static struct irqaction cascade = {
+-		.handler	= no_action,
+-		.name		= "cascade",
+-	};
+-
+ 	long i;
+ 
+ 	outb(0xff, 0x21);	/* mask all of 8259A-1 */
+@@ -96,7 +91,8 @@ init_i8259a_irqs(void)
+ 		irq_set_chip_and_handler(i, &i8259a_irq_type, handle_level_irq);
+ 	}
+ 
+-	setup_irq(2, &cascade);
++	if (request_irq(2, no_action, 0, "cascade", NULL))
++		pr_err("Failed to request irq 2 (cascade)\n");
+ }
+ 
+ 
+diff --git a/arch/alpha/kernel/irq_impl.h b/arch/alpha/kernel/irq_impl.h
+index 16f2b0276f3a..fbf21892e66d 100644
+--- a/arch/alpha/kernel/irq_impl.h
++++ b/arch/alpha/kernel/irq_impl.h
+@@ -21,14 +21,9 @@ extern void isa_no_iack_sc_device_interrupt(unsigned long);
+ extern void srm_device_interrupt(unsigned long);
+ extern void pyxis_device_interrupt(unsigned long);
+ 
+-extern struct irqaction timer_irqaction;
+-extern struct irqaction isa_cascade_irqaction;
+-extern struct irqaction timer_cascade_irqaction;
+-extern struct irqaction halt_switch_irqaction;
+-
+ extern void init_srm_irqs(long, unsigned long);
+ extern void init_pyxis_irqs(unsigned long);
+-extern void init_rtc_irq(void);
++extern void init_rtc_irq(irq_handler_t  handler);
+ 
+ extern void common_init_isa_dma(void);
+ 
+diff --git a/arch/alpha/kernel/irq_pyxis.c b/arch/alpha/kernel/irq_pyxis.c
+index a968b10e687d..27070b5bd33e 100644
+--- a/arch/alpha/kernel/irq_pyxis.c
++++ b/arch/alpha/kernel/irq_pyxis.c
+@@ -107,5 +107,6 @@ init_pyxis_irqs(unsigned long ignore_mask)
+ 		irq_set_status_flags(i, IRQ_LEVEL);
+ 	}
+ 
+-	setup_irq(16+7, &isa_cascade_irqaction);
++	if (request_irq(16 + 7, no_action, 0, "isa-cascade", NULL))
++		pr_err("Failed to register isa-cascade interrupt\n");
+ }
+diff --git a/arch/alpha/kernel/sys_alcor.c b/arch/alpha/kernel/sys_alcor.c
+index e56efd5b855f..ce5430056f65 100644
+--- a/arch/alpha/kernel/sys_alcor.c
++++ b/arch/alpha/kernel/sys_alcor.c
+@@ -133,7 +133,8 @@ alcor_init_irq(void)
+ 	init_i8259a_irqs();
+ 	common_init_isa_dma();
+ 
+-	setup_irq(16+31, &isa_cascade_irqaction);
++	if (request_irq(16 + 31, no_action, 0, "isa-cascade", NULL))
++		pr_err("Failed to register isa-cascade interrupt\n");
+ }
+ 
+ 
+diff --git a/arch/alpha/kernel/sys_cabriolet.c b/arch/alpha/kernel/sys_cabriolet.c
+index 10bc46a4ec40..0aa6a27d0e2f 100644
+--- a/arch/alpha/kernel/sys_cabriolet.c
++++ b/arch/alpha/kernel/sys_cabriolet.c
+@@ -112,7 +112,8 @@ common_init_irq(void (*srm_dev_int)(unsigned long v))
+ 	}
+ 
+ 	common_init_isa_dma();
+-	setup_irq(16+4, &isa_cascade_irqaction);
++	if (request_irq(16 + 4, no_action, 0, "isa-cascade", NULL))
++		pr_err("Failed to register isa-cascade interrupt\n");
+ }
+ 
+ #ifndef CONFIG_ALPHA_PC164
+diff --git a/arch/alpha/kernel/sys_eb64p.c b/arch/alpha/kernel/sys_eb64p.c
+index 5251937ec1b4..1cdfe55fb987 100644
+--- a/arch/alpha/kernel/sys_eb64p.c
++++ b/arch/alpha/kernel/sys_eb64p.c
+@@ -123,7 +123,8 @@ eb64p_init_irq(void)
+ 	}
+ 
+ 	common_init_isa_dma();
+-	setup_irq(16+5, &isa_cascade_irqaction);
++	if (request_irq(16 + 5, no_action, 0, "isa-cascade", NULL))
++		pr_err("Failed to register isa-cascade interrupt\n");
+ }
+ 
+ /*
+diff --git a/arch/alpha/kernel/sys_marvel.c b/arch/alpha/kernel/sys_marvel.c
+index 8d34cf6e002a..533899a4a1a1 100644
+--- a/arch/alpha/kernel/sys_marvel.c
++++ b/arch/alpha/kernel/sys_marvel.c
+@@ -397,7 +397,7 @@ marvel_init_pci(void)
+ static void __init
+ marvel_init_rtc(void)
+ {
+-	init_rtc_irq();
++	init_rtc_irq(NULL);
+ }
+ 
+ static void
+diff --git a/arch/alpha/kernel/sys_miata.c b/arch/alpha/kernel/sys_miata.c
+index 6fa07dc5339d..702292af2225 100644
+--- a/arch/alpha/kernel/sys_miata.c
++++ b/arch/alpha/kernel/sys_miata.c
+@@ -81,8 +81,10 @@ miata_init_irq(void)
+ 	init_pyxis_irqs(0x63b0000);
+ 
+ 	common_init_isa_dma();
+-	setup_irq(16+2, &halt_switch_irqaction);	/* SRM only? */
+-	setup_irq(16+6, &timer_cascade_irqaction);
++	if (request_irq(16 + 2, no_action, 0, "halt-switch", NULL))
++		pr_err("Failed to register halt-switch interrupt\n");
++	if (request_irq(16 + 6, no_action, 0, "timer-cascade", NULL))
++		pr_err("Failed to register timer-cascade interrupt\n");
+ }
+ 
+ 
+diff --git a/arch/alpha/kernel/sys_ruffian.c b/arch/alpha/kernel/sys_ruffian.c
+index 07830cccabf9..d33074011960 100644
+--- a/arch/alpha/kernel/sys_ruffian.c
++++ b/arch/alpha/kernel/sys_ruffian.c
+@@ -82,7 +82,8 @@ ruffian_init_rtc(void)
+ 	outb(0x31, 0x42);
+ 	outb(0x13, 0x42);
+ 
+-	setup_irq(0, &timer_irqaction);
++	if (request_irq(0, rtc_timer_interrupt, 0, "timer", NULL))
++		pr_err("Failed to request irq 0 (timer)\n");
+ }
+ 
+ static void
+diff --git a/arch/alpha/kernel/sys_rx164.c b/arch/alpha/kernel/sys_rx164.c
+index a3db719d3c38..4d85eaeb44aa 100644
+--- a/arch/alpha/kernel/sys_rx164.c
++++ b/arch/alpha/kernel/sys_rx164.c
+@@ -106,7 +106,8 @@ rx164_init_irq(void)
+ 	init_i8259a_irqs();
+ 	common_init_isa_dma();
+ 
+-	setup_irq(16+20, &isa_cascade_irqaction);
++	if (request_irq(16 + 20, no_action, 0, "isa-cascade", NULL))
++		pr_err("Failed to register isa-cascade interrupt\n");
+ }
+ 
+ 
+diff --git a/arch/alpha/kernel/sys_sx164.c b/arch/alpha/kernel/sys_sx164.c
+index 1ec638a2746a..17cc203176c8 100644
+--- a/arch/alpha/kernel/sys_sx164.c
++++ b/arch/alpha/kernel/sys_sx164.c
+@@ -54,7 +54,8 @@ sx164_init_irq(void)
+ 	else
+ 		init_pyxis_irqs(0xff00003f0000UL);
+ 
+-	setup_irq(16+6, &timer_cascade_irqaction);
++	if (request_irq(16 + 6, no_action, 0, "timer-cascade", NULL))
++		pr_err("Failed to register timer-cascade interrupt\n");
+ }
+ 
+ /*
+diff --git a/arch/alpha/kernel/sys_wildfire.c b/arch/alpha/kernel/sys_wildfire.c
+index 8e64052811ab..2191bde161fd 100644
+--- a/arch/alpha/kernel/sys_wildfire.c
++++ b/arch/alpha/kernel/sys_wildfire.c
+@@ -156,10 +156,6 @@ static void __init
+ wildfire_init_irq_per_pca(int qbbno, int pcano)
+ {
+ 	int i, irq_bias;
+-	static struct irqaction isa_enable = {
+-		.handler	= no_action,
+-		.name		= "isa_enable",
+-	};
+ 
+ 	irq_bias = qbbno * (WILDFIRE_PCA_PER_QBB * WILDFIRE_IRQ_PER_PCA)
+ 		 + pcano * WILDFIRE_IRQ_PER_PCA;
+@@ -198,7 +194,8 @@ wildfire_init_irq_per_pca(int qbbno, int pcano)
+ 		irq_set_status_flags(i + irq_bias, IRQ_LEVEL);
+ 	}
+ 
+-	setup_irq(32+irq_bias, &isa_enable);
++	if (request_irq(32 + irq_bias, no_action, 0, "isa_enable", NULL))
++		pr_err("Failed to register isa_enable interrupt\n");
+ }
+ 
+ static void __init
+diff --git a/arch/alpha/kernel/time.c b/arch/alpha/kernel/time.c
+index 0069360697ee..4d01c392ab14 100644
+--- a/arch/alpha/kernel/time.c
++++ b/arch/alpha/kernel/time.c
+@@ -242,7 +242,7 @@ common_init_rtc(void)
+ 	outb(0x31, 0x42);
+ 	outb(0x13, 0x42);
+ 
+-	init_rtc_irq();
++	init_rtc_irq(NULL);
+ }
+ 
+ 
+@@ -396,9 +396,7 @@ time_init(void)
+ 	if (alpha_using_qemu) {
+ 		clocksource_register_hz(&qemu_cs, NSEC_PER_SEC);
+ 		init_qemu_clockevent();
+-
+-		timer_irqaction.handler = qemu_timer_interrupt;
+-		init_rtc_irq();
++		init_rtc_irq(qemu_timer_interrupt);
+ 		return;
+ 	}
+ 
+-- 
+2.18.0
 
