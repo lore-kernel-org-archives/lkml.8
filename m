@@ -2,200 +2,192 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFDEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24636C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A348A2146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583416058;
-	bh=ESM0K3lRAlX6bHImm+yTGw5WfyuYJ8LXuHdmvQZv3vA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wy4qa+SkbomnSneJuEqbn7gCZB0bNgWQLnAvL3knjMUxmU4ELkrjkNiK7IpjngQkY
-	 LTIkSpsVA9ouI/BbHYU7cSU/uLoS3wi0WbFwLpOKpnYV2SQqCaeySyE7LaEQpUcyzX
-	 noXcZmSLU7BVBBgxixMUxD6lsDHwNVY3NFzsO1qA=
+	by mail.kernel.org (Postfix) with ESMTP id E0AA9208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:49:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="QcI2FXdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726099AbgCENrh (ORCPT
+        id S1726143AbgCENtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:47:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45798 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725990AbgCENrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:47:37 -0500
-Received: from linux-8ccs.fritz.box (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75F472073D;
-        Thu,  5 Mar 2020 13:47:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583416056;
-        bh=ESM0K3lRAlX6bHImm+yTGw5WfyuYJ8LXuHdmvQZv3vA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2UZc6+0QtQ8CoeG+HLn6Hr1cidv/r079yyJGTZXtOOpNKwoLnc2BwNPCYhy5uxxcE
-         PwPX1jDL3XOM7na5s0CKRFvzH4at5QRF66a4rG02ATOJayz3pi5T4RRoh2tkcrUbkn
-         dK+0b+1s9uXT2JU9ulrKw6W/5InxP5afWIfgbeVY=
-Date:   Thu, 5 Mar 2020 14:47:32 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Matthias Maennich <maennich@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] modpost: move the namespace field in Module.symvers last
-Message-ID: <20200305134732.GA1637@linux-8ccs.fritz.box>
-References: <20200304170345.21218-1-jeyu@kernel.org>
- <20200305085948.GD119445@google.com>
+        Thu, 5 Mar 2020 08:49:47 -0500
+Received: from mail-eopbgr30100.outbound.protection.outlook.com ([40.107.3.100]:41190
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725990AbgCENtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 08:49:47 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=feS2qpXya8n9Pe7pOybAII4I8gLB3D97eHcsvcw+Lj70sJpCuwiSSGJBtQ6TdX66OmVZ+MdOuk5ZCJaFYP3ct0AHG7aTqaVnILILOFw7UuljyU5moGDAWDth3GlmJAqc9YUPDebY8g2X4tLouVrN1bdxvor2EJjdrkIqTvABwK8dUwmLfnSpOdpaaCxxbr6lgXC+5lXoAugNSoBJ7mbecZpiOvEKUcArptNA/KUFO0YfpcA9gwKRalsQVRJ1BM7tsgdFCaCgYgNhu7MFGe1HVEkbymhuIfWO0gBVaDcwGkBakug7NS8T4PdXT2m0ljQ7LewKgPu7zamqOXKoa52ghQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qJEMiP3awu4DmT/LEm3wuxisEf3MLT3TN03jKeXyYgQ=;
+ b=lREIVuGZDc5goe2TdrcvokmU+lwCj6oYv7W8j3whRp/TBO72QYBcswd+O/SyjJH3vFkMW6d2V/2HVQHODAv9wP+36ETQGQ/bllIjBLEVMzHEn9YELwyFHUtAbW41vxBw4vCk24rZ74PIQzdltJJA4m5ntOLVlQ2N1UOKRFWfiR+gGzEqsoo6oeMyyUp0rxtjAFauT0TDt/SEuvCEUJ6/EjqYqPoNUJsnVQTUH9Y5M7aeo4Dr6TtbgEYjFZ94Gug6sTBDC2tHI+HwvTC0dft5gqGnWqfOIC8Hyc9RcK869FZde9WKr51klpnIUyMs8VDJkT0HQQBSuT5ec+96MzqIAQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=toradex.com; dmarc=pass action=none header.from=toradex.com;
+ dkim=pass header.d=toradex.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qJEMiP3awu4DmT/LEm3wuxisEf3MLT3TN03jKeXyYgQ=;
+ b=QcI2FXdlPBn3hyzZ9qpxUBklPoL0/1DhJ7H5/BIW8loIalpXnJCMWzbJSbU6rsZz6lEFiSsJjGh/Vpb+UsG2HSesCf6jyMcJxfnetrUjaUjwPyrWGUBvQ7s/O17IRQkC5YxjB/51G8uoGy6Lv/SxSPy0deajW5M5LgMm69LY40M=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=philippe.schenker@toradex.com; 
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com (20.179.1.217) by
+ AM6PR05MB5569.eurprd05.prod.outlook.com (20.177.119.158) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2772.15; Thu, 5 Mar 2020 13:49:44 +0000
+Received: from AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::dee:ffa2:1d09:30e]) by AM6PR05MB6120.eurprd05.prod.outlook.com
+ ([fe80::dee:ffa2:1d09:30e%4]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
+ 13:49:43 +0000
+From:   Philippe Schenker <philippe.schenker@toradex.com>
+To:     Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>
+Cc:     Philippe Schenker <philippe.schenker@toradex.com>,
+        Allison Randal <allison@lohutok.net>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH] ARM: mach-imx6q: add ksz9131rn_phy_fixup
+Date:   Thu,  5 Mar 2020 14:49:28 +0100
+Message-Id: <20200305134928.19775-1-philippe.schenker@toradex.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: PR2PR09CA0014.eurprd09.prod.outlook.com
+ (2603:10a6:101:16::26) To AM6PR05MB6120.eurprd05.prod.outlook.com
+ (2603:10a6:20b:a8::25)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200305085948.GD119445@google.com>
-X-OS:   Linux linux-8ccs 5.5.0-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from philippe-pc.toradex.int (31.10.206.124) by PR2PR09CA0014.eurprd09.prod.outlook.com (2603:10a6:101:16::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18 via Frontend Transport; Thu, 5 Mar 2020 13:49:43 +0000
+X-Mailer: git-send-email 2.25.1
+X-Originating-IP: [31.10.206.124]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 9d4e8cd1-94be-42a0-aba0-08d7c10c0f54
+X-MS-TrafficTypeDiagnostic: AM6PR05MB5569:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM6PR05MB55699F71D197820F7C97B03AF4E20@AM6PR05MB5569.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
+X-Forefront-PRVS: 03333C607F
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(376002)(396003)(39850400004)(366004)(136003)(189003)(199004)(6512007)(66946007)(1076003)(8676002)(8936002)(66476007)(5660300002)(4326008)(66556008)(316002)(86362001)(6506007)(16526019)(110136005)(54906003)(44832011)(26005)(956004)(7416002)(6486002)(81166006)(6666004)(2906002)(2616005)(81156014)(478600001)(36756003)(186003)(52116002)(16060500001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB5569;H:AM6PR05MB6120.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+Received-SPF: None (protection.outlook.com: toradex.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: y4GJyYtrBHV1Se3ykurNeZkMp31FU7l3msNHj6qsQ/LYWHgMwBDp0cVOuz3+irYJgiud5q/0RMPbZXwF8sQ3U+GL4xqOUT2iFxCwm668L6Mb2QlcGNa3X1b4kNu+mWrsQdYQk/SP0RF2lei4OVyMY8wIyjjyO8wSnOXS/obBG5clsASoWzb26zsDnzt0UlyNWSqfWh0p5yruPwTnxXVWrUgBE58n5y8Qk+feA0D1zsheVmO52Vd7xxZUSsJ2kpuKY8w73tTNi0zbCtIRi62lf5VMbyZzQ45sXqPoAGBIErYjAW2zK+XnafjXEFVTF49CrBqHWvjLA3DHycHQ8Lqakg2TSSt/yIzknfAgD9Gi70lzmjJcsprsF1VIaxxMheXe2EmFDzoWcIiL0uW0atq6dvFS4g2+GMmH/782y4F+YHL63ob2en29lGRZ/ywKvtx+SAeBlnFPr7YALgQA/T7d/Th30fYnDHUitKMujensLJCFLPkS+9d39aMX/2QHq2Ia
+X-MS-Exchange-AntiSpam-MessageData: 3794z509fEL4sYzFOaEEr+Aea19RoFaYPF8/F31p7ZT9al3ODDqhlZ1QS6oAx69zxnPQfaObUezhX7eKLqIDiws4Voc/xfTOL8raKAqBzlPxrF7eRvugiWtemd0pCbJUkA0Bz/OMXFkZACn5ogi60g==
+X-OriginatorOrg: toradex.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9d4e8cd1-94be-42a0-aba0-08d7c10c0f54
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 13:49:43.8809
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: d9995866-0d9b-4251-8315-093f062abab4
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: TtHkd1/DxSlZ5DG82Iu4IL3CgfwmLk5tPGErdICS/3Gky98xBwuooGXuZknBfHoIxiqq43v+Mv5996uiGjcGGTH/CqIbEoInAm9dBhHMj6g=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5569
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Matthias Maennich [05/03/20 08:59 +0000]:
->Hi Jessica!
->Thanks for working on this!
->
->On Wed, Mar 04, 2020 at 06:03:45PM +0100, Jessica Yu wrote:
->>In order to preserve backwards compatability with kmod tools, we have to
->>move the namespace field in Module.symvers last, as the depmod -e -E
->>option looks at the first three fields in Module.symvers to check symbol
->>versions (and it's expected they stay in the original order of crc,
->>symbol, module).
->>
->>Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
->>Cc: stable@vger.kernel.org
->
->Please note, this patch did not actually go to stable@.
+The MAC of the i.MX6 SoC is compliant with RGMII v1.3. The KSZ9131 PHY
+is like KSZ9031 adhering to RGMII v2.0 specification. This means the
+MAC should provide a delay to the TXC line. Because the i.MX6 MAC does
+not provide this delay this has to be done in the PHY.
 
-Hi Matthias! Thanks, I missed that.
+This patch adds by default ~1.6ns delay to the TXC line. This should
+be good for all boards that have the RGMII signals routed with the
+same length.
 
->>Signed-off-by: Jessica Yu <jeyu@kernel.org>
->>---
->>Documentation/kbuild/modules.rst |  4 ++--
->>scripts/export_report.pl         |  2 +-
->>scripts/mod/modpost.c            | 24 ++++++++++++------------
->>3 files changed, 15 insertions(+), 15 deletions(-)
->>
->>diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
->>index 69fa48ee93d6..e0b45a257f21 100644
->>--- a/Documentation/kbuild/modules.rst
->>+++ b/Documentation/kbuild/modules.rst
->>@@ -470,9 +470,9 @@ build.
->>
->>	The syntax of the Module.symvers file is::
->>
->>-	<CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
->>+	<CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
->>
->>-	0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
->>+	0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
->>
->>	The fields are separated by tabs and values may be empty (e.g.
->>	if no namespace is defined for an exported symbol).
->>diff --git a/scripts/export_report.pl b/scripts/export_report.pl
->>index 548330e8c4e7..feb3d5542a62 100755
->>--- a/scripts/export_report.pl
->>+++ b/scripts/export_report.pl
->>@@ -94,7 +94,7 @@ if (defined $opt{'o'}) {
->>#
->>while ( <$module_symvers> ) {
->>	chomp;
->>-	my (undef, $symbol, $namespace, $module, $gpl) = split('\t');
->>+	my (undef, $symbol, $module, $gpl, $namespace) = split('\t');
->>	$SYMBOL { $symbol } =  [ $module , "0" , $symbol, $gpl];
->>}
->>close($module_symvers);
->>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
->>index 7edfdb2f4497..6ab235354f36 100644
->>--- a/scripts/mod/modpost.c
->>+++ b/scripts/mod/modpost.c
->>@@ -2427,7 +2427,7 @@ static void write_if_changed(struct buffer *b, const char *fname)
->>}
->>
->>/* parse Module.symvers file. line format:
->>- * 0x12345678<tab>symbol<tab>module[[<tab>export]<tab>something]
->>+ * 0x12345678<tab>symbol<tab>module<tab>export<tab>namespace
->> **/
->>static void read_dump(const char *fname, unsigned int kernel)
->>{
->>@@ -2440,7 +2440,7 @@ static void read_dump(const char *fname, unsigned int kernel)
->>		return;
->>
->>	while ((line = get_next_line(&pos, file, size))) {
->>-		char *symname, *namespace, *modname, *d, *export, *end;
->>+		char *symname, *namespace, *modname, *d, *export;
->>		unsigned int crc;
->>		struct module *mod;
->>		struct symbol *s;
->>@@ -2448,16 +2448,16 @@ static void read_dump(const char *fname, unsigned int kernel)
->>		if (!(symname = strchr(line, '\t')))
->>			goto fail;
->>		*symname++ = '\0';
->>-		if (!(namespace = strchr(symname, '\t')))
->>-			goto fail;
->>-		*namespace++ = '\0';
->>-		if (!(modname = strchr(namespace, '\t')))
->>+		if (!(modname = strchr(symname, '\t')))
->>			goto fail;
->>		*modname++ = '\0';
->>-		if ((export = strchr(modname, '\t')) != NULL)
->>-			*export++ = '\0';
->>-		if (export && ((end = strchr(export, '\t')) != NULL))
->>-			*end = '\0';
->>+		if (!(export = strchr(modname, '\t')))
->>+			goto fail;
->>+		*export++ = '\0';
->>+		if (!(namespace = strchr(export, '\t')))
->
->As mentioned below, we should probably treat namespace as an optional
->field. Then this needs adjusting to handle that case. Similar to how
->optional cases were handled before.
+The KSZ9131 has relatively high tolerances on skew registers from
+MMD 2.4 to MMD 2.8. Therefore the new DLL-based delay of 2ns is used
+and then as little as possibly subtracted from that so we get more
+accurate delay. This is actually needed because the i.MX6 SoC has
+an asynchron skew on TXC from -100ps to 900ps, to get all RGMII
+values within spec.
 
-Hm, I think introducing optional fields would add unnecessary
-complexity, and make future parsing harder. For example, say in the
-distant future we add another field. If fields are optional, we are no
-longer able to tell if the 4th field is a namespace or the new_field.
-Whereas, if we made the fields mandatory (even if empty), we would see
-crc<tab>symbol<tab>module<tab>export_type<tab><tab>new_field, and it's
-clear that the namespace is empty. I hope that makes sense...
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
-IMO, I think it's easiest to just establish the fact that
-Module.symvers has 5 fields, and fields can be empty. If a field an
-empty, then the next delimiter or end of line will just follow
-immediately.
+---
 
-Just to reiterate, it is true namespaces are optional, and in the case
-of no namespace, I would prefer it to be an empty string/field rather
-than omitting it entirely.
+ arch/arm/mach-imx/mach-imx6q.c | 37 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
->>+			goto fail;
->>+		*namespace++ = '\0';
->>+
->>		crc = strtoul(line, &d, 16);
->>		if (*symname == '\0' || *modname == '\0' || *d != '\0')
->>			goto fail;
->>@@ -2508,9 +2508,9 @@ static void write_dump(const char *fname)
->>				namespace = symbol->namespace;
->>				buf_printf(&buf, "0x%08x\t%s\t%s\t%s\t%s\n",
->
->This creates trailing tabs for symbols without namespace. If we treat
->'namespace' as an optional field, we should probably make the tab
->conditional as well? What do you think?
-
-Yeah you're right, the trailing tab after an empty namespace looks
-weird...but for reasons I cited above, I would like to keep it simple,
-unless there are huge objections.
-
-Thank you for the review!
-
-Jessica
+diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+index edd26e0ffeec..8ae5f2fa33e2 100644
+--- a/arch/arm/mach-imx/mach-imx6q.c
++++ b/arch/arm/mach-imx/mach-imx6q.c
+@@ -61,6 +61,14 @@ static void mmd_write_reg(struct phy_device *dev, int device, int reg, int val)
+ 	phy_write(dev, 0x0e, val);
+ }
+ 
++static int mmd_read_reg(struct phy_device *dev, int device, int reg)
++{
++	phy_write(dev, 0x0d, device);
++	phy_write(dev, 0x0e, reg);
++	phy_write(dev, 0x0d, (1 << 14) | device);
++	return phy_read(dev, 0x0e);
++}
++
+ static int ksz9031rn_phy_fixup(struct phy_device *dev)
+ {
+ 	/*
+@@ -74,6 +82,33 @@ static int ksz9031rn_phy_fixup(struct phy_device *dev)
+ 	return 0;
+ }
+ 
++#define KSZ9131_RXTXDLL_BYPASS	12
++
++static int ksz9131rn_phy_fixup(struct phy_device *dev)
++{
++	int tmp;
++
++	tmp = mmd_read_reg(dev, 2, 0x4c);
++	/* disable rxdll bypass (enable 2ns skew delay on RXC) */
++	tmp &= ~(1 << KSZ9131_RXTXDLL_BYPASS);
++	mmd_write_reg(dev, 2, 0x4c, tmp);
++
++	tmp = mmd_read_reg(dev, 2, 0x4d);
++	/* disable txdll bypass (enable 2ns skew delay on TXC) */
++	tmp &= ~(1 << KSZ9131_RXTXDLL_BYPASS);
++	mmd_write_reg(dev, 2, 0x4d, tmp);
++
++	/*
++	 * Subtract ~0.6ns from txdll = ~1.4ns delay.
++	 * leave RXC path untouched
++	 */
++	mmd_write_reg(dev, 2, 4, 0x007d);
++	mmd_write_reg(dev, 2, 6, 0xdddd);
++	mmd_write_reg(dev, 2, 8, 0x0007);
++
++	return 0;
++}
++
+ /*
+  * fixup for PLX PEX8909 bridge to configure GPIO1-7 as output High
+  * as they are used for slots1-7 PERST#
+@@ -167,6 +202,8 @@ static void __init imx6q_enet_phy_init(void)
+ 				ksz9021rn_phy_fixup);
+ 		phy_register_fixup_for_uid(PHY_ID_KSZ9031, MICREL_PHY_ID_MASK,
+ 				ksz9031rn_phy_fixup);
++		phy_register_fixup_for_uid(PHY_ID_KSZ9131, MICREL_PHY_ID_MASK,
++				ksz9131rn_phy_fixup);
+ 		phy_register_fixup_for_uid(PHY_ID_AR8031, 0xffffffef,
+ 				ar8031_phy_fixup);
+ 		phy_register_fixup_for_uid(PHY_ID_AR8035, 0xffffffef,
+-- 
+2.25.1
 
