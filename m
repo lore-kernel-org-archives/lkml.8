@@ -2,100 +2,129 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9919BC3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02479C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71AA0208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0B86208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:42:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZZv6hqD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="neFlY3Az"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgCEFko (ORCPT
+        id S1725924AbgCEFmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 00:40:44 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:45554 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgCEFko (ORCPT
+        Thu, 5 Mar 2020 00:42:52 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46239 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbgCEFmw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 00:40:44 -0500
-Received: by mail-qv1-f68.google.com with SMTP id r8so1911337qvs.12;
-        Wed, 04 Mar 2020 21:40:41 -0800 (PST)
+        Thu, 5 Mar 2020 00:42:52 -0500
+Received: by mail-pf1-f193.google.com with SMTP id o24so2182688pfp.13
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 21:42:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=THBYMEY1yGfalLtbzYiKSYkmAX5Lj+jvZpr5bKLPTp0=;
-        b=EZZv6hqD7ymuE6lbhHNuFocVxoT/8FJaP+Xdqv6NKFkH2BKU/X52VI7p/f0086Cvex
-         A1xR+vIZOTlfJFozjl7vvRT12YHemz/A6ZbTZe9FB5ikmBiBbxI9W/q4qBGKIMHmWz9n
-         tPAQnLeUfE67fU17daLSM8SxDrAaIJBF5vsbTbLMf87QcxItNe9GtxLwZFUBT1Ov/yDQ
-         p4VkR/YCQzHiq7P42dX/faOLX8Rg3fb8D1jgQZ1QWXDM8BrfdVVCRui5QMvSAD9jyQCb
-         xe9VDdDqfkk8qtrS/XaXQajELx7JA1AomSuxIJrZv+L+cYhrzmFyUyP3gmWH5B2Y8mko
-         qbRg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=cNQGrNZI2YLBUBgRppVQ1AFH/YzUKaKdzB/7ZzNdnn8=;
+        b=neFlY3AzXQwk38I3fCwFvt5ea+6QcafBvcuXUQgf6wn1h9Fmksg+lwGVKtbXUdFpbD
+         iFrEvVLJ/nqm6IVqw2M5/CBrwEwFT94PjdZvxzC4JVTewsKmQokKrRj2IesC0+TfNwxZ
+         D2c7SVFaLJaNIbTfn/sTDXldlYxLgmUzHjZhrpNjINbtV+y6ydgeH3ht+VB7S5wiDGIh
+         VoKXTeRH9KSswYCSw7P7clX+pqRm+m+MKtHDg65bPZ0FItepMfaNvZzlthJfF/vtn6i5
+         kEm0pKmcN8BTcDjq8ABJ6Ts6CXGRI7C4hYuG6l0X9Y/orblbcgQ0GPzMEzCw+Z9DvHHp
+         DBRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=THBYMEY1yGfalLtbzYiKSYkmAX5Lj+jvZpr5bKLPTp0=;
-        b=Bqr6jnkWOuh93IqQwI8pmzyIyvbhjMFazHdJLt3U9uAZNGmuouklLQlWG/XQXg8o8X
-         17J76YM5cJy5J3T5cbvdd4ai957f1zEvh4++K6SEgmloplgvPyvHDwQwZRp54U3+Aw1C
-         WFeLR0Cr9DWsE5Y6EEUo4QrvXkrdz40VbuteKk4yDW50CPQ9GEhsKs2KSGyQf9eiN2EM
-         2MuWZJFWLcDT/Ga7BrPhuubxlLaGW8q7Gd8w+FIz3cNFXqtwYEBx5pMinW4mIJCVsX4i
-         XkwSy8Ga6bJ5J+7SYH9Ew+u3AUIEgY4PKu/yMUiw+09/1uJzVjLxDl+KUMrx7jvljeAf
-         U4QA==
-X-Gm-Message-State: ANhLgQ1Eoo6mHb3Vd/iH/tWEJx0gvGDx5lNYxPPz8I6Wxvd+o+BjXL1b
-        CpXixewA8xf7oV11COcp3bNo8P3HcwTdyyH30CM=
-X-Google-Smtp-Source: ADFU+vtfOIyH1BW9riEZRACvPgvUTdUP01Lk72U0ekfmC8baXSmHIuWMubjgSVFDnAmUEs9i1uAgEiXwdE9VRISclzc=
-X-Received: by 2002:ad4:4f87:: with SMTP id em7mr4923418qvb.97.1583386840011;
- Wed, 04 Mar 2020 21:40:40 -0800 (PST)
-MIME-Version: 1.0
-References: <20200305050207.4159-1-luke.r.nels@gmail.com>
-In-Reply-To: <20200305050207.4159-1-luke.r.nels@gmail.com>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Thu, 5 Mar 2020 06:40:28 +0100
-Message-ID: <CAJ+HfNjrUxVqpBgC-WLHbZX7_7Gd-Lk7ghrmASTmaNySuXVUfg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 0/4] eBPF JIT for RV32G
-To:     Luke Nelson <lukenels@cs.washington.edu>
-Cc:     bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=cNQGrNZI2YLBUBgRppVQ1AFH/YzUKaKdzB/7ZzNdnn8=;
+        b=WuPFuAIjMWPwLLfzlrjDD1Px7GNBS8RfiHKcU16d9Vdf04Xb79XhwRWPz40hwQW5U0
+         nEOEUSr3uSDYH93HylAE9FfR4eYDPePTb4VnL72VUl0pKg9HQxke+kwkcz3wjVcmKK63
+         nqmTYds4klmtXtOnE4QzMV+1B5VicrklOVW2lNbxshZavKY/FHuTNvsOn068/+Ie/PFT
+         c6sqmmn4nxvQt1JDBuIhLClCCAClwZhnvezbjmDT2eD5Iz2SQzwUa8LXp17Mmd5b5eRE
+         Zb3JNhxZYD2ZcPjc/de5VxI9kcP+C+ahqHID3F/FR9K6S2CljEPbdr98l5VYDl+2FNc4
+         ru3g==
+X-Gm-Message-State: ANhLgQ1/Gp/OneRfpj1wrFUTNnCVUx6eV3F4B7J5NWEDT66N/mBSElMg
+        8VcsDPz5rDuV2DVEPtV5hNmhB+XDxTA=
+X-Google-Smtp-Source: ADFU+vvzjkS9TGRcblpeqpN0ZPT+dotszbngZ5ty0l0O8K/HOOu6mUTWyw5dOp04GzZet7pPJd+gNA==
+X-Received: by 2002:a62:37c7:: with SMTP id e190mr6745679pfa.165.1583386970893;
+        Wed, 04 Mar 2020 21:42:50 -0800 (PST)
+Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
+        by smtp.gmail.com with ESMTPSA id w17sm25177400pfg.33.2020.03.04.21.42.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 04 Mar 2020 21:42:50 -0800 (PST)
+From:   John Stultz <john.stultz@linaro.org>
+To:     lkml <linux-kernel@vger.kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>, Todd Kjos <tkjos@google.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+Subject: [RFC][PATCH] soc: qcom: rpmpd: Allow RPMPD driver to be loaded as a module
+Date:   Thu,  5 Mar 2020 05:42:44 +0000
+Message-Id: <20200305054244.128950-1-john.stultz@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Mar 2020 at 06:02, Luke Nelson <lukenels@cs.washington.edu> wrote=
-:
->
-> This series adds an eBPF JIT for 32-bit RISC-V (RV32G) to the kernel,
-> adapted from the RV64 JIT and the 32-bit ARM JIT.
->
+Allow the rpmpd driver to be loaded as a module.
 
-Nice work! Thanks for hanging in there!
+Cc: Todd Kjos <tkjos@google.com>
+Cc: Saravana Kannan <saravanak@google.com>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ drivers/soc/qcom/Kconfig | 4 ++--
+ drivers/soc/qcom/rpmpd.c | 5 ++++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-For the series,
-Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
-Reviewed-by: Bj=C3=B6rn T=C3=B6pel <bjorn.topel@gmail.com>
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index d0a73e76d563..af774555b9d2 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -123,8 +123,8 @@ config QCOM_RPMHPD
+ 	  for the voltage rail.
+ 
+ config QCOM_RPMPD
+-	bool "Qualcomm RPM Power domain driver"
+-	depends on QCOM_SMD_RPM=y
++	tristate "Qualcomm RPM Power domain driver"
++	depends on QCOM_SMD_RPM
+ 	help
+ 	  QCOM RPM Power domain driver to support power-domains with
+ 	  performance states. The driver communicates a performance state
+diff --git a/drivers/soc/qcom/rpmpd.c b/drivers/soc/qcom/rpmpd.c
+index 2b1834c5609a..9c0834913f3f 100644
+--- a/drivers/soc/qcom/rpmpd.c
++++ b/drivers/soc/qcom/rpmpd.c
+@@ -5,6 +5,7 @@
+ #include <linux/init.h>
+ #include <linux/kernel.h>
+ #include <linux/mutex.h>
++#include <linux/module.h>
+ #include <linux/pm_domain.h>
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+@@ -226,6 +227,7 @@ static const struct of_device_id rpmpd_match_table[] = {
+ 	{ .compatible = "qcom,qcs404-rpmpd", .data = &qcs404_desc },
+ 	{ }
+ };
++MODULE_DEVICE_TABLE(of, rpmpd_match_table);
+ 
+ static int rpmpd_send_enable(struct rpmpd *pd, bool enable)
+ {
+@@ -421,4 +423,5 @@ static int __init rpmpd_init(void)
+ {
+ 	return platform_driver_register(&rpmpd_driver);
+ }
+-core_initcall(rpmpd_init);
++module_init(rpmpd_init);
++MODULE_LICENSE("GPL");
+-- 
+2.17.1
+
