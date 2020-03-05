@@ -2,131 +2,98 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F40C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8D5C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:49:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D46952072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C382072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:49:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=tycho-ws.20150623.gappssmtp.com header.i=@tycho-ws.20150623.gappssmtp.com header.b="oCjzxHqs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbgCEUq1 (ORCPT
+        id S1726162AbgCEUt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:46:27 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49640 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726049AbgCEUq1 (ORCPT
+        Thu, 5 Mar 2020 15:49:27 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:45992 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726080AbgCEUt1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:46:27 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025KcnB5076512;
-        Thu, 5 Mar 2020 15:46:17 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhsvbk8nw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Mar 2020 15:46:17 -0500
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 025KdjSp079121;
-        Thu, 5 Mar 2020 15:46:16 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhsvbk8nc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Mar 2020 15:46:16 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 025KeMiE009438;
-        Thu, 5 Mar 2020 20:46:15 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma04dal.us.ibm.com with ESMTP id 2yffk7hk2f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Mar 2020 20:46:15 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 025KkEKD62456182
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Mar 2020 20:46:14 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09A7DC6057;
-        Thu,  5 Mar 2020 20:46:14 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F29AEC6055;
-        Thu,  5 Mar 2020 20:46:11 +0000 (GMT)
-Received: from jarvis.ext.hansenpartnership.com (unknown [9.80.217.149])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Mar 2020 20:46:11 +0000 (GMT)
-Message-ID: <1583441170.3927.37.camel@linux.ibm.com>
-Subject: Re: [PATCH] MAINTAINERS: adjust to trusted keys subsystem creation
-From:   James Bottomley <jejb@linux.ibm.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Sumit Garg <sumit.garg@linaro.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-        Sebastian Duda <sebastian.duda@fau.de>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        Thu, 5 Mar 2020 15:49:27 -0500
+Received: by mail-yw1-f67.google.com with SMTP id d206so34698ywa.12
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 12:49:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tycho-ws.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5zmgxN7VRZXC7kbix0t7HZalzUvTentTfjnGm/3hMTE=;
+        b=oCjzxHqsExisvhlxj2vLbWI+LleP320DIA63HiMC3CvCVE+taSKApySOErK4ZOUpEt
+         J9NEAZwHZEmWGlvwUQRcTkTuMMzGpWOQXnz4PiGwEe5CWdNMxavPFDWW2EAGixCQhviZ
+         +I4OFEjaLBOeE10vj1L+uU8FohllLaMLab6RAz0XnnMv15zFailN4BfRGHiOaoAiaIYw
+         8y7qzIaNpPZH88IK1Cp3LTrqck3d8e8y5MxZg3BI38HsHzkuz/kBeEblxNYQ8e5miY8W
+         LR739rAjjIcqXS5O5Y8bv+USeISElSCSY4fbxmQTRCK7NaVpZZ18/K2gcxXqCO097Yi6
+         pKWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5zmgxN7VRZXC7kbix0t7HZalzUvTentTfjnGm/3hMTE=;
+        b=dRwHRcN3IRrpoZP9QvaxtA7LyXF04ml8+HocI3NDNoRB2a+jE3s7tAzMiFDRDlUW5l
+         u22wIjs89UolcRxtxIfYZ4qvlVpQ5XpC8gZYm+TsifDEYDAXFEFBJNC528b/Sff8hD0R
+         tXmRJBCgx0hJM/9tUiu7wNmSxhcp7PDjvErP+QbPN2tPOc7YT0l1IYLGHhsAp8Ff6kRX
+         7BY2KrELVl5IdCg3irwtOUpW1LHQY3HQcXH2KkPdutCnHekm9BxbFrQWt4RUHXVRmxVh
+         tGdvhcD4t18BDCEfAAohaeRPXWryRp5RTXJgL5F8ExZpnEGS0OnlOK8XjGBkFAxywZBq
+         YuIA==
+X-Gm-Message-State: ANhLgQ3EwiW4Uzo1Y/9+ulIn9pX074Q/401gV1N68VUi2rKScY9ysys8
+        SWxEEgEtlMSVoj/SNH6aw4qZUg==
+X-Google-Smtp-Source: ADFU+vut5SaFR53pXBOtJjgao2EQ5xqKFPyU2dbqIJP6N0WO2apubN/ljUNmlK9XJyrF+68bzRL6FA==
+X-Received: by 2002:a25:860d:: with SMTP id y13mr137357ybk.310.1583441366443;
+        Thu, 05 Mar 2020 12:49:26 -0800 (PST)
+Received: from cisco ([2607:fb90:17d4:133:1002:9a44:e2a2:4464])
+        by smtp.gmail.com with ESMTPSA id s63sm12469943ywd.82.2020.03.05.12.49.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 12:49:25 -0800 (PST)
+Date:   Thu, 5 Mar 2020 13:49:08 -0700
+From:   Tycho Andersen <tycho@tycho.ws>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Kees Cook <keescook@chromium.org>,
+        "Tobin C . Harding" <me@tobin.cc>,
+        kernel-hardening@lists.openwall.com,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Thu, 05 Mar 2020 12:46:10 -0800
-In-Reply-To: <alpine.DEB.2.21.2003052132540.5431@felia>
-References: <20200304160359.16809-1-lukas.bulwahn@gmail.com>
-         <9127f0318e8507ca0b4e146d9b99d9ecb27f7f28.camel@linux.intel.com>
-         <alpine.DEB.2.21.2003052132540.5431@felia>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-05_07:2020-03-05,2020-03-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 clxscore=1015 suspectscore=0 impostorscore=0 adultscore=0
- spamscore=0 malwarescore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050120
+Subject: Re: [PATCH v3] x86/mm/init_32: Stop printing the virtual memory
+ layout
+Message-ID: <20200305204908.GA6506@cisco>
+References: <202003021039.257258E1B@keescook>
+ <20200305150152.831697-1-nivedita@alum.mit.edu>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305150152.831697-1-nivedita@alum.mit.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-03-05 at 21:34 +0100, Lukas Bulwahn wrote:
+On Thu, Mar 05, 2020 at 10:01:52AM -0500, Arvind Sankar wrote:
+> For security, don't display the kernel's virtual memory layout.
 > 
-> On Thu, 5 Mar 2020, Jarkko Sakkinen wrote:
+> Kees Cook points out:
+> "These have been entirely removed on other architectures, so let's
+> just do the same for ia32 and remove it unconditionally."
 > 
-> > On Wed, 2020-03-04 at 17:03 +0100, Lukas Bulwahn wrote:
-> > > Commit 47f9c2796891 ("KEYS: trusted: Create trusted keys
-> > > subsystem")
-> > > renamed trusted.h to trusted_tpm.h in include/keys/, and moved
-> > > trusted.c
-> > > to trusted-keys/trusted_tpm1.c in security/keys/.
-> > > 
-> > > Since then, ./scripts/get_maintainer.pl --self-test complains:
-> > > 
-> > >   warning: no file matches F: security/keys/trusted.c
-> > >   warning: no file matches F: include/keys/trusted.h
-> > > 
-> > > Rectify the KEYS-TRUSTED entry in MAINTAINERS now.
-> > > 
-> > > Co-developed-by: Sebastian Duda <sebastian.duda@fau.de>
-> > > Signed-off-by: Sebastian Duda <sebastian.duda@fau.de>
-> > > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > > ---
-> > > Sumit, please ack.
-> > > Jarkko, please pick this patch.
-> > 
-> > I'll pick it when it is done. I acknowledge the regression but I
-> > see no reason for rushing as this does not break any systems in
-> > the wild.
-> > 
+> 071929dbdd86 ("arm64: Stop printing the virtual memory layout")
+> 1c31d4e96b8c ("ARM: 8820/1: mm: Stop printing the virtual memory layout")
+> 31833332f798 ("m68k/mm: Stop printing the virtual memory layout")
+> fd8d0ca25631 ("parisc: Hide virtual kernel memory layout")
+> adb1fe9ae2ee ("mm/page_alloc: Remove kernel address exposure in free_reserved_area()")
 > 
-> Agree. No need to rush this. I sent out a v3, and I hope to get
-> Sumit's ACK and then you can pick it for the next merge window.
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 
-From a process point of view, I don't quite understand this.  You're
-altering an entry in the MAINTAINERS file which belongs to the three
-maintainers of trusted keys, you only need our ack to do that, which
-picking up via the trusted key tree will substitute for.  It would be
-useful to have Sumit review this because he moved the files and there
-may be something we missed, but a reviewed-by: is a nice to have and
-not a block on the process.
-
-James
-
+Acked-by: Tycho Andersen <tycho@tycho.ws>
