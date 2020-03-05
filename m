@@ -2,143 +2,151 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4813C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD595C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:29:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7185E2073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:27:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9snj2lv"
+	by mail.kernel.org (Postfix) with ESMTP id A30922073B
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 04:29:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725944AbgCEE1R (ORCPT
+        id S1725965AbgCEE3M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 23:27:17 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34621 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725818AbgCEE1Q (ORCPT
+        Wed, 4 Mar 2020 23:29:12 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18834 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725844AbgCEE3M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 23:27:16 -0500
-Received: by mail-lf1-f68.google.com with SMTP id w27so3429785lfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 20:27:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sS9dvBtV87gMWUGiIiRGt8RJH5mq+llNqMeBOdVmClE=;
-        b=Z9snj2lvrSLPdsNRBeZOWFaNcyEqk6Dwqvz7hhIVeSaaaJCnXCFQaGOKcUx7z48tXu
-         SXmKi+SvTc23cCXr4QQtXz1pXBjtoWoTqLJYNZq8zvUDJ9XjbSq8/TVJDQ1QzOUbD9CY
-         oFqY4TO8J3rw5ylDKUW8yOktXBimepvIs3uLSniPjraAFxfp9JZZTL68kFSdrbxODRJa
-         o9MSbvOXYwncfHefEmYQyrqOD4HlKx2+IgTEnnkV8+8etB4xEzdQYC2z4EMTcki9aQdA
-         wv1WpvFnYwlULtXQkq+LSv1i1Hn+LOtYJw2mOlfnJC1UWJoFvVrbf7b5irUxIopu5M92
-         iC4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sS9dvBtV87gMWUGiIiRGt8RJH5mq+llNqMeBOdVmClE=;
-        b=o/J3iAFQKlaPlj/jmIKhErLRseU0zhmTA9nShOPD4uhKVBmAfMUrNZxD3TrHPjNr7f
-         9rqyTIVV/7YyMgN9ndDAfK5fzxlJK9fZA6E/pP6G2i76ZKEULyP1tf31i3JDJh8kzjkw
-         BGilpXcjxQPLJNgHKYh/QUczJ3Y4y2n2qcr2SVB/Wi0dPPjXmQkIYTuAZ6NkGHRTgbcU
-         DrCLio4yvjS4Bx1t58y51tW7hcJaHHaSANXkDgOkcEhHFVfpMaf8sBVFdkHXuIyubjnE
-         10EN2D+poxhMBr9djB63hFumCv0oYDJeRmsRuxDM1mjrCCr9+oquh2DstJVLvfipSDlI
-         Y3dg==
-X-Gm-Message-State: ANhLgQ2myRaWpXmxTvNzW9+8YdUnkjU93W1xooQhbZZYwMUsjQRtwMNg
-        /dcJmGOLC1sEqQXjNzSFJJXE7wqJD8tEmOEjFy0=
-X-Google-Smtp-Source: ADFU+vvj68an1VQy2p4AvnAIwRe0iWTeTc/g/rEg7MViupDuWdJ35eXqac0LFWQ9snFVtaSEIz+2tlonbwlmYG8vTf0=
-X-Received: by 2002:a05:6512:3188:: with SMTP id i8mr4256307lfe.26.1583382435049;
- Wed, 04 Mar 2020 20:27:15 -0800 (PST)
+        Wed, 4 Mar 2020 23:29:12 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0254OG2D136130
+        for <linux-kernel@vger.kernel.org>; Wed, 4 Mar 2020 23:29:11 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yj3esvx61-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 23:29:10 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <maddy@linux.ibm.com>;
+        Thu, 5 Mar 2020 04:29:08 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Mar 2020 04:29:03 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0254T2l162914792
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Mar 2020 04:29:02 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8694FA405B;
+        Thu,  5 Mar 2020 04:29:02 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 22171A4054;
+        Thu,  5 Mar 2020 04:28:58 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.82.31])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Mar 2020 04:28:57 +0000 (GMT)
+Subject: Re: [RFC 00/11] perf: Enhancing perf to export processor hazard
+ information
+To:     Stephane Eranian <eranian@google.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        yao.jin@linux.intel.com, Robert Richter <robert.richter@amd.com>,
+        "Phillips, Kim" <kim.phillips@amd.com>
+References: <20200302052355.36365-1-ravi.bangoria@linux.ibm.com>
+ <20200302101332.GS18400@hirez.programming.kicks-ass.net>
+ <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
+From:   maddy <maddy@linux.ibm.com>
+Date:   Thu, 5 Mar 2020 09:58:57 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200217083223.2011-9-zong.li@sifive.com> <mhng-da89b7a8-70ef-4ac2-9d56-a4ddab325e9c@palmerdabbelt-glaptop1>
-In-Reply-To: <mhng-da89b7a8-70ef-4ac2-9d56-a4ddab325e9c@palmerdabbelt-glaptop1>
-From:   Zong Li <zongbox@gmail.com>
-Date:   Thu, 5 Mar 2020 12:27:03 +0800
-Message-ID: <CA+ZOyairbeQaaJw6VcKWvJzPKkE4-g=p3U45s8gZSrBG=K+jGw@mail.gmail.com>
-Subject: Re: [PATCH 8/8] riscv: add two hook functions of ftrace
-To:     Palmer Dabbelt <palmer@dabbelt.com>
-Cc:     Zong Li <zong.li@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CABPqkBSzwpR6p7UZs7g1vWGCJRLsh565mRMGc6m0Enn1SnkC4w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20030504-0016-0000-0000-000002ED4DBE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030504-0017-0000-0000-000033509F71
+Message-Id: <feb5e5b1-b1d4-1db4-cd25-c9b1829725f9@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_10:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 mlxscore=0 phishscore=0 spamscore=0
+ clxscore=1015 suspectscore=0 bulkscore=0 adultscore=0 priorityscore=1501
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Palmer Dabbelt <palmer@dabbelt.com> =E6=96=BC 2020=E5=B9=B43=E6=9C=885=E6=
-=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8A=E5=8D=889:44=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> On Mon, 17 Feb 2020 00:32:23 PST (-0800), zong.li@sifive.com wrote:
-> > After the text section be mask as non-writable, the ftrace have to
-> > change the permission of text for dynamic patching the intructions.
-> > Add ftrace_arch_code_modify_prepare and
-> > ftrace_arch_code_modify_post_process to change permission.
-> >
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > ---
-> >  arch/riscv/kernel/ftrace.c | 18 ++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >
-> > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> > index c40fdcdeb950..576df0807200 100644
-> > --- a/arch/riscv/kernel/ftrace.c
-> > +++ b/arch/riscv/kernel/ftrace.c
-> > @@ -7,9 +7,27 @@
-> >
-> >  #include <linux/ftrace.h>
-> >  #include <linux/uaccess.h>
-> > +#include <linux/memory.h>
-> > +#include <asm/set_memory.h>
-> >  #include <asm/cacheflush.h>
-> >
-> >  #ifdef CONFIG_DYNAMIC_FTRACE
-> > +int ftrace_arch_code_modify_prepare(void) __acquires(&text_mutex)
-> > +{
-> > +     mutex_lock(&text_mutex);
-> > +     set_kernel_text_rw();
-> > +     set_all_modules_text_rw();
-> > +     return 0;
-> > +}
->
-> None of the other architectures are doing anything remotely like this in =
-these
-> functions, despite many supporting STRICT_KERNEL_RWX.  Having a function =
-that
-> maps all text as RW seems super dangerous, as one stack attack means NX i=
-s
-> gone.
->
-> Looks like FIX_TEXT_POKE0 is the magic that makes the other ports work.
->
 
-Your concern is right. Let me change the way.
 
-> > +
-> > +int ftrace_arch_code_modify_post_process(void) __releases(&text_mutex)
-> > +{
-> > +     set_all_modules_text_ro();
-> > +     set_kernel_text_ro();
-> > +     mutex_unlock(&text_mutex);
-> > +     return 0;
-> > +}
+On 3/3/20 1:51 AM, Stephane Eranian wrote:
+> On Mon, Mar 2, 2020 at 2:13 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>> On Mon, Mar 02, 2020 at 10:53:44AM +0530, Ravi Bangoria wrote:
+>>> Modern processors export such hazard data in Performance
+>>> Monitoring Unit (PMU) registers. Ex, 'Sampled Instruction Event
+>>> Register' on IBM PowerPC[1][2] and 'Instruction-Based Sampling' on
+>>> AMD[3] provides similar information.
+>>>
+>>> Implementation detail:
+>>>
+>>> A new sample_type called PERF_SAMPLE_PIPELINE_HAZ is introduced.
+>>> If it's set, kernel converts arch specific hazard information
+>>> into generic format:
+>>>
+>>>    struct perf_pipeline_haz_data {
+>>>           /* Instruction/Opcode type: Load, Store, Branch .... */
+>>>           __u8    itype;
+>>>           /* Instruction Cache source */
+>>>           __u8    icache;
+>>>           /* Instruction suffered hazard in pipeline stage */
+>>>           __u8    hazard_stage;
+>>>           /* Hazard reason */
+>>>           __u8    hazard_reason;
+>>>           /* Instruction suffered stall in pipeline stage */
+>>>           __u8    stall_stage;
+>>>           /* Stall reason */
+>>>           __u8    stall_reason;
+>>>           __u16   pad;
+>>>    };
+>> Kim, does this format indeed work for AMD IBS?
 >
-> Presumably this needs a icache flush as well?  Probably better to do so w=
-hen
-> installing the instructions, though.
->
+> Personally, I don't like the term hazard. This is too IBM Power
+> specific. We need to find a better term, maybe stall or penalty.
 
-Yes, I think I lost it. Thanks.
+Yes, names can be reworked and thinking more on it, how about these
+as "pipeline" data instead of "hazard" data.
 
-> > +
-> >  static int ftrace_check_current_call(unsigned long hook_pos,
-> >                                    unsigned int *expected)
-> >  {
->
+> Also worth considering is the support of ARM SPE (Statistical
+> Profiling Extension) which is their version of IBS.
+> Whatever gets added need to cover all three with no limitations.
+
+Thanks for pointing this out. We looked at the ARM SPE spec and it does
+provides information like issue latency, translation latency so on.
+And AMD IBS provides data like fetch latency, tag to retire latency,
+completion to retire latency and so on when using Fetch sampling.
+  So yes, will rework the struct definition to include data from ARM SPE
+and AMD IBS also. Will post out a newer version soon.
+
+Thanks for the comments
+Maddy
+
