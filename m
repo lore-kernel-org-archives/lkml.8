@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D12C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB089C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B0A24654
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B35C7208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428479;
-	bh=hmXOjy2k2WuVXfJkljl/hOavvSMDuPfcrUAqlQP2Vrg=;
+	s=default; t=1583428486;
+	bh=aTdpUfC9CqY/wB251UlTwSnnH+oYCQX5mXBrUSe7RY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HOTEr+IJeTRRgXw5ugexBIhOX3X1vitT2vrftudJp3Ug3og1FX2TC1rRRA5WcmWlz
-	 LzB5jILokcUsP0aJD+fqEM76OhpveidMiIGMDQKEYUPSGsMAu6147TVZa5Lq/iwQw2
-	 UqSLhzDkG04H7zboyQ9Uch6BcRL4wUc4Z2o485sU=
+	b=zobBbPW3FeI35Lbsss0mxyg9KED3AVI336kBYTWkTDac6VIBBePDXngj+m5Wn7mJn
+	 +LAtWri3RQdn1YOYmyxjMxUr+d6Iy06Bz5qamEg/37BKMaHJY0fVc64MPPOKcrfZcG
+	 REd0RU9+/FwgWU/V7NT+wolK/sb36XsAuQrtwQac=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbgCEROi (ORCPT
+        id S1727787AbgCEROp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:14:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:14:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727671AbgCERO2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:14:28 -0500
+        id S1725977AbgCEROb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:14:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 146E2208CD;
-        Thu,  5 Mar 2020 17:14:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D319621739;
+        Thu,  5 Mar 2020 17:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428467;
-        bh=hmXOjy2k2WuVXfJkljl/hOavvSMDuPfcrUAqlQP2Vrg=;
+        s=default; t=1583428470;
+        bh=aTdpUfC9CqY/wB251UlTwSnnH+oYCQX5mXBrUSe7RY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p1BL6T0bJZ1Dq8sRXuWhp10kydkdiqJ86z3wjCibTA453ZRhvgRkPf8treKIhZmjF
-         CKqefeOCn+JKERGp9pSXULjExeQgllFIxY1YJ9HqB8rkLPf5Sj9ZG3FifQWuqz4moG
-         y9mV91iEYfVk0nwdb9WBqPcA2w7TtpIIuB/KnMs0=
+        b=E/QmWYthf+1g71e7SFwDVITcuGtx6jopsmB0d3xhjIkY0UjA3tA8OUTcupzoaZBCB
+         WQXpJXXmt3cUwOVTjt1HkRlpVkcbKOI0BI0lZv9VefE0a63Bf2+fWHab6UL7Iwr+IN
+         WJGLU9a22lPx1Pa7ufk2Y4LWk4fyyRBL9geyz7Gw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>,
-        syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>,
-        linux-usb@vger.kernel.org, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 05/58] HID: hiddev: Fix race in in hiddev_disconnect()
-Date:   Thu,  5 Mar 2020 12:13:26 -0500
-Message-Id: <20200305171420.29595-5-sashal@kernel.org>
+Cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Sasha Levin <sashal@kernel.org>, linux-watchdog@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 08/58] ACPI: watchdog: Set default timeout in probe
+Date:   Thu,  5 Mar 2020 12:13:29 -0500
+Message-Id: <20200305171420.29595-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171420.29595-1-sashal@kernel.org>
 References: <20200305171420.29595-1-sashal@kernel.org>
@@ -61,41 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "dan.carpenter@oracle.com" <dan.carpenter@oracle.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-[ Upstream commit 5c02c447eaeda29d3da121a2e17b97ccaf579b51 ]
+[ Upstream commit cabe17d0173ab04bd3f87b8199ae75f43f1ea473 ]
 
-Syzbot reports that "hiddev" is used after it's free in hiddev_disconnect().
-The hiddev_disconnect() function sets "hiddev->exist = 0;" so
-hiddev_release() can free it as soon as we drop the "existancelock"
-lock.  This patch moves the mutex_unlock(&hiddev->existancelock) until
-after we have finished using it.
+If the BIOS default timeout for the watchdog is too small userspace may
+not have enough time to configure new timeout after opening the device
+before the system is already reset. For this reason program default
+timeout of 30 seconds in the driver probe and allow userspace to change
+this from command line or through module parameter (wdat_wdt.timeout).
 
-Reported-by: syzbot+784ccb935f9900cc7c9e@syzkaller.appspotmail.com
-Fixes: 7f77897ef2b6 ("HID: hiddev: fix potential use-after-free")
-Suggested-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Reported-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/usbhid/hiddev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/watchdog/wdat_wdt.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/hid/usbhid/hiddev.c b/drivers/hid/usbhid/hiddev.c
-index c879b214a4797..35b1fa6d962ec 100644
---- a/drivers/hid/usbhid/hiddev.c
-+++ b/drivers/hid/usbhid/hiddev.c
-@@ -941,9 +941,9 @@ void hiddev_disconnect(struct hid_device *hid)
- 	hiddev->exist = 0;
+diff --git a/drivers/watchdog/wdat_wdt.c b/drivers/watchdog/wdat_wdt.c
+index e7cf41aa26c3b..697b04ffee97c 100644
+--- a/drivers/watchdog/wdat_wdt.c
++++ b/drivers/watchdog/wdat_wdt.c
+@@ -54,6 +54,13 @@ module_param(nowayout, bool, 0);
+ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+ 		 __MODULE_STRING(WATCHDOG_NOWAYOUT) ")");
  
- 	if (hiddev->open) {
--		mutex_unlock(&hiddev->existancelock);
- 		hid_hw_close(hiddev->hid);
- 		wake_up_interruptible(&hiddev->wait);
-+		mutex_unlock(&hiddev->existancelock);
- 	} else {
- 		mutex_unlock(&hiddev->existancelock);
- 		kfree(hiddev);
++#define WDAT_DEFAULT_TIMEOUT	30
++
++static int timeout = WDAT_DEFAULT_TIMEOUT;
++module_param(timeout, int, 0);
++MODULE_PARM_DESC(timeout, "Watchdog timeout in seconds (default="
++		 __MODULE_STRING(WDAT_DEFAULT_TIMEOUT) ")");
++
+ static int wdat_wdt_read(struct wdat_wdt *wdat,
+ 	 const struct wdat_instruction *instr, u32 *value)
+ {
+@@ -438,6 +445,22 @@ static int wdat_wdt_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, wdat);
+ 
++	/*
++	 * Set initial timeout so that userspace has time to configure the
++	 * watchdog properly after it has opened the device. In some cases
++	 * the BIOS default is too short and causes immediate reboot.
++	 */
++	if (timeout * 1000 < wdat->wdd.min_hw_heartbeat_ms ||
++	    timeout * 1000 > wdat->wdd.max_hw_heartbeat_ms) {
++		dev_warn(dev, "Invalid timeout %d given, using %d\n",
++			 timeout, WDAT_DEFAULT_TIMEOUT);
++		timeout = WDAT_DEFAULT_TIMEOUT;
++	}
++
++	ret = wdat_wdt_set_timeout(&wdat->wdd, timeout);
++	if (ret)
++		return ret;
++
+ 	watchdog_set_nowayout(&wdat->wdd, nowayout);
+ 	return devm_watchdog_register_device(dev, &wdat->wdd);
+ }
 -- 
 2.20.1
 
