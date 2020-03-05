@@ -2,102 +2,114 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2B0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140FDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:02:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 042802073B
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D730320801
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:02:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="TamgzMfW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="s2zqd62W";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="C5aupyJy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbgCELBg (ORCPT
+        id S1727242AbgCELCB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:01:36 -0500
-Received: from forward104j.mail.yandex.net ([5.45.198.247]:43097 "EHLO
-        forward104j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725903AbgCELBf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:01:35 -0500
-Received: from forward100q.mail.yandex.net (forward100q.mail.yandex.net [IPv6:2a02:6b8:c0e:4b:0:640:4012:bb97])
-        by forward104j.mail.yandex.net (Yandex) with ESMTP id 446E84A1583;
-        Thu,  5 Mar 2020 14:01:33 +0300 (MSK)
-Received: from mxback8q.mail.yandex.net (mxback8q.mail.yandex.net [IPv6:2a02:6b8:c0e:42:0:640:b38f:32ec])
-        by forward100q.mail.yandex.net (Yandex) with ESMTP id 417987080006;
-        Thu,  5 Mar 2020 14:01:33 +0300 (MSK)
-Received: from vla5-445dc1c4c112.qloud-c.yandex.net (vla5-445dc1c4c112.qloud-c.yandex.net [2a02:6b8:c18:3609:0:640:445d:c1c4])
-        by mxback8q.mail.yandex.net (mxback/Yandex) with ESMTP id JCH9oiAXUo-1XNSk0sb;
-        Thu, 05 Mar 2020 14:01:33 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail; t=1583406093;
-        bh=/kV4O0qJVZXzwid6BVH7MX/fCuvUiaSY86OITvWYn1A=;
-        h=In-Reply-To:Subject:To:From:Cc:References:Date:Message-Id;
-        b=TamgzMfWAMa1KOXUnp4dwwC7MfAGwuARc/H+dgdt2VxkKtxHM8Txz/F/TYVMTCLdN
-         3SIZPRmzTt8uV+d4wUVEJx6vap6/n5uFUsIS2vmXIDNDA2sIN/flWQuf8+/xm8Wzah
-         ButFPaNGxfu7PjNP2KBAzxPttBnasQcqSu8pa2kk=
-Authentication-Results: mxback8q.mail.yandex.net; dkim=pass header.i=@maquefel.me
-Received: by vla5-445dc1c4c112.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id 8hWJyQQZRL-1WW8nAin;
-        Thu, 05 Mar 2020 14:01:32 +0300
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client certificate not present)
-From:   Nikita Shubin <NShubin@topcon.com>
-Cc:     Nikita Shubin <NShubin@topcon.com>, stable@vger.kernel.org,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/1] remoteproc: Fix NULL pointer dereference in rproc_virtio_notify
-Date:   Thu,  5 Mar 2020 14:02:18 +0300
-Message-Id: <20200305110218.8799-2-NShubin@topcon.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200305110218.8799-1-NShubin@topcon.com>
-References: <20200228110804.25822-1-nikita.shubin@maquefel.me>
- <20200305110218.8799-1-NShubin@topcon.com>
+        Thu, 5 Mar 2020 06:02:01 -0500
+Received: from mail.z3ntu.xyz ([128.199.32.197]:52142 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbgCELCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 06:02:01 -0500
+Received: by mail.z3ntu.xyz (Postfix, from userid 182)
+        id 8EC30C3EBA; Thu,  5 Mar 2020 11:01:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1583406118; bh=A09JhYuXQtiWQSwwySPckNq277KWrsZWySE9b6TpTII=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=s2zqd62WGhhJRbiNUaAzO6lQNDZOaLkJJUiU00RDzoE9Y+OzY5aLO/K9MwPLQ/Tqa
+         1yw3gKTr+znjBMyIK6RxrMsQLVHYo8ymWDjSWXYvOK1qvIfKfGjPWLwkTRnPR1JFiv
+         2c2uwTcTx3D/ixkwLEEfdF0Wtb8w4UYa5UYEzXXI=
+Received: from g550jk.localnet (unknown [10.0.11.2])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id B467FC3EB1;
+        Thu,  5 Mar 2020 11:01:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1583406115; bh=A09JhYuXQtiWQSwwySPckNq277KWrsZWySE9b6TpTII=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=C5aupyJy9waLsz9CE+dvC8yOrj0oT4kfsSm3Wgx1idF/b/gGbxoeO7dBlVkBZ9Mt5
+         tt3q0+x5URr9RgEtcJoTMwpeAyJaWb9tph9pLAyE0c7KhozHGC0bG09+opJtRk9aCU
+         0HfCq09ytnu3/pTyFoAyKs+e5gX1tBCto+p7BqnI=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Cc:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] leds: add sgm3140 driver
+Date:   Thu, 05 Mar 2020 12:01:49 +0100
+Message-ID: <11515555.O9o76ZdvQC@g550jk>
+In-Reply-To: <7742f98c-fd96-7f0e-c33c-fbac61a4881c@ti.com>
+References: <20200227185015.212479-1-luca@z3ntu.xyz> <7742f98c-fd96-7f0e-c33c-fbac61a4881c@ti.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/signed; boundary="nextPart5372931.DvuYhMxLoT"; micalg="pgp-sha256"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-.kick method not set in rproc_ops will result in:
+--nextPart5372931.DvuYhMxLoT
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-8<--- cut here ---
-Unable to handle kernel NULL pointer dereference
+On Donnerstag, 27. Februar 2020 20:50:40 CET Dan Murphy wrote:
+> Luca
+> 
+> On 2/27/20 12:50 PM, Luca Weiss wrote:
+> > Add a driver for the SGMICRO SGM3140 Buck/Boost Charge Pump LED driver.
+> > 
+> > This device is controller by two GPIO lines, one for enabling the LED
+> > and the second one for switching between torch and flash mode.
+> > 
+> > The device will automatically switch to torch mode after being in flash
+> > mode for about 250-300ms, so after that time the driver will turn the
+> > LED off again automatically.
+> > 
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> 
+> You seem to be missing the devictree bindings doc for the GPIOs.
 
-in rproc_virtio_notify, after firmware loading.
+As written in the initial email:
 
-refuse to register an rproc-induced virtio device if no kick method was
-defined for rproc.
+> I will also write dt bindings for the driver once I have "strobe"
+> working.
 
-Signed-off-by: Nikita Shubin <NShubin@topcon.com>
-Fixes: 7a186941626d19f668b08108db158379b32e6e02 ("remoteproc: remove the single rpmsg vdev limitation")
-Cc: stable@vger.kernel.org
----
- drivers/remoteproc/remoteproc_virtio.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+I was hoping to get some guidance on the code by posting the WIP patch - the 
+issues I see are documented in the initial email.
 
-diff --git a/drivers/remoteproc/remoteproc_virtio.c b/drivers/remoteproc/remoteproc_virtio.c
-index 8c07cb2ca8ba..31a62a0b470e 100644
---- a/drivers/remoteproc/remoteproc_virtio.c
-+++ b/drivers/remoteproc/remoteproc_virtio.c
-@@ -334,6 +334,13 @@ int rproc_add_virtio_dev(struct rproc_vdev *rvdev, int id)
- 	struct rproc_mem_entry *mem;
- 	int ret;
- 
-+	if (rproc->ops->kick == NULL) {
-+		ret = -EINVAL;
-+		dev_err(dev, ".kick method not defined for %s",
-+				rproc->name);
-+		goto out;
-+	}
-+
- 	/* Try to find dedicated vdev buffer carveout */
- 	mem = rproc_find_carveout_by_name(rproc, "vdev%dbuffer", rvdev->index);
- 	if (mem) {
--- 
-2.24.1
+Regards
+Luca
+--nextPart5372931.DvuYhMxLoT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEObrSLwgs2pG6FY/6cthDuJ1N11YFAl5g3B0ACgkQcthDuJ1N
+11buvA/+NFLsy6B/FPSdwuK2kinJ9IlHsLxP9npxN6SnuDnNP4VchYVswpz8pYog
+YXOMiFpMXIIVSR1mplUUhsWQ2AbuUdKk3sR4Y6lYz2+c07Yozp3Qr3pds5XKd4+9
+XSheq/jsrQKO8gPGmoGiivutBHv+LJ8YZ/KjC6NVV0nxR4V5yI0NUWcrJvhd6N8Z
+JA3C6wFlg/SYg3b7fCbb0yj3YM6V1HLWwFgrXWZeM0X8//YMeOeTE5eHOcexw92E
+1DKrYa02kfIfbwkfqnOM1Q2DNmBNnhgsOs1prRwiBTUjGkeXciuHqELjFIPjN2z6
+LDAfWsZlk4UP6XKiRnc4535+TKJub3Mx6YWdpIEhNrk8rxovdIyrHOIjJdH8IP1C
+0ZCOsBVxi9o7zyAYqm4uxWJl66WJKU4nVBo7Haq7aR0yU+sIhFkTpB+cpsuSnFDg
+/7ram8GZjlU+A+GRRaj7RK9PoDNc6Ic/iodUBqRGD7o7WdRJtmXrw6tB8AQzs5Ih
+9A7A1/ayYr/hktPyzn1U/lhJDttqZ6gcMxCQodLcOeZVJ1VLCd75xxpBtZxLjGXg
+uKwv5rcr/s4d2ngeJtjoW5kpy09Fim6yKi7LJZ+awPP+pxgpvGDhsLDXBy9kXYIu
+ud5ZjRhMRDgSoeJJN+RPMxUxp+R6CoL0ENHIny9+jXwoviE2doE=
+=VJcI
+-----END PGP SIGNATURE-----
+
+--nextPart5372931.DvuYhMxLoT--
+
+
 
