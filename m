@@ -2,203 +2,112 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC1AFC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D60C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 810F52072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273D62072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N7jv4l+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbgCEPvt (ORCPT
+        id S1727071AbgCEPwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:51:49 -0500
-Received: from verein.lst.de ([213.95.11.211]:60065 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbgCEPvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:51:49 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id D812468B05; Thu,  5 Mar 2020 16:51:44 +0100 (CET)
-Date:   Thu, 5 Mar 2020 16:51:44 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     ira.weiny@intel.com
-Cc:     linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org,
-        torvalds@linux-foundation.org
-Subject: Re: [PATCH V5 00/12] Enable per-file/per-directory DAX operations
- V5
-Message-ID: <20200305155144.GA5598@lst.de>
-References: <20200227052442.22524-1-ira.weiny@intel.com>
+        Thu, 5 Mar 2020 10:52:42 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:35088 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgCEPwl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 10:52:41 -0500
+Received: by mail-pj1-f65.google.com with SMTP id s8so2701695pjq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:52:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6f/ifzGRwDmJk/xhVW7g/o8n4zzlT5iV8pc0ZDfsM68=;
+        b=N7jv4l+X0swqok91/RGX+4fn2Do/MFOk3yOT9u6oNCzoFu8gnkQzgl8LGgbPlxBYLK
+         cOwngB7GUkWkY6RtvqtziSCtOnX5VqDg6y0bPx9RyxYcdCwVhIGggSlLYA78QTg1WzlH
+         x6uJw0DKbNbEey5SpQqWUORZPnnvQudx/aCsO/6WlSZqoXzT/E6RvIdaiOPzDS2U/u5C
+         1GZGqO/cg2pt+0e79GvrDKshtduCmL+jvwxvh9bpVZqFbby9OL03aLyGb3rdsmyAQvuC
+         irovQXZU9IDnLUPN15P1lSMWEeWmOR5XCM2IAEIqzMPbtNd8WWV3mroNUxaP5Rf1MQ33
+         xCoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6f/ifzGRwDmJk/xhVW7g/o8n4zzlT5iV8pc0ZDfsM68=;
+        b=guXAQjIh6FTHI3ukM40dQrATPNXy+CoCKRW9HW2MBpilUFiWOs0jBaHg3KKXCnQY9c
+         O4RugKo1T/6wG/LEazPZyeVRJKFa06ilowCZrUXHmaaiVYUb0TJNk6NxgP+ROazBpnhq
+         SuLESvcuzsX7mYRzX5+B9RRM+uw1LlFH+yuSIoQ32LpdQ4ZfX0gwySYK482e2cZdI599
+         Kk72aEhW5Bkoyez12oOQvEx4Brxjqpcgvr4g8BKd+3/ULl2Ia97dgHY6CplJfFIyqy2M
+         HHbVnW/fNaBCzlgSNRg0fT+gQz2H3r+gXxmhm8IBCBWnfMBugJxcGDJlwZpKd5OrETL/
+         mfBw==
+X-Gm-Message-State: ANhLgQ0TYcmhPaCB+vPHUw99kBbG93YsC7ZUgC7eSpdI9dTw+jQjS65F
+        fCQLGMvqmOo08MX65I/LogY=
+X-Google-Smtp-Source: ADFU+vtuhkZgtjxWpOLlgLP5MAaK/Ag8e47IooOM6ZvoEXV0CEuz6M8yHO7S7p/USRv4bu8y0Xh6jQ==
+X-Received: by 2002:a17:90b:3551:: with SMTP id lt17mr9186707pjb.135.1583423560594;
+        Thu, 05 Mar 2020 07:52:40 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id x70sm23598861pgd.37.2020.03.05.07.52.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 05 Mar 2020 07:52:39 -0800 (PST)
+Date:   Thu, 5 Mar 2020 07:52:38 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     madhuparnabhowmik10@gmail.com
+Cc:     paulmck@kernel.org, josh@joshtriplett.org, rostedt@goodmis.org,
+        mathieu.desnoyers@efficios.com, jiangshanlai@gmail.com,
+        joel@joelfernandes.org, linux-kernel@vger.kernel.org,
+        Amol Grover <frextrite@gmail.com>
+Subject: Re: [PATCH] Default enable RCU list lockdep debugging with PROVE_RCU
+Message-ID: <20200305155238.GA8669@roeck-us.net>
+References: <20200228092451.10455-1-madhuparnabhowmik10@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200227052442.22524-1-ira.weiny@intel.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20200228092451.10455-1-madhuparnabhowmik10@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FYI, I still will fully NAK any series that adds additional locks
-and thus atomic instructions to basically every fs call, and grows
-the inode by a rw_semaphore plus and atomic64_t.  I also think the
-whole idea of switching operation vectors at runtime is fatally flawed
-and we should never add such code, nevermind just for a fringe usecase
-of a fringe feature.
+On Fri, Feb 28, 2020 at 02:54:51PM +0530, madhuparnabhowmik10@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
+> 
+> This patch default enables CONFIG_PROVE_RCU_LIST option with
+> CONFIG_PROVE_RCU for RCU list lockdep debugging.
+> 
+> With this change, RCU list lockdep debugging will be default
+> enabled in CONFIG_PROVE_RCU=y kernels.
+> 
+> Most of the RCU users (in core kernel/, drivers/, and net/
+> subsystem) have already been modified to include lockdep
+> expressions hence RCU list debugging can be enabled by
+> default.
+> 
+> However, there are still chances of enountering
+> false-positive lockdep splats because not everything is converted,
+> in case RCU list primitives are used in non-RCU read-side critical
+> section but under the protection of a lock. It would be okay to
+> have a few false-positives, as long as bugs are identified, since this
+> patch only affects debugging kernels.
+> 
+> Co-developed-by: Amol Grover <frextrite@gmail.com>
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>
 
-On Wed, Feb 26, 2020 at 09:24:30PM -0800, ira.weiny@intel.com wrote:
-> From: Ira Weiny <ira.weiny@intel.com>
-> 
-> Changes from V4:
-> 	* Open code the aops lock rather than add it to the xfs_ilock()
-> 	  subsystem (Darrick's comments were obsoleted by this change)
-> 	* Fix lkp build suggestions and bugs
-> 
-> Changes from V3:
-> 	* Remove global locking...  :-D
-> 	* put back per inode locking and remove pre-mature optimizations
-> 	* Fix issues with Directories having IS_DAX() set
-> 	* Fix kernel crash issues reported by Jeff
-> 	* Add some clean up patches
-> 	* Consolidate diflags to iflags functions
-> 	* Update/add documentation
-> 	* Reorder/rename patches quite a bit
-> 
-> Changes from V2:
-> 
-> 	* Move i_dax_sem to be a global percpu_rw_sem rather than per inode
-> 		Internal discussions with Dan determined this would be easier,
-> 		just as performant, and slightly less overhead that having it
-> 		in the SB as suggested by Jan
-> 	* Fix locking order in comments and throughout code
-> 	* Change "mode" to "state" throughout commits
-> 	* Add CONFIG_FS_DAX wrapper to disable inode_[un]lock_state() when not
-> 		configured
-> 	* Add static branch for which is activated by a device which supports
-> 		DAX in XFS
-> 	* Change "lock/unlock" to up/down read/write as appropriate
-> 		Previous names were over simplified
-> 	* Update comments/documentation
-> 
-> 	* Remove the xfs specific lock to the vfs (global) layer.
-> 	* Fix i_dax_sem locking order and comments
-> 
-> 	* Move 'i_mapped' count from struct inode to struct address_space and
-> 		rename it to mmap_count
-> 	* Add inode_has_mappings() call
-> 
-> 	* Fix build issues
-> 	* Clean up syntax spacing and minor issues
-> 	* Update man page text for STATX_ATTR_DAX
-> 	* Add reviewed-by's
-> 	* Rebase to 5.6
-> 
-> 	Rename patch:
-> 		from: fs/xfs: Add lock/unlock state to xfs
-> 		to: fs/xfs: Add write DAX lock to xfs layer
-> 	Add patch:
-> 		fs/xfs: Clarify lockdep dependency for xfs_isilocked()
-> 	Drop patch:
-> 		fs/xfs: Fix truncate up
-> 
-> 
-> At LSF/MM'19 [1] [2] we discussed applications that overestimate memory
-> consumption due to their inability to detect whether the kernel will
-> instantiate page cache for a file, and cases where a global dax enable via a
-> mount option is too coarse.
-> 
-> The following patch series enables selecting the use of DAX on individual files
-> and/or directories on xfs, and lays some groundwork to do so in ext4.  In this
-> scheme the dax mount option can be omitted to allow the per-file property to
-> take effect.
-> 
-> The insight at LSF/MM was to separate the per-mount or per-file "physical"
-> capability switch from an "effective" attribute for the file.
-> 
-> At LSF/MM we discussed the difficulties of switching the DAX state of a file
-> with active mappings / page cache.  It was thought the races could be avoided
-> by limiting DAX state flips to 0-length files.
-> 
-> However, this turns out to not be true.[3] This is because address space
-> operations (a_ops) may be in use at any time the inode is referenced and users
-> have expressed a desire to be able to change the DAX state on a file with data
-> in it.  For those reasons this patch set allows changing the DAX state flag on
-> a file as long as it is not current mapped.
-> 
-> Details of when and how DAX state can be changed on a file is included in a
-> documentation patch.
-> 
-> It should be noted that the physical DAX flag inheritance is not shown in this
-> patch set as it was maintained from previous work on XFS.  The physical DAX
-> flag and it's inheritance will need to be added to other file systems for user
-> control. 
-> 
-> As submitted this works on real hardware testing.
-> 
-> 
-> [1] https://lwn.net/Articles/787973/
-> [2] https://lwn.net/Articles/787233/
-> [3] https://lkml.org/lkml/2019/10/20/96
-> [4] https://patchwork.kernel.org/patch/11310511/
-> 
-> 
-> To: linux-kernel@vger.kernel.org
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: "Theodore Y. Ts'o" <tytso@mit.edu>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: linux-ext4@vger.kernel.org
-> Cc: linux-xfs@vger.kernel.org
-> Cc: linux-fsdevel@vger.kernel.org
-> 
-> 
-> Ira Weiny (12):
->   fs/xfs: Remove unnecessary initialization of i_rwsem
->   fs: Remove unneeded IS_DAX() check
->   fs/stat: Define DAX statx attribute
->   fs/xfs: Isolate the physical DAX flag from enabled
->   fs/xfs: Create function xfs_inode_enable_dax()
->   fs: Add locking for a dynamic address space operations state
->   fs: Prevent DAX state change if file is mmap'ed
->   fs/xfs: Hold off aops users while changing DAX state
->   fs/xfs: Clean up locking in dax invalidate
->   fs/xfs: Allow toggle of effective DAX flag
->   fs/xfs: Remove xfs_diflags_to_linux()
->   Documentation/dax: Update Usage section
-> 
->  Documentation/filesystems/dax.txt | 84 +++++++++++++++++++++++++-
->  Documentation/filesystems/vfs.rst | 16 +++++
->  fs/attr.c                         |  1 +
->  fs/inode.c                        | 16 ++++-
->  fs/iomap/buffered-io.c            |  1 +
->  fs/open.c                         |  4 ++
->  fs/stat.c                         |  5 ++
->  fs/xfs/xfs_icache.c               |  5 +-
->  fs/xfs/xfs_inode.h                |  2 +
->  fs/xfs/xfs_ioctl.c                | 98 +++++++++++++++----------------
->  fs/xfs/xfs_iops.c                 | 69 +++++++++++++++-------
->  include/linux/fs.h                | 73 ++++++++++++++++++++++-
->  include/uapi/linux/stat.h         |  1 +
->  mm/fadvise.c                      |  7 ++-
->  mm/filemap.c                      |  4 ++
->  mm/huge_memory.c                  |  1 +
->  mm/khugepaged.c                   |  2 +
->  mm/mmap.c                         | 19 +++++-
->  mm/util.c                         |  9 ++-
->  19 files changed, 328 insertions(+), 89 deletions(-)
-> 
-> -- 
-> 2.21.0
----end quoted text---
+Who is going to fix the fallout ?
+
+fs/btrfs/block-group.c:2011 RCU-list traversed in non-reader section!!
+kernel/kprobes.c:329 RCU-list traversed in non-reader section!!
+net/ipv4/ipmr.c:136 RCU-list traversed in non-reader section!!
+
+This is just from my boot tests. I'll keep PROVE_RCU enabled for the
+time being, but unless the noise is addressed I'll have to disable it
+because otherwise the real problems disappear in the noise.
+
+Guenter
