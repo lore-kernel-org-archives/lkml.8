@@ -2,106 +2,98 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756E4C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1089C3F2DA
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C89420637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428964;
-	bh=7Xpa5Qwe0lWcRf6rqT2U+lbAJA93ioiusi3vNGr++3Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z+sH7Vp781iB+bOYPosgziBQiF9cHZh4VcWepeO29X5vs7m/z7YoKaD07SpdO8Ec1
-	 25wmGF53Sfu76TGDlmg0nlMj+/Lz1tdOmHnLoQqYJrJJKK2d7dP+dgv0mqqk/F+Bbx
-	 JPpVI3i7tFhjLc+zhjGK2xf3BpAAKnz1tcreC8fI=
+	by mail.kernel.org (Postfix) with ESMTP id 97E412072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:22:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="o3YE+cY0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgCERWm (ORCPT
+        id S1728098AbgCERW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:22:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39660 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727448AbgCERNx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:53 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE52B208CD;
-        Thu,  5 Mar 2020 17:13:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428432;
-        bh=7Xpa5Qwe0lWcRf6rqT2U+lbAJA93ioiusi3vNGr++3Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yiqSxFMOCMsnXVLNKFu5SdIzioJCw5B51+xIVX03nnXKL+e1rSE6/q2NaGWUHVZMg
-         2nC3VAOa1bV8SFm7jYSFzExuz3gqZngYr95akRuY5nSsU7HdIbZ2siwFcc80kXC3/P
-         GM1vxqcYndX6WDI4F+5zWAG3ek2/zRmp+1AmyPs8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Daniele Palmas <dnlplm@gmail.com>,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 31/67] net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
-Date:   Thu,  5 Mar 2020 12:12:32 -0500
-Message-Id: <20200305171309.29118-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
-References: <20200305171309.29118-1-sashal@kernel.org>
+        Thu, 5 Mar 2020 12:22:57 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:52955 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727528AbgCERW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:22:56 -0500
+Received: by mail-pj1-f68.google.com with SMTP id lt1so2763310pjb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:22:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=fYgwNPn+hzRISUrcnyS4RtnmnpZ3Kb0VaVci8GbrKTU=;
+        b=o3YE+cY0AMvX9FIW61axswC5hLklVI8JTAIAQgcBVazuzotTqc/h+Pg/g6abfRuyzX
+         4tXglOcKGcpc3Vagoluun7pQ18V4NCAMAXN4KVIey9I3n/1BsqLmzHVTuYyPZDoMVbS9
+         GO/1VbUKbSM4tglRQh3iDgaRKj9fi/5oH2waIvdNhUu7AFyImdXwXpx21mwDy2i4i583
+         gsNE50sIgAG7q8VTCuKUIRa9C0XTWAXjU/lPN0+zsdp6Mhxfvpxo9x0ciDBWiSofPoLW
+         XYl/9twPKE5N9aeDYfS3VDDx0eVriYJZRqtpPPdiX7+DsxzXzILz+SDuaSXU9Xn3dwjf
+         PB3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=fYgwNPn+hzRISUrcnyS4RtnmnpZ3Kb0VaVci8GbrKTU=;
+        b=e5qBgvG3pjkcHziZd/qL5JK2bsmwTm8gMTpo0m23xE30zicoxT4X+YfK76axvV4L3E
+         Trogr6yW0cY6mqC4Mn6mowOWMaXKHJXMbTjwOWHxlxWJXc7AWtkAxsTbeTAQl/QlpiVy
+         7qUmGpBlgEvHH+wYaN+Qwr9ranD5AsQLcxgkQJhTmqCL5r8Xibet3Mn7CC1FCu2T/MjU
+         Uwfr2zzxpCN3V9wx2kuhnO8srE/h7Y11z/eGDlMipSkZPdBrUbDuLh+zCpc6PqOuwTLf
+         rvPVK0QLZoY6axHoUcTMufYMEqJk69jAiOnOUmnM+9uAQKaCA5Iw+U7/zblhjXCieHQM
+         RffA==
+X-Gm-Message-State: ANhLgQ0yMRb8fnUGSUuu5z35rMEsH6fXNNNJo0kwXXcK591aTKKTcSGe
+        zUq9EI+UhzfkHNvetW+IHe9WNw==
+X-Google-Smtp-Source: ADFU+vu5hq4I0Ryc8m9cr+fBrdw4pFYXc4hKs8nOlBf+e8bunC7kkHnRLwz1LIohkT6ORGzit+5H6g==
+X-Received: by 2002:a17:90a:a616:: with SMTP id c22mr10057159pjq.47.1583428974706;
+        Thu, 05 Mar 2020 09:22:54 -0800 (PST)
+Received: from localhost ([2620:10d:c090:400::5:6216])
+        by smtp.gmail.com with ESMTPSA id 9sm28532487pge.65.2020.03.05.09.22.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 09:22:53 -0800 (PST)
+Date:   Thu, 5 Mar 2020 12:22:48 -0500
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2] mm: Make mem_cgroup_id_get_many() __maybe_unused
+Message-ID: <20200305172248.GB2508@cmpxchg.org>
+References: <20200305164354.48147-1-vincenzo.frascino@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200305164354.48147-1-vincenzo.frascino@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+On Thu, Mar 05, 2020 at 04:43:54PM +0000, Vincenzo Frascino wrote:
+> mem_cgroup_id_get_many() is currently used only when MMU or MEMCG_SWAP
+> configuration options are enabled. Having them disabled triggers the
+> following warning at compile time:
+> 
+> linux/mm/memcontrol.c:4797:13: warning: ‘mem_cgroup_id_get_many’ defined
+> but not used [-Wunused-function]
+>  static void mem_cgroup_id_get_many(struct mem_cgroup *memcg, unsigned
+>  int n)
+> 
+> Make mem_cgroup_id_get_many() __maybe_unused to address the issue.
+> 
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit eae7172f8141eb98e64e6e81acc9e9d5b2add127 ]
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-usbnet creates network interfaces with min_mtu = 0 and
-max_mtu = ETH_MAX_MTU.
-
-These values are not modified by qmi_wwan when the network interface
-is created initially, allowing, for example, to set mtu greater than 1500.
-
-When a raw_ip switch is done (raw_ip set to 'Y', then set to 'N') the mtu
-values for the network interface are set through ether_setup, with
-min_mtu = ETH_MIN_MTU and max_mtu = ETH_DATA_LEN, not allowing anymore to
-set mtu greater than 1500 (error: mtu greater than device maximum).
-
-The patch restores the original min/max mtu values set by usbnet after a
-raw_ip switch.
-
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
-Acked-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/usb/qmi_wwan.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 9485c8d1de8a3..9dcbca1f8f9aa 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -338,6 +338,9 @@ static void qmi_wwan_netdev_setup(struct net_device *net)
- 		netdev_dbg(net, "mode: raw IP\n");
- 	} else if (!net->header_ops) { /* don't bother if already set */
- 		ether_setup(net);
-+		/* Restoring min/max mtu values set originally by usbnet */
-+		net->min_mtu = 0;
-+		net->max_mtu = ETH_MAX_MTU;
- 		clear_bit(EVENT_NO_IP_ALIGN, &dev->flags);
- 		netdev_dbg(net, "mode: Ethernet\n");
- 	}
--- 
-2.20.1
-
+Thanks Vincenzo.
