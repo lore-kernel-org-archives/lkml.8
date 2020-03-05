@@ -2,147 +2,89 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F17C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB88C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DFD020828
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:22:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="XQhSxSzu"
+	by mail.kernel.org (Postfix) with ESMTP id 2E99120870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:24:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgCEIWG (ORCPT
+        id S1726129AbgCEIYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:22:06 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39703 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgCEIWF (ORCPT
+        Thu, 5 Mar 2020 03:24:04 -0500
+Received: from lucky1.263xmail.com ([211.157.147.130]:41560 "EHLO
+        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbgCEIYD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:22:05 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j1so4658606wmi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 00:22:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=references:user-agent:from:to:subject:in-reply-to:date:message-id
-         :mime-version;
-        bh=wy8PG+5094H0kwoE9azcIFtGBXe17DljDLj1gap6KjQ=;
-        b=XQhSxSzu+98TQDBaQbX8qV6wCsTohykSPQpUarrD/+uUdM2OhBCJRgfHiQgAeL2bqG
-         G87zQyeBW8INB88/a53JTOHfVNbpSp170zFo6ePYkoaYwrIkfClzdYU/ZE072Pq2MwIZ
-         Gm1D0BQH7FmM5AiBCcb01izbcw1l1h42XG0YJgv8L9V0og6/XIQgYZ8AQ8mGWH/HAM3a
-         cZHIb+VqXxsktjtO3C4zj7LMmWlcHd766DKDxx+7HwWMdGqV5C5Nfz3aJBhl9G60u4ZM
-         iJ2Nzj+6dVprj7KACOhkfYoW0JHDsxB7scJbNkpoq+xbFn94AW9l5OBu7i1aWpIZEQv9
-         PNWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:subject
-         :in-reply-to:date:message-id:mime-version;
-        bh=wy8PG+5094H0kwoE9azcIFtGBXe17DljDLj1gap6KjQ=;
-        b=mKRNPdXPrtIupADzq3ediT8yuBTd1CjV321uPgdYqT7s3w75zgSEEGPqyNT8XlCQMq
-         MDW81ikfW19DkLSJGdtthrAfqWge7mJm0PbuzaMMl7onazSU/9bIzK2g+/Cp/8uVkqgk
-         UfVbT0iC3ci6JcgS126TGlB7625CKeAGv86Zjwm2Xu++Uzo0K3PAnEWa29QCHsCO21qc
-         2yNU/u0z1MnTbqgz5Vswi7jGxpCCceenSvB27DyRJXqiGrUSBuytrFT4X3imb8GSEard
-         4nObiYi4WmdZPru45sC0+BaRhaif3vc3RVaiPjLw7n1/xuXv16iH5xsPSuuqmVS9337p
-         LKQw==
-X-Gm-Message-State: ANhLgQ3OnwyjJ2eMM0eSdqukYptFETQXECRkEwHqlRiGmKFjLOLSklSs
-        4PhiPj2VY75NgkzPMPPN8qkHUQ==
-X-Google-Smtp-Source: ADFU+vtQyU4UfDH9d2/TXDERF+INdtSbx2/ljMK+EMqmPS+JCjhE5+wuGnUWn9fPAey5YSeP3jbcRA==
-X-Received: by 2002:a1c:dd45:: with SMTP id u66mr8644559wmg.154.1583396523188;
-        Thu, 05 Mar 2020 00:22:03 -0800 (PST)
-Received: from localhost (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id m16sm11943105wrs.67.2020.03.05.00.22.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 00:22:02 -0800 (PST)
-References: <1582985353-83371-1-git-send-email-christianshewitt@gmail.com> <1582985353-83371-3-git-send-email-christianshewitt@gmail.com> <cc4c54c8-aa7f-8755-dc35-94e32d0019cd@baylibre.com>
-User-agent: mu4e 1.3.3; emacs 26.3
-From:   Jerome Brunet <jbrunet@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: meson-g12b-gtking: add initial device-tree
-In-reply-to: <cc4c54c8-aa7f-8755-dc35-94e32d0019cd@baylibre.com>
-Date:   Thu, 05 Mar 2020 09:22:01 +0100
-Message-ID: <1jftencity.fsf@starbuckisacylon.baylibre.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Thu, 5 Mar 2020 03:24:03 -0500
+X-Greylist: delayed 452 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Mar 2020 03:24:02 EST
+Received: from localhost (unknown [192.168.167.209])
+        by lucky1.263xmail.com (Postfix) with ESMTP id 045DC8B0D3;
+        Thu,  5 Mar 2020 16:16:27 +0800 (CST)
+X-MAIL-GRAY: 0
+X-MAIL-DELIVERY: 1
+X-ADDR-CHECKED4: 1
+X-ANTISPAM-LEVEL: 2
+X-ABS-CHECKED: 0
+Received: from localhost.localdomain (unknown [58.22.7.114])
+        by smtp.263.net (postfix) whith ESMTP id P32633T140274034538240S1583396184137610_;
+        Thu, 05 Mar 2020 16:16:26 +0800 (CST)
+X-IP-DOMAINF: 1
+X-UNIQUE-TAG: <e59db39a75117ec32bc961e850a9069c>
+X-RL-SENDER: cl@rock-chips.com
+X-SENDER: cl@rock-chips.com
+X-LOGIN-NAME: cl@rock-chips.com
+X-FST-TO: heiko@sntech.de
+X-SENDER-IP: 58.22.7.114
+X-ATTACHMENT-NUM: 0
+X-DNS-TYPE: 0
+X-System-Flag: 0
+From:   <cl@rock-chips.com>
+To:     heiko@sntech.de
+Cc:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        akpm@linux-foundation.org, tglx@linutronix.de, mpe@ellerman.id.au,
+        surenb@google.com, ben.dooks@codethink.co.uk,
+        anshuman.khandual@arm.com, catalin.marinas@arm.com,
+        will@kernel.org, keescook@chromium.org, luto@amacapital.net,
+        wad@chromium.org, mark.rutland@arm.com, geert+renesas@glider.be,
+        george_davis@mentor.com, sudeep.holla@arm.com,
+        linux@armlinux.org.uk, gregkh@linuxfoundation.org, info@metux.net,
+        kstewart@linuxfoundation.org, allison@lohutok.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        huangtao@rock-chips.com, Liang Chen <cl@rock-chips.com>
+Subject: [PATCH v1 0/1] wait_task_inactive() spend too much time on system startup
+Date:   Thu,  5 Mar 2020 16:16:10 +0800
+Message-Id: <20200305081611.29323-1-cl@rock-chips.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Liang Chen <cl@rock-chips.com>
 
-On Tue 03 Mar 2020 at 15:50, Neil Armstrong <narmstrong@baylibre.com> wrote:
+Changelog:
+v1: wait_task_inactive() frequently call schedule_hrtimeout() and spend a lot of time,
+i am trying to optimize it on rockchip platform.
 
-> On 29/02/2020 15:09, Christian Hewitt wrote:
->> The Shenzen AZW (Beelink) GT-King is based on the Amlogic W400 reference
->> board with an S922X chip.
->> 
->> - 4GB LPDDR4 RAM
->> - 64GB eMMC storage
->> - 10/100/1000 Base-T Ethernet
->> - AP6356S Wireless (802.11 a/b/g/n/ac, BT 4.1)
->> - HDMI 2.1 video
->> - S/PDIF optical output
->> - Analogue audio output
->> - 1x USB 2.0 port
->> - 2x USB 3.0 ports
->> - IR receiver
->> - 1x micro SD card slot
->> 
->> The device-tree is largely based on meson-g12b-ugoos-am6.
+Liang Chen (1):
+  sched/fair: do not preempt current task if it is going to call
+    schedule()
 
-largely indeed ... Would you mind pointing out why the am6 dts can't be
-used and why this one is needed ?
+ arch/arm/include/asm/thread_info.h   |  1 +
+ arch/arm64/include/asm/thread_info.h |  1 +
+ include/linux/sched.h                | 15 +++++++++++++++
+ kernel/kthread.c                     |  4 ++++
+ kernel/sched/fair.c                  |  4 ++++
+ 5 files changed, 25 insertions(+)
 
-Maybe I missed something but they look the same to me.
+-- 
+2.17.1
 
->> 
->> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
->> ---
->>  arch/arm64/boot/dts/amlogic/Makefile              |   1 +
->>  arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts | 557 ++++++++++++++++++++++
->>  2 files changed, 558 insertions(+)
->>  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
->> 
->> diff --git a/arch/arm64/boot/dts/amlogic/Makefile b/arch/arm64/boot/dts/amlogic/Makefile
->> index eef0045..1fd28e8 100644
->> --- a/arch/arm64/boot/dts/amlogic/Makefile
->> +++ b/arch/arm64/boot/dts/amlogic/Makefile
->> @@ -3,6 +3,7 @@ dtb-$(CONFIG_ARCH_MESON) += meson-axg-s400.dtb
->>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-sei510.dtb
->>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-u200.dtb
->>  dtb-$(CONFIG_ARCH_MESON) += meson-g12a-x96-max.dtb
->> +dtb-$(CONFIG_ARCH_MESON) += meson-g12b-gtking.dtb
->>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-a311d-khadas-vim3.dtb
->>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-s922x-khadas-vim3.dtb
->>  dtb-$(CONFIG_ARCH_MESON) += meson-g12b-odroid-n2.dtb
->> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
->> new file mode 100644
->> index 0000000..819f208
->> --- /dev/null
->> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-gtking.dts
->> @@ -0,0 +1,557 @@
->> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
->> +/*
->> + * Copyright (c) 2019 BayLibre, SAS
->> + * Author: Neil Armstrong <narmstrong@baylibre.com>
->> + * Copyright (c) 2019 Christian Hewitt <christianshewitt@gmail.com>
->> + */
->> +
 
-[...]
 
->> +
->> +&spdifout_b {
->> +	status = "okay";
->> +};
->> +
-
-Again, not support by the HDMI controller and not used in the sound card.
