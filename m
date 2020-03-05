@@ -2,139 +2,101 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C2CC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10268C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8183E2146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA61E208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:51:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1WVPPJn"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Vx/5vkxd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726359AbgCEIr7 (ORCPT
+        id S1726177AbgCEIvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:47:59 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39929 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgCEIr7 (ORCPT
+        Thu, 5 Mar 2020 03:51:04 -0500
+Received: from mail-qv1-f68.google.com ([209.85.219.68]:36159 "EHLO
+        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbgCEIvE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:47:59 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y17so5929532wrn.6;
-        Thu, 05 Mar 2020 00:47:57 -0800 (PST)
+        Thu, 5 Mar 2020 03:51:04 -0500
+Received: by mail-qv1-f68.google.com with SMTP id r15so2083384qve.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 00:51:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=nHoooDzcvgLf3wA/4Y6elltfrU93wND/F+5GY/7SXsU=;
-        b=O1WVPPJnWowWB92YgIjXmfothJbjvlguldeZhHFsERRGuVUKYAPlcj64gVzAsLkpft
-         gOF1/ifekicBqUNPbNbYoWktBhd3Y7r6Id/JZLL8SG8V69egXV045S18m+XPI4ai55Nq
-         MeWDPLq1UgU74a7j0piEmLId+wAKKeZ72XeTYKXsHuVhs2bZBg6ZPSIbGXyLLTwLXDHJ
-         sbR/97zDVWuFWIaq4EH7TvwWC95s7Xyu0osCOzO8HR44l4XOtJHOQONfHlpiy4d4cE6C
-         41eeIYEhWgW6JXwKcB6kvTEQwAclC9qF10qX0aOfi+uZDrkNi1tyXs6L56FS/wN7Gyww
-         YQgg==
+        bh=El/sfTpddW1bZLTnEnZCZcYJORrAN8Tq9vEVAml0EDE=;
+        b=Vx/5vkxdn/hKg0Q8e8NxBkcGhDJsI7LG99cvLlcR/CVLIZ3nLfz++O1Kmbsg/jzf9L
+         zKzg6AUYXpm1eBFv9Q/0M27de2rBPlAOqTARP+BlnJoakmL7bC0yE+sPNk6GGceazIs7
+         OFDwJ48nJmQd4RvveTIeupNBOekk28UEEb3QA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nHoooDzcvgLf3wA/4Y6elltfrU93wND/F+5GY/7SXsU=;
-        b=O2eg99hz1O6ZAno2fZbkEDSLCqsTZSEkgC24x1fNIBEptqHh/9xpPygZp9rQ5C2xJ2
-         lV6j32TvCeEuB8YRGxxoro9TZZ6vUy6AXZncBN/qgEnA25ts2w0gGHq/up5bdYTKfXg4
-         utAr3hJBYD67tr0RibNtq19lTW0b8+7PQWNufZsIM0Tn5n4OUd/0U4fyWu9VWdrXeS4E
-         n3Uab1/zIHl/smWCauUeYD0AnSedGttHoI4/CGQADm7B2MM/zp7t0VJyVQlufTKM9Qv7
-         sfx4lSZcioZ+I6KmPriHu2/6xNM226mjQVStTnGHUZCrM86e6VTBaCu/sXemZk50Zp6X
-         uCvA==
-X-Gm-Message-State: ANhLgQ3Ys4lQQ7F2C8KMhoJY3OQvvc4izj3GCPHeROmQXtbQ3TvqEcJt
-        2Icn8kfnKYdVOp9MdPmVqNzfPmzg/LJN1qSyz7SKs/pQ
-X-Google-Smtp-Source: ADFU+vu0oIGU7UqAZgATTFYpNQhrOGcwfgrI+9b0TmG/qVc7O4x6ZZe6+R7ww7PQa0Khi6GKv1ggMyUPxlyrI6YeOqI=
-X-Received: by 2002:adf:9501:: with SMTP id 1mr2832663wrs.426.1583398076809;
- Thu, 05 Mar 2020 00:47:56 -0800 (PST)
+        bh=El/sfTpddW1bZLTnEnZCZcYJORrAN8Tq9vEVAml0EDE=;
+        b=Z3pduk0BkkZUCamcq6yR8j7cQ7Yv1K6cMYqvvyYjo4yADpzSCLPEnys8h6sYM4wPuw
+         hwytwI/LzV+Szc30yy3rpgaINIvSG0FeKGhDOAalNIZXlhA2RSU1e1X8HpQti9QnxiLv
+         Jn3v8L2JIWAJPmOFpT528n9RiSolxtdw9dfY2w5pfxVTOH4YXVb+noWwFpFXfRph6DLD
+         clXMrjEWFol6ep0rFBbQiUUhdXKwC5jYciGfT3VSmpn+rkFojAAGW/tjiB3Fax12Xkz/
+         3mhzlx8srA3kuRav8gSLAgDDErRDhEpr5wA50OAe9DdIcM2Yz07j8O7rwUmzadCQBkoR
+         DnjQ==
+X-Gm-Message-State: ANhLgQ1yoJKiJtrFiTZ8CZtFsi0iRMO/0Oc1NYSxvLXxZSaicqvPwo+8
+        kJjby+jOYBNT0LwiuCKuVwmugmoujtkUjgiAuTmA+A==
+X-Google-Smtp-Source: ADFU+vuXxgY7/ed9EAAffDRefWFzcupI8LrsMya2Q/mcmPS0VFPAjByjJPtT1mwbJ0eu/04sihvT5tTllkXJEr3T8J8=
+X-Received: by 2002:a05:6214:10c1:: with SMTP id r1mr5594398qvs.70.1583398262104;
+ Thu, 05 Mar 2020 00:51:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20200304105818.11781-1-cengiz@kernel.wtf>
-In-Reply-To: <20200304105818.11781-1-cengiz@kernel.wtf>
-From:   Ming Lei <tom.leiming@gmail.com>
-Date:   Thu, 5 Mar 2020 16:47:45 +0800
-Message-ID: <CACVXFVOQLFb7doDSqPxyV-C3au3RfO5YacNzOWv9XOXm+4dE6A@mail.gmail.com>
-Subject: Re: [PATCH v2] blktrace: fix dereference after null check
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200302121524.7543-1-stevensd@chromium.org> <20200302121524.7543-5-stevensd@chromium.org>
+ <20200304080119.i55opxkhk4kdt4hp@sirius.home.kraxel.org>
+In-Reply-To: <20200304080119.i55opxkhk4kdt4hp@sirius.home.kraxel.org>
+From:   David Stevens <stevensd@chromium.org>
+Date:   Thu, 5 Mar 2020 17:50:51 +0900
+Message-ID: <CAD=HUj7jS5jaRmiJwtGMSQZnR8Qd0VvPkBSbs1d-nATdczWdZA@mail.gmail.com>
+Subject: Re: [PATCH v2 4/4] drm/virtio: Support virtgpu exported resources
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        linaro-mm-sig@lists.linaro.org, virtio-dev@lists.oasis-open.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 4, 2020 at 6:59 PM Cengiz Can <cengiz@kernel.wtf> wrote:
+On Wed, Mar 4, 2020 at 5:01 PM Gerd Hoffmann <kraxel@redhat.com> wrote:
 >
-> There was a recent change in blktrace.c that added a RCU protection to
-> `q->blk_trace` in order to fix a use-after-free issue during access.
+>   Hi,
 >
-> However the change missed an edge case that can lead to dereferencing of
-> `bt` pointer even when it's NULL:
+> > +     if (vgdev->has_resource_assign_uuid) {
+> > +             spin_lock(&vgdev->resource_export_lock);
+> > +             if (bo->uuid_state == UUID_NOT_INITIALIZED) {
+> > +                     bo->uuid_state = UUID_INITIALIZING;
+> > +                     needs_init = true;
+> > +             }
+> > +             spin_unlock(&vgdev->resource_export_lock);
+> > +
+> > +             if (needs_init) {
+> > +                     ret = virtio_gpu_cmd_resource_assign_uuid(vgdev, bo);
 >
-> Coverity static analyzer marked this as a FORWARD_NULL issue with CID
-> 1460458.
->
-> ```
-> /kernel/trace/blktrace.c: 1904 in sysfs_blk_trace_attr_store()
-> 1898            ret = 0;
-> 1899            if (bt == NULL)
-> 1900                    ret = blk_trace_setup_queue(q, bdev);
-> 1901
-> 1902            if (ret == 0) {
-> 1903                    if (attr == &dev_attr_act_mask)
-> >>>     CID 1460458:  Null pointer dereferences  (FORWARD_NULL)
-> >>>     Dereferencing null pointer "bt".
-> 1904                            bt->act_mask = value;
-> 1905                    else if (attr == &dev_attr_pid)
-> 1906                            bt->pid = value;
-> 1907                    else if (attr == &dev_attr_start_lba)
-> 1908                            bt->start_lba = value;
-> 1909                    else if (attr == &dev_attr_end_lba)
-> ```
->
-> Added a reassignment with RCU annotation to fix the issue.
->
-> Fixes: c780e86dd48 ("blktrace: Protect q->blk_trace with RCU")
->
-> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-> ---
->
->     Patch Changelog
->     * v2: Added RCU annotation to assignment
->
->  kernel/trace/blktrace.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index 4560878f0bac..ca39dc3230cb 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -1896,8 +1896,11 @@ static ssize_t sysfs_blk_trace_attr_store(struct device *dev,
->         }
->
->         ret = 0;
-> -       if (bt == NULL)
-> +       if (bt == NULL) {
->                 ret = blk_trace_setup_queue(q, bdev);
-> +               bt = rcu_dereference_protected(q->blk_trace,
-> +                               lockdep_is_held(&q->blk_trace_mutex));
-> +       }
->
->         if (ret == 0) {
->                 if (attr == &dev_attr_act_mask)
-> --
-> 2.25.1
->
+> You can submit a fenced command, then wait on the fence here.  Removes
+> the need for UUID_INITIALIZING.
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Synchronously waiting is simper, but only doing the wait when trying
+to use the UUID can help to hide the latency of the virito commands.
+That can save quite a bit of time when setting up multiple buffers for
+a graphics pipeline, which I think is worthwhile.
 
--- 
-Ming Lei
+-David
