@@ -2,154 +2,185 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEEDC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:13:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEA4C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A69E2070E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:13:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ag5H5y4r"
+	by mail.kernel.org (Postfix) with ESMTP id 6BBB62070E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbgCEPN6 (ORCPT
+        id S1726533AbgCEPOe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:13:58 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44602 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbgCEPN6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:13:58 -0500
-Received: by mail-qk1-f195.google.com with SMTP id f198so5583085qke.11
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:13:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=i079FHdW8KISYEfSNqvwZXi8uxi2K0CSJomXrBBVIF8=;
-        b=ag5H5y4raEmo7MQwfTl587DZPNCMHhl9yiIOXOw9C4F+XB7Ic2rGYKstpuulvLGNeO
-         UROljodiq2u6Wwd6LSSrFqTKZ+7q9k/0mQ6OpYpqPhQ3f7MjFwHWBoUv9mtZo0cZkN93
-         hGwPhMrp6besSTuXNepv05Iw5/IOhJVGru1Nj/18lQeT6Xr2Z63we7R4bHSPKqryQ6kQ
-         5J/nrVVxgC8ohwuJQAGOSXZ7DqN9gPKYJ0qdrb1/xwr3aZ8gP1tirJXvd6wxJ/cESRrT
-         D1xdZCTV9Kv8yzYnP96A1PyYT64A1iNTeuIW2UbRaxyYtpK0vE9D5K9uQNR1Dc1l4OyV
-         g/kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=i079FHdW8KISYEfSNqvwZXi8uxi2K0CSJomXrBBVIF8=;
-        b=byFN5/FPFpDWjqqa+z/Bp8AYz0J+l6CQNU9G/Z5F1/LnU3Ly/6iHTq3n5VJczZMra7
-         OrjyuZ2iA/JxPnlugPdvBN6krXPFzbdSNc+UoK+rlVwxyW9dJHfBiKljHEZ60sK8Zdke
-         wMjUj9oiRwvbzkRSFTFYitGHf3HQK7+VZs+w7fUPn6X1Ip9NxJjmeOWMlpA2snQe/v0q
-         vzlKGsa/4x32G8QiHbNpPP995Z9iEBsewYyqBgMmvInOg4GdJCkyUzYdOo1QEpLlkmaM
-         GT8IYvGDFCGia7XJG9FlFBCLwyEn5IkE3b+EULm7X2ljWN8HK1kRCD0XtkhZa2DttULw
-         rDFQ==
-X-Gm-Message-State: ANhLgQ3xqNM475DrsCWg3V1Mi/TAkjODEKc21EBcMuzYIZv5Izvt2QKs
-        oAf0QF1OCRL9VFrBC05Pumc=
-X-Google-Smtp-Source: ADFU+vs2pDOdF3QCIthlqEXMCYPkRNuKuTJVvlvNcq727i4m1KbxDUStToLkHYbkqBXZlZSvi9jlvQ==
-X-Received: by 2002:a05:620a:4f7:: with SMTP id b23mr8797198qkh.258.1583421237027;
-        Thu, 05 Mar 2020 07:13:57 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.37.151])
-        by smtp.gmail.com with ESMTPSA id j85sm468070qke.20.2020.03.05.07.13.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 07:13:55 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 072BD403AD; Thu,  5 Mar 2020 12:13:52 -0300 (-03)
-Date:   Thu, 5 Mar 2020 12:13:52 -0300
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, mark.rutland@arm.com,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, will@kernel.org, ak@linux.intel.com,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        james.clark@arm.com, qiangqing.zhang@nxp.com
-Subject: Re: [PATCH 1/6] perf jevents: Fix leak of mapfile memory
-Message-ID: <20200305151352.GD7895@kernel.org>
-References: <1583406486-154841-1-git-send-email-john.garry@huawei.com>
- <1583406486-154841-2-git-send-email-john.garry@huawei.com>
+        Thu, 5 Mar 2020 10:14:34 -0500
+Received: from mga04.intel.com ([192.55.52.120]:37454 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725990AbgCEPOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 10:14:34 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 07:14:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
+   d="scan'208";a="234479827"
+Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
+  by fmsmga008.fm.intel.com with ESMTP; 05 Mar 2020 07:14:33 -0800
+Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
+ FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 5 Mar 2020 07:14:32 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.50]) by
+ SHSMSX106.ccr.corp.intel.com ([169.254.10.86]) with mapi id 14.03.0439.000;
+ Thu, 5 Mar 2020 23:14:30 +0800
+From:   "Li, Philip" <philip.li@intel.com>
+To:     lkp <lkp@intel.com>, "cl@rock-chips.com" <cl@rock-chips.com>
+CC:     "kbuild-all@lists.01.org" <kbuild-all@lists.01.org>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "juri.lelli@redhat.com" <juri.lelli@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        "dietmar.eggemann@arm.com" <dietmar.eggemann@arm.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "bsegall@google.com" <bsegall@google.com>,
+        "mgorman@suse.de" <mgorman@suse.de>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "surenb@google.com" <surenb@google.com>,
+        "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>,
+        "anshuman.khandual@arm.com" <anshuman.khandual@arm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "wad@chromium.org" <wad@chromium.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "george_davis@mentor.com" <george_davis@mentor.com>,
+        "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "info@metux.net" <info@metux.net>,
+        "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>,
+        "allison@lohutok.net" <allison@lohutok.net>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "huangtao@rock-chips.com" <huangtao@rock-chips.com>,
+        Liang Chen <cl@rock-chips.com>
+Subject: RE: [kbuild-all] Re: [PATCH v1 1/1] sched/fair: do not preempt
+ current task if it is going to call schedule()
+Thread-Topic: [kbuild-all] Re: [PATCH v1 1/1] sched/fair: do not preempt
+ current task if it is going to call schedule()
+Thread-Index: AQHV8vwSaUDvAnC/i0OErjRILa0VAag6GycQ
+Date:   Thu, 5 Mar 2020 15:14:29 +0000
+Message-ID: <831EE4E5E37DCC428EB295A351E66249524206DF@shsmsx102.ccr.corp.intel.com>
+References: <20200305081611.29323-2-cl@rock-chips.com>
+ <202003052243.P59yLrjh%lkp@intel.com>
+In-Reply-To: <202003052243.P59yLrjh%lkp@intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1583406486-154841-2-git-send-email-john.garry@huawei.com>
-X-Url:  http://acmel.wordpress.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, Mar 05, 2020 at 07:08:01PM +0800, John Garry escreveu:
-> The memory for global pointer is never freed during normal program
-> execution, so let's do that in the main function exit as a good programming
-> practice.
+> Subject: [kbuild-all] Re: [PATCH v1 1/1] sched/fair: do not preempt current task if
+> it is going to call schedule()
 > 
-> A stray blank line is also removed.
+> Hi,
+> 
+> Thank you for the patch! Yet something to improve:
+Sorry, there're a few duplicated reports around this patch, kindly
+ignore similar reports, we will look for the possible issue.
 
-Thanks, applied to perf/urgent.
+Thanks
 
-- Arnaldo
- 
-> Reported-by: Jiri Olsa <jolsa@redhat.com>
-> Signed-off-by: John Garry <john.garry@huawei.com>
+> 
+> [auto build test ERROR on tip/sched/core]
+> [also build test ERROR on arm64/for-next/core tip/auto-latest linus/master v5.6-
+> rc4 next-20200305]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/cl-rock-chips-
+> com/wait_task_inactive-spend-too-much-time-on-system-startup/20200305-
+> 201639
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git
+> a0f03b617c3b2644d3d47bf7d9e60aed01bd5b10
+> config: s390-zfcpdump_defconfig (attached as .config)
+> compiler: s390-linux-gcc (GCC) 7.5.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-
+> tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.5.0 make.cross ARCH=s390
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from include/linux/kvm_host.h:12:0,
+>                     from arch/s390/kernel/asm-offsets.c:11:
+>    include/linux/sched.h: In function 'set_tsk_going_to_sched':
+> >> include/linux/sched.h:1776:27: error: 'TIF_GOING_TO_SCHED' undeclared
+> (first use in this function); did you mean 'TIF_SINGLE_STEP'?
+>      set_tsk_thread_flag(tsk, TIF_GOING_TO_SCHED);
+>                               ^~~~~~~~~~~~~~~~~~
+>                               TIF_SINGLE_STEP
+>    include/linux/sched.h:1776:27: note: each undeclared identifier is reported only
+> once for each function it appears in
+>    include/linux/sched.h: In function 'clear_tsk_going_to_sched':
+>    include/linux/sched.h:1781:29: error: 'TIF_GOING_TO_SCHED' undeclared (first
+> use in this function); did you mean 'TIF_SINGLE_STEP'?
+>      clear_tsk_thread_flag(tsk, TIF_GOING_TO_SCHED);
+>                                 ^~~~~~~~~~~~~~~~~~
+>                                 TIF_SINGLE_STEP
+>    In file included from include/linux/kernel.h:11:0,
+>                     from include/linux/list.h:9,
+>                     from include/linux/preempt.h:11,
+>                     from include/linux/hardirq.h:5,
+>                     from include/linux/kvm_host.h:7,
+>                     from arch/s390/kernel/asm-offsets.c:11:
+>    include/linux/sched.h: In function 'test_tsk_going_to_sched':
+>    include/linux/sched.h:1786:44: error: 'TIF_GOING_TO_SCHED' undeclared (first
+> use in this function); did you mean 'TIF_SINGLE_STEP'?
+>      return unlikely(test_tsk_thread_flag(tsk, TIF_GOING_TO_SCHED));
+>                                                ^
+>    include/linux/compiler.h:78:42: note: in definition of macro 'unlikely'
+>     # define unlikely(x) __builtin_expect(!!(x), 0)
+>                                              ^
+>    make[2]: *** [scripts/Makefile.build:101: arch/s390/kernel/asm-offsets.s] Error 1
+>    make[2]: Target '__build' not remade because of errors.
+>    make[1]: *** [Makefile:1112: prepare0] Error 2
+>    make[1]: Target 'prepare' not remade because of errors.
+>    make: *** [Makefile:179: sub-make] Error 2
+>    142 real  47 user  83 sys  92.07% cpu 	make prepare
+> 
+> vim +1776 include/linux/sched.h
+> 
+>   1773
+>   1774	static inline void set_tsk_going_to_sched(struct task_struct *tsk)
+>   1775	{
+> > 1776		set_tsk_thread_flag(tsk, TIF_GOING_TO_SCHED);
+>   1777	}
+>   1778
+> 
 > ---
->  tools/perf/pmu-events/jevents.c | 15 +++++++++------
->  1 file changed, 9 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index 079c77b6a2fd..27b4da80f751 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -1082,10 +1082,9 @@ static int process_one_file(const char *fpath, const struct stat *sb,
->   */
->  int main(int argc, char *argv[])
->  {
-> -	int rc;
-> +	int rc, ret = 0;
->  	int maxfds;
->  	char ldirname[PATH_MAX];
-> -
->  	const char *arch;
->  	const char *output_file;
->  	const char *start_dirname;
-> @@ -1156,7 +1155,8 @@ int main(int argc, char *argv[])
->  		/* Make build fail */
->  		fclose(eventsfp);
->  		free_arch_std_events();
-> -		return 1;
-> +		ret = 1;
-> +		goto out_free_mapfile;
->  	} else if (rc) {
->  		goto empty_map;
->  	}
-> @@ -1174,14 +1174,17 @@ int main(int argc, char *argv[])
->  		/* Make build fail */
->  		fclose(eventsfp);
->  		free_arch_std_events();
-> -		return 1;
-> +		ret = 1;
->  	}
->  
-> -	return 0;
-> +
-> +	goto out_free_mapfile;
->  
->  empty_map:
->  	fclose(eventsfp);
->  	create_empty_mapping(output_file);
->  	free_arch_std_events();
-> -	return 0;
-> +out_free_mapfile:
-> +	free(mapfile);
-> +	return ret;
->  }
-> -- 
-> 2.17.1
-> 
-
--- 
-
-- Arnaldo
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
