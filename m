@@ -2,279 +2,207 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31CCAC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:06:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21734C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0807A2073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3A3A2073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726067AbgCEIEy (ORCPT
+        id S1726099AbgCEIHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:04:54 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:11147 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725946AbgCEIEy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:04:54 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 01B143C07C6844C0EBC2;
-        Thu,  5 Mar 2020 16:04:50 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 5 Mar 2020 16:04:44 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v3] f2fs: introduce F2FS_IOC_RELEASE_COMPRESS_BLOCKS
-Date:   Thu, 5 Mar 2020 16:04:38 +0800
-Message-ID: <20200305080438.106061-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
+        Thu, 5 Mar 2020 03:07:30 -0500
+Received: from mx2.suse.de ([195.135.220.15]:58750 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbgCEIHa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 03:07:30 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 27F32ACC3;
+        Thu,  5 Mar 2020 08:07:22 +0000 (UTC)
+Subject: Re: xen boot PVH guest with linux 5.6.0-rc4-ish kernel: general
+ protection fault, RIP: 0010:__pv_queued_spin_lock_slowpath
+To:     Sander Eikelenboom <linux@eikelenboom.it>
+Cc:     "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+References: <d323139d-97ef-0c76-8ec6-a669f5b0ba2d@eikelenboom.it>
+From:   =?UTF-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Message-ID: <4fa2ddcd-f8ce-12a5-e82e-c28cc865fb86@suse.com>
+Date:   Thu, 5 Mar 2020 09:07:21 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+In-Reply-To: <d323139d-97ef-0c76-8ec6-a669f5b0ba2d@eikelenboom.it>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are still reserved blocks on compressed inode, this patch
-introduce a new ioctl to help release reserved blocks back to
-filesystem, so that userspace can reuse those freed space.
+On 04.03.20 18:52, Sander Eikelenboom wrote:
+> Hi Juergen,
+> 
+> Just tested a 5.6.0-rc4'ish kernel (8b614cb8f1dcac8ca77cf4dd85f46ef3055f8238, so it includes the xen fixes from x86 trees).
+> Xen is the latest xen-unstable, dom0 kernel is 5.5.7.
+> 
+> During boot of the PVH guest I got the splat below.
+> With a 5.5.7 kernel the guest boots fine.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v3:
-- do sanity check on blkaddr in prior to block release.
-- fix to call put_user if @ret is not negative.
-- set SBI_NEED_FSCK if we release reserved blocks partially.
- fs/f2fs/f2fs.h |   6 ++
- fs/f2fs/file.c | 154 ++++++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 159 insertions(+), 1 deletion(-)
+I think I have found the problem. Testing a patch now...
 
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 5ea712a52d46..5ca9efaf2ddc 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -427,6 +427,8 @@ static inline bool __has_cursum_space(struct f2fs_journal *journal,
- #define F2FS_IOC_PRECACHE_EXTENTS	_IO(F2FS_IOCTL_MAGIC, 15)
- #define F2FS_IOC_RESIZE_FS		_IOW(F2FS_IOCTL_MAGIC, 16, __u64)
- #define F2FS_IOC_GET_COMPRESS_BLOCKS	_IOR(F2FS_IOCTL_MAGIC, 17, __u64)
-+#define F2FS_IOC_RELEASE_COMPRESS_BLOCKS				\
-+					_IOR(F2FS_IOCTL_MAGIC, 18, __u64)
- 
- #define F2FS_IOC_GET_VOLUME_NAME	FS_IOC_GETFSLABEL
- #define F2FS_IOC_SET_VOLUME_NAME	FS_IOC_SETFSLABEL
-@@ -3957,6 +3959,10 @@ static inline void f2fs_i_compr_blocks_update(struct inode *inode,
- {
- 	int diff = F2FS_I(inode)->i_cluster_size - blocks;
- 
-+	/* don't update i_compr_blocks if saved blocks were released */
-+	if (!add && !F2FS_I(inode)->i_compr_blocks)
-+		return;
-+
- 	if (add) {
- 		F2FS_I(inode)->i_compr_blocks += diff;
- 		stat_add_compr_blocks(inode, diff);
-diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
-index fb070816a8a5..48ff7406598d 100644
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -557,6 +557,7 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
- 	bool compressed_cluster = false;
- 	int cluster_index = 0, valid_blocks = 0;
- 	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
-+	bool released = !F2FS_I(dn->inode)->i_compr_blocks;
- 
- 	if (IS_INODE(dn->node_page) && f2fs_has_extra_attr(dn->inode))
- 		base = get_extra_isize(dn->inode);
-@@ -595,7 +596,9 @@ void f2fs_truncate_data_blocks_range(struct dnode_of_data *dn, int count)
- 			clear_inode_flag(dn->inode, FI_FIRST_BLOCK_WRITTEN);
- 
- 		f2fs_invalidate_blocks(sbi, blkaddr);
--		nr_free++;
-+
-+		if (released && blkaddr != COMPRESS_ADDR)
-+			nr_free++;
- 	}
- 
- 	if (compressed_cluster)
-@@ -3410,6 +3413,152 @@ static int f2fs_get_compress_blocks(struct file *filp, unsigned long arg)
- 	return put_user(blocks, (u64 __user *)arg);
- }
- 
-+static int release_compress_blocks(struct dnode_of_data *dn, pgoff_t count)
-+{
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(dn->inode);
-+	unsigned int released_blocks = 0;
-+	int cluster_size = F2FS_I(dn->inode)->i_cluster_size;
-+	block_t blkaddr;
-+	int i;
-+
-+	for (i = 0; i < count; i++) {
-+		blkaddr = data_blkaddr(dn->inode, dn->node_page,
-+						dn->ofs_in_node + i);
-+
-+		if (!__is_valid_data_blkaddr(blkaddr))
-+			continue;
-+		if (unlikely(!f2fs_is_valid_blkaddr(sbi, blkaddr,
-+					DATA_GENERIC_ENHANCE)))
-+			return -EFSCORRUPTED;
-+	}
-+
-+	while (count) {
-+		int compr_blocks = 0;
-+
-+		for (i = 0; i < cluster_size; i++, dn->ofs_in_node++) {
-+			blkaddr = f2fs_data_blkaddr(dn);
-+
-+			if (i == 0) {
-+				if (blkaddr == COMPRESS_ADDR)
-+					continue;
-+				dn->ofs_in_node += cluster_size;
-+				goto next;
-+			}
-+
-+			if (__is_valid_data_blkaddr(blkaddr))
-+				compr_blocks++;
-+
-+			if (blkaddr != NEW_ADDR)
-+				continue;
-+
-+			dn->data_blkaddr = NULL_ADDR;
-+			f2fs_set_data_blkaddr(dn);
-+		}
-+
-+		f2fs_i_compr_blocks_update(dn->inode, compr_blocks, false);
-+		dec_valid_block_count(sbi, dn->inode,
-+					cluster_size - compr_blocks);
-+
-+		released_blocks += cluster_size - compr_blocks;
-+next:
-+		count -= cluster_size;
-+	}
-+
-+	return released_blocks;
-+}
-+
-+static int f2fs_release_compress_blocks(struct file *filp, unsigned long arg)
-+{
-+	struct inode *inode = file_inode(filp);
-+	struct f2fs_sb_info *sbi = F2FS_I_SB(inode);
-+	pgoff_t page_idx = 0, last_idx;
-+	unsigned int released_blocks = 0;
-+	int ret;
-+
-+	if (!f2fs_sb_has_compression(F2FS_I_SB(inode)))
-+		return -EOPNOTSUPP;
-+
-+	if (!f2fs_compressed_file(inode))
-+		return -EINVAL;
-+
-+	if (f2fs_readonly(sbi->sb))
-+		return -EROFS;
-+
-+	ret = mnt_want_write_file(filp);
-+	if (ret)
-+		return ret;
-+
-+	if (!F2FS_I(inode)->i_compr_blocks)
-+		goto out;
-+
-+	f2fs_balance_fs(F2FS_I_SB(inode), true);
-+
-+	inode_lock(inode);
-+
-+	if (!IS_IMMUTABLE(inode)) {
-+		F2FS_I(inode)->i_flags |= F2FS_IMMUTABLE_FL;
-+		f2fs_set_inode_flags(inode);
-+		inode->i_ctime = current_time(inode);
-+		f2fs_mark_inode_dirty_sync(inode, true);
-+	}
-+
-+	down_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
-+	down_write(&F2FS_I(inode)->i_mmap_sem);
-+
-+	last_idx = DIV_ROUND_UP(i_size_read(inode), PAGE_SIZE);
-+
-+	while (page_idx < last_idx) {
-+		struct dnode_of_data dn;
-+		pgoff_t end_offset, count;
-+
-+		set_new_dnode(&dn, inode, NULL, NULL, 0);
-+		ret = f2fs_get_dnode_of_data(&dn, page_idx, LOOKUP_NODE);
-+		if (ret) {
-+			if (ret == -ENOENT) {
-+				page_idx = f2fs_get_next_page_offset(&dn,
-+								page_idx);
-+				ret = 0;
-+				continue;
-+			}
-+			break;
-+		}
-+
-+		end_offset = ADDRS_PER_PAGE(dn.node_page, inode);
-+		count = min(end_offset - dn.ofs_in_node, last_idx - page_idx);
-+
-+		ret = release_compress_blocks(&dn, count);
-+
-+		f2fs_put_dnode(&dn);
-+
-+		if (ret < 0)
-+			break;
-+
-+		page_idx += count;
-+		released_blocks += ret;
-+	}
-+
-+	up_write(&F2FS_I(inode)->i_gc_rwsem[WRITE]);
-+	up_write(&F2FS_I(inode)->i_mmap_sem);
-+
-+	inode_unlock(inode);
-+out:
-+	mnt_drop_write_file(filp);
-+
-+	if (ret >= 0) {
-+		ret = put_user(released_blocks, (u64 __user *)arg);
-+	} else if (released_blocks && F2FS_I(inode)->i_compr_blocks) {
-+		set_sbi_flag(sbi, SBI_NEED_FSCK);
-+		f2fs_warn(sbi, "%s: partial blocks were released i_ino=%lx "
-+			"iblocks=%llu, released=%u, compr_blocks=%llu, "
-+			"run fsck to fix.",
-+			__func__, inode->i_ino, inode->i_blocks,
-+			released_blocks,
-+			F2FS_I(inode)->i_compr_blocks);
-+	}
-+
-+	return ret;
-+}
-+
- long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- {
- 	if (unlikely(f2fs_cp_error(F2FS_I_SB(file_inode(filp)))))
-@@ -3490,6 +3639,8 @@ long f2fs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
- 		return f2fs_set_volume_name(filp, arg);
- 	case F2FS_IOC_GET_COMPRESS_BLOCKS:
- 		return f2fs_get_compress_blocks(filp, arg);
-+	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
-+		return f2fs_release_compress_blocks(filp, arg);
- 	default:
- 		return -ENOTTY;
- 	}
-@@ -3650,6 +3801,7 @@ long f2fs_compat_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	case F2FS_IOC_GET_VOLUME_NAME:
- 	case F2FS_IOC_SET_VOLUME_NAME:
- 	case F2FS_IOC_GET_COMPRESS_BLOCKS:
-+	case F2FS_IOC_RELEASE_COMPRESS_BLOCKS:
- 		break;
- 	default:
- 		return -ENOIOCTLCMD;
--- 
-2.18.0.rc1
+
+Juergen
+
+> 
+> --
+> Sander
+> 
+> 
+> [    1.921031] general protection fault, probably for non-canonical address 0x344a3feab7bf8: 0000 [#1] SMP NOPTI
+> [    1.921090] CPU: 1 PID: 1686 Comm: systemd-udevd Tainted: G        W         5.6.0-rc4-20200304-doflr-mac80211debug+ #1
+> [    1.921134] RIP: 0010:__pv_queued_spin_lock_slowpath+0x195/0x2a0
+> [    1.921160] Code: c4 c1 ea 12 4c 8d 6d 14 41 be 01 00 00 00 41 83 e4 03 8d 42 ff 49 c1 e4 05 48 98 49 81 c4 80 c3 02 00 4c 03 24 c5 20 89 b7 82 <49> 89 2c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
+> [    1.921229] RSP: 0018:ffffc90000213958 EFLAGS: 00010002
+> [    1.921249] RAX: 000000000000327f RBX: ffff888005ce00e0 RCX: 0000000000000001
+> [    1.921278] RDX: 0000000000003280 RSI: 0000000000000000 RDI: 0000000000000000
+> [    1.921307] RBP: ffff88801f52c380 R08: 00000000fffea95e R09: ffff8880192d0c80
+> [    1.921335] R10: ffff8880192d0cb8 R11: ffffc90000213b01 R12: 000344a3feab7bf8
+> [    1.921365] R13: ffff88801f52c394 R14: 0000000000000001 R15: 0000000000080000
+> [    1.921402] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
+> [    1.921438] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    1.921461] CR2: 00007fffaae16ec8 CR3: 0000000004b04000 CR4: 00000000000006e0
+> [    1.921608] Call Trace:
+> [    1.921628]  ? ktime_get+0x31/0x90
+> [    1.921646]  _raw_spin_lock_irqsave+0x2b/0x30
+> [    1.921669]  blkif_queue_rq+0x6e/0x7c0
+> [    1.921685]  ? wait_woken+0x80/0x80
+> [    1.921701]  ? xen_clocksource_get_cycles+0x11/0x20
+> [    1.921720]  ? ktime_get+0x31/0x90
+> [    1.921737]  ? blk_mq_get_request+0x195/0x3b0
+> [    1.921757]  ? blk_account_io_start+0xd4/0x150
+> [    1.921776]  __blk_mq_try_issue_directly+0x10e/0x1c0
+> [    1.921798]  blk_mq_request_issue_directly+0x43/0xe0
+> [    1.921819]  blk_mq_try_issue_list_directly+0x3c/0xb0
+> [    1.921840]  blk_mq_sched_insert_requests+0xa0/0xf0
+> [    1.921860]  blk_mq_flush_plug_list+0x122/0x1e0
+> [    1.921879]  blk_flush_plug_list+0xc1/0xf0
+> [    1.921897]  blk_finish_plug+0x1c/0x29
+> [    1.921914]  read_pages+0x7a/0x140
+> [    1.921931]  __do_page_cache_readahead+0x188/0x1a0
+> [    1.921952]  force_page_cache_readahead+0x8b/0xf0
+> [    1.921972]  generic_file_read_iter+0x7e1/0xae0
+> [    1.921993]  ? mem_cgroup_throttle_swaprate+0x1f/0x145
+> [    1.922014]  ? _copy_to_user+0x26/0x30
+> [    1.922031]  ? cp_new_stat+0x127/0x160
+> [    1.922048]  new_sync_read+0x10f/0x1a0
+> [    1.922064]  vfs_read+0x8c/0x140
+> [    1.922081]  ksys_read+0x54/0xd0
+> [    1.922098]  do_syscall_64+0x49/0x130
+> [    1.922114]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> [    1.922138] RIP: 0033:0x7f771df43461
+> [    1.922154] Code: fe ff ff 50 48 8d 3d fe d0 09 00 e8 e9 03 02 00 66 0f 1f 84 00 00 00 00 00 48 8d 05 99 62 0d 00 8b 00 85 c0 75 13 31 c0 0f 05 <48> 3d 00 f0 ff ff 77 57 c3 66 0f 1f 44 00 00 41 54 49 89 d4 55 48
+> [    1.922225] RSP: 002b:00007fffaae1a0c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+> [    1.922255] RAX: ffffffffffffffda RBX: 000055d4cca138f0 RCX: 00007f771df43461
+> [    1.922284] RDX: 0000000000000040 RSI: 000055d4cca164f8 RDI: 000000000000000c
+> [    1.922313] RBP: 000055d4cca13940 R08: 000055d4cca164d0 R09: 0000000000000005
+> [    1.922342] R10: 000055d4cc9fe010 R11: 0000000000000246 R12: 000000013fff0000
+> [    1.922370] R13: 0000000000000040 R14: 000055d4cca164e8 R15: 000055d4cca164d0
+> [    1.922398] Modules linked in:
+> [    1.922415] ---[ end trace baa27c3655b1ea59 ]---
+> [    1.922435] RIP: 0010:__pv_queued_spin_lock_slowpath+0x195/0x2a0
+> [    1.922459] Code: c4 c1 ea 12 4c 8d 6d 14 41 be 01 00 00 00 41 83 e4 03 8d 42 ff 49 c1 e4 05 48 98 49 81 c4 80 c3 02 00 4c 03 24 c5 20 89 b7 82 <49> 89 2c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
+> [    1.922526] RSP: 0018:ffffc90000213958 EFLAGS: 00010002
+> [    1.922545] RAX: 000000000000327f RBX: ffff888005ce00e0 RCX: 0000000000000001
+> [    1.922574] RDX: 0000000000003280 RSI: 0000000000000000 RDI: 0000000000000000
+> [    1.924268] RBP: ffff88801f52c380 R08: 00000000fffea95e R09: ffff8880192d0c80
+> [    1.924302] R10: ffff8880192d0cb8 R11: ffffc90000213b01 R12: 000344a3feab7bf8
+> [    1.924333] R13: ffff88801f52c394 R14: 0000000000000001 R15: 0000000000080000
+> [    1.924377] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
+> [    1.924409] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    1.924434] CR2: 00007fffaae16ec8 CR3: 0000000004b04000 CR4: 00000000000006e0
+> [    1.924967] BUG: unable to handle page fault for address: 000000000013fff8
+> [    1.924999] #PF: supervisor write access in kernel mode
+> [    1.925020] #PF: error_code(0x0002) - not-present page
+> [    1.925042] PGD 0 P4D 0
+> [    1.925056] Oops: 0002 [#2] SMP NOPTI
+> [    1.925073] CPU: 1 PID: 1686 Comm: systemd-udevd Tainted: G      D W         5.6.0-rc4-20200304-doflr-mac80211debug+ #1
+> [    1.925128] RIP: 0010:blk_flush_plug_list+0x67/0xf0
+> [    1.925149] Code: 48 89 e5 48 89 2c 24 48 89 6c 24 08 48 8b 43 10 49 39 c4 74 5c 48 8b 43 10 49 39 c4 74 23 48 8b 4b 10 48 8b 53 18 48 8b 04 24 <48> 89 69 08 48 89 0c 24 48 89 02 48 89 50 08 4c 89 63 10 4c 89 63
+> [    2.013559] RSP: 0018:ffffc90000213b30 EFLAGS: 00010286
+> [    2.013583] RAX: ffffc90000213b30 RBX: ffffc90000213c30 RCX: 000000000013fff0
+> [    2.013615] RDX: 0000000000000001 RSI: 0000000000000001 RDI: ffffc90000213c30
+> [    2.013643] RBP: ffffc90000213b30 R08: 0000000000000000 R09: ffffc90000213ba0
+> [    2.013673] R10: ffffffffffffffff R11: 000000000013ffff R12: ffffc90000213c40
+> [    2.013701] R13: 0000000000000001 R14: dead000000000122 R15: dead000000000100
+> [    2.013740] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
+> [    2.013771] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    2.013794] CR2: 000000000013fff8 CR3: 0000000002c24000 CR4: 00000000000006e0
+> [    2.013824] Call Trace:
+> [    2.013844]  io_schedule_prepare+0x37/0x40
+> [    2.013863]  io_schedule+0x6/0x30
+> [    2.013880]  __lock_page+0x11d/0x1e0
+> [    2.013898]  ? file_fdatawait_range+0x20/0x20
+> [    2.013919]  truncate_inode_pages_range+0x412/0x750
+> [    2.013939]  ? find_get_pages_range_tag+0x7d/0x2f0
+> [    2.013960]  ? __switch_to_asm+0x34/0x70
+> [    2.013975]  ? __switch_to_asm+0x40/0x70
+> [    2.013994]  ? __switch_to_asm+0x34/0x70
+> [    2.014013]  ? pagevec_lookup_range_tag+0x1f/0x30
+> [    2.014086]  ? __filemap_fdatawait_range+0x68/0xe0
+> [    2.014112]  ? locks_remove_flock+0xa7/0xb0
+> [    2.014129]  ? __filemap_fdatawrite_range+0xdf/0x100
+> [    2.014154]  ? cpumask_next_and+0x19/0x20
+> [    2.014172]  ? smp_call_function_many_cond+0x24d/0x2a0
+> [    2.014192]  ? __brelse+0x20/0x20
+> [    2.014207]  ? __ia32_sys_fsconfig+0x430/0x430
+> [    2.014226]  ? __brelse+0x20/0x20
+> [    2.014243]  ? on_each_cpu_cond_mask+0x3e/0x80
+> [    2.014263]  __blkdev_put+0x6f/0x1d0
+> [    2.014280]  blkdev_close+0x1c/0x20
+> [    2.014295]  __fput+0xb1/0x240
+> [    2.014311]  task_work_run+0x85/0xa0
+> [    2.014328]  do_exit+0x39b/0xa80
+> [    2.014343]  ? ksys_read+0x54/0xd0
+> [    2.014359]  rewind_stack_do_exit+0x17/0x20
+> [    2.014375] Modules linked in:
+> [    2.014391] CR2: 000000000013fff8
+> [    2.014407] ---[ end trace baa27c3655b1ea5a ]---
+> [    2.014430] RIP: 0010:__pv_queued_spin_lock_slowpath+0x195/0x2a0
+> [    2.014458] Code: c4 c1 ea 12 4c 8d 6d 14 41 be 01 00 00 00 41 83 e4 03 8d 42 ff 49 c1 e4 05 48 98 49 81 c4 80 c3 02 00 4c 03 24 c5 20 89 b7 82 <49> 89 2c 24 b8 00 80 00 00 eb 15 84 c0 75 0a 41 0f b6 54 24 14 84
+> [    2.014531] RSP: 0018:ffffc90000213958 EFLAGS: 00010002
+> [    2.014550] RAX: 000000000000327f RBX: ffff888005ce00e0 RCX: 0000000000000001
+> [    2.014578] RDX: 0000000000003280 RSI: 0000000000000000 RDI: 0000000000000000
+> [    2.014605] RBP: ffff88801f52c380 R08: 00000000fffea95e R09: ffff8880192d0c80
+> [    2.014632] R10: ffff8880192d0cb8 R11: ffffc90000213b01 R12: 000344a3feab7bf8
+> [    2.014660] R13: ffff88801f52c394 R14: 0000000000000001 R15: 0000000000080000
+> [    2.014700] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
+> [    2.014728] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    2.014751] CR2: 000000000013fff8 CR3: 0000000002c24000 CR4: 00000000000006e0
+> [    2.014782] ------------[ cut here ]------------
+> [    2.014802] WARNING: CPU: 1 PID: 1686 at kernel/exit.c:719 do_exit+0x4a/0xa80
+> [    2.014830] Modules linked in:
+> [    2.014854] CPU: 1 PID: 1686 Comm: systemd-udevd Tainted: G      D W         5.6.0-rc4-20200304-doflr-mac80211debug+ #1
+> [    2.014888] RIP: 0010:do_exit+0x4a/0xa80
+> [    2.014902] Code: 04 25 28 00 00 00 48 89 44 24 30 31 c0 e8 fe 3e 06 00 48 8b 83 a8 06 00 00 48 85 c0 74 0e 48 8b 10 48 39 d0 0f 84 1c 02 00 00 <0f> 0b 65 44 8b 2d b4 03 f1 7e 41 81 e5 00 ff 1f 00 44 89 6c 24 0c
+> [    2.215014] RSP: 0018:ffffc90000213ee8 EFLAGS: 00010086
+> [    2.215041] RAX: ffffc90000213c30 RBX: ffff888005cdec00 RCX: 0000000000000000
+> [    2.215071] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffff82c72340
+> [    2.215099] RBP: 0000000000000009 R08: 0000000000000228 R09: 0000000000000000
+> [    2.215128] R10: 000000000000000a R11: ffffc90000213862 R12: 0000000000000009
+> [    2.215158] R13: ffff888005cdec00 R14: 0000000000000046 R15: 0000000000000000
+> [    2.215200] FS:  00007f771d762d40(0000) GS:ffff88801f500000(0000) knlGS:0000000000000000
+> [    2.215230] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    2.215273] CR2: 000000000013fff8 CR3: 0000000002c24000 CR4: 00000000000006e0
+> [    2.215305] Call Trace:
+> [    2.215326]  ? ksys_read+0x54/0xd0
+> [    2.215348]  rewind_stack_do_exit+0x17/0x20
+> [    2.215366] ---[ end trace baa27c3655b1ea5b ]---
+> [    2.215386] Fixing recursive fault but reboot is needed!
+> [    2.215414] BUG: unable to handle page fault for address: ffffffff82045e50
+> 
 
