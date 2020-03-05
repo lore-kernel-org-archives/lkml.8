@@ -2,110 +2,134 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 950B2C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDA93C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F440208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F248208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:58:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FsxuKIay"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="BIvEOWNV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgCEKze (ORCPT
+        id S1726992AbgCEK6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:55:34 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:49278 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgCEKze (ORCPT
+        Thu, 5 Mar 2020 05:58:01 -0500
+Received: from gateway34.websitewelcome.com ([192.185.148.142]:43205 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726048AbgCEK6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:55:34 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 025AtT2Z010220;
-        Thu, 5 Mar 2020 04:55:29 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1583405729;
-        bh=UMh1opH6tmYxUIx/AyWNlJuD6bLG+NyY4/gGWFJ85Nk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=FsxuKIay7I+ZBVLkyPl3LpD5Y6p6SDnF7fgG7qfZn9e/Qs3/UODQ+ema+spkam3Dm
-         oC4R744c+dIqSRHYZnxu5jf01hUAn0nfY6BHAbjA6S5zx166YKmyg2ooK905vnVZDD
-         j0PrP1WJl3Du/jaaMLEghlYQ0SpRkTBwFXWdVH04=
-Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 025AtTDL030404
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 5 Mar 2020 04:55:29 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 5 Mar
- 2020 04:55:29 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 5 Mar 2020 04:55:29 -0600
-Received: from [10.250.100.73] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 025AtQuu006736;
-        Thu, 5 Mar 2020 04:55:27 -0600
-Subject: Re: [for-next PATCH v2 0/5] phy: ti: gmii-sel: add support for
- am654x/j721e soc
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        David Miller <davem@davemloft.net>
-CC:     <m-karicheri2@ti.com>, <t-kristo@ti.com>, <nsekhar@ti.com>,
-        <robh+dt@kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200303160029.345-1-grygorii.strashko@ti.com>
- <20200304.143951.1102411401290807167.davem@davemloft.net>
- <71a6fea9-65c1-3a3c-a35b-9432208b3ee5@ti.com>
-From:   Grygorii Strashko <grygorii.strashko@ti.com>
-Message-ID: <7c5395a6-56cb-1d2a-0243-99a6b0fed2a7@ti.com>
-Date:   Thu, 5 Mar 2020 12:55:25 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Thu, 5 Mar 2020 05:58:01 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 97948411216
+        for <linux-kernel@vger.kernel.org>; Thu,  5 Mar 2020 04:58:00 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 9oCWjVLKHXVkQ9oCWjpABz; Thu, 05 Mar 2020 04:58:00 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ihHfTDP+fLnk+hUJ+Lmh+Yz+nZ+OXknD+WOz4D6Ifwo=; b=BIvEOWNVJfHZFGbrFw3h5RGybd
+        c3DdP/V4pPLx5zfr9XqVZRWzs6qdQuWhav4GW4D7sP10ljAUk0xYeS5DUg1bmoqSszY8M6m4oMCHJ
+        SOKdl4ZwTuJFR+LpnGunyXalWyqYQ47Cf+ahYpauG0q1LwPdjWpameij/qi7SdHePe+hBSA+pQo+m
+        doEc0CAaHBvuXOFkN4T9HTOL/xgiK3KUlR+B7IWMvpiShGRuk9Ghe+lgwhE9j/3zFKljqf6gl4d35
+        EbqbKxvKT9brc9Y1abz1s83Y285LX/C3ZxOMIVatEYVEDX0KwIgWkjUhQYxHV2SKfJii5PB/u8V4a
+        ZsQneBdw==;
+Received: from [201.166.169.220] (port=15028 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j9oCU-003ibo-KO; Thu, 05 Mar 2020 04:57:59 -0600
+Date:   Thu, 5 Mar 2020 05:01:05 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH][next] drm/drm_displayid.h: Replace zero-length array with
+ flexible-array member
+Message-ID: <20200305110105.GA21188@embeddedor>
 MIME-Version: 1.0
-In-Reply-To: <71a6fea9-65c1-3a3c-a35b-9432208b3ee5@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.166.169.220
+X-Source-L: No
+X-Exim-ID: 1j9oCU-003ibo-KO
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [201.166.169.220]:15028
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 48
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-On 05/03/2020 07:17, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 05/03/20 4:09 am, David Miller wrote:
->> From: Grygorii Strashko <grygorii.strashko@ti.com>
->> Date: Tue, 3 Mar 2020 18:00:24 +0200
->>
->>> Hi Kishon,
->>>
->>> This series adds support for TI K3 AM654x/J721E SoCs in TI phy-gmii-sel PHY
->>> driver, which is required for future adding networking support.
->>>
->>> depends on:
->>>   [PATCH 0/2] phy: ti: gmii-sel: two fixes
->>>   https://lkml.org/lkml/2020/2/14/2510
->>>
->>> Changes in v2:
->>>   - fixed comments
->>>
->>> v1: https://lkml.org/lkml/2020/2/22/100
->>
->> This is mostly DT updates and not much networking code changes, will some other
->> tree take this?
-> 
-> I can take the phy related changes. Grygorii, can you split the dt
-> patches into a separate series?
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-sure. Could pls, pick up 1-3 and I'll resend 4-5.
-Or you want me re-send once again?
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
+
+This issue was found with the help of Coccinelle.
+
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ include/drm/drm_displayid.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/drm/drm_displayid.h b/include/drm/drm_displayid.h
+index 9d3b745c3107..94b4390bf990 100644
+--- a/include/drm/drm_displayid.h
++++ b/include/drm/drm_displayid.h
+@@ -89,7 +89,7 @@ struct displayid_detailed_timings_1 {
+ 
+ struct displayid_detailed_timing_block {
+ 	struct displayid_block base;
+-	struct displayid_detailed_timings_1 timings[0];
++	struct displayid_detailed_timings_1 timings[];
+ };
+ 
+ #define for_each_displayid_db(displayid, block, idx, length) \
 -- 
-Best regards,
-grygorii
+2.25.0
+
