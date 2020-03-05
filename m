@@ -3,94 +3,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2A7C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D904FC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0DA208C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B984A21556
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgCESaY (ORCPT
+        id S1726204AbgCEScI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:30:24 -0500
-Received: from mga14.intel.com ([192.55.52.115]:28704 "EHLO mga14.intel.com"
+        Thu, 5 Mar 2020 13:32:08 -0500
+Received: from mga01.intel.com ([192.55.52.88]:29598 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbgCESaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:30:23 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1725948AbgCEScH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:32:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 10:30:23 -0800
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 10:32:07 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="233018095"
-Received: from yyu32-desk.sc.intel.com ([143.183.136.146])
-  by fmsmga007.fm.intel.com with ESMTP; 05 Mar 2020 10:30:22 -0800
-Message-ID: <dca80473b585c9491fa2f9410806b10aee4594f7.camel@intel.com>
-Subject: Re: [RFC PATCH v9 14/27] mm: Handle Shadow Stack page fault
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        Florian Weimer <fweimer@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
-        Dave Martin <Dave.Martin@arm.com>, x86-patch-review@intel.com
-Date:   Thu, 05 Mar 2020 10:30:22 -0800
-In-Reply-To: <202002251218.F919026@keescook>
-References: <20200205181935.3712-1-yu-cheng.yu@intel.com>
-         <20200205181935.3712-15-yu-cheng.yu@intel.com>
-         <202002251218.F919026@keescook>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+   d="scan'208";a="352410826"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by fmsmga001.fm.intel.com with ESMTP; 05 Mar 2020 10:32:07 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id EA28D301BC6; Thu,  5 Mar 2020 10:32:06 -0800 (PST)
+Date:   Thu, 5 Mar 2020 10:32:06 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc:     zhe.he@windriver.com, jolsa@kernel.org, meyerk@hpe.com,
+        linux-kernel@vger.kernel.org, acme@kernel.org
+Subject: Re: [PATCH] perf: Fix crash due to null pointer dereference when
+ iterating cpu map
+Message-ID: <20200305183206.GA1454533@tassilo.jf.intel.com>
+References: <1583405239-352868-1-git-send-email-zhe.he@windriver.com>
+ <20200305152755.GA6958@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305152755.GA6958@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-02-25 at 12:20 -0800, Kees Cook wrote:
-> On Wed, Feb 05, 2020 at 10:19:22AM -0800, Yu-cheng Yu wrote:
-> > When a task does fork(), its Shadow Stack (SHSTK) must be duplicated for
-> > the child.  This patch implements a flow similar to copy-on-write of an
-> > anonymous page, but for SHSTK.
+On Thu, Mar 05, 2020 at 12:27:55PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Thu, Mar 05, 2020 at 06:47:19PM +0800, zhe.he@windriver.com escreveu:
+> > From: He Zhe <zhe.he@windriver.com>
 > > 
-> > A SHSTK PTE must be RO and Dirty.  This Dirty bit requirement is used to
-> > effect the copying.  In copy_one_pte(), clear the Dirty bit from a SHSTK
-> > PTE to cause a page fault upon the next SHSTK access.  At that time, fix
-> > the PTE and copy/re-use the page.
+> > NULL pointer may be passed to perf_cpu_map__cpu and then cause the
+> > following crash.
+> > 
+> > perf ftrace -G start_kernel ls
+> > failed to set tracing filters
+> > [  208.710716] perf[341]: segfault at 4 ip 00000000567c7c98
+> >                sp 00000000ff937ae0 error 4 in perf[56630000+1b2000]
+> > [  208.724778] Code: fc ff ff e8 aa 9b 01 00 8d b4 26 00 00 00 00 8d
+> >                      76 00 55 89 e5 83 ec 18 65 8b 0d 14 00 00 00 89
+> >                      4d f4 31 c9 8b 45 08 8b9
+> > Segmentation fault
 > 
-> Just to confirm, during the fork, it's really not a SHSTK for a moment
-> (it's still RO, but not dirty). Can other racing threads muck this up,
-> or is this bit removed only on the copied side?
+> I'm not being able to repro this here, what is the tree you are using?
 
-In [RFC PATCH v9 12/27] x86/mm: Modify ptep_set_wrprotect and
-pmdp_set_wrprotect for _PAGE_DIRTY_SW, _PAGE_DIRTY_HW is changed to
-_PAGE_DIRTY_SW with cmpxchg.  That prevents racing.
+I believe that's the same bug that Jann Horn reported recently for perf trace.
+I thought the patch for that went in.
 
-The hw dirty bit is removed from the original copy first.  The next shadow
-stack access to the page causes copying.  The copied page gets the hw dirty
-bit again.
-
-Yu-cheng
-
+-Andi
