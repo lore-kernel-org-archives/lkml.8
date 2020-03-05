@@ -4,95 +4,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A4FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02789C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1CBE2072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF2C42072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726887AbgCENLf (ORCPT
+        id S1726440AbgCENLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:11:35 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:17716 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726769AbgCENLd (ORCPT
+        Thu, 5 Mar 2020 08:11:30 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5808 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725912AbgCENL2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:11:33 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025CoR9L022360;
-        Thu, 5 Mar 2020 08:11:18 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2ygm52f46e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 05 Mar 2020 08:11:18 -0500
-Received: from ASHBMBX8.ad.analog.com (ashbmbx8.ad.analog.com [10.64.17.5])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 025DBHJH041817
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 5 Mar 2020 08:11:17 -0500
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 5 Mar 2020
- 08:11:16 -0500
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 5 Mar 2020 08:11:16 -0500
-Received: from saturn.ad.analog.com ([10.48.65.112])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 025DB78C029497;
-        Thu, 5 Mar 2020 08:11:13 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <dmitry.torokhov@gmail.com>, <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        kbuild test robot <lkp@intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH v4 4/4] Input: adp5589: fix possible memleak of 'kpad'
-Date:   Thu, 5 Mar 2020 15:14:05 +0200
-Message-ID: <20200305131405.6598-4-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305131405.6598-1-alexandru.ardelean@analog.com>
-References: <20200305131405.6598-1-alexandru.ardelean@analog.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ADIRoutedOnPrem: True
+        Thu, 5 Mar 2020 08:11:28 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025CtJ0a092573
+        for <linux-kernel@vger.kernel.org>; Thu, 5 Mar 2020 08:11:27 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yjrtsgw5b-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:11:26 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
+        Thu, 5 Mar 2020 13:11:24 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Mar 2020 13:11:21 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 025DBKtd42598476
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Mar 2020 13:11:20 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2F3E5A405C;
+        Thu,  5 Mar 2020 13:11:20 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E660CA4054;
+        Thu,  5 Mar 2020 13:11:19 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Mar 2020 13:11:19 +0000 (GMT)
+From:   Thomas Richter <tmricht@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org
+Cc:     gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf/s390/json: Add new deflate counters for IBM z15
+Date:   Thu,  5 Mar 2020 14:11:17 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20030513-0012-0000-0000-0000038D71F6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030513-0013-0000-0000-000021CA3132
+Message-Id: <20200305131117.29175-1-tmricht@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-03-05_03:2020-03-05,2020-03-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=999 mlxscore=0 lowpriorityscore=0 clxscore=1015 adultscore=0
- impostorscore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050083
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
+ mlxscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 mlxlogscore=999 clxscore=1015 malwarescore=0
+ spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050084
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If 'adp5589_i2c_get_driver_data()' returns an error, the exit path should
-be to also free the 'kpad' object.
-This change fixes that.
+Add support for new deflate counters:
+- Counter 247: cycles CPU spent obtaining access to Deflate unit
+- Counter 252: cycles CPU is using Deflate unit
+- Counter 264: Increments by one for every DEFLATE CONVERSION CALL
+	    instruction executed.
+- Counter 265: Increments by one for every DEFLATE CONVERSION CALL
+	    instruction executed that ended in Condition Codes
+	    0, 1 or 2.
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
 ---
- drivers/input/keyboard/adp5589-keys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../pmu-events/arch/s390/cf_z15/crypto6.json  |  8 ++---
+ .../pmu-events/arch/s390/cf_z15/extended.json | 30 ++++++++++++++++++-
+ 2 files changed, 33 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/input/keyboard/adp5589-keys.c b/drivers/input/keyboard/adp5589-keys.c
-index 1fd36c581a91..5cef5a13b776 100644
---- a/drivers/input/keyboard/adp5589-keys.c
-+++ b/drivers/input/keyboard/adp5589-keys.c
-@@ -1050,7 +1050,7 @@ static int adp5589_probe(struct i2c_client *client,
- 
- 	ret = adp5589_i2c_get_driver_data(client, id);
- 	if (ret < 0)
--		return ret;
-+		goto err_free_mem;
- 
- 	switch (ret) {
- 	case ADP5585_02:
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json b/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json
+index 5e36bc2468d0..c998e4f1d1d2 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json
+@@ -4,27 +4,27 @@
+ 		"EventCode": "80",
+ 		"EventName": "ECC_FUNCTION_COUNT",
+ 		"BriefDescription": "ECC Function Count",
+-		"PublicDescription": "Long ECC function Count"
++		"PublicDescription": "This counter counts the total number of the elliptic-curve cryptography (ECC) functions issued by the CPU."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "81",
+ 		"EventName": "ECC_CYCLES_COUNT",
+ 		"BriefDescription": "ECC Cycles Count",
+-		"PublicDescription": "Long ECC Function cycles count"
++		"PublicDescription": "This counter counts the total number of CPU cycles when the ECC coprocessor is busy performing the elliptic-curve cryptography (ECC) functions issued by the CPU."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "82",
+ 		"EventName": "ECC_BLOCKED_FUNCTION_COUNT",
+ 		"BriefDescription": "Ecc Blocked Function Count",
+-		"PublicDescription": "Long ECC blocked function count"
++		"PublicDescription": "This counter counts the total number of the elliptic-curve cryptography (ECC) functions that are issued by the CPU and are blocked because the ECC coprocessor is busy performing a function issued by another CPU."
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "83",
+ 		"EventName": "ECC_BLOCKED_CYCLES_COUNT",
+ 		"BriefDescription": "ECC Blocked Cycles Count",
+-		"PublicDescription": "Long ECC blocked cycles count"
++		"PublicDescription": "This counter counts the total number of CPU cycles blocked for the elliptic-curve cryptography (ECC) functions issued by the CPU because the ECC coprocessor is busy performing a function issued by another CPU."
+ 	},
+ ]
+diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/extended.json b/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
+index 89e070727e1b..2df2e231e9ee 100644
+--- a/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
++++ b/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
+@@ -25,7 +25,7 @@
+ 		"EventCode": "131",
+ 		"EventName": "DTLB2_HPAGE_WRITES",
+ 		"BriefDescription": "DTLB2 One-Megabyte Page Writes",
+-		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page or a Last Host Translation was done"
++		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page"
+ 	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+@@ -356,6 +356,34 @@
+ 		"BriefDescription": "Aborted transactions in constrained TX mode using special completion logic",
+ 		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is using special logic to allow the transaction to complete"
+ 	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "247",
++		"EventName": "DFLT_ACCESS",
++		"BriefDescription": "Cycles CPU spent obtaining access to Deflate unit",
++		"PublicDescription": "Cycles CPU spent obtaining access to Deflate unit"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "252",
++		"EventName": "DFLT_CYCLES",
++		"BriefDescription": "Cycles CPU is using Deflate unit",
++		"PublicDescription": "Cycles CPU is using Deflate unit"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "264",
++		"EventName": "DFLT_CC",
++		"BriefDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed",
++		"PublicDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed"
++	},
++	{
++		"Unit": "CPU-M-CF",
++		"EventCode": "265",
++		"EventName": "DFLT_CCERROR",
++		"BriefDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed that ended in Condition Codes 0, 1 or 2",
++		"PublicDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed that ended in Condition Codes 0, 1 or 2"
++	},
+ 	{
+ 		"Unit": "CPU-M-CF",
+ 		"EventCode": "448",
 -- 
-2.20.1
+2.23.0
 
