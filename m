@@ -2,372 +2,178 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 551DCC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DEDC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A76320870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EA0720870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 07:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="C8UzPkZ/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hcfPQNWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbgCEHAs (ORCPT
+        id S1726222AbgCEHBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 02:00:48 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36627 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgCEHAs (ORCPT
+        Thu, 5 Mar 2020 02:01:23 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44048 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgCEHBX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 02:00:48 -0500
-Received: by mail-wr1-f67.google.com with SMTP id j16so5622082wrt.3
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 23:00:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=SNZNXgpCj8D5NmCfQWXK2tzGvCIs7LAx4I2gEpQmkJE=;
-        b=C8UzPkZ/RRPRJMMwJOM9ZlV7JX9uod0msoVvq4GfidfjSFfmZuSzckevyxLX754v0o
-         D/k3e9zR+s9pWcJhOeSoQ31lE56obUEW6/y8IIc4YTtIcanT6N1XWLYgHAj+cJ3CSJh7
-         bx3cYgT3UDX+/0+1Jv9520YExpCAF0tPxZCOyHg5fpdQFgy201aF65unT45FXyqPFm0z
-         ezoNgCpdG8NJv+5mjK9RbbiUxiIbAcvsO/Hpfyeg6xbTy3aiNjbKTrjdDlBQbYYwqnMC
-         oqMHUrTxFzm+LG9BeWJSvdYQaFDdTs/rAv1T8Zgp5IcvxZknSoToIcoyGEjAuHtimU57
-         vy0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=SNZNXgpCj8D5NmCfQWXK2tzGvCIs7LAx4I2gEpQmkJE=;
-        b=LV57hEL3QJDmbuWVI4Q/KSZHs9eiTItyIIMzUxq2TxR66eEdHLAUhFICnCv02EuK2f
-         A7TiATRXItWeNbSz+bhcprjcHlaJ8YdPBgq9gVZnSUhs+4g4qRZt/lV+I735Js8wmHQo
-         Azlk/pqQpGSoiMDgTu+nOXJtqazqdzF8U9pxAUAwn3FLaJORbkIhDyoUjQDlRwkU6hG0
-         SA4XrA5aY7Rzd/7p53P6HltmNL4+2upFnbrn21ZTfkmINEiaYJZoYlT9MQLoubPJgDP/
-         8sNFJ+AhdkHqwjJl0NUZdwzWOwRiUbVWNHi4nsXWxtKkJPTofTgK4U9IVpGIQxfU/L1O
-         NUsw==
-X-Gm-Message-State: ANhLgQ21U6qkhMQMUoKBbR/UtJ4Df6q526LXGpic9tyROEsQXASsHexb
-        50WnLPMoX+xl2ijeIIS9oMxZYg==
-X-Google-Smtp-Source: ADFU+vssMsXpnSqZ0Q+3r3WjknsIVemMmpglb9UzphXFlHgEsxOIGOpQYESqITdqYyP9yC87tYUo3g==
-X-Received: by 2002:adf:e910:: with SMTP id f16mr8418753wrm.20.1583391644891;
-        Wed, 04 Mar 2020 23:00:44 -0800 (PST)
-Received: from Armstrongs-MacBook-Pro.local ([2a01:e35:2ec0:82b0:dcde:37cb:d694:5b35])
-        by smtp.gmail.com with ESMTPSA id e11sm41561583wrm.80.2020.03.04.23.00.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 04 Mar 2020 23:00:44 -0800 (PST)
-Subject: Re: [PATCH v6 6/7] phy: amlogic: Add Amlogic AXG PCIE PHY Driver
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Remi Pommarel <repk@triplefau.lt>
-References: <20200123232943.10229-1-repk@triplefau.lt>
- <20200123232943.10229-7-repk@triplefau.lt>
- <14627e42-4894-6674-4911-3205ea8f5e55@ti.com> <20200304130811.GP2248@voidbox>
- <a6f8ac2f-f49a-f53e-1b44-fc446c3d7964@ti.com>
-Cc:     Yue Wang <yue.wang@amlogic.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-pci@vger.kernel.org
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Message-ID: <6f5cad19-3879-84ae-26bf-2fd065af2e0d@baylibre.com>
-Date:   Thu, 5 Mar 2020 08:00:42 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:45.0)
- Gecko/20100101 Thunderbird/45.8.0
+        Thu, 5 Mar 2020 02:01:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=l8u4PSC2b1MSuE5GU9e0yGRnIE+XAp+0pmylePcjEsU=; b=hcfPQNWEDOT1RSQ+/VhhzmgyeD
+        ir4+IH5xkZ9F96ObSe4OYI2kpAQVzUXQZjy8Q96nFE7hNAEUzebI/ArcDK6PjlJK6GvmhO3rO6T8V
+        GBMQ4lDH4Mk6sxs55cbXrDA3lQzu/I0mlWhzWVRh0CovUFgO6Cml6ah7fJoPLTbpNFS+eWcGWSaqJ
+        18jBlOpHXt5OfQdFHL7P6Wdw54iPRmVhcGmaMk0RuC7H3f2ZGD1q+I6Jyi4scko7Tk3NJGAK5rdKK
+        W3Cdd4MQ3KpuQW5+HzRrO8QHgYd35kCwccNJFKdwkOaVTnzeWnj7Jt0zyEdAKv9GzQXpvSJ6vDFQl
+        prhnCRxg==;
+Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9kVW-0003aa-FA; Thu, 05 Mar 2020 07:01:22 +0000
+Subject: Re: [PATCH v5] Documentation: bootconfig: Update boot configuration
+ documentation
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Markus Elfring <Markus.Elfring@web.de>
+References: <158339065180.26602.26457588086834858.stgit@devnote2>
+ <158339066140.26602.7533299987467005089.stgit@devnote2>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <ef820445-25c5-a312-57d4-25ff3b4d08cf@infradead.org>
+Date:   Wed, 4 Mar 2020 23:01:21 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <a6f8ac2f-f49a-f53e-1b44-fc446c3d7964@ti.com>
+In-Reply-To: <158339066140.26602.7533299987467005089.stgit@devnote2>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Le 05/03/2020 à 05:56, Kishon Vijay Abraham I a écrit :
-> Hi,
+On 3/4/20 10:44 PM, Masami Hiramatsu wrote:
+> Update boot configuration documentation.
 > 
-> On 04/03/20 6:38 pm, Remi Pommarel wrote:
->> On Wed, Mar 04, 2020 at 04:31:24PM +0530, Kishon Vijay Abraham I wrote:
->>>
->>>
->>> On 24/01/20 4:59 am, Remi Pommarel wrote:
->>>> This adds support for the PCI PHY found in the Amlogic AXG SoC Family.
->>>> This will allow to mutualize code in pci-meson.c between AXG and G12A
->>>> SoC.
->>>>
->>>> This PHY also uses and chains an analog PHY, which on AXG platform
->>>> is needed to have reliable PCIe communication.
->>>
->>> Is the analog PHY an independent block and can be used with other PHYs?
->>
->> It is documented as a separate block yes, but I think it is unlikely
->> that it will be used with other PHYs than the PCIe or the MIPI one of
->> the AXG SoC.
+>  - Not using "config" abbreviation but configuration or description.
+>  - Rewrite descriptions of node and its maxinum number.
+>  - Add a section of use cases of boot configuration.
+>  - Move how to use bootconfig to earlier section.
+>  - Fix some typos, indents and format mistakes.
 > 
-> Shouldn't we then have a single PHY driver instead of chaining PHYs?
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-The chaining is necessary because the MIPI/PCIe analogi PHY will be reused on
-recent platform with similar MIPI DSI PHY, but these platforms have their PCIe PHY
-combined with USB3 (see g12a-usb3-pcie combo phy).
+Hi Masami,
 
-Neil
+I swear that I am not trying to cause another version...
 
+> ---
+> Changes in v5:
+>  - Elaborate the document.
+>  - Fix some typos.
+> Changes in v4:
+>  - Remove O= option from examples.
+> Changes in v3:
+>  - Specify that comments also count in size.
+>  - Fix a confusing sentence.
+>  - Add O=<builddir> to make command.
+> Changes in v2:
+>  - Fixes additional typos (Thanks Markus and Randy!)
+>  - Change a section title to "Tree Structured Key".
+> ---
+>  Documentation/admin-guide/bootconfig.rst |  201 +++++++++++++++++++-----------
+>  Documentation/trace/boottime-trace.rst   |    2 
+>  2 files changed, 131 insertions(+), 72 deletions(-)
 > 
-> Thanks
-> Kishon
-> 
->>
->> Thanks,
->> Remi
->>
->>>
->>> For the patch itself
->>> Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>
->>> Thanks
->>> Kishon
->>>>
->>>> Signed-off-by: Remi Pommarel <repk@triplefau.lt>
->>>> ---
->>>>  drivers/phy/amlogic/Kconfig              |  11 ++
->>>>  drivers/phy/amlogic/Makefile             |   1 +
->>>>  drivers/phy/amlogic/phy-meson-axg-pcie.c | 192 +++++++++++++++++++++++
->>>>  3 files changed, 204 insertions(+)
->>>>  create mode 100644 drivers/phy/amlogic/phy-meson-axg-pcie.c
->>>>
->>>> diff --git a/drivers/phy/amlogic/Kconfig b/drivers/phy/amlogic/Kconfig
->>>> index 8c9cf2403591..71801e30d601 100644
->>>> --- a/drivers/phy/amlogic/Kconfig
->>>> +++ b/drivers/phy/amlogic/Kconfig
->>>> @@ -60,6 +60,17 @@ config PHY_MESON_G12A_USB3_PCIE
->>>>  	  in Meson G12A SoCs.
->>>>  	  If unsure, say N.
->>>>  
->>>> +config PHY_MESON_AXG_PCIE
->>>> +	tristate "Meson AXG PCIE PHY driver"
->>>> +	default ARCH_MESON
->>>> +	depends on OF && (ARCH_MESON || COMPILE_TEST)
->>>> +	select GENERIC_PHY
->>>> +	select REGMAP_MMIO
->>>> +	help
->>>> +	  Enable this to support the Meson MIPI + PCIE PHY found
->>>> +	  in Meson AXG SoCs.
->>>> +	  If unsure, say N.
->>>> +
->>>>  config PHY_MESON_AXG_MIPI_PCIE_ANALOG
->>>>  	tristate "Meson AXG MIPI + PCIE analog PHY driver"
->>>>  	default ARCH_MESON
->>>> diff --git a/drivers/phy/amlogic/Makefile b/drivers/phy/amlogic/Makefile
->>>> index 0aecf92d796a..e2baa133f7af 100644
->>>> --- a/drivers/phy/amlogic/Makefile
->>>> +++ b/drivers/phy/amlogic/Makefile
->>>> @@ -4,4 +4,5 @@ obj-$(CONFIG_PHY_MESON_GXL_USB2)		+= phy-meson-gxl-usb2.o
->>>>  obj-$(CONFIG_PHY_MESON_G12A_USB2)		+= phy-meson-g12a-usb2.o
->>>>  obj-$(CONFIG_PHY_MESON_GXL_USB3)		+= phy-meson-gxl-usb3.o
->>>>  obj-$(CONFIG_PHY_MESON_G12A_USB3_PCIE)		+= phy-meson-g12a-usb3-pcie.o
->>>> +obj-$(CONFIG_PHY_MESON_AXG_PCIE)		+= phy-meson-axg-pcie.o
->>>>  obj-$(CONFIG_PHY_MESON_AXG_MIPI_PCIE_ANALOG)	+= phy-meson-axg-mipi-pcie-analog.o
->>>> diff --git a/drivers/phy/amlogic/phy-meson-axg-pcie.c b/drivers/phy/amlogic/phy-meson-axg-pcie.c
->>>> new file mode 100644
->>>> index 000000000000..377ed0dcd0d9
->>>> --- /dev/null
->>>> +++ b/drivers/phy/amlogic/phy-meson-axg-pcie.c
->>>> @@ -0,0 +1,192 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Amlogic AXG PCIE PHY driver
->>>> + *
->>>> + * Copyright (C) 2020 Remi Pommarel <repk@triplefau.lt>
->>>> + */
->>>> +#include <linux/module.h>
->>>> +#include <linux/phy/phy.h>
->>>> +#include <linux/regmap.h>
->>>> +#include <linux/reset.h>
->>>> +#include <linux/platform_device.h>
->>>> +#include <linux/bitfield.h>
->>>> +#include <dt-bindings/phy/phy.h>
->>>> +
->>>> +#define MESON_PCIE_REG0 0x00
->>>> +#define		MESON_PCIE_COMMON_CLK	BIT(4)
->>>> +#define		MESON_PCIE_PORT_SEL	GENMASK(3, 2)
->>>> +#define		MESON_PCIE_CLK		BIT(1)
->>>> +#define		MESON_PCIE_POWERDOWN	BIT(0)
->>>> +
->>>> +#define MESON_PCIE_TWO_X1		FIELD_PREP(MESON_PCIE_PORT_SEL, 0x3)
->>>> +#define MESON_PCIE_COMMON_REF_CLK	FIELD_PREP(MESON_PCIE_COMMON_CLK, 0x1)
->>>> +#define MESON_PCIE_PHY_INIT		(MESON_PCIE_TWO_X1 |		\
->>>> +					 MESON_PCIE_COMMON_REF_CLK)
->>>> +#define MESON_PCIE_RESET_DELAY		500
->>>> +
->>>> +struct phy_axg_pcie_priv {
->>>> +	struct phy *phy;
->>>> +	struct phy *analog;
->>>> +	struct regmap *regmap;
->>>> +	struct reset_control *reset;
->>>> +};
->>>> +
->>>> +static const struct regmap_config phy_axg_pcie_regmap_conf = {
->>>> +	.reg_bits = 8,
->>>> +	.val_bits = 32,
->>>> +	.reg_stride = 4,
->>>> +	.max_register = MESON_PCIE_REG0,
->>>> +};
->>>> +
->>>> +static int phy_axg_pcie_power_on(struct phy *phy)
->>>> +{
->>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
->>>> +	int ret;
->>>> +
->>>> +	ret = phy_power_on(priv->analog);
->>>> +	if (ret != 0)
->>>> +		return ret;
->>>> +
->>>> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
->>>> +			   MESON_PCIE_POWERDOWN, 0);
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int phy_axg_pcie_power_off(struct phy *phy)
->>>> +{
->>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
->>>> +	int ret;
->>>> +
->>>> +	ret = phy_power_off(priv->analog);
->>>> +	if (ret != 0)
->>>> +		return ret;
->>>> +
->>>> +	regmap_update_bits(priv->regmap, MESON_PCIE_REG0,
->>>> +			   MESON_PCIE_POWERDOWN, 1);
->>>> +	return 0;
->>>> +}
->>>> +
->>>> +static int phy_axg_pcie_init(struct phy *phy)
->>>> +{
->>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
->>>> +	int ret;
->>>> +
->>>> +	ret = phy_init(priv->analog);
->>>> +	if (ret != 0)
->>>> +		return ret;
->>>> +
->>>> +	regmap_write(priv->regmap, MESON_PCIE_REG0, MESON_PCIE_PHY_INIT);
->>>> +	return reset_control_reset(priv->reset);
->>>> +}
->>>> +
->>>> +static int phy_axg_pcie_exit(struct phy *phy)
->>>> +{
->>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
->>>> +	int ret;
->>>> +
->>>> +	ret = phy_exit(priv->analog);
->>>> +	if (ret != 0)
->>>> +		return ret;
->>>> +
->>>> +	return reset_control_reset(priv->reset);
->>>> +}
->>>> +
->>>> +static int phy_axg_pcie_reset(struct phy *phy)
->>>> +{
->>>> +	struct phy_axg_pcie_priv *priv = phy_get_drvdata(phy);
->>>> +	int ret = 0;
->>>> +
->>>> +	ret = phy_reset(priv->analog);
->>>> +	if (ret != 0)
->>>> +		goto out;
->>>> +
->>>> +	ret = reset_control_assert(priv->reset);
->>>> +	if (ret != 0)
->>>> +		goto out;
->>>> +	udelay(MESON_PCIE_RESET_DELAY);
->>>> +
->>>> +	ret = reset_control_deassert(priv->reset);
->>>> +	if (ret != 0)
->>>> +		goto out;
->>>> +	udelay(MESON_PCIE_RESET_DELAY);
->>>> +
->>>> +out:
->>>> +	return ret;
->>>> +}
->>>> +
->>>> +static const struct phy_ops phy_axg_pcie_ops = {
->>>> +	.init = phy_axg_pcie_init,
->>>> +	.exit = phy_axg_pcie_exit,
->>>> +	.power_on = phy_axg_pcie_power_on,
->>>> +	.power_off = phy_axg_pcie_power_off,
->>>> +	.reset = phy_axg_pcie_reset,
->>>> +	.owner = THIS_MODULE,
->>>> +};
->>>> +
->>>> +static int phy_axg_pcie_probe(struct platform_device *pdev)
->>>> +{
->>>> +	struct phy_provider *pphy;
->>>> +	struct device *dev = &pdev->dev;
->>>> +	struct phy_axg_pcie_priv *priv;
->>>> +	struct device_node *np = dev->of_node;
->>>> +	struct resource *res;
->>>> +	void __iomem *base;
->>>> +	int ret;
->>>> +
->>>> +	priv = devm_kmalloc(dev, sizeof(*priv), GFP_KERNEL);
->>>> +	if (!priv)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	priv->phy = devm_phy_create(dev, np, &phy_axg_pcie_ops);
->>>> +	if (IS_ERR(priv->phy)) {
->>>> +		ret = PTR_ERR(priv->phy);
->>>> +		if (ret != -EPROBE_DEFER)
->>>> +			dev_err(dev, "failed to create PHY\n");
->>>> +		return ret;
->>>> +	}
->>>> +
->>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +	base = devm_ioremap_resource(dev, res);
->>>> +	if (IS_ERR(base))
->>>> +		return PTR_ERR(base);
->>>> +
->>>> +	priv->regmap = devm_regmap_init_mmio(dev, base,
->>>> +					     &phy_axg_pcie_regmap_conf);
->>>> +	if (IS_ERR(priv->regmap))
->>>> +		return PTR_ERR(priv->regmap);
->>>> +
->>>> +	priv->reset = devm_reset_control_array_get(dev, false, false);
->>>> +	if (IS_ERR(priv->reset))
->>>> +		return PTR_ERR(priv->reset);
->>>> +
->>>> +	priv->analog = devm_phy_get(dev, "analog");
->>>> +	if (IS_ERR(priv->analog))
->>>> +		return PTR_ERR(priv->analog);
->>>> +
->>>> +	phy_set_drvdata(priv->phy, priv);
->>>> +	dev_set_drvdata(dev, priv);
->>>> +	pphy = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->>>> +
->>>> +	return PTR_ERR_OR_ZERO(pphy);
->>>> +}
->>>> +
->>>> +static const struct of_device_id phy_axg_pcie_of_match[] = {
->>>> +	{
->>>> +		.compatible = "amlogic,axg-pcie-phy",
->>>> +	},
->>>> +	{ },
->>>> +};
->>>> +MODULE_DEVICE_TABLE(of, phy_axg_pcie_of_match);
->>>> +
->>>> +static struct platform_driver phy_axg_pcie_driver = {
->>>> +	.probe = phy_axg_pcie_probe,
->>>> +	.driver = {
->>>> +		.name = "phy-axg-pcie",
->>>> +		.of_match_table = phy_axg_pcie_of_match,
->>>> +	},
->>>> +};
->>>> +module_platform_driver(phy_axg_pcie_driver);
->>>> +
->>>> +MODULE_AUTHOR("Remi Pommarel <repk@triplefau.lt>");
->>>> +MODULE_DESCRIPTION("Amlogic AXG PCIE PHY driver");
->>>> +MODULE_LICENSE("GPL v2");
->>>>
+> diff --git a/Documentation/admin-guide/bootconfig.rst b/Documentation/admin-guide/bootconfig.rst
+> index cf2edcd09183..3bfc9ddf68e1 100644
+> --- a/Documentation/admin-guide/bootconfig.rst
+> +++ b/Documentation/admin-guide/bootconfig.rst
+> @@ -11,25 +11,106 @@ Boot Configuration
+
+> +When to Use the Boot Configuration?
+> +-----------------------------------
+> +
+> +The boot configuration supports kernel command line options and init daemon
+> +boot options. All sub-keys under "kernel" root key are passed as a part of
+> +the kernel command line [1]_, and ones under "init" root key are passed as
+> +a part of the init daemon's command line. For example, ::
+> +
+> +   root=UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82 ro quiet splash console=ttyS0,115200n8 console=tty0
+> +
+> +This can be written as following boot configuration file.::
+> +
+> +   kernel {
+> +      root = "UUID=8cd79b08-bda0-4b9d-954c-5d5f34b98c82" # nvme0n1p3
+> +      ro       # mount rootfs as read only
+> +      quiet    # No console log
+> +      splash   # show splash image on boot screen
+> +      console = "ttyS0,115200n8" # 1st console to serial device
+> +      console += tty0            # add 2nd console
+> +   }
+> +
+> +If you think that kernel/init options becomes too long to write in boot-loader
+
+                                         become
+
+> +configuration file or you want to comment on each option, the boot
+> +configuration may be suitable. If unsure, you can still continue to use the
+> +legacy kernel command line.
+
+
+> +Boot Configuration Syntax
+> +=========================
+> +
+> +The boot configuration syntax is a simple structured key-value. Each key
+> +consists of dot-connected-words, and key and value are connected by ``=``.
+> +The value has to be terminated by semicolon (``;``) or newline (``\n``).
+> +For an array, its entries are separated by comma (``,``). ::
+> +
+> +  KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
+>  
+>  Unlike the kernel command line syntax, spaces are OK around the comma and ``=``.
+>  
+>  Each key word must contain only alphabets, numbers, dash (``-``) or underscore
+>  (``_``). And each value only contains printable characters or spaces except
+> -for delimiters such as semi-colon (``;``), new-line (``\n``), comma (``,``),
+> +for delimiters such as semicolon (``;``), new-line (``\n``), comma (``,``),
+
+            usually called:                  newline
+
+>  hash (``#``) and closing brace (``}``).
+>  
+>  If you want to use those delimiters in a value, you can use either double-
+
+
+>  Comments
+>  --------
+>  
+> -The config syntax accepts shell-script style comments. The comments starting
+> -with hash ("#") until newline ("\n") will be ignored.
+> -
+> -::
+> +The boot configuration accepts shell-script style comments. The comments,
+> +beginning with hash (``#``) continues until newline (``\n``), will be
+
+                               and continuing until newline
+
+> +skipped.::
+>  
+>   # comment line
+>   foo = value # value is set to foo.
+
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+thanks.
+-- 
+~Randy
+
