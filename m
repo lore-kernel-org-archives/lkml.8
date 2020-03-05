@@ -2,90 +2,121 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 822FBC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BDEC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6138C20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52738208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 20:56:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726234AbgCEU41 convert rfc822-to-8bit (ORCPT
+        id S1726300AbgCEU4b convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 15:56:27 -0500
-Received: from outpost1.zedat.fu-berlin.de ([130.133.4.66]:57431 "EHLO
-        outpost1.zedat.fu-berlin.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726087AbgCEU40 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 15:56:26 -0500
-Received: from inpost2.zedat.fu-berlin.de ([130.133.4.69])
-          by outpost.zedat.fu-berlin.de (Exim 4.93)
-          with esmtps (TLS1.2)
-          tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id 1j9xXZ-002RaT-5l; Thu, 05 Mar 2020 21:56:21 +0100
-Received: from tmo-119-22.customers.d1-online.com ([80.187.119.22] helo=[10.152.169.150])
-          by inpost2.zedat.fu-berlin.de (Exim 4.85)
-          with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-          (envelope-from <glaubitz@physik.fu-berlin.de>)
-          id <1j9xXY-0001iO-RS>; Thu, 05 Mar 2020 21:56:21 +0100
-Content-Type: text/plain; charset=utf-8
+        Thu, 5 Mar 2020 15:56:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57260 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726087AbgCEU4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 15:56:30 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A9B9020801;
+        Thu,  5 Mar 2020 20:56:29 +0000 (UTC)
+Date:   Thu, 5 Mar 2020 15:56:28 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
+Subject: Re: [v5] Documentation: bootconfig: Update boot configuration
+ documentation
+Message-ID: <20200305155628.09a1e1d4@gandalf.local.home>
+In-Reply-To: <2d5df2ac-443b-cc31-c2bf-78947f81dd00@web.de>
+References: <158339065180.26602.26457588086834858.stgit@devnote2>
+        <158339066140.26602.7533299987467005089.stgit@devnote2>
+        <ef820445-25c5-a312-57d4-25ff3b4d08cf@infradead.org>
+        <3fb124a6-07d2-7a40-8981-07561aeb3c1e@web.de>
+        <f823204d-dcd1-2159-a525-02f15562e1af@infradead.org>
+        <29c599ef-991d-a253-9f27-5999fb55b228@web.de>
+        <997f73af-dc6c-bc8b-12ba-69270ee4b95d@infradead.org>
+        <dbef7b77-945a-585e-12fe-b5e30eb1a6bc@web.de>
+        <e20f52a0-e522-c2cf-17a4-384a1f3308bc@infradead.org>
+        <ecaffba3-fccd-32ee-763a-a2ec84a65148@web.de>
+        <20200305140004.535eeb1a@gandalf.local.home>
+        <af5d4af0-9e06-cc6e-c29e-4c4eebdb9b0e@web.de>
+        <20200305142505.714a5121@gandalf.local.home>
+        <2d5df2ac-443b-cc31-c2bf-78947f81dd00@web.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
-From:   John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] sh: Stop printing the virtual memory layout
-Date:   Thu, 5 Mar 2020 21:56:15 +0100
-Message-Id: <91C97773-5873-4336-9926-A013BB96B75C@physik.fu-berlin.de>
-References: <20200305205158.GF6506@cisco>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Joe Perches <joe@perches.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Tobin C . Harding" <me@tobin.cc>,
-        kernel-hardening@lists.openwall.com,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200305205158.GF6506@cisco>
-To:     Tycho Andersen <tycho@tycho.ws>
-X-Mailer: iPhone Mail (17D50)
-X-Originating-IP: 80.187.119.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 5 Mar 2020 21:10:21 +0100
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
-
-> On Mar 5, 2020, at 9:52 PM, Tycho Andersen <tycho@tycho.ws> wrote:
+> >> I suggest to take another look at review comments for previous patch versions.  
+> >
+> > I have, and I believe Masami has satisfactory addressed them,  
 > 
-> ﻿On Thu, Mar 05, 2020 at 10:56:29AM -0500, Arvind Sankar wrote:
->>> On Thu, Mar 05, 2020 at 04:49:22PM +0100, John Paul Adrian Glaubitz wrote:
->>> On 3/5/20 4:46 PM, Arvind Sankar wrote:
->>>> Not really too late. I can do s/pr_info/pr_devel and resubmit.
->>>> 
->>>> parisc for eg actually hides this in #if 0 rather than deleting the
->>>> code.
->>>> 
->>>> Kees, you fine with that?
->>> 
->>> But wasn't it removed for all the other architectures already? Or are these
->>> changes not in Linus' tree yet?
->>> 
->>> Adrian
->> 
->> The ones mentioned in the commit message, yes, those are long gone. But
->> I don't see any reason why the remaining ones (there are 6 left that I
->> submitted patches just now for) couldn't switch to pr_devel instead.
+> I agree to parts of the shown software evolution.
 > 
-> If you do happen to re-send with pr_debug() instead, feel free to add
-> my ack to that series as well.
+> 
+> > if they needed addressing.  
+> 
+> Remaining issues will eventually be clarified under other circumstances.
+> 
+> 
+> >> Do you identify any feedback as a bug report (or clarification request) here?  
+> >
+> > I still don't have the foggiest clue what you are talking about.  
+> 
+> It seems that a few reminders can help here.
+> 
+> 
+> > What bug are you reporting?  
+> 
+> Examples:
+> 
+> * Another typo
+>   “… contain only alphabets, …”
+>   https://lore.kernel.org/linux-doc/967d6fee-e0cd-c53f-c1f6-b367a979762c@web.de/
+>   https://lkml.org/lkml/2020/3/5/247
 
-Since it already got removed for most other architectures, I don’t think it makes much sense to keep it for consistency.
+Legitimate but not critical.
 
-I just didn’t understand why it was made configurable for debugging purposes in the first place.
+> 
+> * Use case explanation
+>   https://lore.kernel.org/linux-doc/f3c51b0a-2a55-6523-96e2-4f9ef0635d9f@web.de/
+>   https://lkml.org/lkml/2020/3/5/429
 
-Also, many distributions disable access to the kernel buffer for unprivileged users anyway.
+I believe what Masami has is sufficient.
 
-Adrian
+> 
+> * Challenges for the safe application of key hierarchies
+>   “kernel.ftrace”?
+>   https://lore.kernel.org/linux-doc/c4a0bc10-a38b-6ea9-e125-7a37f667e61a@web.de/
+>   https://lkml.org/lkml/2020/2/28/363
+
+Again, what Masami has is sufficient.
+
+> 
+> * Feature request for syntax description
+>   https://lore.kernel.org/linux-doc/2390b729-1b0b-26b5-66bc-92e40e3467b1@web.de/
+>   https://lkml.org/lkml/2020/2/27/1869
+> 
+
+Masami's reply to you was sufficient.
+
+Of your examples, only one do I see can be applied, but is just a minor
+change in wording.
+
+I don't know where you are going with this, and unless you plan on
+submitting patches, I think this document is complete as is.
+
+-- Steve
