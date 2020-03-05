@@ -2,156 +2,138 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5D7C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155B9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBDA20842
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:08:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="a+BKBCwq"
+	by mail.kernel.org (Postfix) with ESMTP id DB50620842
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 00:10:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583367051;
+	bh=iRqeuR4zqIe44/ohDAsoST7Lv50uMJs4rL4YHPuU0AE=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=BQ9WMWZG2P5L3giOCOu4qbUTDpxeXQcvSZYsZrDm/MXWD+JjTlC2dA25+uUx0o5ck
+	 UWUTfD4RpVQgY3VohrbovBTjOdpv85u5ixL3BQa0BjBfMzE5zTFfab3c6wqmbDsUXK
+	 Q+ulkRaFPGLWJ3BI3yxpag0ws5z6h/ojsrEjcpfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388560AbgCEAII (ORCPT
+        id S2388542AbgCEAKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 19:08:08 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44138 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388425AbgCEAII (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 19:08:08 -0500
-Received: by mail-wr1-f68.google.com with SMTP id n7so4791975wrt.11
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 16:08:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rhh6IhNFfdTMDzn5raC/7ABRe9JvD2oPC8LGUlDP/90=;
-        b=a+BKBCwqATbbXKlq1XXUlr635AZcS0pPhF7mDq2OWsaulwzm32OMpK2HPMcx+eX5oT
-         gUrk5/cYzS5OYDOwQaU+oY7zSw78IWeRutxEivfKKDdjqb7+NOngq3aPQv/V30IAhDjo
-         ao9s8z32Qj2c/pqHgXqqY8XLi/qlGHmxzgO0ev02GkhjYJVSfAeba7I3DqVc0Q0I1Sbn
-         jRybY4Ta0iPONmo8C9SIgtFtUncQtyLtLqeOX7J+31GiVLPJI2CA+RzgYZtJSAQ1A3WM
-         7llZZYEeQX0+GVNYKrQ4NOIwcZxXIAiF5jovY2JOfvTAjD5gBfNg+f6FBGw/vHzTkWdp
-         yadw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rhh6IhNFfdTMDzn5raC/7ABRe9JvD2oPC8LGUlDP/90=;
-        b=ewOsvwBLqVHlxHIfF3W6OHKxuV38VRycCRH++WbaPJMRmrClP5u+YWm1Aayi7scq0+
-         uYhaAu9mPl2E63Y5W8NgT64acN15psBt+xJAOpVmumLjo7HgmdAriuyOUgmUUag/2piY
-         5xYATxKuAmcB9K5+ZXwjPedCQtY78nSHZnczfmFx9q/JVSr+gMrDQc55+ol8pLaeFfJm
-         MANXg9OFGtiyiG7xS6CFUPgO4wku4+ovKemfSc2ttKcjZGcjDb7SvbTZwNc+QtkSa9xI
-         13B+deNPKbzl7577p22/AOuweYvgqrATdJxu4xxRQEV3SSlvmuJ87KvxkI5JP/hW0WLU
-         zBLQ==
-X-Gm-Message-State: ANhLgQ1X3tkAxLyEbdXBp5/jCNZK1G+e/Hp3dX9n6grWSJCEw2HFum6g
-        r8qXQMCjrBZ4Cj7QhX2viqD2i9M4GvdG02zyccd68g==
-X-Google-Smtp-Source: ADFU+vvTEJ1ZXYsJgUnLdCTiXOza2fR11hrZeHoPhLSw4Kq9qUMS/vOiA+MuBs83FO2V9MfxDXHldeSHqCJU3F64z3s=
-X-Received: by 2002:adf:ee02:: with SMTP id y2mr720131wrn.23.1583366884150;
- Wed, 04 Mar 2020 16:08:04 -0800 (PST)
+        Wed, 4 Mar 2020 19:10:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45454 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388389AbgCEAKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 4 Mar 2020 19:10:47 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2211020842;
+        Thu,  5 Mar 2020 00:10:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583367046;
+        bh=iRqeuR4zqIe44/ohDAsoST7Lv50uMJs4rL4YHPuU0AE=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=GK/YKQHZXYef51SPBiZpY5AHhRzUhyE6DpUGpmjOZPiTa4gFtV253qBENyjex4FG8
+         fYVr9TNCAyF55cJwGbi07Kam1hscWZbL32pSouG8pT2HqWeaPKao8lcTowOFTi8Et7
+         EWWOfUwk8ADb+sZles3s15N5+SVcTKY7wpfSRSsg=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id E8ACA3522731; Wed,  4 Mar 2020 16:10:45 -0800 (PST)
+Date:   Wed, 4 Mar 2020 16:10:45 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Pawan Kumar Meena <pawank1804@gmail.com>
+Cc:     joel@joelfernandes.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: Re: [PATCH RESEND] Documentation: RCU: lockdep.txt: Convert to
+ lockdep.rst
+Message-ID: <20200305001045.GT2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200303144546.20405-1-pawank1804@gmail.com>
 MIME-Version: 1.0
-References: <20200227024301.217042-1-trishalfonso@google.com>
- <20200227024301.217042-2-trishalfonso@google.com> <CACT4Y+YFewcbRnY62wLHueVNwyXCSZwO8K7SUR2cg=pxZv8uZA@mail.gmail.com>
- <CAKFsvUJFovti=enpOefqMbtQpeorihQhugH3-1nv0BBwevCwQg@mail.gmail.com>
- <CACT4Y+Y-zoiRfDWw6KJr1BJO_=yTpFsVaHMng5iaRn9HeJMNaw@mail.gmail.com>
- <CAKFsvU+ruKWt-BdVz+OX-T9wNEBetqVFACsG1B9ucMS4zHrMBQ@mail.gmail.com> <CACT4Y+b5WaH8OkAJCDeAJcYQ1cbnbqgiF=tTb7CCmtY4UXHc0A@mail.gmail.com>
-In-Reply-To: <CACT4Y+b5WaH8OkAJCDeAJcYQ1cbnbqgiF=tTb7CCmtY4UXHc0A@mail.gmail.com>
-From:   Patricia Alfonso <trishalfonso@google.com>
-Date:   Wed, 4 Mar 2020 16:07:52 -0800
-Message-ID: <CAKFsvUK84pD+K5rTbvKXB0MyW9XCknpSfMAO28iQ4S1=WBQK6Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 2/2] KUnit: KASAN Integration
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        David Gow <davidgow@google.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, kunit-dev@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200303144546.20405-1-pawank1804@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 3, 2020 at 10:23 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Wed, Mar 4, 2020 at 2:26 AM Patricia Alfonso <trishalfonso@google.com> wrote:
-> >
-> > On Sat, Feb 29, 2020 at 10:29 PM Dmitry Vyukov <dvyukov@google.com> wrote:
-> > >
-> > > On Sat, Feb 29, 2020 at 2:23 AM Patricia Alfonso
-> > > <trishalfonso@google.com> wrote:
-> > > > >
-> > > > > On Thu, Feb 27, 2020 at 3:44 AM 'Patricia Alfonso' via kasan-dev
-> > > > > <kasan-dev@googlegroups.com> wrote:
-> > > > > >
-> > > > > > --- a/tools/testing/kunit/kunit_kernel.py
-> > > > > > +++ b/tools/testing/kunit/kunit_kernel.py
-> > > > > > @@ -141,7 +141,7 @@ class LinuxSourceTree(object):
-> > > > > >                 return True
-> > > > > >
-> > > > > >         def run_kernel(self, args=[], timeout=None, build_dir=''):
-> > > > > > -               args.extend(['mem=256M'])
-> > > > > > +               args.extend(['mem=256M', 'kasan_multi_shot'])
-> > > > >
-> > > > > This is better done somewhere else (different default value if
-> > > > > KASAN_TEST is enabled or something). Or overridden in the KASAN tests.
-> > > > > Not everybody uses tools/testing/kunit/kunit_kernel.py and this seems
-> > > > > to be a mandatory part now. This means people will always hit this, be
-> > > > > confused, figure out they need to flip the value, and only then be
-> > > > > able to run kunit+kasan.
-> > > > >
-> > > > I agree. Is the best way to do this with "bool multishot =
-> > > > kasan_save_enable_multi_shot();"  and
-> > > > "kasan_restore_multi_shot(multishot);" inside test_kasan.c like what
-> > > > was done in the tests before?
-> > >
-> > > This will fix KASAN tests, but not non-KASAN tests running under KUNIT
-> > > and triggering KASAN reports.
-> > > You set kasan_multi_shot for all KUNIT tests. I am reading this as
-> > > that we don't want to abort on the first test that triggered a KASAN
-> > > report. Or not?
-> >
-> > I don't think I understand the question, but let me try to explain my
-> > thinking and see if that resonates with you. We know that the KASAN
-> > tests will require more than one report, and we want that. For most
-> > users, since a KASAN error can cause unexpected kernel behavior for
-> > anything after a KASAN error, it is best for just one unexpected KASAN
-> > error to be the only error printed to the user, unless they specify
-> > kasan-multi-shot. The way I understand it, the way to implement this
-> > is to use  "bool multishot = kasan_save_enable_multi_shot();"  and
-> > "kasan_restore_multi_shot(multishot);" around the KASAN tests so that
-> > kasan-multi-shot is temporarily enabled for the tests we expect
-> > multiple reports. I assume "kasan_restore_multi_shot(multishot);"
-> > restores the value to what the user input was so after the KASAN tests
-> > are finished, if the user did not specify kasan-multi-shot and an
-> > unexpected kasan error is reported, it will print the full report and
-> > only that first one. Is this understanding correct? If you have a
-> > better way of implementing this or a better expected behavior, I
-> > appreciate your thoughts.
->
-> Everything you say is correct.
-> What I tried to point at is that this new behavior is different from
-> the original behavior of your change. Initially you added
-> kasan_multi_shot to command line for _all_ kunit tests (not just
-> KASAN). The question is: do we want kasan_multi_shot for non-KASAN
-> tests or not?
+On Tue, Mar 03, 2020 at 08:15:46PM +0530, Pawan Kumar Meena wrote:
+> This patch converts lockdep.txt to lockdep.rst and adds it to index.rst.
+> 
+> Signed-off-by: Pawan Kumar Meena <pawank1804@gmail.com>
 
-Ah, yes. I thought your first comment was suggesting I change it from
-printing all KASAN tests by default because the intended behavior of
-KASAN is to only print the first report. I think I'll pose the
-question back to you. Do we want kasan_multi_shot for non-KASAN tests?
-For functionality sake, it is only required for the KASAN tests so
-this is more of a judgement call for the user experience.
+Given an ack from someone on the docs side, I will be happy to queue
+this one.  Given the large change from the last posted version with no
+version history, I am a bit leery of taking it straight away.
 
---
-Best,
-Patricia Alfonso
+						Thanx, Paul
+
+> ---
+>  Documentation/RCU/index.rst                    | 1 +
+>  Documentation/RCU/{lockdep.txt => lockdep.rst} | 9 ++++++---
+>  2 files changed, 7 insertions(+), 3 deletions(-)
+>  rename Documentation/RCU/{lockdep.txt => lockdep.rst} (97%)
+> 
+> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+> index 81a0a1e5f767..109dea13f165 100644
+> --- a/Documentation/RCU/index.rst
+> +++ b/Documentation/RCU/index.rst
+> @@ -10,6 +10,7 @@ RCU concepts
+>     arrayRCU
+>     rcubarrier
+>     rcu_dereference
+> +   lockdep
+>     whatisRCU
+>     rcu
+>     listRCU
+> diff --git a/Documentation/RCU/lockdep.txt b/Documentation/RCU/lockdep.rst
+> similarity index 97%
+> rename from Documentation/RCU/lockdep.txt
+> rename to Documentation/RCU/lockdep.rst
+> index 89db949eeca0..3a88d8a59753 100644
+> --- a/Documentation/RCU/lockdep.txt
+> +++ b/Documentation/RCU/lockdep.rst
+> @@ -1,4 +1,7 @@
+> +.. _lockdep_doc:
+> +
+>  RCU and lockdep checking
+> +========================
+>  
+>  All flavors of RCU have lockdep checking available, so that lockdep is
+>  aware of when each task enters and leaves any flavor of RCU read-side
+> @@ -63,7 +66,7 @@ checking of rcu_dereference() primitives:
+>  The rcu_dereference_check() check expression can be any boolean
+>  expression, but would normally include a lockdep expression.  However,
+>  any boolean expression can be used.  For a moderately ornate example,
+> -consider the following:
+> +consider the following::
+>  
+>  	file = rcu_dereference_check(fdt->fd[fd],
+>  				     lockdep_is_held(&files->file_lock) ||
+> @@ -82,7 +85,7 @@ RCU read-side critical sections, in case (2) the ->file_lock prevents
+>  any change from taking place, and finally, in case (3) the current task
+>  is the only task accessing the file_struct, again preventing any change
+>  from taking place.  If the above statement was invoked only from updater
+> -code, it could instead be written as follows:
+> +code, it could instead be written as follows::
+>  
+>  	file = rcu_dereference_protected(fdt->fd[fd],
+>  					 lockdep_is_held(&files->file_lock) ||
+> @@ -105,7 +108,7 @@ false and they are called from outside any RCU read-side critical section.
+>  
+>  For example, the workqueue for_each_pwq() macro is intended to be used
+>  either within an RCU read-side critical section or with wq->mutex held.
+> -It is thus implemented as follows:
+> +It is thus implemented as follows::
+>  
+>  	#define for_each_pwq(pwq, wq)
+>  		list_for_each_entry_rcu((pwq), &(wq)->pwqs, pwqs_node,
+> -- 
+> 2.17.1
+> 
