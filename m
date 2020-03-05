@@ -2,98 +2,184 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B69C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EE4AC3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEFE20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:53:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jFX60U1l"
+	by mail.kernel.org (Postfix) with ESMTP id 21BF520637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726300AbgCEQx3 (ORCPT
+        id S1726413AbgCEQxb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:53:29 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:40392 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbgCEQx3 (ORCPT
+        Thu, 5 Mar 2020 11:53:31 -0500
+Received: from mailoutvs59.siol.net ([185.57.226.250]:56086 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726036AbgCEQxb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:53:29 -0500
-Received: by mail-qv1-f66.google.com with SMTP id u17so1398237qvv.7;
-        Thu, 05 Mar 2020 08:53:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=npcqK+CtPgKOdYKCLUdw238cgWR2tdAWLJ+s57xZf+Y=;
-        b=jFX60U1lxCSBOa8t/1PdSfb/kdQVkSZh8Mk5VzCBsZTJbt2yo44hS6AtFCV/WHqQpx
-         3qbwM6aYWdIajwbaZZ5EhZp4fO+lmJ1e4PZSf/j6PN0nf0VFxyZEKSkBZx3DVD+I9MKa
-         xrM4cZ6xC9OoiW7EkAZUI7RYde5/gJi4Mth4cQLIcHl+rewqFyoNnoJMhOUqzbaKaPI2
-         U9VBpWGRHvk3QJh6QzrxxibeO+VwGGg4y40MpCL6actTzyPTm1TwfNkLyxEg/XuARz3Q
-         Rsa0amnG5coKjjJlF+LpckLtPCNZqvxeoTWlNxc+YliNEl9N/xcqn//D1T2pO8COBC+9
-         d6Vw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=npcqK+CtPgKOdYKCLUdw238cgWR2tdAWLJ+s57xZf+Y=;
-        b=ajbBZk15DSiKZw2CYsGfBPWMnClC+PbpHLxyRayvQRN85COc1bz+3X4Wemapzs7OAN
-         VP/r5E4r7JxgMXIBbOKVaxCc94ygwqiv6FOcdJAK0WQbxqVpkiwzdybCR4rcup+wax3K
-         53cBgQ7bafjBVdFZ7Fkwpi0CjW5cceslht3BHA2thUFEzrDT+uFMOn9lzd2APFAbjd8g
-         WDDJkSyWW1JF97r8AzKSSXOZYUKlAkLBu4JaP4chTrTBLx7O1kmhjnIs/DWduweD8UzK
-         Bt4S+U1VqGG02XLABaLsNu3Eym9lp0W+z3ipmZKD0OLbtUUmld0jf2vxaVHeb7wcZqIB
-         fOSQ==
-X-Gm-Message-State: ANhLgQ2jYI+EOpbGaMMq4vE86qKkIpd4A9cBn2LlahFzbptGUfM9Ed9R
-        q0TNfQLT6FGO/7Ibhwgd1XQZLpDW0vInaZzXchM=
-X-Google-Smtp-Source: ADFU+vviwKS4MeppDNv2kpImVhSonDJ24hNChwGak/JUqVXaYc2hp5YiGqyd8YCmOP3NKhW87RY1O4IxPy8g8zMdixs=
-X-Received: by 2002:a0c:f985:: with SMTP id t5mr7387374qvn.127.1583427207904;
- Thu, 05 Mar 2020 08:53:27 -0800 (PST)
+        Thu, 5 Mar 2020 11:53:31 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTP id 1829A523028;
+        Thu,  5 Mar 2020 17:53:26 +0100 (CET)
+X-Virus-Scanned: amavisd-new at psrvmta11.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta11.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id IahrWYT3sMxp; Thu,  5 Mar 2020 17:53:25 +0100 (CET)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Postfix) with ESMTPS id 9E9BC5230A3;
+        Thu,  5 Mar 2020 17:53:25 +0100 (CET)
+Received: from jernej-laptop.localnet (cpe-194-152-20-232.static.triera.net [194.152.20.232])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Postfix) with ESMTPA id 9DDB9522F5B;
+        Thu,  5 Mar 2020 17:53:23 +0100 (CET)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc:     a.hajda@samsung.com, narmstrong@baylibre.com, jonas@kwiboo.se,
+        airlied@linux.ie, daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 4/4] drm/bridge: dw-hdmi: rework csc related functions
+Date:   Thu, 05 Mar 2020 17:53:22 +0100
+Message-ID: <2518078.mvXUDI8C0e@jernej-laptop>
+In-Reply-To: <20200304235149.GH28814@pendragon.ideasonboard.com>
+References: <20200304232512.51616-1-jernej.skrabec@siol.net> <20200304232512.51616-5-jernej.skrabec@siol.net> <20200304235149.GH28814@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-References: <20200305050207.4159-1-luke.r.nels@gmail.com> <CAJ+HfNjrUxVqpBgC-WLHbZX7_7Gd-Lk7ghrmASTmaNySuXVUfg@mail.gmail.com>
- <4633123d-dc61-ab79-d2ee-e0cef66e4cea@iogearbox.net>
-In-Reply-To: <4633123d-dc61-ab79-d2ee-e0cef66e4cea@iogearbox.net>
-From:   =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Date:   Thu, 5 Mar 2020 17:53:16 +0100
-Message-ID: <CAJ+HfNg_cP8DC+C0UGHnumde6+YhqBoTB909A9XwFMPv82tqWw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v5 0/4] eBPF JIT for RV32G
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     Luke Nelson <lukenels@cs.washington.edu>,
-        bpf <bpf@vger.kernel.org>, Luke Nelson <luke.r.nels@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>, Xi Wang <xi.wang@gmail.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Rob Herring <robh@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>, linux-riscv@lists.infradead.org
+Content-Transfer-Encoding: 8BIT
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 5 Mar 2020 at 16:19, Daniel Borkmann <daniel@iogearbox.net> wrote:
->
-[...]
-> Applied, thanks everyone!
->
-> P.s.: I fixed the MAINTAINERS entry in the last one to have both netdev and bpf
-> to be consistent with all the other JIT entries there.
+Hi Laurent,
 
-Ah, I asked specifically Xi and Luke to *remove* the netdev entry, due
-to the bpf_devel_QA.rst change. :-)
+Dne četrtek, 05. marec 2020 ob 00:51:49 CET je Laurent Pinchart napisal(a):
+> Hi Jernej,
+> 
+> Thank you for the patch.
+> 
+> On Thu, Mar 05, 2020 at 12:25:12AM +0100, Jernej Skrabec wrote:
+> > is_color_space_conversion() is a misnomer. It checks not only if color
+> > space conversion is needed, but also if format conversion is needed.
+> > This is actually desired behaviour because result of this function
+> > determines if CSC block should be enabled or not (CSC block can also do
+> > format conversion).
+> > 
+> > In order to clear misunderstandings, let's rework
+> > is_color_space_conversion() to do exactly what is supposed to do and add
+> > another function which will determine if CSC block must be enabled or
+> > not.
+> > 
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > ---
+> > 
+> >  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 31 +++++++++++++++--------
+> >  1 file changed, 21 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c index
+> > c8a02e5b5e1b..7724191e0a8b 100644
+> > --- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > +++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
+> > @@ -963,11 +963,14 @@ static void hdmi_video_sample(struct dw_hdmi *hdmi)
+> > 
+> >  static int is_color_space_conversion(struct dw_hdmi *hdmi)
+> >  {
+> > 
+> > -	return (hdmi->hdmi_data.enc_in_bus_format !=
+> > -			hdmi->hdmi_data.enc_out_bus_format) ||
+> > -	       (hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_in_bus_format) &&
+> > -		hdmi_bus_fmt_is_rgb(hdmi->hdmi_data.enc_out_bus_format) 
+&&
+> > -		hdmi->hdmi_data.rgb_limited_range);
+> > +	struct hdmi_data_info *hdmi_data = &hdmi->hdmi_data;
+> > +	bool is_input_rgb, is_output_rgb;
+> > +
+> > +	is_input_rgb = hdmi_bus_fmt_is_rgb(hdmi_data->enc_in_bus_format);
+> > +	is_output_rgb = hdmi_bus_fmt_is_rgb(hdmi_data-
+>enc_out_bus_format);
+> > +
+> > +	return (is_input_rgb != is_output_rgb) ||
+> > +	       (is_input_rgb && is_output_rgb && hdmi_data-
+>rgb_limited_range);
+> > 
+> >  }
+> >  
+> >  static int is_color_space_decimation(struct dw_hdmi *hdmi)
+> > 
+> > @@ -994,6 +997,13 @@ static int is_color_space_interpolation(struct
+> > dw_hdmi *hdmi)> 
+> >  	return 0;
+> >  
+> >  }
+> > 
+> > +static bool is_conversion_needed(struct dw_hdmi *hdmi)
+> 
+> Maybe is_csc_needed ?
+
+Ok, I'll fix during applying.
+
+> 
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
+Thanks!
+
+Best regards,
+Jernej
+
+> 
+> > +{
+> > +	return is_color_space_conversion(hdmi) ||
+> > +	       is_color_space_decimation(hdmi) ||
+> > +	       is_color_space_interpolation(hdmi);
+> > +}
+> > +
+> > 
+> >  static void dw_hdmi_update_csc_coeffs(struct dw_hdmi *hdmi)
+> >  {
+> >  
+> >  	const u16 (*csc_coeff)[3][4] = &csc_coeff_default;
+> > 
+> > @@ -2014,18 +2024,19 @@ static void dw_hdmi_enable_video_path(struct
+> > dw_hdmi *hdmi)> 
+> >  	hdmi_writeb(hdmi, hdmi->mc_clkdis, HDMI_MC_CLKDIS);
+> >  	
+> >  	/* Enable csc path */
+> > 
+> > -	if (is_color_space_conversion(hdmi)) {
+> > +	if (is_conversion_needed(hdmi)) {
+> > 
+> >  		hdmi->mc_clkdis &= ~HDMI_MC_CLKDIS_CSCCLK_DISABLE;
+> >  		hdmi_writeb(hdmi, hdmi->mc_clkdis, HDMI_MC_CLKDIS);
+> > 
+> > -	}
+> > 
+> > -	/* Enable color space conversion if needed */
+> > -	if (is_color_space_conversion(hdmi))
+> > 
+> >  		hdmi_writeb(hdmi, 
+HDMI_MC_FLOWCTRL_FEED_THROUGH_OFF_CSC_IN_PATH,
+> >  		
+> >  			    HDMI_MC_FLOWCTRL);
+> > 
+> > -	else
+> > +	} else {
+> > +		hdmi->mc_clkdis |= HDMI_MC_CLKDIS_CSCCLK_DISABLE;
+> > +		hdmi_writeb(hdmi, hdmi->mc_clkdis, HDMI_MC_CLKDIS);
+> > +
+> > 
+> >  		hdmi_writeb(hdmi, 
+HDMI_MC_FLOWCTRL_FEED_THROUGH_OFF_CSC_BYPASS,
+> >  		
+> >  			    HDMI_MC_FLOWCTRL);
+> > 
+> > +	}
+> > 
+> >  }
+> >  
+> >  /* Workaround to clear the overflow condition */
+
+
+
+
