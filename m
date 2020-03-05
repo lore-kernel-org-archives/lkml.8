@@ -2,275 +2,101 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 835D4C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F18C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB232073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:30:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kI+RhCb1"
+	by mail.kernel.org (Postfix) with ESMTP id 58C272073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:33:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727326AbgCELao (ORCPT
+        id S1727030AbgCELdd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:30:44 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:42326 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725912AbgCELan (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:30:43 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583407843; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=kDJD4mNwabwWuj0s0vUcdkYgT7NlN6oMEkF3seKfQqg=; b=kI+RhCb1Wpqo99ka6yxvmXZxgu3xNcKoVOXjNOZ/LHP9nqaniA59PNdF3QU1lAb9s7oG3dIV
- rhPlYzmjs1c42F9m4FjJ3lKLpBvMI89x43/K8Lx0w7fX2qSYMAvBiQh9vgyiUTFJGjpwlOub
- bmJGEOrKq9m55BFNFFgcMTz8GSQ=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e60e2d9.7f59f3e5b458-smtp-out-n02;
- Thu, 05 Mar 2020 11:30:33 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C02FFC447A0; Thu,  5 Mar 2020 11:30:33 +0000 (UTC)
-Received: from [10.206.13.37] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mkshah)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6AE9AC43383;
-        Thu,  5 Mar 2020 11:30:29 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6AE9AC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=mkshah@codeaurora.org
-Subject: Re: [PATCH v10 3/3] soc: qcom: rpmh: Invoke rpmh_flush() for dirty
- caches
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, lsrao@codeaurora.org
-References: <1583238415-18686-1-git-send-email-mkshah@codeaurora.org>
- <1583238415-18686-4-git-send-email-mkshah@codeaurora.org>
- <CAD=FV=VG2dirykoGB93s3xCW8CKJjrGDS76koTyww_gy-jv7RQ@mail.gmail.com>
-From:   Maulik Shah <mkshah@codeaurora.org>
-Message-ID: <92bf14b7-b7ae-3060-312e-74f57c1f9a63@codeaurora.org>
-Date:   Thu, 5 Mar 2020 17:00:26 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 06:33:33 -0500
+Received: from mga02.intel.com ([134.134.136.20]:23507 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbgCELdc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 06:33:32 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 03:33:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
+   d="scan'208";a="234387456"
+Received: from unknown (HELO jsakkine-mobl1) ([10.237.50.161])
+  by orsmga008.jf.intel.com with ESMTP; 05 Mar 2020 03:33:27 -0800
+Message-ID: <04362c0cf66bf66e8f7c25a531830b9f294d2d09.camel@linux.intel.com>
+Subject: Re: [PATCH v28 14/22] selftests/x86: Add a selftest for SGX
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Nathaniel McCallum <npmccallum@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        Neil Horman <nhorman@redhat.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        "Svahn, Kai" <kai.svahn@intel.com>, bp@alien8.de,
+        Josh Triplett <josh@joshtriplett.org>, luto@kernel.org,
+        kai.huang@intel.com, rientjes@google.com, cedric.xing@intel.com,
+        Patrick Uiterwijk <puiterwijk@redhat.com>,
+        linux-kselftest@vger.kernel.org
+Date:   Thu, 05 Mar 2020 13:33:28 +0200
+In-Reply-To: <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com>
+References: <20200303233609.713348-1-jarkko.sakkinen@linux.intel.com>
+         <20200303233609.713348-15-jarkko.sakkinen@linux.intel.com>
+         <CAOASepN1JrD6OEzZycbqOr6_ZVACK=EctEOoQ8oSAEeigMr1Eg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.35.92-1 
 MIME-Version: 1.0
-In-Reply-To: <CAD=FV=VG2dirykoGB93s3xCW8CKJjrGDS76koTyww_gy-jv7RQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2020-03-04 at 14:27 -0500, Nathaniel McCallum wrote:
+> > > +xsave_area:
+> > +       .fill   1, 4, 0x037F            # FCW
+> > +       .fill   5, 4, 0
+> > +       .fill   1, 4, 0x1F80            # MXCSR
+> > +       .fill   1, 4, 0xFFFF            # MXCSR_MASK
+> > +       .fill   123, 4, 0
+> > +       .fill   1, 4, 0x80000000        # XCOMP_BV[63] = 1, compaction mode
+> > +       .fill   12, 4, 0
+> 
+> I find this much more readable:
 
-On 3/5/2020 4:52 AM, Doug Anderson wrote:
-> Hi,
->
-> On Tue, Mar 3, 2020 at 4:27 AM Maulik Shah <mkshah@codeaurora.org> wrote:
->> Add changes to invoke rpmh flush() from within cache_lock when the data
->> in cache is dirty.
->>
->> This is done only if OSI is not supported in PSCI. If OSI is supported
->> rpmh_flush can get invoked when the last cpu going to power collapse
->> deepest low power mode.
->>
->> Also remove "depends on COMPILE_TEST" for Kconfig option QCOM_RPMH so the
->> driver is only compiled for arm64 which supports psci_has_osi_support()
->> API.
->>
->> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->> Reviewed-by: Srinivas Rao L <lsrao@codeaurora.org>
->> ---
->>  drivers/soc/qcom/Kconfig |  2 +-
->>  drivers/soc/qcom/rpmh.c  | 37 ++++++++++++++++++++++---------------
->>  2 files changed, 23 insertions(+), 16 deletions(-)
->>
->> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
->> index d0a73e7..2e581bc 100644
->> --- a/drivers/soc/qcom/Kconfig
->> +++ b/drivers/soc/qcom/Kconfig
->> @@ -105,7 +105,7 @@ config QCOM_RMTFS_MEM
->>
->>  config QCOM_RPMH
->>         bool "Qualcomm RPM-Hardened (RPMH) Communication"
->> -       depends on ARCH_QCOM && ARM64 || COMPILE_TEST
->> +       depends on ARCH_QCOM && ARM64
->>         help
->>           Support for communication with the hardened-RPM blocks in
->>           Qualcomm Technologies Inc (QTI) SoCs. RPMH communication uses an
->> diff --git a/drivers/soc/qcom/rpmh.c b/drivers/soc/qcom/rpmh.c
->> index f28afe4..dafb0da 100644
->> --- a/drivers/soc/qcom/rpmh.c
->> +++ b/drivers/soc/qcom/rpmh.c
->> @@ -12,6 +12,7 @@
->>  #include <linux/module.h>
->>  #include <linux/of.h>
->>  #include <linux/platform_device.h>
->> +#include <linux/psci.h>
->>  #include <linux/slab.h>
->>  #include <linux/spinlock.h>
->>  #include <linux/types.h>
->> @@ -158,6 +159,13 @@ static struct cache_req *cache_rpm_request(struct rpmh_ctrlr *ctrlr,
->>         }
->>
->>  unlock:
->> +       if (ctrlr->dirty && !psci_has_osi_support()) {
->> +               if (rpmh_flush(ctrlr)) {
->> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->> +                       return ERR_PTR(-EINVAL);
->> +               }
->> +       }
->> +
->>         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>
->>         return req;
->> @@ -285,26 +293,35 @@ int rpmh_write(const struct device *dev, enum rpmh_state state,
->>  }
->>  EXPORT_SYMBOL(rpmh_write);
->>
->> -static void cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
->> +static int cache_batch(struct rpmh_ctrlr *ctrlr, struct batch_cache_req *req)
->>  {
->>         unsigned long flags;
->>
->>         spin_lock_irqsave(&ctrlr->cache_lock, flags);
->> +
->>         list_add_tail(&req->list, &ctrlr->batch_cache);
->>         ctrlr->dirty = true;
->> +
->> +       if (!psci_has_osi_support()) {
->> +               if (rpmh_flush(ctrlr)) {
-> The whole API here is a bit unfortunate.  From what I can tell,
-> callers of this code almost always call rpmh_write_batch() in
-> triplicate, AKA:
->
-> rpmh_write_batch(active, ...)
-> rpmh_write_batch(wake, ...)
-> rpmh_write_batch(sleep, ...)
->
-> ...that's going to end up writing the whole sleep/wake sets twice
-> every single time, right?  I know you talked about trying to keep
-> separate dirty bits for sleep/wake and maybe that would help, but it
-> might not be so easy due to the comparison of "sleep_val" and
-> "wake_val" in is_req_valid().
->
-> I guess we can keep the inefficiency for now and see how much it hits
-> us, but it feels ugly.
->
->
->> +                       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->> +                       return -EINVAL;
-> nit: why not add "int ret = 0" to the top of the function, then here:
->
-> if (rpmh_flush(ctrl))
->   ret = -EINVAL;
->
-> ...then at the end "return ret".  It avoids the 2nd copy of the unlock?
-Done.
->
-> Also: Why throw away the return value of rpmh_flush and replace it
-> with -EINVAL?  Trying to avoid -EBUSY?  ...oh, should you handle
-> -EBUSY?  AKA:
->
-> if (!psci_has_osi_support()) {
->   do {
->     ret = rpmh_flush(ctrl);
->   } while (ret == -EBUSY);
-> }
+And I always aim to get things more readable. Thank you.
 
-Done, the return value from rpmh_flush() can be -EAGAIN, not -EBUSY.
+> xsave_area:
+>         # Legacy
+>         .fill   1, 4, 0x037F            # FCW
+>         .fill   5, 4, 0
+>         .fill   1, 4, 0x1F80            # MXCSR
+>         .fill   1, 4, 0xFFFF            # MXCSR_MASK
+>         .fill   60, 8, 0
+> 
+>         # Header
+>         .fill   1, 8, 0                 # XSTATE_BV
+>         .fill   1, 8, 1 << 63           # XCOMP_BV (compaction mode)
+>         .fill   6, 8, 0
+> 
+> Also, since people are likely to copy this code for their own
+> enclaves, it would be helpful to document which flags are set in FCW
+> and MXCSR.
 
-i will update the comment accordingly and will include below change as well in next series.
+It was meant as a test program but I'd guess what you say is true
+because it also might be the only alternative user space to Intel's
+:-) And a great starting point if you want to do things from scratch.
 
-https://patchwork.kernel.org/patch/11364067/
+Because I meant it as a smoke test program for SGX, not everything is
+too well documented but given the multipurpose use for that code I'll
+make the improvements that you are suggesting.
 
-this should address for caller to not handle -EAGAIN.
+/Jarkko
 
->
->
->> +               }
->> +       }
->> +
->>         spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->> +
->> +       return 0;
->>  }
->>
->>  static int flush_batch(struct rpmh_ctrlr *ctrlr)
->>  {
->>         struct batch_cache_req *req;
->>         const struct rpmh_request *rpm_msg;
->> -       unsigned long flags;
->>         int ret = 0;
->>         int i;
->>
->>         /* Send Sleep/Wake requests to the controller, expect no response */
->> -       spin_lock_irqsave(&ctrlr->cache_lock, flags);
->>         list_for_each_entry(req, &ctrlr->batch_cache, list) {
->>                 for (i = 0; i < req->count; i++) {
->>                         rpm_msg = req->rpm_msgs + i;
->> @@ -314,7 +331,6 @@ static int flush_batch(struct rpmh_ctrlr *ctrlr)
->>                                 break;
->>                 }
->>         }
->> -       spin_unlock_irqrestore(&ctrlr->cache_lock, flags);
->>
->>         return ret;
->>  }
->> @@ -386,10 +402,8 @@ int rpmh_write_batch(const struct device *dev, enum rpmh_state state,
->>                 cmd += n[i];
->>         }
->>
->> -       if (state != RPMH_ACTIVE_ONLY_STATE) {
->> -               cache_batch(ctrlr, req);
->> -               return 0;
->> -       }
->> +       if (state != RPMH_ACTIVE_ONLY_STATE)
->> +               return cache_batch(ctrlr, req);
->>
->>         for (i = 0; i < count; i++) {
->>                 struct completion *compl = &compls[i];
->> @@ -455,9 +469,6 @@ static int send_single(struct rpmh_ctrlr *ctrlr, enum rpmh_state state,
->>   * Return: -EBUSY if the controller is busy, probably waiting on a response
->>   * to a RPMH request sent earlier.
->>   *
->> - * This function is always called from the sleep code from the last CPU
->> - * that is powering down the entire system. Since no other RPMH API would be
->> - * executing at this time, it is safe to run lockless.
-> nit: you've now got an extra "blank" (just has a "*" on it) line at
-> the end of your comment block.
-Done.
-> nit: in v9, Evan suggested "We should probably replace that with a
-> comment indicating that we assume ctrlr->cache_lock is already held".
-> Maybe you could do that?
-yes i left it for below reason since we still can call it from sleep code.
-i will mention same in v11.
-
-Thanks,
-Maulik
->
-> Also: presumably you _will_ still be called by the sleep code from the
-> last CPU on systems with OSI.  Is that true?  If that's not true then
-> you should change your function to static.  If that is true, then your
-> comment should be something like "this function will either be called
-> from sleep code on the last CPU (thus no spinlock needed) or with the
-> spinlock already held".
->
->
-> -Doug
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
