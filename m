@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0428C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC33C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A40FB21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95A1224655
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428407;
-	bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
+	s=default; t=1583428410;
+	bh=qeSR8s+xjYKgRtoXDhAo+RN2PMmTP5CX+CKt41Yu3xQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jr713zL3rpiBa+UGfUa59ploZhQBNNOEWZxWvebZGWxc1AlOV+NY7cgFjhbK+amfs
-	 8Y9zJHVWUZYjuuAhZLmPMOccCJC7NCj1KYfPY2D+2tPERqnDYtMWdEIYaVpWmStg5w
-	 JgmteXLCA9tIkgg1TnaKHxCjXXO3tO2gCQOBlxMA=
+	b=B0uE8Twi0h+o6hYDQR3vu3Fj5x6VInXCzc5HYAgtiYgSPPxulMqQLho7VXZ6zXbHk
+	 oiPBDrJzVwzBVrpkQFHtWIFGBu0NkTPTjvuoY2nRM6zKLZi0NvO4qzhoyBjXfncUBV
+	 MMBL/wal5J3DY6YTV+ORDuUZLWU8NESYcc41tLkk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726891AbgCERN0 (ORCPT
+        id S1726957AbgCERN3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:13:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38784 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:13:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbgCERNW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:22 -0500
+        id S1726846AbgCERNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:25 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B16120870;
-        Thu,  5 Mar 2020 17:13:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B35252166E;
+        Thu,  5 Mar 2020 17:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428402;
-        bh=3FrZdYvpqhFybQqlRH77rhrJ/OHxk2sMndBLGH2KYyY=;
+        s=default; t=1583428405;
+        bh=qeSR8s+xjYKgRtoXDhAo+RN2PMmTP5CX+CKt41Yu3xQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yz6SMDLzqQQLEbq6x1kR0y4qqXxmg8K/tG+oQWSJxkr2lS7TN1n3ib4xrIQfuv5r1
-         V1LVivWDqReUYwL6jVjxlqYfu26Mnyh0vV9IdyNWGHEPlmiMqh6mG0C7630v3hUyWa
-         FnhmG3EvlYQE6caoxQ/JW9iMaZMyByRnkKWSRywc=
+        b=gCgsaGCNXbb+2j/PbE5Zzb+j1oApB6P4z0MPovpsN1sivbjbce4Nm/RSi76li7GgV
+         cV2i/6SPDRK+l6Rhw93iOHdHwYYZO4qynMU0FNg3qW/GCWU0hiSLypDGJ74XyE4DII
+         4ftnWr08bIvpK7XIMBzhIZw+MtD407KDITi5C/2E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 09/67] HID: i2c-hid: add Trekstor Surfbook E11B to descriptor override
-Date:   Thu,  5 Mar 2020 12:12:10 -0500
-Message-Id: <20200305171309.29118-9-sashal@kernel.org>
+Cc:     Paul Burton <paulburton@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 11/67] MIPS: Disable VDSO time functionality on microMIPS
+Date:   Thu,  5 Mar 2020 12:12:12 -0500
+Message-Id: <20200305171309.29118-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -60,41 +58,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Paul Burton <paulburton@kernel.org>
 
-[ Upstream commit be0aba826c4a6ba5929def1962a90d6127871969 ]
+[ Upstream commit 07015d7a103c4420b69a287b8ef4d2535c0f4106 ]
 
-The Surfbook E11B uses the SIPODEV SP1064 touchpad, which does not supply
-descriptors, so it has to be added to the override list.
+A check we're about to add to pick up on function calls that depend on
+bogus use of the GOT in the VDSO picked up on instances of such function
+calls in microMIPS builds. Since the code appears genuinely problematic,
+and given the relatively small amount of use & testing that microMIPS
+sees, go ahead & disable the VDSO for microMIPS builds.
 
-BugLink: https://bugs.launchpad.net/bugs/1858299
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ arch/mips/vdso/Makefile | 19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-index d31ea82b84c17..a66f08041a1aa 100644
---- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
-@@ -341,6 +341,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
- 		},
- 		.driver_data = (void *)&sipodev_desc
- 	},
-+	{
-+		.ident = "Trekstor SURFBOOK E11B",
-+		.matches = {
-+			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "TREKSTOR"),
-+			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "SURFBOOK E11B"),
-+		},
-+		.driver_data = (void *)&sipodev_desc
-+	},
- 	{
- 		.ident = "Direkt-Tek DTLAPY116-2",
- 		.matches = {
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index 96afd73c94e8a..e8585a22b925c 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -48,6 +48,8 @@ endif
+ 
+ CFLAGS_REMOVE_vgettimeofday.o = -pg
+ 
++DISABLE_VDSO := n
++
+ #
+ # For the pre-R6 code in arch/mips/vdso/vdso.h for locating
+ # the base address of VDSO, the linker will emit a R_MIPS_PC32
+@@ -61,11 +63,24 @@ CFLAGS_REMOVE_vgettimeofday.o = -pg
+ ifndef CONFIG_CPU_MIPSR6
+   ifeq ($(call ld-ifversion, -lt, 225000000, y),y)
+     $(warning MIPS VDSO requires binutils >= 2.25)
+-    obj-vdso-y := $(filter-out vgettimeofday.o, $(obj-vdso-y))
+-    ccflags-vdso += -DDISABLE_MIPS_VDSO
++    DISABLE_VDSO := y
+   endif
+ endif
+ 
++#
++# GCC (at least up to version 9.2) appears to emit function calls that make use
++# of the GOT when targeting microMIPS, which we can't use in the VDSO due to
++# the lack of relocations. As such, we disable the VDSO for microMIPS builds.
++#
++ifdef CONFIG_CPU_MICROMIPS
++  DISABLE_VDSO := y
++endif
++
++ifeq ($(DISABLE_VDSO),y)
++  obj-vdso-y := $(filter-out vgettimeofday.o, $(obj-vdso-y))
++  ccflags-vdso += -DDISABLE_MIPS_VDSO
++endif
++
+ # VDSO linker flags.
+ VDSO_LDFLAGS := \
+ 	-Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1 \
 -- 
 2.20.1
 
