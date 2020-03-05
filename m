@@ -2,95 +2,109 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CED99C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905F5C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6FFF2073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:54:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="kHO3IyO3"
+	by mail.kernel.org (Postfix) with ESMTP id 6D5F52073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:56:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726533AbgCEIym (ORCPT
+        id S1726351AbgCEI4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:54:42 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:42671 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725944AbgCEIym (ORCPT
+        Thu, 5 Mar 2020 03:56:33 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:54042 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725816AbgCEI4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:54:42 -0500
-X-UUID: daf7a5ef966d44a4ab90f1e22b62f28a-20200305
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=lxr/bby5v3dgaounRNkNHYBEf64DNBdkypfjfP7E/iA=;
-        b=kHO3IyO3HGXKZhjaK/pP/x5T/oT3yb5bRYgrlpDvYK3TzQ7wdbz2SmWCAvxQwqpWpbwDrw0w2OrESJLvIfXLwk+ScNZ029XnHpT5jyIHKJwm7TmQTmkffQKuF8v17dVxA/f5r3s+gbtGVzOEoEL9krmYiT5JW/P252xXrAdhFRk=;
-X-UUID: daf7a5ef966d44a4ab90f1e22b62f28a-20200305
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 881533357; Thu, 05 Mar 2020 16:54:37 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 5 Mar 2020 16:54:36 +0800
-Received: from [172.21.84.99] (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 5 Mar 2020 16:52:02 +0800
-Message-ID: <1583398476.17146.6.camel@mtksdccf07>
-Subject: Re: linux-next: build warning after merge of the akpm-current tree
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Date:   Thu, 5 Mar 2020 16:54:36 +0800
-In-Reply-To: <20200305163743.7128c251@canb.auug.org.au>
-References: <20200305163743.7128c251@canb.auug.org.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
+        Thu, 5 Mar 2020 03:56:33 -0500
+Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0258r7g1025055;
+        Thu, 5 Mar 2020 03:56:30 -0500
+Received: from nwd2mta3.analog.com ([137.71.173.56])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2yfnrasp52-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Mar 2020 03:56:29 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 0258uSha065141
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
+        Thu, 5 Mar 2020 03:56:28 -0500
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Thu, 5 Mar 2020 00:56:27 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Thu, 5 Mar 2020 00:56:26 -0800
+Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 0258uNUb021067;
+        Thu, 5 Mar 2020 03:56:23 -0500
+From:   Beniamin Bia <beniamin.bia@analog.com>
+To:     <linux-media@vger.kernel.org>
+CC:     <hverkuil-cisco@xs4all.nl>, <mchehab@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dragos.bogdan@analog.com>,
+        <biabeniamin@outlook.com>, <alexandru.ardelean@analog.com>,
+        Beniamin Bia <beniamin.bia@analog.com>
+Subject: [PATCH] media: adv7604: Add new predefined video timings for adv76xx
+Date:   Thu, 5 Mar 2020 10:59:08 +0200
+Message-ID: <20200305085908.26267-1-beniamin.bia@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-05_02:2020-03-04,2020-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=729 bulkscore=0
+ adultscore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ malwarescore=0 clxscore=1011 spamscore=0 phishscore=0 mlxscore=0
+ suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDIwLTAzLTA1IGF0IDE2OjM3ICsxMTAwLCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3Rl
-Og0KPiBIaSBhbGwsDQo+IA0KPiBBZnRlciBtZXJnaW5nIHRoZSBha3BtLWN1cnJlbnQgdHJlZSwg
-dG9kYXkncyBsaW51eC1uZXh0IGJ1aWxkICh4ODZfNjQNCj4gYWxsbW9kY29uZmlnKSBwcm9kdWNl
-ZCB0aGlzIHdhcm5pbmc6DQo+IA0KPiBtbS9rYXNhbi9jb21tb24ubzogd2FybmluZzogb2JqdG9v
-bDoga2FzYW5fcmVwb3J0KCkrMHgxNzogY2FsbCB0byByZXBvcnRfZW5hYmxlZCgpIHdpdGggVUFD
-Q0VTUyBlbmFibGVkDQo+IEluIGZpbGUgaW5jbHVkZWQgZnJvbSBpbmNsdWRlL2xpbnV4L2JpdG1h
-cC5oOjksDQo+ICAgICAgICAgICAgICAgICAgZnJvbSBpbmNsdWRlL2xpbnV4L2NwdW1hc2suaDox
-MiwNCj4gICAgICAgICAgICAgICAgICBmcm9tIGFyY2gveDg2L2luY2x1ZGUvYXNtL3BhcmF2aXJ0
-Lmg6MTcsDQo+ICAgICAgICAgICAgICAgICAgZnJvbSBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9pcnFm
-bGFncy5oOjcyLA0KPiAgICAgICAgICAgICAgICAgIGZyb20gaW5jbHVkZS9saW51eC9pcnFmbGFn
-cy5oOjE2LA0KPiAgICAgICAgICAgICAgICAgIGZyb20gaW5jbHVkZS9saW51eC9yY3VwZGF0ZS5o
-OjI2LA0KPiAgICAgICAgICAgICAgICAgIGZyb20gaW5jbHVkZS9saW51eC9yY3VsaXN0Lmg6MTEs
-DQo+ICAgICAgICAgICAgICAgICAgZnJvbSBpbmNsdWRlL2xpbnV4L3BpZC5oOjUsDQo+ICAgICAg
-ICAgICAgICAgICAgZnJvbSBpbmNsdWRlL2xpbnV4L3NjaGVkLmg6MTQsDQo+ICAgICAgICAgICAg
-ICAgICAgZnJvbSBpbmNsdWRlL2xpbnV4L3VhY2Nlc3MuaDo2LA0KPiAgICAgICAgICAgICAgICAg
-IGZyb20gYXJjaC94ODYvaW5jbHVkZS9hc20vZnB1L3hzdGF0ZS5oOjUsDQo+ICAgICAgICAgICAg
-ICAgICAgZnJvbSBhcmNoL3g4Ni9pbmNsdWRlL2FzbS9wZ3RhYmxlLmg6MjYsDQo+ICAgICAgICAg
-ICAgICAgICAgZnJvbSBpbmNsdWRlL2xpbnV4L2thc2FuLmg6MTUsDQo+ICAgICAgICAgICAgICAg
-ICAgZnJvbSBsaWIvdGVzdF9rYXNhbi5jOjEyOg0KPiBJbiBmdW5jdGlvbiAnbWVtbW92ZScsDQo+
-ICAgICBpbmxpbmVkIGZyb20gJ2ttYWxsb2NfbWVtbW92ZV9pbnZhbGlkX3NpemUnIGF0IGxpYi90
-ZXN0X2thc2FuLmM6MzAxOjI6DQo+IGluY2x1ZGUvbGludXgvc3RyaW5nLmg6NDQxOjk6IHdhcm5p
-bmc6ICdfX2J1aWx0aW5fbWVtbW92ZScgc3BlY2lmaWVkIGJvdW5kIDE4NDQ2NzQ0MDczNzA5NTUx
-NjE0IGV4Y2VlZHMgbWF4aW11bSBvYmplY3Qgc2l6ZSA5MjIzMzcyMDM2ODU0Nzc1ODA3IFstV3N0
-cmluZ29wLW92ZXJmbG93PV0NCj4gICA0NDEgfCAgcmV0dXJuIF9fYnVpbHRpbl9tZW1tb3ZlKHAs
-IHEsIHNpemUpOw0KPiAgICAgICB8ICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
-fn4NCj4gDQo+IEludHJvZHVjZWQgYnkgY29tbWl0DQo+IA0KPiAgIDUxOWU1MDBmYWM2NCAoImth
-c2FuOiBhZGQgdGVzdCBmb3IgaW52YWxpZCBzaXplIGluIG1lbW1vdmUiKQ0KPiANCj4gVGhhdCdz
-IGEgYml0IGFubm95aW5nIGR1cmluZyBhIG5vcm1hbCB4ODZfNjQgYWxsbW9kY29uZmlnIGJ1aWxk
-IC4uLg0KPiANCg0KSGkgU3RlcGhlbiBhbmQgRG1pdHJ5LA0KDQpJJ20gc29ycnkgZm9yIHRoZSBi
-dWlsZCB3YXJuaW5nLCBpdCBkb2Vzbid0IGdlbmVyYXRlIGluIG91ciBsb2NhbA0KZW52aXJvbm1l
-bnQoYXJtNjQveDg2XzY0KS4gV291bGQgeW91IHRlbGwgbWUgd2hhdCB0b29sY2hhaW5zIGNhbg0K
-cmVwcm9kdWNlIGl0Pw0KDQpEbWl0cnksIFRoYW5rcyBmb3IgeW91ciBzdWdnZXN0aW9uLg0KDQoN
-ClRoYW5rcw0KDQpXYWx0ZXINCg0KDQoNCg==
+This patch adds more predefined video timings for adv76xx family.
+
+Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
+Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+---
+ drivers/media/i2c/adv7604.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+index 2dedd6ebb236..bf16c7a626a9 100644
+--- a/drivers/media/i2c/adv7604.c
++++ b/drivers/media/i2c/adv7604.c
+@@ -280,6 +280,8 @@ static const struct adv76xx_video_standards adv7604_prim_mode_gr[] = {
+ static const struct adv76xx_video_standards adv76xx_prim_mode_hdmi_comp[] = {
+ 	{ V4L2_DV_BT_CEA_720X480P59_94, 0x0a, 0x00 },
+ 	{ V4L2_DV_BT_CEA_720X576P50, 0x0b, 0x00 },
++	{ V4L2_DV_BT_CEA_1280X720P25, 0x13, 0x03 },
++	{ V4L2_DV_BT_CEA_1280X720P24, 0x13, 0x04 },
+ 	{ V4L2_DV_BT_CEA_1280X720P50, 0x13, 0x01 },
+ 	{ V4L2_DV_BT_CEA_1280X720P60, 0x13, 0x00 },
+ 	{ V4L2_DV_BT_CEA_1920X1080P24, 0x1e, 0x04 },
+@@ -305,8 +307,17 @@ static const struct adv76xx_video_standards adv76xx_prim_mode_hdmi_gr[] = {
+ 	{ V4L2_DV_BT_DMT_1024X768P70, 0x0d, 0x00 },
+ 	{ V4L2_DV_BT_DMT_1024X768P75, 0x0e, 0x00 },
+ 	{ V4L2_DV_BT_DMT_1024X768P85, 0x0f, 0x00 },
++	{ V4L2_DV_BT_DMT_1280X768P60, 0x10, 0x00 },
++	{ V4L2_DV_BT_DMT_1280X768P60_RB, 0x11, 0x00 },
+ 	{ V4L2_DV_BT_DMT_1280X1024P60, 0x05, 0x00 },
+ 	{ V4L2_DV_BT_DMT_1280X1024P75, 0x06, 0x00 },
++	{ V4L2_DV_BT_DMT_1360X768P60, 0x12, 0x00 },
++	{ V4L2_DV_BT_DMT_1366X768P60, 0x13, 0x00 },
++	{ V4L2_DV_BT_DMT_1400X1050P60, 0x14, 0x00 },
++	{ V4L2_DV_BT_DMT_1400X1050P75, 0x15, 0x00 },
++	{ V4L2_DV_BT_DMT_1600X1200P60, 0x16, 0x00 },
++	{ V4L2_DV_BT_DMT_1680X1050P60, 0x18, 0x00 },
++	{ V4L2_DV_BT_DMT_1920X1200P60_RB, 0x19, 0x00 },
+ 	{ },
+ };
+ 
+-- 
+2.17.1
 
