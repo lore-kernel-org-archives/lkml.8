@@ -2,192 +2,135 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A10EC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E6C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 397D9208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AAD720870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:21:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s5mrUHcS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FU1QoAct"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbgCEJQy (ORCPT
+        id S1726259AbgCEJVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:16:54 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:37140 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbgCEJQx (ORCPT
+        Thu, 5 Mar 2020 04:21:36 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:35260 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgCEJVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:16:53 -0500
+        Thu, 5 Mar 2020 04:21:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Mime-Version:Content-Type:References:
-        In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=gTwzrLfgqIjdqIGKwb4Y5kBHwktAUEnWC10Kn/EpDiM=; b=s5mrUHcSjdZom/QuZ85/5HtkHd
-        SSKeDBNjp+xhErhPkN7BXjfzwVGH+/ZNPFxa2Cz4br06m7r9UZqsCovoTm1R3x2u8lXW5a4SLmv0I
-        dvHjT5Z2crZlvnFH37M/B5oQWdIx2+pHXWV6m5FlHHCaOmZEEEegyeH1C4pZJ+1FmOtUR41xnru9M
-        RM4VCy3g80gx3UCfrYPWBd5sufDrYei/+fNKuM8LYzjJJtACkGum6PFZ9dpuoHatYupcl/6C9vz37
-        j/179M4jrizVYyO3tdZKrzehVmWTRGp/XYW8zQAFey3VLHFYoF70d3y5ek5iZKmp3AfnGsFoQp8/F
-        q7wlnTgw==;
-Received: from 54-240-197-234.amazon.com ([54.240.197.234] helo=u3832b3a9db3152.ant.amazon.com)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9mcb-0003pZ-Lf; Thu, 05 Mar 2020 09:16:50 +0000
-Message-ID: <40403657934d090d4668916a02878f476b34c9fd.camel@infradead.org>
-Subject: Re: Updating cypress/brcm firmware in linux-firmware for
- CVE-2019-15126
-From:   David Woodhouse <dwmw2@infradead.org>
-To:     Hans de Goede <hdegoede@redhat.com>, chi-hsien.lin@cypress.com,
-        Christopher Rumpf <Christopher.Rumpf@cypress.com>,
-        Chung-Hsien Hsu <cnhu@cypress.com>
-List-Id: <linux-firmware.lore.kernel.org>
-Cc:     linux-firmware@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Thu, 05 Mar 2020 11:16:46 +0200
-In-Reply-To: <17ec344e-80c5-02a9-59a3-35789a2eaaf9@redhat.com>
-References: <93dba8d2-6e46-9157-d292-4d93feb8ec1a@redhat.com>
-         <c2f75e84-6c8d-f4f0-bcc6-5fb2b662de33@redhat.com>
-         <3cf961a6-56c8-81fb-3bf9-fc36e2601d2c@cypress.com>
-         <17ec344e-80c5-02a9-59a3-35789a2eaaf9@redhat.com>
-Content-Type: multipart/signed; micalg="sha-256";
-        protocol="application/x-pkcs7-signature";
-        boundary="=-YrGk8MRnXsewlRGZZ1kC"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-X-SRS-Rewrite: SMTP reverse-path rewritten from <dwmw2@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=cl5TTZ3yy7OBvAp365keU2TNjUwqaC7AGMkrSVJ6Tyc=; b=FU1QoActXTjg2s9/0B+FdaQx2J
+        mpeRpgLiqc7NYXB29KTa6QMQXlddg4sz+3Atgyp3a6/Yo3sYIcJ8wc/xd5gsGxx2oQSDqmpUMfzDq
+        oRYj5wX4onbIc6Eo4t2G75A7byiy7hlAZFED8AohwVTcP0p5NN8XGjvCbndCsbWT3Q+fNWDoRT0RH
+        yiByV9IqVFL7vspTBMuLzvlHkJ8xbPrYIr3m+927griaLlZ+F88iX4xP2VapurmVSgk49DAci+4hv
+        PNBdWSOsH4enoTpILVNuGHspCXRlF9JZVQtV1GtAPNVRR4gEzOkoLBOW26/eXgBQOlpdP1yxXoQuO
+        uNfV/uwg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9mhB-0000ID-T4; Thu, 05 Mar 2020 09:21:34 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0FC10300606;
+        Thu,  5 Mar 2020 10:19:31 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C258D20137FD4; Thu,  5 Mar 2020 10:21:30 +0100 (CET)
+Date:   Thu, 5 Mar 2020 10:21:30 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] x86/optprobe: Fix OPTPROBE vs UACCESS
+Message-ID: <20200305092130.GU2596@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---=-YrGk8MRnXsewlRGZZ1kC
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+While looking at an objtool UACCESS warning, it suddenly occurred to me
+that it is entirely possible to have an OPTPROBE right in the middle of
+an UACCESS region.
 
-On Thu, 2020-03-05 at 07:24 +0100, Hans de Goede wrote:
-> > also clm_blob download is not supported in kernels prior to 4.15 so
-> > those files won't work with older kernels.
->=20
-> That is a valid concern, I'm not sure what the rules for linux-firmware
-> are with regards to this.
+In this case we must of course clear FLAGS.AC while running the KPROBE.
+Luckily the trampoline already saves/restores [ER]FLAGS, so all we need
+to do is inject a CLAC. Unfortunately we cannot use ALTERNATIVE() in the
+trampoline text, so we have to frob that manually.
 
-Not quite sure I understand the problem.
+Fixes: ca0bbc70f147 ("sched/x86_64: Don't save flags on context switch")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/include/asm/kprobes.h |  1 +
+ arch/x86/kernel/kprobes/opt.c  | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+)
 
-The rules for Linux firmware are just the same as basic engineering
-practice for loadable libraries.
-
-If you change the ABI, you change the "soname" of a library, which
-equates to changing the filename of a linux-firmware object.
-
-So if you make a new file format for the firmware which requires new
-driver support, then you give it a new name. The updated driver can
-attempt to load the old firmware filename as a fallback, if it still
-supports that, or you just have a clean separation between the two.
-
-The linux-firmware repository then carries *both* files, supporting
-both old and new kernels in parallel.
-
-
---=-YrGk8MRnXsewlRGZZ1kC
-Content-Type: application/x-pkcs7-signature; name="smime.p7s"
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Transfer-Encoding: base64
-
-MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCCECow
-ggUcMIIEBKADAgECAhEA4rtJSHkq7AnpxKUY8ZlYZjANBgkqhkiG9w0BAQsFADCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0EwHhcNMTkwMTAyMDAwMDAwWhcNMjIwMTAxMjM1
-OTU5WjAkMSIwIAYJKoZIhvcNAQkBFhNkd213MkBpbmZyYWRlYWQub3JnMIIBIjANBgkqhkiG9w0B
-AQEFAAOCAQ8AMIIBCgKCAQEAsv3wObLTCbUA7GJqKj9vHGf+Fa+tpkO+ZRVve9EpNsMsfXhvFpb8
-RgL8vD+L133wK6csYoDU7zKiAo92FMUWaY1Hy6HqvVr9oevfTV3xhB5rQO1RHJoAfkvhy+wpjo7Q
-cXuzkOpibq2YurVStHAiGqAOMGMXhcVGqPuGhcVcVzVUjsvEzAV9Po9K2rpZ52FE4rDkpDK1pBK+
-uOAyOkgIg/cD8Kugav5tyapydeWMZRJQH1vMQ6OVT24CyAn2yXm2NgTQMS1mpzStP2ioPtTnszIQ
-Ih7ASVzhV6csHb8Yrkx8mgllOyrt9Y2kWRRJFm/FPRNEurOeNV6lnYAXOymVJwIDAQABo4IB0zCC
-Ac8wHwYDVR0jBBgwFoAUgq9sjPjF/pZhfOgfPStxSF7Ei8AwHQYDVR0OBBYEFLfuNf820LvaT4AK
-xrGK3EKx1DE7MA4GA1UdDwEB/wQEAwIFoDAMBgNVHRMBAf8EAjAAMB0GA1UdJQQWMBQGCCsGAQUF
-BwMEBggrBgEFBQcDAjBGBgNVHSAEPzA9MDsGDCsGAQQBsjEBAgEDBTArMCkGCCsGAQUFBwIBFh1o
-dHRwczovL3NlY3VyZS5jb21vZG8ubmV0L0NQUzBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3Js
-LmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWls
-Q0EuY3JsMIGLBggrBgEFBQcBAQR/MH0wVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuY29tb2RvY2Eu
-Y29tL0NPTU9ET1JTQUNsaWVudEF1dGhlbnRpY2F0aW9uYW5kU2VjdXJlRW1haWxDQS5jcnQwJAYI
-KwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmNvbW9kb2NhLmNvbTAeBgNVHREEFzAVgRNkd213MkBpbmZy
-YWRlYWQub3JnMA0GCSqGSIb3DQEBCwUAA4IBAQALbSykFusvvVkSIWttcEeifOGGKs7Wx2f5f45b
-nv2ghcxK5URjUvCnJhg+soxOMoQLG6+nbhzzb2rLTdRVGbvjZH0fOOzq0LShq0EXsqnJbbuwJhK+
-PnBtqX5O23PMHutP1l88AtVN+Rb72oSvnD+dK6708JqqUx2MAFLMevrhJRXLjKb2Mm+/8XBpEw+B
-7DisN4TMlLB/d55WnT9UPNHmQ+3KFL7QrTO8hYExkU849g58Dn3Nw3oCbMUgny81ocrLlB2Z5fFG
-Qu1AdNiBA+kg/UxzyJZpFbKfCITd5yX49bOriL692aMVDyqUvh8fP+T99PqorH4cIJP6OxSTdxKM
-MIIFHDCCBASgAwIBAgIRAOK7SUh5KuwJ6cSlGPGZWGYwDQYJKoZIhvcNAQELBQAwgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMB4XDTE5MDEwMjAwMDAwMFoXDTIyMDEwMTIz
-NTk1OVowJDEiMCAGCSqGSIb3DQEJARYTZHdtdzJAaW5mcmFkZWFkLm9yZzCCASIwDQYJKoZIhvcN
-AQEBBQADggEPADCCAQoCggEBALL98Dmy0wm1AOxiaio/bxxn/hWvraZDvmUVb3vRKTbDLH14bxaW
-/EYC/Lw/i9d98CunLGKA1O8yogKPdhTFFmmNR8uh6r1a/aHr301d8YQea0DtURyaAH5L4cvsKY6O
-0HF7s5DqYm6tmLq1UrRwIhqgDjBjF4XFRqj7hoXFXFc1VI7LxMwFfT6PStq6WedhROKw5KQytaQS
-vrjgMjpICIP3A/CroGr+bcmqcnXljGUSUB9bzEOjlU9uAsgJ9sl5tjYE0DEtZqc0rT9oqD7U57My
-ECIewElc4VenLB2/GK5MfJoJZTsq7fWNpFkUSRZvxT0TRLqznjVepZ2AFzsplScCAwEAAaOCAdMw
-ggHPMB8GA1UdIwQYMBaAFIKvbIz4xf6WYXzoHz0rcUhexIvAMB0GA1UdDgQWBBS37jX/NtC72k+A
-CsaxitxCsdQxOzAOBgNVHQ8BAf8EBAMCBaAwDAYDVR0TAQH/BAIwADAdBgNVHSUEFjAUBggrBgEF
-BQcDBAYIKwYBBQUHAwIwRgYDVR0gBD8wPTA7BgwrBgEEAbIxAQIBAwUwKzApBggrBgEFBQcCARYd
-aHR0cHM6Ly9zZWN1cmUuY29tb2RvLm5ldC9DUFMwWgYDVR0fBFMwUTBPoE2gS4ZJaHR0cDovL2Ny
-bC5jb21vZG9jYS5jb20vQ09NT0RPUlNBQ2xpZW50QXV0aGVudGljYXRpb25hbmRTZWN1cmVFbWFp
-bENBLmNybDCBiwYIKwYBBQUHAQEEfzB9MFUGCCsGAQUFBzAChklodHRwOi8vY3J0LmNvbW9kb2Nh
-LmNvbS9DT01PRE9SU0FDbGllbnRBdXRoZW50aWNhdGlvbmFuZFNlY3VyZUVtYWlsQ0EuY3J0MCQG
-CCsGAQUFBzABhhhodHRwOi8vb2NzcC5jb21vZG9jYS5jb20wHgYDVR0RBBcwFYETZHdtdzJAaW5m
-cmFkZWFkLm9yZzANBgkqhkiG9w0BAQsFAAOCAQEAC20spBbrL71ZEiFrbXBHonzhhirO1sdn+X+O
-W579oIXMSuVEY1LwpyYYPrKMTjKECxuvp24c829qy03UVRm742R9Hzjs6tC0oatBF7KpyW27sCYS
-vj5wbal+TttzzB7rT9ZfPALVTfkW+9qEr5w/nSuu9PCaqlMdjABSzHr64SUVy4ym9jJvv/FwaRMP
-gew4rDeEzJSwf3eeVp0/VDzR5kPtyhS+0K0zvIWBMZFPOPYOfA59zcN6AmzFIJ8vNaHKy5QdmeXx
-RkLtQHTYgQPpIP1Mc8iWaRWynwiE3ecl+PWzq4i+vdmjFQ8qlL4fHz/k/fT6qKx+HCCT+jsUk3cS
-jDCCBeYwggPOoAMCAQICEGqb4Tg7/ytrnwHV2binUlYwDQYJKoZIhvcNAQEMBQAwgYUxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMSswKQYDVQQDEyJDT01PRE8gUlNBIENlcnRpZmljYXRp
-b24gQXV0aG9yaXR5MB4XDTEzMDExMDAwMDAwMFoXDTI4MDEwOTIzNTk1OVowgZcxCzAJBgNVBAYT
-AkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAYBgNV
-BAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRoZW50
-aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKC
-AQEAvrOeV6wodnVAFsc4A5jTxhh2IVDzJXkLTLWg0X06WD6cpzEup/Y0dtmEatrQPTRI5Or1u6zf
-+bGBSyD9aH95dDSmeny1nxdlYCeXIoymMv6pQHJGNcIDpFDIMypVpVSRsivlJTRENf+RKwrB6vcf
-WlP8dSsE3Rfywq09N0ZfxcBa39V0wsGtkGWC+eQKiz4pBZYKjrc5NOpG9qrxpZxyb4o4yNNwTqza
-aPpGRqXB7IMjtf7tTmU2jqPMLxFNe1VXj9XB1rHvbRikw8lBoNoSWY66nJN/VCJv5ym6Q0mdCbDK
-CMPybTjoNCQuelc0IAaO4nLUXk0BOSxSxt8kCvsUtQIDAQABo4IBPDCCATgwHwYDVR0jBBgwFoAU
-u69+Aj36pvE8hI6t7jiY7NkyMtQwHQYDVR0OBBYEFIKvbIz4xf6WYXzoHz0rcUhexIvAMA4GA1Ud
-DwEB/wQEAwIBhjASBgNVHRMBAf8ECDAGAQH/AgEAMBEGA1UdIAQKMAgwBgYEVR0gADBMBgNVHR8E
-RTBDMEGgP6A9hjtodHRwOi8vY3JsLmNvbW9kb2NhLmNvbS9DT01PRE9SU0FDZXJ0aWZpY2F0aW9u
-QXV0aG9yaXR5LmNybDBxBggrBgEFBQcBAQRlMGMwOwYIKwYBBQUHMAKGL2h0dHA6Ly9jcnQuY29t
-b2RvY2EuY29tL0NPTU9ET1JTQUFkZFRydXN0Q0EuY3J0MCQGCCsGAQUFBzABhhhodHRwOi8vb2Nz
-cC5jb21vZG9jYS5jb20wDQYJKoZIhvcNAQEMBQADggIBAHhcsoEoNE887l9Wzp+XVuyPomsX9vP2
-SQgG1NgvNc3fQP7TcePo7EIMERoh42awGGsma65u/ITse2hKZHzT0CBxhuhb6txM1n/y78e/4ZOs
-0j8CGpfb+SJA3GaBQ+394k+z3ZByWPQedXLL1OdK8aRINTsjk/H5Ns77zwbjOKkDamxlpZ4TKSDM
-KVmU/PUWNMKSTvtlenlxBhh7ETrN543j/Q6qqgCWgWuMAXijnRglp9fyadqGOncjZjaaSOGTTFB+
-E2pvOUtY+hPebuPtTbq7vODqzCM6ryEhNhzf+enm0zlpXK7q332nXttNtjv7VFNYG+I31gnMrwfH
-M5tdhYF/8v5UY5g2xANPECTQdu9vWPoqNSGDt87b3gXb1AiGGaI06vzgkejL580ul+9hz9D0S0U4
-jkhJiA7EuTecP/CFtR72uYRBcunwwH3fciPjviDDAI9SnC/2aPY8ydehzuZutLbZdRJ5PDEJM/1t
-yZR2niOYihZ+FCbtf3D9mB12D4ln9icgc7CwaxpNSCPt8i/GqK2HsOgkL3VYnwtx7cJUmpvVdZ4o
-gnzgXtgtdk3ShrtOS1iAN2ZBXFiRmjVzmehoMof06r1xub+85hFQzVxZx5/bRaTKTlL8YXLI8nAb
-R9HWdFqzcOoB/hxfEyIQpx9/s81rgzdEZOofSlZHynoSMYIDyjCCA8YCAQEwga0wgZcxCzAJBgNV
-BAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGjAY
-BgNVBAoTEUNPTU9ETyBDQSBMaW1pdGVkMT0wOwYDVQQDEzRDT01PRE8gUlNBIENsaWVudCBBdXRo
-ZW50aWNhdGlvbiBhbmQgU2VjdXJlIEVtYWlsIENBAhEA4rtJSHkq7AnpxKUY8ZlYZjANBglghkgB
-ZQMEAgEFAKCCAe0wGAYJKoZIhvcNAQkDMQsGCSqGSIb3DQEHATAcBgkqhkiG9w0BCQUxDxcNMjAw
-MzA1MDkxNjQ2WjAvBgkqhkiG9w0BCQQxIgQgJGpJQZtnjRHslKmYZ+1e53NgpQZLM87Sk4P+DJK0
-5fswgb4GCSsGAQQBgjcQBDGBsDCBrTCBlzELMAkGA1UEBhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIg
-TWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgGA1UEChMRQ09NT0RPIENBIExpbWl0ZWQx
-PTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhlbnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1h
-aWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMIHABgsqhkiG9w0BCRACCzGBsKCBrTCBlzELMAkGA1UE
-BhMCR0IxGzAZBgNVBAgTEkdyZWF0ZXIgTWFuY2hlc3RlcjEQMA4GA1UEBxMHU2FsZm9yZDEaMBgG
-A1UEChMRQ09NT0RPIENBIExpbWl0ZWQxPTA7BgNVBAMTNENPTU9ETyBSU0EgQ2xpZW50IEF1dGhl
-bnRpY2F0aW9uIGFuZCBTZWN1cmUgRW1haWwgQ0ECEQDiu0lIeSrsCenEpRjxmVhmMA0GCSqGSIb3
-DQEBAQUABIIBAB/LocHVqoCwXu7vF105ub30kMsSpPQg/NSh9aAj7hVLI4GGsTKktPnlqOlLBW+/
-B4x0AKsSf/az2uP3keLV+2IVdB+oA3/dOZ8cO+8rSwOkybKWAXDCfO+zNU3C3Qp8gE443+gAkJ+B
-OfV/Vmi3Swxsjcsp6gJyG3Aw/QKfOfAkd+iV54mAxxoTQ3FkscIApi3XF5MrjgYLAQFenjojMkQe
-0g3gpkMvQi3vTePM1zRCjjaUonM8n4zio6Sxt6Iuab+EabBOsaB4yoOrK0p+R0Zc2D4rIbcKCgmL
-CyHtLnnE7zqc9r2ekeiAnLk4/VVhvgl5/cSeGv5XJQ20+naYzx4AAAAAAAA=
-
-
---=-YrGk8MRnXsewlRGZZ1kC--
-
+diff --git a/arch/x86/include/asm/kprobes.h b/arch/x86/include/asm/kprobes.h
+index 95b1f053bd96..073eb7ad2f56 100644
+--- a/arch/x86/include/asm/kprobes.h
++++ b/arch/x86/include/asm/kprobes.h
+@@ -36,6 +36,7 @@ typedef u8 kprobe_opcode_t;
+ 
+ /* optinsn template addresses */
+ extern __visible kprobe_opcode_t optprobe_template_entry[];
++extern __visible kprobe_opcode_t optprobe_template_clac[];
+ extern __visible kprobe_opcode_t optprobe_template_val[];
+ extern __visible kprobe_opcode_t optprobe_template_call[];
+ extern __visible kprobe_opcode_t optprobe_template_end[];
+diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
+index 3f45b5c43a71..7a3416c9d0dc 100644
+--- a/arch/x86/kernel/kprobes/opt.c
++++ b/arch/x86/kernel/kprobes/opt.c
+@@ -92,6 +92,9 @@ asm (
+ 			/* We don't bother saving the ss register */
+ 			"	pushq %rsp\n"
+ 			"	pushfq\n"
++			".global optprobe_template_clac\n"
++			"optprobe_template_clac:\n"
++			ASM_NOP3
+ 			SAVE_REGS_STRING
+ 			"	movq %rsp, %rsi\n"
+ 			".global optprobe_template_val\n"
+@@ -111,6 +114,9 @@ asm (
+ #else /* CONFIG_X86_32 */
+ 			"	pushl %esp\n"
+ 			"	pushfl\n"
++			".global optprobe_template_clac\n"
++			"optprobe_template_clac:\n"
++			ASM_NOP3
+ 			SAVE_REGS_STRING
+ 			"	movl %esp, %edx\n"
+ 			".global optprobe_template_val\n"
+@@ -134,6 +140,8 @@ asm (
+ void optprobe_template_func(void);
+ STACK_FRAME_NON_STANDARD(optprobe_template_func);
+ 
++#define TMPL_CLAC_IDX \
++	((long)optprobe_template_clac - (long)optprobe_template_entry)
+ #define TMPL_MOVE_IDX \
+ 	((long)optprobe_template_val - (long)optprobe_template_entry)
+ #define TMPL_CALL_IDX \
+@@ -389,6 +397,12 @@ int arch_prepare_optimized_kprobe(struct optimized_kprobe *op,
+ 	op->optinsn.size = ret;
+ 	len = TMPL_END_IDX + op->optinsn.size;
+ 
++	if (static_cpu_has(X86_FEATURE_SMAP)) {
++		buf[TMPL_CLAC_IDX+0] = 0x0f;
++		buf[TMPL_CLAC_IDX+1] = 0x01;
++		buf[TMPL_CLAC_IDX+2] = 0xca;
++	}
++
+ 	/* Set probe information */
+ 	synthesize_set_arg1(buf + TMPL_MOVE_IDX, (unsigned long)op);
+ 
