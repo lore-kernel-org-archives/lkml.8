@@ -2,154 +2,114 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20ECCC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8C3C3F2CE
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E357D2084E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:39:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rwg0PwY/"
+	by mail.kernel.org (Postfix) with ESMTP id 984BE2084E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 02:43:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbgCECjU (ORCPT
+        id S1725897AbgCECny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 4 Mar 2020 21:39:20 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40099 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbgCECjU (ORCPT
+        Wed, 4 Mar 2020 21:43:54 -0500
+Received: from mo-csw1514.securemx.jp ([210.130.202.153]:44684 "EHLO
+        mo-csw.securemx.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbgCECny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 4 Mar 2020 21:39:20 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y1so1947745plp.7;
-        Wed, 04 Mar 2020 18:39:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=YW1iAxgihWa7R1z2LZ0jq4L5SHYbV/y2Cl+4YB22Nq0=;
-        b=rwg0PwY/pBMBBCdKXuCPnAOK+gKG8fWRjtLb8qoZDbY2XJir4nAN2j81+pu+Zm2ChD
-         hCn10l37f12AqtrZmjlcBD/nXxilTi1O5VC6L/m9NC3V/T+XjjprVRilKGBmuIXjF1Ha
-         Q+f7PNBgvDLKzBGbFa9qfE2bK1jHst3TZcW69C7NNScimVRub52WWTe497P8RrB74WRd
-         bGLkqLKdi19e02DtQArGXu1Z8c2QS/J4wF3IRXj0U5poiJ/Oremq2M7A07gOQhv5yO6i
-         ysJSDXEThmhWBDGfdo1hLCVBFb5PwWZ9dozA5wIqkKl6M0Cumh/IyVeNoEDEZDDr5Eqm
-         vz4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=YW1iAxgihWa7R1z2LZ0jq4L5SHYbV/y2Cl+4YB22Nq0=;
-        b=iyNfhhLxB7t5BW0kSTSa3fwdXowYH+A2vFp24JtEqdWfIFYQbSb/38/rYPhbtZ01xS
-         TeaY3qG4d0+C4w2W9TpeSBHk1JYiJMKx/68oWFLjJJhTVTtAF+g1ksSqgFKSA635iyfe
-         UaXOE4uuzApWUmppDoQ8QCzh/VOxfwYtfVb238nBn/DQc/vryIHZ4AA8+gW02S+xy2/R
-         Lyn/OQv6XZR33O+uNUOUIPLEBDeeyQmYeuNZHA5D5TOlc7lf6t/w1D9PA+FINFFmKXOt
-         vxhABup7OXiD9F0LZUIBN4Rly/q1V/Ui/heqyaTjHCn4Ltxbu1bChssWMmmHsuaa4f3J
-         qW9Q==
-X-Gm-Message-State: ANhLgQ2HmPiJxsZBPWKoCO8ZVtMKEztMv16cKGFcY2eGn2up8H22tc+h
-        5RoB1rLEGDE4hJInOUvkvjTFlWhChcs=
-X-Google-Smtp-Source: ADFU+vvNfv1O4y+T8xjWDrOY/eMq3S4rz6h3FPkm/6Mv8mQrQ0af/lXw9Wl/PKse4xev/7IwPhvWKg==
-X-Received: by 2002:a17:90a:e012:: with SMTP id u18mr6415803pjy.190.1583375959117;
-        Wed, 04 Mar 2020 18:39:19 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91.thefacebook.com ([2620:10d:c090:500::5:7dc6])
-        by smtp.gmail.com with ESMTPSA id i197sm26750447pfe.137.2020.03.04.18.39.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 04 Mar 2020 18:39:18 -0800 (PST)
-From:   rentao.bupt@gmail.com
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Stephen Boyd <swboyd@chromium.org>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org, taoren@fb.com
-Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH] usb: gadget: aspeed: improve vhub port irq handling
-Date:   Wed,  4 Mar 2020 18:38:59 -0800
-Message-Id: <20200305023859.21057-1-rentao.bupt@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 4 Mar 2020 21:43:54 -0500
+Received: by mo-csw.securemx.jp (mx-mo-csw1514) id 0252hTjX009961; Thu, 5 Mar 2020 11:43:29 +0900
+X-Iguazu-Qid: 34tKs0J2puIvSotesa
+X-Iguazu-QSIG: v=2; s=0; t=1583376209; q=34tKs0J2puIvSotesa; m=WEUehwg0bIG5XzdGHyhc5DZIIbQUf1gIWxeFjC256IM=
+Received: from imx2.toshiba.co.jp (imx2.toshiba.co.jp [106.186.93.51])
+        by relay.securemx.jp (mx-mr1511) id 0252hRod004744;
+        Thu, 5 Mar 2020 11:43:28 +0900
+Received: from enc01.localdomain ([106.186.93.100])
+        by imx2.toshiba.co.jp  with ESMTP id 0252hR6N025706;
+        Thu, 5 Mar 2020 11:43:27 +0900 (JST)
+Received: from hop001.toshiba.co.jp ([133.199.164.63])
+        by enc01.localdomain  with ESMTP id 0252hQtl020217;
+        Thu, 5 Mar 2020 11:43:26 +0900
+Subject: Re: [PATCH v2 1/2] mtd: spinand: toshiba: Rename function name to
+ change suffix and prefix (8Gbit)
+To:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     "vigneshr@ti.com" <vigneshr@ti.com>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <cover.1582603241.git.ytc-mb-yfuruyama7@kioxia.com>
+ <41b30e2d308ec7f252d71970a2ed1c29cd25c0d7.1582603241.git.ytc-mb-yfuruyama7@kioxia.com>
+ <d2837c89-c9b2-fd18-d090-567f2a90cf75@kontron.de>
+ <20200302101254.31ca0c83@xps13>
+From:   Yoshio Furuyama <ytc-mb-yfuruyama7@kioxia.com>
+X-TSB-HOP: ON
+Message-ID: <f6501db6-8dcd-ec13-de6a-b782656de0e7@kioxia.com>
+Date:   Thu, 5 Mar 2020 11:43:23 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20200302101254.31ca0c83@xps13>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tao Ren <rentao.bupt@gmail.com>
 
-This patch evaluates vhub ports' irq mask before going through per-port
-irq handling one by one, which helps to speed up irq handling in case
-there is no port interrupt.
+On 2020/03/02 18:12, Miquel Raynal wrote:
+> Hello,
+>
+> Schrempf Frieder <frieder.schrempf@kontron.de> wrote on Mon, 2 Mar 2020
+> 08:02:25 +0000:
+>
+>> On 28.02.20 04:11, Yoshio Furuyama wrote:
+>>> The suffix was changed to classify from "g" to "j" between 1st generation
+>>> device and 2nd generation device that's new Serial NAND of Kioxia brand.
+>> I had to read this sentence multiple times to understand it. Maybe
+>> something like this would be better:
+>>
+>>     The suffix was changed from "g" to "j" to classify between 1st
+>>     generation and 2nd generation serial NAND devices (which now belong to
+>>     the Kioxia brand).
+Thanks comment,     I will send revise rev.
+>>> As reference that's
+>>> 1st generation device of 1Gbit product is "tc58cvg0s3hraig"
+>>> 2nd generation device of 1Gbit product is "tc58cvg0s3hraij".
+>>>
+>>> The 8Gbit product "TH58CxG3S0HRAIJ" is new line up of Kioxia's serial nand
+>>> and changed the prefix from tc58 to th58.
+>>> Thus it was changed argument to the function from "tc58cxgxsx" to
+>>> "tx58cxgxsxraix".
+>> Same here. It is very hard to read. I would write something like this:
+>>
+>>     The 8Gbit type "TH58CxG3S0HRAIJ" is new to Kioxia's serial NAND lineup
+>>     and the prefix was changed from "TC58" to "TH85".
+>>
+>>     Thus the functions were renamed from tc58cxgxsx_*() to
+>>     tx58cxgxsxraix_*().
 
-Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
----
- drivers/usb/gadget/udc/aspeed-vhub/core.c | 11 ++++++-----
- drivers/usb/gadget/udc/aspeed-vhub/vhub.h |  8 ++++----
- 2 files changed, 10 insertions(+), 9 deletions(-)
+I will change prefix from "TH85" to "TH58" .  Since this is typo.
 
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-index f8d35dd60c34..a03e4e4ea401 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-@@ -134,11 +134,11 @@ static irqreturn_t ast_vhub_irq(int irq, void *data)
- 	}
- 
- 	/* Handle device interrupts */
--	for (i = 0; i < vhub->max_ports; i++) {
--		u32 dev_mask = VHUB_IRQ_DEVICE1 << i;
--
--		if (istat & dev_mask)
--			ast_vhub_dev_irq(&vhub->ports[i].dev);
-+	if (istat & vhub->port_irq_mask) {
-+		for (i = 0; i < vhub->max_ports; i++) {
-+			if (istat & VHUB_DEV_IRQ(i))
-+				ast_vhub_dev_irq(&vhub->ports[i].dev);
-+		}
- 	}
- 
- 	/* Handle top-level vHub EP0 interrupts */
-@@ -332,6 +332,7 @@ static int ast_vhub_probe(struct platform_device *pdev)
- 
- 	spin_lock_init(&vhub->lock);
- 	vhub->pdev = pdev;
-+	vhub->port_irq_mask = GENMASK(vhub->max_ports + 8, 9);
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	vhub->regs = devm_ioremap_resource(&pdev->dev, res);
-diff --git a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-index fac79ef6d669..e49924ec7e58 100644
---- a/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-+++ b/drivers/usb/gadget/udc/aspeed-vhub/vhub.h
-@@ -54,10 +54,6 @@
- #define VHUB_IRQ_USB_CMD_DEADLOCK		(1 << 18)
- #define VHUB_IRQ_EP_POOL_NAK			(1 << 17)
- #define VHUB_IRQ_EP_POOL_ACK_STALL		(1 << 16)
--#define VHUB_IRQ_DEVICE5			(1 << 13)
--#define VHUB_IRQ_DEVICE4			(1 << 12)
--#define VHUB_IRQ_DEVICE3			(1 << 11)
--#define VHUB_IRQ_DEVICE2			(1 << 10)
- #define VHUB_IRQ_DEVICE1			(1 << 9)
- #define VHUB_IRQ_BUS_RESUME			(1 << 8)
- #define VHUB_IRQ_BUS_SUSPEND 			(1 << 7)
-@@ -70,6 +66,9 @@
- #define VHUB_IRQ_HUB_EP0_SETUP			(1 << 0)
- #define VHUB_IRQ_ACK_ALL			0x1ff
- 
-+/* Downstream device IRQ mask. */
-+#define VHUB_DEV_IRQ(n)				(VHUB_IRQ_DEVICE1 << (n))
-+
- /* SW reset reg */
- #define VHUB_SW_RESET_EP_POOL			(1 << 9)
- #define VHUB_SW_RESET_DMA_CONTROLLER		(1 << 8)
-@@ -402,6 +401,7 @@ struct ast_vhub {
- 	/* Per-port info */
- 	struct ast_vhub_port		*ports;
- 	u32				max_ports;
-+	u32				port_irq_mask;
- 
- 	/* Generic EP data structures */
- 	struct ast_vhub_ep		*epns;
--- 
-2.17.1
+    The 8Gbit type "TH58CxG3S0HRAIJ" is new to Kioxia's serial NAND lineup
+    and the prefix was changed from "TC58" to "TH58".
 
+    Thus the functions were renamed from tc58cxgxsx_*() to
+    tx58cxgxsxraix_*().
+
+Thanks,
+
+>> With an easier to understand commit message:
+>>
+>> Reviewed-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Agreed, the commit log proposal from Frieder looks better.
+>
+> The rest of the patch is fine by me though.
+>
+> Thanks,
+> Miquèl
+>
+>
