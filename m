@@ -7,50 +7,53 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10783C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA9AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9F5720848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C2B120870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:17:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428644;
-	bh=KLdV1W7v+XUkCDtJRVdJ1TK9zKJReuB6m3r1pJnyvLU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=k28PKccyQwbkXG7UImiQlTsUHziHaJFX5admopgpGoFvnUnoDQDoqm6/+QACtXmig
-	 colhmx66o+dXYFoA1iKUM4Q4PM5ekfVMyFr4NmIyQx47dmfNyqnkkt9Y00nigOaF0K
-	 5Bcizv5hZNUZMZT0yn7u3fZJsfScDPXeu3iWpg2s=
+	s=default; t=1583428656;
+	bh=UM1Y+E0WVc8eyIeZY8r6UZ4M0zumB9c8yTTQwXQYXHQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RSvH0u3kX40JnSf7oayPl9sCHBc4nPGSwFXSkWvVxnBJgWOEbw6EdYR/2qxKi8U+f
+	 7gnRdlX/7YPvQ5O7/rtH5WWETp35lXBMnt5BUbCqQM9J2yeShaNY3Znw7SMxmXerqA
+	 VfXekKlWfcGJwE93XbzpbpjfCCCEn2WODNBdOaEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbgCERRX (ORCPT
+        id S1728153AbgCERRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:17:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43010 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:17:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbgCERQB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:16:01 -0500
+        id S1728304AbgCERPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:15:55 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56279207FD;
-        Thu,  5 Mar 2020 17:16:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E66FA21744;
+        Thu,  5 Mar 2020 17:15:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428561;
-        bh=KLdV1W7v+XUkCDtJRVdJ1TK9zKJReuB6m3r1pJnyvLU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Y/hG0rLlR1QXUvrySgcIVE2yVI+YqJVO9nix0h7LNJo7jk4BcfV3a1alJiqAugWpq
-         NaPpRZwRHOCYNGRn1WOeRU+YqecvBkWqXrPnsSsY+t99tspNvCNe1Mwb6isdbqgKRN
-         OZ/3hnSbrKeBBC23bgmxzsukmKAa7fgNfrMR1KQk=
+        s=default; t=1583428554;
+        bh=UM1Y+E0WVc8eyIeZY8r6UZ4M0zumB9c8yTTQwXQYXHQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qX0lBFZVU75p34QSVS+XFB8FE9vUdgT1kC/TumogWhCL7a2TiEIAB2ZlYkp3Zb8j5
+         pihbs+pGkjEiCfRVM3X5SOIZBrgwUFPxGuzJ8QbmJKDwNte3Mx7WbLOtIlxnJhmTsM
+         zNtyJ3Ki3L1/04dVgpV/2Zgs1BnPF9kOmx0UMjwE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jean Delvare <jdelvare@suse.de>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Sasha Levin <sashal@kernel.org>, linux-doc@vger.kernel.org,
-        linux-acpi@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 01/12] ACPI: watchdog: Allow disabling WDAT at boot
-Date:   Thu,  5 Mar 2020 12:15:48 -0500
-Message-Id: <20200305171559.30422-1-sashal@kernel.org>
+Cc:     Daniele Palmas <dnlplm@gmail.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        linux-usb@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 11/19] net: usb: qmi_wwan: restore mtu min/max values after raw_ip switch
+Date:   Thu,  5 Mar 2020 12:15:32 -0500
+Message-Id: <20200305171540.30250-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200305171540.30250-1-sashal@kernel.org>
+References: <20200305171540.30250-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -59,72 +62,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jean Delvare <jdelvare@suse.de>
+From: Daniele Palmas <dnlplm@gmail.com>
 
-[ Upstream commit 3f9e12e0df012c4a9a7fd7eb0d3ae69b459d6b2c ]
+[ Upstream commit eae7172f8141eb98e64e6e81acc9e9d5b2add127 ]
 
-In case the WDAT interface is broken, give the user an option to
-ignore it to let a native driver bind to the watchdog device instead.
+usbnet creates network interfaces with min_mtu = 0 and
+max_mtu = ETH_MAX_MTU.
 
-Signed-off-by: Jean Delvare <jdelvare@suse.de>
-Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+These values are not modified by qmi_wwan when the network interface
+is created initially, allowing, for example, to set mtu greater than 1500.
+
+When a raw_ip switch is done (raw_ip set to 'Y', then set to 'N') the mtu
+values for the network interface are set through ether_setup, with
+min_mtu = ETH_MIN_MTU and max_mtu = ETH_DATA_LEN, not allowing anymore to
+set mtu greater than 1500 (error: mtu greater than device maximum).
+
+The patch restores the original min/max mtu values set by usbnet after a
+raw_ip switch.
+
+Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+Acked-by: Bjørn Mork <bjorn@mork.no>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Documentation/kernel-parameters.txt |  4 ++++
- drivers/acpi/acpi_watchdog.c        | 12 +++++++++++-
- 2 files changed, 15 insertions(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/Documentation/kernel-parameters.txt b/Documentation/kernel-parameters.txt
-index b2d2f4539a3fe..e05d65d6fcb68 100644
---- a/Documentation/kernel-parameters.txt
-+++ b/Documentation/kernel-parameters.txt
-@@ -335,6 +335,10 @@ bytes respectively. Such letter suffixes can also be entirely omitted.
- 			dynamic table installation which will install SSDT
- 			tables to /sys/firmware/acpi/tables/dynamic.
- 
-+	acpi_no_watchdog	[HW,ACPI,WDT]
-+			Ignore the ACPI-based watchdog interface (WDAT) and let
-+			a native driver control the watchdog device instead.
-+
- 	acpi_rsdp=	[ACPI,EFI,KEXEC]
- 			Pass the RSDP address to the kernel, mostly used
- 			on machines running EFI runtime service to boot the
-diff --git a/drivers/acpi/acpi_watchdog.c b/drivers/acpi/acpi_watchdog.c
-index 396e358c2cee0..0c9d5f0fcf56c 100644
---- a/drivers/acpi/acpi_watchdog.c
-+++ b/drivers/acpi/acpi_watchdog.c
-@@ -58,12 +58,14 @@ static bool acpi_watchdog_uses_rtc(const struct acpi_table_wdat *wdat)
- }
- #endif
- 
-+static bool acpi_no_watchdog;
-+
- static const struct acpi_table_wdat *acpi_watchdog_get_wdat(void)
- {
- 	const struct acpi_table_wdat *wdat = NULL;
- 	acpi_status status;
- 
--	if (acpi_disabled)
-+	if (acpi_disabled || acpi_no_watchdog)
- 		return NULL;
- 
- 	status = acpi_get_table(ACPI_SIG_WDAT, 0,
-@@ -91,6 +93,14 @@ bool acpi_has_watchdog(void)
- }
- EXPORT_SYMBOL_GPL(acpi_has_watchdog);
- 
-+/* ACPI watchdog can be disabled on boot command line */
-+static int __init disable_acpi_watchdog(char *str)
-+{
-+	acpi_no_watchdog = true;
-+	return 1;
-+}
-+__setup("acpi_no_watchdog", disable_acpi_watchdog);
-+
- void __init acpi_watchdog_init(void)
- {
- 	const struct acpi_wdat_entry *entries;
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index db70d4c5778a6..1f76998db44e4 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -275,6 +275,9 @@ static void qmi_wwan_netdev_setup(struct net_device *net)
+ 		netdev_dbg(net, "mode: raw IP\n");
+ 	} else if (!net->header_ops) { /* don't bother if already set */
+ 		ether_setup(net);
++		/* Restoring min/max mtu values set originally by usbnet */
++		net->min_mtu = 0;
++		net->max_mtu = ETH_MAX_MTU;
+ 		clear_bit(EVENT_NO_IP_ALIGN, &dev->flags);
+ 		netdev_dbg(net, "mode: Ethernet\n");
+ 	}
 -- 
 2.20.1
 
