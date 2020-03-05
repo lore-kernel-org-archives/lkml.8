@@ -2,327 +2,187 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D5EC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F809C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 361FA20684
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F23520848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 21:04:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbgCEVCR (ORCPT
+        id S1726209AbgCEVES (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 16:02:17 -0500
-Received: from mga09.intel.com ([134.134.136.24]:9691 "EHLO mga09.intel.com"
+        Thu, 5 Mar 2020 16:04:18 -0500
+Received: from mx2.suse.de ([195.135.220.15]:42698 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbgCEVCQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 16:02:16 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 13:02:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,519,1574150400"; 
-   d="scan'208";a="234566101"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Mar 2020 13:02:13 -0800
-Received: from [10.251.16.243] (kliang2-mobl.ccr.corp.intel.com [10.251.16.243])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by linux.intel.com (Postfix) with ESMTPS id 219345802A3;
-        Thu,  5 Mar 2020 13:02:12 -0800 (PST)
-Subject: Re: [PATCH 02/12] perf tools: Support PERF_SAMPLE_BRANCH_HW_INDEX
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Cc:     jolsa@redhat.com, peterz@infradead.org, mingo@redhat.com,
-        linux-kernel@vger.kernel.org, namhyung@kernel.org,
-        adrian.hunter@intel.com, mathieu.poirier@linaro.org,
-        ravi.bangoria@linux.ibm.com, alexey.budankov@linux.intel.com,
-        vitaly.slobodskoy@intel.com, pavel.gerasimov@intel.com,
-        mpe@ellerman.id.au, eranian@google.com, ak@linux.intel.com
-References: <20200228163011.19358-1-kan.liang@linux.intel.com>
- <20200228163011.19358-3-kan.liang@linux.intel.com>
- <20200305202509.GA17483@kernel.org>
-From:   "Liang, Kan" <kan.liang@linux.intel.com>
-Message-ID: <74b01cee-12dc-2a95-9817-4f89a3fbd441@linux.intel.com>
-Date:   Thu, 5 Mar 2020 16:02:10 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726092AbgCEVES (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 16:04:18 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 016C9ACC6;
+        Thu,  5 Mar 2020 21:04:15 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id EFAF41E0FC2; Thu,  5 Mar 2020 22:04:14 +0100 (CET)
+Date:   Thu, 5 Mar 2020 22:04:14 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, stable@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH] loop: avoid EAGAIN, if offset or block_size are changed
+Message-ID: <20200305210414.GA1678@quack2.suse.cz>
+References: <20190518004751.18962-1-jaegeuk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200305202509.GA17483@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190518004751.18962-1-jaegeuk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri 17-05-19 17:47:51, Jaegeuk Kim wrote:
+> This patch tries to avoid EAGAIN due to nrpages!=0 that was originally trying
+> to drop stale pages resulting in wrong data access.
+> 
+> Report: https://bugs.chromium.org/p/chromium/issues/detail?id=938958#c38
 
+...
 
-On 3/5/2020 3:25 PM, Arnaldo Carvalho de Melo wrote:
-> Em Fri, Feb 28, 2020 at 08:30:01AM -0800, kan.liang@linux.intel.com escreveu:
->> From: Kan Liang <kan.liang@linux.intel.com>
->>
->> A new branch sample type PERF_SAMPLE_BRANCH_HW_INDEX has been introduced
->> in latest kernel.
->>
->> Enable HW_INDEX by default in LBR call stack mode.
->> If kernel doesn't support the sample type, switching it off.
->>
->> Add HW_INDEX in attr_fprintf as well. User can check whether the branch
->> sample type is set via debug information or header.
+> ---
+>  drivers/block/loop.c | 44 +++++++++++++++++---------------------------
+>  1 file changed, 17 insertions(+), 27 deletions(-)
 > 
-> So while this works with a kernel where PERF_SAMPLE_BRANCH_HW_INDEX is
-> present and we get, from the committer notes I was putting together
-> while testing/applying this cset:
-> 
-> First collect some samples with LBR callchains, system wide, for a few
-> seconds:
-> 
->    # perf record --call-graph lbr -a sleep 5
->    [ perf record: Woken up 1 times to write data ]
->    [ perf record: Captured and wrote 0.625 MB perf.data (224 samples) ]
->    #
-> 
-> Now lets use 'perf evlist -v' to look at the branch_sample_type:
-> 
->    # perf evlist -v
->    cycles: size: 120, { sample_period, sample_freq }: 4000, sample_type: IP|TID|TIME|CALLCHAIN|CPU|PERIOD|BRANCH_STACK, read_format: ID, disabled: 1, inherit: 1, mmap: 1, comm: 1, freq: 1, task: 1, precise_ip: 3, sample_id_all: 1, exclude_guest: 1, mmap2: 1, comm_exec: 1, ksymbol: 1, bpf_event: 1, branch_sample_type: USER|CALL_STACK|NO_FLAGS|NO_CYCLES|HW_INDEX
->    #
-> 
-> So the machine has the kernel feature, and it was correctly added to
-> perf_event_attr.branch_sample_type, for the default 'cycles' event.
-> 
-> Cool, and look at that 'attr.precise_ip: 3' part, the kernel is OK with
-> having that together with attr.branch_sample_type with HW_INDEX set.
-> 
-> The problem happens when I go test this in an older kernel, where the
-> kernel doesn't know about HW_INDEX, we get it disabled but then
-> precise_ip is set to zero in its detection , even if at the end we get
-> it to 3, as expected, which got me a bit confused, I'll investigate this
-> a bit more to try and avoid these extra probes for the max precise level
-> that fails in older kernels due to branch_sample_type having HW_INDEX
-> :-\
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index 102d79575895..7c7d2d9c47d0 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -1212,6 +1212,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  	kuid_t uid = current_uid();
+>  	struct block_device *bdev;
+>  	bool partscan = false;
+> +	bool drop_caches = false;
+>  
+>  	err = mutex_lock_killable(&loop_ctl_mutex);
+>  	if (err)
+> @@ -1232,10 +1233,8 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  	}
+>  
+>  	if (lo->lo_offset != info->lo_offset ||
+> -	    lo->lo_sizelimit != info->lo_sizelimit) {
+> -		sync_blockdev(lo->lo_device);
+> -		kill_bdev(lo->lo_device);
+> -	}
+> +	    lo->lo_sizelimit != info->lo_sizelimit)
+> +		drop_caches = true;
 
-It looks like this is an expected behavior for the event with maximum 
-precise config for current perf tool.
+I don't think this solution of moving buffer cache invalidation after loop
+device is updated is really correct.
 
-The related commits are as below:
-commit ID: 4e8a5c155137 ("perf evsel: Fix max perf_event_attr.precise_ip 
-detection")
-commit ID: cd136189370c ("perf evsel: Do not rely on errno values for 
-precise_ip fallback")
+If there's any dirty data in the buffer cache, god knows where it ends
+up being written after the loop device is reconfigured. Think e.g. of a
+file offset being changed. It may not be even possible to write it if say
+block size increased and we have now improperly sized buffers in the buffer
+cache...
 
-Before handling any standard fallback (not just HW_INDEX), perf tool 
-will try all the precise_ip value first.
+Frankly, I have rather limited sympathy to someone trying to reconfigure a
+loop device while it is in use. Is there any sane usecase? I'd be inclined
+to just use a similar trick as we did with LOOP_SET_FD and allow these
+changes only if the caller has the loop device open exclusively or we are
+able to upgrade to exclusive open. As otherwise say mounted filesystem on
+top of loop device being reconfigured is very likely to be in serious
+trouble (e.g. it's impossible to fully invalidate buffer cache in that
+case).
 
-Thanks,
-Kan
+But that's probably somewhat tangential to the problem you have. For your
+case I don't really see a race-free way to invalidate buffer cache and
+update loop configuration - the best I can see is to flush & invalidate
+the cache, freeze the bdev so that new data cannot be read into the
+buffer cache, check the cache is still empty - if yes, go ahead. If not,
+unfreeze and try again...
 
-> 
-> 
-> # perf record -vv --call-graph lbr -a sleep 5
-> <SNIP>
-> ------------------------------------------------------------
-> perf_event_attr:
->    size                             120
->    { sample_period, sample_freq }   4000
->    sample_type                      IP|TID|TIME|CALLCHAIN|CPU|PERIOD|BRANCH_STACK
->    read_format                      ID
->    disabled                         1
->    inherit                          1
->    mmap                             1
->    comm                             1
->    freq                             1
->    task                             1
->    precise_ip                       3
->    sample_id_all                    1
->    exclude_guest                    1
->    mmap2                            1
->    comm_exec                        1
->    ksymbol                          1
->    bpf_event                        1
->    branch_sample_type               USER|CALL_STACK|NO_FLAGS|NO_CYCLES|HW_INDEX
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
-> sys_perf_event_open failed, error -95
-> decreasing precise_ip by one (2)
-> ------------------------------------------------------------
-> perf_event_attr:
->    size                             120
->    { sample_period, sample_freq }   4000
->    sample_type                      IP|TID|TIME|CALLCHAIN|CPU|PERIOD|BRANCH_STACK
->    read_format                      ID
->    disabled                         1
->    inherit                          1
->    mmap                             1
->    comm                             1
->    freq                             1
->    task                             1
->    precise_ip                       2
->    sample_id_all                    1
->    exclude_guest                    1
->    mmap2                            1
->    comm_exec                        1
->    ksymbol                          1
->    bpf_event                        1
->    branch_sample_type               USER|CALL_STACK|NO_FLAGS|NO_CYCLES|HW_INDEX
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
-> sys_perf_event_open failed, error -95
-> decreasing precise_ip by one (1)
-> ------------------------------------------------------------
-> perf_event_attr:
->    size                             120
->    { sample_period, sample_freq }   4000
->    sample_type                      IP|TID|TIME|CALLCHAIN|CPU|PERIOD|BRANCH_STACK
->    read_format                      ID
->    disabled                         1
->    inherit                          1
->    mmap                             1
->    comm                             1
->    freq                             1
->    task                             1
->    precise_ip                       1
->    sample_id_all                    1
->    exclude_guest                    1
->    mmap2                            1
->    comm_exec                        1
->    ksymbol                          1
->    bpf_event                        1
->    branch_sample_type               USER|CALL_STACK|NO_FLAGS|NO_CYCLES|HW_INDEX
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
-> sys_perf_event_open failed, error -95
-> decreasing precise_ip by one (0)
-> ------------------------------------------------------------
-> perf_event_attr:
->    size                             120
->    { sample_period, sample_freq }   4000
->    sample_type                      IP|TID|TIME|CALLCHAIN|CPU|PERIOD|BRANCH_STACK
->    read_format                      ID
->    disabled                         1
->    inherit                          1
->    mmap                             1
->    comm                             1
->    freq                             1
->    task                             1
->    sample_id_all                    1
->    exclude_guest                    1
->    mmap2                            1
->    comm_exec                        1
->    ksymbol                          1
->    bpf_event                        1
->    branch_sample_type               USER|CALL_STACK|NO_FLAGS|NO_CYCLES|HW_INDEX
-> ------------------------------------------------------------
-> sys_perf_event_open: pid -1  cpu 0  group_fd -1  flags 0x8
-> sys_perf_event_open failed, error -22
-> switching off branch HW index support
-> ------------------------------------------------------------
-> perf_event_attr:
->    size                             120
->    { sample_period, sample_freq }   4000
->    sample_type                      IP|TID|TIME|CALLCHAIN|CPU|PERIOD|BRANCH_STACK
->    read_format                      ID
->    disabled                         1
->    inherit                          1
->    mmap                             1
->    comm                             1
->    freq                             1
->    task                             1
->    precise_ip                       3
->    sample_id_all                    1
->    exclude_guest                    1
->    mmap2                            1
->    comm_exec                        1
->    ksymbol                          1
->    bpf_event                        1
->    branch_sample_type               USER|CALL_STACK|NO_FLAGS|NO_CYCLES
-> ------------------------------------------------------------
-> 
-> 
->   
->> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
->> ---
->>   tools/perf/util/evsel.c                   | 15 ++++++++++++---
->>   tools/perf/util/evsel.h                   |  1 +
->>   tools/perf/util/perf_event_attr_fprintf.c |  1 +
->>   3 files changed, 14 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
->> index 05883a45de5b..816d930d774e 100644
->> --- a/tools/perf/util/evsel.c
->> +++ b/tools/perf/util/evsel.c
->> @@ -712,7 +712,8 @@ static void __perf_evsel__config_callchain(struct evsel *evsel,
->>   				attr->branch_sample_type = PERF_SAMPLE_BRANCH_USER |
->>   							PERF_SAMPLE_BRANCH_CALL_STACK |
->>   							PERF_SAMPLE_BRANCH_NO_CYCLES |
->> -							PERF_SAMPLE_BRANCH_NO_FLAGS;
->> +							PERF_SAMPLE_BRANCH_NO_FLAGS |
->> +							PERF_SAMPLE_BRANCH_HW_INDEX;
->>   			}
->>   		} else
->>   			 pr_warning("Cannot use LBR callstack with branch stack. "
->> @@ -763,7 +764,8 @@ perf_evsel__reset_callgraph(struct evsel *evsel,
->>   	if (param->record_mode == CALLCHAIN_LBR) {
->>   		perf_evsel__reset_sample_bit(evsel, BRANCH_STACK);
->>   		attr->branch_sample_type &= ~(PERF_SAMPLE_BRANCH_USER |
->> -					      PERF_SAMPLE_BRANCH_CALL_STACK);
->> +					      PERF_SAMPLE_BRANCH_CALL_STACK |
->> +					      PERF_SAMPLE_BRANCH_HW_INDEX);
->>   	}
->>   	if (param->record_mode == CALLCHAIN_DWARF) {
->>   		perf_evsel__reset_sample_bit(evsel, REGS_USER);
->> @@ -1673,6 +1675,8 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
->>   		evsel->core.attr.ksymbol = 0;
->>   	if (perf_missing_features.bpf)
->>   		evsel->core.attr.bpf_event = 0;
->> +	if (perf_missing_features.branch_hw_idx)
->> +		evsel->core.attr.branch_sample_type &= ~PERF_SAMPLE_BRANCH_HW_INDEX;
->>   retry_sample_id:
->>   	if (perf_missing_features.sample_id_all)
->>   		evsel->core.attr.sample_id_all = 0;
->> @@ -1784,7 +1788,12 @@ static int evsel__open_cpu(struct evsel *evsel, struct perf_cpu_map *cpus,
->>   	 * Must probe features in the order they were added to the
->>   	 * perf_event_attr interface.
->>   	 */
->> -	if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
->> +	if (!perf_missing_features.branch_hw_idx &&
->> +	    (evsel->core.attr.branch_sample_type & PERF_SAMPLE_BRANCH_HW_INDEX)) {
->> +		perf_missing_features.branch_hw_idx = true;
->> +		pr_debug2("switching off branch HW index support\n");
->> +		goto fallback_missing_features;
->> +	} else if (!perf_missing_features.aux_output && evsel->core.attr.aux_output) {
->>   		perf_missing_features.aux_output = true;
->>   		pr_debug2_peo("Kernel has no attr.aux_output support, bailing out\n");
->>   		goto out_close;
->> diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
->> index 99a0cb60c556..33804740e2ca 100644
->> --- a/tools/perf/util/evsel.h
->> +++ b/tools/perf/util/evsel.h
->> @@ -119,6 +119,7 @@ struct perf_missing_features {
->>   	bool ksymbol;
->>   	bool bpf;
->>   	bool aux_output;
->> +	bool branch_hw_idx;
->>   };
->>   
->>   extern struct perf_missing_features perf_missing_features;
->> diff --git a/tools/perf/util/perf_event_attr_fprintf.c b/tools/perf/util/perf_event_attr_fprintf.c
->> index 651203126c71..355d3458d4e6 100644
->> --- a/tools/perf/util/perf_event_attr_fprintf.c
->> +++ b/tools/perf/util/perf_event_attr_fprintf.c
->> @@ -50,6 +50,7 @@ static void __p_branch_sample_type(char *buf, size_t size, u64 value)
->>   		bit_name(ABORT_TX), bit_name(IN_TX), bit_name(NO_TX),
->>   		bit_name(COND), bit_name(CALL_STACK), bit_name(IND_JUMP),
->>   		bit_name(CALL), bit_name(NO_FLAGS), bit_name(NO_CYCLES),
->> +		bit_name(HW_INDEX),
->>   		{ .name = NULL, }
->>   	};
->>   #undef bit_name
->> -- 
->> 2.17.1
->>
-> 
+								Honza
+
+>  	/* I/O need to be drained during transfer transition */
+>  	blk_mq_freeze_queue(lo->lo_queue);
+> @@ -1265,14 +1264,6 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  
+>  	if (lo->lo_offset != info->lo_offset ||
+>  	    lo->lo_sizelimit != info->lo_sizelimit) {
+> -		/* kill_bdev should have truncated all the pages */
+> -		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
+> -			err = -EAGAIN;
+> -			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+> -				__func__, lo->lo_number, lo->lo_file_name,
+> -				lo->lo_device->bd_inode->i_mapping->nrpages);
+> -			goto out_unfreeze;
+> -		}
+>  		if (figure_loop_size(lo, info->lo_offset, info->lo_sizelimit)) {
+>  			err = -EFBIG;
+>  			goto out_unfreeze;
+> @@ -1317,6 +1308,12 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+>  		bdev = lo->lo_device;
+>  		partscan = true;
+>  	}
+> +
+> +	/* truncate stale pages cached by previous operations */
+> +	if (!err && drop_caches) {
+> +		sync_blockdev(lo->lo_device);
+> +		kill_bdev(lo->lo_device);
+> +	}
+>  out_unlock:
+>  	mutex_unlock(&loop_ctl_mutex);
+>  	if (partscan)
+> @@ -1498,6 +1495,7 @@ static int loop_set_dio(struct loop_device *lo, unsigned long arg)
+>  
+>  static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+>  {
+> +	bool drop_caches = false;
+>  	int err = 0;
+>  
+>  	if (lo->lo_state != Lo_bound)
+> @@ -1506,23 +1504,10 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+>  	if (arg < 512 || arg > PAGE_SIZE || !is_power_of_2(arg))
+>  		return -EINVAL;
+>  
+> -	if (lo->lo_queue->limits.logical_block_size != arg) {
+> -		sync_blockdev(lo->lo_device);
+> -		kill_bdev(lo->lo_device);
+> -	}
+> +	if (lo->lo_queue->limits.logical_block_size != arg)
+> +		drop_caches = true;
+>  
+>  	blk_mq_freeze_queue(lo->lo_queue);
+> -
+> -	/* kill_bdev should have truncated all the pages */
+> -	if (lo->lo_queue->limits.logical_block_size != arg &&
+> -			lo->lo_device->bd_inode->i_mapping->nrpages) {
+> -		err = -EAGAIN;
+> -		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+> -			__func__, lo->lo_number, lo->lo_file_name,
+> -			lo->lo_device->bd_inode->i_mapping->nrpages);
+> -		goto out_unfreeze;
+> -	}
+> -
+>  	blk_queue_logical_block_size(lo->lo_queue, arg);
+>  	blk_queue_physical_block_size(lo->lo_queue, arg);
+>  	blk_queue_io_min(lo->lo_queue, arg);
+> @@ -1530,6 +1515,11 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
+>  out_unfreeze:
+>  	blk_mq_unfreeze_queue(lo->lo_queue);
+>  
+> +	/* truncate stale pages cached by previous operations */
+> +	if (drop_caches) {
+> +		sync_blockdev(lo->lo_device);
+> +		kill_bdev(lo->lo_device);
+> +	}
+>  	return err;
+>  }
+>  
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
