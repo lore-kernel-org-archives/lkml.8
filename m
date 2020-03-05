@@ -2,142 +2,106 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD0B8C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37920C3F2D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA3920848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:57:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Oeu+u/K9"
+	by mail.kernel.org (Postfix) with ESMTP id 1804E20637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:58:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726273AbgCEN5N (ORCPT
+        id S1726317AbgCEN6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:57:13 -0500
-Received: from mail27.static.mailgun.info ([104.130.122.27]:33807 "EHLO
-        mail27.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726209AbgCEN5N (ORCPT
+        Thu, 5 Mar 2020 08:58:23 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36408 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725946AbgCEN6X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:57:13 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1583416632; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=zOieWkAjoEw8P19n/t7PzYyxX8NrouzGC34JBMcgWuQ=; b=Oeu+u/K9+4A0n+03x8XwiMwLk1jZg7UOW1a3l66pEbCBQLH3kBxn3I/J4lKaYgxCgszODszw
- huET20BZJUdXLZNcO1nN5i+SImvd+PcgNSjovke4+qDmxUXML75CKcymzBMPZ3JUe0qwmbCt
- Q7B17mBk+I5RlqwAFycMo+M+HqM=
-X-Mailgun-Sending-Ip: 104.130.122.27
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e610531.7f1308bc18f0-smtp-out-n03;
- Thu, 05 Mar 2020 13:57:05 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 35012C433A2; Thu,  5 Mar 2020 13:57:04 +0000 (UTC)
-Received: from [10.206.25.140] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vbadigan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 20689C43383;
-        Thu,  5 Mar 2020 13:56:56 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 20689C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=vbadigan@codeaurora.org
-Subject: Re: [PATCH V4] mmc: sdhci-msm: Update system suspend/resume callbacks
- of sdhci-msm platform driver
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Asutosh Das <asutoshd@codeaurora.org>,
-        Sahitya Tummala <stummala@codeaurora.org>,
-        Sayali Lokhande <sayalil@codeaurora.org>, cang@codeaurora.org,
-        Ram Prakash Gupta <rampraka@codeaurora.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-References: <1582181100-29914-1-git-send-email-sbhanu@codeaurora.org>
- <CAPDyKFqSJ4h7UvQfQzWmSq9gg97A0MXvdcuXXaY7b-YUHs=V2g@mail.gmail.com>
- <158334039680.7173.16159724456027777605@swboyd.mtv.corp.google.com>
-From:   Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Message-ID: <5f854baa-3bb1-8cea-b605-dfabae8d8b2a@codeaurora.org>
-Date:   Thu, 5 Mar 2020 19:26:54 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 08:58:23 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025DsGLM010806;
+        Thu, 5 Mar 2020 08:58:19 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhryevqjy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Mar 2020 08:58:19 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 025Dq3dI024309;
+        Thu, 5 Mar 2020 13:58:17 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma05wdc.us.ibm.com with ESMTP id 2yffk6uh61-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 05 Mar 2020 13:58:17 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 025DwH6j49545712
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Mar 2020 13:58:17 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01653C6059;
+        Thu,  5 Mar 2020 13:58:17 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 31BBDC6057;
+        Thu,  5 Mar 2020 13:58:16 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Mar 2020 13:58:16 +0000 (GMT)
+Subject: Re: [PATCH v6 3/3] tpm: ibmvtpm: Add support for TPM2
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org
+Cc:     aik@ozlabs.ru, david@gibson.dropbear.id.au,
+        linux-kernel@vger.kernel.org, nayna@linux.vnet.ibm.com,
+        gcwilson@linux.ibm.com, jgg@ziepe.ca
+References: <20200304132243.179402-1-stefanb@linux.vnet.ibm.com>
+ <20200304132243.179402-4-stefanb@linux.vnet.ibm.com>
+ <a54d6cffe536d568a9fde46f1f32616e89a42d30.camel@linux.intel.com>
+From:   Stefan Berger <stefanb@linux.ibm.com>
+Message-ID: <8dcd22c1-b05f-d619-58c5-fd2248c75b9e@linux.ibm.com>
+Date:   Thu, 5 Mar 2020 08:58:15 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <158334039680.7173.16159724456027777605@swboyd.mtv.corp.google.com>
+In-Reply-To: <a54d6cffe536d568a9fde46f1f32616e89a42d30.camel@linux.intel.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-05_04:2020-03-05,2020-03-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ bulkscore=0 phishscore=0 impostorscore=0 spamscore=0 adultscore=0
+ clxscore=1015 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003050090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 3/4/2020 10:16 PM, Stephen Boyd wrote:
-> Quoting Ulf Hansson (2020-03-04 07:34:29)
->> On Thu, 20 Feb 2020 at 07:45, Shaik Sajida Bhanu <sbhanu@codeaurora.org> wrote:
->>> The existing suspend/resume callbacks of sdhci-msm driver are just
->>> gating/un-gating the clocks. During suspend cycle more can be done
->>> like disabling controller, disabling card detection, enabling wake-up events.
->>>
->>> So updating the system pm callbacks for performing these extra
->>> actions besides controlling the clocks.
->>>
->>> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
->>> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
->>> ---
->>> Changes since V3:
->>>      Invoking sdhci & cqhci resume if sdhci_host_suspend fails.
->>>      Removed condition check before invoking cqhci_resume since its a dummy function.
->>>
->>> Changes since V2:
->>>      Removed disabling/enabling pwr-irq from system pm ops.
->>>
->>> Changes since V1:
->>>      Invoking pm_runtime_force_suspend/resume instead of
->>>      sdhci_msm_runtime_suepend/resume.
->>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
->>> index 3955fa5d..3559b50 100644
->>> --- a/drivers/mmc/host/sdhci-msm.c
->>> +++ b/drivers/mmc/host/sdhci-msm.c
->>> @@ -2159,9 +2159,52 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
-> [...]
->>> +
->>> +       ret = sdhci_suspend_host(host);
->>> +       if (ret)
->>> +               goto resume_cqhci;
->> sdhci_suspend_host() can't be called on a device that has been runtime
->> suspended, as that would lead to accessing device registers when
->> clocks/PM domains are gated.
+On 3/5/20 6:21 AM, Jarkko Sakkinen wrote:
+> On Wed, 2020-03-04 at 08:22 -0500, Stefan Berger wrote:
+>> From: Stefan Berger <stefanb@linux.ibm.com>
 >>
->> Depending on how the corresponding cqhci device is managed from a
->> runtime PM point of view, it could also be problematic to call
->> cqhci_suspend().
-> There seems to be another patch floating around here[1] that is an
-> attempt at a fix to this patch. They should probably be combined so that
-> it's not confusing what's going on.
+>> Support TPM2 in the IBM vTPM driver. The hypervisor tells us what
+>> version of TPM is connected through the vio_device_id.
+>>
+>> In case a TPM2 device is found, we set the TPM_CHIP_FLAG_TPM2 flag
+>> and get the command codes attributes table. The driver does
+>> not need the timeouts and durations, though.
+>>
+>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> There is huge bunch of people in the cc-list and these patches
+> have total zero tested-by's. Why is that?
 
-The other fix is altogether different. It is the fix for the issue seen 
-with run-time pm.
 
-whereas this change is for system pm.
+I cc'ed them because of their involvement in other layers. That's all I 
+can say.
 
->>> +
->>> +       ret = pm_runtime_force_suspend(dev);
->> It looks to me that perhaps you could make use of solely
->> pm_runtime_force_suspend(), then just skip calling
->> sdhci_suspend|resume_host() altogether. Do you think that could work?
-> Does that do all the things the commit text mentions is desired for
-> system suspend?
+   Stefan
+
 >
->>> like disabling controller, disabling card detection, enabling wake-up events.
-> [1] https://lore.kernel.org/linux-arm-msm/1583322863-21790-1-git-send-email-vbadigan@codeaurora.org/
+> /Jarkko
+>
+
