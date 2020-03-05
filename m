@@ -2,129 +2,156 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791B4C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:07:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F038C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CC220848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F962166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:08:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="38/VjRet"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b0VYjSjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgCEKHV (ORCPT
+        id S1726981AbgCEKIs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:07:21 -0500
-Received: from mail-dm6nam11on2040.outbound.protection.outlook.com ([40.107.223.40]:25185
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725946AbgCEKHU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:07:20 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Y/INzPeXBWL8gkXIsJxJlfTtycHpMT8yc1LY9ly8+mTacBWFg63pNhGOvxx4V6nRWbEixWf+BdmHk9meh/ImpcfpHHVVCMIrZ7Y3wgbyDXTPx438G7yDCB9kzUnsNaStqWoBjjc4h0mSEwr8jsQKQTmlFwcG6odOU6Ad1npMKPuXCpq3db4TCNGs7rloNI+MVRog41kt2b4b0DPj0nvOGH2Ptf6bTe6ZYRVOFL4/R7R32DcZhPbsLMS7bAlOTi+/G1ako4AXYdy5DEkhSshEvBoZEv1tXaanKf807HXYvwa742bB5bQcGXo9f51UCC+4D7NjXy9s6A5bXik01JapFg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KQejtw5ZKVrkCo3MY7dxiQYYRLPjr06Gv2FeiOI1YPw=;
- b=C7Ni5VV9qR10zK09jrMqiTeFb64NQrIME+qCc5PdcN891eDDF60VqxiaUwD9WUUv70IUfA+D08oYYTFwcZrdoLgaAaUh4Wh4sxIi8FUVAx126LoldtJqvI0xHV23lWREPHWeByjxcq2rcSO0npl+FvGlNvyjqOjUQzc+jufQB37ibV10iew4+btIluZNQ9hfO8tsuCQxU3BnZGFqug8QlKG2g0QukrB7uuyoddH3y0OJQHwUJ9xjVHAYq3MfjLLJCzqJ48Rkx+aV6RHtS/o95rQmSATY7Af8ZQSPMm1vtfvGRAzv4M48JKchhsFk44JnkLWb0kyaQoOLWZ9p8p5/ZQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=KQejtw5ZKVrkCo3MY7dxiQYYRLPjr06Gv2FeiOI1YPw=;
- b=38/VjRetftFrgV/f3hkWCDuPyMgc4J/1NN5ljxDFygyVEYGbdW+cqMsf7MSRQHThxfU1FvInylpPgliGBkFI4S6lNurgwjWo2ad7n5G2cC9Z+TyHDeEM9sBkavWnDePVM3SlzudTEpqsHokaarsb/Mz9rzJ/6Cn3JYSnPeD/fKM=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=Akshu.Agrawal@amd.com; 
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com (2603:10b6:208:aa::15)
- by MN2PR12MB3950.namprd12.prod.outlook.com (2603:10b6:208:16d::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.16; Thu, 5 Mar
- 2020 10:07:17 +0000
-Received: from MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::c3:c235:f1b0:50cc]) by MN2PR12MB2878.namprd12.prod.outlook.com
- ([fe80::c3:c235:f1b0:50cc%6]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
- 10:07:17 +0000
-Subject: Re: [PATCH] ASoc: amd: acp3x: Add missing include <linux/io.h>
-To:     YueHaibing <yuehaibing@huawei.com>, lgirdwood@gmail.com,
-        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
-        akshu.agrawal@amd.com
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20200304084057.44764-1-yuehaibing@huawei.com>
-From:   "Agrawal, Akshu" <aagrawal2@amd.com>
-Message-ID: <5d205b07-32c4-db9e-76bb-936bca3247ce@amd.com>
-Date:   Thu, 5 Mar 2020 15:37:05 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-In-Reply-To: <20200304084057.44764-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-ClientProxiedBy: MAXPR01CA0084.INDPRD01.PROD.OUTLOOK.COM
- (2603:1096:a00:49::26) To MN2PR12MB2878.namprd12.prod.outlook.com
- (2603:10b6:208:aa::15)
+        Thu, 5 Mar 2020 05:08:48 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31287 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726048AbgCEKIr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 05:08:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583402926;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=a++OnOLHx7X8yF6qTfZsk/CBiAFakXwwpWB/hlFxqQk=;
+        b=b0VYjSjS8cYmXf37DQDgYEnEctWn1+KamHSN5i4zPaYzLMWfk04ubqegbh8AKo/bBxzWWr
+        AhlqZio4+9CnNCDB+sDtApjjaO2hvweK8UqVJzeEMrinQBRH+AvnLtN8BSODXokRKnfRr9
+        jxTnnEVS+myOwxKB0Jmy8GFJPuxHSmE=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-91-J_PgCmR1P86beQUa6xyehA-1; Thu, 05 Mar 2020 05:08:43 -0500
+X-MC-Unique: J_PgCmR1P86beQUa6xyehA-1
+Received: by mail-wr1-f69.google.com with SMTP id m18so2070591wro.22
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 02:08:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=a++OnOLHx7X8yF6qTfZsk/CBiAFakXwwpWB/hlFxqQk=;
+        b=osK3H/uamH6e6YVF4djZSnx2AfKTl8fbud3rbCjxLnHMIVCDfHHAo6HhjOMxF37eD7
+         xry4Q1V4iS6SCjXIirSA5BUJZfH2XGppP5Y4iaHlwZlAvn6o+wTUfjRncooY3UlH4EPy
+         f5BNvF6ukA3GP6IxuZM0/1q0fD8OGb7zdusbhITJ4YfvUp1q5Pyuk5NpaXgItEF42z1R
+         mn5aWhyL8F3ZcPPpNRk5abcRnTcyxgSvVlqahJSFo+WbM764K45Dbbr0lvYL4ddzhLf+
+         HIJ4M1HgF+mSE7vYHnylkJRTNj9wFzStJr8WXyGpSwIOb/Nj7RECIag0Lcxg8+ORu8za
+         rWYw==
+X-Gm-Message-State: ANhLgQ1oc+0xgLv1Krm7vHbh1MMmD1Cgkv10jQ3opkgMAThGp4C6FKoS
+        AdssmL+SPltxuvEa1DzlDa0vee0oiMyWi0sLq4cNzKFp30ha04NbkSUIurdQV+Xn+5cUf6a4w20
+        xUeZEUFdaxWnJDofXw3ZcSvOM
+X-Received: by 2002:a1c:f008:: with SMTP id a8mr8497021wmb.81.1583402921632;
+        Thu, 05 Mar 2020 02:08:41 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vsbhjFKaAeSfPW48bnxoeEB0ks/A9uEmzLV2bTa/Ugj9be5kTg7qhyLsAMwgyzYk+RO9VUxug==
+X-Received: by 2002:a1c:f008:: with SMTP id a8mr8497006wmb.81.1583402921444;
+        Thu, 05 Mar 2020 02:08:41 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id i6sm10535928wra.42.2020.03.05.02.08.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 02:08:40 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org,
+        pbonzini@redhat.com, rkrcmar@redhat.com,
+        sean.j.christopherson@intel.com, jmattson@google.com,
+        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, hpa@zytor.com
+Subject: Re: [PATCH] KVM: VMX: Use wrapper macro ~RMODE_GUEST_OWNED_EFLAGS_BITS directly
+In-Reply-To: <1583375731-18219-1-git-send-email-linmiaohe@huawei.com>
+References: <1583375731-18219-1-git-send-email-linmiaohe@huawei.com>
+Date:   Thu, 05 Mar 2020 11:08:39 +0100
+Message-ID: <87tv33cdw8.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [10.136.133.153] (165.204.157.251) by MAXPR01CA0084.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:49::26) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.15 via Frontend Transport; Thu, 5 Mar 2020 10:07:14 +0000
-X-Originating-IP: [165.204.157.251]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: a222705f-b7c9-4877-e6c2-08d7c0ecfbec
-X-MS-TrafficTypeDiagnostic: MN2PR12MB3950:|MN2PR12MB3950:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <MN2PR12MB3950BF3EC28FA5F0990826F7F8E20@MN2PR12MB3950.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:6108;
-X-Forefront-PRVS: 03333C607F
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(366004)(346002)(376002)(136003)(189003)(199004)(16576012)(316002)(31696002)(66476007)(53546011)(66556008)(5660300002)(6666004)(26005)(4326008)(478600001)(6636002)(2906002)(16526019)(186003)(36756003)(6486002)(66946007)(31686004)(8936002)(8676002)(81166006)(956004)(2616005)(81156014)(52116002)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR12MB3950;H:MN2PR12MB2878.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 40YL7ogObNXY6l/8FCEi2t3is58UdsqLm3c+5Buv6/7wlCzWp7Y7wDCPYNXIwBtQWLETh4/9hY+ZqyPj7kI01LNxW7b1I1tWvWcG8t+491gCVPwM72liZr0zPaOImDgUHmu1YxCUy3T/uT9Ha3lkWSb6TFJzxsaOPV521uut5rWZSP20cQ/7VoVdNxDqEkEc8EQRHSQtSQh8anHTr+SxxZQHhUi/XNOSHWlmO5SU8VdmC4hc5qiAQ5uBejtvLsZxgdttFpCbqcFt8SIuwUqpULfTGYEHKoIs3LDkpwDX7I8YP3u8UnHP/THpLxGldGq1ryRVPVa+LF0vmK2ruqGiQRraEv9+5PATV3dAVwlSRHjis+DqefHoL1ve8Vm9ptA894bUxeGRgbRDLSo0oJCbsC/+uuFe2hVCteONJTiYFUjMTZq8TIRdxlm6C46ByYedDqCalKLVSa+d4CllwzlnwX1dg6emPp7ha6dP6a706u12DKhSKtIaAX8Bs7DoM04L
-X-MS-Exchange-AntiSpam-MessageData: 6PC4YTLapYAy+QY+6gouEDGrQZlKa4pJJcERf5drhE4BzGtkHgd4bGse3AewLNf4yf9tUztYISKk0WgKftDxm3QTc5ZzVclwQohIMYBRfXS111pTXhKPSIh/zdHnC6LsiqCD1KSiXyq8oB/aGmgzCQ==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a222705f-b7c9-4877-e6c2-08d7c0ecfbec
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 10:07:16.9275
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7hUvoJDsc1toMSUxxnOyOLYb1pO8SuXlcXoyFpKv4Va9mMwKu8zPdNA6Ddj3XZ+uxh0qv99Ti0nSt0LhCRs+3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB3950
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+linmiaohe <linmiaohe@huawei.com> writes:
 
-On 3/4/2020 2:10 PM, YueHaibing wrote:
-> gcc 7.4.0 build fails:
+> From: Miaohe Lin <linmiaohe@huawei.com>
 >
-> In file included from sound/soc/amd/acp3x-rt5682-max9836.c:20:0:
-> sound/soc/amd/raven/acp3x.h: In function rv_readl:
-> sound/soc/amd/raven/acp3x.h:113:9: error: implicit declaration of function readl; did you mean rv_readl? [-Werror=implicit-function-declaration]
->    return readl(base_addr - ACP3x_PHY_BASE_ADDRESS);
->           ^~~~~
->           rv_readl
-> sound/soc/amd/raven/acp3x.h: In function rv_writel:
-> sound/soc/amd/raven/acp3x.h:118:2: error: implicit declaration of function writel; did you mean rv_writel? [-Werror=implicit-function-declaration]
->    writel(val, base_addr - ACP3x_PHY_BASE_ADDRESS);
->    ^~~~~~
->    rv_writel
-We don't hit this error and neither with i386-allyesconfig. Would be 
-interesting to know with which config do you get this error.
+> (X86_EFLAGS_IOPL | X86_EFLAGS_VM) indicates the eflag bits that can not be
+> owned by realmode guest, i.e. ~RMODE_GUEST_OWNED_EFLAGS_BITS. Use wrapper
+> macro directly to make it clear and also improve readability.
 >
-> Add <linux/io.h> to fix this.
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index 743b81642ce2..9571f8dea016 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1466,7 +1466,7 @@ void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
+>  	vmx->rflags = rflags;
+>  	if (vmx->rmode.vm86_active) {
+>  		vmx->rmode.save_rflags = rflags;
+> -		rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
+> +		rflags |= ~RMODE_GUEST_OWNED_EFLAGS_BITS;
+>  	}
+>  	vmcs_writel(GUEST_RFLAGS, rflags);
+>  
+> @@ -2797,7 +2797,7 @@ static void enter_rmode(struct kvm_vcpu *vcpu)
+>  	flags = vmcs_readl(GUEST_RFLAGS);
+>  	vmx->rmode.save_rflags = flags;
+>  
+> -	flags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
+> +	flags |= ~RMODE_GUEST_OWNED_EFLAGS_BITS;
+>  
+>  	vmcs_writel(GUEST_RFLAGS, flags);
+>  	vmcs_writel(GUEST_CR4, vmcs_readl(GUEST_CR4) | X86_CR4_VME);
 
-Since readl and writel are used by acp3x.h, it would be better to 
-include linux/io.h in acp3x.h and avoid including it in every file which 
-includes acp3x.h
+Double negations are evil, let's define a macro for 'X86_EFLAGS_IOPL |
+X86_EFLAGS_VM' instead (completely untested):
 
-Thanks,
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 4ee19fb35cde..d838f93bd6d2 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -139,7 +139,8 @@ module_param_named(preemption_timer, enable_preemption_timer, bool, S_IRUGO);
+ #define KVM_PMODE_VM_CR4_ALWAYS_ON (X86_CR4_PAE | X86_CR4_VMXE)
+ #define KVM_RMODE_VM_CR4_ALWAYS_ON (X86_CR4_VME | X86_CR4_PAE | X86_CR4_VMXE)
+ 
+-#define RMODE_GUEST_OWNED_EFLAGS_BITS (~(X86_EFLAGS_IOPL | X86_EFLAGS_VM))
++#define RMODE_HOST_OWNED_EFLAGS_BITS (X86_EFLAGS_IOPL | X86_EFLAGS_VM)
++#define RMODE_GUEST_OWNED_EFLAGS_BITS (~RMODE_HOST_OWNED_EFLAGS_BITS)
+ 
+ #define MSR_IA32_RTIT_STATUS_MASK (~(RTIT_STATUS_FILTEREN | \
+        RTIT_STATUS_CONTEXTEN | RTIT_STATUS_TRIGGEREN | \
+@@ -1468,7 +1469,7 @@ void vmx_set_rflags(struct kvm_vcpu *vcpu, unsigned long rflags)
+        vmx->rflags = rflags;
+        if (vmx->rmode.vm86_active) {
+                vmx->rmode.save_rflags = rflags;
+-               rflags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
++               rflags |= RMODE_HOST_OWNED_EFLAGS_BITS;
+        }
+        vmcs_writel(GUEST_RFLAGS, rflags);
+ 
+@@ -2794,7 +2795,7 @@ static void enter_rmode(struct kvm_vcpu *vcpu)
+        flags = vmcs_readl(GUEST_RFLAGS);
+        vmx->rmode.save_rflags = flags;
+ 
+-       flags |= X86_EFLAGS_IOPL | X86_EFLAGS_VM;
++       flags |= RMODE_HOST_OWNED_EFLAGS_BITS;
+ 
+        vmcs_writel(GUEST_RFLAGS, flags);
+        vmcs_writel(GUEST_CR4, vmcs_readl(GUEST_CR4) | X86_CR4_VME);
 
-Akshu
+-- 
+Vitaly
 
