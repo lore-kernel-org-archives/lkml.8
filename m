@@ -2,101 +2,93 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C185FC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46050C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBB722B48
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:15:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CCB6208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="e1uR1eXr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbgCEJPD (ORCPT
+        id S1726390AbgCEJQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:15:03 -0500
-Received: from mga11.intel.com ([192.55.52.93]:5535 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725900AbgCEJPC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:15:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 01:15:02 -0800
-X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
-   d="scan'208";a="234355748"
-Received: from bennur-mobl1.ger.corp.intel.com (HELO localhost) ([10.249.38.13])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 01:14:54 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Rajat Jain <rajatja@google.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Imre Deak <imre.deak@intel.com>,
-        =?utf-8?Q?Jo?= =?utf-8?Q?s=C3=A9?= Roberto de Souza 
-        <jose.souza@intel.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        gregkh@linuxfoundation.org, mathewk@google.com,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jonathan Corbet <corbet@lwn.net>, Pavel Machek <pavel@denx.de>,
-        seanpaul@google.com, Duncan Laurie <dlaurie@google.com>,
-        jsbarnes@google.com, Thierry Reding <thierry.reding@gmail.com>,
-        mpearson@lenovo.com, Nitin Joshi1 <njoshi1@lenovo.com>,
-        Sugumaran Lacshiminarayanan <slacshiminar@lenovo.com>,
-        Tomoki Maruichi <maruichit@lenovo.com>
-Cc:     Rajat Jain <rajatja@google.com>, rajatxjain@gmail.com
-Subject: Re: [PATCH v6 1/3] intel_acpi: Rename drm_dev local variable to dev
-In-Reply-To: <20200305012338.219746-2-rajatja@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200305012338.219746-1-rajatja@google.com> <20200305012338.219746-2-rajatja@google.com>
-Date:   Thu, 05 Mar 2020 11:14:55 +0200
-Message-ID: <87r1y7noxc.fsf@intel.com>
+        Thu, 5 Mar 2020 04:16:31 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:11935 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725816AbgCEJQb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 04:16:31 -0500
+X-UUID: 672c733cef6941dea7ba533c344ee0be-20200305
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=kpiqrfWIacgjKLiLWLGT9gO7LZYPAEBqZuMrrpG6/+0=;
+        b=e1uR1eXr/oH/WxQrsS/6G19c8yvMVUCDaMDEyGsSElteJVeSs1Mp+D+YloSO9vEIw9cEUPyGKw3h++cngUajTi7KYLgEahxNcAJTO/gIJj+o0aR1X9clAcCG7/qgisHx9vk6lSOQgg6Dtm5SMjoVA3YuK2N11SN1cY94xfgFxlI=;
+X-UUID: 672c733cef6941dea7ba533c344ee0be-20200305
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <walter-zh.wu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2088496652; Thu, 05 Mar 2020 17:16:24 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by mtkexhb01.mediatek.inc
+ (172.21.101.102) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 5 Mar
+ 2020 17:15:40 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 5 Mar 2020 17:15:37 +0800
+Message-ID: <1583399782.17146.14.camel@mtksdccf07>
+Subject: Re: mmotm 2020-03-03-22-28 uploaded (warning: objtool:)
+From:   Walter Wu <walter-zh.wu@mediatek.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Randy Dunlap <rdunlap@infradead.org>, <akpm@linux-foundation.org>,
+        <broonie@kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-next@vger.kernel.org>, <mhocko@suse.cz>,
+        <mm-commits@vger.kernel.org>, <sfr@canb.auug.org.au>,
+        Josh Poimboeuf <jpoimboe@redhat.com>, <dvyukov@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Date:   Thu, 5 Mar 2020 17:16:22 +0800
+In-Reply-To: <20200305081842.GB2619@hirez.programming.kicks-ass.net>
+References: <20200304062843.9yA6NunM5%akpm@linux-foundation.org>
+         <cd1c6bd2-3db3-0058-f3b4-36b2221544a0@infradead.org>
+         <20200305081717.GT2596@hirez.programming.kicks-ass.net>
+         <20200305081842.GB2619@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 04 Mar 2020, Rajat Jain <rajatja@google.com> wrote:
-> Change the struct drm_device * local variable from drm_dev to dev
-> per the feedback received here:
-> https://lkml.org/lkml/2020/1/24/1143
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
+T24gVGh1LCAyMDIwLTAzLTA1IGF0IDA5OjE4ICswMTAwLCBQZXRlciBaaWpsc3RyYSB3cm90ZToN
+Cj4gT24gVGh1LCBNYXIgMDUsIDIwMjAgYXQgMDk6MTc6MTdBTSArMDEwMCwgUGV0ZXIgWmlqbHN0
+cmEgd3JvdGU6DQo+ID4gT24gV2VkLCBNYXIgMDQsIDIwMjAgYXQgMDk6MzQ6NDlBTSAtMDgwMCwg
+UmFuZHkgRHVubGFwIHdyb3RlOg0KPiANCj4gPiA+IG1tL2thc2FuL2NvbW1vbi5vOiB3YXJuaW5n
+OiBvYmp0b29sOiBrYXNhbl9yZXBvcnQoKSsweDEzOiBjYWxsIHRvIHJlcG9ydF9lbmFibGVkKCkg
+d2l0aCBVQUNDRVNTIGVuYWJsZWQNCj4gPiANCj4gPiBJIHVzZWQgbmV4dC9tYXN0ZXIgaW5zdGVh
+ZCwgYW5kIGZvdW5kIHRoZSBiZWxvdyBicm9rZW4gY29tbWl0DQo+ID4gcmVzcG9uc2libGUgZm9y
+IHRoaXMuDQo+IA0KPiA+IEBAIC02MzQsMTIgKzYzNywyMCBAQCB2b2lkIGthc2FuX2ZyZWVfc2hh
+ZG93KGNvbnN0IHN0cnVjdCB2bV9zdHJ1Y3QgKnZtKQ0KPiA+ICAjZW5kaWYNCj4gPiAgDQo+ID4g
+IGV4dGVybiB2b2lkIF9fa2FzYW5fcmVwb3J0KHVuc2lnbmVkIGxvbmcgYWRkciwgc2l6ZV90IHNp
+emUsIGJvb2wgaXNfd3JpdGUsIHVuc2lnbmVkIGxvbmcgaXApOw0KPiA+ICtleHRlcm4gYm9vbCBy
+ZXBvcnRfZW5hYmxlZCh2b2lkKTsNCj4gPiAgDQo+ID4gLXZvaWQga2FzYW5fcmVwb3J0KHVuc2ln
+bmVkIGxvbmcgYWRkciwgc2l6ZV90IHNpemUsIGJvb2wgaXNfd3JpdGUsIHVuc2lnbmVkIGxvbmcg
+aXApDQo+ID4gK2Jvb2wga2FzYW5fcmVwb3J0KHVuc2lnbmVkIGxvbmcgYWRkciwgc2l6ZV90IHNp
+emUsIGJvb2wgaXNfd3JpdGUsIHVuc2lnbmVkIGxvbmcgaXApDQo+ID4gIHsNCj4gPiAtCXVuc2ln
+bmVkIGxvbmcgZmxhZ3MgPSB1c2VyX2FjY2Vzc19zYXZlKCk7DQo+ID4gKwl1bnNpZ25lZCBsb25n
+IGZsYWdzOw0KPiA+ICsNCj4gPiArCWlmIChsaWtlbHkoIXJlcG9ydF9lbmFibGVkKCkpKQ0KPiA+
+ICsJCXJldHVybiBmYWxzZTsNCj4gDQo+IFRoaXMgYWRkcyBhbiBleHBsaWNpdCBjYWxsIGJlZm9y
+ZSB0aGUgdXNlcl9hY2Nlc3Nfc2F2ZSgpIGFuZCB0aGF0IGlzIGENCj4gc3RyYWlnaHQgb24gYnVn
+Lg0KPiANCkhpIFBldGVyLA0KDQpUaGFua3MgZm9yIHlvdXIgaGVscC4gVW5mb3J0dW5hdGVseSwg
+SSBkb24ndCByZXByb2R1Y2UgaXQgaW4gb3VyDQplbnZpcm9ubWVudCwgc28gSSBoYXZlIGFza2Vk
+IFN0ZXBoZW4sIGlmIEkgY2FuIHJlcHJvZHVjZSBpdCwgdGhlbiB3ZQ0Kd2lsbCBzZW5kIG5ldyBw
+YXRjaC4NCg0KDQpUaGFua3MuDQoNCldhbHRlcg0KDQo+ID4gKw0KPiA+ICsJZmxhZ3MgPSB1c2Vy
+X2FjY2Vzc19zYXZlKCk7DQo+ID4gIAlfX2thc2FuX3JlcG9ydChhZGRyLCBzaXplLCBpc193cml0
+ZSwgaXApOw0KPiA+ICAJdXNlcl9hY2Nlc3NfcmVzdG9yZShmbGFncyk7DQo+ID4gKw0KPiA+ICsJ
+cmV0dXJuIHRydWU7DQo+ID4gIH0NCg0K
 
-Reviewed-by: Jani Nikula <jani.nikula@intel.com>
-
-> ---
-> v6: Initial patch (v6 to match other patches in the set) 
->
->  drivers/gpu/drm/i915/display/intel_acpi.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/i915/display/intel_acpi.c b/drivers/gpu/drm/i915/display/intel_acpi.c
-> index e21fb14d5e07b..3e6831cca4ac1 100644
-> --- a/drivers/gpu/drm/i915/display/intel_acpi.c
-> +++ b/drivers/gpu/drm/i915/display/intel_acpi.c
-> @@ -224,13 +224,13 @@ static u32 acpi_display_type(struct intel_connector *connector)
->  
->  void intel_acpi_device_id_update(struct drm_i915_private *dev_priv)
->  {
-> -	struct drm_device *drm_dev = &dev_priv->drm;
-> +	struct drm_device *dev = &dev_priv->drm;
->  	struct intel_connector *connector;
->  	struct drm_connector_list_iter conn_iter;
->  	u8 display_index[16] = {};
->  
->  	/* Populate the ACPI IDs for all connectors for a given drm_device */
-> -	drm_connector_list_iter_begin(drm_dev, &conn_iter);
-> +	drm_connector_list_iter_begin(dev, &conn_iter);
->  	for_each_intel_connector_iter(connector, &conn_iter) {
->  		u32 device_id, type;
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
