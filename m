@@ -2,100 +2,95 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E38C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8F8C3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5FA222522
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:34:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC7F21556
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="Az2s3X85"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=aosc.io header.i=@aosc.io header.b="FWIm1DWu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgCESe3 (ORCPT
+        id S1726048AbgCESfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:34:29 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40789 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725991AbgCESe3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:34:29 -0500
-Received: by mail-wm1-f66.google.com with SMTP id e26so6820669wme.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:34:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=wJ+dZCI2bt1Xd92Q8gcINy/Mjz00mboTvZOgg2MiZ/Q=;
-        b=Az2s3X855Yee9bmXQu46ijVabcCPfzqRWC0fXIWABql9qvdRJREScafWu3/RuhgSZu
-         j4zu1EG9DYlfH1ymfLDTZX07SiFFS4XIvrkPVnNZt41vphnMSbVDpEJJ5ssq1hWz3/L/
-         xc3wSL5sORqcP4T1T/bEHP3MxEhe85fLbf6ZQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wJ+dZCI2bt1Xd92Q8gcINy/Mjz00mboTvZOgg2MiZ/Q=;
-        b=XPh7cGJklqG2qYDhdyLMt+YaeZZNT1dxniDQH3o0toLB/noN7w3mJgKdn84yBVwekQ
-         icXv+gdCDT9rSexyZLICC5fDz/YtYLiZKEbomvkt8MUyUEHCnu6A7i7GMCRstBTT6klq
-         fPa2pB2dxXzZd9Vcw87yhCN8S9WBXIkmcsCdGp14wcyHzgITA64OPhwVTyQsE0t7hVKi
-         N+/OlbPQ4P/2li72xtz6apjwkyWNevyLYrAq2YzdhlomtWcHiSIGzQWWO6wOroa/k1Ms
-         r7GVbU2PyqbYlBxJwcWEpyXQMFOMMi5ghGOQCZHctyzsC6erFRJIjwdFUFHfiIF+IWcp
-         lYSQ==
-X-Gm-Message-State: ANhLgQ2pMuJAYCmPtDb5TlfF7k3g4cGLY99QInIDCqduTtuns23uZOSs
-        DdxHqJ0BNYWhJylRPmX8afAmAw==
-X-Google-Smtp-Source: ADFU+vvQkILMu/20lzgmWDM1ZZQvdG4mimL+9eMS9uDilaKhzhTYYE9iHYxOxeEPWCHv0qyCCN2hFg==
-X-Received: by 2002:a1c:7c08:: with SMTP id x8mr102447wmc.71.1583433267434;
-        Thu, 05 Mar 2020 10:34:27 -0800 (PST)
-Received: from localhost ([2620:10d:c092:180::1:6808])
-        by smtp.gmail.com with ESMTPSA id l4sm47313781wrv.22.2020.03.05.10.34.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 10:34:26 -0800 (PST)
-Date:   Thu, 5 Mar 2020 18:34:26 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Johannes Weiner <hannes@cmpxchg.org>
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Michal Hocko <mhocko@kernel.org>, cgroups@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm: Make mem_cgroup_id_get_many dependent on MMU and
- MEMCG_SWAP
-Message-ID: <20200305183426.GA752201@chrisdown.name>
-References: <20200304142348.48167-1-vincenzo.frascino@arm.com>
- <20200304165336.GO16139@dhcp22.suse.cz>
- <8c489836-b824-184e-7cfe-25e55ab73000@arm.com>
- <20200305160929.GA1166@cmpxchg.org>
+        Thu, 5 Mar 2020 13:35:22 -0500
+Received: from hermes.aosc.io ([199.195.250.187]:36187 "EHLO hermes.aosc.io"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbgCESfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 13:35:22 -0500
+Received: from localhost (localhost [127.0.0.1]) (Authenticated sender: icenowy@aosc.io)
+        by hermes.aosc.io (Postfix) with ESMTPSA id 182D04B2E3;
+        Thu,  5 Mar 2020 18:35:17 +0000 (UTC)
+Date:   Fri, 06 Mar 2020 02:35:12 +0800
+In-Reply-To: <CA+E=qVcyRW4LNC5db27d-8x-T_Nk9QAhkBPwu5rwthTc6ewbYA@mail.gmail.com>
+References: <20200213145416.890080-1-enric.balletbo@collabora.com> <20200213145416.890080-2-enric.balletbo@collabora.com> <CA+E=qVffVzZwRTk9K7=xhWn-AOKExkew0aPcyL_W1nokx-mDdg@mail.gmail.com> <CAFqH_53crnC6hLExNgQRjMgtO+TLJjT6uzA4g8WXvy7NkwHcJg@mail.gmail.com> <CA+E=qVfGiQseZZVBvmmK6u2Mu=-91ViwLuhNegu96KRZNAHr_w@mail.gmail.com> <CAFqH_505eWt9UU7Wj6tCQpQCMZFMfy9e1ETSkiqi7i5Zx6KULQ@mail.gmail.com> <CA+E=qVff5_hdPFdaG4Lrg7Uzorea=JbEdPoy+sQd7rUGNTTZ5g@mail.gmail.com> <5245a8e4-2320-46bd-04fd-f86ce6b17ce7@collabora.com> <CA+E=qVcyRW4LNC5db27d-8x-T_Nk9QAhkBPwu5rwthTc6ewbYA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200305160929.GA1166@cmpxchg.org>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/2] drm/bridge: anx7688: Add anx7688 bridge driver support
+To:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>
+CC:     Enric Balletbo Serra <eballetbo@gmail.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        David Airlie <airlied@linux.ie>, Torsten Duwe <duwe@suse.de>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Maxime Ripard <maxime@cerno.tech>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Collabora Kernel ML <kernel@collabora.com>
+From:   Icenowy Zheng <icenowy@aosc.io>
+Message-ID: <1E10190D-265F-4287-9717-AD1457E7044A@aosc.io>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aosc.io; s=dkim;
+        t=1583433319;
+        h=from:subject:date:message-id:to:cc:mime-version:content-type:content-transfer-encoding:in-reply-to:references;
+        bh=//QrWlD/P+HB+nkieh4hRmpzn2XAHQWWWeCW88czZjU=;
+        b=FWIm1DWulIexbYtpxgnXp718ykKfXTtxpwAKWiUdWiZll5BA+EA6nziXFm2SFHaxnqj/K4
+        S82mGdox2p+i8EZPcPyNFP8Y2+uc+s+kJJ7uTnEJnsLEheDu7qamp+gDQWTDbn0M5+/KCs
+        sfEk9RJhwNQVTrm8MG4PpiYlbfIx2+k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Johannes Weiner writes:
->I would ack a patch that adds __maybe_unused.
->
->This is a tiny function. If we keep it around a few releases after
->removing the last user, it costs us absolutely nothing. Eventually
->somebody will notice and send a patch to remove it. No big deal.
->
->There is, however, real cost in keeping bogus warnings around and
->telling people to ignore them. It's actively lowering the
->signal-to-noise ratio and normalizing warnings to developers. That's
->the kind of thing that will actually hide problems in the kernel.
->
->We know that the function can be unused in certain scenarios. It's
->silly to let the compiler continue to warn about it. That's exactly
->what __maybe_unused is for, so let's use it here.
 
-Yeah, this is exactly what I was trying to express in the first one[0]. The 
-fact that this patch came around a second time, as expected, just solidifies my 
-concern around the waste to human time.
 
-I would also ack a patch that adds __maybe_unused.
+=E4=BA=8E 2020=E5=B9=B43=E6=9C=886=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=882:=
+29:33, Vasily Khoruzhick <anarsoul@gmail=2Ecom> =E5=86=99=E5=88=B0:
+>On Thu, Mar 5, 2020 at 7:28 AM Enric Balletbo i Serra
+><enric=2Eballetbo@collabora=2Ecom> wrote:
+>>
+>> Hi Vasily,
+>
+>CC: Icenowy and Ondrej
+>>
+>> Would you mind to check which firmware version is running the anx7688
+>in
+>> PinePhone, I think should be easy to check with i2c-tools=2E
+>
+>Icenowy, Ondrej, can you guys please check anx7688 firmware version?
 
-0: https://lore.kernel.org/linux-mm/20191217143720.GB131030@chrisdown.name/
+At 0x2c, 0x80 is 0x01, 0x81 is 0x25
+
+01=2E25, right?
+
+>
+>> Thanks in advance,
+>>  Enric
+>>
+>> [snip]
+
+--=20
+=E4=BD=BF=E7=94=A8 K-9 Mail =E5=8F=91=E9=80=81=E8=87=AA=E6=88=91=E7=9A=84A=
+ndroid=E8=AE=BE=E5=A4=87=E3=80=82
