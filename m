@@ -2,164 +2,131 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70547C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4186EC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:49:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DA0F20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:49:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13CAB20637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 16:49:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="XTQub9Ny"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgCEQt3 (ORCPT
+        id S1726263AbgCEQtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 11:49:29 -0500
-Received: from mga12.intel.com ([192.55.52.136]:42731 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbgCEQt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 11:49:28 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 08:49:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,518,1574150400"; 
-   d="scan'208";a="320257512"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga001.jf.intel.com with ESMTP; 05 Mar 2020 08:49:26 -0800
-Date:   Thu, 5 Mar 2020 08:49:26 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
-        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] x86: vmx: virtualize split lock detection
-Message-ID: <20200305164926.GH11500@linux.intel.com>
-References: <20200206070412.17400-1-xiaoyao.li@intel.com>
- <20200206070412.17400-9-xiaoyao.li@intel.com>
- <20200303193012.GV1439@linux.intel.com>
- <fb22d13d-60f5-5050-ccc7-4422f5b25739@intel.com>
+        Thu, 5 Mar 2020 11:49:41 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38480 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725993AbgCEQtl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 11:49:41 -0500
+Received: by mail-io1-f66.google.com with SMTP id s24so7209158iog.5
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:49:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ELgp0+Vv43PvFwuT066GFbqjurDJh9gYaZikvQZEjzk=;
+        b=XTQub9NyfCXzfsgvbIgQ3rjnqhlldYIyaVZ+MrBR5Y0gzxPQYE7PN/wlFUF1+VG+ci
+         rmIdks6AeyN1FJyFvQfmMzygYaNGZoAHH0nibgS0SAZshOiRKpMdWR7BiCf5NNdyv1hL
+         ZfrT117rZvbOsfbyzqLZHJfydNZtgAiYUmMs4JX8mNpLzxtbjUe5Y76mvTbSjU3XPFnY
+         JouvIaWuOteSR2WlCboJXD9qXAQo6JaTCxYfEGgWH/1l1kNeA1kkrMy/V2I/kWNCqGMA
+         5zFjUAJCF5smnlLvORkZDipt/p6dmoiTBuXLmRYciH36ortQ2h9MglbcnsCLOZAFsNB2
+         MUxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ELgp0+Vv43PvFwuT066GFbqjurDJh9gYaZikvQZEjzk=;
+        b=TIzM82XElp8yteIZrz5Co+h5OorWW3AnyDwqjwibqEuKdbArmcPFVqulu2gPM7sajG
+         gEcm3Yh0IL4dK1rXbkOJNNT2fMTceQ2owpkiZ4CBhhT6L6yLm7JTvc6fnyZGT1gPKICM
+         qTbwyFq1lChzSypzVydMsI+CYjRZZXGlT18HHV/5s7EbGi7ZOaCxVu/S0e4KCdlQmVUt
+         QG7fpyJ1A5J5KV5FKnFLpLQZa8eJdvdLPColmkao9Z1HN1b9ZLXLguFg+3FTU326hHTQ
+         wyCJkdxcdegdPk8cjv4TO+6uzLf8vgycg8O48mNIs3+2iCiZZp5wxJNsfiGNb9upd6fg
+         X0lA==
+X-Gm-Message-State: ANhLgQ3/iLu6x0xooOsRxVYU8oy3mwFa1ukMaaGx59kmjZPA3LnAgQNJ
+        So0yav91pa05KnNLddoGV5eahjUQdfRT4GhJIegoBw==
+X-Google-Smtp-Source: ADFU+vvzrUvKBCm/F735xdH6v0/qAZSe9OHz1wp2FJZxfMJIfBzy4XqfCG30OLuLV889Z7fadhympU7j9ak0gBoQMZM=
+X-Received: by 2002:a6b:3e07:: with SMTP id l7mr7197755ioa.287.1583426979686;
+ Thu, 05 Mar 2020 08:49:39 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb22d13d-60f5-5050-ccc7-4422f5b25739@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20200224094158.28761-1-brgl@bgdev.pl> <20200224094158.28761-3-brgl@bgdev.pl>
+In-Reply-To: <20200224094158.28761-3-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Thu, 5 Mar 2020 17:49:28 +0100
+Message-ID: <CAMRc=MdbvwQ3Exa2gmY-J0p8UeB-_dKrgqHEBo=S08yU4Uth=A@mail.gmail.com>
+Subject: Re: [PATCH 2/3] gpiolib: use kref in gpio_desc
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Khouloud Touil <ktouil@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 10:16:40PM +0800, Xiaoyao Li wrote:
-> On 3/4/2020 3:30 AM, Sean Christopherson wrote:
-> >On Thu, Feb 06, 2020 at 03:04:12PM +0800, Xiaoyao Li wrote:
-> >>--- a/arch/x86/kvm/vmx/vmx.c
-> >>+++ b/arch/x86/kvm/vmx/vmx.c
-> >>@@ -1781,6 +1781,25 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
-> >>  	}
-> >>  }
-> >>+/*
-> >>+ * Note: for guest, feature split lock detection can only be enumerated through
-> >>+ * MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT bit. The FMS enumeration is invalid.
-> >>+ */
-> >>+static inline bool guest_has_feature_split_lock_detect(struct kvm_vcpu *vcpu)
-> >>+{
-> >>+	return vcpu->arch.core_capabilities & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
-> >>+}
-> >>+
-> >>+static inline u64 vmx_msr_test_ctrl_valid_bits(struct kvm_vcpu *vcpu)
-> >>+{
-> >>+	u64 valid_bits = 0;
-> >>+
-> >>+	if (guest_has_feature_split_lock_detect(vcpu))
-> >>+		valid_bits |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> >>+
-> >>+	return valid_bits;
-> >>+}
-> >>+
-> >>  /*
-> >>   * Reads an msr value (of 'msr_index') into 'pdata'.
-> >>   * Returns 0 on success, non-0 otherwise.
-> >>@@ -1793,6 +1812,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >>  	u32 index;
-> >>  	switch (msr_info->index) {
-> >>+	case MSR_TEST_CTRL:
-> >>+		if (!msr_info->host_initiated &&
-> >>+		    !guest_has_feature_split_lock_detect(vcpu))
-> >>+			return 1;
-> >>+		msr_info->data = vmx->msr_test_ctrl;
-> >>+		break;
-> >>  #ifdef CONFIG_X86_64
-> >>  	case MSR_FS_BASE:
-> >>  		msr_info->data = vmcs_readl(GUEST_FS_BASE);
-> >>@@ -1934,6 +1959,13 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-> >>  	u32 index;
-> >>  	switch (msr_index) {
-> >>+	case MSR_TEST_CTRL:
-> >>+		if (!msr_info->host_initiated &&
-> >
-> >Host initiated writes need to be validated against
-> >kvm_get_core_capabilities(), otherwise userspace can enable SLD when it's
-> >supported in hardware and the kernel, but can't be safely exposed to the
-> >guest due to SMT being on.
-> 
-> How about making the whole check like this:
-> 
-> 	if (!msr_info->host_initiated &&
-> 	    (!guest_has_feature_split_lock_detect(vcpu))
-> 		return 1;
-> 
-> 	if (data & ~vmx_msr_test_ctrl_valid_bits(vcpu))
+pon., 24 lut 2020 o 10:42 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=82(=
+a):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> GPIO descriptors are freed by consumers using gpiod_put(). The name of
+> this function suggests some reference counting is going on but it's not
+> true.
+>
+> Use kref to actually introduce reference counting for gpio_desc objects.
+> Add a corresponding gpiod_get() helper for increasing the reference count=
+.
+>
+> This doesn't change anything for already existing (correct) drivers but
+> allows us to keep track of GPIO descs used by multiple users.
+>
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Whoops, the check on kvm_get_core_capabilities() should be done in
-"case MSR_IA32_CORE_CAPS:", i.e. KVM shouldn't let host userspace advertise
-split-lock support unless it's allowed by KVM.
+Linus,
 
-Then this code doesn't need to do a check on host_initiated=true.
+This is in response to your suggestion under the previous version of this p=
+atch.
 
-Back to the original code, I don't think we need to make the existence of
-MSR_TEST_CTRL dependent on guest_has_feature_split_lock_detect(), i.e. this
-check can simply be:
+I refreshed my memory on device links and reference counting. I think
+that device links are not the right tool for the problem I'm trying to
+solve. You're right on the other hand about the need for reference
+counting of gpiochip devices. Right now if we remove the chip with
+GPIOs still requested the only thing that happens is a big splat:
+"REMOVING GPIOCHIP WITH GPIOS STILL REQUESTED".
 
-	if (!msr_info->host_initiated &&
-	    (data & ~vmx_msr_test_ctrl_valid_bits(vcpu)))
-		return 1;
+We should probably have a kref on the gpiochip structure which would
+be set to 1 when registering the chip, increased and decreased on
+every operation such as requesting and releasing a GPIO respectively
+and decreased by gpiochip_remove() too. That way if we call
+gpiochip_remove() while some users are still holding GPIO descriptors
+then the only thing that happens is: the reference count for this
+gpiochip is decreased. Once the final consumer calls the appropriate
+release routine and the reference count goes to 0, we'd call the
+actual gpiochip release code. This is similar to what the clock
+framework does IIRC.
 
-and vmx_get_msr() doesn't need to check anything, i.e. RDMSR always
-succeeds.  This is actually aligned with real silicon behavior because
-MSR_TEST_CTRL exists on older processors, it's just wasn't documented until
-we decided to throw in SPLIT_LOCK_AC, e.g. the LOCK# suppression bit is
-marked for deprecation in the SDM, which wouldn't be necessary if it didn't
-exist :-)
+This patch however addresses a different issue: I'd like to add
+reference counting to descriptors associated with GPIOs requested by
+consumers. The kref release function would not trigger a destruction
+of the gpiochip - just releasing of the requested GPIO. In this
+particular use-case: we can pass an already requested GPIO descriptor
+to nvmem. I'd like the nvmem framework to be able to reference it and
+then drop the reference once it's done with the line, so that the life
+of this resource is not controlled only by the entity that initially
+requested it.
 
-  Intel ISA/Feature                          Year of Removal
-  TEST_CTRL MSR, bit 31 (MSR address 33H)    2019 onwards
+In other words: we could use two kref objects: one for the gpiochip
+and one for GPIO descriptors.
 
-  31 Disable LOCK# assertion for split locked access
+I hope that makes it more clear.
 
-On my Haswell box:
-
-  $ rdmsr 0x33
-  0
-  $ wrmsr 0x33 0x20000000
-  wrmsr: CPU 0 cannot set MSR 0x00000033 to 0x0000000020000000
-  $ wrmsr 0x33 0x80000000
-  $ rdmsr 0x33
-  80000000
-  $ wrmsr 0x33 0x00000000
-  $ rdmsr 0x33
-  0
-
-That way the guest_has_feature_split_lock_detect() helper isn't needed
-since its only user is vmx_msr_test_ctrl_valid_bits(), i.e. it can be
-open coded there.
-
-> >>+		    (!guest_has_feature_split_lock_detect(vcpu) ||
-> >>+		     data & ~vmx_msr_test_ctrl_valid_bits(vcpu)))
-> >>+			return 1;
-> >>+		vmx->msr_test_ctrl = data;
-> m>+		break;
+Best regards,
+Bartosz
