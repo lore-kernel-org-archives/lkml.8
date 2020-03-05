@@ -2,148 +2,161 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFFBC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0720C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:46:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D2B7208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:43:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7807120848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:46:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nbjJ+edo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgCEMn2 (ORCPT
+        id S1726129AbgCEMqN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:43:28 -0500
-Received: from foss.arm.com ([217.140.110.172]:48132 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726049AbgCEMn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:43:28 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 274C131B;
-        Thu,  5 Mar 2020 04:43:28 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC1B23F6C4;
-        Thu,  5 Mar 2020 04:43:26 -0800 (PST)
-Date:   Thu, 5 Mar 2020 12:43:24 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Pavan Kondeti <pkondeti@codeaurora.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 1/6] sched/rt: cpupri_find: Implement fallback
- mechanism for !fit case
-Message-ID: <20200305124324.42x6ehjxbnjkklnh@e107158-lin.cambridge.arm.com>
-References: <20200302132721.8353-1-qais.yousef@arm.com>
- <20200302132721.8353-2-qais.yousef@arm.com>
- <20200304112739.7b99677e@gandalf.local.home>
- <20200304173925.43xq4wztummxgs3x@e107158-lin.cambridge.arm.com>
- <20200304135404.146c56eb@gandalf.local.home>
- <20200304200153.c4e2p7qnko54pejt@e107158-lin.cambridge.arm.com>
+        Thu, 5 Mar 2020 07:46:13 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44536 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725989AbgCEMqM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 07:46:12 -0500
+Received: by mail-oi1-f193.google.com with SMTP id d62so5781917oia.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 04:46:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EBJiQx/MPyQ2hugQ5S0diNZxP8ij3c3rvZpbZvxi3j0=;
+        b=nbjJ+edob4wcEAnoswnNyP+pLHYUqojVTVp7wAaZTxnr3fi5TcwEr0MXNa/oZHh7xh
+         YywP+f0wo1k9fzezVsgVONxhuga2FzGKv6C9dPwH9nDS3dkZBqynk8RCmPoF85tbirBt
+         3m5RdwT7gU0M91d4vA7T30cRea9uA8cV1XPZYX1SYQ4Tc8iWWSUv7iCJGUyst68xulMo
+         FFTlWebAxu/wdRjpF/Jwr7UtMtKWCNcyPuwyVXAHcIeKBUHsfOG8580m7GkS8spotS5h
+         B8rclHh70hiN++lVZLl04OxZ/lJOEP7GttWhyVMN+0PzxuYgUa0RJCKBX5szy1nniwlv
+         hSbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EBJiQx/MPyQ2hugQ5S0diNZxP8ij3c3rvZpbZvxi3j0=;
+        b=rigkO46RBV43EnjzVP1omGTZZTE1srYX5zc8SMKIMhte6X8JrJJrt/5J3X6Lvarw+m
+         /NRCmz1Tw4QrAV0FE6leiqgO0Uz8UK3fEaabRCQHeJhIp3c/XMqq9Wr4LnXrlR1qJR4t
+         fuSnwSPrUWSo9XUjoG0hGJgoYogdLKIHgHDnBqOpkidqc2JHu0AxrArDYhAz6K+8VOmw
+         6Aqviqy8JhmlsNJuVXonCTVzpu6oMKoDREcfdDaQIiixzHtXDv+tWFKGCmgqhuHWZ6zs
+         osyKRJ3fHt7UfwgjAK0zChgeK8n2oMNk+ujsnFv+YcjekJWh5DEg6szqFptvxvHZ2iw+
+         zs1A==
+X-Gm-Message-State: ANhLgQ3mTd9h0/90G0SIDE2PTmb66v3kz4uKs4oR7LiLnteuVuYwzBz+
+        bdVAw//LJsyQUj3hbx8XKUxLOxUOSuI3LPImZoqpWQ==
+X-Google-Smtp-Source: ADFU+vso1w9mhfeUd+ur1ReAf47AM2hyb8bzzNFTdwBLB0Sbp0EkstxtFY56uOcWw4/dmeQ6pS9n5ARaJ8lPS979twY=
+X-Received: by 2002:a05:6808:8d0:: with SMTP id k16mr5503025oij.68.1583412371104;
+ Thu, 05 Mar 2020 04:46:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200304200153.c4e2p7qnko54pejt@e107158-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20171215
+References: <20200302130430.201037-1-glider@google.com> <20200302130430.201037-2-glider@google.com>
+ <0eaac427354844a4fcfb0d9843cf3024c6af21df.camel@perches.com>
+ <CAG_fn=VNnxjD6qdkAW_E0v3faBQPpSsO=c+h8O=yvNxTZowuBQ@mail.gmail.com>
+ <4cac10d3e2c03e4f21f1104405a0a62a853efb4e.camel@perches.com>
+ <CAG_fn=XOyPGau9m7x8eCLJHy3m-H=nbMODewWVJ1xb2e+BPdFw@mail.gmail.com>
+ <CAG48ez3sPSFQjB7K64YiNYfemZ_W9cCcKQW34XAcLP_MkXUjCw@mail.gmail.com> <205aa3d8-7d18-1b73-4650-5ef534fe55da@rasmusvillemoes.dk>
+In-Reply-To: <205aa3d8-7d18-1b73-4650-5ef534fe55da@rasmusvillemoes.dk>
+From:   Jann Horn <jannh@google.com>
+Date:   Thu, 5 Mar 2020 13:45:44 +0100
+Message-ID: <CAG48ez014nW8pie91cnrn_7N1zyziAN+9xrT9xN0iLecCoRwfA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] binder: do not initialize locals passed to copy_from_user()
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Joe Perches <joe@perches.com>, Todd Kjos <tkjos@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?B?QXJ2ZSBIasO4bm5ldsOlZw==?= <arve@android.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dmitriy Vyukov <dvyukov@google.com>,
+        "open list:ANDROID DRIVERS" <devel@driverdev.osuosl.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03/04/20 20:01, Qais Yousef wrote:
-> On 03/04/20 13:54, Steven Rostedt wrote:
-> > > If we fix 1, then assuming found == -1 for all level, we'll still have the
-> > > problem that the mask is stale.
-> > > 
-> > > We can do a full scan again as Tao was suggestion, the 2nd one without any
-> > > fitness check that is. But isn't this expensive?
-> > 
-> > I was hoping to try to avoid that, but it's not that expensive and will
-> > probably seldom happen. Perhaps we should run some test cases and trace the
-> > results to see how often that can happen.
-> > 
-> > > 
-> > > We risk the mask being stale anyway directly after selecting it. Or a priority
-> > > level might become the lowest level just after we dismissed it.
-> > 
-> > Sure, but that's still a better effort.
-> 
-> Okay let me run some quick tests and send an updated series if it doesn't
-> return something suspicious.
+On Thu, Mar 5, 2020 at 10:03 AM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+> On 02/03/2020 19.31, Jann Horn wrote:
+> > On Mon, Mar 2, 2020 at 7:17 PM Alexander Potapenko <glider@google.com> wrote:
+> >> On Mon, Mar 2, 2020 at 3:00 PM Joe Perches <joe@perches.com> wrote:
+> >>>
+> >>> So?  CONFIG_INIT_STACK_ALL by design slows down code.
+> >> Correct.
+> >>
+> >>> This marking would likely need to be done for nearly all
+> >>> 3000+ copy_from_user entries.
+> >> Unfortunately, yes. I was just hoping to do so for a handful of hot
+> >> cases that we encounter, but in the long-term a compiler solution must
+> >> supersede them.
+> >>
+> >>> Why not try to get something done on the compiler side
+> >>> to mark the function itself rather than the uses?
+> >> This is being worked on in the meantime as well (see
+> >> http://lists.llvm.org/pipermail/cfe-dev/2020-February/064633.html)
+> >> Do you have any particular requisitions about how this should look on
+> >> the source level?
+> >
+> > Just thinking out loud: Should this be a function attribute, or should
+> > it be a builtin - something like __builtin_assume_initialized(ptr,
+> > len)? That would make it also work for macros,
+>
+> But with macros (and static inlines), the compiler sees all the
+> initialization being done, no?
 
-I ran my 6 tasks test which spawns 6 big tasks on 4 little + 2 big system.
-I verified that the 2nd fallback search happens during this scenario.
+Depends on how the macro writes to the buffer, whether it's a normal
+write or happens through another function call or whatever.
 
-The duration of the run was 10 seconds.
+> and it might simplify
+> > the handling of inlining in the compiler. And you wouldn't need such a
+> > complicated attribute that refers to function arguments by index and
+> > such.
+>
+> Does copy_from_user guarantee to zero-initialize the remaining buffer if
+> copying fails partway through?
 
-Using tace-cmd record --profile -l select_task_rq_rt I got the following
-results for
+Basically yes. From include/linux/uaccess.h:
 
-	A) Falling back to searching the last unfit_priority_idx only
-	B) Falling back to a full search with fitness check disabled
+static __always_inline unsigned long __must_check
+copy_from_user(void *to, const void __user *from, unsigned long n)
+{
+  if (likely(check_copy_size(to, n, false)))
+    n = _copy_from_user(to, from, n);
+  return n;
+}
 
-A)
-  Event: func: select_task_rq_rt() (600) Total: 2486002 Avg: 4143 Max: 11400(ts:1084.358268) Min:1(ts:1080.258259)
-  Event: func: select_task_rq_rt() (2) Total: 11900 Avg: 5950 Max: 8680(ts:1079.659145) Min:3220(ts:1079.659288)
-  Event: func: select_task_rq_rt() (4) Total: 13080 Avg: 3270 Max: 3580(ts:1079.659815) Min:3080(ts:1079.659475)
-  Event: func: select_task_rq_rt() (3) Total: 15240 Avg: 5080 Max: 6260(ts:1079.659222) Min:4180(ts:1079.659591)
-  Event: func: select_task_rq_rt() (1) Total: 5500 Avg: 5500 Max: 5500(ts:1079.659344) Min:5500(ts:1079.659344)
-  Event: func: select_task_rq_rt() (2) Total: 8440 Avg: 4220 Max: 4600(ts:1079.659380) Min:3840(ts:1079.659786)
-  Event: func: select_task_rq_rt() (3) Total: 22920 Avg: 7640 Max: 11100(ts:1079.659672) Min:3620(ts:1079.659891)
+check_copy_size() should be optimized out entirely for straightforward
+use of stack objects; it will only return false if the specified
+address range crosses beyond an allocation boundary.
+_copy_from_user() is defined as follows (there are two possible
+definitions, both of them have the same method body, but they differ
+in whether the function is inline - which one is used depends on the
+architecture):
 
-B)
-  Event: func: select_task_rq_rt() (600) Total: 2468873 Avg: 4114 Max: 12580(ts:510.268625) Min:1(ts:516.868611)
-  Event: func: select_task_rq_rt() (4) Total: 19260 Avg: 4815 Max: 7920(ts:507.369259) Min:3340(ts:507.369669)
-  Event: func: select_task_rq_rt() (1) Total: 4700 Avg: 4700 Max: 4700(ts:507.369583) Min:4700(ts:507.369583)
-  Event: func: select_task_rq_rt() (3) Total: 7640 Avg: 2546 Max: 3320(ts:507.369403) Min:1300(ts:507.369428)
-  Event: func: select_task_rq_rt() (2) Total: 8760 Avg: 4380 Max: 5100(ts:507.369497) Min:3660(ts:507.369338)
-  Event: func: select_task_rq_rt() (1) Total: 3240 Avg: 3240 Max: 3240(ts:507.369450) Min:3240(ts:507.369450)
+static inline __must_check unsigned long
+_copy_from_user(void *to, const void __user *from, unsigned long n)
+{
+  unsigned long res = n;
+  might_fault();
+  if (likely(access_ok(from, n))) {
+    kasan_check_write(to, n);
+    res = raw_copy_from_user(to, from, n);
+  }
+  if (unlikely(res))
+    memset(to + (n - res), 0, res);
+  return res;
+}
 
-So for both the max seems to be ~12us, which I think is fine.
-
-In the profile report I got something like this which I didn't know how to
-interpret. The max value is high; ~72ms.
-
-Did I use and look at the profile output correctly? I still have the trace.dat
-for the 2 runs.
-
-
-                |     + 0x266cb00000000
-                |     |   1% (1) time:72836320 max:72836320(ts:1079.785460) min:72836320(ts:1079.785460) avg:72836320
-                |     |    0x309000a
-                |     |    select_task_rq_rt (0xffff800010152c74)
-                |     |    0x0
-                |     |    0xe885dcc56c
-                |     |    0xe885dcdb24
-                |     |    0x2788400000000
-                |     |    0x1090047
-
-
-
-
-		...
-
-
-
-		                + select_task_rq_rt (0xffff800010152c74)
-                |   88% (1) time:72100 max:72100(ts:507.369339) min:72100(ts:507.369339) avg:72100
-                |    0x24e4b00000000
-                |    0x309000a
-                |    select_task_rq_rt (0xffff800010152c74)
-                |    0x0
-                |    0x53be002898
-                |    0x53be003b6c
-                |    0x26bc400000000
-                |
-
-
-Thanks
-
---
-Qais Yousef
-
+So annotating _copy_from_user(), or calling a magic
+fake-initialization builtin directly before calling _copy_from_user(),
+should be safe. As long as the compiler can eliminate the call to
+check_copy_size(), that should then make that propagate up to the
+caller of copy_from_user(). (You could also try to annotate
+copy_from_user() directly, but I'm not sure whether doing it before
+the bounds check might confuse the compiler somehow.)
