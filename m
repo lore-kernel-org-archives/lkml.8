@@ -2,89 +2,91 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 804B0C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0578C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5744A20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 11:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D20A20848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:00:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zXKm95Ar"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="IaN3n+vc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbgCEL7W (ORCPT
+        id S1727389AbgCEMAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 06:59:22 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:46264 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727460AbgCEL7W (ORCPT
+        Thu, 5 Mar 2020 07:00:50 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51057 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726894AbgCEMAt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 06:59:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=t84ouAsyX1J6mOnF2FaVLphyRW6vdfA28vHTnYsA3QE=; b=zXKm95Ar5SZL7zetu9S3VecTTP
-        qSFTTZsy5Ne+ypZZtac/Esp4fDAv7EPrqLGmcXJhgck1LcxNlWzyBpUBedgyIthm5ZtzoOudZiPvQ
-        O/hrF0UzT+ryNwDn7f3FzaocfDD/DrqpZyifG+Hhw0SyGMIB4OZg/rLjkdLW3McrToPjaRMvJFavD
-        /IhBAN/EGjvwS6mdqMc1ai36c7HwYo7GgZumiCZNYNr1gfJECTk6ggzp3A7V+BhiT3W8EzH4Kmt+Z
-        IfsgbolAg1mOaCD8DTVY+KycjGFOWrdjiWMIJvaSXONbRcuTOaxsNZ6vW/YSlwNdSsgwuerrPfc/L
-        1zCMfggQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9p9r-0003Oq-KX; Thu, 05 Mar 2020 11:59:19 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B60C030066E;
-        Thu,  5 Mar 2020 12:59:16 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 734D320139C6B; Thu,  5 Mar 2020 12:59:16 +0100 (CET)
-Date:   Thu, 5 Mar 2020 12:59:16 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] x86/optprobe: Fix OPTPROBE vs UACCESS
-Message-ID: <20200305115916.GE2579@hirez.programming.kicks-ass.net>
-References: <20200305092130.GU2596@hirez.programming.kicks-ass.net>
- <20200305194006.e3c447159aa866ac95fd02de@kernel.org>
+        Thu, 5 Mar 2020 07:00:49 -0500
+Received: by mail-wm1-f65.google.com with SMTP id a5so5985845wmb.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 04:00:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=uObr8HTRJvvkPtZFYtcKx4WzpLxPFBuwzYX1IrBj3yc=;
+        b=IaN3n+vcHlCFmj2FjcyBTvl5NWCPWY1Gq3x4HzQpuLkfxQZrzljTgj+k100BRs8Biy
+         dF2wPK82zVVMQyv1oCHPn6LNrZf5C/2TPmww8bsfvMyR5BXOcwMqIQ4qnYlj5vqUVXCv
+         H6N70701bHwnqBbmxSTsVxdBFveFAM3iPEP6k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=uObr8HTRJvvkPtZFYtcKx4WzpLxPFBuwzYX1IrBj3yc=;
+        b=BZrzGpODdx3qo84VL5sI7yrXR+OvJA650dHQ3qTltaWvz1xkser/pvyvDIXoQX8hdt
+         lAhf8CqjE/E1MAROfPecon6PpQjaZJ2gN7Za6+rXTTQCe3xqaUQaZ40AOy7tswY2x4Fx
+         zXNBp1emN4f9dcC+ajSCmLRmfMQnmMNSmpsh3iN3XWxQBsNz9BOm5qBKyghYFVz6PZZc
+         w7PoCqgJFtL0SKUXB/KIJ4LIj5URwXO4kQiIR0NXdf616rvRdaeOc1vm9VYjZDUWQI5W
+         MDqWDJ6sJ9ozqsV/Yz/CDyBJCX68qyexI7qdx2sMIck2l8/em8LEJIx80bcMe1nK436i
+         vpGQ==
+X-Gm-Message-State: ANhLgQ3fzjpNSQUQ7Offn/z8BObaQglUr6/rFcLOfg6wlEhKr3nncJFB
+        cMq7xZu4zOSm9dkA5eWy4h1wXA==
+X-Google-Smtp-Source: ADFU+vvhiNLXK/gmpiu0l+tLWMsxbL563AqkpPF0XFukxV+4vnxzUWtwy7ToAThcKQCy2Yn3Hx94cA==
+X-Received: by 2002:a1c:df45:: with SMTP id w66mr9145048wmg.171.1583409645664;
+        Thu, 05 Mar 2020 04:00:45 -0800 (PST)
+Received: from cloudflare.com ([176.221.114.230])
+        by smtp.gmail.com with ESMTPSA id w16sm10403375wrp.8.2020.03.05.04.00.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 04:00:44 -0800 (PST)
+References: <20200304101318.5225-1-lmb@cloudflare.com> <20200304101318.5225-2-lmb@cloudflare.com>
+User-agent: mu4e 1.1.0; emacs 26.3
+From:   Jakub Sitnicki <jakub@cloudflare.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>
+Cc:     john.fastabend@gmail.com, Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Eric Dumazet <edumazet@google.com>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        kernel-team@cloudflare.com, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next v3 01/12] bpf: sockmap: only check ULP for TCP sockets
+In-reply-to: <20200304101318.5225-2-lmb@cloudflare.com>
+Date:   Thu, 05 Mar 2020 13:00:44 +0100
+Message-ID: <87h7z3ypsj.fsf@cloudflare.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200305194006.e3c447159aa866ac95fd02de@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 07:40:06PM +0900, Masami Hiramatsu wrote:
-> Hi Peter,
-> 
-> On Thu, 5 Mar 2020 10:21:30 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > 
-> > While looking at an objtool UACCESS warning, it suddenly occurred to me
-> > that it is entirely possible to have an OPTPROBE right in the middle of
-> > an UACCESS region.
-> > 
-> > In this case we must of course clear FLAGS.AC while running the KPROBE.
-> > Luckily the trampoline already saves/restores [ER]FLAGS, so all we need
-> > to do is inject a CLAC. Unfortunately we cannot use ALTERNATIVE() in the
-> > trampoline text, so we have to frob that manually.
-> 
-> Good catch! so this prevents optprobe handler to access user space
-> avoiding SMAP feature.
+On Wed, Mar 04, 2020 at 11:13 AM CET, Lorenz Bauer wrote:
+> The sock map code checks that a socket does not have an active upper
+> layer protocol before inserting it into the map. This requires casting
+> via inet_csk, which isn't valid for UDP sockets.
+>
+> Guard checks for ULP by checking inet_sk(sk)->is_icsk first.
+>
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> ---
 
-Yes that, but also worse, since the patch referenced by Fixes, x86_64 no
-longer saves/restores FLAGS on context switch, and if the OPTPROBE were
-to (accidentally) call into schedule() (say through preempt_enable()),
-the next task could also run without SMAP for a while.
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thanks!
+[...]
