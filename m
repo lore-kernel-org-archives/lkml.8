@@ -2,203 +2,216 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77753C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:59:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50BAC3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40CD9208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:59:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mQpy2eAX"
+	by mail.kernel.org (Postfix) with ESMTP id AEA522073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbgCEI7y (ORCPT
+        id S1726282AbgCEI74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:59:54 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38889 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgCEI7x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:59:53 -0500
-Received: by mail-wm1-f66.google.com with SMTP id u9so4787715wml.3
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 00:59:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tT2n8WhMPwCVEPoHlfKBHJYxhG2LFSqLNKYfKKAKbak=;
-        b=mQpy2eAXj0LgOnRCXo1+EXGuY48tK9ZoekYlE2QzjUKL0M+3B5GD1swTnrFhyR6aIO
-         JoJX92f8HP5dNa2rvZp+2kca4q2iXnOSgtZ9s48KS/s3h1hbkyCGHsazRJhc4LQ69r1H
-         IcEaImsCFBBX2fey0lupxDXyDdQmnhfd4/TQEQlJFAqJcD5Z2mYRJkjyiO2H5PKKS5um
-         BMM4OLyIbA6K1quz1wrbu60fjY6S2RU1CGvzHAPLw+6zaScuoTRER2njUsllkjaNMh+U
-         qiVzoYnH7iTv77o35QSEY3yOV5T/u7qLNzJfBW15uCy3WbjwwkAUgGX6i4UmD0/2RdZa
-         MifQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tT2n8WhMPwCVEPoHlfKBHJYxhG2LFSqLNKYfKKAKbak=;
-        b=TNikJlBuLgTsoUplr+t2e1zIUrJC0APhtyxW6wQEiCzSnbp8S3ja+7MUcRek3k+4r2
-         DDbGs/XEfdnmZTkNgrAXqYjnjnVud2zZb1VlSL4PUOD7wFFzsZ3neGFgAyQe05z0JP0g
-         jq3I2qHbH2RwOVCq5sKprLfG4cH2WChyhaYlckzLtmnlT657hLdl2S7FW9zt38HoUVIw
-         JGOLCvwx4S3QE32WBgyuWTo5kQPJax5vjuYMbB592FcYZVEaTAA56Mxasi/T8JpeWn6s
-         wAtL3KSqGI0sK/NKFp+C9VZgbeM2Ja0dlWPHBCKi+g4OMm/zKODrOCbOWsmntx93uKgo
-         m/eA==
-X-Gm-Message-State: ANhLgQ1EBMfQWXleEkufQXhzONBarb2McO2nX4mEU0jUTftbB6ybUzkC
-        SbNinYv1O2Sf4PIlsY7T6zXUdA==
-X-Google-Smtp-Source: ADFU+vuUD5KW4KZWOJh2hPzHlrS30/0U3JbJ5Re9k+/nGnA1inbRL9A2dp7zNDmPW9AWck/B1W4Jtg==
-X-Received: by 2002:a05:600c:351:: with SMTP id u17mr8248443wmd.22.1583398789253;
-        Thu, 05 Mar 2020 00:59:49 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
-        by smtp.gmail.com with ESMTPSA id d203sm8014979wmd.37.2020.03.05.00.59.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 00:59:48 -0800 (PST)
-Date:   Thu, 5 Mar 2020 08:59:48 +0000
-From:   Matthias Maennich <maennich@google.com>
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] modpost: move the namespace field in Module.symvers last
-Message-ID: <20200305085948.GD119445@google.com>
-References: <20200304170345.21218-1-jeyu@kernel.org>
+        Thu, 5 Mar 2020 03:59:56 -0500
+Received: from mga09.intel.com ([134.134.136.24]:57937 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725866AbgCEI7z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 03:59:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 00:59:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
+   d="scan'208";a="287609667"
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.167]) ([10.237.72.167])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 Mar 2020 00:59:51 -0800
+Subject: Re: [PATCH V2] mmc: sdhci-msm: Disable CQE during SDHC reset
+To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>,
+        ulf.hansson@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Faiz Abbas <faiz_abbas@ti.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Asutosh Das <asutoshd@codeaurora.org>
+References: <1582890639-32072-1-git-send-email-vbadigan@codeaurora.org>
+ <1583322863-21790-1-git-send-email-vbadigan@codeaurora.org>
+ <da449444-1878-e387-6ebf-4ddb282a9b71@intel.com>
+ <1430237a-9dc5-f046-1dfe-1d5c09c16ead@codeaurora.org>
+ <3a1783c2-e8bb-f5af-4d3e-f4a45b487f0e@intel.com>
+ <0e737f52-767f-05d4-829b-4f76c084062c@codeaurora.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <460b7cbe-71f5-4bea-673f-2075ee5c5d6a@intel.com>
+Date:   Thu, 5 Mar 2020 10:59:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200304170345.21218-1-jeyu@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <0e737f52-767f-05d4-829b-4f76c084062c@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jessica!
-Thanks for working on this!
+On 4/03/20 6:50 pm, Veerabhadrarao Badiganti wrote:
+> 
+> On 3/4/2020 7:40 PM, Adrian Hunter wrote:
+>> On 4/03/20 3:10 pm, Veerabhadrarao Badiganti wrote:
+>>> Hi Adrian
+>>>
+>>> On 3/4/2020 5:58 PM, Adrian Hunter wrote:
+>>>> On 4/03/20 1:54 pm, Veerabhadrarao Badiganti wrote:
+>>>>> When SDHC gets reset (E.g. in suspend path), CQE also gets reset
+>>>>> and goes to disable state. But s/w state still points it as CQE
+>>>>> is in enabled state. Since s/w and h/w states goes out of sync,
+>>>>> it results in s/w request timeout for subsequent CQE requests.
+>>>>>
+>>>>> To synchronize CQE s/w and h/w state during SDHC reset,
+>>>>> explicitly disable CQE after reset.
+>>>> Shouldn't you be calling cqhci_suspend() / cqhci_resume() in the suspend
+>>>> and
+>>>> resume paths?
+>>> This issue is seen during mmc runtime suspend.  I can add it
+>>> sdhci_msm_runtime_suspend
+>>>
+>>> but sdhci_msm runtime delay is aggressive, its 50ms. It may get invoked very
+>>> frequently.
+>>>
+>>> So Im of the opinion that disabling CQE very often from platform runtime
+>>> suspend is overkill.
+>> It doesn't look like sdhci-msm calls any sdhci.c pm ops, so how does SDHC
+>> get reset?
+> 
+> With MMC_CAP_AGGRESSIVE_PM flag enabled, it getting called from
+> mmc_runtime_suspend()
+> 
+> Below is the call stack()
+> 
+>    sdhci_reset
+>   sdhci_do_reset
+>   sdhci_init
+>   sdhci_set_ios
+>   mmc_set_initial_state
+>   mmc_power_off
+>  _mmc_suspend
+>   mmc_runtime_suspend
+> 
 
-On Wed, Mar 04, 2020 at 06:03:45PM +0100, Jessica Yu wrote:
->In order to preserve backwards compatability with kmod tools, we have to
->move the namespace field in Module.symvers last, as the depmod -e -E
->option looks at the first three fields in Module.symvers to check symbol
->versions (and it's expected they stay in the original order of crc,
->symbol, module).
->
->Fixes: cb9b55d21fe0 ("modpost: add support for symbol namespaces")
->Cc: stable@vger.kernel.org
+OK, cqhci_suspend does the right thing, but it is not an
+appropriate function for this.  I suggest introducing
+cqhci_deactivate() as below.
 
-Please note, this patch did not actually go to stable@.
+From: Adrian Hunter <adrian.hunter@intel.com>
+Date: Thu, 5 Mar 2020 10:42:09 +0200
+Subject: [PATCH] mmc: cqhci: Add cqhci_deactivate()
 
->Signed-off-by: Jessica Yu <jeyu@kernel.org>
->---
-> Documentation/kbuild/modules.rst |  4 ++--
-> scripts/export_report.pl         |  2 +-
-> scripts/mod/modpost.c            | 24 ++++++++++++------------
-> 3 files changed, 15 insertions(+), 15 deletions(-)
->
->diff --git a/Documentation/kbuild/modules.rst b/Documentation/kbuild/modules.rst
->index 69fa48ee93d6..e0b45a257f21 100644
->--- a/Documentation/kbuild/modules.rst
->+++ b/Documentation/kbuild/modules.rst
->@@ -470,9 +470,9 @@ build.
->
-> 	The syntax of the Module.symvers file is::
->
->-	<CRC>       <Symbol>          <Namespace>  <Module>                         <Export Type>
->+	<CRC>       <Symbol>         <Module>                         <Export Type>     <Namespace>
->
->-	0xe1cc2a05  usb_stor_suspend  USB_STORAGE  drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL
->+	0xe1cc2a05  usb_stor_suspend drivers/usb/storage/usb-storage  EXPORT_SYMBOL_GPL USB_STORAGE
->
-> 	The fields are separated by tabs and values may be empty (e.g.
-> 	if no namespace is defined for an exported symbol).
->diff --git a/scripts/export_report.pl b/scripts/export_report.pl
->index 548330e8c4e7..feb3d5542a62 100755
->--- a/scripts/export_report.pl
->+++ b/scripts/export_report.pl
->@@ -94,7 +94,7 @@ if (defined $opt{'o'}) {
-> #
-> while ( <$module_symvers> ) {
-> 	chomp;
->-	my (undef, $symbol, $namespace, $module, $gpl) = split('\t');
->+	my (undef, $symbol, $module, $gpl, $namespace) = split('\t');
-> 	$SYMBOL { $symbol } =  [ $module , "0" , $symbol, $gpl];
-> }
-> close($module_symvers);
->diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
->index 7edfdb2f4497..6ab235354f36 100644
->--- a/scripts/mod/modpost.c
->+++ b/scripts/mod/modpost.c
->@@ -2427,7 +2427,7 @@ static void write_if_changed(struct buffer *b, const char *fname)
-> }
->
-> /* parse Module.symvers file. line format:
->- * 0x12345678<tab>symbol<tab>module[[<tab>export]<tab>something]
->+ * 0x12345678<tab>symbol<tab>module<tab>export<tab>namespace
->  **/
-> static void read_dump(const char *fname, unsigned int kernel)
-> {
->@@ -2440,7 +2440,7 @@ static void read_dump(const char *fname, unsigned int kernel)
-> 		return;
->
-> 	while ((line = get_next_line(&pos, file, size))) {
->-		char *symname, *namespace, *modname, *d, *export, *end;
->+		char *symname, *namespace, *modname, *d, *export;
-> 		unsigned int crc;
-> 		struct module *mod;
-> 		struct symbol *s;
->@@ -2448,16 +2448,16 @@ static void read_dump(const char *fname, unsigned int kernel)
-> 		if (!(symname = strchr(line, '\t')))
-> 			goto fail;
-> 		*symname++ = '\0';
->-		if (!(namespace = strchr(symname, '\t')))
->-			goto fail;
->-		*namespace++ = '\0';
->-		if (!(modname = strchr(namespace, '\t')))
->+		if (!(modname = strchr(symname, '\t')))
-> 			goto fail;
-> 		*modname++ = '\0';
->-		if ((export = strchr(modname, '\t')) != NULL)
->-			*export++ = '\0';
->-		if (export && ((end = strchr(export, '\t')) != NULL))
->-			*end = '\0';
->+		if (!(export = strchr(modname, '\t')))
->+			goto fail;
->+		*export++ = '\0';
->+		if (!(namespace = strchr(export, '\t')))
+Host controllers can reset CQHCI either directly or as a consequence of
+host controller reset. Add cqhci_deactivate() which puts the CQHCI
+driver into a state that is consistent with that.
 
-As mentioned below, we should probably treat namespace as an optional
-field. Then this needs adjusting to handle that case. Similar to how
-optional cases were handled before.
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+---
+ drivers/mmc/host/cqhci.c | 6 +++---
+ drivers/mmc/host/cqhci.h | 5 ++++-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
->+			goto fail;
->+		*namespace++ = '\0';
->+
-> 		crc = strtoul(line, &d, 16);
-> 		if (*symname == '\0' || *modname == '\0' || *d != '\0')
-> 			goto fail;
->@@ -2508,9 +2508,9 @@ static void write_dump(const char *fname)
-> 				namespace = symbol->namespace;
-> 				buf_printf(&buf, "0x%08x\t%s\t%s\t%s\t%s\n",
+diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+index e2ea2c4b6b94..d8d024a1682b 100644
+--- a/drivers/mmc/host/cqhci.c
++++ b/drivers/mmc/host/cqhci.c
+@@ -298,16 +298,16 @@ static void __cqhci_disable(struct cqhci_host *cq_host)
+ 	cq_host->activated = false;
+ }
+ 
+-int cqhci_suspend(struct mmc_host *mmc)
++int cqhci_deactivate(struct mmc_host *mmc)
+ {
+ 	struct cqhci_host *cq_host = mmc->cqe_private;
+ 
+-	if (cq_host->enabled)
++	if (cq_host->enabled && cq_host->activated)
+ 		__cqhci_disable(cq_host);
+ 
+ 	return 0;
+ }
+-EXPORT_SYMBOL(cqhci_suspend);
++EXPORT_SYMBOL(cqhci_deactivate);
+ 
+ int cqhci_resume(struct mmc_host *mmc)
+ {
+diff --git a/drivers/mmc/host/cqhci.h b/drivers/mmc/host/cqhci.h
+index def76e9b5cac..8648846a0213 100644
+--- a/drivers/mmc/host/cqhci.h
++++ b/drivers/mmc/host/cqhci.h
+@@ -230,7 +230,10 @@ irqreturn_t cqhci_irq(struct mmc_host *mmc, u32 intmask, int cmd_error,
+ 		      int data_error);
+ int cqhci_init(struct cqhci_host *cq_host, struct mmc_host *mmc, bool dma64);
+ struct cqhci_host *cqhci_pltfm_init(struct platform_device *pdev);
+-int cqhci_suspend(struct mmc_host *mmc);
++static inline int cqhci_suspend(struct mmc_host *mmc)
++{
++	return cqhci_deactivate(mmc);
++}
+ int cqhci_resume(struct mmc_host *mmc);
+ 
+ #endif
+-- 
+2.17.1
 
-This creates trailing tabs for symbols without namespace. If we treat
-'namespace' as an optional field, we should probably make the tab
-conditional as well? What do you think?
 
-Cheers,
-Matthias
+Also, it would be more logical to deactivate prior to the reset i.e.
 
-> 					   symbol->crc, symbol->name,
->-					   namespace ? namespace : "",
-> 					   symbol->module->name,
->-					   export_str(symbol->export));
->+					   export_str(symbol->export),
->+					   namespace ? namespace : "");
-> 			}
-> 			symbol = symbol->next;
-> 		}
->-- 
->2.16.4
->
++    if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
++        cqhci_deactivate(host->mmc);
++    sdhci_reset(host, mask);
+
+
+Also, other drivers using cqhci, should probably do this too, although
+some of them do not reset cqhci with sdhci so perhaps do not need to.
+
+>>>>> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
+>>>>> ---
+>>>>> Changes since V1:
+>>>>>      - Disable CQE only when SDHC undergoes s/w reset for all.
+>>>>> ---
+>>>>>    drivers/mmc/host/sdhci-msm.c | 9 ++++++++-
+>>>>>    1 file changed, 8 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+>>>>> index 53b79ee..75929d3 100644
+>>>>> --- a/drivers/mmc/host/sdhci-msm.c
+>>>>> +++ b/drivers/mmc/host/sdhci-msm.c
+>>>>> @@ -1823,6 +1823,13 @@ static void sdhci_msm_set_regulator_caps(struct
+>>>>> sdhci_msm_host *msm_host)
+>>>>>        pr_debug("%s: supported caps: 0x%08x\n", mmc_hostname(mmc), caps);
+>>>>>    }
+>>>>>    +static void sdhci_msm_reset(struct sdhci_host *host, u8 mask)
+>>>>> +{
+>>>>> +    sdhci_reset(host, mask);
+>>>>> +    if ((host->mmc->caps2 & MMC_CAP2_CQE) && (mask & SDHCI_RESET_ALL))
+>>>>> +        cqhci_suspend(host->mmc);
+>>>>> +}
+>>>>> +
+>>>>>    static const struct sdhci_msm_variant_ops mci_var_ops = {
+>>>>>        .msm_readl_relaxed = sdhci_msm_mci_variant_readl_relaxed,
+>>>>>        .msm_writel_relaxed = sdhci_msm_mci_variant_writel_relaxed,
+>>>>> @@ -1861,7 +1868,7 @@ static void sdhci_msm_set_regulator_caps(struct
+>>>>> sdhci_msm_host *msm_host)
+>>>>>    MODULE_DEVICE_TABLE(of, sdhci_msm_dt_match);
+>>>>>      static const struct sdhci_ops sdhci_msm_ops = {
+>>>>> -    .reset = sdhci_reset,
+>>>>> +    .reset = sdhci_msm_reset,
+>>>>>        .set_clock = sdhci_msm_set_clock,
+>>>>>        .get_min_clock = sdhci_msm_get_min_clock,
+>>>>>        .get_max_clock = sdhci_msm_get_max_clock,
+>>>>>
+
