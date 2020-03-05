@@ -2,106 +2,89 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EA2C3F2DA
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DDA3C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:39:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F67F2166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CDE0208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 10:39:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PnfP0bOc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=chronox.de header.i=@chronox.de header.b="Rix8BlEq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgCEKdA (ORCPT
+        id S1726956AbgCEKjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 05:33:00 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36728 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725897AbgCEKc7 (ORCPT
+        Thu, 5 Mar 2020 05:39:46 -0500
+Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.219]:9732 "EHLO
+        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725903AbgCEKjq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 05:32:59 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g12so2465461plo.3;
-        Thu, 05 Mar 2020 02:32:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=vsmWfQHYKO+IuisE4zoMrrWqQil3RoLQ09NM/R4vXz8=;
-        b=PnfP0bOcQb6PjDSK6KH7VyFI6lPRcbRKxQXVVwlFjpqKwUREnrvNYwuGVOOeteK46l
-         +ziFUEWNEhZ4HH1r5D4yvLldZTqLP1B2uxtlFvEFbevqxE6Q4PWw4Z0APOak1KTgfX6U
-         hxzlSAPkg/84vnQwYAIdOSZr9isyzANmrggt0Yn8ZrmbqAilHz1ctIexj6h3qljDRYgn
-         SrJhXCHML0kTVTJQCkBTiF3orv1usOgLZbXjj82UJBqjpho02d0GIUNX6w7cLLFdtpIV
-         ln3u6zd2iGo7YHWIlXYb4wBvy/339xHyTqYqRlQEi/0djWXaw8YHz1QSS5ERq1mG5x4z
-         5MwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=vsmWfQHYKO+IuisE4zoMrrWqQil3RoLQ09NM/R4vXz8=;
-        b=sgKtQ4NInQR02M+Aa+/FOdE3oti94Y8ZU4jA5EsoBwj/movIPdf6KXGmc+5O9Wa5oa
-         vstb20e4CK4TgQxbFUxFmdA2DfpzCfn347C7JbYY61loXg3PJ/BYKuYUKPGjcEoCvv/L
-         CEzVvpY6PhvNIxkqrHTaTj3pz+driULzWFwSu6RkTJASggUlF6lWC9xWJBAZaWVRX1u1
-         LgvJcz+HgIIZ7GdQGUeBc864FD5mf3qNJ1/Tua0qSAW4Tq7ZymbJwkxziJVlpD6KWynG
-         X6Yhe3b16xHyg3in/fkUbs438lTwJzu44ezBLwI5EOkCn/ogYw3bOI/HUenl5gzv8Zra
-         Y6Mw==
-X-Gm-Message-State: ANhLgQ0JX0T9kdQ+LPtJ0MtbdVBfN5w59uySXoscSKcYpisuA5oJOxG9
-        SJTu99Vry5MqUWnDjmxtezuDv8nr
-X-Google-Smtp-Source: ADFU+vuvup2OQ+LkXonFteqL3x/Q3zHIPTB1pvus9Rdsa06vHb/D3yAFoir8AtziitgcAYM/Iw/3Pg==
-X-Received: by 2002:a17:90a:e654:: with SMTP id ep20mr8005006pjb.60.1583404378204;
-        Thu, 05 Mar 2020 02:32:58 -0800 (PST)
-Received: from ubt.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id t17sm31540145pgn.94.2020.03.05.02.32.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 02:32:57 -0800 (PST)
-From:   Chunyan Zhang <zhang.lyra@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Jiri Slaby <jslaby@suse.com>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Chunyan Zhang <chunyan.zhang@unisoc.com>
-Subject: [PATCH 2/2] tty: serial: make SERIAL_SPRD not depend on ARCH_SPRD
-Date:   Thu,  5 Mar 2020 18:32:28 +0800
-Message-Id: <20200305103228.9686-2-zhang.lyra@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200305103228.9686-1-zhang.lyra@gmail.com>
-References: <20200305103228.9686-1-zhang.lyra@gmail.com>
+        Thu, 5 Mar 2020 05:39:46 -0500
+X-Greylist: delayed 358 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Mar 2020 05:39:45 EST
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1583404784;
+        s=strato-dkim-0002; d=chronox.de;
+        h=References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=lAG5oOfZYa0ZZc4Uadd+FIbLaL5zY+h9aowSlE+qW80=;
+        b=Rix8BlEqNUpw/rhC0RenKg19D4PTTTY3qR8zkon2ki034WlVYz6UsGdCcnrHysL4wv
+        lU09RfOsv+0nFXrM6cSv/QKoM83eEBWQ8xGPePJhieTCnQS9AMQD5OB3HpdLh7isLL9H
+        pUbZcgwFHNpePIv1pqkaAjWRMbb17i3jCs1xHHwMbY2iENHtz3pj1tNB6Rfr4cYQfycq
+        zXECcr/KCDFufQc3oWNvyPRazBLHeUEsHin600aov9yAm9kQLQemHkurc4bOKLsp4a5s
+        gjPXWLITs8swYsFcZLAvdsR+Y6Ux9MxPiiKP9aF2PsHEhYDJeqrDp3sHRyUomPzWEB+Y
+        V/ng==
+X-RZG-AUTH: ":P2ERcEykfu11Y98lp/T7+hdri+uKZK8TKWEqNyiHySGSa9k9xmwdNnzHHXDaJfScGJUh"
+X-RZG-CLASS-ID: mo00
+Received: from tauon.chronox.de
+        by smtp.strato.de (RZmta 46.2.0 DYNA|AUTH)
+        with ESMTPSA id Q01030w25AXfWvr
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Thu, 5 Mar 2020 11:33:41 +0100 (CET)
+From:   Stephan Mueller <smueller@chronox.de>
+To:     Andrei Botila <andrei.botila@oss.nxp.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC] crypto: xts - add check for input length equal to zero
+Date:   Thu, 05 Mar 2020 11:33:40 +0100
+Message-ID: <4145904.A5P2xsN9yQ@tauon.chronox.de>
+In-Reply-To: <20200305102255.12548-1-andrei.botila@oss.nxp.com>
+References: <20200305102255.12548-1-andrei.botila@oss.nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="iso-8859-1"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chunyan Zhang <chunyan.zhang@unisoc.com>
+Am Donnerstag, 5. M=E4rz 2020, 11:22:55 CET schrieb Andrei Botila:
 
-Remove the dependency with ARCH_SPRD from sprd serial/console Kconfig-s,
-since we want them can be built-in when ARCH_SPRD is set as 'm'.
+Hi Andrei,
 
-Signed-off-by: Chunyan Zhang <chunyan.zhang@unisoc.com>
----
- drivers/tty/serial/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+> From: Andrei Botila <andrei.botila@nxp.com>
+>=20
+> Through this RFC we try to standardize the way input lengths equal to 0
+> are handled in all skcipher algorithms. Currently, in xts when an input
+> has a length smaller than XTS_BLOCK_SIZE it returns -EINVAL while the
+> other algorithms return 0 for input lengths equal to zero.
+> The algorithms that implement this check are CBC, ARC4, CFB, OFB, SALSA20,
+> CTR, ECB and PCBC, XTS being the outlier here. All of them call
+> skcipher_walk_virt() which returns 0 if skcipher_walk_skcipher() finds
+> that input length is equal to 0.
+> This case was discovered when fuzz testing was enabled since it generates
+> this input length.
+> This RFC wants to find out if the approach is ok before updating the
+> other xts implementations.
 
-diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-index 52eaac21ff9f..2b9addc0afb5 100644
---- a/drivers/tty/serial/Kconfig
-+++ b/drivers/tty/serial/Kconfig
-@@ -1452,7 +1452,6 @@ config SERIAL_MEN_Z135
- 
- config SERIAL_SPRD
- 	tristate "Support for Spreadtrum serial"
--	depends on ARCH_SPRD
- 	select SERIAL_CORE
- 	help
- 	  This enables the driver for the Spreadtrum's serial.
--- 
-2.20.1
+It may be a good idea to consolidate that. However, changing only one=20
+implementation is not good.
+
+All XTS implementations would need to be converted then.
+
+Ciao
+Stephan
+
 
