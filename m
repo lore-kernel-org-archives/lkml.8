@@ -2,62 +2,79 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E461C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576ECC3F2D2
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D57EF20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22DF120637
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FiF59DD7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qpkOfKIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbgCEREN (ORCPT
+        id S1726087AbgCERFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:04:13 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:35008 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbgCEREN (ORCPT
+        Thu, 5 Mar 2020 12:05:53 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42437 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725946AbgCERFw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:04:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=vF3Qg1jYVPL0fMpAIJJ4hQLf8PLL9mugK11wImvRR4I=; b=FiF59DD7vx7aBlltd/4aw7x57/
-        GaZd9usctGv0IU3Gl089qW9i9VcxMvq97k5+zt7P+tTeB0UTg3pyvjtMTKVaa6HVDvI8GwzqU2S13
-        F1zzzkUHDo3n7j9zwXeZiJuSLU8RpMJCgIqqxUq3S5XUTuMz1SiMXsf6DAop0haWe7IgS42lp0V4D
-        1ZyjHXa2tZWiSiN2mTNPkmPsmRPBqyj7mPDQR0wUJpoKsUdozDTNoTGxj09l/y5T9j+Xy6TlsjhMQ
-        6NYn2Xy/k+vUzXzlyvbY7B46PWRy4tJqSUrerDFCyCe5DT6FUBa/8hJ0VyeJ2X5J+ni31FKBGWdCQ
-        mWI35ZAw==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9tuq-0007DD-EB; Thu, 05 Mar 2020 17:04:08 +0000
-Subject: Re: mmotm 2020-03-03-22-28 uploaded (warning: objtool:)
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Walter Wu <walter-zh.wu@mediatek.com>
-Cc:     akpm@linux-foundation.org, broonie@kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
-        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
-        Josh Poimboeuf <jpoimboe@redhat.com>, dvyukov@google.com
-References: <20200304062843.9yA6NunM5%akpm@linux-foundation.org>
- <cd1c6bd2-3db3-0058-f3b4-36b2221544a0@infradead.org>
- <20200305081717.GT2596@hirez.programming.kicks-ass.net>
- <20200305081842.GB2619@hirez.programming.kicks-ass.net>
- <1583399782.17146.14.camel@mtksdccf07>
- <20200305095436.GV2596@hirez.programming.kicks-ass.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <eb96f240-63ba-c1b1-7696-07ace3ffe13b@infradead.org>
-Date:   Thu, 5 Mar 2020 09:04:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 12:05:52 -0500
+Received: by mail-wr1-f68.google.com with SMTP id v11so5986658wrm.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 09:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KY/+AA/X+vmMaT8JmKrZPvVhnyW63l/Qn9k0Ear+Z80=;
+        b=qpkOfKIPeUauBeKa+GcXonlKmWrtkMDOAuQp5D+IGn34l2m7WwnHskvCWPLJsKvwxv
+         8Zr/wfNCm5LiJsf83DmTJTZv6H0M34mDgZ8Z+jXNXUAw6TpZgKuWBy/Xy+lHKNj1LVec
+         ARNSOFH7gij5XNzSjUNEyOg0Oq5BikMHy+NPk9pooq88/L+2oQeB+UpJ31EUwVNuVi6n
+         zPrSyvtgaEdEFjHgGwWy6G2a+uz7Dz6QbDn3hjv3f8M/KA9OuTLUFRqKRxbHExVrlg69
+         RiAFm0VQvtf1r2uuVTKB2JXVWRWchF/Z3UniKjYLf5asyBHf/w4RFQxf0FFJJsLxr+30
+         qCgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KY/+AA/X+vmMaT8JmKrZPvVhnyW63l/Qn9k0Ear+Z80=;
+        b=HZEkC9Epq4XoEPmim5J7j4tncKaUkJGUSrH+5svjim6AxG0br8yNwYwOwQibM1p9l9
+         rLiwd1GKO8I8NJD8fbqCz+6eKBR2V1BFohToXkX/Q1we2E8h3NBrFP4IZ4VejU0miEyS
+         29MctsFNhrnClG5qSduzS7trAIt7L0jiZz0hM1exVFAoYlwc/g9rCWcAUq+zYFU2iDm1
+         3yslHS2dllSKjSLrynxpCu7LMcYxi99y5WGCqwndLF5umGudftnMQ0QtFrpXxzOUZeAe
+         +UiW3lZJJ5yjso3BSGUOF8+e+yuN1kG4dfcnmF3UdnA0x6v7ZHThGY/13HDvgP3cTqIh
+         qgvw==
+X-Gm-Message-State: ANhLgQ10jnHZeh+aw8ebV0zaC49N1oKJ8JHZ4zKX5aVXERZ21rH4k1iT
+        Ose2roTCXAYPYqJTV71Ur3jepAe5VXo=
+X-Google-Smtp-Source: ADFU+vuhV/vgw2KQG7w7zFquzgovzNbFD6hhvJd/rWV5O26+Y9q1Bbh78DrxmuWhW9lbWUTbkpcI5w==
+X-Received: by 2002:a5d:5301:: with SMTP id e1mr10401607wrv.44.1583427949459;
+        Thu, 05 Mar 2020 09:05:49 -0800 (PST)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id t14sm13003555wrp.63.2020.03.05.09.05.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Mar 2020 09:05:48 -0800 (PST)
+Subject: Re: [PATCH v2 3/3] Revert "thunderbolt: Prevent crash if non-active
+ NVMem file is read"
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <PSXP216MB0438FE68DAAFC23CB9AAD5E180E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <PSXP216MB04388C56BECC4CE5EC81EA2680E70@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20200303103310.GN2540@lahna.fi.intel.com>
+ <PSXP216MB04384541A10255DF4E70F4D480E50@PSXP216MB0438.KORP216.PROD.OUTLOOK.COM>
+ <20200304161827.GQ2540@lahna.fi.intel.com>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <101ca1ac-c3d3-6685-e21b-4c519346b67f@linaro.org>
+Date:   Thu, 5 Mar 2020 17:05:47 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200305095436.GV2596@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200304161827.GQ2540@lahna.fi.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -65,80 +82,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 3/5/20 1:54 AM, Peter Zijlstra wrote:
-> On Thu, Mar 05, 2020 at 05:16:22PM +0800, Walter Wu wrote:
->> On Thu, 2020-03-05 at 09:18 +0100, Peter Zijlstra wrote:
->>> On Thu, Mar 05, 2020 at 09:17:17AM +0100, Peter Zijlstra wrote:
->>>> On Wed, Mar 04, 2020 at 09:34:49AM -0800, Randy Dunlap wrote:
->>>
->>>>> mm/kasan/common.o: warning: objtool: kasan_report()+0x13: call to report_enabled() with UACCESS enabled
+
+
+On 04/03/2020 16:18, Mika Westerberg wrote:
+> On Wed, Mar 04, 2020 at 04:07:29PM +0000, Nicholas Johnson wrote:
+>> On Tue, Mar 03, 2020 at 12:33:10PM +0200, Mika Westerberg wrote:
+>>> On Mon, Mar 02, 2020 at 03:43:29PM +0000, Nicholas Johnson wrote:
+>>>> This reverts commit 03cd45d2e219301880cabc357e3cf478a500080f.
 >>>>
->>>> I used next/master instead, and found the below broken commit
->>>> responsible for this.
-
-Yes, I see that same warning in linux-next of 20200305.
-
->>>> @@ -634,12 +637,20 @@ void kasan_free_shadow(const struct vm_struct *vm)
->>>>  #endif
->>>>  
->>>>  extern void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip);
->>>> +extern bool report_enabled(void);
->>>>  
->>>> -void kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
->>>> +bool kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
->>>>  {
->>>> -	unsigned long flags = user_access_save();
->>>> +	unsigned long flags;
->>>> +
->>>> +	if (likely(!report_enabled()))
->>>> +		return false;
+>>>> Since NVMEM subsystem gained support for write-only instances, this
+>>>> workaround is no longer required, so drop it.
+>>>>
+>>>> Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
 >>>
->>> This adds an explicit call before the user_access_save() and that is a
->>> straight on bug.
+>>> Assuming this goes through The NVMem tree:
 >>>
->> Hi Peter,
->>
->> Thanks for your help. Unfortunately, I don't reproduce it in our
->> environment, so I have asked Stephen, if I can reproduce it, then we
->> will send new patch.
+>>> Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>>
+>>> If that's not the case, please let me know. I can also take them through
+>>> the Thunderbolt tree.
+>> I do not know how this would normally work - I have not experienced much
+>> cross-subsystem work. Perhaps it should be taken through your tree. If
+>> it goes through your tree and not part of this series, perhaps it does
+>> not make sense for it to be authored by me, either. It's just a revert;
+>> it does not take a lot of effort or doing something original.
 > 
-> The patch is trivial; and all you need is an x86_64 (cross) compiler to
-> reproduce.
+> Your authorship is fine.
 > 
-> 
-> diff --git a/mm/kasan/common.c b/mm/kasan/common.c
-> index ad2dc0c9cc17..2906358e42f0 100644
-> --- a/mm/kasan/common.c
-> +++ b/mm/kasan/common.c
-> @@ -618,16 +618,17 @@ extern bool report_enabled(void);
->  
->  bool kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
->  {
-> -	unsigned long flags;
-> +	unsigned long flags = user_access_save();
-> +	bool ret = false;
->  
-> -	if (likely(!report_enabled()))
-> -		return false;
-> +	if (likely(report_enabled())) {
-> +		__kasan_report(addr, size, is_write, ip);
-> +		ret = true;
-> +	}
->  
-> -	flags = user_access_save();
-> -	__kasan_report(addr, size, is_write, ip);
->  	user_access_restore(flags);
->  
-> -	return true;
-> +	return ret;
->  }
->  
->  #ifdef CONFIG_MEMORY_HOTPLUG
+> Since this patch depends on the first one, it should go together with
+> that one either to NVMem tree or Thunderbolt tree. Either is fine by me
+> but if I take them then I need an ack from Srinivas.
 > 
 
-and that fixes the warning.  Thanks.
+I applied 2/3 patch which should show up in next 5.7-rc1 release, with 
+that in place you can revert this patch. Please take this patch via 
+respective tree, it does not make much sense for me to apply this as its 
+not going to break any build.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
--- 
-~Randy
+--srini
