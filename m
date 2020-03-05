@@ -2,177 +2,172 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02789C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60AFC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF2C42072A
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A92C2072A
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:14:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="JdjU1TJg";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="nTnG/ER4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgCENLa (ORCPT
+        id S1726209AbgCENOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:11:30 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:5808 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725912AbgCENL2 (ORCPT
+        Thu, 5 Mar 2020 08:14:04 -0500
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:43048 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725880AbgCENOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:11:28 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 025CtJ0a092573
-        for <linux-kernel@vger.kernel.org>; Thu, 5 Mar 2020 08:11:27 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yjrtsgw5b-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 08:11:26 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Thu, 5 Mar 2020 13:11:24 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Mar 2020 13:11:21 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 025DBKtd42598476
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Mar 2020 13:11:20 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2F3E5A405C;
-        Thu,  5 Mar 2020 13:11:20 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E660CA4054;
-        Thu,  5 Mar 2020 13:11:19 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Mar 2020 13:11:19 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     gor@linux.ibm.com, sumanthk@linux.ibm.com,
-        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/s390/json: Add new deflate counters for IBM z15
-Date:   Thu,  5 Mar 2020 14:11:17 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 20030513-0012-0000-0000-0000038D71F6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030513-0013-0000-0000-000021CA3132
-Message-Id: <20200305131117.29175-1-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-05_03:2020-03-05,2020-03-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- mlxscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 mlxlogscore=999 clxscore=1015 malwarescore=0
- spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003050084
+        Thu, 5 Mar 2020 08:14:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1583414045; x=1614950045;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=x9zGvDeOpV6YKeb9Xxm/GxjNUdXQBfik0BSRBvwZ+v4=;
+  b=JdjU1TJg8Pw2f6Llcj9c/DqgCYb9BzCvnnYn2FmKek8UcKk6x/EZocR+
+   7uxWKQ1+rLNy9t7RJngTLpyRnAWKC1FUxD1ibbSy1/N7iX9mqo+H80LvJ
+   Zh8y4XAdxBahSXcHtoHTWrRGnXKNaLFOkwBvL2OTBVb1Na7DsaWeeueeA
+   +mA2AI0kVNx/m4q+lP4BzFzVj2yH3GNmXUUc3z1w9wB8cLFA23n2ykPcr
+   FUJyBl+G8bWvsv9uIvuLCVhmA0wDI+yTKy4ydN6kfhL50Fqiz3m4/2x/s
+   mTyTedvCCi2cDaeOgqQLmFV9aV4PWhGAPGj1nunaKDablJqvLGEiK/Qtv
+   Q==;
+IronPort-SDR: xCiIAfIIVW1NWbpx+Ydj0fIUN7KAJM57jvx9Qsmre2wK18IrQz2Dk5BLgPTcViVrbPJF7ZAIFn
+ H6Iv4LAPyvsS3cxfU4SWYHpak7Le9lr7vkjT2KnmSIkT3BE/pcrf6Jw5ud4P4BC842sq/H7ZK7
+ m5FrgrZD47DvE2iNeqkayFtSQe/qLSIvhkuueR6CQNnbcrlmiN7Tl6aiWNfVkkdwq/DtEJGHcL
+ c6GIbUB8MZuCITD+b96Xyxbthy8scl+hyUAkDPQYra1n+29qNpS9b83IhHPN2WnQ/JCOHKwBwe
+ o9I=
+X-IronPort-AV: E=Sophos;i="5.70,518,1574092800"; 
+   d="scan'208";a="135970325"
+Received: from mail-mw2nam10lp2104.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.104])
+  by ob1.hgst.iphmx.com with ESMTP; 05 Mar 2020 21:14:03 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=nHVin89DqoW61pK2KBkppewgoD0wIneeIuxGqbjVs1+DaOJ629dZscqqMiQNFLsYxD7xuQPotpGINm7wAznPTcLH0pVJne88Fvl+M++3AmwgLzHN98ki0DQQnoq9KhZKcRc6vDoGLNj6ObhQvWUZxq26+xlkh2RXoexsjebyLKYoE93DbikJRU/O17TBg2j+yOS9ucvfvmnqfyVKV7qNeBoATvOmH47GHbf9BOTG1iXr40dtZz9/KAnBgpGVkWrNfjo2piPhUbJK+kQpDvnWqyeLanKnpuouUT6Z/56AenuCXCH6C04U6a+SyEwquCpBu2Y9tAVZfJ+koFsIqH8u+w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+gJ1IZk6gMA5g7dZREBXQN5OiOEbqyDrbb+DzYlj6o8=;
+ b=nsnPprbXMVGTu6VZ9gPdRAAEEZf5xhQ6ljPoagrclhTh+fHOoFk9s5uDpuKTCix8RTuaFrOpj4Lo7bHP/7/J/XmJH5EFQxVxge2TsTKchav4wCRLT+A0kjLz9sTaY+ZUSFBMmGqz0/1zVtO9YN6Yptyu/eNvAqCvTOZTZgNnWGb2UEBNkvSUf15KTKdNhsUoGy6ZDY8azfrbMWomod6pNOxJv4E5/dRgWYioOZBREqZnJ1PDRGNTolehPU8VqAu089jr1ENnloYaKZpT/RffXEjeNztzzmwoEjEdI3eYUgnBLosNjHHCbgPIiyc47MTrb+jChIlNrYnXpM7t2Fz1JA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+gJ1IZk6gMA5g7dZREBXQN5OiOEbqyDrbb+DzYlj6o8=;
+ b=nTnG/ER4/AUEBgKwT4mGyoXgsB2ov89aHrt1L9ZjmhzpBV6rPPT3zUfIgD6zgV57b3rpl4XM0sysG5oynA+fXoX0QVtdVp6gd+OOw9GQeRp34fuZvPKoaxt6aI3S6oNYnXw07Od6C/dKIyn4Ix4g8lTXBE7fJMa7GEjhPFyKzeo=
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com (2603:10b6:208:1e1::17)
+ by MN2PR04MB6800.namprd04.prod.outlook.com (2603:10b6:208:1e5::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.14; Thu, 5 Mar
+ 2020 13:14:01 +0000
+Received: from MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7]) by MN2PR04MB6991.namprd04.prod.outlook.com
+ ([fe80::3885:5fac:44af:5de7%7]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
+ 13:14:00 +0000
+From:   Avri Altman <Avri.Altman@wdc.com>
+To:     Stanley Chu <stanley.chu@mediatek.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "alim.akhtar@samsung.com" <alim.akhtar@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>
+CC:     "beanhuo@micron.com" <beanhuo@micron.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kuohong.wang@mediatek.com" <kuohong.wang@mediatek.com>,
+        "peter.wang@mediatek.com" <peter.wang@mediatek.com>,
+        "chun-hung.wu@mediatek.com" <chun-hung.wu@mediatek.com>,
+        "andy.teng@mediatek.com" <andy.teng@mediatek.com>
+Subject: RE: [PATCH v1 4/4] scsi: ufs-mediatek: remove delay for host enabling
+Thread-Topic: [PATCH v1 4/4] scsi: ufs-mediatek: remove delay for host
+ enabling
+Thread-Index: AQHV8qOOFwhGQ/NXrkqa0GY3KGA/B6g5+fjg
+Date:   Thu, 5 Mar 2020 13:14:00 +0000
+Message-ID: <MN2PR04MB6991FAE18CCA3DACF2306E08FCE20@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <20200305040704.10645-1-stanley.chu@mediatek.com>
+ <20200305040704.10645-5-stanley.chu@mediatek.com>
+In-Reply-To: <20200305040704.10645-5-stanley.chu@mediatek.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Avri.Altman@wdc.com; 
+x-originating-ip: [77.138.4.172]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: a784fa61-0a70-48d7-e603-08d7c10711af
+x-ms-traffictypediagnostic: MN2PR04MB6800:
+x-microsoft-antispam-prvs: <MN2PR04MB68003A400B87D42A3C2013EFFCE20@MN2PR04MB6800.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 03333C607F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(396003)(39860400002)(346002)(366004)(136003)(376002)(189003)(199004)(66946007)(55016002)(9686003)(66476007)(478600001)(66446008)(76116006)(4326008)(6506007)(64756008)(66556008)(5660300002)(316002)(7416002)(110136005)(26005)(81156014)(52536014)(54906003)(7696005)(86362001)(8676002)(4744005)(81166006)(2906002)(33656002)(8936002)(186003)(71200400001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR04MB6800;H:MN2PR04MB6991.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: rweqDiZf+fl8gaiJHGzJlgHOV6PjdU0ntziKw3n6J5h4cMxiWVL2WiofqHtfduwVc5+E2TSfklSN4F8BkhS+B33Vhm/oevILxxSYrqbat5wfp9ITcZIN5NKA73wfrY9k4sl0E2a8T/MtFFaSGIs4U72UgTvqqa0esWR3vbUTj63pqr+HZMOVCmp1ACvaF3X/Sxbvot7wLzhfrMVy+L2TJhP7G7D4YwRfK+X82jgspnp1cmCrqlk1RjRtksHzLf7+JzX0iwwlK7tpOJBJnR2MUOm8Nml0088WlW7dD6fnZjr47KFYFNFPdsb5KAgMHqUSJ9LgJi6A9EVfWpp8ShXC3zjJU9MBEEDy89Ll1s6gWO8ZUmpXr09Ov9p2Vp/ln2XcKcjvQLvOvBPveivhf1SXmZW/SOy0M0sCMsgi0cOImrx2Vf4+Dx5UD9+QoxL8cDia
+x-ms-exchange-antispam-messagedata: Cx+G9DPJKCE4T7PAoKSA1J4p2yxv6XhMb/Vdb4ZTBn5eSXOPiqQ2Gucb75ujdPb97/BuruObsHnxAzqEoaT7VG1+q19apdDZlyN+9Oalr03WNw+3j2Zr5feRLT7T38AuOHPiXV5wQh+2zE4OYuWaVA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a784fa61-0a70-48d7-e603-08d7c10711af
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2020 13:14:00.0393
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Y59bZ5xOdq3wbRc2ejWGEHZ0y+iUJRv5cPJLsBbI712Xy1bXMbDGWs216TOL8QZQslxEEpbJIrGAhC4FWmG78Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR04MB6800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for new deflate counters:
-- Counter 247: cycles CPU spent obtaining access to Deflate unit
-- Counter 252: cycles CPU is using Deflate unit
-- Counter 264: Increments by one for every DEFLATE CONVERSION CALL
-	    instruction executed.
-- Counter 265: Increments by one for every DEFLATE CONVERSION CALL
-	    instruction executed that ended in Condition Codes
-	    0, 1 or 2.
+Hi Stanley,
 
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Sumanth Korikkar <sumanthk@linux.ibm.com>
----
- .../pmu-events/arch/s390/cf_z15/crypto6.json  |  8 ++---
- .../pmu-events/arch/s390/cf_z15/extended.json | 30 ++++++++++++++++++-
- 2 files changed, 33 insertions(+), 5 deletions(-)
+>=20
+>=20
+> MediaTek platform and UFS controller do not require the delay
+> for host enabling, thus remove it.
+>=20
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>  drivers/scsi/ufs/ufs-mediatek.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-media=
+tek.c
+> index 3b0e575d7460..ea3b5fd62492 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -258,6 +258,8 @@ static int ufs_mtk_init(struct ufs_hba *hba)
+I would expect to set whatever is needed for your host controller
+In ufshcd_vops_hce_enable_notify(hba, PRE_CHANGE), and not here.
 
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json b/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json
-index 5e36bc2468d0..c998e4f1d1d2 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z15/crypto6.json
-@@ -4,27 +4,27 @@
- 		"EventCode": "80",
- 		"EventName": "ECC_FUNCTION_COUNT",
- 		"BriefDescription": "ECC Function Count",
--		"PublicDescription": "Long ECC function Count"
-+		"PublicDescription": "This counter counts the total number of the elliptic-curve cryptography (ECC) functions issued by the CPU."
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
- 		"EventCode": "81",
- 		"EventName": "ECC_CYCLES_COUNT",
- 		"BriefDescription": "ECC Cycles Count",
--		"PublicDescription": "Long ECC Function cycles count"
-+		"PublicDescription": "This counter counts the total number of CPU cycles when the ECC coprocessor is busy performing the elliptic-curve cryptography (ECC) functions issued by the CPU."
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
- 		"EventCode": "82",
- 		"EventName": "ECC_BLOCKED_FUNCTION_COUNT",
- 		"BriefDescription": "Ecc Blocked Function Count",
--		"PublicDescription": "Long ECC blocked function count"
-+		"PublicDescription": "This counter counts the total number of the elliptic-curve cryptography (ECC) functions that are issued by the CPU and are blocked because the ECC coprocessor is busy performing a function issued by another CPU."
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
- 		"EventCode": "83",
- 		"EventName": "ECC_BLOCKED_CYCLES_COUNT",
- 		"BriefDescription": "ECC Blocked Cycles Count",
--		"PublicDescription": "Long ECC blocked cycles count"
-+		"PublicDescription": "This counter counts the total number of CPU cycles blocked for the elliptic-curve cryptography (ECC) functions issued by the CPU because the ECC coprocessor is busy performing a function issued by another CPU."
- 	},
- ]
-diff --git a/tools/perf/pmu-events/arch/s390/cf_z15/extended.json b/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
-index 89e070727e1b..2df2e231e9ee 100644
---- a/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
-+++ b/tools/perf/pmu-events/arch/s390/cf_z15/extended.json
-@@ -25,7 +25,7 @@
- 		"EventCode": "131",
- 		"EventName": "DTLB2_HPAGE_WRITES",
- 		"BriefDescription": "DTLB2 One-Megabyte Page Writes",
--		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page or a Last Host Translation was done"
-+		"PublicDescription": "A translation entry was written into the Combined Region and Segment Table Entry array in the Level-2 TLB for a one-megabyte page"
- 	},
- 	{
- 		"Unit": "CPU-M-CF",
-@@ -356,6 +356,34 @@
- 		"BriefDescription": "Aborted transactions in constrained TX mode using special completion logic",
- 		"PublicDescription": "A transaction abort has occurred in a constrained transactional-execution mode and the CPU is using special logic to allow the transaction to complete"
- 	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "247",
-+		"EventName": "DFLT_ACCESS",
-+		"BriefDescription": "Cycles CPU spent obtaining access to Deflate unit",
-+		"PublicDescription": "Cycles CPU spent obtaining access to Deflate unit"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "252",
-+		"EventName": "DFLT_CYCLES",
-+		"BriefDescription": "Cycles CPU is using Deflate unit",
-+		"PublicDescription": "Cycles CPU is using Deflate unit"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "264",
-+		"EventName": "DFLT_CC",
-+		"BriefDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed",
-+		"PublicDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed"
-+	},
-+	{
-+		"Unit": "CPU-M-CF",
-+		"EventCode": "265",
-+		"EventName": "DFLT_CCERROR",
-+		"BriefDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed that ended in Condition Codes 0, 1 or 2",
-+		"PublicDescription": "Increments by one for every DEFLATE CONVERSION CALL instruction executed that ended in Condition Codes 0, 1 or 2"
-+	},
- 	{
- 		"Unit": "CPU-M-CF",
- 		"EventCode": "448",
--- 
-2.23.0
+Thanks,
+Avri
 
+>         if (err)
+>                 goto out_variant_clear;
+>=20
+> +       hba->hba_enable_delay_us =3D 0;
+> +
+>         /* Enable runtime autosuspend */
+>         hba->caps |=3D UFSHCD_CAP_RPM_AUTOSUSPEND;
+>=20
+> --
+> 2.18.0
