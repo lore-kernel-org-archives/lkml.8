@@ -2,108 +2,232 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32388C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D40A7C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:52:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E66920716
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:51:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCB020716
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 18:52:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VVk6Byjs"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RXDVmytO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726565AbgCESvy (ORCPT
+        id S1726080AbgCESw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 13:51:54 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44288 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbgCESvx (ORCPT
+        Thu, 5 Mar 2020 13:52:58 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:50917 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725946AbgCESw6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 13:51:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=Yn5/IW3OYHf5EUn3GzmHogT1LV9Dftj667FAvQnTKI4=; b=VVk6ByjsRM3wpWY+qvfeAVvFex
-        XSR3Yje5R00vVodKBhThEv3KsINHfdyK4sDscmpZv3NRJq5tIIABEiVi6J/lt6WJh2neZ//CU+xSB
-        rECagYV5W63kkDmeLBsfyRon75GkhHqJkKSGoJ46JVs87XqpW19FnOFHt5Pb6lkgecjeDhebwIxD8
-        smPH00JfG0iTvdM6x1U4xwQTwATpB7D5Fj+9WzRaT3+tdzn9MRsVeFpcD07fiTbCRWzLw2l4Tv5Mb
-        t2hFpnkyadlZ6M6P8MxkYKd60qZwJMVKFn+tMcVe3efktI5e/147Vgg9+G1/63fiSBRGQQW0Z1GBk
-        oW6khrUw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j9vas-0005bE-DZ; Thu, 05 Mar 2020 18:51:38 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 6FE8E980EDA; Thu,  5 Mar 2020 19:51:36 +0100 (CET)
-Date:   Thu, 5 Mar 2020 19:51:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     =?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@collabora.com>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        "Pierre-Loup A. Griffais" <pgriffais@valvesoftware.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, kernel@collabora.com,
-        krisman@collabora.com, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        ryao@gentoo.org, dvhart@infradead.org, mingo@redhat.com,
-        z.figura12@gmail.com, steven@valvesoftware.com,
-        steven@liquorix.net, malteskarupke@web.de, carlos@redhat.com,
-        adhemerval.zanella@linaro.org, libc-alpha@sourceware.org,
-        linux-api@vger.kernel.org
-Subject: Re: 'simple' futex interface [Was: [PATCH v3 1/4] futex: Implement
- mechanism to wait on any of several futexes]
-Message-ID: <20200305185136.GB3348@worktop.programming.kicks-ass.net>
-References: <87tv3aflqm.fsf@nanos.tec.linutronix.de>
- <967d5047-2cb6-d6d8-6107-edb99a4c9696@valvesoftware.com>
- <87o8thg031.fsf@nanos.tec.linutronix.de>
- <beb82055-96fa-cb64-a06e-9d7a0946587b@valvesoftware.com>
- <20200303120050.GC2596@hirez.programming.kicks-ass.net>
- <87pndth9ur.fsf@oldenburg2.str.redhat.com>
- <20200303132150.GD2596@hirez.programming.kicks-ass.net>
- <878skhh7og.fsf@oldenburg2.str.redhat.com>
- <20200303150104.GE2596@hirez.programming.kicks-ass.net>
- <52406c54-60b3-dcfe-65d8-4c425459e37b@collabora.com>
+        Thu, 5 Mar 2020 13:52:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583434376;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RH9rmtOcZDthbsyDXEkU3rwq+PLEuDnB80nQoDiyIKk=;
+        b=RXDVmytOqo6s5KCXYJq0mbs/ctZifZqkoJlcL5GoXbe9y6TR/x4R0fXIWo5L8YQslrJTlr
+        3UH7w7yTM0JiV7LaDPYk0dDpGauYWORyXqwxZUXUA1GKLgRyxTuErHegPr29BRsQ+y5UrV
+        Uhk+MezAMwyaM4jn31SsKkEI8ROFW2Q=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-347-iwx7Wkn_NWSL09suexWebQ-1; Thu, 05 Mar 2020 13:52:53 -0500
+X-MC-Unique: iwx7Wkn_NWSL09suexWebQ-1
+Received: by mail-qk1-f198.google.com with SMTP id l27so4484873qkl.0
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 10:52:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:organization:user-agent:mime-version
+         :content-transfer-encoding;
+        bh=RH9rmtOcZDthbsyDXEkU3rwq+PLEuDnB80nQoDiyIKk=;
+        b=aSWIJgIukh4VERjG29yTpEeLY8TtjU9GVsWiWiMyeuALfa27ayPzCqIxx9TC1zgKtF
+         fyTpfecA+wNdOpgFvLXOjasl2IEc6+xF2DJM1S9pkgy4vV1+WRAX4ZMDQxhYI7vuWjHI
+         ZicHJnIoh1/BNBanU5YuDWIxWHNlvxaqDoGueoUIei/CSw2UO42BdHWLe6fq34y3Uxjw
+         +jhQe8ywVIMtDJz7UGJae3Bl6skZAeuD9DR91zmGi+mp51Ddh28JvZq8SGCNMsTMUuDw
+         h8bh1KDlyobaaGsGydMIJ1W3oSHWxbST50/TEobmFbZ7gi3OTXvEo/6md5bIjOLht9Yo
+         gxmw==
+X-Gm-Message-State: ANhLgQ2nS2A1kzGMUnEPfjwbeldteeyBHO4CQT3Xp8Gl8gExSc3kpppd
+        F+HlX17K4HRZhUtwPr4/qjX7VELWA/FEHzFv2vKGBBZHT0y9V0w45jwtVs/a0RVhHX82yJggj5p
+        j8GkxdBfZmzkDiRtaEXIupmAt
+X-Received: by 2002:ac8:6f79:: with SMTP id u25mr109675qtv.180.1583434372236;
+        Thu, 05 Mar 2020 10:52:52 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vvJXz2ZSsIo3bYzKu/1CSKGSWGjbmWcq9syd6DB4n7dJrhaY4trWfVTG96f/HjSNPw356xESQ==
+X-Received: by 2002:ac8:6f79:: with SMTP id u25mr109650qtv.180.1583434371935;
+        Thu, 05 Mar 2020 10:52:51 -0800 (PST)
+Received: from dhcp-10-20-1-196.bss.redhat.com ([144.121.20.162])
+        by smtp.gmail.com with ESMTPSA id b5sm6777932qkk.16.2020.03.05.10.52.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 10:52:51 -0800 (PST)
+Message-ID: <efe5fc9895eaab47200e813280873894c0f98c8b.camel@redhat.com>
+Subject: Re: [PATCH 2/3] drm/dp_mst: Don't show connectors as connected
+ before probing available PBN
+From:   Lyude Paul <lyude@redhat.com>
+To:     Ville =?ISO-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+Cc:     dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        nouveau@lists.freedesktop.org, Sean Paul <seanpaul@google.com>,
+        David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Mikita Lipski <mikita.lipski@amd.com>
+Date:   Thu, 05 Mar 2020 13:52:50 -0500
+In-Reply-To: <20200305182942.GP13686@intel.com>
+References: <20200304223614.312023-1-lyude@redhat.com>
+         <20200304223614.312023-3-lyude@redhat.com>
+         <20200305131119.GJ13686@intel.com>
+         <73f52c392431cd21a80a118dd2fd1986e2c535df.camel@redhat.com>
+         <20200305182942.GP13686@intel.com>
+Organization: Red Hat
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <52406c54-60b3-dcfe-65d8-4c425459e37b@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 05, 2020 at 01:14:17PM -0300, Andr� Almeida wrote:
-
-> >   sys_futex_wait(void *uaddr, u64 val, unsigned long flags, ktime_t *timo);
-> >   struct futex_wait {
-> > 	  void *uaddr;
-> > 	  u64 val;
-> > 	  u64 flags;
-> >   };
-> >   sys_futex_waitv(struct futex_wait *waiters, unsigned int nr_waiters,
-> > 		  u64 flags, ktime_t *timo);
-> >   sys_futex_wake(void *uaddr, unsigned int nr, u64 flags);
-> >   sys_futex_cmp_requeue(void *uaddr1, void *uaddr2, unsigned int nr_wake,
-> > 		  unsigned int nr_requeue, u64 cmpval, unsigned long flags);
+On Thu, 2020-03-05 at 20:29 +0200, Ville Syrjälä wrote:
+> On Thu, Mar 05, 2020 at 01:13:36PM -0500, Lyude Paul wrote:
+> > On Thu, 2020-03-05 at 15:11 +0200, Ville Syrjälä wrote:
+> > > On Wed, Mar 04, 2020 at 05:36:12PM -0500, Lyude Paul wrote:
+> > > > It's next to impossible for us to do connector probing on topologies
+> > > > without occasionally racing with userspace, since creating a connector
+> > > > itself causes a hotplug event which we have to send before probing the
+> > > > available PBN of a connector. Even if we didn't have this hotplug
+> > > > event
+> > > > sent, there's still always a chance that userspace started probing
+> > > > connectors before we finished probing the topology.
+> > > > 
+> > > > This can be a problem when validating a new MST state since the
+> > > > connector will be shown as connected briefly, but without any
+> > > > available
+> > > > PBN - causing any atomic state which would enable said connector to
+> > > > fail
+> > > > with -ENOSPC. So, let's simply workaround this by telling userspace
+> > > > new
+> > > > MST connectors are disconnected until we've finished probing their
+> > > > PBN.
+> > > > Since we always send a hotplug event at the end of the link address
+> > > > probing process, userspace will still know to reprobe the connector
+> > > > when
+> > > > we're ready.
+> > > > 
+> > > > Signed-off-by: Lyude Paul <lyude@redhat.com>
+> > > > Fixes: cd82d82cbc04 ("drm/dp_mst: Add branch bandwidth validation to
+> > > > MST
+> > > > atomic check")
+> > > > Cc: Mikita Lipski <mikita.lipski@amd.com>
+> > > > Cc: Alex Deucher <alexander.deucher@amd.com>
+> > > > Cc: Sean Paul <seanpaul@google.com>
+> > > > Cc: Hans de Goede <hdegoede@redhat.com>
+> > > > ---
+> > > >  drivers/gpu/drm/drm_dp_mst_topology.c | 13 +++++++++++++
+> > > >  1 file changed, 13 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > index 207eef08d12c..7b0ff0cff954 100644
+> > > > --- a/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > +++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+> > > > @@ -4033,6 +4033,19 @@ drm_dp_mst_detect_port(struct drm_connector
+> > > > *connector,
+> > > >  			ret = connector_status_connected;
+> > > >  		break;
+> > > >  	}
+> > > > +
+> > > > +	/* We don't want to tell userspace the port is actually
+> > > > plugged into
+> > > > +	 * anything until we've finished probing it's available_pbn,
+> > > > otherwise
+> > > 
+> > > "its"
+> > > 
+> > > Why is the connector even registered before we've finished the probe?
+> > > 
+> > Oops, I'm not sure how I did this by accident but the explanation I gave
+> > in
+> > the commit message was uh, completely wrong. I must have forgotten that I
+> > made
+> > sure we didn't expose connectors before probing their PBN back when I
+> > started
+> > my MST cleanup....
 > > 
-> > And that makes 7 arguments for cmp_requeue, which can't be. Maybe we if
-> > combine nr_wake and nr_requeue in one as 2 u16... ?
-> > 
-> > And then we need to go detector if the platform supports it or not..
-> > 
+> > So: despite what I said before it's not actually when new connectors are
+> > created, it's when downstream hotplugs happen which means that the
+> > conenctor's
+> > always going to be there before we probe the available_pbn.
 > 
-> Thanks everyone for the feedback around our mechanism. Are the
-> performance benefits of implementing a syscall to wait on a single futex
-> significant enough to maintain it instead of just using
-> `sys_futex_waitv()` with `nr_waiters = 1`? If we join both cases in a
-> single interface, we may even add a new member for NUMA hint in `struct
-> futex_wait`.
+> Not sure I understand. You're saying this is going to change for already
+> existing connectors when something else gets plugged in, and either we
+> zero it out during the probe or it always was zero to begin with for
+> whatever reason?
 
-My consideration was that avoiding the get_user/copy_from_user might
-become measurable on !PTI systems with SMAP.
+So: you just made me realize that I'm not actually sure whether there's any
+point to us clearing port->available_pbn here since the available_pbn (at
+least the value that we cache on initial link address probing for bandwidth
+constraint checking) shouldn't actually change on a port just because of a
+hotplug. I bet this is probably causing more problems on it's own as well,
+since reprobing the available_pbn might actually give us a value that reflects
+allocations on other ports that are already in place.
 
-But someone would have to build it and measure it before we can be sure
-of course.
+So: I think what I'm going to do instead is make it so that we never clear
+port->available_pbn; mainly to make things less complicated during
+suspend/resume, since we want to make sure there's always some sort of PBN
+value populated even during the middle of reprobing the link address on
+resume. That way we don't have to pretend that it's ever disconnected either.
+Will send a respin in a bit.
+
+> 
+> > I did just notice
+> > though that we send a hotplug on connection status notifications even
+> > before
+> > we've finished the PBN probe, so I might be able to improve on that as
+> > well.
+> > We still definitely want to report the connector as disconnected before we
+> > have the available PBN though, in case another probe was already going
+> > before
+> > we got the connection status notification.
+> > 
+> > I'll make sure to fixup the explanation in the commit message on the next
+> > respin
+> > 
+> > > > +	 * userspace will see racy atomic check failures
+> > > > +	 *
+> > > > +	 * Since we always send a hotplug at the end of probing
+> > > > topology
+> > > > +	 * state, we can just let userspace reprobe this connector
+> > > > later.
+> > > > +	 */
+> > > > +	if (ret == connector_status_connected && !port->available_pbn) 
+> > > > {
+> > > > +		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] not ready yet (PBN
+> > > > not
+> > > > probed)\n",
+> > > > +			      connector->base.id, connector->name);
+> > > > +		ret = connector_status_disconnected;
+> > > > +	}
+> > > >  out:
+> > > >  	drm_dp_mst_topology_put_port(port);
+> > > >  	return ret;
+> > > > -- 
+> > > > 2.24.1
+> > > > 
+> > > > _______________________________________________
+> > > > dri-devel mailing list
+> > > > dri-devel@lists.freedesktop.org
+> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > -- 
+> > Cheers,
+> > 	Lyude Paul (she/her)
+> > 	Associate Software Engineer at Red Hat
+-- 
+Cheers,
+	Lyude Paul (she/her)
+	Associate Software Engineer at Red Hat
+
