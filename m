@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AACC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18233C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53ACF21744
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9F7D20870
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:13:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583428417;
-	bh=Mc9vkGPDUaDyDV/P8kywreIweeOriVdDe6jvOFFt0pI=;
+	s=default; t=1583428419;
+	bh=F1D0R/proQlgrCAIHqb84XFSvyT3s+JQd9HSM/5D7iQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iIlT56kEvdJGHQMTKYyYOAteJWIoZCqHMyAvgjNDcUKVF2EFGGJu+lAXhYwJmbqWi
-	 y/dBc7D65cBNJhKsMHnJSFSFVJqewvTcOryY1rtCtbpOS1oOo+2bbWv6f8dHNSk9Bk
-	 8GfLaWvN2PhaCIqsvvLomT+eKbfxJ36ewN6iEBb8=
+	b=JQbLyCRrB36itzCyUBJcmO3G5siGqtKNBv1Q/wgZ6uEt8t+0SlHkOym5dnUYidPBj
+	 FEFzuUaJW9aw8UsJflnFnKMxnPBgTl0WrJttVybP+UKELwKn9Abks0bmu6LrDPXjL7
+	 25ixJYJ6JDNFDyUhguHjiuZqjprSwuWPdZOfhd0M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727083AbgCERNf (ORCPT
+        id S1727131AbgCERNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:13:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38970 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:13:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726970AbgCERNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:30 -0500
+        id S1726141AbgCERNb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:31 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BD0E2166E;
-        Thu,  5 Mar 2020 17:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91B9C22B48;
+        Thu,  5 Mar 2020 17:13:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428410;
-        bh=Mc9vkGPDUaDyDV/P8kywreIweeOriVdDe6jvOFFt0pI=;
+        s=default; t=1583428411;
+        bh=F1D0R/proQlgrCAIHqb84XFSvyT3s+JQd9HSM/5D7iQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WF+mDlne7hBHCooLpVJ/r13CFtlPudKQjfaZRrnQHf4aw6zNoM6OgysjpjlBqWMtN
-         SSHk7F/sXVll10AhsskPh8+Ou+maSKVs7hv+ObEIFLQ7Y7Y9LgkO5JawhiZbcbD4B7
-         V2yhz4RxDhc5Jcg0HzHieA9zxvwdf5hop2uiiEd8=
+        b=pJm/5sTmhooF8KlZ1ZaG9eRoVbVwsz8WODqs28TYgfaVoLePK2BTcPEAAJ3wI2dyt
+         Q16+k3pYJ1L9RnQlte/8VoBbhtJQrhtEmzIyyRJLx5rys7treRYCTK0wKDMritP+IT
+         W5XVTviXNmwfT0aqZ9oYgNKXegLATKETGASV1ONk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Paul Burton <paulburton@kernel.org>, ralf@linux-mips.org,
-        linux-mips@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.5 14/67] MIPS: VPE: Fix a double free and a memory leak in 'release_vpe()'
-Date:   Thu,  5 Mar 2020 12:12:15 -0500
-Message-Id: <20200305171309.29118-14-sashal@kernel.org>
+Cc:     Hanno Zulla <kontakt@hanno.de>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 15/67] HID: hid-bigbenff: fix general protection fault caused by double kfree
+Date:   Thu,  5 Mar 2020 12:12:16 -0500
+Message-Id: <20200305171309.29118-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -60,44 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Hanno Zulla <kontakt@hanno.de>
 
-[ Upstream commit bef8e2dfceed6daeb6ca3e8d33f9c9d43b926580 ]
+[ Upstream commit 789a2c250340666220fa74bc6c8f58497e3863b3 ]
 
-Pointer on the memory allocated by 'alloc_progmem()' is stored in
-'v->load_addr'. So this is this memory that should be freed by
-'release_progmem()'.
+The struct *bigben was allocated via devm_kzalloc() and then used as a
+parameter in input_ff_create_memless(). This caused a double kfree
+during removal of the device, since both the managed resource API and
+ml_ff_destroy() in drivers/input/ff-memless.c would call kfree() on it.
 
-'release_progmem()' is only a call to 'kfree()'.
-
-With the current code, there is both a double free and a memory leak.
-Fix it by passing the correct pointer to 'release_progmem()'.
-
-Fixes: e01402b115ccc ("More AP / SP bits for the 34K, the Malta bits and things. Still wants")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: ralf@linux-mips.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org
+Signed-off-by: Hanno Zulla <kontakt@hanno.de>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/mips/kernel/vpe.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hid/hid-bigbenff.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/mips/kernel/vpe.c b/arch/mips/kernel/vpe.c
-index 6176b9acba950..d0d832ab3d3b8 100644
---- a/arch/mips/kernel/vpe.c
-+++ b/arch/mips/kernel/vpe.c
-@@ -134,7 +134,7 @@ void release_vpe(struct vpe *v)
+diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
+index 3f6abd190df43..f7e85bacb6889 100644
+--- a/drivers/hid/hid-bigbenff.c
++++ b/drivers/hid/hid-bigbenff.c
+@@ -220,10 +220,16 @@ static void bigben_worker(struct work_struct *work)
+ static int hid_bigben_play_effect(struct input_dev *dev, void *data,
+ 			 struct ff_effect *effect)
  {
- 	list_del(&v->list);
- 	if (v->load_addr)
--		release_progmem(v);
-+		release_progmem(v->load_addr);
- 	kfree(v);
- }
+-	struct bigben_device *bigben = data;
++	struct hid_device *hid = input_get_drvdata(dev);
++	struct bigben_device *bigben = hid_get_drvdata(hid);
+ 	u8 right_motor_on;
+ 	u8 left_motor_force;
  
++	if (!bigben) {
++		hid_err(hid, "no device data\n");
++		return 0;
++	}
++
+ 	if (effect->type != FF_RUMBLE)
+ 		return 0;
+ 
+@@ -341,7 +347,7 @@ static int bigben_probe(struct hid_device *hid,
+ 
+ 	INIT_WORK(&bigben->worker, bigben_worker);
+ 
+-	error = input_ff_create_memless(hidinput->input, bigben,
++	error = input_ff_create_memless(hidinput->input, NULL,
+ 		hid_bigben_play_effect);
+ 	if (error)
+ 		return error;
 -- 
 2.20.1
 
