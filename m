@@ -4,46 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9784FC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9698FC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5725B20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:15:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 701C620848
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 13:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583414140;
-	bh=8Y/+fSmGtQ5niReIDVUsnAPfqnZw8Sl6VHGa4vylWCc=;
+	s=default; t=1583414144;
+	bh=KOksV8eVyBP8koJL1LGAUBzTM6x0CS5AIJrBtFiNDbc=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Vo7Tuiv86hBK8PFyhOyghbW0aRthCLlbjf6yk3IodrH6/7l8+ylT/PikeHt3YkaO1
-	 JSLN8aRfAz276CZ353sKunNz1/H6TiT1g16k9DOybDTDRvPZCot3r3JhKX8RSmuj+q
-	 dY80c+GilGlP7knku7EkaOpkkk4YpDfHrMVrza88=
+	b=T0Xf3MyhDCCXFWZKNpvNsjTYqr8U7IeE0ugS7eyVoNmv1u6BeQ26LfSy9Rhhr8u1Y
+	 fMmc2ZQLRZ4HjRWesl4PyW1fcWAvGEvQjZjDg4leB2hPoaIh1dctS/HSkdggKD6DnD
+	 QZuXJp+YOTfC+0QV7SxZxquu1PCOU0ze7xV/S6XM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgCENPi (ORCPT
+        id S1726211AbgCENPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 08:15:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:48418 "EHLO foss.arm.com"
+        Thu, 5 Mar 2020 08:15:43 -0500
+Received: from foss.arm.com ([217.140.110.172]:48432 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725880AbgCENPi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 08:15:38 -0500
+        id S1725880AbgCENPn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 08:15:43 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 393E91FB;
-        Thu,  5 Mar 2020 05:15:38 -0800 (PST)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4EE04B2;
+        Thu,  5 Mar 2020 05:15:42 -0800 (PST)
 Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B22053F6CF;
-        Thu,  5 Mar 2020 05:15:37 -0800 (PST)
-Date:   Thu, 05 Mar 2020 13:15:36 +0000
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 39CE13F6CF;
+        Thu,  5 Mar 2020 05:15:42 -0800 (PST)
+Date:   Thu, 05 Mar 2020 13:15:40 +0000
 From:   Mark Brown <broonie@kernel.org>
-To:     Baolin Wang <baolin.wang7@gmail.com>
-Cc:     alsa-devel@alsa-project.org, baolin.wang7@gmail.com,
-        broonie@kernel.org, lgirdwood@gmail.com,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        orsonzhai@gmail.com, perex@perex.cz, tiwai@suse.com,
-        zhang.lyra@gmail.com
-Subject: Applied "ASoC: sprd: Allow the MCDT driver to build into modules" to the asoc tree
-In-Reply-To:  <9306f2b99641136653ae4fe6cf9e859b7f698f77.1583387748.git.baolin.wang7@gmail.com>
-Message-Id:  <applied-9306f2b99641136653ae4fe6cf9e859b7f698f77.1583387748.git.baolin.wang7@gmail.com>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
+        lgirdwood@gmail.com, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, perex@perex.cz, tiwai@suse.com
+Subject: Applied "ASoC: tlv320adcx140: Fix mic_bias and vref device tree verification" to the asoc tree
+In-Reply-To:  <20200304193427.16886-1-dmurphy@ti.com>
+Message-Id:  <applied-20200304193427.16886-1-dmurphy@ti.com>
 X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -52,7 +50,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: sprd: Allow the MCDT driver to build into modules
+   ASoC: tlv320adcx140: Fix mic_bias and vref device tree verification
 
 has been applied to the asoc tree at
 
@@ -77,49 +75,51 @@ to this mail.
 Thanks,
 Mark
 
-From fd357ec595d36676c239d8d16706a270a961ac32 Mon Sep 17 00:00:00 2001
-From: Baolin Wang <baolin.wang7@gmail.com>
-Date: Thu, 5 Mar 2020 14:00:53 +0800
-Subject: [PATCH] ASoC: sprd: Allow the MCDT driver to build into modules
+From 2e4249f58074ec93746df3a902d1835b7edfef49 Mon Sep 17 00:00:00 2001
+From: Dan Murphy <dmurphy@ti.com>
+Date: Wed, 4 Mar 2020 13:34:27 -0600
+Subject: [PATCH] ASoC: tlv320adcx140: Fix mic_bias and vref device tree
+ verification
 
-Change the config to 'tristate' for MCDT driver to allow it to build into
-modules, as well as changing to use IS_ENABLED() to validate if need supply
-dummy functions when building the MCDT driver as a module.
+Fix the range verification check for the mic_bias and vref device tree
+entries.
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-Link: https://lore.kernel.org/r/9306f2b99641136653ae4fe6cf9e859b7f698f77.1583387748.git.baolin.wang7@gmail.com
+Fixes 37bde5acf040 ("ASoC: tlv320adcx140: Add the tlv320adcx140 codec driver family")
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Link: https://lore.kernel.org/r/20200304193427.16886-1-dmurphy@ti.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/sprd/Kconfig     | 2 +-
- sound/soc/sprd/sprd-mcdt.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ sound/soc/codecs/tlv320adcx140.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/sound/soc/sprd/Kconfig b/sound/soc/sprd/Kconfig
-index 5474fd3de8c0..5e0ac8278572 100644
---- a/sound/soc/sprd/Kconfig
-+++ b/sound/soc/sprd/Kconfig
-@@ -8,7 +8,7 @@ config SND_SOC_SPRD
- 	  the Spreadtrum SoCs' Audio interfaces.
+diff --git a/sound/soc/codecs/tlv320adcx140.c b/sound/soc/codecs/tlv320adcx140.c
+index 93a0cb8e662c..38897568ee96 100644
+--- a/sound/soc/codecs/tlv320adcx140.c
++++ b/sound/soc/codecs/tlv320adcx140.c
+@@ -748,9 +748,8 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
+ 	if (ret)
+ 		bias_source = ADCX140_MIC_BIAS_VAL_VREF;
  
- config SND_SOC_SPRD_MCDT
--	bool "Spreadtrum multi-channel data transfer support"
-+	tristate "Spreadtrum multi-channel data transfer support"
- 	depends on SND_SOC_SPRD
- 	help
- 	  Say y here to enable multi-channel data transfer support. It
-diff --git a/sound/soc/sprd/sprd-mcdt.h b/sound/soc/sprd/sprd-mcdt.h
-index 9cc7e207ac76..679e3af3baad 100644
---- a/sound/soc/sprd/sprd-mcdt.h
-+++ b/sound/soc/sprd/sprd-mcdt.h
-@@ -48,7 +48,7 @@ struct sprd_mcdt_chan {
- 	struct list_head list;
- };
+-	if (bias_source != ADCX140_MIC_BIAS_VAL_VREF &&
+-	    bias_source != ADCX140_MIC_BIAS_VAL_VREF_1096 &&
+-	    bias_source != ADCX140_MIC_BIAS_VAL_AVDD) {
++	if (bias_source < ADCX140_MIC_BIAS_VAL_VREF ||
++	    bias_source > ADCX140_MIC_BIAS_VAL_AVDD) {
+ 		dev_err(adcx140->dev, "Mic Bias source value is invalid\n");
+ 		return -EINVAL;
+ 	}
+@@ -760,9 +759,8 @@ static int adcx140_codec_probe(struct snd_soc_component *component)
+ 	if (ret)
+ 		vref_source = ADCX140_MIC_BIAS_VREF_275V;
  
--#ifdef CONFIG_SND_SOC_SPRD_MCDT
-+#if IS_ENABLED(CONFIG_SND_SOC_SPRD_MCDT)
- struct sprd_mcdt_chan *sprd_mcdt_request_chan(u8 channel,
- 					      enum sprd_mcdt_channel_type type);
- void sprd_mcdt_free_chan(struct sprd_mcdt_chan *chan);
+-	if (vref_source != ADCX140_MIC_BIAS_VREF_275V &&
+-	    vref_source != ADCX140_MIC_BIAS_VREF_25V &&
+-	    vref_source != ADCX140_MIC_BIAS_VREF_1375V) {
++	if (vref_source < ADCX140_MIC_BIAS_VREF_275V ||
++	    vref_source > ADCX140_MIC_BIAS_VREF_1375V) {
+ 		dev_err(adcx140->dev, "Mic Bias source value is invalid\n");
+ 		return -EINVAL;
+ 	}
 -- 
 2.20.1
 
