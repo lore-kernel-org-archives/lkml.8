@@ -2,92 +2,174 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C015C3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3330DC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:54:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 512CF2072D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:54:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33362072D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 15:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DEApbHTn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbgCEPyB (ORCPT
+        id S1727126AbgCEPyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 10:54:01 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2511 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726275AbgCEPyB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 10:54:01 -0500
-Received: from LHREML713-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 81C7585F4FD0C4A75E66;
-        Thu,  5 Mar 2020 15:53:58 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML713-CAH.china.huawei.com (10.201.108.36) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 5 Mar 2020 15:53:58 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Thu, 5 Mar 2020
- 15:53:58 +0000
-Subject: Re: [PATCH] spi: Remove CONFIG_ prefix from Kconfig select
-To:     Joe Perches <joe@perches.com>
-CC:     Mark Brown <broonie@kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <f8ac6b32a29b9a05b58a7e58ffe8b780642abbf1.camel@perches.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <e265e7df-fd8c-691f-389a-c0e0e377ed9e@huawei.com>
-Date:   Thu, 5 Mar 2020 15:53:57 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Thu, 5 Mar 2020 10:54:25 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44380 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726676AbgCEPyZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 10:54:25 -0500
+Received: by mail-wr1-f67.google.com with SMTP id n7so7609978wrt.11
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 07:54:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8r3r3JLBCoT+7BHX6G7TDShJ5a1/tz8dj9KPds9gTCo=;
+        b=DEApbHTnS0agxpfhPaqw8/MbeQWWgxQiV8dMim1J2/cDkAgUz+6XYcVbU7CosnhTLk
+         jBo/lHQ9zWrKOYL2BbSrzLmvYHQG1LRK6ppljf+IIBlhV7O4HdXRDC/SWiQ/SAPwDHfr
+         /YNmZkOjupuCcvGVS5w+KPzUaHKJtNrvCe1PU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8r3r3JLBCoT+7BHX6G7TDShJ5a1/tz8dj9KPds9gTCo=;
+        b=LoJ6UdqPb/nx9dQvAREYVIb3xQfzJ+06GVLaGZumGQE1k1ggF0MTYd3xYxciw+IxFX
+         H1Z4jnn7QGkzlaFqXBfUOeYzAl1KOH7Rum6se+Drx248L1JlfSAPw1OL9WbslVBv6PRO
+         rqORTw03TWYRforQFEmvyZ/kfErCr/ajThS/3pZW5UXS4HNdWSybcrdQicpXlupJO2MR
+         YOQrUgxzZV6L1obxL8zraJR3S1nzl2n+w10ltTqDvnExKx3IM3QDuT8/sv8ODRXXMIFA
+         8ARGQCJMaF1ObzFefpExGLGdAUwrZpEoWUh6FuvpgB74W56TbC5KVWLe2eIAYZn1WGsu
+         A6iA==
+X-Gm-Message-State: ANhLgQ0TpjTZF9pjdDFB615Bu6OlyID3GzrbKdlKE0nA/fZcfiVPPA2H
+        D2mEXJHIzfkAkObgAXZvGTJJLw==
+X-Google-Smtp-Source: ADFU+vuZnHlrjwtYGp90nAVDU7FR3teK5G/y9pKUhZxtjW/2S5agwnFL89xTRzG1s0R8AIPZj3It3A==
+X-Received: by 2002:adf:d4ca:: with SMTP id w10mr10686408wrk.407.1583423663087;
+        Thu, 05 Mar 2020 07:54:23 -0800 (PST)
+Received: from google.com ([2a00:79e0:42:204:8a21:ba0c:bb42:75ec])
+        by smtp.gmail.com with ESMTPSA id y8sm9685425wmj.22.2020.03.05.07.54.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 05 Mar 2020 07:54:22 -0800 (PST)
+From:   KP Singh <kpsingh@chromium.org>
+X-Google-Original-From: KP Singh <kpsingh>
+Date:   Thu, 5 Mar 2020 16:54:21 +0100
+To:     Stephen Smalley <stephen.smalley.work@gmail.com>
+Cc:     KP Singh <kpsingh@chromium.org>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Paul Turner <pjt@google.com>, Jann Horn <jannh@google.com>,
+        Florent Revest <revest@chromium.org>,
+        Brendan Jackman <jackmanb@chromium.org>, jmorris@namei.org,
+        Paul Moore <paul@paul-moore.com>, casey@schaufler-ca.com
+Subject: Re: [PATCH bpf-next v4 3/7] bpf: Introduce BPF_MODIFY_RETURN
+Message-ID: <20200305155421.GA209155@google.com>
+References: <20200304191853.1529-1-kpsingh@chromium.org>
+ <20200304191853.1529-4-kpsingh@chromium.org>
+ <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <f8ac6b32a29b9a05b58a7e58ffe8b780642abbf1.camel@perches.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml712-chm.china.huawei.com (10.201.108.63) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEjxPJ4+aW5JVC9QjJywjNUS=+cVJeaWwRHLwOssLsZyhX3siw@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/03/2020 15:15, Joe Perches wrote:
-> commit a2ca53b52e00 ("spi: Add HiSilicon v3xx SPI NOR flash
-> controller driver") likely inadvertently used a select statement
-> with a CONFIG_ prefix, remove the prefix.
+On 05-Mar 08:51, Stephen Smalley wrote:
+> On Wed, Mar 4, 2020 at 2:20 PM KP Singh <kpsingh@chromium.org> wrote:
+> >
+> > From: KP Singh <kpsingh@google.com>
+> >
+> > When multiple programs are attached, each program receives the return
+> > value from the previous program on the stack and the last program
+> > provides the return value to the attached function.
+> >
+> > The fmod_ret bpf programs are run after the fentry programs and before
+> > the fexit programs. The original function is only called if all the
+> > fmod_ret programs return 0 to avoid any unintended side-effects. The
+> > success value, i.e. 0 is not currently configurable but can be made so
+> > where user-space can specify it at load time.
+> >
+> > For example:
+> >
+> > int func_to_be_attached(int a, int b)
+> > {  <--- do_fentry
+> >
+> > do_fmod_ret:
+> >    <update ret by calling fmod_ret>
+> >    if (ret != 0)
+> >         goto do_fexit;
+> >
+> > original_function:
+> >
+> >     <side_effects_happen_here>
+> >
+> > }  <--- do_fexit
+> >
+> > The fmod_ret program attached to this function can be defined as:
+> >
+> > SEC("fmod_ret/func_to_be_attached")
+> > int BPF_PROG(func_name, int a, int b, int ret)
+> > {
+> >         // This will skip the original function logic.
+> >         return 1;
+> > }
+> >
+> > The first fmod_ret program is passed 0 in its return argument.
+> >
+> > Signed-off-by: KP Singh <kpsingh@google.com>
+> > Acked-by: Andrii Nakryiko <andriin@fb.com>
 > 
-> Signed-off-by: Joe Perches <joe@perches.com>
+> IIUC you've switched from a model where the BPF program would be
+> invoked after the original function logic
+> and the BPF program is skipped if the original function logic returns
+> non-zero to a model where the BPF program is invoked first and
+> the original function logic is skipped if the BPF program returns
+> non-zero.  I'm not keen on that for userspace-loaded code attached
 
-It's a pity checkpatch can't pick this stuff up...
+We do want to continue the KRSI series and the effort to implement a
+proper BPF LSM. In the meantime, the tracing + error injection
+solution helps us to:
 
-The select is just for enabling the driver of a slave driver, so should 
-not cause any build issues when not enabled. thanks
+  * Provide better debug capabilities.
+  * And parallelize the effort to come up with the right helpers
+    for our LSM work and work on sleepable BPF which is also essential
+    for some of the helpers.
 
-FWIW,
-Acked-by: John Garry <john.garry@huawei.com>
+As you noted, in the KRSI v4 series, we mentioned that we would like
+to have the user-space loaded BPF programs be unable to override the
+decision made by the in-kernel logic/LSMs, but this got shot down:
 
-> ---
->   drivers/spi/Kconfig | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/spi/Kconfig b/drivers/spi/Kconfig
-> index 82177d..2dc7bd 100644
-> --- a/drivers/spi/Kconfig
-> +++ b/drivers/spi/Kconfig
-> @@ -292,7 +292,7 @@ config SPI_HISI_SFC_V3XX
->   	tristate "HiSilicon SPI-NOR Flash Controller for Hi16XX chipsets"
->   	depends on (ARM64 && ACPI) || COMPILE_TEST
->   	depends on HAS_IOMEM
-> -	select CONFIG_MTD_SPI_NOR
-> +	select MTD_SPI_NOR
->   	help
->   	  This enables support for HiSilicon v3xx SPI-NOR flash controller
->   	  found in hi16xx chipsets.
-> 
-> 
-> .
-> 
+   https://lore.kernel.org/bpf/00c216e1-bcfd-b7b1-5444-2a2dfa69190b@schaufler-ca.com
 
+I would like to continue this discussion when we post the v5 series
+for KRSI as to what the correct precedence order should be for the
+BPF_PROG_TYPE_LSM and would appreciate if you also bring it up there.
+
+> to LSM hooks; it means that userspace BPF programs can run even if
+> SELinux would have denied access and SELinux hooks get
+> skipped entirely if the BPF program returns an error.  I think Casey
+> may have wrongly pointed you in this direction on the grounds
+> it can already happen with the base DAC checking logic.  But that's
+
+What we can do for this tracing/modify_ret series, is to remove
+the special casing for "security_" functions in the BPF code and add
+ALLOW_ERROR_INJECTION calls to the security hooks. This way, if
+someone needs to disable the BPF programs being able to modify
+security hooks, they can disable error injection. If that's okay, we
+can send a patch.
+
+- KP
+
+> kernel DAC checking logic, not userspace-loaded code.
+> And the existing checking on attachment is not sufficient for SELinux
+> since CAP_MAC_ADMIN is not all powerful to SELinux.
+> Be careful about designing your mechanisms around Smack because Smack
+> is not the only LSM.
