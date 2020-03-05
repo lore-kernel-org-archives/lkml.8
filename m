@@ -2,131 +2,317 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BC6C3F2D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE9CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5732146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:56:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="pHHIxu+p"
+	by mail.kernel.org (Postfix) with ESMTP id 034F02146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 05:59:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583387941;
+	bh=R0ruMmpvcg+R45pO6k5ANEpp2G+zub9MqEZWqx4sNts=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=FnpYjEC/M7AXbsbYf4u4f16wVNAY7I4d0ql33RBczLjad3oBLzHC4DwjmlQ39ArR8
+	 U5I1kmycneFPP3/KaiHe4CIjauxwN/GKIlEZgAH49DNgldmBklihOgPbEE9ff2oS4u
+	 5o5S1spG7J9aTeNc+B/moTA6yd0CV1gTHX/2GFBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbgCEF4j (ORCPT
+        id S1726080AbgCEF67 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 00:56:39 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:7879 "EHLO pegase1.c-s.fr"
+        Thu, 5 Mar 2020 00:58:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725914AbgCEF4h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 00:56:37 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48Y0PH23ZTz9v0xf;
-        Thu,  5 Mar 2020 06:56:35 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=pHHIxu+p; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id s9KFcENT85ew; Thu,  5 Mar 2020 06:56:35 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48Y0PH10gQz9v0xd;
-        Thu,  5 Mar 2020 06:56:35 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1583387795; bh=Z0UD98IxbqBaiuaVklCQ1qAh/kKOqkXFHSdToBuM/38=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=pHHIxu+p6SvLOjMUKls9TTSin3xoS1sPtQCZuJ4L/CLI/D1CXLNwziilL4+lUVp+4
-         +kwyRvveqFA+gSbY93TJ+tnn2zFr/2LrtMLwCrg6M04AHIz541APRxu1qEVWaPpmyu
-         7GeQOh1JY6nhCgcYuG3fHXhRcTCdKNAZoaAJvtN8=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 382908B790;
-        Thu,  5 Mar 2020 06:56:35 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id HWPfKwU2Yntd; Thu,  5 Mar 2020 06:56:35 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7A8E18B756;
-        Thu,  5 Mar 2020 06:56:33 +0100 (CET)
-Subject: Re: [PATCH -next] powerpc/mm/ptdump: fix an undefined behaviour
-To:     Qian Cai <cai@lca.pw>, mpe@ellerman.id.au,
-        akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        rashmicy@gmail.com, linux-kernel@vger.kernel.org
-References: <20200305044759.1279-1-cai@lca.pw>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <3b724167-6bd2-f281-c6ee-fcb39cb9e24b@c-s.fr>
-Date:   Thu, 5 Mar 2020 06:56:30 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200305044759.1279-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        id S1725882AbgCEF67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 00:58:59 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2042D208CD;
+        Thu,  5 Mar 2020 05:58:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583387938;
+        bh=R0ruMmpvcg+R45pO6k5ANEpp2G+zub9MqEZWqx4sNts=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QdUzq23Vw/YjVJQd1QxBzAfQ0P8IEiHqPL7Hxjwpy+RzjWbrZ4UwW8fnrOZIxHBLQ
+         PaoIpCzOivRcj5A32CRbktyW16cKe7XPLwWbLDxr/jAEuT5A3A84jiYdM1OIHO/omh
+         9UbyJChFF3UcPvyLtrcYMkNI3pkZVbrAYQr1BCB8=
+Date:   Thu, 5 Mar 2020 14:58:52 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Leo Yan <leo.yan@linaro.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 03/13] kprobes: Add symbols for kprobe insn pages
+Message-Id: <20200305145852.5756764a9ffe5da10ae71c3e@kernel.org>
+In-Reply-To: <20200304090633.420-4-adrian.hunter@intel.com>
+References: <20200304090633.420-1-adrian.hunter@intel.com>
+        <20200304090633.420-4-adrian.hunter@intel.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed,  4 Mar 2020 11:06:23 +0200
+Adrian Hunter <adrian.hunter@intel.com> wrote:
 
+> Symbols are needed for tools to describe instruction addresses. Pages
+> allocated for kprobe's purposes need symbols to be created for them.
+> Add such symbols to be visible via /proc/kallsyms.
+> 
+> Note: kprobe insn pages are not used if ftrace is configured. To see the
+> effect of this patch, the kernel must be configured with:
+> 
+> 	# CONFIG_FUNCTION_TRACER is not set
+> 	CONFIG_KPROBES=y
+> 
+> and for optimised kprobes:
+> 
+> 	CONFIG_OPTPROBES=y
+> 
+> Example on x86:
+> 
+> 	# perf probe __schedule
+> 	Added new event:
+> 	  probe:__schedule     (on __schedule)
+> 	# cat /proc/kallsyms | grep '\[__builtin__kprobes\]'
+> 	ffffffffc00d4000 t kprobe_insn_page     [__builtin__kprobes]
+> 	ffffffffc00d6000 t kprobe_optinsn_page  [__builtin__kprobes]
+> 
+> Note: This patch adds "__builtin__kprobes" as a module name in
+> /proc/kallsyms for symbols for pages allocated for kprobes' purposes, even
+> though "__builtin__kprobes" is not a module.
 
-Le 05/03/2020 à 05:47, Qian Cai a écrit :
-> Booting a power9 server with hash MMU could trigger an undefined
-> behaviour because pud_offset(p4d, 0) will do,
+Looks good to me.
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+BTW, would you also make a patch to change [bpf] to [__builtin__bpf]?
+
+Thanks,
+
 > 
-> 0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
-> 
->   UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
->   shift exponent 34 is too large for 32-bit type 'int'
->   CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ #13
->   Call Trace:
->   dump_stack+0xf4/0x164 (unreliable)
->   ubsan_epilogue+0x18/0x78
->   __ubsan_handle_shift_out_of_bounds+0x160/0x21c
->   walk_pagetables+0x2cc/0x700
->   walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
->   (inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
->   ptdump_check_wx+0x8c/0xf0
->   mark_rodata_ro+0x48/0x80
->   kernel_init+0x74/0x194
->   ret_from_kernel_thread+0x5c/0x74
-> 
-> Fixes: 8eb07b187000 ("powerpc/mm: Dump linux pagetables")
-> Signed-off-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 > ---
+>  include/linux/kprobes.h | 15 ++++++++++++++
+>  kernel/kallsyms.c       | 37 +++++++++++++++++++++++++++++----
+>  kernel/kprobes.c        | 45 +++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 93 insertions(+), 4 deletions(-)
 > 
-> Notes for maintainers:
+> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+> index 04bdaf01112c..62d682f47b5e 100644
+> --- a/include/linux/kprobes.h
+> +++ b/include/linux/kprobes.h
+> @@ -242,6 +242,7 @@ struct kprobe_insn_cache {
+>  	struct mutex mutex;
+>  	void *(*alloc)(void);	/* allocate insn page */
+>  	void (*free)(void *);	/* free insn page */
+> +	const char *sym;	/* symbol for insn pages */
+>  	struct list_head pages; /* list of kprobe_insn_page */
+>  	size_t insn_size;	/* size of instruction slot */
+>  	int nr_garbage;
+> @@ -272,6 +273,8 @@ static inline bool is_kprobe_##__name##_slot(unsigned long addr)	\
+>  {									\
+>  	return __is_insn_slot_addr(&kprobe_##__name##_slots, addr);	\
+>  }
+> +#define KPROBE_INSN_PAGE_SYM		"kprobe_insn_page"
+> +#define KPROBE_OPTINSN_PAGE_SYM		"kprobe_optinsn_page"
+>  #else /* __ARCH_WANT_KPROBES_INSN_SLOT */
+>  #define DEFINE_INSN_CACHE_OPS(__name)					\
+>  static inline bool is_kprobe_##__name##_slot(unsigned long addr)	\
+> @@ -373,6 +376,13 @@ void dump_kprobe(struct kprobe *kp);
+>  void *alloc_insn_page(void);
+>  void free_insn_page(void *page);
+>  
+> +int kprobe_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
+> +		       char *sym);
+> +int kprobe_cache_get_kallsym(struct kprobe_insn_cache *c, unsigned int *symnum,
+> +			     unsigned long *value, char *type, char *sym);
+> +
+> +int arch_kprobe_get_kallsym(unsigned int *symnum, unsigned long *value,
+> +			    char *type, char *sym);
+>  #else /* !CONFIG_KPROBES: */
+>  
+>  static inline int kprobes_built_in(void)
+> @@ -435,6 +445,11 @@ static inline bool within_kprobe_blacklist(unsigned long addr)
+>  {
+>  	return true;
+>  }
+> +static inline int kprobe_get_kallsym(unsigned int symnum, unsigned long *value,
+> +				     char *type, char *sym)
+> +{
+> +	return -ERANGE;
+> +}
+>  #endif /* CONFIG_KPROBES */
+>  static inline int disable_kretprobe(struct kretprobe *rp)
+>  {
+> diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+> index 136ce049c4ad..4a93511e6243 100644
+> --- a/kernel/kallsyms.c
+> +++ b/kernel/kallsyms.c
+> @@ -24,6 +24,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/filter.h>
+>  #include <linux/ftrace.h>
+> +#include <linux/kprobes.h>
+>  #include <linux/compiler.h>
+>  
+>  /*
+> @@ -438,6 +439,7 @@ struct kallsym_iter {
+>  	loff_t pos_arch_end;
+>  	loff_t pos_mod_end;
+>  	loff_t pos_ftrace_mod_end;
+> +	loff_t pos_bpf_end;
+>  	unsigned long value;
+>  	unsigned int nameoff; /* If iterating in core kernel symbols. */
+>  	char type;
+> @@ -497,11 +499,33 @@ static int get_ksymbol_ftrace_mod(struct kallsym_iter *iter)
+>  
+>  static int get_ksymbol_bpf(struct kallsym_iter *iter)
+>  {
+> +	int ret;
+> +
+>  	strlcpy(iter->module_name, "bpf", MODULE_NAME_LEN);
+>  	iter->exported = 0;
+> -	return bpf_get_kallsym(iter->pos - iter->pos_ftrace_mod_end,
+> -			       &iter->value, &iter->type,
+> -			       iter->name) < 0 ? 0 : 1;
+> +	ret = bpf_get_kallsym(iter->pos - iter->pos_ftrace_mod_end,
+> +			      &iter->value, &iter->type,
+> +			      iter->name);
+> +	if (ret < 0) {
+> +		iter->pos_bpf_end = iter->pos;
+> +		return 0;
+> +	}
+> +
+> +	return 1;
+> +}
+> +
+> +/*
+> + * This uses "__builtin__kprobes" as a module name for symbols for pages
+> + * allocated for kprobes' purposes, even though "__builtin__kprobes" is not a
+> + * module.
+> + */
+> +static int get_ksymbol_kprobe(struct kallsym_iter *iter)
+> +{
+> +	strlcpy(iter->module_name, "__builtin__kprobes", MODULE_NAME_LEN);
+> +	iter->exported = 0;
+> +	return kprobe_get_kallsym(iter->pos - iter->pos_bpf_end,
+> +				  &iter->value, &iter->type,
+> +				  iter->name) < 0 ? 0 : 1;
+>  }
+>  
+>  /* Returns space to next name. */
+> @@ -528,6 +552,7 @@ static void reset_iter(struct kallsym_iter *iter, loff_t new_pos)
+>  		iter->pos_arch_end = 0;
+>  		iter->pos_mod_end = 0;
+>  		iter->pos_ftrace_mod_end = 0;
+> +		iter->pos_bpf_end = 0;
+>  	}
+>  }
+>  
+> @@ -552,7 +577,11 @@ static int update_iter_mod(struct kallsym_iter *iter, loff_t pos)
+>  	    get_ksymbol_ftrace_mod(iter))
+>  		return 1;
+>  
+> -	return get_ksymbol_bpf(iter);
+> +	if ((!iter->pos_bpf_end || iter->pos_bpf_end > pos) &&
+> +	    get_ksymbol_bpf(iter))
+> +		return 1;
+> +
+> +	return get_ksymbol_kprobe(iter);
+>  }
+>  
+>  /* Returns false if pos at or past end of file. */
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 2625c241ac00..229d1b596690 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -118,6 +118,7 @@ struct kprobe_insn_cache kprobe_insn_slots = {
+>  	.mutex = __MUTEX_INITIALIZER(kprobe_insn_slots.mutex),
+>  	.alloc = alloc_insn_page,
+>  	.free = free_insn_page,
+> +	.sym = KPROBE_INSN_PAGE_SYM,
+>  	.pages = LIST_HEAD_INIT(kprobe_insn_slots.pages),
+>  	.insn_size = MAX_INSN_SIZE,
+>  	.nr_garbage = 0,
+> @@ -296,6 +297,7 @@ struct kprobe_insn_cache kprobe_optinsn_slots = {
+>  	.mutex = __MUTEX_INITIALIZER(kprobe_optinsn_slots.mutex),
+>  	.alloc = alloc_insn_page,
+>  	.free = free_insn_page,
+> +	.sym = KPROBE_OPTINSN_PAGE_SYM,
+>  	.pages = LIST_HEAD_INIT(kprobe_optinsn_slots.pages),
+>  	/* .insn_size is initialized later */
+>  	.nr_garbage = 0,
+> @@ -2179,6 +2181,49 @@ int kprobe_add_area_blacklist(unsigned long start, unsigned long end)
+>  	return 0;
+>  }
+>  
+> +int kprobe_cache_get_kallsym(struct kprobe_insn_cache *c, unsigned int *symnum,
+> +			     unsigned long *value, char *type, char *sym)
+> +{
+> +	struct kprobe_insn_page *kip;
+> +	int ret = -ERANGE;
+> +
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(kip, &c->pages, list) {
+> +		if ((*symnum)--)
+> +			continue;
+> +		strlcpy(sym, c->sym, KSYM_NAME_LEN);
+> +		*type = 't';
+> +		*value = (unsigned long)kip->insns;
+> +		ret = 0;
+> +		break;
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	return ret;
+> +}
+> +
+> +int __weak arch_kprobe_get_kallsym(unsigned int *symnum, unsigned long *value,
+> +				   char *type, char *sym)
+> +{
+> +	return -ERANGE;
+> +}
+> +
+> +int kprobe_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
+> +		       char *sym)
+> +{
+> +#ifdef __ARCH_WANT_KPROBES_INSN_SLOT
+> +	if (!kprobe_cache_get_kallsym(&kprobe_insn_slots, &symnum, value, type, sym))
+> +		return 0;
+> +#ifdef CONFIG_OPTPROBES
+> +	if (!kprobe_cache_get_kallsym(&kprobe_optinsn_slots, &symnum, value, type, sym))
+> +		return 0;
+> +#endif
+> +#endif
+> +	if (!arch_kprobe_get_kallsym(&symnum, value, type, sym))
+> +		return 0;
+> +	return -ERANGE;
+> +}
+> +
+>  int __init __weak arch_populate_kprobe_blacklist(void)
+>  {
+>  	return 0;
+> -- 
+> 2.17.1
 > 
-> This is on the top of the linux-next commit "powerpc: add support for
-> folded p4d page tables" which is in the Andrew's tree.
-> 
->   arch/powerpc/mm/ptdump/ptdump.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/mm/ptdump/ptdump.c b/arch/powerpc/mm/ptdump/ptdump.c
-> index 9d6256b61df3..b530f81398a7 100644
-> --- a/arch/powerpc/mm/ptdump/ptdump.c
-> +++ b/arch/powerpc/mm/ptdump/ptdump.c
-> @@ -279,7 +279,7 @@ static void walk_pmd(struct pg_state *st, pud_t *pud, unsigned long start)
->   
->   static void walk_pud(struct pg_state *st, p4d_t *p4d, unsigned long start)
->   {
-> -	pud_t *pud = pud_offset(p4d, 0);
-> +	pud_t *pud = pud_offset(p4d, 0UL);
 
-Is that the only place we have to do this ?
 
-(In 5.6-rc) I see the same in:
-/arch/powerpc/mm/ptdump/hashpagetable.c
-/arch/powerpc/kvm/book3s_64_mmu_radix.c
-
-Wouldn't it be better to:
-- Either cast addr to unsigned long in pud_index() macro
-- Or change pud_index() macro to a static inline function as x86 ?
-
-Christophe
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
