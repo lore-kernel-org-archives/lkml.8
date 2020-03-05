@@ -2,477 +2,101 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D20C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A9CC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:58:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 511D8208CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B921E20732
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:58:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QdKzIUgm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="esoOeJ8v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbgCEOx4 (ORCPT
+        id S1726650AbgCEO65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:53:56 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39093 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbgCEOxz (ORCPT
+        Thu, 5 Mar 2020 09:58:57 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:43433 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbgCEO64 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:53:55 -0500
-Received: by mail-wm1-f66.google.com with SMTP id j1so6055907wmi.4
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:53:53 -0800 (PST)
+        Thu, 5 Mar 2020 09:58:56 -0500
+Received: by mail-il1-f195.google.com with SMTP id o18so5250445ilg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:58:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=NZ7f1myPGQf1DoR42KxOe8pTxCjM3hFRYpDvoMalEOA=;
-        b=QdKzIUgmwdhX724jS+brwi/J/R8CBiUb3H/haYKJBv6Zxn4Zg0OPNbqO36K40CmHzm
-         7L/woWigYf6abgtBFBpo55sa66fIs39eeQbZykyxE0MZTdNYUtoYjP31AuZ4zl3f+rQF
-         +hgN+j6jN2zEJGdKVJNfjDtmLnekrSSa90p+LUVTrOEPhUEydflPRj8TgHrn4sbJUtRZ
-         VZUqCjX8gRqKSTFF6HWjDwb3tH0zdPIJBffuSHchRVOmaR/k9cN5UguUPdZ1NkI+tLIY
-         eVkHxOpslByCBpmi4dNDJeDCxLY5jOEozwOmaPE+H4oH+fayFV5pg1ZukB3cwnKWhuMX
-         axhg==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4bV4e2J0Fj77NrhTqn4U15G8AA1APxJOoLr6qnKhOMc=;
+        b=esoOeJ8vk39jzQbYXfJq1SFqiVch6RalQvjHVWANNM+olC7WkFv8UUMuQ4k+3AeujU
+         ldsf+SXtvo2g8fplfXNBTqV+HxFYw6ytavS9Yi7rvCgn997XMPTs3uiEzZjmgelDYMCA
+         xNyZd/mKHxBuLL6JVZzGh0lwA3OO4C0t8vi2Pt+RiDN9vgxbT+NiW1IRO5iE9ITrZ2w3
+         UP+RFRkwFWKqt51wrEKEBUiHwdgDyL+BIAkI+DrfdBZ+kU6HSCM1xHd8nnrR+rguCUE5
+         lW+cVrCGK3+K8UgQ9iuIpsdovS8ZDK3sNetDv3lVs7x9KFBjvTXoLDXZhTOxKkb3wbQR
+         PWwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=NZ7f1myPGQf1DoR42KxOe8pTxCjM3hFRYpDvoMalEOA=;
-        b=XKg44jOPSG+/VCzCw6eRRlWykQehx+gmzmN5S73h5vnNSsD3k13TZdQ4BKGRyjs34x
-         4C6/Zm4G9FxHWl98bfhhdM2WK2n5Eh/agwfaM3ZMHOUPhScU9UsJB8DzlAwZ6S9CbHwm
-         MV9UJFfGt7mQwea7Vgi7OVc8jOiAzf4vjLle3kOl1LIQLsGVSGhkrW89h7QROA9ro+5t
-         5DhYmIl2Jqk3CZdlX9T6rrxy0LvUpuYQx7NgX+3LjhHYgkwDpShCu9nrBweWesOZ+ygR
-         2lEzmj+TiwRLV4zzFIZgdj7BBOILJYiIglTCozWhrQEyuvcy53z9Fwl9ORBkaP/eR+XX
-         7Aeg==
-X-Gm-Message-State: ANhLgQ0Fj+8+pXYi6kDB+hB2EI/bzPCHASExcQhzgN8+wq71szjo0q5k
-        Rf/JaN7ynnEN38KJLuMgsFh01A==
-X-Google-Smtp-Source: ADFU+vswFLg81FZz+Z63OuHgMeaCL8C/3J7JNHb2rtfws3Lt107rI1819D3V21AJeeeqnqyAhi7IDw==
-X-Received: by 2002:a05:600c:21c6:: with SMTP id x6mr9819945wmj.17.1583420032188;
-        Thu, 05 Mar 2020 06:53:52 -0800 (PST)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id f16sm35785985wrx.25.2020.03.05.06.53.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 06:53:51 -0800 (PST)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 1/4] arm64: dts: qcom: sdm845: Add ADSP audio support
-Date:   Thu,  5 Mar 2020 14:53:41 +0000
-Message-Id: <20200305145344.14670-2-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200305145344.14670-1-srinivas.kandagatla@linaro.org>
-References: <20200305145344.14670-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4bV4e2J0Fj77NrhTqn4U15G8AA1APxJOoLr6qnKhOMc=;
+        b=dFQMFS8KSA61TDokFWzvENNKexyJNjWdIYeCJnry3IYbLpvY6OUcXh1yFaIoI+4Rax
+         D1/MXke8LS/gn4LFfRlD9+jk6boaFvpizJgJty9G7Z4Rqtp5ZWyIA9dnxD3/AkE+Tdng
+         BZHGpcvCswBsyaFckUKDXyJmZ9YWSzedTWtSWYZwiTki3wJkb/o4iTmyzLcQ8Y9P+flg
+         0DVPNZAJ+CdewwcqWcRoFAtbVDuiow8cyYf81wAk8230wfbaHK1QTfCFnUsrnfMF7DAK
+         cQM/YE3uu/Q2DHiPCN1lCDgkqcuXLzBWcDGBU141m3WF3u0tDdQ1632GX4Zqo6aO8W1B
+         OB5Q==
+X-Gm-Message-State: ANhLgQ1vS904tskQbkjAQDmlORDuGk50Xet1I4SOG2GLmfM6QuHQWtsQ
+        FHKLop7L1JZAUcbFt6E66ph7bIX5dPk=
+X-Google-Smtp-Source: ADFU+vtpeY9CxlaepFzd4eHxFzmg0UDavlbEE426APDD8aZtC+Rwtl+OAoe0AHeKrotvehazhLMiPw==
+X-Received: by 2002:a92:981b:: with SMTP id l27mr8649435ili.118.1583420334176;
+        Thu, 05 Mar 2020 06:58:54 -0800 (PST)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id p78sm6860932ilk.76.2020.03.05.06.58.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 05 Mar 2020 06:58:53 -0800 (PST)
+Subject: Re: [PATCH 00/17] net: introduce Qualcomm IPA driver (UPDATED)
+To:     David Miller <davem@davemloft.net>
+Cc:     arnd@arndb.de, bjorn.andersson@linaro.org, agross@kernel.org,
+        johannes@sipsolutions.net, dcbw@redhat.com, evgreen@google.com,
+        ejcaruso@google.com, syadagir@codeaurora.org,
+        cpratapa@codeaurora.org, subashab@codeaurora.org,
+        robh+dt@kernel.org, mark.rutland@arm.com, ohad@wizery.com,
+        sidgup@codeaurora.org, netdev@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200228224204.17746-1-elder@linaro.org>
+ <20200304.141547.1905642444413562833.davem@davemloft.net>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <d422e872-ed97-76a0-e8d8-457e8932f4ff@linaro.org>
+Date:   Thu, 5 Mar 2020 08:58:04 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200304.141547.1905642444413562833.davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to basic dsp audio, codec, slimbus
-and soundwire controller DT nodes.
+On 3/4/20 4:15 PM, David Miller wrote:
+> From: Alex Elder <elder@linaro.org>
+> Date: Fri, 28 Feb 2020 16:41:47 -0600
+> 
+>> This series presents the driver for the Qualcomm IP Accelerator (IPA).
+> 
+> This doesn't apply cleanly to the net-next tree if that's where you want
+> this applied, can you respin?
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 338 +++++++++++++++++++++++++++
- 1 file changed, 338 insertions(+)
+Yes I will do that today.  Thanks.	-Alex
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 061f49faab19..705d8a0c3a1e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -20,6 +20,7 @@
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
- #include <dt-bindings/thermal/thermal.h>
-+#include <dt-bindings/soc/qcom,apr.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -491,6 +492,54 @@
- 			label = "lpass";
- 			qcom,remote-pid = <2>;
- 			mboxes = <&apss_shared 8>;
-+			apr {
-+				compatible = "qcom,apr-v2";
-+				qcom,glink-channels = "apr_audio_svc";
-+				qcom,apr-domain = <APR_DOMAIN_ADSP>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				qcom,intents = <512 20>;
-+
-+				q6core {
-+					reg = <APR_SVC_ADSP_CORE>;
-+					compatible = "qcom,q6core";
-+				};
-+
-+				q6afe: q6afe {
-+					compatible = "qcom,q6afe";
-+					reg = <APR_SVC_AFE>;
-+					q6afedai: dais {
-+						compatible = "qcom,q6afe-dais";
-+						#address-cells = <1>;
-+						#size-cells = <0>;
-+						#sound-dai-cells = <1>;
-+
-+						qi2s@22 {
-+							reg = <22>;
-+							qcom,sd-lines = <0 1 2 3>;
-+						};
-+					};
-+				};
-+
-+				q6asm: q6asm {
-+					compatible = "qcom,q6asm";
-+					reg = <APR_SVC_ASM>;
-+					q6asmdai: dais {
-+						compatible = "qcom,q6asm-dais";
-+						#sound-dai-cells = <1>;
-+						iommus = <&apps_smmu 0x1821 0x0>;
-+					};
-+				};
-+
-+				q6adm: q6adm {
-+					compatible = "qcom,q6adm";
-+					reg = <APR_SVC_ADM>;
-+					q6routing: routing {
-+						compatible = "qcom,q6adm-routing";
-+						#sound-dai-cells = <0>;
-+					};
-+				};
-+			};
- 			fastrpc {
- 				compatible = "qcom,fastrpc";
- 				qcom,glink-channels = "fastrpcglink-apps-dsp";
-@@ -513,6 +562,9 @@
- 		};
- 	};
- 
-+	sound: sound {
-+	};
-+
- 	cdsp_pas: remoteproc-cdsp {
- 		compatible = "qcom,sdm845-cdsp-pas";
- 
-@@ -1782,6 +1834,142 @@
- 				};
- 			};
- 
-+			quat_mi2s_sleep: quat_mi2s_sleep {
-+				mux {
-+					pins = "gpio58", "gpio59";
-+					function = "gpio";
-+				};
-+
-+				config {
-+					pins = "gpio58", "gpio59";
-+					drive-strength = <2>;   /* 2 mA */
-+					bias-pull-down;         /* PULL DOWN */
-+					input-enable;
-+				};
-+			};
-+
-+			quat_mi2s_active: quat_mi2s_active {
-+				mux {
-+					pins = "gpio58", "gpio59";
-+					function = "qua_mi2s";
-+				};
-+
-+				config {
-+					pins = "gpio58", "gpio59";
-+					drive-strength = <8>;   /* 8 mA */
-+					bias-disable;           /* NO PULL */
-+					output-high;
-+				};
-+			};
-+
-+			quat_mi2s_sd0_sleep: quat_mi2s_sd0_sleep {
-+				mux {
-+					pins = "gpio60";
-+					function = "gpio";
-+				};
-+
-+				config {
-+					pins = "gpio60";
-+					drive-strength = <2>;   /* 2 mA */
-+					bias-pull-down;         /* PULL DOWN */
-+					input-enable;
-+				};
-+			};
-+
-+			quat_mi2s_sd0_active: quat_mi2s_sd0_active {
-+				mux {
-+					pins = "gpio60";
-+					function = "qua_mi2s";
-+				};
-+
-+				config {
-+					pins = "gpio60";
-+					drive-strength = <8>;   /* 8 mA */
-+					bias-disable;           /* NO PULL */
-+				};
-+			};
-+
-+			quat_mi2s_sd1_sleep: quat_mi2s_sd1_sleep {
-+				mux {
-+					pins = "gpio61";
-+					function = "gpio";
-+				};
-+
-+				config {
-+					pins = "gpio61";
-+					drive-strength = <2>;   /* 2 mA */
-+					bias-pull-down;         /* PULL DOWN */
-+					input-enable;
-+				};
-+			};
-+
-+			quat_mi2s_sd1_active: quat_mi2s_sd1_active {
-+				mux {
-+					pins = "gpio61";
-+					function = "qua_mi2s";
-+				};
-+
-+				config {
-+					pins = "gpio61";
-+					drive-strength = <8>;   /* 8 mA */
-+					bias-disable;           /* NO PULL */
-+				};
-+			};
-+
-+			quat_mi2s_sd2_sleep: quat_mi2s_sd2_sleep {
-+				mux {
-+					pins = "gpio62";
-+					function = "gpio";
-+				};
-+
-+				config {
-+					pins = "gpio62";
-+					drive-strength = <2>;   /* 2 mA */
-+					bias-pull-down;         /* PULL DOWN */
-+					input-enable;
-+				};
-+			};
-+
-+			quat_mi2s_sd2_active: quat_mi2s_sd2_active {
-+				mux {
-+					pins = "gpio62";
-+					function = "qua_mi2s";
-+				};
-+
-+				config {
-+					pins = "gpio62";
-+					drive-strength = <8>;   /* 8 mA */
-+					bias-disable;           /* NO PULL */
-+				};
-+			};
-+
-+			quat_mi2s_sd3_sleep: quat_mi2s_sd3_sleep {
-+				mux {
-+					pins = "gpio63";
-+					function = "gpio";
-+				};
-+
-+				config {
-+					pins = "gpio63";
-+					drive-strength = <2>;   /* 2 mA */
-+					bias-pull-down;         /* PULL DOWN */
-+					input-enable;
-+				};
-+			};
-+
-+			quat_mi2s_sd3_active: quat_mi2s_sd3_active {
-+				mux {
-+					pins = "gpio63";
-+					function = "qua_mi2s";
-+				};
-+
-+				config {
-+					pins = "gpio63";
-+					drive-strength = <8>;   /* 8 mA */
-+					bias-disable;           /* NO PULL */
-+				};
-+			};
-+
- 			qup_i2c12_default: qup-i2c12-default {
- 				pinmux {
- 					pins = "gpio49", "gpio50";
-@@ -2049,6 +2237,59 @@
- 					function = "qup15";
- 				};
- 			};
-+
-+			wcd_intr_default: wcd_intr_default{
-+				pinmux {
-+					pins = "gpio54";
-+					function = "gpio";
-+				};
-+
-+				pinconf {
-+					pins = "gpio54";
-+					drive-strength = <2>; /* 2 mA */
-+					bias-pull-down; /* pull down */
-+					input-enable;
-+				};
-+			};
-+
-+			cdc_reset_sleep: cdc_reset_sleep {
-+				pinmux {
-+					pins = "gpio64";
-+					function = "gpio";
-+				};
-+				pinconf {
-+					pins = "gpio64";
-+					drive-strength = <2>;
-+					bias-disable;
-+					output-low;
-+				};
-+			};
-+
-+			cdc_reset_active:cdc_reset_active {
-+				pinmux {
-+					pins = "gpio64";
-+					function = "gpio";
-+				};
-+				pinconf {
-+					pins = "gpio64";
-+					drive-strength = <8>;
-+					bias-pull-down;
-+					output-high;
-+				};
-+			};
-+
-+			audio_slimclk:slim_clk {
-+				pinmux {
-+					pins = "gpio70";
-+					function = "gpio";
-+				};
-+				pinconf {
-+					pins = "gpio70";
-+					drive-strength = <16>;
-+					bias-pull-down;
-+					output-high;
-+				};
-+			};
- 		};
- 
- 		mss_pil: remoteproc@4080000 {
-@@ -2602,6 +2843,91 @@
- 			status = "disabled";
- 		};
- 
-+		slim_msm: slim@171c0000 {
-+			compatible = "qcom,slim-ngd-v2.1.0";
-+			reg = <0 0x171c0000 0 0x2C000>;
-+			reg-names = "ctrl";
-+			interrupts = <0 163 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			qcom,apps-ch-pipes = <0x780000>;
-+			qcom,ea-pc = <0x270>;
-+			status = "okay";
-+			dmas =	<&slimbam 3>, <&slimbam 4>,
-+				<&slimbam 5>, <&slimbam 6>;
-+			dma-names = "rx", "tx", "tx2", "rx2";
-+
-+			iommus = <&apps_smmu 0x1806 0x0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ngd@1 {
-+				reg = <1>;
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				wcd9340_ifd: tas-ifd {
-+					compatible = "slim217,250";
-+					reg  = <0 0>;
-+				};
-+
-+				wcd9340: codec@1{
-+					pinctrl-0 = <&wcd_intr_default>;
-+					pinctrl-names = "default";
-+					compatible = "slim217,250";
-+					reg  = <1 0>;
-+					reset-gpios = <&tlmm 64 0>;
-+					slim-ifc-dev  = <&wcd9340_ifd>;
-+
-+					#sound-dai-cells = <1>;
-+
-+					interrupt-parent = <&tlmm>;
-+					interrupts = <54 IRQ_TYPE_LEVEL_HIGH>;
-+					interrupt-controller;
-+					#interrupt-cells = <1>;
-+
-+					#clock-cells = <0>;
-+					clock-frequency = <9600000>;
-+					clock-output-names = "mclk";
-+					qcom,micbias1-millivolt = <1800>;
-+					qcom,micbias2-millivolt = <1800>;
-+					qcom,micbias3-millivolt = <1800>;
-+					qcom,micbias4-millivolt = <1800>;
-+
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+
-+					wcdpinctrl: wcd-pinctrl@42 {
-+						compatible = "qcom,wcd9340-gpio";
-+						gpio-controller;
-+						#gpio-cells = <2>;
-+						reg = <0x42 0x2>;
-+					};
-+
-+					swm: swm@c85 {
-+						compatible = "qcom,soundwire-v1.3.0";
-+						reg = <0xc85 0x40>;
-+						interrupt-parent = <&wcd9340>;
-+						interrupts = <20 IRQ_TYPE_EDGE_RISING>;
-+						interrupt-names = "soundwire";
-+
-+						qcom,dout-ports	= <6>;
-+						qcom,din-ports	= <2>;
-+						qcom,ports-sinterval-low =/bits/ 8  <0x07 0x1F 0x3F 0x7 0x1F 0x3F 0x0F 0x0F>;
-+						qcom,ports-offset1 = /bits/ 8 <0x01 0x02 0x0C 0x6 0x12 0x0D 0x07 0x0A >;
-+						qcom,ports-offset2 = /bits/ 8 <0x00 0x00 0x1F 0x00 0x00 0x1F 0x00 0x00>;
-+
-+						#sound-dai-cells = <1>;
-+						clocks = <&wcd9340>;
-+						clock-names = "iface";
-+                                                #address-cells = <2>;
-+                                                #size-cells = <0>;
-+
-+
-+					};
-+				};
-+			};
-+		};
-+
- 		usb_1_hsphy: phy@88e2000 {
- 			compatible = "qcom,sdm845-qusb2-phy";
- 			reg = <0 0x088e2000 0 0x400>;
-@@ -3446,6 +3772,18 @@
- 			};
- 		};
- 
-+		slimbam: bamdma@17184000 {
-+			compatible = "qcom,bam-v1.7.0";
-+			qcom,controlled-remotely;
-+			reg = <0 0x17184000 0 0x2a000>;
-+			num-channels  = <31>;
-+			interrupts = <0 164 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			qcom,ee = <1>;
-+			qcom,num-ees = <2>;
-+			iommus = <&apps_smmu 0x1806 0x0>;
-+		};
-+
- 		timer@17c90000 {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
--- 
-2.21.0
+> 
+> Thanks.
+> 
 
