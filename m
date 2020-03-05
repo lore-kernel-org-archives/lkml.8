@@ -7,69 +7,69 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0578C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7A6C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:04:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D20A20848
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:00:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BE50208C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 12:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="IaN3n+vc"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="GIH9MsCP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727389AbgCEMAu (ORCPT
+        id S1727426AbgCEMEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 07:00:50 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51057 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726894AbgCEMAt (ORCPT
+        Thu, 5 Mar 2020 07:04:00 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:37316 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727112AbgCEMD7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 07:00:49 -0500
-Received: by mail-wm1-f65.google.com with SMTP id a5so5985845wmb.0
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 04:00:46 -0800 (PST)
+        Thu, 5 Mar 2020 07:03:59 -0500
+Received: by mail-wr1-f65.google.com with SMTP id 6so1263548wre.4
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 04:03:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=cloudflare.com; s=google;
         h=references:user-agent:from:to:cc:subject:in-reply-to:date
          :message-id:mime-version;
-        bh=uObr8HTRJvvkPtZFYtcKx4WzpLxPFBuwzYX1IrBj3yc=;
-        b=IaN3n+vcHlCFmj2FjcyBTvl5NWCPWY1Gq3x4HzQpuLkfxQZrzljTgj+k100BRs8Biy
-         dF2wPK82zVVMQyv1oCHPn6LNrZf5C/2TPmww8bsfvMyR5BXOcwMqIQ4qnYlj5vqUVXCv
-         H6N70701bHwnqBbmxSTsVxdBFveFAM3iPEP6k=
+        bh=hT7S6vvpnxA0ApcPEejqGxLVzm717a4KSHt7eOw1Bck=;
+        b=GIH9MsCPmG16v2K7zrrevmV3g6eLk1wIcKUD9XnRWZuoOJXK1GkdfQGkFYZ928xMmM
+         Y3PnJAK/ssHCHqBUqfr96FgMu1N8MTdKO8DxCL5bgs/ODGHWiEnA4ZrWrxCmnB0Qk4kj
+         5csGyslb48TLPEaGgGdrIKegAW9qV+4WV2Iu0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:references:user-agent:from:to:cc:subject
          :in-reply-to:date:message-id:mime-version;
-        bh=uObr8HTRJvvkPtZFYtcKx4WzpLxPFBuwzYX1IrBj3yc=;
-        b=BZrzGpODdx3qo84VL5sI7yrXR+OvJA650dHQ3qTltaWvz1xkser/pvyvDIXoQX8hdt
-         lAhf8CqjE/E1MAROfPecon6PpQjaZJ2gN7Za6+rXTTQCe3xqaUQaZ40AOy7tswY2x4Fx
-         zXNBp1emN4f9dcC+ajSCmLRmfMQnmMNSmpsh3iN3XWxQBsNz9BOm5qBKyghYFVz6PZZc
-         w7PoCqgJFtL0SKUXB/KIJ4LIj5URwXO4kQiIR0NXdf616rvRdaeOc1vm9VYjZDUWQI5W
-         MDqWDJ6sJ9ozqsV/Yz/CDyBJCX68qyexI7qdx2sMIck2l8/em8LEJIx80bcMe1nK436i
-         vpGQ==
-X-Gm-Message-State: ANhLgQ3fzjpNSQUQ7Offn/z8BObaQglUr6/rFcLOfg6wlEhKr3nncJFB
-        cMq7xZu4zOSm9dkA5eWy4h1wXA==
-X-Google-Smtp-Source: ADFU+vvhiNLXK/gmpiu0l+tLWMsxbL563AqkpPF0XFukxV+4vnxzUWtwy7ToAThcKQCy2Yn3Hx94cA==
-X-Received: by 2002:a1c:df45:: with SMTP id w66mr9145048wmg.171.1583409645664;
-        Thu, 05 Mar 2020 04:00:45 -0800 (PST)
+        bh=hT7S6vvpnxA0ApcPEejqGxLVzm717a4KSHt7eOw1Bck=;
+        b=hLhOVLgBypDYqaf3Av/STUE/CiAvOcGS3F53v/0bq9vOcon/5NJ9wzYZ4HJn0CmMR8
+         GogIfwgzOa9vFX9coYyj7f0r8fjtcGQDSHuhzeTj4bibwv3bM4rjWDtQbr9dqUk6Gd+H
+         bbOQiADJ3JltMquX7hRtSWHrUiDUlrTkdX1xNzh6U74B7ZtECqSQnn+yB38Gf+v351hY
+         WZjlik3aCRvroRSGUfzFrHfv/H729lqkyr0KXurn8dyLLaupzM/+pt4XzNXKNQ0keRzf
+         0fJmOSJPbx7U91mwv51/V6bYySiaGHPDh3eMgskvYKaHbtEnSFFZl6D4zLi/M5nSUKqG
+         QxHw==
+X-Gm-Message-State: ANhLgQ2jtSMwMhXvwUKwdQTkddb0sdah6lATG1kkrnufo8nWS8q0s2Xm
+        T7I+XkwnWNfJtKMg8j1Iw1BiTQ==
+X-Google-Smtp-Source: ADFU+vucLtTgYNewten9hKmRyZyvNiBAi0eWwE91eSAbKxv50uEY0RkR+AYp55iwZRNYjSqE2Bq4mg==
+X-Received: by 2002:a5d:5706:: with SMTP id a6mr9660460wrv.318.1583409836025;
+        Thu, 05 Mar 2020 04:03:56 -0800 (PST)
 Received: from cloudflare.com ([176.221.114.230])
-        by smtp.gmail.com with ESMTPSA id w16sm10403375wrp.8.2020.03.05.04.00.44
+        by smtp.gmail.com with ESMTPSA id b186sm9170588wmb.40.2020.03.05.04.03.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Mar 2020 04:00:44 -0800 (PST)
-References: <20200304101318.5225-1-lmb@cloudflare.com> <20200304101318.5225-2-lmb@cloudflare.com>
+        Thu, 05 Mar 2020 04:03:54 -0800 (PST)
+References: <20200304101318.5225-1-lmb@cloudflare.com> <20200304101318.5225-3-lmb@cloudflare.com>
 User-agent: mu4e 1.1.0; emacs 26.3
 From:   Jakub Sitnicki <jakub@cloudflare.com>
 To:     Lorenz Bauer <lmb@cloudflare.com>
 Cc:     john.fastabend@gmail.com, Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
         Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
         Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Jakub Kicinski <kuba@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
         kernel-team@cloudflare.com, netdev@vger.kernel.org,
         bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next v3 01/12] bpf: sockmap: only check ULP for TCP sockets
-In-reply-to: <20200304101318.5225-2-lmb@cloudflare.com>
-Date:   Thu, 05 Mar 2020 13:00:44 +0100
-Message-ID: <87h7z3ypsj.fsf@cloudflare.com>
+Subject: Re: [PATCH bpf-next v3 02/12] skmsg: update saved hooks only once
+In-reply-to: <20200304101318.5225-3-lmb@cloudflare.com>
+Date:   Thu, 05 Mar 2020 13:03:53 +0100
+Message-ID: <87ftenypna.fsf@cloudflare.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,11 +78,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, Mar 04, 2020 at 11:13 AM CET, Lorenz Bauer wrote:
-> The sock map code checks that a socket does not have an active upper
-> layer protocol before inserting it into the map. This requires casting
-> via inet_csk, which isn't valid for UDP sockets.
->
-> Guard checks for ULP by checking inet_sk(sk)->is_icsk first.
+> Only update psock->saved_* if psock->sk_proto has not been initialized
+> yet. This allows us to get rid of tcp_bpf_reinit_sk_prot.
 >
 > Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
 > ---
