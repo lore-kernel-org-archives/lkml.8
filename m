@@ -2,66 +2,203 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12B58C3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC383C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:03:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E027C20870
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7368B2073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 09:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726485AbgCEJA0 (ORCPT
+        id S1725944AbgCEJDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 04:00:26 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:51182 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbgCEJA0 (ORCPT
+        Thu, 5 Mar 2020 04:03:00 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:34921 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbgCEJDA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 04:00:26 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id CFD51283C93
-Subject: Re: chrome platform Kconfig typo
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Benson Leung <bleung@chromium.org>
-References: <e5618826-6a5a-08a7-d261-e2eecb1348ce@infradead.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <b992473c-45ff-6cd5-3b09-0c1947d76e1d@collabora.com>
-Date:   Thu, 5 Mar 2020 10:00:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Thu, 5 Mar 2020 04:03:00 -0500
+Received: from mail-lf1-f69.google.com ([209.85.167.69])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <po-hsu.lin@canonical.com>)
+        id 1j9mPB-0006dc-Tq
+        for linux-kernel@vger.kernel.org; Thu, 05 Mar 2020 09:02:58 +0000
+Received: by mail-lf1-f69.google.com with SMTP id q4so301351lfp.3
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 01:02:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zrSbYIRTjXPuBmdlG/mjTUYNkZeuzj3eG/1piLNpOjc=;
+        b=HHBLIsUAnsmwcCpZyLImE6maDe8BasH7gYgCrAGdXfSfLMEGcOTfWDooygs2so4com
+         KgcmIafIDuJ7EDytcbWi5KYVsHkO0ogLQ2nSKzUM0Ve/+GlJah3e6jPHP7ghaW+jc9X3
+         5yB1zqa7tBL+RJWiYAYPb0k9U093G7Rbg5uPWtCqK8msDrxvWUhkq+BrYlS06VJcBQnG
+         8tkd1ENBrLWiZNPB0z0yZQrjcYBeQbyeBlwO1PSrm7Z/egxjEoPtdohAi2ud4flmuLAa
+         eT2ikxKXv7uRmyWb5MuYiPnU4rtLs+VsHZ9RuJbYYyyRMRH14PaYvTUREEgiaB9Uc+sx
+         VnUg==
+X-Gm-Message-State: ANhLgQ2IxzMDT4YMYI9afsv9cTH9M3BCL6+Ejv078PbUJwepT0jTtKoh
+        kYvND2VqFpZHEUJzGEytwPyEJhbNWiK3QF9F/8fk1vAPnGZ+1k16DYebhUo8Q69riKhT8zne/Dx
+        O8w5p+SBpfxL5kBvm0oy7ypnkcE+3eqDvSFzs2n3lqabfIjOZ4ZXcKjIU
+X-Received: by 2002:a2e:570f:: with SMTP id l15mr4709793ljb.236.1583398977198;
+        Thu, 05 Mar 2020 01:02:57 -0800 (PST)
+X-Google-Smtp-Source: ADFU+vt6qfV8GneO9Qxk/ML5cwfUpdwGUMAQ9cLA99DbdPFD0fdAYfOPF1pIXzb0KzrNtVpg5u6CW/KNa/X3H2JyZa4=
+X-Received: by 2002:a2e:570f:: with SMTP id l15mr4709770ljb.236.1583398976762;
+ Thu, 05 Mar 2020 01:02:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <e5618826-6a5a-08a7-d261-e2eecb1348ce@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200304131553.27582-1-po-hsu.lin@canonical.com> <87zhcvp89e.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87zhcvp89e.fsf@mpe.ellerman.id.au>
+From:   Po-Hsu Lin <po-hsu.lin@canonical.com>
+Date:   Thu, 5 Mar 2020 17:02:45 +0800
+Message-ID: <CAMy_GT9fr9cq3FrxUEjv+UhFuduqwPzBjeOL25Kp_EPAAmpU2g@mail.gmail.com>
+Subject: Re: [PATCH] selftests/powerpc: Turn off timeout setting for
+ benchmarks, dscr, signal, tm
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kselftest@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, benh@kernel.crashing.org,
+        paulus@samba.org, shuah <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Randy,
+On Thu, Mar 5, 2020 at 3:32 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> Po-Hsu Lin <po-hsu.lin@canonical.com> writes:
+> > Some specific tests in powerpc can take longer than the default 45
+> > seconds that added in commit 852c8cbf (selftests/kselftest/runner.sh:
+> > Add 45 second timeout per test) to run, the following test result was
+> > collected across 2 Power8 nodes and 1 Power9 node in our pool:
+> >   powerpc/benchmarks/futex_bench - 52s
+> >   powerpc/dscr/dscr_sysfs_test - 116s
+> >   powerpc/signal/signal_fuzzer - 88s
+> >   powerpc/tm/tm_unavailable_test - 168s
+> >   powerpc/tm/tm-poison - 240s
+> >
+> > Thus they will fail with TIMEOUT error. Disable the timeout setting
+> > for these sub-tests to allow them finish properly.
+>
+> I run the powerpc tests with run-parts, rather than the kselftest
+> script, we already have our own test runner with a 120s timeout.
+>
+> I didn't think the kselftests runner actually worked with the powerpc
+> tests? Because we override RUN_TESTS.
+>
+Hello Michael,
 
-On 5/3/20 8:11, Randy Dunlap wrote:
-> 
-> from drivers/platform/chrome/Kconfig:
-> 
-> config MFD_CROS_EC
-> 	tristate "Platform support for Chrome hardware (transitional)"
-> 	select CHROME_PLATFORMS
-> 	select CROS_EC
-> 	select CONFIG_MFD_CROS_EC_DEV   <<<<<<<<<<<<<<<<<<<<<<   drop the /CONFIG_/ <<<<<<<<<<<<<<
+I have done a small experiment with timeout=1 in settings and use
+run-parts to run the executables, it looks like this change won't
+affect run-parts.
 
-Thanks for the report I'll send a patch. Our plan was remove this config at some
-point and that makes me think if this transitional config was ever useful, seems
-there is still a defconfig using it, though, so we can't remove yet.
+Not quite sure about the RUN_TESTS you mentioned here, we're testing
+it with command like:
+sudo make -C linux/tools/testing/selftests TARGETS=powerpc run_tests
+And the timeout setting will take effect with this.
 
-> 	depends on X86 || ARM || ARM64 || COMPILE_TEST
-> 	help
-> 	  This is a transitional Kconfig option and will be removed after
-> 	  everyone enables the parts individually.
-> 
-> 
+Thanks
+
+> cheers
+>
+>
+> > https://bugs.launchpad.net/bugs/1864642
+> > Signed-off-by: Po-Hsu Lin <po-hsu.lin@canonical.com>
+> > ---
+> >  tools/testing/selftests/powerpc/benchmarks/Makefile | 2 ++
+> >  tools/testing/selftests/powerpc/benchmarks/settings | 1 +
+> >  tools/testing/selftests/powerpc/dscr/Makefile       | 2 ++
+> >  tools/testing/selftests/powerpc/dscr/settings       | 1 +
+> >  tools/testing/selftests/powerpc/signal/Makefile     | 2 ++
+> >  tools/testing/selftests/powerpc/signal/settings     | 1 +
+> >  tools/testing/selftests/powerpc/tm/Makefile         | 2 ++
+> >  tools/testing/selftests/powerpc/tm/settings         | 1 +
+> >  8 files changed, 12 insertions(+)
+> >  create mode 100644 tools/testing/selftests/powerpc/benchmarks/settings
+> >  create mode 100644 tools/testing/selftests/powerpc/dscr/settings
+> >  create mode 100644 tools/testing/selftests/powerpc/signal/settings
+> >  create mode 100644 tools/testing/selftests/powerpc/tm/settings
+> >
+> > diff --git a/tools/testing/selftests/powerpc/benchmarks/Makefile b/tools/testing/selftests/powerpc/benchmarks/Makefile
+> > index d40300a..a32a6ab 100644
+> > --- a/tools/testing/selftests/powerpc/benchmarks/Makefile
+> > +++ b/tools/testing/selftests/powerpc/benchmarks/Makefile
+> > @@ -2,6 +2,8 @@
+> >  TEST_GEN_PROGS := gettimeofday context_switch fork mmap_bench futex_bench null_syscall
+> >  TEST_GEN_FILES := exec_target
+> >
+> > +TEST_FILES := settings
+> > +
+> >  CFLAGS += -O2
+> >
+> >  top_srcdir = ../../../../..
+> > diff --git a/tools/testing/selftests/powerpc/benchmarks/settings b/tools/testing/selftests/powerpc/benchmarks/settings
+> > new file mode 100644
+> > index 0000000..e7b9417
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/powerpc/benchmarks/settings
+> > @@ -0,0 +1 @@
+> > +timeout=0
+> > diff --git a/tools/testing/selftests/powerpc/dscr/Makefile b/tools/testing/selftests/powerpc/dscr/Makefile
+> > index 5df4763..cfa6eed 100644
+> > --- a/tools/testing/selftests/powerpc/dscr/Makefile
+> > +++ b/tools/testing/selftests/powerpc/dscr/Makefile
+> > @@ -3,6 +3,8 @@ TEST_GEN_PROGS := dscr_default_test dscr_explicit_test dscr_user_test \
+> >             dscr_inherit_test dscr_inherit_exec_test dscr_sysfs_test  \
+> >             dscr_sysfs_thread_test
+> >
+> > +TEST_FILES := settings
+> > +
+> >  top_srcdir = ../../../../..
+> >  include ../../lib.mk
+> >
+> > diff --git a/tools/testing/selftests/powerpc/dscr/settings b/tools/testing/selftests/powerpc/dscr/settings
+> > new file mode 100644
+> > index 0000000..e7b9417
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/powerpc/dscr/settings
+> > @@ -0,0 +1 @@
+> > +timeout=0
+> > diff --git a/tools/testing/selftests/powerpc/signal/Makefile b/tools/testing/selftests/powerpc/signal/Makefile
+> > index 113838f..153fafc 100644
+> > --- a/tools/testing/selftests/powerpc/signal/Makefile
+> > +++ b/tools/testing/selftests/powerpc/signal/Makefile
+> > @@ -5,6 +5,8 @@ CFLAGS += -maltivec
+> >  $(OUTPUT)/signal_tm: CFLAGS += -mhtm
+> >  $(OUTPUT)/sigfuz: CFLAGS += -pthread -m64
+> >
+> > +TEST_FILES := settings
+> > +
+> >  top_srcdir = ../../../../..
+> >  include ../../lib.mk
+> >
+> > diff --git a/tools/testing/selftests/powerpc/signal/settings b/tools/testing/selftests/powerpc/signal/settings
+> > new file mode 100644
+> > index 0000000..e7b9417
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/powerpc/signal/settings
+> > @@ -0,0 +1 @@
+> > +timeout=0
+> > diff --git a/tools/testing/selftests/powerpc/tm/Makefile b/tools/testing/selftests/powerpc/tm/Makefile
+> > index b15a1a3..7b99d09 100644
+> > --- a/tools/testing/selftests/powerpc/tm/Makefile
+> > +++ b/tools/testing/selftests/powerpc/tm/Makefile
+> > @@ -7,6 +7,8 @@ TEST_GEN_PROGS := tm-resched-dscr tm-syscall tm-signal-msr-resv tm-signal-stack
+> >       $(SIGNAL_CONTEXT_CHK_TESTS) tm-sigreturn tm-signal-sigreturn-nt \
+> >       tm-signal-context-force-tm tm-poison
+> >
+> > +TEST_FILES := settings
+> > +
+> >  top_srcdir = ../../../../..
+> >  include ../../lib.mk
+> >
+> > diff --git a/tools/testing/selftests/powerpc/tm/settings b/tools/testing/selftests/powerpc/tm/settings
+> > new file mode 100644
+> > index 0000000..e7b9417
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/powerpc/tm/settings
+> > @@ -0,0 +1 @@
+> > +timeout=0
+> > --
+> > 2.7.4
