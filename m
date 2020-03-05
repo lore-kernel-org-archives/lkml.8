@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C12DC3F2D2
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51243C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63EBD20637
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:23:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B131207FD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 17:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583429036;
-	bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
+	s=default; t=1583429042;
+	bh=5iPR7XCLsazQnaDrcx+zT2BH4J3il51Isf+Aw05JtG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rY+bcwtd/d5j8HRYjHcSAPgq1QQhSmIHKEWc7E9cM+RxVzIQDhIx7z9mHH0/KdRYC
-	 hdxoknyTypLEXxX+s5wxY0GHCASQDpIj9deGaIuyEvX2g+h+oxw6t7/qInpu/pNVFv
-	 Z+PvT9reUmC5kFKJNDoXo3tbL2xHUCt8LE12Ccv4=
+	b=mOLcjH6uSRDdCgFL7t0F3CUtuCR7XNVFYp221WkjU/w1KzoU4GeJanRDS1D9739B5
+	 btH0SDvV/wZHhGcRwgSadB317bgp9IeOeYRiI4bguue37SixnVqmCIxDlLNHWFTMrN
+	 IsTBN+HQgTNFALI9lGcbZVnbg6dbg9Qg/JcwSaI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgCERXy (ORCPT
+        id S1727000AbgCERNb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 12:23:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39038 "EHLO mail.kernel.org"
+        Thu, 5 Mar 2020 12:13:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727050AbgCERNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 12:13:33 -0500
+        id S1726650AbgCERN1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 12:13:27 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C08DB20848;
-        Thu,  5 Mar 2020 17:13:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 016EC20870;
+        Thu,  5 Mar 2020 17:13:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583428412;
-        bh=1hBIVFpHKaOoRiF23bBVj2jf5aYyVhOa1BFzrADUCNs=;
+        s=default; t=1583428407;
+        bh=5iPR7XCLsazQnaDrcx+zT2BH4J3il51Isf+Aw05JtG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CLCRcV7UF3qZcgu9neI0a1daA40jYC7xGqS4niEvfD3tIopOwVlslyASBknezGIy4
-         jN1stX8rpp2uVcZR95ovyaXJ4nSF0EizWJbBDHgGPAo8hILcqfc+2YOnmFw0rRlcli
-         M7OA3lzLKbJDYqsDPcV9dODB7tXwS4KaWidkImHw=
+        b=PI8C1xyCw6UrWmS9ffswNMbPa4dKTI4bKgFUYA8nNOnxn+70/Y6WAiw43AcBm2aUb
+         ljHX5rAUPLAI8EHHfU4NVPoVlkBUG56w3OSmv+s3mRVODN77o5exRm3iOE3X0inLOw
+         2FGQX4isncVOy9OpOEgm4hRkYbt1eh3tK8Pez8mE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Hanno Zulla <kontakt@hanno.de>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-input@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 16/67] HID: hid-bigbenff: call hid_hw_stop() in case of error
-Date:   Thu,  5 Mar 2020 12:12:17 -0500
-Message-Id: <20200305171309.29118-16-sashal@kernel.org>
+Cc:     Victor Kamensky <kamensky@cisco.com>,
+        Paul Burton <paulburton@kernel.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        bruce.ashfield@gmail.com, richard.purdie@linuxfoundation.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 12/67] mips: vdso: add build time check that no 'jalr t9' calls left
+Date:   Thu,  5 Mar 2020 12:12:13 -0500
+Message-Id: <20200305171309.29118-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200305171309.29118-1-sashal@kernel.org>
 References: <20200305171309.29118-1-sashal@kernel.org>
@@ -59,75 +63,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hanno Zulla <kontakt@hanno.de>
+From: Victor Kamensky <kamensky@cisco.com>
 
-[ Upstream commit 976a54d0f4202cb412a3b1fc7f117e1d97db35f3 ]
+[ Upstream commit 976c23af3ee5bd3447a7bfb6c356ceb4acf264a6 ]
 
-It's required to call hid_hw_stop() once hid_hw_start() was called
-previously, so error cases need to handle this. Also, hid_hw_close() is
-not necessary during removal.
+vdso shared object cannot have GOT based PIC 'jalr t9' calls
+because nobody set GOT table in vdso. Contributing into vdso
+.o files are compiled in PIC mode and as result for internal
+static functions calls compiler will generate 'jalr t9'
+instructions. Those are supposed to be converted into PC
+relative 'bal' calls by linker when relocation are processed.
 
-Signed-off-by: Hanno Zulla <kontakt@hanno.de>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Mips global GOT entries do have dynamic relocations and they
+will be caught by cmd_vdso_check Makefile rule. Static PIC
+calls go through mips local GOT entries that do not have
+dynamic relocations. For those 'jalr t9' calls could be present
+but without dynamic relocations and they need to be converted
+to 'bal' calls by linker.
+
+Add additional build time check to make sure that no 'jalr t9'
+slip through because of some toolchain misconfiguration that
+prevents 'jalr t9' to 'bal' conversion.
+
+Signed-off-by: Victor Kamensky <kamensky@cisco.com>
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Cc: bruce.ashfield@gmail.com
+Cc: richard.purdie@linuxfoundation.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/hid-bigbenff.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ arch/mips/vdso/Makefile | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/hid/hid-bigbenff.c b/drivers/hid/hid-bigbenff.c
-index f7e85bacb6889..f8c552b64a899 100644
---- a/drivers/hid/hid-bigbenff.c
-+++ b/drivers/hid/hid-bigbenff.c
-@@ -305,7 +305,6 @@ static void bigben_remove(struct hid_device *hid)
- 	struct bigben_device *bigben = hid_get_drvdata(hid);
+diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+index e8585a22b925c..bfb65b2d57c7f 100644
+--- a/arch/mips/vdso/Makefile
++++ b/arch/mips/vdso/Makefile
+@@ -93,12 +93,18 @@ GCOV_PROFILE := n
+ UBSAN_SANITIZE := n
+ KCOV_INSTRUMENT := n
  
- 	cancel_work_sync(&bigben->worker);
--	hid_hw_close(hid);
- 	hid_hw_stop(hid);
- }
- 
-@@ -350,7 +349,7 @@ static int bigben_probe(struct hid_device *hid,
- 	error = input_ff_create_memless(hidinput->input, NULL,
- 		hid_bigben_play_effect);
- 	if (error)
--		return error;
-+		goto error_hw_stop;
- 
- 	name_sz = strlen(dev_name(&hid->dev)) + strlen(":red:bigben#") + 1;
- 
-@@ -360,8 +359,10 @@ static int bigben_probe(struct hid_device *hid,
- 			sizeof(struct led_classdev) + name_sz,
- 			GFP_KERNEL
- 		);
--		if (!led)
--			return -ENOMEM;
-+		if (!led) {
-+			error = -ENOMEM;
-+			goto error_hw_stop;
-+		}
- 		name = (void *)(&led[1]);
- 		snprintf(name, name_sz,
- 			"%s:red:bigben%d",
-@@ -375,7 +376,7 @@ static int bigben_probe(struct hid_device *hid,
- 		bigben->leds[n] = led;
- 		error = devm_led_classdev_register(&hid->dev, led);
- 		if (error)
--			return error;
-+			goto error_hw_stop;
- 	}
- 
- 	/* initial state: LED1 is on, no rumble effect */
-@@ -389,6 +390,10 @@ static int bigben_probe(struct hid_device *hid,
- 	hid_info(hid, "LED and force feedback support for BigBen gamepad\n");
- 
- 	return 0;
++# Check that we don't have PIC 'jalr t9' calls left
++quiet_cmd_vdso_mips_check = VDSOCHK $@
++      cmd_vdso_mips_check = if $(OBJDUMP) --disassemble $@ | egrep -h "jalr.*t9" > /dev/null; \
++		       then (echo >&2 "$@: PIC 'jalr t9' calls are not supported"; \
++			     rm -f $@; /bin/false); fi
 +
-+error_hw_stop:
-+	hid_hw_stop(hid);
-+	return error;
- }
+ #
+ # Shared build commands.
+ #
  
- static __u8 *bigben_report_fixup(struct hid_device *hid, __u8 *rdesc,
+ quiet_cmd_vdsold_and_vdso_check = LD      $@
+-      cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check)
++      cmd_vdsold_and_vdso_check = $(cmd_vdsold); $(cmd_vdso_check); $(cmd_vdso_mips_check)
+ 
+ quiet_cmd_vdsold = VDSO    $@
+       cmd_vdsold = $(CC) $(c_flags) $(VDSO_LDFLAGS) \
 -- 
 2.20.1
 
