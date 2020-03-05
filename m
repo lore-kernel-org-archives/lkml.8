@@ -2,128 +2,132 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D410BC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C27C1C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4CCE20732
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E5A720732
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 14:33:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZubQEyMD"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="D+OoHwLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726436AbgCEO3l (ORCPT
+        id S1726209AbgCEOdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 09:29:41 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50660 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726170AbgCEO3l (ORCPT
+        Thu, 5 Mar 2020 09:33:02 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42022 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbgCEOdC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 09:29:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583418580;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=psVOG7od+ajhl0Qo6ZW+Pj0HLvKsvb4nNAk9KL1G8Tw=;
-        b=ZubQEyMDyA9FlydIMlpaSyd566eN21FEwYGoZLqOrtrx/pCGlOSbsUFryfLsW+BVc0BhUr
-        E1jkHCU5G4VL5uZqrZvihuJJPGyA2w6U4KLzIaMSiEyKLJlP7hS1ks+As3PiU30lN2cyD9
-        Aeqjgq24GzYP5GS+4K39Cu7k/8VJfsA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-Uo_awWOSNKqNJmTkK4PT_w-1; Thu, 05 Mar 2020 09:29:39 -0500
-X-MC-Unique: Uo_awWOSNKqNJmTkK4PT_w-1
-Received: by mail-wm1-f72.google.com with SMTP id v21so1645153wml.5
-        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:29:39 -0800 (PST)
+        Thu, 5 Mar 2020 09:33:02 -0500
+Received: by mail-qk1-f196.google.com with SMTP id e11so5429747qkg.9
+        for <linux-kernel@vger.kernel.org>; Thu, 05 Mar 2020 06:33:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=t12PP+Y6fPg04CGydQKRRud0jZNc7mh3eq+JnGGoFlw=;
+        b=D+OoHwLv5FkiKYYj+d73ffAMgsCKhAJcd1W6XTW4We88gcuddps6vzAiuWSwtm12ec
+         WIMfjMcZXNx0qEy6cpVC4VH0l5cTK+qQOA88gcaoHbzKkXczF2NN1zj4AxY+HmoyCmPA
+         VeftV9WHoPHEUW+/TmYdBS6Pp7Z2vew0495PtiJGCvliuiomniLTeO+BOu7ShXSgeH+a
+         IyX7US3HmI7+fYcvYS+WtzU0a1Jjo2Uvpp+GmwW3+aZ3SQ6nmXxDOxYP2njvzY/AP4Lo
+         9wIb4YzvdMPQ6+MzBBpue2ktT7CHiXfN96vA1AlXiniIbePKT1hT0rCAJbe/hJQkYNfd
+         imIQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=psVOG7od+ajhl0Qo6ZW+Pj0HLvKsvb4nNAk9KL1G8Tw=;
-        b=CugdCyScyxhNdOLg42ajIZtvl+xhFd83m/jVLQjZHio6OmFh6LueVFVIBGgQLJ2nAx
-         fGf9ZWW77l8b1HgZiOR83RHhREdisFVQMsz9bBYKULDJgmL4VdqAPw24iWR7DEwnT3By
-         5SeNikTdAH1aciUgStZngRHX5HN3AsvX96zlhA5+NihvSigaFnfoqVzB5A0Sm5kkwEm2
-         zQb/o7xWyssWVVuwNlDfdZk+WBOYe4O5zaN9vzUhlRwftIg4D/5zZdhWYsZMKvws4UOx
-         7LHFTWwdJ7NOU8jJeGAb758vmG3CMO7EPZ0c4/As9Bs4Pf7OrGdPwDS7X/6wF6mC/3/k
-         9iYQ==
-X-Gm-Message-State: ANhLgQ1Gc5XuODfH28lSFvzpS10YQF5HxAvIGNlTYcWYzxqm2i90Hj+F
-        vDsj3HAjt0DDncf2kg+nk1sycJ5d18lIOwPMWKpUUSWHdxZ0CRYWMvnLO574HKNu2S69QvbKynn
-        ++bkLKSTyQVPM/ET0VDXU2oQT
-X-Received: by 2002:a5d:658c:: with SMTP id q12mr11208880wru.57.1583418577985;
-        Thu, 05 Mar 2020 06:29:37 -0800 (PST)
-X-Google-Smtp-Source: ADFU+vvFzgRa5nufgb2hQk6wE9mEnuNRyLTpmqOX3HouacHZWQr0BD1TKZDAs8cSZNdBDl9Pu4WGhg==
-X-Received: by 2002:a5d:658c:: with SMTP id q12mr11208863wru.57.1583418577757;
-        Thu, 05 Mar 2020 06:29:37 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:9def:34a0:b68d:9993? ([2001:b07:6468:f312:9def:34a0:b68d:9993])
-        by smtp.gmail.com with ESMTPSA id y7sm9627254wmd.1.2020.03.05.06.29.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 05 Mar 2020 06:29:37 -0800 (PST)
-Subject: Re: [PATCH] KVM: x86: Fix warning due to implicit truncation on
- 32-bit KVM
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200305002422.20968-1-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <09a6a16a-34db-38df-4632-ddf861afece6@redhat.com>
-Date:   Thu, 5 Mar 2020 15:29:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200305002422.20968-1-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=t12PP+Y6fPg04CGydQKRRud0jZNc7mh3eq+JnGGoFlw=;
+        b=CEOV6eI0yfHdaxfmwe9o3Qotn7UJJfn/CBHCJsn1xzidd5zT4b/b/BkiV7HoLw+Uug
+         8aisTBhlYj2FiXyHycVPZcuJzxGETsDwRMmQs5m1f3BmdVC/gRjgJJjvRAW+Nz5JXcJr
+         Bp7jV6NGO0mdIjAc1huTutxVf2jlCm1bZXzMTtJHrYVd81DuA13c1SsIwTaSBtLm+YoM
+         Capugl5LrWGYgljsIOSk4Evsd8P4ePaebj0+qRoL6E8uU0kf1QZwgaW7A/TBzdE52cCx
+         CzdSNie/4Lza40GbCMuB3AmsaSPD5jpmguzNZ5dLqZ3qV2QKvvn1mChWt3kvQ+3QHNM5
+         TEFQ==
+X-Gm-Message-State: ANhLgQ35BNVOGp0ISrBCDz8ukOzIwEvaJYGSuqYf74UZy7HBvmBZuFGa
+        ty7EV7LLo/kfwNmDFS1aqZ1MRA==
+X-Google-Smtp-Source: ADFU+vsE3hyiBkiu5Q9p6/HXzxk0WFlohUygbSOHcmSvau43NwWVfS2PwRAeTD8NEkmqJRJ6pC7zBg==
+X-Received: by 2002:a05:620a:2209:: with SMTP id m9mr4055395qkh.71.1583418779726;
+        Thu, 05 Mar 2020 06:32:59 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id f7sm16969486qtc.29.2020.03.05.06.32.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 05 Mar 2020 06:32:59 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     mpe@ellerman.id.au, akpm@linux-foundation.org
+Cc:     rashmicy@gmail.com, christophe.leroy@c-s.fr, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next v2] powerpc/64s/pgtable: fix an undefined behaviour
+Date:   Thu,  5 Mar 2020 09:32:39 -0500
+Message-Id: <1583418759-16105-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/03/20 01:24, Sean Christopherson wrote:
-> Explicitly cast the integer literal to an unsigned long when stuffing a
-> non-canonical value into the host virtual address during private memslot
-> deletion.  The explicit cast fixes a warning that gets promoted to an
-> error when running with KVM's newfangled -Werror setting.
-> 
->   arch/x86/kvm/x86.c:9739:9: error: large integer implicitly truncated
->   to unsigned type [-Werror=overflow]
-> 
-> Fixes: a3e967c0b87d3 ("KVM: Terminate memslot walks via used_slots"
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kvm/x86.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index ba4d476b79ad..fa03f31ab33c 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -9735,8 +9735,12 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
->  		if (!slot || !slot->npages)
->  			return 0;
->  
-> -		/* Stuff a non-canonical value to catch use-after-delete. */
-> -		hva = 0xdeadull << 48;
-> +		/*
-> +		 * Stuff a non-canonical value to catch use-after-delete.  This
-> +		 * ends up being 0 on 32-bit KVM, but there's no better
-> +		 * alternative.
-> +		 */
-> +		hva = (unsigned long)(0xdeadull << 48);
->  		old_npages = slot->npages;
->  	}
->  
-> 
+Booting a power9 server with hash MMU could trigger an undefined
+behaviour because pud_offset(p4d, 0) will do,
 
-Queued, thanks.
+0 >> (PAGE_SHIFT:16 + PTE_INDEX_SIZE:8 + H_PMD_INDEX_SIZE:10)
 
-Paolo
+Fix it by converting pud_offset() and friends to static inline
+functions.
+
+ UBSAN: shift-out-of-bounds in arch/powerpc/mm/ptdump/ptdump.c:282:15
+ shift exponent 34 is too large for 32-bit type 'int'
+ CPU: 6 PID: 1 Comm: swapper/0 Not tainted 5.6.0-rc4-next-20200303+ #13
+ Call Trace:
+ dump_stack+0xf4/0x164 (unreliable)
+ ubsan_epilogue+0x18/0x78
+ __ubsan_handle_shift_out_of_bounds+0x160/0x21c
+ walk_pagetables+0x2cc/0x700
+ walk_pud at arch/powerpc/mm/ptdump/ptdump.c:282
+ (inlined by) walk_pagetables at arch/powerpc/mm/ptdump/ptdump.c:311
+ ptdump_check_wx+0x8c/0xf0
+ mark_rodata_ro+0x48/0x80
+ kernel_init+0x74/0x194
+ ret_from_kernel_thread+0x5c/0x74
+
+Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ arch/powerpc/include/asm/book3s/64/pgtable.h | 20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable.h b/arch/powerpc/include/asm/book3s/64/pgtable.h
+index fa60e8594b9f..4967bc9e25e2 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable.h
+@@ -1016,12 +1016,20 @@ static inline bool p4d_access_permitted(p4d_t p4d, bool write)
+ 
+ #define pgd_offset(mm, address)	 ((mm)->pgd + pgd_index(address))
+ 
+-#define pud_offset(p4dp, addr)	\
+-	(((pud_t *) p4d_page_vaddr(*(p4dp))) + pud_index(addr))
+-#define pmd_offset(pudp,addr) \
+-	(((pmd_t *) pud_page_vaddr(*(pudp))) + pmd_index(addr))
+-#define pte_offset_kernel(dir,addr) \
+-	(((pte_t *) pmd_page_vaddr(*(dir))) + pte_index(addr))
++static inline pud_t *pud_offset(p4d_t *p4d, unsigned long address)
++{
++	return (pud_t *)p4d_page_vaddr(*p4d) + pud_index(address);
++}
++
++static inline pmd_t *pmd_offset(pud_t *pud, unsigned long address)
++{
++	return (pmd_t *)pud_page_vaddr(*pud) + pmd_index(address);
++}
++
++static inline pte_t *pte_offset_kernel(pmd_t *pmd, unsigned long address)
++{
++	return (pte_t *)pmd_page_vaddr(*pmd) + pte_index(address);
++}
+ 
+ #define pte_offset_map(dir,addr)	pte_offset_kernel((dir), (addr))
+ 
+-- 
+1.8.3.1
 
