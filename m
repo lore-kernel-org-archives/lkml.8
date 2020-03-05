@@ -2,124 +2,165 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2BCC3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DFEC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F07A2073D
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:12:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nj1FTbG3"
+	by mail.kernel.org (Postfix) with ESMTP id 1A25E2146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:14:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1583388880;
+	bh=+FpE/LMdtG5BhsGwvEKqTJMLpXq5lLNK2BRtoZJXypY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=qbpK9dCoTpT1XZ3NlykUhFJcyDrDom8OOLO6tNp3f+EbombcPVyiE+WTSQNwEtOut
+	 Hhq77ANwCtCjE7RYmhB7eUa861PmDsUL/MZCHVtuJSp1m1dmmp2LYBGLMTJ1KZnD1k
+	 BS/RNBUoxKeAEkt9V3AR3K3j+RrKZTgwOSMOXxOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726090AbgCEGMN (ORCPT
+        id S1725930AbgCEGOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 01:12:13 -0500
-Received: from mail-eopbgr60064.outbound.protection.outlook.com ([40.107.6.64]:12101
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725866AbgCEGMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 01:12:12 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Q8fQtPRW9r8QakRX2XutgqOZCVv1VF4WID6XiLv6+Rc136aEkgV4QjVeXMEz54ry5e9fq0srcD/B9WLyV5AEdsMtAvTNTiRr7MG8lBdfBaSV58GAx7lx07xiaMjjj5tr2oz8Z623TlmwNuhuXXLjU+tfMQ6xAXgK3YseqZXUDWkSNq7PkIJlYEB3QnxkgbiiwiMLLi+xPByZsQvQ0nbTZVEn5JUPtWbwhmu/KYGdIiU+g3wEd6+m5wHX7O+Rx5cqNhMTAz49S4/4wc8jSoPs4xs0UOAlGSY9SWrIAfGiBo+fmABRkIe90NpezOjclmUIUf56kQM213dytm8tco2eog==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ytm9Q2yx8Ys98O5hbHmueMzmjSuBvn+JuNhnkk2XzUM=;
- b=R9XIXtAnLfiOcMLpT6A+28qG5VEgSUKBoz5TxMpY85ekw6XqIqFLXwf5dX7TRW1cmjKF1MRtFe/PG2LBPS3V5rz+ayMh7X90b4CSPDrTqKOz1O0HPxPa6k2VHrvf+frVjJGojFK9F7liw7gG1jliQro5D5AKfl2E8eeAOI0Imz4qDu+ww2zCudAzvl5MjaSrzP7aJLrnfh5x4l3Y6UT8cZDVIXaJA3ka3rdrPT0UtmQYTBGDqHCeBsGhEyMrndQ8yDgA1HFcSJ10IzpZhoWBESiMp380MDgfhYBs5nAr9FL2jtxY0zXhdzEHuwu/NtaHnZ530oburaXJ08uYym90Jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ytm9Q2yx8Ys98O5hbHmueMzmjSuBvn+JuNhnkk2XzUM=;
- b=nj1FTbG3l73FkOtffpHgU1JFKKOxbwPuXzkfC1YMHjSnEJjhV4LxCCvi0pl+pzjWVSoZssw44XBivA/VEaGwuRhudGwRkNcGGMJdT0pB01YBUFfdfgwZArUeasUXZZtJpUe+CPuMqdOLYTfSh4gtwYkQ/+BPdF2REXSuAuQfaDE=
-Received: from DB7PR04MB5242.eurprd04.prod.outlook.com (20.176.234.25) by
- DB7PR04MB4316.eurprd04.prod.outlook.com (52.135.128.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2772.15; Thu, 5 Mar 2020 06:12:10 +0000
-Received: from DB7PR04MB5242.eurprd04.prod.outlook.com
- ([fe80::d55c:9106:6fb2:cc34]) by DB7PR04MB5242.eurprd04.prod.outlook.com
- ([fe80::d55c:9106:6fb2:cc34%4]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
- 06:12:10 +0000
-From:   Ganapathi Bhat <ganapathi.bhat@nxp.com>
-To:     Brian Norris <briannorris@chromium.org>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Nishant Sarmukadam <nishants@marvell.com>,
-        Amitkumar Karwar <amitkarwar@gmail.com>,
-        Xinming Hu <huxinming820@gmail.com>,
-        Arend Van Spriel <arend@broadcom.com>
-Subject: RE: [EXT] [PATCH] mwifiex: set needed_headroom, not hard_header_len
-Thread-Topic: [EXT] [PATCH] mwifiex: set needed_headroom, not hard_header_len
-Thread-Index: AQHV7QGefb0w+LZbCU2BNI3eE64ugag5ZweQgAAOjACAABkz0A==
-Date:   Thu, 5 Mar 2020 06:12:10 +0000
-Message-ID: <DB7PR04MB5242361751E47736B116BFD98FE20@DB7PR04MB5242.eurprd04.prod.outlook.com>
-References: <20200227000511.256055-1-briannorris@chromium.org>
- <DB7PR04MB524240B38FF6603D89D694538FE20@DB7PR04MB5242.eurprd04.prod.outlook.com>
- <CA+ASDXNvjJLzH+_0g1OUNckmRoLyNJVwiAg9=OPwd7LGk-E2Cg@mail.gmail.com>
-In-Reply-To: <CA+ASDXNvjJLzH+_0g1OUNckmRoLyNJVwiAg9=OPwd7LGk-E2Cg@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ganapathi.bhat@nxp.com; 
-x-originating-ip: [115.112.95.158]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 2310c18f-ca47-444f-da69-08d7c0cc23bf
-x-ms-traffictypediagnostic: DB7PR04MB4316:
-x-microsoft-antispam-prvs: <DB7PR04MB4316658C556CA6BB669468018FE20@DB7PR04MB4316.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:655;
-x-forefront-prvs: 03333C607F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(136003)(346002)(396003)(376002)(189003)(199004)(4326008)(71200400001)(66946007)(64756008)(86362001)(66476007)(5660300002)(8676002)(76116006)(478600001)(66556008)(316002)(66446008)(26005)(81156014)(6506007)(6916009)(9686003)(2906002)(55016002)(44832011)(54906003)(7696005)(186003)(8936002)(55236004)(52536014)(81166006)(33656002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB7PR04MB4316;H:DB7PR04MB5242.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eDyIJyptb1gaEHJEu8lDst/k8GEUfl8AIo/uFYWgusm52X+tSM+az30iDkl0TqmkmjsA7Tep68wGmm1R7hcOvWUpLM1+yXEdpZ9D6fT8lW79iPVEy4BP3dTxLrsSRIf0i36bSpxAjgH5UeNtxfS4GrstcfBVEPbKbbJEXYiVzcWHoCvo/BhLJn/MH/XyhM+5KPcmKlARfp9s05nkULa+Q2r+4UKKSbPZL3lxeXyaX6Y3kVuLLeY44zRscAb5VxfV3Vk/Hz7kOdSYK0dOb964NSdmaUd2vkGYqM6QZbKYHybv8HE0aGe7yvb17huVxjGROLUW3KHF7sTXc8UrE1vcqarIckjhe88xJDajeOdZrSkb7oOxN6QRbtEwycl8r+zuGyywrScKpSWfycuj3n4d6Sf1sG2fXq3nDZULP8cV07Vc/DEvSsWYHMS07AIfdcSU
-x-ms-exchange-antispam-messagedata: Q4PSJ5c5nJXZCi8VHkjuYcVlGhvD8ZzvijxEu1Rr34+zTDzxvc/z2uhVCFGTeOwcMwYVRtj0kcROHGM+GZb1mjlp6ot6t1Sdy2a25eWbT20KjqKsdqMyJaduAQjZWR2kx2hcZGT0xVKDo9XwRVRMsw==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 5 Mar 2020 01:14:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38560 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725818AbgCEGOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 01:14:38 -0500
+Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18AB82073D;
+        Thu,  5 Mar 2020 06:14:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1583388877;
+        bh=+FpE/LMdtG5BhsGwvEKqTJMLpXq5lLNK2BRtoZJXypY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=HXXu8yPyVZYJa0yyyg+lJOIoxLTTughoUgC4k7QnWRZBwSzNMw1DS7kTqKqnZe6hv
+         WxxD5eV6NZpJk9ckOzWL6vCUwIwkf31t9il/hx8YDxhpWEo4VVqG9x1PPqD996SJZl
+         vbJd7CIlOn6GESTas7M/VBoZAnU0RZKsW/ouPjpk=
+Date:   Thu, 5 Mar 2020 07:14:31 +0100
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
+Message-ID: <20200305071431.66362e3c@coco.lan>
+In-Reply-To: <ed040dd417d578e1ab4491d116c6ac1431142385.camel@perches.com>
+References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
+        <20200304131035.731a3947@lwn.net>
+        <20200304212846.0c79c6da@coco.lan>
+        <ed040dd417d578e1ab4491d116c6ac1431142385.camel@perches.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2310c18f-ca47-444f-da69-08d7c0cc23bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Mar 2020 06:12:10.1192
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: CEKEwyA1Tu2IcJYH997slSxWj7C+92OOIAzg623ChtRpguzZY2rgl4gNhx1o5A58iU3cjzqw37HIItkG39GAmA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB7PR04MB4316
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQnJpYW4sDQoNCj4gPiA+IGhhcmRfaGVhZGVyX2xlbiBwcm92aWRlcyBsaW1pdGF0aW9ucyBm
-b3IgdGhpbmdzIGxpa2UgQUZfUEFDS0VULCBzdWNoDQo+ID4gPiB0aGF0IHdlIGRvbid0IGFsbG93
-IHRyYW5zbWl0dGluZyBwYWNrZXRzIHNtYWxsZXIgdGhhbiB0aGlzLg0KPiA+DQo+ID4gT0s7IEhv
-d2V2ZXIsIGFyZSB3ZSBub3Qgc3VwcG9zZWQgdG8gbWVudGlvbiBoYXJkX2hlYWRlcl9sZW4gYWxz
-bz8NCj4gDQo+IE5vLCBteSB1bmRlcnN0YW5kaW5nIGlzIHRoYXQgd2UgZG8gbm90IG5lZWQgdG8g
-Ym90aGVyIHdpdGgNCj4gaGFyZF9oZWFkZXJfbGVuIG91cnNlbHZlcyAtLSBldGhlcl9zZXR1cCgp
-IGVzdGFibGlzaGVzIHRoZSBhcHByb3ByaWF0ZQ0KPiBMMiBoZWFkZXIgcGFyYW1ldGVycy4gSSB0
-aGluayB0aGF0J3MgY292ZXJlZCBhIGxpdHRsZSBiZXR0ZXIgYmVsb3cuDQoNCk9LLiBJIGdvdCB5
-b3UuDQo+IA0KPiA+ID4gVGhpcyBpcyB0aGUgZXNzZW50aWFsbHkgdGhlIHNhbWUgYnVnIChhbmQg
-Zml4KSB0aGF0IGJyY21mbWFjIGhhZCwNCj4gPiA+IGZpeGVkIGluIGNvbW1pdCBjYjM5Mjg4ZmQ2
-YmIgKCJicmNtZm1hYzogdXNlIG5kZXYtDQo+ID5uZWVkZWRfaGVhZHJvb20NCj4gPiA+IHRvIHJl
-c2VydmUgYWRkaXRpb25hbCBoZWFkZXIgc3BhY2UiKS4NCj4gPg0KPiA+IE9LOyBJIHJlYWQgdGhp
-cyBjb21taXQ6DQo+ID4NCj4gPiAiLi4uIEFjY29yZGluZyB0byBkZWZpbml0aW9uIG9mIExMX1JF
-U0VSVkVEX1NQQUNFKCkgYW5kIGhhcmRfaGVhZGVyX2xlbiwNCj4gd2Ugc2hvdWxkIHVzZSBoYXJk
-X2hlYWRlcl9sZW4gdG8gcmVzZXJ2ZSBmb3IgTDIgaGVhZGVyLCBsaWtlIGV0aGVybmV0DQo+IGhl
-YWRlcihFVEhfSExFTikgaW4gb3VyIGNhc2UgYW5kIHVzZSBuZWVkZWRfaGVhZHJvb20gZm9yIHRo
-ZSBhZGRpdGlvbmFsDQo+IGhlYWRyb29tIG5lZWRlZCBieSBoYXJkd2FyZS4uLiINCj4gDQo+IFll
-YWgsIHRoYXQncyBwcm9iYWJseSBhIGxpdHRsZSBtb3JlIHZlcmJvc2UgYW5kIGFjY3VyYXRlIGRl
-c2NyaXB0aW9uLCB3aGljaCBpcw0KPiBwYXJ0bHkgd2h5IEkgcmVmZXJyZWQgdG8gdGhhdCBjb21t
-aXQgOikNCj4gDQo+ID4gU28sIGRvZXMgaXQgbWVhbiwgaGFyZF9oZWFkZXJfbGVuIGlzIGFscmVh
-ZHkgY29uc2lkZXJlZCBieSB1cHBlciBsYXllcj8NCj4gDQo+IFJpZ2h0LCBpdCdzIHNldCBieSBl
-dGhlcl9zZXR1cCgpLg0KDQpZZXMsIFRoYW5rcy4NCg0KQWNrZWQtYnk6IEdhbmFwYXRoaSBCaGF0
-IDxnYW5hcGF0aGkuZ2JoYXRAbnhwLmNvbT4NCg0KUmVnYXJkcywNCkdhbmFwYXRoaQ0K
+Em Wed, 04 Mar 2020 13:24:48 -0800
+Joe Perches <joe@perches.com> escreveu:
+
+> On Wed, 2020-03-04 at 21:28 +0100, Mauro Carvalho Chehab wrote:
+> > Em Wed, 4 Mar 2020 13:10:35 -0700
+> > Jonathan Corbet <corbet@lwn.net> escreveu:
+> >   
+> > > On Wed,  4 Mar 2020 08:29:50 +0100
+> > > Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
+> > >   
+> > > > Mauro's patch series <cover.1581955849.git.mchehab+huawei@kernel.org>
+> > > > ("[PATCH 00/44] Manually convert filesystem FS documents to ReST")
+> > > > converts many Documentation/filesystems/ files to ReST.
+> > > > 
+> > > > Since then, ./scripts/get_maintainer.pl --self-test complains with 27
+> > > > warnings on Documentation/filesystems/ of this kind:
+> > > > 
+> > > >   warning: no file matches F: Documentation/filesystems/...
+> > > > 
+> > > > Adjust MAINTAINERS entries to all files converted from .txt to .rst in the
+> > > > patch series and address the 27 warnings.
+> > > > 
+> > > > Link: https://lore.kernel.org/linux-erofs/cover.1581955849.git.mchehab+huawei@kernel.org
+> > > > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+> > > > ---
+> > > > Mauro, please ack.
+> > > > Jonathan, pick pick this patch for doc-next.    
+> > > 
+> > > Sigh, I need to work a MAINTAINERS check into my workflow...
+> > > 
+> > > Thanks for fixing these, but ... what tree did you generate the patch
+> > > against?  I doesn't come close to applying to docs-next.  
+> > 
+> > I'm starting to suspect that maybe the best workflow would be to just 
+> > apply the patches at docs-next keeping links broken, and then run
+> > ./scripts/documentation-file-ref-check --fix by the end of a merge
+> > window, addressing such breakages.  
+> 
+> I'm not sure at all that that script will always do the
+> right thing with MAINTAINERS,
+
+As it is based on some heuristics, whomever runs it should
+double-check the results.
+
+> but it seems to work OK
+> except for some renames where a .txt file was directly
+> renamed to a .rst file in the same directory where there
+> was a similarly named file in a different directory.
+
+Yeah, the script could be smarter to catch this case.
+
+> Likely the direct rename of a filename extension from
+> .txt to .rst should always be applied by the script.
+
+Yeah, makes sense to me. Yet, I got one exception for this:
+I found somewhere a case were there are both foo.txt and foo.rst,
+both with different contents.
+
+The solution I took were to rename foo.txt to bar.txt,
+adjusting the cross-references, then convert bar.txt to
+bar.rst.
+
+In any case, we're close to finish the conversion. I have
+already patches that convert everything to .rst (with a couple of
+exceptions), and I took the care of doing the cross-reference fixes 
+there. I'm still adjusting some things on this tree. My current plans
+are to have them all applied up to Kernel 5.8, and then start looking
+on better organizing the docs (I'm already doing that for media docs).
+
+Once all of those patches get merged, .txt -> .rst will
+be an exception.
+
+> 
+> Anyway, for -next as of today:
+> 
+> $ git diff --shortstat
+>  64 files changed, 116 insertions(+), 116 deletions(-)
+> 
+> > There are usually lots of churn outside the merge window.
+> > 
+> > Another alternative would be to split the MAINTAINERS file on a
+> > per-subsystem basis. If I remember well, someone proposed this once at
+> > LKML. I vaguely remember that there were even a patch (or RFC)
+> > adding support for such thing for get_maintainers.pl.  
+> 
+> Yeah.  get_maintainer.pl does work if the MAINTAINERS
+> file is split up a few different ways.
+> 
+> There was also a tool to do the MAINTAINERS split.
+> https://lore.kernel.org/patchwork/patch/817857/
+> 
+> I doubt that would matter at all given today's tools and
+> the general mechanisms of maintainers renaming files and
+> not running checkpatch in the first place.
+
+Yeah, it may not produce any concrete results on some parts.
+It may help to reduce the conflicts there, though. Also, I guess
+some maintainers will take more care, if they start to have
+their own */MAINTAINERS files.
+
+Thanks,
+Mauro
