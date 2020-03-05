@@ -2,165 +2,87 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DFEC3F2D1
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 845F9C3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A25E2146E
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1583388880;
-	bh=+FpE/LMdtG5BhsGwvEKqTJMLpXq5lLNK2BRtoZJXypY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=qbpK9dCoTpT1XZ3NlykUhFJcyDrDom8OOLO6tNp3f+EbombcPVyiE+WTSQNwEtOut
-	 Hhq77ANwCtCjE7RYmhB7eUa861PmDsUL/MZCHVtuJSp1m1dmmp2LYBGLMTJ1KZnD1k
-	 BS/RNBUoxKeAEkt9V3AR3K3j+RrKZTgwOSMOXxOE=
+	by mail.kernel.org (Postfix) with ESMTP id 3F8B02146E
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:17:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O84g+I4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725930AbgCEGOj (ORCPT
+        id S1725903AbgCEGRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 01:14:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38560 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725818AbgCEGOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 01:14:38 -0500
-Received: from coco.lan (ip5f5ad4e9.dynamic.kabel-deutschland.de [95.90.212.233])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 5 Mar 2020 01:17:35 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:54717 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725818AbgCEGRe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 01:17:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1583389053;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=E6xu+5UxvlRGBObBERKpxsZYB1W/AKSUkfhw6bHB3FM=;
+        b=O84g+I4fr0GoImXk88uidBkTz5IvKo/vJCp327xGHPp+iHmP92GC517TstQcMQgdEvXqCl
+        9dpMuWXzSMV/aP1hepzuaETYTAERVHNmqHHzInyxGVaBZCTmoGJNEmmnwor+l5gZpI+OKI
+        Z1cItBgRbkVCLw8dBFjW0gS7/TGdhWE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-310-fVRD406aNJWJE02WSIVI_w-1; Thu, 05 Mar 2020 01:17:30 -0500
+X-MC-Unique: fVRD406aNJWJE02WSIVI_w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18AB82073D;
-        Thu,  5 Mar 2020 06:14:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583388877;
-        bh=+FpE/LMdtG5BhsGwvEKqTJMLpXq5lLNK2BRtoZJXypY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=HXXu8yPyVZYJa0yyyg+lJOIoxLTTughoUgC4k7QnWRZBwSzNMw1DS7kTqKqnZe6hv
-         WxxD5eV6NZpJk9ckOzWL6vCUwIwkf31t9il/hx8YDxhpWEo4VVqG9x1PPqD996SJZl
-         vbJd7CIlOn6GESTas7M/VBoZAnU0RZKsW/ouPjpk=
-Date:   Thu, 5 Mar 2020 07:14:31 +0100
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Lukas Bulwahn <lukas.bulwahn@gmail.com>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: adjust to filesystem doc ReST conversion
-Message-ID: <20200305071431.66362e3c@coco.lan>
-In-Reply-To: <ed040dd417d578e1ab4491d116c6ac1431142385.camel@perches.com>
-References: <20200304072950.10532-1-lukas.bulwahn@gmail.com>
-        <20200304131035.731a3947@lwn.net>
-        <20200304212846.0c79c6da@coco.lan>
-        <ed040dd417d578e1ab4491d116c6ac1431142385.camel@perches.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C553813E4;
+        Thu,  5 Mar 2020 06:17:29 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B1A1319C6A;
+        Thu,  5 Mar 2020 06:17:29 +0000 (UTC)
+Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id A12DA1809563;
+        Thu,  5 Mar 2020 06:17:29 +0000 (UTC)
+Date:   Thu, 5 Mar 2020 01:17:29 -0500 (EST)
+From:   Vladis Dronov <vdronov@redhat.com>
+To:     joeyli <jlee@suse.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, linux-efi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Message-ID: <1322502214.13237657.1583389049605.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20200305060123.GS16878@linux-l9pv.suse>
+References: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com> <20200304154936.24206-1-vdronov@redhat.com> <20200305060123.GS16878@linux-l9pv.suse>
+Subject: Re: [PATCH v2] efi: fix a race and a buffer overflow while reading
+ efivars via sysfs
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.40.204.88, 10.4.195.7]
+Thread-Topic: fix a race and a buffer overflow while reading efivars via sysfs
+Thread-Index: yZpuewxX2bAsD2i1VoJ9lfrdXAYJYw==
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 04 Mar 2020 13:24:48 -0800
-Joe Perches <joe@perches.com> escreveu:
+Hello, Joey, all,
 
-> On Wed, 2020-03-04 at 21:28 +0100, Mauro Carvalho Chehab wrote:
-> > Em Wed, 4 Mar 2020 13:10:35 -0700
-> > Jonathan Corbet <corbet@lwn.net> escreveu:
-> >   
-> > > On Wed,  4 Mar 2020 08:29:50 +0100
-> > > Lukas Bulwahn <lukas.bulwahn@gmail.com> wrote:
-> > >   
-> > > > Mauro's patch series <cover.1581955849.git.mchehab+huawei@kernel.org>
-> > > > ("[PATCH 00/44] Manually convert filesystem FS documents to ReST")
-> > > > converts many Documentation/filesystems/ files to ReST.
-> > > > 
-> > > > Since then, ./scripts/get_maintainer.pl --self-test complains with 27
-> > > > warnings on Documentation/filesystems/ of this kind:
-> > > > 
-> > > >   warning: no file matches F: Documentation/filesystems/...
-> > > > 
-> > > > Adjust MAINTAINERS entries to all files converted from .txt to .rst in the
-> > > > patch series and address the 27 warnings.
-> > > > 
-> > > > Link: https://lore.kernel.org/linux-erofs/cover.1581955849.git.mchehab+huawei@kernel.org
-> > > > Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> > > > ---
-> > > > Mauro, please ack.
-> > > > Jonathan, pick pick this patch for doc-next.    
-> > > 
-> > > Sigh, I need to work a MAINTAINERS check into my workflow...
-> > > 
-> > > Thanks for fixing these, but ... what tree did you generate the patch
-> > > against?  I doesn't come close to applying to docs-next.  
-> > 
-> > I'm starting to suspect that maybe the best workflow would be to just 
-> > apply the patches at docs-next keeping links broken, and then run
-> > ./scripts/documentation-file-ref-check --fix by the end of a merge
-> > window, addressing such breakages.  
+> > -	var->DataSize = 1024;
+> > -	if (efivar_entry_get(entry, &entry->var.Attributes,
+> > -			     &entry->var.DataSize, entry->var.Data))
+> > +	ret = efivar_entry_get(entry, &var->Attributes, &datasize, var->Data);
+> > +	var->DataSize = size;
 > 
-> I'm not sure at all that that script will always do the
-> right thing with MAINTAINERS,
+> The size is indeterminate here. I think that it should uses datasize?
+> 	var->DataSize = datasize;
 
-As it is based on some heuristics, whomever runs it should
-double-check the results.
+Indeed, my mistake. Thank you much! I will fix it in the v3 patchset I'm
+currently composing.
 
-> but it seems to work OK
-> except for some renames where a .txt file was directly
-> renamed to a .rst file in the same directory where there
-> was a similarly named file in a different directory.
+Best regards,
+Vladis Dronov | Red Hat, Inc. | The Core Kernel | Senior Software Engineer
 
-Yeah, the script could be smarter to catch this case.
-
-> Likely the direct rename of a filename extension from
-> .txt to .rst should always be applied by the script.
-
-Yeah, makes sense to me. Yet, I got one exception for this:
-I found somewhere a case were there are both foo.txt and foo.rst,
-both with different contents.
-
-The solution I took were to rename foo.txt to bar.txt,
-adjusting the cross-references, then convert bar.txt to
-bar.rst.
-
-In any case, we're close to finish the conversion. I have
-already patches that convert everything to .rst (with a couple of
-exceptions), and I took the care of doing the cross-reference fixes 
-there. I'm still adjusting some things on this tree. My current plans
-are to have them all applied up to Kernel 5.8, and then start looking
-on better organizing the docs (I'm already doing that for media docs).
-
-Once all of those patches get merged, .txt -> .rst will
-be an exception.
-
-> 
-> Anyway, for -next as of today:
-> 
-> $ git diff --shortstat
->  64 files changed, 116 insertions(+), 116 deletions(-)
-> 
-> > There are usually lots of churn outside the merge window.
-> > 
-> > Another alternative would be to split the MAINTAINERS file on a
-> > per-subsystem basis. If I remember well, someone proposed this once at
-> > LKML. I vaguely remember that there were even a patch (or RFC)
-> > adding support for such thing for get_maintainers.pl.  
-> 
-> Yeah.  get_maintainer.pl does work if the MAINTAINERS
-> file is split up a few different ways.
-> 
-> There was also a tool to do the MAINTAINERS split.
-> https://lore.kernel.org/patchwork/patch/817857/
-> 
-> I doubt that would matter at all given today's tools and
-> the general mechanisms of maintainers renaming files and
-> not running checkpatch in the first place.
-
-Yeah, it may not produce any concrete results on some parts.
-It may help to reduce the conflicts there, though. Also, I guess
-some maintainers will take more care, if they start to have
-their own */MAINTAINERS files.
-
-Thanks,
-Mauro
