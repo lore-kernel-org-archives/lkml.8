@@ -2,142 +2,100 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC08C3F2D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3268AC3F2D1
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:18:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD731217F4
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09CBB2073D
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 08:18:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QeDESQWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbgCEISi (ORCPT
+        id S1726251AbgCEISu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 03:18:38 -0500
-Received: from mga02.intel.com ([134.134.136.20]:9391 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbgCEISh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 03:18:37 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Mar 2020 00:18:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,517,1574150400"; 
-   d="scan'208";a="234342532"
-Received: from shao2-debian.sh.intel.com (HELO [10.239.13.3]) ([10.239.13.3])
-  by orsmga008.jf.intel.com with ESMTP; 05 Mar 2020 00:18:34 -0800
-Subject: Re: [cpufreq] 909c0e9cc1: fwq.fwq.med 210.0% improvement
-To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-acpi@vger.kernel.org,
-        devel@acpica.org, linux-pm@vger.kernel.org, lkp@lists.01.org,
-        Rafael Wysocki <rafael@kernel.org>
-References: <20200305013509.GF5972@shao2-debian>
- <951b0986-bb35-d9a5-1639-0a8cdb3dcd04@intel.com>
-From:   Rong Chen <rong.a.chen@intel.com>
-Message-ID: <cbe4887c-d54a-c4aa-e4bf-981b5fcc291d@intel.com>
-Date:   Thu, 5 Mar 2020 16:18:24 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 5 Mar 2020 03:18:50 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:35708 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbgCEISu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 5 Mar 2020 03:18:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=3m703ypRjAtYhbKTkAxqNaRn33lkF344lR7igeRi5dw=; b=QeDESQWxblcd1ICzrOjpd4hCUd
+        qsEvNamu4phC6ep6Go1fma5VlXhdDamQawtlV0GF1uJ/nY66ALRpwbJquIX4xw+ldXjLejEWIg7YH
+        uXcyDaNH7zXvWAmMYuLZRDUOJeeAZGqvTEc0U6f7Zr8W8/wpcDEmip3IXXXupMOacO+KA6/AJxbbe
+        VbaB9MadDZ/5IxdnJYyeBdbmY3HmJmUKL/VVl0bcSvl7EUyDm3EY7EYt80tfpwVptOQ1sPdS8Idkf
+        QBkBdclOUqOhXgHaRRBGtYB5nc/xE8r/VfTl7NdVhXIuinI1KKF38twaZ4Xp19Y+qNsB4JE2+RpcJ
+        oKF9xrMg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j9liO-0003xf-73; Thu, 05 Mar 2020 08:18:44 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9EBB630066E;
+        Thu,  5 Mar 2020 09:16:43 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8F9FE20D3014E; Thu,  5 Mar 2020 09:18:42 +0100 (CET)
+Date:   Thu, 5 Mar 2020 09:18:42 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        walter-zh.wu@mediatek.com, dvyukov@google.com
+Subject: Re: mmotm 2020-03-03-22-28 uploaded (warning: objtool:)
+Message-ID: <20200305081842.GB2619@hirez.programming.kicks-ass.net>
+References: <20200304062843.9yA6NunM5%akpm@linux-foundation.org>
+ <cd1c6bd2-3db3-0058-f3b4-36b2221544a0@infradead.org>
+ <20200305081717.GT2596@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <951b0986-bb35-d9a5-1639-0a8cdb3dcd04@intel.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200305081717.GT2596@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Mar 05, 2020 at 09:17:17AM +0100, Peter Zijlstra wrote:
+> On Wed, Mar 04, 2020 at 09:34:49AM -0800, Randy Dunlap wrote:
 
+> > mm/kasan/common.o: warning: objtool: kasan_report()+0x13: call to report_enabled() with UACCESS enabled
+> 
+> I used next/master instead, and found the below broken commit
+> responsible for this.
 
-On 3/5/20 3:50 PM, Rafael J. Wysocki wrote:
-> On 3/5/2020 2:35 AM, kernel test robot wrote:
->> Greeting,
->>
->> FYI, we noticed a 210.0% improvement of fwq.fwq.med due to commit:
->
-> Well, that sounds impressive. :-)
->
->
->>
->> commit: 909c0e9cc11ba39fa5a660583b25c2431cf54deb ("cpufreq: 
->> intel_pstate: Use passive mode by default without HWP")
->> https://git.kernel.org/cgit/linux/kernel/git/rafael/linux-pm.git 
->> intel_pstate-passive
->>
->> in testcase: fwq
->> on test machine: 16 threads Intel(R) Xeon(R) CPU D-1541 @ 2.10GHz 
->> with 48G memory
->> with following parameters:
->>
->>     nr_task: 100%
->>     samples: 100000ss
->>     iterations: 18x
->>     cpufreq_governor: powersave
->
-> The governor should be schedutil, though, unless it is explicitly set 
-> to powersave in the test environment.
->
-> Is that the case?
->
->
+> @@ -634,12 +637,20 @@ void kasan_free_shadow(const struct vm_struct *vm)
+>  #endif
+>  
+>  extern void __kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip);
+> +extern bool report_enabled(void);
+>  
+> -void kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+> +bool kasan_report(unsigned long addr, size_t size, bool is_write, unsigned long ip)
+>  {
+> -	unsigned long flags = user_access_save();
+> +	unsigned long flags;
+> +
+> +	if (likely(!report_enabled()))
+> +		return false;
 
-Hi Rafael,
+This adds an explicit call before the user_access_save() and that is a
+straight on bug.
 
-Yes, we set to powersave for this test.
-
-user  :notice: [  +0.061763] 2020-03-04 21:15:33
-user  :notice: [  +0.057012] for cpu_dir in 
-/sys/devices/system/cpu/cpu[0-9]*
-user  :notice: [  +0.059494] do
-user  :notice: [  +0.046899]    online_file="$cpu_dir"/online
-user  :notice: [  +0.074995]    [ -f "$online_file" ] && [ "$(cat 
-"$online_file")" -eq 0 ] && continue
-user  :notice: [  +0.080600] file="$cpu_dir"/cpufreq/scaling_governor
-user  :notice: [  +0.067584]    [ -f "$file" ] && echo "powersave" > "$file"
-user  :notice: [  +0.050203] done
-user  :notice: [  +0.084039]    Internal Reference Designator: IPMI_LAN
-user  :notice: [  +0.059001]    External Reference Designator: IPMI_LAN
-user  :notice: [  +0.056562] IPMI Device Information
-user  :notice: [  +0.058074] BMC ARP Control         : ARP Responses 
-Enabled, Gratuitous ARP Disabled
-user  :notice: [  +0.053677] 2020-03-04 21:15:34 ./t_fwq -n 100000 -w 18 
--t 16
-user  :notice: [Mar 4 21:22] numthreads = 16
-user  :notice: [  +0.007123] thread number 1 being created.
-user  :notice: [  +0.008334] thread number 2 being created.
-user  :notice: [  +0.008335] thread number 3 being created.
-user  :notice: [  +0.008222] thread number 4 being created.
-user  :notice: [  +0.008359] thread number 5 being created.
-user  :notice: [  +0.008360] thread number 6 being created.
-user  :notice: [  +0.008128] thread number 7 being created.
-user  :notice: [  +0.008409] thread number 8 being created.
-user  :notice: [  +0.008317] thread number 9 being created.
-user  :notice: [  +0.008352] thread number 10 being created.
-user  :notice: [  +0.008480] thread number 11 being created.
-user  :notice: [  +0.008393] thread number 12 being created.
-user  :notice: [  +0.008519] thread number 13 being created.
-user  :notice: [  +0.008518] thread number 14 being created.
-user  :notice: [  +0.008266] thread number 15 being created.
-user  :notice: [  +0.009492] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.010539] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.010499] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.010492] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.010473] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.010255] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.010525] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.013377] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.013653] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.013755] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.013936] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.013843] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.013884] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.013685] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.013835] Starting FWQ_CORE with work_length = 262144
-user  :notice: [  +0.013927] Starting FWQ_CORE with work_length = 262144
-
-
-Best Regards,
-Rong Chen
+> +
+> +	flags = user_access_save();
+>  	__kasan_report(addr, size, is_write, ip);
+>  	user_access_restore(flags);
+> +
+> +	return true;
+>  }
