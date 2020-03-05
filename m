@@ -2,109 +2,183 @@ Return-Path: <SRS0=j27y=4W=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F63C3F2CD
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD37C3F2CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:02:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C55521556
-	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:01:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CflcryAT"
+	by mail.kernel.org (Postfix) with ESMTP id 2E190208CD
+	for <linux-kernel@archiver.kernel.org>; Thu,  5 Mar 2020 06:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbgCEGBG (ORCPT
+        id S1726178AbgCEGCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 5 Mar 2020 01:01:06 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38753 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbgCEGBF (ORCPT
+        Thu, 5 Mar 2020 01:02:05 -0500
+Received: from m9a0014g.houston.softwaregrp.com ([15.124.64.90]:49082 "EHLO
+        m9a0014g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725914AbgCEGCF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 5 Mar 2020 01:01:05 -0500
-Received: by mail-pg1-f196.google.com with SMTP id x7so2208999pgh.5
-        for <linux-kernel@vger.kernel.org>; Wed, 04 Mar 2020 22:01:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=+crT0pBWSfuXBvsoxmaazzTBpnM/2/pQconS/hbBjSE=;
-        b=CflcryATJ3b/FURJquNJlND9mLY4WDEwsbNpyJgV7+X7a16X7mWxQ8LoU8cDZI9rdr
-         GI2Kc/NheE0BNdceo46E5+J4dTEt6FhdPCD/9gO0tfuLykTDFRmArPpN/mbTc0FhWSOR
-         K8cqaftg39gR0DiOX9YBEbpGPVpk8mhT1zq28D/aLfmBT+j6NYsIMjZHCujV5WZTajcF
-         xNVleNiKbjEqFlFSm8M11pl4tV6EO2KDNJTTL6oSA5iJ35RQj93hWJbcdOgjX6CPN/uo
-         LdTzU/2Exnfr3fgbVMm+Ak1/kiP1vPIUvS+8szG7hJ9coag1Ne9P699SykPE4m8ZGmkx
-         Q8Jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+crT0pBWSfuXBvsoxmaazzTBpnM/2/pQconS/hbBjSE=;
-        b=Ke0DPeyinhIF536gAx28QrVRtFXRBWFX2DKgba/mMCgLDRH3Wuj6RtrJjIqaQxLv1h
-         flL18i5rnzgfIg7+oF3eWOvEc0AP0mHEiCqYeEGupxfl6t/GhdABtLuCnN1f1SksGECj
-         F8BFlUEcknV7viziBezgZ6FT96DixUcfxvkAz9fSTRVrPJ7vV4nzKch3S8fV0JAcXanH
-         fvs36Lb1fYZWb8iWJgpf6nOvHW4NyukhhTNYJti2S4zJ2F+lte7H1DH2PYU2lOPu87wr
-         cI7MbJBokRJAU5xUUe0L7jriYOfX6ibXEcX9EIsjv5e7vN7AeFcePQGSrxVbiPY7vmq4
-         0qGg==
-X-Gm-Message-State: ANhLgQ0f0KAklCHwF0X/dG/T8SFrIMGPJ9Djey3t8ip42d3pqF4BPRRq
-        gBysk8u7vYyswA57gtgb9RJamXnz
-X-Google-Smtp-Source: ADFU+vvHjIS0y6Haki+xnAkKnWAaibQMrBK4UejzhrMNkhA0XNRzbYHbqwwN9JidnZp/UGRI/O9pUw==
-X-Received: by 2002:a62:1dc6:: with SMTP id d189mr6807646pfd.153.1583388064938;
-        Wed, 04 Mar 2020 22:01:04 -0800 (PST)
-Received: from sh03840pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id t19sm29508372pgg.23.2020.03.04.22.01.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 04 Mar 2020 22:01:04 -0800 (PST)
-From:   Baolin Wang <baolin.wang7@gmail.com>
-To:     lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, baolin.wang7@gmail.com,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: sprd: Allow the MCDT driver to build into modules
-Date:   Thu,  5 Mar 2020 14:00:53 +0800
-Message-Id: <9306f2b99641136653ae4fe6cf9e859b7f698f77.1583387748.git.baolin.wang7@gmail.com>
-X-Mailer: git-send-email 1.9.1
+        Thu, 5 Mar 2020 01:02:05 -0500
+Received: FROM m9a0014g.houston.softwaregrp.com (15.121.0.190) BY m9a0014g.houston.softwaregrp.com WITH ESMTP;
+ Thu,  5 Mar 2020 06:01:18 +0000
+Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
+ M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Thu, 5 Mar 2020 06:01:33 +0000
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (15.124.72.14) by
+ M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10 via Frontend Transport; Thu, 5 Mar 2020 06:01:32 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MDXDGX5Fe4BfhVWEzpILhWs0mpGPMdFNmuCoRlvWGduzfILBYgXQTy1PkTQp/xSMh4veXwaFrJkiEZsr62/J4LLdjJkAzEKyEZSLsr2VeCZWGxKK4t/wt1O5zysClft1t+lechtgmk4luKpd58Nz58FHRZ0ZX7i5zulGjIzxRA0pXk5zQAZTk2qC8EXoo0BYASHDWaICXuCwdFzQkBab8YsVbVr9PLLbTBlQYSIEqUfHjwDuva/wQ9XtTvSdnU2TifTwedixkCDTxfhMsVWkK6yEVHNNeNZngxzoHfXoAY6cv82xWWgve0mBK6bzUoKZZvoMQZ7YlmaAUtJOv2a7aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dOpGEYsfcqxWkPNVwmG+AhqHlsg7ttjeZH6KCp/3WPo=;
+ b=VuD9GQq/G36YV6gwct6KvyYXMMxSSimdy8WEj8kmHsDnJbF1g+YO/LkQM3slns8DEnhYbwevqCV9k8IVGKF1U2OJAoIuroOsIID+oGeqRx9yab1omy4y7g9H6aWD15uIYosezJVP3fDd9GOJ3xTrG/hoT1QSMkyX67AEWkzVth/Du03V7EHRi9kPZJHr4jjiME3TAbJkQONK1jx7pZhm/SXCFbV360pauoUrrRzbZPo9kdB4Idefyv+q2dokUEqD5ifhM7gmcukAzxeO45Wwfe2f1u6JdgohhzxndYRFrXRyCNfpGTbcl+dbCM7tVguueQASTZ8vsur/7lFRwfu1yg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+Authentication-Results: spf=none (sender IP is ) smtp.mailfrom=JLee@suse.com; 
+Received: from CH2PR18MB3240.namprd18.prod.outlook.com (2603:10b6:610:2d::27)
+ by CH2PR18MB3223.namprd18.prod.outlook.com (2603:10b6:610:28::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2772.18; Thu, 5 Mar
+ 2020 06:01:32 +0000
+Received: from CH2PR18MB3240.namprd18.prod.outlook.com
+ ([fe80::b4b0:7004:b49e:a63]) by CH2PR18MB3240.namprd18.prod.outlook.com
+ ([fe80::b4b0:7004:b49e:a63%6]) with mapi id 15.20.2772.019; Thu, 5 Mar 2020
+ 06:01:32 +0000
+Date:   Thu, 5 Mar 2020 14:01:23 +0800
+From:   joeyli <jlee@suse.com>
+To:     Vladis Dronov <vdronov@redhat.com>
+CC:     Ard Biesheuvel <ardb@kernel.org>, <linux-efi@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] efi: fix a race and a buffer overflow while reading
+ efivars via sysfs
+Message-ID: <20200305060123.GS16878@linux-l9pv.suse>
+References: <CAKv+Gu_3ZRRcoAcLTVVQe26q5x9KALmztaNQF=e=KqWaAwxtpA@mail.gmail.com>
+ <20200304154936.24206-1-vdronov@redhat.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20200304154936.24206-1-vdronov@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-ClientProxiedBy: HK2PR02CA0205.apcprd02.prod.outlook.com
+ (2603:1096:201:20::17) To CH2PR18MB3240.namprd18.prod.outlook.com
+ (2603:10b6:610:2d::27)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from linux-l9pv.suse (60.251.47.115) by HK2PR02CA0205.apcprd02.prod.outlook.com (2603:1096:201:20::17) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2793.14 via Frontend Transport; Thu, 5 Mar 2020 06:01:30 +0000
+X-Originating-IP: [60.251.47.115]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 631f20f7-6865-47ce-5a2e-08d7c0caa74b
+X-MS-TrafficTypeDiagnostic: CH2PR18MB3223:
+X-Microsoft-Antispam-PRVS: <CH2PR18MB3223E6923FEEEE3B5F14F64AA3E20@CH2PR18MB3223.namprd18.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 03333C607F
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(136003)(376002)(396003)(366004)(39860400002)(199004)(189003)(36756003)(2906002)(16526019)(66946007)(6506007)(8886007)(186003)(956004)(478600001)(316002)(4326008)(8936002)(86362001)(52116002)(9686003)(81166006)(66556008)(55236004)(5660300002)(33656002)(6666004)(55016002)(66476007)(81156014)(26005)(7696005)(6916009)(8676002)(1076003)(43062003);DIR:OUT;SFP:1102;SCL:1;SRVR:CH2PR18MB3223;H:CH2PR18MB3240.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: suse.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 1IcXcKeir+dXkS4zyY1mcvLA39exkHYyRbxpuyUhVLcPQlmPDHHEDL3b0M+G+XRZfCaSX0SGBhDuCx7PUusRoJb5OjFLY5TkdVMCUj9t8n2ijgEEDMqnVnAJxtGJiI/aD+JSk3v1VZlVMhDOpfGJqcawteUrrWmnOfRkCCY8vBEr12mQvTg6+VHb9uFXdTmPDJZR+DbQYqRWPd9BzE10Kpakc1nVIecK2Gg7JmFlUQsg72NMdPi2kTYXoe6pKairXApHg3AP4cWksloNdaohqa8JMgZJfPbFWRt+c+hcrg4UKw1T+dphrmp8qJr2rH5IvFAos2Jo5UGwBetCm7upjLJkcIUNDH44qc/1JQCp2jU//mgYWhbEwJLo4wYvsQ3lsv8F8MwDSPMEnrHMPmCQ209iK448/gi3FVo9qZB+8oooTrv59UwztY+rnSM+pYyl2XdYetYGVIHjb/+W5MR6N4/xUp41IBzIXgxGXiYODdCMOloFDDvtmelhDtP3pMwP
+X-MS-Exchange-AntiSpam-MessageData: L8e2zfAxQDHAUud9r9+O8vpENVAiFOIBqELdTzy5RvzdMoQ4GY83/PfQ6fGQsWzqIesal77oX6E3P2b7UE39Vm+mjVFHUXD9SBlqu8gTbVia+Wgd/AOhy+86X4pMdZaIcVto8QmAiv3pH3y9wKJcww==
+X-MS-Exchange-CrossTenant-Network-Message-Id: 631f20f7-6865-47ce-5a2e-08d7c0caa74b
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Mar 2020 06:01:32.0993
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 856b813c-16e5-49a5-85ec-6f081e13b527
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: xfLorypEMdR8mD2/VGR9PbRvEnWJaGE0+vkaBZ86N9bIZOLZyHHn1zBjvqlVvQWj
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR18MB3223
+X-OriginatorOrg: suse.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change the config to 'tristate' for MCDT driver to allow it to build into
-modules, as well as changing to use IS_ENABLED() to validate if need supply
-dummy functions when building the MCDT driver as a module.
+Hi Vladis,
 
-Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
----
- sound/soc/sprd/Kconfig     | 2 +-
- sound/soc/sprd/sprd-mcdt.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+On Wed, Mar 04, 2020 at 04:49:36PM +0100, Vladis Dronov wrote:
+> There is a race and a buffer overflow corrupting a kernel memory while
+> reading an efi variable with a size more than 1024 bytes via the older
+> sysfs method. This happens because accessing struct efi_variable in
+> efivar_{attr,size,data}_read() and friends is not protected from
+> a concurrent access leading to a kernel memory corruption and, at best,
+> to a crash. The race scenario is the following:
+> 
+> CPU0:                                CPU1:
+> efivar_attr_read()
+>   var->DataSize = 1024;
+>   efivar_entry_get(... &var->DataSize)
+>     down_interruptible(&efivars_lock)
+>                                      efivar_attr_read() // same efi var
+>                                        var->DataSize = 1024;
+>                                        efivar_entry_get(... &var->DataSize)
+>                                          down_interruptible(&efivars_lock)
+>     virt_efi_get_variable()
+>     // returns EFI_BUFFER_TOO_SMALL but
+>     // var->DataSize is set to a real
+>     // var size more than 1024 bytes
+>     up(&efivars_lock)
+>                                          virt_efi_get_variable()
+>                                          // called with var->DataSize set
+>                                          // to a real var size, returns
+>                                          // successfully and overwrites
+>                                          // a 1024-bytes kernel buffer
+>                                          up(&efivars_lock)
+> 
+> This can be reproduced by concurrent reading of an efi variable which size
+> is more than 1024 bytes:
+> 
+> ts# for cpu in $(seq 0 $(nproc --ignore=1)); do ( taskset -c $cpu \
+> cat /sys/firmware/efi/vars/KEKDefault*/size & ) ; done
+> 
+> Fix this by using a local variable for a var's data buffer size so it
+> does not get overwritten. Also add a sanity check to efivar_store_raw().
+> 
+> Reported-by: Bob Sanders <bob.sanders@hpe.com> and the LTP testsuite
+> Signed-off-by: Vladis Dronov <vdronov@redhat.com>
+> ---
+>  drivers/firmware/efi/efi-pstore.c |  2 +-
+>  drivers/firmware/efi/efivars.c    | 32 ++++++++++++++++++++++---------
+>  drivers/firmware/efi/vars.c       |  2 +-
+>  3 files changed, 25 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/firmware/efi/efi-pstore.c b/drivers/firmware/efi/efi-pstore.c
+> index 9ea13e8d12ec..e4767a7ce973 100644
+> --- a/drivers/firmware/efi/efi-pstore.c
+> +++ b/drivers/firmware/efi/efi-pstore.c
+> @@ -161,7 +161,7 @@ static int efi_pstore_scan_sysfs_exit(struct efivar_entry *pos,
+>   *
+>   * @record: pstore record to pass to callback
+[...snip]
+> @@ -250,14 +262,16 @@ efivar_show_raw(struct efivar_entry *entry, char *buf)
+>  {
+>  	struct efi_variable *var = &entry->var;
+>  	struct compat_efi_variable *compat;
+> +	unsigned long datasize = sizeof(var->Data);
+>  	size_t size;
+> +	int ret;
+>  
+>  	if (!entry || !buf)
+>  		return 0;
+>  
+> -	var->DataSize = 1024;
+> -	if (efivar_entry_get(entry, &entry->var.Attributes,
+> -			     &entry->var.DataSize, entry->var.Data))
+> +	ret = efivar_entry_get(entry, &var->Attributes, &datasize, var->Data);
+> +	var->DataSize = size;
 
-diff --git a/sound/soc/sprd/Kconfig b/sound/soc/sprd/Kconfig
-index 5474fd3..5e0ac82 100644
---- a/sound/soc/sprd/Kconfig
-+++ b/sound/soc/sprd/Kconfig
-@@ -8,7 +8,7 @@ config SND_SOC_SPRD
- 	  the Spreadtrum SoCs' Audio interfaces.
- 
- config SND_SOC_SPRD_MCDT
--	bool "Spreadtrum multi-channel data transfer support"
-+	tristate "Spreadtrum multi-channel data transfer support"
- 	depends on SND_SOC_SPRD
- 	help
- 	  Say y here to enable multi-channel data transfer support. It
-diff --git a/sound/soc/sprd/sprd-mcdt.h b/sound/soc/sprd/sprd-mcdt.h
-index 9cc7e207..679e3af 100644
---- a/sound/soc/sprd/sprd-mcdt.h
-+++ b/sound/soc/sprd/sprd-mcdt.h
-@@ -48,7 +48,7 @@ struct sprd_mcdt_chan {
- 	struct list_head list;
- };
- 
--#ifdef CONFIG_SND_SOC_SPRD_MCDT
-+#if IS_ENABLED(CONFIG_SND_SOC_SPRD_MCDT)
- struct sprd_mcdt_chan *sprd_mcdt_request_chan(u8 channel,
- 					      enum sprd_mcdt_channel_type type);
- void sprd_mcdt_free_chan(struct sprd_mcdt_chan *chan);
--- 
-1.9.1
+The size is indeterminate here. I think that it should uses datasize?
+	var->DataSize = datasize;
 
+> +	if (ret)
+>  		return -EIO;
+>  
+>  	if (in_compat_syscall()) {
+
+Regards
+Joey Lee
